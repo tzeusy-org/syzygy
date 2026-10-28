@@ -290,7 +290,8 @@ describe('suite child processes and the vitest worker RPC', () => {
     expect(paths).toEqual(expect.arrayContaining(['ssr.resolve.conditions', 'test.setupFiles']));
     expect(paths.some((path) => /^test\.projects\.\d+\.test\.globalSetup$/u.test(path))).toBe(true);
     expect(aliasKeys(config)).toEqual([]);
-    expect(detachedProjects(config)).toEqual([]);
+    // Joined, so that a failure names each entry: vitest abbreviates a longer array in its message.
+    expect(detachedProjects(config).join('; ')).toBe('');
   });
 
   it('reads an alias key wherever the config holds one, and no other key', () => {
