@@ -320,6 +320,11 @@ describe('recognizeCodeContexts — the ranges the mask is built from', () => {
     expect(recognition.spanRanges).toEqual([]);
     expect(recognition.fenceRanges).toEqual([[3, 12]]);
     expect(recognition.malformed).toEqual({ reason: 'unclosed-inline-span', line: 1 });
+    // The dropped span does not come back: a backtick after the fence opens a new span and finds no partner, instead of closing the old one.
+    const later = recognizeCodeContexts('`a\n```\nx\n```\nb`');
+    expect(later.spanRanges).toEqual([]);
+    expect(later.fenceRanges).toEqual([[3, 12]]);
+    expect(later.malformed).toEqual({ reason: 'unclosed-inline-span', line: 1 });
   });
 
   it('a span still open at the end of the text is dropped and reported', () => {
