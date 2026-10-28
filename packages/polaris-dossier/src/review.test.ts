@@ -356,6 +356,77 @@ describe('session-prompt review --kind fidelity', () => {
   });
 });
 
+/** The observed-only check of the review commands' outputs, run once; it returns the reviewer's string leaves and each Observed
+ * holder's JSON as emitted. */
+async function observedOnly(): Promise<{ readonly reviewerText: readonly string[]; readonly holderTexts: readonly string[] }> {
+  const run = await prepared();
+  const dir = await reviewSessionOf(run);
+  const digest = sha256(expectedPacket(run));
+  const v = verdict(digest);
+  writeVerdict(dir, v);
+  const built = await reviewPacket(run, { kind: 'fidelity' }, deps());
+  const checked = await reviewCheck(run, {}, deps());
+  await launchForm(run, { role: 'review', form: 'terminal' }, { sources: sources(), now: () => LATER });
+  const counted = await reviewOfRecord(await opened(run), deps());
+  const cli: unknown[] = [];
+  for (const args of [['review-packet', run, '--kind', 'fidelity', '--json'], ['review-check', run, '--json']]) {
+    const out: string[] = [];
+    await runDossierCli(args, { stdout: (t: string) => { out.push(t); }, stderr: () => {} }, { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN });
+    cli.push(JSON.parse(out.join('')));
+  }
+  const everything = {
+    built, checked, counted, cli,
+    record: JSON.parse(fs.readFileSync(path.join(run, 'reviews', 'checks', 'fidelity-verdict-0.json'), 'utf8')),
+    packet: JSON.parse(expectedPacket(run)),
+  };
+  const observedPaths: string[] = [], observedHolders: Record<string, unknown>[] = [], readinessHolders: Record<string, unknown>[] = [];
+  // The packet's verdict schema names readiness as a property the reviewer will write; outside the packet, a readiness is the verdict's.
+  const sweep = (value: unknown, at: string): void => {
+    if (Array.isArray(value)) { value.forEach((item, i) => sweep(item, `${at}[${i}]`)); return; }
+    if (value === null || typeof value !== 'object') return;
+    const record = value as Record<string, unknown>;
+    if (record['label'] === 'Observed') observedHolders.push(record);
+    if (('readiness' in record || 'blocking' in record) && !at.startsWith('$.packet')) readinessHolders.push(record);
+    for (const [key, child] of Object.entries(record)) {
+      if (child === 'Observed') observedPaths.push(`${at}.${key}`);
+      sweep(child, `${at}.${key}`);
+    }
+  };
+  sweep(everything, '$');
+  expect(observedPaths).toEqual(['$.built.report.label', '$.checked.report.observed.label', '$.counted.observed.label', '$.cli[0].label', '$.cli[1].observed.label']);
+  // What is Observed about a verdict is the packet and its digest and that the verdict names it; nothing the reviewer wrote.
+  for (const holder of observedHolders.filter((h) => !('command' in h))) expect(Object.keys(holder).sort()).toEqual(['label', 'packetSha256', 'verdictNamesPacket']);
+  const reviewerText: string[] = [];
+  const leaves = (value: unknown): void => {
+    if (typeof value === 'string') { if (value !== digest && value !== commit) reviewerText.push(value); return; }
+    if (value !== null && typeof value === 'object') Object.values(value).forEach(leaves);
+  };
+  leaves(v);
+  const holderTexts: string[] = [];
+  for (const holder of observedHolders) {
+    holderTexts.push(JSON.stringify(holder));
+    // The run path is the operator's, under os.tmpdir(), not the reviewer's: replaced before the leaf check, so a leaf as short as
+    // a block id cannot match it (syzygy-bpyt.4.26). The digest each holder observes stays, so the replacement is not the whole text.
+    const text = JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);
+    expect(text).not.toContain(tmpdir());
+    expect(text).toContain(digest);
+    for (const key of ['readiness', 'blocking', 'findings', 'inventoryCoverage', 'inventoryAccuracy', 'blockSupport', 'problems', 'sessionId', 'verdict']) expect(holder).not.toHaveProperty(key);
+    for (const leaf of reviewerText) expect(text).not.toContain(leaf);
+  }
+  // The readiness the verdict declares and the blocking derived from its rows are the reviewer's reading, labelled Inferred where they appear.
+  expect(readinessHolders.length).toBeGreaterThanOrEqual(5);
+  for (const holder of readinessHolders) {
+    const labelled = typeof holder['readiness'] === 'object' && holder['readiness'] !== null ? holder['readiness'] as Record<string, unknown> : holder;
+    expect(labelled).toMatchObject({ declaredBy: 'the review session', label: 'Inferred' });
+  }
+  for (const text of [JSON.stringify(checked), JSON.stringify(counted), JSON.stringify(cli[1])]) {
+    expect(text).toContain('the reviewer\'s reading of the emitted packet: every judgement, finding and readiness the verdict declares, which Syzygy checks for shape, completeness, quotation and consistency and never for truth');
+    expect(text).toContain('the inventory\'s completeness over the clone and its preparation from the whole source population, which are the inventory session\'s self-report and never verified');
+    expect(text).toContain('that the review session read the packet Syzygy emitted, unaltered');
+  }
+  return { reviewerText, holderTexts };
+}
+
 describe('review-check', () => {
   it('validates a complete, consistent verdict bound to the rebuilt packet and records it; it counts once its launch form is recorded', async () => {
     const run = await prepared();
@@ -496,64 +567,23 @@ describe('review-check', () => {
   });
 
   it('observes only the packet, its digest and that the verdict names it: the reviewer\'s reading, independence, completeness, identifiers and launch form stay Inferred', async () => {
-    const run = await prepared();
-    const dir = await reviewSessionOf(run);
-    const digest = sha256(expectedPacket(run));
-    const v = verdict(digest);
-    writeVerdict(dir, v);
-    const built = await reviewPacket(run, { kind: 'fidelity' }, deps());
-    const checked = await reviewCheck(run, {}, deps());
-    await launchForm(run, { role: 'review', form: 'terminal' }, { sources: sources(), now: () => LATER });
-    const counted = await reviewOfRecord(await opened(run), deps());
-    const cli: unknown[] = [];
-    for (const args of [['review-packet', run, '--kind', 'fidelity', '--json'], ['review-check', run, '--json']]) {
-      const out: string[] = [];
-      await runDossierCli(args, { stdout: (t: string) => { out.push(t); }, stderr: () => {} }, { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN });
-      cli.push(JSON.parse(out.join('')));
-    }
-    const everything = {
-      built, checked, counted, cli,
-      record: JSON.parse(fs.readFileSync(path.join(run, 'reviews', 'checks', 'fidelity-verdict-0.json'), 'utf8')),
-      packet: JSON.parse(expectedPacket(run)),
-    };
-    const observedPaths: string[] = [], observedHolders: Record<string, unknown>[] = [], readinessHolders: Record<string, unknown>[] = [];
-    // The packet's verdict schema names readiness as a property the reviewer will write; outside the packet, a readiness is the verdict's.
-    const sweep = (value: unknown, at: string): void => {
-      if (Array.isArray(value)) { value.forEach((item, i) => sweep(item, `${at}[${i}]`)); return; }
-      if (value === null || typeof value !== 'object') return;
-      const record = value as Record<string, unknown>;
-      if (record['label'] === 'Observed') observedHolders.push(record);
-      if (('readiness' in record || 'blocking' in record) && !at.startsWith('$.packet')) readinessHolders.push(record);
-      for (const [key, child] of Object.entries(record)) {
-        if (child === 'Observed') observedPaths.push(`${at}.${key}`);
-        sweep(child, `${at}.${key}`);
-      }
-    };
-    sweep(everything, '$');
-    expect(observedPaths).toEqual(['$.built.report.label', '$.checked.report.observed.label', '$.counted.observed.label', '$.cli[0].label', '$.cli[1].observed.label']);
-    // What is Observed about a verdict is the packet and its digest and that the verdict names it; nothing the reviewer wrote.
-    for (const holder of observedHolders.filter((h) => !('command' in h))) expect(Object.keys(holder).sort()).toEqual(['label', 'packetSha256', 'verdictNamesPacket']);
-    const reviewerText: string[] = [];
-    const leaves = (value: unknown): void => {
-      if (typeof value === 'string') { if (value !== digest && value !== commit) reviewerText.push(value); return; }
-      if (value !== null && typeof value === 'object') Object.values(value).forEach(leaves);
-    };
-    leaves(v);
-    for (const holder of observedHolders) {
-      const text = JSON.stringify(holder);
-      for (const key of ['readiness', 'blocking', 'findings', 'inventoryCoverage', 'inventoryAccuracy', 'blockSupport', 'problems', 'sessionId', 'verdict']) expect(holder).not.toHaveProperty(key);
-      for (const leaf of reviewerText) expect(text).not.toContain(leaf);
-    }
-    // The readiness the verdict declares and the blocking derived from its rows are the reviewer's reading, labelled Inferred where they appear.
-    expect(readinessHolders.length).toBeGreaterThanOrEqual(5);
-    for (const holder of readinessHolders) {
-      const labelled = typeof holder['readiness'] === 'object' && holder['readiness'] !== null ? holder['readiness'] as Record<string, unknown> : holder;
-      expect(labelled).toMatchObject({ declaredBy: 'the review session', label: 'Inferred' });
-    }
-    for (const text of [JSON.stringify(checked), JSON.stringify(counted), JSON.stringify(cli[1])]) {
-      expect(text).toContain('the reviewer\'s reading of the emitted packet: every judgement, finding and readiness the verdict declares, which Syzygy checks for shape, completeness, quotation and consistency and never for truth');
-      expect(text).toContain('the inventory\'s completeness over the clone and its preparation from the whole source population, which are the inventory session\'s self-report and never verified');
-      expect(text).toContain('that the review session read the packet Syzygy emitted, unaltered');
+    await observedOnly();
+  });
+
+  // syzygy-bpyt.4.26 (the PR 524 review's N4): the Observed holders carry the run path under os.tmpdir(), and with TMPDIR=/tmp/r524-p1
+  // the leaf check failed on the block id 'p1', a verdict leaf the reviewer did not put there. Under a TMPDIR whose path holds that
+  // leaf, the check still passes, and the leaf is in both the verdict and the emitted holder, so the row is not vacuous.
+  it('observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf', async () => {
+    const outer = process.env['TMPDIR'];
+    const leafy = tempDir('tmpdir-p1-');
+    process.env['TMPDIR'] = leafy;
+    try {
+      expect(tmpdir()).toBe(leafy);
+      const { reviewerText, holderTexts } = await observedOnly();
+      expect(reviewerText).toContain('p1');
+      expect(holderTexts.filter((text) => text.includes(leafy)).length).toBeGreaterThanOrEqual(2);
+    } finally {
+      if (outer === undefined) delete process.env['TMPDIR']; else process.env['TMPDIR'] = outer;
     }
   });
 });
