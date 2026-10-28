@@ -1,0 +1,813 @@
+{
+ "subject": "rule-6 mutants of syzygy-bpyt.65's and syzygy-bpyt.4.42's guards and clean_build.mjs refusals",
+ "commit": "f83a60412897317e3b77ddc8a1eafef8ec7abddd",
+ "worktreeClean": true,
+ "tool": {
+  "path": "docs/evidence/syzygy-bpyt-4-42/tools/mutants.py",
+  "sha256": "a8468c3ddf81f55bfff28b9060ea29ca5a651f8c7cc79e1ac9f3d7bbc4ee0ccd"
+ },
+ "loadavgBefore": [
+  "24.46",
+  "25.37",
+  "27.72"
+ ],
+ "unmutated": {
+  "guard": {
+   "exit": 0,
+   "failed": 0,
+   "passed": 9,
+   "total": 9,
+   "failing": []
+  },
+  "build": {
+   "exit": 0,
+   "failed": 0,
+   "passed": 25,
+   "total": 25,
+   "failing": []
+  }
+ },
+ "mutants": [
+  {
+   "id": "X9s",
+   "mutation": "a resolver plugin in the POC app's project entry, single-quoted name",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "new": "        plugins: [{ name: 'r65-x9', enforce: 'pre', resolveId(id: string) { return id === '@syzygy/support' ? fileURLToPath(new URL('./packages/support/dist/index.js', import.meta.url)) : null; } }],\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "expectedMessage": "a plugin may load a workspace package by other than its source condition",
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "total": 9,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports",
+     "message": "Error: vitest.config.ts: a plugin may load a workspace package by other than its source condition",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "X9d",
+   "mutation": "a resolver plugin in the POC app's project entry, double-quoted name",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "new": "        plugins: [{ name: \"r65-x9\", enforce: 'pre', resolveId(id: string) { return id === '@syzygy/support' ? fileURLToPath(new URL('./packages/support/dist/index.js', import.meta.url)) : null; } }],\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "expectedMessage": "a plugin may load a workspace package by other than its source condition",
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "total": 9,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports",
+     "message": "Error: vitest.config.ts: a plugin may load a workspace package by other than its source condition",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "X9r",
+   "mutation": "a resolver plugin at the root of the config",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "  ssr: { resolve:",
+     "new": "  plugins: [{ name: \"r65-x9r\", enforce: 'pre', resolveId(id: string) { return id === '@syzygy/support' ? fileURLToPath(new URL('./packages/support/dist/index.js', import.meta.url)) : null; } }],\n  ssr: { resolve:",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "expectedMessage": "a plugin may load a workspace package by other than its source condition",
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "total": 9,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports",
+     "message": "Error: vitest.config.ts: a plugin may load a workspace package by other than its source condition",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "X9q",
+   "mutation": "a plugins key written quoted, in the POC app's project entry",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "new": "        'plugins': [],\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "expectedMessage": "a plugin may load a workspace package by other than its source condition",
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "total": 9,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC runs only short local tools synchronously in a suite test file or any module it imports",
+     "message": "Error: vitest.config.ts: a plugin may load a workspace package by other than its source condition",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "P1",
+   "mutation": "the guard drops the plugins refusal",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+     "old": "  if (PLUGINS_KEY.test(config)) throw new Error(`${VITEST_CONFIG}: a plugin may load a workspace package by other than its source condition`);\n",
+     "new": "",
+     "fileSha256": "1c6f9dbf322820ce40d0aa7a595c5f19557a8e21c443c76f3839543db844b5ca"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "total": 9,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC reads every project root from the vitest config, and fails closed on a shape it does not recognize",
+     "message": "AssertionError: ssr: { resolve: { conditions: ['source', 'module', 'node', 'development|production'] } },",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "X10",
+   "mutation": "the POC core's index names test-frozen.ts in a triple-slash reference",
+   "edits": [
+    {
+     "file": "packages/three-surface-poc-core/src/index.ts",
+     "old": "export * from './model.js';\n",
+     "new": "/// <reference path=\"./test-frozen.ts\" />\nexport * from './model.js';\n",
+     "fileSha256": "4825b9b9bd68599f873166d22a0ed95dd73c7e88debfc6a2a4fa24b94fd5e03b"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 24,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the product build emits no test and no test-support module, but the two kits a reader takes from dist",
+     "message": "AssertionError: expected [ …(3) ] to deeply equal [ …(2) ]",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "X10b",
+   "mutation": "the app's git-observation.ts names test-http-client.ts in a triple-slash reference",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/git-observation.ts",
+     "old": "import { execFileSync } from 'node:child_process';\nimport { realpathSync }",
+     "new": "/// <reference path=\"./test-http-client.ts\" />\nimport { execFileSync } from 'node:child_process';\nimport { realpathSync }",
+     "fileSha256": "dfe1e173deb17ac96c9cf2420c676f6e81a615271efec2f58bbd2bed5872ea52"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 24,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the product build emits no test and no test-support module, but the two kits a reader takes from dist",
+     "message": "AssertionError: expected [ …(3) ] to deeply equal [ …(2) ]",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "P2",
+   "mutation": "the emitted set goes back to the import-only model",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/product-build.test.ts",
+     "old": "  const program = ts.createProgram({ rootNames: parsed.fileNames, options: parsed.options, projectReferences: parsed.projectReferences });\n  return program.getSourceFiles().map(({ fileName }) => fileName)\n    .filter((file) => file.startsWith(`${base}${project}/src/`) && !file.endsWith('.d.ts')).map((file) => file.slice(base.length)).sort();\n",
+     "new": "  const seen = new Set(parsed.fileNames.map((file) => file.slice(base.length)));\n  const queue = [...seen];\n  for (let from = queue.shift(); from !== undefined; from = queue.shift()) {\n    for (const specifier of ts.preProcessFile(readFileSync(join(base, from), 'utf8'), true, true).importedFiles.map(({ fileName }) => fileName)) {\n      const to = resolve(from, specifier);\n      if (typeof to === 'string' && to.startsWith(`${project}/src/`) && !seen.has(to)) { seen.add(to); queue.push(to); }\n    }\n  }\n  return [...seen].sort();\n",
+     "fileSha256": "22e87a1c267f3379b952a8e6ff7842a709760420cbf54f0a370e583e1cbea219"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 24,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the emitted-set model takes in a module a triple-slash reference names, as tsc --listFilesOnly does",
+     "message": "AssertionError: expected [ 'packages/a/src/a.ts' ] to deeply equal [ 'packages/a/src/a.ts', …(1) ]",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "C1",
+   "mutation": "clean_build drops the effective declarationDir refusal",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": " || ('declarationDir' in effective && !underDist(effective.declarationDir))",
+     "new": "",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 2,
+   "passed": 23,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project whose declarations leave dist through extends",
+     "message": "Error: promise resolved \"{ stdout: '', stderr: '' }\" instead of rejecting",
+     "diff": []
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project whose declarations sit in a sibling of dist through extends",
+     "message": "Error: promise resolved \"{ stdout: '', stderr: '' }\" instead of rejecting",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "C2",
+   "mutation": "clean_build drops the effective outFile refusal",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "\n    || 'outFile' in effective) {",
+     "new": ") {",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 24,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project that bundles its outputs into one file through extends",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver… { …(6) } to match object { stderr: StringContaining{…} }",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "C3",
+   "mutation": "clean_build drops the non-composite reference refusal",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "for (const project of referenced) if (!composite.get(project)) throw",
+     "new": "for (const project of referenced) if (false) throw",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 3,
+   "passed": 22,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a referenced project that is not composite",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver… { …(6) } to match object { stderr: StringContaining{…} }",
+     "diff": []
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a referenced project that does not set composite",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver… { …(6) } to match object { stderr: StringContaining{…} }",
+     "diff": []
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a referenced project that inherits composite false",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver… { …(6) } to match object { stderr: StringContaining{…} }",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "C4",
+   "mutation": "clean_build takes an unset composite as composite",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "composite.set(project, effective.composite === true);",
+     "new": "composite.set(project, effective.composite !== false);",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 24,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a referenced project that does not set composite",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver… { …(6) } to match object { stderr: StringContaining{…} }",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "C5",
+   "mutation": "clean_build reads composite from the tsconfig's own options, not through extends",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "composite.set(project, effective.composite === true);",
+     "new": "composite.set(project, options.composite === true);",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 24,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the clean build builds a referenced project that inherits composite through extends",
+     "message": "Error: Command failed: /home/tze/.nvm/versions/node/v24.6.0/bin/node /tmp/laneb-442/c/scripts/clean_build.mjs packages/d",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "C6",
+   "mutation": "clean_build drops both the own and the effective outDir refusal",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "options.outDir !== 'dist' || ",
+     "new": "",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    },
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "!underDist(effective.outDir) || ",
+     "new": "",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 24,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project whose outputs leave dist",
+     "message": "Error: promise resolved \"{ stdout: '', stderr: '' }\" instead of rejecting",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "C7",
+   "mutation": "clean_build requires composite of every project it builds, not only referenced ones",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "for (const project of referenced) if",
+     "new": "for (const project of built) if",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 24,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the clean build builds a named project that nothing references and that is not composite",
+     "message": "Error: Command failed: /home/tze/.nvm/versions/node/v24.6.0/bin/node /tmp/laneb-442/c/scripts/clean_build.mjs packages/c",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "E1",
+   "mutation": "clean_build drops only the effective outDir and tsBuildInfoFile refusals",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "!underDist(effective.outDir) || !underDist(effective.tsBuildInfoFile) || ",
+     "new": "",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": "directory name holds a backslash",
+   "exit": 1,
+   "failed": 1,
+   "passed": 24,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it names a project whose directory name holds a backslash",
+     "message": "AssertionError: expected Error: Command failed: /home/tze/.nvm/ver… { …(6) } to match object { stderr: StringContaining{…} }",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "C10",
+   "mutation": "underDist loses the / after dist, so a declarationDir dist-x passes",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "file.startsWith(`${dist}/`)",
+     "new": "file.startsWith(dist)",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": "sibling of dist",
+   "exit": 1,
+   "failed": 1,
+   "passed": 24,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project whose declarations sit in a sibling of dist through extends",
+     "message": "Error: promise resolved \"{ stdout: '', stderr: '' }\" instead of rejecting",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "N3p",
+   "mutation": "the POC app's project entry extends another config file, which declares a plugin",
+   "edits": [
+    {
+     "file": "vitest.r442-plugins.config.ts",
+     "old": null,
+     "new": "export default { plugins: [{ name: 'r442-n3', resolveId: () => null }] };\n",
+     "fileSha256": null
+    },
+    {
+     "file": "vitest.config.ts",
+     "old": "        extends: true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "new": "        extends: './vitest.r442-plugins.config.ts',\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "expectedMessage": "test.projects.8.extends is not true",
+   "expectedTest": "no project entry detached from the root config",
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "total": 9,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth and no project entry detached from the root config",
+     "message": "AssertionError: expected 'test.projects.8.extends is not true' to be '' // Object.is equality",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "N3s",
+   "mutation": "a string project entry, a path to a config file, before the first entry",
+   "edits": [
+    {
+     "file": "vitest.r442-string.config.ts",
+     "old": null,
+     "new": "export default { test: { name: 'r442-string', include: ['packages/r442-none/**/*.test.ts'] } };\n",
+     "fileSha256": null
+    },
+    {
+     "file": "vitest.config.ts",
+     "old": "    projects: [\n",
+     "new": "    projects: [\n      './vitest.r442-string.config.ts',\n",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "expectedMessage": "test.projects.0 is not an object",
+   "expectedTest": "no project entry detached from the root config",
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "total": 9,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth and no project entry detached from the root config",
+     "message": "AssertionError: expected 'test.projects.0 is not an object' to be '' // Object.is equality",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "N3m",
+   "mutation": "the POC app's project entry drops extends: true",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "        extends: true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "new": "        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "expectedMessage": "test.projects.8.extends is not true",
+   "expectedTest": "no project entry detached from the root config",
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "total": 9,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth and no project entry detached from the root config",
+     "message": "AssertionError: expected 'test.projects.8.extends is not true' to be '' // Object.is equality",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "G1",
+   "mutation": "the guard takes any extends but false as inheriting",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+     "old": ".extends === true ? [] :",
+     "new": ".extends !== false ? [] :",
+     "fileSha256": "1c6f9dbf322820ce40d0aa7a595c5f19557a8e21c443c76f3839543db844b5ca"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": "reads every project entry that does not inherit",
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "total": 9,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC reads every project entry that does not inherit the root config through extends: true",
+     "message": "AssertionError: expected [ …(5) ] to deeply equal [ …(9) ]",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "G2",
+   "mutation": "the guard drops its object check, so only null is not an object",
+   "edits": [
+    {
+     "file": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+     "old": "if (typeof entry !== 'object' || entry === null || Array.isArray(entry)) return",
+     "new": "if (entry === null) return",
+     "fileSha256": "1c6f9dbf322820ce40d0aa7a595c5f19557a8e21c443c76f3839543db844b5ca"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/sync-child-process-guard.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": "reads every project entry that does not inherit",
+   "exit": 1,
+   "failed": 1,
+   "passed": 8,
+   "total": 9,
+   "failing": [
+    {
+     "test": "suite child processes and the vitest worker RPC reads every project entry that does not inherit the root config through extends: true",
+     "message": "AssertionError: expected [ …(9) ] to deeply equal [ …(9) ]",
+     "diff": []
+    }
+   ],
+   "killed": true
+  }
+ ],
+ "defence": [
+  {
+   "id": "C6a",
+   "mutation": "clean_build drops only the own outDir refusal: expected to survive, because the effective check refuses the same trees",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "options.outDir !== 'dist' || ",
+     "new": "",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 0,
+   "failed": 0,
+   "passed": 25,
+   "total": 25,
+   "failing": [],
+   "killed": false
+  }
+ ],
+ "probes": [
+  {
+   "id": "N6-before",
+   "mutation": "outside refusal dropped, KEPT_OUTSIDE emptied only after the rejects, as before this bead",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "  if (!realpathSync(project).startsWith(`${realpathSync('.')}/`)) throw new Error(`${project}: resolves outside the checkout`);\n",
+     "new": "",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    },
+    {
+     "file": "apps/three-surface-poc/src/product-build.test.ts",
+     "old": "    // A row whose refusal fails leaves its outside path behind; it is not the next row's (syzygy-bpyt.4.42).\n    KEPT_OUTSIDE.length = 0;\n",
+     "new": "",
+     "fileSha256": "22e87a1c267f3379b952a8e6ff7842a709760420cbf54f0a370e583e1cbea219"
+    },
+    {
+     "file": "apps/three-surface-poc/src/product-build.test.ts",
+     "old": "...KEPT_OUTSIDE]) expect(",
+     "new": "...KEPT_OUTSIDE.splice(0)]) expect(",
+     "fileSha256": "22e87a1c267f3379b952a8e6ff7842a709760420cbf54f0a370e583e1cbea219"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 2,
+   "passed": 23,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it names a project whose directory resolves outside the checkout",
+     "message": "Error: promise resolved \"{ stdout: '', stderr: '' }\" instead of rejecting",
+     "diff": []
+    },
+    {
+     "test": "the clean build refuses, removing nothing, when it reaches a project whose declarations leave dist through extends",
+     "message": "Error: ENOENT: no such file or directory, open '/tmp/laneb-442/syzygy-clean-build-outside-s5Qwup/dist/e.js'",
+     "diff": []
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "N6-after",
+   "mutation": "outside refusal dropped, the test as it stands",
+   "edits": [
+    {
+     "file": "scripts/clean_build.mjs",
+     "old": "  if (!realpathSync(project).startsWith(`${realpathSync('.')}/`)) throw new Error(`${project}: resolves outside the checkout`);\n",
+     "new": "",
+     "fileSha256": "e59b490ae2a4352d5c80c25f662606f7c2363547bed0c50340a4a5d74401060a"
+    }
+   ],
+   "tests": [
+    "apps/three-surface-poc/src/product-build.test.ts"
+   ],
+   "expectedMessage": null,
+   "expectedTest": null,
+   "exit": 1,
+   "failed": 1,
+   "passed": 24,
+   "total": 25,
+   "failing": [
+    {
+     "test": "the clean build refuses, removing nothing, when it names a project whose directory resolves outside the checkout",
+     "message": "Error: promise resolved \"{ stdout: '', stderr: '' }\" instead of rejecting",
+     "diff": []
+    }
+   ],
+   "killed": true
+  }
+ ],
+ "loadavgAfter": [
+  "23.92",
+  "27.50",
+  "27.98"
+ ],
+ "worktreeCleanAfter": true,
+ "killed": 22,
+ "of": 22
+}
