@@ -1,0 +1,305 @@
+{
+ "commit": "b0136200b8585a0ce184c9859cffc739a7e13e40",
+ "dist": "present",
+ "distDirs": [
+  "apps/syzygy/dist",
+  "apps/three-surface-poc/dist",
+  "packages/cap1-core/dist",
+  "packages/cap1-daemon/dist",
+  "packages/http-host/dist",
+  "packages/polaris-dossier/dist",
+  "packages/polaris-generation-consent/dist",
+  "packages/polaris-generation-core/dist",
+  "packages/support/dist",
+  "packages/three-surface-poc-core/dist"
+ ],
+ "importedTools": {
+  "docs/evidence/syzygy-bpyt-6-14/tools/mutants.py": "133094bce703dad13917d73b4bb1dd29cc8eb43212d2ec9e307656f530f3fe4e",
+  "docs/evidence/syzygy-bpyt-46/tools/mutants.py": "b4728e27e55afbf21caeb275e0f28f0d6b77bb9d368c0d33a347cc80cad02b34"
+ },
+ "node": "v24.6.0",
+ "summary": {
+  "rows": 9,
+  "asExpected": 9,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "U0-unmutated",
+   "edits": [],
+   "expected": [],
+   "failing": [],
+   "asExpected": true,
+   "expectedPrinted": null,
+   "printed": null,
+   "messages": {},
+   "exit": 0,
+   "passed": 81,
+   "failed": 0,
+   "total": 81,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "RK3-key-fault-ranked-first",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "    rank: 2,\n",
+     "new": "    rank: -1,\n"
+    }
+   ],
+   "expected": [
+    "the workspace entry modules throws on a condition key with a /../ segment, at any depth"
+   ],
+   "failing": [
+    "the workspace entry modules throws on a condition key with a /../ segment, at any depth"
+   ],
+   "asExpected": true,
+   "expectedPrinted": null,
+   "printed": null,
+   "messages": {
+    "the workspace entry modules throws on a condition key with a /../ segment, at any depth": "AssertionError: expected [Function] to throw error including '@syzygy/lib: its import condition tar\u2026' but got '@syzygy/lib: its condition key \"a/../\u2026'"
+   },
+   "exit": 1,
+   "passed": 80,
+   "failed": 1,
+   "total": 81,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "RK3B-key-fault-ranked-first-without-the-added-expectation",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "    rank: 2,\n",
+     "new": "    rank: -1,\n"
+    },
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "    // A key fault beside a target Node refuses: the target is named, as the more severe (the PR 557 round-2 review's N2, its RK3).\n    expect(() => entryModulesIn(workspace({}, { 'a/../b': './dist/index.js', import: './dist/./index.js', default: './dist/./index.js' })))\n      .toThrow(`@syzygy/lib: its import condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n",
+     "new": ""
+    }
+   ],
+   "expected": [],
+   "failing": [],
+   "asExpected": true,
+   "expectedPrinted": null,
+   "printed": null,
+   "messages": {},
+   "exit": 0,
+   "passed": 81,
+   "failed": 0,
+   "total": 81,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "RK2-key-walk-skips-arrays",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "  if (Array.isArray(entry)) return entry.flatMap((fallback) => conditionKeysOf(fallback, conditions));\n",
+     "new": "  if (Array.isArray(entry)) return [];\n"
+    }
+   ],
+   "expected": [],
+   "failing": [],
+   "asExpected": true,
+   "expectedPrinted": null,
+   "printed": null,
+   "messages": {},
+   "exit": 0,
+   "passed": 81,
+   "failed": 0,
+   "total": 81,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "RX4-require-not-a-node-condition",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "'node', 'import', 'require',",
+     "new": "'node', 'import',"
+    }
+   ],
+   "expected": [
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first"
+   ],
+   "failing": [
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first"
+   ],
+   "asExpected": true,
+   "expectedPrinted": [
+    "Expected: \"@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)\"",
+    "Received: \"@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read\""
+   ],
+   "printed": [
+    "Expected: \"@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)\"",
+    "Received: \"@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read\""
+   ],
+   "messages": {
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first": "AssertionError: expected [Function] to throw error including '@syzygy/lib: its require condition ta\u2026' but got '@syzygy/lib: its require condition ta\u2026'"
+   },
+   "exit": 1,
+   "passed": 80,
+   "failed": 1,
+   "total": 81,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "RX4E-require-not-a-node-condition-equality-form",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "'node', 'import', 'require',",
+     "new": "'node', 'import',"
+    },
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "  it('throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first', () => {\n    expect(() => entryModulesIn(workspace({}, { types: './dist/x/../index.d.ts', import: './dist/index.js', default: './dist/index.js' })))\n      .toThrow(`@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read`);\n    expect(() => entryModulesIn(workspace({}, { source: './src/x/../index.ts', import: './dist/index.js', default: './dist/index.js' })))\n      .toThrow(`@syzygy/lib: its source condition target \"./src/x/../index.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read`);\n    expect(() => entryModulesIn(workspace({}, { node: { import: './dist/./index.js' }, default: './dist/index.js' })))\n      .toThrow(`@syzygy/lib: its node > import condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    expect(() => entryModulesIn(workspace({}, { source: './src/x/../index.ts', import: './dist//index.js', default: './dist/./index.js' })))\n      .toThrow(`@syzygy/lib: its default condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    expect(() => entryModulesIn(workspace({}, { require: './dist/./index.js', import: './dist/index.js', default: './dist/index.js' })))\n      .toThrow(`@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    const base = workspace({});\n    const app = { ...base.manifests.get('@syzygy/app')!, main: './dist/x/../main.js' };\n    expect(() => entryModulesIn({ ...base, manifests: new Map([...base.manifests, ['@syzygy/app', app]]) }))\n      .toThrow(`@syzygy/app: its main field target \"./dist/x/../main.js\" has an empty, '.', '..' or 'node_modules' segment, which Node reads without its exports rules`);\n  });\n\n",
+     "new": "  it('throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first', () => {\n    expect(thrownBy(() => entryModulesIn(workspace({}, { types: './dist/x/../index.d.ts', import: './dist/index.js', default: './dist/index.js' }))))\n      .toBe(`@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read`);\n    expect(thrownBy(() => entryModulesIn(workspace({}, { source: './src/x/../index.ts', import: './dist/index.js', default: './dist/index.js' }))))\n      .toBe(`@syzygy/lib: its source condition target \"./src/x/../index.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read`);\n    expect(thrownBy(() => entryModulesIn(workspace({}, { node: { import: './dist/./index.js' }, default: './dist/index.js' }))))\n      .toBe(`@syzygy/lib: its node > import condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    expect(thrownBy(() => entryModulesIn(workspace({}, { source: './src/x/../index.ts', import: './dist//index.js', default: './dist/./index.js' }))))\n      .toBe(`@syzygy/lib: its default condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    expect(thrownBy(() => entryModulesIn(workspace({}, { require: './dist/./index.js', import: './dist/index.js', default: './dist/index.js' }))))\n      .toBe(`@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    const base = workspace({});\n    const app = { ...base.manifests.get('@syzygy/app')!, main: './dist/x/../main.js' };\n    expect(thrownBy(() => entryModulesIn({ ...base, manifests: new Map([...base.manifests, ['@syzygy/app', app]]) })))\n      .toBe(`@syzygy/app: its main field target \"./dist/x/../main.js\" has an empty, '.', '..' or 'node_modules' segment, which Node reads without its exports rules`);\n  });\n\n"
+    },
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "// syzygy-bpyt.46: the entries the S10 bundle aliases by.\n",
+     "new": "function thrownBy(read: () => unknown): string {\n  try {\n    read();\n  } catch (error) {\n    return (error as Error).message;\n  }\n  throw new Error('expected the call to throw');\n}\n\n// syzygy-bpyt.46: the entries the S10 bundle aliases by.\n"
+    }
+   ],
+   "expected": [
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first"
+   ],
+   "failing": [
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first"
+   ],
+   "asExpected": true,
+   "expectedPrinted": [
+    "Expected: \"@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)\"",
+    "Received: \"@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read\""
+   ],
+   "printed": [
+    "Expected: \"@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)\"",
+    "Received: \"@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read\""
+   ],
+   "messages": {
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first": "AssertionError: expected '@syzygy/lib: its require condition ta\u2026' to be '@syzygy/lib: its require condition ta\u2026' // Object.is equality"
+   },
+   "exit": 1,
+   "passed": 80,
+   "failed": 1,
+   "total": 81,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "R2-unread-target-claims-node-refuses",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "[2, main ? 'which Node reads without its exports rules' : 'which Node does not read']",
+     "new": "[0, 'which Node refuses (ERR_INVALID_PACKAGE_TARGET)']"
+    }
+   ],
+   "expected": [
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first"
+   ],
+   "failing": [
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first"
+   ],
+   "asExpected": true,
+   "expectedPrinted": [
+    "Expected: \"@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read\"",
+    "Received: \"@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)\""
+   ],
+   "printed": [
+    "Expected: \"@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read\"",
+    "Received: \"@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)\""
+   ],
+   "messages": {
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first": "AssertionError: expected [Function] to throw error including '@syzygy/lib: its types condition targ\u2026' but got '@syzygy/lib: its types condition targ\u2026'"
+   },
+   "exit": 1,
+   "passed": 80,
+   "failed": 1,
+   "total": 81,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "R2E-unread-target-claims-node-refuses-equality-form",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+     "old": "[2, main ? 'which Node reads without its exports rules' : 'which Node does not read']",
+     "new": "[0, 'which Node refuses (ERR_INVALID_PACKAGE_TARGET)']"
+    },
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "  it('throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first', () => {\n    expect(() => entryModulesIn(workspace({}, { types: './dist/x/../index.d.ts', import: './dist/index.js', default: './dist/index.js' })))\n      .toThrow(`@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read`);\n    expect(() => entryModulesIn(workspace({}, { source: './src/x/../index.ts', import: './dist/index.js', default: './dist/index.js' })))\n      .toThrow(`@syzygy/lib: its source condition target \"./src/x/../index.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read`);\n    expect(() => entryModulesIn(workspace({}, { node: { import: './dist/./index.js' }, default: './dist/index.js' })))\n      .toThrow(`@syzygy/lib: its node > import condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    expect(() => entryModulesIn(workspace({}, { source: './src/x/../index.ts', import: './dist//index.js', default: './dist/./index.js' })))\n      .toThrow(`@syzygy/lib: its default condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    expect(() => entryModulesIn(workspace({}, { require: './dist/./index.js', import: './dist/index.js', default: './dist/index.js' })))\n      .toThrow(`@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    const base = workspace({});\n    const app = { ...base.manifests.get('@syzygy/app')!, main: './dist/x/../main.js' };\n    expect(() => entryModulesIn({ ...base, manifests: new Map([...base.manifests, ['@syzygy/app', app]]) }))\n      .toThrow(`@syzygy/app: its main field target \"./dist/x/../main.js\" has an empty, '.', '..' or 'node_modules' segment, which Node reads without its exports rules`);\n  });\n\n",
+     "new": "  it('throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first', () => {\n    expect(thrownBy(() => entryModulesIn(workspace({}, { types: './dist/x/../index.d.ts', import: './dist/index.js', default: './dist/index.js' }))))\n      .toBe(`@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read`);\n    expect(thrownBy(() => entryModulesIn(workspace({}, { source: './src/x/../index.ts', import: './dist/index.js', default: './dist/index.js' }))))\n      .toBe(`@syzygy/lib: its source condition target \"./src/x/../index.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read`);\n    expect(thrownBy(() => entryModulesIn(workspace({}, { node: { import: './dist/./index.js' }, default: './dist/index.js' }))))\n      .toBe(`@syzygy/lib: its node > import condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    expect(thrownBy(() => entryModulesIn(workspace({}, { source: './src/x/../index.ts', import: './dist//index.js', default: './dist/./index.js' }))))\n      .toBe(`@syzygy/lib: its default condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    expect(thrownBy(() => entryModulesIn(workspace({}, { require: './dist/./index.js', import: './dist/index.js', default: './dist/index.js' }))))\n      .toBe(`@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    const base = workspace({});\n    const app = { ...base.manifests.get('@syzygy/app')!, main: './dist/x/../main.js' };\n    expect(thrownBy(() => entryModulesIn({ ...base, manifests: new Map([...base.manifests, ['@syzygy/app', app]]) })))\n      .toBe(`@syzygy/app: its main field target \"./dist/x/../main.js\" has an empty, '.', '..' or 'node_modules' segment, which Node reads without its exports rules`);\n  });\n\n"
+    },
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "// syzygy-bpyt.46: the entries the S10 bundle aliases by.\n",
+     "new": "function thrownBy(read: () => unknown): string {\n  try {\n    read();\n  } catch (error) {\n    return (error as Error).message;\n  }\n  throw new Error('expected the call to throw');\n}\n\n// syzygy-bpyt.46: the entries the S10 bundle aliases by.\n"
+    }
+   ],
+   "expected": [
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first"
+   ],
+   "failing": [
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first"
+   ],
+   "asExpected": true,
+   "expectedPrinted": [
+    "Expected: \"@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read\"",
+    "Received: \"@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)\""
+   ],
+   "printed": [
+    "Expected: \"@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read\"",
+    "Received: \"@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)\""
+   ],
+   "messages": {
+    "the workspace entry modules throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first": "AssertionError: expected '@syzygy/lib: its types condition targ\u2026' to be '@syzygy/lib: its types condition targ\u2026' // Object.is equality"
+   },
+   "exit": 1,
+   "passed": 80,
+   "failed": 1,
+   "total": 81,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "U0E-equality-form-unmutated",
+   "edits": [
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "  it('throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first', () => {\n    expect(() => entryModulesIn(workspace({}, { types: './dist/x/../index.d.ts', import: './dist/index.js', default: './dist/index.js' })))\n      .toThrow(`@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read`);\n    expect(() => entryModulesIn(workspace({}, { source: './src/x/../index.ts', import: './dist/index.js', default: './dist/index.js' })))\n      .toThrow(`@syzygy/lib: its source condition target \"./src/x/../index.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read`);\n    expect(() => entryModulesIn(workspace({}, { node: { import: './dist/./index.js' }, default: './dist/index.js' })))\n      .toThrow(`@syzygy/lib: its node > import condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    expect(() => entryModulesIn(workspace({}, { source: './src/x/../index.ts', import: './dist//index.js', default: './dist/./index.js' })))\n      .toThrow(`@syzygy/lib: its default condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    expect(() => entryModulesIn(workspace({}, { require: './dist/./index.js', import: './dist/index.js', default: './dist/index.js' })))\n      .toThrow(`@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    const base = workspace({});\n    const app = { ...base.manifests.get('@syzygy/app')!, main: './dist/x/../main.js' };\n    expect(() => entryModulesIn({ ...base, manifests: new Map([...base.manifests, ['@syzygy/app', app]]) }))\n      .toThrow(`@syzygy/app: its main field target \"./dist/x/../main.js\" has an empty, '.', '..' or 'node_modules' segment, which Node reads without its exports rules`);\n  });\n\n",
+     "new": "  it('throws on such a target under a condition Node does not read, or in a main, and names the one Node refuses first', () => {\n    expect(thrownBy(() => entryModulesIn(workspace({}, { types: './dist/x/../index.d.ts', import: './dist/index.js', default: './dist/index.js' }))))\n      .toBe(`@syzygy/lib: its types condition target \"./dist/x/../index.d.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read`);\n    expect(thrownBy(() => entryModulesIn(workspace({}, { source: './src/x/../index.ts', import: './dist/index.js', default: './dist/index.js' }))))\n      .toBe(`@syzygy/lib: its source condition target \"./src/x/../index.ts\" has an empty, '.', '..' or 'node_modules' segment, which Node does not read`);\n    expect(thrownBy(() => entryModulesIn(workspace({}, { node: { import: './dist/./index.js' }, default: './dist/index.js' }))))\n      .toBe(`@syzygy/lib: its node > import condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    expect(thrownBy(() => entryModulesIn(workspace({}, { source: './src/x/../index.ts', import: './dist//index.js', default: './dist/./index.js' }))))\n      .toBe(`@syzygy/lib: its default condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    expect(thrownBy(() => entryModulesIn(workspace({}, { require: './dist/./index.js', import: './dist/index.js', default: './dist/index.js' }))))\n      .toBe(`@syzygy/lib: its require condition target \"./dist/./index.js\" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);\n    const base = workspace({});\n    const app = { ...base.manifests.get('@syzygy/app')!, main: './dist/x/../main.js' };\n    expect(thrownBy(() => entryModulesIn({ ...base, manifests: new Map([...base.manifests, ['@syzygy/app', app]]) })))\n      .toBe(`@syzygy/app: its main field target \"./dist/x/../main.js\" has an empty, '.', '..' or 'node_modules' segment, which Node reads without its exports rules`);\n  });\n\n"
+    },
+    {
+     "path": "packages/polaris-generation-core/src/workspace-reach.test.ts",
+     "old": "// syzygy-bpyt.46: the entries the S10 bundle aliases by.\n",
+     "new": "function thrownBy(read: () => unknown): string {\n  try {\n    read();\n  } catch (error) {\n    return (error as Error).message;\n  }\n  throw new Error('expected the call to throw');\n}\n\n// syzygy-bpyt.46: the entries the S10 bundle aliases by.\n"
+    }
+   ],
+   "expected": [],
+   "failing": [],
+   "asExpected": true,
+   "expectedPrinted": null,
+   "printed": null,
+   "messages": {},
+   "exit": 0,
+   "passed": 81,
+   "failed": 0,
+   "total": 81,
+   "fileMessages": [],
+   "error": null
+  }
+ ]
+}
