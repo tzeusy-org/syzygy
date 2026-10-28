@@ -6,8 +6,9 @@
 // outside the checkout, a tsconfig.json that is not plain JSON, one whose own compilerOptions do not set `outDir` `dist` and
 // `tsBuildInfoFile` `dist/.tsbuildinfo` or that set `declarationDir` or `outFile`, and references that form a cycle. It then reads
 // each project's options as TypeScript does, through `extends` (syzygy-bpyt.65), and refuses an `outDir`, `tsBuildInfoFile` or
-// `declarationDir` outside the project's dist, any `outFile`, and a referenced project that is not composite, which `tsc -b`
-// would refuse only after the dists were gone.
+// `declarationDir` outside the project's dist, any `outFile`, a `declarationDir` or `outFile` an extended file sets to `null`
+// (TypeScript reads that as unset, but the option is still present, syzygy-bpyt.4.42), and a referenced project that is not
+// composite, which `tsc -b` would refuse only after the dists were gone.
 //
 // Usage, from the repository root: node scripts/clean_build.mjs <project directory>...
 import { spawnSync } from 'node:child_process';

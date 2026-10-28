@@ -86,6 +86,19 @@ function keyPaths(value: unknown, at: readonly string[] = []): (readonly string[
 }
 const aliasKeys = (config: unknown): string[] => keyPaths(config).filter((path) => path.at(-1) === 'alias').map((path) => path.join('.'));
 
+/** Each `test.projects` entry of the loaded config that does not inherit the root config, which holds the source condition. Vitest
+ * 3.2 loads an entry whose `extends` is a string from that file, which the text checks never read and which may declare a plugin;
+ * a string entry, a function or a promise likewise; and an entry with any other `extends`, or none, from no config file. So an entry
+ * must be an object whose `extends` is `true` (the PR 558 round-1 review's N3, syzygy-bpyt.4.42). */
+function detachedProjects(config: unknown): string[] {
+  const projects = (config as { readonly test?: { readonly projects?: unknown } } | undefined)?.test?.projects;
+  if (!Array.isArray(projects)) return ['test.projects is not an array'];
+  return projects.flatMap((entry: unknown, index) => {
+    if (typeof entry !== 'object' || entry === null || Array.isArray(entry)) return [`test.projects.${index} is not an object`];
+    return (entry as { readonly extends?: unknown }).extends === true ? [] : [`test.projects.${index}.extends is not true`];
+  });
+}
+
 const lineOf = (source: string, index: number): number => source.slice(0, index).split('\n').length;
 const escape = (name: string): string => name.replace(/[$]/g, '\\$');
 
@@ -271,12 +284,13 @@ describe('suite child processes and the vitest worker RPC', () => {
     ]) expect(() => suiteConfig(config), config).toThrow(/a plugin may load a workspace package by other than its source condition/);
   });
 
-  it('loads the vitest config and finds no alias key at any depth', async () => {
+  it('loads the vitest config and finds no alias key at any depth and no project entry detached from the root config', async () => {
     const config: unknown = (await import(pathToFileURL(join(REPO_ROOT, VITEST_CONFIG)).href)).default;
     const paths = keyPaths(config).map((path) => path.join('.'));
     expect(paths).toEqual(expect.arrayContaining(['ssr.resolve.conditions', 'test.setupFiles']));
     expect(paths.some((path) => /^test\.projects\.\d+\.test\.globalSetup$/u.test(path))).toBe(true);
     expect(aliasKeys(config)).toEqual([]);
+    expect(detachedProjects(config)).toEqual([]);
   });
 
   it('reads an alias key wherever the config holds one, and no other key', () => {
@@ -285,6 +299,22 @@ describe('suite child processes and the vitest worker RPC', () => {
     expect(aliasKeys({ test: { projects: [{ test: {} }, { resolve: { alias: [] } }] } })).toEqual(['test.projects.1.resolve.alias']);
     expect(aliasKeys({ alias: {}, ssr: { resolve: { alias: undefined } } })).toEqual(['alias', 'ssr.resolve.alias']);
     expect(aliasKeys({ resolve: { aliases: {}, myalias: {}, conditions: ['alias'] }, alias_: 1, 'x.alias': 2 })).toEqual([]);
+  });
+
+  it('reads every project entry that does not inherit the root config through extends: true', () => {
+    const test = { name: 'p', include: ['packages/a/src/**/*.test.ts'] };
+    expect(detachedProjects({ test: { projects: [{ extends: true, test }, { extends: true, test }] } })).toEqual([]);
+    expect(detachedProjects({ test: { projects: [
+      { extends: './vitest.other.config.ts', test }, { extends: false, test }, { extends: 'true', test }, { test },
+      'packages/a/vitest.config.ts', () => ({ test }), Promise.resolve({ test }), null, [{ extends: true, test }],
+    ] } })).toEqual([
+      'test.projects.0.extends is not true', 'test.projects.1.extends is not true', 'test.projects.2.extends is not true',
+      'test.projects.3.extends is not true', 'test.projects.4 is not an object', 'test.projects.5 is not an object',
+      'test.projects.6.extends is not true', 'test.projects.7 is not an object', 'test.projects.8 is not an object',
+    ]);
+    for (const config of [{}, { test: {} }, { test: { projects: { 0: { extends: true, test } } } }, undefined]) {
+      expect(detachedProjects(config), JSON.stringify(config)).toEqual(['test.projects is not an array']);
+    }
   });
 
   it('scans a helper module a test imports, through relative and workspace imports', () => {
