@@ -1,0 +1,55 @@
+{
+ "subject": {
+  "commit": "420700d28f2dfe0bd2c10542ecdcfb4f8c0670e3",
+  "note": "the merge of main f361108c into the branch; the code is the code of 7a7cf664 and the one test repair 3747f846"
+ },
+ "fullSuite": {
+  "command": "npx vitest run --reporter=json (every dist directory removed first, 0 found after)",
+  "node": "v24.6.0",
+  "testFiles": 256,
+  "tests": 5874,
+  "passed": 5869,
+  "failed": 0,
+  "skipped": 5,
+  "success": true
+ },
+ "typecheck": {
+  "command": "npx tsc -p tsconfig.json",
+  "exit": 0,
+  "outputBytes": 0
+ },
+ "maskDifferentialOfSyzygyBpyt16": {
+  "tool": "docs/evidence/syzygy-bpyt-16/crlf-differential.mjs",
+  "tool_sha256": "b71f3db9fe80367e02dc24d5be4ee1b537cbb1373341211f147a6949f81d6ad2",
+  "output": "docs/evidence/syzygy-bpyt-55/mask-differential-bpyt16-output.json",
+  "output_sha256": "b2cd43c99dc1ab213af756c29848867caa1f24f92217035af2b043354863289e",
+  "baseDistModule": "24323f6ea54a3184769976173b84ee4a325ceed7c057dbb734548b34c4b0f142",
+  "headDistModule": "d49a23ab1817762cf75fba24ca99a018f3ae2aff8cef549104414540bb9a1473",
+  "texts": 11054,
+  "refuses": 0,
+  "accepts": 0,
+  "sameDecisionOtherFindings": 0,
+  "unchanged": 11054,
+  "checks": {
+   "C1_lfUnchanged": {
+    "texts": 1825,
+    "separatorSliceTexts": 10131,
+    "failures": 0
+   },
+   "C2_renderingEqualsLf": {
+    "texts": 11054,
+    "failures": 0
+   },
+   "C3_maskInvariants": {
+    "maskedTexts": 8345,
+    "failures": 0
+   },
+   "C4_crlfFindingsEqualLfIncludingPositions": {
+    "texts": 1822,
+    "failures": 0
+   }
+  },
+  "failureCount": 0,
+  "note": "run with BASE the dist of eb6183b5 and HEAD the dist of 7a7cf664; the fence-differential M1 check repeats the comparison, with the masked text deep-equal, over 175,710 texts of its own"
+ }
+}
