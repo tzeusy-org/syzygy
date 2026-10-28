@@ -34,6 +34,7 @@ import {
   type GitTreeEntry,
   type GitTreeIndex,
 } from './git-tree.js';
+import { isFencedAt, recognizeCodeContexts, spanRangesWithin } from './markdown-code-context.js';
 
 // Byte-equal to the adopted registry entry's `discoveryVersion` and the
 // adopted policy's `sourceAdmission.phaseA.fixedSeedPaths`;
@@ -172,22 +173,30 @@ export type DeriveManifestResult =
 // line start. Images (`![...]`) are not links. Fragments and queries are
 // dropped. Nothing else in an index names a file.
 
-function stripFences(text: string, stripInlineCode = true): readonly string[] { // not the PWB-REQ-006 profile; one of five fence rules: docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json
+// Which lines sit inside a fence, and which characters sit inside a code span, are the PWB-REQ-006 profile's rules
+// (`recognizeCodeContexts`), not rules of this module (syzygy-bpyt.55). The line model stays this module's: the text splits at LF, and a
+// line is fenced when the profile marks its first character fenced. A span is deleted, not blanked, as the reader always did: each
+// character of a profile span on the line is removed and a CR or LF inside it stays, so the line count never moves. `stripInlineCode`
+// false leaves spans alone (the root index's pillar table keeps its code-span directory cells).
+function stripFences(text: string, stripInlineCode = true): readonly string[] {
+  const recognition = recognizeCodeContexts(text);
   const kept: string[] = [];
-  let fence: string | undefined;
+  let offset = 0;
   for (const line of text.split('\n')) {
-    const opener = /^\s{0,3}(`{3,}|~{3,})/.exec(line);
-    if (fence === undefined && opener !== null) {
-      fence = opener[1] ?? '';
+    const start = offset;
+    offset += line.length + 1;
+    if (isFencedAt(recognition, start)) continue;
+    if (!stripInlineCode) {
+      kept.push(line);
       continue;
     }
-    if (fence !== undefined) {
-      if (opener !== null && (opener[1] ?? '').startsWith(fence[0] ?? '') && (opener[1] ?? '').length >= fence.length) {
-        fence = undefined;
-      }
-      continue;
+    let rendered = '';
+    let at = 0;
+    for (const [from, to] of spanRangesWithin(recognition, start, start + line.length)) {
+      rendered += line.slice(at, from - start) + line.slice(from - start, to - start).replace(/[^\r\n]/g, '');
+      at = to - start;
     }
-    kept.push(stripInlineCode ? line.replace(/`[^`]*`/g, '') : line);
+    kept.push(rendered + line.slice(at));
   }
   return kept;
 }

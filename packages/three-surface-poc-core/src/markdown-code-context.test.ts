@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { MALFORMED_CODE_CONTEXTS, maskMarkdownCodeContexts } from './markdown-code-context.js';
+import { isFencedAt, MALFORMED_CODE_CONTEXTS, maskMarkdownCodeContexts, recognizeCodeContexts, spanRangesWithin } from './markdown-code-context.js';
 
 function masked(text: string): string {
   const mask = maskMarkdownCodeContexts(text);
@@ -272,5 +272,90 @@ describe('a very long closed fence', () => {
   it.each(LONG_ENDS)('%s: the same lines left unclosed are still malformed at the opener', (_name, end) => {
     const text = `\`\`\`${end}${`x${end}`.repeat(LINES)}`;
     expect(malformed(text)).toEqual({ reason: 'unclosed-fence', line: 1 });
+  });
+});
+
+// syzygy-bpyt.55 (the owner's GP-B2 Q2 answer C): the extractor, the index-link reader and the root-index reader recognize fences by the
+// profile, and the link reader alone its spans, through the recognizer the mask is built on. Every offset below is typed by hand from the text.
+describe('recognizeCodeContexts — the ranges the mask is built from', () => {
+  const ranges = (text: string): { readonly fences: readonly (readonly [number, number])[]; readonly spans: readonly (readonly [number, number])[] } => {
+    const recognition = recognizeCodeContexts(text);
+    return { fences: recognition.fenceRanges, spans: recognition.spanRanges };
+  };
+
+  it('a closed fence is one range from its opener to the end of its closer, before the terminator', () => {
+    expect(ranges('before\n```html\n<div>\n```\nafter')).toEqual({ fences: [[7, 24]], spans: [] });
+    expect(recognizeCodeContexts('before\n```html\n<div>\n```\nafter')).toMatchObject({ fences: 1, spans: 0 });
+    expect(recognizeCodeContexts('before\n```html\n<div>\n```\nafter').malformed).toBeUndefined();
+  });
+
+  it('a CRLF or a bare CR ends a line and stays inside the range between lines', () => {
+    expect(ranges('```\r\nx\r\n```\r\nz')).toEqual({ fences: [[0, 11]], spans: [] });
+    expect(ranges('```\rx\r```\rz')).toEqual({ fences: [[0, 9]], spans: [] });
+  });
+
+  it('a span is one range from its first opening backtick to its last closing one, and may cross a line end', () => {
+    expect(ranges('a `b` c')).toEqual({ fences: [], spans: [[2, 5]] });
+    expect(ranges('x `a\nb` y')).toEqual({ fences: [], spans: [[2, 7]] });
+    expect(ranges('a ``b`c`` d')).toEqual({ fences: [], spans: [[2, 9]] });
+    expect(ranges('`a` `b`')).toEqual({ fences: [], spans: [[0, 3], [4, 7]] });
+  });
+
+  it('an unclosed fence runs to the end of the text and is reported beside its range', () => {
+    const recognition = recognizeCodeContexts('```\nx\ny');
+    expect(recognition.fenceRanges).toEqual([[0, 7]]);
+    expect(recognition.malformed).toEqual({ reason: 'unclosed-fence', line: 1 });
+    expect(recognition.fences).toBe(0);
+  });
+
+  it('a backtick opener whose info string holds a backtick still opens a fence, and is reported', () => {
+    const recognition = recognizeCodeContexts('```a`b\nx\n```');
+    expect(recognition.fenceRanges).toEqual([[0, 12]]);
+    expect(recognition.malformed).toEqual({ reason: 'backtick-fence-with-backtick-in-info-string', line: 1 });
+    expect(recognition.fences).toBe(1);
+  });
+
+  it('a span still open at a fence opener is dropped, the fence opens, and the span is reported', () => {
+    const recognition = recognizeCodeContexts('`a\n```\nx\n```');
+    expect(recognition.spanRanges).toEqual([]);
+    expect(recognition.fenceRanges).toEqual([[3, 12]]);
+    expect(recognition.malformed).toEqual({ reason: 'unclosed-inline-span', line: 1 });
+  });
+
+  it('a span still open at the end of the text is dropped and reported', () => {
+    const recognition = recognizeCodeContexts('a `b\nc');
+    expect(recognition.spanRanges).toEqual([]);
+    expect(recognition.malformed).toEqual({ reason: 'unclosed-inline-span', line: 1 });
+  });
+
+  it('the first malformation in scan order is the one reported, and the scan goes on past it', () => {
+    expect(recognizeCodeContexts('`a\n```b`\nx').malformed).toEqual({ reason: 'unclosed-inline-span', line: 1 });
+    expect(recognizeCodeContexts('`a\n```b`\nx').fenceRanges).toEqual([[3, 10]]);
+    const after = recognizeCodeContexts('```a`b\nx\n```\n`s`');
+    expect(after.malformed).toEqual({ reason: 'backtick-fence-with-backtick-in-info-string', line: 1 });
+    expect([after.fenceRanges, after.spanRanges, after.fences, after.spans]).toEqual([[[0, 12]], [[13, 16]], 1, 1]);
+  });
+
+  it('the mask reports exactly the recognizer\'s first malformation and nothing from the ranges it kept', () => {
+    for (const text of ['```\nx\ny', '```a`b\nx\n```\n`s`', '`a\n```\nx\n```', 'a `b\nc']) {
+      const recognition = recognizeCodeContexts(text);
+      expect(recognition.malformed, text).toBeDefined();
+      expect(maskMarkdownCodeContexts(text), text).toEqual({ kind: 'malformed', reason: recognition.malformed?.reason, line: recognition.malformed?.line });
+    }
+  });
+
+  it('isFencedAt is true from the opener line to the end of the closer line and false on either side', () => {
+    const recognition = recognizeCodeContexts('a\n```\nx\n```\nz');
+    // The fence is [2, 11): the opener at 2, the closer ending at 11, the terminator at 11, z at 12.
+    expect([0, 1, 2, 4, 6, 8, 10, 11, 12].map((offset) => isFencedAt(recognition, offset))).toEqual([false, false, true, true, true, true, true, false, false]);
+  });
+
+  it('spanRangesWithin clips each overlapping span to the window', () => {
+    const recognition = recognizeCodeContexts('a `b`\n`c`');
+    expect(spanRangesWithin(recognition, 0, 5)).toEqual([[2, 5]]);
+    expect(spanRangesWithin(recognition, 5, 10)).toEqual([[6, 9]]);
+    expect(spanRangesWithin(recognition, 3, 4)).toEqual([[3, 4]]);
+    expect(spanRangesWithin(recognition, 0, 2)).toEqual([]);
+    expect(spanRangesWithin(recognition, 0, 10)).toEqual([[2, 5], [6, 9]]);
   });
 });

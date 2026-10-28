@@ -678,6 +678,23 @@ describe('the seed reader widens phase A only after a validated root index (syzy
     expect(reads.map((record) => record.outcome)).toEqual(['secret-matched', 'refused']);
   });
 
+  // syzygy-bpyt.55 (D1): the recognizer recovers from a malformed context so that its ranges are total, but the profile's decision is to
+  // exclude the whole artifact, and no reader behind the gate is handed such a text. A root index with an unclosed fence, with a backtick
+  // opener whose info string holds a backtick, or with a span open at a fence opener declares nothing, whatever its recovered ranges would show.
+  it.each([
+    ['an unclosed fence', ['# Butlers', '', '[Heart and Soul](heart-and-soul/)', '', '```', '[Lore](legends-and-lore/)', '']],
+    ['a backtick opener with a backtick in its info string', ['# Butlers', '```a`b', '[Heart and Soul](heart-and-soul/)', '```', '']],
+    ['a span open at a fence opener', ['# Butlers', '`open', '```', '[Heart and Soul](heart-and-soul/)', '```', '']],
+  ] as const)('a root index with %s declares nothing: its pillar index stays refused', (_name, lines) => {
+    const bytes = encoder.encode(lines.join('\n'));
+    const objectId = sha1Blob(bytes);
+    const tree = TREE.map((entry) => entry.path === 'about/README.md' ? { ...entry, objectId, sizeBytes: bytes.byteLength } : entry);
+    const { read, reads } = reader({ tree, blobOverrides: { [objectId]: bytes } });
+    expect(read({ path: 'about/README.md', objectId })).toEqual({ kind: 'unavailable', reason: 'phase A source excluded: active-content' });
+    expect(read(seedOf('about/heart-and-soul/README.md', tree))).toEqual({ kind: 'unavailable', reason: 'phase A read refused: not-a-phase-a-seed-path' });
+    expect(reads.map((record) => record.outcome)).toEqual(['active-content', 'refused']);
+  });
+
   it('a seed with a leading byte-order mark is read without it', () => {
     // EF BB BF is the UTF-8 byte-order mark; the decoded text starts at the byte after it.
     const bytes = Uint8Array.from([0xef, 0xbb, 0xbf, 0x61, 0x0a]);
