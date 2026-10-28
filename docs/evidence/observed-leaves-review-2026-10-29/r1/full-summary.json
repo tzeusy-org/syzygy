@@ -1,0 +1,14 @@
+{
+ "commit": "6d95c6264b7de14825fd6abfb6e3fed9b8c975f1",
+ "tmpdir": "/tmp/r559-full",
+ "distDirs": 0,
+ "command": "npx vitest run --reporter=json",
+ "files": 256,
+ "total": 5816,
+ "passed": 5811,
+ "failed": 0,
+ "skipped": 5,
+ "load1Start": 34.31,
+ "load1End": 62.0,
+ "wallSeconds": 317
+}
