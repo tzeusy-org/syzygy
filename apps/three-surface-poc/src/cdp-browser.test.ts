@@ -85,8 +85,11 @@ describe('disposable browser shutdown', () => {
     };
     let scans = 0;
     const connection = { close: () => { events.push('socket-closed'); }, send: async () => ({}) };
+    // The drain clock advances 25 ms per scan, the loop's own sleep, so the 100 ms deadline is a count of scans and a loaded
+    // host cannot overrun it on the wall clock (syzygy-bpyt.4.19), as the timeout and late-empty cases below already do.
     await closeDisposableBrowser(connection, exited, '/tmp/private-browser-profile', privateGroup, {
       closeGraceMs: 5, profileDrainMs: 100,
+      now: () => scans * 25,
       groupProcesses: () => ++scans === 1 ? [123] : [],
       removeProfile: () => { events.push('profile-removed'); },
     });
