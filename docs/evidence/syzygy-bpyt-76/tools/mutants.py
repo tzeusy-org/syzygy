@@ -44,14 +44,14 @@ def edit(path, old, new):
     return {'path': path, 'old': old, 'new': new}
 
 
-def rows(clone):
+def rows(clone, node):
     kit = open(os.path.join(clone, KIT), encoding='utf-8').read().split('\n')
     inv = next(line for line in kit if line.startswith('export const INVALID_SEGMENT = ')) + '\n'
     ref = next(line for line in kit if line.startswith('export const REFUSED_SEGMENT = ')) + '\n'
     assert inv.count('(n|%6e|%4e)') == 1 and ref.endswith('/i;\n')
     # (id, the command, edits, preload, the exit status expected, a line the output must hold, or for the O rows a line it must not).
     return [
-        ('U0-unmutated', None, [], None, 0, 'mismatches 0', None),
+        ('U0-unmutated', None, [], None, 0, f'{node} regexes true true cases 15/15 mismatches 0', None),
         ('G1-invalid-segment-copy-drops-encoded-capital-n', None, [edit(KIT, inv, inv.replace('(n|%6e|%4e)', '(n|%6e)'))], None, 1,
          'mismatch: invalidSegmentRegEx is ', None),
         ('G2-refused-segment-copy-case-sensitive', None, [edit(KIT, ref, ref.replace('/i;\n', '/;\n'))], None, 1,
@@ -89,7 +89,8 @@ def main():
         preloads[name] = os.path.join(tmpdir, f'preload-{name}.mjs')
         open(preloads[name], 'w').write(body)
     out = []
-    for rid, command, edits, preload, want_exit, want_line, not_line in rows(clone):
+    node = subprocess.run(['node', '--version'], capture_output=True, text=True).stdout.strip()
+    for rid, command, edits, preload, want_exit, want_line, not_line in rows(clone, node):
         command = command or step
         env = dict(os.environ, TMPDIR=tmpdir)
         if preload is not None:
