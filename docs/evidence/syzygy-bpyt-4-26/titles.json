@@ -1,0 +1,17 @@
+{
+ "base": "eb6183b58253ef62fa364b78778efda9a77073df",
+ "head": "a64518bd1563efa194bd95ea1e455d22bd78269a",
+ "baseTitles": 5810,
+ "headTitles": 5811,
+ "delta": 1,
+ "added": [
+  {
+   "file": "packages/polaris-dossier/src/review.test.ts",
+   "name": "review-check > observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf"
+  }
+ ],
+ "removed": [],
+ "addedByFile": {
+  "packages/polaris-dossier/src/review.test.ts": 1
+ }
+}
