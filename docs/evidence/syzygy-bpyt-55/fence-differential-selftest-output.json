@@ -1,0 +1,350 @@
+{
+ "tool": "docs/evidence/syzygy-bpyt-55/fence-differential-selftest.mjs",
+ "headDistModuleShas": {
+  "markdown-code-context.js": "d49a23ab1817762cf75fba24ca99a018f3ae2aff8cef549104414540bb9a1473",
+  "project-shape-extraction.js": "0e677542bbd9fb6a12e18ca34a65f239de9aab9490d0182087e613d24a4bd5e2",
+  "project-shape-manifest.js": "b30f73f04515b725cdaf20f7e7c0b56a6beea545d4f39b77813d2947544aafb0"
+ },
+ "mutants": 18,
+ "killed": 18,
+ "controlExit": 0,
+ "rows": [
+  {
+   "id": "CONTROL",
+   "exit": 0,
+   "failingChecks": [],
+   "killed": null,
+   "ok": true
+  },
+  {
+   "id": "K1-opener-indent-4",
+   "file": "markdown-code-context.js",
+   "old": "const FENCE_OPENER = /^ {0,3}(",
+   "new": "const FENCE_OPENER = /^ {0,4}(",
+   "mutatedModuleSha256": "28b74378107a419cbb0d625428f244f4c02cadafcaae5e0d9b1d0a1402af187c",
+   "expectedFailing": [
+    "R1",
+    "M1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "D1",
+    "M1",
+    "O1",
+    "O2",
+    "O3",
+    "O4",
+    "R1"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K2-closer-length-strict",
+   "file": "markdown-code-context.js",
+   "old": "return run[0] === char && run.length >= length;",
+   "new": "return run[0] === char && run.length > length;",
+   "mutatedModuleSha256": "2a1fdc37701536887da111cd9e35b992b118ace4130a3785d88ba070740c06e7",
+   "expectedFailing": [
+    "R1",
+    "M1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "D1",
+    "M1",
+    "O1",
+    "O2",
+    "O3",
+    "O4",
+    "R1"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K3-span-closes-at-longer-run",
+   "file": "markdown-code-context.js",
+   "old": "else if (runLength === span.length) {",
+   "new": "else if (runLength >= span.length) {",
+   "mutatedModuleSha256": "f066d700da1158411e409f2fb2a43b6d53c0a80ce965e16f65f19b3ccb4b7137",
+   "expectedFailing": [
+    "R1",
+    "M1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "D1",
+    "M1",
+    "R1"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K4-fence-range-includes-terminator",
+   "file": "markdown-code-context.js",
+   "old": "fenceRanges.push([fence.start, lineStart + line.length]);",
+   "new": "fenceRanges.push([fence.start, lineStart + line.length + (terminators[index] ?? '').length]);",
+   "mutatedModuleSha256": "7ecb295b9927029720e7c49c61f8893edb36604c23afc5561f4d8aa25b53f59e",
+   "expectedFailing": [
+    "R1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "R1"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K5-backtick-info-ignored",
+   "file": "markdown-code-context.js",
+   "old": "if (run[0] === '`' && info.includes('`'))",
+   "new": "if (false)",
+   "mutatedModuleSha256": "6cd365920b1d10f558fe1eae191f9fc74b41b5ce7707866da18f08723e302bca",
+   "expectedFailing": [
+    "R1",
+    "M1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "M1",
+    "R1"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K6-closer-allows-trailing-tab",
+   "file": "markdown-code-context.js",
+   "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+   "new": "/^ {0,3}(`{3,}|~{3,})[ \\t]*$/",
+   "mutatedModuleSha256": "657c8f633288a77942d58f2885eeb73ad89cbd67a58747fd10f835154c98dadf",
+   "expectedFailing": [
+    "R1",
+    "M1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "D1",
+    "M1",
+    "O1",
+    "O2",
+    "O3",
+    "O4",
+    "R1"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K7-unclosed-fence-range-dropped",
+   "file": "markdown-code-context.js",
+   "old": "fenceRanges.push([fence.start, text.length]);",
+   "new": ";",
+   "mutatedModuleSha256": "c54cce353c8e23afa4a0e939ffec71084b2238511cd32341723bc0516b31b0f5",
+   "expectedFailing": [
+    "R1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "R1"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K8-open-span-kept-at-fence-opener",
+   "file": "markdown-code-context.js",
+   "old": "note('unclosed-inline-span', span.line);\n                span = undefined;\n            }\n            const run",
+   "new": "note('unclosed-inline-span', span.line);\n            }\n            const run",
+   "mutatedModuleSha256": "a9d298c492fd8774f1c6b9657e67c5ff68bcee8c1676126a4fb77de1d7c5bdec",
+   "expectedFailing": [
+    "R1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "R1"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K9-mask-blanks-cr",
+   "file": "markdown-code-context.js",
+   "old": ".replace(/[^\\r\\n]/g, ' ')",
+   "new": ".replace(/[^\\n]/g, ' ')",
+   "mutatedModuleSha256": "a88167736d91f838e0c09b0ba7a18c8904e8f8df76e2f3e47c532ee1c9c75632",
+   "expectedFailing": [
+    "M1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "M1"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K10-mask-ignores-spans",
+   "file": "markdown-code-context.js",
+   "old": "[...recognition.fenceRanges, ...recognition.spanRanges]",
+   "new": "[...recognition.fenceRanges]",
+   "mutatedModuleSha256": "8d431b71ba3a54bdd9ef0e29d4bf616bae3496d8f6746b0c6f3d7917834ba922",
+   "expectedFailing": [
+    "M1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "M1"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K11-is-fenced-excludes-opener-offset",
+   "file": "markdown-code-context.js",
+   "old": "range[0] <= offset;",
+   "new": "range[0] < offset;",
+   "mutatedModuleSha256": "b44cd48fe6682c0ca86f3dc7cb324ddc739ea7d861c04c731cd885f805e511a5",
+   "expectedFailing": [
+    "O1",
+    "O4",
+    "D1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "D1",
+    "O1",
+    "O2",
+    "O4"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K12-extractor-ignores-recognizer",
+   "file": "project-shape-extraction.js",
+   "old": "const inside = isFencedAt(recognition, offset);",
+   "new": "const inside = false;",
+   "mutatedModuleSha256": "515535af55bacc4d85a772e112c5af67e7ee8806c4e147bd265fc89ec3076e16",
+   "expectedFailing": [
+    "O3",
+    "O4"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "O3",
+    "O4"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K13-extractor-offset-drift",
+   "file": "project-shape-extraction.js",
+   "old": "offset += raw.length + 1;",
+   "new": "offset += raw.length;",
+   "mutatedModuleSha256": "0e833bc818ac798ef51ea060f52ec00474650d2ed5e5c9503efde7cb98c6e5a4",
+   "expectedFailing": [
+    "O3",
+    "O4"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "O3",
+    "O4"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K14-links-ignore-fences",
+   "file": "project-shape-manifest.js",
+   "old": "if (isFencedAt(recognition, start))\n            continue;",
+   "new": "if (false)\n            continue;",
+   "mutatedModuleSha256": "84a6baf4ac827280c4ff3e94a51b0c73cf5919ba592527861b37f3a3a10dee64",
+   "expectedFailing": [
+    "O1",
+    "D1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "D1",
+    "O1",
+    "O2"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K15-links-keep-spans",
+   "file": "project-shape-manifest.js",
+   "old": "if (!stripInlineCode) {",
+   "new": "if (true) {",
+   "mutatedModuleSha256": "a99936608b956382b011e185f0acabf7c4af8305f3d4050028473b71a6bc0ae6",
+   "expectedFailing": [
+    "O1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "D1",
+    "O1"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K16-links-blank-spans",
+   "file": "project-shape-manifest.js",
+   "old": ".replace(/[^\\r\\n]/g, '')",
+   "new": ".replace(/[^\\r\\n]/g, ' ')",
+   "mutatedModuleSha256": "f0d10da05800fbff1b89958c1fdaab3a11ce3a84361750db728b0db9fa987268",
+   "expectedFailing": [
+    "O1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "O1"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K17-roots-strip-spans",
+   "file": "project-shape-manifest.js",
+   "old": "const lines = stripFences(text, false);",
+   "new": "const lines = stripFences(text, true);",
+   "mutatedModuleSha256": "42679a41e7379fad11b86c12693ecacfa06fc480ac33513036d8f806fd7996a2",
+   "expectedFailing": [
+    "O2"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "O2"
+   ],
+   "killed": true,
+   "ok": true
+  },
+  {
+   "id": "K18-links-offset-drift",
+   "file": "project-shape-manifest.js",
+   "old": "offset += line.length + 1;",
+   "new": "offset += line.length;",
+   "mutatedModuleSha256": "a145eb4c8c1d8661fbe1bcd1356355218ac03022d3c9a94fb638ab0aeae32b47",
+   "expectedFailing": [
+    "O1",
+    "D1"
+   ],
+   "exit": 1,
+   "failingChecks": [
+    "D1",
+    "O1",
+    "O2"
+   ],
+   "killed": true,
+   "ok": true
+  }
+ ]
+}

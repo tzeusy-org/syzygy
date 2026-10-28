@@ -210,17 +210,27 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   refuse what another spells (an `undefined` member, a BigInt) or reorders
   array-index keys, so it changes an output or a refusal and goes to the
   owner (GP-Q0). `canonical-json-divergence.test.ts` pins the first two.
-- Markdown fences are read by five separate rules, kept apart on purpose:
-  `markdown-code-context.ts` (the PWB-REQ-006 profile, the only one a clause
-  states), the manifest's `stripFences`, the extractor's `parseDoc`, the
-  consent `outsideFences` and the Polaris renderer. `docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json`
-  says which clause governs each and where they differ; `fence-rules.test.ts`
-  pins four of them (the consent reader through the probe and its own tests).
-  Do not merge or "fix" one without the owner, since that changes what a gate
-  accepts. The profile's mask ends a line at CRLF, CR and LF and keeps every
+- Markdown fences are read by three rules, kept apart on purpose: the
+  PWB-REQ-006 profile's recognizer (`recognizeCodeContexts` in
+  `markdown-code-context.ts`, the only one a clause states), which the mask,
+  the extractor's `parseDoc`, the manifest's `stripFences` (the link reader
+  alone also reads its code spans) and the root-index pillar reader all use
+  since `syzygy-bpyt.55`; the consent `outsideFences`; and the Polaris
+  renderer. Read fences by the recognizer, never by the mask.
+  `docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json` says which
+  clause governed each of the five before that change, and
+  `docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-addendum-2026-10-29.json`
+  what moved; `fence-rules.test.ts` pins four of them (the consent reader
+  through the probe and its own tests). Do not merge or "fix" the consent
+  reader or the renderer without the owner, since that changes what a gate
+  accepts. The profile ends a line at CRLF, CR and LF and keeps every
   terminator (`syzygy-bpyt.16`; the differential is in
-  `docs/evidence/syzygy-bpyt-16/crlf-mask-2026-10-27.json`); the extractor and
-  the link reader split at LF only. G2 and G3 were ruled by the owner on 2026-10-28 (GP-B2 Q2, answer C; `syzygy-bpyt.55` implements it).
+  `docs/evidence/syzygy-bpyt-16/crlf-mask-2026-10-27.json`); the extractor
+  and the link reader keep their LF-only line model and ask the recognizer
+  whether a line's first offset is fenced, so a text with bare CRs stays a
+  residual. Two stray single backticks around a list of links make those
+  links a span, and they drop with no signal: the owner chose that
+  (GP-B2 Q2, answer C, 2026-10-28), and `fence-rules.test.ts` pins it.
 - Three-Surface POC: `packages/three-surface-poc-core/` (one shared
   `PocModel`) and `apps/three-surface-poc/` read the same instance — never
   split surface truth stores. Ignored build outputs are executable inputs, so

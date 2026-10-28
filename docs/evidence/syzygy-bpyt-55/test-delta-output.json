@@ -1,0 +1,358 @@
+{
+ "baseTests": 370,
+ "headTests": 409,
+ "added": [
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer indented one space: the profile closes the fence and so does the extractor, and the denominator is 3 of 3",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer indented three spaces: the profile closes the fence and so does the extractor, and the denominator is 3 of 3",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer-shaped line ending in a tab: the profile keeps the fence open to the plain closer, and so does the extractor",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a fence opener indented four spaces is not a fence for the profile or the extractor",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a plain closer: the control, three principles declared and three extracted",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a closer-shaped line ending in a tab, on a text the profile reads as well formed, hides the link inside the fence and shows the one after it",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a closer-shaped line with an info string does not close the fence, and the real closer shows every later link",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a link on a line inside a span that runs across lines is hidden, as the profile hides it: 'double-backtick-span-over-three-lines'",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a link on a line inside a span that runs across lines is hidden, as the profile hides it: 'single-backtick-span-over-three-lines'",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a link on a line inside a span that runs across lines is hidden, as the profile hides it: 'span-opened-mid-line'",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a single-line span is stripped: the control for the rows above",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the extractor",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the link reader",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the renderer reads a bare CR as the LF text is read",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence RESIDUAL: two stray single backticks around a list of links the links between them drop, and nothing says so",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence the link reader holds the profile's vector on every well-formed case, for LF and CRLF",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a malformed code context is excluded whole, and the recognizer's recovery is never acted on backtick-fence-with-backtick-in-info-string: the reader refuses the blob and hands on no text",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a malformed code context is excluded whole, and the recognizer's recovery is never acted on backtick-fence-with-backtick-in-info-string: the scan reports the one finding and nothing from the recovered ranges",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a malformed code context is excluded whole, and the recognizer's recovery is never acted on unclosed-fence: the reader refuses the blob and hands on no text",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a malformed code context is excluded whole, and the recognizer's recovery is never acted on unclosed-fence: the scan reports the one finding and nothing from the recovered ranges",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a malformed code context is excluded whole, and the recognizer's recovery is never acted on unclosed-inline-span: the reader refuses the blob and hands on no text",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+   "a malformed code context is excluded whole, and the recognizer's recovery is never acted on unclosed-inline-span: the scan reports the one finding and nothing from the recovered ranges",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "recognizeCodeContexts \u2014 the ranges the mask is built from a CRLF or a bare CR ends a line and stays inside the range between lines",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "recognizeCodeContexts \u2014 the ranges the mask is built from a backtick opener whose info string holds a backtick still opens a fence, and is reported",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "recognizeCodeContexts \u2014 the ranges the mask is built from a closed fence is one range from its opener to the end of its closer, before the terminator",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "recognizeCodeContexts \u2014 the ranges the mask is built from a span is one range from its first opening backtick to its last closing one, and may cross a line end",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "recognizeCodeContexts \u2014 the ranges the mask is built from a span still open at a fence opener is dropped, the fence opens, and the span is reported",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "recognizeCodeContexts \u2014 the ranges the mask is built from a span still open at the end of the text is dropped and reported",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "recognizeCodeContexts \u2014 the ranges the mask is built from an unclosed fence runs to the end of the text and is reported beside its range",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "recognizeCodeContexts \u2014 the ranges the mask is built from isFencedAt is true from the opener line to the end of the closer line and false on either side",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "recognizeCodeContexts \u2014 the ranges the mask is built from spanRangesWithin clips each overlapping span to the window",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "recognizeCodeContexts \u2014 the ranges the mask is built from the first malformation in scan order is the one reported, and the scan goes on past it",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/markdown-code-context.test.ts",
+   "recognizeCodeContexts \u2014 the ranges the mask is built from the mask reports exactly the recognizer's first malformation and nothing from the ranges it kept",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+   "the extractor reads the profile's fences CRLF: a closer-shaped line with an info string or a trailing tab does not close the fence",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+   "the extractor reads the profile's fences CRLF: a fence closes at a closer indented one to three spaces",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+   "the extractor reads the profile's fences CRLF: an opener indented one to three spaces is a fence, and one indented four spaces is not",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+   "the extractor reads the profile's fences LF: a closer-shaped line with an info string or a trailing tab does not close the fence",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+   "the extractor reads the profile's fences LF: a fence closes at a closer indented one to three spaces",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+   "the extractor reads the profile's fences LF: an opener indented one to three spaces is a fence, and one indented four spaces is not",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-extraction.test.ts",
+   "the extractor reads the profile's fences a fence that never closes runs to the end of the text (recovery; the reader excludes such a source before it gets here)",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+   "index link grammar \u2014 the profile's fences and spans RESIDUAL: two stray single backticks around a list of links drop the links, and the text is well formed",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+   "index link grammar \u2014 the profile's fences and spans a closer-shaped line with an info string or a trailing tab does not close a fence; the real closer does",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+   "index link grammar \u2014 the profile's fences and spans a line inside a fence is dropped whole, in CRLF text too",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+   "index link grammar \u2014 the profile's fences and spans a span closes only at a run of the same length, so a double-backtick span may hold a single backtick and its link",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+   "index link grammar \u2014 the profile's fences and spans a span is deleted and not blanked: the characters around it join",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+   "index link grammar \u2014 the profile's fences and spans a span that opens and closes on other lines hides the links between them",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+   "index link grammar \u2014 the profile's fences and spans an opener indented four spaces is not a fence; its backticks are a span",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+   "index link grammar \u2014 the profile's fences and spans phase A: a pillar link hidden by a code span names no pillar, and the pillar index is never read",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+   "index link grammar \u2014 the profile's fences and spans the root-index pillar table is read outside fences only, with its code-span directory cells intact",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+   "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) a root index with a backtick opener with a backtick in its info string declares nothing: its pillar index stays refused",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+   "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) a root index with a span open at a fence opener declares nothing: its pillar index stays refused",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
+   "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) a root index with an unclosed fence declares nothing: its pillar index stays refused",
+   0
+  ]
+ ],
+ "removed": [
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G2/G3: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the extractor",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G2/G3: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the link reader",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G2/G3: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the renderer reads a bare CR as the LF text is read",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer indented one space: the profile closes the fence, the extractor never does, and the denominator is 1 of 3",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer indented three spaces: the profile closes the fence, the extractor never does, and the denominator is 1 of 3",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a closer-shaped line ending in a tab: the profile keeps the fence open to the plain closer, the extractor closes early and the plain closer then hides the rest",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G2: the extractor keeps its own fence closer a plain closer: the control, three principles declared and three extracted",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a closer-shaped line ending in a tab, on a text the profile reads as well formed, mints the link inside the fence and hides the one after it",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a closer-shaped line with an info string closes the fence early, and the real closer hides every later link",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a link on a line inside a span that runs across lines is indexed, though the profile hides it: 'double-backtick-span-over-three-lines'",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a link on a line inside a span that runs across lines is indexed, though the profile hides it: 'single-backtick-span-over-three-lines'",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a link on a line inside a span that runs across lines is indexed, though the profile hides it: 'span-opened-mid-line'",
+   0
+  ],
+  [
+   "apps/three-surface-poc/src/fence-rules.test.ts",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP G3: the link reader keeps its own fence and span rules a single-line span is stripped: the control for the rows above",
+   0
+  ]
+ ],
+ "changedCalls": [
+  {
+   "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+   "call": "Markdown fence recognizers: what each reader treats as inside a fence > $id",
+   "kind": "each"
+  },
+  {
+   "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+   "call": "Markdown fence recognizers: what each reader treats as inside a fence > the extractor and the profile hold one line model for LF and CRLF: where they agree on LF they agree on CRLF",
+   "kind": "it"
+  },
+  {
+   "file": "apps/three-surface-poc/src/fence-rules.test.ts",
+   "call": "Markdown fence recognizers: what each reader treats as inside a fence > inline span: $id",
+   "kind": "each"
+  }
+ ],
+ "changedGeneratedTests": {
+  "Markdown fence recognizers: what each reader treats as inside a fence > $id": 33,
+  "Markdown fence recognizers: what each reader treats as inside a fence > the extractor and the profile hold one line model for LF and CRLF: where they agree on LF they agree on CRLF": 1,
+  "Markdown fence recognizers: what each reader treats as inside a fence > inline span: $id": 8
+ },
+ "line": "Tests: +52 ~42 -13",
+ "allBasePassed": true,
+ "allHeadPassed": true
+}

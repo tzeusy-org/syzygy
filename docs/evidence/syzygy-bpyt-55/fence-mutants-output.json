@@ -1,0 +1,1622 @@
+{
+ "summary": {
+  "codeCommit": "3747f846d127301372861577683595fd59de1fe5",
+  "baseCommit": "eb6183b5",
+  "controlFailing": 0,
+  "mutants": 23,
+  "killed": 23,
+  "survived": [],
+  "baseFailingTests": 44
+ },
+ "rows": [
+  {
+   "id": "CONTROL-code-commit",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 0
+    }
+   },
+   "failingTests": []
+  },
+  {
+   "id": "R1-opener-indent-4",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "const FENCE_OPENER = /^ {0,3}(",
+     "new": "const FENCE_OPENER = /^ {0,4}("
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "4c27f4ffc6150e76b633e52e208f4661c3a71c51c05b2c390b2988a5472e1768"
+   },
+   "note": "a four-space-indented line opens a fence",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 1
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 2
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 1
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 13
+    }
+   },
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks an opener may be indented zero to three spaces; at four the backticks are inline runs, not a fence",
+    "the extractor reads the profile's fences LF: an opener indented one to three spaces is a fence, and one indented four spaces is not",
+    "the extractor reads the profile's fences CRLF: an opener indented one to three spaces is a fence, and one indented four spaces is not",
+    "index link grammar \u2014 the profile's fences and spans an opener indented four spaces is not a fence; its backticks are a span",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent4'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent4'",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+    "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the extractor and the profile hold one line model for LF and CRLF: where they agree on LF they agree on CRLF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the link reader holds the profile's vector on every well-formed case, for LF and CRLF",
+    "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the link reader",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a fence opener indented four spaces is not a fence for the profile or the extractor"
+   ]
+  },
+  {
+   "id": "R2-closer-length-strict",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "return run[0] === char && run.length >= length;",
+     "new": "return run[0] === char && run.length > length;"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "1b76af889982ba5c1022dd85fbd5f37f8cabb107910951b7cbd7d93e4063391c"
+   },
+   "note": "a closer must be longer than the opener",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 29
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 10
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 5
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 15
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 41
+    }
+   },
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a closed backtick fence is blanked, delimiters included, keeping every newline and length",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks an opener may be indented zero to three spaces; at four the backticks are inline runs, not a fence",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks tildes fence too, and a tilde opener info string may contain a backtick",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks the first qualifying closer ends the fence; text after it is scanned again",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a fence opener line inside a fence is content, never a nested opener",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joined to LF or dropped)",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a fence closed on the last line, with no final line end, is closed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a fence closed on the last line, with no final line end, is closed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a fence closed on the last line, with no final line end, is closed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+    "a very long closed fence LF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence LF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "a very long closed fence CRLF: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "a very long closed fence CR: a script element inside the fence is blanked, and the line after the fence keeps its own",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from a closed fence is one range from its opener to the end of its closer, before the terminator",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from a CRLF or a bare CR ends a line and stays inside the range between lines",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from a backtick opener whose info string holds a backtick still opens a fence, and is reported",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from a span still open at a fence opener is dropped, the fence opens, and the span is reported",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from the first malformation in scan order is the one reported, and the scan goes on past it",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from isFencedAt is true from the opener line to the end of the closer line and false on either side",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/vision.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the vision fixture",
+    "PWB-REQ-002 \u2014 any grammar failure makes the whole source Unknown vision with the purpose heading twice \u2192 duplicate-key",
+    "PWB-REQ-002 \u2014 the grammar is literal keys are NFC-normalized and nothing else",
+    "the extractor reads the profile's fences LF: a fence closes at a closer indented one to three spaces",
+    "the extractor reads the profile's fences CRLF: a fence closes at a closer indented one to three spaces",
+    "the extractor reads the profile's fences LF: an opener indented one to three spaces is a fence, and one indented four spaces is not",
+    "the extractor reads the profile's fences CRLF: an opener indented one to three spaces is a fence, and one indented four spaces is not",
+    "the extractor reads the profile's fences LF: a closer-shaped line with an info string or a trailing tab does not close the fence",
+    "the extractor reads the profile's fences CRLF: a closer-shaped line with an info string or a trailing tab does not close the fence",
+    "deriveProjectShapeManifest \u2014 the population never shrinks on failure two different roots named for one pillar key is Unknown (ambiguous), not a pick",
+    "index link grammar extracts inline links and reference definitions; skips images, fenced blocks and code spans",
+    "index link grammar \u2014 the profile's fences and spans a closer-shaped line with an info string or a trailing tab does not close a fence; the real closer does",
+    "index link grammar \u2014 the profile's fences and spans a line inside a fence is dropped whole, in CRLF text too",
+    "index link grammar \u2014 the profile's fences and spans the root-index pillar table is read outside fences only, with its code-span directory cells intact",
+    "active content is rejected and never reaches a sink markup examples wholly inside closed code contexts read as text (PWB-REQ-006 amended)",
+    "active content is rejected and never reaches a sink every sentinel inside a closed code fence or inline span is inert",
+    "active content is rejected and never reaches a sink the same sentinel outside the context still excludes, at its raw position",
+    "a CRLF or CR blob gets the outcome its LF form gets LF: a script element inside a closed tilde fence reads as text, byte for byte",
+    "a CRLF or CR blob gets the outcome its LF form gets CRLF: a script element inside a closed tilde fence reads as text, byte for byte",
+    "a CRLF or CR blob gets the outcome its LF form gets CR: a script element inside a closed tilde fence reads as text, byte for byte",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a 200,000-line closed fence holding a script element reads as text, under the read limit",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) LF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CRLF: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) CR: scanActiveContent over a 200,000-line closed fence finds nothing inside it",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-col0'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'opener-four-closer-three'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent4'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-space'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-other-char'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-fence-backtick-line'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-opener-four-closer-three'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'info-string'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'info-string-space'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-info-with-backtick'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-info-with-backtick'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'empty-fence'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'two-fences'",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+    "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the extractor and the profile hold one line model for LF and CRLF: where they agree on LF they agree on CRLF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the link reader holds the profile's vector on every well-formed case, for LF and CRLF",
+    "Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: a script element inside a closed tilde fence is admitted whatever ends the lines",
+    "Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: the fail-open class is closed for a well-formed LF source too",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a plain closer: the control, three principles declared and three extracted",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer indented one space: the profile closes the fence and so does the extractor, and the denominator is 3 of 3",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer indented three spaces: the profile closes the fence and so does the extractor, and the denominator is 3 of 3",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer-shaped line ending in a tab: the profile keeps the fence open to the plain closer, and so does the extractor",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a closer-shaped line with an info string does not close the fence, and the real closer shows every later link",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a closer-shaped line ending in a tab, on a text the profile reads as well formed, hides the link inside the fence and shows the one after it"
+   ]
+  },
+  {
+   "id": "R3-closer-allows-trailing-tab",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
+     "new": "/^ {0,3}(`{3,}|~{3,})[ \\t]*$/"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "b798f529afa072582f6c4ad1ca01213b9726e977ff00a22e554e7c15aef0248f"
+   },
+   "note": "a closer-shaped line ending in a tab closes",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 3
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 2
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 1
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 13
+    }
+   },
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a closer followed by text does not close, so the fence is unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a closer followed by text does not close, so the fence is unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a closer followed by text does not close, so the fence is unclosed",
+    "the extractor reads the profile's fences LF: a closer-shaped line with an info string or a trailing tab does not close the fence",
+    "the extractor reads the profile's fences CRLF: a closer-shaped line with an info string or a trailing tab does not close the fence",
+    "index link grammar \u2014 the profile's fences and spans a closer-shaped line with an info string or a trailing tab does not close a fence; the real closer does",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+    "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the extractor and the profile hold one line model for LF and CRLF: where they agree on LF they agree on CRLF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the link reader holds the profile's vector on every well-formed case, for LF and CRLF",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer-shaped line ending in a tab: the profile keeps the fence open to the plain closer, and so does the extractor",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a closer-shaped line ending in a tab, on a text the profile reads as well formed, hides the link inside the fence and shows the one after it"
+   ]
+  },
+  {
+   "id": "R4-span-closes-at-longer-run",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "} else if (runLength === span.length) {",
+     "new": "} else if (runLength >= span.length) {"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "8e0f3b7134971550030b189de18b1fdcca20d23bdc7b8aacbb46f27f6fadfc27"
+   },
+   "note": "a longer backtick run closes a span",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 1
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 0
+    }
+   },
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 inline code spans the closer is exactly the opener length; other runs are content"
+   ]
+  },
+  {
+   "id": "R5-backtick-info-ignored",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "if (run[0] === '`' && info.includes('`')) note('backtick-fence-with-backtick-in-info-string', lineNumber);",
+     "new": ""
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "6c00d94b068ff9d37599782a023afdf682a46c52374d67588027c1d1606aa642"
+   },
+   "note": "a backtick fence with a backtick in its info string is not malformed",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 10
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 1
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 6
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 8
+    }
+   },
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a backtick opener info string with a backtick is malformed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a backtick opener whose info string holds a backtick is malformed at its own line",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a backtick opener whose info string holds a backtick is malformed at its own line",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a backtick opener whose info string holds a backtick is malformed at its own line",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: the reported line counts each line end once",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: the reported line counts each line end once",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: the reported line counts each line end once",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from a backtick opener whose info string holds a backtick still opens a fence, and is reported",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from the first malformation in scan order is the one reported, and the scan goes on past it",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from the mask reports exactly the recognizer's first malformation and nothing from the ranges it kept",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) a root index with a backtick opener with a backtick in its info string declares nothing: its pillar index stays refused",
+    "active content is rejected and never reaches a sink a malformed code context is itself a finding that excludes the source",
+    "a CRLF or CR blob gets the outcome its LF form gets LF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "a CRLF or CR blob gets the outcome its LF form gets CRLF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "a CRLF or CR blob gets the outcome its LF form gets CR: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "a malformed code context is excluded whole, and the recognizer's recovery is never acted on backtick-fence-with-backtick-in-info-string: the scan reports the one finding and nothing from the recovered ranges",
+    "a malformed code context is excluded whole, and the recognizer's recovery is never acted on backtick-fence-with-backtick-in-info-string: the reader refuses the blob and hands on no text",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-info-with-backtick'",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+    "Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: a CRLF or CR source is excluded as a malformed code context, as the same LF source is"
+   ]
+  },
+  {
+   "id": "R6-fence-range-includes-terminator",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "fenceRanges.push([fence.start, lineStart + line.length]);",
+     "new": "fenceRanges.push([fence.start, lineStart + line.length + (terminators[index] ?? '').length]);"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "b6bb300f0f8b069291797b6b3a31049a980f9ee31138ce3a0f7fa356478a9e6d"
+   },
+   "note": "a fence range runs through its closer line terminator",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 5
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 0
+    }
+   },
+   "failingTests": [
+    "recognizeCodeContexts \u2014 the ranges the mask is built from a closed fence is one range from its opener to the end of its closer, before the terminator",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from a CRLF or a bare CR ends a line and stays inside the range between lines",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from a span still open at a fence opener is dropped, the fence opens, and the span is reported",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from the first malformation in scan order is the one reported, and the scan goes on past it",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from isFencedAt is true from the opener line to the end of the closer line and false on either side"
+   ]
+  },
+  {
+   "id": "R7-unclosed-fence-range-dropped",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "fenceRanges.push([fence.start, text.length]);",
+     "new": ""
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "3a8a49fad459b8eabfb119c50e94220cc7573ef882a8e6b8b5811f605d678b57"
+   },
+   "note": "an unclosed fence has no range (D1 recovery)",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 2
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 1
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 1
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 5
+    }
+   },
+   "failingTests": [
+    "recognizeCodeContexts \u2014 the ranges the mask is built from an unclosed fence runs to the end of the text and is reported beside its range",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from the first malformation in scan order is the one reported, and the scan goes on past it",
+    "the extractor reads the profile's fences a fence that never closes runs to the end of the text (recovery; the reader excludes such a source before it gets here)",
+    "a malformed code context is excluded whole, and the recognizer's recovery is never acted on unclosed-fence: the scan reports the one finding and nothing from the recovered ranges",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'unclosed'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'list-item'",
+    "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF",
+    "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the link reader"
+   ]
+  },
+  {
+   "id": "R8-open-span-kept-at-fence-opener",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "        note('unclosed-inline-span', span.line);\n        span = undefined;\n      }\n      const run",
+     "new": "        note('unclosed-inline-span', span.line);\n      }\n      const run"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "3dd6d8169cf5fa5aa09f095f825587954c188feb1c23253af2ae8140be46f6be"
+   },
+   "note": "a span still open at a fence opener stays open (D1 recovery)",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 1
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 0
+    }
+   },
+   "failingTests": [
+    "recognizeCodeContexts \u2014 the ranges the mask is built from a span still open at a fence opener is dropped, the fence opens, and the span is reported"
+   ]
+  },
+  {
+   "id": "R9-first-malformation-overwritten",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "malformed ??= { reason, line };",
+     "new": "malformed = { reason, line };"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "55b4cfaa84c052fcbdb1eefc4c2f451d17983dba900372792b9cb3fab877d058"
+   },
+   "note": "the last malformation is reported, not the first",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 8
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 7
+    }
+   },
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: the reported line counts each line end once",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: the reported line counts each line end once",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: the reported line counts each line end once",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a backtick run after a list marker opens an inline span that a later fence-shaped line leaves unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a backtick run after a list marker opens an inline span that a later fence-shaped line leaves unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a backtick run after a list marker opens an inline span that a later fence-shaped line leaves unclosed",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from a span still open at a fence opener is dropped, the fence opens, and the span is reported",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from the first malformation in scan order is the one reported, and the scan goes on past it",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'list-item'",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle"
+   ]
+  },
+  {
+   "id": "R10-fences-count-counts-unclosed",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "const fences = fenceRanges.length;",
+     "new": "const fences = fenceRanges.length + (fence !== undefined ? 1 : 0);"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "3158169232e9c518a101800e8d3b797b9d91baf55aef6a850bcf1a86c02ee379"
+   },
+   "note": "an unclosed fence is counted as closed",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 1
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 0
+    }
+   },
+   "failingTests": [
+    "recognizeCodeContexts \u2014 the ranges the mask is built from an unclosed fence runs to the end of the text and is reported beside its range"
+   ]
+  },
+  {
+   "id": "R11-is-fenced-excludes-opener-offset",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "range[0] <= offset;",
+     "new": "range[0] < offset;"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "bd422016e3debce2d24ec69219c10b91c35ee532fef059d2e1f3900171bd3235"
+   },
+   "note": "the first offset of a fence is not fenced",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 1
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 1
+    }
+   },
+   "failingTests": [
+    "recognizeCodeContexts \u2014 the ranges the mask is built from isFencedAt is true from the opener line to the end of the closer line and false on either side",
+    "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the link reader"
+   ]
+  },
+  {
+   "id": "R12-is-fenced-includes-range-end",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "if ((ranges[mid] as CodeContextRange)[1] > offset) high = mid;",
+     "new": "if ((ranges[mid] as CodeContextRange)[1] >= offset) high = mid;"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "65bf325c5ee56e42b0e8f0d34ee6164122a485da88078a7893f2b32aeb6a1eac"
+   },
+   "note": "the offset at a range end is fenced",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 2
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 0
+    }
+   },
+   "failingTests": [
+    "recognizeCodeContexts \u2014 the ranges the mask is built from isFencedAt is true from the opener line to the end of the closer line and false on either side",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from spanRangesWithin clips each overlapping span to the window"
+   ]
+  },
+  {
+   "id": "R13-span-range-not-clipped-at-start",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "out.push([Math.max(range[0], start), Math.min(range[1], end)]);",
+     "new": "out.push([range[0], Math.min(range[1], end)]);"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "7e7e201c5c4e1e1adc44af9805b3f0bedaaed0636a4efc793566611af7f66cbb"
+   },
+   "note": "a span range that opens on an earlier line is not clipped to the line",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 1
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 0
+    }
+   },
+   "failingTests": [
+    "recognizeCodeContexts \u2014 the ranges the mask is built from spanRangesWithin clips each overlapping span to the window"
+   ]
+  },
+  {
+   "id": "K1-mask-ignores-spans",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "[...recognition.fenceRanges, ...recognition.spanRanges]",
+     "new": "[...recognition.fenceRanges]"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "a44dbaaf1687f214a3cd4cd08a22935a732b75d511db9212984e8b18b466522e"
+   },
+   "note": "the mask does not blank spans",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 11
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 3
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 17
+    }
+   },
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks an opener may be indented zero to three spaces; at four the backticks are inline runs, not a fence",
+    "closed-pwb-code-context-v1 \u2014 inline code spans a closed span is blanked, delimiters included, in place",
+    "closed-pwb-code-context-v1 \u2014 inline code spans the closer is exactly the opener length; other runs are content",
+    "closed-pwb-code-context-v1 \u2014 inline code spans a backslash does not escape a delimiter",
+    "closed-pwb-code-context-v1 \u2014 inline code spans a span may continue across a line break, keeping the newline",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joined to LF or dropped)",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 are line content, not line ends",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line no code unit but CR and LF ends a line",
+    "active content is rejected and never reaches a sink markup examples wholly inside closed code contexts read as text (PWB-REQ-006 amended)",
+    "active content is rejected and never reaches a sink every sentinel inside a closed code fence or inline span is inert",
+    "active content is rejected and never reaches a sink the same sentinel outside the context still excludes, at its raw position",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent4'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-tab'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'two-backticks'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'blockquote'",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+    "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'inside-span'",
+    "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'inside-double-span'",
+    "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'double-span-with-inner-backtick-aroun\u2026'",
+    "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'backslash-before-delimiters'",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a link on a line inside a span that runs across lines is hidden, as the profile hides it: 'double-backtick-span-over-three-lines'",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a link on a line inside a span that runs across lines is hidden, as the profile hides it: 'single-backtick-span-over-three-lines'",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a link on a line inside a span that runs across lines is hidden, as the profile hides it: 'span-opened-mid-line'"
+   ]
+  },
+  {
+   "id": "K2-mask-blanks-cr",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": ".replace(/[^\\r\\n]/g, ' ')",
+     "new": ".replace(/[^\\n]/g, ' ')"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "b1421f8b0ee8864a953930609788701f5e7f9fa58ddcb8aff0c7c5db96fa5f5b"
+   },
+   "note": "the mask blanks a CR",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 11
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 6
+    }
+   },
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line the mask keeps the length and every CR and LF at its offset (a CR is never blanked, joined to LF or dropped)",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a fence closed on the last line, with no final line end, is closed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a fence closed on the last line, with no final line end, is closed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a tilde fence, a closer with trailing spaces and a span across lines",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a script element between two tilde fences that each show a backtick-fence line is outside every context",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line a CRLF or CR text gets the structure its LF form gets, for every case here",
+    "a very long closed fence CRLF: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "a very long closed fence CR: 200,000 lines are blanked, every line end and the text after the fence kept",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+    "Markdown fence recognizers: what each reader treats as inside a fence the extractor and the profile hold one line model for LF and CRLF: where they agree on LF they agree on CRLF"
+   ]
+  },
+  {
+   "id": "K3-mask-ignores-malformed",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+     "old": "  if (recognition.malformed !== undefined) return { kind: 'malformed', ...recognition.malformed };\n",
+     "new": ""
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/markdown-code-context.ts": "1ae2c682db5ca52f56cc28048eede2c66e7cafc20e5287b08d3f75bf7c085f5d"
+   },
+   "note": "the mask is built from the ranges of a malformed text",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 26
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 1
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 3
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 13
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 13
+    }
+   },
+   "failingTests": [
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks an opener may be indented zero to three spaces; at four the backticks are inline runs, not a fence",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a backtick opener info string with a backtick is malformed",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks a closer must repeat the opener character at least the opener length, then spaces only",
+    "closed-pwb-code-context-v1 \u2014 fenced code blocks an unclosed fence at end of text is malformed at its opener line",
+    "closed-pwb-code-context-v1 \u2014 inline code spans the closer is exactly the opener length; other runs are content",
+    "closed-pwb-code-context-v1 \u2014 inline code spans a backslash does not escape a delimiter",
+    "closed-pwb-code-context-v1 \u2014 inline code spans an unclosed span is malformed at the line it opened",
+    "closed-pwb-code-context-v1 \u2014 inline code spans a fence opener line is recognized before an open inline span, which then never closes",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a backtick opener whose info string holds a backtick is malformed at its own line",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a backtick opener whose info string holds a backtick is malformed at its own line",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a backtick opener whose info string holds a backtick is malformed at its own line",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: the reported line counts each line end once",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: the reported line counts each line end once",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: the reported line counts each line end once",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line mixed terminators: each one ends one line, whichever kind it is",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a backtick run after a list marker opens an inline span that a later fence-shaped line leaves unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a backtick run after a list marker opens an inline span that a later fence-shaped line leaves unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a backtick run after a list marker opens an inline span that a later fence-shaped line leaves unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line LF: a closer followed by text does not close, so the fence is unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CRLF: a closer followed by text does not close, so the fence is unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line CR: a closer followed by text does not close, so the fence is unclosed",
+    "closed-pwb-code-context-v1 \u2014 CRLF, CR and LF each end one line U+2028, U+2029 and U+0085 after a closing fence are line content: the fence stays unclosed",
+    "a very long closed fence LF: the same lines left unclosed are still malformed at the opener",
+    "a very long closed fence CRLF: the same lines left unclosed are still malformed at the opener",
+    "a very long closed fence CR: the same lines left unclosed are still malformed at the opener",
+    "recognizeCodeContexts \u2014 the ranges the mask is built from the mask reports exactly the recognizer's first malformation and nothing from the ranges it kept",
+    "the extractor reads the profile's fences a fence that never closes runs to the end of the text (recovery; the reader excludes such a source before it gets here)",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) a root index with an unclosed fence declares nothing: its pillar index stays refused",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) a root index with a backtick opener with a backtick in its info string declares nothing: its pillar index stays refused",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) a root index with a span open at a fence opener declares nothing: its pillar index stays refused",
+    "active content is rejected and never reaches a sink notes/unclosed-fence.md stays counted as active-content (malformed-code-context) with a body-free record",
+    "active content is rejected and never reaches a sink a malformed code context is itself a finding that excludes the source",
+    "active content is rejected and never reaches a sink the form vocabulary is closed and every form is produced by a sentinel above",
+    "a CRLF or CR blob gets the outcome its LF form gets LF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "a CRLF or CR blob gets the outcome its LF form gets CRLF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "a CRLF or CR blob gets the outcome its LF form gets CR: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "a malformed code context is excluded whole, and the recognizer's recovery is never acted on unclosed-fence: the scan reports the one finding and nothing from the recovered ranges",
+    "a malformed code context is excluded whole, and the recognizer's recovery is never acted on backtick-fence-with-backtick-in-info-string: the scan reports the one finding and nothing from the recovered ranges",
+    "a malformed code context is excluded whole, and the recognizer's recovery is never acted on unclosed-inline-span: the scan reports the one finding and nothing from the recovered ranges",
+    "a malformed code context is excluded whole, and the recognizer's recovery is never acted on unclosed-fence: the reader refuses the blob and hands on no text",
+    "a malformed code context is excluded whole, and the recognizer's recovery is never acted on backtick-fence-with-backtick-in-info-string: the reader refuses the blob and hands on no text",
+    "a malformed code context is excluded whole, and the recognizer's recovery is never acted on unclosed-inline-span: the reader refuses the blob and hands on no text",
+    "reported positions in CRLF and bare-CR texts CRLF as LF; a bare CR counted by the malformed line only",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-info-with-backtick'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'unclosed'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'list-item'",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read crlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read lastCrlf",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read firstCr",
+    "Markdown fence recognizers: what each reader treats as inside a fence the profile and the gate read every rendering as the LF text is read cycle",
+    "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'unclosed-span'",
+    "Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: a CRLF or CR source is excluded as a malformed code context, as the same LF source is",
+    "Markdown fence recognizers: what each reader treats as inside a fence G1, fixed: the fail-open class is closed for a well-formed LF source too"
+   ]
+  },
+  {
+   "id": "W1-extractor-ignores-recognizer",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+     "old": "const inside = isFencedAt(recognition, offset);",
+     "new": "const inside = false;"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-extraction.ts": "df8f35ecb5b202cb1b6b9b37f4e68b9f24002de431ad67364d6847fca14e8c4e"
+   },
+   "note": "the extractor sees no fence",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 8
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 30
+    }
+   },
+   "failingTests": [
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/vision.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the vision fixture",
+    "PWB-REQ-002 \u2014 the grammar is literal keys are NFC-normalized and nothing else",
+    "PWB-REQ-004 \u2014 the root summary emits exactly two stated counts a fenced copy of the summary is inert",
+    "PWB-REQ-004 \u2014 the precedence table is admitted only as the exact seven registry rows a fenced copy of the table is inert",
+    "the extractor reads the profile's fences LF: an opener indented one to three spaces is a fence, and one indented four spaces is not",
+    "the extractor reads the profile's fences CRLF: an opener indented one to three spaces is a fence, and one indented four spaces is not",
+    "the extractor reads the profile's fences a fence that never closes runs to the end of the text (recovery; the reader excludes such a source before it gets here)",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-col0'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'opener-four-closer-three'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent4'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-space'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-other-char'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-fence-backtick-line'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-opener-four-closer-three'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'info-string'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'info-string-space'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-info-with-backtick'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-info-with-backtick'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'unclosed'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'empty-fence'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'list-item'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'two-fences'",
+    "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the extractor and the profile hold one line model for LF and CRLF: where they agree on LF they agree on CRLF"
+   ]
+  },
+  {
+   "id": "W2-extractor-offset-drift",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+     "old": "offset += raw.length + 1;",
+     "new": "offset += raw.length;"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-extraction.ts": "a9b63a54f6c51ac454972d352e38c4a0f7921bde94bda05d829dd11d43284b19"
+   },
+   "note": "the extractor asks the recognizer about the wrong offset",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 9
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 0
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 31
+    }
+   },
+   "failingTests": [
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture heart-and-soul/vision.md mints the oracle's identities and denominators",
+    "PWB-REQ-002 \u2014 two independent extractors agree on every fixture hand-typed expectations pin the grammar on the vision fixture",
+    "PWB-REQ-002 \u2014 the grammar is literal keys are NFC-normalized and nothing else",
+    "the extractor reads the profile's fences LF: a fence closes at a closer indented one to three spaces",
+    "the extractor reads the profile's fences CRLF: a fence closes at a closer indented one to three spaces",
+    "the extractor reads the profile's fences LF: an opener indented one to three spaces is a fence, and one indented four spaces is not",
+    "the extractor reads the profile's fences CRLF: an opener indented one to three spaces is a fence, and one indented four spaces is not",
+    "the extractor reads the profile's fences LF: a closer-shaped line with an info string or a trailing tab does not close the fence",
+    "the extractor reads the profile's fences CRLF: a closer-shaped line with an info string or a trailing tab does not close the fence",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-col0'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'opener-four-closer-three'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent4'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-space'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-other-char'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-fence-backtick-line'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-opener-four-closer-three'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'info-string'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'info-string-space'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-info-with-backtick'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-info-with-backtick'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'empty-fence'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'two-fences'",
+    "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the extractor and the profile hold one line model for LF and CRLF: where they agree on LF they agree on CRLF",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a plain closer: the control, three principles declared and three extracted",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer indented one space: the profile closes the fence and so does the extractor, and the denominator is 3 of 3",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer indented three spaces: the profile closes the fence and so does the extractor, and the denominator is 3 of 3",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer-shaped line ending in a tab: the profile keeps the fence open to the plain closer, and so does the extractor"
+   ]
+  },
+  {
+   "id": "W3-links-ignore-fences",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+     "old": "if (isFencedAt(recognition, start)) continue;",
+     "new": ""
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-manifest.ts": "0046177fb59d730afbbe546c51d0de9d7ae4ff373378c54b4013629bbce4ad56"
+   },
+   "note": "the link reader sees no fence",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 4
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 32
+    }
+   },
+   "failingTests": [
+    "index link grammar extracts inline links and reference definitions; skips images, fenced blocks and code spans",
+    "index link grammar \u2014 the profile's fences and spans a closer-shaped line with an info string or a trailing tab does not close a fence; the real closer does",
+    "index link grammar \u2014 the profile's fences and spans a line inside a fence is dropped whole, in CRLF text too",
+    "index link grammar \u2014 the profile's fences and spans the root-index pillar table is read outside fences only, with its code-span directory cells intact",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-col0'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'opener-four-closer-three'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent4'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-space'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-other-char'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-fence-backtick-line'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-opener-four-closer-three'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'info-string'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'info-string-space'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-info-with-backtick'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-info-with-backtick'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'unclosed'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'empty-fence'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'list-item'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'two-fences'",
+    "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the link reader holds the profile's vector on every well-formed case, for LF and CRLF",
+    "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the link reader",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a closer-shaped line ending in a tab, on a text the profile reads as well formed, hides the link inside the fence and shows the one after it"
+   ]
+  },
+  {
+   "id": "W4-links-keep-spans",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+     "old": "if (!stripInlineCode) {",
+     "new": "if (true) {"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-manifest.ts": "97237d479623724d42d9078f1899b92d8abafe27d2146f5e4f7f6b88690f98af"
+   },
+   "note": "the link reader keeps code spans",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 8
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 16
+    }
+   },
+   "failingTests": [
+    "index link grammar extracts inline links and reference definitions; skips images, fenced blocks and code spans",
+    "index link grammar \u2014 the profile's fences and spans a span that opens and closes on other lines hides the links between them",
+    "index link grammar \u2014 the profile's fences and spans a span closes only at a run of the same length, so a double-backtick span may hold a single backtick and its link",
+    "index link grammar \u2014 the profile's fences and spans a span is deleted and not blanked: the characters around it join",
+    "index link grammar \u2014 the profile's fences and spans an opener indented four spaces is not a fence; its backticks are a span",
+    "index link grammar \u2014 the profile's fences and spans a line inside a fence is dropped whole, in CRLF text too",
+    "index link grammar \u2014 the profile's fences and spans RESIDUAL: two stray single backticks around a list of links drop the links, and the text is well formed",
+    "index link grammar \u2014 the profile's fences and spans phase A: a pillar link hidden by a code span names no pillar, and the pillar index is never read",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent4'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-tab'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'two-backticks'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'blockquote'",
+    "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the link reader holds the profile's vector on every well-formed case, for LF and CRLF",
+    "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the link reader",
+    "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'inside-span'",
+    "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'inside-double-span'",
+    "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'double-span-with-inner-backtick-aroun\u2026'",
+    "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'backslash-before-delimiters'",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a link on a line inside a span that runs across lines is hidden, as the profile hides it: 'double-backtick-span-over-three-lines'",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a link on a line inside a span that runs across lines is hidden, as the profile hides it: 'single-backtick-span-over-three-lines'",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a link on a line inside a span that runs across lines is hidden, as the profile hides it: 'span-opened-mid-line'",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a single-line span is stripped: the control for the rows above",
+    "Markdown fence recognizers: what each reader treats as inside a fence RESIDUAL: two stray single backticks around a list of links the links between them drop, and nothing says so"
+   ]
+  },
+  {
+   "id": "W5-links-blank-spans",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+     "old": ".replace(/[^\\r\\n]/g, '')",
+     "new": ".replace(/[^\\r\\n]/g, ' ')"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-manifest.ts": "689e25d691f36d5c2dedc2fc71053be90368440c3cec054e9a0c88375a4df8ff"
+   },
+   "note": "the link reader blanks a span instead of deleting it (D3)",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 1
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 0
+    }
+   },
+   "failingTests": [
+    "index link grammar \u2014 the profile's fences and spans a span is deleted and not blanked: the characters around it join"
+   ]
+  },
+  {
+   "id": "W6-links-offset-drift",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+     "old": "offset += line.length + 1;",
+     "new": "offset += line.length;"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-manifest.ts": "b7c1935f10a62f59e8ce107278d5022baad49ee84a839cfeadf6bf0eed10e393"
+   },
+   "note": "the link reader asks the recognizer about the wrong offset",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 6
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 29
+    }
+   },
+   "failingTests": [
+    "deriveProjectShapeManifest \u2014 the population never shrinks on failure two different roots named for one pillar key is Unknown (ambiguous), not a pick",
+    "index link grammar extracts inline links and reference definitions; skips images, fenced blocks and code spans",
+    "index link grammar \u2014 the profile's fences and spans a closer-shaped line with an info string or a trailing tab does not close a fence; the real closer does",
+    "index link grammar \u2014 the profile's fences and spans an opener indented four spaces is not a fence; its backticks are a span",
+    "index link grammar \u2014 the profile's fences and spans a line inside a fence is dropped whole, in CRLF text too",
+    "index link grammar \u2014 the profile's fences and spans the root-index pillar table is read outside fences only, with its code-span directory cells intact",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-col0'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-col0'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'opener-four-closer-three'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent4'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-space'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-other-char'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-fence-backtick-line'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-opener-four-closer-three'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'info-string'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'info-string-space'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-info-with-backtick'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-info-with-backtick'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'empty-fence'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'two-fences'",
+    "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the link reader holds the profile's vector on every well-formed case, for LF and CRLF",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a closer-shaped line with an info string does not close the fence, and the real closer shows every later link",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a closer-shaped line ending in a tab, on a text the profile reads as well formed, hides the link inside the fence and shows the one after it"
+   ]
+  },
+  {
+   "id": "W7-roots-strip-spans",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": [
+    {
+     "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+     "old": "const lines = stripFences(text, false);",
+     "new": "const lines = stripFences(text, true);"
+    }
+   ],
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-manifest.ts": "2f9f7d0084de2f78387111778fb7f2305dfc60e3470dc2a40c0298b77cd79b6d"
+   },
+   "note": "the root-index pillar reader deletes code spans (its table cells are spans)",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 0
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 5
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 2
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 0
+    }
+   },
+   "failingTests": [
+    "deriveProjectShapeManifest \u2014 complete population at one revision recognizes the real-shaped five-row root table and all seven Heart and Soul sources",
+    "deriveProjectShapeManifest \u2014 a declared home over tree-rule files (syzygy-1z3.29 review) retains absent and non-blob named targets that the tree rules cannot supply",
+    "deriveProjectShapeManifest \u2014 a declared home over tree-rule files (syzygy-1z3.29 review) a baseline spec named by the Spec and Spine index keeps its tree rule and its baseline-spec class",
+    "deriveProjectShapeManifest \u2014 a declared home over tree-rule files (syzygy-1z3.29 review) a butler.toml named by an index at a roster home keeps its tree rule and its roster-identity class",
+    "index link grammar \u2014 the profile's fences and spans the root-index pillar table is read outside fences only, with its code-span directory cells intact",
+    "declared pillar homes (syzygy-1z3.29) reads the pillar index at a declared home that is not named for the pillar",
+    "declared pillar homes (syzygy-1z3.29) the other four declared homes read as before, with no refusal in the ledger"
+   ]
+  },
+  {
+   "id": "BASE-readers",
+   "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+   "replacements": "the whole extractor and manifest modules at eb6183b5",
+   "mutatedFileSha256": {
+    "packages/three-surface-poc-core/src/project-shape-extraction.ts": "2b2fcd7d79442c6c6ec3774c9af364ce3771bac4f89ba2148fc3db7aec2c4525",
+    "packages/three-surface-poc-core/src/project-shape-manifest.ts": "a6401c017b2743d11d72b71532372c412a9c91287cecd3ebe60df40b4a37b852"
+   },
+   "note": "the new tests fail on the old reader fence rules",
+   "outcome": "killed",
+   "detectors": {
+    "mask": {
+     "tests": 65,
+     "failed": 0
+    },
+    "extractor": {
+     "tests": 96,
+     "failed": 6
+    },
+    "manifest": {
+     "tests": 34,
+     "failed": 8
+    },
+    "observation": {
+     "tests": 45,
+     "failed": 0
+    },
+    "reader": {
+     "tests": 97,
+     "failed": 0
+    },
+    "fenceRules": {
+     "tests": 72,
+     "failed": 30
+    }
+   },
+   "failingTests": [
+    "the extractor reads the profile's fences LF: a fence closes at a closer indented one to three spaces",
+    "the extractor reads the profile's fences CRLF: a fence closes at a closer indented one to three spaces",
+    "the extractor reads the profile's fences LF: an opener indented one to three spaces is a fence, and one indented four spaces is not",
+    "the extractor reads the profile's fences CRLF: an opener indented one to three spaces is a fence, and one indented four spaces is not",
+    "the extractor reads the profile's fences LF: a closer-shaped line with an info string or a trailing tab does not close the fence",
+    "the extractor reads the profile's fences CRLF: a closer-shaped line with an info string or a trailing tab does not close the fence",
+    "index link grammar \u2014 the profile's fences and spans a span that opens and closes on other lines hides the links between them",
+    "index link grammar \u2014 the profile's fences and spans a span closes only at a run of the same length, so a double-backtick span may hold a single backtick and its link",
+    "index link grammar \u2014 the profile's fences and spans a closer-shaped line with an info string or a trailing tab does not close a fence; the real closer does",
+    "index link grammar \u2014 the profile's fences and spans an opener indented four spaces is not a fence; its backticks are a span",
+    "index link grammar \u2014 the profile's fences and spans a line inside a fence is dropped whole, in CRLF text too",
+    "index link grammar \u2014 the profile's fences and spans RESIDUAL: two stray single backticks around a list of links drop the links, and the text is well formed",
+    "index link grammar \u2014 the profile's fences and spans the root-index pillar table is read outside fences only, with its code-span directory cells intact",
+    "index link grammar \u2014 the profile's fences and spans phase A: a pillar link hidden by a code span names no pillar, and the pillar index is never read",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent1'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent2'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'backtick-indent4'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'tilde-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent1'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-indent3'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-trailing-tab-then-closer'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-info'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-longer-with-info'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'closer-with-text'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'two-backticks'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'blockquote'",
+    "Markdown fence recognizers: what each reader treats as inside a fence 'list-item'",
+    "Markdown fence recognizers: what each reader treats as inside a fence links, extraction and the renderer read CRLF exactly as they read LF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the extractor and the profile hold one line model for LF and CRLF: where they agree on LF they agree on CRLF",
+    "Markdown fence recognizers: what each reader treats as inside a fence the link reader holds the profile's vector on every well-formed case, for LF and CRLF",
+    "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the link reader",
+    "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'inside-double-span'",
+    "Markdown fence recognizers: what each reader treats as inside a fence inline span: 'double-span-with-inner-backtick-aroun\u2026'",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer indented one space: the profile closes the fence and so does the extractor, and the denominator is 3 of 3",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer indented three spaces: the profile closes the fence and so does the extractor, and the denominator is 3 of 3",
+    "Markdown fence recognizers: what each reader treats as inside a fence G2, fixed: the extractor reads the profile's fences a closer-shaped line ending in a tab: the profile keeps the fence open to the plain closer, and so does the extractor",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a link on a line inside a span that runs across lines is hidden, as the profile hides it: 'double-backtick-span-over-three-lines'",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a link on a line inside a span that runs across lines is hidden, as the profile hides it: 'single-backtick-span-over-three-lines'",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a link on a line inside a span that runs across lines is hidden, as the profile hides it: 'span-opened-mid-line'",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a closer-shaped line with an info string does not close the fence, and the real closer shows every later link",
+    "Markdown fence recognizers: what each reader treats as inside a fence G3, fixed: the link reader reads the profile's fences and spans a closer-shaped line ending in a tab, on a text the profile reads as well formed, hides the link inside the fence and shows the one after it",
+    "Markdown fence recognizers: what each reader treats as inside a fence RESIDUAL: two stray single backticks around a list of links the links between them drop, and nothing says so"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,493 @@
+{
+ "bead": "syzygy-bpyt.55",
+ "finding": "Addendum to docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json (DC-3, the fence-rule finding). That record, its fence-probe-output.json and its mutant record are not edited; they describe the state before this change. This addendum records what the owner ruling of 2026-10-28 moved: the extractor, the index-link reader and the root-index reader now recognize fences by the PWB-REQ-006 profile, the link reader alone also its code spans, and G2 and G3 are fixed.",
+ "authority": {
+  "ruling": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-FOLLOWUPS-2026-10-28.md, section Q2, answer C",
+  "whatTheOwnerChose": "The extractor, the index-link reader and the root-index reader recognize fences by the PWB-REQ-006 profile; the link reader alone also recognizes the profile code spans; they use the profile recognizer, never its mask.",
+  "whatTheOwnerDidNotChoose": "C, and signal the stray span. Under plain C, two stray single backticks around a list of links make those links a span, and they drop with no signal.",
+  "gateRule": "GP-Q0: a change to what a gate accepts or refuses needs the owner; the mask, the policy action and scanActiveContent are unchanged (see differential.gate)."
+ },
+ "priorRecord": {
+  "path": "docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json",
+  "sha256": "f8b27b2e1e5ccfb1df1338c9423d65180992fa749de7b3e30a009f348c930392",
+  "trackedProbeOutput": {
+   "path": "docs/evidence/syzygy-bpyt-6-3/fence-probe-output.json",
+   "sha256": "95ed7f664f202d723b151842acbb9906ed4978e20c1f70971a8bf07ac5c30902"
+  },
+  "trackedProbeOutputIsStaleAgainstBase": {
+   "note": "The tracked probe output predates syzygy-bpyt.16 (the CRLF mask): re-run at the base commit it differs in the cases listed. It is left as it is; the before column below is the base re-run.",
+   "casesThatDiffer": 28,
+   "cases": [
+    "backtick-col0@crlf",
+    "backtick-indent1@crlf",
+    "backtick-indent2@crlf",
+    "backtick-indent3@crlf",
+    "tilde-col0@crlf",
+    "tilde-indent3@crlf",
+    "opener-four-closer-three@crlf",
+    "closer-longer@crlf",
+    "closer-indent1@crlf",
+    "closer-indent3@crlf",
+    "closer-indent4@crlf",
+    "closer-trailing-space@crlf",
+    "closer-trailing-tab@crlf",
+    "closer-trailing-tab-then-closer@crlf",
+    "closer-with-info@crlf",
+    "closer-longer-with-info@crlf",
+    "closer-with-text@crlf",
+    "closer-other-char@crlf",
+    "tilde-fence-backtick-line@crlf",
+    "tilde-opener-four-closer-three@crlf",
+    "info-string@crlf",
+    "info-string-space@crlf",
+    "backtick-info-with-backtick@crlf",
+    "tilde-info-with-backtick@crlf",
+    "unclosed@crlf",
+    "empty-fence@crlf",
+    "list-item@crlf",
+    "two-fences@crlf"
+   ]
+  }
+ },
+ "subject": {
+  "baseCommit": "eb6183b58253ef62fa364b78778efda9a77073df",
+  "codeCommit": "7a7cf664e72351a2da33dbf240b2e3bfed3f8917",
+  "testRepairCommit": "3747f846d127301372861577683595fd59de1fe5",
+  "note": "The code commit holds every non-test source change; the test repair commit changes one test file only. Evidence commits after them change no code."
+ },
+ "readersAfter": {
+  "profile": {
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "change": "recognizeCodeContexts exposes the fence ranges, the span ranges and the first malformation beside the mask; maskMarkdownCodeContexts is built from those ranges. The mask is byte-identical to the base on every text of the differential.",
+   "recovery": "The recognizer is total: an unclosed fence runs to the end of the text, a backtick opener whose info string holds a backtick still opens a fence, and a span still open at a fence opener or at the end of the text is dropped. The first malformation in scan order is reported. A caller handed a text with malformed set treats it as excluded (the gate does) and never acts on the ranges."
+  },
+  "extraction": {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "before": {
+    "opener": "three or more backticks or tildes at column 0, any text after",
+    "closer": "the line, trailing whitespace trimmed, equals the opener run; or the line starts with the opener run and holds nothing else once backticks and tildes are removed",
+    "unclosedFence": "everything after the opener is hidden; no malformed state",
+    "lineTerminator": "CR before LF is removed first"
+   },
+   "after": {
+    "opener": "the profile: zero to three spaces, then three or more identical backticks or tildes",
+    "closer": "the profile: zero to three spaces, the opener character repeated at least the opener length, then spaces only",
+    "unclosedFence": "the recognizer runs the fence to the end of the text; a text the profile reads as malformed is excluded before this reader",
+    "lineModel": "LF split with one trailing CR removed (unchanged); a line is fenced when the profile marks its first character fenced, so a text with bare CRs is a residual"
+   }
+  },
+  "links": {
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "before": {
+    "opener": "whitespace characters (a tab counts) up to three, then three or more backticks or tildes, any text after",
+    "closer": "any later line that matches the opener shape with the same character and at least the opener length, whatever follows it",
+    "unclosedFence": "everything after the opener is hidden; no malformed state",
+    "inlineCode": "per line, each pair of single backticks with no backtick between them is removed (/`[^`]*`/g); a pair of double backticks removes nothing but itself"
+   },
+   "after": {
+    "opener": "the profile (as above)",
+    "closer": "the profile (as above)",
+    "unclosedFence": "as above",
+    "inlineCode": "each character of a profile code span is deleted from its line, a CR or LF inside the span is kept, and a span may cross lines; the root-index pillar table reader keeps its code-span directory cells (it deletes none)",
+    "lineModel": "LF split (unchanged); a line is fenced when the profile marks its first character fenced"
+   }
+  },
+  "unchanged": [
+   "consent (outsideFences, packages/polaris-generation-consent)",
+   "renderer (renderPolarisMarkdown)",
+   "ceremony-block (owner-act-record.ts)"
+  ]
+ },
+ "gaps": {
+  "G2": {
+   "ruling": "fixed: the extractor reads the profile fences",
+   "before": {
+    "denominator": "7 of 25 well-formed fence-only LF cases differ from the profile",
+    "cases": [
+     "backtick-indent1",
+     "backtick-indent2",
+     "backtick-indent3",
+     "closer-indent1",
+     "closer-indent3",
+     "closer-trailing-tab-then-closer",
+     "tilde-indent3"
+    ]
+   },
+   "after": {
+    "denominator": "0 of 25",
+    "cases": []
+   },
+   "pinnedBy": "apps/three-surface-poc/src/fence-rules.test.ts, describe \"G2, fixed: the extractor reads the profile's fences\" (4 tests)"
+  },
+  "G3": {
+   "ruling": "fixed: the link reader reads the profile's fences and code spans",
+   "before": {
+    "denominator": "4 of 25 fence-only cases, 3 of 4 span cases and 2 single-line span rows differ from the profile",
+    "fenceOnlyCases": [
+     "closer-longer-with-info",
+     "closer-trailing-tab-then-closer",
+     "closer-with-info",
+     "closer-with-text"
+    ],
+    "spanCases": [
+     "backtick-indent4",
+     "blockquote",
+     "two-backticks"
+    ],
+    "singleLineSpanRows": [
+     "inside-double-span",
+     "double-span-with-inner-backtick-around-link"
+    ]
+   },
+   "after": {
+    "denominator": "0 of 25 fence-only cases, 0 of 4 span cases and 0 single-line span rows",
+    "fenceOnlyCases": [],
+    "spanCases": [],
+    "singleLineSpanRows": []
+   },
+   "pinnedBy": "apps/three-surface-poc/src/fence-rules.test.ts, describe \"G3, fixed: the link reader reads the profile's fences and spans\" (6 tests)"
+  },
+  "extractorOnSpanCases": {
+   "note": "The extractor reads fences only, by the owner ruling, so the 4 span cases still differ for it (it never reads a span); this is not a gap.",
+   "cases": [
+    "backtick-indent4",
+    "backtick-tab",
+    "blockquote",
+    "two-backticks"
+   ]
+  },
+  "G1_G4": "unchanged (G1 was fixed by syzygy-bpyt.16; G4 is the consent reader, not moved)"
+ },
+ "probe": {
+  "tool": "docs/evidence/syzygy-bpyt-6-3/fence-probe.mjs",
+  "base": {
+   "path": "docs/evidence/syzygy-bpyt-55/fence-probe-output-base.json",
+   "sha256": "eb6fa97641f5215bac665aee2eab64af2ac0b71392ea9d2c5182905d784b0eda",
+   "commit": "eb6183b5"
+  },
+  "head": {
+   "path": "docs/evidence/syzygy-bpyt-55/fence-probe-output-head.json",
+   "sha256": "160fad28d95b10c9742729a2ee6f08ab18e800db6d95a0e8af05c76fddf18833",
+   "commit": "3747f846"
+  },
+  "casesCompared": 66,
+  "profileVectorsMoved": [],
+  "activeContentVectorsMoved": [],
+  "wholeCaseProfileReadingMoved": [],
+  "consentAndRendererVectorsMoved": [],
+  "casesWhoseReaderVectorsMoved": [
+   "backtick-indent1",
+   "backtick-indent1@crlf",
+   "backtick-indent2",
+   "backtick-indent2@crlf",
+   "backtick-indent3",
+   "backtick-indent3@crlf",
+   "backtick-indent4",
+   "backtick-indent4@crlf",
+   "blockquote",
+   "blockquote@crlf",
+   "closer-indent1",
+   "closer-indent1@crlf",
+   "closer-indent3",
+   "closer-indent3@crlf",
+   "closer-longer-with-info",
+   "closer-longer-with-info@crlf",
+   "closer-trailing-tab",
+   "closer-trailing-tab-then-closer",
+   "closer-trailing-tab-then-closer@crlf",
+   "closer-trailing-tab@crlf",
+   "closer-with-info",
+   "closer-with-info@crlf",
+   "closer-with-text",
+   "closer-with-text@crlf",
+   "list-item",
+   "list-item@crlf",
+   "tilde-indent3",
+   "tilde-indent3@crlf",
+   "two-backticks",
+   "two-backticks@crlf"
+  ],
+  "casesWhoseReaderVectorsMovedAndTheProfileReadsMalformed": [
+   "closer-trailing-tab",
+   "closer-trailing-tab@crlf",
+   "list-item",
+   "list-item@crlf"
+  ],
+  "malformedNote": "A case the profile reads as malformed never reaches a reader (the gate excludes it first), so its reader vector is the recognizer recovery, not an admitted reading."
+ },
+ "differential": {
+  "tool": "docs/evidence/syzygy-bpyt-55/fence-differential.mjs",
+  "output": {
+   "path": "docs/evidence/syzygy-bpyt-55/fence-differential-output.json",
+   "sha256": "3256086a8da4631df9c9de55bae84f61de9fe2fed272a4c05cc6ce193b882762"
+  },
+  "selftest": {
+   "path": "docs/evidence/syzygy-bpyt-55/fence-differential-selftest-output.json",
+   "sha256": "8d557cd11a21ff0814e6781569d39cbb61a150ad9d3f4f27cae01aec3ad7b356",
+   "mutants": 18,
+   "killed": 18
+  },
+  "population": {
+   "texts": 175710,
+   "wellFormed": 36730,
+   "malformed": 138980,
+   "constructCases": {
+    "fenceProbe": 33,
+    "added": 22
+   },
+   "fixtureSeeds": 10,
+   "fuzzBaseTexts": 40000,
+   "renderings": [
+    "lf",
+    "crlf",
+    "cr",
+    "cycle"
+   ],
+   "trackedMarkdown": {
+    "listed": 1912,
+    "files": 1912,
+    "unreadable": 0
+   },
+   "manifestRows": 1724
+  },
+  "checks": {
+   "M1_maskAndGateUnchanged": {
+    "texts": 175710,
+    "failures": 0
+   },
+   "R1_headRecognizerEqualsReference": {
+    "texts": 175710,
+    "failures": 0
+   },
+   "R2_referenceEqualsOldMask": {
+    "texts": 175710,
+    "failures": 0
+   },
+   "O1_linksOracle": {
+    "checked": 27821,
+    "excludedOldReaderOpensAFence": 0,
+    "failures": 0
+   },
+   "O2_rootsOracle": {
+    "checked": 26461,
+    "excludedOldReaderOpensAFence": 1360,
+    "failures": 0
+   },
+   "O3_rootIndexOracle": {
+    "checked": 27311,
+    "excludedOldReaderOpensAFence": 510,
+    "failures": 0
+   },
+   "O5_tomlClassUnchanged": {
+    "checked": 27311,
+    "failures": 0
+   },
+   "O4_classOracle": {
+    "checked": 27311,
+    "excludedOldReaderOpensAFence": 510,
+    "failures": 0
+   },
+   "D1_manifestFollowsProfileVisibility": {
+    "rows": 1724,
+    "failures": 0
+   }
+  },
+  "gate": {
+   "note": "the mask and scanActiveContent are deep-equal at BASE and HEAD on every text: no text is newly refused and none newly accepted by the gate itself",
+   "textsWhoseMaskOrFindingsChanged": 0,
+   "constructPayloadRowsWhoseDecisionChanged": 0
+  },
+  "shapesWhoseReaderOutputMoves": {
+   "backtick-indent1": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 0,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 4,
+    "headingsNewlyShownLf": 0
+   },
+   "backtick-indent2": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 0,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 4,
+    "headingsNewlyShownLf": 0
+   },
+   "backtick-indent3": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 0,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 4,
+    "headingsNewlyShownLf": 0
+   },
+   "backtick-indent4": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 8,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   },
+   "backtick-tab": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 0,
+    "linksNewlyShownLf": 2,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   },
+   "tilde-indent3": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 0,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 4,
+    "headingsNewlyShownLf": 0
+   },
+   "closer-indent1": {
+    "rowsPerRendering": 20,
+    "linksNewlyHiddenLf": 0,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 4
+   },
+   "closer-indent3": {
+    "rowsPerRendering": 20,
+    "linksNewlyHiddenLf": 0,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 4
+   },
+   "closer-trailing-tab": {
+    "rowsPerRendering": 24,
+    "linksNewlyHiddenLf": 6,
+    "linksNewlyShownLf": 2,
+    "headingsNewlyHiddenLf": 4,
+    "headingsNewlyShownLf": 2
+   },
+   "closer-trailing-tab-then-closer": {
+    "rowsPerRendering": 24,
+    "linksNewlyHiddenLf": 6,
+    "linksNewlyShownLf": 2,
+    "headingsNewlyHiddenLf": 4,
+    "headingsNewlyShownLf": 2
+   },
+   "closer-with-info": {
+    "rowsPerRendering": 24,
+    "linksNewlyHiddenLf": 6,
+    "linksNewlyShownLf": 2,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   },
+   "closer-longer-with-info": {
+    "rowsPerRendering": 20,
+    "linksNewlyHiddenLf": 6,
+    "linksNewlyShownLf": 2,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   },
+   "closer-with-text": {
+    "rowsPerRendering": 24,
+    "linksNewlyHiddenLf": 6,
+    "linksNewlyShownLf": 2,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   },
+   "two-backticks": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 8,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   },
+   "blockquote": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 8,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   },
+   "span-three-lines": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 8,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   },
+   "span-double-three-lines": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 8,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   },
+   "span-opened-mid-line": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 8,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   },
+   "span-two-lines": {
+    "rowsPerRendering": 12,
+    "linksNewlyHiddenLf": 4,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   },
+   "stray-pair": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 8,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   },
+   "indent1-opener": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 0,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 4,
+    "headingsNewlyShownLf": 2
+   },
+   "indent3-opener": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 0,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 4,
+    "headingsNewlyShownLf": 2
+   },
+   "closer-indent2": {
+    "rowsPerRendering": 16,
+    "linksNewlyHiddenLf": 0,
+    "linksNewlyShownLf": 0,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 2
+   },
+   "closer-info": {
+    "rowsPerRendering": 24,
+    "linksNewlyHiddenLf": 6,
+    "linksNewlyShownLf": 2,
+    "headingsNewlyHiddenLf": 0,
+    "headingsNewlyShownLf": 0
+   }
+  },
+  "manifest": {
+   "rowsChecked": 1724,
+   "rowsWhoseReadSetMoves": 356
+  }
+ },
+ "mutants": {
+  "tool": "docs/evidence/syzygy-bpyt-55/fence-mutants.py",
+  "output": {
+   "path": "docs/evidence/syzygy-bpyt-55/fence-mutants-output.json",
+   "sha256": "c573979d55cd60c73e6a2b183a5627a420a702fe2a628bad08b93062be455b7b"
+  },
+  "ranAt": "3747f846d127301372861577683595fd59de1fe5",
+  "mutants": 23,
+  "killed": 23,
+  "survived": [],
+  "baseReadersFailingTests": 44
+ },
+ "residuals": [
+  "Two stray single backticks around a list of links make those links a code span: they drop with no signal, and the text is well formed so the gate admits it. The owner chose plain C over \"C, and signal the stray span\". Pinned by a RESIDUAL test in fence-rules.test.ts.",
+  "The extractor and the link reader keep their LF-only line model. In a text with bare CRs (no LF) a fence that opens inside one reader line reaches the lines after it; the differential tallies base against head for those texts (diff.readerChanges, bareCrOrMixed) and makes no oracle claim for them. The bare-CR GAP rows stay.",
+  "The consent reader (outsideFences) and the Polaris renderer keep their own rules; G4 and the renderer departures stand.",
+  "A malformed text never reaches the readers; the recognizer recovery that makes it total is pinned by tests and is not a decision (the policy action is exclude-whole-artifact)."
+ ]
+}
