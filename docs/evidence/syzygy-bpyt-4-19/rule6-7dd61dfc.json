@@ -1,0 +1,155 @@
+{
+ "subject": "syzygy-bpyt.4.19: the drain-timeout test's clock, delayed-scan probe and rule-6 mutants",
+ "commit": "7dd61dfc8b00735b1739a4db7b98566c5ae3bfc8",
+ "base": "eb6183b58253ef62fa364b78778efda9a77073df",
+ "tool": {
+  "path": "docs/evidence/syzygy-bpyt-4-19/tools/rule6.py",
+  "sha256": "e1f08216f3dd1391420040dccc68f72e57f1aa259d912c55c9eb54c1d4ed2410"
+ },
+ "worktreeClean": true,
+ "loadavgBefore": [
+  "23.02",
+  "23.32",
+  "27.14"
+ ],
+ "testFileSha256": {
+  "base": "d1c4ad3baf1f957cc2db9e61ccd5f86bfd4f7f77fdc9178ef85c941d08ccc5ef",
+  "head": "4236ea5161fe1ed93535ec66367df500a21716cd8ab09847766759098126173f"
+ },
+ "prodFileSha256": "60a3990726bc196703d66719b8c50c9c87c62c91b601fa51f7edcca23f71d68d",
+ "unmutated": {
+  "exit": 0,
+  "passed": 29,
+  "failed": 0,
+  "total": 29,
+  "failing": []
+ },
+ "delay": {
+  "fragment": {
+   "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
+   "old": "      groupProcesses: () => ++scans === 1 ? [123] : [],\n",
+   "new": "      groupProcesses: () => { const until = Date.now() + 60; while (Date.now() < until); return ++scans === 1 ? [123] : []; },\n"
+  },
+  "baseTest": {
+   "exit": 1,
+   "passed": 28,
+   "failed": 1,
+   "total": 29,
+   "failing": [
+    {
+     "test": "disposable browser shutdown waits for private Chrome group members before removal and retains the profile on drain timeout",
+     "message": "Error: private browser profile drain did not verify two empty scans before deadline"
+    }
+   ]
+  },
+  "headTest": {
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "failing": []
+  }
+ },
+ "mutants": [
+  {
+   "id": "K1",
+   "mutation": "the drain stops after one empty scan",
+   "file": "apps/three-surface-poc/src/cdp-browser.ts",
+   "old": "if (emptyScans >= 2) break;",
+   "new": "if (emptyScans >= 1) break;",
+   "exit": 1,
+   "passed": 26,
+   "failed": 3,
+   "total": 29,
+   "failing": [
+    {
+     "test": "disposable browser shutdown waits for private Chrome group members before removal and retains the profile on drain timeout",
+     "message": "AssertionError: expected 2 to be 3 // Object.is equality"
+    },
+    {
+     "test": "disposable browser shutdown retains an already-exited parent profile through a late descendant beyond the former one-second drain",
+     "message": "AssertionError: expected 1 to be 5 // Object.is equality"
+    },
+    {
+     "test": "disposable browser shutdown stops helpers orphaned by a killed leader with their group, then drains before removal",
+     "message": "AssertionError: expected 2 to be 3 // Object.is equality"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "K2",
+   "mutation": "the drain deadline is half the configured drain",
+   "file": "apps/three-surface-poc/src/cdp-browser.ts",
+   "old": "const drainDeadline = now() + (options.profileDrainMs ?? BROWSER_PROFILE_DRAIN_MS);",
+   "new": "const drainDeadline = now() + (options.profileDrainMs ?? BROWSER_PROFILE_DRAIN_MS) / 2;",
+   "exit": 1,
+   "passed": 26,
+   "failed": 3,
+   "total": 29,
+   "failing": [
+    {
+     "test": "disposable browser shutdown waits for private Chrome group members before removal and retains the profile on drain timeout",
+     "message": "Error: private browser profile drain did not verify two empty scans before deadline"
+    },
+    {
+     "test": "disposable browser shutdown retains an already-exited parent profile through a late descendant beyond the former one-second drain",
+     "message": "Error: private browser profile drain did not verify two empty scans before deadline"
+    },
+    {
+     "test": "disposable browser shutdown stops helpers orphaned by a killed leader with their group, then drains before removal",
+     "message": "Error: private browser profile drain did not verify two empty scans before deadline"
+    }
+   ],
+   "killed": true
+  },
+  {
+   "id": "K3",
+   "mutation": "the profile is removed before the protocol socket closes",
+   "file": "apps/three-surface-poc/src/cdp-browser.ts",
+   "old": "  connection.close();\n",
+   "new": "  (options.removeProfile ?? removeBrowserProfile)(profile);\n  connection.close();\n",
+   "exit": 1,
+   "passed": 23,
+   "failed": 6,
+   "total": 29,
+   "failing": [
+    {
+     "test": "disposable browser shutdown closes an unresponsive protocol socket, kills the child, then removes its profile",
+     "message": "AssertionError: expected [ 'protocol-close-requested', …(4) ] to deeply equal [ 'protocol-close-requested', …(3) ]"
+    },
+    {
+     "test": "disposable browser shutdown lets an acknowledged close exit before removing the profile without a hard kill",
+     "message": "AssertionError: expected [ 'protocol-close-acknowledged', …(4) ] to deeply equal [ 'protocol-close-acknowledged', …(3) ]"
+    },
+    {
+     "test": "disposable browser shutdown cleans a child whose signal exit was already observed without waiting for a second exit event",
+     "message": "AssertionError: expected [ 'profile-removed', …(2) ] to deeply equal [ 'socket-closed', 'profile-removed' ]"
+    },
+    {
+     "test": "disposable browser shutdown waits for private Chrome group members before removal and retains the profile on drain timeout",
+     "message": "AssertionError: expected [ 'profile-removed', …(2) ] to deeply equal [ 'socket-closed', 'profile-removed' ]"
+    },
+    {
+     "test": "disposable browser shutdown retains an already-exited parent profile through a late descendant beyond the former one-second drain",
+     "message": "AssertionError: expected +0 to be 5 // Object.is equality"
+    },
+    {
+     "test": "disposable browser shutdown stops helpers orphaned by a killed leader with their group, then drains before removal",
+     "message": "AssertionError: expected [ 'profile-removed', …(3) ] to deeply equal [ 'socket-closed', …(2) ]"
+    }
+   ],
+   "killed": true
+  }
+ ],
+ "baseFailsOnWallClock": true,
+ "headPassesDelayed": true,
+ "killed": 3,
+ "of": 3,
+ "loadavgAfter": [
+  "24.50",
+  "23.65",
+  "27.18"
+ ],
+ "worktreeCleanAfter": true
+}

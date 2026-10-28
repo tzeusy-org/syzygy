@@ -1,0 +1,21 @@
+{
+ "subject": "pwbSurfaceVersion at each commit",
+ "rows": [
+  {
+   "commit": "eb6183b58253ef62fa364b78778efda9a77073df",
+   "trees": {
+    "apps/three-surface-poc/src": "fc5b971f0deb7df88f1417634fbc1cb596ee9124",
+    "packages/three-surface-poc-core/src": "95958803b94292e1abe3b55bc5db8227232f8988"
+   },
+   "version": "polaris@7c47d0dcf42b"
+  },
+  {
+   "commit": "7dd61dfc8b00735b1739a4db7b98566c5ae3bfc8",
+   "trees": {
+    "apps/three-surface-poc/src": "eceae12583092b5c9b1f83ee2478eb20281da092",
+    "packages/three-surface-poc-core/src": "95958803b94292e1abe3b55bc5db8227232f8988"
+   },
+   "version": "polaris@556d50196e24"
+  }
+ ]
+}
