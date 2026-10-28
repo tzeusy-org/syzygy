@@ -232,6 +232,9 @@ describe('the workspace entry modules', () => {
       .toThrow('@syzygy/lib: its condition key "a/../b" has a /../ segment, and no condition Node matches by default has one');
     expect(() => entryModulesIn(workspace({}, { node: { 'x/../import': './dist/index.js' }, default: './dist/index.js' })))
       .toThrow('@syzygy/lib: its node > condition key "x/../import" has a /../ segment, and no condition Node matches by default has one');
+    // A key fault beside a target Node refuses: the target is named, as the more severe (the PR 557 round-2 review's N2, its RK3).
+    expect(() => entryModulesIn(workspace({}, { 'a/../b': './dist/index.js', import: './dist/./index.js', default: './dist/./index.js' })))
+      .toThrow(`@syzygy/lib: its import condition target "./dist/./index.js" has an empty, '.', '..' or 'node_modules' segment, which Node refuses (ERR_INVALID_PACKAGE_TARGET)`);
     expect(entryModulesIn(workspace({}, { 'a/..b': './dist/index.js', default: './dist/index.js' }))['@syzygy/lib']).toBe('packages/lib/src/index.ts');
   });
 });

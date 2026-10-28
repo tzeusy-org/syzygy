@@ -30,7 +30,7 @@
   "an exports target with a '.' or 'node_modules' segment, in any case or percent-encoded (Node refuses each with ERR_INVALID_PACKAGE_TARGET); before, only the literal '/../' threw",
   "a '..' segment written with a backslash or percent-encoded",
   "an empty segment ('//' or a trailing '/'), which Node 24.6.0 accepts with the DEP0166 warning: it then loads a '//' target, and fails to load one ending in '/', which names a directory (ERR_UNSUPPORTED_DIR_IMPORT under import, MODULE_NOT_FOUND under require)",
-  "any of these under the types or source condition, or in a main field (before, the '/../' form already threw there)",
+  "any of these under a condition Node does not read by default (types, source, or any other, such as browser), or in a main field (before, the '/../' form already threw there)",
   "an alias key anywhere in the loaded vitest config, including the shorthand form the text check misses",
   "a loaded vitest config without ssr.resolve.conditions, without a root test.setupFiles, or without a test.globalSetup in any project: the alias row checks those paths to show it reads the real config"
  ],
@@ -80,6 +80,13 @@
   "removed": 0
  },
  "differential": {
+  "base": "c672492c",
+  "head": "52d8b96f6ad91c765a6b4675d5eea72ea2067732",
+  "tool": "tools/differential.mjs",
+  "testkitSha256": {
+   "base": "57b643a265a02f612269b19d3ebb7880f3bb72abe9de39c067d29efd1ee47b38",
+   "head": "3695543f4779dadaa87bb928cdd28c9499a95e3ea97fdd76462890139e0711f5"
+  },
   "rows": 156,
   "newlyAccepted": 0,
   "groups": {
@@ -102,7 +109,7 @@
   "node-segments.json": "7ddabd8096c665ac2382b5a15814dcf88db265d638992bd752ecf1af338fa746",
   "suite-absent.json": "452e09e09ed770df95662ade6a3d4ea9f6196628e91feeee80659ba995d8ff4b",
   "titles.json": "eaaa1475aea0e533bbe24f087d1fbdb05d1ddd301341bbb53feb0a514480cd04",
-  "tools/build_record.py": "0f33d67b6b1a514aa945420249cb6f14ab862c35023f9a1479656a73408421ac",
+  "tools/build_record.py": "d46f0b6d1a59fbc13c2cbb0e1f765cd6ec140ea1852256017409bf4a023a5e15",
   "tools/differential.mjs": "923988a4ecae9b9ee02385804297ccb973945b42bd1e9ff4b4f8c60f28697e75",
   "tools/mutants.py": "3f6e645a5092cd4748665dd811299291844e0577c122b6be7ff65abc5a27210b",
   "tools/node_segments.mjs": "5757233336b365fa8c516353ee01f2897ad1b4e645239feeb37338292c455f64",
