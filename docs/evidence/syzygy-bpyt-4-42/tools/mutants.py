@@ -9,14 +9,14 @@ Run from the root of a clean Syzygy checkout: `python3 -I <this file> > record.j
 replacing one exact fragment of one file (it must occur exactly once), runs the named test files, and restores every byte whatever
 happens; an edit whose old fragment is None creates the file, which must not exist, and removes it. The record keeps every fragment with the file's sha256, the commit, the unmutated run of each test set, each run's counts,
 and the full name and first message line of each failing test. A mutant is killed when the run exits non-zero with a failing test
-and, where the row names one, a failing message that contains the expected text and a failing test whose name contains the
-expected name.
+and, where the row names one, a failing message (its first line, or a line of its diff) that contains the expected text and a
+failing test whose name contains the expected name.
 
 X9* put a resolver plugin into vitest.config.ts (the PR 549 review's X9) and P1 drops the refusal; X10* add a triple-slash
 reference to test support (its X10) and P2 restores the import-only model; C* drop or weaken one clean_build.mjs refusal.
 DEFENCE holds mutants run and recorded but not scored, each with its reason. PROBES are runs that are compared, not scored.
 """
-import hashlib, json, os, subprocess, tempfile
+import hashlib, json, os, re, subprocess, tempfile
 
 GUARD = ["apps/three-surface-poc/src/sync-child-process-guard.test.ts"]
 BUILD = ["apps/three-surface-poc/src/product-build.test.ts"]
@@ -43,6 +43,8 @@ OWN_OUTDIR = ("options.outDir !== 'dist' || ", "")
 EFFECTIVE_OUTDIR = ("!underDist(effective.outDir) || ", "")
 APP_EXTENDS = "        extends: true,\n" + APP_ENTRY
 OTHER_CONFIG = "vitest.r442-plugins.config.ts"
+# Vitest refuses at startup a string entry that names no file, so this one names a config file the mutant creates.
+STRING_CONFIG = "vitest.r442-string.config.ts"
 DETACHED = "no project entry detached from the root config"
 OUTSIDE = ("  if (!realpathSync(project).startsWith(`${realpathSync('.')}/`)) throw new Error(`${project}: resolves outside the checkout`);\n", "")
 CLEAR = "    // A row whose refusal fails leaves its outside path behind; it is not the next row's (syzygy-bpyt.4.42).\n    KEPT_OUTSIDE.length = 0;\n"
@@ -86,7 +88,8 @@ MUTANTS = [
      [(OTHER_CONFIG, None, "export default { plugins: [{ name: 'r442-n3', resolveId: () => null }] };\n"),
       (CFG, APP_EXTENDS, f"        extends: './{OTHER_CONFIG}',\n" + APP_ENTRY)], DETACHED),
     ("N3s", "a string project entry, a path to a config file, before the first entry", GUARD, "test.projects.0 is not an object",
-     [(CFG, "    projects: [\n", "    projects: [\n      'packages/r442-none/vitest.config.ts',\n")], DETACHED),
+     [(STRING_CONFIG, None, "export default { test: { name: 'r442-string', include: ['packages/r442-none/**/*.test.ts'] } };\n"),
+      (CFG, "    projects: [\n", f"    projects: [\n      './{STRING_CONFIG}',\n")], DETACHED),
     ("N3m", "the POC app's project entry drops extends: true", GUARD, "test.projects.8.extends is not true",
      [(CFG, APP_EXTENDS, APP_ENTRY)], DETACHED),
     ("G1", "the guard takes any extends but false as inheriting", GUARD, None,
@@ -113,7 +116,9 @@ def vitest(files):
         report = os.path.join(scratch, "report.json")
         done = subprocess.run(["npx", "vitest", "run", *files, "--reporter=json", f"--outputFile={report}"], capture_output=True, text=True)
         counts = json.load(open(report)) if os.path.exists(report) else {}
-    failing = [{"test": r["fullName"], "message": ((r.get("failureMessages") or [""])[0].split("\n") or [""])[0][:300]}
+    failing = [{"test": r["fullName"], "message": ((r.get("failureMessages") or [""])[0].split("\n") or [""])[0][:300],
+                "diff": [line.strip() for line in re.sub(r"\x1b\[[0-9;]*m", "", (r.get("failureMessages") or [""])[0]).split("\n")[1:40]
+                         if line.strip().startswith(("+ ", "- "))][:12]}
                for f in counts.get("testResults", []) for r in f.get("assertionResults", []) if r.get("status") == "failed"]
     failing += [{"suite": os.path.relpath(f["name"]), "message": (f.get("message") or "").split("\n")[0][:300]}
                 for f in counts.get("testResults", []) if f.get("status") == "failed" and not any(r.get("status") == "failed" for r in f.get("assertionResults", []))]
@@ -150,7 +155,7 @@ def run(ident, what, tests, expect, edits, name=None):
                 os.remove(path)
             else:
                 open(path, "wb").write(original)
-    matched = ((expect is None or any(expect in f["message"] for f in outcome["failing"]))
+    matched = ((expect is None or any(expect in f["message"] or any(expect in line for line in f.get("diff", [])) for f in outcome["failing"]))
                and (name is None or any(name in f.get("test", "") for f in outcome["failing"])))
     return {"id": ident, "mutation": what, "edits": rows, "tests": tests, "expectedMessage": expect, "expectedTest": name, **outcome,
             "killed": outcome["exit"] != 0 and (outcome["failed"] or 0) > 0 and matched}
