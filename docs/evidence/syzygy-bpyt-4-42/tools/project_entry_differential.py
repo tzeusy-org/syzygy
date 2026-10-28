@@ -2,8 +2,10 @@
 
 Run from the root of a clean Syzygy checkout: `python3 -I <this file> <base commit> > record.json`. For each case it edits
 vitest.config.ts (and creates any file the case names), runs the guard file once with its bytes at the base commit and once as it
-stands, and restores every byte whatever happens. A case is refused when the run exits non-zero with a failing test; the record
-keeps each failing test's name and first message line, the counts, and each fragment with the config's sha256.
+stands, and restores every byte whatever happens. Each run's outcome is `passes` (exit 0), `guard fails` (non-zero, with a failing
+test) or `vitest refuses` (non-zero with no test report: Vitest refused the config at startup, before the guard ran). The record
+keeps each failing test's name and first message line, the counts, any startup error line, and each fragment with the config's
+sha256.
 """
 import hashlib, json, os, subprocess, sys, tempfile
 
@@ -44,7 +46,8 @@ def vitest():
                for f in counts.get("testResults", []) for r in f.get("assertionResults", []) if r.get("status") == "failed"]
     startup = None if counts else (done.stderr.strip().split("\n") or [""])[0][:300]
     return {"exit": done.returncode, "passed": counts.get("numPassedTests"), "failed": counts.get("numFailedTests"), "failing": failing,
-            "startupError": startup, "refused": done.returncode != 0 and (counts.get("numFailedTests") or 0) > 0}
+            "startupError": startup,
+            "outcome": "passes" if done.returncode == 0 else "guard fails" if (counts.get("numFailedTests") or 0) > 0 else "vitest refuses"}
 
 
 def run(ident, what, edits, base_guard):
@@ -77,9 +80,10 @@ def run(ident, what, edits, base_guard):
                 os.remove(path)
             else:
                 open(path, "wb").write(original)
-    return {"id": ident, "case": what, "edits": rows, **out,
-            "change": {(False, False): "accepted by both", (False, True): "newly refused", (True, True): "refused by both",
-                       (True, False): "newly accepted"}[(out["base"]["refused"], out["head"]["refused"])]}
+    pair = (out["base"]["outcome"], out["head"]["outcome"])
+    change = ("unchanged" if pair[0] == pair[1] else "newly refused by the guard" if pair == ("passes", "guard fails")
+              else "newly accepted" if pair[1] == "passes" else "other")
+    return {"id": ident, "case": what, "edits": rows, **out, "change": change}
 
 
 base = git("rev-parse", sys.argv[1]).strip()
@@ -94,6 +98,8 @@ for spec in CASES:
     record["cases"].append(run(*spec, base_guard))
 record["loadavgAfter"] = open("/proc/loadavg").read().split()[:3]
 record["worktreeCleanAfter"] = git("status", "--porcelain") == ""
-record["summary"] = {change: [c["id"] for c in record["cases"] if c["change"] == change]
-                     for change in ("accepted by both", "newly refused", "refused by both", "newly accepted")}
+record["summary"] = {f"{c['base']['outcome']} -> {c['head']['outcome']}": [] for c in record["cases"]}
+for c in record["cases"]:
+    record["summary"][f"{c['base']['outcome']} -> {c['head']['outcome']}"].append(c["id"])
+record["newlyAccepted"] = [c["id"] for c in record["cases"] if c["change"] == "newly accepted"]
 print(json.dumps(record, indent=1, ensure_ascii=False))
