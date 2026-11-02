@@ -24,11 +24,20 @@ import { parseFragment } from 'parse5';
 //   `unclassifiable` (repository-locator-unavailable), never `no`.
 // - Any other scheme (mailto:, javascript:, …) and a fragment-only href
 //   name no repository file and are ignored.
-// - A malformed percent escape, an encoded separator (`%2F`, `%5C`), a
-//   backslash, a path that climbs above the repository root onto the entry,
-//   collapsed empty segments onto the entry, or a case-only variant of the
-//   entry is `unclassifiable` (ambiguous-target): the reader cannot say what
-//   a renderer would open, so it says so.
+// - A path that climbs above the repository root onto the entry, collapsed
+//   empty segments onto the entry, the entry in directory form (a trailing
+//   `/`, `/.` or `/..`), or a case-only variant of the entry is
+//   `unclassifiable` (ambiguous-target): the reader cannot say what a
+//   renderer would open, so it says so.
+// - A hazard — a malformed percent escape, an encoded separator (`%2F`,
+//   `%5C`), a backslash, or a control character (U+0000–U+001F, U+007F) —
+//   leaves no single reading. The href is then read every way a renderer
+//   might: undecoded and decoded, a backslash as a separator or not, a bare
+//   `%` kept or dropped, controls kept or removed (the WHATWG URL parser
+//   removes tab and newline), case folded. If any reading names the entry
+//   the href is `unclassifiable` (ambiguous-target), never `no`; if none
+//   does, the href names some other file and is ignored. A hazard is never
+//   a `yes`, and a hazard on an unrelated link never hides the finding.
 //
 // The first anchor that resolves to the entry decides `yes`. With none, the
 // first unclassifiable anchor decides `unclassifiable`; otherwise `no`.
@@ -71,6 +80,7 @@ type HrefVerdict =
   | { readonly kind: 'unclassifiable'; readonly reason: 'repository-locator-unavailable' | 'ambiguous-target' };
 
 const OTHER: HrefVerdict = { kind: 'other' };
+const ENTRY: HrefVerdict = { kind: 'entry' };
 const AMBIGUOUS: HrefVerdict = { kind: 'unclassifiable', reason: 'ambiguous-target' };
 
 interface ParseNode {
@@ -95,8 +105,8 @@ function stripQueryAndFragment(href: string): string {
   return cut === -1 ? href : href.slice(0, cut);
 }
 
-// Decodes each '/'-separated segment. Undefined on a malformed escape, an
-// encoded separator or a backslash anywhere in the path.
+// Decodes each '/'-separated segment. Undefined on a hazard: a malformed
+// escape, an encoded separator or a backslash anywhere in the path.
 function decodedSegments(path: string): readonly string[] | undefined {
   if (path.includes('\\') || /%(?:2f|5c)/i.test(path)) return undefined;
   const segments: string[] = [];
@@ -112,18 +122,21 @@ function decodedSegments(path: string): readonly string[] | undefined {
 
 interface Normalized {
   readonly segments: readonly string[];
-  // True when `..` climbed above the root or an empty segment collapsed:
-  // renderers disagree on both, so an entry reached that way is ambiguous.
+  // True when `..` climbed above the root, an empty segment collapsed or
+  // the path ends in directory form: renderers disagree on all three, so an
+  // entry reached that way is ambiguous.
   readonly irregular: boolean;
 }
 
 function normalize(segments: readonly string[]): Normalized {
   const out: string[] = [];
-  let irregular = false;
+  // A last segment of '', '.' or '..' names a directory, never a file.
+  const last = segments[segments.length - 1];
+  let irregular = segments.length > 1 && (last === '' || last === '.' || last === '..');
   segments.forEach((segment, index) => {
     if (segment === '') {
-      // A leading '' is the root-relative slash; a trailing one is a
-      // directory; any other collapses.
+      // A leading '' is the root-relative slash; any other collapses (the
+      // trailing one is the directory form above).
       if (index !== 0 && index !== segments.length - 1) irregular = true;
       return;
     }
@@ -140,15 +153,46 @@ function normalize(segments: readonly string[]): Normalized {
 
 function verdictForRepositoryPath(normalized: Normalized): HrefVerdict {
   const joined = normalized.segments.join('/');
-  if (joined === HUMAN_ENTRY_PATH) return normalized.irregular ? AMBIGUOUS : { kind: 'entry' };
+  if (joined === HUMAN_ENTRY_PATH) return normalized.irregular ? AMBIGUOUS : ENTRY;
   if (joined.toLowerCase() === ENTRY_LOWER) return AMBIGUOUS;
   return OTHER;
 }
 
+function isEntry(segments: readonly string[]): boolean {
+  return segments.join('/').toLowerCase() === ENTRY_LOWER;
+}
+
 function endsWithEntry(segments: readonly string[]): boolean {
   if (segments.length < ENTRY_SEGMENTS.length) return false;
-  const tail = segments.slice(segments.length - ENTRY_SEGMENTS.length).join('/');
-  return tail.toLowerCase() === ENTRY_LOWER;
+  return isEntry(segments.slice(segments.length - ENTRY_SEGMENTS.length));
+}
+
+// Valid escapes decoded run by run; a run that is not UTF-8 stays literal,
+// and so does a bare '%'.
+function lenientDecode(path: string): string {
+  return path.replace(/(?:%[0-9A-Fa-f]{2})+/g, (run) => {
+    try {
+      return decodeURIComponent(run);
+    } catch {
+      return run;
+    }
+  });
+}
+
+// Every normalized segment list a renderer might read a hazardous path as.
+// Used only to ask whether ANY reading names the entry; never to say yes.
+function hazardReadings(path: string): readonly (readonly string[])[] {
+  const strings = new Set<string>();
+  for (const base of [path, lenientDecode(path)]) {
+    strings.add(base);
+    strings.add(base.replace(/%(?![0-9A-Fa-f]{2})/g, ''));
+  }
+  const readings: (readonly string[])[] = [];
+  for (const reading of strings) {
+    readings.push(normalize(reading.split('/')).segments);
+    readings.push(normalize(reading.split(/[\\/]/)).segments);
+  }
+  return readings;
 }
 
 interface Locator {
@@ -186,15 +230,17 @@ function classifyAbsolute(href: string, locator: Locator | undefined): HrefVerdi
   // a backslash into '/'.
   const rawPath = stripQueryAndFragment(href.replace(/^[A-Za-z][A-Za-z0-9+.-]*:\/\/[^/?#]*/, ''));
   const rawSegments = decodedSegments(rawPath);
-  if (rawSegments === undefined) return AMBIGUOUS;
+  if (rawSegments === undefined) {
+    return hazardReadings(rawPath).some(endsWithEntry) ? AMBIGUOUS : OTHER;
+  }
+  const normalized = normalize(rawSegments);
+  if (!endsWithEntry(normalized.segments)) return OTHER;
   let url: URL;
   try {
     url = new URL(href);
   } catch {
     return AMBIGUOUS;
   }
-  const normalized = normalize(rawSegments);
-  if (!endsWithEntry(normalized.segments)) return OTHER;
   if (locator === undefined) {
     return { kind: 'unclassifiable', reason: 'repository-locator-unavailable' };
   }
@@ -209,8 +255,18 @@ function classifyAbsolute(href: string, locator: Locator | undefined): HrefVerdi
   });
 }
 
+// A control character inside an href is a hazard: the WHATWG URL parser
+// removes tab and newline, other renderers may not. The href with every
+// control removed is classified; any answer but `other` is ambiguous.
+const CONTROL = /[\u0000-\u001F\u007F]/g;
+
 function classifyHref(rawHref: string, locator: Locator | undefined): HrefVerdict {
-  const href = rawHref.trim();
+  const trimmed = rawHref.trim();
+  if (trimmed.search(CONTROL) === -1) return classifyCleanHref(trimmed, locator);
+  return classifyCleanHref(trimmed.replace(CONTROL, ''), locator).kind === 'other' ? OTHER : AMBIGUOUS;
+}
+
+function classifyCleanHref(href: string, locator: Locator | undefined): HrefVerdict {
   if (href === '' || href.startsWith('#')) return OTHER;
   if (href.startsWith('//')) return classifyAbsolute(`https:${href}`, locator);
   const scheme = /^([A-Za-z][A-Za-z0-9+.-]*):/.exec(href);
@@ -218,8 +274,9 @@ function classifyHref(rawHref: string, locator: Locator | undefined): HrefVerdic
     const name = (scheme[1] as string).toLowerCase();
     return name === 'http' || name === 'https' ? classifyAbsolute(href, locator) : OTHER;
   }
-  const segments = decodedSegments(stripQueryAndFragment(href));
-  if (segments === undefined) return AMBIGUOUS;
+  const path = stripQueryAndFragment(href);
+  const segments = decodedSegments(path);
+  if (segments === undefined) return hazardReadings(path).some(isEntry) ? AMBIGUOUS : OTHER;
   return verdictForRepositoryPath(normalize(segments));
 }
 
