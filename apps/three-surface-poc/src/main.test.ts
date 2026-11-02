@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { isAbsolute, join } from 'node:path';
 import { PassThrough, Writable } from 'node:stream';
 
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi, type RunnerTask } from 'vitest';
 
 import type { DaemonOptions, DaemonStart, Route } from '@syzygy/http-host';
 import { PocObservationError, type PocModel } from '@syzygy/three-surface-poc-core';
@@ -29,13 +29,18 @@ import { ADMITTING_AUTHORITY, PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC, pr
 
 // The one collaborator `main` reaches by import rather than through its deps
 // is the Polaris blob reader; this records the root it is built for and the
-// objects it is asked for, and reads nothing.
-const blobReader = vi.hoisted(() => ({ roots: [] as string[], objectIds: [] as string[] }));
+// objects it is asked for, and reads nothing unless a test sets `serve`, which
+// answers by exact object id (and `afterEach` clears it).
+const blobReader = vi.hoisted(() => ({
+  roots: [] as string[],
+  objectIds: [] as string[],
+  serve: (_objectId: string): Uint8Array | undefined => undefined,
+}));
 vi.mock('./verbatim-route.js', async (importOriginal) => ({
   ...(await importOriginal<typeof import('./verbatim-route.js')>()),
   gitBlobReaderFor: (root: string) => {
     blobReader.roots.push(root);
-    return (objectId: string) => { blobReader.objectIds.push(objectId); return undefined; };
+    return (objectId: string) => { blobReader.objectIds.push(objectId); return blobReader.serve(objectId); };
   },
 }));
 
@@ -44,8 +49,25 @@ const OBSERVER_ROOT = '/observer/syzygy';
 // Every wait in this file is bounded by WAIT_MS, and every test that waits
 // has a timeout above two of them, so a slow host fails on the unmet
 // expectation instead of on "Test timed out" (vitest's default is 5000 ms).
+// The last test in the file checks that relation against the timeouts vitest
+// registered, for each test that reached a bounded wait.
 const WAIT_MS = 10_000;
 const TEST_TIMEOUT_MS = 30_000;
+
+/** The bound, in ms, summed per test (by full name) over its WAIT_MS waits. */
+const waitBudgets = new Map<string, number>();
+
+/** Charges one WAIT_MS wait to the running test. */
+function chargeWait(): void {
+  const test = expect.getState().currentTestName ?? '';
+  waitBudgets.set(test, (waitBudgets.get(test) ?? 0) + WAIT_MS);
+}
+
+/** `vi.waitFor` bounded by, and charged as, one WAIT_MS wait. */
+async function waitedFor(assertion: () => void): Promise<void> {
+  chargeWait();
+  await vi.waitFor(assertion, { timeout: WAIT_MS });
+}
 
 let repoRoot: string;
 let scratch: string;
@@ -54,6 +76,9 @@ const fixtureDirectories: string[] = [];
 beforeAll(() => {
   scratch = realpathSync(mkdtempSync(join(tmpdir(), 'poc-main-test-')));
   repoRoot = scratch;
+});
+afterEach(() => {
+  blobReader.serve = () => undefined;
 });
 afterAll(() => {
   rmSync(scratch, { recursive: true, force: true });
@@ -184,6 +209,7 @@ function harness(overrides: Partial<PocMainDeps> = {}, options: { observer?: Git
  * finishes first or does not get there within `boundMs`; the poll stops on
  * either, so a failed run leaves no timer behind. */
 async function started(run: Promise<number>, fake: ReturnType<typeof fakeIo>, boundMs: number = WAIT_MS): Promise<void> {
+  if (boundMs === WAIT_MS) chargeWait(); // the two bounds the tests of `started` itself pass are not waits of theirs
   let exitCode: number | undefined;
   void run.then((code) => { exitCode = code; }, () => { exitCode = -1; });
   const deadline = Date.now() + boundMs;
@@ -399,7 +425,7 @@ describe('main(argv, io): serving', () => {
     h.setObserver(observation('observer-rev', ['packages/cap1-daemon/src/server.ts']));
     fake.stdin.write('\n');
     const refusal = 'Re-observation unavailable: Unknown — POC runtime inputs are dirty; re-observation was refused. The prior complete evaluation remains served.\n';
-    await vi.waitFor(() => expect(fake.out().slice(before)).toContain(refusal), { timeout: WAIT_MS });
+    await waitedFor(() => expect(fake.out().slice(before)).toContain(refusal));
     expect(fake.out().slice(before)).toContain('Re-observing…\n');
     fake.signal('SIGINT');
     expect(await run).toBe(0);
@@ -477,7 +503,7 @@ describe('main(argv, io): the bound locator reaches every repository-rooted argu
     expect(await run).toBe(0);
   }, TEST_TIMEOUT_MS);
 
-  it('reads the exact requirement text from the bound repository', async () => {
+  it('serves the requirement text the bound repository returns for the object it asks for, and withholds the purpose prose', async () => {
     const fake = fakeIo();
     const model = buildFixtureModel(fixtureDirectories, {
       projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC) },
@@ -485,13 +511,20 @@ describe('main(argv, io): the bound locator reaches every repository-rooted argu
     const h: Harness = harness({ resolveBinding: bindTo(() => h) }, { model: () => model });
     blobReader.roots.length = 0;
     blobReader.objectIds.length = 0;
+    // The baseline spec's blob, served for its exact (SHA-1) object id only.
+    blobReader.serve = (objectId) => objectId === 'ffcbf1c2ab91c30ee33ff2bcd1844fc5f6132b38'
+      ? new TextEncoder().encode(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC['openspec/specs/switchboard-identity/spec.md'])
+      : undefined;
     const run = main(['--repo', repoRoot, '--state-dir', join(scratch, 'state'), '--port', '0'], fake.io, h.deps);
     await started(run, fake);
 
-    const response = await get(routeOf(h, 'GET', '/api/poc/polaris'));
+    const response = await get(routeOf(h, 'GET', '/polaris'));
     expect(response.status).toBe(200);
     expect(blobReader.roots).toEqual([BOUND]);
-    expect(blobReader.objectIds.length).toBeGreaterThan(0);
+    expect(blobReader.objectIds).toEqual(['ffcbf1c2ab91c30ee33ff2bcd1844fc5f6132b38']);
+    expect(response.body).toContain('The switchboard SHALL resolve the sender of every inbound message to an entity.');
+    expect(response.body).toContain('The routing log SHALL carry the resolved entity.');
+    expect(response.body).not.toContain('PURPOSE-PROSE-NEVER-RENDERED');
 
     fake.signal('SIGINT');
     expect(await run).toBe(0);
@@ -656,4 +689,54 @@ describe('started(): the wait for main to serve', () => {
     const run = main(['--repo', repoRoot, '--state-dir', join(scratch, 'state'), '--port', '0'], fake.io, h.deps);
     await expect(started(run, fake, 50)).rejects.toThrow('main was not serving within 50 ms');
   }, 2_000); // its own bound is 50 ms
+});
+
+interface RegisteredTest {
+  readonly name: string;
+  readonly timeoutMs: number;
+  readonly passed: boolean;
+}
+
+/** The tests, by full name, with the timeout vitest registered for each. */
+function registeredTests(tasks: readonly RunnerTask[], prefix: readonly string[] = []): RegisteredTest[] {
+  return tasks.flatMap((task) => {
+    if (task.type === 'suite') return registeredTests(task.tasks, [...prefix, task.name]);
+    if (task.type !== 'test') return [];
+    return [{ name: [...prefix, task.name].join(' > '), timeoutMs: task.timeout, passed: task.result?.state === 'pass' }];
+  });
+}
+
+/**
+ * What breaks the bound relation: a test whose summed waits reach its timeout
+ * (a slow host would then end it as "Test timed out"), and a passed test that
+ * carries TEST_TIMEOUT_MS yet charged no wait (the charge would then have
+ * gone missing, and with it the check).
+ */
+function boundViolations(budgets: ReadonlyMap<string, number>, tests: readonly RegisteredTest[]): string[] {
+  const timeouts = new Map(tests.map((test) => [test.name, test.timeoutMs]));
+  const outlasting = [...budgets].filter(([name, budget]) => budget >= (timeouts.get(name) ?? 0))
+    .map(([name, budget]) => `${name}: waits up to ${budget} ms, timeout ${timeouts.get(name) ?? 'unregistered'} ms`);
+  // The tests of `started` itself pass their own bounds, so they charge none.
+  const uncharged = tests.filter((test) => test.passed && test.timeoutMs === TEST_TIMEOUT_MS && !budgets.has(test.name) && !test.name.startsWith('started(): '))
+    .map((test) => `${test.name}: carries TEST_TIMEOUT_MS but charged no wait`);
+  return [...outlasting, ...uncharged];
+}
+
+describe('the wait bounds of this file', () => {
+  const GUARDED: RegisteredTest = { name: 'a > guarded', timeoutMs: 30_000, passed: true };
+
+  it('flags a test whose waits reach its timeout, a default-timeout waiter, and a charge that went missing', () => {
+    expect(boundViolations(new Map([['a > guarded', 20_000]]), [GUARDED])).toEqual([]);
+    expect(boundViolations(new Map([['a > guarded', 30_000]]), [GUARDED])).toEqual(['a > guarded: waits up to 30000 ms, timeout 30000 ms']);
+    expect(boundViolations(new Map([['a > guarded', 10_000]]), [{ ...GUARDED, timeoutMs: 5_000 }])).toEqual(['a > guarded: waits up to 10000 ms, timeout 5000 ms']);
+    expect(boundViolations(new Map(), [GUARDED])).toEqual(['a > guarded: carries TEST_TIMEOUT_MS but charged no wait']);
+    expect(boundViolations(new Map(), [{ ...GUARDED, passed: false }])).toEqual([]);
+  });
+
+  // Last in the file: it reads what the tests above charged.
+  it('holds for every test that waited, with the timeout vitest registered', ({ task }) => {
+    const tests = registeredTests(task.file.tasks);
+    expect(tests.length).toBeGreaterThan(20);
+    expect(boundViolations(waitBudgets, tests)).toEqual([]);
+  });
 });
