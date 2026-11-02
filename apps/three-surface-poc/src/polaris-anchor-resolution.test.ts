@@ -234,6 +234,23 @@ describe('PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the inde
     });
   });
 
+  it('a narrative whose every anchor resolves is 6 of 6 and stays non-citable; one own identity is enough to count (not Unknown)', () => {
+    const registry = new NarrativeRegistry();
+    const captured = { label: 'Observed', tier: 'report-fact', reason: 'none' };
+    const anchor = (targetId: string) => ({ targetClass: 'evidence' as const, targetId, revision: 'r', locator: 'p', supports: ['c'], captured });
+    registry.registerAnchored('block:x', ['c'], [anchor('sha256:A'), anchor('sha256:A'), anchor('sha256:A')]);
+    registry.registerAnchored('block:y', ['c'], [anchor('sha256:A'), anchor('sha256:A'), anchor('sha256:A')]);
+    const narrative = registry.narrative({ only: { identity: 'sha256:A' } });
+    expect(narrative.blocks.map((block) => block.anchorsResolved)).toEqual([
+      { kind: 'counted', resolved: 3, total: 3 },
+      { kind: 'counted', resolved: 3, total: 3 },
+    ]);
+    expect(narrative.anchorsResolved).toEqual({ kind: 'counted', resolved: 6, total: 6 });
+    expect(narrative.citable).toBe(false);
+    expect(narrative.presentation).toBe('presentation-artifact');
+    for (const block of narrative.blocks) expect(block.citable).toBe(false);
+  });
+
   it('a target served by two records resolves nowhere (exactly one), and one identity counted per anchor naming it', () => {
     const registry = new NarrativeRegistry();
     const captured = { label: 'Observed', tier: 'report-fact', reason: 'none' };
