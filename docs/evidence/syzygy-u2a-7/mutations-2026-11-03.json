@@ -1,0 +1,205 @@
+{
+  "subject": "syzygy-u2a.7 rule-6 controlled mutations (README link reader, discoverability plane, capture order, two-channel parity, consent-refused entry)",
+  "ranAt": "7d527346a7783a64d4899d41c8a6e1866491975d",
+  "subjectDigests": {
+    "packages/cap1-conformance/src/req-052.conformance.test.ts": "sha256:f65241d08173464ce1f2ab463ce139c4810bc153389d9c5e8402f03263a80815",
+    "packages/cap1-core/src/discoverability.ts": "sha256:99801ccd512c4e3fbfd7e58842258f7ad0e1f13af8e7de5c996365c558bba22c",
+    "packages/cap1-daemon/src/pipeline.test.ts": "sha256:b5d46bc222826ac04f705ed55b66dd65b97043d2e6feb855909086b912c3584a",
+    "packages/cap1-daemon/src/pipeline.ts": "sha256:fd6577ffdec5e65ee4691c87caa72b6e40ab23a692292abc488c779e372de8a0",
+    "packages/cap1-daemon/src/readme-links.test.ts": "sha256:b21771267730e66e2849a0b06bfc88ee32d23ba2c9db70e16422fcccdba0943a",
+    "packages/cap1-daemon/src/readme-links.ts": "sha256:c636553a8d1466a825dd023cc10f57b2e61fe1b42ced8b257e10bff986692959",
+    "packages/cap1-daemon/src/routes-human.test.ts": "sha256:6131e06e7de1cd7b8ce14b136be16f66aa0bf159d6e5b784ceaa694a634d7e32",
+    "packages/cap1-daemon/src/routes-human.ts": "sha256:fa0ae97c448ca9fbcce0b5034f536096ae75e883c213ff3548348ebb6206c8e0",
+    "packages/cap1-daemon/src/routes-machine.test.ts": "sha256:eec41296d615f9d928d025e5b82cfeae430e7a0f8efb7f91e7a8e1accd1db725",
+    "packages/cap1-daemon/src/routes-machine.ts": "sha256:32c91a0efb5316f1ce45ff1fc366cbf44a90c5b958fbda68fb8b5c75e8dc3414",
+    "packages/cap1-daemon/src/source-snapshot.test.ts": "sha256:a02bea6f7d1721744c5e28ffa6290257c398542843a5360c6f68675657bc633a",
+    "packages/cap1-daemon/src/source-snapshot.ts": "sha256:144cb9a7153812a3e7a119d7c5cc070e11cc2afe2b87963a0ef7ba37699222b4",
+    "packages/cap1-system/src/discoverability.system.test.ts": "sha256:d79bbb40bb6dbefef7243b2c6931c237004919f1567f3f7fdb6de2bd48315250"
+  },
+  "method": "each mutant replaces exactly one occurrence of old with new in the named file, runs `npx vitest run <tests>` (unit) and, where the tests list the system file, `npm run build` then the system test; then restores the file. killed means every listed run exited non-zero",
+  "population": 13,
+  "killed": 12,
+  "equivalent": [
+    "M2-consent-before-role"
+  ],
+  "mutants": [
+    {
+      "id": "M1-substring-extraction",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  const html = MARKDOWN.parse(markdown, { async: false });",
+      "new": "  if (markdown.length >= 0) return markdown.includes('.syzygy/intent/OVERVIEW.md') ? { state: 'classified', linksToEntry: true, qualifyingHref: '.syzygy/intent/OVERVIEW.md' } : { state: 'classified', linksToEntry: false, qualifyingHref: undefined };\n  const html = MARKDOWN.parse(markdown, { async: false });",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M2-consent-before-role",
+      "file": "packages/cap1-daemon/src/pipeline.ts",
+      "old": "  if (repository.role === 'observed-source') {\n    return { kind: 'evidence', evidence: { state: 'not-read', reason: 'no-governance-root' } };\n  }\n  if (repository.decision.authorization !== 'admitted') {\n    return { kind: 'evidence', evidence: { state: 'unconsented' } };\n  }",
+      "new": "  if (repository.decision.authorization !== 'admitted') {\n    return { kind: 'evidence', evidence: { state: 'unconsented' } };\n  }\n  if (repository.role === 'observed-source') {\n    return { kind: 'evidence', evidence: { state: 'not-read', reason: 'no-governance-root' } };\n  }",
+      "tests": [
+        "packages/cap1-daemon/src/pipeline.test.ts",
+        "packages/cap1-daemon/src/routes-human.test.ts",
+        "packages/cap1-daemon/src/routes-machine.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 0
+      },
+      "outcome": "equivalent (survived)",
+      "note": "Equivalent at this seam: core computeDiscoverability applies the role check first whatever evidence the pipeline passes, and the capture never holds an observed-source README, so swapping the pipeline order changes no output. The order is pinned where it decides, by M2b in core."
+    },
+    {
+      "id": "M3-unclassifiable-served-as-no",
+      "file": "packages/cap1-daemon/src/pipeline.ts",
+      "old": "      if (link.state === 'unclassifiable') {",
+      "new": "      if (link.state === 'unclassifiable' && link.href === '\\u0000') {",
+      "tests": [
+        "packages/cap1-daemon/src/pipeline.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M4-absolute-without-locator-ignored",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  if (locator === undefined) {\n    return { kind: 'unclassifiable', reason: 'repository-locator-unavailable' };\n  }",
+      "new": "  if (locator === undefined) {\n    return OTHER;\n  }",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M5-observed-source-readme-read",
+      "file": "packages/cap1-daemon/src/source-snapshot.ts",
+      "old": "    if (entry.role === 'observed-source') {\n      readme = notRead('observed-source');",
+      "new": "    if (entry.role === ('never' as string)) {\n      readme = notRead('observed-source');",
+      "tests": [
+        "packages/cap1-daemon/src/source-snapshot.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M6-query-kept-in-identity",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  const cut = href.search(/[?#]/);",
+      "new": "  const cut = href.search(/[#]/);",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M7-root-escape-not-ambiguous",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "      if (out.length === 0) irregular = true;\n      else out.pop();",
+      "new": "      if (out.length > 0) out.pop();",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M8-readme-read-unrecorded",
+      "file": "packages/cap1-daemon/src/source-snapshot.ts",
+      "old": "      const read = await readRecorded('readme', entry.id, README_RELATIVE_PATH, rootDir, ordinal);",
+      "new": "      const read = await reader.readBytes(rootDir, README_RELATIVE_PATH);",
+      "tests": [
+        "packages/cap1-daemon/src/source-snapshot.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M9-not-read-entry-as-unreadable",
+      "file": "packages/cap1-daemon/src/routes-human.ts",
+      "old": "      return { state: 'not-read', reason: entry.reason, unknownReason: entry.unknownReason };",
+      "new": "      return { state: 'unreadable', reason: entry.unknownReason };",
+      "tests": [
+        "packages/cap1-daemon/src/routes-human.test.ts",
+        "packages/cap1-daemon/src/routes-machine.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M10-machine-row-drops-explanation",
+      "file": "packages/cap1-daemon/src/routes-machine.ts",
+      "old": "    rows: plane.rows.map((entry) => ({ ...entry.row, evaluationId: id, explanation: entry.explanation })),",
+      "new": "    rows: plane.rows.map((entry) => ({ ...entry.row, evaluationId: id, explanation: { ...entry.explanation, selection: 'x' } })),",
+      "tests": [
+        "packages/cap1-daemon/src/routes-human.test.ts",
+        "packages/cap1-daemon/src/routes-machine.test.ts",
+        "packages/cap1-system/src/discoverability.system.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1,
+        "system": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M11-human-row-drops-evidence-digest",
+      "file": "packages/cap1-daemon/src/routes-human.ts",
+      "old": "          ? attr('data-evidence-path', row.evidence.relativePath) + attr('data-evidence-digest', row.evidence.digest)",
+      "new": "          ? attr('data-evidence-path', row.evidence.relativePath)",
+      "tests": [
+        "packages/cap1-system/src/discoverability.system.test.ts"
+      ],
+      "exitCodes": {
+        "system": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M12-case-variant-counts",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  if (joined.toLowerCase() === ENTRY_LOWER) return AMBIGUOUS;",
+      "new": "  if (joined.toLowerCase() === ENTRY_LOWER) return { kind: 'entry' };",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M2b-core-consent-before-role",
+      "file": "packages/cap1-core/src/discoverability.ts",
+      "old": "  if (role === 'observed-source') {\n    return {\n      repositoryId,\n      value: 'not-applicable',",
+      "new": "  if (role === 'observed-source' && evidence.state !== 'unconsented') {\n    return {\n      repositoryId,\n      value: 'not-applicable',",
+      "tests": [
+        "packages/cap1-conformance/src/req-052.conformance.test.ts",
+        "packages/cap1-daemon/src/routes-human.test.ts",
+        "packages/cap1-daemon/src/routes-machine.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    }
+  ]
+}
