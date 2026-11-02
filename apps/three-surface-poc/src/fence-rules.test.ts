@@ -220,18 +220,19 @@ describe('Markdown fence recognizers: what each reader treats as inside a fence'
 
   // GAP, what syzygy-bpyt.55 left (the plan kept the readers' line model, the owner's Q2 answer C changed their fence and span rules): a
   // bare CR ends a line for the profile and the gate (since syzygy-bpyt.16) and for the renderer, which turns \r\n? into \n, but not for
-  // the extractor or the link reader, which split at LF only and ask the profile whether the first character of each such line is fenced.
-  // In a bare-CR text that is one line, fenced when the text opens a fence at its start. Over the 33 cases the link reader's vector differs
-  // from its LF vector in 26 and the extractor's in all 33; the renderer's, the profile's and the gate's in none. A change of that line
-  // model flips the two rows.
-  describe('GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader', () => {
+  // the extractor, which splits at LF only and asks the profile whether the first character of each such line is fenced. In a bare-CR
+  // text that is one line, fenced when the text opens a fence at its start. Over the 33 cases the extractor's vector differs from its LF
+  // vector in all 33. The link reader also splits at LF only, but since round 1 (F1) it blanks every fenced character rather than
+  // sampling the line's first, so a bare-CR text reads as its LF text in all 33, as the renderer's, the profile's and the gate's do. A
+  // change of the extractor's line model flips its row.
+  describe('GAP: a bare CR is a line end for the profile, the gate, the renderer and the link reader, not for the extractor', () => {
     const measure = (name: 'links' | 'extraction' | 'renderer'): { readonly differing: number; readonly sample: Readonly<Record<string, string>> } => {
       const differing = CASES.filter((c) => vector(readers[name], PROBE, c.lines, CR) !== c[name]);
       return { differing: differing.length, sample: Object.fromEntries(['backtick-col0', 'unclosed'].map((id) => [id, vector(readers[name], PROBE, (CASES.find((c) => c.id === id) as FenceCase).lines, CR)])) };
     };
 
-    it('the link reader', () => {
-      expect(measure('links')).toEqual({ differing: 26, sample: { 'backtick-col0': 'VHHH', unclosed: 'VHH' } });
+    it('the link reader reads a bare CR as the LF text is read', () => {
+      expect(measure('links')).toEqual({ differing: 0, sample: { 'backtick-col0': 'VHHV', unclosed: 'VHH' } });
     });
 
     it('the extractor', () => {

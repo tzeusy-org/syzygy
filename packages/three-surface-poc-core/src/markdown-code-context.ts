@@ -209,15 +209,24 @@ export function isFencedAt(recognition: CodeContextRecognition, offset: number):
   return range !== undefined && range[0] <= offset;
 }
 
-// The span ranges that overlap [start, end), each clipped to it, in order.
-export function spanRangesWithin(recognition: CodeContextRecognition, start: number, end: number): readonly CodeContextRange[] {
+function rangesWithin(ranges: readonly CodeContextRange[], start: number, end: number): readonly CodeContextRange[] {
   const out: CodeContextRange[] = [];
-  for (let at = firstEndingAfter(recognition.spanRanges, start); at < recognition.spanRanges.length; at += 1) {
-    const range = recognition.spanRanges[at] as CodeContextRange;
+  for (let at = firstEndingAfter(ranges, start); at < ranges.length; at += 1) {
+    const range = ranges[at] as CodeContextRange;
     if (range[0] >= end) break;
     out.push([Math.max(range[0], start), Math.min(range[1], end)]);
   }
   return out;
+}
+
+// The span ranges that overlap [start, end), each clipped to it, in order.
+export function spanRangesWithin(recognition: CodeContextRecognition, start: number, end: number): readonly CodeContextRange[] {
+  return rangesWithin(recognition.spanRanges, start, end);
+}
+
+// The fence ranges that overlap [start, end), each clipped to it, in order.
+export function fenceRangesWithin(recognition: CodeContextRecognition, start: number, end: number): readonly CodeContextRange[] {
+  return rangesWithin(recognition.fenceRanges, start, end);
 }
 
 export function maskMarkdownCodeContexts(text: string): CodeContextMask {

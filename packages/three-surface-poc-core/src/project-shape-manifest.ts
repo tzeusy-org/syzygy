@@ -34,7 +34,12 @@ import {
   type GitTreeEntry,
   type GitTreeIndex,
 } from './git-tree.js';
-import { isFencedAt, recognizeCodeContexts, spanRangesWithin } from './markdown-code-context.js';
+import {
+  type CodeContextRange,
+  fenceRangesWithin,
+  recognizeCodeContexts,
+  spanRangesWithin,
+} from './markdown-code-context.js';
 
 // Byte-equal to the adopted registry entry's `discoveryVersion` and the
 // adopted policy's `sourceAdmission.phaseA.fixedSeedPaths`;
@@ -173,32 +178,43 @@ export type DeriveManifestResult =
 // line start. Images (`![...]`) are not links. Fragments and queries are
 // dropped. Nothing else in an index names a file.
 
-// Which lines sit inside a fence, and which characters sit inside a code span, are the PWB-REQ-006 profile's rules
-// (`recognizeCodeContexts`), not rules of this module (syzygy-bpyt.55). The line model stays this module's: the text splits at LF, and a
-// line is fenced when the profile marks its first character fenced. A span is deleted, not blanked, as the reader always did: each
-// character of a profile span on the line is removed and a CR or LF inside it stays, so the line count never moves. `stripInlineCode`
-// false leaves spans alone (the root index's pillar table keeps its code-span directory cells).
+// Which characters sit inside a fence, and which inside a code span, are the PWB-REQ-006 profile's rules (`recognizeCodeContexts`), not
+// rules of this module (syzygy-bpyt.55). The line model stays this module's: the text splits at LF. Every fenced character becomes a
+// space, so a profile fence that opens or closes at a bare CR inside an LF line hides exactly its own characters (round-1 F1); a line
+// with no character outside a fence but CR is dropped whole, as the reader always dropped a fenced line. Every character of a profile
+// span becomes a space too, never deleted, so the text on either side of a span never joins into a link the text does not write
+// (round-1 F2). A CR or LF stays where it stands. `stripInlineCode` false leaves spans alone (the root index's pillar table keeps its
+// code-span directory cells).
 function stripFences(text: string, stripInlineCode = true): readonly string[] {
   const recognition = recognizeCodeContexts(text);
   const kept: string[] = [];
   let offset = 0;
   for (const line of text.split('\n')) {
     const start = offset;
-    offset += line.length + 1;
-    if (isFencedAt(recognition, start)) continue;
-    if (!stripInlineCode) {
-      kept.push(line);
-      continue;
-    }
+    const end = start + line.length;
+    offset = end + 1;
+    const fenced = fenceRangesWithin(recognition, start, end);
+    if (fenced.length > 0 && outsideIsOnlyCr(line, start, fenced)) continue;
+    const blanked = stripInlineCode ? [...fenced, ...spanRangesWithin(recognition, start, end)].sort((a, b) => a[0] - b[0]) : fenced;
     let rendered = '';
     let at = 0;
-    for (const [from, to] of spanRangesWithin(recognition, start, start + line.length)) {
-      rendered += line.slice(at, from - start) + line.slice(from - start, to - start).replace(/[^\r\n]/g, '');
+    for (const [from, to] of blanked) {
+      rendered += line.slice(at, from - start) + line.slice(from - start, to - start).replace(/[^\r\n]/g, ' ');
       at = to - start;
     }
     kept.push(rendered + line.slice(at));
   }
   return kept;
+}
+
+// Whether every character of the line outside the given fenced ranges (sorted, clipped to the line) is a CR.
+function outsideIsOnlyCr(line: string, start: number, fenced: readonly CodeContextRange[]): boolean {
+  let at = 0;
+  for (const [from, to] of [...fenced, [start + line.length, start + line.length] as const]) {
+    if (/[^\r]/.test(line.slice(at, from - start))) return false;
+    at = to - start;
+  }
+  return true;
 }
 
 const INLINE_LINK = /(!?)\[[^\]]*\]\(\s*(?:<([^>]*)>|([^\s)]+))(?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?\s*\)/g;

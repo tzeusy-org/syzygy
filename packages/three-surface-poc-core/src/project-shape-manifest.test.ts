@@ -596,9 +596,19 @@ describe('index link grammar — the profile\'s fences and spans', () => {
     expect(links('`a` [c](c.md) `b`')).toEqual(['c.md']);
   });
 
-  it('a span is deleted and not blanked: the characters around it join', () => {
-    expect(links('[a](b`x`.md)')).toEqual(['b.md']);
+  // Round 1 F2: deletion joined the text around a span into a link the text never writes.
+  it('a span is blanked and not deleted: the characters around it never join into a link', () => {
+    expect(links('[a]`x`(a.md)')).toEqual([]);
+    expect(links('[a](b`x`.md)')).toEqual([]);
     expect(links('[a`x`](a.md)')).toEqual(['a.md']);
+  });
+
+  // Round 1 F1: the reader sampled a fence only at an LF line's first character, so a fence opening or closing at a bare CR read a
+  // link inside it or hid the one after it. Every fenced character is blanked; what lies outside the fence on the same LF line stays.
+  it('a fence that opens or closes at a bare CR inside an LF line hides exactly its own characters', () => {
+    expect(indexLinkTargets(['[a](a.md)\r' + B + '\r[b](b.md)\r' + B, '[c](c.md)'].join('\n'))).toEqual(['a.md', 'c.md']);
+    expect(indexLinkTargets([B, '[a](a.md)\r' + B + '\r[b](b.md)'].join('\n'))).toEqual(['b.md']);
+    expect([...rootIndexPillarRoots(['x\r' + B + '\r| Pillar | Directory |', '| --- | --- |', '| Heart and Soul | `about/heart-and-soul/` |', B].join('\n'))]).toEqual([]);
   });
 
   it('a closer-shaped line with an info string or a trailing tab does not close a fence; the real closer does', () => {
@@ -633,6 +643,9 @@ describe('index link grammar — the profile\'s fences and spans', () => {
     // The info-string line does not close the fence, so the table stays inside it until the real closer.
     expect([...rootIndexPillarRoots([B, 'x', B + 'js', ...table, B].join('\n'))]).toEqual([]);
     expect([...rootIndexPillarRoots([B, 'x', B, ...table].join('\n'))]).toEqual([['heart-and-soul', ['about/heart-and-soul']]]);
+    // A fenced line is dropped whole, so a fence between the delimiter and a row does not end the table, in CRLF text too.
+    const split = [table[0], table[1], B, 'x', B, table[2], ''];
+    for (const end of ['\n', '\r\n']) expect([...rootIndexPillarRoots(split.join(end))], JSON.stringify(end)).toEqual([['heart-and-soul', ['about/heart-and-soul']]]);
   });
 
   it('phase A: a pillar link hidden by a code span names no pillar, and the pillar index is never read', () => {
