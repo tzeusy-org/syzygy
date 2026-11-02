@@ -1,0 +1,338 @@
+{
+  "subject": "syzygy-u2a.7 round-1 repair rule-6 controlled mutations (README link hazards, control characters, directory form, template walk, reader version pins, undeclared-root entry reason), answering docs/reviews/R-RT-U2A7-DISCOVERABILITY-EXACT-HEAD-RAW.md F1-F3 and F5-F7",
+  "ranAt": "363aeaf3651ecb1991a495ca43157d3060880f4c",
+  "subjectDigests": {
+    "packages/cap1-daemon/package.json": "sha256:7cf8caf645790160cef7f060e780c38b475443e8ac510d9ec0140a15e708c496",
+    "packages/cap1-daemon/src/readme-links.test.ts": "sha256:8328654c7a18662f3fea976c74ad1cfeb7b8a9af29d080c62308ea00898f4d1f",
+    "packages/cap1-daemon/src/readme-links.ts": "sha256:0b4c4a8ffa5136bbf2a6cf622445088821d17045c14edca3946cc487e5033af6",
+    "packages/cap1-daemon/src/routes-human.ts": "sha256:d980fbf7d4c4a2d7dca9687d5c38c862da6b79000225ea4bf156af991c0d2ad0",
+    "packages/cap1-daemon/src/source-snapshot.test.ts": "sha256:b8711a76913f3df0b6282480555c185f986ccc2f9f89b9b710efddb7ae1097b0",
+    "packages/cap1-daemon/src/source-snapshot.ts": "sha256:a85db150ab7a0c0a23c0af5a081c9929497a25ddd6e78de59c3acdf25c4862a2",
+    "packages/cap1-system/src/degradation.system.test.ts": "sha256:b18f7cc8303be1c01820b0660b1f704ab1522cd809c01d04d4c7426b181ef072"
+  },
+  "method": "each mutant replaces exactly one occurrence of old with new in the named file, runs `npx vitest run <unit tests>` with TMPDIR=/tmp/u27f and, where the tests list a cap1-system file, `npm run build` then `npx vitest run --config packages/cap1-system/vitest.config.ts <system tests>`; then restores the file. killed means every listed run exited non-zero. The five predecessor mutants on readme-links.ts recorded in mutations-2026-11-03.json were re-run at this commit because that file changed; their fragments each still occur exactly once",
+  "population": 21,
+  "killed": 21,
+  "survived": [],
+  "mutants": [
+    {
+      "id": "R1-relative-hazard-always-ambiguous",
+      "finding": "F1",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  if (segments === undefined) return hazardReadings(path).some(isEntry) ? AMBIGUOUS : OTHER;",
+      "new": "  if (segments === undefined) return AMBIGUOUS;",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R2-absolute-hazard-always-ambiguous",
+      "finding": "F1",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "    return hazardReadings(rawPath).some(endsWithEntry) ? AMBIGUOUS : OTHER;",
+      "new": "    return AMBIGUOUS;",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R3-relative-hazard-always-other",
+      "finding": "F1",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  if (segments === undefined) return hazardReadings(path).some(isEntry) ? AMBIGUOUS : OTHER;",
+      "new": "  if (segments === undefined) return OTHER;",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R4-absolute-hazard-always-other",
+      "finding": "F1",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "    return hazardReadings(rawPath).some(endsWithEntry) ? AMBIGUOUS : OTHER;",
+      "new": "    return OTHER;",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R5-no-backslash-separator-reading",
+      "finding": "F1",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "    readings.push(normalize(reading.split(/[\\\\/]/)).segments);\n",
+      "new": "",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R6-no-decoded-reading",
+      "finding": "F1",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  for (const base of [path, lenientDecode(path)]) {",
+      "new": "  for (const base of [path]) {",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R7-no-bare-percent-dropped-reading",
+      "finding": "F1",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "    strings.add(base.replace(/%(?![0-9A-Fa-f]{2})/g, ''));\n",
+      "new": "",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R8-controls-ignored",
+      "finding": "F2",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  if (trimmed.search(CONTROL) === -1) return classifyCleanHref(trimmed, locator);",
+      "new": "  return classifyCleanHref(trimmed, locator);",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R9-controls-stripped-silently",
+      "finding": "F2",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  return classifyCleanHref(trimmed.replace(CONTROL, ''), locator).kind === 'other' ? OTHER : AMBIGUOUS;",
+      "new": "  return classifyCleanHref(trimmed.replace(CONTROL, ''), locator);",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R10-controls-tab-only",
+      "finding": "F2",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "const CONTROL = /[\\u0000-\\u001F\\u007F]/g;",
+      "new": "const CONTROL = /[\\u0009]/g;",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R11-directory-form-regular",
+      "finding": "F3",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  let irregular = segments.length > 1 && (last === '' || last === '.' || last === '..');",
+      "new": "  let irregular = false;",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R12-directory-form-trailing-slash-only",
+      "finding": "F3",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "(last === '' || last === '.' || last === '..')",
+      "new": "(last === '')",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R13-template-content-not-walked",
+      "finding": "F6",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  if (node.content !== undefined) anchorHrefs(node.content, out);\n",
+      "new": "",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R14-pin-bumped-string-kept",
+      "finding": "F7",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/package.json",
+      "old": "\"marked\": \"18.0.10\"",
+      "new": "\"marked\": \"18.0.11\"",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R15-undeclared-folded-into-unconsented",
+      "finding": "F5",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/source-snapshot.ts",
+      "old": "      governanceRoot === undefined ? 'undeclared-governance-root' : 'unconsented-governance-root';",
+      "new": "      governanceRoot === undefined ? 'unconsented-governance-root' : 'unconsented-governance-root';",
+      "tests": [
+        "packages/cap1-daemon/src/source-snapshot.test.ts",
+        "packages/cap1-system/src/degradation.system.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1,
+        "system": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "R16-undeclared-sentence-names-consent",
+      "finding": "F5",
+      "source": "round-1 repair",
+      "file": "packages/cap1-daemon/src/routes-human.ts",
+      "old": "  'undeclared-governance-root': 'no governance root is declared',",
+      "new": "  'undeclared-governance-root': \"the governance root's observation consent is not admitted\",",
+      "tests": [
+        "packages/cap1-daemon/src/source-snapshot.test.ts",
+        "packages/cap1-system/src/degradation.system.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1,
+        "system": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M1-substring-extraction",
+      "finding": "predecessor",
+      "source": "recorded at 7d527346, re-run",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  const html = MARKDOWN.parse(markdown, { async: false });",
+      "new": "  if (markdown.length >= 0) return markdown.includes('.syzygy/intent/OVERVIEW.md') ? { state: 'classified', linksToEntry: true, qualifyingHref: '.syzygy/intent/OVERVIEW.md' } : { state: 'classified', linksToEntry: false, qualifyingHref: undefined };\n  const html = MARKDOWN.parse(markdown, { async: false });",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M4-absolute-without-locator-ignored",
+      "finding": "predecessor",
+      "source": "recorded at 7d527346, re-run",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  if (locator === undefined) {\n    return { kind: 'unclassifiable', reason: 'repository-locator-unavailable' };\n  }",
+      "new": "  if (locator === undefined) {\n    return OTHER;\n  }",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M6-query-kept-in-identity",
+      "finding": "predecessor",
+      "source": "recorded at 7d527346, re-run",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  const cut = href.search(/[?#]/);",
+      "new": "  const cut = href.search(/[#]/);",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M7-root-escape-not-ambiguous",
+      "finding": "predecessor",
+      "source": "recorded at 7d527346, re-run",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "      if (out.length === 0) irregular = true;\n      else out.pop();",
+      "new": "      if (out.length > 0) out.pop();",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    },
+    {
+      "id": "M12-case-variant-counts",
+      "finding": "predecessor",
+      "source": "recorded at 7d527346, re-run",
+      "file": "packages/cap1-daemon/src/readme-links.ts",
+      "old": "  if (joined.toLowerCase() === ENTRY_LOWER) return AMBIGUOUS;",
+      "new": "  if (joined.toLowerCase() === ENTRY_LOWER) return { kind: 'entry' };",
+      "tests": [
+        "packages/cap1-daemon/src/readme-links.test.ts"
+      ],
+      "exitCodes": {
+        "unit": 1
+      },
+      "outcome": "killed"
+    }
+  ]
+}
