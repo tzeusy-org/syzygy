@@ -1,6 +1,17 @@
 import { createHash } from 'node:crypto';
 
-import type { ConsentRecord, EvaluationIdentity, ProjectId, RepositoryId } from '@syzygy/cap1-core';
+import type {
+  ConsentDiagnostic,
+  ConsentRecord,
+  EvaluationIdentity,
+  PreObservationConsentDecision,
+  ProjectDeclaration,
+  ProjectId,
+  RepositoryId,
+  Sha256Digest,
+  UntrustedConsentRecordView,
+  VerifiedConsentRecord,
+} from '@syzygy/cap1-core';
 
 // Conformance fixture builders: the INPUT side only. Every conformance
 // file states its expected values as hard-coded literals (AGENTS.md:
@@ -210,4 +221,143 @@ export class MemoryTree {
       },
     };
   }
+}
+
+// --- Closed consent decisions for coverage fixtures (syzygy-u2a.6) --------
+//
+// `computeCoverage` consumes one closed pre-observation decision per
+// declared repository; it never resolves a record itself. Conformance
+// cases about coverage (not about the decision) state their consent
+// situation as plain records, and this builder turns those records into
+// the decisions the reference-bound rules would close over them: the
+// entry's own referenced record is primary (absent → reference-unresolvable,
+// wrong pair → record-subject-mismatch, withdrawn → withdrawn), then any
+// other withdrawal for the pair defeats it, else the pair is admitted with
+// a SYNTHETIC bootstrap act. Inputs only: no case reads an expected value
+// from here.
+
+export const FIXTURE_PROVENANCE = 'owner-adopted (bootstrap, uncorrelated)' as const;
+
+export function fixtureDigest(label: string): Sha256Digest {
+  return `sha256:${sha256Hex(label)}`;
+}
+
+function citationOf(record: ConsentRecord): VerifiedConsentRecord {
+  return {
+    reference: record.id,
+    recordId: record.id,
+    artifactDigest: fixtureDigest(`artifact:${record.id}`),
+    scope: record.scope,
+    attribution: record.attribution,
+    grantState: record.grantState,
+    provenance: FIXTURE_PROVENANCE,
+  };
+}
+
+function untrustedOf(record: ConsentRecord | undefined): UntrustedConsentRecordView | null {
+  if (record === undefined) return null;
+  return {
+    trust: 'untrusted content',
+    recordId: record.id,
+    artifactDigest: fixtureDigest(`artifact:${record.id}`),
+    projectId: record.projectId,
+    repositoryId: record.repositoryId,
+    scope: record.scope,
+    attribution: record.attribution,
+    grantState: record.grantState,
+  };
+}
+
+export function refusedDecision(
+  entry: { readonly id: RepositoryId; readonly consent: string },
+  diagnostic: ConsentDiagnostic,
+  options: {
+    readonly diagnosticReference?: string;
+    readonly untrustedRecord?: UntrustedConsentRecordView | null;
+    readonly withdrawal?: VerifiedConsentRecord | null;
+  } = {},
+): PreObservationConsentDecision {
+  return {
+    authorization: 'Unknown',
+    repositoryId: entry.id,
+    reference: entry.consent,
+    reason: 'unconsented-source-or-provider',
+    diagnostic,
+    diagnosticReference: options.diagnosticReference ?? entry.consent,
+    route: 'owner-adjudication',
+    untrustedRecord: options.untrustedRecord ?? null,
+    withdrawal: options.withdrawal ?? null,
+  };
+}
+
+export function admittedDecision(
+  projectId: ProjectId,
+  entry: { readonly id: RepositoryId; readonly consent: string },
+  record: ConsentRecord,
+  artifactDigest: Sha256Digest = fixtureDigest(`artifact:${record.id}`),
+): PreObservationConsentDecision {
+  return {
+    authorization: 'admitted',
+    repositoryId: entry.id,
+    reference: entry.consent,
+    artifactDigest,
+    record,
+    act: {
+      binding: {
+        projectId,
+        repositoryId: entry.id,
+        artifactId: record.id,
+        artifactDigest,
+        actType: 'consent',
+        owner: ACT_FIXTURE_OWNER,
+        instant: '2026-08-01T00:00:00Z',
+        scope: record.scope,
+        supersedes: null,
+        expires: null,
+        a1AuditRecord: null,
+        actId: `act-${record.id}`,
+        actor: 'human',
+        provenance: 'owner-adopted-bootstrap',
+        actRecordDigest: fixtureDigest(`act:${record.id}`),
+      },
+      correlation: null,
+    },
+    provenance: FIXTURE_PROVENANCE,
+  };
+}
+
+export function decisionsFor(
+  declaration: ProjectDeclaration,
+  records: readonly ConsentRecord[],
+): readonly PreObservationConsentDecision[] {
+  const projectId = declaration.project.id;
+  return declaration.repositories.map((entry) => {
+    const own = records.find((record) => record.id === entry.consent);
+    const untrusted = untrustedOf(own);
+    if (own === undefined) return refusedDecision(entry, 'reference-unresolvable');
+    if (own.projectId !== projectId || own.repositoryId !== entry.id) {
+      return refusedDecision(entry, 'record-subject-mismatch', { untrustedRecord: untrusted });
+    }
+    if (own.grantState === 'withdrawn') {
+      return refusedDecision(entry, 'withdrawn', {
+        untrustedRecord: untrusted,
+        withdrawal: citationOf(own),
+      });
+    }
+    const other = records.find(
+      (record) =>
+        record.id !== own.id &&
+        record.projectId === projectId &&
+        record.repositoryId === entry.id &&
+        record.grantState === 'withdrawn',
+    );
+    if (other !== undefined) {
+      return refusedDecision(entry, 'withdrawn', {
+        diagnosticReference: other.id,
+        untrustedRecord: untrusted,
+        withdrawal: citationOf(other),
+      });
+    }
+    return admittedDecision(projectId, entry, own);
+  });
 }

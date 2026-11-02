@@ -11,7 +11,7 @@ import {
   type ProjectId,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { consent, projectYaml } from './fixtures/index.js';
+import { decisionsFor, consent, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-015 — One coverage boundary, retrievable identically by human
 // and machine.
@@ -84,8 +84,16 @@ const OBSERVATIONS: ObservationOutcome[] = [
 
 describe('CAP1-REQ-015 — one coverage boundary, retrievable identically by human and machine', () => {
   it('one boundary per (project, evaluation) input set, deterministic: two computations are deeply equal', () => {
-    const first = coverageBoundary(computeCoverage(declaration(), CONSENTS, OBSERVATIONS));
-    const second = coverageBoundary(computeCoverage(declaration(), CONSENTS, OBSERVATIONS));
+    const first = coverageBoundary(computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS),
+    );
+    const second = coverageBoundary(computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS),
+    );
     // Same records, same declared scopes, same consent states — equality
     // judged by comparison of the two independently computed values,
     // not by either computation's claim.
@@ -96,7 +104,11 @@ describe('CAP1-REQ-015 — one coverage boundary, retrievable identically by hum
 
   it('the boundary is the union of executed coverage records and declared captured scopes', () => {
     const decl = declaration();
-    const boundary = coverageBoundary(computeCoverage(decl, CONSENTS, OBSERVATIONS));
+    const boundary = coverageBoundary(computeCoverage(
+      decl,
+      decisionsFor(decl, CONSENTS),
+      OBSERVATIONS),
+    );
     // Every declared repository's executed coverage record is present —
     // including the unconsented one, whose consent state is itself a
     // boundary fact.

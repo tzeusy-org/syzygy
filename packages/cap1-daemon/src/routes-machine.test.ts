@@ -9,7 +9,7 @@ import {
   serveMachine,
   type MachineAnswer,
 } from '@syzygy/cap1-core';
-import { compareRenderings, disclosureOf } from '@syzygy/cap1-core/testing';
+import { canonicalTupleMultiset, compareRenderings, disclosureOf } from '@syzygy/cap1-core/testing';
 
 import { writeConsent } from '../test-support/consent-acts.js';
 import { evaluateProject, type ProjectEvaluation } from './pipeline.js';
@@ -446,10 +446,14 @@ repositories:
   - id: repo-withdrawn
     role: observed-source
     consent: consent-withdrawn
+  - id: repo-unverified
+    role: observed-source
+    consent: consent-unverified
 consents:
   - consent-gov-root
   - consent-capture-failed
   - consent-withdrawn
+  - consent-unverified
 declarations:
   spec_root: openspec/
 relations: []
@@ -480,6 +484,16 @@ profiles: []
       'in-force',
     );
     writeCitationConsentRecord(decisionsDir, 'consent-withdrawn', 'repo-withdrawn', 'withdrawn');
+    // A state-(2) claim no provider correlates: refused correlation-unavailable,
+    // its record kept visible as untrusted content (syzygy-u2a.6).
+    writeConsent(
+      decisionsDir,
+      { id: 'consent-unverified', project: CITATION_PROJECT_ID, repository: 'repo-unverified' },
+      {
+        provenance: 'syzygy-verified',
+        a1_audit_record: { id: 'a1-fixture', digest: `sha256:${'d'.repeat(64)}` },
+      },
+    );
 
     // repo-capture-failed is deliberately given NO on-disk root — it
     // never reaches an observation outcome, so core renders it
@@ -533,7 +547,7 @@ profiles: []
     // capture-failed: both channels cite the same in-force record.
     expect(humanHtml).toContain('data-repository-id="repo-capture-failed"');
     expect(humanHtml).toMatch(
-      /repo-capture-failed:[^<]*consent consent-capture-failed in-force/,
+      /repo-capture-failed:[^<]*consent record consent-capture-failed \(sha256:[0-9a-f]{64}\) via reference consent-capture-failed: scope observe, attribution test-owner, grant state in-force/,
     );
     expect(machineCitation('repo-capture-failed')).toBe(
       'record:consent-capture-failed scope:observe attribution:test-owner grantState:in-force',
@@ -542,9 +556,190 @@ profiles: []
     // unconsented-by-withdrawal: both channels cite the WITHDRAWAL
     // record, never a favourable or absent citation.
     expect(humanHtml).toContain('data-withdrawn-record-id="consent-withdrawn"');
-    expect(humanHtml).toContain('Withdrawn consent consent-withdrawn (withdrawn).');
+    expect(humanHtml).toMatch(
+      /repo-withdrawn:[^<]*withdrawn by consent record consent-withdrawn \(sha256:[0-9a-f]{64}\) via reference consent-withdrawn: scope observe, attribution test-owner, grant state withdrawn/,
+    );
     expect(machineCitation('repo-withdrawn')).toBe(
       'record:consent-withdrawn scope:observe attribution:test-owner grantState:withdrawn',
     );
+  });
+
+  // syzygy-u2a.6 — the independent coverage wire oracle. Each channel is
+  // parsed on its own into complete tuples (every field of a row, by name),
+  // then the two multisets are compared in both directions and against the
+  // declared repository count, a literal of this fixture. Neither channel's
+  // claim and no implementation structure is consulted.
+  const COVERAGE_FIELDS: readonly (readonly [string, string])[] = [
+    ['repositoryId', 'data-repository-id'],
+    ['state', 'data-coverage-state'],
+    ['label', 'data-epistemic-label'],
+    ['reason', 'data-unknown-reason'],
+    ['presentation', 'data-presentation'],
+    ['resolutionRoute', 'data-policy-resolution-route'],
+    ['basis', 'data-coverage-basis'],
+    ['reference', 'data-consent-reference'],
+    ['diagnostic', 'data-consent-diagnostic'],
+    ['diagnosticReference', 'data-consent-diagnostic-reference'],
+    ['route', 'data-resolution-route'],
+    ['capturedScope', 'data-captured-scope'],
+    ['declaredScope', 'data-declared-scope'],
+    ['uncaptured.label', 'data-uncaptured-label'],
+    ['uncaptured.reason', 'data-uncaptured-reason'],
+    ['consent.reference', 'data-consent-record-reference'],
+    ['consent.recordId', 'data-consent-record-id'],
+    ['consent.artifactDigest', 'data-consent-record-digest'],
+    ['consent.scope', 'data-consent-scope'],
+    ['consent.attribution', 'data-consent-attribution'],
+    ['consent.grantState', 'data-consent-grant-state'],
+    ['consent.provenance', 'data-consent-provenance'],
+    ['untrustedRecord.trust', 'data-untrusted-trust'],
+    ['untrustedRecord.recordId', 'data-untrusted-record-id'],
+    ['untrustedRecord.artifactDigest', 'data-untrusted-record-digest'],
+    ['untrustedRecord.projectId', 'data-untrusted-project-id'],
+    ['untrustedRecord.repositoryId', 'data-untrusted-repository-id'],
+    ['untrustedRecord.scope', 'data-untrusted-scope'],
+    ['untrustedRecord.attribution', 'data-untrusted-attribution'],
+    ['untrustedRecord.grantState', 'data-untrusted-grant-state'],
+  ];
+
+  function leaves(value: unknown, prefix = ''): [string, string][] {
+    if (value === null || value === undefined) return [];
+    if (typeof value !== 'object') return [[prefix, String(value)]];
+    return Object.entries(value as Record<string, unknown>).flatMap(([key, inner]) =>
+      leaves(inner, prefix === '' ? key : `${prefix}.${key}`),
+    );
+  }
+
+  function jsonTuples(body: WireJson): { tuples: string[]; escaped: string[] } {
+    const known = new Set(COVERAGE_FIELDS.map(([path]) => path));
+    const rows: unknown[] = body.coverageBoundary.records;
+    const escaped = rows.flatMap((row) => leaves(row).map(([path]) => path)).filter((path) => !known.has(path));
+    const tuples = rows.map((row) => {
+      const flat = new Map(leaves(row));
+      return JSON.stringify(COVERAGE_FIELDS.map(([path]) => flat.get(path) ?? null));
+    });
+    return { tuples, escaped };
+  }
+
+  function unescape(text: string): string {
+    return text
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&');
+  }
+
+  function htmlTuples(html: string): string[] {
+    const section = html.match(/<section class="coverage" data-section="coverage-and-consent">[\s\S]*?<\/section>/)?.[0] ?? '';
+    return [...section.matchAll(/<span class="coverage-record"([^>]*)>/g)].map((match) => {
+      const attrs = new Map(
+        [...(match[1] ?? '').matchAll(/ ([a-z-]+)="([^"]*)"/g)].map((a) => [a[1] as string, unescape(a[2] as string)]),
+      );
+      return JSON.stringify(COVERAGE_FIELDS.map(([, name]) => attrs.get(name) ?? null));
+    });
+  }
+
+  // Disagreements in both directions, plus the denominator check.
+  function coverageWireDisagreements(body: WireJson, html: string, declared: number): string[] {
+    const { tuples: machine, escaped } = jsonTuples(body);
+    const human = htmlTuples(html);
+    const m = canonicalTupleMultiset(machine, (t) => t);
+    const h = canonicalTupleMultiset(human, (t) => t);
+    const problems: string[] = escaped.map((path) => `machine field outside the tuple: ${path}`);
+    for (const key of new Set([...m.keys(), ...h.keys()])) {
+      if ((m.get(key) ?? 0) !== (h.get(key) ?? 0)) {
+        problems.push(`count ${m.get(key) ?? 0} machine vs ${h.get(key) ?? 0} human: ${key}`);
+      }
+    }
+    if (machine.length !== declared) problems.push(`machine rows ${machine.length} != declared ${declared}`);
+    if (human.length !== declared) problems.push(`human rows ${human.length} != declared ${declared}`);
+    return problems;
+  }
+
+  it('coverage rows agree as complete tuple multisets over the declared denominator, and every row mutation is caught', async () => {
+    const evaluation = await citationFixture();
+    const routes = [
+      ...humanRoutes({ getEvaluation: () => evaluation }),
+      ...machineRoutes({ getEvaluation: () => evaluation }),
+    ];
+    const start = await createDaemon({
+      stateDir: join(tempDir('rt4-wire-state-'), 'state'),
+      routes,
+      port: 0,
+    });
+    if (!start.started) throw new Error(`daemon failed to start: ${start.failure.kind}`);
+    running.push(start.daemon);
+    const token = readFileSync(start.daemon.credentialPath, 'utf8').trim();
+    const base = `http://127.0.0.1:${start.daemon.port}`;
+    const html = await (await fetch(`${base}${HUMAN_PAGE_PATH}`)).text();
+    const machineText = await (await fetch(`${base}${MACHINE_PROJECT_PATH}`, authed(token))).text();
+    const machine = (): WireJson => JSON.parse(machineText);
+
+    expect(coverageWireDisagreements(machine(), html, 4)).toEqual([]);
+    // Every declared state the fixture carries reaches the wire.
+    expect(
+      (machine().coverageBoundary.records as { repositoryId: string; state: string; basis?: string; diagnostic?: string }[]).map(
+        (row) => [row.repositoryId, row.state, row.basis ?? row.diagnostic ?? null, row.diagnostic ?? null],
+      ),
+    ).toEqual([
+      ['repo-governance-root', 'observed', null, null],
+      ['repo-capture-failed', 'capture-failed', null, null],
+      ['repo-withdrawn', 'unconsented', 'withdrawn', null],
+      ['repo-unverified', 'unconsented', 'no-resolvable-in-force-record', 'correlation-unavailable'],
+    ]);
+
+    // Human mutants edit the coverage section only: the drawers above it
+    // repeat the same rows, and a page-wide first match would land there.
+    const section = html.match(/<section class="coverage" data-section="coverage-and-consent">[\s\S]*?<\/section>/)?.[0];
+    const rows = section?.match(/<span class="coverage-record" data-repository-id="repo-withdrawn"[^>]*>[^<]*<\/span> /)?.[0];
+    const firstHtmlRow = section?.match(/<span class="coverage-record"[^>]*>[^<]*<\/span> /)?.[0];
+    if (section === undefined || rows === undefined || firstHtmlRow === undefined) {
+      throw new Error('fixture rows not found');
+    }
+    const inSection = (edit: (text: string) => string): string => html.replace(section, edit(section));
+    const mutants: Record<string, [WireJson, string]> = {
+      'machine omits a row': (() => {
+        const body = machine();
+        body.coverageBoundary.records.pop();
+        return [body, html];
+      })(),
+      'machine duplicates a row': (() => {
+        const body = machine();
+        body.coverageBoundary.records.push(body.coverageBoundary.records[0]);
+        return [body, html];
+      })(),
+      'machine alters a citation digest': (() => {
+        const body = machine();
+        body.coverageBoundary.records[1].consent.artifactDigest = `sha256:${'e'.repeat(64)}`;
+        return [body, html];
+      })(),
+      'machine drops the untrusted record': (() => {
+        const body = machine();
+        body.coverageBoundary.records[3].untrustedRecord = null;
+        return [body, html];
+      })(),
+      'machine adds an unparitied field': (() => {
+        const body = machine();
+        body.coverageBoundary.records[0].note = 'extra';
+        return [body, html];
+      })(),
+      'human omits a row': [machine(), inSection((t) => t.replace(rows, ''))],
+      'human duplicates a row': [machine(), inSection((t) => t.replace(firstHtmlRow, firstHtmlRow + firstHtmlRow))],
+      'human swaps the diagnostic': [
+        machine(),
+        inSection((t) =>
+          t.replace('data-consent-diagnostic="correlation-unavailable"', 'data-consent-diagnostic="correlation-not-found"'),
+        ),
+      ],
+      'human drops the withdrawal attribution': [
+        machine(),
+        inSection((t) => t.replace(rows, rows.replace(/ data-consent-attribution="[^"]*"/, ''))),
+      ],
+    };
+    const survivors = Object.entries(mutants).flatMap(([name, [body, page]]) =>
+      coverageWireDisagreements(body, page, 4).length === 0 ? [name] : [],
+    );
+    expect(survivors).toEqual([]);
   });
 });

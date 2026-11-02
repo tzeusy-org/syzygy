@@ -8,7 +8,7 @@ import {
   type ProjectId,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { consent, projectYaml } from './fixtures/index.js';
+import { decisionsFor, consent, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-012 — Unconsented renders Unknown as a policy state, never as
 // error or absence.
@@ -59,7 +59,11 @@ const OBSERVATIONS: ObservationOutcome[] = [
 
 describe('CAP1-REQ-012 — unconsented renders Unknown as a policy state, never as error or absence', () => {
   it('scenario: the unconsented portion renders Unknown with the verbatim reason and its resolution route', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const withheld = result.repositories.find(
       (e) => e.repositoryId === ('repo-withheld' as RepositoryId),
     );
@@ -75,7 +79,11 @@ describe('CAP1-REQ-012 — unconsented renders Unknown as a policy state, never 
   });
 
   it('the unconsented state is machine-readably a POLICY state, distinguishable from error/failure states', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const withheld = result.repositories.find((e) => e.state === 'unconsented');
     expect(withheld?.state).toBe('unconsented');
     if (withheld?.state === 'unconsented') {
@@ -88,7 +96,11 @@ describe('CAP1-REQ-012 — unconsented renders Unknown as a policy state, never 
   });
 
   it('scenario: the consented remainder renders normally', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const consented = result.repositories.find(
       (e) => e.repositoryId === ('repo-consented' as RepositoryId),
     );
@@ -99,7 +111,11 @@ describe('CAP1-REQ-012 — unconsented renders Unknown as a policy state, never 
   });
 
   it('falsifier: no invented reason spelling and no empty rendering — the portion is present, labeled, and reasoned', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const withheld = result.repositories.find(
       (e) => e.repositoryId === ('repo-withheld' as RepositoryId),
     );

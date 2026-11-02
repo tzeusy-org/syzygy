@@ -18,12 +18,15 @@ import {
   type CaptureDependencies,
 } from '@syzygy/cap1-daemon';
 import {
+  admittedDecision,
+  decisionsFor,
   consent,
   consentArtifactText,
   DECISIONS_PATH,
   MemoryTree,
   ownerActText,
   projectYaml,
+  refusedDecision,
   sha256Hex,
   type ArtifactFields,
 } from './fixtures/index.js';
@@ -95,7 +98,11 @@ describe('CAP1-REQ-011 — consent is a visible recorded fact, never an assumpti
       expect(resolution.record.grantState).toBe('in-force');
     }
     // And the coverage answer renders that record's facts, citing it.
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     const observed = result.repositories.find((e) => e.state === 'observed');
     expect(observed).toBeDefined();
     if (observed?.state === 'observed') {
@@ -124,7 +131,7 @@ describe('CAP1-REQ-011 — consent is a visible recorded fact, never an assumpti
 
   it('sweep over every declared pair: observed ⇔ joins to an in-force record; no record ⇒ unconsented — denominator = declared pair count', () => {
     const decl = declaration();
-    const result = computeCoverage(decl, CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(decl, decisionsFor(decl, CONSENTS), OBSERVATIONS);
     expect(result.repositories).toHaveLength(decl.repositories.length); // denominator
 
     for (const entry of result.repositories) {
@@ -149,7 +156,11 @@ describe('CAP1-REQ-011 — consent is a visible recorded fact, never an assumpti
   it('falsifier: a repository is never observed (no content served) without an in-force record, even when a capture outcome exists', () => {
     // Both repo-withdrawn and repo-recordless HAVE captured outcomes in
     // the fixture; neither may surface any captured content.
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     for (const id of ['repo-withdrawn', 'repo-recordless']) {
       const entry = result.repositories.find((e) => e.repositoryId === (id as RepositoryId));
       expect(entry?.state).toBe('unconsented');
@@ -158,7 +169,11 @@ describe('CAP1-REQ-011 — consent is a visible recorded fact, never an assumpti
   });
 
   it('falsifier: absence of consent is never absence of the repository', () => {
-    const result = computeCoverage(declaration(), CONSENTS, OBSERVATIONS);
+    const result = computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      OBSERVATIONS,
+    );
     expect(
       result.repositories.some((e) => e.repositoryId === ('repo-recordless' as RepositoryId)),
     ).toBe(true);
@@ -210,7 +225,11 @@ const CITATION_OBSERVATIONS: ObservationOutcome[] = [
 
 describe('CAP1-REQ-011 R-S2 finding #4 — capture-failed and stale cite their in-force record', () => {
   it('consented + capture-failed cites the in-force record that stands behind the failed capture', () => {
-    const result = computeCoverage(citationDeclaration(), CITATION_CONSENTS, CITATION_OBSERVATIONS);
+    const result = computeCoverage(
+      citationDeclaration(),
+      decisionsFor(citationDeclaration(), CITATION_CONSENTS),
+      CITATION_OBSERVATIONS,
+    );
     const entry = result.repositories.find(
       (e) => e.repositoryId === ('repo-capture-failed' as RepositoryId),
     );
@@ -224,7 +243,11 @@ describe('CAP1-REQ-011 R-S2 finding #4 — capture-failed and stale cite their i
   });
 
   it('consented + stale cites the in-force record that stands behind the stale capture', () => {
-    const result = computeCoverage(citationDeclaration(), CITATION_CONSENTS, CITATION_OBSERVATIONS);
+    const result = computeCoverage(
+      citationDeclaration(),
+      decisionsFor(citationDeclaration(), CITATION_CONSENTS),
+      CITATION_OBSERVATIONS,
+    );
     const entry = result.repositories.find((e) => e.repositoryId === ('repo-stale' as RepositoryId));
     expect(entry?.state).toBe('stale');
     if (entry?.state === 'stale') {
@@ -317,7 +340,11 @@ describe('CAP1-REQ-011 falsifier — a pair holding both a grant and a withdrawa
       [CONFLICT_GRANT, CONFLICT_WITHDRAWAL],
       [CONFLICT_WITHDRAWAL, CONFLICT_GRANT],
     ]) {
-      const result = computeCoverage(conflictDeclaration(), records, CONFLICT_OBSERVATIONS);
+      const result = computeCoverage(
+        conflictDeclaration(),
+        decisionsFor(conflictDeclaration(), records),
+        CONFLICT_OBSERVATIONS,
+      );
       const entry = result.repositories.find((e) => e.repositoryId === CONFLICT_REPO);
       expect(entry?.state).toBe('unconsented');
       if (entry?.state === 'unconsented') {
@@ -681,5 +708,215 @@ describe('CAP1-REQ-011 v1.0 — withdrawal and unresolved withdrawal stay fail c
     expect(result.src).toEqual(['Unknown', 'consent-evidence-unresolved']);
     expect(result.gov).toEqual(['Unknown', 'consent-evidence-unresolved']);
     expect(result.srcRootReads).toBe(0);
+  });
+});
+
+// syzygy-u2a.6 — coverage is a projection of the closed decisions. Each case
+// hands `computeCoverage` an already-closed decision and checks the row
+// against literals: the in-force citation on observed and capture-failed,
+// the defeating record on a withdrawal, and Task 1's own basis and visible
+// contradiction on an unresolved reference and on unverified provenance.
+// No record set is passed: coverage cannot re-resolve what it is not given.
+const MATRIX_PROJECT = 'prj-cov-matrix' as ProjectId;
+const MATRIX_DIGEST_A = `sha256:${'a'.repeat(64)}` as const;
+const MATRIX_DIGEST_B = `sha256:${'b'.repeat(64)}` as const;
+const MATRIX_DIGEST_C = `sha256:${'c'.repeat(64)}` as const;
+
+function matrixDeclaration(): ProjectDeclaration {
+  const read = readDeclaration(
+    projectYaml({
+      id: MATRIX_PROJECT,
+      name: 'Coverage Matrix',
+      repositories: [
+        { id: 'repo-m-observed', role: 'governance-root', consent: 'consent-m-observed' },
+        { id: 'repo-m-failed', role: 'observed-source', consent: 'consent-m-failed' },
+        { id: 'repo-m-withdrawn', role: 'observed-source', consent: 'consent-m-withdrawn' },
+        { id: 'repo-m-dangling', role: 'observed-source', consent: 'consent-m-dangling' },
+        { id: 'repo-m-unverified', role: 'observed-source', consent: 'consent-m-unverified' },
+      ],
+      consents: [],
+    }),
+  );
+  if (!read.ok) throw new Error('fixture must be valid');
+  return read.declaration;
+}
+
+const M = (id: string): { id: RepositoryId; consent: string } => ({
+  id: `repo-m-${id}` as RepositoryId,
+  consent: `consent-m-${id}`,
+});
+
+const MATRIX_DECISIONS = [
+  admittedDecision(
+    MATRIX_PROJECT,
+    M('observed'),
+    consent({ id: 'consent-m-observed', projectId: MATRIX_PROJECT, repositoryId: M('observed').id }),
+    MATRIX_DIGEST_A,
+  ),
+  admittedDecision(
+    MATRIX_PROJECT,
+    M('failed'),
+    consent({ id: 'consent-m-failed', projectId: MATRIX_PROJECT, repositoryId: M('failed').id }),
+    MATRIX_DIGEST_B,
+  ),
+  refusedDecision(M('withdrawn'), 'withdrawn', {
+    diagnosticReference: 'consent-m-withdrawal',
+    untrustedRecord: {
+      trust: 'untrusted content',
+      recordId: 'consent-m-withdrawn',
+      artifactDigest: MATRIX_DIGEST_A,
+      projectId: MATRIX_PROJECT,
+      repositoryId: M('withdrawn').id,
+      scope: 'observe',
+      attribution: 'owner',
+      grantState: 'in-force',
+    },
+    withdrawal: {
+      reference: 'consent-m-withdrawal',
+      recordId: 'consent-m-withdrawal',
+      artifactDigest: MATRIX_DIGEST_C,
+      scope: 'observe',
+      attribution: 'owner',
+      grantState: 'withdrawn',
+      provenance: 'owner-adopted (bootstrap, uncorrelated)',
+    },
+  }),
+  refusedDecision(M('dangling'), 'reference-unresolvable'),
+  refusedDecision(M('unverified'), 'correlation-unavailable', {
+    untrustedRecord: {
+      trust: 'untrusted content',
+      recordId: 'consent-m-unverified',
+      artifactDigest: MATRIX_DIGEST_B,
+      projectId: MATRIX_PROJECT,
+      repositoryId: M('unverified').id,
+      scope: 'observe',
+      attribution: 'claimed-owner',
+      grantState: 'in-force',
+    },
+  }),
+];
+
+const MATRIX_OBSERVATIONS: ObservationOutcome[] = [
+  { repositoryId: M('observed').id, outcome: 'captured', capturedScope: 'full-tree' },
+  { repositoryId: M('failed').id, outcome: 'unreachable' },
+  // Outcomes wrongly supplied for refused pairs: discarded, never surfaced.
+  { repositoryId: M('dangling').id, outcome: 'captured', capturedScope: 'full-tree' },
+  { repositoryId: M('unverified').id, outcome: 'captured', capturedScope: 'full-tree' },
+];
+
+describe('CAP1-REQ-011 — coverage rows project the closed consent decisions exactly (syzygy-u2a.6)', () => {
+  const rows = (): ReturnType<typeof computeCoverage>['repositories'] =>
+    computeCoverage(matrixDeclaration(), MATRIX_DECISIONS, MATRIX_OBSERVATIONS).repositories;
+
+  it('observed and capture-failed rows cite the exact verified in-force record', () => {
+    const [observed, failed] = rows();
+    expect(observed).toEqual({
+      repositoryId: 'repo-m-observed',
+      state: 'observed',
+      capturedScope: 'full-tree',
+      consent: {
+        reference: 'consent-m-observed',
+        recordId: 'consent-m-observed',
+        artifactDigest: `sha256:${'a'.repeat(64)}`,
+        scope: 'observe',
+        attribution: 'owner',
+        grantState: 'in-force',
+        provenance: 'owner-adopted (bootstrap, uncorrelated)',
+      },
+    });
+    expect(failed).toEqual({
+      repositoryId: 'repo-m-failed',
+      state: 'capture-failed',
+      label: 'Unknown',
+      reason: 'source-uncaptured-or-unreachable',
+      consent: {
+        reference: 'consent-m-failed',
+        recordId: 'consent-m-failed',
+        artifactDigest: `sha256:${'b'.repeat(64)}`,
+        scope: 'observe',
+        attribution: 'owner',
+        grantState: 'in-force',
+        provenance: 'owner-adopted (bootstrap, uncorrelated)',
+      },
+    });
+  });
+
+  it('a withdrawal row cites the defeating record and keeps the defeated grant visible as untrusted', () => {
+    const withdrawn = rows()[2];
+    expect(withdrawn).toEqual({
+      repositoryId: 'repo-m-withdrawn',
+      state: 'unconsented',
+      label: 'Unknown',
+      reason: 'unconsented-source-or-provider',
+      presentation: 'policy',
+      resolutionRoute: 'record consent',
+      reference: 'consent-m-withdrawn',
+      basis: 'withdrawn',
+      consent: {
+        reference: 'consent-m-withdrawal',
+        recordId: 'consent-m-withdrawal',
+        artifactDigest: `sha256:${'c'.repeat(64)}`,
+        scope: 'observe',
+        attribution: 'owner',
+        grantState: 'withdrawn',
+        provenance: 'owner-adopted (bootstrap, uncorrelated)',
+      },
+      route: 'owner-adjudication',
+      untrustedRecord: {
+        trust: 'untrusted content',
+        recordId: 'consent-m-withdrawn',
+        artifactDigest: `sha256:${'a'.repeat(64)}`,
+        projectId: 'prj-cov-matrix',
+        repositoryId: 'repo-m-withdrawn',
+        scope: 'observe',
+        attribution: 'owner',
+        grantState: 'in-force',
+      },
+    });
+  });
+
+  it('an unresolved reference keeps reason #6 with its typed diagnostic, never reason #11, and masks nothing', () => {
+    const dangling = rows()[3];
+    expect(dangling).toEqual({
+      repositoryId: 'repo-m-dangling',
+      state: 'unconsented',
+      label: 'Unknown',
+      reason: 'unconsented-source-or-provider',
+      presentation: 'policy',
+      resolutionRoute: 'record consent',
+      reference: 'consent-m-dangling',
+      basis: 'no-resolvable-in-force-record',
+      diagnostic: 'reference-unresolvable',
+      diagnosticReference: 'consent-m-dangling',
+      route: 'owner-adjudication',
+      untrustedRecord: null,
+    });
+  });
+
+  it('unverified owner-act provenance keeps the basis, effective Unknown and the unhonored record as a visible contradiction', () => {
+    const unverified = rows()[4];
+    expect(unverified).toEqual({
+      repositoryId: 'repo-m-unverified',
+      state: 'unconsented',
+      label: 'Unknown',
+      reason: 'unconsented-source-or-provider',
+      presentation: 'policy',
+      resolutionRoute: 'record consent',
+      reference: 'consent-m-unverified',
+      basis: 'no-resolvable-in-force-record',
+      diagnostic: 'correlation-unavailable',
+      diagnosticReference: 'consent-m-unverified',
+      route: 'owner-adjudication',
+      untrustedRecord: {
+        trust: 'untrusted content',
+        recordId: 'consent-m-unverified',
+        artifactDigest: `sha256:${'b'.repeat(64)}`,
+        projectId: 'prj-cov-matrix',
+        repositoryId: 'repo-m-unverified',
+        scope: 'observe',
+        attribution: 'claimed-owner',
+        grantState: 'in-force',
+      },
+    });
   });
 });

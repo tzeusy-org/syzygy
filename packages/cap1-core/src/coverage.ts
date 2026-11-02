@@ -1,6 +1,13 @@
 import type { ProjectDeclaration } from './declaration.js';
 import type { ProjectId, RepositoryId } from './identity.js';
-import { resolveConsent, type ConsentRecord, type GrantState } from './consent.js';
+// Types only: coverage projects a closed decision and never runs, reloads or
+// re-verifies one, so it imports no value from the decision module.
+import type {
+  ConsentDiagnostic,
+  PreObservationConsentDecision,
+  UntrustedConsentRecordView,
+  VerifiedConsentRecord,
+} from './consent-decision.js';
 import { UNKNOWN_REASONS } from './vocabulary.js';
 
 // Per-repository coverage — every declared repository gets an explicit
@@ -50,18 +57,17 @@ export type ObservationOutcome =
   | { readonly repositoryId: RepositoryId; readonly outcome: 'unreachable' }
   | { readonly repositoryId: RepositoryId; readonly outcome: 'stale' };
 
-// A consent record cited by a rendered coverage entry — scope,
-// attribution, and grant state, by the record's own id (REQ-011: never a
-// bare boolean, always the record it derives from). Shared by every
-// arm below that has a specific record to name: the in-force record
-// behind observed/degraded-partial/capture-failed/stale, and the
-// withdrawn record behind an unconsented-by-withdrawal entry.
-export interface ConsentCitation {
-  readonly recordId: string;
-  readonly scope: string;
-  readonly attribution: string;
-  readonly grantState: GrantState;
-}
+type RefusedDecision = Extract<PreObservationConsentDecision, { authorization: 'Unknown' }>;
+
+// A consent record cited by a rendered coverage entry — the declared
+// reference, the record's id and artifact digest, scope, attribution,
+// grant state and the provenance label, exactly as the closed
+// pre-observation decision verified them (REQ-011: never a bare boolean,
+// always the record it derives from). The in-force grant behind
+// observed/degraded-partial/capture-failed/stale, or the withdrawal behind
+// an unconsented-by-withdrawal entry. Coverage copies it; it never reloads
+// or re-verifies a record (syzygy-u2a.6).
+export type ConsentCitation = VerifiedConsentRecord;
 
 // The per-repository coverage result: a discriminated union over
 // `state`, so any two of REQ-013's conditions are distinguishable in the
@@ -89,6 +95,17 @@ export type RepositoryCoverage =
       readonly presentation: 'policy';
       readonly resolutionRoute: typeof UNCONSENTED_RESOLUTION_ROUTE;
       readonly basis: 'no-resolvable-in-force-record';
+      // The entry's declared consent reference, and Task 1's typed refusal
+      // carried verbatim: the specific diagnostic, the reference it names,
+      // the owner-adjudication route and any recorded-but-unhonored record
+      // (the visible contradiction). The primary reason stays #6 whatever
+      // the diagnostic says; `reference-unresolvable` here is a consent
+      // diagnostic, never reason #11.
+      readonly reference: string;
+      readonly diagnostic: Exclude<ConsentDiagnostic, 'withdrawn'>;
+      readonly diagnosticReference: string;
+      readonly route: RefusedDecision['route'];
+      readonly untrustedRecord: UntrustedConsentRecordView | null;
     }
   | {
       readonly repositoryId: RepositoryId;
@@ -98,10 +115,13 @@ export type RepositoryCoverage =
       readonly presentation: 'policy';
       readonly resolutionRoute: typeof UNCONSENTED_RESOLUTION_ROUTE;
       readonly basis: 'withdrawn';
+      readonly reference: string;
       // R-S2 finding #4: WHICH withdrawal record defeated the grant —
       // the render already says the pair is withdrawn; this names the
       // record so the claim is checkable, not just assertable.
       readonly consent: ConsentCitation;
+      readonly route: RefusedDecision['route'];
+      readonly untrustedRecord: UntrustedConsentRecordView | null;
     }
   | {
       readonly repositoryId: RepositoryId;
@@ -143,68 +163,92 @@ export interface CoverageResult {
   readonly repositories: readonly RepositoryCoverage[];
 }
 
-// One explicit coverage result per declared repository (CAP1-REQ-010).
+// One explicit coverage result per declared repository (CAP1-REQ-010),
+// projected from the closed pre-observation decisions (syzygy-u2a.6).
 //
-// Precedence, and why: consent is resolved FIRST. An unconsented
-// repository renders 'unconsented' even if an observation outcome was
+// The join is ORDINAL: `consentByEntry[i]` is the decision for
+// `declaration.repositories[i]`. A count, repository-identity or
+// reference mismatch is a caller contract violation and throws; it is
+// never repaired by looking a pair up. Coverage never resolves consent
+// itself: it copies what the decision verified.
+//
+// Precedence, and why: consent comes FIRST. A repository whose decision is
+// not `admitted` renders 'unconsented' even if an observation outcome was
 // (wrongly) supplied for it — no served content, structure, or derived
 // fact may originate from an unconsented source (CAP1-REQ-016, RFC1-3),
-// so an outcome without consent is discarded, not surfaced. Only for a
-// consented repository is the observation outcome consulted; a consented
+// so an outcome without consent is discarded, not surfaced. Only for an
+// admitted repository is the observation outcome consulted; an admitted
 // repository with NO outcome at all renders 'capture-failed' (reason
 // #10) — absence of an outcome is a fact of the render, never a silent
 // omission (RFC2-23 "Source unreachable": the snapshot records the
 // absence as a fact).
 //
-// Deterministic: a pure function of (declaration, consents,
+// Deterministic: a pure function of (declaration, decisions,
 // observations). The (project, evaluation) pairing REQ-015 speaks of is
 // the caller's: this layer computes over one evaluation's inputs and
 // holds no clock; the daemon slice stamps the evaluation identity.
 export function computeCoverage(
   declaration: ProjectDeclaration,
-  consents: readonly ConsentRecord[],
+  consentByEntry: readonly PreObservationConsentDecision[],
   observations: readonly ObservationOutcome[],
 ): CoverageResult {
   const projectId = declaration.project.id;
+  if (consentByEntry.length !== declaration.repositories.length) {
+    throw new TypeError(
+      `computeCoverage: ${consentByEntry.length} consent decisions for ${declaration.repositories.length} declared repositories`,
+    );
+  }
 
-  const repositories = declaration.repositories.map((entry): RepositoryCoverage => {
-    const resolution = resolveConsent(consents, projectId, entry.id);
+  const repositories = declaration.repositories.map((entry, ordinal): RepositoryCoverage => {
+    const decision = consentByEntry[ordinal] as PreObservationConsentDecision;
+    if (decision.repositoryId !== entry.id || decision.reference !== entry.consent) {
+      throw new TypeError(
+        `computeCoverage: decision ${ordinal} is for ${decision.repositoryId} (${decision.reference}), not ${entry.id} (${entry.consent})`,
+      );
+    }
 
-    if (!resolution.consented) {
-      if (resolution.basis === 'withdrawn') {
-        const withdrawn = resolution.withdrawnRecord;
-        return {
-          repositoryId: entry.id,
-          state: 'unconsented',
-          label: 'Unknown',
-          reason: UNCONSENTED,
-          presentation: 'policy',
-          resolutionRoute: UNCONSENTED_RESOLUTION_ROUTE,
-          basis: 'withdrawn',
-          consent: {
-            recordId: withdrawn.id,
-            scope: withdrawn.scope,
-            attribution: withdrawn.attribution,
-            grantState: withdrawn.grantState,
-          },
-        };
-      }
-      return {
+    if (decision.authorization !== 'admitted') {
+      const unconsented = {
         repositoryId: entry.id,
         state: 'unconsented',
         label: 'Unknown',
         reason: UNCONSENTED,
         presentation: 'policy',
         resolutionRoute: UNCONSENTED_RESOLUTION_ROUTE,
+        reference: decision.reference,
+      } as const;
+      if (decision.diagnostic === 'withdrawn') {
+        if (decision.withdrawal === null) {
+          throw new TypeError(
+            `computeCoverage: withdrawn decision for ${entry.id} names no withdrawal record`,
+          );
+        }
+        return {
+          ...unconsented,
+          basis: 'withdrawn',
+          consent: decision.withdrawal,
+          route: decision.route,
+          untrustedRecord: decision.untrustedRecord,
+        };
+      }
+      return {
+        ...unconsented,
         basis: 'no-resolvable-in-force-record',
+        diagnostic: decision.diagnostic,
+        diagnosticReference: decision.diagnosticReference,
+        route: decision.route,
+        untrustedRecord: decision.untrustedRecord,
       };
     }
 
     const consent: ConsentCitation = {
-      recordId: resolution.record.id,
-      scope: resolution.record.scope,
-      attribution: resolution.record.attribution,
-      grantState: 'in-force',
+      reference: decision.reference,
+      recordId: decision.record.id,
+      artifactDigest: decision.artifactDigest,
+      scope: decision.record.scope,
+      attribution: decision.record.attribution,
+      grantState: decision.record.grantState,
+      provenance: decision.provenance,
     };
 
     // First outcome for this repository, in caller order — reproducible

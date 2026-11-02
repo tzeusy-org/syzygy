@@ -10,7 +10,7 @@ import {
   type RepositoryId,
   type ShapeAnswerInputs,
 } from '@syzygy/cap1-core';
-import { consent, evaluation, projectYaml } from './fixtures/index.js';
+import { decisionsFor, consent, evaluation, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-032 — Registration is never certification (invariant).
 //
@@ -73,7 +73,11 @@ function baselineInputs(): ShapeAnswerInputs {
     registration: registerProject(read, 'rev-1'),
     shapeReferences: [{ reference: 'declarations/spec_root', resolution: 'resolved' }],
     comprehension: [{ recordId: 'walkthrough-1', ownerVerdict: 'stands' }],
-    coverage: computeCoverage(read.declaration, CONSENTS, OBSERVATIONS),
+    coverage: computeCoverage(
+      read.declaration,
+      decisionsFor(read.declaration, CONSENTS),
+      OBSERVATIONS,
+    ),
     links: [{ link: 'overview->spec', resolved: true }],
     reconciliation: {
       computed: true,
@@ -153,7 +157,11 @@ const FLIPS: readonly Flip[] = [
       const read = readDeclaration(SOURCE);
       if (!read.ok) throw new Error('fixture must be valid');
       // Consent record removed: the repository resolves unconsented.
-      return { ...inputs, coverage: computeCoverage(read.declaration, [], OBSERVATIONS) };
+      return { ...inputs, coverage: computeCoverage(
+        read.declaration,
+        decisionsFor(read.declaration, []),
+        OBSERVATIONS,
+      ) };
     },
   },
   {
