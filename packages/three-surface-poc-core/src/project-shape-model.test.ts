@@ -14,7 +14,11 @@ import { FRESHNESS_STATES, RENDERING_TIERS, UNKNOWN_REASONS } from '@syzygy/cap1
 
 import type { BodyReadAuthorityEvaluation } from './body-read-authority.js';
 import type { GitTreeEntry } from './git-tree.js';
-import { PWB_RESOURCE_LIMITS, type PwbResourceLimits } from './project-shape-observation.js';
+import type { FixedUnknown } from './content-classification.js';
+import { PRODUCER_UNKNOWN_REASONS, unknown as unknownEpistemic } from './epistemic.js';
+import type { ClassDenominator, ItemCoverage, ReconciledFact } from './project-shape-coverage.js';
+import { PWB_FAILURE_STATES, PWB_RESOURCE_LIMITS, type ObservationDegradation, type PwbResourceLimits } from './project-shape-observation.js';
+import type { ProposedWorkCurrentAuthority } from './proposed-work.js';
 import {
   CHALLENGE_STATES,
   PWB_REPOSITORY_ID,
@@ -350,6 +354,37 @@ describe('vocabularies are cap1-core verbatim', () => {
     expect([...FRESHNESS_STATES]).toEqual([...FRESHNESS]);
     expect([...CHALLENGE_STATES]).toEqual(['unchallenged']);
     expect(PWB_REPOSITORY_ID).toBe('repository:butlers-configured-poc');
+  });
+
+  // syzygy-bpyt.6.4: a producer cannot hand the model an untyped Unknown.
+  // The type half is checked by `npm run typecheck` (tests are in its
+  // program): each directive fails as unused the moment its field widens back
+  // to `string`. The closure is never called; the runtime half pins the
+  // closed words the producers state and the one constructor's output.
+  it('a producer cannot emit an untyped Unknown reason', () => {
+    const minted = 'a minted reason' as string;
+    const typeOnly = (): unknown => [
+      // @ts-expect-error the constructor takes an RFC2-24 reason, never a string
+      unknownEpistemic(minted, 'basis'),
+      // @ts-expect-error a classification record's fixed Unknown is closed
+      { failureState: 'gitCaptureFailed', degradationState: 'Observer failed', unknownReason: minted } satisfies FixedUnknown,
+      // @ts-expect-error an observation degradation is closed
+      { failureState: 'gitCaptureFailed', degradationState: 'Observer failed', unknownReason: minted, detail: '' } satisfies ObservationDegradation,
+      // @ts-expect-error a class denominator's Unknown is closed
+      { kind: 'unknown', reason: 'source-withheld', unknownReason: minted } satisfies ClassDenominator,
+      // @ts-expect-error a reconciled fact's Unknown is closed
+      { fact: 'f', state: 'unknown', declarations: [], unknownReason: minted, rulesConsidered: [] } satisfies ReconciledFact,
+      // @ts-expect-error an item's Unknown is closed
+      { class: 'principle', key: 'k', state: 'unknown', anchors: [], unknownReason: minted } satisfies ItemCoverage,
+      // @ts-expect-error a current-authority Unknown is closed, bar its one named placeholder
+      { kind: 'unknown', reason: minted, route: '', detail: '' } satisfies ProposedWorkCurrentAuthority,
+    ];
+    expect(typeof typeOnly).toBe('function');
+    const stated = [...Object.values(PWB_FAILURE_STATES).map((state) => state.unknownReason), ...Object.values(PRODUCER_UNKNOWN_REASONS)];
+    expect(stated.filter((reason) => !(REASONS as readonly string[]).includes(reason))).toEqual([]);
+    expect(JSON.stringify(unknownEpistemic('missing-evidence', 'No evidence.'))).toBe(
+      '{"label":"Unknown","reason":"No evidence.","closedReason":"missing-evidence","resolutionRoutes":[{"reason":"missing-evidence","route":"Produce or capture evidence","actor":"operator","verb":"capture","target":"evaluation"}]}',
+    );
   });
 });
 

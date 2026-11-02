@@ -2,7 +2,8 @@ import { execFileSync } from 'node:child_process';
 
 import type { UnknownReason } from '@syzygy/cap1-core';
 
-import type { PocProvenance, PocUnknown } from './model.js';
+import { unknown, type PocUnknown } from './epistemic.js';
+import type { PocProvenance } from './model.js';
 import { resolutionRoute, type ResolutionRoutes } from './project-shape-model.js';
 
 export const WORK_ITEM_STATUSES = [
@@ -63,7 +64,7 @@ export function governingIntentUnknown(): GoverningIntentUnknown {
 /** The disclosure twin of an item's governing intent: the served value
  * with its basis sentence, as every rendered Unknown carries one. */
 export function governingIntentDisclosure(governedBy: GoverningIntentUnknown): PocUnknown {
-  return { label: governedBy.label, reason: GOVERNING_INTENT_UNKNOWN_BASIS, closedReason: governedBy.closedReason, resolutionRoutes: governedBy.resolutionRoutes };
+  return unknown(governedBy.closedReason, GOVERNING_INTENT_UNKNOWN_BASIS);
 }
 
 /** Every served item's title, stated once on the observation rather than on
@@ -91,7 +92,7 @@ export function workItemTitlesWithheld(): WorkItemTitlesWithheld {
 
 /** The disclosure twin of the observation's `titles`, with its basis. */
 export function workItemTitlesDisclosure(titles: WorkItemTitlesWithheld): PocUnknown {
-  return { label: titles.label, reason: WORK_ITEM_TITLES_WITHHELD_BASIS, closedReason: titles.closedReason, resolutionRoutes: titles.resolutionRoutes };
+  return unknown(titles.closedReason, WORK_ITEM_TITLES_WITHHELD_BASIS);
 }
 
 /** How many items carry the governing-intent Unknown, counted over the

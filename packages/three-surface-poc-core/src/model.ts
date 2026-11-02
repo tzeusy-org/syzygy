@@ -10,6 +10,7 @@ import { buildDispatchDisclosure, type DispatchDisclosure, type MaterializationR
 import type { BodyReadAuthorityEvaluation } from './body-read-authority.js';
 import { gitRunnerFor, type GitRunner, type PwbResourceLimits } from './project-shape-observation.js';
 import type { UnknownReason } from '@syzygy/cap1-core';
+import { PRODUCER_UNKNOWN_REASONS, observed, unknown, type PocEpistemic, type PocUnknown } from './epistemic.js';
 import { deepFreeze, sha256 } from '@syzygy/support';
 
 import {
@@ -19,7 +20,7 @@ import {
   type ProjectShape,
   type ResolutionRoutes,
 } from './project-shape-model.js';
-import { deriveProposedWork, type ProposedWork } from './proposed-work.js';
+import { NO_SEED_SET_CURRENT_AUTHORITY_REASON, deriveProposedWork, type ProposedWork } from './proposed-work.js';
 import {
   evaluateWalkthroughJudgment,
   type WalkthroughJudgmentEvaluation,
@@ -49,25 +50,7 @@ import {
 const NON_CLOSED_LIMIT = 200;
 const RECENT_CLOSED_WINDOW = 50;
 
-/** The one lawful action a POC Unknown can lead to (M4 slice 1): the
- * read-only materialize preview on Trajectory. Following it writes nothing. */
-export interface PocActionRoute {
-  readonly surface: 'trajectory';
-  readonly anchor: 'materialize-panel';
-}
-
-/** An Unknown carries its basis sentence (`reason`, the prose the page has
- * always rendered), the closed RFC2-24 reason, and at least one route
- * (M4 slices 1–2, P-71). */
-export interface PocUnknown {
-  readonly label: 'Unknown';
-  readonly reason: string;
-  readonly closedReason: UnknownReason;
-  readonly resolutionRoutes: ResolutionRoutes;
-  readonly actionRoute?: PocActionRoute;
-}
-
-export type PocEpistemic = { readonly label: 'Observed'; readonly basis: string } | PocUnknown;
+export type { PocActionRoute, PocEpistemic, PocUnknown } from './epistemic.js';
 
 /** An Unknown the surfaces disclose that is neither an entity, a
  * relationship nor a project-shape claim — a region, a lifecycle, a
@@ -498,20 +481,6 @@ function fileProvenance(artifact: ObservedArtifact, repositoryRevision: string):
   };
 }
 
-function observed(basis: string): PocEpistemic {
-  return { label: 'Observed', basis };
-}
-
-function unknown(reason: string, closedReason: UnknownReason, actionRoute?: PocActionRoute): PocUnknown {
-  return {
-    label: 'Unknown',
-    reason,
-    closedReason,
-    resolutionRoutes: [resolutionRoute(closedReason)],
-    ...(actionRoute === undefined ? {} : { actionRoute }),
-  };
-}
-
 /** Exported for the renderers: the work-item verification Unknown every
  * Trajectory card discloses, and the worker-change verification beside it. */
 export const WORK_ITEM_VERIFICATION_BASIS =
@@ -552,18 +521,19 @@ interface UnknownSubjectInputs {
 }
 
 /** One entry per non-claim Unknown some surface renders, existing exactly
- * when that disclosure renders. A region that was not captured routes to
- * the observer; every other branch names the reason its producer
- * establishes. */
+ * when that disclosure renders. Each closed reason is the one its producer
+ * establishes: carried on the typed result where the serialized shape has
+ * it (`lifecycle.closedReason`, `governedBy`, `titles`), and otherwise read
+ * from `PRODUCER_UNKNOWN_REASONS`. */
 function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknownSubject[] {
   const subjects: PocUnknownSubject[] = [];
   const add = (id: string, basis: string, reason: UnknownReason): void => {
-    subjects.push({ id, epistemic: unknown(basis, reason) });
+    subjects.push({ id, epistemic: unknown(reason, basis) });
   };
   const code = input.codeStructure.kind === 'unknown' ? input.codeStructure : input.orrery.kind === 'unknown' ? input.orrery : null;
-  if (code !== null) add('region:code-structure', code.reason, 'source-uncaptured-or-unreachable');
+  if (code !== null) add('region:code-structure', code.reason, PRODUCER_UNKNOWN_REASONS.codeStructure);
   const work = input.workItems.kind === 'unknown' ? input.workItems : input.trajectory.kind === 'unknown' ? input.trajectory : null;
-  if (work !== null) add('region:work-items', work.reason, 'source-uncaptured-or-unreachable');
+  if (work !== null) add('region:work-items', work.reason, PRODUCER_UNKNOWN_REASONS.workItems);
   const lifecycle = input.proposedWork?.lifecycle;
   if (input.proposedWork !== null && lifecycle?.kind === 'unknown') add(`${input.proposedWork.id}/lifecycle`, lifecycle.reason, lifecycle.closedReason);
   if (input.trajectory.kind === 'observed') {
@@ -585,7 +555,7 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
     const change = input.workerChange;
     if (change.kind === 'observed' && input.trajectory.rendered.some((item) => item.id === change.beadId)) {
       const verification = input.testArtifactVerification;
-      if (verification.kind === 'unknown') add(workerChangeVerificationId(change.beadId), verification.reason, 'missing-evidence');
+      if (verification.kind === 'unknown') add(workerChangeVerificationId(change.beadId), verification.reason, PRODUCER_UNKNOWN_REASONS.testArtifactVerification);
       else if (verification.kind === 'reported' && input.governingIntentId !== null) {
         // RFC5-19: an operator-reported run caps at report-fact, so the
         // verification relationship stays Unknown with its disclosure. The
@@ -628,7 +598,7 @@ function resolveMaterializationEpistemic(
 ): MaterializationEpistemic {
   if (record === null) {
     return {
-      epistemic: unknown('No POC work item has been materialized.', 'missing-evidence'),
+      epistemic: unknown('missing-evidence', 'No POC work item has been materialized.'),
       beadId: null,
       origin: null,
       createdAt: null,
@@ -637,7 +607,7 @@ function resolveMaterializationEpistemic(
   }
   if (workItems.kind === 'unknown') {
     return {
-      epistemic: unknown('A materialization record exists but work items could not be observed to confirm it.', 'source-uncaptured-or-unreachable'),
+      epistemic: unknown('source-uncaptured-or-unreachable', 'A materialization record exists but work items could not be observed to confirm it.'),
       beadId: null,
       origin: null,
       createdAt: null,
@@ -647,7 +617,7 @@ function resolveMaterializationEpistemic(
   const found = workItems.items.find((item) => item.id === record.beadId);
   if (found === undefined) {
     return {
-      epistemic: unknown('A materialization record names a Bead that was not found among the observed work items.', 'reference-unresolvable'),
+      epistemic: unknown('reference-unresolvable', 'A materialization record names a Bead that was not found among the observed work items.'),
       beadId: null,
       origin: null,
       createdAt: null,
@@ -761,7 +731,7 @@ function entityFromSeed(seed: PocSeedEntity, seeds: PocSeedInput, context: SeedO
         kind: seed.kind,
         title,
         detail,
-        epistemic: unknown('No test artifact has been captured for this evaluation.', 'missing-evidence'),
+        epistemic: unknown('missing-evidence', 'No test artifact has been captured for this evaluation.'),
         provenance: [],
       };
     case 'runtime':
@@ -770,7 +740,7 @@ function entityFromSeed(seed: PocSeedEntity, seeds: PocSeedInput, context: SeedO
         kind: seed.kind,
         title,
         detail,
-        epistemic: unknown('No current runtime observation was supplied.', 'missing-evidence'),
+        epistemic: unknown('missing-evidence', 'No current runtime observation was supplied.'),
         provenance: [],
       };
     case 'unknown-region':
@@ -779,7 +749,7 @@ function entityFromSeed(seed: PocSeedEntity, seeds: PocSeedInput, context: SeedO
         kind: seed.kind,
         title,
         detail,
-        epistemic: unknown('The first slice does not enumerate or map the remaining code.', 'mapping-coverage-absent'),
+        epistemic: unknown('mapping-coverage-absent', 'The first slice does not enumerate or map the remaining code.'),
         provenance: [],
       };
   }
@@ -844,7 +814,7 @@ function relationshipFromSeed(
         statement,
         epistemic:
           context.materialization.beadId === null
-            ? unknown('The human-triggered materialization step has not run.', 'missing-evidence', { surface: 'trajectory', anchor: 'materialize-panel' })
+            ? unknown('missing-evidence', 'The human-triggered materialization step has not run.', { surface: 'trajectory', anchor: 'materialize-panel' })
             : observed(
                 `The human-triggered materialization step ${context.materialization.origin === 'created' ? 'created' : context.materialization.origin === 'reused' ? 'reused the existing' : 'created or reused'} Beads item ${context.materialization.beadId}.`,
               ),
@@ -857,7 +827,7 @@ function relationshipFromSeed(
         from: seed.from,
         to: seed.to,
         statement,
-        epistemic: unknown('No materialized work item or worker change was supplied.', 'missing-evidence'),
+        epistemic: unknown('missing-evidence', 'No materialized work item or worker change was supplied.'),
         provenance: [],
       };
     case 'code-to-evidence':
@@ -867,7 +837,7 @@ function relationshipFromSeed(
         from: seed.from,
         to: seed.to,
         statement,
-        epistemic: unknown('No test artifact has been captured for this evaluation.', 'missing-evidence'),
+        epistemic: unknown('missing-evidence', 'No test artifact has been captured for this evaluation.'),
         provenance: [],
       };
     case 'code-to-runtime':
@@ -877,7 +847,7 @@ function relationshipFromSeed(
         from: seed.from,
         to: seed.to,
         statement,
-        epistemic: unknown('No current runtime observation was supplied.', 'missing-evidence'),
+        epistemic: unknown('missing-evidence', 'No current runtime observation was supplied.'),
         provenance: [],
       };
     case 'capability-to-unmapped-region':
@@ -887,7 +857,7 @@ function relationshipFromSeed(
         from: seed.from,
         to: seed.to,
         statement,
-        epistemic: unknown('The bounded POC mapping makes no claim about other code.', 'mapping-coverage-absent'),
+        epistemic: unknown('mapping-coverage-absent', 'The bounded POC mapping makes no claim about other code.'),
         provenance: [],
       };
   }
@@ -953,7 +923,7 @@ function emptyProposedWork(input: BuildPocModelInput): ProposedWork {
     },
     currentAuthority: {
       kind: 'unknown',
-      reason: 'No seeded proposed-work artifacts were supplied to this evaluation.',
+      reason: NO_SEED_SET_CURRENT_AUTHORITY_REASON,
       route: 'Supply an implementation-plane seed set, then create a new evaluation.',
       detail: 'The proposed-work graph was not evaluated because no seed set was supplied.',
     },

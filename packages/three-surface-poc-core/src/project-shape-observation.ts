@@ -24,6 +24,7 @@
 
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import type { UnknownReason } from '@syzygy/cap1-core';
 import { decodeUtf8, deepFreeze, sha256 } from '@syzygy/support';
 
 import type { AuthorityKind, AuthorityState, BodyReadAuthorityEvaluation } from './body-read-authority.js';
@@ -89,7 +90,7 @@ export const PWB_FAILURE_STATES = {
   someSourcesUncapturedOrOverLimit: { degradationState: 'Partial snapshot', unknownReason: 'source-uncaptured-or-unreachable' },
   secretMatchedOrUnclassifiable: { degradationState: 'Excluded content', unknownReason: 'excluded-content' },
   consentWithdrawn: { degradationState: 'Consent withdrawn', unknownReason: 'unconsented-source-or-provider' },
-} as const;
+} as const satisfies Readonly<Record<string, { readonly degradationState: string; readonly unknownReason: UnknownReason }>>;
 export type PwbFailureState = keyof typeof PWB_FAILURE_STATES;
 
 // ---------------------------------------------------------------------
@@ -252,7 +253,7 @@ export interface DeterministicInputs {
 export interface ObservationDegradation {
   readonly failureState: PwbFailureState;
   readonly degradationState: string;
-  readonly unknownReason: string;
+  readonly unknownReason: UnknownReason;
   readonly detail: string;
 }
 
@@ -289,7 +290,7 @@ export interface ProjectShapeObservationUnknown {
   readonly capturedAt: string;
   readonly failureState: 'gitCaptureFailed';
   readonly degradationState: string;
-  readonly reason: string;
+  readonly reason: UnknownReason;
   readonly detail: string;
 }
 

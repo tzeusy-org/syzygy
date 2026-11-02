@@ -28,6 +28,7 @@ import {
   type PocRelationship,
   type ProposedWork,
   type ProposedWorkCurrentAuthority,
+  type UnknownReason,
 } from '@syzygy/three-surface-poc-core';
 import { sha256 } from '@syzygy/support';
 
@@ -48,8 +49,6 @@ type BandAuthorityClass = (typeof BAND_AUTHORITY_CLASS)[DeepDiveBand];
 const READING_MODES = ['Base'] as const;
 type ReadingMode = (typeof READING_MODES)[number];
 export const DEFAULT_READING_MODE: ReadingMode = 'Base';
-
-type UnknownReason = keyof typeof UNKNOWN_REASON_ROUTES;
 
 type CapabilityAdoption =
   | { readonly kind: 'adopted'; readonly basis: string }

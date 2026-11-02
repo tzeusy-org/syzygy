@@ -30,6 +30,7 @@ import {
   type ProposedWork,
   type ReasonCounts,
   type RootSummaryDisclosure,
+  type UnknownReason,
 } from '@syzygy/three-surface-poc-core';
 import { sha256 } from '@syzygy/support';
 
@@ -368,8 +369,8 @@ function tupleMarks(tier: string, freshness: string | undefined, challenge: stri
  * Unknown reason counts separately, each with its route — never a headline
  * status, a maturity or a success. */
 export function reasonCountsBlock(claimId: string, counts: ReasonCounts): string {
-  const list = (which: 'primary' | 'secondary', entries: Readonly<Partial<Record<string, number>>>): string => {
-    const rows = Object.entries(entries).filter((entry): entry is [string, number] => typeof entry[1] === 'number' && entry[1] > 0);
+  const list = (which: 'primary' | 'secondary', entries: ReasonCounts['primary']): string => {
+    const rows = reasonCountRows(entries);
     if (rows.length === 0) return '';
     return `<p${DISCLOSURE}>${copy(which === 'primary' ? 'label.primary-reasons' : 'label.secondary-reasons')}</p>
       <ul data-reason-counts-${which}="${escapeHtml(claimId)}"${DISCLOSURE}>${rows
@@ -571,18 +572,27 @@ function causeRoutes(reason: string, paths: ReadonlySet<string> | undefined): re
   return undefined;
 }
 
-function routeOf(claim: ProjectShapeClaim, reason: string): string {
+/** A reason-count record's rows, in its own key order, with a positive
+ * count. `Object.entries` widens keys to `string`; a `ReasonCounts` record is
+ * keyed by its reasons, so the rows keep that type. */
+function reasonCountRows(counts: ReasonCounts['primary']): readonly (readonly [UnknownReason, number])[] {
+  return (Object.entries(counts) as [UnknownReason, number | undefined][]).filter((entry): entry is [UnknownReason, number] => typeof entry[1] === 'number' && entry[1] > 0);
+}
+
+/** `deferred` stands for a claim with no Unknown reasons; it has no generic
+ * route, so only its causes or the no-route label can answer. */
+function routeOf(claim: ProjectShapeClaim, reason: UnknownReason | 'deferred'): string {
   const causes = causeRoutes(reason, new Set(claim.support.map((support) => support.path)));
   if (causes !== undefined) return causes.join('; ');
   const route = claim.resolutionRoutes.find((entry) => entry.reason === reason)?.route;
-  return route ?? UNKNOWN_REASON_ROUTES[reason as keyof typeof UNKNOWN_REASON_ROUTES] ?? copyText('label.no-route');
+  return route ?? (reason === 'deferred' ? copyText('label.no-route') : UNKNOWN_REASON_ROUTES[reason]);
 }
 
 /** The route text of one reason in the gaps list: the generic route, then
  * the evaluation's causes when it records any, so the reader reaches the
  * actual cause without leaving the list. */
-function reasonRouteHtml(reason: string): string {
-  const generic = UNKNOWN_REASON_ROUTES[reason as keyof typeof UNKNOWN_REASON_ROUTES] ?? copyText('label.no-route');
+function reasonRouteHtml(reason: UnknownReason): string {
+  const generic = UNKNOWN_REASON_ROUTES[reason];
   const causes = causeRoutes(reason, undefined);
   if (causes === undefined) return `${escapeHtml(generic)}.`;
   // The gaps entry lists one cause per item (syzygy-u05.4; S4-F5); the
@@ -591,7 +601,7 @@ function reasonRouteHtml(reason: string): string {
   return `${escapeHtml(generic)}. <span${copyAttr('label.by-cause')}>${copy('label.by-cause')}</span><ul data-polaris-gap-causes="${causes.length}">${causes.map((cause) => `<li>${escapeHtml(cause)}.</li>`).join('')}</ul>`;
 }
 
-function reasonRemedyHtml(reason: string): string {
+function reasonRemedyHtml(reason: UnknownReason): string {
   const { lead, list } = reasonRouteParts(reason);
   return `<p>${copy('label.route')} ${lead}</p>${list}`;
 }
@@ -600,8 +610,8 @@ function reasonRemedyHtml(reason: string): string {
  * paragraph; `list` is empty unless two or more causes are recorded, when it
  * is an ordered list that must follow the paragraph, never sit inside it.
  * <ol>, not <ul>: the reason-counts oracles end a block at its first </ul>. */
-function reasonRouteParts(reason: string): { lead: string; list: string } {
-  const generic = UNKNOWN_REASON_ROUTES[reason as keyof typeof UNKNOWN_REASON_ROUTES] ?? copyText('label.no-route');
+function reasonRouteParts(reason: UnknownReason): { lead: string; list: string } {
+  const generic = UNKNOWN_REASON_ROUTES[reason];
   const causes = causeRoutes(reason, undefined);
   if (causes === undefined) return { lead: `${escapeHtml(generic)}.`, list: '' };
   const byCause = `<span${copyAttr('label.by-cause')}>${copy('label.by-cause')}</span>`;
@@ -1097,8 +1107,8 @@ function rootIndexSection(shape: Extract<ProjectShape, { kind: 'observed' }>): s
 
 /** The Unknown reasons across every shape claim, counted and routed, with
  * `missing-declaration` foremost (RFC7-15) and `unconsented` next. */
-function gapReasonCounts(claims: readonly ProjectShapeClaim[]): ReadonlyMap<string, number> {
-  const counts = new Map<string, number>();
+function gapReasonCounts(claims: readonly ProjectShapeClaim[]): ReadonlyMap<UnknownReason, number> {
+  const counts = new Map<UnknownReason, number>();
   for (const claim of claims) {
     if ('reasons' in claim.epistemic) {
       const reason = claim.epistemic.reasons.primary;
@@ -1377,7 +1387,7 @@ function undeclaredContractPart(dive: CapabilityDeepDive, part: 'doctrine' | 'no
     : `The project shape is ${shape.kind}; no declaration was read.`;
   return `<section class="claim-section" data-contract-part="${part}"${ledger.block('contract', `contract:${dive.capabilityId}/${part}`)}>
       ${heading(4, `polaris-${dive.capabilityId}-${part}`, part === 'doctrine' ? 'label.doctrine' : 'label.non-goals')}
-      ${unknownLine(`${dive.capabilityId}/${part}`, reason, UNKNOWN_REASON_ROUTES[reason as keyof typeof UNKNOWN_REASON_ROUTES] ?? 'No route recorded', detail)}
+      ${unknownLine(`${dive.capabilityId}/${part}`, reason, UNKNOWN_REASON_ROUTES[reason], detail)}
     </section>`;
 }
 

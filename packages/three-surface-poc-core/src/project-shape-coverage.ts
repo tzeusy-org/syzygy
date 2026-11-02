@@ -20,6 +20,8 @@
 // Unknown with reason `contradicted-pending-adjudication` (RFC2-24
 // verbatim). Nothing here ever drops a declaration or hard-codes a winner.
 
+import type { UnknownReason } from '@syzygy/cap1-core';
+
 import {
   type ClassifiedSource,
   type ClassificationRecord,
@@ -179,7 +181,7 @@ export type ReconciledFact =
       readonly fact: string;
       readonly state: 'unknown';
       readonly declarations: readonly Declaration[];
-      readonly unknownReason: string;
+      readonly unknownReason: UnknownReason;
       readonly rulesConsidered: readonly ConsideredRule[];
     };
 
@@ -213,7 +215,7 @@ export type ClassDenominator =
   | {
       readonly kind: 'unknown';
       readonly reason: ExtractionFailure | 'unenumerated-heading' | 'source-withheld';
-      readonly unknownReason: string;
+      readonly unknownReason: UnknownReason;
       readonly failure?: ExtractionFailureRecord;
       readonly unenumeratedHeadings?: number;
     };
@@ -248,7 +250,7 @@ export interface ItemCoverage {
   readonly statement?: string;
   readonly context?: string;
   readonly precedence?: PrecedenceCitation;
-  readonly unknownReason?: string;
+  readonly unknownReason?: UnknownReason;
 }
 
 export interface ClassCoverage {
@@ -272,7 +274,7 @@ export interface ClassCoverage {
     | { readonly kind: 'known'; readonly value: number }
     | {
         readonly kind: 'unknown';
-        readonly reasons: readonly string[];
+        readonly reasons: readonly UnknownReason[];
         // Present when headings no row declares sit in this class's sources:
         // the signed reason word beside the closed reason, with the count
         // of such headings across them (PWB-REQ-002 as amended).
@@ -433,7 +435,7 @@ export const projectAccountFact = (key: string): string => `project-account:${ke
 const unknownOutcomes = (
   classes: readonly ExtractionClass[],
   reason: Extract<ClassDenominator, { kind: 'unknown' }>['reason'],
-  unknownReason: string,
+  unknownReason: UnknownReason,
   failures: readonly ExtractionFailureRecord[] = [],
   headings: readonly UnenumeratedHeading[] = [],
 ): readonly SourceClassOutcome[] =>
@@ -667,10 +669,11 @@ export function buildProjectShapeCoverage(input: CoverageInput): ProjectShapeCov
         .map((s) => ({ path: s.path, ...(digestOf.get(s.path) === undefined ? {} : { contentDigest: digestOf.get(s.path) as string }) })),
     };
     const declarations = [derived, ...stated.filter((d) => d.fact === fact)];
-    if (reasons.length > 0) {
+    const primaryReason = reasons[0];
+    if (primaryReason !== undefined) {
       // A count over an Unknown denominator is itself Unknown, whatever a
       // summary states; every declaration is retained.
-      facts.push({ fact, state: 'unknown', declarations, unknownReason: reasons[0] as string, rulesConsidered: [] });
+      facts.push({ fact, state: 'unknown', declarations, unknownReason: primaryReason, rulesConsidered: [] });
       continue;
     }
     facts.push(reconcileFact(fact, declarations, reconcile, false));
@@ -697,8 +700,9 @@ export function buildProjectShapeCoverage(input: CoverageInput): ProjectShapeCov
       });
     }
     const declarations = [...derived, ...stated.filter((d) => d.fact === fact)];
-    if (catalogReasons.length > 0) {
-      facts.push({ fact, state: 'unknown', declarations, unknownReason: catalogReasons[0] as string, rulesConsidered: [] });
+    const catalogReason = catalogReasons[0];
+    if (catalogReason !== undefined) {
+      facts.push({ fact, state: 'unknown', declarations, unknownReason: catalogReason, rulesConsidered: [] });
       continue;
     }
     if (declarations.length === 0) continue;
