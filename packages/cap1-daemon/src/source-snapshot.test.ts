@@ -248,6 +248,41 @@ describe('capture order: consent is decided before any dependent read', () => {
     expect(captured.entry).toEqual({ state: 'not-read', reason: 'unconsented-governance-root' });
   });
 
+  // Round-1 F5: with no declaration there is no governance root at all, so
+  // the entry's not-read reason and its served sentence say that, never
+  // that a consent was refused.
+  it('an undeclared governance root is its own not-read reason, read nowhere and served truthfully', async () => {
+    const f = fixture();
+    rmSync(join(f.root, '.syzygy', 'project.yaml'));
+    const reader = countingReader();
+    const captured = await capture(f, { reader });
+    expect(captured.repositories).toEqual([]);
+    expect(reader.calls.filter((c) => c === 'read:.syzygy/intent/OVERVIEW.md')).toHaveLength(0);
+    expect(captured.entry).toEqual({ state: 'not-read', reason: 'undeclared-governance-root' });
+    expect(captured.manifest.inputs.filter((d) => d.kind === 'entry').map((d) => [d.state, d.failureCode])).toEqual([
+      ['not-read', 'undeclared-governance-root'],
+    ]);
+    const evaluation = evaluateCapturedProject(captured);
+    const entry = humanRoutes({ getEvaluation: () => evaluation }).find((r) => r.path === HUMAN_ENTRY_ROUTE_PATH);
+    const html = (await entry?.handle({} as never))?.body ?? '';
+    expect(html).toContain(
+      'data-unknown-reason="unconsented-source-or-provider" data-not-read-reason="undeclared-governance-root">' +
+        'The entry document was not read: no governance root is declared (undeclared-governance-root).',
+    );
+    expect(html).not.toContain('consent is not admitted');
+  });
+
+  it('a refused governance root serves the consent sentence on /entry', async () => {
+    const f = fixture();
+    rmSync(join(f.decisions, 'c-gov.act.yaml'));
+    const evaluation = evaluateCapturedProject(await capture(f));
+    const entry = humanRoutes({ getEvaluation: () => evaluation }).find((r) => r.path === HUMAN_ENTRY_ROUTE_PATH);
+    const html = (await entry?.handle({} as never))?.body ?? '';
+    expect(html).toContain(
+      "The entry document was not read: the governance root&#39;s observation consent is not admitted (unconsented-governance-root).",
+    );
+  });
+
   it('a reference naming an act file is refused before any filesystem access', async () => {
     const f = fixture();
     writeFileSync(join(f.root, '.syzygy', 'project.yaml'), DECLARATION.replace('consent: c-src', 'consent: c-gov.act'), 'utf8');

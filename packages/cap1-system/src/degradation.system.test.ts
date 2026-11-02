@@ -70,6 +70,11 @@ describe('RT6 — honest degradation over real disk state', () => {
     expect(entryHtml).toContain('data-entry-state="not-read"');
     expect(entryHtml).not.toContain('data-entry-state="unreadable"');
     expect(entryHtml).toContain('Unknown — reason: unconsented-source-or-provider');
+    // Round-1 F5: the stated cause is the true one — nothing is declared —
+    // never a refused consent.
+    expect(entryHtml).toContain('data-not-read-reason="undeclared-governance-root"');
+    expect(entryHtml).toContain('The entry document was not read: no governance root is declared');
+    expect(entryHtml).not.toContain('consent is not admitted');
   });
 
   it('breaking the declaration between runs changes the served facts to the named invalid arms', async () => {
