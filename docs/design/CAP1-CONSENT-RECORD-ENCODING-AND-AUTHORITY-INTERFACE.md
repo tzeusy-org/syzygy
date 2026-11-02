@@ -28,7 +28,9 @@
 - **Location.** Exactly `<decisions home>/<reference>.act.yaml`, beside the
   artifact it acts on, derived from the same validated bare reference. No
   scan, no second candidate. The act record is a distinct file, so the
-  artifact digest never hashes itself (design.md).
+  artifact digest never hashes itself (design.md). A reference ending in
+  `.act` is refused `reference-unresolvable` before any filesystem access,
+  so no reference can name another reference's act file as its artifact.
 - **Parser.** The core's pinned declaration dialect (`parseDeclarationSource`,
   `yaml@2.9.0`), as for the artifact.
 - **Keys.** Closed set; every key is required; an unknown key is malformed.
@@ -44,13 +46,23 @@
 | `act_type` | 4 act type | `consent` \| `revoke` |
 | `owner` | 5 owner attribution | non-empty, not all-whitespace string |
 | `instant` | 6 act instant | `YYYY-MM-DDTHH:MM:SSZ` or `YYYY-MM-DDTHH:MM:SS.sssZ`, a real calendar instant |
-| `scope` | 7 scope | string; compared byte-for-byte to the artifact's `scope` |
+| `scope` | 7 scope | string; compared byte-for-byte to the artifact's `scope`, then read as the scope grammar below |
 | `supersedes` | 8 supersession/revocation | `null` or an act identity string |
 | `expires` | 8 declared expiry | `null` or an instant in the `instant` grammar |
 | `actor` | human-act premise | `human` \| `machine` |
 | `provenance` | state selection | `owner-adopted-bootstrap` (state 1) \| `syzygy-verified` (state 2) |
 | `a1_audit_record` | 9 A1 identity or explicit absence | `null`, or a mapping with exactly `id` (non-empty string) and `digest` (`sha256:` + 64 hex) |
 
+- **Scope grammar.** One or more tokens from the closed RFC3-7 set
+  `observe`, `write`, `execute`, separated by single spaces, no token twice.
+  Repository observation is admitted only when `observe` is a token. The
+  current loader reads `scope` as a free string and nothing checks it; under
+  this encoding a fixture that should admit uses `scope: observe`.
+- **State-(1) evidence chain.** RFC3-16(c)(1) preserves the exact owner
+  phrase, the content digest, the act record and the recording commit or
+  tag. The phrase and the commit/tag live outside the act record (a commit
+  cannot be inside the file it records); CAP1 neither evaluates nor renders
+  them in this task, and they are not admission inputs.
 - [Inferred] `actor: human` is the record's claim, not proof of attendance
   (RFC3-16(a) trust premise). `actor: machine` is the "known non-human act"
   case. A file that cannot state `human` cannot be admitted.
@@ -70,49 +82,80 @@ fixed so identical inputs give identical diagnostics.
 | 2 | artifact pair equals the entry pair (entry reference only) | `record-subject-mismatch` | wrong project (artifact side) |
 | 3 | act file present | `owner-act-missing` | missing record; machine-only submission |
 | 4 | act file readable | `owner-act-unreadable` | missing record |
-| 5 | `owner` key present and non-blank | `owner-attribution-missing` | missing owner |
-| 6 | `instant` key present and non-blank | `act-instant-missing` | missing instant |
-| 7 | `a1_audit_record` key present | `audit-identity-omitted` | omitted audit field |
-| 8 | mapping, schema, closed key set, every value grammar | `owner-act-malformed` | malformed binding |
-| 9 | `actor` is `human` | `actor-non-human` | known non-human act |
-| 10 | `artifact` equals the reference | `artifact-identity-mismatch` | wrong artifact identity |
-| 11 | `artifact_digest` equals the artifact digest | `artifact-digest-mismatch` | digest mismatch |
-| 12 | `project` equals the declaration project id | `project-mismatch` | wrong project |
-| 13 | `act_type` is `consent` for `in-force`, `revoke` for `withdrawn` | `act-type-mismatch` | wrong act type |
-| 14 | `scope` equals the artifact `scope` | `scope-mismatch` | wrong scope |
-| 15 | state 1 has `a1_audit_record: null`; state 2 has a mapping | `provenance-state-inconsistent` | explicit absence only for state (1) |
-| 16 | `instant` is not after `asOf` | `act-instant-future` | future instant |
-| 17 | `expires` is `null` or after `asOf` | `act-expired` | declared expiry |
-| 18 | no applicable currency bound, or `asOf − instant` within it | `act-stale` | applicable-staleness breach |
-| 19 | no captured act with `act_type: revoke` names this act in `supersedes` | `act-revoked` | revocation |
-| 20 | no captured act with `act_type: consent` names this act in `supersedes` | `act-superseded` | supersession |
-| 21 | state 2: correlation result is `correlated` | `correlation-unavailable` \| `correlation-not-found` \| `correlation-mismatch` \| `correlation-indeterminate` | correlated consent; failed correlation does not downgrade |
+| 5 | act bytes parse in the pinned dialect to a mapping | `owner-act-malformed` | malformed binding |
+| 6 | `owner` key present, a string, not blank (absent, `null` or blank all fail) | `owner-attribution-missing` | missing owner |
+| 7 | `instant` key present, a string, not blank (absent, `null` or blank all fail) | `act-instant-missing` | missing instant |
+| 8 | `a1_audit_record` key present (`null` is explicit absence and passes) | `audit-identity-omitted` | omitted audit field |
+| 9 | schema, closed key set, every value grammar in §2 | `owner-act-malformed` | malformed binding |
+| 10 | no other captured act carries the same `act` identity | `act-identity-duplicate` | ambiguous competing acts |
+| 11 | `actor` is `human` | `actor-non-human` | known non-human act |
+| 12 | `artifact` equals the reference | `artifact-identity-mismatch` | wrong artifact identity |
+| 13 | `artifact_digest` equals the artifact digest | `artifact-digest-mismatch` | digest mismatch |
+| 14 | `project` equals the declaration project id | `project-mismatch` | wrong project |
+| 15 | `act_type` is `consent` for `in-force`, `revoke` for `withdrawn` | `act-type-mismatch` | wrong act type |
+| 16 | `scope` equals the artifact `scope` | `scope-mismatch` | wrong scope |
+| 17 | `scope` follows the scope grammar and has the `observe` token | `scope-excludes-observation` | wrong scope |
+| 18 | state 1 has `a1_audit_record: null`; state 2 has a mapping | `provenance-state-inconsistent` | explicit absence only for state (1) |
+| 19 | `instant` is not after `asOf` | `act-instant-future` | future instant |
+| 20 | `expires` is `null` or after `asOf` | `act-expired` | declared expiry |
+| 21 | no applicable currency bound, or `asOf − instant` within it | `act-stale` | applicable-staleness breach |
+| 22 | no captured act with `act_type: revoke` names this act in `supersedes` | `act-revoked` | revocation |
+| 23 | no captured act with `act_type: consent` names this act in `supersedes` | `act-superseded` | supersession |
+| 24 | state 2: correlation result is `correlated` and matches (§4) | `correlation-unavailable` \| `correlation-not-found` \| `correlation-mismatch` \| `correlation-indeterminate` | correlated consent; failed correlation does not downgrade |
 
-- Checks 19–20 count any captured act whose keys parse far enough to read
-  `act_type` and `supersedes`, valid or not: a defeating act that is itself
+- Check 15 applies to the artifact's own act; for a withdrawal artifact the
+  act must be `revoke`. Check 17 is the "only that observation scope" limb:
+  an act scoped `write` or `execute` alone admits nothing here.
+- Checks 10, 22 and 23 count any captured act that passed check 5 and whose
+  `act`, `act_type` and `supersedes` values are strings (or `null`), valid
+  or not: a defeating act that is itself
   invalid still refuses (fail closed; "invalid or unresolvable referenced
   withdrawal evidence SHALL leave the pair refused").
-- Check 18's bound is injected (`consentCurrencyBound`, §5). The daemon
-  composition root declares none, so the check is not applicable there and
-  renders nothing; no default bound is invented.
+- Check 21's bound is injected (`ConsentCurrencyBound`, §5). The daemon
+  composition root declares none, so the check is not applicable there,
+  the manifest records `none`, and no default bound is invented. RFC3-16(a)
+  lists the currency-bound declaration (RFC2-9) as authorization-bearing:
+  a production bound may only come from an owner-act-backed declaration,
+  never from code or configuration; this task wires none.
 - A caller flag (`verified: true`) or any extra artifact key is ignored for
   admission; an artifact with no act file stops at check 3.
+- `asOf` grammar is the `instant` grammar. A malformed `asOf` stops capture
+  before any read with `CaptureFailure` kind `as-of-invalid`.
 
 ## 4. Correlation boundary (state 2 and later upgrade)
 
 ```ts
+// The validated act, every RFC3-16(b) item plus the repository and act-record digest.
+export interface ConsentActBinding {
+  readonly projectId: ProjectId;            // item 1
+  readonly repositoryId: RepositoryId;
+  readonly artifactId: string;              // item 2
+  readonly artifactDigest: Sha256Digest;    // item 3
+  readonly actType: 'consent' | 'revoke';   // item 4
+  readonly owner: string;                   // item 5
+  readonly instant: string;                 // item 6
+  readonly scope: string;                   // item 7
+  readonly supersedes: string | null;       // item 8
+  readonly expires: string | null;          // item 8
+  readonly a1AuditRecord: { readonly id: string; readonly digest: Sha256Digest } | null; // item 9
+  readonly actId: string;
+  readonly actor: 'human';
+  readonly provenance: 'owner-adopted-bootstrap' | 'syzygy-verified';
+  readonly actRecordDigest: Sha256Digest;
+}
+
 export type ConsentCorrelation =
-  | { readonly state: 'correlated'; readonly auditRecordId: string;
-      readonly auditRecordDigest: Sha256Digest }
+  | { readonly state: 'correlated';
+      readonly auditRecordId: string;
+      readonly auditRecordDigest: Sha256Digest;
+      readonly bindingDigest: Sha256Digest }  // over the canonical binding the audit record holds
   | { readonly state: 'not-found' | 'mismatch' | 'indeterminate' | 'unavailable' };
 
 export interface ConsentCorrelationProvider {
   readonly id: string; // recorded in the snapshot versions
   correlate(input: {
-    readonly projectId: ProjectId;
-    readonly actId: string;
-    readonly artifactDigest: Sha256Digest;
-    readonly claimedAuditRecord: { readonly id: string; readonly digest: Sha256Digest } | null;
+    readonly binding: ConsentActBinding;
+    readonly bindingDigest: Sha256Digest;   // canonical bytes (§6 encoder) of `binding`
   }): Promise<ConsentCorrelation>;
 }
 ```
@@ -120,16 +163,24 @@ export interface ConsentCorrelationProvider {
 - The provider is optional and absent in the daemon (no provider is
   authorized). Absent provider: state 2 refuses `correlation-unavailable`;
   state 1 is unaffected.
-- The provider is called only for acts that passed checks 1–18 (no I/O on
-  behalf of an act already refused). Its result is a captured snapshot input.
-- State 2 is admitted only on `correlated` whose identity equals the claimed
-  `a1_audit_record`; any other result refuses. No result ever yields state 1.
-- State 1 with a `correlated` result is an upgrade: that evaluation reports
-  Syzygy-verified. Upgrade exists only in the newly captured evaluation.
+- It is called at most once per act per capture, only for acts that passed
+  checks 1–23, with no retry. A thrown or rejected call is `unavailable`.
+  Its result is a captured snapshot input.
+- `correlated` matches only when `bindingDigest` equals the digest Syzygy
+  recomputes over the binding, and, for a state-2 claim, `auditRecordId` and
+  `auditRecordDigest` equal the claimed `a1_audit_record`. Otherwise the
+  result counts as `mismatch`. So all nine items are correlated, not only
+  the audit identity.
+- State 2 is admitted only on a matching `correlated`; any other result
+  refuses. No result ever yields state 1.
+- State 1 with a matching `correlated` result is an upgrade: that evaluation
+  reports Syzygy-verified with the returned audit identity. Upgrade exists
+  only in the newly captured evaluation; a prior evaluation is untouched.
 
 ## 5. Pair decision and interface
 
-Core (`packages/cap1-core/src/consent-decision.ts`, pure, no I/O, no clock):
+Core (`packages/cap1-core/src/consent-decision.ts`, pure, no I/O, no clock;
+`packages/cap1-core/src/snapshot.ts` for digests and the manifest):
 
 ```ts
 export type Sha256Digest = `sha256:${string}`;
@@ -141,16 +192,39 @@ export type ConsentProvenanceLabel =
   | 'owner-adopted (bootstrap, uncorrelated)'
   | 'Syzygy-verified';
 
+export interface ConsentCurrencyBound {
+  readonly maxAgeSeconds: number;  // positive integer
+  readonly declaredBy: string;     // the declaring artifact's identity
+}
+
 export interface ConsentAuthorityInput {   // one per distinct declared reference
   readonly reference: string;
   readonly artifact:
     | { readonly state: 'loaded'; readonly digest: Sha256Digest; readonly record: ConsentRecord }
     | { readonly state: 'failed'; readonly failure: ConsentReferenceFailureKind;
-        readonly pair: { projectId: ProjectId; repositoryId: RepositoryId } | undefined };
+        readonly digest: Sha256Digest | null;
+        readonly pair: { readonly projectId: ProjectId; readonly repositoryId: RepositoryId } | null };
   readonly act:
-    | { readonly state: 'loaded'; readonly digest: Sha256Digest; readonly fields: unknown }
+    | { readonly state: 'loaded'; readonly digest: Sha256Digest; readonly document: unknown }
+    | { readonly state: 'unparseable'; readonly digest: Sha256Digest }
     | { readonly state: 'missing' | 'unreadable' | 'not-read' };
   readonly correlation: ConsentCorrelation | 'not-attempted';
+}
+
+export interface AdmittedAct {
+  readonly binding: ConsentActBinding;
+  readonly correlation: Extract<ConsentCorrelation, { state: 'correlated' }> | null;
+}
+
+export interface UntrustedConsentRecordView {
+  readonly trust: 'untrusted content';
+  readonly recordId: string;
+  readonly artifactDigest: Sha256Digest;
+  readonly projectId: ProjectId;
+  readonly repositoryId: RepositoryId;
+  readonly scope: string;
+  readonly attribution: string;
+  readonly grantState: GrantState;
 }
 
 export type PreObservationConsentDecision =
@@ -159,7 +233,7 @@ export type PreObservationConsentDecision =
       readonly reference: string;
       readonly artifactDigest: Sha256Digest;
       readonly record: ConsentRecord;
-      readonly act: AdmittedAct;            // act id, act-record digest, owner, instant, scope, a1
+      readonly act: AdmittedAct;
       readonly provenance: ConsentProvenanceLabel }
   | { readonly authorization: 'Unknown';
       readonly repositoryId: RepositoryId;
@@ -168,8 +242,9 @@ export type PreObservationConsentDecision =
       readonly diagnostic: ConsentDiagnostic;
       readonly diagnosticReference: string; // which reference's evidence failed
       readonly route: 'owner-adjudication';
-      readonly untrustedRecord: UntrustedConsentRecordView | undefined };
+      readonly untrustedRecord: UntrustedConsentRecordView | null };
 
+export function evaluateConsentAct(/* one input, captured act set, project, asOf, bound */): ActEvaluation;
 export function decideRepositoryConsent(
   projectId: ProjectId, entry: RepositoryEntry,
   inputs: readonly ConsentAuthorityInput[], asOf: string,
@@ -184,19 +259,30 @@ Precedence, for entry pair P with entry reference R:
    `withdrawn`.
 3. R is a valid in-force grant, and some other captured artifact for P is
    `withdrawn`: valid → `withdrawn`; invalid → `withdrawal-unresolved`; the
-   withdrawal reference is `diagnosticReference`. Input order never matters.
+   withdrawal reference is `diagnosticReference`.
 4. A declared reference failed to load and its pair cannot be read from its
    bytes → every otherwise-admitted pair refuses
    `consent-evidence-unresolved` (an unreadable record may be a withdrawal of
-   any pair). When its bytes parse far enough to give `project` and
-   `repository`, only that pair refuses, `withdrawal-unresolved`.
+   any pair). When its bytes parse to a mapping whose `project` and
+   `repository` are non-empty strings, only that pair refuses,
+   `withdrawal-unresolved`. [Inferred] Blast radius, disclosed: one broken
+   reference whose pair is unreadable refuses every repository of the
+   project, valid state-(1) grants included; the refusal names that
+   reference so the owner can repair it. Narrowing this is an owner
+   question.
 5. Otherwise admitted, labelled state 1 or Syzygy-verified per §4.
 
-- `UntrustedConsentRecordView` carries the loaded artifact's `id`, `scope`,
-  `attribution`, `grant_state` as untrusted content beside the refusal; it is
-  rendered, never honored.
+- **Tie-breaks.** Among rules 3–4 candidates, `withdrawn` beats
+  `withdrawal-unresolved` beats `consent-evidence-unresolved`; within one
+  class the lowest reference by UTF-16 code-unit order is
+  `diagnosticReference`. Input order never changes the decision or tuple.
+- `untrustedRecord` is set whenever R's artifact loaded but the decision is
+  Unknown; it is rendered, never honored.
 - Other in-force grants for P named only in top-level `consents:` neither
-  grant nor refuse; only the entry reference grants.
+  grant nor refuse; only the entry reference grants (RFC3-7: referenced, the
+  entry names its consent). They stay in the manifest as captured inputs;
+  serving them as disclosed non-granting facts is coverage projection,
+  deferred to `syzygy-u2a.6`.
 - The served tuple adds the evaluation id at serialization; the decision
   itself carries no snapshot (it precedes the digest).
 
@@ -211,15 +297,54 @@ export interface CaptureDependencies {
   readonly consentCurrencyBound?: ConsentCurrencyBound;    // absent in the daemon
   readonly reader?: CaptureReader;                         // fs by default; spied in tests
 }
+
+export interface CaptureVersions {
+  readonly manifestSchema: 'cap1-source-snapshot/v1';
+  readonly observer: string;
+  readonly consentAdapter: string;
+  readonly actEncoding: 'cap1-owner-act/v1';
+  readonly yamlParser: 'yaml@2.9.0';
+  readonly kernel: string;
+  readonly evaluationEngine: string;
+  readonly correlationProvider: string;  // provider id, or 'absent'
+}
+
+export interface CapturedRepositoryInput {
+  readonly repositoryId: RepositoryId;
+  readonly ordinal: number;
+  readonly decision: PreObservationConsentDecision;
+  readonly root:
+    | { readonly state: 'captured'; readonly observation: ObservationOutcome; readonly digest: Sha256Digest }
+    | { readonly state: 'not-read'; readonly reason: 'consent-not-admitted' | 'no-root' };
+}
+
+export interface CapturedProjectInputs {
+  readonly asOf: string;
+  readonly manifest: SourceSnapshotManifest;
+  readonly snapshot: Sha256Digest;
+  readonly declaration: DeclarationObservation;
+  readonly consentInputs: readonly ConsentAuthorityInput[];
+  readonly repositories: readonly CapturedRepositoryInput[];
+  readonly entry:
+    | { readonly state: 'captured'; readonly text: string; readonly digest: Sha256Digest }
+    | { readonly state: 'missing' | 'unreadable'; readonly failureCode: string }
+    | { readonly state: 'not-read'; readonly reason: 'unconsented-governance-root' };
+}
+
+export type CaptureFailure =
+  | { readonly kind: 'source-changed-during-capture'; readonly changed: readonly SnapshotInputDescriptor[] }
+  | { readonly kind: 'as-of-invalid' };
+
 export function captureProjectInputs(root: string, deps: CaptureDependencies):
   Promise<CapturedProjectInputs | CaptureFailure>;
 export function evaluateCapturedProject(captured: CapturedProjectInputs): ProjectEvaluation;
 ```
 
-- `CaptureReader` has two operations, `readText(root, logicalPath)` and
+- Every value in `CapturedProjectInputs` is deep-frozen.
+- `CaptureReader` has two operations, `readBytes(root, logicalPath)` and
   `listRoot(root)`, each returning a named result; tests count calls per path.
-- `CaptureFailure` is `{ kind: 'source-changed-during-capture'; changed:
-  readonly SnapshotInputDescriptor[] }`. There is no retry.
+- `source-changed-during-capture` is returned with no retry; the daemon
+  serves its named failure, never a partial snapshot.
 
 ## 6. Capture order and snapshot manifest
 
@@ -229,7 +354,7 @@ Order, fixed:
 declaration
 → union of entry and top-level consent references (first occurrence order)
 → artifact bytes and digests, act bytes and digests
-→ correlation (provider present, act passed checks 1–18)
+→ correlation (provider present, act passed checks 1–23)
 → per-entry decision at asOf
 → admitted repository root listing and governance-root entry text only
 → re-read every captured byte input, compare digests
@@ -259,9 +384,12 @@ declaration
   by UTF-16 code unit, `undefined` refused (every optional field is written as
   `null`). This is a fourth encoder kept apart from the three in AGENTS.md
   (cap1 imports nothing shared).
-- `asOf` is excluded. The evaluation identity is `(snapshot, asOf)`. Because
-  the decision (and therefore which content is read) depends on `asOf`, two
-  `asOf` values give one digest exactly when they give the same decisions.
+- `asOf` is excluded. The evaluation identity is `(snapshot, asOf)`. The
+  digest is equal exactly when the captured input set (every descriptor and
+  digest) is equal. Because the decision, and so which content is read,
+  depends on `asOf`, two `asOf` values can give different input sets and
+  so different digests; equal input sets with different decisions keep one
+  digest and differ in the evaluation identity.
 
 ## 7. Served projection (both channels)
 
@@ -278,8 +406,10 @@ declaration
   `owner-adjudication`, and any untrusted record view labelled untrusted.
 - Coverage is fed only admitted records and the records behind `withdrawn`
   decisions, so a refused pair renders `unconsented` and never
-  `capture-failed`. The full coverage projection from decisions is
-  `syzygy-u2a.6`.
+  `capture-failed`. The coverage row keeps its existing route `record
+  consent`; the decision tuple carries `owner-adjudication`. Which one the
+  coverage row renders once it projects from decisions is `syzygy-u2a.6`'s
+  to settle; this task does not change coverage wording.
 - `/entry` renders the captured entry; the request-time reader is removed.
 
 ## 8. Reconciliation with plan Task 1
@@ -290,12 +420,21 @@ differently under the adopted v1.0 text.
 
 | Plan Task 1 | Executed as | Why |
 |---|---|---|
-| mandatory-audit `OwnerActBinding`; `ConsentActVerification` verified/unverified | common binding + explicit provenance sum (§2, §5) | design.md "Record and decision contract"; RFC3-16(b) item 9 |
+| mandatory-audit `OwnerActBinding`; `ConsentActVerification` verified/unverified | common `ConsentActBinding` + explicit provenance sum (§2, §4, §5) | design.md "Record and decision contract"; RFC3-16(b) item 9 |
 | `VerifiedConsentRecord` for both states | `admitted` decision with an exact provenance label | design.md: do not reuse that name for both states |
-| `ConsentProvenanceVerifier` required | optional `ConsentCorrelationProvider`, absent in the daemon | owner direction: no provider |
+| `ConsentProvenanceVerifier` required, verifies audit identity | optional `ConsentCorrelationProvider`, absent in the daemon, correlates the whole binding | owner direction: no provider; REQ-011 "correlates all required bindings" |
 | `captureProjectInputs(root, deps)`; `evaluateCapturedProject(captured, asOf)` | `asOf` in `deps`; evaluation takes the capture | the pre-read decision needs `asOf` (future, expiry) |
-| `UntrustedConsentRecordView.effectiveProvenance: 'Unknown'`, contradiction `owner-act-provenance-unverified` | refusal `authorization: 'Unknown'`, specific diagnostic, route `owner-adjudication` | REQ-011/046 v1.0 name per-case diagnostics |
-| README capture | not added | not consumed until `syzygy-u2a.7` |
+| Step 4: same inputs with a different `asOf` retain the digest | digest equal exactly when the captured input set is equal (§6) | `asOf` decides which content is read |
+| `resolvePreObservationConsent(projectId, entry, inputs)` | `decideRepositoryConsent(projectId, entry, inputs, asOf, bound)` | temporal checks and the declared-bound check |
+| `ReferenceBoundConsentInput` | `ConsentAuthorityInput` (artifact, act, correlation per reference) | the act record is a second input per reference |
+| Steps 6–7: a grant is defeated only by a *verified* same-pair withdrawal | an invalid or unresolvable withdrawal also refuses; rule 4 | REQ-011 v1.0 "invalid or unresolvable referenced withdrawal evidence SHALL leave the pair refused" |
+| `UntrustedConsentRecordView.effectiveProvenance: 'Unknown'`, contradiction `owner-act-provenance-unverified` | refusal `authorization: 'Unknown'`, specific diagnostic, route `owner-adjudication`; view keeps `artifactDigest`, `projectId`, `repositoryId` | REQ-011/046 v1.0 name per-case diagnostics |
+| scope unchecked (current code; plan silent) | closed scope grammar with `observe` required (check 17) | REQ-011 "only that observation scope" |
+| core types in `snapshot.ts` / `consent.ts` | `snapshot.ts` (digest, manifest) and new `consent-decision.ts` | keeps the record-only `consent.ts` resolver intact for coverage |
+| `captureProjectInputs` returns `CapturedProjectInputs` | returns `CapturedProjectInputs \| CaptureFailure` | mid-capture change and bad `asOf` are named values, not throws |
+| `linkContexts` / `RepositoryLinkContext` in deps and repository input | not added | nothing in this task consumes them (`syzygy-u2a.7`) |
+| README capture; `CaptureVersions.markdownParser` | not added; versions add `actEncoding` and `correlationProvider` | README unconsumed until `syzygy-u2a.7` |
+| root `not-read` reasons `unverified-consent \| unconsented \| no-root` | `consent-not-admitted \| no-root`; the decision carries the specific reason | one reason source, the decision |
 | canonicalization | as plan, plus `undefined` refused | determinism |
 
 Downstream packets: `syzygy-u2a.6` projects coverage from
@@ -304,11 +443,12 @@ reads README only for admitted repositories through the same decision and
 `CaptureReader`; `syzygy-u2a.8`/`.9` report the scenario matrix in §3 as the
 case denominator.
 
-## 9. Questions put to the reviewer
+## 9. Review record
 
-1. Is §5 rule 4 (an unreadable reference refuses every pair) the right
-   fail-closed reading, or too broad?
-2. Is the injected currency bound (check 18) an acceptable reading of
-   "stale under an applicable declared bound" given no CAP1 bound exists?
-3. Is limiting grants to the entry reference (§5) consistent with design.md
-   "Ambiguous competing acts refuse until owner resolution"?
+Round 1 (`docs/reviews/R-RT-U2A2-CONSENT-ENCODING-INTERFACE-RAW.md`,
+verdict REVISE) raised ten findings; this revision repairs each: 1 §4
+whole-binding correlation; 2 §2 scope grammar and check 17; 3 checks 5–9
+and the `unparseable` arm; 4 §5 tie-breaks; 5 §2 evidence-chain note; 6 §6
+digest property and §8 row; 7 §8 rows; 8 §5 shapes, `asOf` grammar, route
+note in §7; 9 §2 `.act` refusal; 10 check 10. Its answers to the three
+questions are adopted as written in §3 and §5.
