@@ -568,6 +568,8 @@ describe('Polaris authority disclosure and discovery (gen-2 repairs PWB-RECON-01
     expect(html).toContain('Unenumerated heading <code>### Gateways</code> (catalog-entry)');
     expect(html).toContain('route: First-pass drafting for owner sign-off');
     expect(html).toContain('catalog-entry: Unknown — unenumerated-heading (1 unenumerated heading(s))');
+    expect(html).toContain('denominator Unknown (missing-declaration, unenumerated-heading: 1)');
+    expect(html).toContain('Source item denominator Unknown — unenumerated-heading (1). project-account-section: 2 item(s)');
     expect(html).not.toContain('Partially extracted.');
     const clean = renderPolarisPage(observedModel().model);
     expect(clean).not.toContain('data-polaris-unenumerated');

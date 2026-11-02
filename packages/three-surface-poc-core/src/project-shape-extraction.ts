@@ -534,8 +534,9 @@ export function extractCatalogEntries(path: string, doc: Doc): ClassExtraction {
   // The row declares nine headings at level 3, so it encloses that level; the
   // headings no row declares there are surfaced whether or not an entry
   // below, or another declared heading's absence, then fails the class. With
-  // none of the nine found, nothing locates the enclosing section: no scan.
-  const unenumeratedHeadings = rowHeadings.length > 0 ? unenumeratedHeadingsOf(doc, cls, 3, rowHeadings, V1_DECLARED_HEADINGS) : [];
+  // none of the nine found, no heading holds them and the enclosed area is
+  // the whole file (PWB-REQ-002 as amended, Hunk 2).
+  const unenumeratedHeadings = unenumeratedHeadingsOf(doc, cls, 3, rowHeadings, V1_DECLARED_HEADINGS);
   const surfaced = unenumeratedHeadings.length === 0 ? {} : { unenumeratedHeadings };
   const fail = (reason: ExtractionFailure, line: number, detail?: string): ClassExtraction => ({ ...(failed(reason, cls, line, detail) as { kind: 'failed'; failure: ExtractionFailureRecord }), ...surfaced });
   for (const [i, h] of found.entries()) {

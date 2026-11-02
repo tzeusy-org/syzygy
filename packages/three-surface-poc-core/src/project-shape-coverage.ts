@@ -268,7 +268,16 @@ export interface ClassCoverage {
   // being complete even when no class source was discovered.
   readonly discoveryUnknown: number;
   // D itself: known only when every source of the class was readable.
-  readonly denominator: { readonly kind: 'known'; readonly value: number } | { readonly kind: 'unknown'; readonly reasons: readonly string[] };
+  readonly denominator:
+    | { readonly kind: 'known'; readonly value: number }
+    | {
+        readonly kind: 'unknown';
+        readonly reasons: readonly string[];
+        // Present when headings no row declares sit in this class's sources:
+        // the signed reason word beside the closed reason, with the count
+        // of such headings across them (PWB-REQ-002 as amended).
+        readonly unenumerated?: { readonly reason: 'unenumerated-heading'; readonly headings: number };
+      };
 }
 
 // What the root index declared, shown whether or not any conflict needed
@@ -634,6 +643,7 @@ export function buildProjectShapeCoverage(input: CoverageInput): ProjectShapeCov
       ...unknownSources.map((s) => (outcomeOf(s) as Extract<ClassDenominator, { kind: 'unknown' }>).unknownReason),
       ...discoveryUnknowns.map((entry) => entry.unknown.unknownReason),
     ])];
+    const unenumeratedCount = sources.reduce((sum, s) => sum + s.unenumeratedHeadings.filter((heading) => heading.class === cls).length, 0);
     const declared = ofClass.length;
     const count = (state: CoverageState): number => ofClass.filter((i) => i.state === state).length;
     classes[cls] = {
@@ -645,7 +655,7 @@ export function buildProjectShapeCoverage(input: CoverageInput): ProjectShapeCov
       sourcesWithUnknownDenominator: unknownSources.length,
       withoutReadRootIndex: !rootIndexRead && sources.some((s) => s.extractionClasses.includes(cls) && independentOfRoot(s.path)),
       discoveryUnknown: discoveryUnknowns.length,
-      denominator: reasons.length === 0 ? { kind: 'known', value: declared } : { kind: 'unknown', reasons },
+      denominator: reasons.length === 0 ? { kind: 'known', value: declared } : { kind: 'unknown', reasons, ...(unenumeratedCount === 0 ? {} : { unenumerated: { reason: 'unenumerated-heading' as const, headings: unenumeratedCount } }) },
     };
     const fact = countFact(cls);
     const derived: Declaration = {

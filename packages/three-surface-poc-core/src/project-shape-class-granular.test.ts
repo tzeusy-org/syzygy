@@ -231,9 +231,10 @@ function oracleUnenumerated(text: string): { readonly text: string; readonly lin
     const m = /^### +(.*?) *$/.exec(line);
     if (m !== null && CATALOG.includes(m[1] as string)) holders.add(chunkOf[i] as number);
   });
+  // No section holds one of the nine: the enclosed area is the whole file.
   return lines.flatMap((line, i) => {
     const m = /^### +(.*?) *$/.exec(line);
-    return m !== null && holders.has(chunkOf[i] as number) && !CATALOG.includes(m[1] as string) ? [{ text: m[1] as string, line: i + 1 }] : [];
+    return m !== null && (holders.size === 0 || holders.has(chunkOf[i] as number)) && !CATALOG.includes(m[1] as string) ? [{ text: m[1] as string, line: i + 1 }] : [];
   });
 }
 
@@ -267,6 +268,17 @@ describe('PWB-REQ-002 (class-granular) — an unenumerated heading is surfaced, 
       expect(r.denominators['catalog-entry']).toBe('keys' in keys ? keys.keys.length : -1);
     });
   }
+
+  it('falls back to the whole file when none of the nine headings is found', () => {
+    const text = ['# Heart and Soul', '', '## One', '', '### Alpha', '', '## Two', '', '### Beta', '', '#### Deep', ''].join('\n');
+    const expected = oracleUnenumerated(text);
+    expect(expected).toEqual([{ text: 'Alpha', line: 5 }, { text: 'Beta', line: 9 }]);
+    const r = extractSource({ path: 'heart-and-soul/v1.md', extractionClasses: ['catalog-entry'] }, text);
+    expect(r.kind).toBe('unknown');
+    if (r.kind !== 'unknown') return;
+    expect(r.failures.map((f) => f.class)).toEqual(['catalog-entry']);
+    expect((r.unenumeratedHeadings ?? []).map((h) => ({ text: h.text, line: h.line }))).toEqual(expected);
+  });
 
   it('a catalog entry that fails the class does not hide an unenumerated heading', () => {
     const text = v1({ butlers: ['- Atlas without a label'], extra: ['', '### Gateways'] });
@@ -413,7 +425,7 @@ describe('PWB-REQ-002 (class-granular) — an unenumerated heading in the compos
   });
 
   it('leaves the catalog-entry class D and the source D Unknown with the reason, not partial', () => {
-    expect(shape.classes['catalog-entry'].denominator).toEqual({ kind: 'unknown', reasons: ['missing-declaration'] });
+    expect(shape.classes['catalog-entry'].denominator).toEqual({ kind: 'unknown', reasons: ['missing-declaration'], unenumerated: { reason: 'unenumerated-heading', headings: 1 } });
     expect(source?.partiallyExtracted).toBe(false);
     expect(source?.itemDenominator).toMatchObject({ kind: 'unknown', unenumeratedHeadings: 1, unknown: { unknownReason: 'missing-declaration' } });
     const catalog = source?.classOutcomes.find((o) => o.class === 'catalog-entry')?.denominator;

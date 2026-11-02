@@ -702,7 +702,7 @@ export const WITHOUT_ROOT_INDEX_SENTENCE = 'Derived without a read root index.';
 export function denominatorText(aggregate: Pick<ProjectShapeClassAggregate, 'denominator' | 'modeled' | 'unknown' | 'contradicted' | 'sourcesWithUnknownDenominator'> & { readonly withoutReadRootIndex?: boolean }): string {
   const denominator = aggregate.denominator.kind === 'known'
     ? `${aggregate.denominator.value} declared`
-    : `denominator Unknown (${aggregate.denominator.reasons.join(', ')})`;
+    : `denominator Unknown (${[...aggregate.denominator.reasons, ...(aggregate.denominator.unenumerated === undefined ? [] : [`${aggregate.denominator.unenumerated.reason}: ${aggregate.denominator.unenumerated.headings}`])].join(', ')})`;
   return `${denominator}; ${aggregate.modeled} modeled, ${aggregate.unknown} Unknown, ${aggregate.contradicted} contradicted; ${aggregate.sourcesWithUnknownDenominator} source(s) unreadable.${aggregate.withoutReadRootIndex === true ? ` ${WITHOUT_ROOT_INDEX_SENTENCE}` : ''}`;
 }
 
@@ -717,7 +717,12 @@ function classOutcomesLine(source: ProjectShapeSource): string {
     const count = d.unenumeratedHeadings === undefined ? '' : ` (${d.unenumeratedHeadings} unenumerated heading(s))`;
     return `${escapeHtml(outcome.class)}: Unknown — ${escapeHtml(d.reason)}${count}`;
   });
-  return `<br><small data-source-class-outcomes="${escapeHtml(source.path)}"${DISCLOSURE}>${source.partiallyExtracted ? 'Partially extracted. ' : ''}${parts.join('; ')}.</small>`;
+  // The source's own item denominator is Unknown with the signed reason word
+  // and the count, beside the closed reason its claim already carries.
+  const own = source.itemDenominator.kind === 'unknown' && source.itemDenominator.unenumeratedHeadings !== undefined
+    ? `Source item denominator Unknown — unenumerated-heading (${source.itemDenominator.unenumeratedHeadings}). `
+    : '';
+  return `<br><small data-source-class-outcomes="${escapeHtml(source.path)}"${DISCLOSURE}>${source.partiallyExtracted ? 'Partially extracted. ' : ''}${own}${parts.join('; ')}.</small>`;
 }
 
 // Surfaced, never skipped: each heading no grammar row declares, with its
@@ -1001,7 +1006,7 @@ function sourceRow(source: ProjectShapeSource, index: number, revision: string):
   const digest = source.claim.support[0]?.contentDigest;
   const denominator = source.itemDenominator.kind === 'known'
     ? `${source.itemDenominator.value} item(s)`
-    : `${copyText('label.unknown')} — ${source.itemDenominator.unknown.unknownReason}`;
+    : `${copyText('label.unknown')} — ${source.itemDenominator.unknown.unknownReason}${source.itemDenominator.unenumeratedHeadings === undefined ? '' : ` (unenumerated-heading: ${source.itemDenominator.unenumeratedHeadings})`}`;
   const classOutcomes = classOutcomesLine(source);
   const identityColumn = `<span class="source-record-label">${copy('label.source-record')} — ${escapeHtml(source.path)}</span><br>${identityCell}`;
   const ruleColumn = `${escapeHtml(source.rule)} · ${source.pillar === undefined ? 'no pillar declared' : escapeHtml(source.pillar)}`;
