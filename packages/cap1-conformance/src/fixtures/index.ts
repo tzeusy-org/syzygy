@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 import type { ConsentRecord, EvaluationIdentity, ProjectId, RepositoryId } from '@syzygy/cap1-core';
 
 // Conformance fixture builders: the INPUT side only. Every conformance
@@ -85,4 +87,127 @@ export function consent(fields: ConsentFields): ConsentRecord {
     attribution: 'owner',
     grantState: fields.grantState ?? 'in-force',
   };
+}
+
+// --- Captured consent fixtures (CAP1-REQ-011/046 v1.0; syzygy-u2a.2) ------
+//
+// An in-memory observed tree read through the daemon's CaptureReader seam,
+// so a conformance case counts every dependent-content read. Artifacts and
+// cap1-owner-act/v1 records are SYNTHETIC: the owner field says so; no
+// fixture act is a real owner act. Inputs only — each case states its
+// expected admission, diagnostic and read count as literals.
+
+export const ACT_FIXTURE_OWNER = 'fixture-owner (synthetic, not an owner act)';
+
+export function sha256Hex(text: string): string {
+  return createHash('sha256').update(text).digest('hex');
+}
+
+export interface ArtifactFields {
+  readonly id: string;
+  readonly project: string;
+  readonly repository: string;
+  readonly scope?: string;
+  readonly grantState?: 'in-force' | 'withdrawn';
+  readonly extra?: readonly string[];
+}
+
+export function consentArtifactText(fields: ArtifactFields): string {
+  return [
+    `id: ${fields.id}`,
+    `project: ${fields.project}`,
+    `repository: ${fields.repository}`,
+    `scope: ${fields.scope ?? 'observe'}`,
+    'attribution: test-owner',
+    `grant_state: ${fields.grantState ?? 'in-force'}`,
+    ...(fields.extra ?? []),
+    '',
+  ].join('\n');
+}
+
+// A value of `undefined` omits the key; `null` writes an explicit null.
+export function ownerActText(
+  artifact: ArtifactFields,
+  artifactText: string,
+  overrides: Readonly<Record<string, unknown>> = {},
+): string {
+  const fields: Record<string, unknown> = {
+    schema: 'cap1-owner-act/v1',
+    act: `act-${artifact.id}`,
+    project: artifact.project,
+    artifact: artifact.id,
+    artifact_digest: `sha256:${sha256Hex(artifactText)}`,
+    act_type: (artifact.grantState ?? 'in-force') === 'in-force' ? 'consent' : 'revoke',
+    owner: ACT_FIXTURE_OWNER,
+    instant: '2026-08-01T00:00:00Z',
+    scope: artifact.scope ?? 'observe',
+    supersedes: null,
+    expires: null,
+    actor: 'human',
+    provenance: 'owner-adopted-bootstrap',
+    a1_audit_record: null,
+    ...overrides,
+  };
+  const scalar = (value: unknown): string =>
+    value === null ? 'null' : typeof value === 'string' ? JSON.stringify(value) : String(value);
+  const lines: string[] = [];
+  for (const [key, value] of Object.entries(fields)) {
+    if (value === undefined) continue;
+    if (typeof value === 'object' && value !== null) {
+      lines.push(`${key}:`);
+      for (const [inner, innerValue] of Object.entries(value)) lines.push(`  ${inner}: ${scalar(innerValue)}`);
+    } else {
+      lines.push(`${key}: ${scalar(value)}`);
+    }
+  }
+  return `${lines.join('\n')}\n`;
+}
+
+export const DECISIONS_PATH = '.syzygy/governance/decisions';
+
+// An in-memory tree per root; `reads` counts every readBytes path and
+// every listRoot root, so a case can assert zero dependent reads.
+export class MemoryTree {
+  readonly files = new Map<string, string>();
+  readonly roots = new Set<string>();
+  readonly reads = new Map<string, number>();
+
+  put(root: string, path: string, text: string): this {
+    this.roots.add(root);
+    this.files.set(`${root}|${path}`, text);
+    return this;
+  }
+
+  remove(root: string, path: string): this {
+    this.files.delete(`${root}|${path}`);
+    return this;
+  }
+
+  count(key: string): number {
+    return this.reads.get(key) ?? 0;
+  }
+
+  reader(): {
+    readBytes(root: string, path: string): Promise<
+      | { state: 'read'; bytes: Uint8Array }
+      | { state: 'missing' }
+      | { state: 'unreadable'; code: string }
+    >;
+    listRoot(root: string): Promise<{ state: 'listed' } | { state: 'unreachable'; code: string }>;
+  } {
+    return {
+      readBytes: async (root, path) => {
+        const key = `${root}|${path}`;
+        this.reads.set(key, this.count(key) + 1);
+        if (!this.roots.has(root)) return { state: 'unreadable', code: 'ENOENT' };
+        const text = this.files.get(key);
+        return text === undefined ? { state: 'missing' } : { state: 'read', bytes: new TextEncoder().encode(text) };
+      },
+      listRoot: async (root) => {
+        const key = `list|${root}`;
+        this.reads.set(key, this.count(key) + 1);
+        return this.roots.has(root) ? { state: 'listed' } : { state: 'unreachable', code: 'ENOENT' };
+      },
+    };
+  }
 }

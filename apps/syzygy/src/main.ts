@@ -34,7 +34,7 @@ import {
   evaluateProject,
   humanRoutes,
   machineRoutes,
-  type EntrySourceRead,
+  DAEMON_CAPTURE_VERSIONS,
 } from '@syzygy/cap1-daemon';
 import { closeOnSignal, createDaemon } from '@syzygy/http-host';
 import { isArgvFault, readArgv } from '@syzygy/polaris-dossier/argv';
@@ -214,42 +214,25 @@ async function main(): Promise<number> {
   const { root, stateDir, port } = parsed.config;
 
   // The one clock read: the evaluation's as-of instant. The snapshot
-  // coordinate names the observed root at that instant; both are
-  // injected — the pipeline itself holds no clock (RFC2-3).
+  // coordinate is NOT supplied here: it is the digest of the canonical
+  // manifest of everything the capture read (CAP1-REQ-042/060).
   const asOf = new Date().toISOString();
-  const evaluation = { snapshot: `daemon-start-${asOf}`, asOf };
 
-  const projectEvaluation = await evaluateProject(root, { evaluation });
+  const projectEvaluation = await evaluateProject(root, {
+    asOf,
+    versions: DAEMON_CAPTURE_VERSIONS,
+  });
 
   // Both channels serve from this ONE evaluation — parity by construction
-  // (CAP1-REQ-041/043): the human page and the machine endpoint share the
-  // same FactModel source, never two computations.
+  // (CAP1-REQ-041/043): the human page, the entry document and the machine
+  // endpoint share the same capture, never a request-time read.
   const getEvaluation = () => projectEvaluation;
-
-  // Entry content is read from the observed root at request time; ENOENT
-  // renders the named absent finding, everything else the named unreadable
-  // arm (CAP1-REQ-022) — never a fabricated page.
-  const readEntrySource = async (entryPath: string): Promise<EntrySourceRead> => {
-    const { readFile } = await import('node:fs/promises');
-    try {
-      const text = await readFile(path.join(root, entryPath), 'utf8');
-      return { state: 'present', text };
-    } catch (cause: unknown) {
-      if ((cause as NodeJS.ErrnoException).code === 'ENOENT') {
-        return { state: 'absent' };
-      }
-      const reason =
-        (cause as NodeJS.ErrnoException).code ??
-        (cause instanceof Error ? cause.message : String(cause));
-      return { state: 'unreadable', reason };
-    }
-  };
 
   const start = await createDaemon({
     stateDir,
     port,
     routes: [
-      ...humanRoutes({ getEvaluation, readEntrySource }),
+      ...humanRoutes({ getEvaluation }),
       ...machineRoutes({ getEvaluation }),
     ],
   });
