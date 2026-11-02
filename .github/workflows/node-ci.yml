@@ -85,6 +85,16 @@ jobs:
       - name: install (npm ci)
         run: npm ci
 
+      # The workspace entry reader (workspace-reach.testkit.ts) copies two
+      # regexes from Node's exports resolver, and workspace-reach.test.ts's
+      # case rows record Node 24.6.0's outcome for each target, while
+      # node-version above floats within 24. This pins both against the
+      # job's own Node: exit 1 on a mismatch, exit 2 when this Node's
+      # resolver source cannot be read (syzygy-bpyt.76). It imports the
+      # testkit's source, so it needs no build.
+      - name: Node segment rules (scripts/check_node_segment_rules.mjs)
+        run: node scripts/check_node_segment_rules.mjs
+
       # Compile all packages; emit errors are build failures, not test noise.
       - name: build (npm run build)
         run: npm run build
