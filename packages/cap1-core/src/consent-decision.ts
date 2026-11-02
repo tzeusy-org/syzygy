@@ -381,6 +381,23 @@ export type ActEvaluation =
   | { readonly ok: true; readonly binding: ConsentActBinding }
   | { readonly ok: false; readonly diagnostic: ConsentDiagnostic };
 
+// Frozen §3 check 2 with the §5 rules that consult another reference: the
+// one predicate saying whether `entry`'s decision evaluates this artifact's
+// act. True for the entry's own reference whose pair equals the entry pair
+// (rule 1), and for any other reference that is a `withdrawn` artifact for
+// that same pair (rules 3 and 4). Every other pair is decided without its
+// act, so the daemon never hands that act to a correlation provider (frozen
+// §4: "only for acts that passed checks 1–23").
+export function consentPairEvaluatedForEntry(
+  record: { readonly projectId: string; readonly repositoryId: string; readonly grantState: string },
+  reference: string,
+  projectId: string,
+  entry: RepositoryEntry,
+): boolean {
+  if (record.projectId !== projectId || record.repositoryId !== entry.id) return false;
+  return reference === entry.consent || record.grantState === 'withdrawn';
+}
+
 // Checks 3–23 for an input whose artifact loaded. Correlation (check 24) is
 // separate, so the daemon calls a provider only for an act that passed these.
 export function evaluateConsentActBeforeCorrelation(
@@ -622,7 +639,7 @@ export function decideRepositoryConsent(
   if (own === undefined) return refuse('reference-unresolvable', reference);
   if (own.artifact.state !== 'loaded') return refuse(own.artifact.failure, reference);
   const record = own.artifact.record;
-  if (record.projectId !== projectId || record.repositoryId !== entry.id) {
+  if (!consentPairEvaluatedForEntry(record, reference, projectId, entry)) {
     return refuse('record-subject-mismatch', reference);
   }
   const evaluated = fullEvaluation(own, context);
@@ -641,12 +658,7 @@ export function decideRepositoryConsent(
   for (const input of inputs) {
     if (input.reference === reference) continue;
     if (input.artifact.state === 'loaded') {
-      const other = input.artifact.record;
-      if (
-        other.projectId !== projectId ||
-        other.repositoryId !== entry.id ||
-        other.grantState !== 'withdrawn'
-      ) {
+      if (!consentPairEvaluatedForEntry(input.artifact.record, input.reference, projectId, entry)) {
         continue;
       }
       const withdrawal = fullEvaluation(input, context);

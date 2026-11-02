@@ -3,6 +3,7 @@ import { join } from 'node:path';
 
 import {
   canonicalDigest,
+  consentPairEvaluatedForEntry,
   decideRepositoryConsent,
   evaluateConsentActBeforeCorrelation,
   HUMAN_ENTRY_PATH,
@@ -380,13 +381,20 @@ export async function captureProjectInputs(
   }
 
   // 4. Correlation: at most once per act, only for acts that passed the
-  // prechecks, never retried. Absent provider: nothing is called.
+  // prechecks (check 2, then 3–23), never retried. Absent provider: nothing is called.
   if (declared !== undefined && deps.correlation !== undefined) {
     const relations = relationsOf(consentInputs);
     const asOfMillis = instantMillis(deps.asOf) as number;
     for (let index = 0; index < consentInputs.length; index += 1) {
       const input = consentInputs[index] as ConsentAuthorityInput;
       if (input.artifact.state !== 'loaded') continue;
+      // Check 2 first: an act no repository decision evaluates is never
+      // offered to the provider, whatever checks 3–23 would say.
+      const record = input.artifact.record;
+      const evaluated = declared.repositories.some((entry) =>
+        consentPairEvaluatedForEntry(record, input.reference, declared.project.id, entry),
+      );
+      if (!evaluated) continue;
       const before = evaluateConsentActBeforeCorrelation(input, {
         projectId: declared.project.id,
         repositoryId: input.artifact.record.repositoryId,
