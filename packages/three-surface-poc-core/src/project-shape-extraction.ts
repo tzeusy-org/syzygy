@@ -23,6 +23,7 @@
 // seven-row layer precedence table, or nothing.
 
 import { posixBasename } from './git-tree.js';
+import { isFencedAt, recognizeCodeContexts } from './markdown-code-context.js';
 import { EXTRACTION_CLASSES, type ExtractionClass, type ManifestSource, type SourceRule } from './project-shape-manifest.js';
 import type { ResourceLimitBreach } from './project-shape-observation.js';
 import { ParsePassBudgetExceeded, type ParsePassCharge, type ParsePassIdentity } from './resource-ledger.js';
@@ -154,29 +155,26 @@ interface Heading {
 }
 
 const ATX = /^(#{1,6})[ \t]+(.*?)[ \t]*(?:[ \t]#+[ \t]*)?$/;
-const FENCE = /^(`{3,}|~{3,})/; // not the PWB-REQ-006 profile; one of five fence rules: docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-2026-10-25.json
-
+// Which lines sit inside a fence is the PWB-REQ-006 profile's rule (`recognizeCodeContexts`), not a rule of this module (syzygy-bpyt.55).
+// The line model stays this module's: the text splits at LF and one trailing CR is dropped, and a line is fenced when the profile
+// marks its first character fenced. In a text with bare CRs a fence that opens inside an LF line therefore reaches the lines after it.
 function parseDoc(text: string): Doc {
-  const lines = text.split('\n').map((l) => (l.endsWith('\r') ? l.slice(0, -1) : l));
+  const recognition = recognizeCodeContexts(text);
+  const lines: string[] = [];
   const fenced: boolean[] = [];
   const headings: Heading[] = [];
-  let fence: string | undefined;
-  lines.forEach((line, index) => {
-    const opener = FENCE.exec(line);
-    if (fence === undefined && opener !== undefined && opener !== null) {
-      fence = opener[1] as string;
-      fenced.push(true);
-      return;
-    }
-    if (fence !== undefined) {
-      fenced.push(true);
-      if (line.trimEnd() === fence || (line.startsWith(fence) && line.trim().replace(/[`~]/g, '') === '')) fence = undefined;
-      return;
-    }
-    fenced.push(false);
+  let offset = 0;
+  for (const raw of text.split('\n')) {
+    const line = raw.endsWith('\r') ? raw.slice(0, -1) : raw;
+    const index = lines.length;
+    lines.push(line);
+    const inside = isFencedAt(recognition, offset);
+    offset += raw.length + 1;
+    fenced.push(inside);
+    if (inside) continue;
     const h = ATX.exec(line);
     if (h) headings.push({ level: (h[1] as string).length, text: nfc((h[2] as string).trim()), index });
-  });
+  }
   return { lines, fenced, headings };
 }
 

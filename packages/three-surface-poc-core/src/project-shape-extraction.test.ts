@@ -10,6 +10,7 @@ import { isDeepStrictEqual } from 'node:util';
 
 import { describe, expect, it } from 'vitest';
 
+import { maskMarkdownCodeContexts } from './markdown-code-context.js';
 import { EXTRACTION_CLASSES, type ExtractionClass } from './project-shape-manifest.js';
 import {
   CATALOG_HEADINGS,
@@ -216,6 +217,8 @@ const FIXTURES: readonly Fixture[] = [
 
 const N = (s: string): string => s.normalize('NFC');
 
+// It reads plain column-0 fences, which is every fence in the fixtures above; the module reads the PWB-REQ-006 profile's fences (indent, closer
+// shapes, recovery), which the describe at the end of this file pins.
 function stripFences(text: string): string {
   return text.replace(/^(```|~~~)[^\n]*\n[\s\S]*?^\1[ \t]*$/gm, '');
 }
@@ -1166,4 +1169,40 @@ describe('a source whose class holds 130,000 items', () => {
     }
     expect(offset).toBe(r.items.length);
   }, 30_000);
+});
+
+// syzygy-bpyt.55 (the owner's GP-B2 Q2 answer C, G2): which lines sit inside a fence is the PWB-REQ-006 profile's rule. Expected values are
+// literals; the same cases are read by the profile's mask in apps/three-surface-poc/src/fence-rules.test.ts.
+describe('the extractor reads the profile\'s fences', () => {
+  const FENCE = '```';
+  const principles = (fence: readonly string[], eol = '\n'): { readonly kind: string; readonly keys: readonly string[]; readonly denominator: number | undefined } => {
+    const text = ['# Vision', '', '## Non-Negotiable Rules', '', '1. **First.** one', '', ...fence, '', '2. **Second.** two', '', '3. **Third.** three', ''].join(eol);
+    const r = extractSource({ path: 'heart-and-soul/vision.md', extractionClasses: ['principle'] }, text);
+    return r.kind === 'extracted' ? { kind: r.kind, keys: r.items.map((item) => item.key), denominator: r.denominators['principle'] } : { kind: r.kind, keys: [], denominator: undefined };
+  };
+  const ALL = { kind: 'extracted', keys: ['First.', 'Second.', 'Third.'], denominator: 3 };
+
+  it.each([['LF', '\n'], ['CRLF', '\r\n']])('%s: a fence closes at a closer indented one to three spaces', (_name, eol) => {
+    expect(principles([FENCE, 'code', ' ' + FENCE], eol)).toEqual(ALL);
+    expect(principles([FENCE, 'code', '   ' + FENCE], eol)).toEqual(ALL);
+  });
+
+  it.each([['LF', '\n'], ['CRLF', '\r\n']])('%s: an opener indented one to three spaces is a fence, and one indented four spaces is not', (_name, eol) => {
+    expect(principles(['  ' + FENCE, '9. **Hidden.** inside', '  ' + FENCE], eol)).toEqual(ALL);
+    // Four spaces: indented code in CommonMark, and nothing the profile recognizes, so the line is ordinary text and mints nothing here.
+    expect(principles(['    ' + FENCE, 'code', '    ' + FENCE], eol)).toEqual(ALL);
+  });
+
+  it.each([['LF', '\n'], ['CRLF', '\r\n']])('%s: a closer-shaped line with an info string or a trailing tab does not close the fence', (_name, eol) => {
+    expect(principles([FENCE, 'x', FENCE + 'js', 'y', FENCE], eol)).toEqual(ALL);
+    expect(principles([FENCE, 'x', FENCE + '\t', 'y', FENCE], eol)).toEqual(ALL);
+    // Longer than the opener closes; shorter does not.
+    expect(principles([FENCE, 'x', '````'], eol)).toEqual(ALL);
+    expect(principles(['````', 'x', FENCE, 'y', '````'], eol)).toEqual(ALL);
+  });
+
+  it('a fence that never closes runs to the end of the text (recovery; the reader excludes such a source before it gets here)', () => {
+    expect(principles([FENCE, 'code'])).toEqual({ kind: 'extracted', keys: ['First.'], denominator: 1 });
+    expect(maskMarkdownCodeContexts(['# Vision', '', FENCE, 'code', ''].join('\n')).kind).toBe('malformed');
+  });
 });

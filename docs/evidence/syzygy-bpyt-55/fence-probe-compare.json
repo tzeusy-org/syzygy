@@ -1,0 +1,316 @@
+{
+ "casesCompared": 66,
+ "casesThatDiffer": 30,
+ "differing": [
+  {
+   "case": "backtick-indent1",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "backtick-indent1@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "backtick-indent2",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "backtick-indent2@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "backtick-indent3",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "backtick-indent3@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "backtick-indent4",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "backtick-indent4@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "tilde-indent3",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "tilde-indent3@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-indent1",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-indent1@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-indent3",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-indent3@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-trailing-tab",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links",
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-trailing-tab@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links",
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-trailing-tab-then-closer",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links",
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-trailing-tab-then-closer@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links",
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-with-info",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-with-info@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-longer-with-info",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-longer-with-info@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-with-text",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "closer-with-text@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "two-backticks",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "two-backticks@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "blockquote",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "blockquote@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "links"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "list-item",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  },
+  {
+   "case": "list-item@crlf",
+   "keys": [
+    "vectors"
+   ],
+   "readers": [
+    "extraction"
+   ],
+   "activeContentChanged": false
+  }
+ ],
+ "casesOnlyInActual": [],
+ "inlineCasesThatDiffer": [
+  "inside-double-span",
+  "double-span-with-inner-backtick-around-link"
+ ],
+ "consentFunctionTextDiffers": false
+}

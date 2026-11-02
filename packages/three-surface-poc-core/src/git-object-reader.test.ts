@@ -30,6 +30,7 @@ import {
   type ObjectReadRecord,
 } from './git-object-reader.js';
 import { indexGitTree, type GitTreeEntry } from './git-tree.js';
+import { recognizeCodeContexts } from './markdown-code-context.js';
 import type { ManifestSource } from './project-shape-manifest.js';
 import { PWB_RESOURCE_LIMITS, type PwbResourceLimits } from './project-shape-observation.js';
 import { createResourceLedger } from './resource-ledger.js';
@@ -493,6 +494,33 @@ describe('a 200,000-line closed fence under the read limit (GP-B2 Q1)', () => {
 
   it.each(ENDS)('%s: scanActiveContent over a 200,000-line closed fence finds nothing inside it', (_name, end) => {
     expect(scanActiveContent(`~~~${end}<script>${end}${`x${end}`.repeat(LONG_LINES)}~~~${end}`)).toEqual([]);
+  });
+});
+
+// syzygy-bpyt.55 (D1): the recognizer is total, so a malformed text still has ranges (an unclosed fence runs to the end, an opener with a
+// backtick in its info string still opens, a span open at a fence opener is dropped). The gate never acts on them: the profile's decision
+// is to exclude the whole artifact, so the scan reports the one malformed finding and reads nothing else of the text, and the reader hands
+// no text on. Each text holds a script element inside the recovered range and one outside it; neither is reported.
+describe('a malformed code context is excluded whole, and the recognizer\'s recovery is never acted on', () => {
+  const CASES = [
+    ['unclosed-fence', ['<script>out</script>', '```', '<script>in</script>'].join('\n'), 2],
+    ['backtick-fence-with-backtick-in-info-string', ['```a`b', '<script>in</script>', '```', '<script>out</script>'].join('\n'), 1],
+    ['unclosed-inline-span', ['`open', '```', '<script>in</script>', '```', '<script>out</script>'].join('\n'), 1],
+  ] as const;
+
+  it.each(CASES)('%s: the scan reports the one finding and nothing from the recovered ranges', (reason, text, line) => {
+    const recognition = recognizeCodeContexts(text);
+    expect(recognition.malformed).toEqual({ reason, line });
+    expect(recognition.fenceRanges.length).toBeGreaterThan(0);
+    expect(scanActiveContent(text)).toEqual([{ form: 'malformed-code-context', line, column: 1, context: reason }]);
+  });
+
+  it.each(CASES)('%s: the reader refuses the blob and hands on no text', (reason, text, line) => {
+    const result = readOne(text);
+    expect(result.kind).toBe('unavailable');
+    expect('text' in result).toBe(false);
+    expect(result.record.outcome).toBe('active-content');
+    expect(result.record.activeContent).toEqual([{ form: 'malformed-code-context', line, column: 1, context: reason }]);
   });
 });
 
