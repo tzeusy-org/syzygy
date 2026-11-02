@@ -29,7 +29,7 @@ on:
   merge_group:
     types: [checks_requested]
 
-# Supersede stale pull_request runs. The group is per workflow and per PR, and
+# Supersede stale pull_request runs (a newer head cancels the older one). The group is per workflow and per PR, and
 # only pull_request events cancel: push and merge_group runs fall back to a
 # per-run group (run_id), so they are never cancelled, nor can a newer main push
 # displace an older one still pending (the default behaviour of a shared group).
