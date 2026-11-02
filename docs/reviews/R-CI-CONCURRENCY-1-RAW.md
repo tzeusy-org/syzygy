@@ -51,8 +51,8 @@ unobserved-evidence note; none needs a change before merge.
   consumers in `scripts/check_governance.py` (CG-26 `BATTERY_WORKFLOW_FILE`, step list only) and in
   builders and installers that carry the path as data. None asserts the absence of a `concurrency` key
   or the bytes of the header. No test or check pins these bytes.
-- [Observed] `scripts/check_docs_review_campaign_partition.py` with this raw and the new campaign file:
-  see the run recorded in the PR, `unmatched=0`.
+- [Observed] `scripts/check_docs_review_campaign_partition.py` with this raw and its campaign file
+  committed: `total=631 assigned=631 raw=597 other=34 unmatched=0 overlaps=0`.
 
 ## Findings
 
