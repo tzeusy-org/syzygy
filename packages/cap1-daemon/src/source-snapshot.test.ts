@@ -147,6 +147,10 @@ describe('the evaluation snapshot is the digest of the captured inputs', () => {
       ['entry', 'entry', 'captured'],
       ['owner-act', 'c-gov', 'captured'],
       ['owner-act', 'c-src', 'captured'],
+      // syzygy-u2a.7: the admitted governance root's README (absent in this
+      // fixture), and the observed source's README, never read.
+      ['readme', 'repo-gov', 'missing'],
+      ['readme', 'repo-src', 'not-read'],
       ['repository-root', 'repo-gov', 'captured'],
       ['repository-root', 'repo-src', 'captured'],
     ]);
@@ -196,6 +200,11 @@ describe('the evaluation snapshot is the digest of the captured inputs', () => {
     }],
     ['repository observation', (f) => { rmSync(f.src, { recursive: true, force: true }); }],
     ['entry bytes', (f) => writeFileSync(join(f.root, '.syzygy', 'intent', 'OVERVIEW.md'), '# overview v2\n', 'utf8')],
+    ['governance-root README bytes', (f) => writeFileSync(join(f.root, 'README.md'), '# readme\n', 'utf8')],
+    ['repository link context', () => ({
+      linkContexts: { 'repo-gov': { canonicalWebBase: 'https://forge.example/owner/repo', defaultBranch: 'main' } },
+    })],
+    ['markdown parser version', () => ({ versions: { ...DAEMON_CAPTURE_VERSIONS, markdownParser: 'marked@0.0.0+parse5@0.0.0;gfm=true' } })],
     ['observer version', () => ({ versions: { ...DAEMON_CAPTURE_VERSIONS, observer: 'cap1-observer/v2' } })],
     ['currency-bound configuration', () => ({ consentCurrencyBound: { maxAgeSeconds: 31536000, declaredBy: 'fixture-bound (synthetic)' } })],
     ['correlation result', () => ({
@@ -228,6 +237,13 @@ describe('capture order: consent is decided before any dependent read', () => {
     ]);
     expect(reader.calls.filter((c) => c === `list:${f.root}`)).toHaveLength(0);
     expect(reader.calls.filter((c) => c === 'read:.syzygy/intent/OVERVIEW.md')).toHaveLength(0);
+    // No README is read: the refused governance root's for its consent, the
+    // admitted observed source's for its role (syzygy-u2a.7).
+    expect(reader.calls.filter((c) => c === 'read:README.md')).toHaveLength(0);
+    expect(captured.repositories.map((r) => r.readme)).toEqual([
+      { state: 'not-read', reason: 'consent-not-admitted' },
+      { state: 'not-read', reason: 'observed-source' },
+    ]);
     expect(reader.calls.filter((c) => c === `list:${f.src}`)).toHaveLength(2);
     expect(captured.entry).toEqual({ state: 'not-read', reason: 'unconsented-governance-root' });
   });
@@ -318,6 +334,7 @@ describe('mid-capture and post-capture source changes', () => {
     const captured = await capture(f);
     const before = evaluateCapturedProject(captured);
     writeFileSync(join(f.root, '.syzygy', 'intent', 'OVERVIEW.md'), '# overview TAMPERED\n', 'utf8');
+    writeFileSync(join(f.root, 'README.md'), '[entry](.syzygy/intent/OVERVIEW.md)\n', 'utf8');
     rmSync(join(f.decisions, 'c-src.act.yaml'));
     writeFileSync(join(f.root, '.syzygy', 'project.yaml'), 'schema_version: "1"\n', 'utf8');
     const after = evaluateCapturedProject(captured);

@@ -27,6 +27,7 @@ import {
   type PreObservationConsentDecision,
   type ProjectDeclaration,
   type RepositoryId,
+  type RepositoryRole,
   type Sha256Digest,
   type SnapshotInputDescriptor,
   type SourceSnapshotManifest,
@@ -41,9 +42,11 @@ import {
 } from './consent-loading.js';
 import {
   DECLARATION_RELATIVE_PATH,
+  README_RELATIVE_PATH,
   REPOSITORY_ROOT_SCOPE,
   type DeclarationObservation,
 } from './observation.js';
+import { NO_LINK_CONTEXT, README_LINK_READER_VERSION, type ReadmeLinkContext } from './readme-links.js';
 
 // Task 1 of the CAP1 runtime-hardening plan, reconciled to the adopted v1.0
 // consent text (syzygy-u2a.2): capture every input an evaluation consumes,
@@ -55,10 +58,12 @@ import {
 // Order (docs/design/CAP1-CONSENT-RECORD-ENCODING-AND-AUTHORITY-INTERFACE.md §6):
 //   declaration → union of entry and top-level consent references →
 //   artifact and act bytes → correlation (provider present, prechecks
-//   passed) → per-entry decision at asOf → admitted repository roots and
-//   the governance-root entry only → re-read and compare → manifest/digest.
+//   passed) → per-entry decision at asOf → admitted repository roots, each
+//   admitted governance root's README (syzygy-u2a.7), and the
+//   governance-root entry only → re-read and compare → manifest/digest.
 //
-// A refused pair causes zero root and zero entry reads. A change between
+// A refused pair causes zero root, README and entry reads; an
+// observed-source README is never read (role decides first). A change between
 // the first read and the revalidation is `source-changed-during-capture`,
 // returned with no retry. Implementation conventions, not conformance
 // authority.
@@ -73,6 +78,7 @@ export const DAEMON_CAPTURE_VERSIONS: CaptureVersions = Object.freeze({
   consentAdapter: 'cap1-consent-loader/v1',
   actEncoding: 'cap1-owner-act/v1',
   yamlParser: 'yaml@2.9.0',
+  markdownParser: README_LINK_READER_VERSION,
   kernel: 'cap1-core/v1',
   evaluationEngine: 'cap1-daemon/v1',
   correlationProvider: 'absent',
@@ -144,11 +150,38 @@ export interface CaptureDependencies {
   readonly correlation?: ConsentCorrelationProvider | undefined;
   readonly consentCurrencyBound?: ConsentCurrencyBound | undefined;
   readonly reader?: CaptureReader | undefined;
+  // The canonical repository locator per repository id, for classifying
+  // absolute README links (syzygy-u2a.7). No adopted input supplies one
+  // today, so the daemon passes none: an absolute link that looks like the
+  // entry is then unclassifiable, never `no`.
+  readonly linkContexts?: Readonly<Record<string, ReadmeLinkContext>> | undefined;
 }
+
+// The root README as the capture holds it. Read only for an admitted
+// governance root (role, then consent, then README — CAP1-REQ-050/052,
+// CAP1-REQ-016); every other repository names why it was not read.
+export type CapturedReadme =
+  | {
+      readonly state: 'captured';
+      readonly relativePath: typeof README_RELATIVE_PATH;
+      readonly text: string;
+      readonly digest: Sha256Digest;
+    }
+  | {
+      readonly state: 'missing' | 'unreadable';
+      readonly relativePath: typeof README_RELATIVE_PATH;
+      readonly failureCode: string;
+    }
+  | {
+      readonly state: 'not-read';
+      readonly reason: 'observed-source' | 'consent-not-admitted' | 'no-root';
+    };
 
 export interface CapturedRepositoryInput {
   readonly repositoryId: RepositoryId;
   readonly ordinal: number;
+  readonly role: RepositoryRole;
+  readonly linkContext: ReadmeLinkContext;
   readonly decision: PreObservationConsentDecision;
   readonly root:
     | {
@@ -157,6 +190,7 @@ export interface CapturedRepositoryInput {
         readonly digest: Sha256Digest;
       }
     | { readonly state: 'not-read'; readonly reason: 'consent-not-admitted' | 'no-root' };
+  readonly readme: CapturedReadme;
 }
 
 export type CapturedEntry =
@@ -309,17 +343,19 @@ export async function captureProjectInputs(
     kind: SnapshotInputDescriptor['kind'],
     subjectId: string,
     logicalPath: string,
+    root: string = observedRootDir,
+    ordinal: number | null = null,
   ): Promise<ByteRead> => {
-    const read = await reader.readBytes(observedRootDir, logicalPath);
+    const read = await reader.readBytes(root, logicalPath);
     const descriptor: SnapshotInputDescriptor = {
       kind,
       subjectId,
-      ordinal: null,
+      ordinal,
       logicalPath,
       ...byteState(read),
     };
     descriptors.push(descriptor);
-    reads.push({ root: observedRootDir, logicalPath, descriptor });
+    reads.push({ root, logicalPath, descriptor });
     return read;
   };
 
@@ -453,10 +489,46 @@ export async function captureProjectInputs(
     const decision = decisions[ordinal] as PreObservationConsentDecision;
     const rootDir = roots[entry.id];
     const base = { kind: 'repository-root', subjectId: entry.id, ordinal, logicalPath: null } as const;
+    const suppliedContext = deps.linkContexts?.[entry.id];
+    const linkContext: ReadmeLinkContext =
+      suppliedContext === undefined
+        ? NO_LINK_CONTEXT
+        : { canonicalWebBase: suppliedContext.canonicalWebBase, defaultBranch: suppliedContext.defaultBranch };
+    if (suppliedContext !== undefined) {
+      descriptors.push({
+        kind: 'link-context',
+        subjectId: entry.id,
+        ordinal,
+        logicalPath: null,
+        state: 'captured',
+        digest: canonicalDigest({
+          canonicalWebBase: linkContext.canonicalWebBase ?? null,
+          defaultBranch: linkContext.defaultBranch ?? null,
+        }),
+        failureCode: null,
+      });
+    }
+    const readmeBase = { kind: 'readme', subjectId: entry.id, ordinal, logicalPath: README_RELATIVE_PATH } as const;
+    const notRead = (
+      readmeReason: Extract<CapturedReadme, { state: 'not-read' }>['reason'],
+    ): CapturedReadme => {
+      descriptors.push({ ...readmeBase, state: 'not-read', digest: null, failureCode: readmeReason });
+      return { state: 'not-read', reason: readmeReason };
+    };
     if (decision.authorization !== 'admitted' || rootDir === undefined) {
       const reason = decision.authorization !== 'admitted' ? 'consent-not-admitted' : 'no-root';
       descriptors.push({ ...base, state: 'not-read', digest: null, failureCode: reason });
-      repositories.push({ repositoryId: entry.id, ordinal, decision, root: { state: 'not-read', reason } });
+      // Role before consent: an observed-source README is never a subject.
+      const readme = notRead(entry.role === 'observed-source' ? 'observed-source' : reason);
+      repositories.push({
+        repositoryId: entry.id,
+        ordinal,
+        role: entry.role,
+        linkContext,
+        decision,
+        root: { state: 'not-read', reason },
+        readme,
+      });
       continue;
     }
     const listing = await reader.listRoot(rootDir);
@@ -473,7 +545,32 @@ export async function captureProjectInputs(
     };
     descriptors.push(descriptor);
     listings.push({ root: rootDir, descriptor, state: listing.state });
-    repositories.push({ repositoryId: entry.id, ordinal, decision, root: { state: 'captured', observation, digest } });
+    let readme: CapturedReadme;
+    if (entry.role === 'observed-source') {
+      readme = notRead('observed-source');
+    } else {
+      const read = await readRecorded('readme', entry.id, README_RELATIVE_PATH, rootDir, ordinal);
+      readme =
+        read.state === 'read'
+          ? {
+              state: 'captured',
+              relativePath: README_RELATIVE_PATH,
+              text: DECODER.decode(read.bytes),
+              digest: sha256Digest(read.bytes),
+            }
+          : read.state === 'missing'
+            ? { state: 'missing', relativePath: README_RELATIVE_PATH, failureCode: 'missing' }
+            : { state: 'unreadable', relativePath: README_RELATIVE_PATH, failureCode: read.code };
+    }
+    repositories.push({
+      repositoryId: entry.id,
+      ordinal,
+      role: entry.role,
+      linkContext,
+      decision,
+      root: { state: 'captured', observation, digest },
+      readme,
+    });
   }
 
   const governanceRoot = repositories.find(

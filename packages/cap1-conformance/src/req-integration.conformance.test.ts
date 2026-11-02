@@ -31,6 +31,9 @@ import {
 import { authorizeWrite, compareRenderings, disclosureOf } from '@syzygy/cap1-core/testing';
 import { decisionsFor, evaluation, projectYaml } from './fixtures/index.js';
 
+// A literal README digest: the evidence identity a yes/no finding carries.
+const README_DIGEST = 'sha256:5555555555555555555555555555555555555555555555555555555555555555' as const;
+
 // CAP1-REQ-integration — End-to-end integration test.
 //
 // Full pipeline: readDeclaration → registerProject → computeCoverage →
@@ -213,7 +216,7 @@ describe('CAP1-REQ-integration — end-to-end pipeline', () => {
     const finding = computeDiscoverability(
       GOVERNANCE_REPO,
       'governance-root',
-      { state: 'captured', linksToEntry: true },
+      { state: 'captured', relativePath: 'README.md', digest: README_DIGEST, linksToEntry: true },
     );
     expect(finding.value).toBe('yes');
     expect(finding.epistemic.label).toBe('Observed');
@@ -223,10 +226,10 @@ describe('CAP1-REQ-integration — end-to-end pipeline', () => {
     const finding = computeDiscoverability(
       OBSERVED_REPO,
       'observed-source',
-      { state: 'captured', linksToEntry: false },
+      { state: 'captured', relativePath: 'README.md', digest: README_DIGEST, linksToEntry: false },
     );
     expect(finding.value).toBe('not-applicable');
-    expect(finding.basis).toBe('no-governance-root');
+    expect(finding.basis).toStrictEqual({ kind: 'no-governance-root' });
   });
 
   it('discoverability: unconsented repository → Unknown', () => {
@@ -282,7 +285,7 @@ describe('CAP1-REQ-integration — end-to-end pipeline', () => {
     const finding = computeDiscoverability(
       GOVERNANCE_REPO,
       'governance-root',
-      { state: 'captured', linksToEntry: true },
+      { state: 'captured', relativePath: 'README.md', digest: README_DIGEST, linksToEntry: true },
     );
 
     const factD = extractDistinctions(unknownFact);

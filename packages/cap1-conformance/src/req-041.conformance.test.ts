@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import {
   computeCoverage,
   computeShapeAnswers,
@@ -13,8 +13,11 @@ import {
   type ProjectId,
   type RepositoryId,
   type ServedFact,
+  computeDiscoverability,
+  discoverabilityRow,
+  type DiscoverabilityRow,
 } from '@syzygy/cap1-core';
-import { compareRenderings, disclosureOf } from '@syzygy/cap1-core/testing';
+import { canonicalTupleMultiset, compareRenderings, disclosureOf } from '@syzygy/cap1-core/testing';
 import { decisionsFor, evaluation, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-041 — Humans and machines receive the same facts
@@ -356,5 +359,29 @@ describe('CAP1-REQ-041 — humans and machines receive the same facts', () => {
       verdict: 'parity',
       comparedFacts: 3,
     });
+  });
+});
+
+describe('CAP1-REQ-041 — discoverability rows compare as complete-tuple multisets (syzygy-u2a.7)', () => {
+  let rows: DiscoverabilityRow[] = [];
+  beforeAll(() => {
+    rows = [
+      computeDiscoverability('repo-a' as RepositoryId, 'observed-source', { state: 'not-read', reason: 'no-governance-root' }),
+      computeDiscoverability('repo-b' as RepositoryId, 'observed-source', { state: 'not-read', reason: 'no-governance-root' }),
+      computeDiscoverability('repo-c' as RepositoryId, 'governance-root', { state: 'unconsented' }),
+    ].map((finding) => discoverabilityRow(finding, 'not-produced'));
+  });
+  const key = (row: DiscoverabilityRow) => JSON.stringify(row);
+  const same = (a: readonly DiscoverabilityRow[], b: readonly DiscoverabilityRow[]) => {
+    const ma = canonicalTupleMultiset(a, key);
+    const mb = canonicalTupleMultiset(b, key);
+    return ma.size === mb.size && [...ma].every(([k, n]) => mb.get(k) === n);
+  };
+
+  it('the same rows in another order agree; a removed, duplicated or altered row does not', () => {
+    expect(same(rows, [...rows].reverse())).toBe(true);
+    expect(same(rows, rows.slice(1))).toBe(false);
+    expect(same(rows, [...rows.slice(1), rows[1] as DiscoverabilityRow])).toBe(false);
+    expect(same(rows, [{ ...(rows[2] as DiscoverabilityRow), primaryReason: 'missing-declaration' }, rows[0] as DiscoverabilityRow, rows[1] as DiscoverabilityRow])).toBe(false);
   });
 });

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import {
   EXPLANATION_CLASSES,
   WHY_THIS_ANSWER,
@@ -17,6 +17,8 @@ import {
   type FactModel,
   type ProjectId,
   type RepositoryId,
+  explainDiscoverability,
+  computeDiscoverability,
 } from '@syzygy/cap1-core';
 import { decisionsFor, evaluation, projectYaml } from './fixtures/index.js';
 
@@ -259,5 +261,56 @@ describe('CAP1-REQ-040 — every answer is explainable: "Why this answer?"', () 
     if (serving.served) throw new Error('unreachable');
     expect(serving.value).toBe('Unknown');
     expect(serving.reasons.primary).toBe('missing-evidence');
+  });
+});
+
+describe('CAP1-REQ-040 — a discoverability finding is explainable (syzygy-u2a.7)', () => {
+  const README_DIGEST = 'sha256:7777777777777777777777777777777777777777777777777777777777777777' as const;
+  let factSet: ExplanationFactSet | undefined;
+  beforeAll(() => {
+    const finding = computeDiscoverability('repo-gov' as RepositoryId, 'governance-root', {
+      state: 'captured',
+      relativePath: 'README.md',
+      digest: README_DIGEST,
+      linksToEntry: true,
+    });
+    factSet = explainDiscoverability(finding, {
+      projectSelection: 'project:prj-040',
+      evaluation: { snapshot: 'sha256:8888888888888888888888888888888888888888888888888888888888888888', asOf: '2026-08-22T00:00:00Z' },
+      scenarioContext: 'daemon-runtime',
+      boundary: { projectId: 'prj-040' as ProjectId, records: [], declaredCapturedScopes: [] },
+    });
+  });
+
+  it('serves one fact set naming the finding, its evaluation and its README revision', () => {
+    expect(factSet?.selection).toBe('project:prj-040/discoverability:repo-gov');
+    expect(presentClasses(factSet as ExplanationFactSet)).toStrictEqual([
+      'sourceRevision',
+      'evidenceClassification',
+      'evaluation',
+      'coverageAndConsentBoundary',
+    ]);
+    expect(factSet?.sourceRevision).toBe(README_DIGEST);
+  });
+
+  it('every internal reference resolves against the captured README digest', () => {
+    const resolution = resolveExplanationReferences(factSet as ExplanationFactSet, (reference) => reference === README_DIGEST);
+    expect([resolution.references, resolution.unresolved]).toStrictEqual([[README_DIGEST], []]);
+  });
+
+  it('an Unknown finding carries its reason; a not-applicable one carries none', () => {
+    const context = {
+      projectSelection: 'project:prj-040',
+      evaluation: { snapshot: 'sha256:8888888888888888888888888888888888888888888888888888888888888888', asOf: '2026-08-22T00:00:00Z' },
+      scenarioContext: 'daemon-runtime',
+      boundary: { projectId: 'prj-040' as ProjectId, records: [], declaredCapturedScopes: [] },
+    };
+    const unknown = explainDiscoverability(computeDiscoverability('repo-gov' as RepositoryId, 'governance-root', { state: 'unconsented' }), context);
+    const notApplicable = explainDiscoverability(
+      computeDiscoverability('repo-src' as RepositoryId, 'observed-source', { state: 'not-read', reason: 'no-governance-root' }),
+      context,
+    );
+    expect(unknown.unknownReasons).toStrictEqual({ primary: 'unconsented-source-or-provider', secondary: [] });
+    expect([notApplicable.unknownReasons, notApplicable.sourceRevision]).toStrictEqual([undefined, undefined]);
   });
 });

@@ -2,12 +2,10 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import {
-  HUMAN_ENTRY_PATH,
   readDeclaration,
   UNKNOWN_REASONS,
   type DeclarationReadResult,
   type ObservationOutcome,
-  type ReadmeEvidence,
   type RepositoryId,
   type RootCandidate,
 } from '@syzygy/cap1-core';
@@ -16,8 +14,7 @@ import {
 // 050…053). This adapter maps on-disk reality into the pure domain
 // layer's input types and NOTHING more: it locates and reads the
 // declaration source and hands the bytes to core `readDeclaration`
-// unchanged; it captures root-README evidence for
-// `computeDiscoverability`; it produces `ObservationOutcome` inputs for
+// unchanged; it produces `ObservationOutcome` inputs for
 // `computeCoverage`. No domain rule is re-implemented here — validation,
 // registration, root designation, discoverability, and coverage stay in
 // @syzygy/cap1-core.
@@ -240,39 +237,11 @@ export async function observeRootCandidate(
 
 // --- Root-README evidence (CAP1-REQ-050…051) ----------------------------
 
-// Captures the repository's root README as evidence for
-// `computeDiscoverability`. The read subject is fixed: the root
-// `README.md`, nothing configurable (CAP1-REQ-050).
-//
-// - Readable README → 'captured', with `linksToEntry` true exactly when
-//   the content references the fixed entry path (HUMAN_ENTRY_PATH — the
-//   one fixed Syzygy entry, CAP1-REQ-020). Core then renders 'yes' or a
-//   truthful 'no' (CAP1-REQ-051).
-// - Missing README → 'uncaptured'. This is deliberate: a 'no' finding
-//   must rest on evidence "that the root README EXISTS and does not
-//   provide the link" (CAP1-REQ-051) — with no README there is no such
-//   evidence, so the front door was not captured and core renders
-//   Unknown with `source-uncaptured-or-unreachable`, never a
-//   truthful-looking 'no'.
-// - Unreadable README or unreachable root → 'uncaptured' (the
-//   "Unreadable front door" scenario, CAP1-REQ-051).
-//
-// The 'unconsented' and 'undeclared' evidence states are declaration/
-// consent context, not filesystem facts — the caller supplies those
-// before ever asking this adapter to read.
-export async function observeReadmeEvidence(
-  repositoryRoot: string,
-): Promise<ReadmeEvidence> {
-  const root = await observeRoot(repositoryRoot);
-  if (!root.reachable) {
-    return { state: 'uncaptured' };
-  }
-  const read = await readTextFile(repositoryRoot, README_RELATIVE_PATH);
-  if (!read.ok) {
-    return { state: 'uncaptured' };
-  }
-  return { state: 'captured', linksToEntry: read.text.includes(HUMAN_ENTRY_PATH) };
-}
+// The root README is read by the capture (source-snapshot.ts) for an
+// admitted governance root only, and classified by the semantic hyperlink
+// reader (readme-links.ts). The substring check that once lived here
+// (`text.includes(HUMAN_ENTRY_PATH)`) counted plain text, code and images
+// as links and was never wired; syzygy-u2a.7 removed it.
 
 // --- Repository snapshot observation (coverage inputs) ------------------
 

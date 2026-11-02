@@ -83,6 +83,8 @@ export const SNAPSHOT_INPUT_KINDS = [
   'consent-correlation',
   'repository-root',
   'entry',
+  'readme',
+  'link-context',
 ] as const;
 export type SnapshotInputKind = (typeof SNAPSHOT_INPUT_KINDS)[number];
 
@@ -104,6 +106,8 @@ export interface CaptureVersions {
   readonly consentAdapter: string;
   readonly actEncoding: 'cap1-owner-act/v1';
   readonly yamlParser: 'yaml@2.9.0';
+  // The README hyperlink reader (syzygy-u2a.7): both exact parser pins.
+  readonly markdownParser: string;
   readonly kernel: string;
   readonly evaluationEngine: string;
   // The correlation provider's id, or 'absent' when none is wired.

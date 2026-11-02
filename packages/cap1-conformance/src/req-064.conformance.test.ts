@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import {
   extractDistinctions,
   extractProposalDistinctions,
@@ -12,6 +12,8 @@ import {
   type AuthorityExposure,
   type DiscoverabilityFinding,
   type RepositoryId,
+  computeDiscoverability,
+  discoverabilityRow,
 } from '@syzygy/cap1-core';
 
 // CAP1-REQ-064 — Machine-readable distinctions.
@@ -79,6 +81,12 @@ const DISCOVERABILITY_FINDING: DiscoverabilityFinding = {
   repositoryId: 'repo-01' as RepositoryId,
   value: 'yes',
   epistemic: { label: 'Observed' },
+  basis: {
+    kind: 'readme-captured',
+    relativePath: 'README.md',
+    digest: 'sha256:5555555555555555555555555555555555555555555555555555555555555555',
+    linksToEntry: true,
+  },
 };
 
 describe('CAP1-REQ-064 — machine-readable distinctions', () => {
@@ -276,5 +284,30 @@ describe('CAP1-REQ-064 — machine-readable distinctions', () => {
         expect(['text-attribute', 'structure']).toContain(d.recoverableBy);
       }
     });
+  });
+});
+
+describe('CAP1-REQ-064 — the discoverability row is recoverable as text (syzygy-u2a.7)', () => {
+  it('every row field is a string, boolean or null — no distinction rides on structure alone', () => {
+    const row = discoverabilityRow(
+      computeDiscoverability('repo-64' as RepositoryId, 'governance-root', {
+        state: 'uncaptured',
+        relativePath: 'README.md',
+        failure: 'missing',
+      }),
+      'not-produced',
+    );
+    expect(JSON.parse(JSON.stringify(row))).toStrictEqual({
+      repositoryId: 'repo-64',
+      value: 'Unknown',
+      label: 'Unknown',
+      primaryReason: 'source-uncaptured-or-unreachable',
+      basis: { kind: 'readme-uncaptured', relativePath: 'README.md', failure: 'missing' },
+      evidence: null,
+      proposal: 'not-produced',
+    });
+    expect(extractDiscoverabilityDistinctions(
+      computeDiscoverability('repo-64' as RepositoryId, 'governance-root', { state: 'unconsented' }),
+    )).toStrictEqual([{ name: 'discoverability-value', value: 'Unknown', recoverableBy: 'text-attribute' }]);
   });
 });
