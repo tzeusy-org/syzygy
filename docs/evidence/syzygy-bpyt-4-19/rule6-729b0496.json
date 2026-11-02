@@ -1,20 +1,20 @@
 {
  "subject": "syzygy-bpyt.4.19: the drain-timeout test's clock, delayed-scan probe and rule-6 mutants",
- "commit": "7dd61dfc8b00735b1739a4db7b98566c5ae3bfc8",
- "base": "eb6183b58253ef62fa364b78778efda9a77073df",
+ "commit": "729b04963191305c30988b122b0b9f4f75534352",
+ "base": "b77bae097c1aedbbd27b059b95fffdae561e2495",
  "tool": {
   "path": "docs/evidence/syzygy-bpyt-4-19/tools/rule6.py",
-  "sha256": "e1f08216f3dd1391420040dccc68f72e57f1aa259d912c55c9eb54c1d4ed2410"
+  "sha256": "bd879347547e0d3190e9a5931afefd84b66a3e765267bd1ba480ab8fb585e826"
  },
  "worktreeClean": true,
  "loadavgBefore": [
-  "23.02",
-  "23.32",
-  "27.14"
+  "18.90",
+  "16.74",
+  "15.12"
  ],
  "testFileSha256": {
   "base": "d1c4ad3baf1f957cc2db9e61ccd5f86bfd4f7f77fdc9178ef85c941d08ccc5ef",
-  "head": "4236ea5161fe1ed93535ec66367df500a21716cd8ab09847766759098126173f"
+  "head": "1dd72c42697b889a7b3a05518259bb2a1ad81e173f893b03f14480a1e0b6bc16"
  },
  "prodFileSha256": "60a3990726bc196703d66719b8c50c9c87c62c91b601fa51f7edcca23f71d68d",
  "unmutated": {
@@ -28,7 +28,7 @@
   "fragment": {
    "file": "apps/three-surface-poc/src/cdp-browser.test.ts",
    "old": "      groupProcesses: () => ++scans === 1 ? [123] : [],\n",
-   "new": "      groupProcesses: () => { const until = Date.now() + 60; while (Date.now() < until); return ++scans === 1 ? [123] : []; },\n"
+   "new": "      groupProcesses: () => { const until = vi.getRealSystemTime() + 60; while (vi.getRealSystemTime() < until); return ++scans === 1 ? [123] : []; },\n"
   },
   "baseTest": {
    "exit": 1,
@@ -79,10 +79,10 @@
   },
   {
    "id": "K2",
-   "mutation": "the drain deadline is half the configured drain",
+   "mutation": "the drain deadline is a third of the configured drain",
    "file": "apps/three-surface-poc/src/cdp-browser.ts",
    "old": "const drainDeadline = now() + (options.profileDrainMs ?? BROWSER_PROFILE_DRAIN_MS);",
-   "new": "const drainDeadline = now() + (options.profileDrainMs ?? BROWSER_PROFILE_DRAIN_MS) / 2;",
+   "new": "const drainDeadline = now() + (options.profileDrainMs ?? BROWSER_PROFILE_DRAIN_MS) / 3;",
    "exit": 1,
    "passed": 26,
    "failed": 3,
@@ -94,7 +94,7 @@
     },
     {
      "test": "disposable browser shutdown retains an already-exited parent profile through a late descendant beyond the former one-second drain",
-     "message": "Error: private browser profile drain did not verify two empty scans before deadline"
+     "message": "Error: private browser profile still held by 1 process(es)"
     },
     {
      "test": "disposable browser shutdown stops helpers orphaned by a killed leader with their group, then drains before removal",
@@ -140,16 +140,47 @@
     }
    ],
    "killed": true
+  },
+  {
+   "id": "K4",
+   "mutation": "the inter-scan sleep is 200 ms, not 25 ms (review F1)",
+   "file": "apps/three-surface-poc/src/cdp-browser.ts",
+   "old": "await new Promise(resolve => setTimeout(resolve, 25));",
+   "new": "await new Promise(resolve => setTimeout(resolve, 200));",
+   "exit": 1,
+   "passed": 28,
+   "failed": 1,
+   "total": 29,
+   "failing": [
+    {
+     "test": "disposable browser shutdown waits for private Chrome group members before removal and retains the profile on drain timeout",
+     "message": "AssertionError: expected 1 to be 3 // Object.is equality"
+    }
+   ],
+   "killed": true
   }
  ],
+ "f1": {
+  "round1Commit": "72fd2f83c8f7613eac598f1f68acfe751b55eec2",
+  "mutant": "K4",
+  "round1TestFileSha256": "4236ea5161fe1ed93535ec66367df500a21716cd8ab09847766759098126173f",
+  "round1Test": {
+   "exit": 0,
+   "passed": 29,
+   "failed": 0,
+   "total": 29,
+   "failing": []
+  },
+  "survivedAtRound1": true
+ },
  "baseFailsOnWallClock": true,
  "headPassesDelayed": true,
- "killed": 3,
- "of": 3,
+ "killed": 4,
+ "of": 4,
  "loadavgAfter": [
-  "24.50",
-  "23.65",
-  "27.18"
+  "19.23",
+  "16.93",
+  "15.21"
  ],
  "worktreeCleanAfter": true
 }
