@@ -538,6 +538,110 @@ describe('main(argv, io): the human pages carry what the daemon and the session 
   }, TEST_TIMEOUT_MS);
 });
 
+// syzygy-bpyt.5.9: reach of the two POST /polaris/reobserve
+// handlers (the human path and the tailnet-mount path). reobserve-action.test.ts
+// drives the handler with a stub `reobserve`; these drive the pair `main`
+// registered, wired to its real session, so a handler that is dropped,
+// pointed at the wrong session or stripped of its origin check fails here.
+describe('main(argv, io): the POST /polaris/reobserve handlers main registers', () => {
+  const TAILNET = { host: 'tzeusy.parrot-hen.ts.net', origin: 'https://tzeusy.parrot-hen.ts.net' };
+  const OBSERVED_AT = '2026-08-30T12:00:00Z';
+  const ID_TAIL = `\\|observed:${OBSERVED_AT}`;
+  const BASE_ID = new RegExp(`repository:butlers-configured-poc@fixture\\|inputs:sha256:[0-9a-f]{64}${ID_TAIL}`);
+
+  /** Build 1 is the fixture model; every later build is a distinct evaluation, as a real re-observation's is. */
+  const distinctBuilds = (): ((build: number) => PocModel) => {
+    const base = buildFixtureModel(fixtureDirectories);
+    return (build) => (build === 1 ? base : { ...base, evaluation: { ...base.evaluation, snapshot: `${base.evaluation.snapshot}-build-${build}` } });
+  };
+
+  async function post(route: Route, headers: Record<string, string>): Promise<{ readonly status: number; readonly contentType: string; readonly body: string }> {
+    return route.handle({ request: { method: 'POST', path: route.path, query: new URLSearchParams(), headers } });
+  }
+
+  const attributes = (body: string) => ({
+    evaluation: /data-reobserve-evaluation="([^"]*)"/.exec(body)?.[1],
+    supersedes: /data-reobserve-supersedes="([^"]*)"/.exec(body)?.[1],
+  });
+  const servedSnapshot = async (h: Harness): Promise<string> => (JSON.parse((await get(routeOf(h, 'GET', '/api/poc'))).body) as { evaluation: { snapshot: string } }).evaluation.snapshot;
+
+  async function serve(options: Parameters<typeof harness>[1] = {}) {
+    const fake = fakeIo();
+    const h = harness({}, { model: distinctBuilds(), ...options });
+    const run = main(['--repo', repoRoot, '--state-dir', join(scratch, 'state'), '--port', '0'], fake.io, h.deps);
+    await started(run, fake);
+    const stop = async (): Promise<void> => { fake.signal('SIGINT'); expect(await run).toBe(0); };
+    return { h, stop };
+  }
+
+  it('the human path re-observes through the session, names the superseded evaluation and swaps the served model', async () => {
+    const { h, stop } = await serve();
+    const before = await servedSnapshot(h);
+    expect(before).toMatch(/^repository:butlers-configured-poc@fixture\|inputs:sha256:[0-9a-f]{64}$/);
+
+    const response = await post(routeOf(h, 'POST', '/polaris/reobserve'), LOCAL_BROWSER);
+
+    expect(response.status).toBe(200);
+    expect(response.contentType).toBe('text/html; charset=utf-8');
+    const { evaluation, supersedes } = attributes(response.body);
+    expect(evaluation).toMatch(new RegExp(`^repository:butlers-configured-poc@fixture\\|inputs:sha256:[0-9a-f]{64}-build-2${ID_TAIL}$`));
+    expect(supersedes).toMatch(BASE_ID);
+    expect(response.body).toContain('<h1>Re-observed</h1>');
+    expect(response.body).toContain('<li>Butlers HEAD: 1f892687d53c829f9c2a4ee99bccccb23d6158df (unchanged)</li>');
+    expect(response.body).toContain('<li>Observed-project limb: 1 changed, 0 added since the superseded evaluation</li>');
+    expect(response.body).toContain('<li>Observatory limb: 0 Syzygy commits since build observer-rev</li>');
+    expect(response.body).toContain('<a href="/polaris">Back to Polaris</a>');
+    expect(await servedSnapshot(h)).toBe(`${before}-build-2`);
+    expect(h.calls.filter((call) => call.startsWith('model '))).toHaveLength(2);
+    await stop();
+  }, TEST_TIMEOUT_MS);
+
+  it('the tailnet-mount path is the same handler, answering with mount-prefixed links', async () => {
+    const { h, stop } = await serve();
+
+    const response = await post(routeOf(h, 'POST', '/butlers-syzygy/polaris/reobserve'), TAILNET);
+
+    expect(response.status).toBe(200);
+    expect(attributes(response.body).evaluation).toMatch(new RegExp(`-build-2${ID_TAIL}$`));
+    expect(attributes(response.body).supersedes).toMatch(BASE_ID);
+    expect(response.body).toContain('<a href="/butlers-syzygy/polaris">Back to Polaris</a>');
+    expect((await servedSnapshot(h)).endsWith('-build-2')).toBe(true);
+    await stop();
+  }, TEST_TIMEOUT_MS);
+
+  it('both paths refuse a cross-origin request before any re-observation runs', async () => {
+    const { h, stop } = await serve();
+    const before = await servedSnapshot(h);
+    const calls = h.calls.length;
+
+    for (const [path, headers] of [
+      ['/polaris/reobserve', { host: '127.0.0.1:7478', origin: 'http://poc.attacker.invalid' }],
+      ['/butlers-syzygy/polaris/reobserve', { host: 'tzeusy.parrot-hen.ts.net', origin: 'https://poc.attacker.invalid' }],
+    ] as const) {
+      expect(await post(routeOf(h, 'POST', path), headers)).toEqual({ status: 403, contentType: 'application/json', body: '{"served":"nothing","reason":"browser-origin-refused"}' });
+    }
+
+    expect(h.calls).toHaveLength(calls);
+    expect(await servedSnapshot(h)).toBe(before);
+    await stop();
+  }, TEST_TIMEOUT_MS);
+
+  it('a refused re-observation answers 502 with the named reason and keeps the prior evaluation served', async () => {
+    const { h, stop } = await serve();
+    const before = await servedSnapshot(h);
+    h.setObserver(observation('observer-rev', ['packages/cap1-daemon/src/server.ts']));
+
+    const response = await post(routeOf(h, 'POST', '/polaris/reobserve'), LOCAL_BROWSER);
+
+    expect(response.status).toBe(502);
+    expect(response.body).toContain('<p data-reobserve-reason="POC runtime inputs are dirty; re-observation was refused">Unknown — POC runtime inputs are dirty; re-observation was refused. The prior complete evaluation remains served.</p>');
+    expect(response.body).toContain('<a href="/polaris">Back to Polaris</a>');
+    expect(await servedSnapshot(h)).toBe(before);
+    expect(h.calls.filter((call) => call.startsWith('model '))).toHaveLength(1);
+    await stop();
+  }, TEST_TIMEOUT_MS);
+});
+
 describe('started(): the wait for main to serve', () => {
   it('reports a run that finished first, at once and by name', async () => {
     const fake = fakeIo();
