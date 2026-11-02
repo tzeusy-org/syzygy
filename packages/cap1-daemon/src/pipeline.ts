@@ -33,6 +33,7 @@ import {
   type CapturedEntry,
   type CapturedProjectInputs,
   type CapturedRepositoryInput,
+  type EntryNotReadReason,
 } from './source-snapshot.js';
 
 // RT3 — the daemon's capture → consent → evaluation pipeline.
@@ -54,6 +55,7 @@ import {
 // as NAMED values (VIS-2).
 
 export { CONSENT_DECISIONS_RELATIVE_PATH } from './source-snapshot.js';
+export type { EntryNotReadReason } from './source-snapshot.js';
 
 // The scenario context every daemon-served FactModel carries
 // (CAP1-REQ-042's equivalence coordinate; one spelling, fixed here).
@@ -112,7 +114,7 @@ export type ServedEntry =
   | { readonly state: 'unreadable'; readonly label: 'Unknown'; readonly failureCode: string }
   | {
       readonly state: 'not-read';
-      readonly reason: 'unconsented-governance-root';
+      readonly reason: EntryNotReadReason;
       readonly label: 'Unknown';
       readonly unknownReason: 'unconsented-source-or-provider';
     };

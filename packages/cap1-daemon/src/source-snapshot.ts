@@ -196,7 +196,11 @@ export interface CapturedRepositoryInput {
 export type CapturedEntry =
   | { readonly state: 'captured'; readonly text: string; readonly digest: Sha256Digest }
   | { readonly state: 'missing' | 'unreadable'; readonly failureCode: string }
-  | { readonly state: 'not-read'; readonly reason: 'unconsented-governance-root' };
+  // Not read because no governance root is declared, or because the
+  // declared one's consent is not admitted: two reasons, never conflated.
+  | { readonly state: 'not-read'; readonly reason: EntryNotReadReason };
+
+export type EntryNotReadReason = 'undeclared-governance-root' | 'unconsented-governance-root';
 
 export interface CapturedProjectInputs {
   readonly asOf: string;
@@ -578,8 +582,10 @@ export async function captureProjectInputs(
   );
   let entry: CapturedEntry;
   if (governanceRoot === undefined || governanceRoot.decision.authorization !== 'admitted') {
-    entry = { state: 'not-read', reason: 'unconsented-governance-root' };
-    descriptors.push({ kind: 'entry', subjectId: 'entry', ordinal: null, logicalPath: HUMAN_ENTRY_PATH, state: 'not-read', digest: null, failureCode: 'unconsented-governance-root' });
+    const reason: EntryNotReadReason =
+      governanceRoot === undefined ? 'undeclared-governance-root' : 'unconsented-governance-root';
+    entry = { state: 'not-read', reason };
+    descriptors.push({ kind: 'entry', subjectId: 'entry', ordinal: null, logicalPath: HUMAN_ENTRY_PATH, state: 'not-read', digest: null, failureCode: reason });
   } else {
     const read = await readRecorded('entry', 'entry', HUMAN_ENTRY_PATH);
     entry =

@@ -32,6 +32,7 @@ import {
   type AuthorityPlane,
   type DiscoverabilityPlane,
   type ProjectEvaluation,
+  type EntryNotReadReason,
   type ProposalPlane,
 } from './pipeline.js';
 
@@ -85,11 +86,12 @@ export type EntrySourceRead =
   | { readonly state: 'present'; readonly text: string; readonly digest: string }
   | { readonly state: 'absent' }
   | { readonly state: 'unreadable'; readonly reason: string }
-  // The governance root's consent was not admitted, so the capture never
-  // read the entry (syzygy-s6cp): its own state, never `unreadable`.
+  // No governance root is declared, or its consent was not admitted, so the
+  // capture never read the entry (syzygy-s6cp): its own state, never
+  // `unreadable`, and the sentence names which of the two it was.
   | {
       readonly state: 'not-read';
-      readonly reason: 'unconsented-governance-root';
+      readonly reason: EntryNotReadReason;
       readonly unknownReason: 'unconsented-source-or-provider';
     };
 
@@ -922,11 +924,16 @@ function entryContentFrom(read: Exclude<EntrySourceRead, { state: 'not-read' }>)
   }
 }
 
+const NOT_READ_ENTRY_CAUSE: Readonly<Record<EntryNotReadReason, string>> = {
+  'undeclared-governance-root': 'no governance root is declared',
+  'unconsented-governance-root': "the governance root's observation consent is not admitted",
+};
+
 function renderNotReadEntrySection(read: Extract<EntrySourceRead, { state: 'not-read' }>): string {
   return (
     '<section data-section="entry-content" data-entry-state="not-read">' +
     `<p data-epistemic-label="Unknown"${attr('data-unknown-reason', read.unknownReason)}${attr('data-not-read-reason', read.reason)}>` +
-    `The entry document was not read: the governance root's observation consent is not admitted (${escapeHtml(read.reason)}). ` +
+    `The entry document was not read: ${escapeHtml(NOT_READ_ENTRY_CAUSE[read.reason])} (${escapeHtml(read.reason)}). ` +
     `Unknown — reason: ${escapeHtml(read.unknownReason)}. Nothing is shown in its place.</p></section>`
   );
 }
