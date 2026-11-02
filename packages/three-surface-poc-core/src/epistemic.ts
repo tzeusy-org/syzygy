@@ -51,12 +51,12 @@ export function unknown(closedReason: UnknownReason, basis: string, actionRoute?
 
 /** The closed reason each region producer establishes when its result is
  * Unknown. These results (`CodeStructureResult`, `OrreryProjection`,
- * `WorkItemsResult`, `TrajectoryProjection`, `TestArtifactVerificationResult`)
- * are served inside `/api/poc` with their prose `reason` alone, so the closed
+ * `WorkItemsResult`, `TrajectoryProjection` and the test-artifact
+ * verification; this module reads none of them) are served inside `/api/poc` with their prose `reason` alone, so the closed
  * word cannot join their Unknown arms without changing the wire bytes; it is
  * stated here once, typed, and `deriveUnknownSubjects` looks it up. */
 export const PRODUCER_UNKNOWN_REASONS = {
   codeStructure: 'source-uncaptured-or-unreachable',
   workItems: 'source-uncaptured-or-unreachable',
-  testArtifactVerification: 'missing-evidence',
+  testArtifact: 'missing-evidence',
 } as const satisfies Readonly<Record<string, UnknownReason>>;

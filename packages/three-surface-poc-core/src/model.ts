@@ -555,7 +555,7 @@ function deriveUnknownSubjects(input: UnknownSubjectInputs): readonly PocUnknown
     const change = input.workerChange;
     if (change.kind === 'observed' && input.trajectory.rendered.some((item) => item.id === change.beadId)) {
       const verification = input.testArtifactVerification;
-      if (verification.kind === 'unknown') add(workerChangeVerificationId(change.beadId), verification.reason, PRODUCER_UNKNOWN_REASONS.testArtifactVerification);
+      if (verification.kind === 'unknown') add(workerChangeVerificationId(change.beadId), verification.reason, PRODUCER_UNKNOWN_REASONS.testArtifact);
       else if (verification.kind === 'reported' && input.governingIntentId !== null) {
         // RFC5-19: an operator-reported run caps at report-fact, so the
         // verification relationship stays Unknown with its disclosure. The
