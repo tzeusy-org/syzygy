@@ -29,6 +29,14 @@ on:
   merge_group:
     types: [checks_requested]
 
+# Supersede stale pull_request runs. The group is per workflow and per PR, and
+# only pull_request events cancel: push and merge_group runs fall back to a
+# per-run group (run_id), so they are never cancelled, nor can a newer main push
+# displace an older one still pending (the default behaviour of a shared group).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
