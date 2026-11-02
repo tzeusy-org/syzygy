@@ -1,0 +1,155 @@
+{
+  "subject": "syzygy-u2a.6 rule-6 controlled mutations (reference-bound consent coverage projection and wire parity)",
+  "ranAt": "6c520feb30d54fc207d4cd223f3726a4315db3ce",
+  "subjectDigests": {
+    "packages/cap1-conformance/src/req-010.conformance.test.ts": "sha256:2c34f5a579bfecea3707222ac1b3bb703a6cd73380b2118d9cba7f575d910275",
+    "packages/cap1-conformance/src/req-011.conformance.test.ts": "sha256:675eae93d2207751f7f93ad31651d64bcbc7440ee3f2f03c2f3c3cfd5050acbc",
+    "packages/cap1-core/src/consent-decision.ts": "sha256:b6cfbae313289417296c15f555da4672c79125c207be5f8bc93480b983b7e879",
+    "packages/cap1-core/src/coverage.ts": "sha256:c328c85f12466b1a0ec854906d2b969bfabed83023acbedf66a7ca575191789e",
+    "packages/cap1-daemon/src/pipeline.test.ts": "sha256:e9b1c24ee3a287521c1e341b5cd7c71e74150ce11a65b4e8708630bd4598d35f",
+    "packages/cap1-daemon/src/routes-human.ts": "sha256:a5ebcb7db7a80b28edd3ec93fc95dbb5259500102a526338e7722caf3924b84d",
+    "packages/cap1-daemon/src/routes-machine.test.ts": "sha256:2762ad402529e45ea3072f4803eb4af94cb7e357e980603fb3083b63582c9d64",
+    "packages/cap1-daemon/src/routes-machine.ts": "sha256:848549ed2e384c51e999d06bececda4df6d9cc28a6cddb737b5365d096a677c4"
+  },
+  "method": "each mutant replaces exactly one occurrence of old with new in the named file, runs `npx vitest run <test>`, then restores the file; killed means the run exited non-zero",
+  "population": 10,
+  "killed": 10,
+  "mutants": [
+    {
+      "id": "join-count-unchecked",
+      "file": "packages/cap1-core/src/coverage.ts",
+      "old": "if (consentByEntry.length !== declaration.repositories.length) {",
+      "new": "if (false) {",
+      "test": "packages/cap1-conformance/src/req-010.conformance.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 5 passed (6)",
+      "firstErrors": [
+        "AssertionError: expected [Function] to throw error including '2 consent decisions for 3 declared re…' but got 'Cannot read properties of undefined (…'"
+      ],
+      "killed": true
+    },
+    {
+      "id": "join-identity-unchecked",
+      "file": "packages/cap1-core/src/coverage.ts",
+      "old": "if (decision.repositoryId !== entry.id || decision.reference !== entry.consent) {",
+      "new": "if (decision.reference !== entry.consent) {",
+      "test": "packages/cap1-conformance/src/req-010.conformance.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 5 passed (6)",
+      "firstErrors": [
+        "AssertionError: expected [Function] to throw an error"
+      ],
+      "killed": true
+    },
+    {
+      "id": "join-reference-unchecked",
+      "file": "packages/cap1-core/src/coverage.ts",
+      "old": "if (decision.repositoryId !== entry.id || decision.reference !== entry.consent) {",
+      "new": "if (decision.repositoryId !== entry.id) {",
+      "test": "packages/cap1-conformance/src/req-010.conformance.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 5 passed (6)",
+      "firstErrors": [
+        "AssertionError: expected [Function] to throw an error"
+      ],
+      "killed": true
+    },
+    {
+      "id": "capture-failed-citation-altered",
+      "file": "packages/cap1-core/src/coverage.ts",
+      "old": "        reason: UNCAPTURED,\n        consent,\n      };\n    }\n    if (outcome.outcome === 'stale')",
+      "new": "        reason: UNCAPTURED,\n        consent: { ...consent, reference: entry.id },\n      };\n    }\n    if (outcome.outcome === 'stale')",
+      "test": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 60 passed (61)",
+      "firstErrors": [
+        "AssertionError: expected { repositoryId: 'repo-m-failed', …(4) } to deeply equal { repositoryId: 'repo-m-failed', …(4) }"
+      ],
+      "killed": true
+    },
+    {
+      "id": "unverified-record-dropped",
+      "file": "packages/cap1-core/src/coverage.ts",
+      "old": "        diagnosticReference: decision.diagnosticReference,\n        route: decision.route,\n        untrustedRecord: decision.untrustedRecord,",
+      "new": "        diagnosticReference: decision.diagnosticReference,\n        route: decision.route,\n        untrustedRecord: null,",
+      "test": "packages/cap1-daemon/src/pipeline.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 8 passed (9)",
+      "firstErrors": [
+        "AssertionError: expected null to deeply equal { trust: 'untrusted content', …(7) }"
+      ],
+      "killed": true
+    },
+    {
+      "id": "refused-masked-by-observation",
+      "file": "packages/cap1-core/src/coverage.ts",
+      "old": "    if (decision.authorization !== 'admitted') {\n",
+      "new": "    const masked = observations.find((o) => o.repositoryId === entry.id);\n    if (decision.authorization !== 'admitted' && masked !== undefined && masked.outcome === 'captured') {\n      return { repositoryId: entry.id, state: 'observed', capturedScope: masked.capturedScope, consent: decision.withdrawal as ConsentCitation };\n    }\n    if (decision.authorization !== 'admitted') {\n",
+      "test": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "exit": 1,
+      "summary": "Tests  5 failed | 56 passed (61)",
+      "firstErrors": [
+        "AssertionError: expected undefined to be defined",
+        "AssertionError: expected 'observed' to be 'unconsented' // Object.is equality"
+      ],
+      "killed": true
+    },
+    {
+      "id": "withdrawal-cites-defeated-grant",
+      "file": "packages/cap1-core/src/consent-decision.ts",
+      "old": "withdrawal: verifiedRecord(input.reference, input.artifact.digest, other, withdrawal.provenance),",
+      "new": "withdrawal: verifiedRecord(reference, own.artifact.digest, record, withdrawal.provenance),",
+      "test": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 60 passed (61)",
+      "firstErrors": [
+        "AssertionError: expected [ 'c-src', 'c-src', 'c-src', …(2) ] to deeply equal [ 'c-src', 'c-w', 'c-w', …(2) ]"
+      ],
+      "killed": true
+    },
+    {
+      "id": "human-row-drops-attribution",
+      "file": "packages/cap1-daemon/src/routes-human.ts",
+      "old": "    attr('data-consent-attribution', citation.attribution) +\n",
+      "new": "",
+      "test": "packages/cap1-daemon/src/routes-machine.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 11 passed (12)",
+      "firstErrors": [
+        "AssertionError: expected [ …(6) ] to deeply equal []"
+      ],
+      "killed": true
+    },
+    {
+      "id": "machine-row-omitted",
+      "file": "packages/cap1-daemon/src/routes-machine.ts",
+      "old": "        coverageBoundary: coverageBoundary(evaluation.coverage),",
+      "new": "        coverageBoundary: { ...coverageBoundary(evaluation.coverage), records: coverageBoundary(evaluation.coverage).records.slice(1) },",
+      "test": "packages/cap1-daemon/src/routes-machine.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 11 passed (12)",
+      "firstErrors": [
+        "AssertionError: expected [ …(2) ] to deeply equal []"
+      ],
+      "killed": true
+    },
+    {
+      "id": "human-untrusted-attribution-dropped",
+      "file": "packages/cap1-daemon/src/routes-human.ts",
+      "old": "    attr('data-untrusted-attribution', view.attribution) +\n",
+      "new": "",
+      "test": "packages/cap1-daemon/src/pipeline.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 8 passed (9)",
+      "firstErrors": [
+        "AssertionError: expected '<span class=\"coverage-record\" data-re…' to contain 'data-untrusted-attribution=\"test-owne…'"
+      ],
+      "killed": true
+    }
+  ],
+  "priorRun": {
+    "ranAt": "623d0067d534a924886cd1460f5d3922a5c89618",
+    "note": "A first run at this commit, with the masking mutant written as an observation-guarded refusal test, left two survivors: join-identity-unchecked (the swapped-order case also mismatched the reference, so the reference check caught it) and withdrawal-cites-defeated-grant (no test drove a rule-3 withdrawal through the real decider to the coverage row). The next commit added both tests; the masking mutant was rewritten to surface an observed row rather than crash. This record is the rerun."
+  },
+  "harness": "/tmp scratch script, not retained; every mutant above carries its exact old/new fragment, file and test, so each is re-runnable at ranAt."
+}
