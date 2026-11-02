@@ -1,0 +1,161 @@
+{
+ "bead": "syzygy-bpyt.6.4",
+ "finding": "DC-4 (docs/plans/2026-10-21-greenfield-parity-audit.md): typed Unknown reasons, one internal epistemic constructor module",
+ "subject": {
+  "baseCommit": "40f1387d6bdd5fa0c4202dedb31aad07186c2d92",
+  "codeHeadCommit": "006012e5bbaee7bf95cc19f737fcc111f5e22ba2",
+  "note": "codeHeadCommit is the last code commit; commits after it add only files under docs/evidence/syzygy-bpyt-6-4",
+  "changedFiles": [
+   {
+    "path": "apps/three-surface-poc/src/capability-detail.ts",
+    "baseSha256": "870b43ba23fda2f36840b5da4f9fbdb4967bb8e7a2c7a058751f200825d31be7",
+    "headSha256": "51a4453a577acd0ddc5b7a8b719aca41712f044aafeb0dca2b2c39e9cd869ffa"
+   },
+   {
+    "path": "apps/three-surface-poc/src/orrery.ts",
+    "baseSha256": "8cdba628c980a1b9b020ca77ba8c60b0f75299aed6cefc36406df488ce13dc9a",
+    "headSha256": "7d93c5113112faea2a74e52ff60e69126ccf3c9842b2976f1ac8bd90ef5671e6"
+   },
+   {
+    "path": "apps/three-surface-poc/src/polaris-source.ts",
+    "baseSha256": "66ace938b551b5a4f41064a7c5dd77e466ad8254c6bce7679809b2012e3c0483",
+    "headSha256": "d18cba090e871dacd6b8468f6298ca673a453b50cf91c5f012a1fe4ae5675491"
+   },
+   {
+    "path": "apps/three-surface-poc/src/polaris.ts",
+    "baseSha256": "ea0d11f82309e460160ec368826ba2e034a072badee97f0a6f6228919f992354",
+    "headSha256": "a831144b75ec4d01b83e78280979bec76f9307ecdc2157c6082e066836064a18"
+   },
+   {
+    "path": "apps/three-surface-poc/src/test-project-shape-fixture.ts",
+    "baseSha256": "43b7ee2217f056fd6c83a4b11cf3a1775f576d3c57d0ad83700aeaf6d088deee",
+    "headSha256": "655024cd1ec4296a9fed28558d364306af157c3746534e62a8198127d75511d7"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/content-classification.ts",
+    "baseSha256": "1487b110161c948b786ced45d38b1df655bcdb1d7c9c640081248e1848e7d043",
+    "headSha256": "169ef91b6bf2676967125d00c3281f1002b9c5e704f4cb2245b9031b4facf4e9"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/epistemic.ts",
+    "baseSha256": null,
+    "headSha256": "5c9bc8ff3423314ea16bfb0dc03d25d57465dc6a1fa7266657a33ea20f14c6f4"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/model.ts",
+    "baseSha256": "9ab58377379c17fa0a09f84fd45441a1eb0f44d1edf82b07c496f9d49a87ce2f",
+    "headSha256": "5be6a666ad92829db6a62429e6f9d8968526243ed947ce4ffbf2b1d4ad77d610"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+    "baseSha256": "f7995e6ba90d01a4fe4ed78f5599b27cfabaa0d7a5204118d1bca0ef09317cb3",
+    "headSha256": "3091fa45306c5a6c56ce39f30942a1588830b6587284874c0b4d681f2295a870"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-model.test.ts",
+    "baseSha256": "5c5983eff7fe00e1495f00abbb26cec90189fab015a4cbcb8f6a6a0b33a3060b",
+    "headSha256": "f3df16add1f3cee24a9e69748b43e6007c1a75300b4cdcbcce77a15fa91c9007"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+    "baseSha256": "a2f95ca0df347d283af6db2e7ee27f663edfc44ded092f5f0220b221c6c7279c",
+    "headSha256": "a0b91827cea9f488c6ab1d35331c1261679827b9ca370dd72ee76f4a0e50a4fe"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+    "baseSha256": "b57746bb67286dfbe3ed0deaaf844e11d8568936b94c79cc0262ea912b635bff",
+    "headSha256": "6c30ac511106b1fc3cbc04d3dada58cb01087d9001abb51f6be91b764d0763ba"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/proposed-work.ts",
+    "baseSha256": "8a8150b7aef2bfada8174f7444f86da73a31b1a1cb892bbfd2a2b849b856156c",
+    "headSha256": "a31886dab9f166a3c923428bfd92bd111095acb31c55bcf88533045137d4b79a"
+   },
+   {
+    "path": "packages/three-surface-poc-core/src/work-items.ts",
+    "baseSha256": "5c995c5e8a6705b10af97eed86d19151439b0871f15788b0eebba8c212207347",
+    "headSha256": "b793d6706d0968ac1f9d658565644273106031b3295bd0dd0daac15b1fe658ce"
+   }
+  ]
+ },
+ "toolsSha256": {
+  "diff-probe.mjs": "6198b7cb1534bfce2bde754dfbf14714a5b066ffc7c91c6bc908914a8ddf3a5f",
+  "compare-probe.py": "22cc088e30711383554fa55fd12f187252690238db0ce394b9fa43d069e28211",
+  "mutants.py": "77bf1dc6bf848fcf0aee76f3e71f09e5a3b9e2efdc79de7abc384160d5213435",
+  "sweep.py": "692b82b06732554616829597be3f9e2ec73e1d3f63843fa99ded7b3399bd89fd"
+ },
+ "differential": {
+  "method": "node diff-probe.mjs <clone> <out> in a clone at each commit, each built with npm run build:poc, TMPDIR=/tmp/b64t for both; then compare-probe.py base head",
+  "corpus": "36 models: 26 variants (project-shape variants, three observation failures, item unknown/contradicted, judgment states, unreachable observers, three bad work-item answers, lifecycle contradicted, no seeds, five worker-change/test-artifact states) and 10 prose mutations of the project-shape texts; per model the JSON digest and length, responseIdentity, the unknownSubjects population, and every GET route pocRoutes registers (human, machine /api/poc, /api/poc/polaris presentation, tailnet-prefixed twins, source pages per source identity) under the direct Host and the tailnet Host",
+  "baseOutputSha256": "a0fcc7f1631f8bb6005489b68314b47f6097850cfe25667ad99cfc570f1e5d60",
+  "headOutputSha256": "a0fcc7f1631f8bb6005489b68314b47f6097850cfe25667ad99cfc570f1e5d60",
+  "outputsByteIdentical": true,
+  "retainedOutput": "probe-output.json (the head output; the base output is byte-identical, same sha256)",
+  "rowsCompared": 2108,
+  "rowsByKind": {
+   "model": 36,
+   "responseIdentity": 36,
+   "unknownSubjects": 36,
+   "route": 2000
+  },
+  "routeRowsByStatus": {
+   "200": 2000
+  },
+  "rowsThatDiffer": 0,
+  "negativeControl": {
+   "commit": "7e8a3a2c6da5aa2b47ebb6c6d810e9d50434feee",
+   "mutation": {
+    "file": "packages/three-surface-poc-core/src/epistemic.ts",
+    "old": "    reason: basis,\n    closedReason,\n",
+    "new": "    closedReason,\n    reason: basis,\n"
+   },
+   "rowsThatDiffer": 216,
+   "rowsCompared": 2108,
+   "record": "negative-control-key-order-compare.json",
+   "reading": "the comparer sees a one-line serialization change in every model, machine and unknownSubjects row; HTML rows do not move because the pages never serialize PocUnknown key order"
+  }
+ },
+ "privateDaemonCapture": {
+  "performed": false,
+  "reason": "[Observed] npm run poc from the base clone with --repo /home/orca/orca/projects/butlers --port 0 --state-dir <scratch> exited with \"configured repository authority rejected (binding-unreadable)\": resolvePwbRepositoryBinding cannot read the approved locator from this account (git-observation.ts). The daemon serves only the registered locator, so a Butlers capture needs the owner account. The fixture corpus drives the same production route handlers (pocRoutes) under both Host forms."
+ },
+ "rule6": {
+  "commit": "006012e5bbaee7bf95cc19f737fcc111f5e22ba2",
+  "killed": 10,
+  "total": 10,
+  "treeRestored": true,
+  "record": "mutants-006012e5.json"
+ },
+ "sweeps": {
+  "tool": "sweep.py",
+  "population": "git ls-files *.ts (not *.test.ts) under packages/three-surface-poc-core/src and apps/three-surface-poc/src",
+  "base": {
+   "commit": "40f1387d6bdd5fa0c4202dedb31aad07186c2d92",
+   "population": 134,
+   "counts": {
+    "cast": 5,
+    "closed": 9,
+    "revalid": 15,
+    "prose": 59
+   }
+  },
+  "head": {
+   "commit": "006012e5bbaee7bf95cc19f737fcc111f5e22ba2",
+   "population": 135,
+   "counts": {
+    "cast": 0,
+    "closed": 3,
+    "revalid": 0,
+    "prose": 49
+   }
+  },
+  "secondMethod": "git grep -F \"as keyof typeof UNKNOWN_REASON_ROUTES\" and git grep -E \"closedReason\\(|isUnknownReason\\(\" over the same trees at the head: 0 and 0 (one test-file cast remains, polaris-first-reading.test.ts:243, reading a reason back from rendered HTML)",
+  "closedRemainder": "3 hits, all apps/three-surface-poc/src/polaris-generation/dossier-site.ts: the Polaris dossier generator's own EpistemicMarking carrier, outside the PocModel pipeline this bead types",
+  "proseRemainder": "49 `reason: string` fields remain; none carries an RFC2-24 reason as a string except the two named below. They are prose basis sentences on Unknown arms served inside /api/poc (code-structure, work-items, worker-change, test-artifact-verification, orrery, trajectory, materialization, reevaluation, resource ledger/headroom), non-Unknown failure arms, or render helpers taking a word to print. Typing those arms would add or rename a serialized field, which the bead puts out of scope; their closed reason is stated once, typed, in PRODUCER_UNKNOWN_REASONS.",
+  "mixedOnWire": [
+   "project-shape-coverage.ts PrecedenceDisclosure/RootSummaryDisclosure unknown.reason: a closed reason or a sentence (\"no root index in the manifest\", \"root index not extracted\", \"root index grammar not evaluated\")",
+   "proposed-work.ts ProposedWorkCurrentAuthority unknown.reason on the no-seed-set placeholder: a sentence, now named NO_SEED_SET_CURRENT_AUTHORITY_REASON and typed as the one admitted non-reason"
+  ]
+ },
+ "boundCiters": "[Observed] git grep -F of each changed file's full base sha256 over the tree finds citers only in records pinned to an earlier commit: docs/evidence/** (including the P-115 preparation packet docs/evidence/p115-implementation-authorization-2026-10-28/, whose SOURCE-BINDINGS and MANIFEST bind source at its recorded refresh head, recoverable from Git) and, for proposed-work.ts only, .syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json, pinned to its sourceCommit. None of those files is edited. [Inferred] none of them requires the current source to keep the cited bytes."
+}

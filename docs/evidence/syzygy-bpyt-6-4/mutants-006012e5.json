@@ -1,0 +1,155 @@
+{
+ "bead": "syzygy-bpyt.6.4",
+ "commit": "006012e5bbaee7bf95cc19f737fcc111f5e22ba2",
+ "treeRestored": true,
+ "mutants": [
+  {
+   "id": "T1-constructor",
+   "kind": "type",
+   "file": "packages/three-surface-poc-core/src/epistemic.ts",
+   "old": "export function unknown(closedReason: UnknownReason, basis: string",
+   "new": "export function unknown(closedReason: any, basis: string",
+   "check": "npx tsc -p tsconfig.json --noEmit",
+   "exitCode": 2,
+   "killed": true,
+   "predicateDiagnostics": [
+    "packages/three-surface-poc-core/src/project-shape-model.test.ts(367,7): error TS2578: Unused '@ts-expect-error' directive."
+   ],
+   "otherDiagnostics": 0
+  },
+  {
+   "id": "T2-fixed-unknown",
+   "kind": "type",
+   "file": "packages/three-surface-poc-core/src/content-classification.ts",
+   "old": "  readonly degradationState: string;\n  readonly unknownReason: UnknownReason;\n}",
+   "new": "  readonly degradationState: string;\n  readonly unknownReason: string;\n}",
+   "check": "npx tsc -p tsconfig.json --noEmit",
+   "exitCode": 2,
+   "killed": true,
+   "predicateDiagnostics": [
+    "packages/three-surface-poc-core/src/project-shape-model.test.ts(369,7): error TS2578: Unused '@ts-expect-error' directive."
+   ],
+   "otherDiagnostics": 5
+  },
+  {
+   "id": "T3-degradation",
+   "kind": "type",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "  readonly unknownReason: UnknownReason;\n  readonly detail: string;\n}",
+   "new": "  readonly unknownReason: string;\n  readonly detail: string;\n}",
+   "check": "npx tsc -p tsconfig.json --noEmit",
+   "exitCode": 2,
+   "killed": true,
+   "predicateDiagnostics": [
+    "packages/three-surface-poc-core/src/project-shape-model.test.ts(371,7): error TS2578: Unused '@ts-expect-error' directive."
+   ],
+   "otherDiagnostics": 0
+  },
+  {
+   "id": "T4-class-denominator",
+   "kind": "type",
+   "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+   "old": "'source-withheld';\n      readonly unknownReason: UnknownReason;",
+   "new": "'source-withheld';\n      readonly unknownReason: string;",
+   "check": "npx tsc -p tsconfig.json --noEmit",
+   "exitCode": 2,
+   "killed": true,
+   "predicateDiagnostics": [
+    "packages/three-surface-poc-core/src/project-shape-model.test.ts(373,7): error TS2578: Unused '@ts-expect-error' directive."
+   ],
+   "otherDiagnostics": 4
+  },
+  {
+   "id": "T5-reconciled-fact",
+   "kind": "type",
+   "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+   "old": "      readonly state: 'unknown';\n      readonly declarations: readonly Declaration[];\n      readonly unknownReason: UnknownReason;",
+   "new": "      readonly state: 'unknown';\n      readonly declarations: readonly Declaration[];\n      readonly unknownReason: string;",
+   "check": "npx tsc -p tsconfig.json --noEmit",
+   "exitCode": 2,
+   "killed": true,
+   "predicateDiagnostics": [
+    "packages/three-surface-poc-core/src/project-shape-model.test.ts(375,7): error TS2578: Unused '@ts-expect-error' directive."
+   ],
+   "otherDiagnostics": 1
+  },
+  {
+   "id": "T6-item-coverage",
+   "kind": "type",
+   "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+   "old": "  readonly unknownReason?: UnknownReason;\n}",
+   "new": "  readonly unknownReason?: string;\n}",
+   "check": "npx tsc -p tsconfig.json --noEmit",
+   "exitCode": 2,
+   "killed": true,
+   "predicateDiagnostics": [
+    "packages/three-surface-poc-core/src/project-shape-model.test.ts(377,7): error TS2578: Unused '@ts-expect-error' directive."
+   ],
+   "otherDiagnostics": 1
+  },
+  {
+   "id": "T7-current-authority",
+   "kind": "type",
+   "file": "packages/three-surface-poc-core/src/proposed-work.ts",
+   "old": "readonly reason: UnknownReason | typeof NO_SEED_SET_CURRENT_AUTHORITY_REASON;",
+   "new": "readonly reason: string;",
+   "check": "npx tsc -p tsconfig.json --noEmit",
+   "exitCode": 2,
+   "killed": true,
+   "predicateDiagnostics": [
+    "packages/three-surface-poc-core/src/project-shape-model.test.ts(379,7): error TS2578: Unused '@ts-expect-error' directive."
+   ],
+   "otherDiagnostics": 0
+  },
+  {
+   "id": "R1-constructor-key-order",
+   "kind": "runtime",
+   "file": "packages/three-surface-poc-core/src/epistemic.ts",
+   "old": "    reason: basis,\n    closedReason,\n",
+   "new": "    closedReason,\n    reason: basis,\n",
+   "check": "npx vitest run packages/three-surface-poc-core/src/project-shape-model.test.ts -t 'a producer cannot emit an untyped Unknown reason'",
+   "exitCode": 1,
+   "killed": true,
+   "output": [
+    "Tests  1 failed | 34 skipped (35)",
+    "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+    "AssertionError: expected '{\"label\":\"Unknown\",\"closedReason\":\"mi\u2026' to be '{\"label\":\"Unknown\",\"reason\":\"No evide\u2026' // Object.is equality",
+    "Expected: \"{\"label\":\"Unknown\",\"reason\":\"No evidence.\",\"closedReason\":\"missing-evidence\",\"resolutionRoutes\":[{\"reason\":\"missing-evidence\",\"route\":\"Produce or capture evidence\",\"actor\":\"operator\",\"verb\":\"capture\",\"target\":\"evaluation\"}]}\""
+   ]
+  },
+  {
+   "id": "R2-producer-reason",
+   "kind": "runtime",
+   "file": "packages/three-surface-poc-core/src/epistemic.ts",
+   "old": "  testArtifactVerification: 'missing-evidence',",
+   "new": "  testArtifactVerification: 'no-test-evidence' as UnknownReason,",
+   "check": "npx vitest run packages/three-surface-poc-core/src/project-shape-model.test.ts -t 'a producer cannot emit an untyped Unknown reason'",
+   "exitCode": 1,
+   "killed": true,
+   "output": [
+    "Tests  1 failed | 34 skipped (35)",
+    "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+    "AssertionError: expected [ 'no-test-evidence' ] to deeply equal []",
+    "- Expected"
+   ]
+  },
+  {
+   "id": "R3-failure-state-reason",
+   "kind": "runtime",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "unknownReason: 'unconsented-source-or-provider' },\n} as const satisfies",
+   "new": "unknownReason: 'consent-withdrawn' as UnknownReason },\n} as const satisfies",
+   "check": "npx vitest run packages/three-surface-poc-core/src/project-shape-model.test.ts -t 'a producer cannot emit an untyped Unknown reason'",
+   "exitCode": 1,
+   "killed": true,
+   "output": [
+    "Tests  1 failed | 34 skipped (35)",
+    "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af",
+    "AssertionError: expected [ 'consent-withdrawn' ] to deeply equal []",
+    "- Expected"
+   ]
+  }
+ ],
+ "killed": 10,
+ "total": 10
+}
