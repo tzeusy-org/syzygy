@@ -21,6 +21,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { BodyReadAuthorityEvaluation } from './body-read-authority.js';
 import type { GitTreeEntry } from './git-tree.js';
+import { buildProjectShapeCoverage, type CoverageSourceInput } from './project-shape-coverage.js';
 import { extractSource } from './project-shape-extraction.js';
 import { deriveProjectShapeManifest, SOURCE_RULE_NEEDS_ROOT_INDEX, type ExtractionClass, type SeedRead } from './project-shape-manifest.js';
 import { buildProjectShape, type ProjectShape } from './project-shape-model.js';
@@ -605,5 +606,88 @@ describe('PWB-REQ-002 (class-granular) — every source names the rule that admi
       'baseline-spec-tree': false,
       'roster-tree': false,
     });
+  });
+});
+
+// ---------------------------------------------------------------------
+// The count N of unenumerated headings (Hunk 9, Oracle: "the count per source
+// and class equals the count the answer gives"). One heading cannot tell a
+// count from a flag, so every fixture below holds two or more per source, with
+// a different number in each source. Every expected number is a literal typed
+// from the fixture; `oracleUnenumerated` is the independent reader.
+
+describe('PWB-REQ-002 (class-granular) — the unenumerated-heading count is the number of headings, per source and per class', () => {
+  const three = v1({ extra: ['', '### Gateways', '', '### Plugins', '', '### Relays', '', '- **Hidden** - never read'] });
+  const shape = observe(texts(VISION(GOOD_RULES), three));
+  const source = shape.sources.find((s) => s.path === 'about/heart-and-soul/v1.md');
+
+  it('counts three headings of one source at the class aggregate, the source and the class outcome', () => {
+    expect(oracleUnenumerated(three).map((h) => h.text)).toEqual(['Gateways', 'Plugins', 'Relays']);
+    expect(shape.unenumeratedHeadings.map((h) => h.text)).toEqual(['Gateways', 'Plugins', 'Relays']);
+    expect(shape.classes['catalog-entry'].denominator).toEqual({ kind: 'unknown', reasons: ['missing-declaration'], unenumerated: { reason: 'unenumerated-heading', headings: 3 } });
+    expect(source?.itemDenominator).toMatchObject({ kind: 'unknown', unenumeratedHeadings: 3 });
+    expect(source?.classOutcomes.find((o) => o.class === 'catalog-entry')?.denominator).toMatchObject({ kind: 'unknown', reason: 'unenumerated-heading', unenumeratedHeadings: 3 });
+  });
+
+  it('leaves the classes with no unenumerated heading free of a count', () => {
+    expect(shape.classes['success-criterion'].denominator).toEqual({ kind: 'known', value: 3 });
+    expect(shape.classes['project-account-section'].denominator).toEqual({ kind: 'known', value: 6 });
+  });
+});
+
+describe('PWB-REQ-002 (class-granular) — the class count is the sum over its sources, each source and outcome its own', () => {
+  // Three sources of the one class, each a different way the extractor leaves
+  // it: read (two headings), partial (three: a catalog entry fails the class)
+  // and unknown whole (four: none of the nine found, so the whole file is
+  // enclosed). The coverage is built directly: the manifest names one catalog
+  // source, so the sum across sources has no other way in.
+  const readText = v1({ extra: ['', '### Gateways', '', '### Plugins'] });
+  const partialText = v1({ butlers: ['- Atlas without a label'], extra: ['', '### Relays', '', '### Queues', '', '### Hooks'] });
+  const wholeText = ['# Heart and Soul', '', '## One', '', '### Alpha', '', '### Beta', '', '## Two', '', '### Gamma', '', '### Delta', ''].join('\n');
+  const SOURCES = [
+    { path: 'one/heart-and-soul/v1.md', text: readText, kind: 'extracted', count: 2 },
+    { path: 'two/heart-and-soul/v1.md', text: partialText, kind: 'partial', count: 3 },
+    { path: 'three/heart-and-soul/v1.md', text: wholeText, kind: 'unknown', count: 4 },
+  ] as const;
+
+  const inputs: CoverageSourceInput[] = SOURCES.map(({ path, text }) => {
+    const value = extractSource({ path, extractionClasses: V1_CLASSES }, text);
+    return {
+      source: { path, rule: 'pillar-named-file', pillar: 'heart-and-soul', extractionClasses: V1_CLASSES, anchor: { kind: 'blob', mode: '100644', objectId: '0'.repeat(40) } },
+      read: { path, outcome: 'read', bytes: text.length },
+      record: { path, outcome: 'classified', contentDigest: `sha256:${'a'.repeat(64)}`, extractionClasses: V1_CLASSES, policyId: 'fixture', policyVersion: '1', detectorsRun: 0, basis: 'body' },
+      value,
+    } as unknown as CoverageSourceInput;
+  });
+  const coverage = buildProjectShapeCoverage({ sources: inputs });
+
+  it('reads the fixtures the way the table says', () => {
+    expect(inputs.map((i) => i.value?.kind)).toEqual(SOURCES.map((s) => s.kind));
+    expect(SOURCES.map((s) => oracleUnenumerated(s.text).length)).toEqual([2, 3, 4]);
+  });
+
+  it('counts each source denominator and each class outcome by its own headings', () => {
+    expect(coverage.sources.map((s) => s.itemDenominator)).toEqual([
+      expect.objectContaining({ kind: 'unknown', unenumeratedHeadings: 2 }),
+      expect.objectContaining({ kind: 'unknown', unenumeratedHeadings: 3 }),
+      expect.objectContaining({ kind: 'unknown', unenumeratedHeadings: 4 }),
+    ]);
+    expect(coverage.sources.map((s) => s.classOutcomes.find((o) => o.class === 'catalog-entry')?.denominator)).toEqual([
+      expect.objectContaining({ kind: 'unknown', reason: 'unenumerated-heading', unenumeratedHeadings: 2 }),
+      expect.objectContaining({ kind: 'unknown', unenumeratedHeadings: 3 }),
+      expect.objectContaining({ kind: 'unknown', unenumeratedHeadings: 4 }),
+    ]);
+    expect(coverage.sources.map((s) => s.unenumeratedHeadings.length)).toEqual([2, 3, 4]);
+  });
+
+  it('counts the sibling classes of a source that read as known, and none unenumerated', () => {
+    expect(coverage.sources[0]?.classOutcomes.find((o) => o.class === 'success-criterion')?.denominator).toEqual({ kind: 'known', value: 1 });
+    expect(coverage.sources[1]?.classOutcomes.find((o) => o.class === 'success-criterion')?.denominator).toEqual({ kind: 'known', value: 1 });
+  });
+
+  it('sums the class aggregate across the sources and surfaces every heading', () => {
+    expect(coverage.classes['catalog-entry'].denominator).toMatchObject({ kind: 'unknown', unenumerated: { reason: 'unenumerated-heading', headings: 9 } });
+    expect(coverage.unenumeratedHeadings.map((h) => h.text)).toEqual(['Gateways', 'Plugins', 'Relays', 'Queues', 'Hooks', 'Alpha', 'Beta', 'Gamma', 'Delta']);
+    expect(coverage.classes['success-criterion'].denominator).not.toHaveProperty('unenumerated');
   });
 });
