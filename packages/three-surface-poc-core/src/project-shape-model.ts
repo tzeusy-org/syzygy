@@ -55,6 +55,7 @@ import {
   type ReconciledFact,
   type RootSummaryDisclosure,
   type SourceCoverage,
+  type SurfacedUnenumeratedHeading,
 } from './project-shape-coverage.js';
 import { PROJECT_ACCOUNT_KEYS, extractBaselineSpec, extractSource, type ProjectAccountKey, type SourceExtraction } from './project-shape-extraction.js';
 import type { ExtractionClass, ManifestSource, PillarDiscovery, PillarKey, SourceRule } from './project-shape-manifest.js';
@@ -269,6 +270,14 @@ export interface ProjectShapeItem extends ItemCoverage {
   readonly claim: ProjectShapeClaim;
 }
 
+// An unenumerated heading surfaced as a fact (PWB-REQ-002 as amended): its
+// text, level and exact anchor, the source it routes to, and an Unknown claim
+// whose route says the grammar has no row for it. It mints no item.
+export interface ProjectShapeUnenumeratedHeading extends SurfacedUnenumeratedHeading {
+  readonly sourceIdentity: string;
+  readonly claim: ProjectShapeClaim;
+}
+
 export interface ProjectShapeClassAggregate extends ClassCoverage {
   // Aggregate disclosure (PWB-REQ-007): label, tier, freshness and separate
   // primary/secondary reason counts over the members — never a headline.
@@ -296,6 +305,9 @@ export interface ProjectShapeCounts {
   readonly sources: number;
   readonly sourcesWithKnownItemDenominator: number;
   readonly sourcesWithUnknownDenominator: number;
+  // The root index was not read and the population holds a source of a rule
+  // that does not need it: the source-path population total says so.
+  readonly populationWithoutReadRootIndex: boolean;
   readonly items: number;
   readonly modeled: number;
   readonly unknown: number;
@@ -339,6 +351,10 @@ export type ProjectShape =
       readonly authority: AuthorityDisclosure;
       readonly identity: ProjectShapeIdentity;
       readonly sources: readonly ProjectShapeSource[];
+      // Every heading no grammar row declares, surfaced beside the sources.
+      readonly unenumeratedHeadings: readonly ProjectShapeUnenumeratedHeading[];
+      // The root index's body was read (admitted and within limits).
+      readonly rootIndexRead: boolean;
       readonly items: readonly ProjectShapeItem[];
       readonly classes: Readonly<Record<ExtractionClass, ProjectShapeClassAggregate>>;
       readonly facts: readonly ProjectShapeFact[];
@@ -457,7 +473,15 @@ function classAggregate(coverage: ClassCoverage, members: readonly ProjectShapeI
   // excluded or uncaptured source declares nothing, so its reason would
   // otherwise vanish from the aggregate.
   const discoveryClaims = Array.from({ length: coverage.discoveryUnknown }, () => aggregate);
-  return { ...coverage, claim: aggregate, reasonCounts: countReasons([...members, ...classSources].map((entry) => entry.claim).concat(discoveryClaims)) };
+  // A source in which this class read adds nothing; one in which it is
+  // Unknown adds that class's own reason, not the source's.
+  const sourceClaims = classSources.flatMap((source) => {
+    const denominator = source.classOutcomes.find((outcome) => outcome.class === coverage.class)?.denominator;
+    return denominator === undefined || denominator.kind === 'known'
+      ? []
+      : [unknownClaim({ claimId: source.claim.claimId, evaluationId, support: source.claim.support }, closedReason(denominator.unknownReason))];
+  });
+  return { ...coverage, claim: aggregate, reasonCounts: countReasons([...members.map((entry) => entry.claim), ...sourceClaims, ...discoveryClaims]) };
 }
 
 function projectAccountOf(items: readonly ProjectShapeItem[], sources: readonly ProjectShapeSource[], classes: Readonly<Record<ExtractionClass, ProjectShapeClassAggregate>>, evaluationId: string): readonly ProjectAccountStatement[] {
@@ -476,11 +500,13 @@ function projectAccountOf(items: readonly ProjectShapeItem[], sources: readonly 
     // No admitted source declared this section: the statement is Unknown
     // with the first Unknown source's reason, or `missing-declaration`
     // when every account source was read and simply lacks it.
-    const unknownSource = accountSources.find((source) => source.itemDenominator.kind === 'unknown');
+    const classDenominator = (source: ProjectShapeSource) => source.classOutcomes.find((outcome) => outcome.class === 'project-account-section')?.denominator;
+    const unknownSource = accountSources.find((source) => classDenominator(source)?.kind === 'unknown');
+    const unknownDenominator = unknownSource === undefined ? undefined : classDenominator(unknownSource);
     const accountDenominator = classes['project-account-section'].denominator;
     const reason: UnknownReason =
-      unknownSource !== undefined && unknownSource.itemDenominator.kind === 'unknown'
-        ? closedReason(unknownSource.itemDenominator.unknown.unknownReason)
+      unknownDenominator !== undefined && unknownDenominator.kind === 'unknown'
+        ? closedReason(unknownDenominator.unknownReason)
         : accountDenominator.kind === 'unknown'
           ? closedReason(accountDenominator.reasons[0] ?? PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason)
           : 'missing-declaration';
@@ -572,7 +598,7 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
           const extracted = extractBaselineSpec(source.path);
           const value: SourceExtraction = extracted.kind === 'items'
             ? { kind: 'extracted', path: source.path, classes: source.extractionClasses, items: extracted.items, denominators: { 'baseline-spec': extracted.items.length } }
-            : { kind: 'unknown', path: source.path, classes: source.extractionClasses, failure: extracted.failure };
+            : { kind: 'unknown', path: source.path, classes: source.extractionClasses, failure: extracted.failure, failures: [extracted.failure] };
           return { kind: 'derived', value };
         },
         ledger,
@@ -630,6 +656,17 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
           classAggregate(classCoverage, items.filter((item) => item.class === cls), sources, evaluationId),
         ]),
       ) as Record<ExtractionClass, ProjectShapeClassAggregate>;
+      const unenumeratedHeadings: ProjectShapeUnenumeratedHeading[] = coverage.unenumeratedHeadings.map((heading) => {
+        const sourceIdentity = identities.get(heading.path) as string;
+        return {
+          ...heading,
+          sourceIdentity,
+          claim: unknownClaim(
+            { claimId: `claim:unenumerated-heading:${heading.path}:${heading.line}`, evaluationId, support: supportOf([heading.anchor], identities) },
+            'missing-declaration',
+          ),
+        };
+      });
       const facts: ProjectShapeFact[] = coverage.facts.map((fact) => ({ fact, claim: factClaim(fact, identities, evaluationId) }));
       const contradictions = facts.filter((entry) => entry.fact.state === 'contradicted');
       const projectAccount = projectAccountOf(items, sources, classes, evaluationId);
@@ -673,6 +710,8 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
           deterministicInputs: observation.deterministicInputs,
         },
         sources,
+        unenumeratedHeadings,
+        rootIndexRead: coverage.rootIndexRead,
         items,
         classes,
         facts,

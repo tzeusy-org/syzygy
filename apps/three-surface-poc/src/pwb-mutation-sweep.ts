@@ -142,7 +142,7 @@ const COVERAGE_PARTITION: SweepGroup = {
       'class-denominator-known-over-unknown-source',
       COVERAGE_SOURCE,
       'a class denominator is numbered although a source of that class has an Unknown item denominator',
-      "      denominator: reasons.length === 0 ? { kind: 'known', value: declared } : { kind: 'unknown', reasons },",
+      "      denominator: reasons.length === 0 ? { kind: 'known', value: declared } : { kind: 'unknown', reasons, ...(unenumeratedCount === 0 ? {} : { unenumerated: { reason: 'unenumerated-heading' as const, headings: unenumeratedCount } }) },",
       "      denominator: { kind: 'known', value: declared },",
       ['hand-typed per-class counts'],
     ),

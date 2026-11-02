@@ -1,0 +1,654 @@
+{
+  "subject": {
+    "commit": "ce439b107975c22fc7798b74a11e12ec0921cb75",
+    "branch": "agent/syzygy-dov.15.2",
+    "fileSha256": {
+      "packages/three-surface-poc-core/src/project-shape-coverage.ts": "573edd024b8990f6f87ae0de18e7f66a6fecafd8b87eccff5e2b2b045a11db20",
+      "packages/three-surface-poc-core/src/project-shape-extraction.ts": "ee62e00b6a9b12ab3dfae7eb50850a82a7cb6e943662f2d566deefe2e203217b",
+      "packages/three-surface-poc-core/src/project-shape-manifest.ts": "ac937705c7fd54e14f9afa13f33bfc2f3c1cbff42bc3f304ceb026dae80a82b1",
+      "packages/three-surface-poc-core/src/project-shape-model.ts": "a2f95ca0df347d283af6db2e7ee27f663edfc44ded092f5f0220b221c6c7279c"
+    },
+    "testFileSha256": {
+      "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts": "b401ea6aa634b7b75b632dde30e9b012865884f4486b03a36e3bc7e420e15464"
+    }
+  },
+  "runnerPath": "scripts/rule6_mutation_runner.py",
+  "runnerSha256": "2bc35be550f0beb6ad355e0fc89719c1ae28320d186f41929af96dd59a376b22",
+  "runner": "single-occurrence textual replacement of `old` by `new` in `file`, then `npx vitest run --project <project> <testFiles>` in the tree; killed = at least one failed test; file restored from git after each run",
+  "project": "@syzygy/three-surface-poc-core",
+  "ranAt": "2026-11-02T03:36:26+00:00",
+  "mutants": [
+    {
+      "id": "failed-class-emits-partial-population",
+      "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "old": "if (key === undefined || key.trim().length === 0) return failed('ambiguous-leading-label', cls, item.line);\n    out.push({ class: cls, key: declarationKey(key)",
+      "new": "if (key === undefined || key.trim().length === 0) continue;\n    out.push({ class: cls, key: declarationKey(key)",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 5,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 two independent extractors agree per source and class a source assigned three classes in which one fails and two read",
+          "firstErrorLine": "AssertionError: expected 'extracted' to be 'partial' // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer the failed class is Unknown in its source and its siblings keep their own known D",
+          "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer the source D is Unknown and the source is not withheld whole",
+          "firstErrorLine": "AssertionError: expected 'known' to be 'unknown' // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer the sibling classes keep their items modeled; the failed class yields none",
+          "firstErrorLine": "AssertionError: expected [ { class: 'principle', \u2026(5) } ] to deeply equal []"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer class and category D are Unknown only for the failed class",
+          "firstErrorLine": "AssertionError: expected { kind: 'known', value: 1 } to deeply equal { kind: 'unknown', \u2026(1) }"
+        }
+      ]
+    },
+    {
+      "id": "failed-class-withholds-sibling-class",
+      "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "old": "      failures.push(result.failure);\n      for (const heading of result.unenumeratedHeadings ?? []) unenumerated.push(heading);\n      continue;",
+      "new": "      return { kind: 'unknown', path, classes, failure: result.failure, failures: [result.failure] };",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 10,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 two independent extractors agree per source and class a source assigned three classes in which one fails and two read",
+          "firstErrorLine": "AssertionError: expected 'unknown' to be 'partial' // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 two independent extractors agree per source and class v1 whose catalog fails on an unlabelled entry",
+          "firstErrorLine": "AssertionError: expected 'unknown' to be 'partial' // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 two independent extractors agree per source and class v1 whose catalog has a missing heading",
+          "firstErrorLine": "AssertionError: expected 'unknown' to be 'partial' // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 two independent extractors agree per source and class v1 whose success section is gone: two classes fail, the catalog reads",
+          "firstErrorLine": "AssertionError: expected 'unknown' to be 'partial' // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 two independent extractors agree per source and class vision in which every class fails",
+          "firstErrorLine": "Error: principle neither failed nor read"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a catalog entry that fails the class does not hide an unenumerated heading",
+          "firstErrorLine": "AssertionError: expected 'unknown' to be 'partial' // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer the failed class is Unknown in its source and its siblings keep their own known D",
+          "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer the source D is Unknown and the source is not withheld whole",
+          "firstErrorLine": "AssertionError: expected 'excluded' to be 'classified' // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer the sibling classes keep their items modeled; the failed class yields none",
+          "firstErrorLine": "AssertionError: expected [ 'architecture', 'v1-scope', \u2026(1) ] to deeply equal [ 'architecture', 'promises', \u2026(4) ]"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer class and category D are Unknown only for the failed class",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(1) } to deeply equal { kind: 'known', value: 3 }"
+        }
+      ]
+    },
+    {
+      "id": "unenumerated-heading-skipped",
+      "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "old": "    found.push({ class: cls, level, text: h.text, line: h.index + 1 });",
+      "new": "    void h;",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 7,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a tenth level-3 heading in the section enclosing the catalog",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ { text: 'Gateways', line: 37 } ]"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing two such headings, and a fenced one that is not a heading",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ Array(2) ]"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a catalog split over two sections, the second holding a tenth heading",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ { text: 'Extras', line: 39 } ]"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a catalog entry that fails the class does not hide an unenumerated heading",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ { text: 'Gateways', line: 36 } ]"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading in the composed answer is surfaced with its text, level, class, exact anchor and a route to its source",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ { \u2026(5) } ]"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading in the composed answer leaves the catalog-entry class D and the source D Unknown with the reason, not partial",
+          "firstErrorLine": "AssertionError: expected { kind: 'known', value: 3 } to deeply equal { kind: 'unknown', \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading in the composed answer makes every derived catalog count Unknown",
+          "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "unenumerated-heading-mints-item",
+      "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "old": "  const result = items(cls, out);\n  if (result.kind !== 'items') return { ...result, ...surfaced };",
+      "new": "  for (const u of unenumeratedHeadings) out.push({ class: cls, key: u.text, path, line: u.line });\n  const result = items(cls, out);\n  if (result.kind !== 'items') return { ...result, ...surfaced };",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 4,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a tenth level-3 heading in the section enclosing the catalog",
+          "firstErrorLine": "AssertionError: expected { keys: [ 'Bus', 'Atlas', \u2026(2) ] } to deeply equal { keys: [ 'Bus', 'Atlas', 'Bishop' ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing two such headings, and a fenced one that is not a heading",
+          "firstErrorLine": "AssertionError: expected { keys: [ 'Bus', 'Atlas', \u2026(3) ] } to deeply equal { keys: [ 'Bus', 'Atlas', 'Bishop' ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a catalog split over two sections, the second holding a tenth heading",
+          "firstErrorLine": "AssertionError: expected { keys: [ 'Bus', 'Atlas', \u2026(2) ] } to deeply equal { keys: [ 'Bus', 'Atlas', 'Bishop' ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading in the composed answer mints no item and keeps the nine headings' items modeled",
+          "firstErrorLine": "AssertionError: expected [ [ 'Bus', 'modeled' ], \u2026(3) ] to deeply equal [ [ 'Bus', 'modeled' ], \u2026(2) ]"
+        }
+      ]
+    },
+    {
+      "id": "unenumerated-heading-miscounted-deeper-levels",
+      "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "old": "    if (h.level !== level) continue;\n    if (!areas.some",
+      "new": "    if (h.level < level) continue;\n    if (!areas.some",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a level-4 heading below a catalog heading",
+          "firstErrorLine": "AssertionError: expected [ { text: 'Deep', line: 37 } ] to deeply equal []"
+        }
+      ]
+    },
+    {
+      "id": "unenumerated-heading-scan-ignores-enclosing-section",
+      "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "old": "const areas: readonly Range[] = holders.size === 0 ? [{ start: 0, end: doc.lines.length }] : [...holders.values()];",
+      "new": "const areas: readonly Range[] = [{ start: 0, end: doc.lines.length }];",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a level-3 heading in a section that holds none of the nine",
+          "firstErrorLine": "AssertionError: expected [ { text: 'Elsewhere', line: 47 } ] to deeply equal []"
+        }
+      ]
+    },
+    {
+      "id": "unenumerated-heading-lost-when-class-fails",
+      "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "old": "      failures.push(result.failure);\n      for (const heading of result.unenumeratedHeadings ?? []) unenumerated.push(heading);\n      continue;",
+      "new": "      failures.push(result.failure);\n      continue;",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a catalog entry that fails the class does not hide an unenumerated heading",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ { text: 'Gateways', line: 36 } ]"
+        }
+      ]
+    },
+    {
+      "id": "admitted-item-appears-twice",
+      "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "old": "    for (const item of result.items) all.push(item);",
+      "new": "    for (const item of result.items) { all.push(item); all.push(item); }",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 14,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 two independent extractors agree per source and class a source assigned three classes in which one fails and two read",
+          "firstErrorLine": "AssertionError: project-account-section: expected { Object (keys) } to deeply equal { keys: [ 'purpose', \u2026(2) ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 two independent extractors agree per source and class a source whose three classes all read",
+          "firstErrorLine": "AssertionError: project-account-section: expected { Object (keys) } to deeply equal { keys: [ 'purpose', \u2026(2) ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 two independent extractors agree per source and class v1 whose catalog fails on an unlabelled entry",
+          "firstErrorLine": "AssertionError: project-account-section: expected { keys: [ 'v1-scope', \u2026(3) ] } to deeply equal { keys: [ 'v1-scope', 'v1-success' ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 two independent extractors agree per source and class v1 whose catalog has a missing heading",
+          "firstErrorLine": "AssertionError: project-account-section: expected { keys: [ 'v1-scope', \u2026(3) ] } to deeply equal { keys: [ 'v1-scope', 'v1-success' ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 two independent extractors agree per source and class v1 whose success section is gone: two classes fail, the catalog reads",
+          "firstErrorLine": "AssertionError: catalog-entry: expected { keys: [ 'Bus', 'Bus', \u2026(4) ] } to deeply equal { keys: [ 'Bus', 'Atlas', 'Bishop' ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a tenth level-3 heading in the section enclosing the catalog",
+          "firstErrorLine": "AssertionError: expected { keys: [ 'Bus', 'Bus', \u2026(4) ] } to deeply equal { keys: [ 'Bus', 'Atlas', 'Bishop' ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing two such headings, and a fenced one that is not a heading",
+          "firstErrorLine": "AssertionError: expected { keys: [ 'Bus', 'Bus', \u2026(4) ] } to deeply equal { keys: [ 'Bus', 'Atlas', 'Bishop' ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a level-3 heading in a section that holds none of the nine",
+          "firstErrorLine": "AssertionError: expected { keys: [ 'Bus', 'Bus', \u2026(4) ] } to deeply equal { keys: [ 'Bus', 'Atlas', 'Bishop' ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a level-4 heading below a catalog heading",
+          "firstErrorLine": "AssertionError: expected { keys: [ 'Bus', 'Bus', \u2026(4) ] } to deeply equal { keys: [ 'Bus', 'Atlas', 'Bishop' ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing a catalog split over two sections, the second holding a tenth heading",
+          "firstErrorLine": "AssertionError: expected { keys: [ 'Bus', 'Bus', \u2026(4) ] } to deeply equal { keys: [ 'Bus', 'Atlas', 'Bishop' ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading is surfaced, counted and mints nothing the nine headings only",
+          "firstErrorLine": "AssertionError: expected { keys: [ 'Bus', 'Bus', \u2026(4) ] } to deeply equal { keys: [ 'Bus', 'Atlas', 'Bishop' ] }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer the sibling classes keep their items modeled; the failed class yields none",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ 'architecture', 'promises', \u2026(4) ]"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer class and category D are Unknown only for the failed class",
+          "firstErrorLine": "AssertionError: expected 'Unknown' to be 'Observed' // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading in the composed answer mints no item and keeps the nine headings' items modeled",
+          "firstErrorLine": "AssertionError: expected [ [ 'Bus', 'contradicted' ], \u2026(2) ] to deeply equal [ [ 'Bus', 'modeled' ], \u2026(2) ]"
+        }
+      ]
+    },
+    {
+      "id": "failed-class-denominator-presented-known",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "const unknownSources = sources.filter((s) => outcomeOf(s)?.kind === 'unknown');",
+      "new": "const unknownSources = sources.filter((s) => outcomeOf(s)?.kind === 'unknown' && !s.partiallyExtracted);",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer class and category D are Unknown only for the failed class",
+          "firstErrorLine": "AssertionError: expected { kind: 'known', value: +0 } to deeply equal { kind: 'unknown', \u2026(1) }"
+        }
+      ]
+    },
+    {
+      "id": "unenumerated-heading-class-denominator-presented-known",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "      unenumerated === 0\n        ? { kind: 'known', value: count }",
+      "new": "      true\n        ? { kind: 'known', value: count }",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading in the composed answer leaves the catalog-entry class D and the source D Unknown with the reason, not partial",
+          "firstErrorLine": "AssertionError: expected { kind: 'known', value: 3 } to deeply equal { kind: 'unknown', \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading in the composed answer makes every derived catalog count Unknown",
+          "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "partial-source-denominator-presented-known",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "itemDenominator: { kind: 'unknown', unknown, grammarFailure: value.failures[0] as ExtractionFailureRecord, ...(headings.length === 0 ? {} : { unenumeratedHeadings: headings.length }) },",
+      "new": "itemDenominator: { kind: 'known', value: value.items.length },",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer the source D is Unknown and the source is not withheld whole",
+          "firstErrorLine": "AssertionError: expected 'known' to be 'unknown' // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "unenumerated-source-denominator-presented-known",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "      headings.length === 0\n        ? { kind: 'known', value: value.items.length }",
+      "new": "      true\n        ? { kind: 'known', value: value.items.length }",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading in the composed answer leaves the catalog-entry class D and the source D Unknown with the reason, not partial",
+          "firstErrorLine": "AssertionError: expected { kind: 'known', value: 6 } to match object { kind: 'unknown', \u2026(2) }"
+        }
+      ]
+    },
+    {
+      "id": "known-source-disappears",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "const sources = input.sources.map((entry) => sourceCoverage(entry, policy));",
+      "new": "const sources = input.sources.filter((entry) => entry.value?.kind !== 'partial').map((entry) => sourceCoverage(entry, policy));",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 3,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer the failed class is Unknown in its source and its siblings keep their own known D",
+          "firstErrorLine": "AssertionError: expected undefined to be true // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer the source D is Unknown and the source is not withheld whole",
+          "firstErrorLine": "AssertionError: expected undefined to be 'unknown' // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer class and category D are Unknown only for the failed class",
+          "firstErrorLine": "AssertionError: expected { kind: 'known', value: +0 } to deeply equal { kind: 'unknown', \u2026(1) }"
+        }
+      ]
+    },
+    {
+      "id": "partial-source-items-not-admitted",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "(entry.value.kind !== 'extracted' && entry.value.kind !== 'partial')) continue;\n    population.add",
+      "new": "entry.value.kind !== 'extracted') continue;\n    population.add",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer the sibling classes keep their items modeled; the failed class yields none",
+          "firstErrorLine": "AssertionError: expected [ 'architecture', 'v1-scope', \u2026(1) ] to deeply equal [ 'architecture', 'promises', \u2026(4) ]"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 a failing class keeps its siblings in the machine answer class and category D are Unknown only for the failed class",
+          "firstErrorLine": "AssertionError: expected { kind: 'known', value: 1 } to deeply equal { kind: 'known', value: 3 }"
+        }
+      ]
+    },
+    {
+      "id": "class-count-without-root-index-unqualified",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "withoutReadRootIndex: !rootIndexRead && sources.some(",
+      "new": "withoutReadRootIndex: false && sources.some(",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 counts without a read root index say so admits the tree-rule sources and qualifies the counts that include them",
+          "firstErrorLine": "AssertionError: expected { class: 'baseline-spec', \u2026(10) } to match object { withoutReadRootIndex: true, \u2026(2) }"
+        }
+      ]
+    },
+    {
+      "id": "population-total-without-root-index-unqualified",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "const populationWithoutReadRootIndex = !rootIndexRead && input.sources.some(",
+      "new": "const populationWithoutReadRootIndex = false && input.sources.some(",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 counts without a read root index say so admits the tree-rule sources and qualifies the counts that include them",
+          "firstErrorLine": "AssertionError: expected false to be true // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "root-index-always-read",
+      "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "old": "const rootIndexRead = rootEntry !== undefined &&",
+      "new": "const rootIndexRead = true || rootEntry !== undefined &&",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 counts without a read root index say so admits the tree-rule sources and qualifies the counts that include them",
+          "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "doubly-admitted-pillar-index-named-file",
+      "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+      "old": "      if (pillarIndexPaths.has(path)) continue;\n",
+      "new": "",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 every source names the rule that admitted it, by the stated order matches an independent derivation of the population, doubly admitted sources included",
+          "firstErrorLine": "AssertionError: expected { \u2026(16) } to deeply equal { \u2026(16) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 every source names the rule that admitted it, by the stated order hand-typed: the order decides each doubly admitted source",
+          "firstErrorLine": "AssertionError: expected 'pillar-named-file' to be 'pillar-index' // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "doubly-admitted-roster-toml-named-file",
+      "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+      "old": "(BASELINE_SPEC.test(path) || ROSTER_BUTLER.test(path))) continue;",
+      "new": "(BASELINE_SPEC.test(path))) continue;",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 every source names the rule that admitted it, by the stated order matches an independent derivation of the population, doubly admitted sources included",
+          "firstErrorLine": "AssertionError: expected { \u2026(16) } to deeply equal { \u2026(16) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 every source names the rule that admitted it, by the stated order hand-typed: the order decides each doubly admitted source",
+          "firstErrorLine": "AssertionError: expected 'pillar-named-file' to be 'roster-tree' // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "doubly-admitted-baseline-spec-named-file",
+      "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+      "old": "(BASELINE_SPEC.test(path) || ROSTER_BUTLER.test(path))) continue;",
+      "new": "(ROSTER_BUTLER.test(path))) continue;",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 every source names the rule that admitted it, by the stated order matches an independent derivation of the population, doubly admitted sources included",
+          "firstErrorLine": "AssertionError: expected { \u2026(16) } to deeply equal { \u2026(16) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 every source names the rule that admitted it, by the stated order hand-typed: the order decides each doubly admitted source",
+          "firstErrorLine": "AssertionError: expected 'pillar-named-file' to be 'baseline-spec-tree' // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "named-file-rule-other-than-admitting-rule",
+      "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+      "old": "        rule: 'pillar-named-file',\n        pillar: key,",
+      "new": "        rule: 'pillar-index',\n        pillar: key,",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 every source names the rule that admitted it, by the stated order matches an independent derivation of the population, doubly admitted sources included",
+          "firstErrorLine": "AssertionError: expected { \u2026(16) } to deeply equal { \u2026(16) }"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 every source names the rule that admitted it, by the stated order hand-typed: the order decides each doubly admitted source",
+          "firstErrorLine": "AssertionError: expected 'pillar-index' to be 'pillar-named-file' // Object.is equality"
+        }
+      ]
+    },
+    {
+      "id": "rule-needing-root-index-mints-when-unread",
+      "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+      "old": "    if (rootIndex.state === 'missing-at-revision') {\n      return { key, state: 'unknown', reason: 'root-index-missing-at-revision', ignoredLinks: [] };\n    }",
+      "new": "    if (rootIndex.state === 'missing-at-revision') {\n      rootsByKey.set(key, { root: `about/${key}`, ambiguous: false });\n    }",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 counts without a read root index say so mints no item from a rule that needs the root index",
+          "firstErrorLine": "AssertionError: expected [ 'baseline-spec-tree', \u2026(8) ] to deeply equal [ 'baseline-spec-tree', \u2026(3) ]"
+        }
+      ]
+    },
+    {
+      "id": "source-names-wrong-rule-in-machine-answer",
+      "file": "packages/three-surface-poc-core/src/project-shape-model.ts",
+      "old": "          rule: origin.rule,",
+      "new": "          rule: 'pillar-named-file',",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 counts without a read root index say so admits the tree-rule sources and qualifies the counts that include them",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ Array(3) ]"
+        },
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 counts without a read root index say so mints no item from a rule that needs the root index",
+          "firstErrorLine": "AssertionError: expected [ 'pillar-named-file', \u2026(3) ] to deeply equal [ 'baseline-spec-tree', \u2026(3) ]"
+        }
+      ]
+    },
+    {
+      "id": "unenumerated-heading-not-in-machine-answer",
+      "file": "packages/three-surface-poc-core/src/project-shape-model.ts",
+      "old": "        unenumeratedHeadings,\n        rootIndexRead: coverage.rootIndexRead,",
+      "new": "        unenumeratedHeadings: [],\n        rootIndexRead: coverage.rootIndexRead,",
+      "tests": [
+        "packages/three-surface-poc-core/src/project-shape-class-granular.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-core packages/three-surface-poc-core/src/project-shape-class-granular.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 29,
+      "failures": [
+        {
+          "test": "PWB-REQ-002 (class-granular) \u2014 an unenumerated heading in the composed answer is surfaced with its text, level, class, exact anchor and a route to its source",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ { \u2026(5) } ]"
+        }
+      ]
+    }
+  ]
+}

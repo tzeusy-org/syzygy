@@ -339,7 +339,7 @@ function oracle(fixture: Fixture): ReadonlyMap<ExtractionClass, readonly string[
 
 const extracted = (f: Fixture): SourceExtraction & { kind: 'extracted' } => {
   const r = extractSource({ path: f.path, extractionClasses: f.classes }, f.text);
-  if (r.kind !== 'extracted') throw new Error(`${f.path}: ${JSON.stringify(r.kind === 'unknown' ? r.failure : r.breach)}`);
+  if (r.kind !== 'extracted') throw new Error(`${f.path}: ${JSON.stringify(r.kind === 'unknown' ? r.failure : r.kind === 'partial' ? r.failures : r.breach)}`);
   return r;
 };
 
@@ -438,7 +438,7 @@ describe('PWB-REQ-002 — two independent extractors agree on every fixture', ()
 });
 
 // ---------------------------------------------------------------------
-// Malformed fixtures: the whole source is Unknown, never a partial set.
+// Malformed fixtures: the failing class is Unknown, never a partial set.
 
 interface Malformed {
   readonly name: string;
@@ -762,32 +762,50 @@ const MALFORMED: readonly Malformed[] = [
   },
 ];
 
-describe('PWB-REQ-002 — any grammar failure makes the whole source Unknown', () => {
+describe('PWB-REQ-002 — any grammar failure makes that class Unknown, never a partial set', () => {
   for (const m of MALFORMED) {
     it(`${m.name} → ${m.reason}`, () => {
       const r = extractSource({ path: m.path, extractionClasses: m.classes }, m.text);
-      expect(r.kind).toBe('unknown');
-      if (r.kind !== 'unknown') return;
+      // The same classes read alone: the source is `unknown` only when none reads.
+      const alone = m.classes.map((cls) => extractClass(cls, m.path, m.text));
+      const failedClasses = m.classes.filter((_, i) => (alone[i] as { kind: string }).kind === 'failed');
+      expect(r.kind).toBe(failedClasses.length === m.classes.length ? 'unknown' : 'partial');
+      if (r.kind !== 'unknown' && r.kind !== 'partial') return;
       expect(r.path).toBe(m.path);
       expect(r.classes).toEqual(m.classes);
-      expect(r.failure.reason).toBe(m.reason);
-      expect(r.failure.class).toBe(m.class);
-      if (m.line !== undefined) expect(r.failure.line).toBe(m.line);
-      if (m.detail !== undefined) expect(r.failure.detail).toBe(m.detail);
-      // No partial set: nothing item-shaped survives on the Unknown arm.
-      expect('items' in r).toBe(false);
-      expect('denominators' in r).toBe(false);
-      expect(EXTRACTION_FAILURES).toContain(r.failure.reason);
+      const failures = r.kind === 'unknown' ? r.failures : r.failures;
+      expect(failures.map((f) => f.class)).toEqual(failedClasses);
+      const first = failures[0] as (typeof failures)[number];
+      expect(first.reason).toBe(m.reason);
+      expect(first.class).toBe(m.class);
+      if (m.line !== undefined) expect(first.line).toBe(m.line);
+      if (m.detail !== undefined) expect(first.detail).toBe(m.detail);
+      expect(EXTRACTION_FAILURES).toContain(first.reason);
+      // No failed class yields an item, whatever its siblings did.
+      if (r.kind === 'unknown') {
+        expect(r.failure).toEqual(first);
+        expect('items' in r).toBe(false);
+        expect('denominators' in r).toBe(false);
+      } else {
+        for (const cls of failedClasses) {
+          expect(r.items.some((item) => item.class === cls)).toBe(false);
+          expect(cls in r.denominators).toBe(false);
+        }
+      }
     });
   }
 
-  it('a failing class withholds the items of the classes that succeeded', () => {
-    // principle fails; project-account-section and success-criterion would succeed alone.
+  it('a failing class keeps the items of the classes that succeeded', () => {
+    // principle fails; project-account-section and success-criterion read.
     const text = VISION.replace('2. **Cite or stay quiet**', '2. Cite or stay quiet');
-    expect(extractClass('project-account-section', 'heart-and-soul/vision.md', text).kind).toBe('items');
-    expect(extractClass('success-criterion', 'heart-and-soul/vision.md', text).kind).toBe('items');
+    const read = ['project-account-section', 'success-criterion'] as const;
+    for (const cls of read) expect(extractClass(cls, 'heart-and-soul/vision.md', text).kind).toBe('items');
     const r = extractSource({ path: 'heart-and-soul/vision.md', extractionClasses: ['project-account-section', 'principle', 'success-criterion'] }, text);
-    expect(r.kind).toBe('unknown');
+    expect(r.kind).toBe('partial');
+    if (r.kind !== 'partial') return;
+    expect(r.failures).toEqual([{ reason: 'ambiguous-leading-label', class: 'principle', line: 29 }]);
+    expect(r.denominators).toEqual({ 'project-account-section': 3, 'success-criterion': 3 });
+    expect(r.items.map((item) => item.class)).toEqual(['project-account-section', 'project-account-section', 'project-account-section', 'success-criterion', 'success-criterion', 'success-criterion']);
   });
 
   it('the fixture set exercises every closed failure reason', () => {
@@ -823,8 +841,9 @@ describe('PWB-REQ-002 — the grammar is literal', () => {
   const vision = (text: string): SourceExtraction => extractSource({ path: 'heart-and-soul/vision.md', extractionClasses: ['principle', 'success-criterion'] }, text);
 
   it('heading matches are exact: no case folding, no trailing punctuation rewriting', () => {
-    expect(vision(VISION.replace('## Non-Negotiable Rules', '## non-negotiable rules')).kind).toBe('unknown');
-    expect(vision(VISION.replace('## Non-Negotiable Rules', '## Non-Negotiable Rules:')).kind).toBe('unknown');
+    // The principle class fails; success-criterion still reads, so the source is partial.
+    expect(vision(VISION.replace('## Non-Negotiable Rules', '## non-negotiable rules')).kind).toBe('partial');
+    expect(vision(VISION.replace('## Non-Negotiable Rules', '## Non-Negotiable Rules:')).kind).toBe('partial');
     // Trailing closing hashes and surrounding whitespace are ATX syntax, not text.
     expect(vision(VISION.replace('## Non-Negotiable Rules', '##   Non-Negotiable Rules ##')).kind).toBe('extracted');
   });
