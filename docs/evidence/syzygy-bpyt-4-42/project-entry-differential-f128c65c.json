@@ -1,0 +1,347 @@
+{
+ "subject": "sync-child-process-guard.test.ts over test.projects entry shapes, base against head",
+ "base": "e5667689ed296274360b05f5e4d77a83e53f1410",
+ "baseGuardSha256": "b8af5862036d31411f594943ffaaabbf4b73e0be2fae32a0d2a91bf1e7d372bf",
+ "commit": "f128c65c9972763c68cb9b01ba7073596ac36ff0",
+ "headGuardSha256": "1c6f9dbf322820ce40d0aa7a595c5f19557a8e21c443c76f3839543db844b5ca",
+ "worktreeClean": true,
+ "tool": {
+  "path": "docs/evidence/syzygy-bpyt-4-42/tools/project_entry_differential.py",
+  "sha256": "7f5913b2879e58fcfea8b6ecab9e873832ed1fa5ed6409740537e3f5aab492bb"
+ },
+ "loadavgBefore": [
+  "21.13",
+  "25.02",
+  "27.17"
+ ],
+ "cases": [
+  {
+   "id": "today",
+   "case": "vitest.config.ts as it stands",
+   "edits": [],
+   "base": {
+    "exit": 0,
+    "passed": 8,
+    "failed": 0,
+    "failing": [],
+    "startupError": null,
+    "outcome": "passes"
+   },
+   "head": {
+    "exit": 0,
+    "passed": 9,
+    "failed": 0,
+    "failing": [],
+    "startupError": null,
+    "outcome": "passes"
+   },
+   "change": "unchanged"
+  },
+  {
+   "id": "quoted-key",
+   "case": "the POC app entry spells its key 'extends': true",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "        extends: true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "new": "        'extends': true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "base": {
+    "exit": 0,
+    "passed": 8,
+    "failed": 0,
+    "failing": [],
+    "startupError": null,
+    "outcome": "passes"
+   },
+   "head": {
+    "exit": 0,
+    "passed": 9,
+    "failed": 0,
+    "failing": [],
+    "startupError": null,
+    "outcome": "passes"
+   },
+   "change": "unchanged"
+  },
+  {
+   "id": "extends-path",
+   "case": "the POC app entry extends another config file, which declares a plugin",
+   "edits": [
+    {
+     "file": "vitest.r442-plugins.config.ts",
+     "old": null,
+     "new": "export default { plugins: [{ name: 'r442-n3', resolveId: () => null }] };\n",
+     "fileSha256": null
+    },
+    {
+     "file": "vitest.config.ts",
+     "old": "        extends: true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "new": "        extends: './vitest.r442-plugins.config.ts',\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "base": {
+    "exit": 0,
+    "passed": 8,
+    "failed": 0,
+    "failing": [],
+    "startupError": null,
+    "outcome": "passes"
+   },
+   "head": {
+    "exit": 1,
+    "passed": 8,
+    "failed": 1,
+    "failing": [
+     {
+      "test": "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth and no project entry detached from the root config",
+      "message": "AssertionError: expected 'test.projects.8.extends is not true' to be '' // Object.is equality"
+     }
+    ],
+    "startupError": null,
+    "outcome": "guard fails"
+   },
+   "change": "newly refused by the guard"
+  },
+  {
+   "id": "extends-false",
+   "case": "the POC app entry sets extends: false",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "        extends: true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "new": "        extends: false,\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "base": {
+    "exit": 0,
+    "passed": 8,
+    "failed": 0,
+    "failing": [],
+    "startupError": null,
+    "outcome": "passes"
+   },
+   "head": {
+    "exit": 1,
+    "passed": 8,
+    "failed": 1,
+    "failing": [
+     {
+      "test": "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth and no project entry detached from the root config",
+      "message": "AssertionError: expected 'test.projects.8.extends is not true' to be '' // Object.is equality"
+     }
+    ],
+    "startupError": null,
+    "outcome": "guard fails"
+   },
+   "change": "newly refused by the guard"
+  },
+  {
+   "id": "extends-string-true",
+   "case": "the POC app entry sets extends: 'true', a string",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "        extends: true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "new": "        extends: 'true',\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "base": {
+    "exit": 1,
+    "passed": null,
+    "failed": null,
+    "failing": [],
+    "startupError": "✘ [ERROR] Could not resolve \"/tmp/laneb-442/c/true\"",
+    "outcome": "vitest refuses"
+   },
+   "head": {
+    "exit": 1,
+    "passed": null,
+    "failed": null,
+    "failing": [],
+    "startupError": "✘ [ERROR] Could not resolve \"/tmp/laneb-442/c/true\"",
+    "outcome": "vitest refuses"
+   },
+   "change": "unchanged"
+  },
+  {
+   "id": "extends-missing",
+   "case": "the POC app entry has no extends",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "        extends: true,\n        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "new": "        test: {\n          name: '@syzygy/three-surface-poc-app',",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "base": {
+    "exit": 0,
+    "passed": 8,
+    "failed": 0,
+    "failing": [],
+    "startupError": null,
+    "outcome": "passes"
+   },
+   "head": {
+    "exit": 1,
+    "passed": 8,
+    "failed": 1,
+    "failing": [
+     {
+      "test": "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth and no project entry detached from the root config",
+      "message": "AssertionError: expected 'test.projects.8.extends is not true' to be '' // Object.is equality"
+     }
+    ],
+    "startupError": null,
+    "outcome": "guard fails"
+   },
+   "change": "newly refused by the guard"
+  },
+  {
+   "id": "string-entry",
+   "case": "a string entry, a path to a config file, before the first entry",
+   "edits": [
+    {
+     "file": "vitest.r442-string.config.ts",
+     "old": null,
+     "new": "export default { test: { name: 'r442-string', include: ['packages/r442-none/**/*.test.ts'] } };\n",
+     "fileSha256": null
+    },
+    {
+     "file": "vitest.config.ts",
+     "old": "    projects: [\n",
+     "new": "    projects: [\n      './vitest.r442-string.config.ts',\n",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "base": {
+    "exit": 0,
+    "passed": 8,
+    "failed": 0,
+    "failing": [],
+    "startupError": null,
+    "outcome": "passes"
+   },
+   "head": {
+    "exit": 1,
+    "passed": 8,
+    "failed": 1,
+    "failing": [
+     {
+      "test": "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth and no project entry detached from the root config",
+      "message": "AssertionError: expected 'test.projects.0 is not an object' to be '' // Object.is equality"
+     }
+    ],
+    "startupError": null,
+    "outcome": "guard fails"
+   },
+   "change": "newly refused by the guard"
+  },
+  {
+   "id": "function-entry",
+   "case": "a function entry before the first entry",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "    projects: [\n",
+     "new": "    projects: [\n      () => ({}),\n",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "base": {
+    "exit": 0,
+    "passed": 16,
+    "failed": 0,
+    "failing": [],
+    "startupError": null,
+    "outcome": "passes"
+   },
+   "head": {
+    "exit": 1,
+    "passed": 16,
+    "failed": 2,
+    "failing": [
+     {
+      "test": "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth and no project entry detached from the root config",
+      "message": "AssertionError: expected 'test.projects.0 is not an object' to be '' // Object.is equality"
+     },
+     {
+      "test": "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth and no project entry detached from the root config",
+      "message": "AssertionError: expected 'test.projects.0 is not an object' to be '' // Object.is equality"
+     }
+    ],
+    "startupError": null,
+    "outcome": "guard fails"
+   },
+   "change": "newly refused by the guard"
+  },
+  {
+   "id": "promise-entry",
+   "case": "a promise entry before the first entry",
+   "edits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "    projects: [\n",
+     "new": "    projects: [\n      Promise.resolve({}),\n",
+     "fileSha256": "c54019db1fcec4354bd72610c69396ae5276c51017692d151147eb832d4c6750"
+    }
+   ],
+   "base": {
+    "exit": 0,
+    "passed": 16,
+    "failed": 0,
+    "failing": [],
+    "startupError": null,
+    "outcome": "passes"
+   },
+   "head": {
+    "exit": 1,
+    "passed": 16,
+    "failed": 2,
+    "failing": [
+     {
+      "test": "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth and no project entry detached from the root config",
+      "message": "AssertionError: expected 'test.projects.0.extends is not true' to be '' // Object.is equality"
+     },
+     {
+      "test": "suite child processes and the vitest worker RPC loads the vitest config and finds no alias key at any depth and no project entry detached from the root config",
+      "message": "AssertionError: expected 'test.projects.0.extends is not true' to be '' // Object.is equality"
+     }
+    ],
+    "startupError": null,
+    "outcome": "guard fails"
+   },
+   "change": "newly refused by the guard"
+  }
+ ],
+ "loadavgAfter": [
+  "23.47",
+  "24.96",
+  "27.04"
+ ],
+ "worktreeCleanAfter": true,
+ "summary": {
+  "passes -> passes": [
+   "today",
+   "quoted-key"
+  ],
+  "passes -> guard fails": [
+   "extends-path",
+   "extends-false",
+   "extends-missing",
+   "string-entry",
+   "function-entry",
+   "promise-entry"
+  ],
+  "vitest refuses -> vitest refuses": [
+   "extends-string-true"
+  ]
+ },
+ "newlyAccepted": []
+}

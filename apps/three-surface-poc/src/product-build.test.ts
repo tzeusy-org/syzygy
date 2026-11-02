@@ -12,8 +12,8 @@ import { ROOT, readModule, resolve } from '../../../packages/polaris-generation-
 // syzygy-bpyt.4.2: `npm run build` emits the product, with no test and no test-support module but two kits a reader takes from
 // dist, and `npm run typecheck` is the one program that reads the tests. TypeScript emits every module of the project in the
 // program a tsconfig builds: the modules it names and every module one of those imports or names in a triple-slash reference,
-// whatever `exclude` says, so a build emits no test support only while each project excludes it and no module it builds reaches
-// it. A tool runs over a dist the build has just written whole:
+// whatever `exclude` says (a composite build also fails, TS6307), so a build emits no test support only while each project
+// excludes it and no module it builds reaches it. A tool runs over a dist the build has just written whole:
 // scripts/clean_build.mjs removes every dist `tsc -b` will build before it builds, where `tsc -b --force` kept an output whose
 // source was gone and `tsc -b` alone also kept one altered since it was written.
 
@@ -203,12 +203,28 @@ describe('the clean build', () => {
       editConfig(root, 'packages/a', (config) => { delete config.compilerOptions.composite; });
       inherit(root, 'packages/a', { composite: false });
     }, 'packages/a/tsconfig.json: a referenced project is not composite'],
+    ['reaches a project whose declarations sit in a sibling of dist through extends', ['packages/d'], (root) => inherit(root, 'packages/a', { declarationDir: 'dist-x' }),
+      'packages/a/tsconfig.json: its outputs and incremental state are not both under dist'],
   ])('refuses, removing nothing, when it %s', async (_case, projects, edit, reason) => {
+    // A row whose refusal fails leaves its outside path behind; it is not the next row's (syzygy-bpyt.4.42).
+    KEPT_OUTSIDE.length = 0;
     const root = scratchTree();
     edit(root);
     for (const path of KEPT) plant(root, path, 'kept\n');
     await expect(cleanBuild(root, ...projects)).rejects.toMatchObject({ stderr: expect.stringContaining(reason) });
-    for (const path of [...KEPT.map((kept) => join(root, kept)), ...KEPT_OUTSIDE.splice(0)]) expect(readFileSync(path, 'utf8'), path).toBe('kept\n');
+    for (const path of [...KEPT.map((kept) => join(root, kept)), ...KEPT_OUTSIDE]) expect(readFileSync(path, 'utf8'), path).toBe('kept\n');
+  }, 30_000);
+
+  // TypeScript reads a backslash in a path as a separator, so it resolves this project's outDir to packages/x/y/dist, outside its
+  // own dist, while the tsconfig's own outDir is 'dist' (R6).
+  it('refuses, removing nothing, when it names a project whose directory name holds a backslash', async () => {
+    const root = scratchTree();
+    plant(root, 'packages/x\\y/src/m.ts', "export const m = 'm';\n");
+    plant(root, 'packages/x\\y/tsconfig.json', readFileSync(join(root, 'packages/c/tsconfig.json'), 'utf8'));
+    plant(root, 'packages/x\\y/dist/m.js', 'kept\n');
+    await expect(cleanBuild(root, 'packages/x\\y')).rejects
+      .toMatchObject({ stderr: expect.stringContaining('packages/x\\y/tsconfig.json: its outputs and incremental state are not both under dist') });
+    expect(readFileSync(join(root, 'packages/x\\y/dist/m.js'), 'utf8')).toBe('kept\n');
   }, 30_000);
 
   // tsc -b requires composite only of a referenced project, so a named project nothing references builds without it.
