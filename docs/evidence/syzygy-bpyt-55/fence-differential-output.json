@@ -7,9 +7,9 @@
   "project-shape-manifest.js": "129ce988f54b30fc0c330f730ca410215448e2dcd35bec17d935de73b6cf4656"
  },
  "headDistModules": {
-  "markdown-code-context.js": "d49a23ab1817762cf75fba24ca99a018f3ae2aff8cef549104414540bb9a1473",
+  "markdown-code-context.js": "5bc6bfe63a0d9e740a3ef9cfca15eadbc9e77b1f0f5414ee055e81d354f4a6aa",
   "project-shape-extraction.js": "0e677542bbd9fb6a12e18ca34a65f239de9aab9490d0182087e613d24a4bd5e2",
-  "project-shape-manifest.js": "b30f73f04515b725cdaf20f7e7c0b56a6beea545d4f39b77813d2947544aafb0"
+  "project-shape-manifest.js": "7fce99c8db7093fcbce620e847b985b2aa4e00b69addd614ec9babfdf8f517c9"
  },
  "inputs": {
   "fixtures": {
@@ -22,8 +22,8 @@
   }
  },
  "population": {
-  "texts": 175710,
-  "wellFormed": 36730,
+  "texts": 175716,
+  "wellFormed": 36736,
   "malformed": 138980,
   "constructCases": {
    "fenceProbe": 33,
@@ -38,46 +38,46 @@
    "cycle"
   ],
   "trackedMarkdown": {
-   "listed": 1912,
-   "files": 1912,
+   "listed": 1915,
+   "files": 1915,
    "unreadable": 0
   },
   "manifestRows": 1724
  },
  "checks": {
   "M1_maskAndGateUnchanged": {
-   "texts": 175710,
+   "texts": 175716,
    "failures": 0
   },
   "R1_headRecognizerEqualsReference": {
-   "texts": 175710,
+   "texts": 175716,
    "failures": 0
   },
   "R2_referenceEqualsOldMask": {
-   "texts": 175710,
+   "texts": 175716,
    "failures": 0
   },
   "O1_linksOracle": {
-   "checked": 27821,
+   "checked": 27827,
    "excludedOldReaderOpensAFence": 0,
    "failures": 0
   },
   "O2_rootsOracle": {
-   "checked": 26461,
+   "checked": 26467,
    "excludedOldReaderOpensAFence": 1360,
    "failures": 0
   },
   "O3_rootIndexOracle": {
-   "checked": 27311,
+   "checked": 27317,
    "excludedOldReaderOpensAFence": 510,
    "failures": 0
   },
   "O5_tomlClassUnchanged": {
-   "checked": 27311,
+   "checked": 27317,
    "failures": 0
   },
   "O4_classOracle": {
-   "checked": 27311,
+   "checked": 27317,
    "excludedOldReaderOpensAFence": 510,
    "failures": 0
   },
@@ -197,7 +197,7 @@
    },
    "bareCrOrMixed": {
     "wellFormed": 786,
-    "changedTexts": 28
+    "changedTexts": 102
    },
    "oracleExcluded": {
     "links": 0,
@@ -327,8 +327,8 @@
    "wellFormed": 5694,
    "malformedExcludedByGate": 34306,
    "changedLfCrlf": {
-    "texts": 569,
-    "links": 420,
+    "texts": 993,
+    "links": 856,
     "roots": 0,
     "rootIndex": 80,
     "classes": 170
@@ -350,8 +350,8 @@
    "wellFormed": 5694,
    "malformedExcludedByGate": 34306,
    "changedLfCrlf": {
-    "texts": 569,
-    "links": 420,
+    "texts": 993,
+    "links": 856,
     "roots": 0,
     "rootIndex": 80,
     "classes": 170
@@ -373,15 +373,15 @@
    "wellFormed": 5694,
    "malformedExcludedByGate": 34306,
    "changedLfCrlf": {
-    "texts": 0,
-    "links": 0,
+    "texts": 57,
+    "links": 57,
     "roots": 0,
     "rootIndex": 0,
     "classes": 0
    },
    "bareCrOrMixed": {
     "wellFormed": 4872,
-    "changedTexts": 339
+    "changedTexts": 764
    },
    "oracleExcluded": {
     "links": 0,
@@ -396,15 +396,15 @@
    "wellFormed": 5694,
    "malformedExcludedByGate": 34306,
    "changedLfCrlf": {
-    "texts": 42,
-    "links": 41,
+    "texts": 243,
+    "links": 242,
     "roots": 0,
     "rootIndex": 0,
     "classes": 1
    },
    "bareCrOrMixed": {
     "wellFormed": 2855,
-    "changedTexts": 488
+    "changedTexts": 711
    },
    "oracleExcluded": {
     "links": 0,
@@ -415,8 +415,8 @@
    "matchedModuloIndentation": 1
   },
   "repo-markdown/as-is": {
-   "texts": 1912,
-   "wellFormed": 1878,
+   "texts": 1915,
+   "wellFormed": 1881,
    "malformedExcludedByGate": 34,
    "changedLfCrlf": {
     "texts": 0,
@@ -438,8 +438,8 @@
    "matchedModuloIndentation": 0
   },
   "repo-markdown/crlf": {
-   "texts": 1912,
-   "wellFormed": 1878,
+   "texts": 1915,
+   "wellFormed": 1881,
    "malformedExcludedByGate": 34,
    "changedLfCrlf": {
     "texts": 0,
@@ -469,9 +469,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 42,
@@ -505,7 +505,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -521,9 +521,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 34,
@@ -557,7 +557,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -573,9 +573,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 34,
@@ -609,7 +609,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -625,9 +625,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 34,
@@ -661,7 +661,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -781,9 +781,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 42,
@@ -817,7 +817,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -833,9 +833,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 34,
@@ -869,7 +869,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -937,9 +937,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 66,
+    "unchanged": 64,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 66,
@@ -973,7 +973,7 @@
      "rows": 24,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -989,9 +989,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 42,
@@ -1025,7 +1025,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1041,9 +1041,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 54,
+    "unchanged": 48,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 6
    },
    "extraction": {
     "unchanged": 46,
@@ -1077,7 +1077,7 @@
      "rows": 20,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 6
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1093,9 +1093,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 54,
+    "unchanged": 48,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 6
    },
    "extraction": {
     "unchanged": 46,
@@ -1129,7 +1129,7 @@
      "rows": 20,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 6
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1145,9 +1145,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 66,
+    "unchanged": 64,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 66,
@@ -1181,7 +1181,7 @@
      "rows": 24,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1197,9 +1197,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 42,
@@ -1233,7 +1233,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1249,9 +1249,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 50,
+    "unchanged": 48,
     "newlyHidden": 12,
-    "newlyShown": 4
+    "newlyShown": 6
    },
    "extraction": {
     "unchanged": 54,
@@ -1285,7 +1285,7 @@
      "rows": 24,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1301,9 +1301,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 50,
+    "unchanged": 48,
     "newlyHidden": 12,
-    "newlyShown": 4
+    "newlyShown": 6
    },
    "extraction": {
     "unchanged": 54,
@@ -1337,7 +1337,7 @@
      "rows": 24,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1353,9 +1353,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 50,
+    "unchanged": 48,
     "newlyHidden": 12,
-    "newlyShown": 4
+    "newlyShown": 6
    },
    "extraction": {
     "unchanged": 66,
@@ -1389,7 +1389,7 @@
      "rows": 24,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1405,9 +1405,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 38,
+    "unchanged": 36,
     "newlyHidden": 12,
-    "newlyShown": 4
+    "newlyShown": 6
    },
    "extraction": {
     "unchanged": 54,
@@ -1441,7 +1441,7 @@
      "rows": 20,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1457,9 +1457,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 50,
+    "unchanged": 48,
     "newlyHidden": 12,
-    "newlyShown": 4
+    "newlyShown": 6
    },
    "extraction": {
     "unchanged": 66,
@@ -1493,7 +1493,7 @@
      "rows": 24,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1509,9 +1509,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 66,
+    "unchanged": 64,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 66,
@@ -1545,7 +1545,7 @@
      "rows": 24,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1561,9 +1561,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 66,
+    "unchanged": 64,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 66,
@@ -1597,7 +1597,7 @@
      "rows": 24,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1613,9 +1613,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 66,
+    "unchanged": 64,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 66,
@@ -1649,7 +1649,7 @@
      "rows": 24,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1665,9 +1665,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 42,
@@ -1701,7 +1701,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1717,9 +1717,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 42,
@@ -1753,7 +1753,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1821,9 +1821,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 42,
@@ -1857,7 +1857,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -1925,9 +1925,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 30,
+    "unchanged": 28,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 30,
@@ -1961,7 +1961,7 @@
      "rows": 12,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -2133,9 +2133,9 @@
    "malformedRows": 12,
    "gateChanged": 0,
    "links": {
-    "unchanged": 72,
+    "unchanged": 68,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 4
    },
    "extraction": {
     "unchanged": 72,
@@ -2169,7 +2169,7 @@
      "rows": 28,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 4
      },
      "extraction": {
       "newlyHidden": 0,
@@ -2445,9 +2445,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 46,
+    "unchanged": 54,
     "newlyHidden": 0,
-    "newlyShown": 8
+    "newlyShown": 0
    },
    "extraction": {
     "unchanged": 54,
@@ -2481,7 +2481,7 @@
      "rows": 20,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 8
+      "newlyShown": 0
      },
      "extraction": {
       "newlyHidden": 0,
@@ -2497,9 +2497,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 54,
+    "unchanged": 48,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 6
    },
    "extraction": {
     "unchanged": 54,
@@ -2533,7 +2533,7 @@
      "rows": 20,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 6
      },
      "extraction": {
       "newlyHidden": 0,
@@ -2809,9 +2809,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 30,
@@ -2845,7 +2845,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -2861,9 +2861,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 30,
@@ -2897,7 +2897,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -2913,9 +2913,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 38,
@@ -2949,7 +2949,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -2965,9 +2965,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 50,
+    "unchanged": 48,
     "newlyHidden": 12,
-    "newlyShown": 4
+    "newlyShown": 6
    },
    "extraction": {
     "unchanged": 66,
@@ -3001,7 +3001,7 @@
      "rows": 24,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -3017,9 +3017,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 42,
@@ -3053,7 +3053,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -3069,9 +3069,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 42,
+    "unchanged": 40,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 42,
@@ -3105,7 +3105,7 @@
      "rows": 16,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -3121,9 +3121,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 66,
+    "unchanged": 64,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 66,
@@ -3157,7 +3157,7 @@
      "rows": 24,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -3173,9 +3173,9 @@
    "malformedRows": 6,
    "gateChanged": 0,
    "links": {
-    "unchanged": 66,
+    "unchanged": 64,
     "newlyHidden": 0,
-    "newlyShown": 0
+    "newlyShown": 2
    },
    "extraction": {
     "unchanged": 66,
@@ -3209,7 +3209,7 @@
      "rows": 24,
      "links": {
       "newlyHidden": 0,
-      "newlyShown": 0
+      "newlyShown": 2
      },
      "extraction": {
       "newlyHidden": 0,
@@ -13691,19 +13691,36 @@
   ],
   "fuzz/cr/bare-cr-links": [
    {
-    "text": "`\r```\u2029x\r[d](d`e.md)",
-    "base": "[\"d`e.md\"]",
+    "text": "[e](e`x`.md)\r",
+    "base": "[\"e.md\"]",
     "head": "[]"
    },
    {
-    "text": "\u2028```\r\u2028```\r- [b](b.md)",
-    "base": "[]",
-    "head": "[\"b.md\"]"
+    "text": "[e](e`x`.md)\r",
+    "base": "[\"e.md\"]",
+    "head": "[]"
    },
    {
-    "text": "```\u2029x\r```\u2029x\r- [b](b.md)",
-    "base": "[]",
-    "head": "[\"b.md\"]"
+    "text": "[e](e`x`.md)\r",
+    "base": "[\"e.md\"]",
+    "head": "[]"
+   }
+  ],
+  "fuzz/cr/links": [
+   {
+    "text": "[e](e`x`.md)",
+    "base": "[\"e.md\"]",
+    "head": "[]"
+   },
+   {
+    "text": "[e](e`x`.md)",
+    "base": "[\"e.md\"]",
+    "head": "[]"
+   },
+   {
+    "text": "[e](e`x`.md)",
+    "base": "[\"e.md\"]",
+    "head": "[]"
    }
   ],
   "fuzz/crlf/classes": [
@@ -13725,18 +13742,18 @@
   ],
   "fuzz/crlf/links": [
    {
-    "text": "`\r\n[d](d`e.md)",
-    "base": "[\"d`e.md\"]",
+    "text": "[e](e`x`.md)",
+    "base": "[\"e.md\"]",
     "head": "[]"
    },
    {
-    "text": "[d](d`e.md)\r\n`",
-    "base": "[\"d`e.md\"]",
+    "text": "[e](e`x`.md)",
+    "base": "[\"e.md\"]",
     "head": "[]"
    },
    {
-    "text": "[d](d`e.md)\r\n`",
-    "base": "[\"d`e.md\"]",
+    "text": "[e](e`x`.md)",
+    "base": "[\"e.md\"]",
     "head": "[]"
    }
   ],
@@ -13786,8 +13803,8 @@
     "head": "[\"c.md\"]"
    },
    {
-    "text": "[d](d`e.md)\n# T\r\nx `y\r",
-    "base": "[\"d`e.md\"]",
+    "text": "## H\n\r\n[e](e`x`.md)\r",
+    "base": "[\"e.md\"]",
     "head": "[]"
    }
   ],
@@ -13817,18 +13834,18 @@
   ],
   "fuzz/cycle/links": [
    {
-    "text": "`\n[d](d`e.md)",
-    "base": "[\"d`e.md\"]",
+    "text": "[e](e`x`.md)",
+    "base": "[\"e.md\"]",
     "head": "[]"
    },
    {
-    "text": "[d](d`e.md)\n`",
-    "base": "[\"d`e.md\"]",
+    "text": "[e](e`x`.md)",
+    "base": "[\"e.md\"]",
     "head": "[]"
    },
    {
-    "text": "[d](d`e.md)\n`",
-    "base": "[\"d`e.md\"]",
+    "text": "[e](e`x`.md)",
+    "base": "[\"e.md\"]",
     "head": "[]"
    }
   ],
@@ -13851,18 +13868,18 @@
   ],
   "fuzz/lf/links": [
    {
-    "text": "`\n[d](d`e.md)",
-    "base": "[\"d`e.md\"]",
+    "text": "[e](e`x`.md)",
+    "base": "[\"e.md\"]",
     "head": "[]"
    },
    {
-    "text": "[d](d`e.md)\n`",
-    "base": "[\"d`e.md\"]",
+    "text": "[e](e`x`.md)",
+    "base": "[\"e.md\"]",
     "head": "[]"
    },
    {
-    "text": "[d](d`e.md)\n`",
-    "base": "[\"d`e.md\"]",
+    "text": "[e](e`x`.md)",
+    "base": "[\"e.md\"]",
     "head": "[]"
    }
   ],

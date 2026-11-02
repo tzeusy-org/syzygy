@@ -58,10 +58,13 @@ MUTANTS = [
     ('K3-mask-ignores-malformed', MASK, [("  if (recognition.malformed !== undefined) return { kind: 'malformed', ...recognition.malformed };\n", '')], 'the mask is built from the ranges of a malformed text'),
     ('W1-extractor-ignores-recognizer', EXTRACTOR, [('const inside = isFencedAt(recognition, offset);', 'const inside = false;')], 'the extractor sees no fence'),
     ('W2-extractor-offset-drift', EXTRACTOR, [('offset += raw.length + 1;', 'offset += raw.length;')], 'the extractor asks the recognizer about the wrong offset'),
-    ('W3-links-ignore-fences', MANIFEST, [('if (isFencedAt(recognition, start)) continue;', '')], 'the link reader sees no fence'),
-    ('W4-links-keep-spans', MANIFEST, [('if (!stripInlineCode) {', 'if (true) {')], 'the link reader keeps code spans'),
-    ('W5-links-blank-spans', MANIFEST, [(".replace(/[^\\r\\n]/g, '')", ".replace(/[^\\r\\n]/g, ' ')")], 'the link reader blanks a span instead of deleting it (D3)'),
-    ('W6-links-offset-drift', MANIFEST, [('offset += line.length + 1;', 'offset += line.length;')], 'the link reader asks the recognizer about the wrong offset'),
+    ('W3-links-ignore-fences', MANIFEST, [('const fenced = fenceRangesWithin(recognition, start, end);', 'const fenced: readonly CodeContextRange[] = [];')], 'the link reader sees no fence'),
+    ('W4-links-keep-spans', MANIFEST, [('const blanked = stripInlineCode ? [...fenced, ...spanRangesWithin(recognition, start, end)].sort((a, b) => a[0] - b[0]) : fenced;', 'const blanked = fenced;')], 'the link reader keeps code spans'),
+    ('W5-links-delete-spans', MANIFEST, [(".replace(/[^\\r\\n]/g, ' ')", ".replace(/[^\\r\\n]/g, '')")], 'the link reader deletes a span (and fenced characters) instead of blanking it (round 1 F2)'),
+    ('W6-links-offset-drift', MANIFEST, [('offset = end + 1;', 'offset = end;')], 'the link reader asks the recognizer about the wrong offset'),
+    ('W8-links-fence-sampled-at-line-start', MANIFEST, [('if (fenced.length > 0 && outsideIsOnlyCr(line, start, fenced)) continue;', 'if (fenced.length > 0 && fenced[0]?.[0] === start) continue;')], 'a line is dropped when its first offset is fenced, whatever follows a bare CR (round 1 F1)'),
+    ('W9-links-fence-characters-kept', MANIFEST, [('[...fenced, ...spanRangesWithin(recognition, start, end)]', '[...spanRangesWithin(recognition, start, end)]'), (': fenced;', ': [];')], 'the fenced characters of a kept line stay readable (round 1 F1)'),
+    ('W10-links-cr-counts-as-outside', MANIFEST, [("if (/[^\\r]/.test(line.slice(at, from - start))) return false;", "if (line.slice(at, from - start) !== '') return false;")], 'a CRLF fence line keeps its CR outside the fence, so it is kept blank instead of dropped'),
     ('W7-roots-strip-spans', MANIFEST, [('const lines = stripFences(text, false);', 'const lines = stripFences(text, true);')], 'the root-index pillar reader deletes code spans (its table cells are spans)'),
 ]
 def run(cmd, cwd, env=None, check=True):

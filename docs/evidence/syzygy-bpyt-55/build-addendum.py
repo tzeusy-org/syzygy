@@ -105,7 +105,8 @@ result = {
         'baseCommit': git('rev-parse', 'eb6183b5'),
         'codeCommit': git('rev-parse', '7a7cf664'),
         'testRepairCommit': git('rev-parse', '3747f846'),
-        'note': 'The code commit holds every non-test source change; the test repair commit changes one test file only. Evidence commits after them change no code.',
+        'reviewCorrectionCommit': git('rev-parse', '9d15c801'),
+        'note': 'The code commit holds every non-test source change of the first submission; the test repair commit changes one test file only. The review correction commit applies review round 1 findings F1 and F2 (R-GP-IMPL-FENCE-RECOGNIZER-1) to the link and root-index readers and their tests. Evidence commits after it change no code.',
     },
     'readersAfter': {
         'profile': {
@@ -130,8 +131,8 @@ result = {
                 'opener': 'the profile (as above)',
                 'closer': 'the profile (as above)',
                 'unclosedFence': 'as above',
-                'inlineCode': 'each character of a profile code span is deleted from its line, a CR or LF inside the span is kept, and a span may cross lines; the root-index pillar table reader keeps its code-span directory cells (it deletes none)',
-                'lineModel': 'LF split (unchanged); a line is fenced when the profile marks its first character fenced',
+                'inlineCode': 'each character of a profile code span becomes a space, never deleted, so the text on either side of a span never joins into a link the text does not write (review round 1, F2); a CR or LF inside the span is kept, and a span may cross lines; the root-index pillar table reader keeps its code-span directory cells (it blanks none)',
+                'lineModel': 'LF split (unchanged); every character the profile marks fenced becomes a space, so a fence that opens or closes at a bare CR inside an LF line hides exactly its own characters (review round 1, F1); a line with no character outside a fence but CR is dropped whole, as the reader dropped a fenced line before',
             },
         },
         'unchanged': ['consent (outsideFences, packages/polaris-generation-consent)', 'renderer (renderPolarisMarkdown)', 'ceremony-block (owner-act-record.ts)'],
@@ -168,7 +169,7 @@ result = {
     'probe': {
         'tool': E63 + 'fence-probe.mjs',
         'base': {'path': E55 + 'fence-probe-output-base.json', 'sha256': sha(E55 + 'fence-probe-output-base.json'), 'commit': 'eb6183b5'},
-        'head': {'path': E55 + 'fence-probe-output-head.json', 'sha256': sha(E55 + 'fence-probe-output-head.json'), 'commit': '3747f846'},
+        'head': {'path': E55 + 'fence-probe-output-head.json', 'sha256': sha(E55 + 'fence-probe-output-head.json'), 'commit': '3747f846', 'note': 'Re-run at the review correction commit 9d15c801: every case, inline-span case and summary key equal to this file, so it is kept (the probe renders LF and CRLF only, where F1 and F2 move no vector).'},
         'casesCompared': len(before['cases']),
         'profileVectorsMoved': profile_moved,
         'activeContentVectorsMoved': gate_moved,
@@ -199,7 +200,7 @@ result = {
     },
     'residuals': [
         'Two stray single backticks around a list of links make those links a code span: they drop with no signal, and the text is well formed so the gate admits it. The owner chose plain C over "C, and signal the stray span". Pinned by a RESIDUAL test in fence-rules.test.ts.',
-        'The extractor and the link reader keep their LF-only line model. In a text with bare CRs (no LF) a fence that opens inside one reader line reaches the lines after it; the differential tallies base against head for those texts (diff.readerChanges, bareCrOrMixed) and makes no oracle claim for them. The bare-CR GAP rows stay.',
+        'The extractor keeps its LF-only line model and asks whether the first character of each LF line is fenced. In a text with bare CRs (no LF) a fence that opens inside one reader line reaches the lines after it; its bare-CR GAP row stays (33 of 33 cases differ from LF). The link and root-index readers keep the LF split too but, since review round 1 (F1), blank every fenced character, so their bare-CR GAP row reads 0 of 33. The differential tallies base against head for bare-CR and mixed texts (diff.readerChanges, bareCrOrMixed) and makes no oracle claim for them.',
         'The consent reader (outsideFences) and the Polaris renderer keep their own rules; G4 and the renderer departures stand.',
         'A malformed text never reaches the readers; the recognizer recovery that makes it total is pinned by tests and is not a decision (the policy action is exclude-whole-artifact).',
     ],

@@ -1,14 +1,14 @@
 {
  "subject": {
-  "commit": "420700d28f2dfe0bd2c10542ecdcfb4f8c0670e3",
-  "note": "the merge of main f361108c into the branch; the code is the code of 7a7cf664 and the one test repair 3747f846"
+  "commit": "9d15c801387810f7f25bbcd652ec118597bbb0c0",
+  "note": "the review round 1 correction (F1, F2); the commits after it change evidence and AGENTS.md only, no source or test. Run in the worktree with those evidence edits uncommitted."
  },
  "fullSuite": {
   "command": "npx vitest run --reporter=json (every dist directory removed first, 0 found after)",
   "node": "v24.6.0",
   "testFiles": 256,
-  "tests": 5874,
-  "passed": 5869,
+  "tests": 5875,
+  "passed": 5870,
   "failed": 0,
   "skipped": 5,
   "success": true
@@ -50,6 +50,6 @@
    }
   },
   "failureCount": 0,
-  "note": "run with BASE the dist of eb6183b5 and HEAD the dist of 7a7cf664; the fence-differential M1 check repeats the comparison, with the masked text deep-equal, over 175,710 texts of its own"
+  "note": "run with BASE the dist of eb6183b5 and HEAD the dist of 7a7cf664; the fence-differential M1 check repeats the comparison, with the masked text deep-equal, over 175,710 texts of its own Not re-run for the round 1 correction: it changes no mask code (markdown-code-context.ts gains fenceRangesWithin only; M1 of fence-differential.mjs re-checked the mask over 175,716 texts, 0 failures)."
  }
 }

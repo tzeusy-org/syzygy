@@ -13,19 +13,19 @@
 //   R2  REF is the old mask  REF's malformed reason and line, fence count and span count equal the BASE mask's, and the BASE masked
 //                          text equals the text with REF's ranges blanked (every terminator kept). It ties REF to the code it replaces.
 //   O1  links oracle       on a text the profile reads as well formed, with no bare CR: HEAD indexLinkTargets(T) equals BASE
-//                          indexLinkTargets(N), where N is T with each profile span deleted (CR and LF kept) and each fenced run of
+//                          indexLinkTargets(N), where N is T with each profile span blanked (CR and LF kept) and each fenced run of
 //                          reader lines rewritten as a column-0 fence of the same lines, which the OLD reader reads as the profile does.
-//   O2  roots oracle       the same for rootIndexPillarRoots, N without span deletion.
+//   O2  roots oracle       the same for rootIndexPillarRoots, N without span blanking.
 //   O3  root-index oracle  the same for extractRootIndex.
 //   O4  class oracle       the same for extractClass of every class that reads Markdown (all but roster-identity).
 //   O5  TOML class         extractClass('roster-identity') reads TOML lines and no fence: BASE and HEAD agree on the text itself.
 //   D1  manifest           deriveProjectShapeManifest at HEAD over a Butlers-shaped fixture tree: a probe link on a line of a root index
 //                          or a pillar index is followed iff the profile leaves it visible (REF).
 // A text whose N still holds a line the OLD reader would take for a fence opener that the profile does not (a tab-indented opener,
-// a tilde fence made by deleting a span) is not oracle-checked for that reader; it is counted by tag, and its base-versus-head
+// a tilde fence the old reader finds in N) is not oracle-checked for that reader; it is counted by tag, and its base-versus-head
 // change is still tallied. A text the profile reads as malformed never reaches a reader (the gate excludes it first); it is checked
 // by M1, R1 and R2 only. Bare-CR and mixed renderings are tallied base against head and carry no oracle claim (the readers keep their
-// LF-only line model, so a bare-CR text is one reader line).
+// LF-only line model; the extractor reads a bare-CR text as one line, the link readers blank its fenced characters).
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -180,10 +180,11 @@ const blankByRanges = (text, r) => {
 
 // ------------------------------------------------------------------ the oracle's neutral form
 // N(T): the reader lines (split at LF) that the profile marks fenced are rewritten as one column-0 fence per run, interior lines `x`,
-// the CR of a CRLF line kept; with `deleteSpans`, each profile span's characters are first removed (CR and LF kept).
+// the CR of a CRLF line kept; with `blankSpans`, each profile span's characters are first made spaces (CR and LF kept), as the link
+// reader does since round 1 (F2).
 const OLD_LINKS_OPENER = /^\s{0,3}(`{3,}|~{3,})/;
 const OLD_EXTRACT_OPENER = /^(`{3,}|~{3,})/;
-function neutral(text, r, deleteSpans) {
+function neutral(text, r, blankSpans) {
   const parts = text.split(LF);
   const starts = [];
   let offset = 0;
@@ -193,11 +194,11 @@ function neutral(text, r, deleteSpans) {
   }
   const fenced = starts.map((s) => inRanges(r.fenceRanges, s));
   let work = text;
-  if (deleteSpans && r.spanRanges.length > 0) {
+  if (blankSpans && r.spanRanges.length > 0) {
     const pieces = [];
     let at = 0;
     for (const [a, b] of r.spanRanges) {
-      pieces.push(text.slice(at, a), text.slice(a, b).replace(/[^\r\n]/g, ''));
+      pieces.push(text.slice(at, a), text.slice(a, b).replace(/[^\r\n]/g, ' '));
       at = b;
     }
     pieces.push(text.slice(at));

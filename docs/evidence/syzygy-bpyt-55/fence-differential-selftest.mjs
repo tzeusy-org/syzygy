@@ -29,14 +29,14 @@ const MUTANTS = [
   ['K8-open-span-kept-at-fence-opener', CTX, "note('unclosed-inline-span', span.line);\n                span = undefined;\n            }\n            const run", "note('unclosed-inline-span', span.line);\n            }\n            const run", ['R1']],
   ['K9-mask-blanks-cr', CTX, ".replace(/[^\\r\\n]/g, ' ')", ".replace(/[^\\n]/g, ' ')", ['M1']],
   ['K10-mask-ignores-spans', CTX, '[...recognition.fenceRanges, ...recognition.spanRanges]', '[...recognition.fenceRanges]', ['M1']],
-  ['K11-is-fenced-excludes-opener-offset', CTX, 'range[0] <= offset;', 'range[0] < offset;', ['O1', 'O4', 'D1']],
+  ['K11-is-fenced-excludes-opener-offset', CTX, 'range[0] <= offset;', 'range[0] < offset;', ['O4']], // the extractor alone calls isFencedAt since round 1 (F1)
   ['K12-extractor-ignores-recognizer', EXT, 'const inside = isFencedAt(recognition, offset);', 'const inside = false;', ['O3', 'O4']],
   ['K13-extractor-offset-drift', EXT, 'offset += raw.length + 1;', 'offset += raw.length;', ['O3', 'O4']],
-  ['K14-links-ignore-fences', MAN, 'if (isFencedAt(recognition, start))\n            continue;', 'if (false)\n            continue;', ['O1', 'D1']],
-  ['K15-links-keep-spans', MAN, 'if (!stripInlineCode) {', 'if (true) {', ['O1']],
-  ['K16-links-blank-spans', MAN, ".replace(/[^\\r\\n]/g, '')", ".replace(/[^\\r\\n]/g, ' ')", ['O1']],
+  ['K14-links-ignore-fences', MAN, 'const fenced = fenceRangesWithin(recognition, start, end);', 'const fenced = [];', ['O1', 'D1']],
+  ['K15-links-keep-spans', MAN, 'const blanked = stripInlineCode ?', 'const blanked = false ?', ['O1']],
+  ['K16-links-delete-spans', MAN, ".replace(/[^\\r\\n]/g, ' ')", ".replace(/[^\\r\\n]/g, '')", ['O1']],
   ['K17-roots-strip-spans', MAN, 'const lines = stripFences(text, false);', 'const lines = stripFences(text, true);', ['O2']],
-  ['K18-links-offset-drift', MAN, 'offset += line.length + 1;', 'offset += line.length;', ['O1', 'D1']],
+  ['K18-links-offset-drift', MAN, 'offset = end + 1;', 'offset = end;', ['O1', 'D1']],
 ];
 
 const run = (head, tag) => {

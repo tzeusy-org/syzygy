@@ -53,7 +53,8 @@
   "baseCommit": "eb6183b58253ef62fa364b78778efda9a77073df",
   "codeCommit": "7a7cf664e72351a2da33dbf240b2e3bfed3f8917",
   "testRepairCommit": "3747f846d127301372861577683595fd59de1fe5",
-  "note": "The code commit holds every non-test source change; the test repair commit changes one test file only. Evidence commits after them change no code."
+  "reviewCorrectionCommit": "9d15c801387810f7f25bbcd652ec118597bbb0c0",
+  "note": "The code commit holds every non-test source change of the first submission; the test repair commit changes one test file only. The review correction commit applies review round 1 findings F1 and F2 (R-GP-IMPL-FENCE-RECOGNIZER-1) to the link and root-index readers and their tests. Evidence commits after it change no code."
  },
  "readersAfter": {
   "profile": {
@@ -88,8 +89,8 @@
     "opener": "the profile (as above)",
     "closer": "the profile (as above)",
     "unclosedFence": "as above",
-    "inlineCode": "each character of a profile code span is deleted from its line, a CR or LF inside the span is kept, and a span may cross lines; the root-index pillar table reader keeps its code-span directory cells (it deletes none)",
-    "lineModel": "LF split (unchanged); a line is fenced when the profile marks its first character fenced"
+    "inlineCode": "each character of a profile code span becomes a space, never deleted, so the text on either side of a span never joins into a link the text does not write (review round 1, F2); a CR or LF inside the span is kept, and a span may cross lines; the root-index pillar table reader keeps its code-span directory cells (it blanks none)",
+    "lineModel": "LF split (unchanged); every character the profile marks fenced becomes a space, so a fence that opens or closes at a bare CR inside an LF line hides exactly its own characters (review round 1, F1); a line with no character outside a fence but CR is dropped whole, as the reader dropped a fenced line before"
    }
   },
   "unchanged": [
@@ -168,7 +169,8 @@
   "head": {
    "path": "docs/evidence/syzygy-bpyt-55/fence-probe-output-head.json",
    "sha256": "160fad28d95b10c9742729a2ee6f08ab18e800db6d95a0e8af05c76fddf18833",
-   "commit": "3747f846"
+   "commit": "3747f846",
+   "note": "Re-run at the review correction commit 9d15c801: every case, inline-span case and summary key equal to this file, so it is kept (the probe renders LF and CRLF only, where F1 and F2 move no vector)."
   },
   "casesCompared": 66,
   "profileVectorsMoved": [],
@@ -219,17 +221,17 @@
   "tool": "docs/evidence/syzygy-bpyt-55/fence-differential.mjs",
   "output": {
    "path": "docs/evidence/syzygy-bpyt-55/fence-differential-output.json",
-   "sha256": "3256086a8da4631df9c9de55bae84f61de9fe2fed272a4c05cc6ce193b882762"
+   "sha256": "75a5ac506eefaa079f2aa83e869bf359478d7e958cb9623e09b5e62e515218f8"
   },
   "selftest": {
    "path": "docs/evidence/syzygy-bpyt-55/fence-differential-selftest-output.json",
-   "sha256": "8d557cd11a21ff0814e6781569d39cbb61a150ad9d3f4f27cae01aec3ad7b356",
+   "sha256": "d18e44f4fda6a3003c777dae43d4a55d975e616284c72269b623fbf6f5a007e0",
    "mutants": 18,
    "killed": 18
   },
   "population": {
-   "texts": 175710,
-   "wellFormed": 36730,
+   "texts": 175716,
+   "wellFormed": 36736,
    "malformed": 138980,
    "constructCases": {
     "fenceProbe": 33,
@@ -244,46 +246,46 @@
     "cycle"
    ],
    "trackedMarkdown": {
-    "listed": 1912,
-    "files": 1912,
+    "listed": 1915,
+    "files": 1915,
     "unreadable": 0
    },
    "manifestRows": 1724
   },
   "checks": {
    "M1_maskAndGateUnchanged": {
-    "texts": 175710,
+    "texts": 175716,
     "failures": 0
    },
    "R1_headRecognizerEqualsReference": {
-    "texts": 175710,
+    "texts": 175716,
     "failures": 0
    },
    "R2_referenceEqualsOldMask": {
-    "texts": 175710,
+    "texts": 175716,
     "failures": 0
    },
    "O1_linksOracle": {
-    "checked": 27821,
+    "checked": 27827,
     "excludedOldReaderOpensAFence": 0,
     "failures": 0
    },
    "O2_rootsOracle": {
-    "checked": 26461,
+    "checked": 26467,
     "excludedOldReaderOpensAFence": 1360,
     "failures": 0
    },
    "O3_rootIndexOracle": {
-    "checked": 27311,
+    "checked": 27317,
     "excludedOldReaderOpensAFence": 510,
     "failures": 0
    },
    "O5_tomlClassUnchanged": {
-    "checked": 27311,
+    "checked": 27317,
     "failures": 0
    },
    "O4_classOracle": {
-    "checked": 27311,
+    "checked": 27317,
     "excludedOldReaderOpensAFence": 510,
     "failures": 0
    },
@@ -476,17 +478,17 @@
   "tool": "docs/evidence/syzygy-bpyt-55/fence-mutants.py",
   "output": {
    "path": "docs/evidence/syzygy-bpyt-55/fence-mutants-output.json",
-   "sha256": "c573979d55cd60c73e6a2b183a5627a420a702fe2a628bad08b93062be455b7b"
+   "sha256": "e484b1709b972e5419ec064c693c60ad9e1dc5d3b3f0061e303058a40ef75ccc"
   },
-  "ranAt": "3747f846d127301372861577683595fd59de1fe5",
-  "mutants": 23,
-  "killed": 23,
+  "ranAt": "9d15c801387810f7f25bbcd652ec118597bbb0c0",
+  "mutants": 26,
+  "killed": 26,
   "survived": [],
-  "baseReadersFailingTests": 44
+  "baseReadersFailingTests": 46
  },
  "residuals": [
   "Two stray single backticks around a list of links make those links a code span: they drop with no signal, and the text is well formed so the gate admits it. The owner chose plain C over \"C, and signal the stray span\". Pinned by a RESIDUAL test in fence-rules.test.ts.",
-  "The extractor and the link reader keep their LF-only line model. In a text with bare CRs (no LF) a fence that opens inside one reader line reaches the lines after it; the differential tallies base against head for those texts (diff.readerChanges, bareCrOrMixed) and makes no oracle claim for them. The bare-CR GAP rows stay.",
+  "The extractor keeps its LF-only line model and asks whether the first character of each LF line is fenced. In a text with bare CRs (no LF) a fence that opens inside one reader line reaches the lines after it; its bare-CR GAP row stays (33 of 33 cases differ from LF). The link and root-index readers keep the LF split too but, since review round 1 (F1), blank every fenced character, so their bare-CR GAP row reads 0 of 33. The differential tallies base against head for bare-CR and mixed texts (diff.readerChanges, bareCrOrMixed) and makes no oracle claim for them.",
   "The consent reader (outsideFences) and the Polaris renderer keep their own rules; G4 and the renderer departures stand.",
   "A malformed text never reaches the readers; the recognizer recovery that makes it total is pinned by tests and is not a decision (the policy action is exclude-whole-artifact)."
  ]

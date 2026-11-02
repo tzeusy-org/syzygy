@@ -1,9 +1,9 @@
 {
  "tool": "docs/evidence/syzygy-bpyt-55/fence-differential-selftest.mjs",
  "headDistModuleShas": {
-  "markdown-code-context.js": "d49a23ab1817762cf75fba24ca99a018f3ae2aff8cef549104414540bb9a1473",
+  "markdown-code-context.js": "5bc6bfe63a0d9e740a3ef9cfca15eadbc9e77b1f0f5414ee055e81d354f4a6aa",
   "project-shape-extraction.js": "0e677542bbd9fb6a12e18ca34a65f239de9aab9490d0182087e613d24a4bd5e2",
-  "project-shape-manifest.js": "b30f73f04515b725cdaf20f7e7c0b56a6beea545d4f39b77813d2947544aafb0"
+  "project-shape-manifest.js": "7fce99c8db7093fcbce620e847b985b2aa4e00b69addd614ec9babfdf8f517c9"
  },
  "mutants": 18,
  "killed": 18,
@@ -21,7 +21,7 @@
    "file": "markdown-code-context.js",
    "old": "const FENCE_OPENER = /^ {0,3}(",
    "new": "const FENCE_OPENER = /^ {0,4}(",
-   "mutatedModuleSha256": "28b74378107a419cbb0d625428f244f4c02cadafcaae5e0d9b1d0a1402af187c",
+   "mutatedModuleSha256": "2e052122dd4b96b90cc463443ff04d5cc474877c46b12f7348e486259f637c4e",
    "expectedFailing": [
     "R1",
     "M1"
@@ -44,7 +44,7 @@
    "file": "markdown-code-context.js",
    "old": "return run[0] === char && run.length >= length;",
    "new": "return run[0] === char && run.length > length;",
-   "mutatedModuleSha256": "2a1fdc37701536887da111cd9e35b992b118ace4130a3785d88ba070740c06e7",
+   "mutatedModuleSha256": "fcb3e08a1cde35e7d1d4181e9ebdb0f7920ce194de06ebbfc6bdf654c4cd1576",
    "expectedFailing": [
     "R1",
     "M1"
@@ -67,7 +67,7 @@
    "file": "markdown-code-context.js",
    "old": "else if (runLength === span.length) {",
    "new": "else if (runLength >= span.length) {",
-   "mutatedModuleSha256": "f066d700da1158411e409f2fb2a43b6d53c0a80ce965e16f65f19b3ccb4b7137",
+   "mutatedModuleSha256": "0bd4e8ecee51af23ac562c28679e9d234977f7ebd2a4a62f342968e4f1cc08ee",
    "expectedFailing": [
     "R1",
     "M1"
@@ -86,7 +86,7 @@
    "file": "markdown-code-context.js",
    "old": "fenceRanges.push([fence.start, lineStart + line.length]);",
    "new": "fenceRanges.push([fence.start, lineStart + line.length + (terminators[index] ?? '').length]);",
-   "mutatedModuleSha256": "7ecb295b9927029720e7c49c61f8893edb36604c23afc5561f4d8aa25b53f59e",
+   "mutatedModuleSha256": "54092298907867debf6a3c0b0d0827cdd76540729e4c12d1c303c58c9791759b",
    "expectedFailing": [
     "R1"
    ],
@@ -102,7 +102,7 @@
    "file": "markdown-code-context.js",
    "old": "if (run[0] === '`' && info.includes('`'))",
    "new": "if (false)",
-   "mutatedModuleSha256": "6cd365920b1d10f558fe1eae191f9fc74b41b5ce7707866da18f08723e302bca",
+   "mutatedModuleSha256": "b384136f683c490a3aa22405ceadbe78970686f41289e788abfd100b5c73d7d1",
    "expectedFailing": [
     "R1",
     "M1"
@@ -120,7 +120,7 @@
    "file": "markdown-code-context.js",
    "old": "/^ {0,3}(`{3,}|~{3,}) *$/",
    "new": "/^ {0,3}(`{3,}|~{3,})[ \\t]*$/",
-   "mutatedModuleSha256": "657c8f633288a77942d58f2885eeb73ad89cbd67a58747fd10f835154c98dadf",
+   "mutatedModuleSha256": "3744bdc124eff914f4994f0de446d23d23888887bb91ad81435111c162003c52",
    "expectedFailing": [
     "R1",
     "M1"
@@ -143,7 +143,7 @@
    "file": "markdown-code-context.js",
    "old": "fenceRanges.push([fence.start, text.length]);",
    "new": ";",
-   "mutatedModuleSha256": "c54cce353c8e23afa4a0e939ffec71084b2238511cd32341723bc0516b31b0f5",
+   "mutatedModuleSha256": "5c2f62c00f851ee4a3dcce328439247badff51b62ce3473d876c55ec67509f58",
    "expectedFailing": [
     "R1"
    ],
@@ -159,7 +159,7 @@
    "file": "markdown-code-context.js",
    "old": "note('unclosed-inline-span', span.line);\n                span = undefined;\n            }\n            const run",
    "new": "note('unclosed-inline-span', span.line);\n            }\n            const run",
-   "mutatedModuleSha256": "a9d298c492fd8774f1c6b9657e67c5ff68bcee8c1676126a4fb77de1d7c5bdec",
+   "mutatedModuleSha256": "10834de485eb76f81dda1b4af53b82eccc3196050ebf910c69946c9109790347",
    "expectedFailing": [
     "R1"
    ],
@@ -175,7 +175,7 @@
    "file": "markdown-code-context.js",
    "old": ".replace(/[^\\r\\n]/g, ' ')",
    "new": ".replace(/[^\\n]/g, ' ')",
-   "mutatedModuleSha256": "a88167736d91f838e0c09b0ba7a18c8904e8f8df76e2f3e47c532ee1c9c75632",
+   "mutatedModuleSha256": "de45cc6d4c7228ebf709606e36267d6686052cd7afd8ed379348c9ba2d849eef",
    "expectedFailing": [
     "M1"
    ],
@@ -191,7 +191,7 @@
    "file": "markdown-code-context.js",
    "old": "[...recognition.fenceRanges, ...recognition.spanRanges]",
    "new": "[...recognition.fenceRanges]",
-   "mutatedModuleSha256": "8d431b71ba3a54bdd9ef0e29d4bf616bae3496d8f6746b0c6f3d7917834ba922",
+   "mutatedModuleSha256": "2c85994a6e21fec950d9aa6206f579283e55fc43af3d01da34a9db07a7c67907",
    "expectedFailing": [
     "M1"
    ],
@@ -207,17 +207,12 @@
    "file": "markdown-code-context.js",
    "old": "range[0] <= offset;",
    "new": "range[0] < offset;",
-   "mutatedModuleSha256": "b44cd48fe6682c0ca86f3dc7cb324ddc739ea7d861c04c731cd885f805e511a5",
+   "mutatedModuleSha256": "f8c42d54a68bd28d2bc49d07da3c37a0c0353daa492d82e91b77d7ac58c88cf6",
    "expectedFailing": [
-    "O1",
-    "O4",
-    "D1"
+    "O4"
    ],
    "exit": 1,
    "failingChecks": [
-    "D1",
-    "O1",
-    "O2",
     "O4"
    ],
    "killed": true,
@@ -262,9 +257,9 @@
   {
    "id": "K14-links-ignore-fences",
    "file": "project-shape-manifest.js",
-   "old": "if (isFencedAt(recognition, start))\n            continue;",
-   "new": "if (false)\n            continue;",
-   "mutatedModuleSha256": "84a6baf4ac827280c4ff3e94a51b0c73cf5919ba592527861b37f3a3a10dee64",
+   "old": "const fenced = fenceRangesWithin(recognition, start, end);",
+   "new": "const fenced = [];",
+   "mutatedModuleSha256": "152248b15b091cf0edc99d0114f490624e699076fffbb7779d9c859e23eaed05",
    "expectedFailing": [
     "O1",
     "D1"
@@ -281,9 +276,9 @@
   {
    "id": "K15-links-keep-spans",
    "file": "project-shape-manifest.js",
-   "old": "if (!stripInlineCode) {",
-   "new": "if (true) {",
-   "mutatedModuleSha256": "a99936608b956382b011e185f0acabf7c4af8305f3d4050028473b71a6bc0ae6",
+   "old": "const blanked = stripInlineCode ?",
+   "new": "const blanked = false ?",
+   "mutatedModuleSha256": "378e1fbb3a86ce2fcf545c3688e254be4c2ce2a11d6d23c86954d25a38e1009e",
    "expectedFailing": [
     "O1"
    ],
@@ -296,11 +291,11 @@
    "ok": true
   },
   {
-   "id": "K16-links-blank-spans",
+   "id": "K16-links-delete-spans",
    "file": "project-shape-manifest.js",
-   "old": ".replace(/[^\\r\\n]/g, '')",
-   "new": ".replace(/[^\\r\\n]/g, ' ')",
-   "mutatedModuleSha256": "f0d10da05800fbff1b89958c1fdaab3a11ce3a84361750db728b0db9fa987268",
+   "old": ".replace(/[^\\r\\n]/g, ' ')",
+   "new": ".replace(/[^\\r\\n]/g, '')",
+   "mutatedModuleSha256": "d0b7357dbdb80f50eb560f6a7f0bcbed9df4f86292ba5d6824d0df4418bc5f9d",
    "expectedFailing": [
     "O1"
    ],
@@ -316,7 +311,7 @@
    "file": "project-shape-manifest.js",
    "old": "const lines = stripFences(text, false);",
    "new": "const lines = stripFences(text, true);",
-   "mutatedModuleSha256": "42679a41e7379fad11b86c12693ecacfa06fc480ac33513036d8f806fd7996a2",
+   "mutatedModuleSha256": "054e0ab33869c092a07f272cbec1e4b8026a831969b871ea9d1a12a6b277f4d8",
    "expectedFailing": [
     "O2"
    ],
@@ -330,9 +325,9 @@
   {
    "id": "K18-links-offset-drift",
    "file": "project-shape-manifest.js",
-   "old": "offset += line.length + 1;",
-   "new": "offset += line.length;",
-   "mutatedModuleSha256": "a145eb4c8c1d8661fbe1bcd1356355218ac03022d3c9a94fb638ab0aeae32b47",
+   "old": "offset = end + 1;",
+   "new": "offset = end;",
+   "mutatedModuleSha256": "b6645d395baa0a1c48f94210568a89e3bb11d9a3b289a5254d59e878976c76f6",
    "expectedFailing": [
     "O1",
     "D1"

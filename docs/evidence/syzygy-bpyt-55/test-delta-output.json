@@ -1,6 +1,6 @@
 {
  "baseTests": 370,
- "headTests": 409,
+ "headTests": 410,
  "added": [
   [
    "apps/three-surface-poc/src/fence-rules.test.ts",
@@ -59,17 +59,17 @@
   ],
   [
    "apps/three-surface-poc/src/fence-rules.test.ts",
-   "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the extractor",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate, the renderer and the link reader, not for the extractor the extractor",
    0
   ],
   [
    "apps/three-surface-poc/src/fence-rules.test.ts",
-   "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the link reader",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate, the renderer and the link reader, not for the extractor the link reader reads a bare CR as the LF text is read",
    0
   ],
   [
    "apps/three-surface-poc/src/fence-rules.test.ts",
-   "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate and the renderer, not for the extractor or the link reader the renderer reads a bare CR as the LF text is read",
+   "Markdown fence recognizers: what each reader treats as inside a fence GAP: a bare CR is a line end for the profile, the gate, the renderer and the link reader, not for the extractor the renderer reads a bare CR as the LF text is read",
    0
   ],
   [
@@ -214,6 +214,11 @@
   ],
   [
    "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
+   "index link grammar \u2014 the profile's fences and spans a fence that opens or closes at a bare CR inside an LF line hides exactly its own characters",
+   0
+  ],
+  [
+   "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
    "index link grammar \u2014 the profile's fences and spans a line inside a fence is dropped whole, in CRLF text too",
    0
   ],
@@ -224,7 +229,7 @@
   ],
   [
    "packages/three-surface-poc-core/src/project-shape-manifest.test.ts",
-   "index link grammar \u2014 the profile's fences and spans a span is deleted and not blanked: the characters around it join",
+   "index link grammar \u2014 the profile's fences and spans a span is blanked and not deleted: the characters around it never join into a link",
    0
   ],
   [
@@ -352,7 +357,7 @@
   "Markdown fence recognizers: what each reader treats as inside a fence > the extractor and the profile hold one line model for LF and CRLF: where they agree on LF they agree on CRLF": 1,
   "Markdown fence recognizers: what each reader treats as inside a fence > inline span: $id": 8
  },
- "line": "Tests: +52 ~42 -13",
+ "line": "Tests: +53 ~42 -13",
  "allBasePassed": true,
  "allHeadPassed": true
 }

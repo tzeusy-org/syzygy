@@ -226,11 +226,14 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   accepts. The profile ends a line at CRLF, CR and LF and keeps every
   terminator (`syzygy-bpyt.16`; the differential is in
   `docs/evidence/syzygy-bpyt-16/crlf-mask-2026-10-27.json`); the extractor
-  and the link reader keep their LF-only line model and ask the recognizer
-  whether a line's first offset is fenced, so a text with bare CRs stays a
-  residual. Two stray single backticks around a list of links make those
-  links a span, and they drop with no signal: the owner chose that
-  (GP-B2 Q2, answer C, 2026-10-28), and `fence-rules.test.ts` pins it.
+  keeps its LF-only line model and asks the recognizer whether a line's first
+  offset is fenced, so a text with bare CRs stays its residual. The link
+  readers split at LF too but blank every fenced and span character (never
+  delete one: deletion joins text into a link the text never writes), so a
+  bare CR cannot hide or expose a link. Two stray single backticks around a
+  list of links make those links a span, and they drop with no signal: the
+  owner chose that (GP-B2 Q2, answer C, 2026-10-28), and
+  `fence-rules.test.ts` pins it.
 - Three-Surface POC: `packages/three-surface-poc-core/` (one shared
   `PocModel`) and `apps/three-surface-poc/` read the same instance — never
   split surface truth stores. Ignored build outputs are executable inputs, so
