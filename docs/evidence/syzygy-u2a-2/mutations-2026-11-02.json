@@ -1,0 +1,138 @@
+{
+  "subject": "syzygy-u2a.2 rule-6 controlled mutations (captured snapshot and pre-read consent decision)",
+  "ranAt": "ee99fd5948931a054e3ddb993acb99718458af85",
+  "subjectDigests": {
+    "packages/cap1-conformance/src/req-011.conformance.test.ts": "sha256:44d61b0e620a95d87b6cee886e6ece683b9b8c3e9fd559ebdcee702c5580656f",
+    "packages/cap1-core/src/consent-decision.ts": "sha256:bee60e6fce81448b49177cc121487ccc9ad6216fc824b7552e22d30bbb97455c",
+    "packages/cap1-daemon/src/pipeline.ts": "sha256:99ed20a4d6ea6aba865cebedfa604bfce339c3fa3520b559dd14371cbbc9a6da",
+    "packages/cap1-daemon/src/source-snapshot.test.ts": "sha256:94dcdf9578acab6b9104fb403f98ed1bbba59fc19feb2d610654874befab5a4b",
+    "packages/cap1-daemon/src/source-snapshot.ts": "sha256:0960ce227e5f75100b73c52aae13478fbad502c53218bae068b644ac8759c95e"
+  },
+  "method": "each mutant replaces exactly one old fragment with new in the named file, runs `npx vitest run <test>`, then restores the file; killed means the named test run exited non-zero, and firstErrors shows it failed on an assertion",
+  "population": 9,
+  "killed": 9,
+  "mutants": [
+    {
+      "id": "caller-snapshot",
+      "file": "packages/cap1-daemon/src/pipeline.ts",
+      "old": "    return { kind: 'capture-failed', failure: captured, asOf: deps.asOf };\n  }\n  return evaluateCapturedProject(captured);",
+      "new": "    return { kind: 'capture-failed', failure: captured, asOf: deps.asOf };\n  }\n  const forged = (deps as { evaluation?: { snapshot: string } }).evaluation?.snapshot;\n  return evaluateCapturedProject(forged === undefined ? captured : { ...captured, snapshot: forged as typeof captured.snapshot });",
+      "test": "packages/cap1-daemon/src/source-snapshot.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 15 passed (16)",
+      "firstErrors": [
+        "AssertionError: expected 'forged' not to be 'forged' // Object.is equality"
+      ],
+      "killed": true
+    },
+    {
+      "id": "post-capture-entry-read",
+      "file": "packages/cap1-daemon/src/source-snapshot.ts",
+      "old": "        ? { state: 'captured', text: DECODER.decode(read.bytes), digest: sha256Digest(read.bytes) }",
+      "new": "        ? { state: 'captured', get text() { return (process.getBuiltinModule('node:fs') as typeof import('node:fs')).readFileSync(join(observedRootDir, HUMAN_ENTRY_PATH), 'utf8'); }, digest: sha256Digest(read.bytes) } as CapturedEntry",
+      "test": "packages/cap1-daemon/src/source-snapshot.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 15 passed (16)",
+      "firstErrors": [
+        "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h…' to contain '# overview v1'"
+      ],
+      "killed": true
+    },
+    {
+      "id": "read-without-admission",
+      "file": "packages/cap1-daemon/src/source-snapshot.ts",
+      "old": "    if (decision.authorization !== 'admitted' || rootDir === undefined) {",
+      "new": "    if (rootDir === undefined) {",
+      "test": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "exit": 1,
+      "summary": "Tests  36 failed | 15 passed (51)",
+      "firstErrors": [
+        "AssertionError: expected 2 to be +0 // Object.is equality",
+        "AssertionError: expected 2 to be +0 // Object.is equality",
+        "AssertionError: expected 2 to be +0 // Object.is equality"
+      ],
+      "killed": true
+    },
+    {
+      "id": "grant-without-act",
+      "file": "packages/cap1-core/src/consent-decision.ts",
+      "old": "    case 'missing':\n    case 'not-read':\n      return { ok: false, diagnostic: 'owner-act-missing' };",
+      "new": "    case 'not-read':\n      return { ok: false, diagnostic: 'owner-act-missing' };\n    case 'missing':\n      return { ok: true, binding: { projectId: context.projectId, repositoryId: context.repositoryId, artifactId: input.reference, artifactDigest: input.artifact.digest, actType: 'consent', owner: record.attribution, instant: '1970-01-01T00:00:00Z', scope: record.scope, supersedes: null, expires: null, a1AuditRecord: null, actId: input.reference, actor: 'human', provenance: 'owner-adopted-bootstrap', actRecordDigest: input.artifact.digest } };",
+      "test": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "exit": 1,
+      "summary": "Tests  3 failed | 48 passed (51)",
+      "firstErrors": [
+        "AssertionError: expected [ 'admitted', …(1) ] to deeply equal [ 'Unknown', 'owner-act-missing' ]",
+        "AssertionError: expected [ 'Unknown', 'withdrawn' ] to deeply equal [ 'Unknown', 'withdrawal-unresolved' ]"
+      ],
+      "killed": true
+    },
+    {
+      "id": "omitted-audit-as-absent",
+      "file": "packages/cap1-core/src/consent-decision.ts",
+      "old": "  if (!('a1_audit_record' in doc)) return { ok: false, diagnostic: 'audit-identity-omitted' };",
+      "new": "  if (!('a1_audit_record' in doc)) doc = { ...doc, a1_audit_record: null };",
+      "test": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 50 passed (51)",
+      "firstErrors": [
+        "AssertionError: expected [ 'admitted', …(1) ] to deeply equal [ 'Unknown', 'audit-identity-omitted' ]"
+      ],
+      "killed": true
+    },
+    {
+      "id": "state2-downgrade",
+      "file": "packages/cap1-core/src/consent-decision.ts",
+      "old": "  if (binding.provenance === 'owner-adopted-bootstrap') {\n    return { ok: true, provenance: PROVENANCE_LABELS['owner-adopted-bootstrap'], correlation: null };",
+      "new": "  if (binding.provenance === 'owner-adopted-bootstrap' || binding.provenance === 'syzygy-verified') {\n    return { ok: true, provenance: PROVENANCE_LABELS['owner-adopted-bootstrap'], correlation: null };",
+      "test": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "exit": 1,
+      "summary": "Tests  7 failed | 44 passed (51)",
+      "firstErrors": [
+        "AssertionError: expected [ 'admitted', …(1) ] to deeply equal [ Array(2) ]",
+        "AssertionError: expected [ 'admitted', …(1) ] to deeply equal [ 'Unknown', 'correlation-not-found' ]",
+        "AssertionError: expected [ 'admitted', …(1) ] to deeply equal [ 'Unknown', 'correlation-mismatch' ]"
+      ],
+      "killed": true
+    },
+    {
+      "id": "withdrawal-dropping",
+      "file": "packages/cap1-core/src/consent-decision.ts",
+      "old": "      const withdrawal = fullEvaluation(input, context);\n      candidates.push({",
+      "new": "      const withdrawal = fullEvaluation(input, context);\n      if (withdrawal.ok) candidates.push({",
+      "test": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "exit": 1,
+      "summary": "Tests  2 failed | 49 passed (51)",
+      "firstErrors": [
+        "AssertionError: expected [ 'admitted', …(1) ] to deeply equal [ 'Unknown', 'withdrawal-unresolved' ]"
+      ],
+      "killed": true
+    },
+    {
+      "id": "no-revalidation",
+      "file": "packages/cap1-daemon/src/source-snapshot.ts",
+      "old": "  if (changed.length > 0) {",
+      "new": "  if (changed.length < 0) {",
+      "test": "packages/cap1-daemon/src/source-snapshot.test.ts",
+      "exit": 1,
+      "summary": "Tests  1 failed | 15 passed (16)",
+      "firstErrors": [
+        "AssertionError: expected false to be 'source-changed-during-capture' // Object.is equality"
+      ],
+      "killed": true
+    },
+    {
+      "id": "scope-unchecked",
+      "file": "packages/cap1-core/src/consent-decision.ts",
+      "old": "  if (!scopeAdmitsObservation(act.scope)) {",
+      "new": "  if (false && !scopeAdmitsObservation(act.scope)) {",
+      "test": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "exit": 1,
+      "summary": "Tests  2 failed | 49 passed (51)",
+      "firstErrors": [
+        "AssertionError: expected [ 'admitted', …(1) ] to deeply equal [ 'Unknown', …(1) ]"
+      ],
+      "killed": true
+    }
+  ]
+}
