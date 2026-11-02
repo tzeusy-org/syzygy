@@ -1,6 +1,6 @@
 {
  "bead": "syzygy-bpyt.6.4",
- "commit": "006012e5bbaee7bf95cc19f737fcc111f5e22ba2",
+ "commit": "2992265795d458fc45d194b30fbff0be577802d7",
  "treeRestored": true,
  "mutants": [
   {
@@ -121,8 +121,8 @@
    "id": "R2-producer-reason",
    "kind": "runtime",
    "file": "packages/three-surface-poc-core/src/epistemic.ts",
-   "old": "  testArtifactVerification: 'missing-evidence',",
-   "new": "  testArtifactVerification: 'no-test-evidence' as UnknownReason,",
+   "old": "  testArtifact: 'missing-evidence',",
+   "new": "  testArtifact: 'no-test-evidence' as UnknownReason,",
    "check": "npx vitest run packages/three-surface-poc-core/src/project-shape-model.test.ts -t 'a producer cannot emit an untyped Unknown reason'",
    "exitCode": 1,
    "killed": true,

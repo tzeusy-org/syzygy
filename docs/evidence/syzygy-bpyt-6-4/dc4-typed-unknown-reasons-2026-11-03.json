@@ -2,9 +2,9 @@
  "bead": "syzygy-bpyt.6.4",
  "finding": "DC-4 (docs/plans/2026-10-21-greenfield-parity-audit.md): typed Unknown reasons, one internal epistemic constructor module",
  "subject": {
-  "baseCommit": "40f1387d6bdd5fa0c4202dedb31aad07186c2d92",
-  "codeHeadCommit": "006012e5bbaee7bf95cc19f737fcc111f5e22ba2",
-  "note": "codeHeadCommit is the last code commit; commits after it add only files under docs/evidence/syzygy-bpyt-6-4",
+  "baseCommit": "7202d49b135c6f9eee5f4924f7560076d4c0e910",
+  "codeHeadCommit": "2992265795d458fc45d194b30fbff0be577802d7",
+  "note": "codeHeadCommit is the last code commit, rebased onto baseCommit (origin/main); commits after it change only files under docs/evidence/syzygy-bpyt-6-4. An earlier run over base 40f1387d and code head 006012e5 gave the same probe output bytes (sha256 below).",
   "changedFiles": [
    {
     "path": "apps/three-surface-poc/src/capability-detail.ts",
@@ -27,6 +27,11 @@
     "headSha256": "a831144b75ec4d01b83e78280979bec76f9307ecdc2157c6082e066836064a18"
    },
    {
+    "path": "apps/three-surface-poc/src/pwb-mutation-sweep.ts",
+    "baseSha256": "ab96a1e013deb37a49279acf97885398ed67c312d315ed9e6796cd65f836e0b1",
+    "headSha256": "06ef0e599420182016bdd305c2057dd31b0c57a5c7669debe0d2437f7ceb0dcc"
+   },
+   {
     "path": "apps/three-surface-poc/src/test-project-shape-fixture.ts",
     "baseSha256": "43b7ee2217f056fd6c83a4b11cf3a1775f576d3c57d0ad83700aeaf6d088deee",
     "headSha256": "655024cd1ec4296a9fed28558d364306af157c3746534e62a8198127d75511d7"
@@ -39,12 +44,12 @@
    {
     "path": "packages/three-surface-poc-core/src/epistemic.ts",
     "baseSha256": null,
-    "headSha256": "5c9bc8ff3423314ea16bfb0dc03d25d57465dc6a1fa7266657a33ea20f14c6f4"
+    "headSha256": "184a800e758d2db0194a9f42fcfe18d2c77a007a62f1c3bbc680dd15ac3df062"
    },
    {
     "path": "packages/three-surface-poc-core/src/model.ts",
     "baseSha256": "9ab58377379c17fa0a09f84fd45441a1eb0f44d1edf82b07c496f9d49a87ce2f",
-    "headSha256": "5be6a666ad92829db6a62429e6f9d8968526243ed947ce4ffbf2b1d4ad77d610"
+    "headSha256": "a781f7382f4d5ac037553ab8cb03081183e2eee1039a0e0705c2e82351261782"
    },
    {
     "path": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
@@ -81,7 +86,7 @@
  "toolsSha256": {
   "diff-probe.mjs": "6198b7cb1534bfce2bde754dfbf14714a5b066ffc7c91c6bc908914a8ddf3a5f",
   "compare-probe.py": "22cc088e30711383554fa55fd12f187252690238db0ce394b9fa43d069e28211",
-  "mutants.py": "77bf1dc6bf848fcf0aee76f3e71f09e5a3b9e2efdc79de7abc384160d5213435",
+  "mutants.py": "95bfc589adabc3ccb9a7ced12a1481d1de926e0b6b0c8b82271d3a88c95d6c19",
   "sweep.py": "692b82b06732554616829597be3f9e2ec73e1d3f63843fa99ded7b3399bd89fd"
  },
  "differential": {
@@ -90,7 +95,7 @@
   "baseOutputSha256": "a0fcc7f1631f8bb6005489b68314b47f6097850cfe25667ad99cfc570f1e5d60",
   "headOutputSha256": "a0fcc7f1631f8bb6005489b68314b47f6097850cfe25667ad99cfc570f1e5d60",
   "outputsByteIdentical": true,
-  "retainedOutput": "probe-output.json (the head output; the base output is byte-identical, same sha256)",
+  "retainedOutput": "probe-output.json (byte-identical to both the base and the head output: a0fcc7f1631f8bb6005489b68314b47f6097850cfe25667ad99cfc570f1e5d60)",
   "rowsCompared": 2108,
   "rowsByKind": {
    "model": 36,
@@ -120,17 +125,27 @@
   "reason": "[Observed] npm run poc from the base clone with --repo /home/orca/orca/projects/butlers --port 0 --state-dir <scratch> exited with \"configured repository authority rejected (binding-unreadable)\": resolvePwbRepositoryBinding cannot read the approved locator from this account (git-observation.ts). The daemon serves only the registered locator, so a Butlers capture needs the owner account. The fixture corpus drives the same production route handlers (pocRoutes) under both Host forms."
  },
  "rule6": {
-  "commit": "006012e5bbaee7bf95cc19f737fcc111f5e22ba2",
+  "commit": "2992265795d458fc45d194b30fbff0be577802d7",
   "killed": 10,
   "total": 10,
   "treeRestored": true,
-  "record": "mutants-006012e5.json"
+  "record": "mutants-29922657.json",
+  "mutationPlanLiteral": {
+   "commit": "2992265795d458fc45d194b30fbff0be577802d7",
+   "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+   "id": "count-fact-numbered-over-unknown (apps/three-surface-poc/src/pwb-mutation-sweep.ts)",
+   "old": "    if (primaryReason !== undefined) {\n      // A count over an Unknown denominator",
+   "new": "    if (false) {\n      // A count over an Unknown denominator",
+   "check": "npx vitest run packages/three-surface-poc-core/src/project-shape-coverage.test.ts",
+   "result": "2 failed | 30 passed, including the named must-fail \"a count over an Unknown denominator is Unknown with the source reason, never a number\"; source restored byte-identical",
+   "why": "the coverage guard this sweep-plan literal mutates was rewritten (reasons.length > 0 -> primaryReason !== undefined), so the literal moved with it"
+  }
  },
  "sweeps": {
   "tool": "sweep.py",
   "population": "git ls-files *.ts (not *.test.ts) under packages/three-surface-poc-core/src and apps/three-surface-poc/src",
   "base": {
-   "commit": "40f1387d6bdd5fa0c4202dedb31aad07186c2d92",
+   "commit": "7202d49b135c6f9eee5f4924f7560076d4c0e910",
    "population": 134,
    "counts": {
     "cast": 5,
@@ -140,7 +155,7 @@
    }
   },
   "head": {
-   "commit": "006012e5bbaee7bf95cc19f737fcc111f5e22ba2",
+   "commit": "2992265795d458fc45d194b30fbff0be577802d7",
    "population": 135,
    "counts": {
     "cast": 0,
