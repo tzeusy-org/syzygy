@@ -420,6 +420,7 @@ interface CaseResult {
   readonly entryReads: number;
   readonly machine: readonly (readonly [string, string, string])[];
   readonly human: string;
+  readonly coverage: ReturnType<typeof computeCoverage>['repositories'];
 }
 
 async function runCase(tree: MemoryTree, extra: Partial<CaptureDependencies> = {}): Promise<CaseResult> {
@@ -455,6 +456,7 @@ async function runCase(tree: MemoryTree, extra: Partial<CaptureDependencies> = {
       d.authorization === 'admitted' ? (d.provenance ?? '') : (d.diagnostic ?? ''),
     ]),
     human,
+    coverage: evaluation.coverage.repositories,
   };
 }
 
@@ -699,6 +701,24 @@ describe('CAP1-REQ-011 v1.0 — withdrawal and unresolved withdrawal stay fail c
       expect(result.src).toEqual(['Unknown', diagnostic]);
       expect(result.srcRootReads).toBe(0);
     }
+  });
+
+  it('a valid withdrawal under another reference is the record the coverage row cites; the defeated grant stays visible as untrusted (syzygy-u2a.6)', async () => {
+    const tree = v1Tree(['c-w']);
+    putConsent(tree, SRC);
+    putConsent(tree, WITHDRAWAL);
+    const result = await runCase(tree);
+    const row = result.coverage[1];
+    if (row?.state !== 'unconsented' || row.basis !== 'withdrawn') throw new Error('expected a withdrawn row');
+    expect([row.reference, row.consent.reference, row.consent.recordId, row.consent.grantState, row.consent.provenance]).toEqual([
+      'c-src',
+      'c-w',
+      'c-w',
+      'withdrawn',
+      'owner-adopted (bootstrap, uncorrelated)',
+    ]);
+    expect(row.consent.artifactDigest).toBe(`sha256:${sha256Hex(consentArtifactText(WITHDRAWAL))}`);
+    expect([row.untrustedRecord?.recordId, row.untrustedRecord?.grantState]).toEqual(['c-src', 'in-force']);
   });
 
   it('an unresolvable withdrawal reference refuses every pair, naming that reference', async () => {

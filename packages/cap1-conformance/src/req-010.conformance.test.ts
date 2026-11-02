@@ -145,6 +145,10 @@ describe('CAP1-REQ-010 — one decision per declared repository, joined by ordin
     expect(() => computeCoverage(decl, swapped, OBSERVATIONS)).toThrow(
       'decision 0 is for repo-unconsented (consent-r2), not repo-observed (consent-r1)',
     );
+    const reidentified = [{ ...decisions[0], repositoryId: 'repo-elsewhere' as RepositoryId }, decisions[1], decisions[2]] as typeof decisions;
+    expect(() => computeCoverage(decl, reidentified, OBSERVATIONS)).toThrow(
+      'decision 0 is for repo-elsewhere (consent-r1), not repo-observed (consent-r1)',
+    );
     const rereferenced = [{ ...decisions[0], reference: 'consent-r9' }, decisions[1], decisions[2]] as typeof decisions;
     expect(() => computeCoverage(decl, rereferenced, OBSERVATIONS)).toThrow(
       'decision 0 is for repo-observed (consent-r9), not repo-observed (consent-r1)',
