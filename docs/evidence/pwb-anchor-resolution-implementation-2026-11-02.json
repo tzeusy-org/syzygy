@@ -1,0 +1,91 @@
+{
+  "record": "P-96 anchor-resolution implementation measurements (syzygy-u05.21)",
+  "date": "2026-11-02",
+  "subject": {
+    "requirement": "PWB-REQ-014",
+    "signedTag": "pwb-anchor-resolution-amendment-v1.0",
+    "authorization": ".syzygy/governance/decisions/OWNER-DIRECTION-IMPLEMENTATION-SIGNED-AMENDMENTS-2026-10-15.md",
+    "implementationCommit": "30ca9020fa817c4aef2c99270c8fdbb5264f58eb",
+    "rule6Record": "docs/evidence/pwb-anchor-resolution-rule6-2026-11-02.json (23 mutants, 23 killed, read from the file)"
+  },
+  "measuredOn": "the shared synthetic fixture models of apps/three-surface-poc/src/test-model-fixture.ts (unevaluated; observed with the fixture shape; observed with a baseline spec); no Butlers read, no new content class",
+  "method": {
+    "resolver": "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts independentResolve: reads only blocks[].blockId and blocks[].anchors[].targetId of the serialized machine narrative and the serialized machine answer (JSON.stringify(model), the /api/poc body), counting objects with a string identity member by a JSON.parse reviver; imports no Polaris, narrative or rendering module",
+    "predicate": "an anchor resolves when the answer serves exactly one object with a string `identity` member whose whole value equals the anchor's target identity; every pair is Unknown when the answer serves none"
+  },
+  "figures": {
+    "unevaluated": {
+      "blocks": 11,
+      "anchors": 19,
+      "narrativePair": "Unknown (missing-evidence): the answer serves no own identity"
+    },
+    "observed": {
+      "blocks": 58,
+      "anchors": 70,
+      "narrativePair": {
+        "resolved": 50,
+        "total": 70
+      },
+      "blockPairDistribution": {
+        "1/1": 43,
+        "0/1": 5,
+        "0/2": 6,
+        "0/3": 1,
+        "2/2": 2,
+        "3/3": 1
+      }
+    },
+    "observed-with-baseline": {
+      "blocks": 61,
+      "anchors": 74,
+      "narrativePair": {
+        "resolved": 54,
+        "total": 74
+      }
+    },
+    "withholdOneTarget": "observed evaluation, the repository-level source identity anchored by 12 blocks (one anchor each): narrative 38 of 70; exactly those 12 blocks lose 1"
+  },
+  "machineNarrativeBytes": {
+    "note": "JSON.stringify of the narrative of one render, same fixture before (origin/main 43dfd9b0 polaris.ts and polaris-narrative.ts) and after",
+    "unevaluated": {
+      "before": 11895,
+      "after": 16359,
+      "blocks": 11
+    },
+    "observed": {
+      "before": 45792,
+      "after": 49334,
+      "blocks": 58
+    },
+    "observed-with-baseline": {
+      "before": 48934,
+      "after": 52656,
+      "blocks": 61
+    },
+    "perBlockBytes": "about 61 (the pair `\"anchorsResolved\":{\"kind\":\"counted\",\"resolved\":R,\"total\":T}` plus a comma) in the counted case; the Unknown pair is larger (about 400 bytes, with its reason and route) and is served only when the answer serves no own identity",
+    "machineCeiling": "maxMachineResponseBytes 16777216 (project-shape-observation.ts PWB_RESOURCE_LIMITS); the delta's estimate of about 30 KB at 697 blocks is [Inferred] about 43 KB at 61 bytes a block, not measured on a Butlers capture"
+  },
+  "humanPage": {
+    "htmlBytesBeforeAfter": {
+      "unevaluated": [
+        106540,
+        106540
+      ],
+      "observed": [
+        208169,
+        208169
+      ],
+      "observed-with-baseline": [
+        213986,
+        213986
+      ]
+    },
+    "note": "byte counts equal before and after in all three evaluations. The page's sha256 differs between any two runs at one commit (the fixture repository path is in the page), so equality is read by byte count and by the test that the page names no pair."
+  },
+  "butlersFigure": {
+    "status": "[Unknown] not re-derived by this lane",
+    "reason": "the daemon binds only its approved Butlers locator (git-observation.ts PWB_APPROVED_REPOSITORY_LOCATOR), which lies outside this lane's home; the lane did not read it, and the 2026-10-03 captures were not retained (syzygy-yp4x note N3).",
+    "carried": "the 883-of-902 figure of docs/evidence/n9-machine-channel-provenance-measurement-2026-10-03.json rests on one method (scripts/measure_machine_channel_provenance.py) over those unretained captures at Syzygy 71b4f525 and Butlers 32f38feb; it is not quoted as a current figure.",
+    "toRederive": "an operator run: serve a private daemon from a committed tree of this implementation, capture GET /api/poc and GET /api/poc/polaris, retain both with sha256, run scripts/measure_machine_channel_provenance.py on the pair (its resolved and unresolved counts) and compare with the served narrative.anchorsResolved of the second capture. The test-side independentResolve gives the same count from the same two files."
+  }
+}

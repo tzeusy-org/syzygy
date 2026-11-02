@@ -1,0 +1,822 @@
+{
+  "subject": {
+    "commit": "30ca9020fa817c4aef2c99270c8fdbb5264f58eb",
+    "branch": "agent/syzygy-u05.21",
+    "fileSha256": {
+      "apps/three-surface-poc/src/polaris-anchor-resolution.ts": "f1d0aeaf7a198cefe212b66a85670ff3138a0fd8f6a8a28e42ff7417876432cc",
+      "apps/three-surface-poc/src/polaris-narrative.ts": "9c7707c662bf7e42d961f0ecd0885ba4926d97b683b17a6cc6702f5e040d8b94",
+      "apps/three-surface-poc/src/polaris.ts": "ea0d11f82309e460160ec368826ba2e034a072badee97f0a6f6228919f992354",
+      "apps/three-surface-poc/src/routes.ts": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0"
+    },
+    "testFileSha256": {
+      "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts": "8d17cc6d1502c77f45f7bd212234ea0c20351d982434ac47ca74638163a73385"
+    }
+  },
+  "runnerPath": "scripts/rule6_mutation_runner.py",
+  "runnerSha256": "2bc35be550f0beb6ad355e0fc89719c1ae28320d186f41929af96dd59a376b22",
+  "runner": "single-occurrence textual replacement of `old` by `new` in `file`, then `npx vitest run --project <project> <testFiles>` in the tree; killed = at least one failed test; file restored from git after each run",
+  "project": "@syzygy/three-surface-poc-app",
+  "ranAt": "2026-11-02T10:27:55+00:00",
+  "mutants": [
+    {
+      "id": "S1",
+      "file": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "old": "anchorId: `${blockId}#a${index + 1}`,",
+      "new": "anchorId: `${blockId}:a${index + 1}`,",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchor shape: every anchor takes the one shape and names its block carries exactly the signed fields, and an identity beginning with its own block and \"#\"",
+          "firstErrorLine": "AssertionError: unevaluated: block:project:butlers:a1 names block block:project:butlers: expected false to be true // Object.is equality"
+        }
+      ],
+      "note": "anchor off the shape: identity without \"#\""
+    },
+    {
+      "id": "S2",
+      "file": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "old": "anchorId: `${blockId}#a${index + 1}`,",
+      "new": "anchorId: `a${index + 1}`,",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchor shape: every anchor takes the one shape and names its block carries exactly the signed fields, and an identity beginning with its own block and \"#\"",
+          "firstErrorLine": "AssertionError: unevaluated: a1 names block block:project:butlers: expected false to be true // Object.is equality"
+        }
+      ],
+      "note": "anchor naming no block"
+    },
+    {
+      "id": "S3",
+      "file": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "old": "anchorId: `${blockId}#a${index + 1}`,",
+      "new": "anchorId: `block:other#a${index + 1}`,",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchor shape: every anchor takes the one shape and names its block carries exactly the signed fields, and an identity beginning with its own block and \"#\"",
+          "firstErrorLine": "AssertionError: unevaluated: block:other#a1 names block block:project:butlers: expected false to be true // Object.is equality"
+        }
+      ],
+      "note": "anchor naming another block"
+    },
+    {
+      "id": "S4",
+      "file": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "old": "        revision: anchor.revision,\n",
+      "new": "",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchor shape: every anchor takes the one shape and names its block carries exactly the signed fields, and an identity beginning with its own block and \"#\"",
+          "firstErrorLine": "AssertionError: unevaluated: block:project:butlers#a1: expected [ 'anchorId', 'captured', \u2026(4) ] to deeply equal [ 'anchorId', 'captured', \u2026(5) ]"
+        }
+      ],
+      "note": "anchor missing a field of the one shape (revision)"
+    },
+    {
+      "id": "S5",
+      "file": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "old": "        revision: anchor.revision,\n",
+      "new": "        revision: anchor.revision,\n        extra: 1,\n",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchor shape: every anchor takes the one shape and names its block carries exactly the signed fields, and an identity beginning with its own block and \"#\"",
+          "firstErrorLine": "AssertionError: unevaluated: block:project:butlers#a1: expected [ 'anchorId', 'captured', \u2026(6) ] to deeply equal [ 'anchorId', 'captured', \u2026(5) ]"
+        }
+      ],
+      "note": "anchor with a field outside the one shape"
+    },
+    {
+      "id": "P1",
+      "file": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "old": "blocks: this.blocks.map((block, index) => ({ ...block, anchorsResolved: pairs.blocks[index] as AnchorsResolved })),",
+      "new": "blocks: [...this.blocks],",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 12,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver matches per block and for the narrative in every evaluation, with N >= 2 blocks and mixed counts",
+          "firstErrorLine": "TypeError: Cannot read properties of undefined (reading 'kind')"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver hand-typed literals: the observed evaluation is 50 of 70 over 58 blocks, in the distribution the resolver finds",
+          "firstErrorLine": "TypeError: Cannot read properties of undefined (reading 'kind')"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the narrative's pair is the sum of its blocks' pairs",
+          "firstErrorLine": "TypeError: Cannot read properties of undefined (reading 'kind')"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the signed scenario: three anchors, two served once and one served without an identity of its own, is 2 of 3 and stays non-citable at 2 of 3 and at 3 of 3",
+          "firstErrorLine": "AssertionError: expected undefined to deeply equal { kind: 'counted', resolved: 2, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a narrative whose every anchor resolves is 6 of 6 and stays non-citable; one own identity is enough to count (not Unknown)",
+          "firstErrorLine": "AssertionError: expected [ undefined, undefined ] to deeply equal [ { kind: 'counted', \u2026(2) }, \u2026(1) ]"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a target served by two records resolves nowhere (exactly one), and one identity counted per anchor naming it",
+          "firstErrorLine": "AssertionError: expected [ undefined, undefined ] to deeply equal [ { kind: 'counted', \u2026(2) }, \u2026(1) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (delete) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "TypeError: Cannot read properties of undefined (reading 'kind')"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (reference) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "TypeError: Cannot read properties of undefined (reading 'kind')"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a block with two anchors naming one withheld target loses both",
+          "firstErrorLine": "AssertionError: expected [ undefined, undefined ] to deeply equal [ { kind: 'counted', \u2026(2) }, \u2026(1) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding every identity turns every pair Unknown, with its reason, never a count",
+          "firstErrorLine": "AssertionError: expected undefined to match object { kind: 'unknown', \u2026(2) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a record whose identity is two records served twice is ambiguous: the duplicate resolves nowhere",
+          "firstErrorLine": "TypeError: Cannot read properties of undefined (reading 'kind')"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved is presentation, machine channel only serves the pair over the route: the independent resolver, reading the real /api/poc and /api/poc/polaris bodies, reproduces it; nothing else in the envelope or the answer carries it",
+          "firstErrorLine": "TypeError: Cannot read properties of undefined (reading 'kind')"
+        }
+      ],
+      "note": "anchored block without a pair"
+    },
+    {
+      "id": "P2",
+      "file": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "old": "      anchorsResolved: pairs.narrative,\n",
+      "new": "",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 13,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver matches per block and for the narrative in every evaluation, with N >= 2 blocks and mixed counts",
+          "firstErrorLine": "TypeError: Cannot read properties of undefined (reading 'kind')"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver hand-typed literals: the observed evaluation is 50 of 70 over 58 blocks, in the distribution the resolver finds",
+          "firstErrorLine": "AssertionError: expected undefined to deeply equal { kind: 'counted', resolved: 50, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the narrative's pair is the sum of its blocks' pairs",
+          "firstErrorLine": "AssertionError: expected undefined to deeply equal { kind: 'counted', resolved: 50, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the signed scenario: three anchors, two served once and one served without an identity of its own, is 2 of 3 and stays non-citable at 2 of 3 and at 3 of 3",
+          "firstErrorLine": "AssertionError: expected undefined to deeply equal { kind: 'counted', resolved: 5, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a narrative whose every anchor resolves is 6 of 6 and stays non-citable; one own identity is enough to count (not Unknown)",
+          "firstErrorLine": "AssertionError: expected undefined to deeply equal { kind: 'counted', resolved: 6, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a target served by two records resolves nowhere (exactly one), and one identity counted per anchor naming it",
+          "firstErrorLine": "AssertionError: expected undefined to deeply equal { kind: 'counted', resolved: 1, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (delete) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected undefined to deeply equal { kind: 'counted', resolved: 38, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (reference) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected undefined to deeply equal { kind: 'counted', resolved: 38, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a block with two anchors naming one withheld target loses both",
+          "firstErrorLine": "AssertionError: expected undefined to deeply equal { kind: 'counted', resolved: 2, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding every identity turns every pair Unknown, with its reason, never a count",
+          "firstErrorLine": "AssertionError: expected undefined to match object { kind: 'unknown', \u2026(2) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation an evaluation that serves no own identity from the start (no shape observed) is Unknown, not 0 of N",
+          "firstErrorLine": "TypeError: Cannot read properties of undefined (reading 'kind')"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a record whose identity is two records served twice is ambiguous: the duplicate resolves nowhere",
+          "firstErrorLine": "TypeError: Cannot read properties of undefined (reading 'kind')"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved is presentation, machine channel only serves the pair over the route: the independent resolver, reading the real /api/poc and /api/poc/polaris bodies, reproduces it; nothing else in the envelope or the answer carries it",
+          "firstErrorLine": "TypeError: Cannot read properties of undefined (reading 'kind')"
+        }
+      ],
+      "note": "narrative without its pair"
+    },
+    {
+      "id": "P3",
+      "file": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "old": "anchorsResolved: pairs.blocks[index] as AnchorsResolved",
+      "new": "anchorsResolved: pairs.blocks[0] as AnchorsResolved",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 10,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver matches per block and for the narrative in every evaluation, with N >= 2 blocks and mixed counts",
+          "firstErrorLine": "AssertionError: observed: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver hand-typed literals: the observed evaluation is 50 of 70 over 58 blocks, in the distribution the resolver finds",
+          "firstErrorLine": "AssertionError: expected { '0/1': 58 } to deeply equal { '0/1': 5, '0/2': 6, '0/3': 1, \u2026(3) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the narrative's pair is the sum of its blocks' pairs",
+          "firstErrorLine": "AssertionError: expected 1 to be 2 // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the signed scenario: three anchors, two served once and one served without an identity of its own, is 2 of 3 and stays non-citable at 2 of 3 and at 3 of 3",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 2, \u2026(1) } to deeply equal { kind: 'counted', resolved: 1, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a target served by two records resolves nowhere (exactly one), and one identity counted per anchor naming it",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'counted', \u2026(2) }, \u2026(1) ] to deeply equal [ { kind: 'counted', \u2026(2) }, \u2026(1) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (delete) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ [ \u2026(2) ], [ \u2026(2) ], [ \u2026(2) ], \u2026(9) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (reference) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ [ \u2026(2) ], [ \u2026(2) ], [ \u2026(2) ], \u2026(9) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a block with two anchors naming one withheld target loses both",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'counted', \u2026(2) }, \u2026(1) ] to deeply equal [ { kind: 'counted', \u2026(2) }, \u2026(1) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a record whose identity is two records served twice is ambiguous: the duplicate resolves nowhere",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved is presentation, machine channel only serves the pair over the route: the independent resolver, reading the real /api/poc and /api/poc/polaris bodies, reproduces it; nothing else in the envelope or the answer carries it",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        }
+      ],
+      "note": "wrong pair: every block takes the first block's"
+    },
+    {
+      "id": "C1",
+      "file": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "old": "({ ...block, anchorsResolved: pairs.blocks[index] as AnchorsResolved })",
+      "new": "({ ...block, citable: (pairs.blocks[index] as { resolved?: number; total?: number }).resolved === (pairs.blocks[index] as { resolved?: number; total?: number }).total, anchorsResolved: pairs.blocks[index] as AnchorsResolved })",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 6,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the signed scenario: three anchors, two served once and one served without an identity of its own, is 2 of 3 and stays non-citable at 2 of 3 and at 3 of 3",
+          "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a narrative whose every anchor resolves is 6 of 6 and stays non-citable; one own identity is enough to count (not Unknown)",
+          "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (delete) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (reference) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding every identity turns every pair Unknown, with its reason, never a count",
+          "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved is presentation, machine channel only the human page carries no pair, no unit is citable, and the machine answer carries none",
+          "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+        }
+      ],
+      "note": "unit made citable by its pair (block)"
+    },
+    {
+      "id": "C2",
+      "file": "apps/three-surface-poc/src/polaris-narrative.ts",
+      "old": "      citable: false,\n      roles:",
+      "new": "      citable: pairs.narrative.kind === 'counted' && pairs.narrative.resolved === pairs.narrative.total,\n      roles:",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a narrative whose every anchor resolves is 6 of 6 and stays non-citable; one own identity is enough to count (not Unknown)",
+          "firstErrorLine": "AssertionError: expected true to be false // Object.is equality"
+        }
+      ],
+      "note": "unit made citable by its pair (narrative)"
+    },
+    {
+      "id": "R1",
+      "file": "apps/three-surface-poc/src/polaris-anchor-resolution.ts",
+      "old": "counts.get(anchor.targetId) === 1",
+      "new": "(counts.get(anchor.targetId) ?? 0) >= 1",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a target served by two records resolves nowhere (exactly one), and one identity counted per anchor naming it",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'counted', \u2026(2) }, \u2026(1) ] to deeply equal [ { kind: 'counted', \u2026(2) }, \u2026(1) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a record whose identity is two records served twice is ambiguous: the duplicate resolves nowhere",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        }
+      ],
+      "note": "wrong pair: an ambiguous target (served twice) counted resolved"
+    },
+    {
+      "id": "R2",
+      "file": "apps/three-surface-poc/src/polaris-anchor-resolution.ts",
+      "old": "record['identity'] : undefined",
+      "new": "record['identity'] : record['sourceIdentity']",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 8,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver matches per block and for the narrative in every evaluation, with N >= 2 blocks and mixed counts",
+          "firstErrorLine": "AssertionError: observed: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver hand-typed literals: the observed evaluation is 50 of 70 over 58 blocks, in the distribution the resolver finds",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: +0, \u2026(1) } to deeply equal { kind: 'counted', resolved: 50, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the signed scenario: three anchors, two served once and one served without an identity of its own, is 2 of 3 and stays non-citable at 2 of 3 and at 3 of 3",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 3, \u2026(1) } to deeply equal { kind: 'counted', resolved: 2, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (delete) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ [ \u2026(2) ], [ \u2026(2) ], [ \u2026(2) ], \u2026(9) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (reference) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ [ \u2026(2) ], [ \u2026(2) ], [ \u2026(2) ], \u2026(9) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding every identity turns every pair Unknown, with its reason, never a count",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: +0, \u2026(1) } to match object { kind: 'unknown', \u2026(2) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a record whose identity is two records served twice is ambiguous: the duplicate resolves nowhere",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved is presentation, machine channel only serves the pair over the route: the independent resolver, reading the real /api/poc and /api/poc/polaris bodies, reproduces it; nothing else in the envelope or the answer carries it",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        }
+      ],
+      "note": "wrong pair: a reference (sourceIdentity) counted as an own identity"
+    },
+    {
+      "id": "R3",
+      "file": "apps/three-surface-poc/src/polaris-anchor-resolution.ts",
+      "old": "return { kind: 'counted', resolved: blockResolved, total: block.anchors.length };",
+      "new": "return { kind: 'counted', resolved: blockResolved === block.anchors.length - 1 ? block.anchors.length : blockResolved, total: block.anchors.length };",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 10,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver matches per block and for the narrative in every evaluation, with N >= 2 blocks and mixed counts",
+          "firstErrorLine": "AssertionError: observed: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver hand-typed literals: the observed evaluation is 50 of 70 over 58 blocks, in the distribution the resolver finds",
+          "firstErrorLine": "AssertionError: expected { '0/2': 6, '0/3': 1, '1/1': 48, \u2026(2) } to deeply equal { '0/1': 5, '0/2': 6, '0/3': 1, \u2026(3) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the narrative's pair is the sum of its blocks' pairs",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 50, \u2026(1) } to deeply equal { kind: 'counted', resolved: 55, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the signed scenario: three anchors, two served once and one served without an identity of its own, is 2 of 3 and stays non-citable at 2 of 3 and at 3 of 3",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 3, \u2026(1) } to deeply equal { kind: 'counted', resolved: 2, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a target served by two records resolves nowhere (exactly one), and one identity counted per anchor naming it",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'counted', \u2026(2) }, \u2026(1) ] to deeply equal [ { kind: 'counted', \u2026(2) }, \u2026(1) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (delete) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ [ \u2026(2) ], [ \u2026(2) ], [ \u2026(2) ], \u2026(9) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (reference) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected [] to deeply equal [ [ \u2026(2) ], [ \u2026(2) ], [ \u2026(2) ], \u2026(9) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a block with two anchors naming one withheld target loses both",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'counted', \u2026(2) }, \u2026(1) ] to deeply equal [ { kind: 'counted', \u2026(2) }, \u2026(1) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a record whose identity is two records served twice is ambiguous: the duplicate resolves nowhere",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved is presentation, machine channel only serves the pair over the route: the independent resolver, reading the real /api/poc and /api/poc/polaris bodies, reproduces it; nothing else in the envelope or the answer carries it",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        }
+      ],
+      "note": "rounded pair: a block one short of its total served as its total"
+    },
+    {
+      "id": "R4",
+      "file": "apps/three-surface-poc/src/polaris-anchor-resolution.ts",
+      "old": "narrative: { kind: 'counted', resolved, total } };",
+      "new": "narrative: { kind: 'counted', resolved: Math.max(resolved, total - 1), total } };",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 9,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver matches per block and for the narrative in every evaluation, with N >= 2 blocks and mixed counts",
+          "firstErrorLine": "AssertionError: observed: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver hand-typed literals: the observed evaluation is 50 of 70 over 58 blocks, in the distribution the resolver finds",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 69, \u2026(1) } to deeply equal { kind: 'counted', resolved: 50, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the narrative's pair is the sum of its blocks' pairs",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 69, \u2026(1) } to deeply equal { kind: 'counted', resolved: 50, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a target served by two records resolves nowhere (exactly one), and one identity counted per anchor naming it",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 2, \u2026(1) } to deeply equal { kind: 'counted', resolved: 1, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (delete) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 69, \u2026(1) } to deeply equal { kind: 'counted', resolved: 38, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (reference) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 69, \u2026(1) } to deeply equal { kind: 'counted', resolved: 38, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a block with two anchors naming one withheld target loses both",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 4, \u2026(1) } to deeply equal { kind: 'counted', resolved: 2, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a record whose identity is two records served twice is ambiguous: the duplicate resolves nowhere",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved is presentation, machine channel only serves the pair over the route: the independent resolver, reading the real /api/poc and /api/poc/polaris bodies, reproduces it; nothing else in the envelope or the answer carries it",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        }
+      ],
+      "note": "rounded pair: the narrative one short of its total"
+    },
+    {
+      "id": "R5",
+      "file": "apps/three-surface-poc/src/polaris-anchor-resolution.ts",
+      "old": "blocks: blocks.map(() => NO_OWN_IDENTITY), narrative: NO_OWN_IDENTITY",
+      "new": "blocks: blocks.map((block) => ({ kind: 'counted' as const, resolved: 0, total: block.anchors.length })), narrative: NO_OWN_IDENTITY",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding every identity turns every pair Unknown, with its reason, never a count",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: +0, \u2026(1) } to match object { kind: 'unknown', \u2026(2) }"
+        }
+      ],
+      "note": "a count where blocks should be Unknown"
+    },
+    {
+      "id": "R6",
+      "file": "apps/three-surface-poc/src/polaris-anchor-resolution.ts",
+      "old": "narrative: NO_OWN_IDENTITY };",
+      "new": "narrative: { kind: 'counted', resolved: 0, total: 0 } };",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 3,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver matches per block and for the narrative in every evaluation, with N >= 2 blocks and mixed counts",
+          "firstErrorLine": "Error: block:project:butlers: a block pair is Unknown beside a counted narrative pair"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding every identity turns every pair Unknown, with its reason, never a count",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: +0, \u2026(1) } to match object { kind: 'unknown', \u2026(2) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation an evaluation that serves no own identity from the start (no shape observed) is Unknown, not 0 of N",
+          "firstErrorLine": "Error: block:project:butlers: a block pair is Unknown beside a counted narrative pair"
+        }
+      ],
+      "note": "a count where the narrative should be Unknown"
+    },
+    {
+      "id": "R7",
+      "file": "apps/three-surface-poc/src/polaris-anchor-resolution.ts",
+      "old": "if (counts.size === 0)",
+      "new": "if (counts.size < 2)",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a narrative whose every anchor resolves is 6 of 6 and stays non-citable; one own identity is enough to count (not Unknown)",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'unknown', \u2026(4) }, \u2026(1) ] to deeply equal [ { kind: 'counted', \u2026(2) }, \u2026(1) ]"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a block with two anchors naming one withheld target loses both",
+          "firstErrorLine": "AssertionError: expected [ { kind: 'unknown', \u2026(4) }, \u2026(1) ] to deeply equal [ { kind: 'counted', \u2026(2) }, \u2026(1) ]"
+        }
+      ],
+      "note": "Unknown where a count belongs (one own identity is enough)"
+    },
+    {
+      "id": "R8",
+      "file": "apps/three-surface-poc/src/polaris-anchor-resolution.ts",
+      "old": "total += block.anchors.length;",
+      "new": "total += 1;",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 11,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver matches per block and for the narrative in every evaluation, with N >= 2 blocks and mixed counts",
+          "firstErrorLine": "AssertionError: observed: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver hand-typed literals: the observed evaluation is 50 of 70 over 58 blocks, in the distribution the resolver finds",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 50, \u2026(1) } to deeply equal { kind: 'counted', resolved: 50, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the narrative's pair is the sum of its blocks' pairs",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 50, \u2026(1) } to deeply equal { kind: 'counted', resolved: 50, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the signed scenario: three anchors, two served once and one served without an identity of its own, is 2 of 3 and stays non-citable at 2 of 3 and at 3 of 3",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 5, \u2026(1) } to deeply equal { kind: 'counted', resolved: 5, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a narrative whose every anchor resolves is 6 of 6 and stays non-citable; one own identity is enough to count (not Unknown)",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 6, \u2026(1) } to deeply equal { kind: 'counted', resolved: 6, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a target served by two records resolves nowhere (exactly one), and one identity counted per anchor naming it",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 1, \u2026(1) } to deeply equal { kind: 'counted', resolved: 1, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (delete) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 38, \u2026(1) } to deeply equal { kind: 'counted', resolved: 38, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (reference) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 38, \u2026(1) } to deeply equal { kind: 'counted', resolved: 38, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a block with two anchors naming one withheld target loses both",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: 2, \u2026(1) } to deeply equal { kind: 'counted', resolved: 2, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a record whose identity is two records served twice is ambiguous: the duplicate resolves nowhere",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved is presentation, machine channel only serves the pair over the route: the independent resolver, reading the real /api/poc and /api/poc/polaris bodies, reproduces it; nothing else in the envelope or the answer carries it",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        }
+      ],
+      "note": "narrative pair not the sum: total counts blocks"
+    },
+    {
+      "id": "R9",
+      "file": "apps/three-surface-poc/src/polaris-anchor-resolution.ts",
+      "old": "    resolved += blockResolved;\n",
+      "new": "",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 11,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver matches per block and for the narrative in every evaluation, with N >= 2 blocks and mixed counts",
+          "firstErrorLine": "AssertionError: observed: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver hand-typed literals: the observed evaluation is 50 of 70 over 58 blocks, in the distribution the resolver finds",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: +0, \u2026(1) } to deeply equal { kind: 'counted', resolved: 50, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the narrative's pair is the sum of its blocks' pairs",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: +0, \u2026(1) } to deeply equal { kind: 'counted', resolved: 50, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver the signed scenario: three anchors, two served once and one served without an identity of its own, is 2 of 3 and stays non-citable at 2 of 3 and at 3 of 3",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: +0, \u2026(1) } to deeply equal { kind: 'counted', resolved: 5, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a narrative whose every anchor resolves is 6 of 6 and stays non-citable; one own identity is enough to count (not Unknown)",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: +0, \u2026(1) } to deeply equal { kind: 'counted', resolved: 6, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved: every pair reproduced exactly by the independent resolver a target served by two records resolves nowhere (exactly one), and one identity counted per anchor naming it",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: +0, \u2026(1) } to deeply equal { kind: 'counted', resolved: 1, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (delete) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: +0, \u2026(1) } to deeply equal { kind: 'counted', resolved: 38, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding one resolved target (reference) lowers exactly the blocks anchored to it, by the anchors naming it, and they stay non-citable",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: +0, \u2026(1) } to deeply equal { kind: 'counted', resolved: 38, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a block with two anchors naming one withheld target loses both",
+          "firstErrorLine": "AssertionError: expected { kind: 'counted', resolved: +0, \u2026(1) } to deeply equal { kind: 'counted', resolved: 2, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation a record whose identity is two records served twice is ambiguous: the duplicate resolves nowhere",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        },
+        {
+          "test": "PWB-REQ-014 anchorsResolved is presentation, machine channel only serves the pair over the route: the independent resolver, reading the real /api/poc and /api/poc/polaris bodies, reproduces it; nothing else in the envelope or the answer carries it",
+          "firstErrorLine": "AssertionError: expected { blocks: Map{ \u2026(58) }, \u2026(1) } to deeply equal { blocks: Map{ \u2026(58) }, \u2026(1) }"
+        }
+      ],
+      "note": "narrative pair not the sum: resolved omitted"
+    },
+    {
+      "id": "R10",
+      "file": "apps/three-surface-poc/src/polaris-anchor-resolution.ts",
+      "old": "  label: 'Unknown',\n",
+      "new": "",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 withholding: the pair follows the machine answer at the same evaluation withholding every identity turns every pair Unknown, with its reason, never a count",
+          "firstErrorLine": "AssertionError: expected { kind: 'unknown', \u2026(3) } to match object { kind: 'unknown', \u2026(2) }"
+        }
+      ],
+      "note": "Unknown without its label"
+    },
+    {
+      "id": "H1",
+      "file": "apps/three-surface-poc/src/polaris.ts",
+      "old": "    return { html, narrative: activeRegistry.narrative('machineAnswer' in inputs",
+      "new": "    return { html: `${html}<!-- anchorsResolved -->`, narrative: activeRegistry.narrative('machineAnswer' in inputs",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved is presentation, machine channel only the human page carries no pair, no unit is citable, and the machine answer carries none",
+          "firstErrorLine": "AssertionError: expected '<!doctype html>\\n<html lang=\"en\">\\n<h\u2026' not to match /anchorsResolved|anchors-resolved|anc\u2026/i"
+        }
+      ],
+      "note": "the human page renders the pair"
+    },
+    {
+      "id": "H2",
+      "file": "apps/three-surface-poc/src/routes.ts",
+      "old": "      evidence: model.evaluation.evidence,\n      project:",
+      "new": "      evidence: { ...model.evaluation.evidence, anchorsResolved: narrative.anchorsResolved },\n      project:",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved is presentation, machine channel only serves the pair over the route: the independent resolver, reading the real /api/poc and /api/poc/polaris bodies, reproduces it; nothing else in the envelope or the answer carries it",
+          "firstErrorLine": "AssertionError: expected '{\"kind\":\"polaris-presentation\",\"versi\u2026' not to contain 'anchorsResolved'"
+        }
+      ],
+      "note": "a status claim (the envelope evidence) fed by the pair"
+    },
+    {
+      "id": "H3",
+      "file": "apps/three-surface-poc/src/routes.ts",
+      "old": "const projected = { ...servedModel(), links: linksFor(request) };",
+      "new": "const projected = { ...servedModel(), links: linksFor(request), anchorsResolved: renderPolarisPresentation(servedModel()).narrative.anchorsResolved };",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-anchor-resolution.test.ts"
+      ],
+      "command": "npx vitest run --project @syzygy/three-surface-poc-app apps/three-surface-poc/src/polaris-anchor-resolution.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 15,
+      "failures": [
+        {
+          "test": "PWB-REQ-014 anchorsResolved is presentation, machine channel only serves the pair over the route: the independent resolver, reading the real /api/poc and /api/poc/polaris bodies, reproduces it; nothing else in the envelope or the answer carries it",
+          "firstErrorLine": "AssertionError: expected '{\"schema\":\"syzygy-three-surface-poc/v\u2026' not to contain 'anchorsResolved'"
+        }
+      ],
+      "note": "the pair on the machine answer /api/poc"
+    }
+  ]
+}

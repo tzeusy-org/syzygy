@@ -293,7 +293,7 @@ describe('Polaris narrative claim blocks (PWB-REQ-014; RFC7-2, RFC7-3, RFC7-9)',
     supports.push('claim:y');
     expect(block.anchors[0]?.captured.label).toBe('Observed');
     expect(block.anchors[0]?.supports).toEqual(['claim:x']);
-    expect(registry.narrative().blocks[0]?.anchors[0]?.captured.label).toBe('Observed');
+    expect(registry.narrative({}).blocks[0]?.anchors[0]?.captured.label).toBe('Observed');
     expect(() => registry.registerAnchored('block:x', [], [])).toThrow(/twice/);
   });
 
