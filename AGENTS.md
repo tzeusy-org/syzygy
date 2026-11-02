@@ -581,14 +581,13 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   byte-compared by CI. A count of unbannered heads measures what a reader may
   open, never how much work is available; check what protects each file before
   costing a pass over a population.
-- `docs/README.md`'s review-campaign table is one row per campaign over
-  every file in `docs/reviews/`, each row carrying its last verdict of record
-  and where the findings landed. It is re-derived, not maintained: the count
-  moved 88 → 90 within a day of being written, and again the same day, so
-  rerun `scripts/check_docs_review_campaign_partition.py` rather than
-  trusting a row. A new `-RAW.md` whose basename matches no campaign
-  pattern fails it as `unmatched`: add the pattern and the row in the same
-  commit as the raw.
+- Review campaigns are one file each under `docs/review-campaigns/<key>.md`
+  (display, patterns, subject, verdict of record), never a table in
+  `docs/README.md`. No file stores a derived figure: print counts and dates
+  with `scripts/check_docs_review_campaign_partition.py --table`. A new
+  `-RAW.md` whose basename matches no campaign pattern fails `--check` as
+  `unmatched`: add the pattern (or a new campaign file) in the same commit as
+  the raw (`syzygy-gkvu`, 2026-11-02).
 - **An index that routes by short name makes the files it routes read as
   orphans.** `contracts/candidates/reviews/DISPOSITIONS.md` sections are
   titled "rev10-boundary", "rev10-safety" — never the filename — so a sweep
@@ -646,16 +645,16 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   `docs/reviews/*-RAW.md` are skipped since 2026-09-21 (reviewer `Anchor:`
   lines, uneditable under CC-REV-6), the same population
   `check_governance._is_raw_review` exempts; any other `-RAW.md` still counts.
-- **The `docs/README.md` partition count races between sessions.** A
-  rebase-merge never re-runs CI against the other branch's count, so two raws
-  landing minutes apart each pass at N+1 and leave main at N+1 with N+2 files
-  (2026-09-22, repaired by #89). Rebase onto the latest main, re-run
-  `check_docs_review_campaign_partition.py` immediately before merging, and
-  again on main after; treat the count sentence like the CG-26 triple — one
-  integration edit per batch of raws. A clean rebase proves nothing: two
-  branches that each rewrote the count line to the same stale number merge
-  with no conflict (both said 236 over 237 files on 2026-09-23), so
-  re-derive after every rebase even when git reports success.
+- **Stored derived counts race between sessions; that is why none is stored.**
+  Until 2026-11-02 `docs/README.md` carried per-campaign counts and a total
+  sentence, so every PR retaining a raw edited the same lines: rebase-merges
+  left main at N+1 with N+2 files (2026-09-22, #89), two branches agreed on the
+  same stale number with no conflict (2026-09-23), and the merge queue ejected
+  four reviewed PRs. Since `syzygy-gkvu` two raw-retaining PRs touch
+  different files unless they edit the same campaign's verdict. Run
+  `check_docs_review_campaign_partition.py --check` on the merged head; never
+  reintroduce a count into a campaign file (the parser refuses any section
+  but the three it names).
 - **A repair that copies a reviewer's figure, commit or population inherits
   the reviewer's error, and rule 10 charges a round for each one.** Rounds
   5–9 of the P-71 opening-band review each faulted the previous round's

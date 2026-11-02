@@ -22,13 +22,16 @@ from typing import Callable, Iterable
 REVIEW_PREFIX = "docs/reviews/"
 README = Path("docs/README.md")
 HELPER = Path("scripts/check_docs_review_campaign_partition.py")
-SVG_GRAPH_REVIEW_PATTERN = (
-    r"^R-POLARIS-SVG-GRAPH-DIAGRAMS-FEATURE-CANDIDATE"
-    r"(?:-REVIEW-[1-3])?-RAW\.md$"
-)
-MISSING_CURRENCY_REVIEW_PATTERN = (
-    r"^R-PWB-MISSING-CURRENCY-DISCLOSURE-SCENARIO-DELTA"
-    r"(?:-CONFIRMATION(?:-[2-9])?)?-RAW\.md$"
+CAMPAIGN_DIR = Path("docs/review-campaigns")
+CAMPAIGN_INDEX = "README.md"
+KEY_PATTERN = re.compile(r"[a-z0-9][a-z0-9-]*")
+PATTERNS_HEADING = "## Patterns"
+SUBJECT_HEADING = "## What was under review"
+VERDICT_HEADING = "## Last verdict of record, and where the findings landed"
+SECTION_HEADINGS = (PATTERNS_HEADING, SUBJECT_HEADING, VERDICT_HEADING)
+TABLE_HEADER = (
+    "| Campaign | Files | Recorded | What was under review "
+    "| Last verdict of record, and where the findings landed |"
 )
 
 
@@ -37,462 +40,93 @@ class Campaign:
     key: str
     display: str
     patterns: tuple[str, ...]
+    subject: str = ""
+    verdict: str = ""
 
 
 def campaign(key: str, display: str, *patterns: str) -> Campaign:
     return Campaign(key, display, tuple(patterns))
 
 
-CAMPAIGNS = (
-    campaign(
-        "shared-mutation-runner-owner",
-        "Shared mutation runner owner offering",
-        r"R-SHARED-MUTATION-RUNNER-(?:OFFERING-R2|REFRESH-[12]|QUESTIONNAIRE)-RAW\.md",
-    ),
-    campaign("cap1-slices", "`R-S2` … `R-S7`", r"R-S[2567]-RISK-FLOOR-REVIEW\.md"),
-    campaign("cap1-runtime", "`R-RT-*`", r"R-RT-.*\.md"),
-    campaign("three-surface-poc", "`R-POC-*`", r"R-POC-.*\.md"),
-    campaign(
-        "trajectory-selection",
-        "Trajectory bounded selection",
-        r"R-TRAJECTORY-BOUNDED-SELECTION(?:-\d+)?-RAW\.md",
-    ),
-    campaign(
-        "polaris-project-wide",
-        "Project-wide Polaris specification and observation gate",
-        r"POLARIS-PROJECT-WIDE-SIGNOFF-PACKET\.md",
-        r"R-POLARIS-(?:A1-LOCAL-AUDIT-BOUNDARY|PRECONDITION-READ-BOUNDARY-INCIDENT)\.md",
-        r"R-POLARIS-(?:OBSERVATION-GATE-CONFIRMATION|POC-EXCEPTION-(?:INDEPENDENT|SECURITY)|TRUSTED-BOOTSTRAP-CONFIRMATION)-RAW\.md",
-        r"R-POLARIS-PROJECT-WIDE-.*\.md",
-    ),
-    campaign(
-        "general-trusted-bootstrap",
-        "`R-GENERAL-TRUSTED-*`",
-        r"R-GENERAL-TRUSTED-.*\.md",
-    ),
-    campaign("pwb-state1", "`R-PWB-STATE1-*`", r"R-PWB-STATE1-.*\.md"),
-    campaign("pwb-effect", "`R-PWB-EFFECT-*`", r"R-PWB-EFFECT-.*\.md"),
-    campaign("pwb-truth", "`R-PWB-TRUTH-*`", r"R-PWB-TRUTH-.*\.md"),
-    campaign(
-        "pwb-live",
-        "PWB live exact-head",
-        r"(?:R-PWB-LIVE-.*|2026-09-05-pwb-live-.*)\.md",
-    ),
-    campaign(
-        "pwb-recovery",
-        "PWB recovery reconciliation",
-        r"(?:R-PWB-RECOVERY-.*|2026-09-06-pwb-recovery-.*)\.md",
-    ),
-    campaign("pwb-p63", "`R-PWB-P63-*`", r"R-PWB-P63-.*\.md"),
-    campaign(
-        "orrery-height",
-        "Orrery height finding",
-        r"R-POLARIS-ORRERY-HEIGHT-FINDING-RAW\.md",
-    ),
-    campaign(
-        "polaris-editorial",
-        "Polaris editorial repair",
-        r"(?:2026-09-09-polaris-editorial-repair|R-POLARIS-EDITORIAL-.*)\.md",
-    ),
-    campaign(
-        "polaris-manifesto",
-        "Polaris manifesto design and code",
-        r"R-POLARIS-MANIFESTO-.*\.md",
-    ),
-    campaign(
-        "polaris-reading-assets",
-        "Polaris reading assets and navigation",
-        r"R-POLARIS-(?:GUIDE-NAVIGATION|LIVE-READING|READING-ASSETS)-.*\.md",
-    ),
-    campaign(
-        "pwb-declared-home", "PWB declared-home repair", r"R-PWB-DECLARED-HOME-.*\.md"
-    ),
-    campaign(
-        "pwb-walkthrough", "PWB owner-walkthrough capture", r"R-PWB-WALKTHROUGH-.*\.md"
-    ),
-    campaign(
-        "polaris-diagrams",
-        "Polaris visible diagrams",
-        r"R-POLARIS-(?:DIAGRAM-VISIBILITY|VISIBLE-DIAGRAMS)-.*\.md",
-    ),
-    campaign(
-        "polaris-generation-kit",
-        "Polaris generation kit",
-        r"R-POLARIS-GENERATION-KIT-.*\.md",
-    ),
-    campaign(
-        "polaris-generator-product",
-        "Polaris generator product and scope",
-        r"R-POLARIS-GENERATOR-(?:FRESH-PRODUCT|PRODUCT-READINESS|SCOPE-CONFIRMATION)-.*\.md",
-    ),
-    campaign(
-        "polaris-generator-authority",
-        "Polaris generator authority and recorder",
-        r"R-POLARIS-GENERATOR-(?:AUTHORITY-PAIRING-CONFIRMATION|AUTHORITY-READINESS|AUTHORITY-STAGING-CONFIRMATION|CONCRETE-OFFER|FINAL-READINESS|FRESH-AUTHORITY|RECORDER-CONFIRMATION)-.*\.md",
-    ),
-    campaign(
-        "polaris-understanding",
-        "Polaris understanding amendment",
-        r"R-POLARIS-UNDERSTANDING-(?!READABILITY-SUCCESSOR-).*\.md",
-    ),
-    campaign("pwb-m1-lane-a", "PWB M1 lane A", r"R-PWB-M1-POLARIS-LANE-A-RAW\.md"),
-    campaign(
-        "poc-surface-routes-budget",
-        "Surface-routes CI budget",
-        r"R-SURFACE-ROUTES-BUDGET-.*\.md",
-    ),
-    campaign(
-        "pwb-recorder-notes-only",
-        "Recorder notes-only verdict",
-        r"R-PWB-RECORDER-NOTES-ONLY-.*\.md",
-    ),
-    campaign(
-        "cg7e-bare-digest",
-        "CG-7e bare digest headings",
-        r"R-CG7E-BARE-DIGEST-.*\.md",
-    ),
-    campaign(
-        "tree-style-restyle",
-        "Tree-style restyle (CC-REV-8)",
-        r"R-TREE-STYLE-[A-Z0-9]+(?:-[A-Z0-9]+)*-\d+-RAW\.md",
-    ),
-    campaign(
-        "readability-successors",
-        "Readability successors",
-        r"R-(?:(?:CAP1|POLARIS-BASE|POLARIS-UNDERSTANDING|PWB)-READABILITY-SUCCESSOR|SPEC-READABILITY-RECONCILIATION)-\d+-RAW\.md",
-    ),
-    campaign(
-        "pwb-scoped-attributes",
-        "P-68 scoped-attributes package",
-        r"R-PWB-SCOPED-ATTRIBUTES-.*\.md",
-    ),
-    campaign(
-        "rfc7-scoped-values",
-        "RFC-0007 scoped-values successor",
-        r"R-RFC7-SCOPED-VALUES-SUCCESSOR-.*\.md",
-    ),
-    *(
-        campaign(
-            f"polaris-m{number}",
-            f"Polaris M{number} funnel",
-            rf"R-POLARIS-M{number}-.*-FUNNEL(?:-[0-9]+)?-RAW\.md",
-        )
-        for number in range(2, 17)
-    ),
-    campaign(
-        "polaris-svg-graph-candidate",
-        "Polaris SVG graph feature candidate",
-        SVG_GRAPH_REVIEW_PATTERN,
-    ),
-    campaign(
-        "retention-posture",
-        "P-79 retention-posture gate",
-        r"R-POLARIS-RETENTION-POSTURE-.*\.md",
-    ),
-    campaign("exact-source", "P-81 exact-source gate", r"R-PWB-EXACT-SOURCE-.*\.md"),
-    campaign("item-depth", "P-81 item-depth gate", r"R-PWB-ITEM-DEPTH-.*\.md"),
-    campaign("machine-view", "P-72 machine-view gate", r"R-PWB-MACHINE-VIEW-.*\.md"),
-    campaign("opening-band", "P-71 opening-band gate", r"R-PWB-OPENING-BAND-.*\.md"),
-    campaign(
-        "registry-currency",
-        "P-69/P-72 registry gate",
-        r"R-PWB-(?:REGISTRY-CURRENCY|BEHAVIOR-CONTRACT-REPIN)-.*\.md",
-    ),
-    campaign(
-        "missing-currency",
-        "P-69 Q7a missing-currency gate",
-        MISSING_CURRENCY_REVIEW_PATTERN,
-    ),
-    campaign(
-        "n8-generality",
-        "N8 generality measurement",
-        r"R-PWB-N8-.*\.md",
-    ),
-    campaign(
-        "n4-page-honesty",
-        "N4 page honesty",
-        r"R-PWB-N4-.*\.md",
-    ),
-    campaign(
-        "n11-drift-sweep",
-        "N11 drift sweep",
-        r"R-PWB-N11-.*\.md",
-    ),
-    campaign(
-        "n3-resource-ledger",
-        "N3 resource ledger",
-        r"R-PWB-(?:N3|U05-17)-.*\.md",
-    ),
-    campaign(
-        "u05-16-admission",
-        "Polaris generation admission validation",
-        r"R-PWB-U05-16-.*\.md",
-    ),
-    campaign(
-        "edit-repair-deletion",
-        "P-73 edit/repair deletion gate",
-        r"R-POLARIS-EDIT-REPAIR-DELETION-.*\.md",
-    ),
-    campaign(
-        "dov27-response-ceiling",
-        "P-77 Q2 response-ceiling reading gate",
-        r"R-DOV27-.*\.md",
-    ),
-    campaign(
-        "dov29-dismissal-expiry-delta",
-        "P-79 Q5 dismissal-expiry gate",
-        r"R-DOV29-.*\.md",
-    ),
-    campaign(
-        "n8-container-shape",
-        "N8 container-shape profile gate",
-        r"R-N8-.*\.md",
-    ),
-    campaign(
-        "tree-framing",
-        "PWB tree-framing gate",
-        r"R-PWB-TREE-FRAMING-.*\.md",
-    ),
-    campaign(
-        "m9-poc-identity-amendment",
-        "M9 POC identity amendment gate",
-        r"R-M9-POC-IDENTITY-AMENDMENT-.*\.md",
-    ),
-    campaign(
-        "m9-poc-vocabulary-epistemic-amendment",
-        "M9 POC vocabulary and epistemic-record amendment gate",
-        r"R-M9-POC-VOCABULARY-EPISTEMIC-AMENDMENT-.*\.md",
-    ),
-    campaign(
-        "pwb-release-label",
-        "PWB release-label gate",
-        r"R-PWB-RELEASE-LABEL-.*\.md",
-    ),
-    campaign(
-        "pwb-class-granular",
-        "PWB class-granular extraction gate",
-        r"R-PWB-CLASS-GRANULAR-EXTRACTION-.*\.md",
-    ),
-    campaign(
-        "n9-machine-channel",
-        "N9 machine-channel amendments gate",
-        r"R-N9-MACHINE-CHANNEL-.*\.md",
-    ),
-    campaign(
-        "n10-poc-governing-intent",
-        "N10 POC governing-intent gate",
-        r"R-N10-POC-GOVERNING-INTENT-.*\.md",
-    ),
-    campaign(
-        "pwb-opening-index-accessible-name",
-        "PWB opening-index and accessible-name gate",
-        r"R-PWB-(?:OPENING-INDEX|ACCESSIBLE-NAME)-AMENDMENT-.*\.md",
-    ),
-    campaign(
-        "doctrine-amendment-d7",
-        "D7 doctrine amendment gate",
-        r"R-DOCTRINE-AMENDMENT-D7-.*\.md",
-    ),
-    campaign(
-        "doctrine-amendment-d8",
-        "D8 doctrine amendment gate",
-        r"R-DOCTRINE-AMENDMENT-D8-.*\.md",
-    ),
-    campaign(
-        "doctrine-amendment-d9",
-        "D9 doctrine amendment gate",
-        r"R-DOCTRINE-AMENDMENT-D9-.*\.md",
-    ),
-    campaign(
-        "polaris-dossier-local-agent",
-        "Polaris dossier local-agent amendment gate",
-        r"R-POLARIS-DOSSIER-LOCAL-AGENT-.*\.md",
-    ),
-    campaign(
-        "polaris-dossier-s2-reader",
-        "Polaris dossier S2 object reader",
-        r"R-POLARIS-DOSSIER-S2-READER-.*\.md",
-    ),
-    campaign(
-        "polaris-dossier-s3-gates",
-        "Polaris dossier S3 start gates",
-        r"R-POLARIS-DOSSIER-S3-GATES-.*\.md",
-    ),
-    campaign(
-        "polaris-dossier-clone-shape",
-        "Polaris dossier clone shape",
-        r"R-POLARIS-DOSSIER-CLONE-SHAPE-.*\.md",
-    ),
-    campaign(
-        "redis-local-agent-sitting-brief",
-        "Redis local-agent sitting brief",
-        r"R-REDIS-LOCAL-AGENT-SITTING-BRIEF-.*\.md",
-    ),
-    campaign(
-        "capture-test-artifact-no-spawn",
-        "Capture test-artifact no-spawn",
-        r"R-CAPTURE-TEST-ARTIFACT-NO-SPAWN-.*\.md",
-    ),
-    campaign(
-        "polaris-dossier-gate-sources",
-        "Polaris dossier gate sources",
-        r"R-POLARIS-DOSSIER-GATE-SOURCES-.*\.md",
-    ),
-    campaign(
-        "live-test-no-spawn",
-        "Live test no-spawn",
-        r"R-LIVE-TEST-NO-SPAWN-.*\.md",
-    ),
-    campaign(
-        "redis-sitting-installer-pins",
-        "Redis sitting installer pins",
-        r"R-REDIS-SITTING-INSTALLER-PINS-.*\.md",
-    ),
-    campaign(
-        "arbitrary-public-repo",
-        "Arbitrary public-repository dossier spec",
-        r"R-ARBITRARY-PUBLIC-REPO-.*\.md",
-    ),
-    campaign(
-        "pr403-screen-docs",
-        "Project-documentation screening",
-        r"R-PR403-SCREEN-DOCS-.*\.md",
-    ),
-    campaign(
-        "pr406-session-tool-statement",
-        "Session-prompt tool statement",
-        r"R-PR406-SESSION-TOOL-STATEMENT-.*\.md",
-    ),
-    campaign(
-        "pr404-dossier-blockers",
-        "Redis dossier blockers packet",
-        r"R-PR404-DOSSIER-BLOCKERS-.*\.md",
-    ),
-    campaign(
-        "public-source-screening-scope-v3",
-        "Screening scope version 3",
-        r"R-PUBLIC-SOURCE-SCREENING-SCOPE-V3-.*\.md",
-    ),
-    campaign(
-        "dossier-agent-provider-v2",
-        "Agent-provider statement version 2",
-        r"R-DOSSIER-AGENT-PROVIDER-V2-.*\.md",
-    ),
-    campaign(
-        "pr409-dossier-blockers-install",
-        "P-105/P-106 record and install",
-        r"R-PR409-DOSSIER-BLOCKERS-INSTALL-.*\.md",
-    ),
-    campaign(
-        "pr408-waiting-sessions",
-        "Pre-started waiting sessions",
-        r"R-PR408-(?:WAITING-SESSIONS|V12-INSTALL)-.*\.md",
-    ),
-    campaign(
-        "cap1-trusted-bootstrap-consent",
-        "CAP1 trusted-bootstrap consent amendment",
-        r"R-CAP1-TRUSTED-BOOTSTRAP-CONSENT-\d+-(?:RAW|DISPOSITION)\.md",
-    ),
-    campaign(
-        "dossier-cli-subprocess",
-        "Local agent CLI subprocess runner",
-        r"R-DOSSIER-CLI-SUBPROCESS-.*\.md",
-    ),
-    campaign(
-        "polaris-dossier-one-command-run",
-        "One-command Polaris dossier run",
-        r"R-POLARIS-DOSSIER-ONE-COMMAND-RUN-.*\.md",
-    ),
-    campaign(
-        "dov24-loaded-profile",
-        "P-74 loaded-profile registry gate",
-        r"R-DOV24-.*\.md",
-    ),
-    campaign(
-        "p110-screening-v4-install",
-        "Screening v4 span installation",
-        r"R-P110-.*-RAW\.md",
-    ),
-    campaign(
-        "olmr-screening-scope-v4",
-        "Screening scope version 4",
-        r"R-OLMR-SCREENING-SCOPE-V4-.*\.md",
-    ),
-    campaign(
-        "signed-amendment-implementation-chain",
-        "Signed-amendment implementation chain",
-        r"R-IMPL-(?:P97|P100|P86|P96|TREE-FRAMING)-.*\.md",
-    ),
-    campaign(
-        "pwb-accessible-name-implementation",
-        "PWB accessible-name implementation",
-        r"R-PWB-ACCESSIBLE-NAME-IMPL-.*\.md",
-    ),
-    campaign(
-        "pwb-opening-index-implementation",
-        "PWB opening-index implementation",
-        r"R-PWB-OPENING-INDEX-IMPL-.*\.md",
-    ),
-    campaign(
-        "pwb-registry-machine-ceiling",
-        "P-114 machine-ceiling registry gate",
-        r"R-PWB-REGISTRY-MACHINE-CEILING-.*\.md",
-        r"R-P114-.*-RAW\.md",
-    ),
-    campaign(
-        "greenfield-parity-packet",
-        "Greenfield-parity owner packet",
-        r"R-GREENFIELD-PARITY-PACKET-\d+-RAW\.md",
-    ),
-    campaign(
-        "greenfield-parity-implementation",
-        "Greenfield-parity implementation",
-        r"R-GP-IMPL-.*-RAW\.md",
-        r"V-CRLF-MASK-\d+-RAW\.md",
-    ),
-    campaign(
-        "pr491-redis-remeasure",
-        "Redis v4 re-measure refusal record",
-        r"R-PR491-REDIS-REMEASURE-\d+-RAW\.md",
-    ),
-    campaign(
-        "pwb-m2-slice5-continuation",
-        "M2 slice 5 continuation packet",
-        r"R-PWB-M2-SLICE5-CONTINUATION-PACKET(?:-\d+)?-RAW\.md",
-    ),
-    campaign(
-        "pr489-signed-amendments-direction",
-        "Signed-amendment implementation direction (PR #489)",
-        r"R-PR489-SIGNED-AMENDMENTS-DIRECTION-\d+-RAW\.md",
-        r"R-PR489-OWNER-ANSWERS-RECORDING-\d+-RAW\.md",
-    ),
-    campaign(
-        "pr493-bead-title-withholding",
-        "Bead-title withholding",
-        r"R-PR493-BEAD-TITLE-WITHHOLDING-.*\.md",
-    ),
-    campaign(
-        "p115-governedby-reference",
-        "P-115 governedBy reference amendment",
-        r"R-P115-GOVERNEDBY-REFERENCE-[1-4]-RAW\.md",
-    ),
-    campaign(
-        "p115-implementation-owner-offering",
-        "P115 implementation owner offering",
-        r"R-P115-IMPLEMENTATION-OWNER-OFFERING-RAW\.md",
-    ),
-    campaign(
-        "gpb2-followup-packet",
-        "GP-B2 follow-up owner packet",
-        r"V-GP-B2-[12](?:-ADDENDUM)?-RAW\.md",
-        r"V-GP-B2-RECORD-\d+-RAW\.md",
-        r"VET-GP-FOLLOWUPS-[1-4]-RAW\.md",
-    ),
-)
-
-
 class PartitionError(RuntimeError):
     pass
+
+
+def parse_campaign_fragment(key: str, text: str) -> Campaign:
+    """Parse one `docs/review-campaigns/<key>.md` fragment, strictly.
+
+    A fragment holds what a person writes about a campaign: its display name,
+    the anchored basename patterns, the subject and the verdict of record. It
+    holds no figure the helper derives (file count, recorded dates, totals),
+    so two branches that each retain a raw never edit the same line unless
+    they touch the same campaign.
+    """
+    if not KEY_PATTERN.fullmatch(key):
+        raise PartitionError(f"campaign fragment key is not kebab-case: {key}")
+    lines = text.splitlines()
+    if not lines or not lines[0].startswith("# ") or not lines[0][2:].strip():
+        raise PartitionError(f"campaign fragment lacks a '# <display>' first line: {key}")
+    display = lines[0][2:].strip()
+    sections: dict[str, list[str]] = {}
+    current: str | None = None
+    for line in lines[1:]:
+        if line.startswith("#"):
+            if line not in SECTION_HEADINGS or line in sections:
+                raise PartitionError(
+                    f"campaign fragment has an unexpected or repeated heading: {key}: {line}"
+                )
+            current = line
+            sections[current] = []
+        elif current is None:
+            if line.strip():
+                raise PartitionError(f"campaign fragment text before its first section: {key}")
+        else:
+            sections[current].append(line)
+    if tuple(sections) != SECTION_HEADINGS:
+        raise PartitionError(
+            f"campaign fragment sections must be exactly {list(SECTION_HEADINGS)} in order: {key}"
+        )
+    patterns: list[str] = []
+    for line in sections[PATTERNS_HEADING]:
+        if not line.strip():
+            continue
+        item = re.fullmatch(r"- `([^`]+)`", line)
+        if not item:
+            raise PartitionError(f"campaign pattern line is not '- `<regex>`': {key}: {line}")
+        try:
+            re.compile(item.group(1))
+        except re.error as error:
+            raise PartitionError(f"campaign pattern does not compile: {key}: {error}") from error
+        patterns.append(item.group(1))
+    if not patterns:
+        raise PartitionError(f"campaign fragment has no pattern: {key}")
+    subject = "\n".join(sections[SUBJECT_HEADING]).strip()
+    verdict = "\n".join(sections[VERDICT_HEADING]).strip()
+    if not subject or not verdict:
+        raise PartitionError(f"campaign fragment has an empty section: {key}")
+    return Campaign(key, display, tuple(patterns), subject, verdict)
+
+
+def load_campaigns(directory: Path) -> tuple[Campaign, ...]:
+    if not directory.is_dir():
+        raise PartitionError(f"campaign directory missing: {directory}")
+    campaigns: list[Campaign] = []
+    displays: dict[str, str] = {}
+    for path in sorted(directory.iterdir()):
+        if path.name == CAMPAIGN_INDEX:
+            continue
+        if path.suffix != ".md" or not path.is_file():
+            raise PartitionError(f"unexpected entry in campaign directory: {path.name}")
+        item = parse_campaign_fragment(path.stem, path.read_text(encoding="utf-8"))
+        if item.display in displays:
+            raise PartitionError(
+                f"duplicate campaign display: {item.display}: {displays[item.display]}, {item.key}"
+            )
+        displays[item.display] = item.key
+        campaigns.append(item)
+    if not campaigns:
+        raise PartitionError(f"campaign directory has no fragment: {directory}")
+    return tuple(campaigns)
 
 
 def git(*args: str, cwd: Path | None = None) -> bytes:
@@ -519,6 +153,7 @@ def head_input_drift(repo_root: Path) -> list[str]:
         "--",
         README.as_posix(),
         REVIEW_PREFIX,
+        CAMPAIGN_DIR.as_posix(),
         HELPER.as_posix(),
         cwd=repo_root,
     )
@@ -577,7 +212,7 @@ def tree_regular_paths() -> list[str]:
     return sorted(paths)
 
 
-def matches(path: str, campaigns: Iterable[Campaign] = CAMPAIGNS) -> list[str]:
+def matches(path: str, campaigns: Iterable[Campaign]) -> list[str]:
     basename = path.removeprefix(REVIEW_PREFIX)
     return [
         item.key
@@ -587,7 +222,7 @@ def matches(path: str, campaigns: Iterable[Campaign] = CAMPAIGNS) -> list[str]:
 
 
 def partition(
-    paths: Iterable[str], campaigns: Iterable[Campaign] = CAMPAIGNS
+    paths: Iterable[str], campaigns: Iterable[Campaign]
 ) -> dict[str, list[str]]:
     campaigns = tuple(campaigns)
     result = {item.key: [] for item in campaigns}
@@ -642,7 +277,7 @@ def date_span(
 def report(
     paths: list[str],
     observed_date: str,
-    campaigns: Iterable[Campaign] = CAMPAIGNS,
+    campaigns: Iterable[Campaign],
     add_date_for_path: Callable[[str], str] = add_date,
 ) -> dict[str, object]:
     campaigns = tuple(campaigns)
@@ -658,6 +293,8 @@ def report(
                 "display": item.display,
                 "count": len(members),
                 "recorded": date_span(members, add_date_for_path=add_date_for_path),
+                "subject": item.subject,
+                "verdict": item.verdict,
                 "paths": members,
             }
         )
@@ -747,40 +384,39 @@ def expand_continuation_ids(text: str) -> tuple[set[str], list[str]]:
     return found, sorted(set(unresolved))
 
 
-def parse_campaign_table(readme: str) -> dict[str, tuple[int, str, str]]:
-    lines = readme.splitlines()
-    try:
-        start = lines.index(
-            "| Campaign | Files | Recorded | What was under review | Last verdict of record, and where the findings landed |"
-        )
-    except ValueError as error:
-        raise PartitionError("review campaign table header missing") from error
-    rows: dict[str, tuple[int, str, str]] = {}
-    for line in lines[start + 2 :]:
-        if not line.startswith("|"):
-            break
-        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-        if len(cells) != 5:
-            raise PartitionError(f"malformed campaign row: {line}")
-        display, count, recorded, _subject, verdict = cells
-        if display in rows:
-            raise PartitionError(f"duplicate campaign row: {display}")
-        try:
-            rows[display] = (int(count), recorded, verdict)
-        except ValueError as error:
-            raise PartitionError(
-                f"non-integer campaign count: {display}: {count}"
-            ) from error
-    return rows
+def render_table(data: dict[str, object]) -> str:
+    """The campaign table, with every figure derived at HEAD (never stored)."""
+    rows = sorted(
+        data["campaigns"],  # type: ignore[arg-type]
+        key=lambda row: (str(row["recorded"]), str(row["key"])),
+    )
+    lines = [TABLE_HEADER, "|---|---|---|---|---|"]
+    for row in rows:
+        cells = [
+            str(row["display"]),
+            str(row["count"]),
+            str(row["recorded"]),
+            " ".join(str(row["subject"]).split()),
+            " ".join(str(row["verdict"]).split()),
+        ]
+        lines.append("| " + " | ".join(cell.replace("|", "\\|") for cell in cells) + " |")
+    lines.append("")
+    lines.append(
+        f"The {len(rows)} rows partition the tracked directory at HEAD: "
+        f"{data['total']} files, {data['assigned']} assigned, no remainder "
+        f"[Observed — derived for HEAD dated {data['observed_date']} by "
+        f"`{HELPER.as_posix()}`]."
+    )
+    return "\n".join(lines)
 
 
-def validate_verdict_citation(verdict: str, display: str) -> None:
+def validate_verdict_citation(verdict: str, display: str, root: Path) -> None:
     citations = path_line_citations(verdict)
     if not citations:
         raise PartitionError(f"campaign lacks exact verdict citation: {display}")
     resolved = False
     for raw_path, line_number in citations:
-        path = (
+        path = root / (
             Path(raw_path)
             if raw_path.startswith(REVIEW_PREFIX)
             else Path("docs/reviews") / raw_path
@@ -806,56 +442,16 @@ def validate_verdict_citation(verdict: str, display: str) -> None:
         )
 
 
-def check_readme(readme_path: Path, data: dict[str, object]) -> None:
-    text = readme_path.read_text(encoding="utf-8")
-    actual_rows = parse_campaign_table(text)
-    expected_rows = {str(row["display"]): row for row in data["campaigns"]}  # type: ignore[index]
-    validate_campaign_rows(actual_rows, expected_rows)
-    for display, (_count, _recorded, verdict) in actual_rows.items():
-        validate_verdict_citation(verdict, display)
-    summary = re.search(
-        r"The\s+(\d+)\s+rows\s+partition\s+the\s+tracked\s+directory\s+at\s+HEAD:\s+"
-        r"(\d+)\s+files,\s+(\d+)\s+assigned,\s+no\s+remainder\s+"
-        r"\[Observed\s+—\s+re-derived\s+for\s+HEAD\s+dated\s+"
-        r"(\d{4}-\d{2}-\d{2})",
-        text,
-    )
-    if not summary:
-        raise PartitionError("derived partition summary missing or malformed")
-    expected_summary = (
-        len(expected_rows),
-        int(data["total"]),
-        int(data["assigned"]),
-        str(data["observed_date"]),
-    )
-    actual_summary = (
-        int(summary.group(1)),
-        int(summary.group(2)),
-        int(summary.group(3)),
-        summary.group(4),
-    )
-    if actual_summary != expected_summary:
-        raise PartitionError(
-            f"stale partition summary: README={actual_summary}; derived={expected_summary}"
-        )
-
-
-def validate_campaign_rows(
-    actual_rows: dict[str, tuple[int, str, str]],
-    expected_rows: dict[str, dict[str, object]],
+def check_campaigns(
+    readme_path: Path, campaigns: Iterable[Campaign], root: Path
 ) -> None:
-    missing = sorted(set(expected_rows) - set(actual_rows))
-    extra = sorted(set(actual_rows) - set(expected_rows))
-    if missing or extra:
+    text = readme_path.read_text(encoding="utf-8")
+    if f"{CAMPAIGN_DIR.relative_to('docs').as_posix()}/" not in text:
         raise PartitionError(
-            f"README campaign rows differ; missing={missing}; extra={extra}"
+            f"{README.as_posix()} does not route to {CAMPAIGN_DIR.as_posix()}/"
         )
-    for display, expected in expected_rows.items():
-        count, recorded, _verdict = actual_rows[display]
-        if count != expected["count"] or recorded != expected["recorded"]:
-            raise PartitionError(
-                f"stale campaign row: {display}: README=({count}, {recorded}); derived=({expected['count']}, {expected['recorded']})"
-            )
+    for item in campaigns:
+        validate_verdict_citation(item.verdict, item.display, root)
 
 
 def validate_denominator_sets(primary: list[str], secondary: list[str]) -> None:
@@ -935,6 +531,8 @@ def selftest() -> None:
     else:
         raise AssertionError("overlap mutant survived")
 
+    live = load_campaigns(repository_root() / CAMPAIGN_DIR)
+
     fixtures += 1
     svg_paths = [
         "docs/reviews/R-POLARIS-SVG-GRAPH-DIAGRAMS-FEATURE-CANDIDATE-RAW.md",
@@ -942,9 +540,9 @@ def selftest() -> None:
         "docs/reviews/R-POLARIS-SVG-GRAPH-DIAGRAMS-FEATURE-CANDIDATE-REVIEW-2-RAW.md",
         "docs/reviews/R-POLARIS-SVG-GRAPH-DIAGRAMS-FEATURE-CANDIDATE-REVIEW-3-RAW.md",
     ]
-    assert all(matches(path) == ["polaris-svg-graph-candidate"] for path in svg_paths)
+    assert all(matches(path, live) == ["polaris-svg-graph-candidate"] for path in svg_paths)
     assert not matches(
-        "docs/reviews/R-POLARIS-SVG-GRAPH-DIAGRAMS-FEATURE-CANDIDATE-REVIEW-4-RAW.md"
+        "docs/reviews/R-POLARIS-SVG-GRAPH-DIAGRAMS-FEATURE-CANDIDATE-REVIEW-4-RAW.md", live
     )
 
     fixtures += 1
@@ -953,25 +551,49 @@ def selftest() -> None:
         "docs/reviews/R-PWB-MISSING-CURRENCY-DISCLOSURE-SCENARIO-DELTA-CONFIRMATION-RAW.md",
         "docs/reviews/R-PWB-MISSING-CURRENCY-DISCLOSURE-SCENARIO-DELTA-CONFIRMATION-2-RAW.md",
     ]
-    assert all(matches(path) == ["missing-currency"] for path in missing_currency_paths)
+    assert all(matches(path, live) == ["missing-currency"] for path in missing_currency_paths)
     assert not matches(
-        "docs/reviews/R-PWB-MISSING-CURRENCY-DISCLOSURE-SCENARIO-DELTA-REVIEW-RAW.md"
+        "docs/reviews/R-PWB-MISSING-CURRENCY-DISCLOSURE-SCENARIO-DELTA-REVIEW-RAW.md", live
     )
 
     fixtures += 1
-    sample = """| Campaign | Files | Recorded | What was under review | Last verdict of record, and where the findings landed |
-|---|---|---|---|---|
-| example | 1 | 2026-01-01 | subject | `R-EXAMPLE-RAW.md:1` |
-"""
-    try:
-        validate_campaign_rows(
-            parse_campaign_table(sample),
-            {"example": {"count": 2, "recorded": "2026-01-01"}},
+    good_fragment = (
+        "# Example campaign\n\n## Patterns\n\n- `R-EXAMPLE-RAW\\.md`\n\n"
+        "## What was under review\n\nsubject\n\n"
+        "## Last verdict of record, and where the findings landed\n\n"
+        "`CONFIRM` (`R-EXAMPLE-RAW.md:1`)\n"
+    )
+    parsed = parse_campaign_fragment("example", good_fragment)
+    assert parsed.display == "Example campaign" and parsed.patterns == (r"R-EXAMPLE-RAW\.md",)
+    fragment_mutants = {
+        "Example_Key": (good_fragment, "kebab-case"),
+        "no-title": (good_fragment.replace("# Example campaign\n", ""), "first line"),
+        "no-pattern": (good_fragment.replace("- `R-EXAMPLE-RAW\\.md`\n", ""), "no pattern"),
+        "bad-pattern": (good_fragment.replace("R-EXAMPLE-RAW", "R-(EXAMPLE"), "compile"),
+        "bare-pattern": (good_fragment.replace("- `R-EXAMPLE-RAW\\.md`", "- R-EXAMPLE"), "pattern line"),
+        "stored-count": (good_fragment + "\n## Files\n\n3\n", "unexpected"),
+        "empty-verdict": (good_fragment.replace("`CONFIRM` (`R-EXAMPLE-RAW.md:1`)", ""), "empty section"),
+    }
+    for key, (text, needle) in fragment_mutants.items():
+        fixtures += 1
+        try:
+            parse_campaign_fragment(key, text)
+        except PartitionError as error:
+            assert needle in str(error), (key, str(error))
+        else:
+            raise AssertionError(f"fragment mutant survived: {key}")
+
+    fixtures += 1
+    rendered = render_table(
+        report(
+            ["docs/reviews/R-EXAMPLE-RAW.md"],
+            "2026-09-23",
+            campaigns=(parsed,),
+            add_date_for_path=lambda _path: "2026-09-20",
         )
-    except PartitionError as error:
-        assert "stale campaign row" in str(error)
-    else:
-        raise AssertionError("stale-row-count mutant survived")
+    )
+    assert "| Example campaign | 1 | 2026-09-20 | subject |" in rendered
+    assert "1 files, 1 assigned" in rendered
 
     fixtures += 1
     try:
@@ -1018,9 +640,12 @@ def selftest() -> None:
         fixture_readme = fixture_root / README
         fixture_review = fixture_root / "docs/reviews/R-EXAMPLE-RAW.md"
         fixture_helper = fixture_root / HELPER
-        fixture_readme.write_text("clean README\n", encoding="utf-8")
+        fixture_readme.write_text("see review-campaigns/\n", encoding="utf-8")
         fixture_review.write_text("CONFIRM\n", encoding="utf-8")
         fixture_helper.write_text("# helper\n", encoding="utf-8")
+        fixture_fragment = fixture_root / CAMPAIGN_DIR / "example.md"
+        fixture_fragment.parent.mkdir(parents=True)
+        fixture_fragment.write_text(good_fragment, encoding="utf-8")
         subprocess.run(("git", "init", "-q"), cwd=fixture_root, check=True)
         subprocess.run(("git", "config", "gc.auto", "0"), cwd=fixture_root, check=True)
         subprocess.run(("git", "config", "maintenance.auto", "false"), cwd=fixture_root, check=True)
@@ -1041,6 +666,38 @@ def selftest() -> None:
             check=True,
         )
         assert_head_bound_inputs(fixture_readme, fixture_root)
+        fixture_campaigns = load_campaigns(fixture_root / CAMPAIGN_DIR)
+        check_campaigns(fixture_readme, fixture_campaigns, fixture_root)
+
+        fixtures += 1
+        fixture_review.write_text("no verdict word\n", encoding="utf-8")
+        try:
+            check_campaigns(fixture_readme, fixture_campaigns, fixture_root)
+        except PartitionError as error:
+            assert "does not resolve to a verdict line" in str(error)
+        else:
+            raise AssertionError("verdict-citation mutant survived")
+        fixture_review.write_text("CONFIRM\n", encoding="utf-8")
+
+        fixtures += 1
+        fixture_readme.write_text("no route\n", encoding="utf-8")
+        try:
+            check_campaigns(fixture_readme, fixture_campaigns, fixture_root)
+        except PartitionError as error:
+            assert "does not route" in str(error)
+        else:
+            raise AssertionError("README-route mutant survived")
+        fixture_readme.write_text("see review-campaigns/\n", encoding="utf-8")
+
+        fixtures += 1
+        fixture_fragment.write_text(good_fragment + "\nedited\n", encoding="utf-8")
+        try:
+            assert_head_bound_inputs(fixture_readme, fixture_root)
+        except PartitionError as error:
+            assert "HEAD input drift: docs/review-campaigns/example.md" in str(error)
+        else:
+            raise AssertionError("dirty-fragment mutant survived")
+        fixture_fragment.write_text(good_fragment, encoding="utf-8")
 
         fixtures += 1
         fixture_readme.write_text("dirty README\n", encoding="utf-8")
@@ -1050,7 +707,7 @@ def selftest() -> None:
             assert "HEAD input drift: docs/README.md" in str(error)
         else:
             raise AssertionError("dirty-README mutant survived")
-        fixture_readme.write_text("clean README\n", encoding="utf-8")
+        fixture_readme.write_text("see review-campaigns/\n", encoding="utf-8")
 
         fixtures += 1
         fixture_review.write_text("REVISE\n", encoding="utf-8")
@@ -1082,28 +739,40 @@ def selftest() -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--check", type=Path, metavar="README")
+    parser.add_argument(
+        "--check",
+        type=Path,
+        nargs="?",
+        const=README,
+        metavar="README",
+        help="fail unless the HEAD-bound campaign fragments partition docs/reviews/",
+    )
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--table", action="store_true", help="print the derived campaign table")
     parser.add_argument("--second-method", action="store_true")
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
     if args.selftest:
         selftest()
         return 0
+    root = repository_root()
     if args.check:
-        assert_head_bound_inputs(args.check)
+        assert_head_bound_inputs(args.check, root)
+    campaigns = load_campaigns(root / CAMPAIGN_DIR)
     paths = tracked_regular_paths()
-    data = report(paths, head_commit_date())
+    data = report(paths, head_commit_date(), campaigns)
     if args.check or args.second_method:
         second_method(paths)
     if args.check:
-        check_readme(args.check, data)
+        check_campaigns(args.check, campaigns, root)
         print(
             f"partition PASS: denominator={data['total']}; assigned={data['assigned']}; "
-            f"raw={data['raw']}; other={data['other']}; unmatched=0; overlaps=0; campaigns={len(CAMPAIGNS)}"
+            f"raw={data['raw']}; other={data['other']}; unmatched=0; overlaps=0; campaigns={len(campaigns)}"
         )
     elif args.json:
         print(json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False))
+    elif args.table:
+        print(render_table(data))
     elif not args.second_method:
         for row in data["campaigns"]:  # type: ignore[index]
             print(f"{row['display']}\t{row['count']}\t{row['recorded']}")
