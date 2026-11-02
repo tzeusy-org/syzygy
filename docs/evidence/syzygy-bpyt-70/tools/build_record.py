@@ -7,6 +7,8 @@ It checks that the mutant, suite, titles and pin records name that commit, that 
 clone clean after, that the pin found no mismatch over the subject's bytes at that commit, and that the differential newly
 accepts nothing; then it writes the item dispositions, the refusals, the residuals, the figures and the sha256 of every
 retained file.
+The differential names the two testkits it compared, the one at BASE and the one at that commit, with each one's sha256 and the
+tool that compared them (the PR 557 round-2 review's N1, syzygy-bpyt.78).
 """
 import hashlib
 import json
@@ -22,7 +24,7 @@ SUBJECTS = ['packages/polaris-generation-core/src/workspace-reach.testkit.ts', '
 
 def main():
     commit = subprocess.run(['git', 'rev-parse', sys.argv[1]], capture_output=True, text=True, check=True).stdout.strip()
-    blob = lambda p: hashlib.sha256(subprocess.run(['git', 'show', f'{commit}:{p}'], capture_output=True, check=True).stdout).hexdigest()
+    blob = lambda p, at=commit: hashlib.sha256(subprocess.run(['git', 'show', f'{at}:{p}'], capture_output=True, check=True).stdout).hexdigest()
     changed = subprocess.run(['git', 'diff', '--name-only', BASE, commit, '--', 'apps', 'packages'], capture_output=True, text=True, check=True).stdout.split()
     assert sorted(changed) == sorted(SUBJECTS), changed
     mutants = {s: json.load(open(f'{D}/mutants-{s}.json')) for s in ['absent', 'present']}
@@ -64,7 +66,7 @@ def main():
             "an exports target with a '.' or 'node_modules' segment, in any case or percent-encoded (Node refuses each with ERR_INVALID_PACKAGE_TARGET); before, only the literal '/../' threw",
             "a '..' segment written with a backslash or percent-encoded",
             "an empty segment ('//' or a trailing '/'), which Node 24.6.0 accepts with the DEP0166 warning: it then loads a '//' target, and fails to load one ending in '/', which names a directory (ERR_UNSUPPORTED_DIR_IMPORT under import, MODULE_NOT_FOUND under require)",
-            "any of these under the types or source condition, or in a main field (before, the '/../' form already threw there)",
+            "any of these under a condition Node does not read by default (types, source, or any other, such as browser), or in a main field (before, the '/../' form already threw there)",
             'an alias key anywhere in the loaded vitest config, including the shorthand form the text check misses',
             "a loaded vitest config without ssr.resolve.conditions, without a root test.setupFiles, or without a test.globalSetup in any project: the alias row checks those paths to show it reads the real config",
         ],
@@ -78,7 +80,9 @@ def main():
         'mutants': {state: record['summary'] for state, record in mutants.items()},
         'suite': {k: suite[k] for k in ['commit', 'distDirs', 'exit', 'files', 'total', 'passed', 'failed', 'skipped', 'load1', 'wallSeconds', 'cleanAfter']},
         'titles': {k: titles[k] for k in ['base', 'head', 'baseTitles', 'headTitles', 'delta', 'addedByFile']} | {'removed': len(titles['removed'])},
-        'differential': {'rows': differential['rows'], 'newlyAccepted': newly_accepted, 'groups': {k: g['n'] for k, g in differential['groups'].items()}},
+        'differential': {'base': BASE, 'head': commit, 'tool': 'tools/differential.mjs',
+                         'testkitSha256': {'base': blob(SUBJECTS[0], BASE), 'head': blob(SUBJECTS[0])},
+                         'rows': differential['rows'], 'newlyAccepted': newly_accepted, 'groups': {k: g['n'] for k, g in differential['groups'].items()}},
         'surfaceVersion': {'base': 'polaris@5e39299adacf', 'head': f'polaris@{surface}'},
         'node': pin['node'],
         'files': {f: hashlib.sha256(open(f'{D}/{f}', 'rb').read()).hexdigest() for f in files},
