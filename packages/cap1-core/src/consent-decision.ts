@@ -667,7 +667,7 @@ export function decideRepositoryConsent(
           ? {
               diagnostic: 'withdrawn',
               reference: input.reference,
-              withdrawal: verifiedRecord(input.reference, input.artifact.digest, other, withdrawal.provenance),
+              withdrawal: verifiedRecord(input.reference, input.artifact.digest, input.artifact.record, withdrawal.provenance),
             }
           : { diagnostic: 'withdrawal-unresolved', reference: input.reference, withdrawal: null },
       );
