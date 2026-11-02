@@ -77,6 +77,18 @@ export type ExtractionClass = (typeof EXTRACTION_CLASSES)[number];
 export const SOURCE_RULES = ['root-index', 'pillar-index', 'pillar-named-file', 'baseline-spec-tree', 'roster-tree'] as const;
 export type SourceRule = (typeof SOURCE_RULES)[number];
 
+// PWB-REQ-002 (class-granular extraction amendment): each rule declares
+// whether it needs the root index read. The flag belongs to the rule. Rules 1
+// and 2 are named by the root index; rules 3 and 4 write their own path
+// patterns in the reader definitions, so Git-tree metadata alone admits them.
+export const SOURCE_RULE_NEEDS_ROOT_INDEX: Readonly<Record<SourceRule, boolean>> = {
+  'root-index': true,
+  'pillar-index': true,
+  'pillar-named-file': true,
+  'baseline-spec-tree': false,
+  'roster-tree': false,
+};
+
 export type SourceAnchor =
   | { readonly kind: 'blob'; readonly mode: string; readonly objectId: string }
   | { readonly kind: 'not-a-blob'; readonly mode: string; readonly type: 'tree' | 'commit' }
@@ -440,6 +452,21 @@ export function deriveProjectShapeManifest(input: DeriveManifestInput): DeriveMa
     for (const [key, declared] of rootRead.pillarRoots ?? declaredPillarRoots(rootRead.text)) rootsByKey.set(key, { root: declared.root, ambiguous: declared.ambiguous });
   }
 
+  // The index file of every pillar that will be discovered. A pillar's index
+  // file is `pillar-index` even when another pillar's index names it, which
+  // happens only when one declared root lies inside another: registration
+  // runs in `PILLAR_KEYS` order, so an earlier pillar's named files must
+  // leave these paths to the pillar whose index they are (Q8 "Drafted order").
+  const pillarIndexPaths = new Set<string>();
+  if (rootIndex.state === 'read') {
+    for (const key of PILLAR_KEYS) {
+      const named = rootsByKey.get(key);
+      if (named === undefined || named.ambiguous || !tree.hasDirectory(named.root)) continue;
+      const indexPath = `${named.root}/README.md`;
+      if (anchorFor(tree, indexPath).kind === 'blob') pillarIndexPaths.add(indexPath);
+    }
+  }
+
   // Rule 2 — each declared pillar's own README index, restricted to its root.
   const pillars: PillarDiscovery[] = PILLAR_KEYS.map((key) => {
     if (rootIndex.state === 'missing-at-revision') {
@@ -493,6 +520,8 @@ export function deriveProjectShapeManifest(input: DeriveManifestInput): DeriveMa
       namedPaths.add(resolved.path);
     }
     for (const path of namedPaths) {
+      // Another discovered pillar's own index file is that pillar's `pillar-index`.
+      if (pillarIndexPaths.has(path)) continue;
       // A baseline spec or roster file is owned by Rules 3 and 4 with their
       // classes (the spec: `baseline-spec` uses each baseline spec directory)
       // whoever names it; a pillar declared at `openspec/` or `roster/` would

@@ -29,7 +29,7 @@ import {
   parseFailureExclusion,
   resourceLimitExclusion,
 } from './content-classification.js';
-import { EXTRACTION_CLASSES, type ExtractionClass, type ManifestSource } from './project-shape-manifest.js';
+import { EXTRACTION_CLASSES, SOURCE_RULE_NEEDS_ROOT_INDEX, type ExtractionClass, type ManifestSource } from './project-shape-manifest.js';
 import {
   CATALOG_HEADINGS,
   type ExtractedItem,
@@ -42,6 +42,7 @@ import {
   ROSTER_HOME_TEMPLATE,
   type SourceExtraction,
   type StatedCount,
+  type UnenumeratedHeading,
 } from './project-shape-extraction.js';
 
 // ---------------------------------------------------------------------
@@ -182,14 +183,58 @@ export type ReconciledFact =
       readonly rulesConsidered: readonly ConsideredRule[];
     };
 
+// The Unknown a heading no row declares leaves behind: the items beneath it
+// are not read, and the grammar has no row for them (RFC2-24 #1, "mapping"),
+// so the reason word is `unenumerated-heading` and the closed reason is
+// `missing-declaration`.
+export interface UnenumeratedUnknown {
+  readonly reason: 'unenumerated-heading';
+  readonly unknownReason: 'missing-declaration';
+}
+export const UNENUMERATED_UNKNOWN: UnenumeratedUnknown = { reason: 'unenumerated-heading', unknownReason: 'missing-declaration' };
+
 export type ItemDenominator =
   | { readonly kind: 'known'; readonly value: number }
-  | { readonly kind: 'unknown'; readonly unknown: FixedUnknown; readonly grammarFailure?: ExtractionFailureRecord };
+  | {
+      readonly kind: 'unknown';
+      readonly unknown: FixedUnknown | UnenumeratedUnknown;
+      // The first failed class's failure, when a class failed.
+      readonly grammarFailure?: ExtractionFailureRecord;
+      // The count of unenumerated headings across the source's classes.
+      readonly unenumeratedHeadings?: number;
+    };
+
+// One class's item denominator within one source (PWB-REQ-002 as amended):
+// known, or Unknown with the reason word (a closed grammar failure, the
+// `unenumerated-heading` flag, or `source-withheld` when no class could be
+// read) and the closed RFC2-24 reason the claim carries.
+export type ClassDenominator =
+  | { readonly kind: 'known'; readonly value: number }
+  | {
+      readonly kind: 'unknown';
+      readonly reason: ExtractionFailure | 'unenumerated-heading' | 'source-withheld';
+      readonly unknownReason: string;
+      readonly failure?: ExtractionFailureRecord;
+      readonly unenumeratedHeadings?: number;
+    };
+
+export interface SourceClassOutcome {
+  readonly class: ExtractionClass;
+  readonly denominator: ClassDenominator;
+}
 
 export interface SourceCoverage {
   readonly path: string;
   readonly extractionClasses: readonly ExtractionClass[];
+  // Known only when every class the source is assigned has a known item
+  // denominator in it.
   readonly itemDenominator: ItemDenominator;
+  // Each assigned class's own outcome, in class order.
+  readonly classOutcomes: readonly SourceClassOutcome[];
+  // Some classes failed and others read.
+  readonly partiallyExtracted: boolean;
+  // Surfaced, never skipped: headings no row declares, in source order.
+  readonly unenumeratedHeadings: readonly UnenumeratedHeading[];
   // The classification record that governs this source (the parse-failure
   // exclusion when the grammar failed).
   readonly record: ClassificationRecord;
@@ -213,8 +258,12 @@ export interface ClassCoverage {
   readonly modeled: number;
   readonly unknown: number;
   readonly contradicted: number;
-  // Sources assigned this class whose item denominator is Unknown.
+  // Sources assigned this class in which its item denominator is Unknown.
   readonly sourcesWithUnknownDenominator: number;
+  // True when the root index was not read and this class counts a source of
+  // a rule that does not need it: the count was derived without a read root
+  // index and says so wherever it is shown.
+  readonly withoutReadRootIndex: boolean;
   // Root/index discovery failures that prevent this class denominator from
   // being complete even when no class source was discovered.
   readonly discoveryUnknown: number;
@@ -234,8 +283,17 @@ export type RootSummaryDisclosure =
   | { readonly kind: 'absent'; readonly anchor: DeclarationAnchor; readonly reason: ExtractionFailure; readonly line?: number; readonly detail?: string }
   | { readonly kind: 'unknown'; readonly reason: string };
 
+// An unenumerated heading as surfaced: its source, and the exact anchor.
+export interface SurfacedUnenumeratedHeading extends UnenumeratedHeading {
+  readonly path: string;
+  readonly anchor: DeclarationAnchor;
+}
+
 export interface ProjectShapeCoverage {
   readonly sources: readonly SourceCoverage[];
+  readonly unenumeratedHeadings: readonly SurfacedUnenumeratedHeading[];
+  // The root index's body was read (admitted and within limits).
+  readonly rootIndexRead: boolean;
   readonly items: readonly ItemCoverage[];
   readonly classes: Readonly<Record<ExtractionClass, ClassCoverage>>;
   readonly facts: readonly ReconciledFact[];
@@ -246,6 +304,9 @@ export interface ProjectShapeCoverage {
     readonly sources: number;
     readonly sourcesWithKnownItemDenominator: number;
     readonly sourcesWithUnknownDenominator: number;
+    // True when the root index was not read and the source-path population
+    // holds a source of a rule that does not need it.
+    readonly populationWithoutReadRootIndex: boolean;
     readonly items: number;
     readonly modeled: number;
     readonly unknown: number;
@@ -360,27 +421,95 @@ export const countFact = (cls: ExtractionClass): string => `count:${cls}`;
 export const catalogCountFact = (key: string): string => `catalog-count:${key}`;
 export const projectAccountFact = (key: string): string => `project-account:${key}`;
 
+const unknownOutcomes = (
+  classes: readonly ExtractionClass[],
+  reason: Extract<ClassDenominator, { kind: 'unknown' }>['reason'],
+  unknownReason: string,
+  failures: readonly ExtractionFailureRecord[] = [],
+  headings: readonly UnenumeratedHeading[] = [],
+): readonly SourceClassOutcome[] =>
+  classes.map((cls) => {
+    const failure = failures.find((candidate) => candidate.class === cls);
+    const unenumerated = headings.filter((heading) => heading.class === cls).length;
+    return {
+      class: cls,
+      denominator: {
+        kind: 'unknown',
+        reason: failure === undefined ? reason : failure.reason,
+        unknownReason,
+        ...(failure === undefined ? {} : { failure }),
+        ...(unenumerated === 0 ? {} : { unenumeratedHeadings: unenumerated }),
+      },
+    };
+  });
+
+// The classes that read, each known or Unknown for an unenumerated heading.
+function readOutcome(cls: ExtractionClass, count: number, headings: readonly UnenumeratedHeading[]): SourceClassOutcome {
+  const unenumerated = headings.filter((heading) => heading.class === cls).length;
+  return {
+    class: cls,
+    denominator:
+      unenumerated === 0
+        ? { kind: 'known', value: count }
+        : { kind: 'unknown', reason: 'unenumerated-heading', unknownReason: UNENUMERATED_UNKNOWN.unknownReason, unenumeratedHeadings: unenumerated },
+  };
+}
+
 function sourceCoverage(entry: CoverageSourceInput, policy: SecretClassificationPolicy): SourceCoverage {
   const { record, source } = entry;
   const extractionClasses = source.extractionClasses;
-  if (record.outcome !== 'classified') {
-    return { path: source.path, extractionClasses, itemDenominator: { kind: 'unknown', unknown: record.unknown }, record };
-  }
+  const whole = (
+    unknown: FixedUnknown,
+    outcomeRecord: ClassificationRecord,
+    grammarFailure?: ExtractionFailureRecord,
+    failures: readonly ExtractionFailureRecord[] = [],
+    headings: readonly UnenumeratedHeading[] = [],
+  ): SourceCoverage => ({
+    path: source.path,
+    extractionClasses,
+    itemDenominator: { kind: 'unknown', unknown, ...(grammarFailure === undefined ? {} : { grammarFailure }), ...(headings.length === 0 ? {} : { unenumeratedHeadings: headings.length }) },
+    classOutcomes: unknownOutcomes(extractionClasses, 'source-withheld', unknown.unknownReason, failures, headings),
+    partiallyExtracted: false,
+    unenumeratedHeadings: headings,
+    record: outcomeRecord,
+  });
+  if (record.outcome !== 'classified') return whole(record.unknown, record);
   const value = entry.value;
   if (value !== undefined && value.kind === 'over-limit') {
     const excluded = resourceLimitExclusion(policy, record, value.breach.limit);
-    return { path: source.path, extractionClasses, itemDenominator: { kind: 'unknown', unknown: excluded.unknown }, record: excluded };
+    return whole(excluded.unknown, excluded);
   }
   if (value === undefined || value.kind === 'unknown') {
     const excluded = parseFailureExclusion(policy, record);
+    return whole(excluded.unknown, excluded, value?.failure, value?.failures, value?.unenumeratedHeadings);
+  }
+  const headings = value.unenumeratedHeadings ?? [];
+  const read = extractionClasses.filter((cls) => value.denominators[cls] !== undefined).map((cls) => readOutcome(cls, value.denominators[cls] as number, headings));
+  if (value.kind === 'partial') {
+    const unknown = parseFailureExclusion(policy, record).unknown;
+    const failed = unknownOutcomes(value.failures.map((failure) => failure.class), 'source-withheld', unknown.unknownReason, value.failures, headings);
     return {
       path: source.path,
       extractionClasses,
-      itemDenominator: { kind: 'unknown', unknown: excluded.unknown, ...(value === undefined ? {} : { grammarFailure: value.failure }) },
-      record: excluded,
+      itemDenominator: { kind: 'unknown', unknown, grammarFailure: value.failures[0] as ExtractionFailureRecord, ...(headings.length === 0 ? {} : { unenumeratedHeadings: headings.length }) },
+      classOutcomes: extractionClasses.map((cls) => (failed.find((outcome) => outcome.class === cls) ?? read.find((outcome) => outcome.class === cls)) as SourceClassOutcome),
+      partiallyExtracted: true,
+      unenumeratedHeadings: headings,
+      record,
     };
   }
-  return { path: source.path, extractionClasses, itemDenominator: { kind: 'known', value: value.items.length }, record };
+  return {
+    path: source.path,
+    extractionClasses,
+    itemDenominator:
+      headings.length === 0
+        ? { kind: 'known', value: value.items.length }
+        : { kind: 'unknown', unknown: UNENUMERATED_UNKNOWN, unenumeratedHeadings: headings.length },
+    classOutcomes: read,
+    partiallyExtracted: false,
+    unenumeratedHeadings: headings,
+    record,
+  };
 }
 
 function anchorOf(item: ExtractedItem, contentDigest: string | undefined): DeclarationAnchor {
@@ -438,13 +567,21 @@ export function buildProjectShapeCoverage(input: CoverageInput): ProjectShapeCov
   // The stated summary counts, retained as declarations whatever else says.
   const stated: readonly Declaration[] = rootSummary.kind === 'emitted' ? rootSummary.declarations : [];
 
-  // Admitted items with their anchors, in source order.
+  // Admitted items with their anchors, in source order. A partially extracted
+  // source admits the items of the classes that read.
   const admitted: { readonly item: ExtractedItem; readonly anchor: DeclarationAnchor }[] = [];
+  const population = new Set<string>();
   for (const entry of input.sources) {
-    if (entry.record.outcome !== 'classified' || entry.value === undefined || entry.value.kind !== 'extracted') continue;
+    if (entry.record.outcome !== 'classified' || entry.value === undefined || (entry.value.kind !== 'extracted' && entry.value.kind !== 'partial')) continue;
+    population.add(entry.source.path);
     for (const item of entry.value.items) admitted.push({ item, anchor: anchorOf(item, entry.record.contentDigest) });
   }
-  const population = new Set(sources.filter((s) => s.itemDenominator.kind === 'known').map((s) => s.path));
+  // The root index is read when its body is: admitted and within limits. A
+  // root whose grammar fails is still read.
+  const rootEntry = input.sources.find((entry) => entry.source.rule === 'root-index');
+  const rootIndexRead = rootEntry !== undefined && rootEntry.record.outcome === 'classified' && rootEntry.record.basis === 'body' && rootEntry.value?.kind !== 'over-limit';
+  const independentOfRoot = (path: string): boolean => input.sources.some((entry) => entry.source.path === path && !SOURCE_RULE_NEEDS_ROOT_INDEX[entry.source.rule]);
+  const populationWithoutReadRootIndex = !rootIndexRead && input.sources.some((entry) => !SOURCE_RULE_NEEDS_ROOT_INDEX[entry.source.rule]);
   const rosterKeys = new Set(admitted.filter((a) => a.item.class === 'roster-identity').map((a) => a.item.key));
   const reconcile: ReconcileInput = { rules, population, rosterKeys };
 
@@ -490,10 +627,11 @@ export function buildProjectShapeCoverage(input: CoverageInput): ProjectShapeCov
   const classes = {} as Record<ExtractionClass, ClassCoverage>;
   for (const cls of EXTRACTION_CLASSES) {
     const ofClass = items.filter((i) => i.class === cls);
-    const unknownSources = sources.filter((s) => s.extractionClasses.includes(cls) && s.itemDenominator.kind === 'unknown');
+    const outcomeOf = (s: SourceCoverage): ClassDenominator | undefined => s.classOutcomes.find((o) => o.class === cls)?.denominator;
+    const unknownSources = sources.filter((s) => outcomeOf(s)?.kind === 'unknown');
     const discoveryUnknowns = (input.discoveryUncertainties ?? []).filter((entry) => entry.classes.includes(cls));
     const reasons = [...new Set([
-      ...unknownSources.map((s) => (s.itemDenominator as { unknown: FixedUnknown }).unknown.unknownReason),
+      ...unknownSources.map((s) => (outcomeOf(s) as Extract<ClassDenominator, { kind: 'unknown' }>).unknownReason),
       ...discoveryUnknowns.map((entry) => entry.unknown.unknownReason),
     ])];
     const declared = ofClass.length;
@@ -505,6 +643,7 @@ export function buildProjectShapeCoverage(input: CoverageInput): ProjectShapeCov
       unknown: count('unknown'),
       contradicted: count('contradicted'),
       sourcesWithUnknownDenominator: unknownSources.length,
+      withoutReadRootIndex: !rootIndexRead && sources.some((s) => s.extractionClasses.includes(cls) && independentOfRoot(s.path)),
       discoveryUnknown: discoveryUnknowns.length,
       denominator: reasons.length === 0 ? { kind: 'known', value: declared } : { kind: 'unknown', reasons },
     };
@@ -514,7 +653,7 @@ export function buildProjectShapeCoverage(input: CoverageInput): ProjectShapeCov
       value: String(declared),
       basis: 'derived-count',
       anchors: sources
-        .filter((s) => s.extractionClasses.includes(cls) && s.itemDenominator.kind === 'known')
+        .filter((s) => outcomeOf(s)?.kind === 'known')
         .map((s) => ({ path: s.path, ...(digestOf.get(s.path) === undefined ? {} : { contentDigest: digestOf.get(s.path) as string }) })),
     };
     const declarations = [derived, ...stated.filter((d) => d.fact === fact)];
@@ -536,7 +675,7 @@ export function buildProjectShapeCoverage(input: CoverageInput): ProjectShapeCov
     const fact = catalogCountFact(key);
     const derived: Declaration[] = [];
     for (const entry of input.sources) {
-      if (entry.record.outcome !== 'classified' || entry.value === undefined || entry.value.kind !== 'extracted' || entry.value.catalogHeadings === undefined) continue;
+      if (entry.record.outcome !== 'classified' || entry.value === undefined || (entry.value.kind !== 'extracted' && entry.value.kind !== 'partial') || entry.value.catalogHeadings === undefined) continue;
       const heading = entry.value.catalogHeadings.find((h) => h.key === key);
       if (heading === undefined) continue;
       const digest = entry.record.contentDigest;
@@ -569,8 +708,14 @@ export function buildProjectShapeCoverage(input: CoverageInput): ProjectShapeCov
 
   const contradictions = facts.filter((f) => f.state === 'contradicted');
   const rulesApplied = new Set(facts.flatMap((f) => (f.state === 'modeled' && f.disagreement !== undefined ? [f.disagreement.precedence.ruleId] : []))).size;
+  const unenumeratedHeadings: SurfacedUnenumeratedHeading[] = [];
+  for (const source of sources) {
+    for (const heading of source.unenumeratedHeadings) unenumeratedHeadings.push({ ...heading, path: source.path, anchor: { path: source.path, line: heading.line, ...(digestOf.get(source.path) === undefined ? {} : { contentDigest: digestOf.get(source.path) as string }) } });
+  }
   return {
     sources,
+    unenumeratedHeadings,
+    rootIndexRead,
     items,
     classes,
     facts,
@@ -579,8 +724,9 @@ export function buildProjectShapeCoverage(input: CoverageInput): ProjectShapeCov
     rootSummary,
     counts: {
       sources: sources.length,
-      sourcesWithKnownItemDenominator: population.size,
-      sourcesWithUnknownDenominator: sources.length - population.size,
+      sourcesWithKnownItemDenominator: sources.filter((s) => s.itemDenominator.kind === 'known').length,
+      sourcesWithUnknownDenominator: sources.filter((s) => s.itemDenominator.kind === 'unknown').length,
+      populationWithoutReadRootIndex,
       items: items.length,
       modeled: items.filter((i) => i.state === 'modeled').length,
       unknown: items.filter((i) => i.state === 'unknown').length,
