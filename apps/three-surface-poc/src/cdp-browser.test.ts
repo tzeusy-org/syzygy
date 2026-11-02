@@ -85,14 +85,22 @@ describe('disposable browser shutdown', () => {
     };
     let scans = 0;
     const connection = { close: () => { events.push('socket-closed'); }, send: async () => ({}) };
-    // The drain clock advances 25 ms per scan, the loop's own sleep, so the 100 ms deadline is a count of scans and a loaded
-    // host cannot overrun it on the wall clock (syzygy-bpyt.4.19), as the timeout and late-empty cases below already do.
-    await closeDisposableBrowser(connection, exited, '/tmp/private-browser-profile', privateGroup, {
-      closeGraceMs: 5, profileDrainMs: 100,
-      now: () => scans * 25,
-      groupProcesses: () => ++scans === 1 ? [123] : [],
-      removeProfile: () => { events.push('profile-removed'); },
-    });
+    // Fake timers drive the product's own 25 ms inter-scan sleep and the default `now`, so the 100 ms drain deadline is a
+    // count of scans, not wall time, and a loaded host cannot overrun it (syzygy-bpyt.4.19). A longer product sleep still
+    // fails here: the scans would not finish within the 50 ms the two empty scans take.
+    vi.useFakeTimers();
+    try {
+      const closing = closeDisposableBrowser(connection, exited, '/tmp/private-browser-profile', privateGroup, {
+        closeGraceMs: 5, profileDrainMs: 100,
+        groupProcesses: () => ++scans === 1 ? [123] : [],
+        removeProfile: () => { events.push('profile-removed'); },
+      });
+      await vi.advanceTimersByTimeAsync(50);
+      expect(scans).toBe(3);
+      await closing;
+    } finally {
+      vi.useRealTimers();
+    }
     expect(scans).toBe(3);
     expect(events).toEqual(['socket-closed', 'profile-removed']);
     let timeoutScans = 0;
