@@ -18,7 +18,7 @@ import {
   type ProjectId,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { evaluation, projectYaml } from './fixtures/index.js';
+import { decisionsFor, evaluation, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-040 — Every answer is explainable: "Why this answer?"
 // (state projection/query).
@@ -61,7 +61,7 @@ function fixtureBoundary() {
   const read = readDeclaration(SOURCE);
   if (!read.ok) throw new Error('fixture must parse');
   return coverageBoundary(
-    computeCoverage(read.declaration, CONSENTS, [
+    computeCoverage(read.declaration, decisionsFor(read.declaration, CONSENTS), [
       { repositoryId: REPO, outcome: 'captured', capturedScope: 'full' },
     ]),
   );

@@ -9,7 +9,7 @@ import {
   type ProjectId,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { consent, evaluation, projectYaml } from './fixtures/index.js';
+import { decisionsFor, consent, evaluation, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-035 — Several reasons may be visible at once; one never
 // hides the others (event-response).
@@ -75,7 +75,11 @@ function observableAnswer() {
   const read = readDeclaration(SOURCE);
   if (!read.ok) throw new Error('fixture must be valid');
   const set = computeShapeAnswers(PROJECT, EVALUATION, {
-    coverage: computeCoverage(read.declaration, CONSENTS, OBSERVATIONS),
+    coverage: computeCoverage(
+      read.declaration,
+      decisionsFor(read.declaration, CONSENTS),
+      OBSERVATIONS,
+    ),
   });
   return set.answers[3];
 }

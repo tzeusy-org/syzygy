@@ -18,8 +18,10 @@ import {
   type ExplanationFactSet,
   type FacetAnswer,
   type HumanView,
+  type ConsentCitation,
   type RepositoryCoverage,
   type ServedFact,
+  type UntrustedConsentRecordView,
 } from '@syzygy/cap1-core';
 import { escapeHtml, type Route, type RouteResponse } from '@syzygy/http-host';
 
@@ -374,41 +376,125 @@ function renderDrawer(evaluation: EvaluatedArm, answer: FacetAnswer): string {
 
 // --- Coverage and consent (CAP1-REQ-010…016 exposure on the page) ----------
 
+// One coverage row: every field of the core `RepositoryCoverage` entry
+// travels as a data-* attribute on the row AND as literal text, so the
+// whole tuple is recoverable without colour, position or hover
+// (CAP1-REQ-064) and the machine channel's `coverageBoundary` row can be
+// compared to it field by field (CAP1-REQ-041). Scope, attribution and grant
+// state render with the boundary (CAP1-REQ-011).
+function citationAttrs(citation: ConsentCitation): string {
+  return (
+    attr('data-consent-record-reference', citation.reference) +
+    attr('data-consent-record-id', citation.recordId) +
+    attr('data-consent-record-digest', citation.artifactDigest) +
+    attr('data-consent-scope', citation.scope) +
+    attr('data-consent-attribution', citation.attribution) +
+    attr('data-consent-grant-state', citation.grantState) +
+    attr('data-consent-provenance', citation.provenance)
+  );
+}
+
+function citationText(citation: ConsentCitation): string {
+  return (
+    `consent record ${escapeHtml(citation.recordId)} (${escapeHtml(citation.artifactDigest)}) via reference ${escapeHtml(citation.reference)}: ` +
+    `scope ${escapeHtml(citation.scope)}, attribution ${escapeHtml(citation.attribution)}, grant state ${escapeHtml(citation.grantState)}, provenance ${escapeHtml(citation.provenance)}`
+  );
+}
+
+function untrustedAttrs(view: UntrustedConsentRecordView | null): string {
+  if (view === null) return '';
+  return (
+    attr('data-untrusted-trust', view.trust) +
+    attr('data-untrusted-record-id', view.recordId) +
+    attr('data-untrusted-record-digest', view.artifactDigest) +
+    attr('data-untrusted-project-id', view.projectId) +
+    attr('data-untrusted-repository-id', view.repositoryId) +
+    attr('data-untrusted-scope', view.scope) +
+    attr('data-untrusted-attribution', view.attribution) +
+    attr('data-untrusted-grant-state', view.grantState)
+  );
+}
+
+function untrustedText(view: UntrustedConsentRecordView | null): string {
+  if (view === null) return '';
+  return (
+    ` Recorded consent ${escapeHtml(view.recordId)} (${escapeHtml(view.artifactDigest)}) — ${escapeHtml(view.trust)}, not honored: ` +
+    `project ${escapeHtml(view.projectId)}, repository ${escapeHtml(view.repositoryId)}, scope ${escapeHtml(view.scope)}, attribution ${escapeHtml(view.attribution)}, grant state ${escapeHtml(view.grantState)}.`
+  );
+}
+
+function coverageRow(attrs: string, text: string): string {
+  return `<span class="coverage-record"${attrs}>${text}</span> `;
+}
+
 function renderBoundaryRecord(record: RepositoryCoverage): string {
-  const base = attr('data-repository-id', record.repositoryId);
+  const base =
+    attr('data-repository-id', record.repositoryId) + attr('data-coverage-state', record.state);
+  const repo = escapeHtml(record.repositoryId);
   switch (record.state) {
     case 'observed':
-      return (
-        `<span class="coverage-record"${base}${attr('data-coverage-state', record.state)}${attr('data-consent-state', record.consent.grantState)}>` +
-        `${escapeHtml(record.repositoryId)}: observed; consent ${escapeHtml(record.consent.recordId)} ${escapeHtml(record.consent.grantState)}; captured scope ${escapeHtml(record.capturedScope)}</span> `
+      return coverageRow(
+        base +
+          attr('data-consent-state', record.consent.grantState) +
+          attr('data-captured-scope', record.capturedScope) +
+          citationAttrs(record.consent),
+        `${repo}: observed; captured scope ${escapeHtml(record.capturedScope)}; ${citationText(record.consent)}`,
       );
     case 'unconsented': {
-      // R-S2 finding #4: a withdrawn pair cites WHICH withdrawal record
-      // defeated the grant, the same way an in-force citation names its
-      // record below — a record-absence unconsented entry has no record
-      // to cite, so it renders exactly as before.
-      const citation = record.basis === 'withdrawn' ? record.consent : undefined;
-      const citationAttrs =
-        citation !== undefined ? attr('data-withdrawn-record-id', citation.recordId) : '';
-      const citationText =
-        citation !== undefined
-          ? ` Withdrawn consent ${escapeHtml(citation.recordId)} (${escapeHtml(citation.grantState)}).`
-          : '';
-      return (
-        `<span class="coverage-record"${base}${attr('data-coverage-state', record.state)}${attr('data-consent-state', 'unconsented')}${citationAttrs}${attr('data-epistemic-label', record.label)}${attr('data-unknown-reason', record.reason)}${attr('data-presentation', record.presentation)}>` +
-        `${escapeHtml(record.repositoryId)}: ${escapeHtml(record.label)} — ${escapeHtml(record.reason)} (a standing policy state; resolution route: ${escapeHtml(record.resolutionRoute)}).${citationText}</span> `
+      const unknown =
+        attr('data-epistemic-label', record.label) +
+        attr('data-unknown-reason', record.reason) +
+        attr('data-presentation', record.presentation) +
+        attr('data-policy-resolution-route', record.resolutionRoute) +
+        attr('data-coverage-basis', record.basis) +
+        attr('data-consent-reference', record.reference) +
+        attr('data-resolution-route', record.route);
+      const lead =
+        `${repo}: ${escapeHtml(record.label)} — ${escapeHtml(record.reason)} (a standing policy state; resolution route: ${escapeHtml(record.resolutionRoute)}). ` +
+        `Declared consent reference ${escapeHtml(record.reference)}; `;
+      if (record.basis === 'withdrawn') {
+        // R-S2 finding #4: a withdrawn pair cites WHICH withdrawal record
+        // defeated the grant.
+        return coverageRow(
+          base +
+            attr('data-consent-state', 'unconsented') +
+            unknown +
+            attr('data-withdrawn-record-id', record.consent.recordId) +
+            citationAttrs(record.consent) +
+            untrustedAttrs(record.untrustedRecord),
+          `${lead}withdrawn by ${citationText(record.consent)}; route ${escapeHtml(record.route)}.${untrustedText(record.untrustedRecord)}`,
+        );
+      }
+      return coverageRow(
+        base +
+          attr('data-consent-state', 'unconsented') +
+          unknown +
+          attr('data-consent-diagnostic', record.diagnostic) +
+          attr('data-consent-diagnostic-reference', record.diagnosticReference) +
+          untrustedAttrs(record.untrustedRecord),
+        `${lead}diagnostic ${escapeHtml(record.diagnostic)} (reference ${escapeHtml(record.diagnosticReference)}); route ${escapeHtml(record.route)}.${untrustedText(record.untrustedRecord)}`,
       );
     }
     case 'capture-failed':
     case 'stale':
-      return (
-        `<span class="coverage-record"${base}${attr('data-coverage-state', record.state)}${attr('data-consent-state', record.consent.grantState)}${attr('data-epistemic-label', record.label)}${attr('data-unknown-reason', record.reason)}>` +
-        `${escapeHtml(record.repositoryId)}: ${escapeHtml(record.label)} — ${escapeHtml(record.reason)}; consent ${escapeHtml(record.consent.recordId)} ${escapeHtml(record.consent.grantState)}</span> `
+      return coverageRow(
+        base +
+          attr('data-consent-state', record.consent.grantState) +
+          attr('data-epistemic-label', record.label) +
+          attr('data-unknown-reason', record.reason) +
+          citationAttrs(record.consent),
+        `${repo}: ${escapeHtml(record.label)} — ${escapeHtml(record.reason)}; ${citationText(record.consent)}`,
       );
     case 'degraded-partial':
-      return (
-        `<span class="coverage-record"${base}${attr('data-coverage-state', record.state)}${attr('data-consent-state', record.consent.grantState)}${attr('data-uncaptured-reason', record.uncaptured.reason)}>` +
-        `${escapeHtml(record.repositoryId)}: partial — captured ${escapeHtml(record.capturedScope)} of ${escapeHtml(record.declaredScope)}; remainder ${escapeHtml(record.uncaptured.label)} (${escapeHtml(record.uncaptured.reason)})</span> `
+      return coverageRow(
+        base +
+          attr('data-consent-state', record.consent.grantState) +
+          attr('data-captured-scope', record.capturedScope) +
+          attr('data-declared-scope', record.declaredScope) +
+          attr('data-uncaptured-label', record.uncaptured.label) +
+          attr('data-uncaptured-reason', record.uncaptured.reason) +
+          citationAttrs(record.consent),
+        `${repo}: partial — captured ${escapeHtml(record.capturedScope)} of ${escapeHtml(record.declaredScope)}; remainder ${escapeHtml(record.uncaptured.label)} (${escapeHtml(record.uncaptured.reason)}); ${citationText(record.consent)}`,
       );
   }
 }

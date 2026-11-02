@@ -2,9 +2,11 @@ import {
   consentDecisionTuple,
   evaluationId,
   type ConsentDecisionTuple,
+  type CoverageBoundary,
   extractConsentDistinction,
   extractDistinctions,
   extractProposalDistinctions,
+  coverageBoundary,
   coverageIdentityFields,
   registrationIdentityFields,
   renderState,
@@ -129,6 +131,12 @@ export interface MachineProjectEvaluatedBody {
   readonly state: StateRendering<MachineAnswer>;
   readonly evaluationId: EvaluationId;
   readonly consentDecisions: readonly MachineConsentDecision[];
+  // CAP1-REQ-010…016: the coverage boundary core computed — one row per
+  // declared repository, in declaration order, each citing the exact
+  // consent record (or typed refusal) the closed decision verified. The
+  // human page renders the same rows; only the independent wire oracle
+  // in the tests judges that they agree (CAP1-REQ-041).
+  readonly coverageBoundary: CoverageBoundary;
   readonly identities: {
     readonly registration: readonly IdentityField[];
     readonly coverage: readonly IdentityField[];
@@ -198,6 +206,7 @@ export function machineProjectBody(evaluation: ProjectEvaluation): MachineProjec
           ...consentDecisionTuple(decision),
           evaluationId: id,
         })),
+        coverageBoundary: coverageBoundary(evaluation.coverage),
         identities: {
           registration: registrationIdentityFields(evaluation.registration),
           coverage: coverageIdentityFields(evaluation.coverage),

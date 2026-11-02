@@ -177,6 +177,20 @@ export interface UntrustedConsentRecordView {
   readonly grantState: GrantState;
 }
 
+// The verified record a closed decision stands on, as coverage cites it: the
+// admitted grant, or the valid withdrawal that defeated the pair. Every field
+// comes from a record that passed every check (CAP1-REQ-011), so coverage
+// carries it without reloading or re-verifying anything (syzygy-u2a.6).
+export interface VerifiedConsentRecord {
+  readonly reference: string;
+  readonly recordId: string;
+  readonly artifactDigest: Sha256Digest;
+  readonly scope: string;
+  readonly attribution: string;
+  readonly grantState: GrantState;
+  readonly provenance: ConsentProvenanceLabel;
+}
+
 export type PreObservationConsentDecision =
   | {
       readonly authorization: 'admitted';
@@ -196,6 +210,9 @@ export type PreObservationConsentDecision =
       readonly diagnosticReference: string;
       readonly route: typeof CONSENT_DECISION_ROUTE;
       readonly untrustedRecord: UntrustedConsentRecordView | null;
+      // The withdrawal that defeated the pair: non-null exactly when the
+      // diagnostic is `withdrawn` (rules 2 and 3), null otherwise.
+      readonly withdrawal: VerifiedConsentRecord | null;
     };
 
 // --- Act parsing (checks 5–9) ---------------------------------------------
@@ -508,6 +525,23 @@ function fullEvaluation(
 
 // --- The pair decision (§5) -----------------------------------------------
 
+function verifiedRecord(
+  reference: string,
+  artifactDigest: Sha256Digest,
+  record: ConsentRecord,
+  provenance: ConsentProvenanceLabel,
+): VerifiedConsentRecord {
+  return {
+    reference,
+    recordId: record.id,
+    artifactDigest,
+    scope: record.scope,
+    attribution: record.attribution,
+    grantState: record.grantState,
+    provenance,
+  };
+}
+
 export function relationsOf(inputs: readonly ConsentAuthorityInput[]): readonly ActRelation[] {
   return actRelations(inputs);
 }
@@ -570,6 +604,18 @@ export function decideRepositoryConsent(
     diagnosticReference,
     route: CONSENT_DECISION_ROUTE,
     untrustedRecord: untrusted,
+    withdrawal: null,
+  });
+  const withdrawn = (withdrawal: VerifiedConsentRecord): PreObservationConsentDecision => ({
+    authorization: 'Unknown',
+    repositoryId: entry.id,
+    reference,
+    reason: CONSENT_DECISION_REASON,
+    diagnostic: 'withdrawn',
+    diagnosticReference: withdrawal.reference,
+    route: CONSENT_DECISION_ROUTE,
+    untrustedRecord: untrusted,
+    withdrawal,
   });
 
   // Rule 1: the entry reference's own evidence is primary.
@@ -582,10 +628,16 @@ export function decideRepositoryConsent(
   const evaluated = fullEvaluation(own, context);
   if (!evaluated.ok) return refuse(evaluated.diagnostic, reference);
   // Rule 2: the entry names a valid withdrawal.
-  if (record.grantState === 'withdrawn') return refuse('withdrawn', reference);
+  if (record.grantState === 'withdrawn') {
+    return withdrawn(verifiedRecord(reference, own.artifact.digest, record, evaluated.provenance));
+  }
 
   // Rules 3 and 4: every other captured reference that may withdraw P.
-  const candidates: { readonly diagnostic: ConsentDiagnostic; readonly reference: string }[] = [];
+  const candidates: {
+    readonly diagnostic: 'withdrawn' | 'withdrawal-unresolved' | 'consent-evidence-unresolved';
+    readonly reference: string;
+    readonly withdrawal: VerifiedConsentRecord | null;
+  }[] = [];
   for (const input of inputs) {
     if (input.reference === reference) continue;
     if (input.artifact.state === 'loaded') {
@@ -598,17 +650,22 @@ export function decideRepositoryConsent(
         continue;
       }
       const withdrawal = fullEvaluation(input, context);
-      candidates.push({
-        diagnostic: withdrawal.ok ? 'withdrawn' : 'withdrawal-unresolved',
-        reference: input.reference,
-      });
+      candidates.push(
+        withdrawal.ok
+          ? {
+              diagnostic: 'withdrawn',
+              reference: input.reference,
+              withdrawal: verifiedRecord(input.reference, input.artifact.digest, other, withdrawal.provenance),
+            }
+          : { diagnostic: 'withdrawal-unresolved', reference: input.reference, withdrawal: null },
+      );
       continue;
     }
     const pair = input.artifact.pair;
     if (pair === null) {
-      candidates.push({ diagnostic: 'consent-evidence-unresolved', reference: input.reference });
+      candidates.push({ diagnostic: 'consent-evidence-unresolved', reference: input.reference, withdrawal: null });
     } else if (pair.projectId === projectId && pair.repositoryId === entry.id) {
-      candidates.push({ diagnostic: 'withdrawal-unresolved', reference: input.reference });
+      candidates.push({ diagnostic: 'withdrawal-unresolved', reference: input.reference, withdrawal: null });
     }
   }
   if (candidates.length > 0) {
@@ -617,7 +674,11 @@ export function decideRepositoryConsent(
         (CANDIDATE_RANK[a.diagnostic] as number) - (CANDIDATE_RANK[b.diagnostic] as number) ||
         compareCodeUnits(a.reference, b.reference),
     );
-    if (winner !== undefined) return refuse(winner.diagnostic, winner.reference);
+    if (winner !== undefined) {
+      return winner.withdrawal !== null
+        ? withdrawn(winner.withdrawal)
+        : refuse(winner.diagnostic, winner.reference);
+    }
   }
 
   // Rule 5: admitted, with the exact provenance label.
@@ -630,27 +691,6 @@ export function decideRepositoryConsent(
     act: evaluated.act,
     provenance: evaluated.provenance,
   };
-}
-
-// The records coverage may cite: admitted grants, and the withdrawal record
-// behind a `withdrawn` decision. A refused pair contributes nothing, so
-// coverage renders it unconsented and never capture-failed.
-export function coverageRecordsFrom(
-  decisions: readonly PreObservationConsentDecision[],
-  inputs: readonly ConsentAuthorityInput[],
-): readonly ConsentRecord[] {
-  const records: ConsentRecord[] = [];
-  for (const decision of decisions) {
-    if (decision.authorization === 'admitted') {
-      records.push(decision.record);
-    } else if (decision.diagnostic === 'withdrawn') {
-      const withdrawal = inputs.find((input) => input.reference === decision.diagnosticReference);
-      if (withdrawal !== undefined && withdrawal.artifact.state === 'loaded') {
-        records.push(withdrawal.artifact.record);
-      }
-    }
-  }
-  return records;
 }
 
 // --- The served tuple (CAP1-REQ-046 v1.0) ---------------------------------

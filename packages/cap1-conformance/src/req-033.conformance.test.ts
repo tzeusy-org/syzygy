@@ -11,7 +11,7 @@ import {
   type RepositoryId,
   type ShapeAnswerInputs,
 } from '@syzygy/cap1-core';
-import { consent, evaluation, projectYaml } from './fixtures/index.js';
+import { decisionsFor, consent, evaluation, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-033 — Every answer exposes its constituent facts and scope
 // (state projection/query).
@@ -59,7 +59,11 @@ function evidencedInputs(): ShapeAnswerInputs {
     registration: registerProject(read, 'rev-1'),
     shapeReferences: [{ reference: 'declarations/spec_root', resolution: 'resolved' }],
     comprehension: [{ recordId: 'walkthrough-1', ownerVerdict: 'stands' }],
-    coverage: computeCoverage(read.declaration, CONSENTS, OBSERVATIONS),
+    coverage: computeCoverage(
+      read.declaration,
+      decisionsFor(read.declaration, CONSENTS),
+      OBSERVATIONS,
+    ),
     links: [{ link: 'overview->spec', resolved: true }],
     reconciliation: {
       computed: true,

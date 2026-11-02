@@ -1,7 +1,6 @@
 import {
   computeCoverage,
   computeShapeAnswers,
-  coverageRecordsFrom,
   registerProject,
   type CoverageResult,
   type FactModel,
@@ -32,10 +31,11 @@ import {
 // digest of the canonical manifest, explicit as-of): no caller supplies a
 // snapshot label and no clock is read here (RFC2-3; CAP1-REQ-042/060).
 //
-// Consent: coverage is fed only the records the closed pre-observation
-// decisions admit (plus the withdrawal behind a `withdrawn` decision), so a
-// refused pair renders unconsented and no observation outcome exists for
-// it — none was read (CAP1-REQ-011/016).
+// Consent: coverage is an ordinal projection of the closed pre-observation
+// decisions — one per declared repository, in declaration order — and never
+// reloads or re-resolves a record. A refused pair renders unconsented with
+// its typed basis, and no observation outcome exists for it: none was read
+// (CAP1-REQ-011/016).
 //
 // Polarity: no evidence yields Unknown, never green; failures flow through
 // as NAMED values (VIS-2).
@@ -170,11 +170,7 @@ export function evaluateCapturedProject(captured: CapturedProjectInputs): Projec
     repository.root.state === 'captured' ? [repository.root.observation] : [],
   );
 
-  const coverage = computeCoverage(
-    declaration,
-    coverageRecordsFrom(consentDecisions, captured.consentInputs),
-    observations,
-  );
+  const coverage = computeCoverage(declaration, consentDecisions, observations);
   const answers = computeShapeAnswers(projectId, evaluation, { registration, coverage });
 
   const model: FactModel = {

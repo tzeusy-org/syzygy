@@ -12,7 +12,7 @@ import {
   type ProjectId,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { projectYaml } from './fixtures/index.js';
+import { decisionsFor, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-060 — Identities are the accepted, stable, literal ones
 // (invariant).
@@ -53,7 +53,7 @@ const CONSENTS: readonly ConsentRecord[] = [
 function coverageFor(source: string) {
   const read = readDeclaration(source);
   if (!read.ok) throw new Error('fixture must parse');
-  return computeCoverage(read.declaration, CONSENTS, [
+  return computeCoverage(read.declaration, decisionsFor(read.declaration, CONSENTS), [
     { repositoryId: REPO, outcome: 'captured', capturedScope: 'full' },
   ]);
 }

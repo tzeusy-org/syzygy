@@ -10,7 +10,7 @@ import {
   type ProjectId,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { consent, projectYaml } from './fixtures/index.js';
+import { decisionsFor, consent, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-016 — No source is inspected through authority the project
 // did not grant.
@@ -60,11 +60,19 @@ const OBSERVATIONS: ObservationOutcome[] = [
 
 describe('CAP1-REQ-016 — no source is inspected through authority the project did not grant', () => {
   it("scenario: consent is per project pair — A's answers may carry facts from R, B renders R Unknown with reason unconsented-source-or-provider", () => {
-    const forA = computeCoverage(declarationFor('prj-alpha-g7', 'Alpha'), ALL_CONSENTS, OBSERVATIONS);
+    const forA = computeCoverage(
+      declarationFor('prj-alpha-g7', 'Alpha'),
+      decisionsFor(declarationFor('prj-alpha-g7', 'Alpha'), ALL_CONSENTS),
+      OBSERVATIONS,
+    );
     const entryA = forA.repositories.find((e) => e.repositoryId === REPO_R);
     expect(entryA?.state).toBe('observed');
 
-    const forB = computeCoverage(declarationFor('prj-beta-g7', 'Beta'), ALL_CONSENTS, OBSERVATIONS);
+    const forB = computeCoverage(
+      declarationFor('prj-beta-g7', 'Beta'),
+      decisionsFor(declarationFor('prj-beta-g7', 'Beta'), ALL_CONSENTS),
+      OBSERVATIONS,
+    );
     const entryB = forB.repositories.find((e) => e.repositoryId === REPO_R);
     expect(entryB?.state).toBe('unconsented');
     if (entryB?.state === 'unconsented') {
@@ -84,7 +92,11 @@ describe('CAP1-REQ-016 — no source is inspected through authority the project 
   });
 
   it("sweep: no fact in B's served set carries provenance from R — denominator: B's full served entry set", () => {
-    const forB = computeCoverage(declarationFor('prj-beta-g7', 'Beta'), ALL_CONSENTS, OBSERVATIONS);
+    const forB = computeCoverage(
+      declarationFor('prj-beta-g7', 'Beta'),
+      decisionsFor(declarationFor('prj-beta-g7', 'Beta'), ALL_CONSENTS),
+      OBSERVATIONS,
+    );
     // Denominator: every entry B serves.
     expect(forB.repositories).toHaveLength(1);
     for (const entry of forB.repositories) {

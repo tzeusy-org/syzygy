@@ -1,10 +1,12 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { writeConsent } from '../test-support/consent-acts.js';
 import { evaluateProject } from './pipeline.js';
+import { humanRoutes } from './routes-human.js';
+import { machineProjectBody } from './routes-machine.js';
 import { DAEMON_CAPTURE_VERSIONS } from './source-snapshot.js';
 
 // RT3 — pipeline tests over a REAL on-disk fixture repository (no
@@ -239,5 +241,84 @@ describe('RT3 — evaluateProject over a real fixture repository', () => {
     if (result.kind !== 'declaration-invalid') return;
     expect(result.registration.status).toBe('failed');
     expect(result.failures.length).toBeGreaterThan(0);
+  });
+});
+
+// syzygy-u2a.6 — the coverage and route layers carry Task 1's closed
+// decision; they never reload a record or re-verify an act.
+describe('coverage preserves the closed consent decision (syzygy-u2a.6)', () => {
+  it('a closed unverified decision keeps its untrusted record, effective Unknown and owner-adjudication route through coverage and both channels', async () => {
+    const { root, observedSourceDir } = fixtureRepo();
+    // A state-(2) claim with no correlation provider: Task 1 refuses it
+    // `correlation-unavailable`, never downgrades it to bootstrap.
+    writeConsent(
+      join(root, '.syzygy', 'governance', 'decisions'),
+      { id: 'consent-observed', project: 'prj-rt3-pipeline', repository: 'repo-observed-source' },
+      {
+        provenance: 'syzygy-verified',
+        a1_audit_record: { id: 'a1-fixture', digest: `sha256:${'d'.repeat(64)}` },
+      },
+    );
+    const result = await evaluateProject(root, fixtureDeps(observedSourceDir, root));
+    if (result.kind !== 'project-evaluated') throw new Error('expected evaluation');
+
+    const decision = result.consentDecisions[1];
+    const row = result.coverage.repositories[1];
+    if (decision?.authorization !== 'Unknown' || row?.state !== 'unconsented') {
+      throw new Error('expected a refused decision and an unconsented row');
+    }
+    expect(decision.diagnostic).toBe('correlation-unavailable');
+    expect(row.basis).toBe('no-resolvable-in-force-record');
+    if (row.basis !== 'no-resolvable-in-force-record') return;
+    expect([row.label, row.reason, row.reference, row.diagnostic, row.diagnosticReference, row.route]).toEqual([
+      'Unknown',
+      'unconsented-source-or-provider',
+      'consent-observed',
+      'correlation-unavailable',
+      'consent-observed',
+      'owner-adjudication',
+    ]);
+    // The untrusted view is the decision's own, field for field.
+    expect(row.untrustedRecord).toEqual(decision.untrustedRecord);
+    expect(row.untrustedRecord).toMatchObject({
+      trust: 'untrusted content',
+      recordId: 'consent-observed',
+      attribution: 'test-owner',
+      grantState: 'in-force',
+    });
+    // Nothing was read for the refused pair, so nothing is observed.
+    expect(result.observations.map((o) => o.repositoryId)).toEqual(['repo-governance-root']);
+
+    // Both channels serve the row as computed.
+    const machine = machineProjectBody(result);
+    if (machine.kind !== 'project-evaluated') throw new Error('expected evaluated body');
+    expect(JSON.parse(JSON.stringify(machine.coverageBoundary.records[1]))).toEqual(row);
+    const routes = humanRoutes({ getEvaluation: () => result });
+    const page = await routes[0]?.handle({} as never);
+    const html = String(page?.body);
+    const span = html.match(/<span class="coverage-record" data-repository-id="repo-observed-source"[^>]*>/)?.[0];
+    expect(span).toContain('data-consent-diagnostic="correlation-unavailable"');
+    expect(span).toContain('data-resolution-route="owner-adjudication"');
+    expect(span).toContain('data-untrusted-record-id="consent-observed"');
+    expect(span).toContain('data-untrusted-attribution="test-owner"');
+  });
+
+  it('static review: coverage and route modules import neither the consent loader nor the act verifier', () => {
+    const source = (path: string): string => readFileSync(new URL(path, import.meta.url), 'utf8');
+    const modules = {
+      coverage: source('../../cap1-core/src/coverage.ts'),
+      'routes-machine': source('./routes-machine.ts'),
+      'routes-human': source('./routes-human.ts'),
+    };
+    const forbidden =
+      /\b(?:decideRepositoryConsent|evaluateConsentActBeforeCorrelation|correlationBindingDigest|relationsOf|resolveConsent|loadConsentReferences?|resolveConsentReferencePath|captureProjectInputs|evaluateProject)\b|consent-loading|source-snapshot/;
+    const findings = Object.entries(modules).flatMap(([name, text]) =>
+      forbidden.test(text) ? [name] : [],
+    );
+    expect(findings).toEqual([]);
+    // Coverage's only consent-decision import is type-only.
+    const decisionImports = modules.coverage.match(/^import[^;]*from '\.\/consent-decision\.js';/gm) ?? [];
+    expect(decisionImports.map((statement) => statement.startsWith('import type'))).toEqual([true]);
+    expect(modules.coverage).not.toMatch(/from '\.\/consent\.js'/);
   });
 });

@@ -5,10 +5,8 @@ import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import {
-  computeCoverage,
   readDeclaration,
   resolveConsent,
-  type ObservationOutcome,
   type ProjectId,
   type RepositoryId,
 } from '@syzygy/cap1-core';
@@ -346,7 +344,7 @@ relations: []
 profiles: []
 `;
 
-  it('coverage over loaded records matches conformance expectations: observed / unconsented / withdrawn', () => {
+  it('loading the declaration references names the dangling one and loads the other two', () => {
     const dir = decisionsDir();
     writeRecord(dir, 'consent-good', {
       id: 'consent-good',
@@ -379,56 +377,9 @@ profiles: []
     expect(report.failures[0]?.kind).toBe('reference-unresolvable');
     expect(report.failures[0]?.reference).toBe('consent-dangling');
 
-    const observations: ObservationOutcome[] = [
-      {
-        repositoryId: 'repo-consented' as RepositoryId,
-        outcome: 'captured',
-        capturedScope: 'full-tree',
-      },
-    ];
-
-    // The EXISTING pure core computes coverage from the loaded records.
-    const result = computeCoverage(read.declaration, report.records, observations);
-
-    // CAP1-REQ-010: exactly one explicit result per declared repository.
-    expect(result.repositories).toHaveLength(3);
-    expect(result.repositories.map((r) => r.repositoryId)).toEqual([
-      'repo-consented',
-      'repo-dangling',
-      'repo-withdrawn',
-    ]);
-
-    const [consented, dangling, withdrawn] = result.repositories;
-
-    // CAP1-REQ-011: the observed pair cites its record's facts.
-    expect(consented?.state).toBe('observed');
-    if (consented?.state === 'observed') {
-      expect(consented.consent).toEqual({
-        recordId: 'consent-good',
-        scope: 'observe',
-        attribution: 'owner',
-        grantState: 'in-force',
-      });
-    }
-
-    // CAP1-REQ-012: the dangling reference renders Unknown as a POLICY
-    // state with the verbatim reason and its resolution route — never
-    // an error, never absence of the repository.
-    expect(dangling?.state).toBe('unconsented');
-    if (dangling?.state === 'unconsented') {
-      expect(dangling.label).toBe('Unknown');
-      expect(dangling.reason).toBe('unconsented-source-or-provider');
-      expect(dangling.presentation).toBe('policy');
-      expect(dangling.resolutionRoute).toBe('record consent');
-      expect(dangling.basis).toBe('no-resolvable-in-force-record');
-    }
-
-    // CAP1-REQ-011/013: the withdrawn pair is unconsented on the
-    // record's own ground, distinguishable from record absence.
-    expect(withdrawn?.state).toBe('unconsented');
-    if (withdrawn?.state === 'unconsented') {
-      expect(withdrawn.reason).toBe('unconsented-source-or-provider');
-      expect(withdrawn.basis).toBe('withdrawn');
-    }
+    // The loaded records name exactly the two resolvable references. The
+    // records never feed coverage directly: coverage projects the closed
+    // pre-observation decisions (syzygy-u2a.6; pipeline.test.ts).
+    expect(report.records.map((record) => record.id)).toEqual(['consent-good', 'consent-withdrawn']);
   });
 });

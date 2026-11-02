@@ -19,7 +19,7 @@ import {
   type QueryEnvelope,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { evaluation, projectYaml } from './fixtures/index.js';
+import { decisionsFor, evaluation, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-042 — Equivalent queries at one revision expose equivalent
 // facts (invariant).
@@ -80,7 +80,7 @@ const QUERIES: readonly { readonly name: string; readonly run: () => unknown }[]
   {
     name: 'computeCoverage',
     run: () =>
-      computeCoverage(declaration(), CONSENTS, [
+      computeCoverage(declaration(), decisionsFor(declaration(), CONSENTS), [
         { repositoryId: REPO, outcome: 'captured', capturedScope: 'full' },
       ]),
   },
@@ -88,14 +88,18 @@ const QUERIES: readonly { readonly name: string; readonly run: () => unknown }[]
     name: 'coverageBoundary',
     run: () =>
       coverageBoundary(
-        computeCoverage(declaration(), CONSENTS, [
+        computeCoverage(declaration(), decisionsFor(declaration(), CONSENTS), [
           { repositoryId: REPO, outcome: 'captured', capturedScope: 'full' },
         ]),
       ),
   },
   {
     name: 'isComplete',
-    run: () => isComplete(computeCoverage(declaration(), CONSENTS, [])),
+    run: () => isComplete(computeCoverage(
+      declaration(),
+      decisionsFor(declaration(), CONSENTS),
+      []),
+    ),
   },
   {
     name: 'assessCurrency',
