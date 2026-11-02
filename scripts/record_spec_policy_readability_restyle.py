@@ -179,7 +179,12 @@ def verify_package(root, allow_applied):
 def body(sha, instant, pins, nested):
     if not INSTANT.fullmatch(instant):
         raise ValueError("invalid act instant")
-    datetime.strptime(instant, "%Y-%m-%dT%H:%M:%SZ")
+    try:
+        datetime.strptime(instant, "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        # strptime's own wording differs between Python versions, so the
+        # refusal says it itself rather than passing the library's text on.
+        raise ValueError("invalid act instant: not a calendar date") from None
     lines = "\n".join(nested)
     return f"""# Specification-policy readability restyle adoption
 
@@ -422,7 +427,7 @@ def selftest():
                         validate_pins(root, with_exceptions) == sha))
         refuses("invalid instant",
                 lambda: record(root, phrase, "2026-02-30T00:00:00Z", False, pins),
-                "day is out of range")
+                "not a calendar date")
         (root / MANIFEST).write_text(manifest.splitlines()[0] + "\n" + manifest.splitlines()[1] + "\n")
         short = write_review(root, raw_rel, digest((root / MANIFEST).read_bytes()))
         refuses("one-row manifest refused",
