@@ -1740,7 +1740,7 @@ export function renderCapabilityDeepDive(dive: CapabilityDeepDive, model: PocMod
   try {
     const shape = model.projectShape;
     const html = capabilityDeepDive(dive, model, shape.kind === 'observed' ? shape.identity.revision : '', inputs.verbatim);
-    return { html, narrative: activeRegistry.narrative() };
+    return { html, narrative: activeRegistry.narrative(model) };
   } finally {
     activeRegistry = undefined;
   }
@@ -1751,6 +1751,11 @@ export function renderCapabilityDeepDive(dive: CapabilityDeepDive, model: PocMod
  * consented content class, and the page says so). */
 export interface PolarisRenderInputs {
   readonly verbatim?: VerbatimLeafReader;
+  /** Test seam: the machine answer the `anchorsResolved` pairs are counted
+   * against (PWB-REQ-014), so a test can serve the narrative again from an
+   * answer with identities withheld while the page still renders. Production
+   * passes none: the model it renders is the answer of the same evaluation. */
+  readonly machineAnswer?: unknown;
 }
 
 /** The presentation artifact and its machine form, from one capture: the
@@ -1762,7 +1767,7 @@ export function renderPolarisPresentation(model: PocModel, mountPrefix = '', vie
   activeViewState = viewState;
   try {
     const html = renderPolarisBody(model, mountPrefix, activeRegistry, inputs, status);
-    return { html, narrative: activeRegistry.narrative() };
+    return { html, narrative: activeRegistry.narrative('machineAnswer' in inputs ? inputs.machineAnswer : model) };
   } finally {
     activeRegistry = undefined;
     activeViewState = {};
