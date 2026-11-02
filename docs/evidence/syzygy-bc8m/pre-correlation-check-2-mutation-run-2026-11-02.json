@@ -1,0 +1,52 @@
+{
+  "record": "rule-6 mutation run (AGENTS.md verification rule 6)",
+  "subject": "syzygy-bc8m pre-correlation check-2 gate",
+  "clause": "docs/design/CAP1-CONSENT-RECORD-ENCODING-AND-AUTHORITY-INTERFACE.md §4: \"It is called at most once per act per capture, only for acts that passed checks 1–23, with no retry.\"",
+  "commit": "836bcde146c54d890ca6775338752d825770b192",
+  "subjectDigests": {
+    "packages/cap1-core/src/consent-decision.ts": "sha256:50f76cfe503e58d674943e9968767c6e8b5bc85bcd46673ffbf1b5c3fd691f24",
+    "packages/cap1-daemon/src/source-snapshot.ts": "sha256:8b49f4891fb4b60665185ac027dfd342b35f2ae01cdb9a2203937e93a679663f",
+    "packages/cap1-daemon/src/source-snapshot.test.ts": "sha256:cea3dc16e74a8dc53bb714b28971cd4a2217108717b81d9fa12808a35bca1c78"
+  },
+  "command": "npx vitest run packages/cap1-daemon packages/cap1-core packages/cap1-conformance",
+  "mutants": [
+    {
+      "id": "M1-reorder-provider-before-check-2",
+      "file": "packages/cap1-daemon/src/source-snapshot.ts",
+      "old": "      if (!evaluated) continue;\n",
+      "new": "",
+      "exitCode": 1,
+      "outcome": "killed",
+      "failingTests": [
+        "|@syzygy/cap1-daemon| packages/cap1-daemon/src/source-snapshot.test.ts > capture order: consent is decided before any dependent read > a pair failing check 2 never reaches the correlation provider"
+      ]
+    },
+    {
+      "id": "M2-gate-drops-withdrawal-arm",
+      "file": "packages/cap1-core/src/consent-decision.ts",
+      "old": "  return reference === entry.consent || record.grantState === 'withdrawn';",
+      "new": "  return reference === entry.consent;",
+      "exitCode": 1,
+      "outcome": "killed",
+      "failingTests": [
+        "|@syzygy/cap1-conformance| packages/cap1-conformance/src/req-011.conformance.test.ts > CAP1-REQ-011 v1.0 — withdrawal and unresolved withdrawal stay fail closed > malformed withdrawal act keeps the pair refused, in either reference order",
+        "|@syzygy/cap1-conformance| packages/cap1-conformance/src/req-011.conformance.test.ts > CAP1-REQ-011 v1.0 — withdrawal and unresolved withdrawal stay fail closed > valid withdrawal keeps the pair refused, in either reference order",
+        "|@syzygy/cap1-conformance| packages/cap1-conformance/src/req-011.conformance.test.ts > CAP1-REQ-011 v1.0 — withdrawal and unresolved withdrawal stay fail closed > withdrawal with no act keeps the pair refused, in either reference order",
+        "|@syzygy/cap1-daemon| packages/cap1-daemon/src/source-snapshot.test.ts > capture order: consent is decided before any dependent read > a pair failing check 2 never reaches the correlation provider"
+      ]
+    },
+    {
+      "id": "M3-gate-drops-repository-pair",
+      "file": "packages/cap1-core/src/consent-decision.ts",
+      "old": "record.projectId !== projectId || record.repositoryId !== entry.id) return false;",
+      "new": "record.projectId !== projectId) return false;",
+      "exitCode": 1,
+      "outcome": "killed",
+      "failingTests": [
+        "|@syzygy/cap1-conformance| packages/cap1-conformance/src/req-011.conformance.test.ts > CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read > revocation refuses with its own diagnostic and zero reads of the repository",
+        "|@syzygy/cap1-daemon| packages/cap1-daemon/src/routes-machine.test.ts > R-S2 finding #4 — human/machine citation parity for capture-failed and withdrawn repositories > capture-failed and withdrawal citations agree between the human page and the machine endpoint",
+        "|@syzygy/cap1-daemon| packages/cap1-daemon/src/source-snapshot.test.ts > capture order: consent is decided before any dependent read > a pair failing check 2 never reaches the correlation provider"
+      ]
+    }
+  ]
+}
