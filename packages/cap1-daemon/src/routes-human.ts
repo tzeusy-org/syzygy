@@ -8,13 +8,15 @@ import {
   presentClasses,
   renderEntry,
   renderHuman,
+  renderProposal,
   resolveExplanationReferences,
   serveEntryRoute,
   HUMAN_ENTRY_PATH,
   type AuthorityCitation,
-  type AuthorityExposure,
-  type DiscoverabilityWithProposal,
+  type CoverageBoundary,
+  type DiscoverabilityBasis,
   type EntryContent,
+  type EvaluatedDiscoverability,
   type ExplanationFactSet,
   type FacetAnswer,
   type HumanView,
@@ -25,7 +27,13 @@ import {
 } from '@syzygy/cap1-core';
 import { escapeHtml, type Route, type RouteResponse } from '@syzygy/http-host';
 
-import type { ProjectEvaluation } from './pipeline.js';
+import {
+  servedEntry,
+  type AuthorityPlane,
+  type DiscoverabilityPlane,
+  type ProjectEvaluation,
+  type ProposalPlane,
+} from './pipeline.js';
 
 export { escapeHtml };
 
@@ -74,9 +82,16 @@ export const HUMAN_ENTRY_ROUTE_PATH = '/entry' as const;
 // page. The route never touches the filesystem: it renders the bytes the
 // evaluation's capture read, or the named reason none were read.
 export type EntrySourceRead =
-  | { readonly state: 'present'; readonly text: string }
+  | { readonly state: 'present'; readonly text: string; readonly digest: string }
   | { readonly state: 'absent' }
-  | { readonly state: 'unreadable'; readonly reason: string };
+  | { readonly state: 'unreadable'; readonly reason: string }
+  // The governance root's consent was not admitted, so the capture never
+  // read the entry (syzygy-s6cp): its own state, never `unreadable`.
+  | {
+      readonly state: 'not-read';
+      readonly reason: 'unconsented-governance-root';
+      readonly unknownReason: 'unconsented-source-or-provider';
+    };
 
 export interface HumanRouteDependencies {
   // The ONE evaluation source — the same one the machine endpoint (RT4)
@@ -87,19 +102,8 @@ export interface HumanRouteDependencies {
   // Supplied by composition; absence renders as an empty citation list,
   // never as invented citations.
   readonly entryAuthorities?: readonly AuthorityCitation[] | undefined;
-  // Optional provenance beyond the pipeline's own arms. When the
-  // composition computes discoverability findings (CAP1-REQ-050…053) or
-  // authority exposures (CAP1-REQ-046), they render here as the core
-  // exposes them; when absent, the page renders the DISCLOSED absence —
-  // never a fabricated finding and never a favourable default.
-  readonly getDiscoverability?:
-    | (() =>
-        | readonly DiscoverabilityWithProposal[]
-        | Promise<readonly DiscoverabilityWithProposal[]>)
-    | undefined;
-  readonly getAuthorityExposures?:
-    | (() => readonly AuthorityExposure[] | Promise<readonly AuthorityExposure[]>)
-    | undefined;
+  // Discoverability, authority exposure and proposals are NOT injected:
+  // they are required planes of the one evaluation (syzygy-u2a.7).
 }
 
 // --- HTML escaping -------------------------------------------------------
@@ -240,6 +244,9 @@ function knownReferences(evaluation: EvaluatedArm): ReadonlySet<string> {
   }
   for (const input of evaluation.capture.consentInputs) {
     if (input.artifact.state === 'loaded') known.add(input.artifact.record.id);
+  }
+  for (const repository of evaluation.capture.repositories) {
+    if (repository.readme.state === 'captured') known.add(repository.readme.digest);
   }
   return known;
 }
@@ -499,20 +506,21 @@ function renderBoundaryRecord(record: RepositoryCoverage): string {
   }
 }
 
-// --- Optional provenance sections (CAP1-REQ-046, 050…053) -------------------
+// --- Required evaluated planes (CAP1-REQ-046, 050…053, 063) ----------------
 
-function renderAuthoritySection(exposures: readonly AuthorityExposure[] | undefined): string {
-  if (exposures === undefined || exposures.length === 0) {
-    // Disclosed absence — a fact of the render, never a fabricated
-    // exposure and never silence (VIS-2).
+function renderAuthoritySection(plane: AuthorityPlane): string {
+  if (plane.state === 'unavailable') {
+    // The named unavailable state — never a fabricated exposure and never
+    // silence (VIS-2). The machine answer carries the same plane.
     return (
       '<section class="authority" data-section="authority-exposure">' +
       '<h2>Authority exposure</h2>' +
-      '<p data-state="absent">No authority exposures were supplied at this evaluation.</p>' +
+      `<p data-plane-state="unavailable"${attr('data-plane-reason', plane.reason)} data-epistemic-label="Unknown">` +
+      `Authority exposure is unavailable at this evaluation (${escapeHtml(plane.reason)}): no authority-exposure input is designed.</p>` +
       '</section>'
     );
   }
-  const items = exposures
+  const items = plane.values
     .map((exposure) => {
       // Stamp and effective status: two SEPARATE attributes and two
       // separate text spans, readable apart (CAP1-REQ-046) — never one
@@ -539,63 +547,165 @@ function renderAuthoritySection(exposures: readonly AuthorityExposure[] | undefi
   return (
     '<section class="authority" data-section="authority-exposure">' +
     '<h2>Authority exposure</h2>' +
+    '<p data-plane-state="available"></p>' +
     `<ul>${items}</ul>` +
     '</section>'
   );
 }
 
-function renderDiscoverabilitySection(
-  findings: readonly DiscoverabilityWithProposal[] | undefined,
-): string {
-  if (findings === undefined || findings.length === 0) {
-    return (
-      '<section class="discoverability" data-section="discoverability">' +
-      '<h2>Repository discoverability</h2>' +
-      '<p data-state="absent">No discoverability findings were supplied at this evaluation.</p>' +
-      '</section>'
+function renderProposalSection(plane: ProposalPlane): string {
+  const body =
+    plane.state === 'not-produced'
+      ? `<p data-plane-state="not-produced"${attr('data-plane-reason', plane.reason)}>` +
+        `No proposals are produced at this evaluation (${escapeHtml(plane.reason)}); nothing here is current state.</p>`
+      : '<p data-plane-state="available"></p>' +
+        `<ul>${plane.values
+          .map(renderProposal)
+          .map(
+            // Proposed material, machine-readably distinct, never an applied
+            // change and never a status (CAP1-REQ-053/063).
+            (proposal) =>
+              `<li class="proposal"${attr('data-proposal-id', proposal.proposalId)}${attr('data-proposed-vs-current', proposal.marking)}${attr('data-adopted-vs-unadopted', String(proposal.adopted))}${attr('data-status-authority', proposal.statusAuthority)}>proposed (unapplied): ${escapeHtml(proposal.subject)}</li>`,
+          )
+          .join('')}</ul>`;
+  return `<section class="proposals" data-section="proposals"><h2>Proposals</h2>${body}</section>`;
+}
+
+function basisAttrs(basis: DiscoverabilityBasis): string {
+  let out = attr('data-basis-kind', basis.kind);
+  if (basis.kind === 'readme-captured') {
+    out +=
+      attr('data-basis-relative-path', basis.relativePath) +
+      attr('data-basis-digest', basis.digest) +
+      attr('data-basis-links-to-entry', String(basis.linksToEntry));
+  } else if (basis.kind === 'readme-uncaptured') {
+    out += attr('data-basis-relative-path', basis.relativePath) + attr('data-basis-failure', basis.failure);
+  }
+  return out;
+}
+
+function basisText(basis: DiscoverabilityBasis): string {
+  switch (basis.kind) {
+    case 'no-governance-root':
+      return 'no governance root (the repository can host no entry)';
+    case 'readme-captured':
+      return `root ${escapeHtml(basis.relativePath)} captured (${escapeHtml(basis.digest)}); links to the fixed entry: ${String(basis.linksToEntry)}`;
+    case 'readme-uncaptured':
+      return `root ${escapeHtml(basis.relativePath)} not captured (${escapeHtml(basis.failure)})`;
+    case 'consent-not-admitted':
+      return 'observation consent not admitted; the README was not read';
+    case 'membership-undeclared':
+      return 'no declaration establishes the repository';
+  }
+}
+
+function declaredScopesText(boundary: CoverageBoundary): string {
+  return boundary.declaredCapturedScopes.map((scope) => `${scope.repositoryId}:${scope.capturedScope}`).join(' ');
+}
+
+// "Why this answer?" for one discoverability row: the same fact set the
+// machine row carries, every field as text and as an attribute.
+function renderDiscoverabilityDrawer(evaluation: EvaluatedArm, entry: EvaluatedDiscoverability): string {
+  const factSet = entry.explanation;
+  const known = knownReferences(evaluation);
+  const resolution = resolveExplanationReferences(factSet, (reference) => known.has(reference));
+  const classes = presentClasses(factSet);
+  const rows: string[] = [
+    `<dt>Selection</dt><dd>${escapeHtml(factSet.selection)}</dd>`,
+    `<dt>Evaluation identity</dt><dd>snapshot <code>${escapeHtml(factSet.evaluation.snapshot)}</code>, as of <code>${escapeHtml(factSet.evaluation.asOf)}</code></dd>`,
+    `<dt>Scenario context</dt><dd>${escapeHtml(factSet.scenarioContext)}</dd>`,
+  ];
+  if (factSet.evidenceClassification !== undefined) {
+    rows.push(`<dt>Evidence classification</dt><dd>label ${escapeHtml(factSet.evidenceClassification.label)}</dd>`);
+  }
+  if (factSet.unknownReasons !== undefined) {
+    rows.push(
+      `<dt>Unknown reasons</dt><dd>primary: ${escapeHtml(factSet.unknownReasons.primary)}; secondary: [${escapeHtml(factSet.unknownReasons.secondary.join(', '))}]</dd>`,
     );
   }
-  const items = findings
+  if (factSet.sourceRevision !== undefined) {
+    rows.push(`<dt>Evidence revision</dt><dd><code>${escapeHtml(factSet.sourceRevision)}</code></dd>`);
+  }
+  if (factSet.coverageAndConsentBoundary !== undefined) {
+    rows.push(
+      `<dt>Coverage and consent boundary</dt><dd>project ${escapeHtml(String(factSet.coverageAndConsentBoundary.projectId))}; ` +
+        `declared captured scopes: ${escapeHtml(declaredScopesText(factSet.coverageAndConsentBoundary) || 'none')}. ` +
+        `${factSet.coverageAndConsentBoundary.records.map((record) => renderBoundaryRecord(record)).join('')}</dd>`,
+    );
+  }
+  rows.push(`<dt>Explanation classes present</dt><dd>${escapeHtml(classes.join(', '))}</dd>`);
+  rows.push(
+    `<dt>Internal references</dt><dd${attr('data-reference-count', String(resolution.references.length))}${attr('data-unresolved-count', String(resolution.unresolved.length))}>` +
+      `${resolution.references.length} followed; unresolved: ${resolution.unresolved.length === 0 ? 'none of the followed set' : escapeHtml(resolution.unresolved.join(', '))}</dd>`,
+  );
+  const drawerAttrs =
+    attr('data-explains-discoverability', entry.row.repositoryId) +
+    attr('data-explanation-selection', factSet.selection) +
+    attr('data-evaluation-snapshot', factSet.evaluation.snapshot) +
+    attr('data-evaluation-as-of', factSet.evaluation.asOf) +
+    attr('data-scenario-context', factSet.scenarioContext) +
+    attr('data-present-classes', classes.join(' ')) +
+    (factSet.evidenceClassification !== undefined
+      ? attr('data-explanation-label', factSet.evidenceClassification.label)
+      : '') +
+    (factSet.unknownReasons !== undefined
+      ? attr('data-explanation-reason-primary', factSet.unknownReasons.primary) +
+        attr('data-explanation-reason-secondary', factSet.unknownReasons.secondary.join(' '))
+      : '') +
+    (factSet.sourceRevision !== undefined ? attr('data-source-revision', factSet.sourceRevision) : '') +
+    (factSet.coverageAndConsentBoundary !== undefined
+      ? attr('data-boundary-project-id', String(factSet.coverageAndConsentBoundary.projectId)) +
+        attr('data-boundary-record-count', String(factSet.coverageAndConsentBoundary.records.length)) +
+        attr('data-boundary-declared-scopes', declaredScopesText(factSet.coverageAndConsentBoundary))
+      : '');
+  return `<details${drawerAttrs}><summary>Why this answer?</summary><dl>${rows.join('')}</dl></details>`;
+}
+
+function renderDiscoverabilitySection(evaluation: EvaluatedArm, plane: DiscoverabilityPlane): string {
+  const open = '<section class="discoverability" data-section="discoverability"><h2>Repository discoverability</h2>';
+  if (plane.state === 'unavailable') {
+    // A partial plane is never served, and an unclassifiable link is never
+    // `no`: the whole plane is unavailable and names the link (VIS-2).
+    return (
+      open +
+      `<p data-plane-state="unavailable"${attr('data-plane-reason', plane.reason)}${attr('data-repository-id', plane.repositoryId)}${attr('data-readme-path', plane.readme.relativePath)}${attr('data-readme-digest', plane.readme.digest)}${attr('data-unclassifiable-href', plane.href)}${attr('data-classifier-reason', plane.classifier)} data-epistemic-label="Unknown">` +
+      `Repository discoverability is unavailable at this evaluation (${escapeHtml(plane.reason)}): ` +
+      `the root ${escapeHtml(plane.readme.relativePath)} of ${escapeHtml(plane.repositoryId)} (${escapeHtml(plane.readme.digest)}) links to <code>${escapeHtml(plane.href)}</code>, ` +
+      `whose target cannot be classified (${escapeHtml(plane.classifier)}). No finding is served.</p></section>`
+    );
+  }
+  const id = evaluationId(evaluation.model.evaluation);
+  const items = plane.rows
     .map((entry) => {
-      const finding = entry.current;
-      const findingAttrs =
-        attr('data-repository-id', finding.repositoryId) +
-        attr('data-discoverability-value', finding.value) +
-        attr('data-epistemic-label', finding.epistemic.label) +
-        (finding.basis !== undefined ? attr('data-basis', finding.basis) : '');
-      // A proposal renders BESIDE the finding as proposed material,
-      // machine-readably distinct, never as an applied change and never
-      // improving the finding (CAP1-REQ-053).
-      const proposals = entry.proposed
-        .map(
-          (proposal) =>
-            `<span class="proposal"${attr('data-proposal-id', proposal.proposalId)}${attr('data-proposed-vs-current', proposal.marking)}${attr('data-adopted-vs-unadopted', String(proposal.adopted))}${attr('data-status-authority', proposal.statusAuthority)}>` +
-            `proposed (unapplied): ${escapeHtml(proposal.subject)}</span>`,
-        )
-        .join(' ');
+      const row = entry.row;
+      const rowAttrs =
+        attr('data-discoverability-row', row.repositoryId) +
+        attr('data-repository-id', row.repositoryId) +
+        attr('data-discoverability-value', row.value) +
+        attr('data-epistemic-label', row.label) +
+        (row.primaryReason !== null ? attr('data-unknown-reason', row.primaryReason) : '') +
+        basisAttrs(row.basis) +
+        (row.evidence !== null
+          ? attr('data-evidence-path', row.evidence.relativePath) + attr('data-evidence-digest', row.evidence.digest)
+          : '') +
+        attr('data-proposal-state', row.proposal) +
+        attr('data-evaluation-id', id);
       return (
-        `<li${findingAttrs}>${escapeHtml(finding.repositoryId)}: ${escapeHtml(finding.value)} [${escapeHtml(finding.epistemic.label)}]` +
-        (finding.basis !== undefined ? ` (basis: ${escapeHtml(finding.basis)})` : '') +
-        (proposals.length > 0 ? ` ${proposals}` : '') +
+        `<li${rowAttrs}>${escapeHtml(row.repositoryId)}: ${escapeHtml(row.value)} [${escapeHtml(row.label)}]` +
+        (row.primaryReason !== null ? ` (reason: ${escapeHtml(row.primaryReason)})` : '') +
+        ` — basis: ${basisText(row.basis)}; evidence: ${row.evidence === null ? 'none captured' : `${escapeHtml(row.evidence.relativePath)} ${escapeHtml(row.evidence.digest)}`}` +
+        `; proposal: ${escapeHtml(row.proposal)}; evaluation ${escapeHtml(id)}.` +
+        renderDiscoverabilityDrawer(evaluation, entry) +
         '</li>'
       );
     })
     .join('');
-  return (
-    '<section class="discoverability" data-section="discoverability">' +
-    '<h2>Repository discoverability</h2>' +
-    `<ul>${items}</ul>` +
-    '</section>'
-  );
+  return `${open}<p data-plane-state="available"${attr('data-row-count', String(plane.rows.length))}></p><ul>${items}</ul></section>`;
 }
 
 // --- The project page -------------------------------------------------------
 
-function renderEvaluatedPage(
-  evaluation: EvaluatedArm,
-  discoverability: readonly DiscoverabilityWithProposal[] | undefined,
-  authorityExposures: readonly AuthorityExposure[] | undefined,
-): string {
+function renderEvaluatedPage(evaluation: EvaluatedArm): string {
   // ONE fact model, rendered by the unchanged core renderer. No
   // presentation spec is passed: core's own full-disclosure guarantee
   // then routes every fact into the 'Further facts' section — the
@@ -676,10 +786,11 @@ function renderEvaluatedPage(
   // Human entry discoverability from this page (CAP1-REQ-020): the ONE
   // fixed entry, linked, its publication path rendered verbatim, never
   // an identity — and no second front door is offered.
+  const served = servedEntry(evaluation.planes.entry);
   const entrySection =
     '<section class="entry" data-section="human-entry">' +
     '<h2>Human entry</h2>' +
-    `<p${attr('data-entry-path', entryRoute.path)}${attr('data-entry-path-is-identity', String(entryRoute.isIdentity))}>` +
+    `<p${attr('data-entry-path', entryRoute.path)}${attr('data-entry-path-is-identity', String(entryRoute.isIdentity))}${attr('data-entry-state', served.state)}${served.state === 'captured' ? attr('data-entry-digest', served.digest) : ''}>` +
     `The project's one human entry is published at <code>${escapeHtml(entryRoute.path)}</code> ` +
     `(a publication location, never an identity) — <a href="${escapeHtml(HUMAN_ENTRY_ROUTE_PATH)}">read the entry document</a>.</p>` +
     '</section>';
@@ -692,8 +803,9 @@ function renderEvaluatedPage(
     '</section>',
     renderDisclosureSections(view),
     coverageSection,
-    renderAuthoritySection(authorityExposures),
-    renderDiscoverabilitySection(discoverability),
+    renderAuthoritySection(evaluation.planes.authorityExposures),
+    renderProposalSection(evaluation.planes.proposals),
+    renderDiscoverabilitySection(evaluation, evaluation.planes.discoverability),
     entrySection,
   ].join('\n');
 
@@ -786,20 +898,20 @@ function entrySourceFrom(evaluation: ProjectEvaluation): EntrySourceRead {
   if (evaluation.kind === 'capture-failed') {
     return { state: 'unreadable', reason: evaluation.failure.kind };
   }
-  const entry = evaluation.capture.entry;
+  const entry = servedEntry(evaluation.capture.entry);
   switch (entry.state) {
     case 'captured':
-      return { state: 'present', text: entry.text };
+      return { state: 'present', text: entry.text, digest: entry.digest };
     case 'missing':
       return { state: 'absent' };
     case 'unreadable':
       return { state: 'unreadable', reason: entry.failureCode };
     case 'not-read':
-      return { state: 'unreadable', reason: 'unconsented-source-or-provider' };
+      return { state: 'not-read', reason: entry.reason, unknownReason: entry.unknownReason };
   }
 }
 
-function entryContentFrom(read: EntrySourceRead): EntryContent {
+function entryContentFrom(read: Exclude<EntrySourceRead, { state: 'not-read' }>): EntryContent {
   switch (read.state) {
     case 'present':
       return { state: 'present', text: read.text };
@@ -810,47 +922,60 @@ function entryContentFrom(read: EntrySourceRead): EntryContent {
   }
 }
 
+function renderNotReadEntrySection(read: Extract<EntrySourceRead, { state: 'not-read' }>): string {
+  return (
+    '<section data-section="entry-content" data-entry-state="not-read">' +
+    `<p data-epistemic-label="Unknown"${attr('data-unknown-reason', read.unknownReason)}${attr('data-not-read-reason', read.reason)}>` +
+    `The entry document was not read: the governance root's observation consent is not admitted (${escapeHtml(read.reason)}). ` +
+    `Unknown — reason: ${escapeHtml(read.unknownReason)}. Nothing is shown in its place.</p></section>`
+  );
+}
+
 function renderEntryPage(
   read: EntrySourceRead,
   authorities: readonly AuthorityCitation[],
 ): string {
-  const rendering = renderEntry(entryContentFrom(read), authorities);
-  const assessment = rendering.assessment;
+  const rendering =
+    read.state === 'not-read' ? undefined : renderEntry(entryContentFrom(read), authorities);
+  const pageState = rendering === undefined ? 'not-read' : rendering.content.state;
 
-  let contentSection: string;
-  switch (rendering.content.state) {
-    case 'present':
-      // The entry text is observed-file content: untrusted, escaped, and
-      // served as preformatted text — the daemon renders no markup FROM
-      // the file (no client-side or server-side interpretation of
-      // untrusted content as HTML).
-      contentSection =
-        `<section data-section="entry-content" data-entry-state="present">` +
-        `<pre class="entry-text">${escapeHtml(rendering.content.text)}</pre></section>`;
-      break;
-    case 'absent':
-      contentSection =
-        '<section data-section="entry-content" data-entry-state="absent">' +
-        `<p${attr('data-assessment-kind', assessment.kind)}>` +
-        `The entry document is absent — a finding${assessment.kind === 'finding' ? ` (${escapeHtml(assessment.detail)})` : ''}, rendered as such, never a silently missing page.</p></section>`;
-      break;
-    case 'unreadable':
-      contentSection =
-        '<section data-section="entry-content" data-entry-state="unreadable">' +
-        `<p data-epistemic-label="Unknown"${attr('data-assessment-kind', assessment.kind)}>` +
-        `The entry document is unreadable: Unknown — reason: ${escapeHtml(rendering.content.reason)}.</p></section>`;
-      break;
-    case 'stale':
-    case 'contradictory':
-      // Both sides render, the authority governing — disclosed, never
-      // silently reconciled (CAP1-REQ-022). The daemon's entry reader
-      // does not mint these arms today; the renderer stays total.
-      contentSection =
-        `<section data-section="entry-content"${attr('data-entry-state', rendering.content.state)}>` +
-        `<p${attr('data-assessment-kind', assessment.kind)} data-authority-wins="true">Disagreement disclosed — the authority governs.</p>` +
-        `<pre class="authority-text">${escapeHtml(rendering.content.authorityText)}</pre>` +
-        `<pre class="entry-text">${escapeHtml(rendering.content.entryText)}</pre></section>`;
-      break;
+  let contentSection = read.state === 'not-read' ? renderNotReadEntrySection(read) : '';
+  if (rendering !== undefined) {
+    const assessment = rendering.assessment;
+    switch (rendering.content.state) {
+      case 'present':
+        // The entry text is observed-file content: untrusted, escaped, and
+        // served as preformatted text — the daemon renders no markup FROM
+        // the file (no client-side or server-side interpretation of
+        // untrusted content as HTML).
+        contentSection =
+          `<section data-section="entry-content" data-entry-state="present"${read.state === 'present' ? attr('data-entry-digest', read.digest) : ''}>` +
+          `<pre class="entry-text">${escapeHtml(rendering.content.text)}</pre></section>`;
+        break;
+      case 'absent':
+        contentSection =
+          '<section data-section="entry-content" data-entry-state="absent">' +
+          `<p${attr('data-assessment-kind', assessment.kind)}>` +
+          `The entry document is absent — a finding${assessment.kind === 'finding' ? ` (${escapeHtml(assessment.detail)})` : ''}, rendered as such, never a silently missing page.</p></section>`;
+        break;
+      case 'unreadable':
+        contentSection =
+          '<section data-section="entry-content" data-entry-state="unreadable">' +
+          `<p data-epistemic-label="Unknown"${attr('data-assessment-kind', assessment.kind)}>` +
+          `The entry document is unreadable: Unknown — reason: ${escapeHtml(rendering.content.reason)}.</p></section>`;
+        break;
+      case 'stale':
+      case 'contradictory':
+        // Both sides render, the authority governing — disclosed, never
+        // silently reconciled (CAP1-REQ-022). The daemon's entry reader
+        // does not mint these arms today; the renderer stays total.
+        contentSection =
+          `<section data-section="entry-content"${attr('data-entry-state', rendering.content.state)}>` +
+          `<p${attr('data-assessment-kind', assessment.kind)} data-authority-wins="true">Disagreement disclosed — the authority governs.</p>` +
+          `<pre class="authority-text">${escapeHtml(rendering.content.authorityText)}</pre>` +
+          `<pre class="entry-text">${escapeHtml(rendering.content.entryText)}</pre></section>`;
+        break;
+    }
   }
 
   const citations =
@@ -877,7 +1002,7 @@ function renderEntryPage(
   return page(
     'Human entry',
     ' data-non-citable="true" data-artifact-class="presentation-artifact"' +
-      attr('data-entry-state', rendering.content.state),
+      attr('data-entry-state', pageState),
     body,
   );
 }
@@ -902,15 +1027,7 @@ export function humanRoutes(deps: HumanRouteDependencies): Route[] {
         if (evaluation.kind !== 'project-evaluated') {
           return htmlResponse(renderDegradedPage(evaluation));
         }
-        const discoverability =
-          deps.getDiscoverability === undefined ? undefined : await deps.getDiscoverability();
-        const authorityExposures =
-          deps.getAuthorityExposures === undefined
-            ? undefined
-            : await deps.getAuthorityExposures();
-        return htmlResponse(
-          renderEvaluatedPage(evaluation, discoverability, authorityExposures),
-        );
+        return htmlResponse(renderEvaluatedPage(evaluation));
       },
     },
     {

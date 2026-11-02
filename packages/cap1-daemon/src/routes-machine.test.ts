@@ -312,19 +312,34 @@ describe('RT4 — the authenticated JSON machine endpoint', () => {
       },
     ]);
 
-    // The sweep NEVER claims coverage this response does not carry:
-    // authority, discoverability, tier, freshness, and the (empty)
+    // Discoverability value per declared repository (syzygy-u2a.7).
+    expect(body.distinctions.perRepositoryDiscoverability).toEqual([
+      {
+        repositoryId: 'repo-governance-root',
+        distinctions: [{ name: 'discoverability-value', value: 'Unknown', recoverableBy: 'text-attribute' }],
+      },
+      {
+        repositoryId: 'repo-observed-source',
+        distinctions: [{ name: 'discoverability-value', value: 'not-applicable', recoverableBy: 'text-attribute' }],
+      },
+      {
+        repositoryId: 'repo-unconsented',
+        distinctions: [{ name: 'discoverability-value', value: 'not-applicable', recoverableBy: 'text-attribute' }],
+      },
+    ]);
+
+    // The sweep NEVER claims coverage this response does not carry: the
+    // unavailable authority plane, tier, freshness, and the not-produced
     // proposal plane are listed missing — hard-coded literals.
     expect(body.distinctions.sweep).toEqual({
       totalDistinctions: 9,
-      coveredDistinctions: ['epistemic-label', 'unknown-reason', 'consent-state'],
+      coveredDistinctions: ['epistemic-label', 'unknown-reason', 'consent-state', 'discoverability-value'],
       missingDistinctions: [
         'rendering-tier',
         'freshness-state',
         'adopted-vs-unadopted',
         'proposed-vs-current',
         'effective-status-vs-stamp',
-        'discoverability-value',
       ],
     });
   });
@@ -741,5 +756,52 @@ profiles: []
       coverageWireDisagreements(body, page, 4).length === 0 ? [name] : [],
     );
     expect(survivors).toEqual([]);
+  });
+});
+
+// syzygy-u2a.7 — the required planes on the machine channel, and the
+// consent-refused entry's own state on both channels (syzygy-s6cp).
+describe('required evaluated planes on the machine channel', () => {
+  it('serves discoverability rows with their explanation, and the named authority, proposal and entry states', async () => {
+    const evaluation = await evaluatedFixture();
+    const { token, url } = await startMachineDaemon(() => evaluation);
+    const body = await jsonOf(await fetch(url, authed(token)));
+
+    expect(body.discoverability.state).toBe('available');
+    expect(body.discoverability.rows.map((row: WireJson) => [row.repositoryId, row.value, row.basis.kind, row.proposal])).toEqual([
+      ['repo-governance-root', 'Unknown', 'readme-uncaptured', 'not-produced'],
+      ['repo-observed-source', 'not-applicable', 'no-governance-root', 'not-produced'],
+      ['repo-unconsented', 'not-applicable', 'no-governance-root', 'not-produced'],
+    ]);
+    const first = body.discoverability.rows[0];
+    expect(first.evaluationId).toBe(body.evaluationId);
+    expect(first.explanation.selection).toBe('project:prj-rt4-machine/discoverability:repo-governance-root');
+    expect(first.explanation.unknownReasons).toEqual({ primary: 'source-uncaptured-or-unreachable', secondary: [] });
+    expect(body.authorityExposures).toEqual({ state: 'unavailable', reason: 'authority-input-not-designed' });
+    expect(body.proposals).toEqual({ state: 'not-produced', reason: 'proposal-input-not-designed' });
+    expect(body.state.proposed).toEqual([]);
+    expect(body.entry).toEqual({ state: 'missing', failureCode: 'missing' });
+  });
+
+  it('a consent-refused governance root serves the not-read entry on both channels, never unreadable', async () => {
+    const { root, observedSourceDir } = fixtureRepo();
+    rmSync(join(root, '.syzygy', 'governance', 'decisions', 'consent-gov-root.act.yaml'));
+    const evaluation = await evaluateProject(root, {
+      ...CAPTURE,
+      repositoryRoots: { 'repo-governance-root': root, 'repo-observed-source': observedSourceDir },
+    });
+    const { token, url } = await startMachineDaemon(() => evaluation);
+    const body = await jsonOf(await fetch(url, authed(token)));
+    expect(body.entry).toEqual({
+      state: 'not-read',
+      reason: 'unconsented-governance-root',
+      label: 'Unknown',
+      unknownReason: 'unconsented-source-or-provider',
+    });
+    const entryRoute = humanRoutes({ getEvaluation: () => evaluation }).find((route) => route.path === '/entry');
+    const html = (await entryRoute?.handle({} as never))?.body ?? '';
+    expect(html).toContain('<section data-section="entry-content" data-entry-state="not-read">');
+    expect(html).toContain('data-unknown-reason="unconsented-source-or-provider" data-not-read-reason="unconsented-governance-root"');
+    expect(html).not.toContain('data-entry-state="unreadable"');
   });
 });
