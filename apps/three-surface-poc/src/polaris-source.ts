@@ -1,5 +1,5 @@
 import { escapeHtml } from '@syzygy/http-host';
-import type { PocModel, ProjectShape } from '@syzygy/three-surface-poc-core';
+import type { PocModel, ProjectShape, UnknownReason } from '@syzygy/three-surface-poc-core';
 
 import { resolveVerbatim, type VerbatimLeafReader, type VerbatimResolution } from './capability-detail.js';
 import { pageShell, type HumanOperabilityStatus } from './page-shell.js';
@@ -64,9 +64,9 @@ function unescapeAttribute(value: string): string {
 
 type SourceRouteResolution =
   | { readonly kind: 'rendered'; readonly path: string; readonly resolution: Extract<VerbatimResolution, { kind: 'rendered' }> }
-  | { readonly kind: 'not-rendered'; readonly path: string | undefined; readonly reason: string; readonly route: string; readonly detail: string };
+  | { readonly kind: 'not-rendered'; readonly path: string | undefined; readonly reason: UnknownReason; readonly route: string; readonly detail: string };
 
-function shapeReason(shape: Exclude<ProjectShape, { kind: 'observed' }>): { readonly reason: string; readonly route: string } {
+function shapeReason(shape: Exclude<ProjectShape, { kind: 'observed' }>): { readonly reason: UnknownReason; readonly route: string } {
   const epistemic = shape.claim.epistemic;
   const reason = 'reasons' in epistemic ? epistemic.reasons.primary : 'unconsented-source-or-provider';
   return { reason, route: shape.claim.resolutionRoutes[0]?.route ?? 'No route recorded' };

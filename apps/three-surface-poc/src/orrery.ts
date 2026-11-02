@@ -1,5 +1,5 @@
 import { escapeHtml } from '@syzygy/http-host';
-import type { PocModel } from '@syzygy/three-surface-poc-core';
+import type { PocModel, UnknownReason } from '@syzygy/three-surface-poc-core';
 
 import { exactTablesSection } from './exact-tables.js';
 import { substrateEvaluationFooter } from './evaluation-footer.js';
@@ -33,7 +33,7 @@ interface OrreryDataIsland {
   readonly totalFileCount: number;
   readonly unmappedRegionEntityId: string;
   /** The unmapped region's closed reason and route, from the model (M4 slice 1). */
-  readonly unmappedRegionUnknown: { readonly reason: string; readonly route: string; readonly actor: string; readonly verb: string; readonly target: string } | null;
+  readonly unmappedRegionUnknown: { readonly reason: UnknownReason; readonly route: string; readonly actor: string; readonly verb: string; readonly target: string } | null;
 }
 
 const ORRERY_STYLE = `
