@@ -457,6 +457,7 @@ const INVALID_CASES: readonly (readonly [string, (tree: MemoryTree) => void, str
   ['state 1 carrying an A1 identity', (t) => putConsent(t, SRC, { a1_audit_record: { id: 'a1-x', digest: `sha256:${'a'.repeat(64)}` } }), 'provenance-state-inconsistent'],
   ['state 2 with explicit absence', (t) => putConsent(t, SRC, { provenance: 'syzygy-verified' }), 'provenance-state-inconsistent'],
   ['supersession', (t) => { putConsent(t, SRC); putConsent(t, { ...SRC, id: 'c-new' }, { supersedes: 'act-c-src' }); }, 'act-superseded'],
+  ['self-supersession', (t) => putConsent(t, SRC, { supersedes: 'act-c-src' }), 'act-superseded'],
   ['revocation', (t) => { putConsent(t, SRC); putConsent(t, { ...SRC, id: 'c-w', grantState: 'withdrawn' }, { supersedes: 'act-c-src' }); }, 'act-revoked'],
   ['duplicate act identity', (t) => { putConsent(t, SRC); putConsent(t, { ...SRC, id: 'c-dup', scope: 'observe' }, { act: 'act-c-src' }); }, 'act-identity-duplicate'],
 ];
@@ -492,9 +493,9 @@ describe('CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any depen
     expect(result.human).toContain(`data-consent-diagnostic="${diagnostic}"`);
   });
 
-  it('the case denominator is the enumerated matrix: 23 invalid cases, 23 distinct inputs', () => {
-    expect(INVALID_CASES.length).toBe(23);
-    expect(new Set(INVALID_CASES.map(([name]) => name)).size).toBe(23);
+  it('the case denominator is the enumerated matrix: 24 invalid cases, 24 distinct inputs', () => {
+    expect(INVALID_CASES.length).toBe(24);
+    expect(new Set(INVALID_CASES.map(([name]) => name)).size).toBe(24);
   });
 
   it('a missing consent record refuses its pair and, being unreadable evidence, every pair', async () => {
@@ -508,9 +509,9 @@ describe('CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any depen
 
   it('an applicable declared currency bound refuses a stale act, one millisecond past the bound', async () => {
     const tree = v1Tree();
-    putConsent(tree, SRC, { instant: '2026-08-31T23:59:59.999Z' });
+    putConsent(tree, SRC, { instant: '2026-08-31T23:59:58.999Z' });
     const result = await runCase(tree, {
-      consentCurrencyBound: { maxAgeSeconds: 0, declaredBy: 'fixture-bound (synthetic)' },
+      consentCurrencyBound: { maxAgeSeconds: 1, declaredBy: 'fixture-bound (synthetic)' },
     });
     expect(result.src).toEqual(['Unknown', 'act-stale']);
     expect(result.srcRootReads).toBe(0);
@@ -577,6 +578,61 @@ describe('CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no 
       },
     });
     expect(result.src).toEqual(['Unknown', 'correlation-mismatch']);
+  });
+
+  it.each([
+    ['an empty audit record id', { auditRecordId: '' }],
+    ['a malformed audit record digest', { auditRecordDigest: 'sha256:not-a-digest' }],
+    ['a malformed binding digest', { bindingDigest: 'deadbeef' }],
+  ] as const)('a correlated answer with %s is unavailable, never a grant', async (_name, broken) => {
+    const tree = v1Tree();
+    claimState2(tree);
+    const result = await runCase(tree, {
+      correlation: {
+        id: 'fixture-provider',
+        correlate: async ({ bindingDigest }) =>
+          ({
+            state: 'correlated',
+            auditRecordId: A1.id,
+            auditRecordDigest: A1.digest,
+            bindingDigest,
+            ...broken,
+          }) as never,
+      },
+    });
+    expect(result.src).toEqual(['Unknown', 'correlation-unavailable']);
+    expect(result.srcRootReads).toBe(0);
+  });
+
+  it('the correlated binding digest is the sha256 of the binding without the A1 identity and act-record digest (independent oracle)', async () => {
+    const tree = v1Tree();
+    claimState2(tree);
+    // Hand-encoded canonical bytes: keys in UTF-16 code-unit order, no
+    // a1AuditRecord, no actRecordDigest. The provider never echoes the
+    // digest it is handed; it answers with its own.
+    const oracle = (repositoryId: string, artifactId: string, provenance: string): string =>
+      `sha256:${sha256Hex(
+        `{"actId":"act-${artifactId}","actType":"consent","actor":"human",` +
+          `"artifactDigest":"sha256:${sha256Hex(consentArtifactText(artifactId === 'c-src' ? SRC : GOV))}",` +
+          `"artifactId":"${artifactId}","expires":null,"instant":"2026-08-01T00:00:00Z",` +
+          `"owner":"fixture-owner (synthetic, not an owner act)","projectId":"prj-req011-v1",` +
+          `"provenance":"${provenance}","repositoryId":"${repositoryId}","scope":"observe","supersedes":null}`,
+      )}`;
+    const result = await runCase(tree, {
+      correlation: {
+        id: 'fixture-provider',
+        correlate: async ({ binding }) => ({
+          state: 'correlated',
+          auditRecordId: A1.id,
+          auditRecordDigest: A1.digest as `sha256:${string}`,
+          bindingDigest: (binding.repositoryId === 'repo-src'
+            ? oracle('repo-src', 'c-src', 'syzygy-verified')
+            : oracle('repo-gov', 'c-gov', 'owner-adopted-bootstrap')) as `sha256:${string}`,
+        }),
+      },
+    });
+    expect(result.src).toEqual(['admitted', 'Syzygy-verified']);
+    expect(result.gov).toEqual(['admitted', 'Syzygy-verified']);
   });
 
   it('a matching correlation admits Syzygy-verified; a bootstrap act it correlates is upgraded only in this evaluation', async () => {

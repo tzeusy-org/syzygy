@@ -418,9 +418,10 @@ export function evaluateConsentActBeforeCorrelation(
   ) {
     return { ok: false, diagnostic: 'act-stale' };
   }
-  const defeaters = context.relations.filter(
-    (relation) => relation.reference !== input.reference && relation.supersedes === act.actId,
-  );
+  // Every captured act is in the population, the act under evaluation
+  // included: an act naming itself in `supersedes` defeats itself (§3
+  // checks 22–23; R-RT-U2A2 implementation review finding 1).
+  const defeaters = context.relations.filter((relation) => relation.supersedes === act.actId);
   if (defeaters.some((relation) => relation.actType === 'revoke')) {
     return { ok: false, diagnostic: 'act-revoked' };
   }

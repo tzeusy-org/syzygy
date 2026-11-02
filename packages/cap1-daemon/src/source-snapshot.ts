@@ -7,11 +7,13 @@ import {
   evaluateConsentActBeforeCorrelation,
   HUMAN_ENTRY_PATH,
   instantMillis,
+  isSha256Digest,
   parseDeclarationSource,
   readDeclaration,
   relationsOf,
   sha256Digest,
   snapshotDigest,
+  sortSnapshotInputs,
   SNAPSHOT_SCHEMA,
   UNKNOWN_REASONS,
   correlationBindingDigest,
@@ -251,8 +253,9 @@ function correlationShape(value: unknown): ConsentCorrelation {
   if (
     record['state'] === 'correlated' &&
     typeof record['auditRecordId'] === 'string' &&
-    typeof record['auditRecordDigest'] === 'string' &&
-    typeof record['bindingDigest'] === 'string'
+    record['auditRecordId'].length > 0 &&
+    isSha256Digest(record['auditRecordDigest']) &&
+    isSha256Digest(record['bindingDigest'])
   ) {
     return {
       state: 'correlated',
@@ -289,6 +292,13 @@ export async function captureProjectInputs(
   deps: CaptureDependencies,
 ): Promise<CapturedProjectInputs | CaptureFailure> {
   if (instantMillis(deps.asOf) === undefined) return { kind: 'as-of-invalid' };
+  if (deps.consentCurrencyBound !== undefined) {
+    const { maxAgeSeconds } = deps.consentCurrencyBound;
+    // Frozen §5: a positive integer. Refused before any read.
+    if (!Number.isSafeInteger(maxAgeSeconds) || maxAgeSeconds <= 0) {
+      throw new TypeError('captureProjectInputs: consentCurrencyBound.maxAgeSeconds must be a positive integer');
+    }
+  }
   const reader = deps.reader ?? fsCaptureReader;
   const descriptors: SnapshotInputDescriptor[] = [];
   const reads: RecordedRead[] = [];
@@ -511,7 +521,7 @@ export async function captureProjectInputs(
               declaredBy: deps.consentCurrencyBound.declaredBy,
             },
     },
-    inputs: descriptors,
+    inputs: sortSnapshotInputs(descriptors),
   };
   return deepFreeze({
     asOf: deps.asOf,

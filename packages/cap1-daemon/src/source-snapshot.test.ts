@@ -138,19 +138,39 @@ describe('the evaluation snapshot is the digest of the captured inputs', () => {
     expect(JSON.stringify(manifest)).not.toContain(f.root);
   });
 
-  it('the manifest names each consumed input class exactly once per subject', async () => {
+  it('the manifest names each consumed input class exactly once per subject, sorted by (kind, subjectId)', async () => {
     const captured = await capture(fixture());
     expect(captured.manifest.inputs.map((i) => [i.kind, i.subjectId, i.state])).toEqual([
-      ['declaration', 'declaration', 'captured'],
       ['consent-artifact', 'c-gov', 'captured'],
-      ['owner-act', 'c-gov', 'captured'],
       ['consent-artifact', 'c-src', 'captured'],
+      ['declaration', 'declaration', 'captured'],
+      ['entry', 'entry', 'captured'],
+      ['owner-act', 'c-gov', 'captured'],
       ['owner-act', 'c-src', 'captured'],
       ['repository-root', 'repo-gov', 'captured'],
       ['repository-root', 'repo-src', 'captured'],
-      ['entry', 'entry', 'captured'],
     ]);
   });
+
+  it.each([0, -1, 1.5, Number.NaN, Number.POSITIVE_INFINITY])(
+    'a currency bound of %s (not a positive integer) is refused before any read',
+    async (maxAgeSeconds) => {
+      const f = fixture();
+      let reads = 0;
+      const reader = {
+        readBytes: async () => { reads += 1; return { state: 'missing' } as const; },
+        listRoot: async () => { reads += 1; return { state: 'missing' } as const; },
+      };
+      await expect(
+        captureProjectInputs(f.root, {
+          ...deps(f),
+          reader: reader as unknown as CaptureDependencies['reader'],
+          consentCurrencyBound: { maxAgeSeconds, declaredBy: 'fixture-bound (synthetic)' },
+        }),
+      ).rejects.toThrow('maxAgeSeconds must be a positive integer');
+      expect(reads).toBe(0);
+    },
+  );
 
   it('identical inputs give one digest and one evaluation; a different asOf keeps the digest', async () => {
     const f = fixture();
