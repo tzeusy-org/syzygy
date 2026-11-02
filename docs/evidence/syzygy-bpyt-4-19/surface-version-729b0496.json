@@ -1,0 +1,21 @@
+{
+ "subject": "pwbSurfaceVersion at the merge base and at the head: sha256 over the two tree ids, newline-joined, first 12 hex (walkthrough-inputs.ts pwbSurfaceVersion)",
+ "rows": [
+  {
+   "commit": "b77bae097c1aedbbd27b059b95fffdae561e2495",
+   "trees": {
+    "apps/three-surface-poc/src": "43c657f5e6d68207cdde5d7576b19b2f32102b00",
+    "packages/three-surface-poc-core/src": "1a876bee513e886444b4c082db58c79d7ca3d957"
+   },
+   "version": "polaris@37bec30acd90"
+  },
+  {
+   "commit": "729b04963191305c30988b122b0b9f4f75534352",
+   "trees": {
+    "apps/three-surface-poc/src": "27d323ab802032f43fadd20dc6d470895a98573a",
+    "packages/three-surface-poc-core/src": "1a876bee513e886444b4c082db58c79d7ca3d957"
+   },
+   "version": "polaris@6d265961aa82"
+  }
+ ]
+}
