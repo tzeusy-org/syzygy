@@ -242,6 +242,40 @@ describe('capture order: consent is decided before any dependent read', () => {
     expect(src?.decision.authorization === 'Unknown' ? src.decision.diagnostic : 'admitted').toBe('reference-unresolvable');
   });
 
+  // syzygy-bc8m — frozen §4 (CAP1-CONSENT-RECORD-ENCODING-AND-AUTHORITY-
+  // INTERFACE.md): the provider "is called at most once per act per capture,
+  // only for acts that passed checks 1–23". An entry's artifact naming another
+  // repository fails check 2 (`record-subject-mismatch`) and is no withdrawal
+  // any entry consults, so its otherwise valid act never reaches the provider.
+  // A withdrawal for a declared pair is consulted (rules 3 and 4) and still
+  // reaches it; a withdrawal for an undeclared repository does not.
+  it('a pair failing check 2 never reaches the correlation provider', async () => {
+    const f = fixture();
+    writeFileSync(
+      join(f.root, '.syzygy', 'project.yaml'),
+      DECLARATION.replace('  - c-src\n', '  - c-src\n  - c-wd-gov\n  - c-wd-elsewhere\n'),
+      'utf8',
+    );
+    writeConsent(f.decisions, { id: 'c-src', project: PROJECT, repository: 'repo-elsewhere' });
+    writeConsent(f.decisions, { id: 'c-wd-gov', project: PROJECT, repository: 'repo-gov', grantState: 'withdrawn' });
+    writeConsent(f.decisions, { id: 'c-wd-elsewhere', project: PROJECT, repository: 'repo-elsewhere', grantState: 'withdrawn' });
+    const called: string[] = [];
+    const correlation = {
+      id: 'spy-provider',
+      correlate: async ({ binding }: { readonly binding: { readonly artifactId: string } }) => {
+        called.push(binding.artifactId);
+        return { state: 'not-found' as const };
+      },
+    };
+    const captured = await capture(f, { correlation });
+    expect(called).toEqual(['c-gov', 'c-wd-gov']);
+    const src = captured.repositories.find((r) => r.repositoryId === 'repo-src');
+    expect(src?.decision.authorization === 'Unknown' ? src.decision.diagnostic : 'admitted').toBe('record-subject-mismatch');
+    expect(
+      captured.manifest.inputs.filter((i) => i.kind === 'consent-correlation').map((i) => i.subjectId),
+    ).toEqual(['c-gov', 'c-wd-gov']);
+  });
+
   it('a malformed asOf stops capture before any read', async () => {
     const f = fixture();
     const reader = countingReader();
