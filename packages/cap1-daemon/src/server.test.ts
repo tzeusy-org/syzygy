@@ -3,9 +3,9 @@ import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { EvaluationIdentity } from '@syzygy/cap1-core';
 
 import { evaluateProject } from './pipeline.js';
+import { DAEMON_CAPTURE_VERSIONS } from './source-snapshot.js';
 import {
   createDaemon,
   minimalRootRoute,
@@ -274,11 +274,10 @@ describe('RT3 — startup write boundary (harness-external snapshot diff)', () =
     const stateDir = join(base, 'daemon-state');
 
     const before = snapshotFiles(base);
-    const evaluation: EvaluationIdentity = {
-      snapshot: 'snap-rt3-writes',
+    const projectEvaluation = await evaluateProject(repoRoot, {
       asOf: '2026-08-22T11:00:00Z',
-    };
-    const projectEvaluation = await evaluateProject(repoRoot, { evaluation });
+      versions: DAEMON_CAPTURE_VERSIONS,
+    });
     const daemon = await startDaemon(stateDir, [minimalRootRoute(projectEvaluation)]);
     // Exercise the pipeline-backed root route before judging writes.
     const response = await fetch(`http://127.0.0.1:${daemon.port}/`);
@@ -342,11 +341,10 @@ describe('RT3 — the minimal root route', () => {
       'utf8',
     );
 
-    const evaluation: EvaluationIdentity = {
-      snapshot: 'snap-rt3-root',
+    const projectEvaluation = await evaluateProject(root, {
       asOf: '2026-08-22T12:00:00Z',
-    };
-    const projectEvaluation = await evaluateProject(root, { evaluation });
+      versions: DAEMON_CAPTURE_VERSIONS,
+    });
     const daemon = await startDaemon(join(tempDir('rt3-srv-'), 'state'), [
       minimalRootRoute(projectEvaluation),
     ]);
@@ -356,7 +354,7 @@ describe('RT3 — the minimal root route', () => {
     expect(response.headers.get('content-type')).toContain('text/plain');
     const body = await response.text();
     expect(body).toContain('selection: project:prj-rt3-root');
-    expect(body).toContain('evaluation: snap-rt3-root@2026-08-22T12:00:00Z');
+    expect(body).toMatch(/evaluation: sha256:[0-9a-f]{64}@2026-08-22T12:00:00Z/);
     expect(body).toContain('- Registered: satisfied [Observed]');
     expect(body).toContain(
       '- Mission-ready: not evaluated [Unknown]',
@@ -365,11 +363,10 @@ describe('RT3 — the minimal root route', () => {
 
   it('states a missing declaration honestly, with its verbatim reason', async () => {
     const emptyRoot = tempDir('rt3-srv-empty-');
-    const evaluation: EvaluationIdentity = {
-      snapshot: 'snap-rt3-missing',
+    const projectEvaluation = await evaluateProject(emptyRoot, {
       asOf: '2026-08-22T12:30:00Z',
-    };
-    const projectEvaluation = await evaluateProject(emptyRoot, { evaluation });
+      versions: DAEMON_CAPTURE_VERSIONS,
+    });
     const daemon = await startDaemon(join(tempDir('rt3-srv-'), 'state'), [
       minimalRootRoute(projectEvaluation),
     ]);

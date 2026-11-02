@@ -7,14 +7,15 @@ import {
   deterministicLayer,
   renderHuman,
   serveMachine,
-  type EvaluationIdentity,
   type MachineAnswer,
 } from '@syzygy/cap1-core';
 import { compareRenderings, disclosureOf } from '@syzygy/cap1-core/testing';
 
+import { writeConsent } from '../test-support/consent-acts.js';
 import { evaluateProject, type ProjectEvaluation } from './pipeline.js';
+import { DAEMON_CAPTURE_VERSIONS } from './source-snapshot.js';
 import { machineRoutes, MACHINE_PROJECT_PATH } from './routes-machine.js';
-import { humanRoutes, HUMAN_PAGE_PATH, type EntrySourceRead } from './routes-human.js';
+import { humanRoutes, HUMAN_PAGE_PATH } from './routes-human.js';
 import { createDaemon, type RunningDaemon } from './server.js';
 
 // RT4 — machine-endpoint tests over a REAL daemon, real sockets, and a
@@ -34,10 +35,8 @@ import { createDaemon, type RunningDaemon } from './server.js';
 // - two fetches of one evaluation are byte-identical (determinism —
 //   stamps and identities survive re-serving unchanged).
 
-const EVALUATION: EvaluationIdentity = {
-  snapshot: 'snap-rt4-001',
-  asOf: '2026-08-22T14:00:00Z',
-};
+// The capture's explicit as-of; the snapshot is the capture's own digest.
+const CAPTURE = { asOf: '2026-08-22T14:00:00Z', versions: DAEMON_CAPTURE_VERSIONS } as const;
 
 const cleanups: string[] = [];
 const running: RunningDaemon[] = [];
@@ -88,19 +87,7 @@ profiles: []
 `;
 
 function writeConsentRecord(decisionsDir: string, id: string, repository: string): void {
-  writeFileSync(
-    join(decisionsDir, `${id}.yaml`),
-    [
-      `id: ${id}`,
-      'project: prj-rt4-machine',
-      `repository: ${repository}`,
-      'scope: full',
-      'attribution: test-owner',
-      'grant_state: in-force',
-      '',
-    ].join('\n'),
-    'utf8',
-  );
+  writeConsent(decisionsDir, { id, project: 'prj-rt4-machine', repository });
 }
 
 function fixtureRepo(): { root: string; observedSourceDir: string } {
@@ -110,6 +97,13 @@ function fixtureRepo(): { root: string; observedSourceDir: string } {
   writeFileSync(join(root, '.syzygy', 'project.yaml'), DECLARATION_SOURCE, 'utf8');
   writeConsentRecord(decisionsDir, 'consent-gov-root', 'repo-governance-root');
   writeConsentRecord(decisionsDir, 'consent-observed', 'repo-observed-source');
+  // A legacy record with no owner act admits nothing; an unloadable
+  // reference would instead refuse every pair (§5 rule 4).
+  writeConsent(
+    decisionsDir,
+    { id: 'consent-unconsented', project: 'prj-rt4-machine', repository: 'repo-unconsented' },
+    false,
+  );
 
   const observedSourceDir = tempDir('rt4-mach-observed-');
   writeFileSync(join(observedSourceDir, 'README.md'), '# observed source\n', 'utf8');
@@ -121,7 +115,7 @@ async function evaluatedFixture(): Promise<
 > {
   const { root, observedSourceDir } = fixtureRepo();
   const result = await evaluateProject(root, {
-    evaluation: EVALUATION,
+    ...CAPTURE,
     repositoryRoots: {
       'repo-governance-root': root,
       'repo-observed-source': observedSourceDir,
@@ -197,11 +191,9 @@ describe('RT4 — the authenticated JSON machine endpoint', () => {
     expect(body.state.current.channel).toBe('machine');
     expect(body.state.current.selection).toBe('project:prj-rt4-machine');
     expect(body.state.current.scenarioContext).toBe('daemon-runtime');
-    expect(body.state.current.evaluation).toEqual({
-      snapshot: 'snap-rt4-001',
-      asOf: '2026-08-22T14:00:00Z',
-    });
-    expect(body.evaluationId).toBe('snap-rt4-001@2026-08-22T14:00:00Z');
+    expect(body.state.current.evaluation.asOf).toBe('2026-08-22T14:00:00Z');
+    expect(body.state.current.evaluation.snapshot).toMatch(/^sha256:[0-9a-f]{64}$/);
+    expect(body.evaluationId).toBe(`${body.state.current.evaluation.snapshot}@2026-08-22T14:00:00Z`);
 
     const facts: { name: string; value: string; epistemic: { label: string } }[] =
       body.state.current.facts;
@@ -380,7 +372,7 @@ describe('RT4 — the authenticated JSON machine endpoint', () => {
 
   it('a missing declaration is served as the named JSON arm with its verbatim reason — never a 500, never empty', async () => {
     const emptyRoot = tempDir('rt4-mach-empty-');
-    const evaluation = await evaluateProject(emptyRoot, { evaluation: EVALUATION });
+    const evaluation = await evaluateProject(emptyRoot, CAPTURE);
     const { token, url } = await startMachineDaemon(() => evaluation);
 
     const response = await fetch(url, authed(token));
@@ -401,7 +393,7 @@ describe('RT4 — the authenticated JSON machine endpoint', () => {
     const root = tempDir('rt4-mach-invalid-');
     mkdirSync(join(root, '.syzygy'), { recursive: true });
     writeFileSync(join(root, '.syzygy', 'project.yaml'), 'schema_version: "1"\n', 'utf8');
-    const evaluation = await evaluateProject(root, { evaluation: EVALUATION });
+    const evaluation = await evaluateProject(root, CAPTURE);
     const { token, url } = await startMachineDaemon(() => evaluation);
 
     const response = await fetch(url, authed(token));
@@ -470,19 +462,7 @@ profiles: []
     repository: string,
     grantState: 'in-force' | 'withdrawn',
   ): void {
-    writeFileSync(
-      join(decisionsDir, `${id}.yaml`),
-      [
-        `id: ${id}`,
-        `project: ${CITATION_PROJECT_ID}`,
-        `repository: ${repository}`,
-        'scope: full',
-        'attribution: test-owner',
-        `grant_state: ${grantState}`,
-        '',
-      ].join('\n'),
-      'utf8',
-    );
+    writeConsent(decisionsDir, { id, project: CITATION_PROJECT_ID, repository, grantState });
   }
 
   async function citationFixture(): Promise<
@@ -507,7 +487,7 @@ profiles: []
     // IS consented; repo-withdrawn resolves unconsented on consent
     // grounds alone, before any observation is consulted.
     const result = await evaluateProject(root, {
-      evaluation: EVALUATION,
+      ...CAPTURE,
       repositoryRoots: { 'repo-governance-root': root },
     });
     if (result.kind !== 'project-evaluated') {
@@ -516,13 +496,11 @@ profiles: []
     return result;
   }
 
-  const absentEntrySource: (entryPath: unknown) => EntrySourceRead = () => ({ state: 'absent' });
-
   it('capture-failed and withdrawal citations agree between the human page and the machine endpoint', async () => {
     const evaluation = await citationFixture();
 
     const routes = [
-      ...humanRoutes({ getEvaluation: () => evaluation, readEntrySource: absentEntrySource }),
+      ...humanRoutes({ getEvaluation: () => evaluation }),
       ...machineRoutes({ getEvaluation: () => evaluation }),
     ];
     const start = await createDaemon({
@@ -558,7 +536,7 @@ profiles: []
       /repo-capture-failed:[^<]*consent consent-capture-failed in-force/,
     );
     expect(machineCitation('repo-capture-failed')).toBe(
-      'record:consent-capture-failed scope:full attribution:test-owner grantState:in-force',
+      'record:consent-capture-failed scope:observe attribution:test-owner grantState:in-force',
     );
 
     // unconsented-by-withdrawal: both channels cite the WITHDRAWAL
@@ -566,7 +544,7 @@ profiles: []
     expect(humanHtml).toContain('data-withdrawn-record-id="consent-withdrawn"');
     expect(humanHtml).toContain('Withdrawn consent consent-withdrawn (withdrawn).');
     expect(machineCitation('repo-withdrawn')).toBe(
-      'record:consent-withdrawn scope:full attribution:test-owner grantState:withdrawn',
+      'record:consent-withdrawn scope:observe attribution:test-owner grantState:withdrawn',
     );
   });
 });

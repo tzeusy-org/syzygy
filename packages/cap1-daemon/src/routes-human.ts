@@ -1,5 +1,7 @@
 import {
   aggregate,
+  consentDecisionTuple,
+  evaluationId,
   coverageBoundary,
   explainAnswer,
   extractDistinctions,
@@ -64,11 +66,11 @@ export const HUMAN_ENTRY_ROUTE_PATH = '/entry' as const;
 
 // --- Injected dependencies ----------------------------------------------
 
-// The entry document's source, read from disk BY THE COMPOSITION ROOT —
-// a named result, so an unreadable entry arrives as its named state and
-// renders honestly (CAP1-REQ-022), never as a thrown error and never as
-// a fake page. This module defines the type; it never touches the
-// filesystem itself.
+// The entry document's source as the capture recorded it — a named
+// result, so an unreadable entry arrives as its named state and renders
+// honestly (CAP1-REQ-022), never as a thrown error and never as a fake
+// page. The route never touches the filesystem: it renders the bytes the
+// evaluation's capture read, or the named reason none were read.
 export type EntrySourceRead =
   | { readonly state: 'present'; readonly text: string }
   | { readonly state: 'absent' }
@@ -79,12 +81,6 @@ export interface HumanRouteDependencies {
   // is composed over, so both channels serve identical fact sets by
   // construction (CAP1-REQ-041/043).
   readonly getEvaluation: () => ProjectEvaluation | Promise<ProjectEvaluation>;
-  // Reads the entry document at its fixed publication location,
-  // relative to the observed repository root. Called with
-  // HUMAN_ENTRY_PATH verbatim — the read subject is not configurable.
-  readonly readEntrySource: (
-    entryPath: typeof HUMAN_ENTRY_PATH,
-  ) => EntrySourceRead | Promise<EntrySourceRead>;
   // Authority citations the entry routes its reader to (CAP1-REQ-021).
   // Supplied by composition; absence renders as an empty citation list,
   // never as invented citations.
@@ -240,10 +236,53 @@ function knownReferences(evaluation: EvaluatedArm): ReadonlySet<string> {
     : []) {
     known.add(entry.id);
   }
-  for (const record of evaluation.consent.records) {
-    known.add(record.id);
+  for (const input of evaluation.capture.consentInputs) {
+    if (input.artifact.state === 'loaded') known.add(input.artifact.record.id);
   }
   return known;
+}
+
+// CAP1-REQ-046 v1.0: the consent decision per repository, as text — the
+// same tuple the machine answer carries (`consentDecisionTuple`), each
+// field readable without colour, position or hover, inside the
+// keyboard-reachable explanation (a native <details>).
+export const CONSENT_EFFECT_DISCLAIMER =
+  'Consent authorizes observation only; it is not evidence that any effect succeeded.';
+
+function renderConsentDecisions(evaluation: EvaluatedArm): string {
+  const id = evaluationId(evaluation.model.evaluation);
+  const items = evaluation.consentDecisions.map((decision) => {
+    const tuple = consentDecisionTuple(decision);
+    const base =
+      attr('data-consent-decision', tuple.repositoryId) +
+      attr('data-consent-reference', tuple.reference) +
+      attr('data-consent-authorization', tuple.authorization) +
+      attr('data-evaluation-id', id);
+    if (tuple.authorization === 'admitted') {
+      const a1 =
+        tuple.a1AuditRecord === null || typeof tuple.a1AuditRecord === 'string'
+          ? 'explicitly absent'
+          : `${tuple.a1AuditRecord.id} (${tuple.a1AuditRecord.digest})`;
+      return (
+        `<li${base}${attr('data-consent-provenance', tuple.provenance ?? '')}>` +
+        `${escapeHtml(tuple.repositoryId)}: observation admitted — provenance ${escapeHtml(tuple.provenance ?? '')}; ` +
+        `consent artifact ${escapeHtml(tuple.artifactId ?? '')} (${escapeHtml(tuple.artifactDigest ?? '')}); ` +
+        `owner act ${escapeHtml(tuple.actId ?? '')} (${escapeHtml(tuple.actRecordDigest ?? '')}) by ${escapeHtml(tuple.owner ?? '')} at ${escapeHtml(tuple.actInstant ?? '')}, scope ${escapeHtml(tuple.scope ?? '')}; ` +
+        `A1 audit identity: ${escapeHtml(a1)}; evaluation ${escapeHtml(id)}.</li>`
+      );
+    }
+    const untrusted = tuple.untrustedRecord;
+    const untrustedText =
+      untrusted === null
+        ? ''
+        : ` Recorded consent ${escapeHtml(untrusted.recordId)} (${escapeHtml(untrusted.artifactDigest)}) — untrusted content, not honored: project ${escapeHtml(untrusted.projectId)}, repository ${escapeHtml(untrusted.repositoryId)}, scope ${escapeHtml(untrusted.scope)}, attribution ${escapeHtml(untrusted.attribution)}, grant state ${escapeHtml(untrusted.grantState)}.`;
+    return (
+      `<li${base}${attr('data-epistemic-label', 'Unknown')}${attr('data-unknown-reason', tuple.reason ?? '')}${attr('data-consent-diagnostic', tuple.diagnostic ?? '')}${attr('data-consent-diagnostic-reference', tuple.diagnosticReference ?? '')}${attr('data-resolution-route', tuple.route ?? '')}>` +
+      `${escapeHtml(tuple.repositoryId)}: authorization Unknown — reason ${escapeHtml(tuple.reason ?? '')}; diagnostic ${escapeHtml(tuple.diagnostic ?? '')} (reference ${escapeHtml(tuple.diagnosticReference ?? '')}); route ${escapeHtml(tuple.route ?? '')}; evaluation ${escapeHtml(id)}.` +
+      `${untrustedText}</li>`
+    );
+  });
+  return `<ul>${items.join('')}</ul><p>${escapeHtml(CONSENT_EFFECT_DISCLAIMER)}</p>`;
 }
 
 function renderDrawer(evaluation: EvaluatedArm, answer: FacetAnswer): string {
@@ -291,6 +330,9 @@ function renderDrawer(evaluation: EvaluatedArm, answer: FacetAnswer): string {
       `<dt>Unknown reasons</dt><dd${attr('data-unknown-reason-primary', factSet.unknownReasons.primary)}>primary: ${escapeHtml(factSet.unknownReasons.primary)}; secondary: [${escapeHtml(factSet.unknownReasons.secondary.join(', '))}]</dd>`,
     );
   }
+  rows.push(
+    `<dt>Consent decisions</dt><dd>${renderConsentDecisions(evaluation)}</dd>`,
+  );
   if (boundary !== undefined) {
     rows.push(
       `<dt>Coverage and consent boundary</dt><dd>${boundary.records
@@ -585,6 +627,32 @@ function renderEvaluatedPage(
 function renderDegradedPage(
   evaluation: Exclude<ProjectEvaluation, EvaluatedArm>,
 ): string {
+  if (evaluation.kind === 'capture-failed') {
+    const failure = evaluation.failure;
+    const changed =
+      failure.kind === 'source-changed-during-capture'
+        ? `<ul class="changed">${failure.changed
+            .map(
+              (input) =>
+                `<li${attr('data-changed-kind', input.kind)}${attr('data-changed-subject', input.subjectId)}>${escapeHtml(input.kind)}: ${escapeHtml(input.subjectId)}</li>`,
+            )
+            .join('')}</ul>`
+        : '';
+    const body =
+      '<header><h1>No project evaluated</h1></header>' +
+      '<section data-section="degradation">' +
+      `<p${attr('data-capture-failure', failure.kind)} data-epistemic-label="Unknown">` +
+      `The capture failed (${escapeHtml(failure.kind)}); nothing was evaluated and no partial snapshot is served. Nothing is retried.</p>` +
+      changed +
+      '</section>';
+    return page(
+      'No project evaluated',
+      attr('data-evaluation-kind', evaluation.kind) +
+        ' data-non-citable="true" data-artifact-class="presentation-artifact"',
+      body,
+    );
+  }
+
   if (evaluation.kind === 'no-declaration-observed') {
     const observation = evaluation.declarationObservation;
     const body =
@@ -624,6 +692,26 @@ function renderDegradedPage(
 }
 
 // --- The entry document route (CAP1-REQ-020…023) ---------------------------
+
+// The entry as the evaluation's capture holds it. The capture read the
+// entry only when the governance root's consent was admitted (CAP1-REQ-016);
+// otherwise the entry is Unknown for that reason — never re-read here.
+function entrySourceFrom(evaluation: ProjectEvaluation): EntrySourceRead {
+  if (evaluation.kind === 'capture-failed') {
+    return { state: 'unreadable', reason: evaluation.failure.kind };
+  }
+  const entry = evaluation.capture.entry;
+  switch (entry.state) {
+    case 'captured':
+      return { state: 'present', text: entry.text };
+    case 'missing':
+      return { state: 'absent' };
+    case 'unreadable':
+      return { state: 'unreadable', reason: entry.failureCode };
+    case 'not-read':
+      return { state: 'unreadable', reason: 'unconsented-source-or-provider' };
+  }
+}
 
 function entryContentFrom(read: EntrySourceRead): EntryContent {
   switch (read.state) {
@@ -744,8 +832,10 @@ export function humanRoutes(deps: HumanRouteDependencies): Route[] {
       path: HUMAN_ENTRY_ROUTE_PATH,
       credentialClass: 'human-open',
       async handle(): Promise<RouteResponse> {
-        const read = await deps.readEntrySource(HUMAN_ENTRY_PATH);
-        return htmlResponse(renderEntryPage(read, deps.entryAuthorities ?? []));
+        const evaluation = await deps.getEvaluation();
+        return htmlResponse(
+          renderEntryPage(entrySourceFrom(evaluation), deps.entryAuthorities ?? []),
+        );
       },
     },
   ];

@@ -9,7 +9,24 @@ import {
   type ProjectId,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { consent, projectYaml } from './fixtures/index.js';
+import {
+  captureProjectInputs,
+  DAEMON_CAPTURE_VERSIONS,
+  evaluateCapturedProject,
+  humanRoutes,
+  machineProjectBody,
+  type CaptureDependencies,
+} from '@syzygy/cap1-daemon';
+import {
+  consent,
+  consentArtifactText,
+  DECISIONS_PATH,
+  MemoryTree,
+  ownerActText,
+  projectYaml,
+  sha256Hex,
+  type ArtifactFields,
+} from './fixtures/index.js';
 
 // CAP1-REQ-011 — Consent is a visible recorded fact, never an
 // assumption.
@@ -318,5 +335,351 @@ describe('CAP1-REQ-011 falsifier — a pair holding both a grant and a withdrawa
       expect(entry !== undefined && 'capturedScope' in entry).toBe(false);
       expect(JSON.stringify(entry)).not.toContain('full-tree');
     }
+  });
+});
+
+// --- CAP1-REQ-011 v1.0: owner-act admission before any dependent read ------
+//
+// Each case is one controlled input difference against a valid bootstrap
+// baseline, run through the real capture with an intercepting reader. The
+// expected (authorization, diagnostic, dependent-read count) tuple is a
+// literal per case; the denominator is the enumerated case list below,
+// never the implementation's accepted subset. Both channels are compared
+// against the same literals. Fixture acts are synthetic, never owner acts.
+
+const V1_PROJECT = 'prj-req011-v1';
+const GOV: ArtifactFields = { id: 'c-gov', project: V1_PROJECT, repository: 'repo-gov' };
+const SRC: ArtifactFields = { id: 'c-src', project: V1_PROJECT, repository: 'repo-src' };
+const AS_OF = '2026-09-01T00:00:00Z';
+
+function v1Tree(extraConsents: readonly string[] = [], extraFirst = false): MemoryTree {
+  const tree = new MemoryTree();
+  tree.roots.add('/src');
+  tree.put(
+    '/gov',
+    '.syzygy/project.yaml',
+    projectYaml({
+      id: V1_PROJECT,
+      name: 'REQ-011 v1.0 fixture',
+      repositories: [
+        { id: 'repo-gov', role: 'governance-root', consent: 'c-gov' },
+        { id: 'repo-src', role: 'observed-source', consent: 'c-src' },
+      ],
+      consents: extraFirst ? [...extraConsents, 'c-gov', 'c-src'] : ['c-gov', 'c-src', ...extraConsents],
+    }),
+  );
+  tree.put('/gov', '.syzygy/intent/OVERVIEW.md', '# overview\n');
+  putConsent(tree, GOV);
+  return tree;
+}
+
+function putConsent(
+  tree: MemoryTree,
+  artifact: ArtifactFields,
+  act: Readonly<Record<string, unknown>> | false = {},
+  artifactOverride?: string,
+): void {
+  const text = artifactOverride ?? consentArtifactText(artifact);
+  tree.put('/gov', `${DECISIONS_PATH}/${artifact.id}.yaml`, text);
+  if (act !== false) {
+    tree.put('/gov', `${DECISIONS_PATH}/${artifact.id}.act.yaml`, ownerActText(artifact, text, act));
+  }
+}
+
+interface CaseResult {
+  readonly gov: readonly [string, string];
+  readonly src: readonly [string, string];
+  readonly srcRootReads: number;
+  readonly entryReads: number;
+  readonly machine: readonly (readonly [string, string, string])[];
+  readonly human: string;
+}
+
+async function runCase(tree: MemoryTree, extra: Partial<CaptureDependencies> = {}): Promise<CaseResult> {
+  const captured = await captureProjectInputs('/gov', {
+    asOf: AS_OF,
+    versions: DAEMON_CAPTURE_VERSIONS,
+    repositoryRoots: { 'repo-gov': '/gov', 'repo-src': '/src' },
+    reader: tree.reader(),
+    ...extra,
+  });
+  if ('kind' in captured) throw new Error(`capture failed: ${captured.kind}`);
+  const evaluation = evaluateCapturedProject(captured);
+  if (evaluation.kind !== 'project-evaluated') throw new Error(evaluation.kind);
+  const tuple = (repositoryId: string): readonly [string, string] => {
+    const decision = evaluation.consentDecisions.find((d) => d.repositoryId === repositoryId);
+    if (decision === undefined) throw new Error(repositoryId);
+    return decision.authorization === 'admitted'
+      ? ['admitted', decision.provenance]
+      : ['Unknown', decision.diagnostic];
+  };
+  const body = machineProjectBody(evaluation);
+  if (body.kind !== 'project-evaluated') throw new Error(body.kind);
+  const [page] = humanRoutes({ getEvaluation: () => evaluation });
+  const human = page === undefined ? '' : (await page.handle({} as never)).body;
+  return {
+    gov: tuple('repo-gov'),
+    src: tuple('repo-src'),
+    srcRootReads: tree.count('list|/src'),
+    entryReads: tree.count('/gov|.syzygy/intent/OVERVIEW.md'),
+    machine: body.consentDecisions.map((d) => [
+      d.repositoryId,
+      d.authorization,
+      d.authorization === 'admitted' ? (d.provenance ?? '') : (d.diagnostic ?? ''),
+    ]),
+    human,
+  };
+}
+
+const BOOT = 'owner-adopted (bootstrap, uncorrelated)';
+const ADMITTED_GOV = ['admitted', BOOT] as const;
+
+// [case, arrange, expected src tuple]. Every case leaves repo-gov valid.
+const INVALID_CASES: readonly (readonly [string, (tree: MemoryTree) => void, string])[] = [
+  ['missing owner-act record', (t) => putConsent(t, SRC, false), 'owner-act-missing'],
+  ['machine-only submission (caller flag, no act)', (t) => putConsent(t, SRC, false, consentArtifactText({ ...SRC, extra: ['verified: true'] })), 'owner-act-missing'],
+  ['known non-human act', (t) => putConsent(t, SRC, { actor: 'machine' }), 'actor-non-human'],
+  ['malformed binding', (t) => putConsent(t, SRC, { act_type: 'grant' }), 'owner-act-malformed'],
+  ['unparseable act', (t) => { putConsent(t, SRC, false); t.put('/gov', `${DECISIONS_PATH}/c-src.act.yaml`, 'act: [unclosed\n'); }, 'owner-act-malformed'],
+  ['omitted audit field', (t) => putConsent(t, SRC, { a1_audit_record: undefined }), 'audit-identity-omitted'],
+  ['digest mismatch', (t) => putConsent(t, SRC, { artifact_digest: `sha256:${'0'.repeat(64)}` }), 'artifact-digest-mismatch'],
+  ['wrong artifact identity', (t) => putConsent(t, SRC, { artifact: 'c-other' }), 'artifact-identity-mismatch'],
+  ['wrong project', (t) => putConsent(t, SRC, { project: 'prj-other' }), 'project-mismatch'],
+  ['wrong act type', (t) => putConsent(t, SRC, { act_type: 'revoke' }), 'act-type-mismatch'],
+  ['wrong scope (act differs from artifact)', (t) => putConsent(t, SRC, { scope: 'observe write' }), 'scope-mismatch'],
+  ['wrong scope (no observe token)', (t) => putConsent(t, { ...SRC, scope: 'write' }), 'scope-excludes-observation'],
+  ['legacy free-text scope', (t) => putConsent(t, { ...SRC, scope: 'full' }), 'scope-excludes-observation'],
+  ['missing owner (omitted)', (t) => putConsent(t, SRC, { owner: undefined }), 'owner-attribution-missing'],
+  ['missing owner (null)', (t) => putConsent(t, SRC, { owner: null }), 'owner-attribution-missing'],
+  ['missing instant', (t) => putConsent(t, SRC, { instant: undefined }), 'act-instant-missing'],
+  ['future instant', (t) => putConsent(t, SRC, { instant: '2026-09-01T00:00:00.001Z' }), 'act-instant-future'],
+  ['declared expiry', (t) => putConsent(t, SRC, { expires: '2026-09-01T00:00:00Z' }), 'act-expired'],
+  ['state 1 carrying an A1 identity', (t) => putConsent(t, SRC, { a1_audit_record: { id: 'a1-x', digest: `sha256:${'a'.repeat(64)}` } }), 'provenance-state-inconsistent'],
+  ['state 2 with explicit absence', (t) => putConsent(t, SRC, { provenance: 'syzygy-verified' }), 'provenance-state-inconsistent'],
+  ['supersession', (t) => { putConsent(t, SRC); putConsent(t, { ...SRC, id: 'c-new' }, { supersedes: 'act-c-src' }); }, 'act-superseded'],
+  ['self-supersession', (t) => putConsent(t, SRC, { supersedes: 'act-c-src' }), 'act-superseded'],
+  ['revocation', (t) => { putConsent(t, SRC); putConsent(t, { ...SRC, id: 'c-w', grantState: 'withdrawn' }, { supersedes: 'act-c-src' }); }, 'act-revoked'],
+  ['duplicate act identity', (t) => { putConsent(t, SRC); putConsent(t, { ...SRC, id: 'c-dup', scope: 'observe' }, { act: 'act-c-src' }); }, 'act-identity-duplicate'],
+];
+
+const EXTRA_REFS: Readonly<Record<string, readonly string[]>> = {
+  supersession: ['c-new'],
+  revocation: ['c-w'],
+  'duplicate act identity': ['c-dup'],
+};
+
+describe('CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read', () => {
+  it('a valid explicit state-(1) act admits observation without an A1 provider', async () => {
+    const tree = v1Tree();
+    putConsent(tree, SRC);
+    const result = await runCase(tree);
+    expect(result.gov).toEqual(ADMITTED_GOV);
+    expect(result.src).toEqual(['admitted', 'owner-adopted (bootstrap, uncorrelated)']);
+    // One capture read plus one revalidation read; nothing more.
+    expect(result.srcRootReads).toBe(2);
+    expect(result.entryReads).toBe(2);
+  });
+
+  it.each(INVALID_CASES)('%s refuses with its own diagnostic and zero reads of the repository', async (name, arrange, diagnostic) => {
+    const tree = v1Tree(EXTRA_REFS[name] ?? []);
+    arrange(tree);
+    const result = await runCase(tree);
+    expect(result.src).toEqual(['Unknown', diagnostic]);
+    expect(result.gov).toEqual(ADMITTED_GOV);
+    expect(result.srcRootReads).toBe(0);
+    // Both channels carry the same tuple for the refused pair.
+    expect(result.machine).toContainEqual(['repo-src', 'Unknown', diagnostic]);
+    expect(result.human).toContain(`data-consent-decision="repo-src"`);
+    expect(result.human).toContain(`data-consent-diagnostic="${diagnostic}"`);
+  });
+
+  it('the case denominator is the enumerated matrix: 24 invalid cases, 24 distinct inputs', () => {
+    expect(INVALID_CASES.length).toBe(24);
+    expect(new Set(INVALID_CASES.map(([name]) => name)).size).toBe(24);
+  });
+
+  it('a missing consent record refuses its pair and, being unreadable evidence, every pair', async () => {
+    const tree = v1Tree();
+    const result = await runCase(tree);
+    expect(result.src).toEqual(['Unknown', 'reference-unresolvable']);
+    expect(result.gov).toEqual(['Unknown', 'consent-evidence-unresolved']);
+    expect(result.srcRootReads).toBe(0);
+    expect(result.entryReads).toBe(0);
+  });
+
+  it('an applicable declared currency bound refuses a stale act, one millisecond past the bound', async () => {
+    const tree = v1Tree();
+    putConsent(tree, SRC, { instant: '2026-08-31T23:59:58.999Z' });
+    const result = await runCase(tree, {
+      consentCurrencyBound: { maxAgeSeconds: 1, declaredBy: 'fixture-bound (synthetic)' },
+    });
+    expect(result.src).toEqual(['Unknown', 'act-stale']);
+    expect(result.srcRootReads).toBe(0);
+    const atBound = v1Tree();
+    putConsent(atBound, SRC, { instant: '2026-08-31T23:59:59Z' });
+    const ok = await runCase(atBound, {
+      consentCurrencyBound: { maxAgeSeconds: 1, declaredBy: 'fixture-bound (synthetic)' },
+    });
+    expect(ok.src).toEqual(['admitted', 'owner-adopted (bootstrap, uncorrelated)']);
+  });
+});
+
+describe('CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade', () => {
+  const A1 = { id: 'a1-fixture-1', digest: `sha256:${sha256Hex('a1-fixture-1')}` };
+  const claimState2 = (tree: MemoryTree): void =>
+    putConsent(tree, SRC, { provenance: 'syzygy-verified', a1_audit_record: A1 });
+
+  it('no provider refuses correlation-unavailable, never state (1)', async () => {
+    const tree = v1Tree();
+    claimState2(tree);
+    const result = await runCase(tree);
+    expect(result.src).toEqual(['Unknown', 'correlation-unavailable']);
+    expect(result.srcRootReads).toBe(0);
+  });
+
+  it.each([
+    ['not-found', 'correlation-not-found'],
+    ['mismatch', 'correlation-mismatch'],
+    ['indeterminate', 'correlation-indeterminate'],
+    ['unavailable', 'correlation-unavailable'],
+    ['throws', 'correlation-unavailable'],
+  ] as const)('a %s correlation refuses %s with no fallback or retry', async (state, diagnostic) => {
+    const tree = v1Tree();
+    claimState2(tree);
+    let calls = 0;
+    const result = await runCase(tree, {
+      correlation: {
+        id: 'fixture-provider',
+        correlate: async () => {
+          calls += 1;
+          if (state === 'throws') throw new Error('provider down');
+          return { state };
+        },
+      },
+    });
+    expect(result.src).toEqual(['Unknown', diagnostic]);
+    expect(result.srcRootReads).toBe(0);
+    // Called once per act that passed the prechecks: c-gov and c-src.
+    expect(calls).toBe(2);
+  });
+
+  it('a correlation whose binding digest does not match refuses correlation-mismatch', async () => {
+    const tree = v1Tree();
+    claimState2(tree);
+    const result = await runCase(tree, {
+      correlation: {
+        id: 'fixture-provider',
+        correlate: async () => ({
+          state: 'correlated',
+          auditRecordId: A1.id,
+          auditRecordDigest: A1.digest as `sha256:${string}`,
+          bindingDigest: `sha256:${'1'.repeat(64)}`,
+        }),
+      },
+    });
+    expect(result.src).toEqual(['Unknown', 'correlation-mismatch']);
+  });
+
+  it.each([
+    ['an empty audit record id', { auditRecordId: '' }],
+    ['a malformed audit record digest', { auditRecordDigest: 'sha256:not-a-digest' }],
+    ['a malformed binding digest', { bindingDigest: 'deadbeef' }],
+  ] as const)('a correlated answer with %s is unavailable, never a grant', async (_name, broken) => {
+    const tree = v1Tree();
+    claimState2(tree);
+    const result = await runCase(tree, {
+      correlation: {
+        id: 'fixture-provider',
+        correlate: async ({ bindingDigest }) =>
+          ({
+            state: 'correlated',
+            auditRecordId: A1.id,
+            auditRecordDigest: A1.digest,
+            bindingDigest,
+            ...broken,
+          }) as never,
+      },
+    });
+    expect(result.src).toEqual(['Unknown', 'correlation-unavailable']);
+    expect(result.srcRootReads).toBe(0);
+  });
+
+  it('the correlated binding digest is the sha256 of the binding without the A1 identity and act-record digest (independent oracle)', async () => {
+    const tree = v1Tree();
+    claimState2(tree);
+    // Hand-encoded canonical bytes: keys in UTF-16 code-unit order, no
+    // a1AuditRecord, no actRecordDigest. The provider never echoes the
+    // digest it is handed; it answers with its own.
+    const oracle = (repositoryId: string, artifactId: string, provenance: string): string =>
+      `sha256:${sha256Hex(
+        `{"actId":"act-${artifactId}","actType":"consent","actor":"human",` +
+          `"artifactDigest":"sha256:${sha256Hex(consentArtifactText(artifactId === 'c-src' ? SRC : GOV))}",` +
+          `"artifactId":"${artifactId}","expires":null,"instant":"2026-08-01T00:00:00Z",` +
+          `"owner":"fixture-owner (synthetic, not an owner act)","projectId":"prj-req011-v1",` +
+          `"provenance":"${provenance}","repositoryId":"${repositoryId}","scope":"observe","supersedes":null}`,
+      )}`;
+    const result = await runCase(tree, {
+      correlation: {
+        id: 'fixture-provider',
+        correlate: async ({ binding }) => ({
+          state: 'correlated',
+          auditRecordId: A1.id,
+          auditRecordDigest: A1.digest as `sha256:${string}`,
+          bindingDigest: (binding.repositoryId === 'repo-src'
+            ? oracle('repo-src', 'c-src', 'syzygy-verified')
+            : oracle('repo-gov', 'c-gov', 'owner-adopted-bootstrap')) as `sha256:${string}`,
+        }),
+      },
+    });
+    expect(result.src).toEqual(['admitted', 'Syzygy-verified']);
+    expect(result.gov).toEqual(['admitted', 'Syzygy-verified']);
+  });
+
+  it('a matching correlation admits Syzygy-verified; a bootstrap act it correlates is upgraded only in this evaluation', async () => {
+    const tree = v1Tree();
+    claimState2(tree);
+    const result = await runCase(tree, {
+      correlation: {
+        id: 'fixture-provider',
+        correlate: async ({ bindingDigest }) => ({
+          state: 'correlated',
+          auditRecordId: A1.id,
+          auditRecordDigest: A1.digest as `sha256:${string}`,
+          bindingDigest,
+        }),
+      },
+    });
+    expect(result.src).toEqual(['admitted', 'Syzygy-verified']);
+    expect(result.gov).toEqual(['admitted', 'Syzygy-verified']);
+    expect(result.srcRootReads).toBe(2);
+  });
+});
+
+describe('CAP1-REQ-011 v1.0 — withdrawal and unresolved withdrawal stay fail closed', () => {
+  const WITHDRAWAL: ArtifactFields = { ...SRC, id: 'c-w', grantState: 'withdrawn' };
+
+  it.each([
+    ['valid withdrawal', (t: MemoryTree) => putConsent(t, WITHDRAWAL), 'withdrawn'],
+    ['malformed withdrawal act', (t: MemoryTree) => putConsent(t, WITHDRAWAL, { actor: 'robot' }), 'withdrawal-unresolved'],
+    ['withdrawal with no act', (t: MemoryTree) => putConsent(t, WITHDRAWAL, false), 'withdrawal-unresolved'],
+    ['malformed withdrawal record naming the pair', (t: MemoryTree) => t.put('/gov', `${DECISIONS_PATH}/c-w.yaml`, `project: ${V1_PROJECT}\nrepository: repo-src\ngrant_state: maybe\n`), 'withdrawal-unresolved'],
+  ] as const)('%s keeps the pair refused, in either reference order', async (_name, arrange, diagnostic) => {
+    for (const extraFirst of [false, true]) {
+      const tree = v1Tree(['c-w'], extraFirst);
+      putConsent(tree, SRC);
+      arrange(tree);
+      const result = await runCase(tree);
+      expect(result.src).toEqual(['Unknown', diagnostic]);
+      expect(result.srcRootReads).toBe(0);
+    }
+  });
+
+  it('an unresolvable withdrawal reference refuses every pair, naming that reference', async () => {
+    const tree = v1Tree(['c-w']);
+    putConsent(tree, SRC);
+    const result = await runCase(tree);
+    expect(result.src).toEqual(['Unknown', 'consent-evidence-unresolved']);
+    expect(result.gov).toEqual(['Unknown', 'consent-evidence-unresolved']);
+    expect(result.srcRootReads).toBe(0);
   });
 });

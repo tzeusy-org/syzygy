@@ -1,0 +1,65 @@
+{
+  "subject": "syzygy-u2a.2 rule-6 controlled mutations for the exact-head review repairs (docs/reviews/R-RT-U2A2-IMPLEMENTATION-EXACT-HEAD-RAW.md)",
+  "ranAt": "e700ba8c80a374ad07c70e3c516984e055b9c62b",
+  "note": "Mutants ran on a working tree byte-identical to ranAt for every subject file (digests below); each mutant replaced exactly one occurrence of old with new, ran its test file with npx vitest run, and was restored.",
+  "subjectDigests": {
+    "packages/cap1-conformance/src/req-011.conformance.test.ts": "sha256:e5ea1009df70e231dd74fc122f0bef618c81b6c05c792088bdc2b30a9884ffc0",
+    "packages/cap1-core/src/consent-decision.ts": "sha256:d2d8b2462bae88914f87b2aa4bfb8204bb0727b2844d073cfefebe924ffaaa2f",
+    "packages/cap1-daemon/src/source-snapshot.test.ts": "sha256:275508b6e611a6ffd26dc505c4f641423803e227848ba722b5e5aed7b0a22f68",
+    "packages/cap1-daemon/src/source-snapshot.ts": "sha256:2fa0af36aafdeb6fafa94f4d4b4bd5c06371c0cdda25eaea2f2a661320435610"
+  },
+  "mutants": [
+    {
+      "id": "self-supersession-excluded",
+      "file": "packages/cap1-core/src/consent-decision.ts",
+      "old": "const defeaters = context.relations.filter((relation) => relation.supersedes === act.actId);",
+      "new": "const defeaters = context.relations.filter((relation) => relation.reference !== input.reference && relation.supersedes === act.actId);",
+      "test": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "exit": 1,
+      "killed": true,
+      "summary": "Tests  1 failed | 55 passed (56)"
+    },
+    {
+      "id": "audit-digest-unchecked",
+      "file": "packages/cap1-daemon/src/source-snapshot.ts",
+      "old": "isSha256Digest(record['auditRecordDigest']) &&",
+      "new": "typeof record['auditRecordDigest'] === 'string' &&",
+      "test": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "exit": 1,
+      "killed": true,
+      "summary": "Tests  1 failed | 55 passed (56)"
+    },
+    {
+      "id": "bound-unvalidated",
+      "file": "packages/cap1-daemon/src/source-snapshot.ts",
+      "old": "if (!Number.isSafeInteger(maxAgeSeconds) || maxAgeSeconds <= 0) {",
+      "new": "if (false) {",
+      "test": "packages/cap1-daemon/src/source-snapshot.test.ts",
+      "exit": 1,
+      "killed": true,
+      "summary": "Tests  5 failed | 16 passed (21)"
+    },
+    {
+      "id": "manifest-unsorted",
+      "file": "packages/cap1-daemon/src/source-snapshot.ts",
+      "old": "inputs: sortSnapshotInputs(descriptors),",
+      "new": "inputs: descriptors,",
+      "test": "packages/cap1-daemon/src/source-snapshot.test.ts",
+      "exit": 1,
+      "killed": true,
+      "summary": "Tests  1 failed | 20 passed (21)"
+    },
+    {
+      "id": "binding-digest-includes-act-record",
+      "file": "packages/cap1-core/src/consent-decision.ts",
+      "old": "const { a1AuditRecord: _a1, actRecordDigest: _actRecord, ...correlated } = binding;",
+      "new": "const { a1AuditRecord: _a1, ...correlated } = binding;",
+      "test": "packages/cap1-conformance/src/req-011.conformance.test.ts",
+      "exit": 1,
+      "killed": true,
+      "summary": "Tests  1 failed | 55 passed (56)"
+    }
+  ],
+  "total": 5,
+  "killed": 5
+}

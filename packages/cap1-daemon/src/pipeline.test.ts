@@ -3,24 +3,23 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
-import type { EvaluationIdentity } from '@syzygy/cap1-core';
-
+import { writeConsent } from '../test-support/consent-acts.js';
 import { evaluateProject } from './pipeline.js';
+import { DAEMON_CAPTURE_VERSIONS } from './source-snapshot.js';
 
 // RT3 — pipeline tests over a REAL on-disk fixture repository (no
 // mocks). The fixture mirrors the integration conformance test's
 // composition: three declared repositories — governance root
 // (consented, observed), observed source (consented, observed), and an
-// unconsented repository whose consent reference resolves to nothing.
+// unconsented repository whose consent record is a legacy record with no owner act.
 //
 // Oracle independence: every expected value below is a HARD-CODED
 // string literal — facet names, answer values, Unknown reasons — never
 // imported from the vocabulary modules.
 
-const EVALUATION: EvaluationIdentity = {
-  snapshot: 'snap-rt3-001',
-  asOf: '2026-08-22T10:00:00Z',
-};
+// The capture's explicit as-of; the snapshot is never supplied — it is the
+// digest of what the capture read.
+const CAPTURE = { asOf: '2026-08-22T10:00:00Z', versions: DAEMON_CAPTURE_VERSIONS } as const;
 
 const cleanups: string[] = [];
 
@@ -67,24 +66,12 @@ function writeConsentRecord(
   id: string,
   repository: string,
 ): void {
-  writeFileSync(
-    join(decisionsDir, `${id}.yaml`),
-    [
-      `id: ${id}`,
-      'project: prj-rt3-pipeline',
-      `repository: ${repository}`,
-      'scope: full',
-      'attribution: test-owner',
-      'grant_state: in-force',
-      '',
-    ].join('\n'),
-    'utf8',
-  );
+  writeConsent(decisionsDir, { id, project: 'prj-rt3-pipeline', repository });
 }
 
 // The standard fixture: a governed repository root holding the
 // declaration and two in-force consent records; the third declared
-// consent reference (consent-unconsented) resolves to NO record.
+// consent reference (consent-unconsented) is a legacy record with no owner act.
 function fixtureRepo(): { root: string; observedSourceDir: string } {
   const root = tempDir('rt3-pipe-root-');
   const decisionsDir = join(root, '.syzygy', 'governance', 'decisions');
@@ -92,6 +79,13 @@ function fixtureRepo(): { root: string; observedSourceDir: string } {
   writeFileSync(join(root, '.syzygy', 'project.yaml'), DECLARATION_SOURCE, 'utf8');
   writeConsentRecord(decisionsDir, 'consent-gov-root', 'repo-governance-root');
   writeConsentRecord(decisionsDir, 'consent-observed', 'repo-observed-source');
+  // A legacy record with no owner act: a visible recorded fact that admits
+  // nothing (an unloadable reference would refuse every pair, §5 rule 4).
+  writeConsent(
+    decisionsDir,
+    { id: 'consent-unconsented', project: 'prj-rt3-pipeline', repository: 'repo-unconsented' },
+    false,
+  );
 
   const observedSourceDir = tempDir('rt3-pipe-observed-');
   writeFileSync(join(observedSourceDir, 'README.md'), '# observed source\n', 'utf8');
@@ -100,7 +94,7 @@ function fixtureRepo(): { root: string; observedSourceDir: string } {
 
 function fixtureDeps(observedSourceDir: string, root: string) {
   return {
-    evaluation: EVALUATION,
+    ...CAPTURE,
     repositoryRoots: {
       'repo-governance-root': root,
       'repo-observed-source': observedSourceDir,
@@ -118,10 +112,10 @@ describe('RT3 — evaluateProject over a real fixture repository', () => {
 
     expect(result.projectId).toBe('prj-rt3-pipeline');
     expect(result.model.selection).toBe('project:prj-rt3-pipeline');
-    expect(result.model.evaluation).toEqual({
-      snapshot: 'snap-rt3-001',
-      asOf: '2026-08-22T10:00:00Z',
-    });
+    // The snapshot is the capture's own digest — no caller label survives.
+    expect(result.model.evaluation.asOf).toBe('2026-08-22T10:00:00Z');
+    expect(result.model.evaluation.snapshot).toMatch(/^sha256:[0-9a-f]{64}$/);
+    expect(result.model.evaluation.snapshot).toBe(result.capture.snapshot);
     expect(result.model.scenarioContext).toBe('daemon-runtime');
     expect(result.model.declaredFilters).toEqual({});
 
@@ -174,21 +168,26 @@ describe('RT3 — evaluateProject over a real fixture repository', () => {
       ['repo-unconsented', 'unconsented'],
     ]);
 
-    // The failed consent reference travels as a NAMED failure — kept,
-    // never thrown away — and contributed no record.
-    expect(result.consent.records.map((r) => r.id)).toEqual([
-      'consent-gov-root',
-      'consent-observed',
+    // The failed consent reference travels as a NAMED refusal — kept,
+    // never thrown away — and admitted nothing.
+    expect(
+      result.consentDecisions.map((d) => [
+        d.repositoryId,
+        d.authorization,
+        d.authorization === 'admitted' ? d.provenance : d.diagnostic,
+      ]),
+    ).toEqual([
+      ['repo-governance-root', 'admitted', 'owner-adopted (bootstrap, uncorrelated)'],
+      ['repo-observed-source', 'admitted', 'owner-adopted (bootstrap, uncorrelated)'],
+      ['repo-unconsented', 'Unknown', 'owner-act-missing'],
     ]);
-    expect(result.consent.failures).toHaveLength(1);
-    expect(result.consent.failures[0]?.kind).toBe('reference-unresolvable');
   });
 
   it('a declared repository with no known root renders capture-failed, never green', async () => {
     const { root } = fixtureRepo();
     // Only the governance root has a known on-disk location (default
     // mapping); the consented observed-source repository is uncaptured.
-    const result = await evaluateProject(root, { evaluation: EVALUATION });
+    const result = await evaluateProject(root, CAPTURE);
     if (result.kind !== 'project-evaluated') throw new Error('expected evaluation');
 
     const observedSource = result.coverage.repositories.find(
@@ -210,7 +209,7 @@ describe('RT3 — evaluateProject over a real fixture repository', () => {
 
   it('a missing declaration is the named no-declaration arm with its verbatim reason', async () => {
     const emptyRoot = tempDir('rt3-pipe-empty-');
-    const result = await evaluateProject(emptyRoot, { evaluation: EVALUATION });
+    const result = await evaluateProject(emptyRoot, CAPTURE);
 
     expect(result.kind).toBe('no-declaration-observed');
     if (result.kind !== 'no-declaration-observed') return;
@@ -222,7 +221,7 @@ describe('RT3 — evaluateProject over a real fixture repository', () => {
   it('an unreachable root is the named no-declaration arm, distinct from missing', async () => {
     const result = await evaluateProject(
       join(tempDir('rt3-pipe-gone-'), 'does-not-exist'),
-      { evaluation: EVALUATION },
+      CAPTURE,
     );
     expect(result.kind).toBe('no-declaration-observed');
     if (result.kind !== 'no-declaration-observed') return;
@@ -235,7 +234,7 @@ describe('RT3 — evaluateProject over a real fixture repository', () => {
     mkdirSync(join(root, '.syzygy'), { recursive: true });
     writeFileSync(join(root, '.syzygy', 'project.yaml'), 'schema_version: "1"\n', 'utf8');
 
-    const result = await evaluateProject(root, { evaluation: EVALUATION });
+    const result = await evaluateProject(root, CAPTURE);
     expect(result.kind).toBe('declaration-invalid');
     if (result.kind !== 'declaration-invalid') return;
     expect(result.registration.status).toBe('failed');
