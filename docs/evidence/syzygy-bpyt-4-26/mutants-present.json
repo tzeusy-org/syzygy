@@ -1,0 +1,238 @@
+{
+ "commit": "a64518bd1563efa194bd95ea1e455d22bd78269a",
+ "dist": "present",
+ "distDirs": [
+  "apps/syzygy/dist",
+  "apps/three-surface-poc/dist",
+  "packages/cap1-core/dist",
+  "packages/cap1-daemon/dist",
+  "packages/http-host/dist",
+  "packages/polaris-dossier/dist",
+  "packages/polaris-generation-consent/dist",
+  "packages/polaris-generation-core/dist",
+  "packages/support/dist",
+  "packages/three-surface-poc-core/dist"
+ ],
+ "importedTools": {
+  "docs/evidence/syzygy-bpyt-6-14/tools/mutants.py": "133094bce703dad13917d73b4bb1dd29cc8eb43212d2ec9e307656f530f3fe4e",
+  "docs/evidence/syzygy-bpyt-46/tools/mutants.py": "b4728e27e55afbf21caeb275e0f28f0d6b77bb9d368c0d33a347cc80cad02b34"
+ },
+ "node": "v24.6.0",
+ "summary": {
+  "rows": 8,
+  "asExpected": 8,
+  "unexpected": []
+ },
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "U0-unmutated",
+   "tmpdir": "/tmp/la426m/t/plain",
+   "edits": [],
+   "expected": [],
+   "failing": [],
+   "asExpected": true,
+   "messages": {},
+   "exit": 0,
+   "passed": 63,
+   "failed": 0,
+   "total": 63,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "U0P-unmutated-under-a-p1-tmpdir",
+   "tmpdir": "/tmp/la426m/t/p1-leaf",
+   "edits": [],
+   "expected": [],
+   "failing": [],
+   "asExpected": true,
+   "messages": {},
+   "exit": 0,
+   "passed": 63,
+   "failed": 0,
+   "total": 63,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "M1-run-path-kept-in-the-holder",
+   "tmpdir": "/tmp/la426m/t/plain",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    const text = JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);\n    expect(text).not.toContain(tmpdir());\n",
+     "new": "    const text = JSON.stringify(holder);\n"
+    }
+   ],
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf"
+   ],
+   "asExpected": true,
+   "messages": {
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'"
+   },
+   "exit": 1,
+   "passed": 62,
+   "failed": 1,
+   "total": 63,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "M1P-run-path-kept-under-a-p1-tmpdir",
+   "tmpdir": "/tmp/la426m/t/p1-leaf",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    const text = JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);\n    expect(text).not.toContain(tmpdir());\n",
+     "new": "    const text = JSON.stringify(holder);\n"
+    }
+   ],
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "asExpected": true,
+   "messages": {
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'"
+   },
+   "exit": 1,
+   "passed": 61,
+   "failed": 2,
+   "total": 63,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "M2-verdict-leaf-in-the-observed-holder",
+   "tmpdir": "/tmp/la426m/t/plain",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.ts",
+     "old": "    observed: { packetSha256: packet.sha256, verdictNamesPacket: named === packet.sha256, label: 'Observed' },\n",
+     "new": "    observed: { packetSha256: `${packet.sha256} ${declared ?? ''}`, verdictNamesPacket: named === packet.sha256, label: 'Observed' },\n"
+    }
+   ],
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred",
+    "review-check validates a complete, consistent verdict bound to the rebuilt packet and records it; it counts once its launch form is recorded"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred",
+    "review-check validates a complete, consistent verdict bound to the rebuilt packet and records it; it counts once its launch form is recorded"
+   ],
+   "asExpected": true,
+   "messages": {
+    "review-check validates a complete, consistent verdict bound to the rebuilt packet and records it; it counts once its launch form is recorded": "AssertionError: expected { command: 'review-check', \u2026(18) } to match object { command: 'review-check', \u2026(10) }",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred": "AssertionError: expected '{\"packetSha256\":\"eb9a0599471c5aaa720b\u2026' not to contain 'not-ready'",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"packetSha256\":\"32ce6b98f01a4dceb5ad\u2026' not to contain 'not-ready'"
+   },
+   "exit": 1,
+   "passed": 60,
+   "failed": 3,
+   "total": 63,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "M3-every-string-replaced",
+   "tmpdir": "/tmp/la426m/t/plain",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "value.split(run).join('<run>')",
+     "new": "'<run>'"
+    }
+   ],
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "asExpected": true,
+   "messages": {
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred": "AssertionError: expected '{\"command\":\"<run>\",\"outcome\":\"<run>\",\u2026' to contain 'b0996f112031b74ebc207ada6fb46a5879415\u2026'",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"<run>\",\"outcome\":\"<run>\",\u2026' to contain '547e88d5e33c8f4d4e4036983189a98fa9187\u2026'"
+   },
+   "exit": 1,
+   "passed": 61,
+   "failed": 2,
+   "total": 63,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "M4-row-keeps-the-outer-tmpdir",
+   "tmpdir": "/tmp/la426m/t/plain",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    process.env['TMPDIR'] = leafy;\n",
+     "new": ""
+    }
+   ],
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf"
+   ],
+   "asExpected": true,
+   "messages": {
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '/tmp/la426m/t/plain' to be '/tmp/la426m/t/plain/tmpdir-p1-2Lq9dO' // Object.is equality"
+   },
+   "exit": 1,
+   "passed": 62,
+   "failed": 1,
+   "total": 63,
+   "fileMessages": [],
+   "error": null
+  },
+  {
+   "id": "M4B-row-keeps-the-outer-tmpdir-unchecked",
+   "tmpdir": "/tmp/la426m/t/plain",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    process.env['TMPDIR'] = leafy;\n",
+     "new": ""
+    },
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "      expect(tmpdir()).toBe(leafy);\n",
+     "new": ""
+    }
+   ],
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf"
+   ],
+   "asExpected": true,
+   "messages": {
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected 0 to be greater than or equal to 2"
+   },
+   "exit": 1,
+   "passed": 62,
+   "failed": 1,
+   "total": 63,
+   "fileMessages": [],
+   "error": null
+  }
+ ]
+}

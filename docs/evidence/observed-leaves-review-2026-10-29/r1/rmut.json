@@ -1,0 +1,373 @@
+{
+ "commit": "6d95c6264b7de14825fd6abfb6e3fed9b8c975f1",
+ "statusAfter": "",
+ "rows": [
+  {
+   "id": "R1-cli-holder-unreplaced",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    const text = JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);\n",
+     "new": "    const text = 'command' in holder ? JSON.stringify(holder) : JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);\n"
+    }
+   ],
+   "mode": "exact",
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "messages": {
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain '/tmp/r559-m-qx'",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain '/tmp/r559-m-qx/tmpdir-p1-qpg0ar'"
+   },
+   "exit": 1,
+   "passed": 61,
+   "failed": 2,
+   "total": 63,
+   "asExpected": true,
+   "load1": 23.74,
+   "seconds": 17.7
+  },
+  {
+   "id": "R1B-cli-holder-unreplaced-no-tmpcheck-plain",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    const text = JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);\n",
+     "new": "    const text = 'command' in holder ? JSON.stringify(holder) : JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);\n"
+    },
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    expect(text).not.toContain(tmpdir());\n",
+     "new": ""
+    }
+   ],
+   "mode": "exact",
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf"
+   ],
+   "messages": {
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'"
+   },
+   "exit": 1,
+   "passed": 62,
+   "failed": 1,
+   "total": 63,
+   "asExpected": true,
+   "load1": 25.22,
+   "seconds": 17.4
+  },
+  {
+   "id": "R1BP-cli-holder-unreplaced-no-tmpcheck-p1",
+   "tmpdir": "/tmp/r559-m-p1",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    const text = JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);\n",
+     "new": "    const text = 'command' in holder ? JSON.stringify(holder) : JSON.stringify(holder, (_key, value: unknown) => typeof value === 'string' ? value.split(run).join('<run>') : value);\n"
+    },
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "    expect(text).not.toContain(tmpdir());\n",
+     "new": ""
+    }
+   ],
+   "mode": "exact",
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "messages": {
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'"
+   },
+   "exit": 1,
+   "passed": 61,
+   "failed": 2,
+   "total": 63,
+   "asExpected": true,
+   "load1": 27.87,
+   "seconds": 18.9
+  },
+  {
+   "id": "R2-first-occurrence-only",
+   "tmpdir": "/tmp/r559-m-p1",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "value.split(run).join('<run>')",
+     "new": "value.replace(run, '<run>')"
+    }
+   ],
+   "mode": "exact",
+   "expected": [],
+   "failing": [],
+   "messages": {},
+   "exit": 0,
+   "passed": 63,
+   "failed": 0,
+   "total": 63,
+   "asExpected": true,
+   "load1": 28.67,
+   "seconds": 23.5
+  },
+  {
+   "id": "R3-leaf-after-run-path",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.ts",
+     "old": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: built.sha256, directory,\n",
+     "new": "    command: 'review-packet', outcome: 'built', run: `${opened.run}p1`, kind: 'fidelity', packetSha256: built.sha256, directory,\n"
+    }
+   ],
+   "mode": "includes",
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "messages": {
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'"
+   },
+   "exit": 1,
+   "passed": 61,
+   "failed": 2,
+   "total": 63,
+   "asExpected": true,
+   "load1": 33.81,
+   "seconds": 29.8
+  },
+  {
+   "id": "R3B-leaf-before-run-path",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.ts",
+     "old": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: built.sha256, directory,\n",
+     "new": "    command: 'review-packet', outcome: 'built', run: `p1${opened.run}`, kind: 'fidelity', packetSha256: built.sha256, directory,\n"
+    }
+   ],
+   "mode": "includes",
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "messages": {
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'"
+   },
+   "exit": 1,
+   "passed": 61,
+   "failed": 2,
+   "total": 63,
+   "asExpected": true,
+   "load1": 33.91,
+   "seconds": 21.4
+  },
+  {
+   "id": "R3C-leaf-as-segment-under-run",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.ts",
+     "old": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: built.sha256, directory,\n",
+     "new": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: built.sha256, directory: path.join(directory, 'p1'),\n"
+    }
+   ],
+   "mode": "includes",
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred",
+    "review-packet --kind fidelity emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name",
+    "the content-class gate on the fidelity packet admits the span with its text once the statement lists project-documentation",
+    "the content-class gate on the fidelity packet gates every class by the statement: one that lists only project-documentation withholds the code-content spans",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a non-governed run, which relies on no statement, naming the class",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a statement that lists code-content and not project-documentation, naming the class",
+    "the fidelity packet over a body retained as redacted-span carries a span that includes no withheld line, with the body's redaction count beside it",
+    "the fidelity packet over a body retained as redacted-span withholds a span that includes a withheld line whole, carrying no byte of it"
+   ],
+   "messages": {
+    "review-packet --kind fidelity emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name": "AssertionError: expected '/tmp/r559-m-qx/dossier-review-state-a\u2026' to be '/tmp/r559-m-qx/dossier-review-state-a\u2026' // Object.is equality",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'p1'",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a non-governed run, which relies on no statement, naming the class": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx/dossier-review-state-HJmwhc/run-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee/reviews/fidelity-packet-bcd645980113e70aff48c16c75880f97d96d39f6aae26c1a5f20cd7d38f12848/p1/packet.json'",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a statement that lists code-content and not project-documentation, naming the class": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx/dossier-review-state-ww7oFu/run-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee/reviews/fidelity-packet-42aa72770433632f2f364fc942d8424796a614d539b0ec706e775097315d28c1/p1/packet.json'",
+    "the content-class gate on the fidelity packet admits the span with its text once the statement lists project-documentation": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx/dossier-review-state-fi45Hz/run-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee/reviews/fidelity-packet-f63bfa7c928bef27126b69b37be819e7a2ed26507e49d939767216019c9ae179/p1/packet.json'",
+    "the content-class gate on the fidelity packet gates every class by the statement: one that lists only project-documentation withholds the code-content spans": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx/dossier-review-state-72fz74/run-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee/reviews/fidelity-packet-98b376846c8f8e5d8035fe37895d9509cbea80910e83ba4fc7c2cd1dbe1c0b5a/p1/packet.json'",
+    "the fidelity packet over a body retained as redacted-span carries a span that includes no withheld line, with the body's redaction count beside it": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx/dossier-review-state-CrZ27v/run-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee/reviews/fidelity-packet-15c136f282a16779131869b370dc9a00d36e651ef37d3dbd9d0fc43d0b2f867f/p1/packet.json'",
+    "the fidelity packet over a body retained as redacted-span withholds a span that includes a withheld line whole, carrying no byte of it": "Error: ENOENT: no such file or directory, open '/tmp/r559-m-qx/dossier-review-state-ovePVO/run-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee/reviews/fidelity-packet-5e71444adc20a6b502731daec6f13d1eb2a017e86061f84a7b9fa94c55919a14/p1/packet.json'"
+   },
+   "exit": 1,
+   "passed": 54,
+   "failed": 9,
+   "total": 63,
+   "asExpected": true,
+   "load1": 36.53,
+   "seconds": 36.7
+  },
+  {
+   "id": "R3D-session-id-beside-run",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.ts",
+     "old": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: built.sha256, directory,\n",
+     "new": "    command: 'review-packet', outcome: 'built', run: `${opened.run}/reviewer-1`, kind: 'fidelity', packetSha256: built.sha256, directory,\n"
+    }
+   ],
+   "mode": "includes",
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "failing": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "messages": {
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'reviewer-1'",
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf": "AssertionError: expected '{\"command\":\"review-packet\",\"outcome\":\u2026' not to contain 'reviewer-1'"
+   },
+   "exit": 1,
+   "passed": 61,
+   "failed": 2,
+   "total": 63,
+   "asExpected": true,
+   "load1": 40.21,
+   "seconds": 50.7
+  },
+  {
+   "id": "R4-no-restore",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.test.ts",
+     "old": "      if (outer === undefined) delete process.env['TMPDIR']; else process.env['TMPDIR'] = outer;\n",
+     "new": ""
+    }
+   ],
+   "mode": "includes",
+   "expected": [],
+   "failing": [
+    "session-prompt --tool and the session pair's statement cites the codex statement in the inventory prompt record, and stops counting the inventory once that statement is withdrawn",
+    "session-prompt --tool and the session pair's statement cites the codex statement in the review prompt record, and stops counting the verdict once that statement is withdrawn",
+    "session-prompt --tool and the session pair's statement does not count work once the run's own statement is withdrawn, though the session pair's cited statement still governs",
+    "session-prompt --tool and the session pair's statement does not count work whose cited statement a successor replaced or whose classes narrowed; a record from before citations counts on the re-check, its citation Unknown",
+    "session-prompt --tool and the session pair's statement does not count work whose prompt record cites its statement for another agent tool",
+    "session-prompt --tool and the session pair's statement does not count work whose prompt record cites its statement for another provider",
+    "session-prompt --tool and the session pair's statement hands a codex session over when an in-force codex statement lists every class the run's lists",
+    "session-prompt --tool and the session pair's statement hands a codex session over when the run is non-governed and relies on no statement",
+    "session-prompt --tool and the session pair's statement hands the declared tool's session over with no codex statement at all",
+    "session-prompt --tool and the session pair's statement names the caller's consequence in every refusal kind, and leaves the counting texts as they were without one",
+    "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when no statement names codex, and writes nothing",
+    "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when the codex statement is withdrawn, and writes nothing",
+    "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when the codex statement lists only code-content, and writes nothing",
+    "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when the codex statement names another provider, and writes nothing",
+    "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when the codex statement takes effect after now, and writes nothing",
+    "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when two in-force statements name codex, and writes nothing",
+    "the CLI builds a packet and checks a verdict through syzygy dossier, exiting 1 on a refused verdict",
+    "the content-class gate on the fidelity packet admits the span with its text once the statement lists project-documentation",
+    "the content-class gate on the fidelity packet gates every class by the statement: one that lists only project-documentation withholds the code-content spans",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a non-governed run, which relies on no statement, naming the class",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a statement that lists code-content and not project-documentation, naming the class",
+    "the fidelity packet over a body retained as redacted-span carries a span that includes no withheld line, with the body's redaction count beside it",
+    "the fidelity packet over a body retained as redacted-span withholds a span that includes a withheld line whole, carrying no byte of it",
+    "the step guard runs before every review step (syzygy-qkea.23) lists the pinned tree with the object reader it is given, on review-packet and review-check",
+    "the step guard runs before every review step (syzygy-qkea.23) refuses review-packet, review-check and the review hand-over when the consent stops naming the pinned revision, with the guard's codes",
+    "the step guard runs before every review step (syzygy-qkea.23) refuses review-packet, review-check and the review hand-over when the project input now records a drawer, with the guard's codes"
+   ],
+   "messages": {
+    "the step guard runs before every review step (syzygy-qkea.23) refuses review-packet, review-check and the review hand-over when the consent stops naming the pinned revision, with the guard's codes": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "the step guard runs before every review step (syzygy-qkea.23) refuses review-packet, review-check and the review hand-over when the project input now records a drawer, with the guard's codes": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "the step guard runs before every review step (syzygy-qkea.23) lists the pinned tree with the object reader it is given, on review-packet and review-check": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a non-governed run, which relies on no statement, naming the class": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "the content-class gate on the fidelity packet withholds a project-documentation span under a statement that lists code-content and not project-documentation, naming the class": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "the content-class gate on the fidelity packet admits the span with its text once the statement lists project-documentation": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "the content-class gate on the fidelity packet gates every class by the statement: one that lists only project-documentation withholds the code-content spans": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "the fidelity packet over a body retained as redacted-span carries a span that includes no withheld line, with the body's redaction count beside it": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "the fidelity packet over a body retained as redacted-span withholds a span that includes a withheld line whole, carrying no byte of it": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when no statement names codex, and writes nothing": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when two in-force statements name codex, and writes nothing": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when the codex statement is withdrawn, and writes nothing": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when the codex statement takes effect after now, and writes nothing": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when the codex statement names another provider, and writes nothing": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement refuses a fidelity, a design and an inventory session when the codex statement lists only code-content, and writes nothing": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement hands a codex session over when an in-force codex statement lists every class the run's lists": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement hands a codex session over when the run is non-governed and relies on no statement": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement hands the declared tool's session over with no codex statement at all": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement cites the codex statement in the inventory prompt record, and stops counting the inventory once that statement is withdrawn": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement cites the codex statement in the review prompt record, and stops counting the verdict once that statement is withdrawn": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement does not count work whose cited statement a successor replaced or whose classes narrowed; a record from before citations counts on the re-check, its citation Unknown": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement does not count work whose prompt record cites its statement for another agent tool": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement does not count work whose prompt record cites its statement for another provider": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement does not count work once the run's own statement is withdrawn, though the session pair's cited statement still governs": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "session-prompt --tool and the session pair's statement names the caller's consequence in every refusal kind, and leaves the counting texts as they were without one": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'",
+    "the CLI builds a packet and checks a verdict through syzygy dossier, exiting 1 on a refused verdict": "Error: ENOENT: no such file or directory, mkdtemp '/tmp/r559-m-qx/tmpdir-p1-iwhwd6/dossier-review-clone-XXXXXX'"
+   },
+   "exit": 1,
+   "passed": 37,
+   "failed": 26,
+   "total": 63,
+   "asExpected": true,
+   "load1": 44.16,
+   "seconds": 34.3
+  },
+  {
+   "id": "R5-digest-dropped-from-cli-holder",
+   "tmpdir": "/tmp/r559-m-qx",
+   "edits": [
+    {
+     "path": "packages/polaris-dossier/src/review.ts",
+     "old": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: built.sha256, directory,\n",
+     "new": "    command: 'review-packet', outcome: 'built', run: opened.run, kind: 'fidelity', packetSha256: 'x', directory,\n"
+    }
+   ],
+   "mode": "includes",
+   "expected": [
+    "review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf",
+    "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"
+   ],
+   "failing": [
+    "review-packet --kind fidelity emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name",
+    "the CLI builds a packet and checks a verdict through syzygy dossier, exiting 1 on a refused verdict"
+   ],
+   "messages": {
+    "review-packet --kind fidelity emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name": "AssertionError: expected { command: 'review-packet', \u2026(10) } to match object { command: 'review-packet', \u2026(7) }",
+    "the CLI builds a packet and checks a verdict through syzygy dossier, exiting 1 on a refused verdict": "AssertionError: expected 'x' to be 'dcb46d55c73722c95d8a71f51ebe34a8e90d1\u2026' // Object.is equality"
+   },
+   "exit": 1,
+   "passed": 61,
+   "failed": 2,
+   "total": 63,
+   "asExpected": false,
+   "load1": 46.21,
+   "seconds": 44.9
+  }
+ ]
+}

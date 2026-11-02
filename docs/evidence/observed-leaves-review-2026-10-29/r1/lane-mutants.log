@@ -1,0 +1,10 @@
+U0-unmutated as expected 0 63 0 []
+U0P-unmutated-under-a-p1-tmpdir as expected 0 63 0 []
+M1-run-path-kept-in-the-holder as expected 1 62 1 ['review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf']
+M1P-run-path-kept-under-a-p1-tmpdir as expected 1 61 2 ['review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf', "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"]
+M2-verdict-leaf-in-the-observed-holder as expected 1 60 3 ['review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf', "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred", 'review-check validates a complete, consistent verdict bound to the rebuilt packet and records it; it counts once its launch form is recorded']
+M3-every-string-replaced as expected 1 61 2 ['review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf', "review-check observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred"]
+M4-row-keeps-the-outer-tmpdir as expected 1 62 1 ['review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf']
+M4B-row-keeps-the-outer-tmpdir-unchecked as expected 1 62 1 ['review-check observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf']
+summary {'rows': 8, 'asExpected': 8, 'unexpected': []} status after ''
+EXIT 0
