@@ -54,10 +54,17 @@ export type ProposedWorkCurrentAuthority =
     }
   | {
       readonly kind: 'unknown';
-      readonly reason: string;
+      /** The closed RFC2-24 reason, or, on the no-seed-set placeholder alone,
+       * `NO_SEED_SET_CURRENT_AUTHORITY_REASON` (served as-is; see there). */
+      readonly reason: UnknownReason | typeof NO_SEED_SET_CURRENT_AUTHORITY_REASON;
       readonly route: string;
       readonly detail: string;
     };
+
+/** The no-seed-set placeholder's current-authority `reason`: a sentence, not
+ * one of the twelve RFC2-24 reasons. It is served inside `/api/poc` as it has
+ * always been, so it is named here rather than changed (syzygy-bpyt.6.4). */
+export const NO_SEED_SET_CURRENT_AUTHORITY_REASON = 'No seeded proposed-work artifacts were supplied to this evaluation.';
 
 export interface ProposedWork {
   readonly kind: 'proposed-work';
@@ -115,11 +122,11 @@ export function deriveCurrentAuthority(specKey: string, projectShape: ProjectSha
   const path = baselineSpecPath(specKey);
   if (projectShape.kind !== 'observed') {
     const epistemic = projectShape.claim.epistemic;
-    const reason = 'reasons' in epistemic ? epistemic.reasons.primary : 'unconsented-source-or-provider';
+    const reason: UnknownReason = 'reasons' in epistemic ? epistemic.reasons.primary : 'unconsented-source-or-provider';
     return {
       kind: 'unknown',
       reason,
-      route: UNKNOWN_REASON_ROUTES[reason as keyof typeof UNKNOWN_REASON_ROUTES] ?? 'No route recorded',
+      route: UNKNOWN_REASON_ROUTES[reason],
       detail: `The project shape is ${projectShape.kind}; ${path} was not looked up.`,
     };
   }

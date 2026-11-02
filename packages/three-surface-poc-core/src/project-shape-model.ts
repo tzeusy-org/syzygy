@@ -19,7 +19,6 @@
 import {
   FRESHNESS_STATES,
   RENDERING_TIERS,
-  UNKNOWN_REASONS,
   type EpistemicState,
   type FreshnessState,
   type RenderingTier,
@@ -87,6 +86,8 @@ export type ChallengeState = (typeof CHALLENGE_STATES)[number];
 // RFC2-24's resolution route per reason, one short phrase each, keyed by
 // the closed twelve. `project-shape-model.test.ts` proves the key set equals
 // cap1-core's `UNKNOWN_REASONS` exactly.
+export type { UnknownReason };
+
 export const UNKNOWN_REASON_ROUTES: Readonly<Record<UnknownReason, string>> = {
   'missing-declaration': 'First-pass drafting for owner sign-off',
   'missing-evidence': 'Produce or capture evidence',
@@ -177,18 +178,6 @@ export interface ProjectShapeClaim {
 export interface ReasonCounts {
   readonly primary: Readonly<Partial<Record<UnknownReason, number>>>;
   readonly secondary: Readonly<Partial<Record<UnknownReason, number>>>;
-}
-
-function isUnknownReason(value: string): value is UnknownReason {
-  return (UNKNOWN_REASONS as readonly string[]).includes(value);
-}
-
-// The fixed reasons flow from act-bound artifacts whose values are proven
-// byte-equal to RFC2-24; anything else would be a minted reason, which
-// RFC2-24 forbids — so it is a thrown invariant, never a rendered word.
-function closedReason(value: string): UnknownReason {
-  if (!isUnknownReason(value)) throw new Error(`"${value}" is not one of the twelve RFC2-24 Unknown reasons`);
-  return value;
 }
 
 function routesFor(state: EpistemicState): readonly ResolutionRoute[] {
@@ -425,7 +414,7 @@ function sourceClaim(coverage: SourceCoverage, identity: string, evaluationId: s
   const support: ProjectShapeSupport[] = [{ path: coverage.path, sourceIdentity: identity, ...(digest === undefined ? {} : { contentDigest: digest }) }];
   const input = { claimId: `claim:source:${coverage.path}`, evaluationId, support };
   if (coverage.itemDenominator.kind === 'known') return observedClaim(input);
-  return unknownClaim(input, closedReason(coverage.itemDenominator.unknown.unknownReason));
+  return unknownClaim(input, coverage.itemDenominator.unknown.unknownReason);
 }
 
 // Exported for its own test: coverage's item contract admits three states,
@@ -434,7 +423,7 @@ export function itemClaim(item: ItemCoverage, identities: ReadonlyMap<string, st
   const input = { claimId: `claim:item:${item.class}:${item.key}`, evaluationId, support: supportOf(item.anchors, identities) };
   if (item.state === 'modeled') return observedClaim(input);
   if (item.state === 'contradicted') return unknownClaim(input, 'contradicted-pending-adjudication', [], SUSPENDED);
-  return unknownClaim(input, closedReason(item.unknownReason ?? PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason));
+  return unknownClaim(input, item.unknownReason ?? PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason);
 }
 
 function factClaim(fact: ReconciledFact, identities: ReadonlyMap<string, string>, evaluationId: string): ProjectShapeClaim {
@@ -442,7 +431,7 @@ function factClaim(fact: ReconciledFact, identities: ReadonlyMap<string, string>
   const input = { claimId: `claim:fact:${fact.fact}`, evaluationId, support: supportOf(anchors, identities) };
   if (fact.state === 'modeled') return observedClaim(input);
   if (fact.state === 'contradicted') return unknownClaim(input, fact.unknownReason, [], SUSPENDED);
-  return unknownClaim(input, closedReason(fact.unknownReason));
+  return unknownClaim(input, fact.unknownReason);
 }
 
 export function countReasons(claims: readonly ProjectShapeClaim[]): ReasonCounts {
@@ -462,8 +451,8 @@ function classAggregate(coverage: ClassCoverage, members: readonly ProjectShapeI
   const input = { claimId: `claim:class:${coverage.class}`, evaluationId, support: classSources.flatMap((source) => source.claim.support) };
   let aggregate: ProjectShapeClaim;
   if (coverage.denominator.kind === 'unknown') {
-    const [primary, ...secondary] = coverage.denominator.reasons.map(closedReason);
-    aggregate = unknownClaim(input, primary ?? closedReason(PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason), secondary);
+    const [primary, ...secondary] = coverage.denominator.reasons;
+    aggregate = unknownClaim(input, primary ?? PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason, secondary);
   } else if (coverage.contradicted > 0) {
     aggregate = unknownClaim(input, 'contradicted-pending-adjudication', [], SUSPENDED);
   } else {
@@ -479,7 +468,7 @@ function classAggregate(coverage: ClassCoverage, members: readonly ProjectShapeI
     const denominator = source.classOutcomes.find((outcome) => outcome.class === coverage.class)?.denominator;
     return denominator === undefined || denominator.kind === 'known'
       ? []
-      : [unknownClaim({ claimId: source.claim.claimId, evaluationId, support: source.claim.support }, closedReason(denominator.unknownReason))];
+      : [unknownClaim({ claimId: source.claim.claimId, evaluationId, support: source.claim.support }, denominator.unknownReason)];
   });
   return { ...coverage, claim: aggregate, reasonCounts: countReasons([...members.map((entry) => entry.claim), ...sourceClaims, ...discoveryClaims]) };
 }
@@ -506,9 +495,9 @@ function projectAccountOf(items: readonly ProjectShapeItem[], sources: readonly 
     const accountDenominator = classes['project-account-section'].denominator;
     const reason: UnknownReason =
       unknownDenominator !== undefined && unknownDenominator.kind === 'unknown'
-        ? closedReason(unknownDenominator.unknownReason)
+        ? unknownDenominator.unknownReason
         : accountDenominator.kind === 'unknown'
-          ? closedReason(accountDenominator.reasons[0] ?? PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason)
+          ? accountDenominator.reasons[0] ?? PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason
           : 'missing-declaration';
     return {
       key,
@@ -553,7 +542,7 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
         return observationFailed(authority, {
           failureState: undefined,
           degradationState: undefined,
-          reason: closedReason(PWB_FAILURE_STATES.gitCaptureFailed.unknownReason),
+          reason: PWB_FAILURE_STATES.gitCaptureFailed.unknownReason,
           detail: observation.reason,
         });
       }
@@ -561,7 +550,7 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
         return observationFailed(authority, {
           failureState: observation.failureState,
           degradationState: observation.degradationState,
-          reason: closedReason(observation.reason),
+          reason: observation.reason,
           detail: observation.detail,
         });
       }
@@ -573,7 +562,7 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
         return observationFailed(authority, {
           failureState: 'gitCaptureFailed',
           degradationState: PWB_FAILURE_STATES.gitCaptureFailed.degradationState,
-          reason: closedReason(PWB_FAILURE_STATES.gitCaptureFailed.unknownReason),
+          reason: PWB_FAILURE_STATES.gitCaptureFailed.unknownReason,
           detail: `git ls-tree failed: ${error instanceof Error ? error.message : String(error)}`,
         });
       }
@@ -582,7 +571,7 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
         return observationFailed(authority, {
           failureState: 'gitCaptureFailed',
           degradationState: PWB_FAILURE_STATES.gitCaptureFailed.degradationState,
-          reason: closedReason(PWB_FAILURE_STATES.gitCaptureFailed.unknownReason),
+          reason: PWB_FAILURE_STATES.gitCaptureFailed.unknownReason,
           detail: `ls-tree record is malformed: ${parsed.record}`,
         });
       }
@@ -682,7 +671,7 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
       // degradation is disclosed as data beside it; the population never
       // shrinks, so every degraded source is itself an Unknown member.
       const discoveryReasons = uncoveredDiscovery.length > 0
-        ? [closedReason(PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason)]
+        ? [PWB_FAILURE_STATES.sourceMissingOrUnreadable.unknownReason]
         : [];
       const memberReasons = [
         ...discoveryReasons,

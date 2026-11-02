@@ -1,0 +1,24 @@
+{
+ "baseFile": {
+  "sha256": "a0fcc7f1631f8bb6005489b68314b47f6097850cfe25667ad99cfc570f1e5d60",
+  "bytes": 535541
+ },
+ "headFile": {
+  "sha256": "a0fcc7f1631f8bb6005489b68314b47f6097850cfe25667ad99cfc570f1e5d60",
+  "bytes": 535541
+ },
+ "models": 36,
+ "rowsCompared": 2108,
+ "rowsByKind": {
+  "model": 36,
+  "responseIdentity": 36,
+  "unknownSubjects": 36,
+  "route": 2000
+ },
+ "routeRowsByStatus": {
+  "200": 2000
+ },
+ "errors": [],
+ "rowsThatDiffer": 0,
+ "differences": []
+}

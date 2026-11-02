@@ -150,7 +150,7 @@ const COVERAGE_PARTITION: SweepGroup = {
       'count-fact-numbered-over-unknown',
       COVERAGE_SOURCE,
       'the derived count fact is modeled although the denominator is Unknown',
-      '    if (reasons.length > 0) {\n      // A count over an Unknown denominator',
+      '    if (primaryReason !== undefined) {\n      // A count over an Unknown denominator',
       '    if (false) {\n      // A count over an Unknown denominator',
       ['a count over an Unknown denominator is Unknown with the source reason, never a number'],
     ),

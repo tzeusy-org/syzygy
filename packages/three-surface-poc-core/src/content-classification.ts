@@ -31,6 +31,8 @@
 // The population never shrinks: `classifyManifestSources` returns exactly one
 // result per manifest source, in manifest order.
 
+import type { UnknownReason } from '@syzygy/cap1-core';
+
 import { PWB_POLICY_IDENTITY, scanActiveContent, type ExactObjectReader, type ObjectReadRecord, readManifestSources } from './git-object-reader.js';
 import { EXTRACTION_CLASSES, type ManifestSource, type ProjectShapeSourceManifest } from './project-shape-manifest.js';
 import { PWB_FAILURE_STATES, type PwbFailureState, type PwbResourceLimits, type ResourceLimitBreach } from './project-shape-observation.js';
@@ -250,7 +252,7 @@ export interface Exclusion {
 export interface FixedUnknown {
   readonly failureState: PwbFailureState;
   readonly degradationState: string;
-  readonly unknownReason: string;
+  readonly unknownReason: UnknownReason;
 }
 
 // Body-free. Never carries a `text` field.

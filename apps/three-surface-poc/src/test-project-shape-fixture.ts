@@ -2,7 +2,7 @@
 
 import { createHash } from 'node:crypto';
 
-import { itemClaim, type BodyReadAuthorityEvaluation, type GitRunner, type PocModel } from '@syzygy/three-surface-poc-core';
+import { itemClaim, type BodyReadAuthorityEvaluation, type GitRunner, type PocModel, type UnknownReason } from '@syzygy/three-surface-poc-core';
 
 /**
  * An in-memory Butlers-shaped tree for surface tests that need the shared
@@ -208,7 +208,7 @@ export function projectShapeItemStateFixture(model: PocModel, state: 'unknown' |
   const anchors = state === 'unknown'
     ? [{ path: 'about/heart-and-soul/missing-source.md', line: 1 }]
     : [...item.anchors, { path: 'about/heart-and-soul/competing-source.md', line: 1 }];
-  const unknownReason = state === 'unknown' ? 'source-uncaptured-or-unreachable' : 'contradicted-pending-adjudication';
+  const unknownReason: UnknownReason = state === 'unknown' ? 'source-uncaptured-or-unreachable' : 'contradicted-pending-adjudication';
   const changed = { ...item, state, anchors, unknownReason, claim: itemClaim({ ...item, state, anchors, unknownReason }, new Map(), item.claim.evaluationId) };
   return { ...model, projectShape: { ...shape, items: shape.items.map((candidate) => candidate === item ? changed : candidate) } };
 }
