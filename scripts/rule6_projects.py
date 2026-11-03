@@ -74,7 +74,9 @@ def selftest():
     with tempfile.TemporaryDirectory() as d:
         pidfile = os.path.join(d, 'grandchild.pid')
         child = "import subprocess,sys,time; g=subprocess.Popen([sys.executable,'-c','import time; time.sleep(60)']); open(%r,'w').write(str(g.pid)); time.sleep(60)" % pidfile
+        t0 = time.time()
         rc, out, timed = run_limited([sys.executable, '-c', child], '.', 3)
+        returned_in = time.time() - t0  # a lone child kill leaves the grandchild holding the pipe, so the call would block until it exits (60 s)
         gpid = int(open(pidfile).read()) if os.path.exists(pidfile) else None
         def dead(pid):
             for _ in range(50):
@@ -86,7 +88,7 @@ def selftest():
                 except OSError: return True
                 time.sleep(0.1)
             return False
-        checks.append(('the whole process group dies on timeout', timed and gpid is not None and dead(gpid)))
+        checks.append(('the whole process group dies on timeout', timed and returned_in < 20 and gpid is not None and dead(gpid)))
         if gpid and not dead(gpid): os.kill(gpid, signal.SIGKILL)
     bad = [n for n, good in checks if not good]
     sys.exit('selftest FAIL: %r' % (bad,)) if bad else print('rule6_projects selftest ok: %d cases' % len(checks))
