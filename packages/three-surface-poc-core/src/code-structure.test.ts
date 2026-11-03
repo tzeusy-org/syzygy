@@ -201,6 +201,8 @@ describe('code-structure observer', () => {
     expect(observe(`100644 blob ${'1'.repeat(40)} 12\ta.ts\n`)).toEqual(unknown);
     expect(observe(`${blob('a.ts')}100644 blob ${'3'.repeat(40)} 7\tb.md`)).toEqual(unknown);
     expect(observe('')).toMatchObject({ kind: 'observed', files: [] });
+    // Only gitlinks remain after the filter, but the listing still lacks its final NUL: the observer's own check refuses it, not the parser's (R4).
+    expect(observe(`160000 commit ${'2'.repeat(40)}       -\tsub`)).toEqual(unknown);
   });
 
   it('makes the inventory Unknown for a committed path that is not valid UTF-8, never a lossy or colliding path', () => {
