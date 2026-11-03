@@ -6672,11 +6672,20 @@ def cg26_battery_parity(res, status=None, workflow=None):
         rf"({phrase})\s+the\s+hosted\s+workflow\s+runs\b",
         status_text))
     if not claims:
+        # Message only: the match above stays case-sensitive. A sentence that
+        # matches only ignoring case is named, so the reason is not hidden.
+        folded = re.search(
+            rf"\bThe ({phrase})\s+checks\s+above\s+are\s+the\s+same\s+"
+            rf"({phrase})\s+the\s+hosted\s+workflow\s+runs\b",
+            status_text, re.I)
+        case_note = ("; a sentence matching only when case is ignored was "
+                     "found, and the match is case-sensitive (lower-case "
+                     "number words)" if folded else "")
         findings.append(
             "no parity count sentence matched `The <N> checks above are the "
             "same <N> the hosted workflow runs`; a count this check cannot "
             "find is a count it cannot police, and skipping it would read "
-            "as agreement")
+            "as agreement" + case_note)
     for claim in claims:
         said = _number_word(claim.group(1))
         also = _number_word(claim.group(2))
@@ -8135,6 +8144,57 @@ def selftest():
     cases.append(("CG-26 zero tail after hundred is unreadable, not read",
                   c.rows[0][0] == "FAIL"
                   and any("cannot read" in d for d in c.rows[0][4])))
+
+    # Direct table over the helper: each refused phrase stays refused, each
+    # accepted phrase keeps its value (kills `<= 10`, the `hundred` guard,
+    # the lead-word default and the extra-tail-word mutants).
+    cases.append(("CG-26 number words: refused phrases stay unreadable",
+                  all(_number_word(w) is None for w in (
+                      "ten hundred", "one two", "foo hundred five",
+                      "one hundred five six", "one hundred and five six",
+                      "one hundred and", "zero hundred"))))
+    cases.append(("CG-26 number words: accepted phrases keep their value",
+                  [_number_word(w) for w in (
+                      "ninety-nine", "one hundred", "one hundred five",
+                      "one hundred and five", "two hundred and thirteen")]
+                  == [99, 100, 105, 105, 213]))
+
+    # Wrapping outside the number phrase: `\s+` at both fixed joints.
+    blk, wf = _big(105)
+    for label, claim in (
+            ("checks/above", "The one hundred and five checks\nabove are the "
+                             "same one hundred and five the hosted workflow "
+                             "runs."),
+            ("same/number", "The one hundred and five checks above are the "
+                            "same\none hundred and five the hosted workflow "
+                            "runs."),
+            ("number/the", "The one hundred and five checks above are the "
+                           "same one hundred and five\nthe hosted workflow "
+                           "runs.")):
+        c = Cap()
+        cg26_battery_parity(c, status=_st(blk, claim), workflow=wf)
+        cases.append((f"CG-26 sentence wrapped at {label} still matches",
+                      c.rows[0][0] == "OK"))
+
+    # Extra tail words after the number are unreadable, not truncated.
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred and five six checks above are "
+                           "the same one hundred and five the hosted "
+                           "workflow runs."), workflow=wf)
+    cases.append(("CG-26 extra tail word after count is unreadable",
+                  c.rows[0][0] == "FAIL"
+                  and any("cannot read" in d for d in c.rows[0][4])))
+
+    # Capitalized phrase fails closed and the finding names case.
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The One Hundred And Five checks above are the "
+                           "same one hundred and five the hosted workflow "
+                           "runs."), workflow=wf)
+    cases.append(("CG-26 capitalized count names case in the finding",
+                  c.rows[0][0] == "FAIL"
+                  and any("case" in d for d in c.rows[0][4])))
 
     # No count sentence at all is a finding, not a silent skip.
     c = Cap()
