@@ -1,0 +1,159 @@
+# R-PR599-V5-INSTALL-19CA-1 — screening scope v5 (bcd) install, code and security review
+Verdict: CONFIRM WITH EXCEPTIONS
+Reviewed commit: 19ca222153cfaed4385d1965cc3f924bc6082a43
+Policy SHA-256: e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b
+
+- Verdict: CONFIRM WITH EXCEPTIONS; I found no blocking finding
+  - The code applies exactly variant bcd, and it fails closed
+  - Every mutant I ran was caught: 27 of 27
+  - Five non-blocking findings (F1–F5), each with a repair
+  - Governance checks pass: 0 FAIL; the v5 recorder `--check` matches the argument
+
+- Digest binding holds [Observed]
+  - I computed the policy sha256 with a script
+    - It matches the act record's `Exact digest` (act file, line 19)
+    - It matches the `[variant: bcd]` row of `PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt:7`
+  - It differs from the `bd`, `b` and `t` rows (manifest lines 8–10)
+
+- Findings
+  - F1 (non-blocking): `close.ts` skips the shared loader, but this does no harm
+    - Location: `packages/polaris-dossier/src/close.ts:121-123`
+    - It calls `loadDossierScreen` with no placement subject, bypassing `screenLoaderOf` [Observed]
+    - Close uses the screen only to run detectors over operator-reported command strings [Observed]
+      - The call is `screenBody(value) === 'secret-detector-match'`, given no path
+      - Neither placement nor content class can change that answer
+      - The scope detectors still run, since they are compiled into every screen
+    - Repair: route it through `screenLoaderOf(...)(placementSubjectOf(subject))` for uniformity
+      - Or add a comment saying close reads no blob and needs no placement
+  - F2 (non-blocking): duplicate placement entries would be stricter than the signed text
+    - Location: `packages/polaris-generation-core/src/public-source-classification.ts:217-218`
+    - Code lists `owner-placement` once per matching `ownerPlacements` entry [Observed]
+      - Two entries naming one (repository, commit, path) give two matches
+      - That path would then be indeterminate
+    - The text says "exactly one of the four path rules", so one rule should count once [Inferred]
+    - No effect today: the signed bytes have one entry [Observed]
+    - The error fails closed, never open
+    - Repair: count `owner-placement` at most once
+      - Or have `readOwnerPlacements` refuse duplicate triples
+  - F3 (non-blocking): a doc comment is attached to the wrong declaration
+    - Location: `packages/polaris-dossier/src/screen.ts:94-96`
+    - The `placementSubjectOf` comment sits above `screenLoaderOf`'s comment [Observed]
+    - `placementSubjectOf` itself carries no doc comment
+    - Repair: move the comment line down to `placementSubjectOf`
+  - F4 (non-blocking): the install's mutation record cannot be re-run at this commit
+    - Record: `docs/evidence/syzygy-mea-4/screening-scope-v5-install-mutants-2026-11-03.json`
+    - It names commit `70a45c78` [Observed]
+      - `git merge-base --is-ancestor 70a45c78 HEAD` fails
+      - The record predates the #620 merge, so it does not cover the moved hunks
+    - Its own figures, unchecked by me: 63 of 63 killed, with `old`/`new` fragments stored
+    - My independent re-run at 19ca2221 covers the moved code (see criterion 5)
+    - Repair: none required; optionally add a run at the merge head
+  - F5 (non-blocking): the app reader's exemption has no class gate behind it
+    - Location: `apps/three-surface-poc/src/polaris-generation/public-source-screening.ts:213-217`
+    - The project-documentation exemption is active in the app reader's screen [Observed]
+    - The app corpus applies no consent class gate
+      - It carries a governance-text or project-documentation body with no consent check
+    - The file states "this reader has no production caller that hands its corpus on" (lines 59–60)
+      - The gap predates this PR and also applies to project-documentation [Inferred]
+    - Repair: none now; keep the residual on record
+      - A future caller must gate by `contentClass`, as `class-gate.ts` does
+
+- Criterion 1, fidelity: met; no widening found
+  - Governance-text class (part B) matches the signed rule [Observed]
+    - `readGovernanceTextRule` pins the rule text by sha256 and requires exactly two keys
+    - `classesClassified` must list the class
+    - Names must be single segments with no A–Z, '/' or backslash
+    - `publicSourceContentClass` compares the folded path to the list
+    - A path that two class rules match is indeterminate (`classes.length === 1`)
+  - Governance-text bodies are not redacted [Observed]
+    - `KNOWN_CLASSES` and the signed `redactedClasses` list only project-documentation
+    - So any detector match takes the `class-not-redacted` path and excludes the body whole
+    - `documentationExempt` exempts only project-documentation, so governance-text gets the active-content scan
+  - Documentation exemption (part C) pins all five field texts by sha256 and refuses any other key set [Observed]
+  - Owner placements (part D) are read from the policy, never hard-coded [Observed]
+    - A placement matches only when repository, commit and folded path all match the subject
+    - They are refused under the version-2 three-rule text
+    - The `redis.conf` path appears in no production code
+      - Searched `packages` and `apps`; the only hit is the synthetic `redis-shaped-fixture.ts`
+  - Tightenings (part T) are enforced [Observed]
+    - Scope detectors join the policy's for compile, every-offset matching, path screening and the `screenBody` / span re-screen
+    - The two new ids are in `wholeArtifactDetectors`; `readSecretRedaction` validates them
+    - `compileEveryOffsetMatcher` keeps the `i` flag for `credential-url-any-scheme`
+    - That pattern's per-offset backtracking stops at the next '/', '@' or space
+      - So its cost is linear in body length [Inferred]
+  - The Butlers base screen does not read the scope detectors; its diff is version strings only [Observed]
+
+- Criterion 2, fail-closed behaviour: met [Observed]
+  - An unparseable policy refuses (`buildDossierScreen` JSON/UTF-8 refusal)
+  - Any unpinned text refuses: governance-text rule, documentation exemption, scope-detector `rule`/`consequence`, and `ownerPlacements` beside the v2 rule
+  - Act chain: `readPolicyActChain` needs `final` to bind the on-disk bytes
+    - A chain stopping at v4 is refused over v5 bytes
+    - `loadDossierScreen` re-hashes the bytes on a second read
+  - Placement scope
+    - Another repository or commit places nothing
+    - No subject places nothing; mutants `placement-any-*` and `placement-without-subject` were killed
+  - Render side (`render.ts:206`)
+    - Exempt bodies are re-scanned when the page sink cannot be confirmed
+    - Redacted bodies use `activeContentAsBefore`, which scans the complete body
+      - Set at `check-derive.ts:183`; withheld lines count, but no withheld text is carried
+    - On a finding, the whole render refuses: stricter than per-body exclusion
+
+- Criterion 3, every reader uses the run's own placement subject: met, except close (F1) [Observed]
+  - Readers checked: check (`check.ts:190`), review packet (`review-packet.ts:88`), render (`render.ts:157`), census (`census.ts:105`) and inventory (`inventory.ts:176`)
+  - The app passes `{repository: config.repositoryId, commit: config.revision}`
+    - That id is in `repository:<id>` form, and the revision is a validated 40-hex pin
+  - Close reads no blob, so it needs no subject (see F1)
+
+- Criterion 4, no secret or body leaks: met [Observed]
+  - Provenance and redaction records are unchanged
+  - The census remains path-only
+  - `activeContentAsBefore` is a boolean
+  - Both new evidence files carry only metadata: paths, outcomes, counts and digests
+  - I ran the policy's detectors over every changed file except the `.patch` files
+    - In governance prose, every hit is a placeholder (`<password>`, `user:pass`) or the policy pattern text
+    - The rest are test fixtures, or code and scripts quoting placeholders or patterns
+    - No real secret in the files scanned [Inferred]
+
+- Criterion 5, tests: met [Observed]
+  - All 16 changed test files pass
+    - Unit tier: 5 files, 278 tests
+    - Integration tier: 11 files, 962 tests
+  - `npm run typecheck` is clean; `npm run test:tiers` passes
+  - Expected values come from literals or the Python builder oracle, never from the module under test
+    - The oracle is `scripts/build_public_source_screening_scope_v5.py`
+  - My own mutation run, in a scratch copy at 19ca2221: 27 of 27 killed
+    - The set and its log were in my scratchpad as `rv19ca-mutants.py` and `.log`; that scratch area is shared with another session
+    - They cover:
+      - the render and redacted-body logic (3)
+      - the exemption on/off and its scope (2)
+      - governance-text: dropped, redacted, multi-segment, tie-break (4)
+      - placement checks: commit, repository, no subject, unprefixed id, path validation, v2 text (6)
+      - each reader dropping the subject: check, review, render, census, default loader, app (6)
+      - scope detectors: dropped from the dossier, from every-offset matching, from the app (3)
+      - whole-artifact detector removal (1)
+      - text pins: scope rule and exemption (2)
+    - Several mutants are killed only by `screen-scope-v5.test.ts`
+      - The unit tests and `secret-redaction`/`public-source-exemption` tests alone miss them
+      - That file is in the integration tier, which `npm test` does not run
+
+- Criterion 6, the #620 merge: nothing lost or duplicated [Observed]
+  - Install changes before the merge (8c87afb1→aa7dabd5, in `check.ts`, `review.ts`, `inventory.ts`) match the merge's changes (075dc0dd→19ca2221) line for line
+    - They now sit in `check-model.ts`, `check.ts`, `check-derive.ts`, `review-model.ts`, `review-packet.ts` and `inventory.ts`
+  - Every other file the install touched, and that main did not, is byte-identical between aa7dabd5 and 19ca2221
+    - One exception: `governance-inputs.test.ts`, whose census row went from 61/47/42 to 95/81/76
+    - The v5 act has 95 non-blank lines, so the pre-merge head carried a stale row [Inferred]
+    - It passes at 19ca2221
+  - `close.ts` is unchanged by the install, as the merge message says
+
+- Criterion 7, governance hygiene: clean [Observed]
+  - `python3 scripts/check_governance.py`: "32 OK, 21 WARN, 0 FAIL (53 checks)", exit 0
+    - The warnings are standing report-only or advisory items (CG-8, CG-21, CG-27 and others)
+  - The v5 recorder `--check` prints "recorded policy act matches the exact owner argument", exit 0
+    - Arguments: `e8a2f4f3…` with `--date 2026-11-03 --owner-words 'Sign screening scope version 5, variant bcd'`
+  - The recorder `--selftest` reports "113 of 113 predicates held"
+
+- One action outside the review subject
+  - I wrote `pre.txt` and `post.txt` in my scratchpad, which an earlier session also uses
+    - Same-named files there may have been overwritten [Unknown]
+  - The frozen checkout was not modified; `git status` is clean
+  - I deleted my scratch clone `rv19ca-mut`
