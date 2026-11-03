@@ -161,5 +161,25 @@
  },
  "probesNotAligned": {
   "policy stem as a text needle (POLICY_STEM in ActSweep.needles)": "refuses the current tree (policyReader throws invalid-records; policyChain refused; port public-source-policy unsatisfied): not a reading knob, left unchanged, reported to the owner"
+ },
+ "corpusDifferential": {
+  "file": "docs/evidence/syzygy-bpyt-1-24/act-family-differential-2026-11-04.json",
+  "script": "scripts/differential_consent_act_families.mjs",
+  "old": "e1f43f7c9ca2c2643473157372dbee3850f1c04a",
+  "new": "5d889636d7a455e3df8a5d04da465f3a0dd16eef",
+  "worlds": 5075,
+  "answersCompared": 59912,
+  "mismatches": 1426,
+  "worldsWithAMismatch": 244,
+  "mismatchesByKind": {
+   "line": 703,
+   "named": 571,
+   "probe": 140,
+   "real-file": 12
+  },
+  "towardRefusalPredicate": "new label matches /throws AdmissionRecordError|^refused|kind=refused|why=no screening policy is in force: inv/ (python re)",
+  "mismatchesWhoseNewAnswerIsNotARefusal": 0,
+  "note": "run with --expect-mismatches: the change is meant to refuse more; every mismatch is a world some reader answered and now refuses, and in the base worlds (the checkout as it is) no answer differs",
+  "baseWorldMismatches": 0
  }
 }
