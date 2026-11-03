@@ -38,6 +38,29 @@ describe('parseGitLsTree', () => {
     });
   });
 
+  it('in NUL-terminated mode takes a path that begins with a quote or holds a newline verbatim (syzygy-bpyt.6.7)', () => {
+    const strict = { nulTerminated: true } as const;
+    expect(parseGitLsTree(`100644 blob ${A}\t"lead.md\x00100644 blob ${B}\tline\nbreak.md\x00100644 blob ${C}\t"caf\\303\\251.md"\x00`, strict)).toEqual({
+      kind: 'parsed',
+      entries: [
+        { mode: '100644', type: 'blob', objectId: A, path: '"lead.md' },
+        { mode: '100644', type: 'blob', objectId: B, path: 'line\nbreak.md' },
+        { mode: '100644', type: 'blob', objectId: C, path: '"caf\\303\\251.md"' },
+      ],
+    });
+    // The default mode keeps refusing both, for the PWB readers.
+    expect(parseGitLsTree(`100644 blob ${A}\t"lead.md\x00`)).toEqual({ kind: 'malformed', record: `100644 blob ${A}\t"lead.md` });
+    expect(parseGitLsTree(`100644 blob ${B}\tline\nbreak.md\x00`)).toEqual({ kind: 'malformed', record: `100644 blob ${B}\tline\nbreak.md` });
+  });
+
+  it('in NUL-terminated mode refuses a newline-format listing and an unterminated last record', () => {
+    const strict = { nulTerminated: true } as const;
+    expect(parseGitLsTree(`100644 blob ${A}\tplain.md\n`, strict)).toEqual({ kind: 'malformed', record: `100644 blob ${A}\tplain.md\n` });
+    expect(parseGitLsTree(`100644 blob ${A}\ta.md\x00100644 blob ${B}\tb.md`, strict)).toEqual({ kind: 'malformed', record: `100644 blob ${B}\tb.md` });
+    expect(parseGitLsTree(`garbage\x00`, strict)).toEqual({ kind: 'malformed', record: 'garbage' });
+    expect(parseGitLsTree('', strict)).toEqual({ kind: 'parsed', entries: [] });
+  });
+
   it('rejects a malformed record instead of skipping it', () => {
     expect(parseGitLsTree(`100644 blob nothex\tx.md\x00`)).toEqual({ kind: 'malformed', record: `100644 blob nothex\tx.md` });
     expect(parseGitLsTree(`garbage\x00`)).toEqual({ kind: 'malformed', record: 'garbage' });

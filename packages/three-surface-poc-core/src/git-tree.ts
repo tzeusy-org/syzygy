@@ -5,6 +5,13 @@
 // phase B exact-object reader both consume this shape, so the one parser
 // lives here. Callers must pass `-z`: a quoted (escaped) path from the
 // newline format is rejected as malformed rather than guessed at.
+//
+// By default the parser also accepts newline-separated records and refuses
+// any path that begins with `"` or holds a newline, a guard for a caller
+// that forgot `-z`. Under `-z` such a path is a real, well-formed name, so a
+// caller that always asks for `-z` opts into `{ nulTerminated: true }`: only
+// NUL-terminated records are accepted, and the path is taken verbatim
+// (syzygy-bpyt.6.7). The PWB readers keep the default.
 
 const GIT_TREE_OBJECT_TYPES = ['blob', 'tree', 'commit'] as const;
 type GitTreeObjectType = (typeof GIT_TREE_OBJECT_TYPES)[number];
@@ -24,17 +31,25 @@ type ParsedGitTree =
 
 const LS_TREE_RECORD = /^([0-7]{6}) (blob|tree|commit) ([0-9a-f]{40,64})(?:\s+(\d+|-))?\t(.+)$/s;
 
-export function parseGitLsTree(raw: string): ParsedGitTree {
-  const records = raw.includes('\0') ? raw.split('\0') : raw.split('\n');
+export interface ParseGitLsTreeOptions {
+  // Accept only NUL-terminated records (`git ls-tree -z`) and take each path verbatim.
+  readonly nulTerminated?: boolean;
+}
+
+export function parseGitLsTree(raw: string, options: ParseGitLsTreeOptions = {}): ParsedGitTree {
+  const strict = options.nulTerminated === true;
+  const records = strict || raw.includes('\0') ? raw.split('\0') : raw.split('\n');
+  if (strict && raw !== '' && !raw.endsWith('\0')) {
+    return { kind: 'malformed', record: records[records.length - 1] ?? '' };
+  }
   const entries: GitTreeEntry[] = [];
   for (const record of records) {
     if (record === '') continue;
     const match = LS_TREE_RECORD.exec(record);
     const path = match?.[5];
     const type = match?.[2];
-    if (match === null || match === undefined || path === undefined || path.startsWith('"') || path.includes('\n')) {
-      return { kind: 'malformed', record };
-    }
+    if (match === null || match === undefined || path === undefined) return { kind: 'malformed', record };
+    if (!strict && (path.startsWith('"') || path.includes('\n'))) return { kind: 'malformed', record };
     if (type !== 'blob' && type !== 'tree' && type !== 'commit') return { kind: 'malformed', record };
     const size = match[4];
     entries.push({
