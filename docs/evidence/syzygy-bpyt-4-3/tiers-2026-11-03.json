@@ -393,5 +393,23 @@
  "mutantNotes": "Each mutant replaces old with new in the named file, runs the command, and restores the file. A mutant is killed when the command exits non-zero. S1/S2/C7 need a config/list divergence for the script to see; the divergence edits are listed. G10 first survived at commit ecc1bcdd (afterAll also failed the file) and was killed after 22b42361 attributed a swallowed refusal to its test.",
  "mutantsRanAtCommit": "22b423613bb0d74bff80d4a0bd5e94710af19e08",
  "subjectFilesAtCommit": "5e518b5b6cf1a8f4fce09ce1cdd81a8eff6c1d37",
- "sinceMutantRun": "the header comment of scripts/check_test_tiers.mjs and the test:tiers script flag --disable-warning=MODULE_TYPELESS_PACKAGE_JSON; neither is a mutated fragment"
+ "sinceMutantRun": "the header comment of scripts/check_test_tiers.mjs and the test:tiers script flag --disable-warning=MODULE_TYPELESS_PACKAGE_JSON; neither is a mutated fragment",
+ "afterRebaseOntoMain": {
+  "base": "08f2287d (adds packages/cap1-core/src/barrel-guard.test.ts, a unit test under the new derived workspace walk)",
+  "tierFilesIncludingSystemTests": {
+   "unit": 162,
+   "integration": 86,
+   "e2e": 24,
+   "live": 3,
+   "total": 275
+  },
+  "runs": {
+   "npm run check": "162 files, 3559 tests passed, 30.3 s duration at load about 12",
+   "npm run test:integration": "86 files, 2370 tests passed, 53 s",
+   "npm run test:e2e": "13 files, 125 passed and 2 skipped, then test:system 11 files, 53 passed",
+   "npm run test:live": "3 files, 3 skipped (SYZYGY_POC_BUTLERS_REPO unset)",
+   "root total tests": "3559 + 2370 + 127 + 3 = 6059 (base commit: 6029, +23 new tests, +7 in barrel-guard.test.ts)"
+  },
+  "distDirectoriesAbsentDuringUnitAndIntegration": true
+ }
 }

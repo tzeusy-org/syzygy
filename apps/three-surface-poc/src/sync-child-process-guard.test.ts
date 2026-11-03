@@ -193,9 +193,9 @@ describe('suite child processes and the vitest worker RPC', () => {
     // Every workspace package's tests, in every tier, are scanned.
     expect(roots.length).toBeGreaterThanOrEqual(7);
     expect(roots).toEqual(expect.arrayContaining(['packages/polaris-dossier/src/', 'packages/polaris-generation-consent/src/']));
-    // The workspaces with no test file here are the only roots left unscanned: cap1-core (its conformance tests live in
-    // cap1-conformance), the daemon entry app, and cap1-system (system tests only).
-    expect(roots.filter((root) => !tests.some((path) => path.startsWith(root)))).toEqual(['packages/cap1-core/src/', 'packages/cap1-system/src/', 'apps/syzygy/src/']);
+    // The workspaces with no test file here are the only roots left unscanned: the daemon entry app, and cap1-system (system
+    // tests only).
+    expect(roots.filter((root) => !tests.some((path) => path.startsWith(root)))).toEqual(['packages/cap1-system/src/', 'apps/syzygy/src/']);
     expect(tests.length).toBeGreaterThan(100);
     expect(tests).toContain(SELF);
     expect(modules.length).toBeGreaterThan(tests.length + 100);
