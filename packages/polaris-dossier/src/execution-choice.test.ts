@@ -1,9 +1,8 @@
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ADMISSION_ACT_FORMS } from '@syzygy/polaris-generation-consent';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { issueBrief } from './brief.js';
 import { runDossierCli } from './cli.js';
 import { allowExecution, readExecutionChoice, RUN_DIRECTORY_CHOICES } from './execution-choice.js';
@@ -12,6 +11,7 @@ import type { PinnedObjectReader } from './git-object-reader.js';
 import { writeLaunchedMarker } from './launched.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // syzygy-qkea.5 (S4): `syzygy dossier allow-execution` (REQ-polaris-generation-033, the execution-choice paragraph; R3-F2, R3-F7).
 // Gate sources are a fixture; D9 is in force only where a test says so. Expected values are literals.
@@ -31,13 +31,6 @@ const SUBJECT: RunSubject = {
   workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
 };
 
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (prefix: string): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 const runDirectory = (operatorIsOwner = true, name = RUN_ID): string => {
   const run = path.join(tempDir('dossier-choice-'), name);
   fs.mkdirSync(run);

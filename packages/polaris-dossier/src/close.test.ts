@@ -1,15 +1,15 @@
 import { execFile } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { promisify } from 'node:util';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { FIXTURE_SCREEN, LATER, NOW, PLANTED_SECRET, REAL_ROOT, fixtureSources, fullFixtureRun, makeClone } from './full-run.testkit.js';
 import type { DossierRenderer } from './render.js';
 import { closeRun, parseUsageFigure } from './close.js';
 import { runStatus } from './status.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // Asynchronous, so a slow command cannot starve the vitest worker's RPC (syzygy-w90k).
 const execFileAsync = promisify(execFile);
@@ -20,13 +20,6 @@ beforeAll(async () => {
   renderer = ((await import(module)) as { renderLocalDossier: DossierRenderer }).renderLocalDossier;
 });
 
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (prefix: string): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 type Doc = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 const readJson = (file: string): Doc => JSON.parse(fs.readFileSync(file, 'utf8'));
 

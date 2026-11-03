@@ -1,10 +1,9 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { evaluateDossier, excludedSourceId, parseDossierManifest, scanDossierPage } from '@syzygy/polaris-generation-core';
 import { issueBrief } from './brief.js';
 import { checkDraft, type CheckDeps } from './check.js';
@@ -20,7 +19,7 @@ import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
 import { launchForm, sessionPrompt } from './session-handover.js';
-import { GIT_ENV } from '@syzygy/test-kit';
+import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // syzygy-qkea.10 (S9a): `render` (REQ-polaris-generation-033, 034, 036). The clone is a real Git repository built here with the git
 // CLI. Most cases draw through the real multi-page dossier renderer of apps/three-surface-poc, loaded by file URL because this package
@@ -56,7 +55,7 @@ const objectIds: Record<string, string> = {};
 let renderLocalDossier: DossierRenderer;
 beforeAll(async () => {
   renderLocalDossier = ((await import(RENDERER_MODULE)) as { renderLocalDossier: DossierRenderer }).renderLocalDossier;
-  origin = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-render-origin-')));
+  origin = tempDir('dossier-render-origin-');
   const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
   git('init', '-q', '-b', 'main');
   git('config', 'gc.auto', '0');
@@ -70,15 +69,6 @@ beforeAll(async () => {
   commit = git('rev-parse', 'HEAD');
   for (const file of Object.keys(FILES)) objectIds[file] = git('rev-parse', `${commit}:${file}`);
 });
-afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));
-
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (prefix: string): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 
 // R-PR403-SCREEN-DOCS-1 finding 1: with `statementClasses` set the subject is governed and relies on one in-force per-project statement
 // listing those classes; every other test runs with it null, a non-governed subject, as before.

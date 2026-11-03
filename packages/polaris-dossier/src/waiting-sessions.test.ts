@@ -1,6 +1,5 @@
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { Readable } from 'node:stream';
 import { pathToFileURL } from 'node:url';
@@ -10,6 +9,7 @@ import { FIXTURE_SCREEN, FIXTURE_URL, LATER, NOW, REAL_ROOT, designVerdict, draf
 import type { GateSources, ProviderStatementRecord } from './gate-sources.js';
 import type { DossierRenderer } from './render.js';
 import { deliverToWaiting, readStdinBytes, resolveSessionDirectory, sessionDirectoryRefusal, signoffRecordHolds, waitModeRefusal, waitModeSignedIn, waitModeStatus, waitingReviewSession } from './waiting-sessions.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // Pre-started waiting sessions (owner direction POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08; candidate v1.2 of the local-agent mode,
 // REQ-polaris-generation-035 as amended there). Every step runs through the CLI as a session would. Expected prompts, permission rules,
@@ -24,11 +24,6 @@ beforeAll(async () => {
 
 const cleanups: (() => void)[] = [];
 afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (prefix: string): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').update(bytes).digest('hex');
 const readJson = (file: string): Doc => JSON.parse(fs.readFileSync(file, 'utf8'));
 const write = (file: string, doc: unknown): void => fs.writeFileSync(file, JSON.stringify(doc, null, 2));

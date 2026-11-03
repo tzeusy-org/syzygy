@@ -1,23 +1,15 @@
 import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { resolveCloneHead } from './clone-head.js';
 import { providerStatementGate, registryEntryUsable, type ProviderStatementRecord } from './gate-sources.js';
 import { dossierRepositoryUrl } from './github-url.js';
 import { governedSubject, type DrawerStatement } from './governed.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // The pure parts of the S3 start gates (syzygy-qkea.4): the repository URL, the clone's HEAD, the governed predicate
 // (REQ-polaris-generation-033, R3-F9), the per-project statement gate and the registry entry's usability. Expected values are literals.
-
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (prefix: string): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 
 describe('repository URL (parsed, never fetched)', () => {
   it.each([

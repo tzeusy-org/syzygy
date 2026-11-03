@@ -1,21 +1,20 @@
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { patchFs } from './fs-patch.testkit.js';
 import { createRunDirectory, resolvePathIntent, stateRootViolation } from './state-directory.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // REQ-polaris-generation-033: Syzygy writes only to its own state directory for the run, never into
 // the clone and never to a location derived from the clone's path.
 let base: string;
 let clone: string;
 beforeEach(() => {
-  base = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-state-')));
+  base = tempDir('dossier-state-');
   clone = path.join(base, 'clone');
   fs.mkdirSync(path.join(clone, '.git'), { recursive: true });
   fs.writeFileSync(path.join(clone, 'README.md'), '# clone\n');
 });
-afterEach(() => fs.rmSync(base, { recursive: true, force: true }));
 const isRoot = process.getuid?.() === 0;
 
 /** Every path under `dir`, with its kind and mode: the harness's own record of what was written. */

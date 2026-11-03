@@ -1,11 +1,11 @@
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { renderHuman, runDossierCli } from './cli.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // Design "Command surface": non-interactive; a human summary and, with --json, the same content as
 // one JSON document; exit status 0 clean, 1 refusal, 2 usage error.
@@ -27,7 +27,7 @@ const SUBJECT: RunSubject = {
 
 let runDir: string;
 beforeEach(() => {
-  runDir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-cli-')));
+  runDir = tempDir('dossier-cli-');
   const parsed = parseRunConfig(JSON.stringify({
     operator: 'Tzeusy', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic',
     model: 'claude-opus-5-5', deadline: 'PT1H', agentTokenBudget: 100_000, maxRepairCycles: 1, maxQuestions: 2,
@@ -36,7 +36,6 @@ beforeEach(() => {
   if (!parsed.ok) throw new Error('fixture configuration refused');
   fs.writeFileSync(path.join(runDir, 'run.json'), encodeRunRecord(parsed.config, SUBJECT));
 });
-afterEach(() => fs.rmSync(runDir, { recursive: true, force: true }));
 
 /** Every leaf of a JSON document as `dotted.key: value`, computed here rather than by the module. */
 const leaves = (value: unknown, key = ''): string[] => {

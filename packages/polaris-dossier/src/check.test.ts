@@ -1,9 +1,8 @@
 import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { issueBrief } from './brief.js';
 import { blobRedaction, checkDraft, deriveFindings, draftRules, lineRanges, reviewVisibility, type CheckDeps, type CheckResult } from './check.js';
 import { runDossierCli } from './cli.js';
@@ -12,7 +11,7 @@ import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, 
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
-import { GIT_ENV } from '@syzygy/test-kit';
+import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // syzygy-qkea.7 (S6): `syzygy dossier check` (REQ-polaris-generation-033, 034, 036). The clone is a real Git repository built here
 // with the git CLI (the code under test runs no process); the screening policy is this checkout's detectors and denied paths with a
@@ -61,7 +60,7 @@ const SCREEN_OK = ((load) => { if (!load.ok) throw new Error(load.why); return l
 
 let origin: string, commit: string, other: string;
 beforeAll(() => {
-  origin = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-check-origin-')));
+  origin = tempDir('dossier-check-origin-');
   const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
   git('init', '-q', '-b', 'main');
   git('config', 'gc.auto', '0');
@@ -77,15 +76,6 @@ beforeAll(() => {
   git('-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-q', '-am', 'later');
   other = git('rev-parse', 'HEAD');
 });
-afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));
-
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (prefix: string): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 
 /** A clone at the pinned commit whose working tree differs from it in the quoted file. */
 const cloneOf = (): string => {
