@@ -1,9 +1,8 @@
 import { execFileSync } from 'node:child_process';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { issueBrief } from './brief.js';
 import { blobRedaction, checkDraft, deriveFindings, draftRules, lineRanges, reviewVisibility, type CheckDeps, type CheckResult } from './check.js';
 import { runDossierCli } from './cli.js';
@@ -61,7 +60,7 @@ const SCREEN_OK = ((load) => { if (!load.ok) throw new Error(load.why); return l
 
 let origin: string, commit: string, other: string;
 beforeAll(() => {
-  origin = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-check-origin-')));
+  origin = tempDir('dossier-check-origin-');
   const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
   git('init', '-q', '-b', 'main');
   git('config', 'gc.auto', '0');
@@ -77,7 +76,6 @@ beforeAll(() => {
   git('-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-q', '-am', 'later');
   other = git('rev-parse', 'HEAD');
 });
-afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));
 
 /** A clone at the pinned commit whose working tree differs from it in the quoted file. */
 const cloneOf = (): string => {

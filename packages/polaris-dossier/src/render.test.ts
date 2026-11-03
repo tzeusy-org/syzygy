@@ -1,10 +1,9 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { evaluateDossier, excludedSourceId, parseDossierManifest, scanDossierPage } from '@syzygy/polaris-generation-core';
 import { issueBrief } from './brief.js';
 import { checkDraft, type CheckDeps } from './check.js';
@@ -56,7 +55,7 @@ const objectIds: Record<string, string> = {};
 let renderLocalDossier: DossierRenderer;
 beforeAll(async () => {
   renderLocalDossier = ((await import(RENDERER_MODULE)) as { renderLocalDossier: DossierRenderer }).renderLocalDossier;
-  origin = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-render-origin-')));
+  origin = tempDir('dossier-render-origin-');
   const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
   git('init', '-q', '-b', 'main');
   git('config', 'gc.auto', '0');
@@ -70,7 +69,6 @@ beforeAll(async () => {
   commit = git('rev-parse', 'HEAD');
   for (const file of Object.keys(FILES)) objectIds[file] = git('rev-parse', `${commit}:${file}`);
 });
-afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));
 
 // R-PR403-SCREEN-DOCS-1 finding 1: with `statementClasses` set the subject is governed and relies on one in-force per-project statement
 // listing those classes; every other test runs with it null, a non-governed subject, as before.

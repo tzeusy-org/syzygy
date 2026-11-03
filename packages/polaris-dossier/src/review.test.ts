@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { issueBrief } from './brief.js';
 import { checkDraft, type CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
@@ -57,7 +57,7 @@ const sha256 = (bytes: string | Uint8Array): string => createHash('sha256').upda
 let origin: string, commit: string;
 const objectIds: Record<string, string> = {};
 beforeAll(() => {
-  origin = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-review-origin-')));
+  origin = tempDir('dossier-review-origin-');
   const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
   git('init', '-q', '-b', 'main');
   git('config', 'gc.auto', '0');
@@ -71,7 +71,6 @@ beforeAll(() => {
   commit = git('rev-parse', 'HEAD');
   for (const file of Object.keys(FILES)) objectIds[file] = git('rev-parse', `${commit}:${file}`);
 });
-afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));
 
 // R-PR403-SCREEN-DOCS-1 finding 1: the class-gate tests run in a world with the project-documentation screen and, for a governed
 // subject, one in-force per-project statement listing `classes`; every other test runs with `world` null, as before.

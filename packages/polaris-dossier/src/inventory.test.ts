@@ -1,11 +1,10 @@
 import { execFile, execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { issueBrief } from './brief.js';
 import type { CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
@@ -52,7 +51,7 @@ const SCREEN_C_ONLY = buildDossierScreen(new TextEncoder().encode(JSON.stringify
 
 let origin: string, commit: string;
 beforeAll(() => {
-  origin = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-inventory-origin-')));
+  origin = tempDir('dossier-inventory-origin-');
   const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
   git('init', '-q', '-b', 'main');
   git('config', 'gc.auto', '0');
@@ -65,7 +64,6 @@ beforeAll(() => {
   git('-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-q', '-m', 'fixture');
   commit = git('rev-parse', 'HEAD');
 });
-afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));
 
 const subject = (clone: string): RunSubject => ({
   repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },

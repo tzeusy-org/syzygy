@@ -1,11 +1,11 @@
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { build, type Plugin } from 'esbuild';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { entryModules } from '../../polaris-generation-core/src/workspace-reach.testkit.js';
 import { exited } from './child-process.testkit.js';
 import { FULL_RUN_ROOT_ENV, REAL_ROOT, makeClone } from './full-run.testkit.js';
+import { tempDir } from '@syzygy/test-kit';
 
 /** The no-egress proof (REQ-polaris-generation-033, scenario "No provider call and no egress record"; tasks "Prove no provider call and no
  * transmission"; syzygy-qkea.11). A full fixture run, every dossier command from preflight to close and status, runs in a child process
@@ -68,12 +68,11 @@ let clone: string;
 let commit: string;
 beforeAll(async () => {
   if (!HAVE_STRACE) return;
-  dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-no-egress-')));
+  dir = tempDir('dossier-no-egress-');
   ({ clone, commit } = makeClone(path.join(dir, 'repo')));
   bundle = path.join(dir, 'driver.mjs');
   await bundleDriver(bundle);
 });
-afterAll(() => { if (dir !== undefined) fs.rmSync(dir, { recursive: true, force: true }); });
 
 interface Capture { readonly status: number | null; readonly stdout: string; readonly stderr: string; readonly calls: readonly string[]; readonly tasks: number }
 
@@ -158,7 +157,7 @@ describe('the S10 bundle takes each workspace package from the source its entry 
   });
 
   it('bundles the driver with every @syzygy specifier inside packages/*/src or apps/*/src', async () => {
-    const out = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-no-egress-bundle-')));
+    const out = tempDir('dossier-no-egress-bundle-');
     try {
       await expect(bundleDriver(path.join(out, 'driver.mjs'))).resolves.toBeUndefined();
     } finally {
@@ -167,7 +166,7 @@ describe('the S10 bundle takes each workspace package from the source its entry 
   });
 
   it('bundles the driver only under the guard: an alias that leaves the sources fails it', async () => {
-    const out = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-no-egress-bundle-')));
+    const out = tempDir('dossier-no-egress-bundle-');
     try {
       const outside = { ...workspaceAliases(), '@syzygy/support': path.join(SOURCE_ROOT, 'packages/support/package.json') };
       await expect(bundleDriver(path.join(out, 'driver.mjs'), outside))
