@@ -1,11 +1,11 @@
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { runDossierCli } from './cli.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { runStatus } from './status.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // `syzygy dossier status`: everything it reports is read from files the agent sessions can write, so
 // every value is labelled Inferred; the principal is the operator with credential identity Unknown.
@@ -25,12 +25,11 @@ const SUBJECT: RunSubject = {
 };
 let runDir: string;
 beforeEach(() => {
-  runDir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-status-')));
+  runDir = tempDir('dossier-status-');
   const parsed = parseRunConfig(JSON.stringify(CONFIG));
   if (!parsed.ok) throw new Error('fixture configuration refused');
   fs.writeFileSync(path.join(runDir, 'run.json'), encodeRunRecord(parsed.config, SUBJECT));
 });
-afterEach(() => fs.rmSync(runDir, { recursive: true, force: true }));
 
 const snapshot = (dir: string): string[] => fs.readdirSync(dir, { recursive: true, withFileTypes: true })
   .map((entry) => {
