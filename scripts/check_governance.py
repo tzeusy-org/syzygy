@@ -8092,6 +8092,14 @@ def selftest():
                   c.rows[0][0] == "FAIL"
                   and any("cannot read" in d for d in c.rows[0][4])))
 
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred zero checks above are the same "
+                           "five the hosted workflow runs."), workflow=wf)
+    cases.append(("CG-26 zero tail after hundred is unreadable, not read",
+                  c.rows[0][0] == "FAIL"
+                  and any("cannot read" in d for d in c.rows[0][4])))
+
     # No count sentence at all is a finding, not a silent skip.
     c = Cap()
     cg26_battery_parity(c, status=_st(AGREE, "No count is stated here."),
