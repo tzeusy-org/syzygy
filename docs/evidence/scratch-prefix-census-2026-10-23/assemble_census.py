@@ -416,11 +416,17 @@ def classify_fixture() -> dict:
     return result
 
 
-# A synthetic two-run aggregation: one clean run of 10 s sampled every 0.5 s, and one SIGKILLed run that left three entries.
+# A synthetic three-run aggregation: one clean run of 10 s sampled every 0.5 s, one SIGKILLed run that left four entries (one of them a name derived
+# from another), and the fresh run seeded with the SIGKILLed run's entries, which swept two of them away and left one of its own.
 AGG_RECORDS = {
     'c': {'mode': 'clean', 'seconds': 10.0, 'privateDirectory': '/p/c', 'listingAtEnd': []},
     'k': {'mode': 'kill', 'seconds': 5.0, 'privateDirectory': '/p/k',
-          'listingAtEnd': [{'name': 'tk-ZZZZZZ', 'bytes': 10, 'mtime': 1.0}, {'name': 'nt-YYYYYY', 'bytes': 20, 'mtime': 2.0}, {'name': '.com.google.Chrome.xYzAbC', 'bytes': 30, 'mtime': 3.0}]},
+          'listingAtEnd': [{'name': 'tk-ZZZZZZ', 'bytes': 10, 'mtime': 1.0}, {'name': 'nt-YYYYYY', 'bytes': 20, 'mtime': 2.0}, {'name': '.com.google.Chrome.xYzAbC', 'bytes': 30, 'mtime': 3.0},
+                            {'name': 'tk-ZZZZZZ-out.md', 'bytes': 5, 'mtime': 4.0}]},
+    'f': {'mode': 'clean', 'seconds': 5.0, 'privateDirectory': '/p/f',
+          'seededFrom': {'privateDirectory': '/p/k', 'entriesMovedIn': ['tk-ZZZZZZ', 'nt-YYYYYY', '.com.google.Chrome.xYzAbC', 'tk-ZZZZZZ-out.md']},
+          'listingAtEnd': [{'name': 'tk-ZZZZZZ', 'bytes': 10, 'mtime': 1.0}, {'name': '.com.google.Chrome.xYzAbC', 'bytes': 30, 'mtime': 3.0},
+                           {'name': 'tk-WWWWWW', 'bytes': 40, 'mtime': 7.0}]},
 }
 AGG_TRACES = {
     'c': [
@@ -435,6 +441,10 @@ AGG_TRACES = {
     'k': [
         {'kind': 'mkdtemp', 'path': '/t/tk-ZZZZZZ', 'prefix': 'tk-', 'frames': ['packages/q/src/kit.testkit.ts:3']},
         {'kind': 'mkdtemp', 'path': '/t/nt-YYYYYY', 'prefix': 'nt-', 'frames': ['packages/q/src/operator.ts:6']},
+        {'kind': 'writeFile', 'path': '/t/tk-ZZZZZZ-out.md', 'frames': ['packages/q/src/kit.testkit.ts:3']},
+    ],
+    'f': [
+        {'kind': 'mkdtemp', 'path': '/t/tk-WWWWWW', 'prefix': 'tk-', 'frames': ['packages/q/src/kit.testkit.ts:3']},
     ],
 }
 # The clean run's sampler record: first and last sighting of each name it saw (tk-CCCCCC lived between two samples and was never seen).
@@ -451,15 +461,16 @@ AGG_MIXED_ROWS = [
     {'kind': 'mkdtemp', 'path': '/t/mix-BBBBBB', 'prefix': 'mix-', 'frames': ['packages/q/src/b.ts:2']},
 ]
 
-# A synthetic clean run for long_gap_trace: sampled every 0.5 s, sighting instants 0.5 1.0 3.0 3.5 4.0 6.0 and the start 0.0, so two gaps of
-# two intervals or more (1.0-3.0 and 4.0-6.0) and four shorter ones. The trace clock runs 0.1 s to 0.2 s ahead of the sampler's: the
-# three sampled traced names bound the offset to 0.0-0.4 s and the middle, 0.2 s, is used. Each trace time is the sampler time plus 0.2 s
+# A synthetic clean run for long_gap_trace: sampled every 0.5 s, sighting instants 0.5 1.0 3.0 3.5 4.0 6.0 7.0 and the start 0.0, so three gaps of
+# two intervals or more (1.0-3.0, 4.0-6.0 and 6.0-7.0, the last exactly two intervals) and four shorter ones. The trace clock runs 0.1 s to 0.2 s
+# ahead of the sampler's: the four sampled traced names bound the offset to 0.0-0.4 s and the middle, 0.2 s, is used. Each trace time is the sampler time plus 0.2 s
 # (HHHHHH, made at 3.9 s, falls in a shorter gap only when the offset is subtracted; otherwise it reads 4.1 s, inside the second long gap).
 LG_SAMPLER = {'intervalSeconds': 0.5, 'entries': {
     'p-AAAAAA': {'first': 0.5, 'last': 1.0},
     'p-BBBBBB': {'first': 3.0, 'last': 3.5},
     'q-CCCCCC': {'first': 4.0, 'last': 6.0},
     '.com.google.Chrome.aBcDeF': {'first': 3.5, 'last': 4.0},
+    'p-JJJJJJ': {'first': 7.0, 'last': 7.0},
 }}
 LG_ROWS = [
     {'kind': 'mkdtemp', 'path': '/t/p-AAAAAA', 'prefix': 'p-', 't': 400, 'frames': ['packages/q/src/a.ts:1']},
@@ -469,15 +480,20 @@ LG_ROWS = [
     {'kind': 'mkdtemp', 'path': '/t/r-EEEEEE', 'prefix': 'r-', 't': 5200, 'frames': ['packages/q/src/a.ts:3']},
     {'kind': 'mkdtemp', 'path': '/t/s-FFFFFF', 'prefix': 's-', 't': 3400, 'frames': ['packages/q/src/a.ts:4']},
     {'kind': 'mkdtemp', 'path': '/t/r-HHHHHH', 'prefix': 'r-', 't': 4100, 'frames': ['packages/q/src/a.ts:3']},
+    {'kind': 'mkdtemp', 'path': '/t/p-JJJJJJ', 'prefix': 'p-', 't': 7000, 'frames': ['packages/q/src/a.ts:1']},
+    # Never sampled: u-KKKKKK is created at 6.5 s, inside the gap of exactly two intervals (6.0-7.0), in a published class; v-LLLLLL at 2.5 s, inside
+    # 1.0-3.0, in a class that is not published, so the published filter alone keeps it out of the answer.
+    {'kind': 'mkdtemp', 'path': '/t/u-KKKKKK', 'prefix': 'u-', 't': 6700, 'frames': ['packages/q/src/a.ts:5']},
+    {'kind': 'mkdtemp', 'path': '/t/v-LLLLLL', 'prefix': 'v-', 't': 2700, 'frames': ['packages/q/src/a.ts:6']},
 ]
-LG_PUBLISHED = {'p-', 'q-', 'r-', 's-', 'chrome-singleton-directory'}
+LG_PUBLISHED = {'p-', 'q-', 'r-', 's-', 'u-', 'chrome-singleton-directory'}
 EXPECTED_AGGREGATE = {
     'gap': {'gapSeconds': 0.6, 'sightingInstants': 9, 'gapsBetweenSightings': 8, 'gapsUnderTwoIntervals': 2, 'gapsOfTwoIntervalsOrMore': 6, 'smallestGapOfTwoIntervalsOrMore': 1.0},
-    'byRule': {'R1-fixture-sweep-landed': 1, 'R2-chrome-singleton': 1, 'R3-browser-profile': 1, 'R6-non-test-module': 2, 'R9-test-file': 2},
+    'byRule': {'R1-fixture-sweep-landed': 1, 'R2-chrome-singleton': 1, 'R3-browser-profile': 1, 'R6-non-test-module': 2, 'R9-test-file': 3},
     'creatingFilesOfTwoRows': {'packages/q/src/first.test.ts': 1},
-    'partition': 'The two runs together put 7 classes of entries directly in the temp directory (6 by mkdtemp): 1 by test-model-fixture.ts (PR 509 sweeps them); '
+    'partition': 'The three runs together put 8 classes of entries directly in the temp directory (6 by mkdtemp): 1 by test-model-fixture.ts (PR 509 sweeps them); '
                  '1 by Chrome itself (its singleton directory); 1 by cdp-browser.ts (the browser profile); 0 by vitest itself (its project directory); '
-                 '0 by npm itself (its compile cache); 2 by other non-test modules; 0 as a lock file (attributed to restart.ts by its name); 0 with no known creator; and 2 by test files.',
+                 '0 by npm itself (its compile cache); 2 by other non-test modules; 0 as a lock file (attributed to restart.ts by its name); 0 with no known creator; and 3 by test files.',
     'exposure': {
         'chrome-singleton-directory': {'run': 'c', 'namesSampled': 1, 'namesNeverSampled': 0, 'expectedNamesPresentAtARandomMoment': {'lowerBound': 0.6, 'upperBound': 0.72}},
         'nt-': {'run': 'c', 'namesSampled': 1, 'namesNeverSampled': 0, 'expectedNamesPresentAtARandomMoment': {'lowerBound': 0.06, 'upperBound': 0.18}},
@@ -488,17 +504,34 @@ EXPECTED_AGGREGATE = {
         'two-': {'run': 'c', 'namesSampled': 1, 'namesNeverSampled': 0, 'expectedNamesPresentAtARandomMoment': {'lowerBound': 0.0, 'upperBound': 0.12}},
     },
     'longGaps': {
-        'clockOffsetSeconds': 0.2, 'clockOffsetWindowSeconds': 0.4, 'tracedNames': 7, 'tracedNamesTheSamplerSaw': 3, 'tracedNamesCreatedInNoGap': 0,
-        'gapsOfTwoIntervalsOrMore': {'gaps': 2, 'seconds': 4.0, 'namesCreatedInside': 3, 'ofThemEverSampled': 1,
-                                     'perGap': [{'from': 1.0, 'to': 3.0, 'seconds': 2.0, 'namesCreatedInside': 2, 'ofThemEverSampled': 1},
-                                                {'from': 4.0, 'to': 6.0, 'seconds': 2.0, 'namesCreatedInside': 1, 'ofThemEverSampled': 0}]},
+        'clockOffsetSeconds': 0.2, 'clockOffsetWindowSeconds': 0.4, 'tracedNames': 10, 'tracedNamesTheSamplerSaw': 4, 'tracedNamesCreatedInNoGap': 0,
+        'gapsOfTwoIntervalsOrMore': {'gaps': 3, 'seconds': 5.0, 'namesCreatedInside': 6, 'ofThemEverSampled': 2,
+                                     'perGap': [{'from': 1.0, 'to': 3.0, 'seconds': 2.0, 'namesCreatedInside': 3, 'ofThemEverSampled': 1},
+                                                {'from': 4.0, 'to': 6.0, 'seconds': 2.0, 'namesCreatedInside': 1, 'ofThemEverSampled': 0},
+                                                {'from': 6.0, 'to': 7.0, 'seconds': 1.0, 'namesCreatedInside': 2, 'ofThemEverSampled': 1}]},
         'shorterGaps': {'gaps': 4, 'seconds': 2.0, 'namesCreatedInside': 4, 'ofThemEverSampled': 2},
-        'publishedClasses': 5,
+        'publishedClasses': 6,
         'publishedClassesThatDependOnThem': {
             'chrome-singleton-directory': {'names': 1, 'neverSampledCreatedInALongGap': 0, 'sampledWithALongGapBesideItsSightings': 1},
-            'p-': {'names': 2, 'neverSampledCreatedInALongGap': 0, 'sampledWithALongGapBesideItsSightings': 2},
-            'r-': {'names': 3, 'neverSampledCreatedInALongGap': 2, 'sampledWithALongGapBesideItsSightings': 0}},
-        'publishedClassesThatDoNot': ['q-', 's-'],
+            'p-': {'names': 3, 'neverSampledCreatedInALongGap': 0, 'sampledWithALongGapBesideItsSightings': 3},
+            'q-': {'names': 1, 'neverSampledCreatedInALongGap': 0, 'sampledWithALongGapBesideItsSightings': 1},
+            'r-': {'names': 3, 'neverSampledCreatedInALongGap': 2, 'sampledWithALongGapBesideItsSightings': 0},
+            'u-': {'names': 1, 'neverSampledCreatedInALongGap': 1, 'sampledWithALongGapBesideItsSightings': 0}},
+        'publishedClassesThatDoNot': ['s-'],
+    },
+    # What each run left, per class, hand-derived from AGG_RECORDS: k left tk-ZZZZZZ, nt-YYYYYY, a Chrome singleton and the derived tk-ZZZZZZ-out.md; the
+    # fresh run f, seeded from k, still holds two of those (tk-ZZZZZZ and the singleton, 10 and 30 bytes) and left tk-WWWWWW of its own. A seed is
+    # never the fresh run's own leftover, and a SIGKILL leftover is counted once per entry.
+    'leftovers': {
+        'chrome-singleton-directory': {'leftAfterSIGKILL': {'k': {'entries': 1, 'bytes': 30, 'oldestMtime': 3.0, 'newestMtime': 3.0}},
+                                       'afterTheNextFreshRun': {'f': {'killRun': 'k', 'leftBySIGKILL': 1, 'stillThere': 1, 'bytesStillThere': 30}}, 'leftByTheFreshRunItself': {}},
+        'nt-': {'leftAfterSIGKILL': {'k': {'entries': 1, 'bytes': 20, 'oldestMtime': 2.0, 'newestMtime': 2.0}},
+                'afterTheNextFreshRun': {'f': {'killRun': 'k', 'leftBySIGKILL': 1, 'stillThere': 0, 'bytesStillThere': 0}}, 'leftByTheFreshRunItself': {}},
+        'tk-': {'leftAfterSIGKILL': {'k': {'entries': 1, 'bytes': 10, 'oldestMtime': 1.0, 'newestMtime': 1.0}},
+                'afterTheNextFreshRun': {'f': {'killRun': 'k', 'leftBySIGKILL': 1, 'stillThere': 1, 'bytesStillThere': 10}},
+                'leftByTheFreshRunItself': {'f': {'entries': 1, 'bytes': 40, 'oldestMtime': 7.0, 'newestMtime': 7.0}}},
+        'tk-<random>-out.md': {'leftAfterSIGKILL': {'k': {'entries': 1, 'bytes': 5, 'oldestMtime': 4.0, 'newestMtime': 4.0}},
+                               'afterTheNextFreshRun': {'f': {'killRun': 'k', 'leftBySIGKILL': 1, 'stillThere': 0, 'bytesStillThere': 0}}, 'leftByTheFreshRunItself': {}},
     },
     'mixedClassStops': "no disposition rule for mkdtemp 'mix-' (files ['packages/q/src/a.test.ts', 'packages/q/src/b.ts'])",
     'partitionStopsOnARuleNobodyListed': "the parts of the partition sum to 0, the table has 1 classes (a rule that RULES does not list: ['R0-unlisted'])",
@@ -525,6 +558,8 @@ def aggregate_fixture() -> dict:
             'creatingFilesOfTwoRows': next(r['creatingFiles'] for r in table if r['class'] == 'two-'),
             'partition': partition_sentence(table, len(AGG_RECORDS)),
             'exposure': {r['class']: r['exposureInTheCleanRun'] for r in table if r['exposureInTheCleanRun']},
+            'leftovers': {r['class']: {k: r[k] for k in ('leftAfterSIGKILL', 'afterTheNextFreshRun', 'leftByTheFreshRunItself')}
+                          for r in table if r['leftAfterSIGKILL'] or r['afterTheNextFreshRun'] or r['leftByTheFreshRunItself']},
             'longGaps': long_gap_trace(LG_SAMPLER['entries'], Index(LG_ROWS), LG_SAMPLER['intervalSeconds'], LG_PUBLISHED), **stops}
 
 
@@ -578,6 +613,12 @@ def selftest(out: pathlib.Path) -> None:
         'sampled-traced-names-not-counted': ("total['ofThemEverSampled'] += sampled", "total['ofThemEverSampled'] += 0"),
         'never-sampled-name-in-a-short-gap-counts-as-dependent': ("elif in_a_long_gap(created[name]):", "elif name in created:"),
         'long-gap-after-the-last-sighting-ignored': ("return is_long(before, first) or (after < len(known) and is_long(last, known[after]))", "return is_long(before, first)"),
+        'kill-leftover-count-doubled': ("slot['entries'] += 1", "slot['entries'] += 2"),
+        'kill-leftovers-not-reported': ("'leftAfterSIGKILL': killed_left,", "'leftAfterSIGKILL': {},"),
+        'seed-entries-counted-as-the-runs-own': ("slot = item['leftFromSeed' if name in seed_names else 'leftAtEnd']", "slot = item['leftAtEnd']"),
+        'mkdtemp-count-includes-derived': ("sum(1 for r in table if r['family'] == 'mkdtemp')", "sum(1 for r in table if r['family'] in ('mkdtemp', 'derived'))"),
+        'r3-long-gap-strict-threshold': ('is_long = lambda earlier, later: round(later - earlier, 2) >= 2 * interval', 'is_long = lambda earlier, later: round(later - earlier, 2) > 2 * interval'),
+        'r3-published-filter-dropped': ('        if cls not in published:\n            continue\n        slot = by_class', '        slot = by_class'),
         'long-gap-before-the-first-sighting-ignored': ("return is_long(before, first) or (after < len(known) and is_long(last, known[after]))", "return after < len(known) and is_long(last, known[after])"),
     }
     expected = {'classify': EXPECTED, 'aggregate': EXPECTED_AGGREGATE}
