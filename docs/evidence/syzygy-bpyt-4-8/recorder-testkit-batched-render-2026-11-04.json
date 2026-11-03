@@ -1,6 +1,6 @@
 {
  "subject": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
- "subjectSha256": "f1327e2255b260000e2b16618e4060fc175b4a14e7445f6c647fe2358668b612",
+ "subjectSha256": "0b04861268e49f1ee809ba3c8816cfba2fffd83a8f5e88fa957a6d4c495f5243",
  "predecessorSha256": "73c3c18032ce023bcc9b8f45ab36aab060629ec8299389726cbd87e804b28bcc",
  "predecessorCommit": "cbd8b708022504c54dc533b53863a95de9761898",
  "bead": "syzygy-bpyt.4.8",
@@ -25,7 +25,7 @@
   "distinctCalls": 244
  },
  "populationReplay": {
-  "ranOn": "subject bytes, as a scratch integration test (not retained) calling each logged function with the logged arguments and comparing the JSON of the result with the logged output",
+  "ranOn": "subject bytes (after loadRecorderForms in a beforeAll), as a scratch integration test (not retained) calling each logged function with the logged arguments and comparing the JSON of the result with the logged output",
   "calls": 3612,
   "identical": 3612,
   "different": 0,
@@ -33,7 +33,7 @@
   "loggedOutputsDigestMethod": "sha256 over the concatenated JSON.stringify(out) of every log line, in log order"
  },
  "mutants": {
-  "commit": "084c8f85950fe96524eb1ed088032f15f3ffbba0",
+  "commit": "09ee5075ae062c0c39dd24f5ba4a28fc148dea18",
   "mutants": [
    {
     "mutant": "M1 policy instant filled from date",
@@ -96,6 +96,16 @@
     "summary": "Tests  1 failed | 2 passed (3)"
    },
    {
+    "mutant": "M7 loader never awaited",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
+    "old": "beforeAll(loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS);",
+    "new": "void [loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS];",
+    "test": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
+    "exit": 1,
+    "killed": true,
+    "summary": "Tests  3 skipped (3)"
+   },
+   {
     "mutant": "G1 sync python3 spawn back in the testkit",
     "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
     "old": "import { execFile } from 'node:child_process';",
@@ -107,5 +117,5 @@
    }
   ]
  },
- "mutantNotes": "M2 and M5 kill in the beforeAll hook: the mutated form wants a slot the call does not supply, so fill throws and the file fails with its 3 tests skipped (exit 1)."
+ "mutantNotes": "M2, M5 and M7 kill in the beforeAll hook: the mutated form wants a slot the call does not supply (M2, M5), or no form is loaded (M7), so the render throws and the file fails with its 3 tests skipped (exit 1)."
 }
