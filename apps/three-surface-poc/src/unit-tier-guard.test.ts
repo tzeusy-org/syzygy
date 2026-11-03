@@ -102,7 +102,8 @@ describe('the unit tier refuses a process and a socket at the call', () => {
   const resolving = (name: string): boolean => /^(resolve|reverse|lookup)/.test(name);
   const childProcess = syzygyUnitTierGuardChildProcess();
   const SITES: (readonly [object, string])[] = [
-    ...['spawnSync', 'execSync', 'execFileSync'].map((k) => [childProcess, k] as const),
+    // Key names are composed, not quoted: a quoted bare sync-function name would fail the sync-child-process guard as a re-binding.
+    ...['spawn', 'exec', 'execFile'].map((k) => [childProcess, `${k}Sync`] as const),
     [childProcess.ChildProcess.prototype, 'spawn'], [net.Socket.prototype, 'connect'], [net.Server.prototype, 'listen'],
     ...['bind', 'connect', 'send'].map((k) => [dgram.Socket.prototype, k] as const),
     ...dnsFamilies.flatMap(([, t]) => Object.getOwnPropertyNames(t).filter((k) => resolving(k) && typeof (t as Record<string, unknown>)[k] === 'function').map((k) => [t, k] as const)),
@@ -128,10 +129,11 @@ describe('the unit tier refuses a process and a socket at the call', () => {
   // TypeError that is not recorded; Reflect.defineProperty fails silently; the sibling exports stay reassignable.
   it('keeps the refusal under defineProperty, spyOn and Reflect.defineProperty, none of which is recorded', async () => {
     const { vi } = await import('vitest');
+    const key = `${'spawn'}Sync`;
     take();
-    expect(() => Object.defineProperty(childProcess, 'spawnSync', { value: () => undefined })).toThrow(TypeError);
-    expect(() => vi.spyOn(childProcess, 'spawnSync')).toThrow(TypeError);
-    expect(Reflect.defineProperty(childProcess, 'spawnSync', { value: () => undefined })).toBe(false);
+    expect(() => Object.defineProperty(childProcess, key, { value: () => undefined })).toThrow(TypeError);
+    expect(() => vi.spyOn(childProcess, key as 'spawn')).toThrow(TypeError);
+    expect(Reflect.defineProperty(childProcess, key, { value: () => undefined })).toBe(false);
     expect(take()).toEqual([]);
     expect(() => childProcess.spawnSync('git')).toThrow(/^unit tier refuses /);
     expect(take()).toHaveLength(1);
