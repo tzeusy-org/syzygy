@@ -206,8 +206,22 @@ const EVENT_HANDLER = /<[A-Za-z][^<>]*\son[a-z]+\s*=/gi;
 // control characters inside the scheme are tolerated the way browsers
 // tolerate them.
 const UNSAFE_SCHEME = '(?:j\\s*a\\s*v\\s*a\\s*s\\s*c\\s*r\\s*i\\s*p\\s*t|v\\s*b\\s*s\\s*c\\s*r\\s*i\\s*p\\s*t|d\\s*a\\s*t\\s*a|f\\s*i\\s*l\\s*e)\\s*:';
-const UNSAFE_URL = new RegExp(`(?:\\]\\(\\s*<?|\\]:\\s*<?|=\\s*["']?\\s*|<)\\s*${UNSAFE_SCHEME}`, 'gi');
+// Each whitespace run before the scheme is matched by exactly one `\s*`.
+// The earlier form, `(?:\]\(\s*<?|\]:\s*<?|=\s*["']?\s*|<)\s*`,
+// put two or three `\s*` side by side, so a long run after `=` backtracked
+// through every split of it: one 2 KB line took about 5 s.
+// The two forms accept the same strings, and from any start a match must
+// end at the one `:` the scheme's letters lead to, so `matchAll` yields the
+// same index and text for every input (syzygy-bpyt.52; the old form is the
+// oracle in `git-object-reader.test.ts`).
+const UNSAFE_URL = new RegExp(`(?:\\]\\(\\s*(?:<\\s*)?|\\]:\\s*(?:<\\s*)?|=\\s*(?:["']\\s*)?|<\\s*)${UNSAFE_SCHEME}`, 'gi');
 const OBFUSCATED_DESTINATION = /\]\(\s*<?[^)\s]*&(?:#\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);/g;
+
+// Every unsafe-URL match the scan reports, in `matchAll` order: its index
+// in `text` and the matched text. Exported for the equivalence test.
+export function unsafeUrlMatches(text: string): readonly { readonly index: number; readonly value: string }[] {
+  return [...text.matchAll(UNSAFE_URL)].map((match) => ({ index: match.index, value: match[0] }));
+}
 
 function positionOf(text: string, index: number): { readonly line: number; readonly column: number } {
   let line = 1;
@@ -269,7 +283,7 @@ export function scanActiveContentCharged(raw: string, charge: ParsePassCharge): 
   for (const match of text.matchAll(EVENT_HANDLER)) add('event-handler-attribute', match.index);
   const urlSpent = spent('unsafe-url-positions');
   if (urlSpent !== undefined) return urlSpent;
-  for (const match of text.matchAll(UNSAFE_URL)) add('unsafe-url-scheme', match.index);
+  for (const match of unsafeUrlMatches(text)) add('unsafe-url-scheme', match.index);
   for (const match of text.matchAll(OBFUSCATED_DESTINATION)) add('obfuscated-link-destination', match.index);
   return { kind: 'scanned', findings: findings.sort((a, b) => a.line - b.line || a.column - b.column || a.form.localeCompare(b.form)) };
 }
