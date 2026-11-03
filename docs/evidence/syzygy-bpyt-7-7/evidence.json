@@ -1,0 +1,1030 @@
+{
+  "subject": {
+    "commit": "0285819da45684e6299e81402d6ad1b7e4032eab",
+    "blobDigests": {
+      "apps/syzygy/src/main.ts": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+      "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md": "65b66c913cd2650881a9df8cb34a3c63b3f518041e83f45d2451980d9f1d0448",
+      "packages/cap1-conformance/src/req-014.conformance.test.ts": "fcde28917989de648332a1d98493cb8e3f8f89b843f9000e4b6d5206e8d945a8",
+      "packages/cap1-conformance/src/req-016.conformance.test.ts": "70fd7c83e84ed70275458dd038b51802009860184307c3bf257d4004f87c7136",
+      "packages/cap1-conformance/src/req-042.conformance.test.ts": "dc8c78fc2e6ed1ba922be81c59dd01eb13ef81e7e2cc885ab02ec504019a188c",
+      "packages/cap1-conformance/src/req-045.conformance.test.ts": "13f367a614a571d4f6222a786b7aa56625df277ecac38c28ced295b3d53b03aa",
+      "packages/cap1-conformance/src/req-046.conformance.test.ts": "b3f3f1b3809c8541386913d9cb29152ca7af11dbaffd05aa815327c339e682bd",
+      "packages/cap1-conformance/src/req-053.conformance.test.ts": "d891856462d3af09cab9574a1656b4e31e79b9ae69f3a8d25bb698f971d609b3",
+      "packages/cap1-conformance/src/req-060.conformance.test.ts": "99bc26fce6f213c2cd55c891649c24819c388b132d6cfab056f5363fa435d1b2",
+      "packages/cap1-conformance/src/req-061.conformance.test.ts": "b02c564f88983d83f5a39a3ad349588d896a45f5e25120fea4fceaed16d0e5c1",
+      "packages/cap1-conformance/src/req-062.conformance.test.ts": "93ab249c042ae3b67864512181d32189632587276aeed9f5d8622d1030fff482",
+      "packages/cap1-conformance/src/req-064.conformance.test.ts": "95c3da67c3e6a5c65b4974cfbd78da44dffd52d2f7a8825baec39e8858b0addf",
+      "packages/cap1-conformance/src/req-integration.conformance.test.ts": "324be429b6cd3cd8b28c22af13082f095ff0559c68aece07f906e5d93fbc8521",
+      "packages/cap1-core/src/admission.ts": "d0ef0989a524cde9d94430f3c1469a192d0a0cc9f56104c1248906a39d7495b6",
+      "packages/cap1-core/src/authority.ts": "c0ffa70ac1bf32049bec408d614b3a4c8771ce826621d58524d492ba1e69608c",
+      "packages/cap1-core/src/consent-decision.ts": "53103e7d90f12a06c7106150b6cccbad7ddd96ce70d23c8593ae16f5b1cb66b8",
+      "packages/cap1-core/src/coverage.ts": "c328c85f12466b1a0ec854906d2b969bfabed83023acbedf66a7ca575191789e",
+      "packages/cap1-core/src/declaration.ts": "8e6d757d5c523cce80eec0ef32876d22099a7085ae2fb450646e3198f4c1238e",
+      "packages/cap1-core/src/discoverability.ts": "cf36dd2753eacd59626d879a15d957d050f7f3b41b6887581b43b7614f295611",
+      "packages/cap1-core/src/distinction.ts": "f8226c8871fb556c90154078332b34bf3e22081fd27855c72fc5de576d30a05e",
+      "packages/cap1-core/src/epistemic.ts": "d8d6417fa4675ac2a927dd5e300f5f1e164ff0c7bc3eb69757e6dea4ef07f99c",
+      "packages/cap1-core/src/evaluation.ts": "4628e23d38bb365aa79ed4217e38a9301eca984a9c15d24d2f79f6554a113bf0",
+      "packages/cap1-core/src/stable-identity.ts": "04b1942f8bf4aa544f093b3c24aab90b499cc071b85e11878f6b6a778abdab75",
+      "packages/cap1-core/src/staleness.ts": "520305502eed72a3ac0c0bf3c2e05ca4ae81a031ac41b60e8f02739e7ad2b31d",
+      "packages/cap1-core/src/write-boundary.ts": "ebba822aa889b540f5aec7b2ef596e516b9ffca90218c127e0aea2f451d00326",
+      "packages/cap1-daemon/src/pipeline.ts": "03421e29646b914d2dc49e8072aa261aa5134c79765f6400e5fcacba16c0b3a7",
+      "packages/cap1-daemon/src/routes-human.test.ts": "bde8a906096e068a90d768ea9cddfeb24597a34dc2321896d6ca0dfa4b0f4ee9",
+      "packages/cap1-daemon/src/routes-human.ts": "a5ebcb7db7a80b28edd3ec93fc95dbb5259500102a526338e7722caf3924b84d",
+      "packages/cap1-daemon/src/routes-machine.ts": "848549ed2e384c51e999d06bececda4df6d9cc28a6cddb737b5365d096a677c4",
+      "packages/cap1-daemon/src/source-snapshot.ts": "8b49f4891fb4b60665185ac027dfd342b35f2ae01cdb9a2203937e93a679663f",
+      "packages/cap1-system/src/write-boundary.system.test.ts": "b50feaafc9fb72b65ed1c3cedc0b7baa784819c58facea4d0f5af1f9f8e3c68d"
+    }
+  },
+  "population": {
+    "functions": 16,
+    "nonTestSrcFiles": 264,
+    "testSrcFiles": 271,
+    "verdictCounts": {
+      "test-support": 10,
+      "gap-already-filed": 4,
+      "gap-new-candidate": 2
+    }
+  },
+  "rows": [
+    {
+      "name": "authorizeObservation",
+      "requirement": "CAP1-REQ-016",
+      "verdict": "test-support",
+      "verdictLabel": "Observed",
+      "bead": null,
+      "rationale": "Production decides consent per (project, repository) pair in decideRepositoryConsent, whose pair predicate and record-subject-mismatch refusal feed computeCoverage; the conformance file's own sweep already runs through computeCoverage. authorizeObservation is a parallel per-pair predicate over the older ConsentResolution that no production module calls [Inferred: superseded by the consent-decision pipeline].",
+      "definition": {
+        "file": "packages/cap1-core/src/admission.ts",
+        "line": 66
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-016.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 6
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-016 — No source is inspected through authority the project did not grant",
+        "headingLine": 601,
+        "quote": "Syzygy SHALL NOT observe any repository or source without a recorded in-force consent record for the exact (observing project, repository) pair. Consent granted to one project SHALL NOT admit observation by another. No served content, structure, or derived fact SHALL originate from an unconsented source."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-core/src/consent-decision.ts",
+          "role": "pair predicate (project and repository coordinates)",
+          "line": 391,
+          "pattern": "^export function consentPairEvaluatedForEntry"
+        },
+        {
+          "file": "packages/cap1-core/src/consent-decision.ts",
+          "role": "refusal when the record's pair is not the entry's pair",
+          "line": 643,
+          "pattern": "refuse\\('record-subject-mismatch', reference\\)"
+        },
+        {
+          "file": "packages/cap1-core/src/consent-decision.ts",
+          "role": "closed per-repository decision",
+          "line": 576,
+          "pattern": "^export function decideRepositoryConsent"
+        },
+        {
+          "file": "packages/cap1-daemon/src/source-snapshot.ts",
+          "role": "daemon decides before any content read",
+          "line": 433,
+          "pattern": "^\\s+decideRepositoryConsent\\("
+        },
+        {
+          "file": "packages/cap1-core/src/coverage.ts",
+          "role": "decision -> coverage state",
+          "line": 190,
+          "pattern": "^export function computeCoverage"
+        },
+        {
+          "file": "packages/cap1-daemon/src/pipeline.ts",
+          "role": "daemon pipeline call",
+          "line": 173,
+          "pattern": "computeCoverage\\(declaration, consentDecisions, observations\\)"
+        }
+      ],
+      "absenceAnchors": []
+    },
+    {
+      "name": "deriveEffectiveStatus",
+      "requirement": "CAP1-REQ-046",
+      "verdict": "gap-already-filed",
+      "verdictLabel": "Observed",
+      "bead": "syzygy-u2a.13",
+      "rationale": "The only producer of AuthorityExposure. The human route has an optional getAuthorityExposures dependency that the production composition never supplies, so the page renders the disclosed absence and the machine channel carries no authority exposure.",
+      "definition": {
+        "file": "packages/cap1-core/src/authority.ts",
+        "line": 109
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-046.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 10
+        },
+        {
+          "file": "packages/cap1-conformance/src/req-integration.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 2
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-human.test.ts",
+          "kind": "other",
+          "callSiteLines": 2
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-046 — Owning authority and effective status are exposed, stamp and record readable apart",
+        "headingLine": 1501,
+        "quote": "For every answer resting on a governance artifact, Syzygy SHALL expose the artifact's owning authority and governing revision, and SHALL distinguish the artifact's self-declared lifecycle stamp (untrusted content) from its effective status (derived from the owner-act record). Where they disagree, the effective status governs and the disagreement renders as a disclosed fact. An artifact with no owner-act record renders effectively unadopted whatever its stamp claims."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-core/src/authority.ts",
+          "role": "the derivation REQ-046 names",
+          "line": 109,
+          "pattern": "^export function deriveEffectiveStatus"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-human.ts",
+          "role": "optional dependency, never supplied",
+          "line": 100,
+          "pattern": "readonly getAuthorityExposures\\?:"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-human.ts",
+          "role": "disclosed absence rendered in production",
+          "line": 511,
+          "pattern": "No authority exposures were supplied"
+        },
+        {
+          "file": "apps/syzygy/src/main.ts",
+          "role": "production composition passes no authority source",
+          "line": 235,
+          "pattern": "\\.\\.\\.humanRoutes\\(\\{ getEvaluation \\}\\)"
+        }
+      ],
+      "absenceAnchors": [
+        {
+          "pattern": "getAuthorityExposures",
+          "allowedFiles": [
+            "packages/cap1-daemon/src/routes-human.ts"
+          ],
+          "scopePrefixes": [
+            "packages/cap1-core/src/",
+            "packages/cap1-daemon/src/",
+            "apps/syzygy/src/"
+          ],
+          "otherNonTestFilesMatching": [],
+          "denominatorNonTestSrcFiles": 35
+        }
+      ]
+    },
+    {
+      "name": "artifactInForce",
+      "requirement": "CAP1-REQ-046",
+      "verdict": "gap-already-filed",
+      "verdictLabel": "Observed",
+      "bead": "syzygy-u2a.13",
+      "rationale": "Consumes an AuthorityExposure, which nothing in production produces (see deriveEffectiveStatus).",
+      "definition": {
+        "file": "packages/cap1-core/src/authority.ts",
+        "line": 146
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-046.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 4
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-046 — Owning authority and effective status are exposed, stamp and record readable apart",
+        "headingLine": 1501,
+        "quote": "For every answer resting on a governance artifact, Syzygy SHALL expose the artifact's owning authority and governing revision, and SHALL distinguish the artifact's self-declared lifecycle stamp (untrusted content) from its effective status (derived from the owner-act record). Where they disagree, the effective status governs and the disagreement renders as a disclosed fact. An artifact with no owner-act record renders effectively unadopted whatever its stamp claims."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-core/src/authority.ts",
+          "role": "answer-layer force predicate",
+          "line": 146,
+          "pattern": "^export function artifactInForce"
+        },
+        {
+          "file": "apps/syzygy/src/main.ts",
+          "role": "production composition passes no authority source",
+          "line": 235,
+          "pattern": "\\.\\.\\.humanRoutes\\(\\{ getEvaluation \\}\\)"
+        }
+      ],
+      "absenceAnchors": [
+        {
+          "pattern": "getAuthorityExposures",
+          "allowedFiles": [
+            "packages/cap1-daemon/src/routes-human.ts"
+          ],
+          "scopePrefixes": [
+            "packages/cap1-core/src/",
+            "packages/cap1-daemon/src/",
+            "apps/syzygy/src/"
+          ],
+          "otherNonTestFilesMatching": [],
+          "denominatorNonTestSrcFiles": 35
+        }
+      ]
+    },
+    {
+      "name": "isComplete",
+      "requirement": "CAP1-REQ-014",
+      "verdict": "test-support",
+      "verdictLabel": "Observed",
+      "bead": null,
+      "rationale": "The requirement (a partial capture never renders as whole) is carried per repository by computeCoverage's degraded-partial state and by coverageBoundary's declared captured scopes, both served on both channels. No production code asserts a project-level 'complete', so the aggregate predicate has no caller; the daemon adapters also mint only full captures, so the partial arm is unreachable at runtime today.",
+      "definition": {
+        "file": "packages/cap1-core/src/coverage.ts",
+        "line": 331
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-014.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 7
+        },
+        {
+          "file": "packages/cap1-conformance/src/req-042.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 3
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-014 — Incomplete coverage is never rendered as complete coverage",
+        "headingLine": 498,
+        "quote": "Syzygy SHALL NOT present a partial capture as full scope. WHEN a snapshot is partial, the captured scope SHALL be declared explicitly, the uncaptured portion SHALL render `Unknown`, and no aggregate over the full scope SHALL render as if whole."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-core/src/coverage.ts",
+          "role": "partial capture declares its scope",
+          "line": 278,
+          "pattern": "state: 'degraded-partial',"
+        },
+        {
+          "file": "packages/cap1-core/src/coverage.ts",
+          "role": "declared captured scopes",
+          "line": 312,
+          "pattern": "^export function coverageBoundary"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-machine.ts",
+          "role": "machine channel serves the boundary",
+          "line": 209,
+          "pattern": "coverageBoundary: coverageBoundary\\(evaluation\\.coverage\\)"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-human.ts",
+          "role": "human channel renders the partial state",
+          "line": 488,
+          "pattern": "case 'degraded-partial':"
+        },
+        {
+          "file": "packages/cap1-daemon/src/source-snapshot.ts",
+          "role": "adapter mints full captures only",
+          "line": 465,
+          "pattern": "outcome: 'captured', capturedScope: REPOSITORY_ROOT_SCOPE"
+        }
+      ],
+      "absenceAnchors": []
+    },
+    {
+      "name": "proposeEntryLink",
+      "requirement": "CAP1-REQ-053",
+      "verdict": "test-support",
+      "verdictLabel": "Inferred",
+      "bead": "syzygy-u2a.7",
+      "rationale": "REQ-053 says Syzygy MAY draft the proposal and SHALL NOT write or render it as applied. The prohibition limbs are carried in production by the proposed/current rendering (renderState over a constant empty proposal list) and by the absence of any governed write (state-dir refusal in main.ts). The optional drafting limb has no production caller; supplying one is a feature the u2a.7 non-goals exclude, not an unwired mandate.",
+      "definition": {
+        "file": "packages/cap1-core/src/discoverability.ts",
+        "line": 98
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-053.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 4
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-human.test.ts",
+          "kind": "other",
+          "callSiteLines": 2
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-053 — Syzygy may propose the link; it never writes it, and a proposal never renders as applied",
+        "headingLine": 1695,
+        "quote": "Syzygy MAY draft a proposed repository-entry link as a Proposal (RFC1-27). Syzygy SHALL NOT directly write the root README or any other location outside its two writable namespaces, and a proposed link SHALL never be rendered, counted, or served as an applied change: the finding stays computed from the actual front door, and the proposal renders as proposed material, visually and machine-readably distinct, with no status authority."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-daemon/src/routes-machine.ts",
+          "role": "production proposals are the empty list",
+          "line": 187,
+          "pattern": "const OPEN_PROPOSALS: readonly Proposal\\[\\] = \\[\\];"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-machine.ts",
+          "role": "proposed/current rendering is wired",
+          "line": 199,
+          "pattern": "renderState\\(answer, OPEN_PROPOSALS\\)"
+        },
+        {
+          "file": "apps/syzygy/src/main.ts",
+          "role": "no write path into the governed plane",
+          "line": 140,
+          "pattern": "^function governedPlaneViolation"
+        },
+        {
+          "file": "apps/syzygy/src/main.ts",
+          "role": "refusal applied at start-up",
+          "line": 201,
+          "pattern": "const violation = governedPlaneViolation\\("
+        }
+      ],
+      "absenceAnchors": []
+    },
+    {
+      "name": "computeDiscoverabilityWithProposal",
+      "requirement": "CAP1-REQ-053",
+      "verdict": "gap-already-filed",
+      "verdictLabel": "Observed",
+      "bead": "syzygy-u2a.7",
+      "rationale": "Builds the DiscoverabilityWithProposal the human route renders. The route's getDiscoverability dependency is supplied by no production file on main, so the page renders the disclosed absence. u2a.7 (PR 585, open) wires findings; its diff adds no caller of this function [Observed in the PR diff at its head 3c30b2e2], so re-run this sweep when it merges.",
+      "definition": {
+        "file": "packages/cap1-core/src/discoverability.ts",
+        "line": 116
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-053.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 4
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-human.test.ts",
+          "kind": "other",
+          "callSiteLines": 2
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-053 — Syzygy may propose the link; it never writes it, and a proposal never renders as applied",
+        "headingLine": 1695,
+        "quote": "Syzygy MAY draft a proposed repository-entry link as a Proposal (RFC1-27). Syzygy SHALL NOT directly write the root README or any other location outside its two writable namespaces, and a proposed link SHALL never be rendered, counted, or served as an applied change: the finding stays computed from the actual front door, and the proposal renders as proposed material, visually and machine-readably distinct, with no status authority."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-core/src/discoverability.ts",
+          "role": "finding plus proposal",
+          "line": 116,
+          "pattern": "^export function computeDiscoverabilityWithProposal"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-human.ts",
+          "role": "optional dependency, never supplied",
+          "line": 95,
+          "pattern": "readonly getDiscoverability\\?:"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-human.ts",
+          "role": "disclosed absence rendered in production",
+          "line": 554,
+          "pattern": "No discoverability findings were supplied"
+        },
+        {
+          "file": "apps/syzygy/src/main.ts",
+          "role": "production composition passes no discoverability source",
+          "line": 235,
+          "pattern": "\\.\\.\\.humanRoutes\\(\\{ getEvaluation \\}\\)"
+        }
+      ],
+      "absenceAnchors": [
+        {
+          "pattern": "getDiscoverability",
+          "allowedFiles": [
+            "packages/cap1-daemon/src/routes-human.ts"
+          ],
+          "scopePrefixes": [
+            "packages/cap1-core/src/",
+            "packages/cap1-daemon/src/",
+            "apps/syzygy/src/"
+          ],
+          "otherNonTestFilesMatching": [],
+          "denominatorNonTestSrcFiles": 35
+        }
+      ]
+    },
+    {
+      "name": "extractDiscoverabilityDistinctions",
+      "requirement": "CAP1-REQ-064",
+      "verdict": "gap-already-filed",
+      "verdictLabel": "Observed",
+      "bead": "syzygy-u2a.7",
+      "rationale": "The machine channel passes empty lists for the authority and discoverability planes to the distinction sweep, which then lists those kinds as missing. REQ-064 names the four-value discoverability domain as a distinction that must be machine-readable; today it is honestly reported missing, not carried.",
+      "definition": {
+        "file": "packages/cap1-core/src/distinction.ts",
+        "line": 117
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-064.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 5
+        },
+        {
+          "file": "packages/cap1-conformance/src/req-integration.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 2
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-064 — Every distinction is machine-readable and recoverable without vision",
+        "headingLine": 1933,
+        "quote": "Every distinction Capability 1 draws — epistemic label, tier, Unknown reason, freshness, consent state, adopted versus unadopted, proposed versus current, effective status versus stamp, the four-value discoverability domain — SHALL be carried as a machine-readable attribute on the rendered unit and SHALL be recoverable without colour, position, or layout, by label, text, or structure. Accessibility of the behavior is required; no UI framework is specified."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-core/src/distinction.ts",
+          "role": "the discoverability-value extractor",
+          "line": 117,
+          "pattern": "^export function extractDiscoverabilityDistinctions"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-machine.ts",
+          "role": "sweep input is empty for these planes",
+          "line": 246,
+          "pattern": "authority and discoverability planes contribute nothing here"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-machine.ts",
+          "role": "two empty plane arguments to sweepDistinctions",
+          "line": 257,
+          "pattern": "^    \\[\\],\\n    \\[\\],"
+        }
+      ],
+      "absenceAnchors": []
+    },
+    {
+      "name": "epistemicMarking",
+      "requirement": "CAP1-REQ-045",
+      "verdict": "test-support",
+      "verdictLabel": "Observed",
+      "bead": null,
+      "rationale": "The marking is the fact's own label as text. Production emits it as the epistemic-label distinction on every fact (extractDistinctions, machine channel) and as data-epistemic-label on the human channel; epistemicMarking is a one-line restatement with no caller.",
+      "definition": {
+        "file": "packages/cap1-core/src/epistemic.ts",
+        "line": 87
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-045.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 5
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-045 — Inferred is distinguishable from observed; generated presentation is never the source",
+        "headingLine": 1457,
+        "quote": "Every fact Capability 1 serves SHALL carry its epistemic label (Observed / Inferred / Unknown) verbatim, and inferred information SHALL be distinguishable from observed information in every rendering, machine-readably and without relying on colour, position, or layout. Generated presentation artifacts SHALL never be the source of any answer: every answer's cited basis is its owning authority, never a rendering of it."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-core/src/distinction.ts",
+          "role": "label distinction built from the fact",
+          "line": 35,
+          "pattern": "name: 'epistemic-label',"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-machine.ts",
+          "role": "emitted per fact on the machine channel",
+          "line": 217,
+          "pattern": "distinctions: extractDistinctions\\(fact\\),"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-human.ts",
+          "role": "label rendered as text on the human channel",
+          "line": 167,
+          "pattern": "<span class=\"fact-label\">\\["
+        }
+      ],
+      "absenceAnchors": []
+    },
+    {
+      "name": "citeBasis",
+      "requirement": "CAP1-REQ-045",
+      "verdict": "test-support",
+      "verdictLabel": "Inferred",
+      "bead": "syzygy-u2a.13",
+      "rationale": "The prohibition limb (a presentation artifact is never a cited basis) holds structurally: production states a basis only as constituent fact names and never builds a BasisCandidate. The positive limb (the owning authority is the cited basis) has no production source because ExplanationFactSet.owningAuthority is populated by nothing in the daemon; that is the authority-exposure gap u2a.13 owns.",
+      "definition": {
+        "file": "packages/cap1-core/src/epistemic.ts",
+        "line": 128
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-045.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 3
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-045 — Inferred is distinguishable from observed; generated presentation is never the source",
+        "headingLine": 1457,
+        "quote": "Every fact Capability 1 serves SHALL carry its epistemic label (Observed / Inferred / Unknown) verbatim, and inferred information SHALL be distinguishable from observed information in every rendering, machine-readably and without relying on colour, position, or layout. Generated presentation artifacts SHALL never be the source of any answer: every answer's cited basis is its owning authority, never a rendering of it."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-core/src/epistemic.ts",
+          "role": "admission rule",
+          "line": 128,
+          "pattern": "^export function citeBasis"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-human.ts",
+          "role": "production basis = constituent facts",
+          "line": 355,
+          "pattern": "Stated basis:"
+        }
+      ],
+      "absenceAnchors": [
+        {
+          "pattern": "owningAuthority",
+          "allowedFiles": [
+            "packages/cap1-daemon/src/routes-human.ts"
+          ],
+          "scopePrefixes": [
+            "packages/cap1-daemon/src/",
+            "apps/syzygy/src/"
+          ],
+          "otherNonTestFilesMatching": [],
+          "denominatorNonTestSrcFiles": 10
+        }
+      ]
+    },
+    {
+      "name": "queryKey",
+      "requirement": "CAP1-REQ-042",
+      "verdict": "test-support",
+      "verdictLabel": "Inferred",
+      "bead": null,
+      "rationale": "Production computes one evaluation at start-up and serves every request from that same object, stamped with evaluationId, so two equivalent queries cannot diverge and every answer names its evaluation. queryKey/answersAgree are the test-side comparison of two independent runs and have no production caller.",
+      "definition": {
+        "file": "packages/cap1-core/src/evaluation.ts",
+        "line": 70
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-042.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 2
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-042 — Equivalent queries at one revision expose equivalent facts",
+        "headingLine": 1329,
+        "quote": "Two equivalent queries — same selection, same evaluation identity, same declared filters, same scenario context — SHALL expose equivalent facts in the deterministic layer, and every answer SHALL name the evaluation identity it was computed at. An answer that cannot name its evaluation is not an answer."
+      },
+      "anchors": [
+        {
+          "file": "apps/syzygy/src/main.ts",
+          "role": "one evaluation for every route",
+          "line": 229,
+          "pattern": "const getEvaluation = \\(\\) => projectEvaluation;"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-human.ts",
+          "role": "human answers stamped",
+          "line": 255,
+          "pattern": "evaluationId\\(evaluation\\.model\\.evaluation\\)"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-machine.ts",
+          "role": "machine answers stamped",
+          "line": 204,
+          "pattern": "evaluationId: id,"
+        }
+      ],
+      "absenceAnchors": []
+    },
+    {
+      "name": "answersAgree",
+      "requirement": "CAP1-REQ-042",
+      "verdict": "test-support",
+      "verdictLabel": "Inferred",
+      "bead": null,
+      "rationale": "Same as queryKey: equality of two runs is judged in tests; production serves one stamped evaluation.",
+      "definition": {
+        "file": "packages/cap1-core/src/evaluation.ts",
+        "line": 99
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-042.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 4
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-042 — Equivalent queries at one revision expose equivalent facts",
+        "headingLine": 1329,
+        "quote": "Two equivalent queries — same selection, same evaluation identity, same declared filters, same scenario context — SHALL expose equivalent facts in the deterministic layer, and every answer SHALL name the evaluation identity it was computed at. An answer that cannot name its evaluation is not an answer."
+      },
+      "anchors": [
+        {
+          "file": "apps/syzygy/src/main.ts",
+          "role": "one evaluation for every route",
+          "line": 229,
+          "pattern": "const getEvaluation = \\(\\) => projectEvaluation;"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-machine.ts",
+          "role": "machine answers stamped",
+          "line": 204,
+          "pattern": "evaluationId: id,"
+        }
+      ],
+      "absenceAnchors": []
+    },
+    {
+      "name": "presentProject",
+      "requirement": "CAP1-REQ-060",
+      "verdict": "test-support",
+      "verdictLabel": "Observed",
+      "bead": null,
+      "rationale": "Production keeps identity and label as separate fields (projectId vs displayName) and enumerates identity fields with registrationIdentityFields, which the machine channel serves. presentProject is a two-field record constructor with no caller.",
+      "definition": {
+        "file": "packages/cap1-core/src/stable-identity.ts",
+        "line": 32
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-060.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 3
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-060 — Identities are the accepted, stable, literal ones",
+        "headingLine": 1744,
+        "quote": "Capability 1 SHALL identify projects and repositories by their declared opaque identifiers: a display name is a label, never an identity; renaming changes the label and no identifier; a repository's identity is never a URL, path, or branch. No implementation-specific identifier is introduced as a project or repository identity in any served answer."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-core/src/declaration.ts",
+          "role": "label separate from identity",
+          "line": 351,
+          "pattern": "displayName: read\\.declaration\\.project\\.name,"
+        },
+        {
+          "file": "packages/cap1-core/src/stable-identity.ts",
+          "role": "identity-field enumeration",
+          "line": 79,
+          "pattern": "^export function registrationIdentityFields"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-machine.ts",
+          "role": "served on the machine channel",
+          "line": 211,
+          "pattern": "registration: registrationIdentityFields\\(evaluation\\.registration\\),"
+        }
+      ],
+      "absenceAnchors": []
+    },
+    {
+      "name": "presentRepository",
+      "requirement": "CAP1-REQ-060",
+      "verdict": "test-support",
+      "verdictLabel": "Observed",
+      "bead": null,
+      "rationale": "Same as presentProject; the coverage identity fields are enumerated and served in production.",
+      "definition": {
+        "file": "packages/cap1-core/src/stable-identity.ts",
+        "line": 43
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-060.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 3
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-060 — Identities are the accepted, stable, literal ones",
+        "headingLine": 1744,
+        "quote": "Capability 1 SHALL identify projects and repositories by their declared opaque identifiers: a display name is a label, never an identity; renaming changes the label and no identifier; a repository's identity is never a URL, path, or branch. No implementation-specific identifier is introduced as a project or repository identity in any served answer."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-core/src/stable-identity.ts",
+          "role": "identity-field enumeration",
+          "line": 90,
+          "pattern": "^export function coverageIdentityFields"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-machine.ts",
+          "role": "served on the machine channel",
+          "line": 212,
+          "pattern": "coverage: coverageIdentityFields\\(evaluation\\.coverage\\),"
+        }
+      ],
+      "absenceAnchors": []
+    },
+    {
+      "name": "isLocatorShaped",
+      "requirement": "CAP1-REQ-060",
+      "verdict": "gap-new-candidate",
+      "verdictLabel": "Observed",
+      "bead": null,
+      "rationale": "REQ-060: a repository's identity is never a URL, path or branch; a served identity equal to a URL or path is its falsifier. The declaration reader accepts any non-empty string as project.id and repositories[].id and no production module calls the shape check. Runtime probe (probe-req060.test.ts.txt; output in evidence.json): a declaration with project id 'https://example.com/acme/project' and repository id '/srv/repos/shared' reads, registers and is served as facts.projectId verbatim.",
+      "definition": {
+        "file": "packages/cap1-core/src/stable-identity.ts",
+        "line": 57
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-060.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 4
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-060 — Identities are the accepted, stable, literal ones",
+        "headingLine": 1744,
+        "quote": "Capability 1 SHALL identify projects and repositories by their declared opaque identifiers: a display name is a label, never an identity; renaming changes the label and no identifier; a repository's identity is never a URL, path, or branch. No implementation-specific identifier is introduced as a project or repository identity in any served answer."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-core/src/stable-identity.ts",
+          "role": "the shape check",
+          "line": 57,
+          "pattern": "^export function isLocatorShaped"
+        },
+        {
+          "file": "packages/cap1-core/src/declaration.ts",
+          "role": "project id admission: non-empty only",
+          "line": 162,
+          "pattern": "`project\\.id` \\(the opaque project identifier\\) must be a non-empty string"
+        },
+        {
+          "file": "packages/cap1-core/src/declaration.ts",
+          "role": "repository id admission: non-empty only",
+          "line": 194,
+          "pattern": "repository `id` \\(the opaque repository identifier, RFC1-2\\) must be a non-empty string"
+        }
+      ],
+      "absenceAnchors": [
+        {
+          "pattern": "isLocatorShaped",
+          "allowedFiles": [
+            "packages/cap1-core/src/stable-identity.ts"
+          ],
+          "scopePrefixes": [
+            "packages/cap1-core/src/",
+            "packages/cap1-daemon/src/",
+            "apps/syzygy/src/"
+          ],
+          "otherNonTestFilesMatching": [],
+          "denominatorNonTestSrcFiles": 35
+        }
+      ]
+    },
+    {
+      "name": "renderSuperseded",
+      "requirement": "CAP1-REQ-062",
+      "verdict": "gap-new-candidate",
+      "verdictLabel": "Inferred",
+      "bead": null,
+      "rationale": "No production code produces a superseded observation or assesses currency: assessCurrency has no non-test caller either (syzygy-dov.2 is the planning bead for it), and the daemon keeps no earlier evaluation to supersede. The limb is vacuous today rather than violated [Inferred]; it becomes live when retention or last-good state is authorized.",
+      "definition": {
+        "file": "packages/cap1-core/src/staleness.ts",
+        "line": 167
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-062.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 2
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-062 — Stale evidence cannot silently remain current or favourable",
+        "headingLine": 1837,
+        "quote": "Evidence past its declared currency bound at the evaluation's as-of instant SHALL NOT support a current or favourable answer: the dependent claim renders `Unknown` with reason `stale-beyond-currency-bound`, and a claim class with no declared currency bound renders `Unknown` with reason `no-currency-bound-declared`. Staleness of superseded observations is visible on the primary surface. A displayed answer changes only through a new identified evaluation — never by the wall clock silently."
+      },
+      "anchors": [
+        {
+          "file": "packages/cap1-core/src/staleness.ts",
+          "role": "superseded rendering",
+          "line": 167,
+          "pattern": "^export function renderSuperseded"
+        },
+        {
+          "file": "packages/cap1-core/src/staleness.ts",
+          "role": "currency assessment, also unwired",
+          "line": 87,
+          "pattern": "^export function assessCurrency"
+        },
+        {
+          "file": "packages/cap1-daemon/src/routes-machine.ts",
+          "role": "machine channel only forwards states it is given",
+          "line": 119,
+          "pattern": "Freshness and staleness \\(CAP1-REQ-062\\) travel verbatim"
+        }
+      ],
+      "absenceAnchors": [
+        {
+          "pattern": "assessCurrency",
+          "allowedFiles": [
+            "packages/cap1-core/src/staleness.ts"
+          ],
+          "scopePrefixes": [
+            "packages/cap1-core/src/",
+            "packages/cap1-daemon/src/",
+            "apps/syzygy/src/"
+          ],
+          "otherNonTestFilesMatching": [],
+          "denominatorNonTestSrcFiles": 35
+        },
+        {
+          "pattern": "'superseded'",
+          "allowedFiles": [
+            "packages/cap1-core/src/staleness.ts"
+          ],
+          "scopePrefixes": [
+            "packages/cap1-core/src/",
+            "packages/cap1-daemon/src/",
+            "apps/syzygy/src/"
+          ],
+          "otherNonTestFilesMatching": [],
+          "denominatorNonTestSrcFiles": 35
+        }
+      ]
+    },
+    {
+      "name": "authorizeWrite",
+      "requirement": "CAP1-REQ-061",
+      "verdict": "test-support",
+      "verdictLabel": "Observed",
+      "bead": null,
+      "rationale": "Capability 1 performs no governed write; the production boundary is the start-up refusal of a state directory inside either real governed root, and the write-universe oracle is the external effect observer in cap1-system. authorizeWrite is already exported only from @syzygy/cap1-core/testing and compares by raw startsWith (it permits 'openspec/../README.md'); the conformance file pins only green prefix cases.",
+      "definition": {
+        "file": "packages/cap1-core/src/write-boundary.ts",
+        "line": 53
+      },
+      "productionReferencesOutsideDefiningFile": [],
+      "commentOnlyReferences": [
+        "packages/cap1-daemon/src/consent-loading.ts"
+      ],
+      "tests": [
+        {
+          "file": "packages/cap1-conformance/src/req-061.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 7
+        },
+        {
+          "file": "packages/cap1-conformance/src/req-integration.conformance.test.ts",
+          "kind": "conformance",
+          "callSiteLines": 4
+        }
+      ],
+      "clause": {
+        "heading": "### Requirement: CAP1-REQ-061 — Capability 1 observes and presents; its write boundary is the governed plane",
+        "headingLine": 1785,
+        "quote": "Capability 1's behavior SHALL cause no mutation beyond governed proposals and Syzygy-owned presentation or specification artifacts inside `openspec/**` and `.syzygy/**` where accepted authority permits them. No source-code edit, root-README edit, deployment, scheduler mutation, or other external effect is part of this capability, and no manifest field may widen that write universe: a field purporting to do so is inoperative and renders as a contradiction routed to the owner."
+      },
+      "anchors": [
+        {
+          "file": "apps/syzygy/src/main.ts",
+          "role": "production write boundary",
+          "line": 140,
+          "pattern": "^function governedPlaneViolation"
+        },
+        {
+          "file": "apps/syzygy/src/main.ts",
+          "role": "applied at start-up",
+          "line": 201,
+          "pattern": "const violation = governedPlaneViolation\\("
+        },
+        {
+          "file": "packages/cap1-core/src/write-boundary.ts",
+          "role": "false permit recorded in the source comment",
+          "line": 20,
+          "pattern": "openspec/\\.\\./README\\.md` passes the prefix test"
+        },
+        {
+          "file": "packages/cap1-system/src/write-boundary.system.test.ts",
+          "role": "external write-universe oracle",
+          "line": 30,
+          "pattern": "^describe\\('RT6 — write boundary"
+        }
+      ],
+      "absenceAnchors": []
+    }
+  ],
+  "failures": [],
+  "sweepScript": {
+    "path": "docs/evidence/syzygy-bpyt-7-7/audit_sweep.py",
+    "sha256": "7b7ce4797e86c85f71bd6bf7927661bc2157f71d2f61c302f8bbbf97b584e761"
+  },
+  "probes": {
+    "req060-locator-shaped-identity-admission": {
+      "label": "Observed",
+      "source": "docs/evidence/syzygy-bpyt-7-7/probe-req060.test.ts.txt",
+      "sourceSha256": "9e28ac5dbf868ae20937e2b62df931ba3f10c161f1b86a14eb2562283ba028e6",
+      "ranAtCommit": "0285819da45684e6299e81402d6ad1b7e4032eab",
+      "output": {
+        "candidateProjectId": "https://example.com/acme/project",
+        "candidateRepositoryId": "/srv/repos/shared",
+        "isLocatorShapedProjectId": true,
+        "isLocatorShapedRepositoryId": true,
+        "declarationReadOk": true,
+        "registrationStatus": "registered",
+        "servedIdentityFields": [
+          {
+            "field": "facts.projectId",
+            "value": "https://example.com/acme/project"
+          }
+        ]
+      },
+      "reading": "Production registration admits and serves a URL-shaped project identity verbatim; isLocatorShaped(...) is true for both candidates and no production module calls it."
+    }
+  },
+  "notes": {
+    "scopeReconciliation": "The bead's 15 names are all still test-only at the subject commit. export_sweep.py (syzygy-bpyt-7-2) lists 23 test-only exports there; the other 8 (compareRenderings, disclosureOf, reportEffectBoundary, loadConsentReferences, minimalRootRoute, observeReadmeEvidence, observeRepositorySnapshot, observeRootCandidate) are outside this bead (testing-entry exports, and legacy daemon readers owned by syzygy-av0u). authorizeWrite is added by the bead's 2026-10-22 note; export_sweep.py does not list it because a source comment names it. [Observed]",
+    "authorizeWriteRecommendation": "Option (a): keep it as test support in the testing entry and add one test pinning that authorizeWrite('openspec/../README.md') is permitted, with a comment pointing at write-boundary.system.test.ts as the REQ-061 write oracle. Option (b) deletes 5 req-061 tests and 4 req-integration assertions (call-site lines in this record) for no production gain. The source comment already records the false permit (write-boundary.ts:20); no test pins it. [Inferred]",
+    "siblingsOutsideTheFifteen": "Same planes, no non-test caller either, not in the bead's list: computeDiscoverability (REQ-050..052, gap under syzygy-u2a.7), extractAuthorityDistinctions (REQ-064/046, syzygy-u2a.13), assessCurrency (REQ-062, syzygy-dov.2). detectWideningFields has no caller either; production surfaces a widening field as a named unknown-field declaration failure (declaration.ts closed field set), not as a contradiction routed to the owner. [Observed by absence anchors for assessCurrency; Inferred for the other three]",
+    "pr585": "syzygy-u2a.7 PR 585 (open) at head 3c30b2e24d3e27a81492dd9d874dc1c348a57b61: its diff adds no production caller of computeDiscoverabilityWithProposal, extractDiscoverabilityDistinctions or deriveEffectiveStatus (added-line grep over gh pr diff). Re-run audit_sweep.py after it merges; rows 2, 3, 6 and 7 may change. [Observed]",
+    "existingBeads": {
+      "syzygy-u2a.13": "open; owns CAP1-REQ-046 authority exposure gap (deriveEffectiveStatus, artifactInForce)",
+      "syzygy-u2a.7": "blocked; owns discoverability plane (PR 585)",
+      "syzygy-dov.2": "open planning; names assessCurrency wiring for REQ-062"
+    },
+    "proposedGapBeads": [
+      {
+        "for": "isLocatorShaped",
+        "title": "CAP1-REQ-060: declaration admission accepts URL- or path-shaped project and repository identities",
+        "parent": "syzygy-u2a",
+        "type": "bug",
+        "priority": "P2",
+        "description": [
+          "REQ-060 says a repository's identity is never a URL, path or branch; the declaration reader (declaration.ts:162, :194) accepts any non-empty string and no production module calls isLocatorShaped (stable-identity.ts:57).",
+          "Probe in docs/evidence/syzygy-bpyt-7-7/evidence.json: project id 'https://example.com/acme/project' registers and is served as facts.projectId.",
+          "Owner gate first: refusing at admission changes which declarations register (a named invalid-field failure); put the before/after to the owner as one question (GP-Q0) before wiring."
+        ]
+      },
+      {
+        "for": "renderSuperseded",
+        "title": "CAP1-REQ-062: no production producer of superseded or stale-bound observations",
+        "parent": "syzygy-u2a",
+        "type": "task",
+        "priority": "P3",
+        "description": [
+          "renderSuperseded and assessCurrency (staleness.ts:167, :87) have no non-test caller; the daemon keeps no earlier evaluation, so the superseded limb of REQ-062 is vacuous today rather than violated [Inferred].",
+          "Overlaps syzygy-dov.2 (assessCurrency wiring, planning-only, hold-gated): fold into it if the owner prefers one bead.",
+          "Becomes live only if retention or last-good state is authorized (a u2a.7 non-goal), so this is an owner decision before any code."
+        ]
+      }
+    ]
+  }
+}
