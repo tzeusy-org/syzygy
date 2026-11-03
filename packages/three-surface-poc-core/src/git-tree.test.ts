@@ -53,6 +53,23 @@ describe('parseGitLsTree', () => {
     expect(parseGitLsTree(`100644 blob ${B}\tline\nbreak.md\x00`)).toEqual({ kind: 'malformed', record: `100644 blob ${B}\tline\nbreak.md` });
   });
 
+  it('keeps accepting an interior quote and a carriage return in the default mode, as the PWB readers rely on (R-GP-IMPL-CODE-STRUCTURE-QUOTED-PATHS-1 N2)', () => {
+    // Pinned as it behaves today (GP-Q0): only a leading quote and a newline are refused by default.
+    expect(parseGitLsTree(`100644 blob ${A}\td/"e.md\x00100644 blob ${B}\tcr\rpath.md\x00`)).toEqual({
+      kind: 'parsed',
+      entries: [
+        { mode: '100644', type: 'blob', objectId: A, path: 'd/"e.md' },
+        { mode: '100644', type: 'blob', objectId: B, path: 'cr\rpath.md' },
+      ],
+    });
+  });
+
+  it('skips an empty record between NULs in both modes, since it names no path and drops nothing (R-GP-IMPL-CODE-STRUCTURE-QUOTED-PATHS-1 N4)', () => {
+    const entries = [{ mode: '100644', type: 'blob', objectId: A, path: 'a.md' }];
+    expect(parseGitLsTree(`100644 blob ${A}\ta.md\x00\x00`, { nulTerminated: true })).toEqual({ kind: 'parsed', entries });
+    expect(parseGitLsTree(`100644 blob ${A}\ta.md\x00\x00`)).toEqual({ kind: 'parsed', entries });
+  });
+
   it('in NUL-terminated mode refuses a newline-format listing and an unterminated last record', () => {
     const strict = { nulTerminated: true } as const;
     expect(parseGitLsTree(`100644 blob ${A}\tplain.md\n`, strict)).toEqual({ kind: 'malformed', record: `100644 blob ${A}\tplain.md\n` });
