@@ -1,14 +1,14 @@
 import { execFile, execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { DECISIONS_DIR, POLICY_PATH } from '@syzygy/polaris-generation-consent';
 import { renderClassAct, renderPolicyAct } from '@syzygy/polaris-generation-consent/testing';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { buildDossierScreen, loadDossierScreen } from './screen.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // Asynchronous, so a slow command cannot starve the vitest worker's RPC (syzygy-w90k).
 const execFileAsync = promisify(execFile);
@@ -24,8 +24,6 @@ const policyOf = (scope: unknown = { contentClassification: { rules: [{ class: '
   `${JSON.stringify({ policyId: 'fixture', policyVersion: '1', detectors: LIVE.detectors, sourceAdmission: LIVE.sourceAdmission, publicSourceScope: scope, ...over }, null, 2)}\n`;
 const encode = (text: string): Uint8Array => new TextEncoder().encode(text);
 
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
 // syzygy-2coz: the live scope carries the project-documentation rule (screening scope version 2), classified only while the RFC5-14
 // class amendment act is in force. The class act's argument is the sha256 of the RFC-0005 module in the records root.
 const DOC_SCOPE = { contentClassification: LIVE.publicSourceScope.contentClassification };
@@ -35,8 +33,7 @@ const MODULE_TEXT = '# RFC-0005 fixture module\n\n- `project-documentation`\n';
 const CLASS_ACT_FILE = `${DECISIONS_DIR}/RFC5-PROJECT-DOCUMENTATION-CLASS-AMENDMENT-ACT.md`;
 type ClassAct = { readonly argument?: string; readonly date?: string; readonly withdrawn?: boolean } | null;
 const recordsRoot = (policy: string, actArgument: string = sha(policy), classAct: ClassAct = null): string => {
-  const root = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-screen-')));
-  cleanups.push(() => fs.rmSync(root, { recursive: true, force: true }));
+  const root = tempDir('dossier-screen-');
   const files: [string, string][] = [[POLICY_PATH, policy], [`${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-ACT.md`, renderPolicyAct(actArgument, '2026-10-04', '2026-10-04T10:00:00Z')]];
   if (classAct !== null) files.push([RFC5_MODULE, MODULE_TEXT], [CLASS_ACT_FILE, renderClassAct(classAct.argument ?? sha(MODULE_TEXT), classAct.date ?? '2026-10-04', `${classAct.date ?? '2026-10-04'}T09:00:00Z`)]);
   if (classAct?.withdrawn === true) files.push([`${DECISIONS_DIR}/RFC5-PROJECT-DOCUMENTATION-WITHDRAWAL-2026-10-06.md`, '# Owner withdrawal\n\nWithdraws `RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-04`.\n']);

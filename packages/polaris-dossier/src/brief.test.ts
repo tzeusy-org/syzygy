@@ -1,10 +1,9 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { DOSSIER_GUIDANCE, DOSSIER_GUIDANCE_VERSION, issueBrief, renderBrief } from './brief.js';
 import { runDossierCli } from './cli.js';
 import { readSec3 } from './doctrine-quote.js';
@@ -15,6 +14,7 @@ import { GitObjectReadRefusal, type PinnedObjectReader } from './git-object-read
 import { writeLaunchedMarker } from './launched.js';
 import { parseRunConfig, type RunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // syzygy-qkea.6 (S5): `syzygy dossier brief <run>` (REQ-polaris-generation-033, 034, 036). The gate sources are a fixture whose answers
 // each test sets; the doctrine is the live security.md of this checkout. Expected values are literals or computed here from the files
@@ -47,11 +47,8 @@ const configOf = (over: Record<string, unknown> = {}): RunConfig => {
   return parsed.config;
 };
 
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
 const runDirectory = (subject: RunSubject = SUBJECT, config: RunConfig = configOf(), name = RUN_ID): string => {
-  const root = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-brief-')));
-  cleanups.push(() => fs.rmSync(root, { recursive: true, force: true }));
+  const root = tempDir('dossier-brief-');
   const run = path.join(root, name);
   fs.mkdirSync(run);
   fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(config, subject));
@@ -292,8 +289,7 @@ describe('brief: refused', () => {
 
   it('refuses when SEC-3 cannot be quoted as adopted', async () => {
     const run = runDirectory();
-    const empty = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-records-')));
-    cleanups.push(() => fs.rmSync(empty, { recursive: true, force: true }));
+    const empty = tempDir('dossier-records-');
     const result = await issueBrief(run, { sources: sources({ recordsRoot: empty }), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: false, refusal: { stage: 'doctrine', reason: 'SEC-3 cannot be quoted as adopted: .syzygy/governance/doctrine/security.md cannot be read (ENOENT)' } });
     nothingWritten(run);

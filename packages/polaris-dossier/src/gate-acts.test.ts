@@ -1,13 +1,13 @@
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DECISIONS_DIR, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM, readDigestBoundActState, type DigestBoundActForm } from '@syzygy/polaris-generation-consent';
 import { HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS, recorderRecordPaths, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderProviderV2Act, type DossierLocalAgentActKey } from '@syzygy/polaris-generation-consent/testing';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { preflight } from './preflight.js';
 import { D9_ACT_FORM, DRAWER_FORMS, PROVIDER_V2_FORM, RFC7_20_RULING_ACT_FORM, STATEMENT_FORMS, createPackageGateSources, providerStatementGate } from './gate-sources.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // syzygy-qkea.21: the gate sources read the local-agent sitting's acts (scripts/record_dossier_local_agent_acts.py) and the
 // version-tagged sign-off of the local-agent registry entry (scripts/record_versioned_signoff.py). Act text comes from the real
@@ -43,13 +43,6 @@ const V2_INSTANT = '2026-10-07T10:30:00Z';
 const V2_AT = Date.UTC(2026, 9, 7, 10, 30, 0);
 const real = (rel: string): string => fs.readFileSync(path.join(REAL_ROOT, rel), 'utf8');
 
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-gate-acts-')));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 const write = (root: string, rel: string, text: string): void => {
   fs.mkdirSync(path.dirname(path.join(root, rel)), { recursive: true });
   fs.writeFileSync(path.join(root, rel), text);
@@ -58,7 +51,7 @@ const write = (root: string, rel: string, text: string): void => {
 /** A records root holding the real sitting records and the files they bind, with the named acts recorded at INSTANT, and (when
  * `signoff`) the local-agent entry installed and signed off v1.0. An unrelated decisions file keeps the directory present. */
 function world(acts: readonly DossierLocalAgentActKey[], signoff = false, v2 = false): string {
-  const root = tempDir();
+  const root = tempDir('dossier-gate-acts-');
   for (const rel of [...KEYS.map(k => ACTS[k].record), SECURITY, V1, DIRECTION, V2_RECORD]) write(root, rel, real(rel));
   write(root, `${DECISIONS_DIR}/UNRELATED.md`, '# Unrelated\n');
   for (const key of acts) write(root, ACTS[key].file, renderDossierLocalAgentAct(key, sha(real(ACTS[key].record)), DATE, INSTANT));
