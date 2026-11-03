@@ -282,7 +282,9 @@ function isChromeSingletonDirectory(directory: string): boolean {
 /** A singleton directory as it was when it was read: its path and the identity of the
  * directory (device and inode). Chrome removes the directory itself on a clean exit, and
  * another Chrome in the same temp directory can then make one under the same name before
- * this one is removed; the identity tells the two apart. */
+ * this one is removed. The identity makes a mistaken removal unlikely, not impossible: a file
+ * system may reuse an inode number, so a directory made under the same name that happens to
+ * take the freed device and inode passes for the one that was read. */
 export interface ChromeSingletonDirectory {
   readonly path: string;
   readonly dev: bigint;
@@ -304,7 +306,18 @@ function ownedByRunningUser(entry: BigIntStats): boolean {
 /** The singleton directory the profile's Chrome made, if the profile's link names a socket
  * in a directory of that name directly under the temp directory. The link is read only if
  * the profile and the link are the running user's: in a shared temp directory another user
- * can make a profile path first and link it to a directory of ours. */
+ * can make a profile path first and link it to a directory of ours.
+ *
+ * Scope of the guarantee: it is for a private profile (`mkdtemp`, mode 0700) in a sticky or
+ * private temp directory. Each owner check holds at the instant of its `lstat`, and the
+ * profile is judged as the entry itself (a symlink another user made is theirs, whatever it
+ * points at), never after resolving it. Two windows for a same-user racer stay open: between
+ * the owner `lstat` and `readlink` of the link, and between the identity `lstat` and the
+ * `rmSync` in removeChromeSingletonDirectory (the latter measured: a same-user racer
+ * removed the replacement in 12 of 1000 trials). Another account cannot use either in a
+ * private or sticky temp directory. Refusing a group- or world-writable profile is not
+ * done (syzygy-bpyt.4.28 item 3): mkdtemp makes the profile 0700 and a writable one is
+ * already not private, so the owner checks above are the whole rule. */
 function chromeSingletonDirectory(profile: string, lstat: ReadEntry = readEntry): ChromeSingletonDirectory | undefined {
   const link = join(profile, 'SingletonSocket');
   try {

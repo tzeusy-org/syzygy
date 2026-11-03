@@ -461,6 +461,17 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
     expect(existsSync(join(victim, 'SingletonSocket'))).toBe(true);
   });
 
+  it('keeps the directory a link names when the profile is a link another user made, even to a directory that is the running user\'s', () => {
+    const { root, profile: real } = privateTemp();
+    const victim = singletonDirectory(root, '.com.google.Chrome.Victim1');
+    symlinkSync(join(victim, 'SingletonSocket'), join(real, 'SingletonSocket'));
+    const profile = join(root, 'syzygy-poc-browser-LinkTo');
+    symlinkSync(real, profile);
+    // The entry is judged as it is, not after resolving it: resolved, it is the running user's.
+    removeBrowserProfile(profile, { remove: () => undefined, lstat: lstatWith(profile, { uid: lstatSync(real, { bigint: true }).uid + 1n }) });
+    expect(existsSync(join(victim, 'SingletonSocket'))).toBe(true);
+  });
+
   it('keeps the directory a link names when the link is not the running user\'s', () => {
     const { profile, victim } = linkedProfile();
     const link = join(profile, 'SingletonSocket');
