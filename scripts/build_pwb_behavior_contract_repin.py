@@ -135,10 +135,16 @@ LATER_SUBJECT_ACTS: dict[str, tuple[tuple[pathlib.Path, pathlib.Path], ...]] = {
          pathlib.Path(".syzygy/governance/contracts/candidates/public-source-screening-scope-v4/"
                       "proposed/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json."
                       "{variant}.patch")),
+        (DECISIONS / "PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md",
+         pathlib.Path(".syzygy/governance/contracts/candidates/public-source-screening-scope-v5/"
+                      "proposed/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json."
+                      "{variant}.patch")),
     ),
 }
-# Version 3's variants are `all` and `non-web`, so a variant name may carry a hyphen.
-CHOSEN_VARIANT_RE = re.compile(r"^Chosen variant: `([a-z]+(?:-[a-z]+)*)`\.?\s*$", re.MULTILINE)
+# Version 3's variants are `all` and `non-web`, so a variant name may carry a hyphen. Version 5's
+# record goes on after the name on the same line ("Chosen variant: `bcd`; its manifest row's
+# digest is ..."), so a `;` clause may follow it.
+CHOSEN_VARIANT_RE = re.compile(r"^Chosen variant: `([a-z]+(?:-[a-z]+)*)`(?:\.|;[^\n]*)?\s*$", re.MULTILINE)
 
 ROW = re.compile(r"^([0-9a-f]{64})  ([^\n]+)$", re.MULTILINE)
 EXACT_DIGEST_RE = re.compile(
