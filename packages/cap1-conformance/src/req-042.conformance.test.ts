@@ -19,7 +19,7 @@ import {
   type QueryEnvelope,
   type RepositoryId,
 } from '@syzygy/cap1-core';
-import { decisionsFor, evaluation, projectYaml } from './fixtures/index.js';
+import { corrupt, decisionsFor, evaluation, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-042 — Equivalent queries at one revision expose equivalent
 // facts (invariant).
@@ -71,7 +71,7 @@ const QUERIES: readonly { readonly name: string; readonly run: () => unknown }[]
   { name: 'registerProject(valid)', run: () => registerProject(readDeclaration(SOURCE), EVALUATION.snapshot) },
   {
     name: 'registerProject(invalid)',
-    run: () => registerProject(readDeclaration(SOURCE.replace('owner: uniquosity@gmail.com', 'owner: ""')), EVALUATION.snapshot),
+    run: () => registerProject(readDeclaration(corrupt(SOURCE, 'owner: uniquosity@gmail.com', 'owner: ""')), EVALUATION.snapshot),
   },
   {
     name: 'designateRoots',
