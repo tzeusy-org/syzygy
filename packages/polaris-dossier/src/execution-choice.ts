@@ -7,6 +7,7 @@ import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
 import type { Outcome } from './outcome.js';
 import { reverifyPinnedRevision, type ReverifyOptions, type ReverifyRefusal } from './reverify.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
+import { isoOf } from './iso-of.js';
 
 /** `syzygy dossier allow-execution <run> --revision <pinned> --declare <declarations>` (REQ-polaris-generation-033).
  *
@@ -114,7 +115,7 @@ export async function allowExecution(runDir: string, request: AllowExecutionRequ
     command: 'allow-execution',
     runId,
     revision: pinned,
-    recordedAt: new Date(deps.now()).toISOString(),
+    recordedAt: isoOf(deps.now()),
     covers: EXECUTION_CHOICE_COVERS,
     declarations: { ownerStartedSession: true, ownersOwnHost: true, ownerAttends: true },
     declaredBy: 'operator',

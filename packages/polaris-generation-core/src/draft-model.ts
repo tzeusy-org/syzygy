@@ -8,30 +8,30 @@ import { check, handle, list, object, refs, text, type Schema } from './closed-s
 // executable markup or external link role.
 
 const requestedAssetsSchema = list(object({ id: handle, kind: { ...text, enum: ['section', 'diagram', 'deep-dive'] }, required: { type: 'boolean' } }), 0, 100);
-const paragraph = object({ id: handle, text, sourceIds: refs });
+const paragraph = object({ id: handle, text, sourceIds: refs() });
 // A tree block: the parent summarizes its leaf children, so truncating at either
 // depth leaves a coarser account. Nesting is exactly one level; the Schema type
 // has no recursion. The first block of a section is its answer (prompt-stated).
-const block = object({ id: handle, text, sourceIds: refs, children: list(paragraph, 0, 12) });
+const block = object({ id: handle, text, sourceIds: refs(), children: list(paragraph, 0, 12) });
 const epistemic: Schema = { ...text, enum: ['observed', 'inferred', 'unknown'] };
 export const DIAGRAM_KINDS = ['flow', 'lifecycle', 'state-machine', 'boundary', 'dependency', 'placement'] as const;
 /** Package-internal (with `draft` and `fidelity`): the provider stage schemas in provider-draft.ts embed it. */
 export const disposition: Schema = { oneOf: [
-  object({ kind: { ...text, enum: ['produced'] }, assetIds: refs }),
-  object({ kind: { ...text, enum: ['omitted'] }, reason: text, references: refs }),
-  object({ kind: { ...text, enum: ['unresolved'] }, reason: text, references: refs }),
+  object({ kind: { ...text, enum: ['produced'] }, assetIds: refs() }),
+  object({ kind: { ...text, enum: ['omitted'] }, reason: text, references: refs() }),
+  object({ kind: { ...text, enum: ['unresolved'] }, reason: text, references: refs() }),
 ] };
 export const draft = object({
   title: text, introduction: paragraph,
   sections: list(object({ id: handle, title: text, paragraphs: list(block, 1, 30), disposition }), 1, 30),
   diagrams: list(object({ id: handle, title: text, sectionId: handle,
     kind: { ...text, enum: [...DIAGRAM_KINDS] }, relationship: text,
-    nodes: list(object({ id: handle, label: text, sourceIds: refs, epistemic }), 1, 40),
-    edges: list(object({ id: handle, from: handle, to: handle, label: text, sourceIds: refs, epistemic }), 1, 80),
+    nodes: list(object({ id: handle, label: text, sourceIds: refs(), epistemic }), 1, 40),
+    edges: list(object({ id: handle, from: handle, to: handle, label: text, sourceIds: refs(), epistemic }), 1, 80),
     disposition,
   }), 0, 20),
   deepDives: list(object({ id: handle, title: text, sectionId: handle, paragraphs: list(block, 1, 30), disposition }), 0, 30),
-  unresolved: list(object({ question: text, reason: text, references: refs }), 0, 100),
+  unresolved: list(object({ question: text, reason: text, references: refs() }), 0, 100),
 });
 const inventoryCoverage = list(object({ entryId: handle, disposition: { ...text, enum: ['represented', 'justified-omission', 'unsupported', 'unresolved'] }, blockIds: list(handle, 0, 5000), reason: text }), 1, 5000);
 const blockSupport = list(object({ blockId: handle, verdict: { ...text, enum: ['supported', 'anchor-does-not-support', 'unresolved'] }, sourceIds: list(handle, 0, 200), reason: text }), 1, 5000);

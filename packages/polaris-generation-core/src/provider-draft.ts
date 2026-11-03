@@ -25,8 +25,8 @@ export type ProviderInventoryCoverage = FidelityInventoryCoverage;
 export type ProviderBlockSupport = FidelityBlockSupport;
 export type ProviderReview = FidelityReview;
 
-const inventory = object({ entries: list(object({ id: handle, sourceIds: refs, statement: text, kind: { ...text, enum: ['purpose', 'beneficiary', 'thesis', 'capability', 'choice', 'term', 'qualification', 'conflict', 'other'] }, disposition }), 1) });
-const plan = object({ sections: list(object({ id: handle, title: text, reason: text, sourceIds: refs, disposition }), 1, 30) });
+const inventory = object({ entries: list(object({ id: handle, sourceIds: refs(), statement: text, kind: { ...text, enum: ['purpose', 'beneficiary', 'thesis', 'capability', 'choice', 'term', 'qualification', 'conflict', 'other'] }, disposition }), 1) });
+const plan = object({ sections: list(object({ id: handle, title: text, reason: text, sourceIds: refs(), disposition }), 1, 30) });
 /** Bounds a discovery claim; discovery.ts truncates at `maxClaimChars` (default 400). */
 export const DISCOVERY_CLAIM_MAX_LENGTH = 400;
 export const DISCOVERY_RELEVANCE_MAX = 10;
@@ -220,12 +220,6 @@ export function validateStage(stage: GenerationStage, value: unknown, context: R
   }
   return structuredClone(value);
 }
-
-/** Closed-schema primitives shared with rendered-design.ts (package-internal; not
- * re-exported from index.ts), so both modules enforce one `check` and one handle. */
-export type ClosedSchema = Schema;
-export const checkClosedSchema: (schema: Schema, value: unknown) => void = check;
-export const schemaParts = { text, handle, list, object, refs } as const;
 
 /**
  * Validates a discovery reply against its stage's schema and its own call:

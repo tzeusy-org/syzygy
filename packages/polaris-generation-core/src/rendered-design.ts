@@ -1,5 +1,6 @@
 import { digestCanonicalJson } from './canonical-json.js';
-import { checkClosedSchema, schemaParts, validateDraftRecord, type ClosedSchema, type ProviderDraft } from './provider-draft.js';
+import { check, handle, list, object, refs, text, type Schema } from './closed-schema.js';
+import { validateDraftRecord, type ProviderDraft } from './provider-draft.js';
 
 /**
  * Rendered-design review record and its trusted verdict (REQ-polaris-generation-004
@@ -46,26 +47,25 @@ import { checkClosedSchema, schemaParts, validateDraftRecord, type ClosedSchema,
  * here: it is trusted to the figure's `produced` disposition.
  */
 
-const { text, handle, list, object, refs } = schemaParts;
-const kind = (value: string): ClosedSchema => ({ ...text, enum: [value] } as ClosedSchema);
+const kind = (value: string): Schema => ({ ...text, enum: [value] });
 
-const relationshipDiagram: ClosedSchema = { oneOf: [
+const relationshipDiagram: Schema = { oneOf: [
   object({ kind: kind('named'), diagramId: handle }),
   object({ kind: kind('none') }),
 ] };
 const relationship = object({
   id: handle,
   description: text,
-  sourceIds: refs,
-  judgment: { ...text, enum: ['diagram-clearer', 'prose-sufficient'] } as ClosedSchema,
-  support: { ...text, enum: ['supported', 'partly-supported', 'unsupported'] } as ClosedSchema,
+  sourceIds: refs(),
+  judgment: { ...text, enum: ['diagram-clearer', 'prose-sufficient'] },
+  support: { ...text, enum: ['supported', 'partly-supported', 'unsupported'] },
   diagram: relationshipDiagram,
   gaps: list(object({ element: text, reason: text }), 0, 40),
 });
 const renderedDesignReview = object({
   draftDigest: { type: 'string', minLength: 64, maxLength: 64, pattern: '^[0-9a-f]{64}$' },
   relationships: list(relationship, 0, 200),
-  findings: list(object({ severity: { ...text, enum: ['blocking', 'advisory'] } as ClosedSchema, message: text, target: handle }), 0, 1000),
+  findings: list(object({ severity: { ...text, enum: ['blocking', 'advisory'] }, message: text, target: handle }), 0, 1000),
 });
 
 export type RelationshipJudgment = 'diagram-clearer' | 'prose-sufficient';
@@ -146,7 +146,7 @@ function relationshipRule(item: RenderedDesignRelationship, draft: ProviderDraft
  * an explicit, valid empty enumeration blocks nothing by itself.
  */
 export function renderedDesignVerdict(review: unknown, draft: unknown): RenderedDesignVerdict {
-  checkClosedSchema(renderedDesignReview, review);
+  check(renderedDesignReview, review);
   const data = structuredClone(review as RenderedDesignReview);
   const subject = validateDraftRecord(draft);
   const ids = data.relationships.map(item => item.id);

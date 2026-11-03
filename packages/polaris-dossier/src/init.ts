@@ -10,6 +10,7 @@ import type { Outcome } from './outcome.js';
 import { parseRunConfig, type RunConfigRefusal } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { createRunDirectory, stateRootViolation, type RunPorts } from './state-directory.js';
+import { isoOf } from './iso-of.js';
 
 /** `syzygy dossier init <clone> --url <url> --config <run.json> --state-root <dir>` (REQ-polaris-generation-033, 036).
  *
@@ -141,7 +142,7 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
   const subject: RunSubject = {
     repository: { url: url.url, repositoryId },
     clone: { path: clonePath, declaredBy: 'operator', label: 'Inferred', use: 'read' },
-    pinnedRevision: { commit: head.commit, label: pinned.label, consentRecord: consent.record, pinnedAt: new Date(ports.now()).toISOString() },
+    pinnedRevision: { commit: head.commit, label: pinned.label, consentRecord: consent.record, pinnedAt: isoOf(ports.now()) },
     startGates: { registryEntry: registryEntry.record, screeningPolicy: screeningPolicy.record },
     governed: { kind: governed.kind, because: governed.because },
     providerStatement,
