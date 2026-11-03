@@ -213,9 +213,33 @@ const UNSAFE_SCHEME = '(?:j\\s*a\\s*v\\s*a\\s*s\\s*c\\s*r\\s*i\\s*p\\s*t|v\\s*b\
 // The two forms accept the same strings, and from any start a match must
 // end at the one `:` the scheme's letters lead to, so `matchAll` yields the
 // same index and text for every input (syzygy-bpyt.52; the old form is the
-// oracle in `git-object-reader.test.ts`).
+// oracle in `unsafe-url-equivalence.test.ts`).
 const UNSAFE_URL = new RegExp(`(?:\\]\\(\\s*(?:<\\s*)?|\\]:\\s*(?:<\\s*)?|=\\s*(?:["']\\s*)?|<\\s*)${UNSAFE_SCHEME}`, 'gi');
-const OBFUSCATED_DESTINATION = /\]\(\s*<?[^)\s]*&(?:#\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);/g;
+// An HTML entity inside a Markdown link destination: `](`, optional
+// whitespace, then the destination's run of characters that are neither
+// `)` nor whitespace, ending at the run's last entity. The first branch is
+// the earlier pattern, `\]\(\s*<?[^)\s]*&(?:…);`, unchanged; alone it
+// rescanned the whole run from every `](` inside it, so a run of 100,000
+// `](` took 28 s of CPU. When the first branch fails at a `](`, no entity
+// ends the run after it, so every later `](` whose destination is the same
+// run fails too: the second branch (group 1) consumes that run, stopping
+// before a closing `](` that whitespace follows (its destination is the
+// next run), and its matches are dropped. Each run is then scanned a
+// bounded number of times, and the reported matches keep the index and text
+// of the earlier pattern for every input (syzygy-rmax; the old pattern is
+// the oracle in `obfuscated-destination-equivalence.test.ts`).
+const OBFUSCATED_DESTINATION = /\]\(\s*(?:<?[^)\s]*&(?:#\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\s\]]|\](?!\(\s))*))/g;
+
+// Every obfuscated-destination match the scan reports, in `matchAll` order:
+// its index in `text` and the matched text. Exported for the equivalence
+// test.
+export function obfuscatedDestinationMatches(text: string): readonly { readonly index: number; readonly value: string }[] {
+  const matches: { readonly index: number; readonly value: string }[] = [];
+  for (const match of text.matchAll(OBFUSCATED_DESTINATION)) {
+    if (match[1] === undefined) matches.push({ index: match.index, value: match[0] });
+  }
+  return matches;
+}
 
 // Every unsafe-URL match the scan reports, in `matchAll` order: its index
 // in `text` and the matched text. Exported for the equivalence test.
@@ -284,7 +308,7 @@ export function scanActiveContentCharged(raw: string, charge: ParsePassCharge): 
   const urlSpent = spent('unsafe-url-positions');
   if (urlSpent !== undefined) return urlSpent;
   for (const match of unsafeUrlMatches(text)) add('unsafe-url-scheme', match.index);
-  for (const match of text.matchAll(OBFUSCATED_DESTINATION)) add('obfuscated-link-destination', match.index);
+  for (const match of obfuscatedDestinationMatches(text)) add('obfuscated-link-destination', match.index);
   return { kind: 'scanned', findings: findings.sort((a, b) => a.line - b.line || a.column - b.column || a.form.localeCompare(b.form)) };
 }
 

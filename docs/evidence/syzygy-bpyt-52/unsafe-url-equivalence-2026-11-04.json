@@ -2,10 +2,21 @@
  "subject": {
   "bead": "syzygy-bpyt.52",
   "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
-  "sha256": "ecd15f1031178da2f33e5ac79bdb2e37177c4c2bda5bfcbd2104793a1a016f7d",
+  "sha256": "d88a1e71ab9a1e7ea5671c6e4184d6640f1b92b626f2229e1123a01d36df617d",
   "test": "packages/three-surface-poc-core/src/unsafe-url-equivalence.test.ts",
-  "sweepCommit": "30c5da16f425e42323eb8a1813f08a4eed5b3089",
-  "note": "the sweep and mutants ran at sweepCommit; git-object-reader.ts is byte-identical at the PR head (sha256 above)"
+  "testSha256": "9fc33808a5e6ed42661ccc12682ae99898a4654a1d9d3df0633093718709576d",
+  "sweepCommit": "a332ff69f14868128a1667b685b258b9add36953",
+  "sweepCommitReachableFrom": "origin/main (the #638 merge commit)",
+  "note": "the sweep and mutants were re-run at sweepCommit on 2026-11-04 (syzygy-rmax); git-object-reader.ts and the test there are byte-identical to the #638 head c70d2900 (sha256 above)",
+  "firstRun": {
+   "sweepCommit": "30c5da16f425e42323eb8a1813f08a4eed5b3089",
+   "subjectSha256": "ecd15f1031178da2f33e5ac79bdb2e37177c4c2bda5bfcbd2104793a1a016f7d",
+   "trackedFiles": 8515,
+   "formsCompared": 16698,
+   "same": 16697,
+   "oracleMatches": 80,
+   "why retired (syzygy-rmax, folding #638 review exceptions E1 and E2)": "30c5da16 is reachable from no ref on origin/main, and its git-object-reader.ts (the sha256 here) is not the head's: the PR head changed policyVersion after the sweep, so the earlier note calling the file byte-identical at the head was false. Kept as provenance; the figures below were re-derived at a reachable commit."
+  }
  },
  "oracle": "(?:\\]\\(\\s*<?|\\]:\\s*<?|=\\s*[\"']?\\s*|<)\\s*(?:j\\s*a\\s*v\\s*a\\s*s\\s*c\\s*r\\s*i\\s*p\\s*t|v\\s*b\\s*s\\s*c\\s*r\\s*i\\s*p\\s*t|d\\s*a\\s*t\\s*a|f\\s*i\\s*l\\s*e)\\s*: (flags gi)",
  "head": "(?:\\]\\(\\s*(?:<\\s*)?|\\]:\\s*(?:<\\s*)?|=\\s*(?:[\"']\\s*)?|<\\s*)(?:j\\s*a\\s*v\\s*a\\s*s\\s*c\\s*r\\s*i\\s*p\\s*t|v\\s*b\\s*s\\s*c\\s*r\\s*i\\s*p\\s*t|d\\s*a\\s*t\\s*a|f\\s*i\\s*l\\s*e)\\s*: (flags gi)",
@@ -14,19 +25,19 @@
   "runs": [
    {
     "tool": "tools/sweep.mjs",
-    "args": "<root> sweep.json 120000 10",
-    "population": "all 8515 tracked files, NUL-bearing files skipped"
+    "args": "<root> sweep.json 120000 8",
+    "population": "all 8546 tracked files at sweepCommit, NUL-bearing files skipped"
    },
    {
-    "args": "<root> rest.json 570000 6",
-    "population": "the 3 files with a form over the 120 s cap"
+    "args": "<root> rest.json 600000 6",
+    "population": "the 3 files with a masked form over the 120 s cap"
    },
    {
-    "args": "<root> nul.json 570000 10 --include-nul",
+    "args": "<root> nul.json 600000 8 --include-nul",
     "population": "the 13 NUL-bearing files"
    }
   ],
-  "trackedFiles": 8515,
+  "trackedFiles": 8546,
   "notUtf8Files": [
    "docs/evidence/orrery-height-repaired-narrow-2026-09-09.png",
    "docs/evidence/orrery-height-repaired-wide-2026-09-09.png",
@@ -40,8 +51,8 @@
    "docs/evidence/scratch-prefix-census-2026-10-23/runs/k2-kill-75s.trace.jsonl.gz",
    "docs/evidence/scratch-prefix-census-2026-10-23/runs/k3-kill-115s.trace.jsonl.gz"
   ],
-  "formsCompared": 16698,
-  "same": 16697,
+  "formsCompared": 16754,
+  "same": 16753,
   "differ": [],
   "oracleOverCap": [
    {
@@ -49,70 +60,49 @@
     "form": "masked",
     "bytes": 138173,
     "sha": "a831144b75ec4d01b83e78280979bec76f9307ecdc2157c6082e066836064a18",
-    "capMs": 570000
+    "capMs": 600000
    }
   ],
-  "oracleMatches": 80,
+  "oracleMatches": 84,
   "slowestOracle": [
    {
     "f": "packages/polaris-dossier/src/cli.ts",
     "form": "masked",
-    "bytes": 31307,
-    "oldMs": 324792,
+    "bytes": 31296,
+    "oldMs": 327929.8,
     "headMs": 0.1
    },
    {
     "f": "apps/three-surface-poc/src/design-tokens.ts",
     "form": "masked",
     "bytes": 17448,
-    "oldMs": 165955.5,
-    "headMs": 0.07
+    "oldMs": 141060,
+    "headMs": 0.06
+   },
+   {
+    "f": "packages/polaris-dossier/src/brief.ts",
+    "form": "masked",
+    "bytes": 22968,
+    "oldMs": 48061.6,
+    "headMs": 0.04
    },
    {
     "f": "apps/three-surface-poc/src/polaris-generation/draft-preview.ts",
     "form": "masked",
     "bytes": 14173,
-    "oldMs": 64953,
+    "oldMs": 32058.4,
     "headMs": 0.05
    },
    {
     "f": "apps/three-surface-poc/src/orrery.ts",
     "form": "masked",
     "bytes": 11221,
-    "oldMs": 56751.3,
-    "headMs": 0.05
-   },
-   {
-    "f": "packages/polaris-dossier/src/brief.ts",
-    "form": "masked",
-    "bytes": 22968,
-    "oldMs": 46015.5,
-    "headMs": 0.04
-   },
-   {
-    "f": "apps/three-surface-poc/src/polaris-opening-index.ts",
-    "form": "masked",
-    "bytes": 10481,
-    "oldMs": 23189.7,
-    "headMs": 0.04
-   },
-   {
-    "f": "packages/polaris-generation-core/src/prompts.ts",
-    "form": "masked",
-    "bytes": 33442,
-    "oldMs": 20124.9,
-    "headMs": 0.05
-   },
-   {
-    "f": "apps/three-surface-poc/src/trajectory.ts",
-    "form": "masked",
-    "bytes": 17613,
-    "oldMs": 13039.3,
-    "headMs": 0.05
+    "oldMs": 25726.5,
+    "headMs": 0.07
    }
   ],
-  "headMsMax": 7.31,
-  "unknown": "apps/three-surface-poc/src/polaris.ts masked form: the oracle did not finish in 570 s, so that one form is not compared [Unknown]; its raw form is same"
+  "headMsMax": 8.23,
+  "unknown": "apps/three-surface-poc/src/polaris.ts masked form: the oracle did not finish in 600 s, so that one form is not compared [Unknown]; its raw form is same"
  },
  "unitDifferential": "unsafe-url-equivalence.test.ts: package fixtures and three test sources (whole and per line), hand cases, 11^3 x 5 exhaustive token strings, 20,000 seeded random strings; all 0 differ",
  "timing": {
@@ -135,69 +125,78 @@
    "20KB": "not finished in 120 s (timeout exit 124)"
   }
  },
- "mutants": [
-  {
-   "id": "m1-drop-ws-after-link-angle",
-   "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "new": "`(?:\\\\]\\\\(\\\\s*(?:<)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "tests": "Tests  3 failed | 1 passed | 7 skipped (11)",
-   "killed": true
+ "mutants": {
+  "ranAt": {
+   "commit": "a332ff69f14868128a1667b685b258b9add36953",
+   "subjectSha256": "d88a1e71ab9a1e7ea5671c6e4184d6640f1b92b626f2229e1123a01d36df617d"
   },
-  {
-   "id": "m2-refdef-angle-without-ws",
-   "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*<?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "tests": "Tests  3 failed | 1 passed | 7 skipped (11)",
-   "killed": true
-  },
-  {
-   "id": "m3-drop-quote",
-   "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "tests": "Tests  3 failed | 1 passed | 7 skipped (11)",
-   "killed": true
-  },
-  {
-   "id": "m4-drop-ws-after-quote",
-   "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*[\"']?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "tests": "Tests  3 failed | 1 passed | 7 skipped (11)",
-   "killed": true
-  },
-  {
-   "id": "m5-drop-ws-after-autolink",
-   "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<)${UNSAFE_SCHEME}`, 'gi')",
-   "tests": "Tests  3 failed | 1 passed | 7 skipped (11)",
-   "killed": true
-  },
-  {
-   "id": "m6-drop-refdef",
-   "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "tests": "Tests  4 failed | 7 skipped (11)",
-   "killed": true
-  },
-  {
-   "id": "m7-drop-case-fold",
-   "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'g')",
-   "tests": "Tests  4 failed | 7 skipped (11)",
-   "killed": true
-  },
-  {
-   "id": "m8-sticky-flag",
-   "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
-   "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'giy')",
-   "tests": "Tests  4 failed | 7 skipped (11)",
-   "killed": true
-  },
-  {
-   "id": "t1-restore-old-pattern",
-   "old": "head pattern",
-   "new": "oracle pattern",
-   "tests": "2 KB row: expected 2359.819 to be less than 250 (bound then 250, now 200); 20 KB `=` row did not finish under `timeout 120` (exit 124)",
-   "killed": true
-  }
- ]
+  "killed": 8,
+  "total": 8,
+  "rows": [
+   {
+    "id": "m1-drop-ws-after-link-angle",
+    "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "new": "`(?:\\\\]\\\\(\\\\s*(?:<)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "exit": 1,
+    "tests": "Tests  3 failed | 1 passed | 7 skipped (11)",
+    "killed": true
+   },
+   {
+    "id": "m2-refdef-angle-without-ws",
+    "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*<?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "exit": 1,
+    "tests": "Tests  3 failed | 1 passed | 7 skipped (11)",
+    "killed": true
+   },
+   {
+    "id": "m3-drop-quote",
+    "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "exit": 1,
+    "tests": "Tests  3 failed | 1 passed | 7 skipped (11)",
+    "killed": true
+   },
+   {
+    "id": "m4-drop-ws-after-quote",
+    "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*[\"']?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "exit": 1,
+    "tests": "Tests  3 failed | 1 passed | 7 skipped (11)",
+    "killed": true
+   },
+   {
+    "id": "m5-drop-ws-after-autolink",
+    "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<)${UNSAFE_SCHEME}`, 'gi')",
+    "exit": 1,
+    "tests": "Tests  3 failed | 1 passed | 7 skipped (11)",
+    "killed": true
+   },
+   {
+    "id": "m6-drop-refdef",
+    "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "exit": 1,
+    "tests": "Tests  4 failed | 7 skipped (11)",
+    "killed": true
+   },
+   {
+    "id": "m7-drop-case-fold",
+    "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'g')",
+    "exit": 1,
+    "tests": "Tests  4 failed | 7 skipped (11)",
+    "killed": true
+   },
+   {
+    "id": "m8-sticky-flag",
+    "old": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'gi')",
+    "new": "`(?:\\\\]\\\\(\\\\s*(?:<\\\\s*)?|\\\\]:\\\\s*(?:<\\\\s*)?|=\\\\s*(?:[\"']\\\\s*)?|<\\\\s*)${UNSAFE_SCHEME}`, 'giy')",
+    "exit": 1,
+    "tests": "Tests  4 failed | 7 skipped (11)",
+    "killed": true
+   }
+  ]
+ }
 }
