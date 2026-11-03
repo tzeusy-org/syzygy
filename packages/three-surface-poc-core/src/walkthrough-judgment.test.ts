@@ -565,12 +565,20 @@ const NON_HUMAN_OWNERS: readonly [string, string][] = [
   ['gpt-5', 'model name gpt (flipped)'],
   ['GitHub Copilot', 'model name copilot (flipped)'],
   ['an llm', 'model name llm (flipped)'],
-  // syzygy-bpyt.6.8: one owner per remaining alternative of NON_HUMAN_PRINCIPAL,
-  // each matched by no other alternative, so deleting that alternative (or a
-  // separator it alone relies on) changes a verdict here. Section 3H of
-  // R-GP-IMPL-OWNER-ACT-FIELDS-1 lists the first seven; the rest pin the
-  // slash and whitespace forms of the second line-start arm and the first
-  // arm's machine separators.
+  // syzygy-bpyt.6.8, corrected by syzygy-bpyt.6.11: what each group kills.
+  // Section 3H of R-GP-IMPL-OWNER-ACT-FIELDS-1 lists the first seven below.
+  //  - bot, service: deploy, system, pipeline-7, model: x, agent: nightly are
+  //    each matched by their word in BOTH line-start arms, so they kill only
+  //    the deletion of that word from both arms at once (section 3H); a
+  //    deletion from one arm leaves the other matching them.
+  //  - agent/triage, bot/deploy, system/cron, service/gateway, pipeline/build,
+  //    model/v2 (slash) and daemon nightly (whitespace) kill the single-arm
+  //    deletions (second arm) and the separator deletions.
+  //  - daemon-7 (hyphen) kills the deletion of daemon from the second arm and
+  //    of the hyphen from that arm's separator class.
+  //  - machine: build-42, machine runner and machine-7 are matched by the
+  //    first arm alone and kill the colon, whitespace and hyphen deletions
+  //    from its separator class.
   ['bot', 'role prefix bot, bare'],
   ['service: deploy', 'role prefix service, colon'],
   ['system', 'role prefix system, bare'],
