@@ -472,7 +472,7 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
 
   it('keeps the directory a link names when the profile is not the running user\'s, as in a shared temp directory where another user made it first', () => {
     const { profile, victim } = linkedProfile();
-    const readLink = vi.fn(readlinkSync);
+    const readLink = vi.fn((path: string): string => readlinkSync(path));
     removeBrowserProfile(profile, { remove: () => undefined, readLink, lstat: lstatWith(profile, { uid: lstatSync(profile, { bigint: true }).uid + 1n }) });
     expect(readLink).not.toHaveBeenCalled();
     expect(existsSync(join(victim, 'SingletonSocket'))).toBe(true);
@@ -485,7 +485,7 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
     const profile = join(root, 'syzygy-poc-browser-LinkTo');
     symlinkSync(real, profile);
     // The entry is judged as it is, not after resolving it: resolved, it is the running user's.
-    const readLink = vi.fn(readlinkSync);
+    const readLink = vi.fn((path: string): string => readlinkSync(path));
     removeBrowserProfile(profile, { remove: () => undefined, readLink, lstat: lstatWith(profile, { uid: lstatSync(real, { bigint: true }).uid + 1n }) });
     expect(readLink).not.toHaveBeenCalled();
     expect(existsSync(join(victim, 'SingletonSocket'))).toBe(true);
@@ -494,7 +494,7 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
   it('keeps the directory a link names when the link is not the running user\'s', () => {
     const { profile, victim } = linkedProfile();
     const link = join(profile, 'SingletonSocket');
-    const readLink = vi.fn(readlinkSync);
+    const readLink = vi.fn((path: string): string => readlinkSync(path));
     removeBrowserProfile(profile, { remove: () => undefined, readLink, lstat: lstatWith(link, { uid: lstatSync(link, { bigint: true }).uid + 1n }) });
     expect(readLink).not.toHaveBeenCalled();
     expect(existsSync(join(victim, 'SingletonSocket'))).toBe(true);
