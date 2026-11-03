@@ -1,0 +1,19 @@
+{
+ "tool": "lexer_vs_printer.py",
+ "toolSha256": "1c17a513dc60f7355c31d4f98effa1845070f30ae9afdc8880668b848e0f4a71",
+ "treeCommit": "695bf136da35dc9d94bf4abf80c709f3d4244adb",
+ "trackedChangesInTree": false,
+ "denominator": {
+  "trackedCodeFiles": 847,
+  "extensions": [
+   ".ts",
+   ".mts",
+   ".mjs",
+   ".js",
+   ".cjs"
+  ]
+ },
+ "filesAgreeing": 847,
+ "filesDiffering": 0,
+ "differing": []
+}

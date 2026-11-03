@@ -1,0 +1,47 @@
+{
+ "tool": "compare_captures.py",
+ "claim": "equality between the compared trees only; the digests depend on the fixture repository path and are not a reference for any other run",
+ "reference": {
+  "file": "route-capture-base-0285819d.json",
+  "fileSha256": "775f04cedee6c884a02327ef1cd02ba46b066b24c0451553217774207d84651d",
+  "treeCommit": "0285819da45684e6299e81402d6ad1b7e4032eab",
+  "changedTrackedFilesUnderPackagesAndApps": [],
+  "variantsSha256": "c73225ccf8d763b6bf2ae6f76c04ab25859c32f8544a157ac0f1a48bd757e588"
+ },
+ "fixtureRepository": {
+  "path": "/tmp/b712/fixture-repo",
+  "revision": "1f892687d53c829f9c2a4ee99bccccb23d6158df",
+  "creation": "first run only: fixtureRepoWithGit([]) from apps/three-surface-poc/dist/test-model-fixture.js builds a git repository from fixed files with pinned commit instants (GIT_AUTHOR_DATE and GIT_COMMITTER_DATE 2026-08-24T00:00:00Z) and no global or system git config, so its revision is a function of the files alone; the script copies it to the path above, removes the original, and writes the revision to <path>.json; later runs reuse the path"
+ },
+ "fixtures": 5,
+ "fixturesWithDistinctOutput": 5,
+ "routesPerFixture": [
+  19,
+  19,
+  19,
+  19,
+  19
+ ],
+ "responses": 230,
+ "requestKeysPerFixture": 46,
+ "requestKeysWhoseBodyDiffersAcrossFixtures": 30,
+ "distinctBodyDigests": 73,
+ "statuses": {
+  "200": 150,
+  "401": 40,
+  "403": 20,
+  "502": 20
+ },
+ "comparisons": [
+  {
+   "file": "route-capture-head-695bf136.json",
+   "fileSha256": "0a1f27551a85c20141317874ec9527ea499983270de3703d56dfbe5e14264653",
+   "treeCommit": "695bf136da35dc9d94bf4abf80c709f3d4244adb",
+   "changedTrackedFilesUnderPackagesAndApps": [],
+   "variantsSha256": "c73225ccf8d763b6bf2ae6f76c04ab25859c32f8544a157ac0f1a48bd757e588",
+   "variantsBytesEqualReference": true,
+   "sameRequestKeys": true,
+   "responsesDifferingFromReference": 0
+  }
+ ]
+}

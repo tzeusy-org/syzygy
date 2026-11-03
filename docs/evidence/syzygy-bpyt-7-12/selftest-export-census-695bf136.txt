@@ -1,0 +1,34 @@
+# tool sha256: e63681d9f206deafa7056fcfd036f2578be25e56cd4f5a534a9a0db2191cb931
+# tree commit: 695bf136da35dc9d94bf4abf80c709f3d4244adb
+# command: python3 export_census.py --selftest (exit 0)
+ok  glob then block comment later: X expected 1 got 1
+ok  name only in comments: X expected 0 got 0
+ok  name in string kept: X expected 1 got 1
+ok  name in template text kept: X expected 1 got 1
+ok  template expression is code: X expected 1 got 1
+ok  nested braces in template expression: X expected 2 got 2
+ok  quote inside regex class: X expected 1 got 1
+ok  division is not a regex: X expected 1 got 1
+ok  regex after return: X expected 1 got 1
+ok  url in string is not a comment: X expected 1 got 1
+ok  escaped quote does not end the string: X expected 1 got 1
+ok  comment inside a template expression is a comment: X expected 1 got 1
+ok  comment after a nested template in a template expression is a comment: X expected 1 got 1
+ok  comment after braces inside a template expression is a comment: X expected 1 got 1
+ok  slash inside a regex character class does not end the regex: X expected 1 got 1
+ok  division after a parenthesis is not a regex: X expected 1 got 1
+ok  nested template inside a template expression is entered: X expected 2 got 2
+ok  text after a template expression close is template text: X expected 1 got 1
+ok  class of deadThing: expected dead got dead
+ok  class of selfOnlyThing: expected self-only got self-only
+ok  class of testOnlyThing: expected test-only got test-only
+ok  class of internalThing: expected internal got internal
+ok  class of publicThing: expected public got public
+ok  class of commentOnlyThing: expected dead got dead
+ok  class of barrelOnlyThing: expected dead got dead
+ok  class of aliasedThing: expected dead got dead
+ok  class of listedThing: expected self-only got self-only
+ok  class of useSelf: expected dead got dead
+ok  class of useInternal: expected dead got dead
+ok  raw class of commentOnlyThing: expected self-only got self-only
+selftest: 30 of 30 cases hold
