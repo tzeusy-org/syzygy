@@ -3,6 +3,7 @@
 .dolt/
 *.db
 .beads-credential-key
+.beads.gate.lock
 
 # Rebuildable projections — never a source of truth (VIS-6)
 .syzygy/cache/
