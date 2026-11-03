@@ -19,6 +19,7 @@ import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
 import { launchForm, sessionPrompt, shellQuote } from './session-handover.js';
+import { GIT_ENV } from '@syzygy/test-kit';
 
 // Asynchronous, so a slow command cannot starve the vitest worker's RPC (syzygy-w90k).
 const execFileAsync = promisify(execFile);
@@ -28,7 +29,6 @@ const execFileAsync = promisify(execFile);
 // code ran, never imported from the module under test.
 
 const REAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-const GIT_ENV = { ...process.env, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null', GIT_AUTHOR_DATE: '2026-10-01T00:00:00Z', GIT_COMMITTER_DATE: '2026-10-01T00:00:00Z' };
 const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
 const LATER = NOW + 60_000;
 const RUN_ID = `run-${'d'.repeat(32)}`;

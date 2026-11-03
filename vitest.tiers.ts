@@ -101,6 +101,7 @@ export const INTEGRATION_TESTS: readonly string[] = [
   'packages/polaris-generation-consent/src/package-reader.test.ts',
   'packages/polaris-generation-core/src/public-source-exemption.test.ts',
   'packages/polaris-generation-core/src/secret-redaction.test.ts',
+  'packages/test-kit/src/git-repo.test.ts',
   'packages/three-surface-poc-core/src/code-structure.test.ts',
   'packages/three-surface-poc-core/src/model-observations.test.ts',
   'packages/three-surface-poc-core/src/model.test.ts',

@@ -198,10 +198,10 @@ describe('read-only Git observation', () => {
     ]);
     expect(exact).toEqual(['package-lock.json', 'package.json', 'scripts/clean_build.mjs', 'tsconfig.base.json']);
     const workspaces = [...WORKSPACE.manifests.values()].map((manifest) => manifest.dir).filter((dir) => dir !== '.').sort();
-    expect(workspaces, 'the workspaces the probes are built over; a new workspace needs its probes reviewed').toHaveLength(12);
+    expect(workspaces, 'the workspaces the probes are built over; a new workspace needs its probes reviewed').toHaveLength(13);
     const tracked = git(REPO_ROOT, ['ls-files', '-z']).split('\0').filter((path) => path !== '');
     const probes = [...workspaces.flatMap((dir) => [`${dir}/package.json`, `${dir}/tsconfig.json`, `${dir}/src/__untracked__.ts`, `${dir}x/a.ts`, `docs/${dir}/a.ts`]), 'scripts/clean_build.mjs.bak'];
-    expect(probes, 'five probes per workspace and the program\'s near-miss; a changed count means the probe list changed').toHaveLength(61);
+    expect(probes, 'five probes per workspace and the program\'s near-miss; a changed count means the probe list changed').toHaveLength(66);
     const population = [...new Set([...tracked, ...probes])].sort();
     const isInput = (path: string): boolean => exact.includes(path) || projects.some((dir) => path.startsWith(`${dir}/`));
     expect(population.filter((path) => pocObserverInputsAreClean({ changedPaths: [path] }) === isInput(path))
