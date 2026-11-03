@@ -69,10 +69,11 @@ ROWS = {
     'packages/polaris-dossier/src/render.ts:321': (1, True, OS_, 6_712, SEGMENTS),
     'packages/polaris-dossier/src/review-model.ts:44': (1, True, OWN, None, DOSSIER_RUN_DIR),
     'packages/polaris-dossier/src/review-verdict.ts:15': (1, True, OWN, None, DOSSIER_RUN_DIR),
-    'packages/polaris-dossier/src/state-directory.ts:71': (1, True, OS_, 67_584,
-        'path components after a rewritten link: the tail of a path that entered as an argv or environment string (Linux '
-        'MAX_ARG_STRLEN = 131,072 bytes, so at most 65,536 components) plus one readlink target (PATH_MAX 4,096, 2,048 components). '
-        'Margin about 1.5x at the default stack only: the threshold halves at half the stack'),
+    'packages/polaris-dossier/src/state-directory.ts:71': (1, False, None, None,
+        'path components after a rewritten link. Each rewrite keeps the components that follow the link, so a chain of distinct '
+        'links grows the spread without limit: the first argv or environment tail (Linux MAX_ARG_STRLEN = 131,072 bytes, so at '
+        'most 65,536 components) is a floor, and every further link adds up to one readlink target (PATH_MAX 4,096, 2,048 '
+        'components) [Observed by the reviewer: 80 links with targets of about 3.8 KB throw RangeError on node v24]'),
     'packages/polaris-generation-core/src/closed-schema.ts:36': (1, True, C, None, 'choice() callers pass module-constant enum lists'),
     'packages/polaris-generation-core/src/discovery.ts:283': (2, True, BUD, 40,
         'one group\'s blobs; partitionSubsystems chunks every group at maxGroupBlobs, 40 in both DEFAULT_ and DOSSIER_DISCOVERY_BUDGET'),
@@ -106,6 +107,7 @@ ROWS = {
     'scripts/measure_line_slot_reads.mjs:139': (1, True, C, 20, 'the twenty timed reads'),
 }
 GP_Q0 = {
+    'packages/polaris-dossier/src/state-directory.ts:71': 'a loop turns the RangeError on a pathological symlink chain into a resolved state-directory path, so it changes which directory the tool reads and writes (an observable decision)',
     'apps/three-surface-poc/src/polaris-accessible-names.ts:336': 'the PWB-REQ-016 sweep exits 0 only when every listed page is served with zero violations; a loop turns the crash into that exit code and evidence record',
     'apps/three-surface-poc/src/polaris-accessible-names.ts:338': 'the same exit code and record, through the coverage arm',
     'packages/polaris-dossier/src/check.ts:206': 'the line sits outside the try around deriveFindings, so the RangeError escapes `syzygy dossier check`; a loop turns it into a recorded check result refusing the submission, and its exit code',

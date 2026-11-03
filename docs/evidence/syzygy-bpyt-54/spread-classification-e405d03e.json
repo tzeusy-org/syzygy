@@ -1,7 +1,7 @@
 {
  "subject": "argument-spread calls (one call handed a whole array as arguments) in tracked implementation code",
  "bead": "syzygy-bpyt.54",
- "commit": "66837559d0d1cc7f555f995683653f6884ed3fd1",
+ "commit": "e405d03e5320256581772ed015a7f723ef07ba65",
  "tool": "docs/evidence/syzygy-bpyt-54/spread_sweep.py",
  "toolSha256": "808d6225e5d48c6dba773e09c018a3ce62563c57201d472154d99bdf58d52b93",
  "population": 288,
@@ -38,18 +38,18 @@
   "all": {
    "lines": 51,
    "calls": 55,
-   "boundedLines": 47,
-   "unboundedLines": 4,
+   "boundedLines": 46,
+   "unboundedLines": 5,
    "fixed": 0,
-   "heldGpQ0": 4
+   "heldGpQ0": 5
   },
   "shipped": {
    "lines": 34,
    "calls": 35,
-   "boundedLines": 30,
-   "unboundedLines": 4,
+   "boundedLines": 29,
+   "unboundedLines": 5,
    "fixed": 0,
-   "heldGpQ0": 4
+   "heldGpQ0": 5
   },
   "scripts": {
    "lines": 17,
@@ -344,11 +344,12 @@
    "calls": 1,
    "shipped": true,
    "text": "...components.slice(index + 1));",
-   "bounded": true,
-   "boundClass": "os-limit",
-   "ceiling": 67584,
-   "bound": "path components after a rewritten link: the tail of a path that entered as an argv or environment string (Linux MAX_ARG_STRLEN = 131,072 bytes, so at most 65,536 components) plus one readlink target (PATH_MAX 4,096, 2,048 components). Margin about 1.5x at the default stack only: the threshold halves at half the stack",
-   "disposition": "unchanged: bounded"
+   "bounded": false,
+   "boundClass": "unbounded",
+   "ceiling": null,
+   "bound": "path components after a rewritten link. Each rewrite keeps the components that follow the link, so a chain of distinct links grows the spread without limit: the first argv or environment tail (Linux MAX_ARG_STRLEN = 131,072 bytes, so at most 65,536 components) is a floor, and every further link adds up to one readlink target (PATH_MAX 4,096, 2,048 components) [Observed by the reviewer: 80 links with targets of about 3.8 KB throw RangeError on node v24]",
+   "disposition": "held: GP-Q0",
+   "whyHeld": "a loop turns the RangeError on a pathological symlink chain into a resolved state-directory path, so it changes which directory the tool reads and writes (an observable decision)"
   },
   {
    "site": "packages/polaris-generation-core/src/closed-schema.ts:36",

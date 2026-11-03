@@ -1,6 +1,8 @@
 """syzygy-bpyt.54, rule 6 for the sweep itself: each mutant rewrites one predicate of spread_sweep.py method 1 in a
-temporary copy and must make `--selftest` exit 1. Usage: python3 spread_sweep_mutants.py (prints JSON; exits 1 if any
+temporary copy and must make `--selftest` exit 1. Usage: python3 spread_sweep_mutants.py <clone> [--selftest-record] (prints JSON; with --selftest-record prints the
+unmutated selftest record instead; exits 1 if any
 mutant survives or the unmutated selftest fails). Every mutant records its exact old and new fragment."""
+import hashlib
 import json
 import os
 import subprocess
@@ -8,6 +10,10 @@ import sys
 import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = sys.argv[1]
+COMMIT = subprocess.run(['git', '-C', ROOT, 'rev-parse', 'HEAD'], capture_output=True, check=True, text=True).stdout.strip()
+SUBJECT = {'ranAtCommit': COMMIT, 'tool': 'docs/evidence/syzygy-bpyt-54/spread_sweep.py',
+           'toolSha256': hashlib.sha256(open(os.path.join(HERE, 'spread_sweep.py'), 'rb').read()).hexdigest()}
 SOURCE = open(os.path.join(HERE, 'spread_sweep.py'), encoding='utf-8').read()
 MUTANTS = [
     ('strip-disabled', 'code = strip_with_depth(raw)', 'code = raw'),
@@ -32,6 +38,9 @@ def selftest(text):
 
 
 base_code, base_failures = selftest(SOURCE)
+if '--selftest-record' in sys.argv:
+    print(json.dumps({**SUBJECT, 'selftest': 'pass' if base_code == 0 else 'fail', 'failures': base_failures}, indent=1))
+    sys.exit(0 if base_code == 0 else 1)
 rows = []
 for name, old, new in MUTANTS:
     if SOURCE.count(old) != 1:
@@ -39,6 +48,6 @@ for name, old, new in MUTANTS:
     code, failures = selftest(SOURCE.replace(old, new))
     rows.append({'mutant': name, 'old': old, 'new': new, 'exit': code, 'outcome': 'killed' if code == 1 else 'survived', 'selftestFailures': failures})
 ok = base_code == 0 and all(row.get('outcome') == 'killed' for row in rows)
-print(json.dumps({'unmutatedSelftestExit': base_code, 'unmutatedFailures': base_failures, 'mutants': rows,
+print(json.dumps({**SUBJECT, 'unmutatedSelftestExit': base_code, 'unmutatedFailures': base_failures, 'mutants': rows,
                   'killed': sum(row.get('outcome') == 'killed' for row in rows), 'total': len(rows)}, indent=1))
 sys.exit(0 if ok else 1)
