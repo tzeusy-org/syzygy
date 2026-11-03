@@ -4,12 +4,13 @@
 // toggle. Every card carries the Unknown, so the narrowed board equals the
 // un-narrowed one; a card this test injects without the mark proves the
 // toggle narrows at all (a no-op toggle would pass the first half alone).
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+
+import { tempDir } from '@syzygy/test-kit';
 
 import { findBrowserExecutable, launchBrowser, type Browser } from './cdp-browser.js';
 import { buildFixtureModel, fixtureWorkItemRow } from './test-model-fixture.js';
@@ -37,8 +38,7 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
 
   it('the narrowed board lists exactly the cards the board renders, and hides an unmarked one', async () => {
     const model = buildFixtureModel(cleanups);
-    const directory = mkdtempSync(join(tmpdir(), 'syzygy-trajectory-narrowing-'));
-    cleanups.push(directory);
+    const directory = tempDir('syzygy-trajectory-narrowing-');
     const file = join(directory, 'trajectory.html');
     writeFileSync(file, renderTrajectoryPage(model));
     const page = await browser.newPage();
@@ -74,8 +74,7 @@ describe.skipIf(executable === undefined)('Trajectory narrowing to the governing
       }),
     ];
     const model = buildFixtureModel(cleanups, { workItemRows: rows });
-    const directory = mkdtempSync(join(tmpdir(), 'syzygy-trajectory-narrowing-'));
-    cleanups.push(directory);
+    const directory = tempDir('syzygy-trajectory-narrowing-');
     const file = join(directory, 'trajectory.html');
     writeFileSync(file, renderTrajectoryPage(model));
     const page = await browser.newPage();

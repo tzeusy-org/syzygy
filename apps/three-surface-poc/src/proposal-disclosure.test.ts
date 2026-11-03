@@ -1,9 +1,9 @@
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { afterEach, describe, expect, it } from 'vitest';
 
+import { tempDir } from '@syzygy/test-kit';
 import type { PocModel } from '@syzygy/three-surface-poc-core';
 
 import { findBrowserExecutable, withBrowserPage, type BrowserPage } from './cdp-browser.js';
@@ -130,8 +130,7 @@ describe('proposal disclosure row (syzygy-dov.3.2; P-70 M3 slice 6)', () => {
   });
 
   it.skipIf(browserExecutable === undefined)('renders every served proposal and the legend row in the declared token and symbol after scripts', async () => {
-    const directory = mkdtempSync(join(tmpdir(), 'syzygy-dov32-proposal-'));
-    cleanups.push(directory);
+    const directory = tempDir('syzygy-dov32-proposal-');
     await withBrowserPage(browserExecutable as string, async (page) => {
       for (const [name, model, expected] of [['populated', populated(), 1], ['zero', zero(populated()), 0]] as const) {
         const file = join(directory, `${name}.html`);

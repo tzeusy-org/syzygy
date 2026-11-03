@@ -9,13 +9,13 @@
 // imports no Polaris, narrative or rendering module. Expected counts come from
 // it, or are hand-typed literals it was cross-checked against, never from the
 // builder.
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { createDaemon, type RunningDaemon } from '@syzygy/http-host';
+import { tempDir } from '@syzygy/test-kit';
 import type { PocModel } from '@syzygy/three-surface-poc-core';
 
 import { NarrativeRegistry, type PolarisNarrative } from './polaris-narrative.js';
@@ -81,11 +81,9 @@ const bytes = (value: unknown): string => JSON.stringify(value);
 type Variant = 'unevaluated' | 'observed' | 'observed-with-baseline';
 const VARIANTS: readonly Variant[] = ['unevaluated', 'observed', 'observed-with-baseline'];
 
-const cleanups: string[] = [];
 const running: RunningDaemon[] = [];
 afterEach(async () => {
   for (const daemon of running.splice(0)) await daemon.close().catch(() => undefined);
-  for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });
 });
 
 const shared = sharedFixtureModels<Variant>((cleanupList) => ({
@@ -402,8 +400,7 @@ describe('PWB-REQ-014 anchorsResolved is presentation, machine channel only', ()
 
   it('serves the pair over the route: the independent resolver, reading the real /api/poc and /api/poc/polaris bodies, reproduces it; nothing else in the envelope or the answer carries it', async () => {
     const model = shared.get('observed');
-    const stateDir = mkdtempSync(join(tmpdir(), 'syzygy-poc-anchors-'));
-    cleanups.push(stateDir);
+    const stateDir = tempDir('syzygy-poc-anchors-');
     const start = await createDaemon({ stateDir: join(stateDir, 'state'), routes: pocRoutes(() => model), port: 0 });
     if (!start.started) throw new Error(`daemon failed to start: ${start.failure.kind}`);
     running.push(start.daemon);

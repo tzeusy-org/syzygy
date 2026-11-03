@@ -9,12 +9,12 @@
 // Bead syzygy-1z3.24.5 (PWB-LIVE-06, PWB-LIVE-11, PWB-LIVE-13).
 
 import { createHash } from 'node:crypto';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { createDaemon, escapeHtml, type RunningDaemon } from '@syzygy/http-host';
+import { tempDir } from '@syzygy/test-kit';
 import { PWB_RESOURCE_LIMITS, type PocModel, type ProjectShape } from '@syzygy/three-surface-poc-core';
 
 import { TAILNET_HOST } from './browser-origin.js';
@@ -85,8 +85,7 @@ function verbatimBlocks(html: string): { title: string; identity: string; text: 
 }
 
 async function startPoc(model: PocModel, limits = PWB_RESOURCE_LIMITS): Promise<{ readonly baseUrl: string; readonly token: string }> {
-  const stateDir = mkdtempSync(join(tmpdir(), 'syzygy-poc-source-route-'));
-  cleanups.push(stateDir);
+  const stateDir = tempDir('syzygy-poc-source-route-');
   const start = await createDaemon({
     stateDir: join(stateDir, 'state'),
     routes: pocRoutes(() => model, limits, (m) => ({ verbatim: verbatimRouteReader(m, blobReaderFor(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC)) })),

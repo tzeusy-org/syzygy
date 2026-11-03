@@ -1,9 +1,9 @@
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { createDaemon, type RunningDaemon } from '@syzygy/http-host';
+import { tempDir } from '@syzygy/test-kit';
 import {
   BUTLERS_POC_SEEDS,
   buildPocModel,
@@ -44,12 +44,6 @@ afterEach(async () => {
     rmSync(directory, { recursive: true, force: true });
   }
 });
-
-function tempDir(prefix: string): string {
-  const directory = mkdtempSync(join(tmpdir(), prefix));
-  cleanups.push(directory);
-  return directory;
-}
 
 // Test-only: the wired create path stays covered by injecting the verdict
 // a future owner act would have to produce. Production never passes it.
