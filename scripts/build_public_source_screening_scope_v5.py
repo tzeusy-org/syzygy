@@ -70,8 +70,8 @@ HAS = {"bcd": set("bcd"), "bd": set("bd"), "b": set("b"), "t": set()}
 #: Split so this file carries no literal key header, token or credential URL (push protection, and Syzygy's own
 #: screens): every fixture secret below is assembled at run time.
 _DASH5, _DASH4 = "-" * 5, "-" * 4
-PRIVATE_KEY_HEADER = r"(?:-{4,5} ?BEGIN [A-Z0-9 ]*PRIVATE KEY|PuTTY-User-Key-File-[0-9]+:|LS0tLS1CRUdJT|LS0tLSBCRUdJT)"
-CREDENTIAL_URL_ANY_SCHEME = r"[a-z][a-z0-9+.-]{0,31}://[^/@\s]*:[^/@\s]+@"
+PRIVATE_KEY_HEADER = r"(?:-{4,5} ?BEGIN [A-Z0-9 ]*(?:PRIVATE|SECRET) KEY|PuTTY-User-Key-File-[0-9]+:|LS0tLS1CRUdJT|LS0tLSBCRUdJT)"
+CREDENTIAL_URL_ANY_SCHEME = r"[a-z][a-z0-9+.-]{0,31}://[^/@\s:]*:[^/@\s]+@"
 KNOWN_TOKEN_FORMATS_EXTENDED = (
     r"(?:ASIA[0-9A-Z]{16}"
     r"|github_pat_[A-Za-z0-9_]{22,}"
@@ -137,15 +137,23 @@ REDIS_REPOSITORY = "repository:redis-redis"
 #: The admitted revision labelled 8.10.2 in the Redis observation consent, the revision of the 2026-10-14 trial.
 REDIS_TRIAL_COMMIT = "498ecd0d6d007db11ddb3aea9428552598a78622"
 OWNER_PLACEMENTS = [{"repository": REDIS_REPOSITORY, "commits": [REDIS_TRIAL_COMMIT],
-                     "paths": ["TLS.md", "modules/MODULES.md"]}]
+                     "paths": ["tls.md", "modules/modules.md"]}]
 PLACEMENT_RULE = {
     "id": "owner-placement",
-    "rule": ("a path that, compared after the same fold, equals one of the paths of an ownerPlacements entry whose "
+    "rule": ("a path that, after the same fold, equals one of the paths of an ownerPlacements entry (each listed "
+             "already folded, so it is compared as given) whose "
              "repository is the repository the blob is read from and whose commits list the admitted commit it is "
              "read at. An entry places those paths and nothing else: it admits no repository, commit or object (the "
              "observation consent decides those), it is not inherited by any other repository or commit, and every "
              "screening step still applies to the body"),
 }
+INDETERMINATE_OLD = ("documents whose path carries a word of the rule's docExcludedTokens (decision, specification, "
+                     "design, governance, policy, security and conduct records),")
+INDETERMINATE_NEW = ("documents whose path carries a word of the rule's docExcludedTokens (decision, specification, "
+                     "design, governance, policy, security and conduct records) other than a root file the "
+                     "governance-text rule classifies,")
+NOT_MAPPED_PROSE_OLD = "committed reports; and any other prose."
+NOT_MAPPED_PROSE_NEW = "committed reports; and any other prose that no ownerPlacements entry names."
 DOC_RULE_OLD_1 = "matched by exactly one of the three path rules below"
 DOC_RULE_NEW_1 = "matched by exactly one of the four path rules below"
 DOC_RULE_OLD_2 = "or a directory name outside the three rules, places nothing in it (RFC5-14)"
@@ -175,7 +183,8 @@ DOC_EXEMPTION = {
     "renderCondition": (
         "codeContentExemption.renderCondition, read for a body this exemption names: the exemption holds for a page "
         "sink only while that condition holds for it, and a consumer that cannot confirm it for a page sink scans "
-        "the body as before for that sink and excludes it whole there on a finding"),
+        "the body as before for that sink and excludes it whole there on a finding. Where that condition says egress "
+        "governs every other place, it is this exemption's egress that governs, never codeContentExemption.egress"),
     "egress": (
         "the exemption changes no egress or consent rule. At every place that is not a page sink (a review packet, a "
         "provider request, a discovery excerpt, a stored record), such a body or a span of it counts as "
@@ -188,7 +197,8 @@ DOC_EXEMPTION = {
         "badge, a centred heading, a placeholder written in angle brackets, an HTML comment) is admitted; the "
         "2026-10-14 trial withheld two such root files for active content. The cost: markup that a reader of the "
         "upstream page does not see, such as an HTML comment, now reaches the review packet and agent sessions as "
-        "text"),
+        "text; and a documentation body version 4 withheld only for markup now carries the residuals of any admitted "
+        "documentation body, a secret no detector matches and a secret beyond a guard line"),
 }
 ACTIVE_RULE_OLD = ("except the steps codeContentExemption.rule lifts for a body it exempts: a body it does not "
                    "exempt with")
@@ -241,12 +251,14 @@ def v5_scope(scope4: dict, variant: str) -> dict:
         if cc["governanceTextPaths"] != []:
             raise ValueError("governanceTextPaths is not empty in version 4")
         cc["governanceTextPaths"] = list(GOVERNANCE_TEXT_PATHS)
+        cc["indeterminate"] = _replace_once(cc["indeterminate"], INDETERMINATE_OLD, INDETERMINATE_NEW, "indeterminate")
     if "d" in has:
         r = doc_rule(s)
         r["rule"] = _replace_once(_replace_once(r["rule"], DOC_RULE_OLD_1, DOC_RULE_NEW_1, "the documentation rule"),
                                   DOC_RULE_OLD_2, DOC_RULE_NEW_2, "the documentation rule")
         r["pathRules"] = r["pathRules"] + [copy.deepcopy(PLACEMENT_RULE)]
-        r["notMapped"] = _replace_once(r["notMapped"], NOT_MAPPED_OLD, NOT_MAPPED_NEW, "notMapped")
+        r["notMapped"] = _replace_once(_replace_once(r["notMapped"], NOT_MAPPED_OLD, NOT_MAPPED_NEW, "notMapped"),
+                                       NOT_MAPPED_PROSE_OLD, NOT_MAPPED_PROSE_NEW, "notMapped")
         r2 = _insert_after(r, "licenseTreeSuffixes", "ownerPlacements", copy.deepcopy(OWNER_PLACEMENTS))
         cc["rules"][cc["rules"].index(r)] = r2
         s["observedRepositories"] = _replace_once(s["observedRepositories"], OBSERVED_OLD, OBSERVED_NEW,
@@ -355,7 +367,7 @@ def content_class(path: str, policy_text: str, repository: str = "repository:any
         hits = int(v2.classify_documentation(path, r))
         if not bad and any(pr["id"] == "owner-placement" for pr in r["pathRules"]):
             hits += sum(1 for e in r.get("ownerPlacements", []) if e["repository"] == repository
-                        and commit in e["commits"] and p in [v2.ascii_fold(x) for x in e["paths"]])
+                        and commit in e["commits"] and p in e["paths"])
         if hits == 1:
             found.append("project-documentation")
     src = next(r for r in cc["rules"] if r["class"] == "code-content")["sourceExtensions"]
@@ -523,7 +535,16 @@ COUNTEREXAMPLES = [
      {"v4": ("excluded", "unknown-extraction-class"), "t": ("excluded", "unknown-extraction-class"),
       "b": ("excluded", "active-content"), "bd": ("excluded", "active-content"),
       "bcd": ("excluded", "active-content")}),
+    ("SECURITY.md: legacy PGP secret key block", "SECURITY.md",
+     f"# Security\n{_DASH5}BEGIN PGP " + "SECRET KEY BLOCK" + f"{_DASH5}\nlQOYBGexample\n", 3,
+     {"v4": ("excluded", "unknown-extraction-class"), "t": ("excluded", "unknown-extraction-class"),
+      "b": ("excluded", "secret-detector-match"), "bd": ("excluded", "secret-detector-match"),
+      "bcd": ("excluded", "secret-detector-match")}),
     # D: owner placements
+    ("TLS.md: AUTH and redis-cli -a passwords", "TLS.md",
+     f"# TLS\nAUTH {_UNMATCHED}\nredis-cli --tls -a {_UNMATCHED}\n", 2,
+     {"v4": ("excluded", "unknown-extraction-class"), "t": ("excluded", "unknown-extraction-class"),
+      "b": ("excluded", "unknown-extraction-class"), "bd": ("admitted",), "bcd": ("admitted",)}),
     ("TLS.md: key passphrase as a config directive", "TLS.md",
      f"# TLS\nSet the key passphrase:\n    tls-key-file-pass {_UNMATCHED}\nRestart the server.\n", 3,
      {"v4": ("excluded", "unknown-extraction-class"), "t": ("excluded", "unknown-extraction-class"),
@@ -583,6 +604,14 @@ COUNTEREXAMPLES = [
       "bd": ("excluded", "active-content"), "bcd": ("admitted",)}),
     ("README: HTML badge carrying a token on line 1", "README.md",
      f"<a href=\"https://x/y?{_TOKEN}\"><img src=\"b.svg\"></a>\nline2\nline3\nline4\n", 1,
+     {"v4": ("excluded", "active-content"), "t": ("excluded", "active-content"), "b": ("excluded", "active-content"),
+      "bd": ("excluded", "active-content"), "bcd": ("redacted", frozenset({1, 2}))}),
+    ("README: HTML element, then a secret no detector matches", "README.md",
+     f"# Project\n<p align=\"center\">logo</p>\nSECRET_KEY = \"{_UNMATCHED}\"\n", 3,
+     {"v4": ("excluded", "active-content"), "t": ("excluded", "active-content"), "b": ("excluded", "active-content"),
+      "bd": ("excluded", "active-content"), "bcd": ("admitted",)}),
+    ("README: HTML badge token on line 1, unmatched secret on line 3", "README.md",
+     f"<a href=\"https://x/y?{_TOKEN}\"><img src=\"b.svg\"></a>\nline2\nSECRET_KEY = \"{_UNMATCHED}\"\n", 3,
      {"v4": ("excluded", "active-content"), "t": ("excluded", "active-content"), "b": ("excluded", "active-content"),
       "bd": ("excluded", "active-content"), "bcd": ("redacted", frozenset({1, 2}))}),
     ("TLS.md: HTML table", "TLS.md",
@@ -656,6 +685,8 @@ def semantic_findings(base_text: str, proposed_text: str, variant: str) -> list[
             bad.append("the governance-text rule is not exactly the declared one")
         if "governance-text" in red.get("redactedClasses", []):
             bad.append("governance-text is redacted by line")
+        if cc5.get("indeterminate") != cc4["indeterminate"].replace(INDETERMINATE_OLD, INDETERMINATE_NEW, 1):
+            bad.append("indeterminate still names the governance-text root files as indeterminate")
         if any(v2.classify_documentation(p, doc_rule(s5)) for p in GOVERNANCE_TEXT_PATHS):
             bad.append("a governanceTextPaths name is also project-documentation")
     else:
@@ -672,11 +703,15 @@ def semantic_findings(base_text: str, proposed_text: str, variant: str) -> list[
             if not e.get("commits") or any(not re.fullmatch(r"[0-9a-f]{40}", c) for c in e.get("commits", [])):
                 bad.append("an ownerPlacements entry is not pinned to full commit ids")
             for p in e.get("paths", []):
+                if p != v2.ascii_fold(p):
+                    bad.append(f"placed path {p!r} is not folded, so a folded path can never equal it")
                 if v2.classify_documentation(p, r5) or v2.ascii_fold(p) in GOVERNANCE_TEXT_PATHS:
                     bad.append(f"placed path {p!r} is already matched by another rule")
                 if any(t in r5["docExcludedTokens"] for seg in v2.ascii_fold(p).rsplit(".", 1)[0].split("/")
                        for t in v2.tokens(seg, r5["docTokenSeparators"])):
                     bad.append(f"placed path {p!r} carries a docExcludedTokens word")
+        if NOT_MAPPED_PROSE_NEW not in r5.get("notMapped", ""):
+            bad.append("notMapped still calls every other prose unmapped")
         if s5.get("observedRepositories") != s4["observedRepositories"].replace(OBSERVED_OLD, OBSERVED_NEW, 1):
             bad.append("observedRepositories still says the policy names no repository")
     elif "ownerPlacements" in doc_rule(s5):
@@ -909,7 +944,7 @@ def selftest() -> int:
             lambda d: sdet(d, "credential-url-any-scheme").__setitem__("pattern", r"[a-z][a-z0-9+.-]{0,31}://[^/@\s]+:[^/@\s]+@"),
             "counterexample 'modules/MODULES.md: redis:// URL with a password'")
         sem("an unbounded scheme caught", "t",
-            lambda d: sdet(d, "credential-url-any-scheme").__setitem__("pattern", r"[a-z][a-z0-9+.-]*://[^/@\s]*:[^/@\s]+@"),
+            lambda d: sdet(d, "credential-url-any-scheme").__setitem__("pattern", r"[a-z][a-z0-9+.-]*://[^/@\s:]*:[^/@\s]+@"),
             "scopeDetectors is not exactly")
         sem("a dropped ASIA form caught", "bcd",
             lambda d: sdet(d, "known-token-formats-extended").__setitem__("pattern", KNOWN_TOKEN_FORMATS_EXTENDED.replace("ASIA[0-9A-Z]{16}|", "")),
@@ -930,6 +965,15 @@ def selftest() -> int:
             lambda d: cc(d)["governanceTextPaths"].append(".github/security.md"), "governanceTextPaths is not")
         sem("AGENTS.md added as governance-text caught", "bcd",
             lambda d: cc(d)["governanceTextPaths"].append("agents.md"), "governanceTextPaths is not")
+        sem("a stale indeterminate sentence caught", "b",
+            lambda d: cc(d).__setitem__("indeterminate", json.loads(base)[SCOPE_KEY]["contentClassification"]["indeterminate"]),
+            "indeterminate still names")
+        sem("a legacy PGP secret-key header missed caught", "bd",
+            lambda d: sdet(d, "private-key-header").__setitem__("pattern", PRIVATE_KEY_HEADER.replace("(?:PRIVATE|SECRET) KEY", "PRIVATE KEY")),
+            "counterexample 'SECURITY.md: legacy PGP secret key block'")
+        sem("an ambiguous userinfo pattern caught", "t",
+            lambda d: sdet(d, "credential-url-any-scheme").__setitem__("pattern", r"[a-z][a-z0-9+.-]{0,31}://[^/@\s]*:[^/@\s]+@"),
+            "scopeDetectors is not exactly")
         sem("governance-text classified in variant t caught", "t",
             lambda d: cc(d)["classesClassified"].insert(0, "governance-text"), "without B")
         sem("a class fixture flip caught (MANIFESTO dropped)", "b",
@@ -948,6 +992,12 @@ def selftest() -> int:
             lambda d: doc_rule(sc(d))["ownerPlacements"][0]["paths"].append("AGENTS.md"), "ownerPlacements is not")
         sem("a placed path another rule matches caught", "bd",
             lambda d: doc_rule(sc(d))["ownerPlacements"][0]["paths"].append("README.md"), "already matched by another rule")
+        sem("an un-folded placement path caught", "bd",
+            lambda d: doc_rule(sc(d))["ownerPlacements"][0].__setitem__("paths", ["TLS.md", "modules/modules.md"]),
+            "is not folded")
+        sem("a stale notMapped 'any other prose' caught", "bcd",
+            lambda d: doc_rule(sc(d)).__setitem__("notMapped", doc_rule(sc(d))["notMapped"].replace(NOT_MAPPED_PROSE_NEW, NOT_MAPPED_PROSE_OLD)),
+            "every other prose unmapped")
         sem("placements in variant b caught", "b",
             lambda d: doc_rule(sc(d)).__setitem__("ownerPlacements", copy.deepcopy(OWNER_PLACEMENTS)), "without D")
         sem("a stale 'names no repository' sentence caught", "bd",

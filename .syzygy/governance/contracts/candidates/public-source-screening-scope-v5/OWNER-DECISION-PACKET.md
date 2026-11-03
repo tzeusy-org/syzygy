@@ -2,15 +2,21 @@
 
 > **Candidate — binds nothing.** It carries no digest. Nothing here is a
 > decision, and no act is performed by reading it. It is offered only after a
-> confirming review; until then it is not offered.
+> confirming review; until then it is not offered. Round 1
+> (`docs/reviews/R-HA5B-SCREENING-SCOPE-V5-1-RAW.md`) returned REVISE: four
+> revise findings and five notes, all repaired once (`ROUND-1-DISPOSITIONS.md`).
+> Round 2 is the last round before you, under the stopping rule agreed before
+> round 1.
 
 ## What this is, in plain words
 
 You asked for a one-shot command that produces a full Polaris dossier for
 Redis. In the 2026-10-14 Redis trial, 140 of 233 quotations were withheld from
 the independent reviewer [Observed, bead `syzygy-olmr`]. Version 4 (signed
-2026-10-20) dealt with the README's 41. The other 99 sit on seven files that
-version 4 still withholds:
+2026-10-20) addressed the README's 41. Whether they now return is Unknown: the
+trial's secret match ended screening before the README was checked for markup,
+and if it holds markup, version 4 still withholds it and C decides. The other
+99 sit on seven files that version 4 still withholds:
 
 - `SECURITY.md` and `MANIFESTO`: no class;
 - `TLS.md` and modules/MODULES.md: no class;
@@ -60,7 +66,7 @@ after a confirming review, takes that row as the act's argument (phrase
 ## What each part buys for Redis
 
 - **B, D and C give six of the seven files a path into the packet.** The
-  exception is `redis.conf`.
+  exception is `redis.conf`. C may also be what admits `README.md`.
 - [Unknown] How many of the 99 quotations return. The trial did not record
   them per file, and each body still meets every other check (a secret match,
   a key header, and, outside `bcd`, markup).
@@ -92,25 +98,40 @@ Each cost below is a synthetic fixture in the builder, scored per variant
   - Today such a file is withheld whole. Under C the reviewer reads the comment
     as data.
   - The authoring sessions already read the clone unrestricted.
-  - C changes nothing about secrets: detectors still run first.
+- **C: the secret risks of documentation reach more files.**
+  - Today a documentation file with any markup is withheld whole, so every
+    secret in it stays out, recognised or not.
+  - Under C such a file is read. A recognised secret is still withheld as
+    before. An unrecognised one now reaches the reviewer, as it already does in
+    a markup-free README.
+  - The same holds for a secret one line beyond a withheld line.
+  - For Redis this means `00-RELEASENOTES`, `LICENSE.txt` and perhaps
+    `README.md`.
 - **T: it withholds more, not less.**
   - A base64 certificate or a sample connection string with a password
     placeholder (`postgres://user:password@localhost`) now withholds a source
     file whole.
   - [Unknown] How many Redis files this affects.
-  - Over Syzygy's own 8,387 text files the three detectors newly match 6 files,
-    all detector tests, policies or reviews of detectors [Observed].
+  - At commit `85c54814`, over Syzygy's own 8,387 text files, the three
+    detectors newly match 6 files, all detector tests, policies or reviews of
+    detectors [Observed].
 - **Shapes no version catches, named rather than fixed:**
   - a quoted JSON `"password": "…"`;
   - a JavaScript `secretAccessKey: "…"`;
-  - an `https` password containing `/`.
+  - a Django `SECRET_KEY = "…"`;
+  - an `https` password containing `/`;
+  - a base64 key whose encoding does not start at the key's first dash;
+  - a config line written `key value` (`requirepass`, `masterauth`,
+    `tls-key-file-pass`);
+  - Redis command forms such as `AUTH <password>`, `redis-cli -a <password>`
+    and an ACL rule `><password>` [Inferred, from general knowledge of Redis].
 
 ## What changed since you withheld SECURITY and MANIFESTO in version 2
 
 In version 2 you withheld both because they are policy or doctrine text, not
 project documentation. That packet's own alternative was "a separate closed
 rule for `governance-text` with its own review", and version 4 named the same
-route. Three things are new:
+route (in its semantic delta). Three things are new:
 
 1. B uses exactly that class, so the version-2 reason is kept, not reversed.
 2. The Redis provider statement you signed lists `governance-text`.
