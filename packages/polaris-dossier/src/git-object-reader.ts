@@ -75,6 +75,10 @@ export function hashAlgorithmOf(identifier: string): HashAlgorithm {
   return refuse('malformed-identifier', `"${identifier.slice(0, 80)}" is not a 40- or 64-digit lowercase hex object identifier`);
 }
 
+/** Tree entry modes whose object is a blob: regular, executable and symbolic-link files. A submodule (`160000`) is not one. The one copy
+ * every reader of a listing filters by (`check.ts`, `review.ts`, `census.ts`). */
+export const BLOB_MODES: ReadonlySet<string> = new Set(['100644', '100755', '120000']);
+
 export interface TreeEntry {
   readonly path: string;
   readonly mode: string;

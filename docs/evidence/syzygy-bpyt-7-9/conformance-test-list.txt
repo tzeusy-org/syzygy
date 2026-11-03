@@ -1,0 +1,366 @@
+consent-record-convention.conformance.test.ts::consent-record on-disk convention — <decisionsDir>/<reference>.yaml a real record loaded through the convention round-trips: written at the exact resolved path, found by its bare reference
+consent-record-convention.conformance.test.ts::consent-record on-disk convention — <decisionsDir>/<reference>.yaml missing extension: a file written without the .yaml extension is not found by its bare name
+consent-record-convention.conformance.test.ts::consent-record on-disk convention — <decisionsDir>/<reference>.yaml missing extension: the resolved path always carries the literal .yaml suffix, even for a reference that already ends in .yaml
+consent-record-convention.conformance.test.ts::consent-record on-disk convention — <decisionsDir>/<reference>.yaml normal resolution: a bare reference resolves to exactly <decisionsDir>/<reference>.yaml
+consent-record-convention.conformance.test.ts::consent-record on-disk convention — <decisionsDir>/<reference>.yaml reference containing path separators: forward slash, backslash, and an absolute-looking reference are all refused
+consent-record-convention.conformance.test.ts::consent-record on-disk convention — <decisionsDir>/<reference>.yaml traversal attempt: a reference naming ".." or containing a traversal segment is refused before any filesystem access
+consent-record-convention.conformance.test.ts::consent-record on-disk convention — <decisionsDir>/<reference>.yaml traversal attempt: a reference shaped like an escape path never reaches a file outside decisionsDir
+req-001.conformance.test.ts::CAP1-REQ-001 — valid declaration registers exactly one project designates the governance root by the file location, never a field value (RFC3-4)
+req-001.conformance.test.ts::CAP1-REQ-001 — valid declaration registers exactly one project falsifier: identity never differs from the declared identifier
+req-001.conformance.test.ts::CAP1-REQ-001 — valid declaration registers exactly one project produces exactly one registered project carrying the declared identifier
+req-001.conformance.test.ts::CAP1-REQ-001 — valid declaration registers exactly one project reads the checker-authored valid declaration without failure
+req-002.conformance.test.ts::CAP1-REQ-002 — invalid declaration is a named failure, never a partial registration falsifier: no partial registration — the failed result carries no facts at all
+req-002.conformance.test.ts::CAP1-REQ-002 — invalid declaration is a named failure, never a partial registration falsifier: no silent failure — every failure names what failed
+req-002.conformance.test.ts::CAP1-REQ-002 — invalid declaration is a named failure, never a partial registration renders every dependent claim Unknown with the verbatim reason
+req-002.conformance.test.ts::CAP1-REQ-002 — invalid declaration is a named failure, never a partial registration scenario: an unparseable file is served as a named failure carrying the dialect error
+req-002.conformance.test.ts::CAP1-REQ-002 — invalid declaration is a named failure, never a partial registration scenario: one invalid field yields a failure naming that field, and no registered project
+req-003.conformance.test.ts::CAP1-REQ-003 — missing required information is visible falsifier: no generic failure naming nothing — every missing-field failure carries a field
+req-003.conformance.test.ts::CAP1-REQ-003 — missing required information is visible multiple omissions are each named — enumeration from the output alone
+req-003.conformance.test.ts::CAP1-REQ-003 — missing required information is visible scenario: omitting `consents` yields a validation failure naming `consents` as missing
+req-003.conformance.test.ts::CAP1-REQ-003 — missing required information is visible scenario: omitting `declarations` yields a validation failure naming `declarations` as missing
+req-003.conformance.test.ts::CAP1-REQ-003 — missing required information is visible scenario: omitting `owner` yields a validation failure naming `owner` as missing
+req-003.conformance.test.ts::CAP1-REQ-003 — missing required information is visible scenario: omitting `profiles` yields a validation failure naming `profiles` as missing
+req-003.conformance.test.ts::CAP1-REQ-003 — missing required information is visible scenario: omitting `project` yields a validation failure naming `project` as missing
+req-003.conformance.test.ts::CAP1-REQ-003 — missing required information is visible scenario: omitting `relations` yields a validation failure naming `relations` as missing
+req-003.conformance.test.ts::CAP1-REQ-003 — missing required information is visible scenario: omitting `repositories` yields a validation failure naming `repositories` as missing
+req-003.conformance.test.ts::CAP1-REQ-003 — missing required information is visible scenario: omitting `schema_version` yields a validation failure naming `schema_version` as missing
+req-003.conformance.test.ts::CAP1-REQ-003 — missing required information is visible the full declaration (nothing omitted) reads valid — the fixture is sound
+req-003.conformance.test.ts::CAP1-REQ-003 — missing required information is visible the sweep denominator is the full eight-field closed set from RFC3-5
+req-004.conformance.test.ts::CAP1-REQ-004 — no silent invention, repair, or inference a field with an unknown (typo) name fails, naming that field — the set is closed (RFC3-5)
+req-004.conformance.test.ts::CAP1-REQ-004 — no silent invention, repair, or inference a missing field is never defaulted: the read fails instead of producing a declaration
+req-004.conformance.test.ts::CAP1-REQ-004 — no silent invention, repair, or inference falsifier: an invalid declaration is never repaired into a registration
+req-004.conformance.test.ts::CAP1-REQ-004 — no silent invention, repair, or inference sweep: a successful read carries only values the input carried
+req-004.conformance.test.ts::CAP1-REQ-004 — no silent invention, repair, or inference sweep: every declaration-derived value in the served facts appears in the input
+req-005.conformance.test.ts::CAP1-REQ-005 — registration facts are deterministic per (declaration, revision) a one-byte change in the source changes the result
+req-005.conformance.test.ts::CAP1-REQ-005 — registration facts are deterministic per (declaration, revision) a revision change is visible in the facts — the evaluation identity is not shared
+req-005.conformance.test.ts::CAP1-REQ-005 — registration facts are deterministic per (declaration, revision) every registration answer names the identified evaluation it was computed at
+req-005.conformance.test.ts::CAP1-REQ-005 — registration facts are deterministic per (declaration, revision) falsifier: two runs of one identified evaluation never serve different facts
+req-005.conformance.test.ts::CAP1-REQ-005 — registration facts are deterministic per (declaration, revision) invalid input is deterministic too — failure sets are deeply equal across runs
+req-005.conformance.test.ts::CAP1-REQ-005 — registration facts are deterministic per (declaration, revision) scenario: same declaration, same revision — same facts, byte-level
+req-006.conformance.test.ts::CAP1-REQ-006 — root-count violations surface, never repaired an empty candidate set is the zero-root case, not an error and not silence
+req-006.conformance.test.ts::CAP1-REQ-006 — root-count violations surface, never repaired exactly one declaring repository is designated the root
+req-006.conformance.test.ts::CAP1-REQ-006 — root-count violations surface, never repaired falsifier: two roots are never resolved by any precedence — ordering changes nothing
+req-006.conformance.test.ts::CAP1-REQ-006 — root-count violations surface, never repaired scenario: two governance roots — a contradiction routed to the owner, no winner picked
+req-006.conformance.test.ts::CAP1-REQ-006 — root-count violations surface, never repaired scenario: zero governance roots — Unknown with reason `missing-declaration` at the workspace level
+req-006.conformance.test.ts::CAP1-REQ-006 — root-count violations surface, never repaired the three candidate counts produce three distinct result shapes
+req-010.conformance.test.ts::CAP1-REQ-010 — every declared repository has an explicit coverage result falsifier: a repository with no observation outcome is not silently absent — it renders an explicit capture failure
+req-010.conformance.test.ts::CAP1-REQ-010 — every declared repository has an explicit coverage result falsifier: the coverage answer count never differs from the declaration count
+req-010.conformance.test.ts::CAP1-REQ-010 — every declared repository has an explicit coverage result oracle: every result carries an observed-or-why-not value
+req-010.conformance.test.ts::CAP1-REQ-010 — every declared repository has an explicit coverage result oracle: exactly N results, one per declared repository, N = the declared count
+req-010.conformance.test.ts::CAP1-REQ-010 — every declared repository has an explicit coverage result scenario: three declared, one unconsented — the unconsented one carries its explicit not-observed result rather than being omitted
+req-010.conformance.test.ts::CAP1-REQ-010 — one decision per declared repository, joined by ordinal falsifier: a missing, a reordered or a re-referenced decision throws rather than being repaired
+req-011.conformance.test.ts::CAP1-REQ-011 R-S2 finding #4 — capture-failed and stale cite their in-force record consented + capture-failed cites the in-force record that stands behind the failed capture
+req-011.conformance.test.ts::CAP1-REQ-011 R-S2 finding #4 — capture-failed and stale cite their in-force record consented + stale cites the in-force record that stands behind the stale capture
+req-011.conformance.test.ts::CAP1-REQ-011 falsifier — a pair holding both a grant and a withdrawal resolves closed coverage over the conflicted pair renders unconsented with the verbatim reason, citing the withdrawal record — no captured content surfaces, in either record order
+req-011.conformance.test.ts::CAP1-REQ-011 falsifier — a pair holding both a grant and a withdrawal resolves closed in-force listed FIRST, withdrawal after: the withdrawal still defeats the grant — and names the withdrawal record
+req-011.conformance.test.ts::CAP1-REQ-011 falsifier — a pair holding both a grant and a withdrawal resolves closed withdrawal listed FIRST, in-force after: same answer, same cited record — list order never decides the conflict or its citation
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read a missing consent record refuses its pair and, being unreadable evidence, every pair
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read a valid explicit state-(1) act admits observation without an A1 provider
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read an applicable declared currency bound refuses a stale act, one millisecond past the bound
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read declared expiry refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read digest mismatch refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read duplicate act identity refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read future instant refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read known non-human act refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read legacy free-text scope refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read machine-only submission (caller flag, no act) refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read malformed binding refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read missing instant refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read missing owner (null) refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read missing owner (omitted) refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read missing owner-act record refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read omitted audit field refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read revocation refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read self-supersession refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read state 1 carrying an A1 identity refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read state 2 with explicit absence refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read supersession refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read the case denominator is the enumerated matrix: 24 invalid cases, 24 distinct inputs
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read unparseable act refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read wrong act type refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read wrong artifact identity refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read wrong project refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read wrong scope (act differs from artifact) refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — invalid owner-act states refuse before any dependent read wrong scope (no observe token) refuses with its own diagnostic and zero reads of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade a correlated answer with a malformed audit record digest is unavailable, never a grant
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade a correlated answer with a malformed binding digest is unavailable, never a grant
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade a correlated answer with an empty audit record id is unavailable, never a grant
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade a correlation whose binding digest does not match refuses correlation-mismatch
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade a indeterminate correlation refuses correlation-indeterminate with no fallback or retry
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade a matching correlation admits Syzygy-verified; a bootstrap act it correlates is upgraded only in this evaluation
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade a mismatch correlation refuses correlation-mismatch with no fallback or retry
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade a not-found correlation refuses correlation-not-found with no fallback or retry
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade a throws correlation refuses correlation-unavailable with no fallback or retry
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade a unavailable correlation refuses correlation-unavailable with no fallback or retry
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade no provider refuses correlation-unavailable, never state (1)
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — state (2) needs successful correlation, with no downgrade the correlated binding digest is the sha256 of the binding without the A1 identity and act-record digest (independent oracle)
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — withdrawal and unresolved withdrawal stay fail closed a valid withdrawal under another reference is the record the coverage row cites; the defeated grant stays visible as untrusted (syzygy-u2a.6)
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — withdrawal and unresolved withdrawal stay fail closed an unresolvable withdrawal reference refuses every pair, naming that reference
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — withdrawal and unresolved withdrawal stay fail closed malformed withdrawal act keeps the pair refused, in either reference order
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — withdrawal and unresolved withdrawal stay fail closed malformed withdrawal record naming the pair keeps the pair refused, in either reference order
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — withdrawal and unresolved withdrawal stay fail closed valid withdrawal keeps the pair refused, in either reference order
+req-011.conformance.test.ts::CAP1-REQ-011 v1.0 — withdrawal and unresolved withdrawal stay fail closed withdrawal with no act keeps the pair refused, in either reference order
+req-011.conformance.test.ts::CAP1-REQ-011 — consent is a visible recorded fact, never an assumption a withdrawn record is not consent — and the withdrawal is distinguishable from record absence
+req-011.conformance.test.ts::CAP1-REQ-011 — consent is a visible recorded fact, never an assumption absence of a resolvable in-force record renders as absence of consent — never implied consent
+req-011.conformance.test.ts::CAP1-REQ-011 — consent is a visible recorded fact, never an assumption falsifier: a repository is never observed (no content served) without an in-force record, even when a capture outcome exists
+req-011.conformance.test.ts::CAP1-REQ-011 — consent is a visible recorded fact, never an assumption falsifier: absence of consent is never absence of the repository
+req-011.conformance.test.ts::CAP1-REQ-011 — consent is a visible recorded fact, never an assumption scenario: consent state joins to a record — the served state cites the record with scope, attribution, and grant state
+req-011.conformance.test.ts::CAP1-REQ-011 — consent is a visible recorded fact, never an assumption sweep over every declared pair: observed ⇔ joins to an in-force record; no record ⇒ unconsented — denominator = declared pair count
+req-011.conformance.test.ts::CAP1-REQ-011 — coverage rows project the closed consent decisions exactly (syzygy-u2a.6) a withdrawal row cites the defeating record and keeps the defeated grant visible as untrusted
+req-011.conformance.test.ts::CAP1-REQ-011 — coverage rows project the closed consent decisions exactly (syzygy-u2a.6) an unresolved reference keeps reason #6 with its typed diagnostic, never reason #11, and masks nothing
+req-011.conformance.test.ts::CAP1-REQ-011 — coverage rows project the closed consent decisions exactly (syzygy-u2a.6) observed and capture-failed rows cite the exact verified in-force record
+req-011.conformance.test.ts::CAP1-REQ-011 — coverage rows project the closed consent decisions exactly (syzygy-u2a.6) unverified owner-act provenance keeps the basis, effective Unknown and the unhonored record as a visible contradiction
+req-012.conformance.test.ts::CAP1-REQ-012 — unconsented renders Unknown as a policy state, never as error or absence falsifier: no invented reason spelling and no empty rendering — the portion is present, labeled, and reasoned
+req-012.conformance.test.ts::CAP1-REQ-012 — unconsented renders Unknown as a policy state, never as error or absence scenario: the consented remainder renders normally
+req-012.conformance.test.ts::CAP1-REQ-012 — unconsented renders Unknown as a policy state, never as error or absence scenario: the unconsented portion renders Unknown with the verbatim reason and its resolution route
+req-012.conformance.test.ts::CAP1-REQ-012 — unconsented renders Unknown as a policy state, never as error or absence the unconsented state is machine-readably a POLICY state, distinguishable from error/failure states
+req-013.conformance.test.ts::CAP1-REQ-013 — coverage failure states are distinguishable each reason matches its closed-vocabulary entry verbatim
+req-013.conformance.test.ts::CAP1-REQ-013 — coverage failure states are distinguishable falsifier: a stale observation is not rendered as current, and an observer degradation is not rendered as missing consent
+req-013.conformance.test.ts::CAP1-REQ-013 — coverage failure states are distinguishable scenario: unreachable is not unconsented — the consented-but-unreachable repository and the recordless one render different reasons
+req-013.conformance.test.ts::CAP1-REQ-013 — coverage failure states are distinguishable sweep: the four conditions render four states, pairwise distinct in the machine-readable state field — denominator: the full fixture repository set
+req-014.conformance.test.ts::CAP1-REQ-014 — incomplete coverage is never rendered as complete coverage falsifier: a full-scope claim over partial data is impossible — a partial outcome can never render as observed
+req-014.conformance.test.ts::CAP1-REQ-014 — incomplete coverage is never rendered as complete coverage isComplete is false for any partial capture
+req-014.conformance.test.ts::CAP1-REQ-014 — incomplete coverage is never rendered as complete coverage isComplete is true only when every repository is fully observed
+req-014.conformance.test.ts::CAP1-REQ-014 — incomplete coverage is never rendered as complete coverage scenario: partial snapshot disclosed — the partial capture declares its captured scope and renders its uncaptured portion Unknown
+req-014.conformance.test.ts::CAP1-REQ-014 — incomplete coverage is never rendered as complete coverage the boundary over a partial snapshot carries the declared captured scopes, not an undisclosed whole
+req-015.conformance.test.ts::CAP1-REQ-015 — one coverage boundary, retrievable identically by human and machine RFC5-3 by construction: admission takes the credential and nothing else — no location parameter exists to influence it
+req-015.conformance.test.ts::CAP1-REQ-015 — one coverage boundary, retrievable identically by human and machine an admissible credential admits, as a machine client
+req-015.conformance.test.ts::CAP1-REQ-015 — one coverage boundary, retrievable identically by human and machine one boundary per (project, evaluation) input set, deterministic: two computations are deeply equal
+req-015.conformance.test.ts::CAP1-REQ-015 — one coverage boundary, retrievable identically by human and machine oracle limb (c): a credential-less machine retrieval is refused and served no boundary fact
+req-015.conformance.test.ts::CAP1-REQ-015 — one coverage boundary, retrievable identically by human and machine the boundary is the union of executed coverage records and declared captured scopes
+req-016.conformance.test.ts::CAP1-REQ-016 — no source is inspected through authority the project did not grant an unconsented resolution never authorizes, and renders as the policy state — never as error
+req-016.conformance.test.ts::CAP1-REQ-016 — no source is inspected through authority the project did not grant falsifier: cross-project consent never grants — A's record for R resolves nothing for project B
+req-016.conformance.test.ts::CAP1-REQ-016 — no source is inspected through authority the project did not grant falsifier: per-project authorization — a resolution obtained for project A, presented while serving project B, is refused
+req-016.conformance.test.ts::CAP1-REQ-016 — no source is inspected through authority the project did not grant per-repository authorization: a consent resolved for repository A never authorizes observation of repository B
+req-016.conformance.test.ts::CAP1-REQ-016 — no source is inspected through authority the project did not grant scenario: consent is per project pair — A's answers may carry facts from R, B renders R Unknown with reason unconsented-source-or-provider
+req-016.conformance.test.ts::CAP1-REQ-016 — no source is inspected through authority the project did not grant sweep: no fact in B's served set carries provenance from R — denominator: B's full served entry set
+req-020.conformance.test.ts::CAP1-REQ-020 — one fixed Syzygy-owned entry path no second entry path exists — the constant is the only one
+req-020.conformance.test.ts::CAP1-REQ-020 — one fixed Syzygy-owned entry path serveEntryRoute returns the fixed path for any project
+req-020.conformance.test.ts::CAP1-REQ-020 — one fixed Syzygy-owned entry path the fixed entry path is .syzygy/intent/OVERVIEW.md
+req-020.conformance.test.ts::CAP1-REQ-020 — one fixed Syzygy-owned entry path the route path is a publication location, never an identity
+req-021.conformance.test.ts::CAP1-REQ-021 — entry routes to authority, never itself authority a present entry renders with artifactClass presentation-artifact
+req-021.conformance.test.ts::CAP1-REQ-021 — entry routes to authority, never itself authority a present entry renders with nonCitable: true
+req-021.conformance.test.ts::CAP1-REQ-021 — entry routes to authority, never itself authority an absent entry still carries non-citable attributes
+req-021.conformance.test.ts::CAP1-REQ-021 — entry routes to authority, never itself authority authority citations are carried on the rendering
+req-021.conformance.test.ts::CAP1-REQ-021 — entry routes to authority, never itself authority falsifier: no rendering lacks the non-citable marking
+req-022.conformance.test.ts::CAP1-REQ-022 — honest entry rendering absent content is a FINDING, not an Unknown
+req-022.conformance.test.ts::CAP1-REQ-022 — honest entry rendering contradictory content discloses disagreement with authority ID
+req-022.conformance.test.ts::CAP1-REQ-022 — honest entry rendering present content assesses as available
+req-022.conformance.test.ts::CAP1-REQ-022 — honest entry rendering stale content is a disagreement-disclosed with authority winning
+req-022.conformance.test.ts::CAP1-REQ-022 — honest entry rendering unreadable content is Unknown with the reason disclosed
+req-023.conformance.test.ts::CAP1-REQ-023 — write boundary entry functions return data, never write instructions
+req-023.conformance.test.ts::CAP1-REQ-023 — write boundary governed namespaces are openspec/ and .syzygy/
+req-023.conformance.test.ts::CAP1-REQ-023 — write boundary paths inside .syzygy/ are inside the governed plane
+req-023.conformance.test.ts::CAP1-REQ-023 — write boundary paths inside openspec/ are inside the governed plane
+req-023.conformance.test.ts::CAP1-REQ-023 — write boundary paths outside both namespaces are outside the governed plane
+req-023.conformance.test.ts::CAP1-REQ-023 — write boundary the entry path itself is inside the governed plane
+req-030.conformance.test.ts::CAP1-REQ-030 — the seven project-shape answers, answered independently falsifier: no answer is renamed, missing, or extra — strict name-set equality against the ruling
+req-030.conformance.test.ts::CAP1-REQ-030 — the seven project-shape answers, answered independently falsifier: no answer's value is a function of another answer's value — flipping one facet's own facts moves no sibling
+req-030.conformance.test.ts::CAP1-REQ-030 — the seven project-shape answers, answered independently oracle: each answer carries its own value and its own constituent-fact set
+req-030.conformance.test.ts::CAP1-REQ-030 — the seven project-shape answers, answered independently oracle: exactly the seven SDR-36 names, in order — count and name comparison against the hard-coded ruling
+req-030.conformance.test.ts::CAP1-REQ-030 — the seven project-shape answers, answered independently scenario: seven independent answers served for a registered project, each with constituent facts
+req-030.conformance.test.ts::CAP1-REQ-030 — the seven project-shape answers, answered independently the value domain is closed at three spellings plus the deferred posture — `satisfied` verbatim, swept over all seven
+req-031.conformance.test.ts::CAP1-REQ-031 — no combined score, badge, colour, percentage, or passing count oracle: no served field is a function of multiple facet values — under a one-facet flip, only that facet's own entry changes
+req-031.conformance.test.ts::CAP1-REQ-031 — no combined score, badge, colour, percentage, or passing count scenario: with a Gap and several Unknowns, no served field summarizes them
+req-031.conformance.test.ts::CAP1-REQ-031 — no combined score, badge, colour, percentage, or passing count sweep: no served leaf anywhere in the answer set is a number, a percentage, a fraction, or a colour word — the whole serialization, denominator disclosed
+req-031.conformance.test.ts::CAP1-REQ-031 — no combined score, badge, colour, percentage, or passing count sweep: the served project-level field set is exactly {projectId, evaluation, answers} — no aggregate field exists; denominator disclosed
+req-031.conformance.test.ts::CAP1-REQ-031 — no combined score, badge, colour, percentage, or passing count the aggregate rendering discloses its members' composition instead — one entry per member, nothing derived across members
+req-032.conformance.test.ts::CAP1-REQ-032 — registration is never certification; no answer's value implies another's falsifier: `Registered` reads as a relationship fact — a valid registration never renders any sibling `satisfied` absent that sibling's own evidence
+req-032.conformance.test.ts::CAP1-REQ-032 — registration is never certification; no answer's value implies another's scenario: registration raises nothing else — newly registered, no other evidence: Registered reflects the validated declaration; the other six render Unknown (or their deferred posture), each with its own reason
+req-032.conformance.test.ts::CAP1-REQ-032 — registration is never certification; no answer's value implies another's sweep: each flip changes only the answers whose declared constituent-fact sets contain the flipped fact — 7 flips × 7 observations = 49, denominator disclosed
+req-033.conformance.test.ts::CAP1-REQ-033 — every answer exposes its constituent facts and scope falsifier: no answer in either fixture is served with unreachable constituent facts — the sweep covers all 14 fact sets
+req-033.conformance.test.ts::CAP1-REQ-033 — every answer exposes its constituent facts and scope falsifier: the served value's stated basis never references a fact outside the set
+req-033.conformance.test.ts::CAP1-REQ-033 — every answer exposes its constituent facts and scope oracle: per-answer check over the all-absent fixture — absence is itself a served fact, never a factless answer
+req-033.conformance.test.ts::CAP1-REQ-033 — every answer exposes its constituent facts and scope oracle: per-answer check over the evidenced fixture — seven fact sets, each non-empty, scoped, evaluation-bearing, basis-supported
+req-033.conformance.test.ts::CAP1-REQ-033 — every answer exposes its constituent facts and scope scenario: the facts behind `Observable` — the coverage and consent states and the producing evaluation it was computed from are served
+req-034.conformance.test.ts::CAP1-REQ-034 — missing evidence yields Unknown; non-satisfaction yields Gap; absence is never zero falsifier: a Gap value never carries an Unknown reason set, and an Unknown value always carries one
+req-034.conformance.test.ts::CAP1-REQ-034 — missing evidence yields Unknown; non-satisfaction yields Gap; absence is never zero scenario/sweep (a): with no verifying evidence, every answer renders Unknown with a reason from the closed vocabulary — never favourable, never zero; denominator: all seven
+req-034.conformance.test.ts::CAP1-REQ-034 — missing evidence yields Unknown; non-satisfaction yields Gap; absence is never zero scenario/sweep (b): current admissible evidence of non-satisfaction renders Gap, never Unknown — denominator: the five facets the spec gives a non-satisfaction arm
+req-034.conformance.test.ts::CAP1-REQ-034 — missing evidence yields Unknown; non-satisfaction yields Gap; absence is never zero sweep (a): no absent quantity is served as zero — no numeric leaf exists anywhere in the no-evidence answer set
+req-034.conformance.test.ts::CAP1-REQ-034 — missing evidence yields Unknown; non-satisfaction yields Gap; absence is never zero the two are never interchanged: fixture (a) serves zero Gap values; fixture (b)'s evidenced facets serve zero Unknown values
+req-035.conformance.test.ts::CAP1-REQ-035 — several reasons may be visible at once; one never hides the others a single-condition claim serves one primary and an empty secondary set — nothing is invented
+req-035.conformance.test.ts::CAP1-REQ-035 — several reasons may be visible at once; one never hides the others composition is deterministic and duplicate-free: repeated conditions collapse, order is first-applicable-first
+req-035.conformance.test.ts::CAP1-REQ-035 — several reasons may be visible at once; one never hides the others falsifier: every served spelling — primary and secondary — is inside the closed twelve
+req-035.conformance.test.ts::CAP1-REQ-035 — several reasons may be visible at once; one never hides the others falsifier: two known conditions are never served with one reason and no secondary
+req-035.conformance.test.ts::CAP1-REQ-035 — several reasons may be visible at once; one never hides the others scenario/oracle: two known conditions, both served — one primary plus the applicable secondary, each verbatim; set comparison against the fixture
+req-035.conformance.test.ts::CAP1-REQ-035 — several reasons may be visible at once; one never hides the others the secondary is marked as secondary and never folded into primary counts — the primary is exactly one, by shape
+req-036.conformance.test.ts::CAP1-REQ-036 — Mission-ready renders only its deferred posture falsifier: never satisfied, never Gap, never a score — even when every other facet is satisfied
+req-036.conformance.test.ts::CAP1-REQ-036 — Mission-ready renders only its deferred posture falsifier: no coordinate is served with a different spelling — case and wording exact
+req-036.conformance.test.ts::CAP1-REQ-036 — Mission-ready renders only its deferred posture falsifier: the compute path admits no evaluation input at all — the posture is identical whatever the project's evidence
+req-036.conformance.test.ts::CAP1-REQ-036 — Mission-ready renders only its deferred posture oracle: nothing else is served as the answer's value — the render carries exactly the three coordinates
+req-036.conformance.test.ts::CAP1-REQ-036 — Mission-ready renders only its deferred posture oracle: the three posture coordinates, verbatim — value `not evaluated`, basis `deferred`, epistemic label `Unknown`; string comparison per coordinate
+req-036.conformance.test.ts::CAP1-REQ-036 — Mission-ready renders only its deferred posture scenario: the deferred facet stays visible — present in the answer set of every fixture, evidence-rich or evidence-free
+req-037.conformance.test.ts::CAP1-REQ-037 — uncomputed reconciliation is Unknown falsifier: merged work is never rendered as reconciled, done, or green absent a computed reconciliation
+req-037.conformance.test.ts::CAP1-REQ-037 — uncomputed reconciliation is Unknown falsifier: reconciliation input absent entirely — still Unknown, never favourable
+req-037.conformance.test.ts::CAP1-REQ-037 — uncomputed reconciliation is Unknown oracle: no reason outside the twelve is minted — the merged-but-unreconciled condition is a FACT of the render, bound to no thirteenth reason
+req-037.conformance.test.ts::CAP1-REQ-037 — uncomputed reconciliation is Unknown scenario/oracle: merged work with no computed reconciliation — `Reconciled` renders Unknown and each work item reads `reconciliation evidence absent`
+req-037.conformance.test.ts::CAP1-REQ-037 — uncomputed reconciliation is Unknown the favourable arm is reachable only through a computed reconciliation of the declared scope
+req-038.conformance.test.ts::CAP1-REQ-038 — a negative or Unknown answer never erases the others falsifier: no answer is blanked — every served answer in the mixed set carries a non-empty value and a non-empty fact set; sweep over all seven
+req-038.conformance.test.ts::CAP1-REQ-038 — a negative or Unknown answer never erases the others falsifier: no answer is omitted because a sibling is negative or Unknown — the name set is identical across the mixed set and an all-Unknown set
+req-038.conformance.test.ts::CAP1-REQ-038 — a negative or Unknown answer never erases the others falsifier: the Gap does not degrade the satisfied sibling's rendering — Registered's render and facts are byte-identical with and without the sibling Gap
+req-038.conformance.test.ts::CAP1-REQ-038 — a negative or Unknown answer never erases the others scenario/oracle: one Gap, several Unknowns, one satisfied — all seven answers served, each with its own value; count and per-answer comparison
+req-040.conformance.test.ts::CAP1-REQ-040 — every answer is explainable: "Why this answer?" each internal reference resolves, checked by following references — with the denominator enumerated
+req-040.conformance.test.ts::CAP1-REQ-040 — every answer is explainable: "Why this answer?" falsifier: a fact-set field no accepted clause warrants is unrepresentable — served keys stay inside envelope + classes
+req-040.conformance.test.ts::CAP1-REQ-040 — every answer is explainable: "Why this answer?" falsifier: an answer with no reachable explanation renders the unavailability, never nothing
+req-040.conformance.test.ts::CAP1-REQ-040 — every answer is explainable: "Why this answer?" falsifier: an unresolvable internal reference is enumerated by name, never swallowed
+req-040.conformance.test.ts::CAP1-REQ-040 — every answer is explainable: "Why this answer?" per-class presence check over the closed class list, bounded: one fact set
+req-040.conformance.test.ts::CAP1-REQ-040 — every answer is explainable: "Why this answer?" presence is per-class, never assumed: a sparse fact set reports only what it carries
+req-040.conformance.test.ts::CAP1-REQ-040 — every answer is explainable: "Why this answer?" scenario: a shape answer explanation carries owning authority, evidence classification, evaluation identity, and Unknown reasons
+req-040.conformance.test.ts::CAP1-REQ-040 — every answer is explainable: "Why this answer?" serves one fact set under the literal human-view name
+req-040.conformance.test.ts::CAP1-REQ-040 — every answer is explainable: "Why this answer?" the class enumeration is closed at twelve and matches the accepted contract classes
+req-040.conformance.test.ts::CAP1-REQ-040 — every answer is explainable: "Why this answer?" the explanation is reachable from the human view under the literal name
+req-040.conformance.test.ts::CAP1-REQ-040 — every answer is explainable: "Why this answer?" the fact set is served in full through the machine plane
+req-041.conformance.test.ts::CAP1-REQ-041 — humans and machines receive the same facts a partial presentation cannot subtract a fact — minimal display never subtracts (RFC6-21)
+req-041.conformance.test.ts::CAP1-REQ-041 — humans and machines receive the same facts duplicate-named facts in the model are never silently dropped by the human view (RFC6-21)
+req-041.conformance.test.ts::CAP1-REQ-041 — humans and machines receive the same facts duplicate-named facts with a presentation section claiming the name: both are placed
+req-041.conformance.test.ts::CAP1-REQ-041 — humans and machines receive the same facts falsifier: a human view showing evidence the machine answer cannot retrieve is a detected parity break
+req-041.conformance.test.ts::CAP1-REQ-041 — humans and machines receive the same facts falsifier: a machine answer omitting an Unknown the human view shows is a detected parity break
+req-041.conformance.test.ts::CAP1-REQ-041 — humans and machines receive the same facts lawful fact permutation remains parity because presentation order is not semantic
+req-041.conformance.test.ts::CAP1-REQ-041 — humans and machines receive the same facts presentation may group and order differently without touching the facts
+req-041.conformance.test.ts::CAP1-REQ-041 — humans and machines receive the same facts scenario: no machine-invisible Unknown — the human-rendered Unknown and its reason travel verbatim to the machine answer
+req-041.conformance.test.ts::CAP1-REQ-041 — humans and machines receive the same facts sweep: both channels expose equal fact sets for every answer of the fixture project
+req-042.conformance.test.ts::CAP1-REQ-042 — equivalent queries at one evaluation expose equivalent facts a different evaluation may lawfully answer differently — equivalence is scoped to one identity
+req-042.conformance.test.ts::CAP1-REQ-042 — equivalent queries at one evaluation expose equivalent facts equivalence ignores filter key order — same selection, evaluation, filters, context is one query
+req-042.conformance.test.ts::CAP1-REQ-042 — equivalent queries at one evaluation expose equivalent facts every answer names the evaluation identity it was computed at
+req-042.conformance.test.ts::CAP1-REQ-042 — equivalent queries at one evaluation expose equivalent facts falsifier: answers stamped with different evaluations never count as one agreeing pair
+req-042.conformance.test.ts::CAP1-REQ-042 — equivalent queries at one evaluation expose equivalent facts falsifier: two answers disagreeing at one evaluation are detected as disagreement
+req-042.conformance.test.ts::CAP1-REQ-042 — equivalent queries at one evaluation expose equivalent facts sweep: each Capability 1 query issued twice at the pinned evaluation agrees, pair by pair
+req-042.conformance.test.ts::CAP1-REQ-042 — equivalent queries at one evaluation expose equivalent facts the canonical evaluation id is built from the pair and nothing else (RFC2-3)
+req-043.conformance.test.ts::CAP1-REQ-043 — a parity disagreement is visible and fails a count disagreement over one declared scope fails — even when name-keyed lookups would collapse it
+req-043.conformance.test.ts::CAP1-REQ-043 — a parity disagreement is visible and fails a freshness disagreement fails
+req-043.conformance.test.ts::CAP1-REQ-043 — a parity disagreement is visible and fails a reason disagreement fails — carrying the primary alone drops the marked secondary
+req-043.conformance.test.ts::CAP1-REQ-043 — a parity disagreement is visible and fails agreement is judged from the served outputs alone — identical disclosures are parity with the compared count disclosed
+req-043.conformance.test.ts::CAP1-REQ-043 — a parity disagreement is visible and fails an entity-existence disagreement fails — a fact present in one rendering's disclosure, absent from the other
+req-043.conformance.test.ts::CAP1-REQ-043 — a parity disagreement is visible and fails equal-count duplicate divergence fails without selecting the final name-mapped occurrence
+req-043.conformance.test.ts::CAP1-REQ-043 — a parity disagreement is visible and fails lawful: a disclosed filter difference is aggregation/finer detail, never a contradiction — and never silent parity
+req-043.conformance.test.ts::CAP1-REQ-043 — a parity disagreement is visible and fails no presentation precedence: the defect result has no field naming a winner, and the verdict is symmetric
+req-043.conformance.test.ts::CAP1-REQ-043 — a parity disagreement is visible and fails scenario: a label disagreement at one evaluation fails parity; neither value is silently preferred
+req-043.conformance.test.ts::CAP1-REQ-043 — a parity disagreement is visible and fails two renderings at different evaluations are not one pair — no cross-evaluation contradiction is minted
+req-044.conformance.test.ts::CAP1-REQ-044 — a missing explanation is never replaced by an optimistic summary an aggregate never hides its Unknowns — all three labels are disclosed with computed counts
+req-044.conformance.test.ts::CAP1-REQ-044 — a missing explanation is never replaced by an optimistic summary an empty aggregate disclosed its zero denominator — never a favourable blank
+req-044.conformance.test.ts::CAP1-REQ-044 — a missing explanation is never replaced by an optimistic summary an uncomputable explanation renders the unavailability: Unknown with its reason, byte for byte
+req-044.conformance.test.ts::CAP1-REQ-044 — a missing explanation is never replaced by an optimistic summary falsifier: the unavailable arm has no field that could carry a summary, default, or aggregate
+req-044.conformance.test.ts::CAP1-REQ-044 — a missing explanation is never replaced by an optimistic summary scenario: several Unknown answers aggregate with membership count, per-reason composition, and expansion to members
+req-044.conformance.test.ts::CAP1-REQ-044 — a missing explanation is never replaced by an optimistic summary secondary Unknown annotations are disclosed separately, never folded into the primary counts
+req-044.conformance.test.ts::CAP1-REQ-044 — a missing explanation is never replaced by an optimistic summary the aggregate carries no epistemic state of its own — its whole field set is composition and members
+req-044.conformance.test.ts::CAP1-REQ-044 — a missing explanation is never replaced by an optimistic summary the unavailable arm carries a caller-supplied reason verbatim
+req-044.conformance.test.ts::CAP1-REQ-044 — a missing explanation is never replaced by an optimistic summary tier and freshness composition travel where members carry them
+req-045.conformance.test.ts::CAP1-REQ-045 — inferred is distinguishable from observed; generated presentation is never the source an owning authority is citable as a basis, with its governing revision
+req-045.conformance.test.ts::CAP1-REQ-045 — inferred is distinguishable from observed; generated presentation is never the source canonical tuple multisets retain duplicate occurrence counts
+req-045.conformance.test.ts::CAP1-REQ-045 — inferred is distinguishable from observed; generated presentation is never the source falsifier: a generated presentation artifact offered as a source is refused, with the lawful route named
+req-045.conformance.test.ts::CAP1-REQ-045 — inferred is distinguishable from observed; generated presentation is never the source falsifier: an inferred value re-served as Observed is a cross-channel-detectable difference, not a cosmetic one
+req-045.conformance.test.ts::CAP1-REQ-045 — inferred is distinguishable from observed; generated presentation is never the source scenario: the Inferred label travels verbatim to the machine answer and is recoverable non-visually in the human view
+req-045.conformance.test.ts::CAP1-REQ-045 — inferred is distinguishable from observed; generated presentation is never the source sweep: every served fact of the fixture carries a label from the closed three
+req-045.conformance.test.ts::CAP1-REQ-045 — inferred is distinguishable from observed; generated presentation is never the source the inferred marking is a machine-readable text attribute, distinct from the observed one
+req-045.conformance.test.ts::CAP1-REQ-045 — inferred is distinguishable from observed; generated presentation is never the source the marking survives plain-text serialization of the machine answer
+req-045.conformance.test.ts::CAP1-REQ-045 — inferred is distinguishable from observed; generated presentation is never the source the six rendering tiers are closed and verbatim (RFC2-25)
+req-045.conformance.test.ts::CAP1-REQ-045 — inferred is distinguishable from observed; generated presentation is never the source the three-label vocabulary is closed and verbatim
+req-046.conformance.test.ts::CAP1-REQ-046 v1.0 — consent provenance disclosure a later correlation reports Syzygy-verified only in the new evaluation; the earlier one keeps bootstrap provenance
+req-046.conformance.test.ts::CAP1-REQ-046 v1.0 — consent provenance disclosure a valid state-(1) act shows the same exact basis in both channels, labelled bootstrap with A1 explicitly absent
+req-046.conformance.test.ts::CAP1-REQ-046 v1.0 — consent provenance disclosure an invalid act refuses with Unknown, the primary reason and the same diagnostic in both channels, inside a keyboard-reachable disclosure
+req-046.conformance.test.ts::CAP1-REQ-046 — stamp is not status; owning authority and effective status exposed a draft-stamped artifact whose exact digest carries a record is effectively accepted, with the disagreement disclosed
+req-046.conformance.test.ts::CAP1-REQ-046 — stamp is not status; owning authority and effective status exposed an empty stamp is still readable apart, and force still derives from the record set alone
+req-046.conformance.test.ts::CAP1-REQ-046 — stamp is not status; owning authority and effective status exposed an owner-act record at the exact digest makes the artifact effectively accepted, carrying the record and its two-valued provenance
+req-046.conformance.test.ts::CAP1-REQ-046 — stamp is not status; owning authority and effective status exposed falsifier: a record naming a different digest binds nothing — an edit after the act destroys it
+req-046.conformance.test.ts::CAP1-REQ-046 — stamp is not status; owning authority and effective status exposed falsifier: stamp and effective status are never merged — both fields exist on every exposure, independently valued
+req-046.conformance.test.ts::CAP1-REQ-046 — stamp is not status; owning authority and effective status exposed scenario: a stamp claiming `accepted` with no owner-act record serves effective status unadopted, both readable apart
+req-046.conformance.test.ts::CAP1-REQ-046 — stamp is not status; owning authority and effective status exposed the owning authority and governing revision are exposed on every answer resting on the artifact
+req-046.conformance.test.ts::CAP1-REQ-046 — stamp is not status; owning authority and effective status exposed the syzygy-verified provenance state travels unconflated
+req-046.conformance.test.ts::CAP1-REQ-046 — stamp is not status; owning authority and effective status exposed with several records at one digest, the last appended governs — records are appended, never edited
+req-050.conformance.test.ts::CAP1-REQ-050 — closed four-value discoverability vocabulary Unknown is a verbatim string value
+req-050.conformance.test.ts::CAP1-REQ-050 — closed four-value discoverability vocabulary no is a verbatim string value
+req-050.conformance.test.ts::CAP1-REQ-050 — closed four-value discoverability vocabulary not-applicable is a verbatim string value
+req-050.conformance.test.ts::CAP1-REQ-050 — closed four-value discoverability vocabulary one finding per repository carries the repository ID
+req-050.conformance.test.ts::CAP1-REQ-050 — closed four-value discoverability vocabulary yes is a verbatim string value
+req-051.conformance.test.ts::CAP1-REQ-051 — evidence-backed findings captured README linking to entry → yes
+req-051.conformance.test.ts::CAP1-REQ-051 — evidence-backed findings captured README not linking to entry → no
+req-051.conformance.test.ts::CAP1-REQ-051 — evidence-backed findings uncaptured source → Unknown with source-uncaptured-or-unreachable
+req-051.conformance.test.ts::CAP1-REQ-051 — evidence-backed findings unconsented source → Unknown with unconsented-source-or-provider
+req-051.conformance.test.ts::CAP1-REQ-051 — evidence-backed findings undeclared → Unknown with missing-declaration
+req-052.conformance.test.ts::CAP1-REQ-052 — not-applicable only for observed-source falsifier: governance-root never gets not-applicable (captured linking)
+req-052.conformance.test.ts::CAP1-REQ-052 — not-applicable only for observed-source falsifier: governance-root never gets not-applicable (uncaptured)
+req-052.conformance.test.ts::CAP1-REQ-052 — not-applicable only for observed-source falsifier: observed-source never gets no
+req-052.conformance.test.ts::CAP1-REQ-052 — not-applicable only for observed-source observed-source gets not-applicable regardless of evidence
+req-052.conformance.test.ts::CAP1-REQ-052 — not-applicable only for observed-source observed-source with uncaptured evidence still gets not-applicable
+req-053.conformance.test.ts::CAP1-REQ-053 — proposal beside finding a proposal carries kind code-change-set and plane proposed
+req-053.conformance.test.ts::CAP1-REQ-053 — proposal beside finding finding value is unchanged by the proposal
+req-053.conformance.test.ts::CAP1-REQ-053 — proposal beside finding proposal renders beside the finding as proposed
+req-053.conformance.test.ts::CAP1-REQ-053 — proposal beside finding the entry path is inside the governed plane — no write outside
+req-053.conformance.test.ts::CAP1-REQ-053 — proposal beside finding without a proposal, the proposed array is empty
+req-060.conformance.test.ts::CAP1-REQ-060 — identities are the accepted, stable, literal ones a project presentation carries identity and label as distinct fields — a rename rebuilds the label only
+req-060.conformance.test.ts::CAP1-REQ-060 — identities are the accepted, stable, literal ones declared opaque identifiers pass the locator-shape check
+req-060.conformance.test.ts::CAP1-REQ-060 — identities are the accepted, stable, literal ones falsifier sweep: locator-shaped strings are refused as identities — denominator: the prohibited-shape list
+req-060.conformance.test.ts::CAP1-REQ-060 — identities are the accepted, stable, literal ones falsifier: served identity values equal no URL and no path — swept over the identity-field set
+req-060.conformance.test.ts::CAP1-REQ-060 — identities are the accepted, stable, literal ones relocation changes locator hints and no identity
+req-060.conformance.test.ts::CAP1-REQ-060 — identities are the accepted, stable, literal ones scenario: rename changes no identity — every answer keys on the same identifier, the new name serves as a label
+req-060.conformance.test.ts::CAP1-REQ-060 — identities are the accepted, stable, literal ones sweep: the identity-field set of registration and coverage answers is byte-identical across the rename — denominator disclosed
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening authorizeWrite permits governed-plane writes, refuses external permits writes inside .syzygy/
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening authorizeWrite permits governed-plane writes, refuses external permits writes inside openspec/
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening authorizeWrite permits governed-plane writes, refuses external refuses deployment target writes
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening authorizeWrite permits governed-plane writes, refuses external refuses root-README writes
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening authorizeWrite permits governed-plane writes, refuses external refuses writes outside the governed plane
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening detectWideningFields catches known widening fields detects all four known widening field names
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening detectWideningFields catches known widening fields detects write_roots as a contradiction routed to owner
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening detectWideningFields catches known widening fields falsifier: a widening field must render as contradiction, not be honored
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening detectWideningFields catches known widening fields ignores fields that are not widening field names
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening effect boundary report Capability 1 exposes no external effects
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening effect boundary report includes widening violations in the report
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening effect boundary report reports the governed write namespaces
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening isInsideGovernedPlane classifies paths correctly external paths fail
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening isInsideGovernedPlane classifies paths correctly governed paths pass
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening no module in S1–S6 exports a function that performs I/O GOVERNED_WRITE_NAMESPACES is exactly two entries: openspec/ and .syzygy/
+req-061.conformance.test.ts::CAP1-REQ-061 — write boundary hardening no module in S1–S6 exports a function that performs I/O WIDENING_FIELD_NAMES is the closed four
+req-062.conformance.test.ts::CAP1-REQ-062 — stale evidence cannot silently remain current or favourable a claim class with no declared currency bound renders Unknown with reason `no-currency-bound-declared` — however fresh the evidence
+req-062.conformance.test.ts::CAP1-REQ-062 — stale evidence cannot silently remain current or favourable evidence within its declared bound is current — the favourable arm exists and is reachable only through a declared, satisfied bound
+req-062.conformance.test.ts::CAP1-REQ-062 — stale evidence cannot silently remain current or favourable fail-closed: an unreadable evidence instant cannot count as current, and says so machine-readably
+req-062.conformance.test.ts::CAP1-REQ-062 — stale evidence cannot silently remain current or favourable falsifier: an unbounded claim class never renders favourably, even with zero-age evidence
+req-062.conformance.test.ts::CAP1-REQ-062 — stale evidence cannot silently remain current or favourable falsifier: future-dated evidence cannot count as current — it is not in the evaluation's past at all
+req-062.conformance.test.ts::CAP1-REQ-062 — stale evidence cannot silently remain current or favourable falsifier: stale evidence never supports a current or favourable answer
+req-062.conformance.test.ts::CAP1-REQ-062 — stale evidence cannot silently remain current or favourable no served value differs between two reads of one evaluation — the whole claim set, repeated, is byte-identical
+req-062.conformance.test.ts::CAP1-REQ-062 — stale evidence cannot silently remain current or favourable scenario: evidence beyond its declared bound renders Unknown with reason `stale-beyond-currency-bound` — swept over the whole fixture
+req-062.conformance.test.ts::CAP1-REQ-062 — stale evidence cannot silently remain current or favourable staleness of a superseded observation is visible on the primary surface
+req-062.conformance.test.ts::CAP1-REQ-062 — stale evidence cannot silently remain current or favourable the bound is judged at the as-of instant: age exactly at the bound is current, one millisecond past it is stale
+req-063.conformance.test.ts::CAP1-REQ-063 — proposed material never renders as current state competing proposals in one exclusivity group render as distinct candidates, never one merged rendering (RFC1-27)
+req-063.conformance.test.ts::CAP1-REQ-063 — proposed material never renders as current state falsifier: a drafted repair renders only as proposed material, never as the declaration's content
+req-063.conformance.test.ts::CAP1-REQ-063 — proposed material never renders as current state falsifier: an unfavourable answer is never improved by an open proposal
+req-063.conformance.test.ts::CAP1-REQ-063 — proposed material never renders as current state scenario: the same query with and without an open proposal serves identical status values
+req-063.conformance.test.ts::CAP1-REQ-063 — proposed material never renders as current state sweep: every proposal rendering carries the proposed marking, machine-readably — denominator: the rendering set
+req-063.conformance.test.ts::CAP1-REQ-063 — proposed material never renders as current state the current value is the caller's own, untouched by reference — no code path folds a proposal into it
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractAuthorityDistinctions recovers effective status vs stamp recovers effective status as text attribute
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractAuthorityDistinctions recovers effective status vs stamp recovers stamp-vs-effective comparison as structure
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractConsentDistinction R-S2 finding #4: an optional citation adds structure detail without minting a new distinction name a cited withdrawal names the withdrawal record, not an in-force one
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractConsentDistinction R-S2 finding #4: an optional citation adds structure detail without minting a new distinction name the closed nine-distinction set is unaffected: consent-state still counts once whether or not a citation is present
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractConsentDistinction R-S2 finding #4: an optional citation adds structure detail without minting a new distinction name with a citation, a second consent-state entry carries the record as structure
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractConsentDistinction R-S2 finding #4: an optional citation adds structure detail without minting a new distinction name with no citation, only the text-attribute consent-state entry is returned (unchanged shape)
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractDiscoverabilityDistinctions recovers discoverability value recovers discoverability value as text attribute
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractDistinctions recovers epistemic attributes from ServedFact omits tier when absent
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractDistinctions recovers epistemic attributes from ServedFact omits unknown-reason when label is not Unknown
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractDistinctions recovers epistemic attributes from ServedFact recovers Unknown reason from an Unknown fact
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractDistinctions recovers epistemic attributes from ServedFact recovers epistemic label from an Observed fact
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractDistinctions recovers epistemic attributes from ServedFact recovers freshness state
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractDistinctions recovers epistemic attributes from ServedFact recovers rendering tier
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractProposalDistinctions recovers proposed/current and adopted/unadopted recovers adopted-vs-unadopted
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions extractProposalDistinctions recovers proposed/current and adopted/unadopted recovers proposed-vs-current marking
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions falsifier: no distinction relies only on colour, position, or layout every distinction is recoverable by text-attribute or structure
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions sweep: all nine named distinctions covered all nine are covered when all extractors run on representative fixtures
+req-064.conformance.test.ts::CAP1-REQ-064 — machine-readable distinctions sweep: all nine named distinctions covered the nine distinction names are exactly the closed set
+req-integration.conformance.test.ts::CAP1-REQ-integration — end-to-end pipeline all nine machine-readable distinctions are covered end-to-end
+req-integration.conformance.test.ts::CAP1-REQ-integration — end-to-end pipeline coverage computed with consent and no-consent repositories
+req-integration.conformance.test.ts::CAP1-REQ-integration — end-to-end pipeline declaration reads and registers successfully
+req-integration.conformance.test.ts::CAP1-REQ-integration — end-to-end pipeline discoverability: governance-root with consented README link → yes
+req-integration.conformance.test.ts::CAP1-REQ-integration — end-to-end pipeline discoverability: observed-source → not-applicable
+req-integration.conformance.test.ts::CAP1-REQ-integration — end-to-end pipeline discoverability: unconsented repository → Unknown
+req-integration.conformance.test.ts::CAP1-REQ-integration — end-to-end pipeline entry path is correct for any project
+req-integration.conformance.test.ts::CAP1-REQ-integration — end-to-end pipeline every Unknown answer carries its reason
+req-integration.conformance.test.ts::CAP1-REQ-integration — end-to-end pipeline every proposed rendering carries the proposed marking
+req-integration.conformance.test.ts::CAP1-REQ-integration — end-to-end pipeline parity holds: machine and human renderings agree on every facet
+req-integration.conformance.test.ts::CAP1-REQ-integration — end-to-end pipeline shape answers: all seven produced, stamped with the evaluation
+req-integration.conformance.test.ts::CAP1-REQ-integration — end-to-end pipeline write boundary holds: governed paths allowed, external refused
+vocabulary.conformance.test.ts::CAP1-REQ-030 — the seven answer names, exact and ordered serves exactly the seven owner-ratified names in order (SDR-36)
+vocabulary.conformance.test.ts::CAP1-REQ-030/034 — the three-spelling answer domain (SDR-35) closes the value domain at satisfied / Gap / Unknown, verbatim
+vocabulary.conformance.test.ts::CAP1-REQ-036 — the Mission-ready deferred posture serves the three coordinates verbatim (SDR-36 rule 3)
+vocabulary.conformance.test.ts::CAP1-REQ-050 — the four discoverability spellings closes the domain at yes / no / not-applicable / Unknown, verbatim
+vocabulary.conformance.test.ts::RFC2-24 — twelve Unknown reasons, closed carries twelve distinct non-empty reason spellings
+vocabulary.conformance.test.ts::RFC2-24 — twelve Unknown reasons, closed spells each reason verbatim from the clause
+vocabulary.conformance.test.ts::yaml-dialect — the pinned declaration dialect (RFC3-1) parses a simple valid document
+vocabulary.conformance.test.ts::yaml-dialect — the pinned declaration dialect (RFC3-1) rejects duplicate keys

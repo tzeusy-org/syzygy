@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { sha256 } from '@syzygy/support';
 import { RUN_LAYOUT } from './state-directory.js';
+import { isoOf } from './iso-of.js';
 
 /** Launched runs (candidate REQ-polaris-generation-040 to 044; prototype under owner direction
  * POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14).
@@ -76,7 +77,7 @@ export function expectedLaunch(state: LaunchedMarkerState): string {
 
 export function writeLaunchedMarker(runDir: string, runId: string, now: number): void {
   const marker: LaunchedMarker = {
-    format: LAUNCHED_FORMAT, runId, startedAt: new Date(now).toISOString(), command: 'syzygy polaris', executionPermitted: false,
+    format: LAUNCHED_FORMAT, runId, startedAt: isoOf(now), command: 'syzygy polaris', executionPermitted: false,
     direction: 'POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14',
   };
   fs.writeFileSync(path.join(runDir, RUN_LAYOUT.launched), `${JSON.stringify(marker, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
@@ -111,9 +112,9 @@ export function writeLaunchRecord(
     form: launchedForm(), promptSha256: fields.promptSha256,
     observed: {
       executable: observed.executable, argvSha256: sha256(JSON.stringify(observed.argv)), directory: observed.directory,
-      viewSha256: observed.viewSha256, pid: observed.pid, startedAt: new Date(observed.startedAt).toISOString(), label: 'Observed',
+      viewSha256: observed.viewSha256, pid: observed.pid, startedAt: isoOf(observed.startedAt), label: 'Observed',
     },
-    recordedAt: new Date(observed.startedAt).toISOString(),
+    recordedAt: isoOf(observed.startedAt),
     label: 'Observed',
   };
   const target = path.join(runDir, file);

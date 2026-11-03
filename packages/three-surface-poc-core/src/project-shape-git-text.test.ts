@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { classifyPhaseASeed, compileDetectors, PWB_SECRET_POLICY } from './content-classification.js';
-import { observeProjectShapeSources, type GitRunner } from './project-shape-observation.js';
+import { observeProjectShapeSources } from './project-shape-observation.js';
+import type { GitRunner } from './pwb-types.js';
 
 // The three git commands whose output the observer decodes as text (syzygy-bpyt.6.3): the exact commit, the committer
 // instant and the tree listing. Bytes that are not well-formed UTF-8 stop the observation as a capture failure that

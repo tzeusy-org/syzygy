@@ -16,6 +16,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
   ACTIVE_CONTENT_FORMS,
+  BLOB_READ_REFUSAL_REASONS,
+  PHASE_A_REFUSAL_REASONS,
+  PHASE_B_READ_POLICY,
   PWB_DENIED_PATH_RULES,
   PWB_POLICY_IDENTITY,
   READ_REFUSAL_REASONS,
@@ -32,8 +35,10 @@ import {
 import { indexGitTree, type GitTreeEntry } from './git-tree.js';
 import { recognizeCodeContexts } from './markdown-code-context.js';
 import type { ManifestSource } from './project-shape-manifest.js';
-import { PWB_RESOURCE_LIMITS, type PwbResourceLimits } from './project-shape-observation.js';
+import { PWB_RESOURCE_LIMITS } from './project-shape-observation.js';
+import type { PwbResourceLimits } from './pwb-types.js';
 import { createResourceLedger } from './resource-ledger.js';
+import { createTransientBodies } from './transient-bodies.js';
 
 // ---------------------------------------------------------------------
 // Fixture repository: bodies, real Git object ids, a tree with every
@@ -217,6 +222,17 @@ describe('read guard — paths that must never reach Git', () => {
     );
     const exercised = new Set([...MALICIOUS.map(([, reason]) => reason), 'object-id-differs-from-tree']);
     for (const reason of READ_REFUSAL_REASONS) expect(exercised.has(reason), reason).toBe(true);
+  });
+
+  it('both phase vocabularies are subsets of the one refusal set, sharing exactly the three tree checks (syzygy-bpyt.6.5)', () => {
+    expect([...PHASE_A_REFUSAL_REASONS]).toEqual(['not-in-tree', 'not-a-regular-blob', 'object-id-differs-from-tree', 'not-a-phase-a-seed-path']);
+    const union = new Set<string>([...READ_REFUSAL_REASONS, ...PHASE_A_REFUSAL_REASONS]);
+    expect([...union].sort()).toEqual([...BLOB_READ_REFUSAL_REASONS].sort());
+    expect(READ_REFUSAL_REASONS.filter((reason) => (PHASE_A_REFUSAL_REASONS as readonly string[]).includes(reason)).sort()).toEqual(
+      ['not-a-regular-blob', 'not-in-tree', 'object-id-differs-from-tree'],
+    );
+    expect(PHASE_B_READ_POLICY.refusals).toBe(READ_REFUSAL_REASONS);
+    expect(PHASE_B_READ_POLICY.trailingPasses).toEqual([]);
   });
 
   it('admits a regular blob by exact tree identity, executable mode included', () => {
@@ -431,6 +447,19 @@ function readOne(text: string): ReturnType<ExactObjectReader['read']> {
   };
   return createExactObjectReader({ runGit, tree: indexGitTree([entry]), resourceLimits: PWB_RESOURCE_LIMITS }).read('notes/line-ends.md');
 }
+
+// syzygy-bpyt.6.5: the validation pass is charged before the NUL and UTF-8 checks run, so a source with no budget left is over-limit
+// whatever its bytes are; a reader that validated first would call this body contains-nul.
+describe('the validation pass is charged before validation runs', () => {
+  it('maxParsePassesPerSource 0 leaves a NUL-bearing body over-limit, not contains-nul, with the bytes it took counted', () => {
+    const bytes = enc.encode('a\u0000b');
+    const oid = sha1Blob(bytes);
+    const entry: GitTreeEntry = { mode: '100644', type: 'blob', objectId: oid, sizeBytes: bytes.byteLength, path: 'notes/nul.md' };
+    const r = createExactObjectReader({ runGit: () => bytes, tree: indexGitTree([entry]), resourceLimits: { ...PWB_RESOURCE_LIMITS, maxParsePassesPerSource: 0 } });
+    expect(r.read('notes/nul.md').record).toEqual({ path: 'notes/nul.md', objectId: oid, bytes: 3, contentDigest: contentDigestOf(bytes), outcome: 'over-limit', detail: 'maxParsePassesPerSource' });
+    expect(r.breaches).toEqual([{ limit: 'maxParsePassesPerSource', declared: 0, observed: 1, path: 'notes/nul.md' }]);
+  });
+});
 
 // syzygy-bpyt.16 (ruled on syzygy-bpyt.1.14): the reader hands a blob's decoded text to the scan with its line ends as they are, and the
 // code-context mask ends a line at CRLF, CR and LF alike, so a CRLF or CR blob gets the outcome its LF form gets. The first text was
@@ -729,9 +758,10 @@ describe('the reader charges one shared resource ledger', () => {
     // Phase A took the body, counted it and validated it (nine passes).
     expect(ledger.chargeBody(PATH, oidOf(PATH), size)).toBeUndefined();
     for (let i = 0; i < 9; i += 1) ledger.chargePass(PATH, 'utf8-and-nul-validation');
-    ledger.remember(PATH, oidOf(PATH), { bytes: BYTES[PATH] as Uint8Array, text: TEXTS[PATH] as string });
+    const bodies = createTransientBodies();
+    bodies.remember(PATH, oidOf(PATH), { bytes: BYTES[PATH] as Uint8Array, text: TEXTS[PATH] as string });
     const spy = gitSpy();
-    const r = createExactObjectReader({ runGit: spy.runGit, tree: indexGitTree(TREE), ledger });
+    const r = createExactObjectReader({ runGit: spy.runGit, tree: indexGitTree(TREE), ledger, bodies });
     const result = r.read(PATH);
     expect(result.kind).toBe('text');
     if (result.kind !== 'text') throw new Error('unreachable');

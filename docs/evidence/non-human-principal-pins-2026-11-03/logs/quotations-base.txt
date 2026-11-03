@@ -1,0 +1,9 @@
+OK    QC-1  a quotation beside a path:line locator was said by that file — 69 quotations examined in 24 of 1129 .md files scanned (loc-paren-quote 3, loc-colon-quote 26, quote-paren-loc 40), 0 findings
+note  QC-1  1 recorded findings, printed every run and never failed (`RECORDED`)
+        .syzygy/governance/contracts/candidates/policy-candidates/DOCTRINE-AMENDMENT-ACTUATOR-DEFINITION.md:24 — quotes doctrine/v1.md:53 ("endpoints in real **actuator** use *and* the three-axis propagation sl…"), in no revision of .syzygy/governance/doctrine/v1.md — recorded: the quotation ends "slice"; doctrine/v1.md:53 at 9bdfe98a, the one revision carrying the sentence, ends "proof-of-concept", and no revision carries "propagation slice". Drafting text of the P-25(c) packet, applied within doctrine amendment D5, whose head banner says the text below it is unchanged; found by this check, 2026-10-03
+note  QC-1  7 of 69 are in an earlier revision of their source only: amended since quoted, reported, never failed
+note  QC-1  14 of 69 found outside their cited lines (±2): locator drift, reported, never failed
+note  QC-1  102 locators name no tracked file (CG-1 owns dangling paths); not examined
+note  QC-1  excluded verbatim records, candidates history: 21 .md files, 0 quotations, 0 not in their source now; history not searched
+note  QC-1  excluded verbatim records, raw review: 803 .md files, 1187 quotations, 487 not in their source now; history not searched
+note  QC-1  excluded verbatim records, round directory: 139 .md files, 10 quotations, 4 not in their source now; history not searched

@@ -1,0 +1,18 @@
+// syzygy-bpyt.6.5 follow-up (syzygy-q44o): the config the differential and
+// capture harnesses run under, at the base commit and at the head alike.
+//
+// Copy to the repository root as vitest.differential.config.ts. The harnesses
+// need git (a committed fixture repository, a real `git` subprocess), which the
+// head's unit tier refuses, and the base has no tiers at all; a config of their
+// own runs them identically on both sides. It carries the two things a test
+// needs from the root config: the `source` export condition and vitest.setup.ts.
+import { fileURLToPath } from 'node:url';
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  ssr: { resolve: { conditions: ['source', 'module', 'node', 'development|production'] } },
+  test: {
+    setupFiles: [fileURLToPath(new URL('./vitest.setup.ts', import.meta.url))],
+    include: ['apps/three-surface-poc/src/zz-bpyt65-*.test.ts'],
+  },
+});

@@ -22,6 +22,23 @@ import type {
 
 export const FIXTURE_OWNER = 'uniquosity@gmail.com';
 
+// Corrupt a fixture on purpose: the one place a conformance test rewrites
+// builder output. `String.replace` is silent when the needle is absent, so a
+// changed builder default would leave the "corrupted" source equal to the
+// valid one and the test would assert against valid input without failing
+// (syzygy-bpyt.7.9). This throws instead, and requires the needle to occur
+// exactly once. The needle and the replacement stay literals at the call
+// site; no expected value comes from here.
+export function corrupt(source: string, needle: string, replacement: string): string {
+  const first = source.indexOf(needle);
+  if (first === -1 || source.indexOf(needle, first + 1) !== -1) {
+    throw new Error(
+      `corrupt(): expected exactly one occurrence of ${JSON.stringify(needle)} in the fixture source`,
+    );
+  }
+  return source.slice(0, first) + replacement + source.slice(first + needle.length);
+}
+
 // The as-of instant most conformance fixtures evaluate at.
 export const FIXTURE_AS_OF = '2026-08-21T00:00:00Z';
 

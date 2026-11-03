@@ -281,6 +281,17 @@ describe('review-packet --kind fidelity', () => {
     expect((await execFileAsync('sha256sum', ['-c', 'packet.sha256'], { cwd: dir })).stdout).toBe('packet.json: OK\n');
   });
 
+  // P-116 (screening scope version 5, D): the packet's screen is loaded for the run's repository identity and pinned commit.
+  it('loads the screen for repository:<id> at the pinned commit', async () => {
+    const run = await prepared();
+    const seen: unknown[] = [];
+    const result = await reviewPacket(run, { kind: 'fidelity' }, { ...deps(), loadScreen: async (placement) => { seen.push(placement); return screenOf(); } });
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const commit = JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')).subject.pinnedRevision.commit as string;
+    expect(commit).toMatch(/^[0-9a-f]{40}$/u);
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit }]);
+  });
+
   it('carries no authoring exchange, read account or excluded byte', async () => {
     const run = await prepared();
     await packetOf(run);
@@ -638,7 +649,7 @@ describe('the step guard runs before every review step (syzygy-qkea.23)', () => 
 describe('the content-class gate on the fidelity packet', () => {
   const DOC_POLICY = new TextEncoder().encode(JSON.stringify({
     policyId: 'fixture-public-source', policyVersion: '2', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
-    publicSourceScope: { contentClassification: { rules: LIVE_POLICY.publicSourceScope.contentClassification.rules } },
+    publicSourceScope: { contentClassification: LIVE_POLICY.publicSourceScope.contentClassification },
   }));
   const NOTES_CITED = [{ subject: 'draft', citationId: 'c-p2' }, { subject: 'inventory', citationId: 'c-e-snap' }];
   const spansOf = async (classes: readonly string[] | null): Promise<{ spans: Record<string, unknown>[]; text: string; counts: unknown }> => {
@@ -681,7 +692,7 @@ describe('the content-class gate on the fidelity packet', () => {
 describe('the fidelity packet over a body retained as redacted-span', () => {
   const DOC_POLICY = new TextEncoder().encode(JSON.stringify({
     policyId: 'fixture-public-source', policyVersion: '4', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
-    publicSourceScope: { contentClassification: { rules: LIVE_POLICY.publicSourceScope.contentClassification.rules } },
+    publicSourceScope: { contentClassification: LIVE_POLICY.publicSourceScope.contentClassification },
   }));
   const NOTES_CITED = [{ subject: 'draft', citationId: 'c-p2' }, { subject: 'inventory', citationId: 'c-e-snap' }];
   const packetWith = async (withheld: readonly number[]) => {

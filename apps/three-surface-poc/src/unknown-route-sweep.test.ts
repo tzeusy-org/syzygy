@@ -138,11 +138,15 @@ beforeAll(() => {
       runGit: (root, args) => { if (args[0] === 'ls-tree') throw new Error('refused'); return realGit(root, args); },
       runWorkItemQuery: () => { throw new Error('connection refused'); },
     }));
-    models.set('no-seeds', buildPocModel({
+    // A seed set naming a repository with no materialization support: the
+    // one model state with no dispatch, so the action's Unknown is routed.
+    models.set('unsupported-repository', buildPocModel({
+      seeds: { ...BUTLERS_POC_SEEDS, project: { ...BUTLERS_POC_SEEDS.project, repositoryId: 'repository:unsupported-poc' } },
       repoRoot,
       repositoryRevision: revision,
       observerRevision: revision,
-      evaluation: { snapshot: 'butlers@no-seeds', asOf: '2026-08-30T12:00:00Z' },
+      evaluation: { snapshot: 'butlers@unsupported-repository', asOf: '2026-08-30T12:00:00Z' },
+      runWorkItemQuery: () => { throw new Error('connection refused'); },
     }));
   }
   {
@@ -188,11 +192,13 @@ function model(name: string): PocModel {
 // SEC-5 (syzygy-jytt) added one withheld-title mark per rendered card and
 // the board's notice: plain and observed-shape 11 → 17 (five cards, one
 // notice), worker-change 4 → 6 (one card, one notice).
+// syzygy-bpyt.7.1 removed the seedless build; its no-seeds row (8, 2, 1)
+// became unsupported-repository, the remaining state with no dispatch.
 const DENOMINATORS: Readonly<Record<string, Readonly<Record<Surface, number>>>> = {
   plain: { polaris: 21, trajectory: 17, orrery: 9 },
   'observed-shape': { polaris: 13, trajectory: 17, orrery: 9 },
   unreachable: { polaris: 24, trajectory: 1, orrery: 10 },
-  'no-seeds': { polaris: 8, trajectory: 2, orrery: 1 },
+  'unsupported-repository': { polaris: 22, trajectory: 2, orrery: 9 },
   'worker-change': { polaris: 19, trajectory: 6, orrery: 7 },
 };
 

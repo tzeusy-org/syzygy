@@ -386,9 +386,10 @@ describe('policy residuals (the detectors see literal forms only)', () => {
 // syzygy-2coz: the project-documentation class of screening scope version 2, under the live scope's rules. It is classified only while
 // the RFC5-14 class amendment act is confirmed (the scope's prerequisite); its bodies pass every detector and the active-content scan.
 describe('the project-documentation class', () => {
-  const LIVE_RULES = (JSON.parse(readFileSync(new URL('../../../../.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json', import.meta.url), 'utf8'))
-    .publicSourceScope.contentClassification.rules) as Record<string, unknown>[];
-  const livePolicy = policyBytes({ publicSourceScope: { contentClassification: { rules: LIVE_RULES } } });
+  const LIVE_CLASSIFICATION = (JSON.parse(readFileSync(new URL('../../../../.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json', import.meta.url), 'utf8'))
+    .publicSourceScope.contentClassification) as Record<string, unknown>;
+  const LIVE_RULES = LIVE_CLASSIFICATION['rules'] as Record<string, unknown>[];
+  const livePolicy = policyBytes({ publicSourceScope: { contentClassification: LIVE_CLASSIFICATION } });
   // The port states the prerequisite; the checkout port decides it with the strict class act reader at its clock, which the dossier's
   // screen test drives over records roots (a future-dated act, a withdrawal) against both screens. No default for `inForce`: an absent
   // answer is passed as `undefined`, which a default would replace.
@@ -398,8 +399,9 @@ describe('the project-documentation class', () => {
   it('admits a root document, a docs guide and a license text, and keeps withholding the rest', async () => {
     const screen = await loadPublicSourceScreen(docPort(true));
     expect(screen.projectDocumentation).toBe(true);
+    // Version 5: a root MANIFESTO is governance-text, admitted under that class rather than withheld.
     expect(['README.md', 'docs/guide.md', 'licenses/MIT.txt', 'src/server.c', 'MANIFESTO', 'docs/design.md', 'src/README.md', 'redis.conf'].map(path => screen.screenPath(path)))
-      .toEqual([undefined, undefined, undefined, undefined, 'unknown-extraction-class', 'unknown-extraction-class', 'unknown-extraction-class', 'unknown-extraction-class']);
+      .toEqual([undefined, undefined, undefined, undefined, undefined, 'unknown-extraction-class', 'unknown-extraction-class', 'unknown-extraction-class']);
     expect(['README.md', 'licenses/MIT.txt', 'src/server.c', 'docs/design.md'].map(path => screen.contentClass(path)))
       .toEqual(['project-documentation', 'project-documentation', 'code-content', undefined]);
   });
@@ -417,7 +419,7 @@ describe('the project-documentation class', () => {
 
   it('refuses a malformed project-documentation rule whether or not the class act is in force', async () => {
     const rules = LIVE_RULES.map(rule => (rule['class'] === 'project-documentation' ? { ...rule, docTreeRoots: ['docs/api'] } : rule));
-    const policy = policyBytes({ publicSourceScope: { contentClassification: { rules } } });
+    const policy = policyBytes({ publicSourceScope: { contentClassification: { ...LIVE_CLASSIFICATION, rules } } });
     for (const inForce of [true, false]) {
       const error = await loadPublicSourceScreen(docPort(inForce, policy)).then(() => undefined, (caught: unknown) => caught);
       expect(error).toBeInstanceOf(CorpusRefusal);
@@ -451,8 +453,10 @@ describe('the code-content exemption (screening scope version 3)', () => {
   let exemption: Record<string, unknown> = {};
   beforeAll(async () => {
     const py = `import json, sys; sys.path.insert(0, 'scripts')
-import build_public_source_screening_scope_v2 as b2, build_public_source_screening_scope_v3 as b, build_public_source_screening_scope_v4 as b4
-v3_all, _mode = b4.base_bytes()
+import build_public_source_screening_scope_v2 as b2, build_public_source_screening_scope_v3 as b, build_public_source_screening_scope_v4 as b4, build_public_source_screening_scope_v5 as b5
+v4_span, _mode = b5.base_bytes()
+v3_all = b2.reverse_patch((b4.ROOT / b4.patch_path(b5.V4_BASE_VARIANT)).read_text(), v4_span)
+assert b4.sha(v3_all) == b4.v3.manifest_rows(b4.ROOT)[b4.V3_BASE_VARIANT] and b4.propose(v3_all, b5.V4_BASE_VARIANT) == v4_span
 base = b2.reverse_patch((b.ROOT / b.patch_path('all')).read_text(), v3_all)
 assert b.propose(base, 'all') == v3_all
 sys.stdout.write(json.dumps(json.loads(b.propose(base, 'all'))[b.SCOPE_KEY]['activeContent']['codeContentExemption']))`;
@@ -489,7 +493,7 @@ sys.stdout.write(json.dumps(json.loads(b.propose(base, 'all'))[b.SCOPE_KEY]['act
 
   it('refuses an exemption whose texts or extensions this screen does not implement', async () => {
     expect(await loadPublicSourceScreen(exemptPort(exemptPolicy({ rule: 'another rule' }))).then(() => '', (error: unknown) => (error as CorpusRefusal).reason))
-      .toBe('public-source-policy: policy code-content exemption rule is not the text this screen implements');
+      .toBe('public-source-policy: policy code-content exemption rule is not a text this screen implements');
     expect(await loadPublicSourceScreen(exemptPort(exemptPolicy({ exemptExtensions: ['.h'] }))).then(() => '', (error: unknown) => (error as CorpusRefusal).reason))
       .toBe('public-source-policy: policy code-content exemption exemptExtensions is not a non-empty list of distinct sourceExtensions entries');
   });
@@ -577,4 +581,31 @@ describe('the v4 redacted corpus behind the original-object verification boundar
     expect(sent.join('\n')).not.toContain('forged-secret-sentinel');
   });
 
+});
+
+// P-116 (screening scope version 5, D): the reader loads the screen for the repository it reads (its consent identity, as configured)
+// at the revision it reads, so an owner placement applies only there. The live policy with its one placement re-pointed at this fixture.
+describe('the version-5 owner placements through the corpus reader', () => {
+  const live = JSON.parse(readFileSync(new URL('../../../../.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json', import.meta.url), 'utf8')) as Record<string, any>;
+  const placing = (repository: string, commits: readonly string[]): PublicSourcePolicyActPort => {
+    const doc = structuredClone(live);
+    const rule = (doc.publicSourceScope.contentClassification.rules as Record<string, unknown>[]).find(entry => entry['class'] === 'project-documentation')!;
+    rule['ownerPlacements'] = [{ repository, commits, paths: ['tls.md'] }];
+    const bytes = new TextEncoder().encode(`${JSON.stringify(doc, null, 2)}\n`);
+    return { read: async () => ({ actRecord: actRecord(sha(bytes)), policy: bytes, classActInForce: true }) };
+  };
+  let placed: { root: string; commit: string };
+  beforeAll(() => { placed = fixtureRepo({ 'TLS.md': '# TLS\nUse port 6380.\n', 'src/a.c': 'int a;\n' }); });
+  const paths = async (policyAct: PublicSourcePolicyActPort): Promise<string[]> =>
+    (await readScreenedRepoCorpus(placed.root, cfg(placed.commit), { admission: allow, policyAct })).sources.filter(source => !source.exclusion.excluded).map(source => source.path).sort();
+
+  it('admits the placed path for the configured repository at the read revision', async () => {
+    expect(await paths(placing('repository:fixture', [placed.commit]))).toEqual(['TLS.md', 'src/a.c']);
+  });
+  it.each<[string, string, () => string[]]>([
+    ['another revision', 'repository:fixture', () => ['0'.repeat(40)]],
+    ['another repository', 'repository:other', () => [placed.commit]],
+  ])('withholds it for %s', async (_name, repository, commits) => {
+    expect(await paths(placing(repository, commits()))).toEqual(['src/a.c']);
+  });
 });

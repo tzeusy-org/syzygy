@@ -31,8 +31,8 @@
 import { posixBasename } from './git-tree.js';
 import { isFencedAt, recognizeCodeContexts } from './markdown-code-context.js';
 import { EXTRACTION_CLASSES, type ExtractionClass, type ManifestSource, type SourceRule } from './project-shape-manifest.js';
-import type { ResourceLimitBreach } from './project-shape-observation.js';
-import { ParsePassBudgetExceeded, type ParsePassCharge, type ParsePassIdentity } from './resource-ledger.js';
+import type { ResourceLimitBreach } from './pwb-types.js';
+import type { ParsePassCharge, ParsePassIdentity } from './resource-ledger.js';
 
 // ---------------------------------------------------------------------
 // Vocabulary.
@@ -741,12 +741,8 @@ export function extractSource(
   const failures: ExtractionFailureRecord[] = [];
   const unenumerated: UnenumeratedHeading[] = [];
   for (const cls of classes) {
-    try {
-      charge?.(EXTRACTION_PASSES[cls]);
-    } catch (error) {
-      if (error instanceof ParsePassBudgetExceeded) return { kind: 'over-limit', path, classes, pass: EXTRACTION_PASSES[cls], class: cls, breach: error.breach };
-      throw error;
-    }
+    const breach = charge?.(EXTRACTION_PASSES[cls]);
+    if (breach !== undefined) return { kind: 'over-limit', path, classes, pass: EXTRACTION_PASSES[cls], class: cls, breach };
     const result = extractClass(cls, path, text);
     if (result.kind === 'failed') {
       failures.push(result.failure);
@@ -768,12 +764,8 @@ export function extractSource(
   if ((source.rule as SourceRule | undefined) !== 'root-index') return extracted;
   // The root index's own pass: one traversal for the stated counts and the
   // precedence table together, charged under the registry identity.
-  try {
-    charge?.(ROOT_INDEX_PASS);
-  } catch (error) {
-    if (error instanceof ParsePassBudgetExceeded) return { kind: 'over-limit', path, classes, pass: ROOT_INDEX_PASS, breach: error.breach };
-    throw error;
-  }
+  const breach = charge?.(ROOT_INDEX_PASS);
+  if (breach !== undefined) return { kind: 'over-limit', path, classes, pass: ROOT_INDEX_PASS, breach };
   return { ...extracted, rootIndex: extractRootIndex(text) };
 }
 

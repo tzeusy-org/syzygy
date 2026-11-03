@@ -1,0 +1,173 @@
+// syzygy-bpyt.8.5 golden capture (not committed as a test; retained as evidence). Writes every emitted schema and every check
+// result over a generated, mutated corpus to $GOLDEN_OUT, so the bytes before and after the schema dedup can be compared.
+import fs from 'node:fs';
+import { it } from 'vitest';
+import {
+  checkDraftShape, designVerdictSchemaDocument, draftSchemaDocument, inventorySchemaDocument, localDesignVerdictSchema, localDraftSchema,
+  localInventorySchema, localVerdictSchema, verdictSchemaDocument,
+} from './draft-schema.js';
+import { check } from '../../polaris-generation-core/src/closed-schema.js';
+import { stageSchema, validateStage } from '../../polaris-generation-core/src/provider-draft.js';
+import { renderedDesignVerdict } from '../../polaris-generation-core/src/rendered-design.js';
+import { validateDraftRecord } from '../../polaris-generation-core/src/draft-model.js';
+
+type S = any; // eslint-disable-line @typescript-eslint/no-explicit-any
+const REV40 = '498ecd0d6d007db11ddb3aea9428552598a78622';
+const REV64 = 'a'.repeat(64);
+
+let counter = 0;
+function synth(schema: S, defs: Record<string, S>, depth = 0, arm = 0): unknown {
+  if ('$ref' in schema) return synth(defs[schema.$ref.slice(8)], defs, depth, arm);
+  if ('oneOf' in schema) return synth(schema.oneOf[arm % schema.oneOf.length], defs, depth + 1, arm);
+  switch (schema.type) {
+    case 'string': {
+      if (schema.enum) return schema.enum[arm % schema.enum.length];
+      if (schema.pattern && schema.pattern.includes('{64}')) return 'b'.repeat(64);
+      const v = `a${++counter}`;
+      return v.length > schema.maxLength ? 'a' : v;
+    }
+    case 'integer': case 'number': return schema.minimum;
+    case 'boolean': return true;
+    case 'array': {
+      const n = depth > 6 ? schema.minItems : Math.min(schema.maxItems, Math.max(schema.minItems, 2));
+      return Array.from({ length: n }, (_, i) => synth(schema.items, defs, depth + 1, arm + i));
+    }
+    case 'object': return Object.fromEntries(Object.entries(schema.properties).map(([k, v]) => [k, synth(v, defs, depth + 1, arm)]));
+  }
+  throw new Error('synth: unknown schema');
+}
+
+class Klass { a = 1; }
+const holey = (): unknown => { const a: unknown[] = [1, 2, 3]; delete a[1]; (a as S).x = 1; return a; };
+const REPLACEMENTS: [string, () => unknown][] = [
+  ['null', () => null], ['one', () => 1], ['frac', () => 1.5], ['neg', () => -1], ['big', () => 1e16], ['nan', () => Number.NaN],
+  ['x', () => 'x'], ['empty', () => ''], ['long', () => 'a'.repeat(9000)], ['true', () => true], ['arr', () => []], ['obj', () => ({})],
+  ['handles', () => ['a1', 'a1']], ['proxyObj', () => new Proxy({}, {})], ['proxyArr', () => new Proxy([], {})], ['nullProto', () => Object.create(null)],
+  ['klass', () => new Klass()], ['holey', holey], ['astral', () => '\u{1F600}'.repeat(3)], ['slash', () => '/abs'], ['undef', () => undefined],
+  ['protoArr', () => Object.setPrototypeOf([1], Object.prototype)],
+];
+
+function paths(value: unknown, at: (string | number)[] = [], out: (string | number)[][] = []): (string | number)[][] {
+  out.push(at);
+  if (Array.isArray(value)) value.forEach((v, i) => paths(v, [...at, i], out));
+  else if (value !== null && typeof value === 'object') for (const [k, v] of Object.entries(value)) paths(v, [...at, k], out);
+  return out;
+}
+const clone = (v: unknown): S => structuredClone(v);
+function setAt(root: S, at: (string | number)[], f: (parent: S, key: string | number) => void): S {
+  if (at.length === 0) { const box = { v: root }; f(box, 'v'); return box.v; }
+  let p = root; for (const k of at.slice(0, -1)) p = p[k];
+  f(p, at[at.length - 1]!); return root;
+}
+function mutants(seed: unknown): [string, unknown][] {
+  const out: [string, unknown][] = [['seed', clone(seed)]];
+  const all = paths(seed);
+  for (const at of all) {
+    const label = at.join('.');
+    for (const [name, make] of REPLACEMENTS) out.push([`${label}=${name}`, setAt(clone(seed), at, (p, k) => { p[k] = make(); })]);
+    const node = at.reduce((v: S, k) => v[k], seed as S);
+    if (at.length > 0 && !Array.isArray(at.length > 1 ? at.slice(0, -1).reduce((v: S, k) => v[k], seed as S) : seed)) {
+      out.push([`${label}:delete`, setAt(clone(seed), at, (p, k) => { delete p[k]; })]);
+      out.push([`${label}:nonenum`, setAt(clone(seed), at, (p, k) => { const v = p[k]; delete p[k]; Object.defineProperty(p, k, { value: v, enumerable: false }); })]);
+      out.push([`${label}:accessor`, setAt(clone(seed), at, (p, k) => { const v = p[k]; delete p[k]; Object.defineProperty(p, k, { get: () => v, enumerable: true }); })]);
+    }
+    if (node !== null && typeof node === 'object') {
+      out.push([`${label}:extra`, setAt(clone(seed), at, (p, k) => { if (Array.isArray(p[k])) p[k].push(clone(p[k][0] ?? 'a1')); else p[k].zz = 'a1'; })]);
+      out.push([`${label}:symbol`, setAt(clone(seed), at, (p, k) => { p[k][Symbol('s')] = 1; })]);
+      if (Array.isArray(node)) {
+        out.push([`${label}:dup`, setAt(clone(seed), at, (p, k) => { if (p[k].length) p[k].push(clone(p[k][0])); })]);
+        out.push([`${label}:empty`, setAt(clone(seed), at, (p, k) => { p[k] = []; })]);
+        if (at.length <= 2) out.push([`${label}:many`, setAt(clone(seed), at, (p, k) => { p[k] = Array.from({ length: 6000 }, () => clone(p[k][0] ?? 'a1')); })]);
+        out.push([`${label}:reverse`, setAt(clone(seed), at, (p, k) => { p[k].reverse(); })]);
+        // Round 2 (R-GP-IMPL-CLOSED-SCHEMA-1 F1, N1): the same valid items under a plain object's prototype, so the repeat
+        // test is reached; and a named key beside full items, so only the key count refuses it.
+        out.push([`${label}:protoArr`, setAt(clone(seed), at, (p, k) => { p[k] = Object.setPrototypeOf(p[k], Object.prototype); })]);
+        out.push([`${label}:named`, setAt(clone(seed), at, (p, k) => { p[k].zz = 'a1'; })]);
+      } else {
+        out.push([`${label}:reorder`, setAt(clone(seed), at, (p, k) => { p[k] = Object.fromEntries(Object.entries(p[k]).reverse()); })]);
+        // Round 2 (N2): a proxy over the valid object, so a form is named only if the proxy guard is absent.
+        out.push([`${label}:proxied`, setAt(clone(seed), at, (p, k) => { p[k] = new Proxy(p[k], {}); })]);
+      }
+    }
+  }
+  // Multi-defect mutants (seeded): two and three paths broken at once, so the order a checker reports in is exercised.
+  let s = 12345; const rnd = (n: number) => { s = (s * 1103515245 + 12345) % 2147483648; return s % n; };
+  const leaves = all.filter((at) => at.length > 0);
+  for (let i = 0; i < 200 && leaves.length > 1; i++) {
+    let m = clone(seed); const picks: string[] = [];
+    for (let j = 0; j < 2 + (i % 2); j++) {
+      const at = leaves[rnd(leaves.length)]!; const [name, make] = REPLACEMENTS[rnd(REPLACEMENTS.length)]!;
+      try { m = setAt(m, at, (p, k) => { if (p !== null && typeof p === 'object') p[k] = make(); }); picks.push(`${at.join('.')}=${name}`); } catch { picks.push(`${at.join('.')}=skip`); }
+    }
+    out.push([`multi:${picks.join('+')}`, m]);
+  }
+  return out;
+}
+
+const shape = (schema: S, value: unknown): string => { try { return JSON.stringify(checkDraftShape(schema, value)); } catch (e) { return `THROW ${(e as Error).constructor.name}: ${(e as Error).message}`; } };
+const closed = (f: () => unknown): string => { try { f(); return 'ok'; } catch (e) { return `THROW ${(e as Error).constructor.name}: ${(e as Error).message}`; } };
+
+it('captures the golden', () => {
+  const golden: Record<string, unknown> = {};
+  const docs: Record<string, unknown> = {};
+  for (const rev of [REV40, REV64]) for (const q of [0, 1, 7]) {
+    docs[`draft-${rev.length}-${q}`] = draftSchemaDocument({ pinnedRevision: rev, maxQuestions: q });
+    docs[`draft-internal-${rev.length}-${q}`] = localDraftSchema({ pinnedRevision: rev, maxQuestions: q });
+  }
+  for (const rev of [REV40, REV64]) {
+    docs[`inventory-${rev.length}`] = inventorySchemaDocument({ pinnedRevision: rev });
+    docs[`verdict-${rev.length}`] = verdictSchemaDocument({ pinnedRevision: rev });
+    docs[`design-${rev.length}`] = designVerdictSchemaDocument({ pinnedRevision: rev });
+    docs[`inventory-internal-${rev.length}`] = localInventorySchema({ pinnedRevision: rev });
+    docs[`verdict-internal-${rev.length}`] = localVerdictSchema({ pinnedRevision: rev });
+    docs[`design-internal-${rev.length}`] = localDesignVerdictSchema({ pinnedRevision: rev });
+  }
+  for (const stage of ['inventory', 'plan', 'author', 'edit', 'repair', 'fidelity', 'discovery-map', 'discovery-reduce'] as const) docs[`stage-${stage}`] = stageSchema(stage);
+  golden.documents = Object.fromEntries(Object.entries(docs).map(([k, v]) => [k, JSON.stringify(v)]));
+  golden.parameterRefusals = Object.fromEntries([
+    ['draft-HEAD', () => localDraftSchema({ pinnedRevision: 'HEAD', maxQuestions: 1 })], ['draft-neg', () => localDraftSchema({ pinnedRevision: REV40, maxQuestions: -1 })],
+    ['draft-frac', () => localDraftSchema({ pinnedRevision: REV40, maxQuestions: 1.5 })], ['inv-HEAD', () => localInventorySchema({ pinnedRevision: 'HEAD' })],
+    ['ver-upper', () => localVerdictSchema({ pinnedRevision: REV40.toUpperCase() })], ['des-41', () => localDesignVerdictSchema({ pinnedRevision: `${REV40}a` })],
+    ['stage-bad', () => stageSchema('nope' as never)],
+  ].map(([k, f]) => [k, closed(f as () => unknown)]));
+
+  const shapeCases: Record<string, string> = {};
+  const draftSchemas: [string, S][] = [
+    ['draft', localDraftSchema({ pinnedRevision: REV40, maxQuestions: 2 })], ['inventory', localInventorySchema({ pinnedRevision: REV40 })],
+    ['verdict', localVerdictSchema({ pinnedRevision: REV40 })], ['design', localDesignVerdictSchema({ pinnedRevision: REV40 })],
+  ];
+  for (const [name, schema] of draftSchemas) for (let arm = 0; arm < 4; arm++) {
+    counter = 0;
+    const seed = synth(schema.root, schema.defs, 0, arm);
+    for (const [label, value] of mutants(seed)) shapeCases[`${name}#${arm}|${label}`] = shape(schema, value);
+  }
+  golden.shape = shapeCases;
+
+  const closedCases: Record<string, string> = {};
+  for (const stage of ['inventory', 'plan', 'author', 'fidelity', 'discovery-map', 'discovery-reduce'] as const) for (let arm = 0; arm < 3; arm++) {
+    counter = 0;
+    const schema = stageSchema(stage).schema;
+    const seed = synth(schema, {}, 0, arm);
+    for (const [label, value] of mutants(seed)) closedCases[`${stage}#${arm}|${label}`] = closed(() => check(schema, value));
+  }
+  golden.closed = closedCases;
+
+  // Fixture seeds through the public entry points (rendered-design, the draft record, a provider stage).
+  const node = (id: string, label: string) => ({ id, label, sourceIds: ['s1'], epistemic: 'observed' });
+  const figure = (id: string, disposition: Record<string, unknown>) => ({ id, title: `Figure ${id}`, sectionId: 'section', kind: 'dependency', relationship: `R ${id}`,
+    nodes: [node(`${id}-a`, 'Store'), node(`${id}-b`, 'Reader')], edges: [{ id: `${id}-e`, from: `${id}-a`, to: `${id}-b`, label: 'Feeds', sourceIds: ['s1'], epistemic: 'observed' }], disposition });
+  const draft = { title: 'A manifesto', introduction: { id: 'intro', text: 'Why it exists.', sourceIds: ['s1'] },
+    sections: [{ id: 'section', title: 'How it works', paragraphs: [{ id: 'body', text: 'The store feeds the reader.', sourceIds: ['s1'], children: [] }], disposition: { kind: 'produced', assetIds: ['section'] } }],
+    diagrams: [figure('deps', { kind: 'produced', assetIds: ['deps'] }), figure('skipped', { kind: 'omitted', reason: 'No.', references: ['s1'] })], deepDives: [], unresolved: [] };
+  const review = { draftDigest: 'c'.repeat(64), relationships: [{ id: 'r1', description: 'D', sourceIds: ['s1'], judgment: 'diagram-clearer', support: 'supported', diagram: { kind: 'named', diagramId: 'deps' }, gaps: [] },
+    { id: 'r2', description: 'D', sourceIds: ['s1'], judgment: 'prose-sufficient', support: 'partly-supported', diagram: { kind: 'none' }, gaps: [{ element: 'e', reason: 'r' }] }], findings: [{ severity: 'advisory', message: 'm', target: 'r1' }] };
+  const fixtureCases: Record<string, string> = {};
+  for (const [label, value] of mutants(review)) fixtureCases[`design|${label}`] = closed(() => JSON.stringify(renderedDesignVerdict(value, draft)));
+  for (const [label, value] of mutants(draft)) fixtureCases[`record|${label}`] = closed(() => JSON.stringify(validateDraftRecord(value)));
+  const sources = [{ sourceId: 's1', text: 'Purpose' }];
+  const inventory = { entries: [{ id: 'i1', sourceIds: ['s1'], statement: 'Purpose', kind: 'purpose', disposition: { kind: 'produced', assetIds: ['intro'] } }] };
+  for (const [label, value] of mutants(inventory)) fixtureCases[`stage-inventory|${label}`] = closed(() => validateStage('inventory', value, { sources }));
+  golden.fixtures = fixtureCases;
+
+  fs.writeFileSync(process.env.GOLDEN_OUT!, `${JSON.stringify(golden, null, 1)}\n`);
+}, 600_000);

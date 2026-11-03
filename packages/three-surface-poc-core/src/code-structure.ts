@@ -1,8 +1,8 @@
-import { execFileSync } from 'node:child_process';
 
 import { decodeUtf8 } from '@syzygy/support';
 
 import { parseGitLsTree } from './git-tree.js';
+import { gitRunnerFor } from './project-shape-observation.js';
 import type { PocProvenance } from './model.js';
 
 const CODE_LANGUAGE_CLASSIFICATIONS = [
@@ -94,10 +94,13 @@ export interface ObserveCodeStructureInput {
 /** Git's output is not valid UTF-8: a path a JS string cannot carry exactly. */
 class NonUtf8GitOutput extends Error {}
 
-const GITLINK_RECORD = Buffer.from('160000 ');
+/** The head git prints for every gitlink (`-l` pads the size column, which is `-`). A record is dropped only when it starts with this. */
+const GITLINK_HEAD = /^160000 commit [0-9a-f]{40,64} +-\t/;
+/** Longest head git can print: mode, type, a 64-digit id, the padded size column and the tab. */
+const GITLINK_HEAD_BYTES = 128;
 
 /**
- * Drops each NUL-terminated gitlink (mode 160000) record. A gitlink is a commit of another repository, not a file of this revision,
+ * Drops each NUL-terminated record whose head is a well-formed gitlink (mode 160000); any other record, a malformed one starting `160000` included, is kept for the parser to refuse. A gitlink is a commit of another repository, not a file of this revision,
  * and its path is never recorded, so a submodule path that is not UTF-8, or that the parser cannot read, must not fail the listing.
  * An unterminated tail is kept, for the NUL-termination check to refuse.
  */
@@ -106,7 +109,9 @@ function withoutGitlinkRecords(bytes: Buffer): Buffer {
   let start = 0;
   for (let end = bytes.indexOf(0, start); end !== -1; end = bytes.indexOf(0, start)) {
     const record = bytes.subarray(start, end + 1);
-    if (!record.subarray(0, GITLINK_RECORD.length).equals(GITLINK_RECORD)) kept.push(record);
+    // The head is ASCII; latin1 maps each byte to one code unit, so the path after the tab, whatever its bytes, is never decoded.
+    const head = record.subarray(0, GITLINK_HEAD_BYTES).toString('latin1');
+    if (!GITLINK_HEAD.test(head)) kept.push(record);
     start = end + 1;
   }
   if (start < bytes.length) kept.push(bytes.subarray(start));
@@ -114,10 +119,9 @@ function withoutGitlinkRecords(bytes: Buffer): Buffer {
 }
 
 function defaultRunGit(repoRoot: string, args: readonly string[]): string {
-  const bytes = execFileSync('git', ['--no-optional-locks', '-C', repoRoot, ...args], {
-    maxBuffer: 256 * 1024 * 1024,
-    stdio: ['ignore', 'pipe', 'ignore'],
-  });
+  // The one production Git runner (same flags, buffer bound and stdio as the PWB reader's); the decode below is this observer's own.
+  const stdout = gitRunnerFor(repoRoot)(args);
+  const bytes = Buffer.from(stdout.buffer, stdout.byteOffset, stdout.byteLength);
   // The gitlink filter runs inside the try, as the decode always did: a copy it cannot allocate is reported like the bytes that
   // could not be decoded, so the Unknown reason for a failure here is the one this module has always given.
   try {
@@ -169,7 +173,7 @@ export function observeCodeStructure(input: ObserveCodeStructureInput): CodeStru
   }
   // A submodule gitlink (mode 160000) is not a file of this revision and its path is never recorded, so its record is dropped before
   // parsing, whichever runner answered; the default runner already dropped it from git's bytes, before decoding.
-  const parsed = parseGitLsTree(raw.split('\0').filter((record) => !record.startsWith('160000 ')).join('\0'));
+  const parsed = parseGitLsTree(raw.split('\0').filter((record) => !GITLINK_HEAD.test(record)).join('\0'));
   if (parsed.kind === 'malformed') {
     return malformed;
   }

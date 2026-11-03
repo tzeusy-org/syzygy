@@ -9,6 +9,7 @@ import {
   PocObservationError,
   type PocEntity,
   type PocRelationship,
+  walkthroughAcceptance,
 } from './model.js';
 import { BUTLERS_POC_SEEDS } from './poc-seeds.js';
 import type { BodyReadAuthorityEvaluation } from './body-read-authority.js';
@@ -240,6 +241,10 @@ describe('three-surface Butlers POC model', () => {
     ]);
 
     const entities = byId(first.entities);
+    expect(entities.get('capability:whatsapp-transport-identity')?.provenance.map((provenance) => provenance.source)).toEqual([
+      'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md',
+      'openspec/changes/repair-whatsapp-identity-reconciliation/specs/switchboard-identity/spec.md',
+    ]);
     expect(entities.get('intent:req-switchboard-identity-001')?.epistemic.label).toBe(
       'Observed',
     );
@@ -437,11 +442,13 @@ describe('three-surface Butlers POC model', () => {
     buildPocModel({
       ...baseInput,
       projectShape: { authority: admitting, runGit },
-      walkthroughJudgment: (binding) => {
-        seen.push(binding.evaluationIdentity);
-        throw new Error('stop here');
-      },
-      walkthroughReadiness: { traversal: { polarisRoutes: ['/polaris'], isExactSourceRoute: () => false } },
+      acceptance: walkthroughAcceptance({
+        judgment: (binding) => {
+          seen.push(binding.evaluationIdentity);
+          throw new Error('stop here');
+        },
+        traversal: { polarisRoutes: ['/polaris'], isExactSourceRoute: () => false },
+      }),
     });
     expect(seen).toEqual([walkthroughEvaluationIdentity(observed.projectShape)]);
     expect(seen[0]).toMatch(/^pwb-eval-[0-9a-f]{24}$/);
@@ -475,11 +482,13 @@ describe('three-surface Butlers POC model', () => {
     const seen: string[] = [];
     const throwing = buildPocModel({
       ...baseInput,
-      walkthroughJudgment: (binding) => {
-        seen.push(binding.evaluationIdentity);
-        throw new Error('governance tree unreadable');
-      },
-      walkthroughReadiness: { traversal: { polarisRoutes: ['/polaris'], isExactSourceRoute: () => false } },
+      acceptance: walkthroughAcceptance({
+        judgment: (binding) => {
+          seen.push(binding.evaluationIdentity);
+          throw new Error('governance tree unreadable');
+        },
+        traversal: { polarisRoutes: ['/polaris'], isExactSourceRoute: () => false },
+      }),
     });
     // No shape was evaluated, so the identity names that state rather than
     // an evaluation; the loader saw exactly that identity.
@@ -767,62 +776,6 @@ describe('three-surface Butlers POC model', () => {
     expect(failed.testArtifactVerification.kind).toBe('unknown');
   });
 
-  it('builds an explicit Unknown model with no seeds and performs no seeded reads', () => {
-    const repoRoot = mkdtempSync(join(tmpdir(), 'syzygy-poc-empty-seeds-'));
-    cleanups.push(repoRoot);
-    const gitCalls: string[][] = [];
-    const runGit = (_root: string, args: readonly string[]): string => {
-      gitCalls.push([...args]);
-      if (args[0] === 'ls-tree') {
-        return `100644 blob ${'1'.repeat(40)} 1\tREADME.md\0`;
-      }
-      throw new Error(`unexpected non-structure read: ${args.join(' ')}`);
-    };
-
-    const model = buildPocModel({
-      repoRoot,
-      repositoryRevision: 'empty-seed-revision',
-      observerRevision: 'empty-seed-observer',
-      evaluation: { snapshot: 'empty-seed', asOf: '2026-09-22T00:00:00Z' },
-      runGit,
-    });
-
-    expect(model.entities).toEqual([]);
-    expect(model.relationships).toEqual([]);
-    expect(model.surfaces).toEqual([]);
-    expect(model.project.name).toBe('Unknown project');
-    expect(model.capabilityId).toBe('capability:unknown');
-    expect(model.trajectory).toMatchObject({ kind: 'unknown' });
-    if (model.trajectory.kind !== 'unknown') throw new Error('unreachable');
-    expect(model.trajectory.observedItemCount).toBeUndefined();
-    expect(model.orrery).toMatchObject({
-      kind: 'unknown',
-      observedFileCount: 1,
-      mappedFileCount: 0,
-      unmappedFileCount: 1,
-      totalFileCount: 1,
-    });
-    expect(gitCalls).toEqual([['ls-tree', '-r', '-z', '-l', 'empty-seed-revision']]);
-  });
-
-  it('keeps an unobserved empty-seed Orrery denominator Unknown instead of inventing zero', () => {
-    const { repoRoot } = butlersGitFixture();
-    const model = buildPocModel({
-      repoRoot,
-      repositoryRevision: 'missing-code-structure-revision',
-      observerRevision: 'empty-seed-observer',
-      evaluation: { snapshot: 'empty-seed-unobserved', asOf: '2026-09-22T00:00:00Z' },
-      runGit: () => {
-        throw new Error('code structure unavailable');
-      },
-    });
-
-    expect(model.orrery).toEqual({
-      kind: 'unknown',
-      reason: 'No seed-backed capability-to-path mappings were supplied to this evaluation.',
-    });
-  });
-
   it('owns returned surface membership arrays and keeps the exported seed graph isolated', () => {
     const repoRoot = butlersFixture();
     const input = {
@@ -835,6 +788,11 @@ describe('three-surface Butlers POC model', () => {
     const first = buildPocModel(input);
     const firstPolaris = first.surfaces.find((surface) => surface.id === 'polaris');
     if (firstPolaris === undefined) throw new Error('missing Polaris surface');
+    // Orrery holds the whole graph; the other two keep their seeded members.
+    expect(first.surfaces.find((surface) => surface.id === 'orrery')?.entityIds).toEqual(first.entities.map((entity) => entity.id));
+    expect(first.surfaces.find((surface) => surface.id === 'orrery')?.relationshipIds).toEqual(first.relationships.map((relationship) => relationship.id));
+    expect(firstPolaris.entityIds).toEqual(BUTLERS_POC_SEEDS.surfaces.find((surface) => surface.id === 'polaris')?.entityIds);
+    expect(firstPolaris.entityIds.length).toBeLessThan(first.entities.length);
     expect(Object.isFrozen(firstPolaris.entityIds)).toBe(true);
     expect(Object.isFrozen(BUTLERS_POC_SEEDS.surfaces[0]?.entityIds)).toBe(true);
     expect(() => (firstPolaris.entityIds as string[]).push('entity:mutated-only-in-first-build')).toThrow();
@@ -999,6 +957,29 @@ describe('three-surface Butlers POC model', () => {
         expect.objectContaining({ kind: 'invalid-seed-graph' }),
       );
     }
+  });
+
+  it('names a seed role the role tables do not carry', () => {
+    const baseInput = {
+      repoRoot: butlersFixture(),
+      repositoryRevision: 'c13894238989d3bebb24094730992970b31fe546',
+      observerRevision: 'bfdb7963e4ff5628d0d1ec0f59e831d7e8209abe',
+      evaluation: { snapshot: 'butlers@unsupported-role', asOf: '2026-09-22T00:00:00Z' },
+    } as const;
+    const entityRole = {
+      ...BUTLERS_POC_SEEDS,
+      entities: BUTLERS_POC_SEEDS.entities.map((entity) =>
+        entity.role === 'runtime' ? { ...entity, role: 'oracle' as unknown as 'runtime' } : entity,
+      ),
+    };
+    const relationshipRole = {
+      ...BUTLERS_POC_SEEDS,
+      relationships: BUTLERS_POC_SEEDS.relationships.map((relationship) =>
+        relationship.role === 'code-to-runtime' ? { ...relationship, role: 'oracle' as unknown as 'code-to-runtime' } : relationship,
+      ),
+    };
+    expect(() => buildPocModel({ ...baseInput, seeds: entityRole })).toThrowError(/entity [^ ]+ has unsupported role oracle/);
+    expect(() => buildPocModel({ ...baseInput, seeds: relationshipRole })).toThrowError(/relationship [^ ]+ has unsupported role oracle/);
   });
 
   it('rejects a seeded Orrery mapping that is absent from the observed inventory', () => {

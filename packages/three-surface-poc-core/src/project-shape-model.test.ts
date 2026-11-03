@@ -17,7 +17,9 @@ import type { GitTreeEntry } from './git-tree.js';
 import type { FixedUnknown } from './content-classification.js';
 import { PRODUCER_UNKNOWN_REASONS, unknown as unknownEpistemic } from './epistemic.js';
 import type { ClassDenominator, ItemCoverage, ReconciledFact } from './project-shape-coverage.js';
-import { PWB_FAILURE_STATES, PWB_RESOURCE_LIMITS, type ObservationDegradation, type PwbResourceLimits } from './project-shape-observation.js';
+import { PWB_FAILURE_STATES, type ObservationDegradation } from './project-shape-observation.js';
+import { PWB_RESOURCE_LIMITS } from './project-shape-observation.js';
+import type { PwbResourceLimits } from './pwb-types.js';
 import type { ProposedWorkCurrentAuthority } from './proposed-work.js';
 import {
   CHALLENGE_STATES,
@@ -190,7 +192,7 @@ function sha256(text: string): string {
 interface Fixture {
   readonly texts: Readonly<Record<string, string>>;
   readonly failRevParse?: boolean;
-  readonly failPhaseBLsTree?: boolean;
+  readonly failLsTree?: boolean;
   readonly dropFromTree?: readonly string[];
 }
 
@@ -202,7 +204,6 @@ function fixture(input: Fixture) {
   const byOid = new Map(entries.map((entry) => [entry.objectId, bytes.get(entry.path) as Uint8Array]));
   const listing = entries.map((e) => `${e.mode} ${e.type} ${e.objectId} ${String(e.sizeBytes).padStart(7)}\t${e.path}\x00`).join('');
   const calls: string[][] = [];
-  let lsTreeCalls = 0;
   const runGit = (args: readonly string[]): Uint8Array => {
     calls.push([...args]);
     switch (args[0]) {
@@ -212,9 +213,8 @@ function fixture(input: Fixture) {
       case 'show':
         return encoder.encode(`${COMMITTED_AT}\n`);
       case 'ls-tree':
-        lsTreeCalls += 1;
         if (args[4] !== COMMIT) throw new Error(`fixture lists trees only at the resolved commit, not ${args[4] ?? ''}`);
-        if (input.failPhaseBLsTree === true && lsTreeCalls === 2) throw new Error('fatal: not a tree object');
+        if (input.failLsTree === true) throw new Error('fatal: not a tree object');
         return encoder.encode(listing);
       case 'cat-file': {
         const body = byOid.get(args[2] ?? '');
@@ -437,12 +437,22 @@ describe('observation failures stay Unknown with the registry reason', () => {
     isValidClaim(shape.claim);
   });
 
-  it('phase B tree listing failure is gitCaptureFailed too', () => {
-    const { shape } = build({ texts: BASE_TEXTS, failPhaseBLsTree: true });
+  it('the one tree listing failing is gitCaptureFailed, before any body is read', () => {
+    const { shape, calls } = build({ texts: BASE_TEXTS, failLsTree: true });
     expect(shape.kind).toBe('observation-failed');
     if (shape.kind !== 'observation-failed') return;
     expect(shape.failure.failureState).toBe('gitCaptureFailed');
-    expect(shape.failure.detail).toContain('ls-tree');
+    expect(shape.failure.detail).toBe('git ls-tree failed: fatal: not a tree object');
+    expect(calls.filter((args) => args[0] === 'cat-file')).toEqual([]);
+  });
+
+  it('one evaluation lists the tree once, with -z, and phase B reads against that listing (syzygy-bpyt.6.5)', () => {
+    const { shape, calls } = build({ texts: BASE_TEXTS });
+    expect(shape.kind).toBe('observed');
+    expect(calls.filter((args) => args[0] === 'ls-tree')).toEqual([['ls-tree', '-r', '-z', '-l', COMMIT]]);
+    // The listing precedes every body read, and nothing but metadata comes before it.
+    expect(calls.slice(0, 3).map((args) => args[0])).toEqual(['rev-parse', 'show', 'ls-tree']);
+    expect(calls.slice(3).every((args) => args[0] === 'cat-file')).toBe(true);
   });
 
   it('an option-shaped revision is refused before any Git command', () => {
@@ -467,7 +477,7 @@ describe('an admitted, fully readable fixture', () => {
     expect(shape.identity.sourceClaimedInstant.instant).not.toBe(shape.identity.capturedAt);
     expect(shape.identity.scope).toEqual({ repositoryId: 'repository:butlers-configured-poc', contentClass: 'declared-project-shape-text', phase: 'A' });
     expect(shape.identity.observer.observerId).toBe('polaris-butlers-project-shape');
-    expect(shape.identity.policy).toEqual({ policyId: 'polaris-butlers-project-shape-secrets', policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span' });
+    expect(shape.identity.policy).toEqual({ policyId: 'polaris-butlers-project-shape-secrets', policyVersion: '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd' });
     expect(shape.identity.manifestDigest).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(shape.identity.observationDigest).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(shape.identity.deterministicInputs.authority).toEqual({
@@ -624,7 +634,7 @@ describe('faults never shrink the population (PWB-REQ-003)', () => {
         redactionClass: 'excluded-artifact',
         repositoryRelativePath: 'about/craft-and-care/README.md',
         policyId: 'polaris-butlers-project-shape-secrets',
-        policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span',
+        policyVersion: '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd',
         contentDigest: sha256(CRAFT_SECRET),
         detectorId: 'known-token-formats',
       },

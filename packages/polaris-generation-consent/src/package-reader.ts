@@ -328,7 +328,7 @@ export interface PolicyActReader { readonly read: () => Promise<readonly PolicyA
 
 /** A recorder's act form for the screening-scope policy: the one file it writes, the title and the identity it renders
  * (`scripts/record_public_source_screening_scope_act.py`), over the policy file as an `approve-policy` act. The list is closed and
- * ordered; a later recorder (scope v2, v3, v4) is registered here by a reviewed change, never discovered. */
+ * ordered; a later recorder (scope v2 to v5) is registered here by a reviewed change, never discovered. */
 export interface PolicyActForm { readonly file: string; readonly title: string; readonly type: 'approve-policy'; readonly identity: (date: string) => string; readonly artifact: string }
 const APPROVE_POLICY = { type: 'approve-policy', artifact: POLICY_PATH } as const;
 export const POLICY_ACT_FORMS: readonly PolicyActForm[] = Object.freeze([Object.freeze({
@@ -354,6 +354,12 @@ export const POLICY_ACT_FORMS: readonly PolicyActForm[] = Object.freeze([Object.
   file: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md',
   title: '# Owner act — Polaris Butlers secret-classification policy approval (public-source screening scope, version 4)',
   identity: (date: string) => `PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-APPROVAL-${date}`,
+  ...APPROVE_POLICY,
+}), Object.freeze({
+  // scripts/record_public_source_screening_scope_v5_act.py (2026-11-03, `syzygy-mea.4`): it supersedes version 4 the same way.
+  file: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md',
+  title: '# Owner act — Polaris Butlers secret-classification policy approval (public-source screening scope, version 5)',
+  identity: (date: string) => `PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-${date}`,
   ...APPROVE_POLICY,
 })]);
 export const POLICY_ACT_FILE = POLICY_ACT_FORMS[0]!.file;
@@ -383,7 +389,7 @@ const POLICY_FAMILY: ParsedActFamily<PolicyActForm> = {
   dialect: { typeValue: '[a-z-]+', fixedLines: 'provenance', instant: 'Recorded at (UTC)', supersession: true },
 };
 
-/** The policy, its declared scope, and the recorder acts over it in chain order (version 1, 2, 3, 4), every decisions file swept. The
+/** The policy, its declared scope, and the recorder acts over it in chain order (version 1 to 5), every decisions file swept. The
  * chain is strict: each later version needs the one before it, took effect strictly later, binds other bytes, and its supersession
  * text names the earlier version's record path and argument. */
 async function readPolicyActs(fs: PackageReaderFs, root: string): Promise<{ readonly policy: string; readonly scope: unknown; readonly acts: readonly ParsedAct[] }> {
@@ -445,9 +451,9 @@ async function strict<T>(read: () => Promise<ActState<T>>): Promise<ActState<T>>
 /** The screening-scope policy act chain at `now`. `final` is the act the chain puts in force then (the latest version whose instant
  * has passed); `ok` only when it binds exactly the on-disk policy bytes and that policy declares a `publicSourceScope` object, which is
  * exactly when the port's public-source-policy check is satisfied. `absent` before the first act's instant. `acts` is every recorded
- * version in chain order; `v1` to `v4` name them by version. */
+ * version in chain order; `v1` to `v5` name them by version. */
 export type PolicyActChain = {
-  readonly v1: ParsedAct | null; readonly v2: ParsedAct | null; readonly v3: ParsedAct | null; readonly v4: ParsedAct | null; readonly acts: readonly ParsedAct[];
+  readonly v1: ParsedAct | null; readonly v2: ParsedAct | null; readonly v3: ParsedAct | null; readonly v4: ParsedAct | null; readonly v5: ParsedAct | null; readonly acts: readonly ParsedAct[];
   readonly final: ParsedAct; readonly policyDigest: string;
 };
 export function readPolicyActChain(options: StrictReadOptions): Promise<ActState<PolicyActChain>> {
@@ -457,7 +463,7 @@ export function readPolicyActChain(options: StrictReadOptions): Promise<ActState
     const final = policyActAt(acts, options.now);
     if (final === null) return { state: 'absent', why: 'no screening-scope policy act is in force yet' };
     const why = policyMismatch(final, policy, scope);
-    return why === null ? { state: 'ok', v1: acts[0] ?? null, v2: acts[1] ?? null, v3: acts[2] ?? null, v4: acts[3] ?? null, acts, final, policyDigest: sha256(policy) } : { state: 'refused', why };
+    return why === null ? { state: 'ok', v1: acts[0] ?? null, v2: acts[1] ?? null, v3: acts[2] ?? null, v4: acts[3] ?? null, v5: acts[4] ?? null, acts, final, policyDigest: sha256(policy) } : { state: 'refused', why };
   });
 }
 

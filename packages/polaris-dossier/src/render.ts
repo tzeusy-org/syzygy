@@ -8,7 +8,7 @@ import {
   type DossierDraft, type DraftBlock, type DraftParagraph,
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
-import { collectBlocks, deriveFindings, draftRules, type Derived } from './check.js';
+import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
 import { UNDERSTANDING_ITEMS } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
@@ -22,7 +22,7 @@ import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignRev
 import type { ReverifyRefusal } from './reverify.js';
 import { NO_WORK_ITEM_REASON } from './run-record.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass, unconsentedText } from './class-gate.js';
-import { loadDossierScreen, type DossierScreen, type ScreenExclusion } from './screen.js';
+import { placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { continuationOf } from './waiting-sessions.js';
 
@@ -154,7 +154,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
     return refuse('draft', `draft revision ${draftRev.revision} is not one bounded JSON object`);
   }
 
-  const screenLoad = await (deps.loadScreen ?? (() => loadDossierScreen(deps.sources.recordsRoot, now)))();
+  const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, now)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
   const screen = screenLoad.screen;
   const reader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });
@@ -198,13 +198,16 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // The first RFC7-20 condition, checked on the output itself: the disclosure on every page and in the machine view.
   const pagesMissing = [...files].filter(([file, html]) => file.endsWith('.html') && !html.includes('class="run-disclosure"')).map(([file]) => file);
   if (pagesMissing.length > 0 || !files.has('machine.json')) return refuse('render', `the rendered site does not carry the run disclosure on every page and in the machine view (${pagesMissing.join(', ') || 'machine.json'})`);
-  // The code-content exemption (policy version 3) admitted some bodies without the active-content scan. It holds at these pages only
-  // while they meet its renderCondition; where that cannot be confirmed, each such body is scanned as before for these pages, and one with
-  // a finding is excluded whole here: a quoted or cited body cannot leave the pages it is drawn on, so nothing is rendered.
-  const scannedAsBefore = [...derived.admitted].filter(([, blob]) => screen.screenBody(blob.raw) !== undefined).map(([cited]) => cited);
+  // The code-content exemption (policy version 3) and the project-documentation exemption (version 5) admitted some bodies without the
+  // active-content scan. Each holds at these pages only while they meet the version-3 renderCondition; where that cannot be confirmed,
+  // each such body is scanned as before for these pages, and one with a finding is excluded whole here: a quoted or cited body cannot
+  // leave the pages it is drawn on, so nothing is rendered. A redacted body is scanned over its complete body, which check kept as the
+  // answer alone (`activeContentAsBefore`), so its withheld lines count and no withheld text reaches this step.
+  const scannedAsBefore = [...derived.admitted].filter(([, blob]) => (blob.withheld === undefined ? screen.screenBody(blob.raw) !== undefined : blob.activeContentAsBefore === true))
+    .map(([cited]) => cited);
   const unconfirmed = scannedAsBefore.length === 0 ? null : pageSinkUnconfirmed(renderer, files);
   if (unconfirmed !== null) {
-    return refuse('render', `${scannedAsBefore.length} cited blob(s) were admitted only under the screening policy's code-content exemption, and these pages cannot be confirmed to meet its render condition (${unconfirmed}); scanned as before for these pages they hold active content, so nothing is rendered`);
+    return refuse('render', `${scannedAsBefore.length} cited blob(s) were admitted only under the screening policy's code-content or project-documentation exemption, and these pages cannot be confirmed to meet its render condition (${unconfirmed}); scanned as before for these pages they hold active content, so nothing is rendered`);
   }
 
   let site: string;
@@ -272,6 +275,19 @@ interface BuildInputs {
 
 type Built = { readonly ok: true; readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } | { readonly ok: false; readonly stage: RenderStage; readonly reason: string };
 
+/** How much of a redacted-span body screening kept: partially retained, or, where the emptied body no longer matches a detector and
+ * `redactBody` withholds every line, retained with every line withheld (syzygy-mea.3 round-1 note 6). Never "not retained". */
+export const redactedExtent = ({ withheld, lines }: { readonly withheld: number; readonly lines: number }): string => (withheld >= lines
+  ? `retained by screening as redacted-span with every one of its ${lines} line(s) withheld`
+  : `partially retained by screening as redacted-span: ${withheld} of its ${lines} line(s) withheld`);
+
+/** A redacted body's provenance as the discovery row states it: the detectors that matched and the withheld line ranges, never the
+ * matched text (syzygy-ts8u). */
+export const redactionDetails = (redaction: BlobRedaction | undefined): string[] => (redaction === undefined ? [] : [
+  `detectors matched: ${redaction.detectorIds.join(', ')}`,
+  `withheld lines: ${redaction.withheldLineRanges.map(([first, last]) => (first === last ? `${first}` : `${first}\u2013${last}`)).join(', ')}`,
+]);
+
 /** The adapter from the checked local draft to the renderer's operator-agent input. */
 export function buildLocalInput(inputs: BuildInputs): Built {
   const { opened, doc, derived, review, design, ruling, screen, credential, algorithm } = inputs;
@@ -288,7 +304,8 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     const missing = unconsentedClass(screen.contentClass(repositoryPath), consented);
     if (missing !== undefined) withheldClass.set(repositoryPath, missing);
   }
-  const redacted = new Map([...derived.admitted].flatMap(([repositoryPath, blob]) => (blob.withheld === undefined ? [] : [[repositoryPath, blob.withheld.length] as const])));
+  // A body retained as redacted-span is partially retained, never "not retained" (syzygy-ts8u): its withheld and total line counts.
+  const redacted = new Map([...derived.admitted].flatMap(([repositoryPath, blob]) => (blob.withheld === undefined ? [] : [[repositoryPath, { withheld: blob.withheld.length, lines: blob.retainedLines!.length }] as const])));
   const admitted = new Map([...derived.admitted].filter(([repositoryPath]) => !withheldClass.has(repositoryPath)));
 
   // Sources: every cited blob read now and admitted (whole, or in pieces when too long to quote whole), and every cited blob screening
@@ -461,9 +478,9 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     title: cited.path === null ? SECRET_PATH : cited.path,
     text: cited.outcome !== 'admitted' ? `${cited.read ? 'read at this render and re-hashed' : 'named by the pinned tree and not read'}; excluded by screening (${cited.outcome})`
       : cited.path !== null && withheldClass.has(cited.path) ? `read at this render, re-hashed, and admitted by screening as ${withheldClass.get(cited.path)!}; ${unconsentedText(withheldClass.get(cited.path)!, consented)} (${CLASS_NOT_CONSENTED})`
-        : cited.path !== null && redacted.has(cited.path) ? `read at this render, re-hashed, and retained by screening as redacted-span with ${redacted.get(cited.path)!} withheld line(s); each withheld run is marked on its source page; surviving spans retain their original coordinates`
+        : cited.path !== null && redacted.has(cited.path) ? `read at this render, re-hashed, and ${redactedExtent(redacted.get(cited.path)!)}; each withheld run is marked on its source page; surviving spans retain their original coordinates`
         : 'read at this render, re-hashed, and admitted by screening',
-    details: [`object ${cited.objectId === null ? '(not shown)' : `${algorithm}:${cited.objectId}`}`, `revision ${pinned}`],
+    details: [`object ${cited.objectId === null ? '(not shown)' : `${algorithm}:${cited.objectId}`}`, `revision ${pinned}`, ...redactionDetails(cited.redaction)],
     sourceIds: cited.outcome === 'admitted' && cited.path !== null ? (pieces.get(cited.path) ?? []).slice(0, 1).map((source) => source.sourceId) : [],
   }));
   const discoveryPage: LocalPage = {
@@ -508,6 +525,8 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     { id: 'review/fidelity/verdict', marking: 'inferred', unknownReason: null, title: 'Fidelity verdict', text: `The review session declares the draft ${review.verdict.readiness}${review.verdict.blocking ? ', beside a blocking finding' : ''}.`,
       details: [`Review session identifier ${review.sessionId.value}, as that session declares it`, `Launch form ${review.launchForm.value}, as the operator declares it`, ...review.inferred.basis], sourceIds: [] },
     // A reviewer that continued across revisions is disclosed (owner direction POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08).
+    // The item renders for every counted verdict, whether or not v1.2 is signed in (review-408 round 4, finding 4): it adds a disclosure, never a
+    // permission, and a reviewer that continued is disclosed under v1.1 too. Only the wait-mode steps wait on the sign-off.
     { id: 'review/fidelity/continuation', marking: 'inferred', unknownReason: null, title: fidelityContinuation!.continuing ? 'Continuing reviewer' : 'Reviewer continuity', text: fidelityContinuation!.text,
       details: [`From ${fidelityContinuation!.basis}`], sourceIds: [] },
   ] : [{ id: 'review/fidelity/none', marking: 'unknown', unknownReason: 'missing-evidence', title: 'Fidelity review', text: `No fidelity review counts for this draft: ${review.why}.`, details: [], sourceIds: [] }];

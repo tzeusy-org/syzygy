@@ -14,7 +14,7 @@ import { designVerdictSchemaDocument } from './draft-schema.js';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
 import { checkInventory, openRun } from './inventory.js';
-import { NO_RENDERER, renderRun, type DossierRenderer, type DossierRendererInput, type RenderDeps } from './render.js';
+import { NO_RENDERER, redactedExtent, redactionDetails, renderRun, type DossierRenderer, type DossierRendererInput, type RenderDeps } from './render.js';
 import { buildStoredDesignPacket, designReviewOfRecord, reviewCheck, reviewPacket } from './review.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
@@ -388,7 +388,7 @@ describe('render', () => {
   // project-documentation is quoted and given a source page only when the statement the run relies on lists the class.
   const DOC_SCREEN = buildDossierScreen(new TextEncoder().encode(JSON.stringify({
     policyId: 'fixture-public-source', policyVersion: '2', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
-    publicSourceScope: { contentClassification: { rules: LIVE_POLICY.publicSourceScope.contentClassification.rules } },
+    publicSourceScope: { contentClassification: LIVE_POLICY.publicSourceScope.contentClassification },
   })), true);
   it.each<[string, readonly string[] | null, string]>([
     ['a non-governed run, which relies on no statement', null, 'withheld from every agent-bound artifact: the run relies on no per-project statement, so no consent record lists project-documentation'],
@@ -444,7 +444,7 @@ describe('render', () => {
     const exempt = { ok: true as const, screen: { ...base, codeContentExemption: true, screenBody: (body: string, repositoryPath?: string) => (repositoryPath === undefined && body === KESTREL ? 'active-content' as const : base.screenBody(body, repositoryPath)) } };
     const deps = (renderer: DossierRenderer) => renderDeps({ loadScreen: async () => exempt, renderer });
     const undeclared: DossierRenderer = (input) => renderLocalDossier(input);
-    const why = (unconfirmed: string) => `1 cited blob(s) were admitted only under the screening policy's code-content exemption, and these pages cannot be confirmed to meet its render condition (${unconfirmed}); scanned as before for these pages they hold active content, so nothing is rendered`;
+    const why = (unconfirmed: string) => `1 cited blob(s) were admitted only under the screening policy's code-content or project-documentation exemption, and these pages cannot be confirmed to meet its render condition (${unconfirmed}); scanned as before for these pages they hold active content, so nothing is rendered`;
     expect(await renderRun(run, deps(undeclared))).toMatchObject({ ok: false, refusal: { stage: 'render', reason: why('the injected renderer does not declare that it writes every source byte as entity-encoded text') } });
     const noCsp: DossierRenderer = Object.assign((input: DossierRendererInput) => ({ files: new Map([...renderLocalDossier(input).files].map(([file, page]) => [file, file === 'index.html' ? page.replace(/<meta http-equiv="Content-Security-Policy"[^>]*>/u, '') : page])) }), { pageSinkContract: renderLocalDossier.pageSinkContract });
     expect(await renderRun(run, deps(noCsp))).toMatchObject({ ok: false, refusal: { stage: 'render', reason: expect.stringContaining('index.html') } });
@@ -477,9 +477,54 @@ describe('render', () => {
     expect(pages).toContain('[redacted-span: 1 withheld line(s) in this file]');
     expect(pages).toContain('surviving spans use original Git byte coordinates');
     expect(pages).toContain('each withheld run is marked on its source page; surviving spans retain their original coordinates');
+    // syzygy-ts8u: the discovery row states the body partially retained, with its withheld and total line counts, and its provenance
+    // (the detectors that matched and the withheld line ranges); it never reads as a body not retained.
+    expect(pages).toContain('read at this render, re-hashed, and partially retained by screening as redacted-span: 1 of its 5 line(s) withheld;');
+    expect(pages).toContain('detectors matched: credential-assignment');
+    expect(pages).toContain('withheld lines: 4');
+    expect(pages).not.toContain('not retained');
+    expect(pages).not.toContain('body-not-retained-for-generation');
     const sourcePage = [...readSite(result.report.site).entries()].find(([file, page]) => file.startsWith('sources/') && page.includes('Kestrel keeps every key'))![1];
     expect(sourcePage).toContain(`data-quote-start="${Buffer.byteLength(lines.slice(0, 4).join(''))}"`);
     expect(sourcePage.match(/class="redaction-note"/gu)).toHaveLength(1);
+  });
+
+  // P-116 (screening scope version 5, C): a redacted body the project-documentation exemption admitted is scanned at a page that cannot
+  // meet renderCondition over its complete body, which check keeps only as the answer (activeContentAsBefore), never as text.
+  it('rescans a redacted exempt body over its complete body where the page sink is unconfirmed, and states no withheld text', async () => {
+    const run = await prepared(draft(), false);
+    if (!SCREEN.ok) throw new Error(SCREEN.why);
+    const base = SCREEN.screen;
+    const lines = KESTREL.match(/[^\n]*\n|[^\n]+$/gu)!;
+    const retainedLines = lines.map((line, i) => i === 3 ? '\n' : line);
+    const lineByteOffsets: number[] = []; let offset = 0;
+    for (const line of lines) { lineByteOffsets.push(offset); offset += Buffer.byteLength(line); }
+    const redacted = { kind: 'redacted' as const, retained: retainedLines.join(''), retainedLines, lineByteOffsets, originalBytes: offset, contentSha256: createHash('sha256').update(KESTREL).digest('hex'), withheld: [4], detectorIds: ['credential-assignment'] };
+    const asked: string[] = [];
+    const redacting = (active: boolean) => ({ ok: true as const, screen: { ...base,
+      screenTargetBody: (body: string, repositoryPath: string) => (repositoryPath === 'src/kestrel.c' ? redacted : base.screenTargetBody(body, repositoryPath)),
+      activeContentAsBefore: (body: string) => { asked.push(body); return active && body === KESTREL; } } });
+    const undeclared: DossierRenderer = (input) => renderLocalDossier(input);
+    const refused = await renderRun(run, renderDeps({ loadScreen: async () => redacting(true), renderer: undeclared }));
+    expect(refused).toMatchObject({ ok: false, refusal: { stage: 'render', reason: "1 cited blob(s) were admitted only under the screening policy's code-content or project-documentation exemption, and these pages cannot be confirmed to meet its render condition (the injected renderer does not declare that it writes every source byte as entity-encoded text); scanned as before for these pages they hold active content, so nothing is rendered" } });
+    // The complete body was asked about, not the retained text; the refusal carries no line of it.
+    expect(asked).toContain(KESTREL);
+    expect(JSON.stringify(refused)).not.toContain(lines[3]!.trim());
+    expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
+    // A renderer that meets the condition renders it; a body with no active content as before needs no condition.
+    expect(await renderRun(run, renderDeps({ loadScreen: async () => redacting(true), renderer: renderLocalDossier }))).toMatchObject({ ok: true });
+    expect(await renderRun(run, renderDeps({ loadScreen: async () => redacting(false), renderer: undeclared }))).toMatchObject({ ok: true });
+  });
+
+  // P-116 (D): the screen is loaded for the run's repository identity and pinned commit, which the owner placements compare.
+  it('loads the screen for the run\'s repository and pinned commit', async () => {
+    const run = await prepared(draft(), false);
+    const seen: unknown[] = [];
+    const result = await renderRun(run, renderDeps({ loadScreen: async (placement) => { seen.push(placement); return SCREEN; } }));
+    expect(result).toMatchObject({ ok: true });
+    const commit = JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')).subject.pinnedRevision.commit as string;
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit }]);
+    expect(commit).toMatch(/^[0-9a-f]{40}$/u);
   });
 
   it('refuses when the stored passed draft revision is altered, after the deadline, and when the output lacks the disclosure', async () => {
@@ -841,5 +886,23 @@ describe('rendered-design review (S9b)', () => {
     const c = capture();
     expect(await runDossierCli(['render', run, '--json'], c.io, ports)).toBe(0);
     expect(JSON.parse(c.out.stdout).designReview).toEqual({ counts: true, packetSha256, label: 'Observed' });
+  });
+});
+
+// syzygy-ts8u: the discovery row's provenance details for a redacted body.
+describe('redactionDetails', () => {
+  it('names the matched detectors and the withheld ranges, a single line as one number and a run with an en dash', () => {
+    expect(redactionDetails(undefined)).toEqual([]);
+    expect(redactionDetails({ redactionClass: 'redacted-span', withheldLines: 5, detectorIds: ['credential-assignment', 'credential-bearing-url'], withheldLineRanges: [[1, 3], [9, 9], [12, 13]] }))
+      .toEqual(['detectors matched: credential-assignment, credential-bearing-url', 'withheld lines: 1\u20133, 9, 12\u201313']);
+  });
+});
+
+// syzygy-mea.3 round-1 note 6: a body redactBody keeps with every line withheld is not "partially" retained.
+describe('redactedExtent', () => {
+  it('says partially retained while some line is kept, and retained with every line withheld when none is', () => {
+    expect(redactedExtent({ withheld: 1, lines: 5 })).toBe('partially retained by screening as redacted-span: 1 of its 5 line(s) withheld');
+    expect(redactedExtent({ withheld: 4, lines: 5 })).toBe('partially retained by screening as redacted-span: 4 of its 5 line(s) withheld');
+    expect(redactedExtent({ withheld: 5, lines: 5 })).toBe('retained by screening as redacted-span with every one of its 5 line(s) withheld');
   });
 });

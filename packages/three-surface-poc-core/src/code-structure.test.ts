@@ -129,6 +129,20 @@ describe('code-structure observer', () => {
     // A gitlink at a path the parser cannot read is skipped from an injected runner too.
     expect(observe(`${blob('a.ts')}160000 commit ${'2'.repeat(40)}       -\t"sub\x00160000 commit ${'2'.repeat(40)}       -\tsu\nb\0`))
       .toMatchObject({ kind: 'observed', files: [{ path: 'a.ts' }] });
+    // A record that merely starts `160000` is not a gitlink head: it reaches the parser and is refused, never dropped (syzygy-bpyt.6.9).
+    const unknownMalformed = { kind: 'unknown', reason: 'code-structure observation produced a malformed inventory entry' };
+    expect(observe(`${blob('a.ts')}160000 garbage\0`)).toEqual(unknownMalformed);
+    // Each part of the head is load-bearing: a record that breaks one is refused, not dropped as a gitlink.
+    const id = '2'.repeat(40);
+    for (const head of [
+      `160000 blob ${id}       -\ta.ts`, `160000 commit ${'2'.repeat(39)}       -\ta.ts`, `160000 commit ${id}  zz\ta.ts`,
+      `160000 commit ${id}-\ta.ts`, `160000 commit ${id}       - a.ts`, `160000 commit ${id}`, '160000 ',
+    ]) {
+      expect(observe(`${blob('a.ts')}${head}\0`), head).toEqual(unknownMalformed);
+    }
+    // A `160000 blob` record is a well-formed tree record, not a gitlink: the parser reads it as the base did (a.ts recorded, not dropped).
+    expect(observe(`160000 blob ${'1'.repeat(40)}      12\ta.ts\0`)).toMatchObject({ kind: 'observed', files: [{ path: 'a.ts', sizeBytes: 12 }] });
+    expect(observe(`${blob('a.ts')}160000  commit ${'2'.repeat(40)}       -\tvendor/sub\0`)).toEqual(unknownMalformed);
     // Only blobs are files: a tree record, which `ls-tree -r -t` would emit, is skipped, not refused for its missing size.
     expect(observe(`${blob('a.ts')}040000 tree ${'5'.repeat(40)}       -\tdir\0`)).toMatchObject({ kind: 'observed', files: [{ path: 'a.ts' }] });
     const unknown ={ kind: 'unknown', reason: 'code-structure observation produced a malformed inventory entry' };
@@ -236,6 +250,31 @@ describe('code-structure observer', () => {
     expect(result.kind).toBe('observed');
     if (result.kind !== 'observed') throw new Error('unreachable');
     expect(result.files.map((file) => file.path)).toEqual(['ok.ts', 'vendor/ok.ts']);
+  });
+
+  it('records a real blob whose path starts like a gitlink head, beside gitlinks (syzygy-bpyt.6.9)', () => {
+    const { root } = fixtureRepo('sentinel-gitlink-lookalike');
+    writeFileSync(join(root, 'blob.txt'), 'x\n', 'utf8');
+    const blob = git(root, ['hash-object', '-w', 'blob.txt']);
+    const commit = '1'.repeat(40);
+    const record = (head: string, name: string): Buffer => Buffer.from(`${head}\t${name}\0`);
+    const mktree = (records: readonly Buffer[]): string => execFileSync('git', ['-C', root, 'mktree', '-z', '--missing'], {
+      input: Buffer.concat(records),
+      stdio: ['pipe', 'pipe', 'ignore'],
+    }).toString('utf8').trim();
+    const dir = mktree([record(`100644 blob ${blob}`, 'a.ts')]);
+    const tree = mktree([
+        record(`100644 blob ${blob}`, '160000 x.ts'),
+        record(`040000 tree ${dir}`, '160000 commit'),
+        record(`160000 commit ${commit}`, 'sub'),
+        record(`160000 commit ${commit}`, 'sub2'),
+        // A path that holds a whole gitlink head after its own head: only a head at the start of the record is a gitlink.
+        record(`100644 blob ${blob}`, `160000 commit ${commit} -\tz.ts`),
+    ]);
+    const revision = git(root, ['commit-tree', tree, '-m', 'lookalike']);
+    const result = observeCodeStructure({ repoRoot: root, revision, capturedAt: '2026-11-03T00:00:00Z' });
+    if (result.kind !== 'observed') throw new Error(`expected observed, got ${JSON.stringify(result)}`);
+    expect(result.files.map((file) => file.path)).toEqual([`160000 commit ${'1'.repeat(40)} -\tz.ts`, '160000 commit/a.ts', '160000 x.ts']);
   });
 
   it('produces identical facts across two observations of one revision, excluding capture instant (POC-REQ-004)', () => {

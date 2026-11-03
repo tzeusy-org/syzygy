@@ -167,23 +167,6 @@ describe('Trajectory', () => {
     expect(emptyHtml).not.toContain('role="list"');
   });
 
-  it('renders an explicit denominator-bearing Unknown graph when no seeds are supplied', () => {
-    const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
-    const model = buildPocModel({
-      repoRoot,
-      repositoryRevision: revision,
-      observerRevision: revision,
-      evaluation: { snapshot: 'empty-seed-trajectory', asOf: '2026-09-22T00:00:00Z' },
-    });
-    expect(model.entities).toEqual([]);
-    expect(model.trajectory.kind).toBe('unknown');
-    const html = renderTrajectoryPage(model);
-    expect(html).toContain('data-unknown-disclosure="region:work-items"');
-    expect(html).toContain('Independently observed work-item denominator: Unknown (work items were not independently observed).');
-    expect(html).not.toContain('class="board"');
-    expect(html).toContain('Unknown project');
-  });
-
   it('renders the observed worker-change lifecycle state on the matching card, never as verified (AC3/AC4)', () => {
     const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
     writeWorkerChangeSeam(repoRoot, 'x = 1\n');

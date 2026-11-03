@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import type { CredentialProbe } from './execution-rule.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { isoOf } from './iso-of.js';
 
 /** The adapter-credential check of D9's credential condition (REQ-polaris-generation-033; R3-F1).
  *
@@ -188,7 +189,7 @@ export async function credentialStepCheck(runDir: string, step: CredentialStep, 
   const result = await probe.probe();
   if (result.passed) return { required: true, passed: true, checked: result.checked, source: result.source };
   const finding: CredentialBreachFinding = {
-    kind: 'adapter-credential-readable', step, at: new Date(now).toISOString(), why: result.why,
+    kind: 'adapter-credential-readable', step, at: isoOf(now), why: result.why,
     instruction: 'Run no further observed code: the permission to build and run the observed project has lapsed for this run.',
   };
   fs.appendFileSync(path.join(run, RUN_LAYOUT.credentialBreaches), `${JSON.stringify(finding)}\n`, { mode: 0o600 });

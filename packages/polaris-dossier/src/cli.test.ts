@@ -107,6 +107,13 @@ describe('syzygy dossier', () => {
   it('renders an empty list or object as (none)', async () => {
     expect(renderHuman({ a: [], b: {} })).toBe('a: (none)\nb: (none)\n');
   });
+
+  it('writes a string leaf that could break its line as a JSON string, and leaves every other leaf as it was (syzygy-mea.3 round-1 note 3)', () => {
+    expect(renderHuman({ a: 'plain text: with colons', n: 3 })).toBe('a: plain text: with colons\nn: 3\n');
+    expect(renderHuman({ path: 'docs/a\nnext: forged' })).toBe('path: "docs/a\\nnext: forged"\n');
+    expect(renderHuman({ p: 'a\rb' })).toBe('p: "a\\rb"\n');
+    expect(renderHuman({ p: 'a\u2028b\u0085c\u007fd' })).toBe('p: "a\\u2028b\\u0085c\\u007fd"\n');
+  });
 });
 
 describe('no route and no credential', () => {
@@ -122,7 +129,7 @@ describe('no route and no credential', () => {
   const sources = all.filter((name) => !UNIX_SOCKET_ONLY.includes(name));
 
   it('sweeps a non-empty population of source files', async () => {
-    expect(sources).toEqual(['argv.ts', 'brief.ts', 'check.ts', 'child-process.testkit.ts', 'class-gate.ts', 'cli.ts', 'clone-head.ts', 'clone-shape.ts', 'close.ts', 'credential-probe.ts', 'design-review.ts', 'doctrine-quote.ts', 'draft-schema.ts', 'execution-choice.ts', 'execution-flags.ts', 'execution-rule.ts', 'fs-patch.testkit.ts', 'full-run.testkit.ts', 'gate-sources.ts', 'git-object-reader.ts', 'github-url.ts', 'governed.ts', 'index.ts', 'init.ts', 'inventory.ts', 'iso-of.ts', 'launched.ts', 'outcome.ts', 'polaris.ts', 'preflight.ts', 'render.ts', 'reverify.ts', 'review.ts', 'run-config.ts', 'run-record.ts', 'screen.ts', 'session-handover.ts', 'session-statement.ts', 'session-view.ts', 'state-directory.ts', 'status.ts', 'waiting-sessions.ts']);
+    expect(sources).toEqual(['argv.ts', 'brief.ts', 'census.ts', 'check.ts', 'child-process.testkit.ts', 'class-gate.ts', 'cli.ts', 'clone-head.ts', 'clone-shape.ts', 'close.ts', 'credential-probe.ts', 'design-review.ts', 'doctrine-quote.ts', 'draft-schema.ts', 'execution-choice.ts', 'execution-flags.ts', 'execution-rule.ts', 'fs-patch.testkit.ts', 'full-run.testkit.ts', 'gate-sources.ts', 'git-object-reader.ts', 'github-url.ts', 'governed.ts', 'index.ts', 'init.ts', 'inventory.ts', 'iso-of.ts', 'launched.ts', 'outcome.ts', 'polaris.ts', 'preflight.ts', 'render.ts', 'reverify.ts', 'review.ts', 'run-config.ts', 'run-record.ts', 'screen.ts', 'session-handover.ts', 'session-statement.ts', 'session-view.ts', 'state-directory.ts', 'status.ts', 'waiting-sessions.ts']);
   });
 
   it.each(sources.map((name) => [name]))('%s imports no network module', (name) => {

@@ -25,8 +25,9 @@ sys.stdout.write(m.render_act(m.ACT_BY_KEY['${key}'], '${argument}', '${date}', 
 /** The public-source screening-scope policy act as scripts/record_public_source_screening_scope_act.py (version 1),
  * scripts/record_public_source_screening_scope_v2_act.py (version 2), scripts/record_public_source_screening_scope_v3_act.py
  * (version 3, variant `all`, superseding a version-2 act of 2026-10-07) or scripts/record_public_source_screening_scope_v4_act.py
- * (version 4, variant `span`, superseding a version-3 act of 2026-10-08) renders it. */
-export function renderPolicyAct(argument: string, date: string, instant: string, version: 1 | 2 | 3 | 4 = 1, supersededArgument = '1'.repeat(64)): string {
+ * (version 4, variant `span`, superseding a version-3 act of 2026-10-08) or scripts/record_public_source_screening_scope_v5_act.py
+ * (version 5, variant `bcd`, superseding a version-4 act of 2026-10-20) renders it. */
+export function renderPolicyAct(argument: string, date: string, instant: string, version: 1 | 2 | 3 | 4 | 5 = 1, supersededArgument = '1'.repeat(64)): string {
   const id = ['policy', version, argument, date, instant, supersededArgument].join('|');
   const hit = cache.get(id);
   if (hit !== undefined) return hit;
@@ -39,8 +40,11 @@ sys.stdout.write(m.render_act(m.ACT, '${argument}', 'none', '${date}', 'b'*64, '
       : version === 3
         ? `import sys; sys.path.insert(0, 'scripts'); import record_public_source_screening_scope_v3_act as m
 sys.stdout.write(m.render_act(m.ACT, '${argument}', 'all', '${date}', 'b'*64, 'c'*40, 'CONFIRM', m.Selection('opening', 'label', 'description', m.PACKET_WORDS[0]), 'f'*40, '${instant}', '${supersededArgument}', '2026-10-07', '1.4.0-public-source-candidate.1.none.code-all', 25))`
-        : `import sys; sys.path.insert(0, 'scripts'); import record_public_source_screening_scope_v4_act as m
-sys.stdout.write(m.render_act(m.ACT, '${argument}', 'span', '${date}', 'b'*64, 'c'*40, 'CONFIRM', m.OWNER_WORDS[0], 'f'*40, '${instant}', '${supersededArgument}', '2026-10-08', '1.5.0-public-source-candidate.1.none.code-all.redact-span', 'The effect paragraph.'))`;
+        : version === 4
+          ? `import sys; sys.path.insert(0, 'scripts'); import record_public_source_screening_scope_v4_act as m
+sys.stdout.write(m.render_act(m.ACT, '${argument}', 'span', '${date}', 'b'*64, 'c'*40, 'CONFIRM', m.OWNER_WORDS[0], 'f'*40, '${instant}', '${supersededArgument}', '2026-10-08', '1.5.0-public-source-candidate.1.none.code-all.redact-span', 'The effect paragraph.'))`
+          : `import sys; sys.path.insert(0, 'scripts'); import record_public_source_screening_scope_v5_act as m
+sys.stdout.write(m.render_act(m.ACT, '${argument}', 'bcd', '${date}', 'b'*64, 'c'*40, 'CONFIRM', m.OWNER_WORDS[0], '${instant}', 'f'*40, '${instant}', '${supersededArgument}', '2026-10-20', '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd', 'The effect paragraph.'))`;
   const run = spawnSync('python3', ['-c', py], { cwd: ROOT, encoding: 'utf8' });
   if (run.status !== 0) throw new Error(`recorder render failed: ${run.stderr}`);
   cache.set(id, run.stdout);
