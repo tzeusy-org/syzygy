@@ -591,6 +591,17 @@ describe('what the review will not see (syzygy-mea.3)', () => {
     expect(listsCode.text).toContain('does not list: 0\n');
   });
 
+  it('loads the census screen for repository:<id> at the pinned commit (syzygy-mea.4: the version-5 owner placements)', async () => {
+    const run = await runWithDrafts();
+    const opened = await openRun(run, sources(), LATER, 'fixture');
+    if (!opened.ok) throw new Error(opened.reason);
+    const asked: unknown[] = [];
+    const brief = await buildInventoryBrief(opened, 1, sources(), LATER, { loadScreen: async (subject) => { asked.push(subject); return SCREEN; } });
+    if (!brief.ok) throw new Error(brief.reason);
+    // The repository id is the bare `redis-redis`; the placement subject is the consent form.
+    expect(asked).toEqual([{ repository: 'repository:redis-redis', commit: opened.subject.pinnedRevision.commit }]);
+  });
+
   it('never names a path both a denied-path rule and a secret detector match in the inventory brief (round-2 review finding 1)', async () => {
     const run = await runWithDrafts();
     const opened = await openRun(run, sources(), LATER, 'fixture');
