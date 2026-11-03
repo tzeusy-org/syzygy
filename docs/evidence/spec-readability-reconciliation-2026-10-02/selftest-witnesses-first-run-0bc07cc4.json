@@ -1,0 +1,1206 @@
+{
+  "commit": "0bc07cc4da316add6ddbb157fedf4562613306c3",
+  "script": "scripts/check_spec_reconciliation.py",
+  "mutants": [
+    {
+      "mutant": "stale-act-phrase",
+      "path": ".syzygy/governance/decisions/CAPABILITY-1-READABILITY-SUCCESSOR-ACT.md",
+      "old": "LITY 1 READABILITY SUCCESSOR: 1",
+      "new": "LITY 1 READABILITY SUCCESSOR: 2",
+      "expected": "R1",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "stale-act-aggregate",
+      "path": ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",
+      "old": "ANDING READABILITY SUCCESSOR: 2",
+      "new": "ANDING READABILITY SUCCESSOR: 1",
+      "expected": "R1",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "stale-act-consistent",
+      "path": ".syzygy/governance/decisions/THREE-SURFACE-POC-READABILITY-SUCCESSOR-ACT.md + .syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",
+      "old": "CE POC READABILITY SUCCESSOR: 2",
+      "new": "CE POC READABILITY SUCCESSOR: 1",
+      "expected": "R1",
+      "failed": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "stale-manifest-row",
+      "path": ".syzygy/governance/contracts/candidates/polaris-generator-base-readability-successor/SUCCESSOR-MANIFEST.txt",
+      "old": "s file>` installs these rows.\n51f878fe4cb0dc90ca033ecef399a61d3fa2b825794bf69fdcb256dfc1e407bb",
+      "new": "s file>` installs these rows.\n0000000000000000000000000000000000000000000000000000000000000000",
+      "expected": "R1",
+      "failed": [
+        "R1",
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "stale-subject-digest",
+      "path": "openspec/changes/three-surface-poc-experience/proposal.md",
+      "old": "ned predecessors record them.\n",
+      "new": "ned predecessors record them.\n\n",
+      "expected": "R2",
+      "failed": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "stale-versioned-subject",
+      "path": "openspec/changes/polaris-project-wide-butlers-model/design.md",
+      "old": "## ",
+      "new": "##  ",
+      "expected": "R2",
+      "failed": [
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "missing-child-pwb",
+      "path": ".syzygy/governance/decisions/PWB-READABILITY-SUCCESSOR-SIGNOFF-v1.0.md",
+      "old": "<file present>",
+      "new": "<file deleted>",
+      "expected": "R1",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "missing-child-understanding",
+      "path": ".syzygy/governance/decisions/POLARIS-UNDERSTANDING-READABILITY-SUCCESSOR-ACT.md",
+      "old": "<file present>",
+      "new": "<file deleted>",
+      "expected": "R1",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "versioned-tag-line",
+      "path": ".syzygy/governance/decisions/PWB-READABILITY-SUCCESSOR-SIGNOFF-v1.0.md",
+      "old": "g: pwb-readability-successor-v1.0",
+      "new": "g: pwb-readability-successor-v0.9",
+      "expected": "R1",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "versioned-aggregate-block",
+      "path": ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",
+      "old": ":pwb-readability-successor:v1.0",
+      "new": ":pwb-readability-successor:v1.1",
+      "expected": "R1",
+      "failed": [
+        "R1",
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "scenario-removed",
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "old": " capture\n  instant.\n\n#### Scenario",
+      "new": " capture\n  instant.\n\n#### Scenery",
+      "expected": "R3",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "duplicate-id",
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "old": "`\n\n### Requirement: PWB-REQ-002",
+      "new": "`\n\n### Requirement: PWB-REQ-001",
+      "expected": "R3",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "method-split-heading",
+      "path": "openspec/changes/three-surface-poc-experience/specs/three-surface-poc-experience/spec.md",
+      "old": "\n### Requirement: POC-REQ-010 —",
+      "new": "\n### Requirement: POC-REQ-010 -",
+      "expected": "R3",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "polaris-renamed-modified",
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "old": ": Understandable reading depths",
+      "new": ": Understandable reading depth",
+      "expected": "R3",
+      "failed": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "polaris-dangling-modified",
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "old": "\n\nID: REQ-polaris-generation-002",
+      "new": "\n\nID: REQ-polaris-generation-099",
+      "expected": "R3",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "census-drift",
+      "path": "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
+      "old": "       \"scenarios\": [\n        ",
+      "new": "       \"scenarios\": [\n        \"x\",\n        ",
+      "expected": "R3",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "deps-source-digest",
+      "path": "openspec/changes/three-surface-poc-experience/GOVERNING-DEPENDENCIES.md",
+      "old": ">\n> Source: `spec.md` sha256 `0",
+      "new": ">\n> Source: `spec.md` sha256 `f",
+      "expected": "R4",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "dangling-coverage-id",
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/CAPABILITY-COVERAGE.md",
+      "old": "nd this file's citation set).\n",
+      "new": "nd this file's citation set).\n\nCAP1-REQ-099\n",
+      "expected": "R4",
+      "failed": [
+        "R2",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "dangling-continuation-id",
+      "path": "AGENTS.md",
+      "old": "!-- END BEADS INTEGRATION -->\n",
+      "new": "!-- END BEADS INTEGRATION -->\n\nPWB-REQ-005/009\n",
+      "expected": "R4",
+      "failed": [
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "route-row-record",
+      "path": "openspec/README.md",
+      "old": "· [`PWB-READABILITY-SUCCESSOR-SIGNOFF-v1.0.md`](../.syzygy/governance/decisions/PWB-READABILITY-SUCCESSOR-SIGNOFF-v1.0",
+      "new": "· [`PWB-READABILITY-SUCCESSOR-ACT.md`](../.syzygy/governance/decisions/PWB-READABILITY-SUCCESSOR-ACT",
+      "expected": "R5",
+      "failed": [
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "pin-made-current",
+      "path": ".syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json",
+      "old": "odel\",\n    \"version\": \"sha256:0d50f8f496aada5e89a0ab2d7de29e487fc2d4f4ce66435f7a2abdab7a7a5bc1",
+      "new": "odel\",\n    \"version\": \"sha256:44f4ad77e62525595be5839883ac491d26bdd6859f353f91edc1d48903011ed2",
+      "expected": "R6~",
+      "failed": [],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "pins-after-repin-acts",
+      "path": ".syzygy/governance/declarations/adapter-registry/POLARIS-BUTLERS-PROJECT-SHAPE-OBSERVER-CANDIDATE.json + .syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json + openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "old": "rrative links do not recurse.\n  - Every source carries the name of the rule that admitted it, from this\n    closed set: the first rule admits the root index its",
+      "new": "rrative links do not recurse.\n- A **declared item** has one class from this closed set, read by that class's\n  extraction rule (for a loaded profile, the class'",
+      "expected": "R6=0|R1,R2,R3,R4",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "union-after-successor-act",
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/GOVERNING-DEPENDENCIES.md",
+      "old": "<already applied>",
+      "new": "<already applied>",
+      "expected": "R7=0",
+      "failed": [],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "missing-successor-record",
+      "path": ".syzygy/governance/decisions/POLARIS-UNDERSTANDING-DEPENDENCY-UNION-SUCCESSOR-ACT.md",
+      "old": "<file present>",
+      "new": "<file deleted>",
+      "expected": "R1",
+      "failed": [
+        "R1",
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "stale-successor-aggregate",
+      "path": ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",
+      "old": "G DEPENDENCY UNION SUCCESSOR: 9",
+      "new": "G DEPENDENCY UNION SUCCESSOR: 1",
+      "expected": "R1",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "successor-broken-chain",
+      "path": ".syzygy/governance/decisions/POLARIS-UNDERSTANDING-DEPENDENCY-UNION-SUCCESSOR-ACT.md",
+      "old": "GOVERNING-DEPENDENCIES.md` | `315207c0be81915f2461c1d94a8468a39171b98f1a11deeddd78e8ee676ba32e",
+      "new": "GOVERNING-DEPENDENCIES.md` | `0000000000000000000000000000000000000000000000000000000000000000",
+      "expected": "R2",
+      "failed": [
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "successor-instant-order",
+      "path": ".syzygy/governance/decisions/POLARIS-UNDERSTANDING-DEPENDENCY-UNION-SUCCESSOR-ACT.md",
+      "old": "er: Tzeusy\n\nAct instant: 2026-10-02T17:17:57",
+      "new": "er: Tzeusy\n\nAct instant: 2026-09-01T00:00:00",
+      "expected": "R2",
+      "failed": [
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "route-successor-record",
+      "path": "openspec/README.md",
+      "old": "SSOR-ACT.md) (2026-09-29) · [`POLARIS-UNDERSTANDING-DEPENDENCY-UNION-SUCCESSOR-ACT.md`](../.syzygy/governance/decisions/POLARIS-UNDERSTANDING-DEPENDENCY-UNION-S",
+      "new": "SSOR-ACT.md) (2026-09-29) · [`DEPENDENCY-UNION-ACT.md`](../.syzygy/governance/decisions/DEPENDENCY-UNION",
+      "expected": "R5",
+      "failed": [
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "missing-versioned-successor",
+      "path": ".syzygy/governance/decisions/PWB-TREE-FRAMING-AMENDMENT-SIGNOFF-v1.0.md",
+      "old": "<file present>",
+      "new": "<file deleted>",
+      "expected": "R1",
+      "failed": [
+        "R1",
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "versioned-successor-tag",
+      "path": ".syzygy/governance/decisions/PWB-TREE-FRAMING-AMENDMENT-SIGNOFF-v1.0.md",
+      "old": ": pwb-tree-framing-amendment-v1.0",
+      "new": ": pwb-tree-framing-amendment-v0.9",
+      "expected": "R1",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "versioned-successor-aggregate",
+      "path": ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",
+      "old": "pwb-tree-framing-amendment:v1.0",
+      "new": "pwb-tree-framing-amendment:v1.1",
+      "expected": "R1",
+      "failed": [
+        "R1",
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "versioned-successor-order",
+      "path": ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",
+      "old": ">\n\n<!-- versioned-signoff:pwb-readability-successor:v1.0 -->\n## Versioned sign-off — pwb-readability-successor — v1.0 — recorded 2026-10-02\n\nThe owner signed of",
+      "new": ">\n\n<!-- versioned-signoff:pwb-tree-framing-amendment:v1.0 -->\n## Versioned sign-off — pwb-tree-framing-amendment — v1.0 — recorded 2026-10-03\n\nThe owner signed ",
+      "expected": "R2",
+      "failed": [
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "versioned-successor-date",
+      "path": ".syzygy/governance/decisions/PWB-TREE-FRAMING-AMENDMENT-SIGNOFF-v1.0.md",
+      "old": "ged sign-off v1.0\n\nDate: 2026-10-03",
+      "new": "ged sign-off v1.0\n\nDate: 2026-09-01",
+      "expected": "R2",
+      "failed": [
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "versioned-successor-reversal",
+      "path": ".syzygy/governance/contracts/candidates/pwb-tree-framing-amendment/proposed/spec.md.patch",
+      "old": "later-read target\n-  mutation.",
+      "new": "later-read target\n-  mutation. x",
+      "expected": "R2",
+      "failed": [
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "versioned-successor-patch-missing",
+      "path": ".syzygy/governance/contracts/candidates/pwb-tree-framing-amendment/proposed/design.md.patch",
+      "old": "<file present>",
+      "new": "<file deleted>",
+      "expected": "R2",
+      "failed": [
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "versioned-successor-foreign-patch",
+      "path": ".syzygy/governance/contracts/candidates/pwb-tree-framing-amendment/proposed/proposal.md.patch",
+      "old": "ct-wide-butlers-model/proposal",
+      "new": "ct-wide-butlers-model/proposal-x",
+      "expected": "R2",
+      "failed": [
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "route-versioned-successor",
+      "path": "openspec/README.md",
+      "old": "-10-02) · [`PWB-TREE-FRAMING-AMENDMENT-SIGNOFF-v1.0.md`](../.syzygy/governance/decisions/PWB-TREE-FRAMING-AMENDMENT-SIGNOFF-v1.0",
+      "new": "-10-02) · [`PWB-TREE-FRAMING-ACT.md`](../.syzygy/governance/decisions/PWB-TREE-FRAMING-ACT",
+      "expected": "R5",
+      "failed": [
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "union-extra-decision",
+      "path": "openspec/changes/polaris-manifesto-understanding-amendment/GOVERNING-DEPENDENCIES.md",
+      "old": "CC-SPEC-4\n\n## decisions\n\nSDR-3",
+      "new": "CC-SPEC-4\n\n## decisions\n\nSDR-3, SDR-99",
+      "expected": "R7~",
+      "failed": [
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "status-figure",
+      "path": "PROJECT-STATUS.md",
+      "old": "and\n    36 requirements and 248",
+      "new": "and\n    36 requirements and 243",
+      "expected": "R5",
+      "failed": [
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-scenario-removed",
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "old": "ring an A1 provider\n\n#### Scenario",
+      "new": "ring an A1 provider\n\n#### Scenery",
+      "expected": "R3",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-unsigned",
+      "path": ".syzygy/governance/decisions/CAP1-TRUSTED-BOOTSTRAP-CONSENT-SIGNOFF-v1.0.md",
+      "old": "<file present>",
+      "new": "<file deleted>",
+      "expected": "R3:sign-off records",
+      "failed": [
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-wrong-tag",
+      "path": ".syzygy/governance/decisions/CAP1-TRUSTED-BOOTSTRAP-CONSENT-SIGNOFF-v1.0.md",
+      "old": "p1-trusted-bootstrap-consent-v1.0",
+      "new": "p1-trusted-bootstrap-consent-v0.9",
+      "expected": "R3:sign-off records",
+      "failed": [
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-missing",
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "old": "<file present>",
+      "new": "<file deleted>",
+      "expected": "R3:overlay `",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-replaces-other",
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "old": "\n\n### Requirement: CAP1-REQ-046",
+      "new": "\n\n### Requirement: CAP1-REQ-045",
+      "expected": "R3:CAP1 method A: overlay replaces&CAP1 method B: overlay replaces",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-dangling",
+      "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "old": "\n\n### Requirement: CAP1-REQ-046",
+      "new": "\n\n### Requirement: CAP1-REQ-049",
+      "expected": "R3:CAP1 method A: overlay: CAP1-REQ-046 is dangling&CAP1 method B: overlay: CAP1-REQ-046 is dangling",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-added-section",
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "old": "sent provenance amendment\n\n## MODIFI",
+      "new": "sent provenance amendment\n\n## ADD",
+      "expected": "R3:CAP1 method A: overlay: level-2 headings&CAP1 method B: overlay: level-2 headings",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-delta-heading",
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "old": "  parent_requirements: []\n```\n",
+      "new": "  parent_requirements: []\n```\n\n### REMOVED Requirements\n",
+      "expected": "R3:CAP1 method A: overlay: heading `###&CAP1 method B: overlay: heading `###",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-carriage-return",
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "old": "1 consent provenance amendment",
+      "new": "1 consent provenance amendment\r",
+      "expected": "R3:CAP1 method A: overlay: carries a carriage return&CAP1 method B: overlay: carries a carriage return",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-bom",
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "old": "",
+      "new": "﻿",
+      "expected": "R3:CAP1 method A: overlay: carries U+FEFF&CAP1 method B: overlay: carries U+FEFF",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-fenced-header",
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "old": "  parent_requirements: []\n```\n",
+      "new": "  parent_requirements: []\n```\n\n```\n### Requirement: CAP1-REQ-099 — x\n```\n",
+      "expected": "R3:CAP1 method A: overlay: a requirement header inside a fence&CAP1 method B: overlay: a requirement header inside a fence",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-prose-only",
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/specs/project-registration-and-honest-shape-visibility/spec.md",
+      "old": "sumption\n\nObservation consent ",
+      "new": "sumption\n\nObservation consent  ",
+      "expected": "R3:composed bytes do not hash",
+      "failed": [
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-composed-digest",
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/GOVERNING-DEPENDENCIES.json",
+      "old": "\",\n  \"composed_spec_sha256\": \"3",
+      "new": "\",\n  \"composed_spec_sha256\": \"0",
+      "expected": "R3:composed bytes do not hash",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-deps-count",
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/GOVERNING-DEPENDENCIES.json",
+      "old": "ddb\",\n  \"requirement_count\": 42",
+      "new": "ddb\",\n  \"requirement_count\": 43",
+      "expected": "R4:requirement_count",
+      "failed": [
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-adoption-figure",
+      "path": "openspec/changes/cap1-trusted-bootstrap-consent/ADOPTION.md",
+      "old": "r] It has 42 requirements and 5",
+      "new": "r] It has 42 requirements and 4",
+      "expected": "R4:states",
+      "failed": [
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-route-row",
+      "path": "openspec/README.md",
+      "old": "n authorized the same day | [`CAP1-TRUSTED-BOOTSTRAP-CONSENT-SIGNOFF-v1.0.md`](../.syzygy/governance/decisions/CAP1-TRUSTED-BOOTSTRAP-CONSENT-SIGNOFF-v1.0",
+      "new": "n authorized the same day | [`X.md`](../.syzygy/governance/decisions/X",
+      "expected": "R5:`cap1-trusted-bootstrap-consent` row",
+      "failed": [
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "cap1-overlay-status-citation",
+      "path": "PROJECT-STATUS.md",
+      "old": "sent/ADOPTION.md`; `decisions/CAP1-TRUSTED-BOOTSTRAP-CONSENT-SIGNOFF-v1.0.md`; `decisions/OWNER-DIRECTION-SCOPE-A-CAP1-TRUSTED-BOOTSTRAP-CONSENT-2026-10-15.md` ",
+      "new": "sent/ADOPTION.md`; `decisions/X.md`; `decisions/OWNER-DIRECTION-SCOPE-A-CAP1-TRUSTED-BOOTSTRAP-CONSENT-2026-10-15.md` |\n| CAP1 consent implementation (P-109 Q3)",
+      "expected": "R5:cites no terminal record `CAP1-TRUSTED-BOOTSTRAP-CONSENT-SIGNOFF-v1.0.md`",
+      "failed": [
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-bom-removed-first",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "",
+      "new": "﻿## REMOVED Requirements\n\n- `### Requirement: Admitted project input`\n\n",
+      "expected": "R3:method A: addition polaris-selftest-addition: carries U+FEFF&method B: addition polaris-selftest-addition: carries U+FEFF",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-bom-renamed-first",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "",
+      "new": "﻿## RENAMED Requirements\n\n- FROM: `### Requirement: Admitted project input`\n- TO: `### Requirement: Renamed input`\n\n",
+      "expected": "R3:method A: addition polaris-selftest-addition: carries U+FEFF&method B: addition polaris-selftest-addition: carries U+FEFF",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-bom-modified-first",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "",
+      "new": "﻿## MODIFIED Requirements\n\n### Requirement: Admitted project input\n\nThe generator SHALL accept an identified project source snapshot only after the applicable r",
+      "expected": "R3:method A: addition polaris-selftest-addition: carries U+FEFF&method B: addition polaris-selftest-addition: carries U+FEFF",
+      "failed": [
+        "R3",
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-cr-removed",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "wo\n\n- **WHEN** x\n- **THEN** y\n",
+      "new": "wo\n\n- **WHEN** x\n- **THEN** y\n\nProse.\r## REMOVED Requirements\r\r- `### Requirement: Admitted project input`\r\r",
+      "expected": "R3:method A: addition polaris-selftest-addition: carries a carriage return&method B: addition polaris-selftest-addition: carries a carriage return",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-cr-renamed",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "wo\n\n- **WHEN** x\n- **THEN** y\n",
+      "new": "wo\n\n- **WHEN** x\n- **THEN** y\n\nProse.\r## RENAMED Requirements\r\r- FROM: `### Requirement: Admitted project input`\r- TO: `### Requirement: Renamed input`\r\r",
+      "expected": "R3:method A: addition polaris-selftest-addition: carries a carriage return&method B: addition polaris-selftest-addition: carries a carriage return",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-cr-modified",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "wo\n\n- **WHEN** x\n- **THEN** y\n",
+      "new": "wo\n\n- **WHEN** x\n- **THEN** y\n\nProse.\r## MODIFIED Requirements\r\r### Requirement: Admitted project input\r\rThe generator SHALL accept an identified project source",
+      "expected": "R3:method A: addition polaris-selftest-addition: carries a carriage return&method B: addition polaris-selftest-addition: carries a carriage return",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-record-package-prefix",
+      "path": ".syzygy/governance/decisions/POLARIS-SELFTEST-ADDITION-SIGNOFF-v1.0.md",
+      "old": "age: polaris-selftest-addition",
+      "new": "age: polaris-selftest-addition-extra",
+      "expected": "R1:unsigned addition",
+      "failed": [
+        "R1",
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-status-citation",
+      "path": "PROJECT-STATUS.md",
+      "old": "is page.** Run the commands.\n\nSelftest addition: `POLARIS-SELFTEST-ADDITION-SIGNOFF-v1.0.md`.\n",
+      "new": "is page.** Run the commands.\n\n",
+      "expected": "R5:cites no terminal record",
+      "failed": [
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-unsigned",
+      "path": ".syzygy/governance/decisions/POLARIS-SELFTEST-ADDITION-SIGNOFF-v1.0.md",
+      "old": "<file present>",
+      "new": "<file deleted>",
+      "expected": "R1",
+      "failed": [
+        "R1",
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-unsigned-not-expected",
+      "path": ".syzygy/governance/decisions/POLARIS-SELFTEST-ADDITION-SIGNOFF-v1.0.md",
+      "old": "<file present>",
+      "new": "<file deleted>",
+      "expected": "R3:no versioned sign-off record",
+      "failed": [
+        "R1",
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-renamed-section",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "wo\n\n- **WHEN** x\n- **THEN** y\n",
+      "new": "wo\n\n- **WHEN** x\n- **THEN** y\n\n## RENAMED Requirements\n\n- FROM: `### Requirement: Selftest addition`\n- TO: `### Requirement: Renamed`\n",
+      "expected": "R3:method A: addition polaris-selftest-addition: heading&method B: addition polaris-selftest-addition: heading",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-removed-names-only",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "wo\n\n- **WHEN** x\n- **THEN** y\n",
+      "new": "wo\n\n- **WHEN** x\n- **THEN** y\n\n## REMOVED Requirements\n\n- Selftest addition\n",
+      "expected": "R3:method A: addition polaris-selftest-addition: heading&method B: addition polaris-selftest-addition: heading",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-lower-case-delta-heading",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "wo\n\n- **WHEN** x\n- **THEN** y\n",
+      "new": "wo\n\n- **WHEN** x\n- **THEN** y\n\n## removed requirements\n",
+      "expected": "R3:method A: addition polaris-selftest-addition: heading&method B: addition polaris-selftest-addition: heading",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-level-3-delta-heading",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "wo\n\n- **WHEN** x\n- **THEN** y\n",
+      "new": "wo\n\n- **WHEN** x\n- **THEN** y\n\n### MODIFIED Requirements\n",
+      "expected": "R3:method A: addition polaris-selftest-addition: heading&method B: addition polaris-selftest-addition: heading",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-respaced-added-heading",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "## ADDED",
+      "new": "##  ADDED ",
+      "expected": "R3:method A: addition polaris-selftest-addition: heading&method B: addition polaris-selftest-addition: heading",
+      "failed": [
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-other-level-2-heading",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "wo\n\n- **WHEN** x\n- **THEN** y\n",
+      "new": "wo\n\n- **WHEN** x\n- **THEN** y\n\n## Notes\n\nProse.\n",
+      "expected": "R3:method A: addition polaris-selftest-addition: heading&method B: addition polaris-selftest-addition: heading",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-record-names-another-package",
+      "path": ".syzygy/governance/decisions/POLARIS-SELFTEST-ADDITION-SIGNOFF-v1.0.md",
+      "old": "t\n\nDate: 2026-10-06\n\nPackage: polaris-selftest-addition",
+      "new": "t\n\nDate: 2026-10-06\n\nPackage: some-other-package",
+      "expected": "R1:unsigned addition",
+      "failed": [
+        "R1",
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-record-package",
+      "path": ".syzygy/governance/decisions/POLARIS-SELFTEST-ADDITION-SIGNOFF-v1.0.md",
+      "old": "g: polaris-selftest-addition-v1.0",
+      "new": "g: polaris-selftest-addition-v0.9",
+      "expected": "R1",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-aggregate-block",
+      "path": ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",
+      "old": "ence-amendment:v1.0 -->\n\n<!-- versioned-signoff:polaris-selftest-addition:v1.0",
+      "new": "ence-amendment:v1.0 -->\n\n<!-- x",
+      "expected": "R1",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-not-added-only",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "## ADD",
+      "new": "## MODIFI",
+      "expected": "R3:method A: addition polaris-selftest-addition: MODIFIED section&method B: addition polaris-selftest-addition: MODIFIED section",
+      "failed": [
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-restates-base",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "## ADDED Requirements\n\n### Requirement: Selftest addition\n\nID: REQ-polaris-generation-099\n\n```yaml\nwarrants:\n  primary: [VIS-2]\n  doctrine: [VIS-2]\n  contracts:",
+      "new": "## MODIFIED Requirements\n\n### Requirement: Admitted project input\n\nThe generator SHALL accept an identified project source snapshot only after the applicable re",
+      "expected": "R3:method A: addition polaris-selftest-addition: MODIFIED section&method B: addition polaris-selftest-addition: MODIFIED section",
+      "failed": [
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-re-adds-base-id",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "\n\nID: REQ-polaris-generation-099",
+      "new": "\n\nID: REQ-polaris-generation-001",
+      "expected": "R3:re-adds",
+      "failed": [
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-re-adds-overlay-id",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "\n\nID: REQ-polaris-generation-099",
+      "new": "\n\nID: REQ-polaris-generation-030",
+      "expected": "R3:re-adds",
+      "failed": [
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-scenario-dropped",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "EN** x\n- **THEN** y\n\n#### Scenario",
+      "new": "EN** x\n- **THEN** y\n\n#### Scenery",
+      "expected": "R3",
+      "failed": [
+        "R3",
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-census-stale",
+      "path": "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
+      "old": "    \"REQ-polaris-generation-099",
+      "new": "    \"REQ-polaris-generation-098",
+      "expected": "R3",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-dangling-mention",
+      "path": "openspec/changes/polaris-selftest-addition/proposal.md",
+      "old": "Adds REQ-polaris-generation-099",
+      "new": "Adds REQ-polaris-generation-097",
+      "expected": "R4",
+      "failed": [
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "candidate-mention-on-route",
+      "path": "AGENTS.md",
+      "old": "!-- END BEADS INTEGRATION -->\n",
+      "new": "!-- END BEADS INTEGRATION -->\n\nREQ-polaris-generation-095\n",
+      "expected": "R4",
+      "failed": [
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-lenient-header",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "## ADDED Requirements\n\n### Requirement: ",
+      "new": "## ADDED Requirements\n\n###Requirement:",
+      "expected": "R3:method A: addition polaris-selftest-addition: non-canonical requirement header&method B: addition polaris-selftest-addition: non-canonical requirement header",
+      "failed": [
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-second-added",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "wo\n\n- **WHEN** x\n- **THEN** y\n",
+      "new": "wo\n\n- **WHEN** x\n- **THEN** y\n\n## ADDED Requirements\n",
+      "expected": "R3:method A: addition polaris-selftest-addition: 2 `## ADDED Requirements`&method B: addition polaris-selftest-addition: 2 `## ADDED Requirements`",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-fenced-header",
+      "path": "openspec/changes/polaris-selftest-addition/specs/polaris-generation/spec.md",
+      "old": "wo\n\n- **WHEN** x\n- **THEN** y\n",
+      "new": "wo\n\n- **WHEN** x\n- **THEN** y\n\n```\n### Requirement: Fenced\n```\n",
+      "expected": "R3:method A: addition polaris-selftest-addition: a requirement header inside a fence&method B: addition polaris-selftest-addition: a requirement header inside a fence",
+      "failed": [
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-route-row",
+      "path": "openspec/README.md",
+      "old": "-addition) | Selftest | Signed: `POLARIS-SELFTEST-ADDITION-SIGNOFF-v1.0.md`",
+      "new": "-addition) | Selftest | Signed",
+      "expected": "R5",
+      "failed": [
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-status-figure",
+      "path": "PROJECT-STATUS.md",
+      "old": " and\n    37 requirements and 250",
+      "new": " and\n    37 requirements and 245",
+      "expected": "R5",
+      "failed": [
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-union-stale",
+      "path": "openspec/changes/polaris-selftest-addition/GOVERNING-DEPENDENCIES.md",
+      "old": "ic coverage.\n\n## primary\n\nVIS-2",
+      "new": "ic coverage.\n\n## primary\n\nVIS-3",
+      "expected": "R4:differs from its spec's warrants",
+      "failed": [
+        "R4"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "adopted-record-missing",
+      "path": ".syzygy/governance/decisions/POLARIS-SELFTEST-ADOPTED-ADOPTION.md",
+      "old": "<file present>",
+      "new": "<file deleted>",
+      "expected": "R1:declared adoption record",
+      "failed": [
+        "R1",
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "adopted-record-not-naming-spec",
+      "path": ".syzygy/governance/decisions/POLARIS-SELFTEST-ADOPTED-ADOPTION.md",
+      "old": "T10:00:00Z\n\nAdopted subject: `openspec/changes/polaris-selftest-adopted/specs/polaris-generation/spec.md",
+      "new": "T10:00:00Z\n\nAdopted subject: `elsewhere",
+      "expected": "R1:does not name the installed",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "adopted-record-path-substring",
+      "path": ".syzygy/governance/decisions/POLARIS-SELFTEST-ADOPTED-ADOPTION.md",
+      "old": "ecs/polaris-generation/spec.md",
+      "new": "ecs/polaris-generation/spec.md.orig",
+      "expected": "R1:does not name the installed",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "adopted-record-two-dates",
+      "path": ".syzygy/governance/decisions/POLARIS-SELFTEST-ADOPTED-ADOPTION.md",
+      "old": "t adoption\n\nDate: 2026-10-06\n\n",
+      "new": "t adoption\n\nDate: 2026-10-06\n\nDate: 2026-10-07\n\n",
+      "expected": "R1:recorder's shape",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "adopted-record-no-instant",
+      "path": ".syzygy/governance/decisions/POLARIS-SELFTEST-ADOPTED-ADOPTION.md",
+      "old": "t adoption\n\nDate: 2026-10-06\n\nRecorded at (UTC): 2026-10-06T10:00:00Z\n",
+      "new": "t adoption\n\nDate: 2026-10-06\n\n",
+      "expected": "R1:recorder's shape",
+      "failed": [
+        "R1"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "adopted-review-digest",
+      "path": ".syzygy/governance/contracts/candidates/polaris-selftest-adopted/reviews/R-SELFTEST-ADOPTED-1-RAW.md",
+      "old": "it: selftest\nSubject SHA-256: 920ee38dde826b602595767058df68fa3a915812cec7f81839d9fb4c2192cd24",
+      "new": "it: selftest\nSubject SHA-256: 0000000000000000000000000000000000000000000000000000000000000000",
+      "expected": "R2:does not bind",
+      "failed": [
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "adopted-review-head-pushed",
+      "path": ".syzygy/governance/contracts/candidates/polaris-selftest-adopted/reviews/R-SELFTEST-ADOPTED-1-RAW.md",
+      "old": "# R-SELFTEST-ADOPTED-1\n\n",
+      "new": "# R-SELFTEST-ADOPTED-1\n\nA\n\nB\n\n",
+      "expected": "R2:does not bind",
+      "failed": [
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "adopted-spec-edited",
+      "path": "openspec/changes/polaris-selftest-adopted/specs/polaris-generation/spec.md",
+      "old": "wo\n\n- **WHEN** x\n- **THEN** y\n",
+      "new": "wo\n\n- **WHEN** x\n- **THEN** y\n\nEdited prose.\n",
+      "expected": "R2:stale digest",
+      "failed": [
+        "R2"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "adopted-also-signed",
+      "path": ".syzygy/governance/decisions/POLARIS-SELFTEST-ADDITION-SIGNOFF-v1.0.md",
+      "old": "\n\nPackage: polaris-selftest-addition",
+      "new": "\n\nPackage: polaris-selftest-adopted",
+      "expected": "R1:also names",
+      "failed": [
+        "R1",
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "adopted-route-row",
+      "path": "openspec/README.md",
+      "old": "t-adopted) | Selftest | Signed: `POLARIS-SELFTEST-ADOPTED-ADOPTION.md`",
+      "new": "t-adopted) | Selftest | Signed",
+      "expected": "R5",
+      "failed": [
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "adopted-census-unexpected",
+      "path": ".syzygy/governance/decisions/POLARIS-SELFTEST-ADOPTED-ADOPTION.md",
+      "old": "<file present>",
+      "new": "<file deleted>",
+      "expected": "R3:no declared adoption record",
+      "failed": [
+        "R1",
+        "R3"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "addition-duplicate-version-record",
+      "path": "<scripted case>",
+      "old": "",
+      "new": "",
+      "expected": "R1:records sign version",
+      "failed": [
+        "R1",
+        "R5"
+      ],
+      "outcome": "killed"
+    },
+    {
+      "mutant": "regenerate-refuses-unsigned",
+      "path": "<scripted case>",
+      "old": "",
+      "new": "",
+      "expected": "refused",
+      "failed": [],
+      "outcome": "killed"
+    }
+  ]
+}

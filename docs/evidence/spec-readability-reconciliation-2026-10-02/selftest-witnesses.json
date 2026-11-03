@@ -1,5 +1,5 @@
 {
-  "commit": "0bc07cc4da316add6ddbb157fedf4562613306c3",
+  "commit": "5ee1c1a1fa1ce53fc66644301aa8da6452214ad8",
   "script": "scripts/check_spec_reconciliation.py",
   "mutants": [
     {
@@ -884,8 +884,8 @@
     {
       "mutant": "addition-aggregate-block",
       "path": ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",
-      "old": "ence-amendment:v1.0 -->\n\n<!-- versioned-signoff:polaris-selftest-addition:v1.0",
-      "new": "ence-amendment:v1.0 -->\n\n<!-- x",
+      "old": "POLICY-SCOPE-V5:END -->\n\n<!-- versioned-signoff:polaris-selftest-addition:v1.0",
+      "new": "POLICY-SCOPE-V5:END -->\n\n<!-- x",
       "expected": "R1",
       "failed": [
         "R1"

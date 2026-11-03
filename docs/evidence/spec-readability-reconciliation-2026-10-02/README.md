@@ -225,6 +225,14 @@ or effect permission from adoption.
   ran at (`5a0df90`, the commit that added the checker; no checker input
   changed after it) [superseded 2026-10-02: regenerated at the
   re-derivation commit, §9].
+  [superseded 2026-11-04, `syzygy-hgkq`: the file now names `5ee1c1a1`, an
+  ancestor of `main`, with `scripts/check_spec_reconciliation.py` at blob
+  `0c0a6fb11c7d84b85cf8c8208a9ee600830182b9`; the same 102 of 102 mutants
+  were killed. The first run, which named the pre-rebase `0bc07cc4` (reached
+  by no ref, same checker blob), is kept unchanged as
+  [`selftest-witnesses-first-run-0bc07cc4.json`](selftest-witnesses-first-run-0bc07cc4.json).
+  The two files differ in one row, `addition-aggregate-block`, whose
+  old and new fragments carry tree-derived text.]
 - **Battery:** `--check` and `--selftest` joined the canonical battery in one
   CG-26 edit — the `PROJECT-STATUS.md` block, the hosted workflow
   `.github/workflows/governance-docs.yml` and the count sentence
