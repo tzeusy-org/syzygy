@@ -1,6 +1,7 @@
-import { chmodSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, renameSync, rmSync, symlinkSync, writeFileSync, type BigIntStats } from 'node:fs';
+import { chmodSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, readlinkSync, renameSync, rmSync, symlinkSync, writeFileSync, type BigIntStats } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -455,9 +456,25 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
     expect(existsSync(victim)).toBe(false);
   });
 
+  it('has one profile creator, launchBrowser\'s mkdtempSync, and no production caller outside cdp-browser.ts: the reason item 3 refuses no writable profile', () => {
+    const dir = dirname(fileURLToPath(import.meta.url));
+    const production = readdirSync(dir).filter((name) => name.endsWith('.ts') && !/\.test(?:-support|kit)?\.ts$|\.testkit\.ts$/.test(name));
+    const naming = production.filter((name) => /\b(?:removeBrowserProfile|closeDisposableBrowser)\b/.test(readFileSync(join(dir, name), 'utf8')));
+    expect(naming).toEqual(['cdp-browser.ts']);
+    const source = readFileSync(join(dir, 'cdp-browser.ts'), 'utf8');
+    expect(source.match(/mkdtempSync\(/g)).toHaveLength(1);
+    expect(source.match(/const profile = mkdtempSync\(join\(tmpdir\(\), 'syzygy-poc-browser-'\)\);/g)).toHaveLength(1);
+    // Every call that passes a profile passes launchBrowser's `profile`.
+    const calls = [...source.matchAll(/closeDisposableBrowser\(\{[^\n]*?\}, child, (\w+),|closeDisposableBrowser\(connection, child, (\w+),|(?<!=> )removeBrowserProfile\((\w+),/g)];
+    expect(calls.length).toBeGreaterThan(0);
+    for (const call of calls) expect(call[1] ?? call[2] ?? call[3]).toBe('profile');
+  });
+
   it('keeps the directory a link names when the profile is not the running user\'s, as in a shared temp directory where another user made it first', () => {
     const { profile, victim } = linkedProfile();
-    removeBrowserProfile(profile, { remove: () => undefined, lstat: lstatWith(profile, { uid: lstatSync(profile, { bigint: true }).uid + 1n }) });
+    const readLink = vi.fn((path: string): string => readlinkSync(path));
+    removeBrowserProfile(profile, { remove: () => undefined, readLink, lstat: lstatWith(profile, { uid: lstatSync(profile, { bigint: true }).uid + 1n }) });
+    expect(readLink).not.toHaveBeenCalled();
     expect(existsSync(join(victim, 'SingletonSocket'))).toBe(true);
   });
 
@@ -468,14 +485,18 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
     const profile = join(root, 'syzygy-poc-browser-LinkTo');
     symlinkSync(real, profile);
     // The entry is judged as it is, not after resolving it: resolved, it is the running user's.
-    removeBrowserProfile(profile, { remove: () => undefined, lstat: lstatWith(profile, { uid: lstatSync(real, { bigint: true }).uid + 1n }) });
+    const readLink = vi.fn((path: string): string => readlinkSync(path));
+    removeBrowserProfile(profile, { remove: () => undefined, readLink, lstat: lstatWith(profile, { uid: lstatSync(real, { bigint: true }).uid + 1n }) });
+    expect(readLink).not.toHaveBeenCalled();
     expect(existsSync(join(victim, 'SingletonSocket'))).toBe(true);
   });
 
   it('keeps the directory a link names when the link is not the running user\'s', () => {
     const { profile, victim } = linkedProfile();
     const link = join(profile, 'SingletonSocket');
-    removeBrowserProfile(profile, { remove: () => undefined, lstat: lstatWith(link, { uid: lstatSync(link, { bigint: true }).uid + 1n }) });
+    const readLink = vi.fn((path: string): string => readlinkSync(path));
+    removeBrowserProfile(profile, { remove: () => undefined, readLink, lstat: lstatWith(link, { uid: lstatSync(link, { bigint: true }).uid + 1n }) });
+    expect(readLink).not.toHaveBeenCalled();
     expect(existsSync(join(victim, 'SingletonSocket'))).toBe(true);
   });
 
