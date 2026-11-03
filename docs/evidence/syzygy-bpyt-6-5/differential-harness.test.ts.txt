@@ -1,9 +1,17 @@
 // syzygy-bpyt.6.5 before/after differential harness.
 //
-// Copy to apps/three-surface-poc/src/zz-bpyt65-differential.test.ts and run
-//   BPYT65_OUT=<file.json> npx vitest run --project three-surface-poc zz-bpyt65-differential
-// at the base commit and at the PR head, then compare the two outputs with
-// compare_differential.py. Fixtures only: every Git runner here is in
+// Copy to apps/three-surface-poc/src/zz-bpyt65-differential.test.ts, with
+// vitest.differential.config.ts (this directory) at the repository root, and run
+//   BPYT65_OUT=<file.json> npx vitest run --config vitest.differential.config.ts zz-bpyt65-differential
+// at the base commit and at the head, then compare the two outputs with
+// compare_differential.py. The root config's `--project` form does not apply:
+// the head's suite is tiered and its unit tier refuses a test that spawns git,
+// and the base has no tiers; the config here runs the file identically on both.
+// Output digests: the model rows hash a page whose evaluation-inputs digest
+// names the repository root, so the root is the fixed path BPYT65_FIXTURE_ROOT
+// (default /tmp/bpyt65-fixture-root), never TMPDIR-relative; with the same
+// root, two runs at one commit give one output sha256 whatever TMPDIR is.
+// Fixtures only: every Git runner here is in
 // memory, except the model-level rows, which use the committed fixture
 // repository `buildFixtureModel` copies; no observed repository is read.
 //
@@ -332,7 +340,7 @@ describe('syzygy-bpyt.6.5 differential', () => {
     // The evaluation inputs digest names the repository root, so it is
     // copied to one fixed path for both runs.
     const copied = fixtureRepoWithGit(cleanups);
-    const fixedRoot = `${process.env.TMPDIR ?? '/tmp'}/bpyt65-fixture-root`;
+    const fixedRoot = process.env.BPYT65_FIXTURE_ROOT ?? '/tmp/bpyt65-fixture-root';
     rmSync(fixedRoot, { recursive: true, force: true });
     cpSync(copied.repoRoot, fixedRoot, { recursive: true });
     cleanups.push(fixedRoot);
