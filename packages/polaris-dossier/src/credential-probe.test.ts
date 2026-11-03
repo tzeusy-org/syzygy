@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
+import { tempDir as makeTempDir } from '@syzygy/test-kit';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   classifyRead, createCredentialProbe, credentialListFromEnv, credentialListFromFile, credentialStepCheck, type CredentialListSource, type OpenForRead,
@@ -12,8 +12,9 @@ import {
 const cleanups: (() => void)[] = [];
 afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
 const tempDir = (): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), 'dossier-cred-')));
-  cleanups.push(() => { fs.chmodSync(dir, 0o700); for (const name of fs.readdirSync(dir)) { try { fs.chmodSync(path.join(dir, name), 0o700); } catch { /* gone */ } } fs.rmSync(dir, { recursive: true, force: true }); });
+  const dir = makeTempDir('dossier-cred-');
+  // Runs before the kit's removal (afterEach precedes the file teardown): a 000-mode member must be readable again for it.
+  cleanups.push(() => { fs.chmodSync(dir, 0o700); for (const name of fs.readdirSync(dir)) { try { fs.chmodSync(path.join(dir, name), 0o700); } catch { /* gone */ } } });
   return dir;
 };
 const listOf = (paths: readonly string[]): CredentialListSource => ({ describe: 'fixture list', list: () => ({ ok: true, paths }) });
