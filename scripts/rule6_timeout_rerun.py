@@ -28,11 +28,12 @@ out = {'subject': {'commit': head}, 'script': {'path': 'scripts/rule6_timeout_re
        'ranAt': datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'), 'runs': []}
 for mid in ['M0-unmutated-control', *ids]:
     m = next(x for x in spec['mutants'] if x['id'] == mid)
+    project = projects.resolve_project(tree, m.get('project', spec['project']), m['tests'])  # before the file is touched: a refusal leaves the tree clean
     target = os.path.join(tree, m['file'])
     orig = open(target, encoding='utf8').read()
     assert orig.count(m['old']) >= 1, mid
     open(target, 'w', encoding='utf8').write(orig.replace(m['old'], m['new'], 1))
-    command = ['npx', 'vitest', 'run', '--project', projects.resolve_project(tree, m.get('project', spec['project']), m['tests']), f'--testTimeout={timeout}', *m['tests']]
+    command = ['npx', 'vitest', 'run', '--project', project, f'--testTimeout={timeout}', *m['tests']]
     load1 = round(os.getloadavg()[0], 2)
     with tempfile.TemporaryDirectory() as tmp:
         rp = os.path.join(tmp, 'r.json')

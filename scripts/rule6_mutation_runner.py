@@ -62,11 +62,11 @@ out = {'subject': {'commit': head, 'branch': run(['git','rev-parse','--abbrev-re
        'runner': 'single-occurrence textual replacement of `old` by `new` in `file`, then `npx vitest run --project <project> <testFiles>` in the tree; killed = at least one failed test; file restored from git after each run',
        'project': spec['project'], 'helperSha256': sha(run(['git','show','HEAD:scripts/rule6_projects.py']).stdout.encode()), 'ranAt': datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'), 'mutants': []}
 for m in spec['mutants']:
+    project = projects.resolve_project(tree, m.get('project', spec['project']), m['tests'])
     target = os.path.join(tree, m['file'])
     orig = open(target, encoding='utf8').read()
     if orig.count(m['old']) < 1: sys.exit(f"fragment not found for {m['id']}")
     open(target, 'w', encoding='utf8').write(orig.replace(m['old'], m['new'], 1))
-    project = projects.resolve_project(tree, m.get('project', spec['project']), m['tests'])
     command = ['npx','vitest','run','--project',project,*m['tests']]
     with tempfile.TemporaryDirectory() as tmp:
         report_path = os.path.join(tmp, 'report.json')

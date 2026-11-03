@@ -75,12 +75,13 @@ for record_path in record_paths:
              'baseline': vitest(project, tests), 'mutants': []}
     print(entry['path'], 'baseline', entry['baseline'], flush=True)
     for m in record['mutants']:
+        mutant_project = projects.resolve_project(tree, m.get('project', project), m['tests'])  # before the file is touched
         target = os.path.join(tree, m['file'])
         orig = open(target, encoding='utf8').read()
         if m['old'] not in orig: sys.exit(f"fragment not found for {m['id']}")
         open(target, 'w', encoding='utf8').write(orig.replace(m['old'], m['new'], 1))
         try:
-            result = vitest(projects.resolve_project(tree, m.get('project', project), m['tests']), m['tests'])
+            result = vitest(mutant_project, m['tests'])
         finally:
             run(['git', 'checkout', '--', m['file']])
         outcome = classify(result)
