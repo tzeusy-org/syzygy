@@ -18,7 +18,7 @@ import { AGENT_TOOLS, type AgentTool } from './run-config.js';
 import { recheckSessionStatement, type SessionStatementCitation } from './session-statement.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import {
-  DELIVERY_DISCLOSURES, PLAIN_PATH, WAITING_MODE, WAIT_MODE_DIRECTION, WAIT_MODE_UNSIGNED, WAIT_TIMEOUT_ADVICE, deliverToWaiting, stdinHandOver, waitModeSignedIn, waitingReviewSession,
+  DELIVERY_DISCLOSURES, PLAIN_PATH, WAITING_MODE, WAIT_MODE_DIRECTION, WAIT_TIMEOUT_ADVICE, deliverToWaiting, stdinHandOver, waitModeRefusal, waitingReviewSession,
   type DeliveryReport,
 } from './waiting-sessions.js';
 
@@ -89,7 +89,7 @@ export function sessionCommands(tool: AgentTool, directory: string, prompt: stri
       terminal, bang: null, ...waiting,
       note: allowedTools === undefined
         ? 'Codex: type the terminal form in a new terminal; no shell-escape form is offered for Codex in this build.'
-        : 'Codex: type the terminal form in a new terminal. Syzygy prints no pre-approval for Codex: how narrowly Codex lets one command and writes to one directory be pre-approved is Unknown to this build, and it prints no broader one, so a waiting Codex session asks you before each call and waits while you are away.',
+        : 'Codex: type the terminal form in a new terminal. Syzygy prints no pre-approval for Codex: how narrowly Codex lets one command and writes to one directory be pre-approved is Unknown to this build, and it prints no broader one. Whether a waiting Codex session then asks you before a call, or runs it unattended while you are away, depends on the approval policy in your own Codex configuration (~/.codex/config.toml, or a profile or flag you start it with): under a policy that does not ask, it runs without asking. Syzygy has not read that configuration and cannot see which applies.',
     };
 }
 
@@ -393,7 +393,8 @@ export async function startSessions(runDir: string, request: Omit<SessionPromptR
   const now = deps.now();
   const refuse = (stage: string, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]) =>
     ({ ok: false as const, refusal: { command: 'session-prompt' as const, outcome: 'refused' as const, stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: START_DISCLOSURES } });
-  if (!(deps.waitModeSigned ?? (() => waitModeSignedIn(deps.sources.recordsRoot)))()) return refuse('unsigned', WAIT_MODE_UNSIGNED);
+  const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned);
+  if (gateRefusal !== null) return refuse('unsigned', gateRefusal);
   const opened = await openRun(runDir, deps.sources, now, 'no session is started', deps.openReader ? { openReader: deps.openReader } : {});
   if (!opened.ok) return refuse(opened.stage, opened.reason, opened.reasons, opened.refusals);
   const { run, runId } = opened;
@@ -472,7 +473,8 @@ async function deliverReview(
   const now = deps.now();
   const refuse = (stage: string, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]) =>
     ({ ok: false as const, refusal: { command: 'session-prompt' as const, outcome: 'refused' as const, stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: DELIVERY_DISCLOSURES } });
-  if (!(deps.waitModeSigned ?? (() => waitModeSignedIn(deps.sources.recordsRoot)))()) return refuse('unsigned', WAIT_MODE_UNSIGNED);
+  const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned);
+  if (gateRefusal !== null) return refuse('unsigned', gateRefusal);
   if (request.tool !== undefined || request.toolVersion !== undefined || request.model !== undefined) {
     return refuse('context', `a ${kind} session is waiting, and its tool, version and model were declared when it was started; deliver without --tool, --tool-version or --model, or add --fresh to hand the packet to a new session`);
   }

@@ -522,6 +522,8 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     { id: 'review/fidelity/verdict', marking: 'inferred', unknownReason: null, title: 'Fidelity verdict', text: `The review session declares the draft ${review.verdict.readiness}${review.verdict.blocking ? ', beside a blocking finding' : ''}.`,
       details: [`Review session identifier ${review.sessionId.value}, as that session declares it`, `Launch form ${review.launchForm.value}, as the operator declares it`, ...review.inferred.basis], sourceIds: [] },
     // A reviewer that continued across revisions is disclosed (owner direction POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08).
+    // The item renders for every counted verdict, whether or not v1.2 is signed in (review-408 round 4, finding 4): it adds a disclosure, never a
+    // permission, and a reviewer that continued is disclosed under v1.1 too. Only the wait-mode steps wait on the sign-off.
     { id: 'review/fidelity/continuation', marking: 'inferred', unknownReason: null, title: fidelityContinuation!.continuing ? 'Continuing reviewer' : 'Reviewer continuity', text: fidelityContinuation!.text,
       details: [`From ${fidelityContinuation!.basis}`], sourceIds: [] },
   ] : [{ id: 'review/fidelity/none', marking: 'unknown', unknownReason: 'missing-evidence', title: 'Fidelity review', text: `No fidelity review counts for this draft: ${review.why}.`, details: [], sourceIds: [] }];

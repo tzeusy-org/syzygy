@@ -32,8 +32,8 @@ export {
   type LaunchFormResult, type SessionPromptResult, type StartSessionsReport, type StartedSession,
 } from './session-handover.js';
 export {
-  AWAIT_FORMAT, DEFAULT_WAIT_MINUTES, DELIVERY_FILE, DELIVERY_FORMAT, MAX_WAIT_MINUTES, WAITING_MODE, WAIT_MODE_DIRECTION, WAIT_MODE_SPEC, WAIT_MODE_UNSIGNED,
-  awaitSession, continuationOf, deliveries, waitModeSignedIn, waitingReviewSession,
+  AWAIT_FORMAT, DEFAULT_WAIT_MINUTES, DELIVERY_FILE, DELIVERY_FORMAT, MAX_WAIT_MINUTES, WAITING_MODE, WAIT_MODE_DIRECTION, WAIT_MODE_DRIFTED, WAIT_MODE_SPEC, WAIT_MODE_UNSIGNED,
+  awaitSession, continuationOf, deliveries, waitModeRefusal, waitModeSignedIn, waitModeStatus, waitingReviewSession,
   type AwaitDeps, type AwaitReport, type AwaitRequest, type AwaitResult, type Continuation, type DeliveryReport,
 } from './waiting-sessions.js';
 export { buildDossierScreen, loadDossierScreen, type DossierScreen, type ScreenExclusion, type ScreenLoad } from './screen.js';
