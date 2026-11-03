@@ -55,7 +55,17 @@ Predicates, each printed with its denominator:
   regular expressions; Polaris composes by ID line in one and by requirement
   name in the other). Both must agree, identifiers must be unique, and the
   result must equal the hard-coded literal census below and the committed
-  `census.json`. A Polaris addition is any other change whose
+  `census.json`. CAP1 is the effective composition (`syzygy-5oqc`): the
+  bound file with the adopted `cap1-trusted-bootstrap-consent` overlay's
+  blocks for exactly CAP1-REQ-011 and 046 in place of its own, composed only
+  while its declared v1.0 sign-off record terminates it. Method A parses
+  both files by regular expression and replaces by identifier; method B
+  splices the overlay's blocks into the bound text by lines, parses that
+  with the state machine, and requires the spliced bytes to hash to the
+  `composed_spec_sha256` the adoption builder recorded. Both refuse any
+  other replaced set, a name the bound file lacks, any level-2 heading but
+  `## MODIFIED Requirements` or other delta heading, U+FEFF, a carriage
+  return, and a non-canonical or fenced requirement header. A Polaris addition is any other change whose
   `specs/polaris-generation/spec.md` is installed (by a version-tagged
   sign-off's builder, or by the install step after an adoption record); it
   is signed when R1 finds its terminal record. It may only ADD requirements
@@ -75,13 +85,17 @@ Predicates, each printed with its denominator:
 - R4 generated rows: each generated dependency file's source digest and
   requirement count match the spec; every full or continuation-form
   identifier mention in the five change directories, each signed addition's
-  directory and the default route pages resolves to the population; the CAP1
+  directory, the CAP1 overlay's directory and the default route pages
+  resolves to the population; the CAP1 overlay's generated
+  `GOVERNING-DEPENDENCIES.json` (requirement count, source digests) and its
+  `ADOPTION.md` figure agree with the composed census; the CAP1
   and PWB capability coverage tables carry the whole population; and each
   signed addition's generated union equals its spec's warrants (a FAIL,
   since that union is generated and never signed).
 - R5 default routes: `openspec/README.md` has one row per tracked change
   directory naming its terminal record; `PROJECT-STATUS.md` cites every
-  terminal record (a signed addition's sign-off record included) and states
+  terminal record (a signed addition's and the CAP1 overlay's sign-off
+  records included; the overlay's row must name its record) and states
   the Polaris composition the census computes.
 - R6 behaviour-contract pins (report only, never green): the observer
   registry entry and the secret-classification policy pin a PWB `spec.md`
@@ -309,6 +323,19 @@ FAMILY_SPECS = {
     "POC": spec_path(POC_CHANGE),
     "PWB": spec_path(PWB_CHANGE),
 }
+#: The adopted CAP1 overlay (P-109, signed v1.0 by version tag 2026-10-15):
+#: its `spec.md` fully replaces the requirement blocks named below in the
+#: bound CAP1 file, and the census reads the composition (syzygy-5oqc).
+#: Declared here, never inferred; the replaced identities are literals.
+CAP1_OVERLAY_CHANGE = "cap1-trusted-bootstrap-consent"
+CAP1_OVERLAY_SPEC = spec_path(CAP1_OVERLAY_CHANGE, CAP1_CHANGE)
+CAP1_OVERLAY_RECORD = (f"{DECISIONS}/"
+                       "CAP1-TRUSTED-BOOTSTRAP-CONSENT-SIGNOFF-v1.0.md")
+CAP1_OVERLAY_VERSION = "1.0"
+CAP1_OVERLAY_DEPS = f"{CHANGES}/{CAP1_OVERLAY_CHANGE}/GOVERNING-DEPENDENCIES.json"
+CAP1_OVERLAY_ADOPTION = f"{CHANGES}/{CAP1_OVERLAY_CHANGE}/ADOPTION.md"
+CAP1_OVERLAY_REPLACES = ("CAP1-REQ-011", "CAP1-REQ-046")
+CAP1_OVERLAY_SECTION = "## MODIFIED Requirements"
 POLARIS_BASE_SPEC = spec_path(BASE_CHANGE, "polaris-generation")
 POLARIS_OVERLAY_SPEC = spec_path(UNDERSTANDING_CHANGE, "polaris-generation")
 POLARIS_ID = "REQ-polaris-generation-"
@@ -406,7 +433,11 @@ EXPECTED = {
         (1, 10, 1, 3, 5, 3, 5, 7, 5, 1, 1, 9, 1, 3, 1, 2, 5))),
     "POLARIS": None,  # totals only below; per-requirement counts in census.json
 }
-EXPECTED_TOTALS = {"CAP1": (42, 47), "POC": (26, 28), "PWB": (17, 63),
+# CAP1 re-derived 2026-11-04 (syzygy-5oqc): the census composes the adopted
+# consent overlay, whose CAP1-REQ-011 carries 8 scenarios and CAP1-REQ-046
+# 4 (each 1 in the bound file alone, 42 / 47). Literals, never parsed.
+EXPECTED["CAP1"] = {**EXPECTED["CAP1"], "011": 8, "046": 4}
+EXPECTED_TOTALS = {"CAP1": (42, 57), "POC": (26, 28), "PWB": (17, 63),
                    "POLARIS": (31, 182)}
 
 ROW = re.compile(r"^([0-9a-f]{64})  (\S[^\n]*)$", re.M)
@@ -1052,6 +1083,162 @@ def compose_polaris_by_name(base, overlay, *additions):
     return by_id, problems
 
 
+def _cap1_overlay_guard_regex(text):
+    """Method A: refusals for the CAP1 overlay, independent of its blocks.
+
+    Its only level-2 heading is exactly `## MODIFIED Requirements`; no other
+    heading of any level names a delta section; it carries no U+FEFF or
+    carriage return; and every requirement header is canonical and unfenced.
+    """
+    out = []
+    level2 = re.findall(r"^[ \t]*##(?!#)[^\n]*$", text, re.M)
+    if level2 != [CAP1_OVERLAY_SECTION]:
+        out.append(f"level-2 headings {level2}, expected exactly "
+                   f"[{CAP1_OVERLAY_SECTION!r}]")
+    out += [f"heading `{h.strip()}`; the overlay is MODIFIED-only"
+            for h in _foreign_headings_regex(text)
+            if h != CAP1_OVERLAY_SECTION and h not in level2]
+    out += [f"carries {what}; refused, never normalised"
+            for what, pattern in (("U+FEFF", "\ufeff"),
+                                  ("a carriage return", "\r"))
+            if re.search(pattern, text)]
+    return out + [p for p in _header_problems_regex(text)]
+
+
+def _cap1_overlay_guard_manual(text):
+    """Method B: the same refusals, by a line scan with no regular expressions."""
+    out = []
+    level2 = [line for line in text.split("\n")
+              if line.lstrip(" \t").startswith("##")
+              and not line.lstrip(" \t").startswith("###")]
+    if level2 != [CAP1_OVERLAY_SECTION]:
+        out.append(f"level-2 headings {level2}, expected exactly "
+                   f"[{CAP1_OVERLAY_SECTION!r}]")
+    out += [f"heading `{h.strip()}`; the overlay is MODIFIED-only"
+            for h in _foreign_headings_manual(text)
+            if h != CAP1_OVERLAY_SECTION and h not in level2]
+    if "\ufeff" in text:
+        out.append("carries U+FEFF; refused, never normalised")
+    if "\r" in text:
+        out.append("carries a carriage return; refused, never normalised")
+    return out + [p for p in _header_problems_manual(text)]
+
+
+def compose_cap1_by_id(base, overlay):
+    """Method A: parse both files by regex, then replace by identifier.
+
+    The overlay must carry exactly `CAP1_OVERLAY_REPLACES`, in that order,
+    and each must already be a base requirement (a full replacement, never
+    an addition).
+    """
+    comp, pb = parse_regex(base, "CAP1")
+    over, po = parse_regex(overlay, "CAP1")
+    problems = [f"base: duplicate or orphan {p}" for p in pb]
+    problems += [f"overlay: duplicate or orphan {p}" for p in po]
+    problems += [f"overlay: {p}" for p in _cap1_overlay_guard_regex(overlay)]
+    if tuple(over) != CAP1_OVERLAY_REPLACES:
+        problems.append(f"overlay replaces {list(over)}, expected exactly "
+                        f"{list(CAP1_OVERLAY_REPLACES)}")
+    for ident, req in over.items():
+        if ident not in comp:
+            problems.append(f"overlay: {ident} is dangling (not in the base)")
+        comp[ident] = req
+    return comp, problems
+
+
+def _lines_keep(text):
+    """Split at LF, keeping each terminator (no regular expression)."""
+    out, start = [], 0
+    while start < len(text):
+        stop = text.find("\n", start)
+        stop = len(text) if stop < 0 else stop + 1
+        out.append(text[start:stop])
+        start = stop
+    return out
+
+
+def _cap1_spans_manual(lines):
+    """{identifier: [(first, end)]}: each block runs to the next header."""
+    head = "### Requirement: "
+    heads = [i for i, line in enumerate(lines) if line.startswith(head)]
+    spans = {}
+    for n, i in enumerate(heads):
+        ident = lines[i][len(head):].partition(" — ")[0]
+        end = heads[n + 1] if n + 1 < len(heads) else len(lines)
+        spans.setdefault(ident, []).append((i, end))
+    return spans
+
+
+def compose_cap1_by_text(base, overlay):
+    """Method B: splice the overlay's blocks into the base text, then parse.
+
+    No regular expression: the composed bytes come from a line splice, are
+    then read by the line state machine, and are returned for the digest
+    comparison with the adoption's generated record.
+    """
+    problems = [f"overlay: {p}" for p in _cap1_overlay_guard_manual(overlay)]
+    b_lines, o_lines = _lines_keep(base), _lines_keep(overlay)
+    b_spans, o_spans = _cap1_spans_manual(b_lines), _cap1_spans_manual(o_lines)
+    if tuple(o_spans) != CAP1_OVERLAY_REPLACES:
+        problems.append(f"overlay replaces {list(o_spans)}, expected exactly "
+                        f"{list(CAP1_OVERLAY_REPLACES)}")
+    composed = b_lines
+    for ident in o_spans:
+        if len(o_spans[ident]) != 1:
+            problems.append(f"overlay: {ident} has {len(o_spans[ident])} blocks")
+            continue
+        have = _cap1_spans_manual(composed).get(ident, [])
+        if len(have) != 1:
+            problems.append(f"overlay: {ident} is dangling or repeated in the "
+                            f"base ({len(have)} blocks)")
+            continue
+        (first, end), (ofirst, oend) = have[0], o_spans[ident][0]
+        composed = composed[:first] + o_lines[ofirst:oend] + composed[end:]
+    text = "".join(composed)
+    comp, pc = parse_manual(text, "CAP1")
+    problems += [f"composed: duplicate or orphan {p}" for p in pc]
+    return comp, problems, text
+
+
+def cap1_overlay_signed(root):
+    """Findings unless the declared sign-off record terminates the overlay."""
+    records = addition_records(root, CAP1_OVERLAY_CHANGE)
+    want = [(CAP1_OVERLAY_RECORD, CAP1_OVERLAY_VERSION)]
+    got = [(rel, version) for rel, _text, version in records]
+    tag = f"Tag: {CAP1_OVERLAY_CHANGE}-v{CAP1_OVERLAY_VERSION}"
+    if got != want or tag not in records[0][1].splitlines():
+        return [f"CAP1: overlay `{CAP1_OVERLAY_CHANGE}` sign-off records "
+                f"{got}, expected exactly {want} carrying `{tag}`; the bound "
+                "file alone is counted"]
+    return []
+
+
+def compose_cap1(root, text):
+    """(population, findings): the bound CAP1 file with the overlay applied."""
+    overlay = read_text(root, CAP1_OVERLAY_SPEC)
+    unsigned = cap1_overlay_signed(root)
+    if overlay is None or unsigned:
+        a, pa = parse_regex(text, "CAP1")
+        return a, unsigned or [f"CAP1: overlay `{CAP1_OVERLAY_SPEC}` missing; "
+                               "the bound file alone is counted"]
+    a, pa = compose_cap1_by_id(text, overlay)
+    b, pb, composed = compose_cap1_by_text(text, overlay)
+    findings = [f"CAP1 method A: {p}" for p in pa]
+    findings += [f"CAP1 method B: {p}" for p in pb]
+    if a != b:
+        findings.append(f"CAP1: the two overlay compositions disagree "
+                        f"({len(a)} vs {len(b)} requirements)")
+    try:
+        recorded = json.loads(read_text(root, CAP1_OVERLAY_DEPS) or "null")
+        recorded = recorded["composed_spec_sha256"]
+    except (ValueError, TypeError, KeyError):
+        recorded = None
+    if sha(composed.encode("utf-8")) != recorded:
+        findings.append(f"CAP1 method B: composed bytes do not hash to "
+                        f"`{CAP1_OVERLAY_DEPS}` composed_spec_sha256")
+    return a, findings
+
+
 def census(root):
     """Return ({family: {id: {name, scenarios}}}, findings)."""
     out, findings = {}, []
@@ -1059,6 +1246,10 @@ def census(root):
         text = read_text(root, rel)
         if text is None:
             findings.append(f"{family}: `{rel}` missing")
+            continue
+        if family == "CAP1":
+            out[family], cap1 = compose_cap1(root, text)
+            findings += cap1
             continue
         a, pa = parse_regex(text, family)
         b, pb = parse_manual(text, family)
@@ -1221,10 +1412,33 @@ def check_generated(root, pop, report):
         if cited != set(pop.get(family, {})):
             findings.append(f"`{rel}`: covers {len(cited)} of "
                             f"{len(pop.get(family, {}))} requirements")
+    # The CAP1 overlay's adoption-time generated record and figure, written
+    # by its own builder: both must agree with the composed census.
+    examined += 2
+    cap1 = pop.get("CAP1", {})
+    cap1_scen = sum(len(r["scenarios"]) for r in cap1.values())
+    try:
+        deps = json.loads(read_text(root, CAP1_OVERLAY_DEPS) or "null")
+        count, sources = deps["requirement_count"], deps["source_files"]
+    except (ValueError, TypeError, KeyError):
+        count, sources = None, {}
+    want_sources = {rel: sha(read_bytes(root, rel) or b"")
+                    for rel in (CAP1_OVERLAY_SPEC, FAMILY_SPECS["CAP1"])}
+    if count != len(cap1) or sources != want_sources:
+        findings.append(f"`{CAP1_OVERLAY_DEPS}`: requirement_count {count} or "
+                        "its source digests disagree with the composed census "
+                        f"({len(cap1)} requirements) and the bytes on disk")
+    adoption = " ".join((read_text(root, CAP1_OVERLAY_ADOPTION) or "").split())
+    stated = re.findall(r"It has (\d+) requirements and (\d+) scenarios",
+                        adoption)
+    if stated != [(str(len(cap1)), str(cap1_scen))]:
+        findings.append(f"`{CAP1_OVERLAY_ADOPTION}`: states {stated}, census "
+                        f"composes {len(cap1)} / {cap1_scen}")
     numbers = {fam: {k[-3:] for k in reqs} for fam, reqs in pop.items()}
     files = []
     for child in CHILDREN:
         files += tracked(root, f"{CHANGES}/{child['change']}")
+    files += tracked(root, f"{CHANGES}/{CAP1_OVERLAY_CHANGE}")
     addition_dirs = tuple(f"{CHANGES}/{change}/"
                           for change, _rel in polaris_additions(root))
     for prefix in addition_dirs:
@@ -1322,6 +1536,13 @@ def check_routes(root, pop, report):
                                 f"not name its terminal record `{name}`")
             if record not in status and name not in status:
                 findings.append(f"`{STATUS}` cites no terminal record `{name}`")
+    examined += 2
+    name = Path(CAP1_OVERLAY_RECORD).name
+    if not any(name in line for line in rows.get(CAP1_OVERLAY_CHANGE, [])):
+        findings.append(f"`{OPENSPEC_README}`: the `{CAP1_OVERLAY_CHANGE}` row "
+                        f"does not name its terminal record `{name}`")
+    if CAP1_OVERLAY_RECORD not in status and name not in status:
+        findings.append(f"`{STATUS}` cites no terminal record `{name}`")
     figures = STATUS_FIGURE.findall(status)
     examined += 1
     reqs = pop.get("POLARIS", {})
@@ -1471,7 +1692,7 @@ def inputs(root):
         manifest = read_text(root, child["manifest"]) or ""
         paths |= {p for _d, p in ROW.findall(manifest)}
         paths |= set(tracked(root, f"{CHANGES}/{child['change']}"))
-    paths |= set(tracked(root, CHANGES))
+    paths |= set(tracked(root, CHANGES)) | {CAP1_OVERLAY_RECORD}
     for change, rel in polaris_additions(root):
         paths |= {rel} | {r for r, _t, _v in addition_records(root, change)}
         paths |= {r for r, _t, _v in addition_terminals(root, change)}
@@ -1736,6 +1957,66 @@ def mutants(root):
          _replace("## decisions\n\nSDR-3\n", "## decisions\n\nSDR-3, SDR-99\n"),
          "R7~"),
         ("status-figure", STATUS, _status_figure_moved, "R5"),
+    )
+
+
+def cap1_overlay_mutants():
+    """Rule-6 mutants of the CAP1 overlay composition (syzygy-5oqc).
+
+    Each guard is pinned in both methods where both carry it; `&` requires
+    both findings. The prose-only mutant leaves the census unchanged, so only
+    method B's composed digest (R3) and the record's source digests (R4) see
+    it.
+    """
+    spec, record = CAP1_OVERLAY_SPEC, CAP1_OVERLAY_RECORD
+    name = Path(record).name
+
+    def both(text):
+        return f"R3:CAP1 method A: overlay: {text}&CAP1 method B: overlay: {text}"
+    return (
+        ("cap1-overlay-scenario-removed", spec,
+         _replace("#### Scenario: Correlated consent",
+                  "#### Scenery: Correlated consent"), "R3"),
+        ("cap1-overlay-unsigned", record, None, "R3:sign-off records"),
+        ("cap1-overlay-wrong-tag", record,
+         _replace(f"Tag: {CAP1_OVERLAY_CHANGE}-v1.0",
+                  f"Tag: {CAP1_OVERLAY_CHANGE}-v0.9"), "R3:sign-off records"),
+        ("cap1-overlay-missing", spec, None, "R3:overlay `"),
+        ("cap1-overlay-replaces-other", spec,
+         _replace("### Requirement: CAP1-REQ-046 — ",
+                  "### Requirement: CAP1-REQ-045 — "),
+         "R3:CAP1 method A: overlay replaces&CAP1 method B: overlay replaces"),
+        ("cap1-overlay-dangling", FAMILY_SPECS["CAP1"],
+         _replace("### Requirement: CAP1-REQ-046 — ",
+                  "### Requirement: CAP1-REQ-049 — "),
+         "R3:CAP1 method A: overlay: CAP1-REQ-046 is dangling"
+         "&CAP1 method B: overlay: CAP1-REQ-046 is dangling"),
+        ("cap1-overlay-added-section", spec,
+         _replace(CAP1_OVERLAY_SECTION, ADDED_HEADING), both("level-2 headings")),
+        ("cap1-overlay-delta-heading", spec,
+         lambda t: t + "\n### REMOVED Requirements\n", both("heading `###")),
+        ("cap1-overlay-carriage-return", spec, _replace("\n", "\r\n"),
+         both("carries a carriage return")),
+        ("cap1-overlay-bom", spec, lambda t: "\ufeff" + t, both("carries U+FEFF")),
+        ("cap1-overlay-fenced-header", spec,
+         lambda t: t + "\n```\n### Requirement: CAP1-REQ-099 — x\n```\n",
+         both("a requirement header inside a fence")),
+        ("cap1-overlay-prose-only", spec, _replace(" SHALL ", "  SHALL "),
+         "R3:composed bytes do not hash"),
+        ("cap1-overlay-composed-digest", CAP1_OVERLAY_DEPS,
+         lambda t: re.sub(r'("composed_spec_sha256": ")([0-9a-f])',
+                          lambda m: m.group(1) + ("0" if m.group(2) != "0"
+                                                  else "1"), t, 1),
+         "R3:composed bytes do not hash"),
+        ("cap1-overlay-deps-count", CAP1_OVERLAY_DEPS,
+         _replace('"requirement_count": 42', '"requirement_count": 43'),
+         "R4:requirement_count"),
+        ("cap1-overlay-adoption-figure", CAP1_OVERLAY_ADOPTION,
+         _replace("and 57 scenarios", "and 47 scenarios"), "R4:states"),
+        ("cap1-overlay-route-row", OPENSPEC_README, _replace(name, "X.md", -1),
+         f"R5:`{CAP1_OVERLAY_CHANGE}` row"),
+        ("cap1-overlay-status-citation", STATUS, _replace(name, "X.md", -1),
+         f"R5:cites no terminal record `{name}`"),
     )
 
 
@@ -2071,6 +2352,7 @@ def selftest(witness_path=None):
 def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
                     added, with_addition, adopted, with_adopted):
     cases = ([(base, clean, m) for m in mutants(ROOT)]
+             + [(base, clean, m) for m in cap1_overlay_mutants()]
              + [(added, with_addition, m)
                 for m in addition_mutants()]
              + [(adopted, with_adopted, m) for m in adopted_mutants()])

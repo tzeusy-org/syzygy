@@ -3,7 +3,7 @@
   "families": {
     "CAP1": {
       "requirements": 42,
-      "scenarios": 47,
+      "scenarios": 57,
       "members": {
         "CAP1-REQ-001": {
           "name": "A valid declaration registers exactly one project",
@@ -52,7 +52,14 @@
         "CAP1-REQ-011": {
           "name": "Consent is a visible recorded fact, never an assumption",
           "scenarios": [
-            "Consent state joins to a record"
+            "Consent state joins to a record",
+            "Explicit bootstrap consent without an audit provider",
+            "Correlated consent",
+            "Invalid binding refuses observation",
+            "Failed correlation does not downgrade",
+            "Observable machine-only submission is refused",
+            "Withdrawal and unresolved withdrawal remain fail closed",
+            "Captured decision is immutable"
           ]
         },
         "CAP1-REQ-012": {
@@ -204,7 +211,10 @@
         "CAP1-REQ-046": {
           "name": "Owning authority and effective status are exposed, stamp and record readable apart",
           "scenarios": [
-            "Stamp is not status"
+            "Stamp is not status",
+            "Bootstrap disclosure agrees across channels",
+            "Invalid consent has an accessible explanation",
+            "New correlation cannot rewrite old evidence"
           ]
         },
         "CAP1-REQ-050": {
