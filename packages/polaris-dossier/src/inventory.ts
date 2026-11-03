@@ -5,26 +5,23 @@ import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { QUOTATION_RULE } from './brief.js';
 import { censusSection, loadCensus, type CensusDeps, type CensusLoad } from './census.js';
-import {
-  briefIssuedAt, checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision,
-  type ExcludedQuotation, type CitedBlob, type SubjectBlock, type SubjectPlan, type SubjectReport, type SubjectRules, type VerifiedQuotation,
-} from './check.js';
+import { checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision, type ExcludedQuotation, type CitedBlob, type SubjectBlock, type SubjectPlan, type SubjectReport, type SubjectRules, type VerifiedQuotation } from './check.js';
 import { readSec3 } from './doctrine-quote.js';
-import {
-  INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, SESSION_ID_RULE, inventorySchemaDocument,
-  localInventorySchema,
-} from './draft-schema.js';
+import { INVENTORY_ENTRY_KINDS, INVENTORY_QUOTATION_FORM, LOCAL_INVENTORY_SCHEMA_VERSION, SESSION_ID_RULE, inventorySchemaDocument, localInventorySchema } from './draft-schema.js';
 import { PERMITTING_ARM_ENABLED, decideExecutionRule, executionRuleSection, type ExecutionRule } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
 import { isoOf } from './iso-of.js';
 import { expectedLaunch, launchFormRefusal, launchedMarkerState } from './launched.js';
 import type { Outcome } from './outcome.js';
 import { recheckSessionStatement, type SessionStatementOfRecord } from './session-statement.js';
-import { reverifyPinnedRevision, type ReverifiedRevision, type ReverifyOptions, type ReverifyRefusal } from './reverify.js';
+import { type ReverifyOptions, type ReverifyRefusal } from './reverify.js';
 import type { RunConfig } from './run-config.js';
 import type { RunSubject } from './run-record.js';
 import { placementSubjectOf } from './screen.js';
-import { REVISION_FILE, RUN_ID, RUN_LAYOUT, resolvePathIntent, within } from './state-directory.js';
+import { REVISION_FILE, RUN_LAYOUT, within } from './state-directory.js';
+import { type OpenedRun, errno, openRun, readRecord, sessionDirectory } from './run-dir.js';
+export { SESSION_DIR, sessionDirName, sessionsRoot, sessionDirectory, sessionsRootViolation, errno, openRun, logStep, readRecord } from './run-dir.js';
+export type { OpenedRun } from './run-dir.js';
 
 /** The independent inventory of the operator-agent mode (REQ-polaris-generation-035, 006).
  *
@@ -42,68 +39,12 @@ export const INVENTORY_BRIEF_VERSION = 'polaris-dossier-inventory-brief-v1';
 export const INVENTORY_CHECK_FORMAT = 'polaris-dossier-inventory-check/1';
 export const INVENTORY_BRIEF_FILE = 'inventory-brief.md';
 export const INVENTORY_FILE = 'inventory.json';
-/** A session's directory, under the run's sessions root. */
-export const SESSION_DIR = /^session-([1-9][0-9]*)$/;
-export const sessionDirName = (n: number): string => `session-${n}`;
-/** The run's sessions root, `<state root>/<run id>.sessions/`: a sibling of the run directory, never inside it, so that no ancestor
- * of a session's working directory below the state root is the run directory and `..` from it never reaches `drafts/`. */
-export const sessionsRoot = (run: string): string => path.join(path.dirname(run), `${path.basename(run)}.sessions`);
-export const sessionDirectory = (run: string, n: number): string => path.join(sessionsRoot(run), sessionDirName(n));
-
-/** Why the run's sessions root may not hold a session, or null when it may. Judged on real paths, as the state root is: the sessions
- * root may lie neither inside the run directory or the clone nor around either, and none may resolve unreadably. */
-export function sessionsRootViolation(run: string, clone: string): string | null {
-  const root = sessionsRoot(run);
-  const resolved = [root, run, path.resolve(clone)].map(resolvePathIntent);
-  const real: string[] = [];
-  for (const intent of resolved) {
-    if (!intent.resolved) return `the sessions root ${root} cannot be judged: ${intent.detail}`;
-    real.push(intent.realPath);
-  }
-  const [sessions, realRun, realClone] = real as [string, string, string];
-  for (const [what, other] of [['run directory', realRun], ['clone', realClone]] as const) {
-    if (within(sessions, other)) return `the sessions root ${root} resolves to ${sessions}, inside the ${what} (${other}); choose a state root where it is a sibling of the run directory`;
-    if (within(other, sessions)) return `the sessions root ${root} resolves to ${sessions}, which contains the ${what} (${other}); choose a state root where it does not`;
-  }
-  return null;
-}
-
 /** Within `inventory/`: a session's prompt record and its launch-form record. */
 const PROMPT_RECORD = /^session-([1-9][0-9]*)\.json$/;
 export const promptRecordName = (n: number): string => `session-${n}.json`;
 export const launchRecordName = (n: number): string => `session-${n}.launch.json`;
 export const INVENTORY_CHECKS = path.join(RUN_LAYOUT.inventory, 'checks');
-const RECORD_JSON_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 });
 const DRAFT_JSON_LIMITS = Object.freeze({ maxBytes: 4 * 1024 * 1024, maxNodes: 500_000, maxDepth: 16 });
-
-export const errno = (cause: unknown): string => (cause as NodeJS.ErrnoException).code ?? 'unknown-error';
-
-/** A run step's common opening: the run directory, the pinned revision verified again, a brief issued and its deadline not passed.
- * `revision` is the label and consent record the live consent gives the pinned commit now, never the run record's copy. */
-export type OpenedRun =
-  | { readonly ok: true; readonly run: string; readonly runId: string; readonly subject: RunSubject; readonly declared: RunConfig; readonly deadlineEnds: number; readonly revision: ReverifiedRevision; readonly contentClasses: readonly string[] | null }
-  | { readonly ok: false; readonly stage: 'run' | 'reverify' | 'not-briefed' | 'deadline'; readonly reason: string; readonly reasons?: readonly string[]; readonly refusals?: readonly ReverifyRefusal[] };
-
-export async function openRun(runDir: string, sources: GateSources, now: number, what: string, options: ReverifyOptions = {}): Promise<OpenedRun> {
-  const run = path.resolve(runDir);
-  const runId = path.basename(run);
-  if (!RUN_ID.test(runId) || !fs.existsSync(path.join(run, RUN_LAYOUT.config))) return { ok: false, stage: 'run', reason: `${run} is not a run directory` };
-  const checked = await reverifyPinnedRevision(run, sources, now, options);
-  if (!checked.ok) return { ok: false, stage: 'reverify', reason: `the pinned revision could not be verified again, so ${what}`, reasons: checked.reasons, refusals: checked.refusals };
-  const { subject, declared } = checked.record;
-  const issued = briefIssuedAt(run, subject.pinnedRevision.commit);
-  if (typeof issued === 'string') return { ok: false, stage: 'not-briefed', reason: issued };
-  const deadlineEnds = issued + declared.deadline.seconds * 1000;
-  if (now >= deadlineEnds) return { ok: false, stage: 'deadline', reason: `the deadline ${declared.deadline.declared} from the brief ended at ${isoOf(deadlineEnds)} on Syzygy's clock; no step runs after it` };
-  return { ok: true, run, runId, subject, declared, deadlineEnds, revision: checked.revision, contentClasses: checked.contentClasses };
-}
-
-/** Append one entry to the run's step log; a failure to append changes no result. */
-export function logStep(run: string, step: string, at: number, entry: Record<string, unknown>): void {
-  try {
-    fs.appendFileSync(path.join(run, RUN_LAYOUT.steps), `${JSON.stringify({ format: 'polaris-dossier-step/1', step, at: isoOf(at), ...entry })}\n`, { mode: 0o600 });
-  } catch { /* the step log is a convenience within the agent's reach */ }
-}
 
 /** The highest inventory session number with a prompt record, or 0. */
 export function latestInventorySession(run: string): number {
@@ -111,14 +52,6 @@ export function latestInventorySession(run: string): number {
   try { names = fs.readdirSync(path.join(run, RUN_LAYOUT.inventory)); } catch { return 0; }
   const numbers = names.flatMap((name) => { const match = PROMPT_RECORD.exec(name); return match === null ? [] : [Number(match[1])]; });
   return numbers.length === 0 ? 0 : Math.max(...numbers);
-}
-
-/** A stored record, parsed within bounds, or undefined. */
-export function readRecord(file: string): Readonly<Record<string, unknown>> | undefined {
-  try {
-    const value = parseBoundedJson(fs.readFileSync(file, 'utf8'), RECORD_JSON_LIMITS);
-    return isRecord(value) ? value : undefined;
-  } catch { return undefined; }
 }
 
 /** The session identifiers the frozen draft revisions declare, and how many revisions are frozen. Syzygy reads them; it never passes

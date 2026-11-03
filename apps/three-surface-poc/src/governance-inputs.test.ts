@@ -630,7 +630,7 @@ describe('owner-act records under altered prose (characterization, syzygy-bpyt.6
   // [authority, non-blank lines, append ignored, delete ignored]; ignored = the authority's verdict is unchanged (parser-isolated).
   const CENSUS: ReadonlyArray<readonly [(typeof KINDS)[number], number, number, number]> = [
     ['consent', 56, 42, 37],
-    ['policy', 61, 47, 42],
+    ['policy', 95, 81, 76],
     ['registry', 52, 38, 30],
   ];
   it.each(CENSUS)('FAIL-OPEN (parser-isolated) line census, %s record: of %s non-blank lines, %s ignore an appended suffix and %s ignore deletion; none do under the loader-faithful reading', (kind, nonBlank, appendIgnored, deleteIgnored) => {
