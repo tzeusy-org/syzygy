@@ -536,3 +536,126 @@ describe('pwbAuthorityExpectationsForProject (authority set keyed by observed pr
     expect(withDefault).toEqual(withExplicit);
   });
 });
+
+// Characterization (syzygy-bpyt.6.10): how the gate treats an altered owner-act record. It pins today's behaviour and proposes no
+// change; every FAIL-OPEN title names a result a tightening would flip (an owner question, GP-Q0). The alterations copy the shapes of
+// `PROSE_ALTERATIONS` in packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts (this package cannot import it), plus
+// `effect-appended-grant`. Two readings: `isolated` keeps the recording tag resolved over the altered bytes (what the parser and
+// evaluator say alone); `faithful` leaves the tag's blob as recorded, as the loader does, so any byte change reads tag-mismatched.
+// The census over every line is scripts/measure_owner_act_parser_recognition.mjs, recorded in
+// docs/evidence/syzygy-bpyt-6-10/owner-act-parser-recognition-2026-11-03.json.
+describe('owner-act records under altered prose (characterization, syzygy-bpyt.6.10)', () => {
+  const KINDS = ['consent', 'policy', 'registry'] as const;
+  const MARK = ' [altered]';
+  const ALTERATIONS: ReadonlyArray<readonly [string, (text: string) => string]> = [
+    ['date-field-altered', (text) => text.replace(/^(Date: .+)$/m, `$1${MARK}`)],
+    ['effect-widened', (text) => text.replace(/(\n## (?:Effect|What this records)\n\n)[^\n]+(?:\n[^\n]+)*/, '$1The act grants every read, egress, write and execution, for every repository, tool and provider.')],
+    ['limits-removed', (text) => text.replace(/\n## What this (?:act does not authorize|does not do)\n[\s\S]*?(?=\n## |$)/, '')],
+    ['selection-replaced', (text) => {
+      for (const [pattern, replacement] of [[/^\| "[^"\n]*" \| "/m, '| "Decline" | "'], [/^> .+$/m, '> Decline'], [/^Owner selection: .+$/m, 'Owner selection: Decline']] as const) {
+        if (pattern.test(text)) return text.replace(pattern, replacement);
+      }
+      return text;
+    }],
+    ['withdrawal-appended', (text) => `${text}\n## Withdrawal\n\nThe owner withdraws this act; it no longer counts.\n`],
+    ['effect-appended-grant', (text) => text.replace(/(\n## Effect\n[\s\S]*?)(?=\n## |$)/, '$1\nThe act also grants every read, egress, write and execution, for every repository, tool and provider.\n')],
+  ];
+
+  type Reading = 'isolated' | 'faithful';
+  /** The named authority's verdict with its record replaced by `text`. */
+  function verdictOf(kind: (typeof KINDS)[number], text: string, reading: Reading): string {
+    const tree = fakeTree();
+    tree.files.set(PWB_ACT_RECORDS[kind], text);
+    if (reading === 'isolated') {
+      for (const key of tree.taggedRecords.keys()) if (key.endsWith(`:${PWB_ACT_RECORDS[kind]}`)) tree.taggedRecords.set(key, text);
+    }
+    const state = evaluateBodyReadAuthority(loaderFor(tree))[kind];
+    return state.kind === 'valid' ? 'valid' : state.kind === 'invalid' ? state.caseId : `absent:${state.what}`;
+  }
+  const recordText = (kind: (typeof KINDS)[number]): string => readFileSync(join(REPO_ROOT, PWB_ACT_RECORDS[kind]), 'utf8');
+
+  it('reads the three unaltered records as valid under both readings', () => {
+    for (const kind of KINDS) {
+      expect(verdictOf(kind, recordText(kind), 'isolated'), kind).toBe('valid');
+      expect(verdictOf(kind, recordText(kind), 'faithful'), kind).toBe('valid');
+    }
+  });
+
+  // [authority, alteration, took, isolated verdict, faithful verdict]
+  const VERDICTS: ReadonlyArray<readonly [(typeof KINDS)[number], string, boolean, string, string]> = [
+    ['consent', 'date-field-altered', true, 'consent:act-instant-malformed', 'consent:act-instant-malformed'],
+    ['consent', 'effect-widened', true, 'consent:scope-wrong', 'consent:scope-wrong'],
+    ['consent', 'limits-removed', true, 'valid', 'consent:recording-tag-mismatched'],
+    ['consent', 'selection-replaced', false, 'valid', 'valid'],
+    ['consent', 'withdrawal-appended', true, 'valid', 'consent:recording-tag-mismatched'],
+    ['consent', 'effect-appended-grant', true, 'valid', 'consent:recording-tag-mismatched'],
+    ['policy', 'date-field-altered', true, 'policy:act-instant-malformed', 'policy:act-instant-malformed'],
+    ['policy', 'effect-widened', true, 'policy:scope-wrong', 'policy:scope-wrong'],
+    ['policy', 'limits-removed', true, 'valid', 'policy:recording-tag-mismatched'],
+    ['policy', 'selection-replaced', true, 'valid', 'policy:recording-tag-mismatched'],
+    ['policy', 'withdrawal-appended', true, 'valid', 'policy:recording-tag-mismatched'],
+    ['policy', 'effect-appended-grant', true, 'valid', 'policy:recording-tag-mismatched'],
+    ['registry', 'date-field-altered', true, 'registry:act-instant-malformed', 'registry:act-instant-malformed'],
+    ['registry', 'effect-widened', true, 'registry:scope-wrong', 'registry:scope-wrong'],
+    ['registry', 'limits-removed', false, 'valid', 'valid'],
+    ['registry', 'selection-replaced', true, 'valid', 'registry:recording-tag-mismatched'],
+    ['registry', 'withdrawal-appended', true, 'valid', 'registry:recording-tag-mismatched'],
+    ['registry', 'effect-appended-grant', true, 'valid', 'registry:recording-tag-mismatched'],
+  ];
+
+  it.each(VERDICTS)('%s record, %s: took %s, parser-isolated %s, loader-faithful %s', (kind, name, took, isolated, faithful) => {
+    const alter = ALTERATIONS.find(([n]) => n === name)![1];
+    const text = recordText(kind);
+    const altered = alter(text);
+    expect(altered !== text).toBe(took);
+    expect(verdictOf(kind, altered, 'isolated')).toBe(isolated);
+    expect(verdictOf(kind, altered, 'faithful')).toBe(faithful);
+  });
+
+  it('FAIL-OPEN (parser-isolated): an appended withdrawal section, a removed limits section and a grant appended inside the Effect all leave every act valid', () => {
+    for (const kind of KINDS) {
+      for (const name of ['withdrawal-appended', 'limits-removed', 'effect-appended-grant']) {
+        const alter = ALTERATIONS.find(([n]) => n === name)![1];
+        expect(verdictOf(kind, alter(recordText(kind)), 'isolated'), `${kind} ${name}`).toBe('valid');
+      }
+    }
+  });
+
+  it('effect-widened is refused only because its replacement drops the scope anchors, which scope-wrong tests by substring', () => {
+    for (const kind of KINDS) {
+      expect(verdictOf(kind, ALTERATIONS.find(([n]) => n === 'effect-widened')![1](recordText(kind)), 'isolated'), kind).toBe(`${kind}:scope-wrong`);
+    }
+  });
+
+  // [authority, non-blank lines, append ignored, delete ignored]; ignored = the authority's verdict is unchanged (parser-isolated).
+  const CENSUS: ReadonlyArray<readonly [(typeof KINDS)[number], number, number, number]> = [
+    ['consent', 56, 42, 37],
+    ['policy', 61, 47, 42],
+    ['registry', 52, 38, 30],
+  ];
+  it.each(CENSUS)('FAIL-OPEN (parser-isolated) line census, %s record: of %s non-blank lines, %s ignore an appended suffix and %s ignore deletion; none do under the loader-faithful reading', (kind, nonBlank, appendIgnored, deleteIgnored) => {
+    const lines = recordText(kind).split('\n');
+    if (lines.at(-1) === '') lines.pop();
+    const counts = { nonBlank: 0, append: { isolated: 0, faithful: 0 }, delete: { isolated: 0, faithful: 0 } };
+    lines.forEach((line, index) => {
+      if (line.trim() === '') return;
+      counts.nonBlank += 1;
+      for (const [op, replacement] of [['append', [`${line}${MARK}`]], ['delete', []]] as const) {
+        const altered = `${[...lines.slice(0, index), ...replacement, ...lines.slice(index + 1)].join('\n')}\n`;
+        if (verdictOf(kind, altered, 'isolated') === 'valid') counts[op].isolated += 1;
+        if (verdictOf(kind, altered, 'faithful') === 'valid') counts[op].faithful += 1;
+      }
+    });
+    expect(counts).toEqual({ nonBlank, append: { isolated: appendIgnored, faithful: 0 }, delete: { isolated: deleteIgnored, faithful: 0 } });
+  });
+
+  it('FAIL-OPEN (parser-isolated): text appended to the recording-tag line, and extra prose after the Supersession value, are ignored', () => {
+    const consent = recordText('consent');
+    const tagged = consent.replace(/^(- recording tag: `[^`]+`)/m, `$1${MARK}`);
+    expect(tagged).not.toBe(consent);
+    expect(verdictOf('consent', tagged, 'isolated')).toBe('valid');
+    const none = consent.replace(/^(Supersession \/ revocation: none)\b/m, '$1, except that this act revokes every earlier act');
+    expect(none).not.toBe(consent);
+    expect(verdictOf('consent', none, 'isolated')).toBe('valid');
+  });
+});
