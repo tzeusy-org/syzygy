@@ -20,12 +20,18 @@ import { isRecord, sha256 } from '@syzygy/support';
  * - A path matched by more than one path rule is not in the class ("exactly one"); if no code-content extension ends it, it is
  *   indeterminate. */
 
-export type DocumentationPathRuleId = 'root-document' | 'docs-tree' | 'licenses-tree';
+export type DocumentationPathRuleId = 'root-document' | 'docs-tree' | 'licenses-tree' | 'owner-placement';
 const PATH_RULE_IDS: readonly DocumentationPathRuleId[] = ['root-document', 'docs-tree', 'licenses-tree'];
+/** Version 5 (variants `bd` and `bcd`, approved 2026-11-03 as `bcd`) adds a fourth path rule, the owner's placements. */
+const PATH_RULE_IDS_V5: readonly DocumentationPathRuleId[] = [...PATH_RULE_IDS, 'owner-placement'];
 
-/** sha256 of each rule text this module implements, UTF-8. */
+/** sha256 of each rule text this module implements, UTF-8. The class rule has two texts: version 2's ("exactly one of the three path
+ * rules"), read with the three path rules and no `ownerPlacements`, and version 5's ("exactly one of the four path rules"), read with the
+ * fourth rule `owner-placement` and its `ownerPlacements`. Each text is read only with its own path rules. */
 const IMPLEMENTED_TEXTS = {
   rule: '99453acf1524976e5416fa4291d55aa6ad2530418efe802aac6a675748ddfe46',
+  ruleV5: '3b1edf6c5b03f3ac1cec847a4791ecd076a8b70c1cb149d6f249a3f736f3674b',
+  'owner-placement': '3b58e5f5959e8a80d7e3fd362ce7936d43c7a9ad2bcbb2555d0708832631f1e2',
   disjointFromSourceExtensions: '9dba52f576eced78b2fd95f4d1bb05afc2e401a57b49164edc998ae141872455',
   rootStemNumericPrefixNote: '720a1f94189844e4cc480ba6cf3d98eaf7bebbf91c4b2e8ed6046af0e6b11605',
   'root-document': 'c42e03ee183319bbc448e6cdd89aa731dca793e07c4da60e71c792921fa90981',
@@ -48,6 +54,23 @@ export interface ProjectDocumentationRule {
   readonly docTxtExcludedPrefixes: readonly string[];
   readonly licenseTreeRoots: readonly string[];
   readonly licenseTreeSuffixes: readonly string[];
+  /** The owner's placements (version 5, the `owner-placement` path rule); empty under version 2's three rules. */
+  readonly ownerPlacements: readonly OwnerPlacement[];
+}
+
+/** One `ownerPlacements` entry: it places `paths` (each already folded) in the class for the blobs of `repository` read at one of
+ * `commits`, and nothing else. It admits no repository, commit or object; the observation consent decides those. */
+export interface OwnerPlacement {
+  readonly repository: string;
+  readonly commits: readonly string[];
+  readonly paths: readonly string[];
+}
+
+/** The repository a blob is read from and the admitted commit it is read at, as the owner-placement path rule compares them
+ * (`repository:<id>`, the observation consent's subject form, and the full commit id). A screen built without one places nothing. */
+export interface PlacementSubject {
+  readonly repository: string;
+  readonly commit: string;
 }
 
 /** `rule` is null when the policy has no project-documentation rule (version 1). */
@@ -55,6 +78,28 @@ export type ProjectDocumentationRead = { readonly ok: true; readonly rule: Proje
 
 // Never matchable against a folded path: an A-Z letter (folded away), a separator of segments, or a backslash (matches nothing).
 const unmatchable = (entry: string): boolean => /[A-Z/\\]/u.test(entry);
+// A placement path is a whole repository path, so it may hold '/' (round-2 note 3 of the v5 review: `unmatchable`'s segment test would
+// refuse modules/modules.md). It is never matchable when it holds an A-Z letter or a backslash, or an empty, '.' or '..' segment, which
+// also covers a leading or trailing '/': a folded path with any of those matches no path rule.
+const placementPath = (entry: string): boolean => entry.length > 0 && !/[A-Z\\]/u.test(entry) && entry.split('/').every(part => part !== '' && part !== '.' && part !== '..');
+const REPOSITORY_ID = /^repository:[a-z0-9][a-z0-9-]*$/u;
+const COMMIT_ID = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
+const distinct = (value: unknown, valid: (entry: string) => boolean): value is readonly string[] =>
+  Array.isArray(value) && value.length > 0 && value.every(entry => typeof entry === 'string' && valid(entry)) && new Set(value).size === value.length;
+const PLACEMENT_KEYS = ['repository', 'commits', 'paths'] as const;
+function readOwnerPlacements(value: unknown): readonly OwnerPlacement[] | null {
+  if (!Array.isArray(value)) return null;
+  const out: OwnerPlacement[] = [];
+  for (const entry of value) {
+    if (!isRecord(entry)) return null;
+    const keys = Object.keys(entry);
+    if (keys.length !== PLACEMENT_KEYS.length || PLACEMENT_KEYS.some(key => !keys.includes(key))) return null;
+    const { repository, commits, paths } = entry;
+    if (typeof repository !== 'string' || !REPOSITORY_ID.test(repository) || !distinct(commits, id => COMMIT_ID.test(id)) || !distinct(paths, placementPath)) return null;
+    out.push(Object.freeze({ repository, commits: Object.freeze([...commits]), paths: Object.freeze([...paths]) }));
+  }
+  return Object.freeze(out);
+}
 const names = (value: unknown, minimum: number, valid: (entry: string) => boolean): value is readonly string[] =>
   Array.isArray(value) && value.length >= minimum && value.every(entry => typeof entry === 'string' && !unmatchable(entry) && valid(entry))
   && new Set(value).size === value.length;
@@ -69,16 +114,23 @@ export function readProjectDocumentationRule(rules: readonly unknown[], sourceEx
   if (found.length === 0) return { ok: true, rule: null };
   if (found.length > 1) return refuse('appears more than once');
   const rule = found[0] as Readonly<Record<string, unknown>>;
-  if (typeof rule['rule'] !== 'string' || sha256(rule['rule']) !== IMPLEMENTED_TEXTS.rule) return refuse('text is not the text this screen implements');
+  const text = typeof rule['rule'] === 'string' ? sha256(rule['rule']) : null;
+  if (text !== IMPLEMENTED_TEXTS.rule && text !== IMPLEMENTED_TEXTS.ruleV5) return refuse('text is not the text this screen implements');
+  const ids = text === IMPLEMENTED_TEXTS.ruleV5 ? PATH_RULE_IDS_V5 : PATH_RULE_IDS;
   if (typeof rule['disjointFromSourceExtensions'] !== 'string' || sha256(rule['disjointFromSourceExtensions']) !== IMPLEMENTED_TEXTS.disjointFromSourceExtensions) {
     return refuse('disjointness statement is not the text this screen implements');
   }
   const pathRules = rule['pathRules'];
-  if (!Array.isArray(pathRules) || pathRules.length !== PATH_RULE_IDS.length
-    || !pathRules.every((pathRule: unknown, index) => isRecord(pathRule) && pathRule['id'] === PATH_RULE_IDS[index] && typeof pathRule['rule'] === 'string'
-      && sha256(pathRule['rule']) === IMPLEMENTED_TEXTS[PATH_RULE_IDS[index]!])) {
-    return refuse('path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)');
+  if (!Array.isArray(pathRules) || pathRules.length !== ids.length
+    || !pathRules.every((pathRule: unknown, index) => isRecord(pathRule) && pathRule['id'] === ids[index] && typeof pathRule['rule'] === 'string'
+      && sha256(pathRule['rule']) === IMPLEMENTED_TEXTS[ids[index]!])) {
+    return refuse(ids === PATH_RULE_IDS_V5 ? 'path rules are not the four this screen implements for its text (root-document, docs-tree, licenses-tree, owner-placement, in that order and text)'
+      : 'path rules are not the three this screen implements (root-document, docs-tree, licenses-tree, in that order and text)');
   }
+  // The owner's placements exist only beside the rule that reads them: under the three-rule text an `ownerPlacements` field places nothing
+  // the text names, so it refuses rather than being ignored.
+  const placements = ids === PATH_RULE_IDS_V5 ? readOwnerPlacements(rule['ownerPlacements']) : Object.hasOwn(rule, 'ownerPlacements') ? null : Object.freeze([]);
+  if (placements === null) return refuse('ownerPlacements is unreadable');
   const prefix = rule['rootStemNumericPrefix'];
   if (!isRecord(prefix) || !Number.isSafeInteger(prefix['digitCount']) || (prefix['digitCount'] as number) < 1
     || typeof prefix['digits'] !== 'string' || !/^[\x21-\x7e]+$/u.test(prefix['digits']) || unmatchable(prefix['digits']) || new Set(prefix['digits']).size !== prefix['digits'].length
@@ -105,6 +157,7 @@ export function readProjectDocumentationRule(rules: readonly unknown[], sourceEx
       docTreeExtensions: Object.freeze([...read.docTreeExtensions]), docExcludedTokens: Object.freeze([...read.docExcludedTokens]), docTokenSeparators: separators,
       docTxtExcludedNames: Object.freeze([...read.docTxtExcludedNames]), docTxtExcludedPrefixes: Object.freeze([...read.docTxtExcludedPrefixes]),
       licenseTreeRoots: Object.freeze([...read.licenseTreeRoots]), licenseTreeSuffixes: Object.freeze([...read.licenseTreeSuffixes]),
+      ownerPlacements: placements,
     }),
   };
 }
@@ -152,24 +205,72 @@ function licensesTree(segments: readonly string[], rule: ProjectDocumentationRul
 }
 
 /** The path rules that match a repository-relative path; a path with an empty, '.' or '..' segment, a backslash or a leading or
- * trailing '/' matches none. */
-export function documentationPathRules(repositoryPath: string, rule: ProjectDocumentationRule): DocumentationPathRuleId[] {
+ * trailing '/' matches none. `owner-placement` is listed once for each `ownerPlacements` entry that places the path for `subject` (the
+ * repository it is read from and the admitted commit it is read at); with no subject no placement matches. */
+export function documentationPathRules(repositoryPath: string, rule: ProjectDocumentationRule, subject: PlacementSubject | null = null): DocumentationPathRuleId[] {
   const folded = fold(repositoryPath);
   if (folded.includes('\\')) return [];
   const segments = folded.split('/');
   if (segments.some(part => part === '' || part === '.' || part === '..')) return [];
-  return PATH_RULE_IDS.filter(id => (id === 'root-document' ? rootDocument : id === 'docs-tree' ? docsTree : licensesTree)(segments, rule));
+  const matched = PATH_RULE_IDS.filter(id => (id === 'root-document' ? rootDocument : id === 'docs-tree' ? docsTree : licensesTree)(segments, rule));
+  if (subject === null) return matched;
+  const placed = rule.ownerPlacements.filter(entry => entry.repository === subject.repository && entry.commits.includes(subject.commit) && entry.paths.includes(folded));
+  return [...matched, ...placed.map((): DocumentationPathRuleId => 'owner-placement')];
 }
 
-export type PublicSourceContentClass = 'project-documentation' | 'code-content';
+/** The classes this screen classifies a blob's body into: RFC5-14's `governance-text` (version 5, variants b, bd and bcd),
+ * `project-documentation` (version 2) and `code-content`. */
+export type PublicSourceContentClass = 'governance-text' | 'project-documentation' | 'code-content';
+
+/** The governance-text class's inputs beside the other two: its folded root names (null when the policy classifies no such class, as
+ * versions 1 to 4 do), and the subject the owner's placements are compared with. */
+export interface ClassificationContext {
+  readonly governanceTextPaths?: readonly string[] | null;
+  readonly subject?: PlacementSubject | null;
+}
 
 /** The class a public-source blob's body is admitted under, or undefined when it is indeterminate. `documentation` is null when the
  * project-documentation class is not classified: the policy has no such rule, or the in-force RFC-0005 vocabulary cannot be confirmed
- * to list the class (the scope's `prerequisite`). */
-export function publicSourceContentClass(repositoryPath: string, sourceExtensions: readonly string[], documentation: ProjectDocumentationRule | null): PublicSourceContentClass | undefined {
-  if (documentation !== null && documentationPathRules(repositoryPath, documentation).length === 1) return 'project-documentation';
+ * to list the class (the scope's `prerequisite`). A path that this documentation rule matches is never code-content, whatever it ends
+ * with; a path that the governance-text rule and another class's rule both match has two classes and is indeterminate (version 5). */
+export function publicSourceContentClass(repositoryPath: string, sourceExtensions: readonly string[], documentation: ProjectDocumentationRule | null,
+  context: ClassificationContext = {}): PublicSourceContentClass | undefined {
+  const governanceText = context.governanceTextPaths != null && context.governanceTextPaths.includes(fold(repositoryPath));
+  const projectDocumentation = documentation !== null && documentationPathRules(repositoryPath, documentation, context.subject ?? null).length === 1;
   const name = repositoryPath.split('/').at(-1) ?? '';
-  return sourceExtensions.some(entry => name.endsWith(entry)) ? 'code-content' : undefined;
+  const codeContent = !projectDocumentation && sourceExtensions.some(entry => name.endsWith(entry));
+  const classes = ([['governance-text', governanceText], ['project-documentation', projectDocumentation], ['code-content', codeContent]] as const)
+    .filter(([, matched]) => matched).map(([found]) => found);
+  return classes.length === 1 ? classes[0] : undefined;
+}
+
+/** sha256 of the governance-text rule text this module implements (version 5, UTF-8). */
+const GOVERNANCE_TEXT_RULE = 'a5530c34f0c3c45b57245e9e028685a0b33058fe235871a3a36cdf9650bbbadc';
+/** The governance-text class's folded root names, or null when the policy classifies no such class (versions 1 to 4: no rule and an
+ * empty `governanceTextPaths`). */
+export type GovernanceTextRead = { readonly ok: true; readonly paths: readonly string[] | null } | { readonly ok: false; readonly why: string };
+
+/** Reads the governance-text rule and its `governanceTextPaths` from a policy's `contentClassification`. A path is classified only when
+ * it has exactly one segment and, after the ASCII fold, equals a listed name, so a listed name that could never equal a folded
+ * one-segment path (an A-Z letter, a '/', a backslash, an empty, '.' or '..' name) refuses, as does any other text or field. Such a
+ * body is data, never policy: nothing here reads a target body as an input to this policy. */
+export function readGovernanceTextRule(classification: unknown): GovernanceTextRead {
+  const refuse = (why: string): GovernanceTextRead => ({ ok: false, why: `its governance-text rule ${why}` });
+  if (!isRecord(classification)) return { ok: true, paths: null };
+  const rules = Array.isArray(classification['rules']) ? classification['rules'] : [];
+  const found = rules.filter((rule: unknown) => isRecord(rule) && rule['class'] === 'governance-text');
+  const paths = classification['governanceTextPaths'];
+  if (found.length === 0) {
+    return paths === undefined || (Array.isArray(paths) && paths.length === 0) ? { ok: true, paths: null } : refuse('is absent, yet governanceTextPaths lists names');
+  }
+  if (found.length > 1) return refuse('appears more than once');
+  const rule = found[0] as Readonly<Record<string, unknown>>;
+  const keys = Object.keys(rule);
+  if (keys.length !== 2 || typeof rule['rule'] !== 'string' || sha256(rule['rule']) !== GOVERNANCE_TEXT_RULE) return refuse('text is not the text this screen implements');
+  const classified = classification['classesClassified'];
+  if (!Array.isArray(classified) || !classified.includes('governance-text')) return refuse('names a class classesClassified does not list');
+  if (!names(paths, 1, segment)) return refuse('governanceTextPaths is unreadable');
+  return { ok: true, paths: Object.freeze([...paths]) };
 }
 
 /** The version-3 scope's code-content exemption (`publicSourceScope.activeContent.codeContentExemption`, approved 2026-10-08, variant
@@ -184,7 +285,8 @@ export function publicSourceContentClass(repositoryPath: string, sourceExtension
  * variant's `appliesTo` is accepted, the extension list deciding the variant) refuses the screen. */
 const EXEMPTION_TEXTS = {
   appliesTo: ['d202ff90a058d968503ef1de9f1de6f13cb31d4217b6761dee2579e8fc0f97b4', '215d99e9b193efd3be87442cf55fec0b4c37d3482767917b0ddfacee987fcbca'],
-  rule: 'b2d0ec79e84ac51239073b9c84040d92951400575c6204825d990681d0b4a41c',
+  // Version 3's text, and version 5's, which names projectDocumentationExemption for the bodies this exemption does not name.
+  rule: ['b2d0ec79e84ac51239073b9c84040d92951400575c6204825d990681d0b4a41c', 'f08bb1c9462d3c73f184e715665523bc0a56d0db69eab64230ae6ffbf640337e'],
   renderCondition: '2942af13a00058568faaf88e6a3abe9f43a9a1f0c056f1531fd2aff4797265a9',
   egress: '4ffff86212a31309259037674aa7d95f4458c2f460335ef12198ba7a453148fd',
 } as const;
@@ -209,7 +311,9 @@ export function readCodeContentExemption(scope: unknown, sourceExtensions: reado
   if (keys.length !== EXEMPTION_KEYS.length || EXEMPTION_KEYS.some(key => !keys.includes(key))) return refuse(`carries the fields ${keys.join(', ')}, not exactly ${EXEMPTION_KEYS.join(', ')}`);
   const applies = exemption['appliesTo'];
   if (typeof applies !== 'string' || !(EXEMPTION_TEXTS.appliesTo as readonly string[]).includes(sha256(applies))) return refuse('appliesTo is not a text this screen implements');
-  for (const key of ['rule', 'renderCondition', 'egress'] as const) {
+  const ruleText = exemption['rule'];
+  if (typeof ruleText !== 'string' || !(EXEMPTION_TEXTS.rule as readonly string[]).includes(sha256(ruleText))) return refuse('rule is not a text this screen implements');
+  for (const key of ['renderCondition', 'egress'] as const) {
     const value = exemption[key];
     if (typeof value !== 'string' || sha256(value) !== EXEMPTION_TEXTS[key]) return refuse(`${key} is not the text this screen implements`);
   }
@@ -233,6 +337,44 @@ export function codeContentExempt(repositoryPath: string, contentClass: PublicSo
   if (exemption === null || contentClass !== 'code-content') return false;
   const name = repositoryPath.split('/').at(-1) ?? '';
   return exemption.exemptExtensions.some(entry => name.endsWith(entry));
+}
+
+/** The version-5 scope's project-documentation exemption (`publicSourceScope.activeContent.projectDocumentationExemption`, approved
+ * 2026-11-03, variant `bcd`): a body this scope classifies project-documentation, under any of its path rules, skips the active-content
+ * scan, its success condition and the malformed-code-context exclusion; every detector and `secretRedaction` still apply, and a
+ * governance-text body is scanned as before. It holds at a page sink only under version 3's `renderCondition`, read for this body, so
+ * a consumer that cannot confirm that condition for a page scans the body as before there (`render.ts`). Every text is pinned. */
+const DOCUMENTATION_EXEMPTION_TEXTS = {
+  appliesTo: 'fbf912d13faabc2b96b6e0563895df3a9f325e6f4a528a56704408eddbfa326b',
+  rule: '1f9f0cf62ebeb0010866f546afde331a34d34f3190424dd89377f8d8482c5b7e',
+  renderCondition: '8e599d1e618ffd959431a4b10a83ed4e9de9c17a30f7b01c950696af60b110e9',
+  egress: 'cb5e93b4ed5e935a1b793100cdf89a895da1c7180545a4ae423abbcbea67b29d',
+  consequence: 'cc2c14cbc95f157fd56886e222a09e26edb5fa1bb370efa602849c683e4488d4',
+} as const;
+/** `declared` is false when the scope declares no such exemption (versions 1 to 4). */
+export type DocumentationExemptionRead = { readonly ok: true; readonly declared: boolean } | { readonly ok: false; readonly why: string };
+
+/** Reads the exemption from a policy's `publicSourceScope`. Any other field set or text refuses. */
+export function readProjectDocumentationExemption(scope: unknown): DocumentationExemptionRead {
+  const refuse = (why: string): DocumentationExemptionRead => ({ ok: false, why: `its project-documentation exemption ${why}` });
+  const active = isRecord(scope) ? scope['activeContent'] : undefined;
+  if (!isRecord(active) || !Object.hasOwn(active, 'projectDocumentationExemption')) return { ok: true, declared: false };
+  const exemption = active['projectDocumentationExemption'];
+  if (!isRecord(exemption)) return refuse('is not an object');
+  const expected = Object.keys(DOCUMENTATION_EXEMPTION_TEXTS) as (keyof typeof DOCUMENTATION_EXEMPTION_TEXTS)[];
+  const keys = Object.keys(exemption);
+  if (keys.length !== expected.length || expected.some(key => !keys.includes(key))) return refuse(`carries the fields ${keys.join(', ')}, not exactly ${expected.join(', ')}`);
+  for (const key of expected) {
+    const value = exemption[key];
+    if (typeof value !== 'string' || sha256(value) !== DOCUMENTATION_EXEMPTION_TEXTS[key]) return refuse(`${key} is not the text this screen implements`);
+  }
+  return { ok: true, declared: true };
+}
+
+/** Whether a body admitted under `contentClass` skips the active-content scan under the project-documentation exemption: the exemption
+ * is declared and the class is project-documentation, whichever path rule placed it. A governance-text or code-content body never does. */
+export function documentationExempt(contentClass: PublicSourceContentClass | undefined, declared: boolean): boolean {
+  return declared && contentClass === 'project-documentation';
 }
 
 /** What a page renderer declares (as its `pageSinkContract` property) when it writes every byte of a source body or span it puts on a

@@ -37,6 +37,8 @@ describe('the live rule', () => {
       docTxtExcludedPrefixes: ['requirements'],
       licenseTreeRoots: ['licenses'],
       licenseTreeSuffixes: ['.md', '.txt'],
+      // Version 5 (variant bcd): the fourth path rule's one entry.
+      ownerPlacements: [{ repository: 'repository:redis-redis', commits: ['498ecd0d6d007db11ddb3aea9428552598a78622'], paths: ['tls.md', 'modules/modules.md'] }],
     });
   });
 

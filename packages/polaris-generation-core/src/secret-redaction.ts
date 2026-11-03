@@ -32,7 +32,9 @@ import type { PublicSourceContentClass } from './public-source-classification.js
  * a secret no detector matches, beyond the guard lines or continuing past
  * them, is admitted; the whole body's digest and object id stay recorded and can check a guess at a short withheld line. */
 
-/** sha256 of each text this module implements, UTF-8 (the version-4 bytes approved 2026-10-20). */
+/** sha256 of each text this module implements, UTF-8 (the version-4 bytes approved 2026-10-20). `unchanged` has a second text, version
+ * 5's (approved 2026-11-03), which names the project-documentation exemption beside the code-content one; both say the scan runs over
+ * the complete body exactly as the exemptions' own rules say, which is what the screens do with or without that exemption declared. */
 const REDACTION_TEXTS = {
   appliesTo: 'd2db3aa87aebba3b42a72a5ff1c435cb3a6bb61288b5ffb0076f68d62891503e',
   wholeArtifactLinePattern: '63f957c57bc1565c86a7ad614469755172102540a0d19b4df3dcd1854b4fefa0',
@@ -40,7 +42,7 @@ const REDACTION_TEXTS = {
   withheldLines: '9878b9d7a10057981508f7cc9b36bcab649116a52b07ea0e35842030764efd82',
   citedSpanRule: '1d583b499faa94320e106774a5b7e1804fb757e33d34c1b0680ef217b9d495c6',
   provenance: '361eb887bca9149b771b66b0891d71adb5626b3178df48502696144a8b9e0dc1',
-  unchanged: '74f0bc88dc1c99324bcfdbc554234c011b0131627adb9eb37d9c34792ea79bdb',
+  unchanged: ['74f0bc88dc1c99324bcfdbc554234c011b0131627adb9eb37d9c34792ea79bdb', 'e00788b3ee20697408b02a984c5f5a93a3ad100909e1b8fe93367e08fa08fd4c'],
   consequence: 'fbccac9121d61a3cf617a26dfc4b54f378753a22b9c5b7f431ba13447ffb6566',
 } as const;
 const REDACTION_KEYS = ['appliesTo', 'redactedClasses', 'redactionClass', 'wholeArtifactDetectors', 'wholeArtifactLinePattern', 'wholeArtifactFragments',
@@ -64,8 +66,9 @@ export interface SecretRedaction {
 /** `redaction` is null when the scope declares none (versions 1 to 3). */
 export type SecretRedactionRead = { readonly ok: true; readonly redaction: SecretRedaction | null } | { readonly ok: false; readonly why: string };
 
-/** Reads `secretRedaction` from a policy's `publicSourceScope`. `detectorIds` are the policy's detector ids; a whole-artifact detector
- * that names none of them refuses. Any malformed or unrecognised field refuses. */
+/** Reads `secretRedaction` from a policy's `publicSourceScope`. `detectorIds` are the ids of every detector this scope runs: the policy's
+ * own and, from version 5, its `scopeDetectors` (`readScopeDetectors`); a whole-artifact detector that names none of them refuses. Any
+ * malformed or unrecognised field refuses. */
 export function readSecretRedaction(scope: unknown, detectorIds: readonly string[]): SecretRedactionRead {
   const refuse = (why: string): SecretRedactionRead => ({ ok: false, why: `its secret redaction ${why}` });
   if (!isRecord(scope) || !Object.hasOwn(scope, 'secretRedaction')) return { ok: true, redaction: null };
@@ -74,8 +77,8 @@ export function readSecretRedaction(scope: unknown, detectorIds: readonly string
   const keys = Object.keys(red);
   if (keys.length !== REDACTION_KEYS.length || REDACTION_KEYS.some(key => !keys.includes(key))) return refuse(`carries the fields ${keys.join(', ')}, not exactly ${REDACTION_KEYS.join(', ')}`);
   for (const key of Object.keys(REDACTION_TEXTS) as (keyof typeof REDACTION_TEXTS)[]) {
-    const value = red[key];
-    if (typeof value !== 'string' || sha256(value) !== REDACTION_TEXTS[key]) return refuse(`${key} is not the text this screen implements`);
+    const value = red[key], accepted: string | readonly string[] = REDACTION_TEXTS[key];
+    if (typeof value !== 'string' || !(typeof accepted === 'string' ? [accepted] : accepted).includes(sha256(value))) return refuse(`${key} is not the text this screen implements`);
   }
   if (red['redactionClass'] !== 'redacted-span') return refuse('redactionClass is not redacted-span');
   const distinctStrings = (value: unknown): value is readonly string[] => Array.isArray(value) && value.length > 0 && new Set(value).size === value.length
@@ -94,6 +97,50 @@ export function readSecretRedaction(scope: unknown, detectorIds: readonly string
     redactedClasses: Object.freeze([...classes]) as readonly PublicSourceContentClass[], wholeArtifactDetectors: Object.freeze([...whole]),
     wholeArtifactLinePattern: pattern, wholeArtifactFragments: Object.freeze([...fragments]), guardLines: guard,
   }) };
+}
+
+/** The version-5 scope's own detectors (`publicSourceScope.scopeDetectors`, approved 2026-11-03): added to the policy's detectors for this
+ * scope only, so the public-source screens run them wherever they run the policy's (paths, bodies, the every-offset scan, retained text
+ * and agent text), and the Butlers base screen never reads them. The `rule` and `consequence` texts are pinned; each detector is read as
+ * the policy's are (`id`, `kind` and `pattern` with `flags`, or `values`), and an id the policy's detectors or another scope detector
+ * already uses refuses. The patterns are compiled by the screens with the policy's own compiler, which refuses one that does not compile. */
+const SCOPE_DETECTOR_TEXTS = {
+  rule: '6503580ee657dac1536178c1b90f25c62b10a97211a2e883071c7538a0d257c5',
+  consequence: '3e4ba41de90a1d7bbeb937c461361bcdfc37ffd6253015639894d46412ce7f1f',
+} as const;
+const SCOPE_DETECTOR_KEYS = ['rule', 'detectors', 'consequence'] as const;
+/** `detectors` is empty when the scope declares none (versions 1 to 4). */
+export type ScopeDetectorsRead = { readonly ok: true; readonly detectors: readonly RedactionDetector[] } | { readonly ok: false; readonly why: string };
+
+export function readScopeDetectors(scope: unknown, policyDetectorIds: readonly string[]): ScopeDetectorsRead {
+  const refuse = (why: string): ScopeDetectorsRead => ({ ok: false, why: `its scope detectors ${why}` });
+  if (!isRecord(scope) || !Object.hasOwn(scope, 'scopeDetectors')) return { ok: true, detectors: Object.freeze([]) };
+  const object = scope['scopeDetectors'];
+  if (!isRecord(object)) return refuse('is not an object');
+  const keys = Object.keys(object);
+  if (keys.length !== SCOPE_DETECTOR_KEYS.length || SCOPE_DETECTOR_KEYS.some(key => !keys.includes(key))) return refuse(`carries the fields ${keys.join(', ')}, not exactly ${SCOPE_DETECTOR_KEYS.join(', ')}`);
+  for (const key of ['rule', 'consequence'] as const) {
+    const value = object[key];
+    if (typeof value !== 'string' || sha256(value) !== SCOPE_DETECTOR_TEXTS[key]) return refuse(`${key} is not the text this screen implements`);
+  }
+  const list = object['detectors'];
+  if (!Array.isArray(list) || list.length === 0) return refuse('declares no detector');
+  const seen = new Set(policyDetectorIds), out: RedactionDetector[] = [];
+  for (const entry of list) {
+    if (!isRecord(entry) || typeof entry['id'] !== 'string' || entry['id'].length === 0) return refuse('lists a detector without an id');
+    const id = entry['id'];
+    if (seen.has(id)) return refuse(`repeats the detector id ${id}`);
+    seen.add(id);
+    const fields = Object.keys(entry).sort().join(',');
+    if (entry['kind'] === 'regular-expression' && fields === 'flags,id,kind,pattern' && typeof entry['pattern'] === 'string' && entry['pattern'].length > 0
+      && typeof entry['flags'] === 'string') {
+      out.push(Object.freeze({ id, kind: 'regular-expression', pattern: entry['pattern'], flags: entry['flags'] }));
+    } else if (entry['kind'] === 'literal-fragment' && fields === 'id,kind,values' && Array.isArray(entry['values']) && entry['values'].length > 0
+      && entry['values'].every((value: unknown) => typeof value === 'string' && value.length > 0)) {
+      out.push(Object.freeze({ id, kind: 'literal-fragment', values: Object.freeze([...entry['values'] as string[]]) }));
+    } else return refuse(`detector ${id} is not read as the policy's detectors are`);
+  }
+  return { ok: true, detectors: Object.freeze(out) };
 }
 
 /** A detector as the policy declares it (`@syzygy/three-surface-poc-core`'s `SecretDetector`). */

@@ -1713,3 +1713,32 @@ question naming this package and version (quoted in the dedicated record).
 This sign-off authorizes no implementation, widens no consent, read, write or
 egress, and a later version of the package is signed separately.
 <!-- /versioned-signoff:three-surface-poc-governedby-reference-amendment:v1.0 -->
+
+<!-- PWB-POLICY-SCOPE-V5:BEGIN -->
+## Public-source screening scope version 5 act — approve-policy — performed 2026-11-03
+
+**Phrase the act takes (given 2026-11-03 by the owner's words, not typed as a
+phrase; see the dedicated record):**
+
+```text
+APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY: e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b
+```
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Act type / artifact | `approve-policy` / `.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json` |
+| Argument | SHA-256 of the artifact itself: the chosen row (variant `bcd`) of the package manifest, recomputed at recording |
+| Provenance state | `owner-adopted (bootstrap, uncorrelated)` — a state-(1) human act, owner-trusted and never independently verified |
+| A1 audit-record identity | explicitly absent, satisfying RFC3-16(b) item 9 for state (1) |
+| Frozen subject | `9daf9e0480b96d3cf09efebc7a357f6e21acda45` |
+| Manifest | `.syzygy/governance/contracts/candidates/public-source-screening-scope-v5/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt`, SHA-256 `b9fdbc164952af642bb50aa2b82a21481a0322cccbb65fd0b4be35b73190a80f` |
+| Review outcome | `docs/reviews/R-HA5B-SCREENING-SCOPE-V5-2-RAW.md`: `CONFIRM WITH EXCEPTIONS`, its head bound to the manifest file |
+| Owner's words given (UTC) | `2026-11-03T06:17:55Z` |
+| Recorded at (UTC) | `2026-11-03T06:58:26Z` |
+| Recording | `.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md`; annotated tag `pwb-approve-policy-public-source-scope-v5-signed-2026-11-03` on the commit carrying these records |
+
+Effective status: this one record is **effective owner authority —
+owner-adopted (bootstrap, uncorrelated)** for its own role only. It grants no
+consent, read or egress, and the read gates are re-pointed by a separate change.
+<!-- PWB-POLICY-SCOPE-V5:END -->

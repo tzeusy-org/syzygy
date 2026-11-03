@@ -219,6 +219,18 @@ describe('check: a draft that follows every rule', () => {
   });
 });
 
+// P-116 (screening scope version 5, D): the screen is loaded for the run's repository identity and pinned commit, which the owner
+// placements compare.
+describe('check: the screen subject', () => {
+  it('loads the screen for repository:<id> at the pinned commit', async () => {
+    const run = await briefedRun();
+    writeDraft(run, JSON.stringify(valid(), null, 2));
+    const seen: unknown[] = [];
+    report(await checkDraft(run, {}, deps({ loadScreen: async (placement) => { seen.push(placement); return SCREEN; } })));
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit }]);
+  });
+});
+
 describe('check: each rule refuses its own violation', () => {
   const kestrel = (d: Draft) => d.sections[0].paragraphs[0];
   it.each<[string, (d: Draft) => void, { kind: string; at: string; blockId?: string; citationId?: string }]>([
@@ -276,12 +288,13 @@ describe('check: each rule refuses its own violation', () => {
 });
 
 // P-110 (syzygy-3sjj): a body screening retains as redacted-span (policy version 4). The fixture policy carries the live secretRedaction
-// with code-content as its redacted class, so src/config.c (a password on line 1) is retained with lines 1 and 2 withheld.
+// with code-content as its redacted class (and, since version 5, the scope detectors its wholeArtifactDetectors names), so src/config.c (a password on line 1) is retained with lines 1 and 2 withheld.
 describe('check: a quotation from a body retained as redacted-span', () => {
   const REDACTING = buildDossierScreen(new TextEncoder().encode(JSON.stringify({
     policyId: 'fixture-public-source', policyVersion: '4', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
     publicSourceScope: {
       contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.c', '.h', '.ts', '.txt'] }] },
+      scopeDetectors: LIVE_POLICY.publicSourceScope.scopeDetectors,
       secretRedaction: { ...LIVE_POLICY.publicSourceScope.secretRedaction, redactedClasses: ['code-content'] },
     },
   })));

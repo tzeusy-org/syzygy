@@ -9,7 +9,7 @@ import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type TreeEntr
 import { INVENTORY_INFERRED, errno, inventoryOfRecord, type OpenedRun } from './inventory.js';
 import { buildDesignPacket, readLatestSite, type DesignPacketBuild } from './design-review.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
-import { loadDossierScreen, type ScreenExclusion } from './screen.js';
+import { placementSubjectOf, screenLoaderOf, type ScreenExclusion } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { FIDELITY_PACKET_FORMAT, PACKET_DIGEST_FILE, PACKET_FILE, type PacketBuild, type PacketSpan, type ReviewDeps, type ReviewKind, SUBJECT_JSON_LIMITS, type SpanCitation, type SpanRedaction, VERDICT_FILE, list, packetDirName, text } from './review-model.js';
 
@@ -85,7 +85,7 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
     }
   }
 
-  const screenLoad = await (deps.loadScreen ?? (() => loadDossierScreen(deps.sources.recordsRoot, deps.now())))();
+  const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, deps.now())(placementSubjectOf(subject));
   if (!screenLoad.ok) return { ok: false, stage: 'screen', reason: screenLoad.why };
   const screen = screenLoad.screen;
   const reader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });

@@ -7,7 +7,7 @@ import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
 import { GitObjectReadRefusal, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import type { Outcome } from './outcome.js';
 import { type ReverifyRefusal } from './reverify.js';
-import { type DossierScreen, type ScreenExclusion, type ScreenLoad } from './screen.js';
+import { type DossierScreen, type ScreenExclusion, type ScreenLoader } from './screen.js';
 import { type ScreenCensusReport } from './census.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 
@@ -188,7 +188,7 @@ export interface CheckDeps {
   readonly now: () => number;
   readonly probe: CredentialProbe;
   /** The screen; by default the policy the act chain puts in force, from the records root. */
-  readonly loadScreen?: () => Promise<ScreenLoad>;
+  readonly loadScreen?: ScreenLoader;
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
 }
 

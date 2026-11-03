@@ -7,7 +7,7 @@ import { sessionsRoot } from './inventory.js';
 import type { Outcome } from './outcome.js';
 import type { ReverifyRefusal } from './reverify.js';
 import { CLASS_NOT_CONSENTED } from './class-gate.js';
-import { type ScreenExclusion, type ScreenLoad } from './screen.js';
+import { type ScreenExclusion, type ScreenLoader } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 
 /** The review step's formats, file naming, packet, problem and check-result types; split out of `review.ts` unchanged. */
@@ -72,7 +72,7 @@ export type PacketBuild =
 export interface ReviewDeps {
   readonly sources: GateSources;
   readonly now: () => number;
-  readonly loadScreen?: () => Promise<ScreenLoad>;
+  readonly loadScreen?: ScreenLoader;
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
 }
 

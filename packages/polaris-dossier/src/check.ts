@@ -10,7 +10,7 @@ import { isoOf } from './iso-of.js';
 import type { Outcome } from './outcome.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import type { RunConfig } from './run-config.js';
-import { loadDossierScreen } from './screen.js';
+import { placementSubjectOf, screenLoaderOf } from './screen.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
@@ -187,7 +187,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const gate = plan.gate(run, parseFault === null ? doc : undefined);
   if (!gate.ok) return refuse(gate.stage, gate.reason);
 
-  const screenLoad = await (deps.loadScreen ?? (() => loadDossierScreen(deps.sources.recordsRoot, started)))();
+  const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, started)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
   const screen = screenLoad.screen;
 

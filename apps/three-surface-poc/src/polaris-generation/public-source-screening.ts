@@ -30,7 +30,16 @@
 // project-documentation body whose detector matches are all line-redactable
 // is retained as `redacted-span` with its matched and guard lines withheld;
 // `screenBody` stays whole-text, and this reader's corpus still excludes such
-// a body whole (it is not yet taught to carry withheld lines). The exemption holds at a page only while the page meets
+// a body whole (it is not yet taught to carry withheld lines). Under version 5
+// (variant `bcd`), the scope's `scopeDetectors` run beside the policy's
+// detectors on every path and body; root SECURITY and MANIFESTO names are
+// `governance-text` (data, never policy, scanned as before, excluded whole on
+// any detector match); the owner's placements classify named paths as
+// project-documentation for one repository at listed commits only, so the
+// screen is loaded for the corpus's repository and revision (one loaded
+// without them places nothing); and a project-documentation body skips the
+// active-content scan given its path (`projectDocumentationExemption`).
+// Each exemption holds at a page only while the page meets
 // the scope's `renderCondition`: this app's page sinks are the dossier
 // renderer and the draft preview, which write every body byte through
 // `escape` under `DRAFT_PREVIEW_CSP_META`, and their tests fail if either
@@ -54,7 +63,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { POLICY_ACT_FORMS, readClassActState, readPolicyActChain } from '@syzygy/polaris-generation-consent';
-import { codeContentExempt, compileEveryOffsetMatcher, publicSourceContentClass, readCodeContentExemption, readProjectDocumentationRule, readSecretRedaction, redactBody, type PipelinePorts, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core';
+import { codeContentExempt, compileEveryOffsetMatcher, documentationExempt, publicSourceContentClass, readCodeContentExemption, readGovernanceTextRule, readProjectDocumentationExemption, readProjectDocumentationRule, readScopeDetectors, readSecretRedaction, redactBody, type PipelinePorts, type PlacementSubject, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core';
 import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, type DeniedPathRules, type SecretDetector } from '@syzygy/three-surface-poc-core';
 import { sha256 } from '@syzygy/support';
 
@@ -112,6 +121,12 @@ export interface PublicSourceScreen extends CorpusScreen {
   readonly codeContentExemption: boolean;
   /** Whether the policy declares the version-4 secret redaction. */
   readonly secretRedaction: boolean;
+  /** Whether the policy classifies the version-5 governance-text class. */
+  readonly governanceText: boolean;
+  /** Whether the policy declares the version-5 project-documentation exemption from the active-content scan. */
+  readonly documentationExemption: boolean;
+  /** How many detectors the scope adds to the policy's own (version 5's `scopeDetectors`; 0 before it). */
+  readonly scopeDetectors: number;
   /** A target body screened under the policy's secret redaction (version 4) where it applies; see the dossier's `screenTargetBody`. */
   readonly screenTargetBody: (body: string, path: string) => PublicSourceTargetBody;
   /** The content class `screenPath` admits a path under, or undefined when it excludes the path. Whoever hands an admitted body to an
@@ -129,8 +144,11 @@ export type PublicSourceTargetBody =
 function refuse(why: string): never { throw new CorpusRefusal(`public-source-policy: ${why}`); }
 const stringList = (value: unknown): value is readonly string[] => Array.isArray(value) && value.every(item => typeof item === 'string' && item.length > 0);
 
-/** Verifies the act record against the policy bytes and builds the screen. Any gap refuses. */
-export async function loadPublicSourceScreen(port: PublicSourcePolicyActPort = checkoutPolicyActPort(), runKey: Uint8Array = newGenerationRunKey()): Promise<PublicSourceScreen> {
+/** Verifies the act record against the policy bytes and builds the screen. Any gap refuses. `subject` is the repository read
+ * (its consent identity, `repository:<id>`, which the reader config already carries) and the admitted commit it is read at, which the
+ * version-5 owner placements compare; null places nothing. */
+export async function loadPublicSourceScreen(port: PublicSourcePolicyActPort = checkoutPolicyActPort(), runKey: Uint8Array = newGenerationRunKey(),
+  subject: PlacementSubject | null = null): Promise<PublicSourceScreen> {
   if (runKey.byteLength < 32) refuse('run key shorter than 32 bytes');
   const { actRecord, why, policy, classActInForce } = await port.read();
   if (actRecord === undefined) refuse(`no screening-scope policy act is in force${why === undefined ? '' : ` (${why})`}`);
@@ -161,24 +179,43 @@ export async function loadPublicSourceScreen(port: PublicSourcePolicyActPort = c
   if (!documentationRead.ok) refuse(`policy ${documentationRead.why.replace(/^its /u, '')}`);
   // The scope's prerequisite: the class is classified only while the in-force RFC-0005 vocabulary lists it.
   const documentation = classActInForce === true ? documentationRead.rule : null;
+  const governanceRead = readGovernanceTextRule(classification);
+  if (!governanceRead.ok) refuse(`policy ${governanceRead.why.replace(/^its /u, '')}`);
+  const governanceTextPaths = governanceRead.ok ? governanceRead.paths : null;
   const exemptionRead = readCodeContentExemption(scope, sourceExtensions);
   if (!exemptionRead.ok) refuse(`policy ${exemptionRead.why.replace(/^its /u, '')}`);
   const exemption = exemptionRead.ok ? exemptionRead.exemption : null;
-  const detectorIds = Array.isArray(doc.detectors) ? doc.detectors.flatMap((d: unknown) => (d !== null && typeof d === 'object' && typeof (d as Record<string, unknown>).id === 'string' ? [(d as Record<string, unknown>).id as string] : [])) : [];
+  const documentationExemptionRead = readProjectDocumentationExemption(scope);
+  if (!documentationExemptionRead.ok) refuse(`policy ${documentationExemptionRead.why.replace(/^its /u, '')}`);
+  const documentationExemption = documentationExemptionRead.ok && documentationExemptionRead.declared;
+  const policyDetectorIds = Array.isArray(doc.detectors) ? doc.detectors.flatMap((d: unknown) => (d !== null && typeof d === 'object' && typeof (d as Record<string, unknown>).id === 'string' ? [(d as Record<string, unknown>).id as string] : [])) : [];
+  const scopeRead = readScopeDetectors(scope, policyDetectorIds);
+  if (!scopeRead.ok) refuse(`policy ${scopeRead.why.replace(/^its /u, '')}`);
+  const scopeDetectors = scopeRead.ok ? scopeRead.detectors : [];
+  // The scope's detectors join the policy's for this scope only (version 5); before version 5 the list is the policy's alone.
+  const allDetectors = Array.isArray(doc.detectors) ? [...doc.detectors as unknown[], ...scopeDetectors] : doc.detectors;
+  const detectorIds = [...policyDetectorIds, ...scopeDetectors.map(detector => detector.id)];
   const redactionRead = readSecretRedaction(scope, detectorIds);
   if (!redactionRead.ok) refuse(`policy ${redactionRead.why.replace(/^its /u, '')}`);
   const redaction = redactionRead.ok ? redactionRead.redaction : null;
   const rules: DeniedPathRules = { basenames: admission!.deniedPathBasenames as string[], prefixes: admission!.deniedPathPrefixes as string[], suffixes: admission!.deniedPathSuffixes as string[] };
   let detectors: ReturnType<typeof compileDetectors>;
-  try { detectors = compileDetectors({ detectors: doc.detectors as readonly SecretDetector[] }); } catch (error) { return refuse(`detectors: ${error instanceof Error ? error.message : 'invalid'}`); }
-  const everyOffset = compileEveryOffsetMatcher(doc.detectors as readonly RedactionDetector[]);
+  try { detectors = compileDetectors({ detectors: allDetectors as readonly SecretDetector[] }); } catch (error) { return refuse(`detectors: ${error instanceof Error ? error.message : 'invalid'}`); }
+  const everyOffset = compileEveryOffsetMatcher(allDetectors as readonly RedactionDetector[]);
+  const context = { governanceTextPaths, subject };
+  const classOf = (path: string): PublicSourceContentClass | undefined => publicSourceContentClass(path, sourceExtensions, documentation, context);
   const key = Buffer.from(runKey);
   // Unread: denied path, then a detector match anywhere in the path, then a path in neither project-documentation nor code-content.
   const screenPath = (path: string) => deniedPathReason(path, rules) !== undefined ? 'denied-path' as const
     : detectSecrets(detectors, path) !== undefined ? 'secret-detector-match' as const
-      : publicSourceContentClass(path, sourceExtensions, documentation) !== undefined ? undefined : 'unknown-extraction-class' as const;
-  const contentClass = (path: string): PublicSourceContentClass | undefined => screenPath(path) === undefined ? publicSourceContentClass(path, sourceExtensions, documentation) : undefined;
-  const active = (body: string, path: string | undefined): boolean => !(path !== undefined && codeContentExempt(path, contentClass(path), exemption)) && scanActiveContent(body).length > 0;
+      : classOf(path) !== undefined ? undefined : 'unknown-extraction-class' as const;
+  const contentClass = (path: string): PublicSourceContentClass | undefined => screenPath(path) === undefined ? classOf(path) : undefined;
+  const exempt = (path: string | undefined): boolean => {
+    if (path === undefined) return false;
+    const found = contentClass(path);
+    return codeContentExempt(path, found, exemption) || documentationExempt(found, documentationExemption);
+  };
+  const active = (body: string, path: string | undefined): boolean => !exempt(path) && scanActiveContent(body).length > 0;
   const screenTargetBody = (body: string, path: string): PublicSourceTargetBody => {
     const redacted = redactBody(body, contentClass(path), everyOffset, redaction);
     if (redacted.kind === 'excluded') return { kind: 'excluded', outcome: 'secret-detector-match' };
@@ -189,6 +226,9 @@ export async function loadPublicSourceScreen(port: PublicSourcePolicyActPort = c
     policyId: doc.policyId as string, policyVersion: doc.policyVersion as string, policySha256, projectDocumentation: documentation !== null,
     codeContentExemption: exemption !== null,
     secretRedaction: redaction !== null,
+    governanceText: governanceTextPaths !== null,
+    documentationExemption,
+    scopeDetectors: scopeDetectors.length,
     screenTargetBody,
     screenPath,
     contentClass,
@@ -204,7 +244,7 @@ export async function loadPublicSourceScreen(port: PublicSourcePolicyActPort = c
 export async function readScreenedRepoCorpus(repoRoot: string, config: Pick<ReaderConfig, 'repositoryId' | 'revision' | 'include' | 'exclude' | 'oversize'>,
   ports: Omit<RepoCorpusPorts, 'screen'> & { readonly policyAct?: PublicSourcePolicyActPort; readonly runKey?: Buffer } = {}): Promise<RepoCorpus> {
   const runKey = ports.runKey ?? newGenerationRunKey();
-  const screen = await loadPublicSourceScreen(ports.policyAct, runKey);
+  const screen = await loadPublicSourceScreen(ports.policyAct, runKey, { repository: config.repositoryId, commit: config.revision });
   return readRepoCorpus(repoRoot, config, { ...(ports.admission === undefined ? {} : { admission: ports.admission }), ...(ports.readBlobs === undefined ? {} : { readBlobs: ports.readBlobs }), screen, runKey });
 }
 

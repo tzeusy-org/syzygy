@@ -31,7 +31,10 @@ print(json.dumps({'body': [{'name': n, 'body': body, 'expected': srt(w), 'oracle
 
 const policyDoc = (): Record<string, unknown> => JSON.parse(readFileSync(`${ROOT}${POLICY_PATH}`, 'utf8')) as Record<string, unknown>;
 const scopeOf = (doc: Record<string, unknown>): Record<string, unknown> => doc['publicSourceScope'] as Record<string, unknown>;
-const idsOf = (doc: Record<string, unknown>): string[] => (doc['detectors'] as { id: string }[]).map(d => d.id);
+// The detectors this scope runs: the policy's, then (version 5) the scope's own, which wholeArtifactDetectors may name.
+const detectorsOf = (doc: Record<string, unknown>): RedactionDetector[] => [...doc['detectors'] as RedactionDetector[],
+  ...((scopeOf(doc)['scopeDetectors'] as { detectors?: RedactionDetector[] } | undefined)?.detectors ?? [])];
+const idsOf = (doc: Record<string, unknown>): string[] => detectorsOf(doc).map(d => d.id);
 const TOKEN = 'tok' + 'en=' + 'abcdefgh12345678';
 
 describe('secretRedaction (policy version 4): the builder fixtures through the TypeScript reading', () => {
@@ -44,12 +47,12 @@ describe('secretRedaction (policy version 4): the builder fixtures through the T
     const read = readSecretRedaction(scopeOf(doc), idsOf(doc));
     if (!read.ok || read.redaction === null) throw new Error('the policy on disk declares no readable secretRedaction');
     redaction = read.redaction;
-    matcher = compileEveryOffsetMatcher(doc['detectors'] as RedactionDetector[]);
+    matcher = compileEveryOffsetMatcher(detectorsOf(doc));
   });
 
   it('reads the parameters of the approved bytes', () => {
     expect(redaction.redactedClasses).toEqual(['project-documentation']);
-    expect(redaction.wholeArtifactDetectors).toEqual(['private-key-material', 'known-token-formats']);
+    expect(redaction.wholeArtifactDetectors).toEqual(['private-key-material', 'known-token-formats', 'private-key-header', 'known-token-formats-extended']);
     expect(redaction.wholeArtifactFragments).toEqual(['-----BEGIN ', '---- BEGIN ', 'LS0tLS1CRUdJT', 'LS0tLSBCRUdJT']);
     expect(redaction.guardLines).toBe(1);
   });

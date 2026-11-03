@@ -19,7 +19,10 @@ export interface Derived {
   /** Each admitted blob's text: the whole body, or for a body retained as `redacted-span` the retained text (every withheld line emptied,
    * its terminator kept) with the withheld line numbers. */
   readonly admitted: ReadonlyMap<string, { readonly objectId: string; readonly raw: string; readonly withheld?: readonly number[]; readonly detectorIds?: readonly string[];
-    readonly retainedLines?: readonly string[]; readonly lineByteOffsets?: readonly number[]; readonly originalBytes?: number; readonly contentSha256?: string; readonly projection?: VerifiedRedactedBody }>;
+    readonly retainedLines?: readonly string[]; readonly lineByteOffsets?: readonly number[]; readonly originalBytes?: number; readonly contentSha256?: string; readonly projection?: VerifiedRedactedBody;
+    /** For a redacted body only: whether its complete body, scanned for active content as before, holds any (`DossierScreen.activeContentAsBefore`).
+     * The complete body is not kept, so a page sink that cannot meet the renderCondition reads this instead of rescanning. */
+    readonly activeContentAsBefore?: boolean }>;
 }
 
 export interface DeriveInputs {
@@ -60,7 +63,8 @@ type BlobState =
   | { readonly state: 'absent' }
   | { readonly state: 'excluded'; readonly outcome: ScreenExclusion }
   | { readonly state: 'admitted'; readonly entry: TreeEntry; readonly raw: string; readonly lines: number; tracked: TrackedText | null; readonly withheld?: readonly number[];
-      readonly detectorIds?: readonly string[]; readonly retainedLines?: readonly string[]; readonly lineByteOffsets?: readonly number[]; readonly originalBytes?: number; readonly contentSha256?: string; readonly projection?: VerifiedRedactedBody };
+      readonly detectorIds?: readonly string[]; readonly retainedLines?: readonly string[]; readonly lineByteOffsets?: readonly number[]; readonly originalBytes?: number; readonly contentSha256?: string; readonly projection?: VerifiedRedactedBody;
+      readonly activeContentAsBefore?: boolean };
 
 /** Every check over a parsed subject. Each walker tolerates a subject of the wrong shape, so one submission reports every finding it
  * carries, not only its schema faults. It freezes and writes nothing: `checkSubject` freezes, and `render` derives again from a frozen
@@ -175,7 +179,8 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     blobs.set(blob.path, screened.kind === 'excluded' ? { state: 'excluded', outcome: screened.outcome }
       : screened.kind === 'redacted' ? { state: 'admitted', entry: blob, raw: retainedWithMarkers(screened.retainedLines, screened.withheld), lines: screened.retainedLines.length,
         tracked: null, withheld: screened.withheld, detectorIds: screened.detectorIds, retainedLines: screened.retainedLines, lineByteOffsets: screened.lineByteOffsets,
-        originalBytes: screened.originalBytes, contentSha256: screened.contentSha256, projection: verifiedRedactedBody(raw, blob.id, blob.path, inputs.screen.screenTargetBody) }
+        originalBytes: screened.originalBytes, contentSha256: screened.contentSha256, projection: verifiedRedactedBody(raw, blob.id, blob.path, inputs.screen.screenTargetBody),
+        activeContentAsBefore: inputs.screen.activeContentAsBefore(raw) }
         : { state: 'admitted', entry: blob, raw, lines: lineCount(raw), tracked: null });
   }
   const firstCited = [...new Set(citations.flatMap(({ value }) => (text(value['path']) === undefined ? [] : [text(value['path'])!])))];
@@ -250,7 +255,8 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
 
   const admitted = new Map([...blobs].flatMap(([cited, state]) => (state.state === 'admitted'
     ? [[cited, { objectId: state.entry.id, raw: state.raw, ...(state.withheld === undefined ? {} : { withheld: state.withheld, detectorIds: state.detectorIds!,
-      retainedLines: state.retainedLines!, lineByteOffsets: state.lineByteOffsets!, originalBytes: state.originalBytes!, contentSha256: state.contentSha256!, projection: state.projection! }) }] as const] : [])));
+      retainedLines: state.retainedLines!, lineByteOffsets: state.lineByteOffsets!, originalBytes: state.originalBytes!, contentSha256: state.contentSha256!, projection: state.projection!,
+      activeContentAsBefore: state.activeContentAsBefore! }) }] as const] : [])));
   return { findings, quotations, excludedContent, citedBlobs, admitted };
 }
 

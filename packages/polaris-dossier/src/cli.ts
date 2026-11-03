@@ -16,7 +16,7 @@ import type { ReverifyOptions } from './reverify.js';
 import { RUN_CONFIG_JSON_LIMITS } from './run-config.js';
 import { renderRun, type DossierRenderer } from './render.js';
 import { reviewCheck, reviewPacket } from './review.js';
-import type { ScreenLoad } from './screen.js';
+import type { ScreenLoader } from './screen.js';
 import { handOver, launchForm } from './session-handover.js';
 import { runStatus } from './status.js';
 import { awaitSession } from './waiting-sessions.js';
@@ -166,7 +166,7 @@ export interface CliPorts {
   /** The object reader the step guard lists the pinned tree with; by default the re-hashing in-process reader. */
   readonly openReader?: ReverifyOptions['openReader'];
   /** The screen `check` applies; by default the policy the act chain puts in force in this checkout. */
-  readonly loadScreen?: () => Promise<ScreenLoad>;
+  readonly loadScreen?: ScreenLoader;
   /** The multi-page dossier renderer `render` draws through; the `syzygy` composition root injects it. Without it `render` refuses. */
   readonly renderer?: DossierRenderer;
   /** Whether version 1.2 of the local-agent mode, which specifies waiting sessions, is signed off; by default read from the records root. */

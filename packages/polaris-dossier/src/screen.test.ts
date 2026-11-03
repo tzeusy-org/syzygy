@@ -28,8 +28,8 @@ const cleanups: (() => void)[] = [];
 afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
 // syzygy-2coz: the live scope carries the project-documentation rule (screening scope version 2), classified only while the RFC5-14
 // class amendment act is in force. The class act's argument is the sha256 of the RFC-0005 module in the records root.
-const DOC_SCOPE = { contentClassification: { rules: LIVE.publicSourceScope.contentClassification.rules } };
-const docScopeWith = (over: Record<string, unknown>) => ({ contentClassification: { rules: DOC_SCOPE.contentClassification.rules.map((rule: Record<string, unknown>) => (rule['class'] === 'project-documentation' ? { ...rule, ...over } : rule)) } });
+const DOC_SCOPE = { contentClassification: LIVE.publicSourceScope.contentClassification };
+const docScopeWith = (over: Record<string, unknown>) => ({ contentClassification: { ...DOC_SCOPE.contentClassification, rules: DOC_SCOPE.contentClassification.rules.map((rule: Record<string, unknown>) => (rule['class'] === 'project-documentation' ? { ...rule, ...over } : rule)) } });
 const RFC5_MODULE = '.syzygy/governance/contracts/rfcs/RFC-0005/consent-egress-secrets.md';
 const MODULE_TEXT = '# RFC-0005 fixture module\n\n- `project-documentation`\n';
 const CLASS_ACT_FILE = `${DECISIONS_DIR}/RFC5-PROJECT-DOCUMENTATION-CLASS-AMENDMENT-ACT.md`;
@@ -134,7 +134,8 @@ describe('the project-documentation class (syzygy-2coz)', () => {
   it.each<[string, string | undefined]>([
     ['README.md', undefined], ['LICENSE.txt', undefined], ['01-CONTRIBUTING.md', undefined], ['COPYING', undefined],
     ['docs/guide.md', undefined], ['doc/intro.rst', undefined], ['licenses/MIT.txt', undefined], ['src/server.c', undefined],
-    ['MANIFESTO', 'unknown-extraction-class'], ['redis.conf', 'unknown-extraction-class'], ['src/README.md', 'unknown-extraction-class'],
+    // Version 5: a root MANIFESTO is governance-text, not project-documentation, and is admitted under that class.
+    ['MANIFESTO', undefined], ['redis.conf', 'unknown-extraction-class'], ['src/README.md', 'unknown-extraction-class'],
     ['docs/design.md', 'unknown-extraction-class'], ['docs/adr/0001.md', 'unknown-extraction-class'], ['docs/requirements.txt', 'unknown-extraction-class'],
     ['licenses/a/MIT.txt', 'unknown-extraction-class'], ['docs//guide.md', 'unknown-extraction-class'],
     // The steps before the class are unchanged: a denied path or a detector match in a documentation path is still withheld.
@@ -249,7 +250,9 @@ describe('parity with the any-repo reader\'s screen (syzygy-qkea.17)', () => {
     // Under the live scope the class decides real paths both ways, so agreement covers it.
     if (policy.includes('project-documentation')) expect(['README.md', 'docs/design.md'].map((p) => ours.screen.screenPath(p))).toEqual([classAct ? undefined : 'unknown-extraction-class', 'unknown-extraction-class']);
     // The class each admitted path is admitted under, so that agreement on classes is not agreement on one class.
-    expect(new Set(paths.map((p) => ours.screen.contentClass(p) ?? 'excluded'))).toEqual(new Set(['code-content', 'excluded', ...(classAct && policy.includes('project-documentation') ? ['project-documentation'] : [])]));
+    // Version 5's governance-text class is classified whether or not the class act is in force: RFC5-14 already lists it.
+    expect(new Set(paths.map((p) => ours.screen.contentClass(p) ?? 'excluded'))).toEqual(new Set(['code-content', 'excluded', ...(classAct && policy.includes('project-documentation') ? ['project-documentation'] : []),
+      ...(policy.includes('governanceTextPaths') ? ['governance-text'] : [])]));
   });
 
   // R-PR403-SCREEN-DOCS-1 finding 2: each screen decides the class prerequisite from the same records at the same `now`, so a class act
@@ -284,7 +287,7 @@ describe('parity with the any-repo reader\'s screen (syzygy-qkea.17)', () => {
     ['no identity', policyOf(undefined, { policyId: 7 })],
     ['an edited project-documentation path rule', policyOf(docScopeWith({ pathRules: [] }))],
     ['a project-documentation suffix that is a code extension', policyOf(docScopeWith({ licenseTreeSuffixes: ['.c'] }))],
-    ['two project-documentation rules', policyOf({ contentClassification: { rules: [...DOC_SCOPE.contentClassification.rules, ...DOC_SCOPE.contentClassification.rules.filter((rule: Record<string, unknown>) => rule['class'] === 'project-documentation')] } })],
+    ['two project-documentation rules', policyOf({ contentClassification: { ...DOC_SCOPE.contentClassification, rules: [...DOC_SCOPE.contentClassification.rules, ...DOC_SCOPE.contentClassification.rules.filter((rule: Record<string, unknown>) => rule['class'] === 'project-documentation')] } })],
   ])('refuses a policy with %s, as the app does', async (_name, policy) => {
     for (const classAct of [false, true]) {
       expect(buildDossierScreen(encode(policy), classAct)).toMatchObject({ ok: false });
@@ -301,8 +304,10 @@ describe('the code-content exemption of screening scope version 3', () => {
   let V3: Record<string, Record<string, unknown>> = {};
   beforeAll(async () => {
     const py = `import json, sys; sys.path.insert(0, 'scripts')
-import build_public_source_screening_scope_v2 as b2, build_public_source_screening_scope_v3 as b, build_public_source_screening_scope_v4 as b4
-v3_all, _mode = b4.base_bytes()
+import build_public_source_screening_scope_v2 as b2, build_public_source_screening_scope_v3 as b, build_public_source_screening_scope_v4 as b4, build_public_source_screening_scope_v5 as b5
+v4_span, _mode = b5.base_bytes()
+v3_all = b2.reverse_patch((b4.ROOT / b4.patch_path(b5.V4_BASE_VARIANT)).read_text(), v4_span)
+assert b4.sha(v3_all) == b4.v3.manifest_rows(b4.ROOT)[b4.V3_BASE_VARIANT] and b4.propose(v3_all, b5.V4_BASE_VARIANT) == v4_span
 base = b2.reverse_patch((b.ROOT / b.patch_path('all')).read_text(), v3_all)
 assert b.sha(base) != b.sha(v3_all) and b.propose(base, 'all') == v3_all
 sys.stdout.write(json.dumps({v: json.loads(b.propose(base, v))[b.SCOPE_KEY] for v in b.VARIANTS}))`;
@@ -383,17 +388,19 @@ sys.stdout.write(json.dumps({v: json.loads(b.propose(base, v))[b.SCOPE_KEY] for 
 // (scripts/build_public_source_screening_scope_v4.py `withheld_lines`), so the TypeScript reading is held to the oracle in both screens.
 describe('the secret redaction of screening scope version 4', () => {
   type TargetScreen = { screenTargetBody: (b: string, p: string) => { kind: string; withheld?: readonly number[]; retained?: string }; screenBody: (b: string, p?: string) => string | undefined; secretRedaction: boolean };
-  let fixtures: { body: { name: string; body: string; oracle: number[] | null }[]; whole: { name: string; path: string; body: string; oracle: number[] | null }[] } = { body: [], whole: [] };
+  let fixtures: { body: { name: string; body: string; oracle: number[] | null }[]; whole: { name: string; path: string; body: string; oracle: number[] | null }[]; v4Scope: Record<string, unknown> } = { body: [], whole: [], v4Scope: {} };
   beforeAll(async () => {
-    const py = `import json, sys; sys.path.insert(0, 'scripts'); import build_public_source_screening_scope_v4 as b
+    const py = `import json, sys; sys.path.insert(0, 'scripts'); import build_public_source_screening_scope_v4 as b, build_public_source_screening_scope_v5 as b5
 policy = open(str(b.ROOT / b.POLICY)).read()
+v4, _mode = b5.base_bytes()
 srt = lambda s: None if s is None else sorted(s)
 sys.stdout.write(json.dumps({'body': [{'name': n, 'body': body, 'oracle': srt(b.withheld_lines(body, policy))} for n, body, _w in b.BODY_FIXTURES],
-  'whole': [{'name': n, 'path': p, 'body': body, 'oracle': srt(b.withheld_lines(body, policy, p))} for n, p, body in b.WHOLE_FIXTURES]}))`;
+  'whole': [{'name': n, 'path': p, 'body': body, 'oracle': srt(b.withheld_lines(body, policy, p))} for n, p, body in b.WHOLE_FIXTURES],
+  'v4Scope': json.loads(v4)[b.SCOPE_KEY]}))`;
     fixtures = JSON.parse((await execFileAsync('python3', ['-c', py], { cwd: REAL_ROOT })).stdout) as typeof fixtures;
   });
-  const both = async (): Promise<readonly [TargetScreen, TargetScreen]> => {
-    const policy = policyOf(LIVE.publicSourceScope);
+  const both = async (scope: unknown = LIVE.publicSourceScope): Promise<readonly [TargetScreen, TargetScreen]> => {
+    const policy = policyOf(scope);
     const ours = buildDossierScreen(encode(policy), true);
     if (!ours.ok) throw new Error(ours.why);
     return [ours.screen, (await appScreen(policy, true)) as unknown as TargetScreen];
@@ -429,14 +436,19 @@ sys.stdout.write(json.dumps({'body': [{'name': n, 'body': body, 'oracle': srt(b.
       expect(screen.screenBody(body)).toBe('secret-detector-match');
     }
   });
-  it('runs the active-content scan over the complete body of a redacted one, excluding it whole', async () => {
+  // Under the version-4 bytes (recovered by reversing version 5's patch) a project-documentation body is scanned for active content.
+  // Under version 5 (variant bcd) projectDocumentationExemption lifts that scan, so the same bodies are retained redacted; a page that
+  // cannot confirm the renderCondition rescans the complete body (render.ts), which the render tests pin.
+  it('runs the active-content scan over the complete body of a redacted one, excluding it whole (version 4), and not under version 5', async () => {
     const body = `${['to', 'ken'].join('')}=${'abcdefgh12345678'}\nx\ny\n<script>run()</script>\n`;
-    for (const screen of await both()) expect(screen.screenTargetBody(body, 'README.md')).toEqual({ kind: 'excluded', outcome: 'active-content' });
+    for (const screen of await both(fixtures.v4Scope)) expect(screen.screenTargetBody(body, 'README.md')).toEqual({ kind: 'excluded', outcome: 'active-content' });
+    for (const screen of await both()) expect(screen.screenTargetBody(body, 'README.md')).toMatchObject({ kind: 'redacted', withheld: [1, 2] });
   });
-  it('runs the active-content scan over the withheld lines too: active content only on a matched line excludes the body whole', async () => {
+  it('runs the active-content scan over the withheld lines too: active content only on a matched line excludes the body whole (version 4)', async () => {
     // The retained text (lines 2 to 4 emptied) holds no active content, so a scan of the retained text alone would admit it.
     const body = `a\nb\n<script>run()</script> ${['to', 'ken'].join('')}=${'abcdefgh12345678'}\nc\nd\n`;
-    for (const screen of await both()) expect(screen.screenTargetBody(body, 'README.md')).toEqual({ kind: 'excluded', outcome: 'active-content' });
+    for (const screen of await both(fixtures.v4Scope)) expect(screen.screenTargetBody(body, 'README.md')).toEqual({ kind: 'excluded', outcome: 'active-content' });
+    for (const screen of await both()) expect(screen.screenTargetBody(body, 'README.md')).toMatchObject({ kind: 'redacted', withheld: [2, 3, 4] });
   });
   it.each([
     ['another rule text', (r: Record<string, unknown>) => ({ ...r, rule: `${r['rule'] as string} ` })],

@@ -17,6 +17,7 @@ import { recheckSessionStatement, type SessionStatementOfRecord } from './sessio
 import { type ReverifyOptions, type ReverifyRefusal } from './reverify.js';
 import type { RunConfig } from './run-config.js';
 import type { RunSubject } from './run-record.js';
+import { placementSubjectOf } from './screen.js';
 import { REVISION_FILE, RUN_LAYOUT, within } from './state-directory.js';
 import { type OpenedRun, errno, openRun, readRecord, sessionDirectory } from './run-dir.js';
 export { SESSION_DIR, sessionDirName, sessionsRoot, sessionDirectory, sessionsRootViolation, errno, openRun, logStep, readRecord } from './run-dir.js';
@@ -172,7 +173,7 @@ export async function buildInventoryBrief(opened: Extract<OpenedRun, { ok: true 
     role: 'inventory', runDir: opened.run, runId: opened.runId, pinnedRevision: opened.subject.pinnedRevision.commit,
     operatorIsOwner: opened.declared.operatorIsOwner, sec3: doctrine.sec3, now, d9: sources.d9, launched: () => launchedMarkerState(opened.run), permitting: { enabled: PERMITTING_ARM_ENABLED },
   });
-  const census = await loadCensus({ clonePath: opened.subject.clone.path, pinned: opened.subject.pinnedRevision.commit, consented: opened.contentClasses, recordsRoot: sources.recordsRoot, now }, deps);
+  const census = await loadCensus({ clonePath: opened.subject.clone.path, pinned: opened.subject.pinnedRevision.commit, consented: opened.contentClasses, recordsRoot: sources.recordsRoot, now, placement: placementSubjectOf(opened.subject) }, deps);
   const text = renderInventoryBrief({
     runDir: opened.run, runId: opened.runId, subject: opened.subject, declared: opened.declared, deadlineEnds: opened.deadlineEnds, session, executionRule, census,
   });

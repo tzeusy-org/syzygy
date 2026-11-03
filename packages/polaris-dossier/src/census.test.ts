@@ -145,7 +145,7 @@ describe('censusSection', () => {
 });
 
 describe('loadCensus', () => {
-  const input = { clonePath: '/nonexistent/clone', pinned: 'a'.repeat(40), consented: null, recordsRoot: REAL_ROOT, now: 0 };
+  const input = { clonePath: '/nonexistent/clone', pinned: 'a'.repeat(40), consented: null, recordsRoot: REAL_ROOT, now: 0, placement: { repository: 'repository:fixture', commit: 'a'.repeat(40) } };
   const reader = (list: () => Promise<readonly { path: string; mode: string; id: string }[]>) => () => ({ listTree: list }) as unknown as PinnedObjectReader;
 
   it('lists the pinned tree with the reader it is given and screens it with the screen it is given', async () => {
@@ -163,6 +163,52 @@ describe('loadCensus', () => {
     expect(noScreen).toEqual({ ok: false, why: 'the screening policy cannot be read (ENOENT)', consented: null });
     const unlisted = await loadCensus(input, { loadScreen: async () => LOADED, openReader: reader(async () => { throw new GitObjectReadRefusal('object-missing' as never, 'gone'); }) });
     expect(unlisted).toEqual({ ok: false, why: 'the pinned tree could not be listed (object-missing)', consented: null });
+  });
+
+  it('loads the screen for the run\'s placement subject (syzygy-mea.4)', async () => {
+    const asked: unknown[] = [];
+    await loadCensus(input, { loadScreen: async (subject) => { asked.push(subject); return LOADED; }, openReader: reader(async () => []) });
+    expect(asked).toEqual([{ repository: 'repository:fixture', commit: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' }]);
+  });
+});
+
+// syzygy-mea.4: the census under the live version-5 policy (governance-text and the owner placements), with the RFC5-14 class act in
+// force, as `loadCensus` builds it for the run's subject.
+describe('withheldCensus under the screening scope version 5', () => {
+  const LIVE_BYTES = fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'));
+  const TRIAL = '498ecd0d6d007db11ddb3aea9428552598a78622';
+  const screenFor = (subject: { repository: string; commit: string } | null) => {
+    const built = buildDossierScreen(LIVE_BYTES, true, subject);
+    if (!built.ok) throw new Error(built.why);
+    return built.screen;
+  };
+  const V5_ENTRIES = [blob('SECURITY.md'), blob('MANIFESTO'), blob('TLS.md'), blob('modules/MODULES.md'), blob('README.md'), blob('src/server.c')];
+
+  it('lists a governance-text path as class-not-consented when the statement does not list governance-text', () => {
+    const census = withheldCensus(V5_ENTRIES, screenFor({ repository: 'repository:redis-redis', commit: TRIAL }), ['code-content', 'project-documentation']);
+    expect(census.classNotConsented).toEqual([{ path: 'MANIFESTO', missingClass: 'governance-text' }, { path: 'SECURITY.md', missingClass: 'governance-text' }]);
+    expect(census.unknownExtractionClass).toEqual([]);
+    const listed = withheldCensus(V5_ENTRIES, screenFor({ repository: 'repository:redis-redis', commit: TRIAL }), ['code-content', 'project-documentation', 'governance-text']);
+    expect(listed.classNotConsented).toEqual([]);
+  });
+
+  it('admits the placed paths at the trial commit of repository:redis-redis and lists them as unknown-extraction-class elsewhere', () => {
+    const consented = ['code-content', 'project-documentation', 'governance-text'];
+    expect(withheldCensus(V5_ENTRIES, screenFor({ repository: 'repository:redis-redis', commit: TRIAL }), consented).unknownExtractionClass).toEqual([]);
+    for (const subject of [{ repository: 'repository:redis-redis', commit: 'd2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7' }, { repository: 'repository:other', commit: TRIAL }, null]) {
+      expect(withheldCensus(V5_ENTRIES, screenFor(subject), consented).unknownExtractionClass, JSON.stringify(subject)).toEqual(['TLS.md', 'modules/MODULES.md']);
+    }
+  });
+
+  it('loads the checkout\'s own screen for the placement subject when no loader is given', async () => {
+    const listing = () => ({ listTree: async () => V5_ENTRIES.map((e) => ({ ...e, id: 'x' })) }) as unknown as PinnedObjectReader;
+    const at = (commit: string) => loadCensus({ clonePath: '/nonexistent/clone', pinned: commit, consented: ['code-content', 'project-documentation', 'governance-text'],
+      recordsRoot: REAL_ROOT, now: Date.UTC(2026, 10, 3, 12, 0, 0), placement: { repository: 'repository:redis-redis', commit } }, { openReader: listing });
+    const trial = await at(TRIAL), other = await at('d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7');
+    if (!trial.ok || !other.ok) throw new Error('expected both censuses to load');
+    expect(trial.census.policy.policyVersion).toBe('1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd');
+    expect(trial.census.unknownExtractionClass).toEqual([]);
+    expect(other.census.unknownExtractionClass).toEqual(['TLS.md', 'modules/MODULES.md']);
   });
 });
 

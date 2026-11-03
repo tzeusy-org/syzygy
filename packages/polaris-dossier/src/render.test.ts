@@ -388,7 +388,7 @@ describe('render', () => {
   // project-documentation is quoted and given a source page only when the statement the run relies on lists the class.
   const DOC_SCREEN = buildDossierScreen(new TextEncoder().encode(JSON.stringify({
     policyId: 'fixture-public-source', policyVersion: '2', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
-    publicSourceScope: { contentClassification: { rules: LIVE_POLICY.publicSourceScope.contentClassification.rules } },
+    publicSourceScope: { contentClassification: LIVE_POLICY.publicSourceScope.contentClassification },
   })), true);
   it.each<[string, readonly string[] | null, string]>([
     ['a non-governed run, which relies on no statement', null, 'withheld from every agent-bound artifact: the run relies on no per-project statement, so no consent record lists project-documentation'],
@@ -444,7 +444,7 @@ describe('render', () => {
     const exempt = { ok: true as const, screen: { ...base, codeContentExemption: true, screenBody: (body: string, repositoryPath?: string) => (repositoryPath === undefined && body === KESTREL ? 'active-content' as const : base.screenBody(body, repositoryPath)) } };
     const deps = (renderer: DossierRenderer) => renderDeps({ loadScreen: async () => exempt, renderer });
     const undeclared: DossierRenderer = (input) => renderLocalDossier(input);
-    const why = (unconfirmed: string) => `1 cited blob(s) were admitted only under the screening policy's code-content exemption, and these pages cannot be confirmed to meet its render condition (${unconfirmed}); scanned as before for these pages they hold active content, so nothing is rendered`;
+    const why = (unconfirmed: string) => `1 cited blob(s) were admitted only under the screening policy's code-content or project-documentation exemption, and these pages cannot be confirmed to meet its render condition (${unconfirmed}); scanned as before for these pages they hold active content, so nothing is rendered`;
     expect(await renderRun(run, deps(undeclared))).toMatchObject({ ok: false, refusal: { stage: 'render', reason: why('the injected renderer does not declare that it writes every source byte as entity-encoded text') } });
     const noCsp: DossierRenderer = Object.assign((input: DossierRendererInput) => ({ files: new Map([...renderLocalDossier(input).files].map(([file, page]) => [file, file === 'index.html' ? page.replace(/<meta http-equiv="Content-Security-Policy"[^>]*>/u, '') : page])) }), { pageSinkContract: renderLocalDossier.pageSinkContract });
     expect(await renderRun(run, deps(noCsp))).toMatchObject({ ok: false, refusal: { stage: 'render', reason: expect.stringContaining('index.html') } });
@@ -487,6 +487,44 @@ describe('render', () => {
     const sourcePage = [...readSite(result.report.site).entries()].find(([file, page]) => file.startsWith('sources/') && page.includes('Kestrel keeps every key'))![1];
     expect(sourcePage).toContain(`data-quote-start="${Buffer.byteLength(lines.slice(0, 4).join(''))}"`);
     expect(sourcePage.match(/class="redaction-note"/gu)).toHaveLength(1);
+  });
+
+  // P-116 (screening scope version 5, C): a redacted body the project-documentation exemption admitted is scanned at a page that cannot
+  // meet renderCondition over its complete body, which check keeps only as the answer (activeContentAsBefore), never as text.
+  it('rescans a redacted exempt body over its complete body where the page sink is unconfirmed, and states no withheld text', async () => {
+    const run = await prepared(draft(), false);
+    if (!SCREEN.ok) throw new Error(SCREEN.why);
+    const base = SCREEN.screen;
+    const lines = KESTREL.match(/[^\n]*\n|[^\n]+$/gu)!;
+    const retainedLines = lines.map((line, i) => i === 3 ? '\n' : line);
+    const lineByteOffsets: number[] = []; let offset = 0;
+    for (const line of lines) { lineByteOffsets.push(offset); offset += Buffer.byteLength(line); }
+    const redacted = { kind: 'redacted' as const, retained: retainedLines.join(''), retainedLines, lineByteOffsets, originalBytes: offset, contentSha256: createHash('sha256').update(KESTREL).digest('hex'), withheld: [4], detectorIds: ['credential-assignment'] };
+    const asked: string[] = [];
+    const redacting = (active: boolean) => ({ ok: true as const, screen: { ...base,
+      screenTargetBody: (body: string, repositoryPath: string) => (repositoryPath === 'src/kestrel.c' ? redacted : base.screenTargetBody(body, repositoryPath)),
+      activeContentAsBefore: (body: string) => { asked.push(body); return active && body === KESTREL; } } });
+    const undeclared: DossierRenderer = (input) => renderLocalDossier(input);
+    const refused = await renderRun(run, renderDeps({ loadScreen: async () => redacting(true), renderer: undeclared }));
+    expect(refused).toMatchObject({ ok: false, refusal: { stage: 'render', reason: "1 cited blob(s) were admitted only under the screening policy's code-content or project-documentation exemption, and these pages cannot be confirmed to meet its render condition (the injected renderer does not declare that it writes every source byte as entity-encoded text); scanned as before for these pages they hold active content, so nothing is rendered" } });
+    // The complete body was asked about, not the retained text; the refusal carries no line of it.
+    expect(asked).toContain(KESTREL);
+    expect(JSON.stringify(refused)).not.toContain(lines[3]!.trim());
+    expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
+    // A renderer that meets the condition renders it; a body with no active content as before needs no condition.
+    expect(await renderRun(run, renderDeps({ loadScreen: async () => redacting(true), renderer: renderLocalDossier }))).toMatchObject({ ok: true });
+    expect(await renderRun(run, renderDeps({ loadScreen: async () => redacting(false), renderer: undeclared }))).toMatchObject({ ok: true });
+  });
+
+  // P-116 (D): the screen is loaded for the run's repository identity and pinned commit, which the owner placements compare.
+  it('loads the screen for the run\'s repository and pinned commit', async () => {
+    const run = await prepared(draft(), false);
+    const seen: unknown[] = [];
+    const result = await renderRun(run, renderDeps({ loadScreen: async (placement) => { seen.push(placement); return SCREEN; } }));
+    expect(result).toMatchObject({ ok: true });
+    const commit = JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')).subject.pinnedRevision.commit as string;
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit }]);
+    expect(commit).toMatch(/^[0-9a-f]{40}$/u);
   });
 
   it('refuses when the stored passed draft revision is altered, after the deadline, and when the output lacks the disclosure', async () => {
