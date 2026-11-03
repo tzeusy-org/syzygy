@@ -6483,9 +6483,9 @@ _NUMBER_WORDS = {
 }
 
 
-def _number_word(value):
-    """Parse a simple English count word from zero through ninety-nine."""
-    parts = value.lower().split("-")
+def _number_below_hundred(value):
+    """Parse one count word from zero through ninety-nine (hyphen allowed)."""
+    parts = value.split("-")
     if len(parts) == 1:
         return _NUMBER_WORDS.get(parts[0])
     if (len(parts) == 2
@@ -6494,6 +6494,39 @@ def _number_word(value):
             and 1 <= _NUMBER_WORDS.get(parts[1], 0) <= 9):
         return _NUMBER_WORDS[parts[0]] + _NUMBER_WORDS[parts[1]]
     return None
+
+
+def _number_word(value):
+    """Parse an English count phrase from zero through nine hundred ninety-nine.
+
+    Accepts `ninety-nine`, `one hundred`, `one hundred and five`,
+    `one hundred five` and `two hundred and thirteen`. A dangling `and`, a
+    `hundred` without a leading one-to-nine word, or a zero tail after
+    `hundred` is unreadable (None), never guessed.
+    """
+    chunks = value.lower().split()
+    if not chunks:
+        return None
+    if len(chunks) == 1:
+        return _number_below_hundred(chunks[0])
+    if chunks[1] != "hundred":
+        return None
+    lead = _NUMBER_WORDS.get(chunks[0], 0)
+    if not 1 <= lead <= 9:
+        return None
+    rest = chunks[2:]
+    if rest and rest[0] == "and":
+        rest = rest[1:]
+        if not rest:
+            return None
+    if not rest:
+        return lead * 100
+    if len(rest) != 1:
+        return None
+    tail = _number_below_hundred(rest[0])
+    if not tail:
+        return None
+    return lead * 100 + tail
 
 
 def _battery_commands(sh_block):
@@ -6594,18 +6627,30 @@ def cg26_battery_parity(res, status=None, workflow=None):
                         f"and did not")
 
     # The stated count is a third hand-maintained copy of the same fact.
-    for claim in re.finditer(
-            r"\bThe ([a-z]+(?:-[a-z]+)*) checks above are the same "
-            r"([a-z]+(?:-[a-z]+)*)\b",
-            status_text):
+    # The phrase may span several words (`one hundred and five`) and the
+    # sentence may wrap across lines, so whitespace is `\s+`.
+    word = r"[a-z]+(?:-[a-z]+)*"
+    phrase = rf"{word}(?:\s+{word})*?"
+    claims = list(re.finditer(
+        rf"\bThe ({phrase})\s+checks\s+above\s+are\s+the\s+same\s+"
+        rf"({phrase})\s+the\s+hosted\s+workflow\s+runs\b",
+        status_text))
+    if not claims:
+        findings.append(
+            "no parity count sentence matched `The <N> checks above are the "
+            "same <N> the hosted workflow runs`; a count this check cannot "
+            "find is a count it cannot police, and skipping it would read "
+            "as agreement")
+    for claim in claims:
         said = _number_word(claim.group(1))
         also = _number_word(claim.group(2))
         for n, which in ((said, "published"), (also, "hosted")):
             if n is None:
                 findings.append(
-                    f"the parity sentence says `{claim.group(0)}` and this "
-                    f"check cannot read one of its numbers as a word; a "
-                    f"number it cannot read is a number it cannot police")
+                    f"the parity sentence says `{' '.join(claim.group(0).split())}`"
+                    f" and this check cannot read one of its numbers as a "
+                    f"word; a number it cannot read is a number it cannot "
+                    f"police")
                 break
         else:
             if said != len(pub_checks):
@@ -7871,7 +7916,27 @@ def selftest():
     def _wf(*cmds):
         return "".join(f"      - name: x\n        run: {c}\n" for c in cmds)
 
-    def _st(block, claim=""):
+    def _spell(n):
+        # Independent of `_number_word`: the oracle must not share its code.
+        ones = ("zero one two three four five six seven eight nine ten "
+                "eleven twelve thirteen fourteen fifteen sixteen seventeen "
+                "eighteen nineteen").split()
+        tens = "x x twenty thirty forty fifty sixty seventy eighty ninety".split()
+        if n < 20:
+            return ones[n]
+        if n < 100:
+            return tens[n // 10] + (f"-{ones[n % 10]}" if n % 10 else "")
+        tail = f" and {_spell(n % 100)}" if n % 100 else ""
+        return f"{ones[n // 100]} hundred{tail}"
+
+    def _st(block, claim=None):
+        if claim is None:
+            # The default claim is the true sentence for the block, since a
+            # missing count sentence is itself a finding.
+            n = sum(1 for ln in block.splitlines()
+                    if ln.startswith("python3 "))
+            claim = (f"The {_spell(n)} checks above are the same "
+                     f"{_spell(n)} the hosted workflow runs.")
         return (f"# S\n\n{BATTERY_HEADING}\n\n```sh\n{block}```\n\n{claim}\n")
 
     AGREE = "python3 scripts/a.py\npython3 scripts/b.py --check\n"
@@ -7966,6 +8031,83 @@ def selftest():
                   c.rows[0][0] == "FAIL"
                   and any("claims 26 hosted checks" in d
                           for d in c.rows[0][4])))
+
+    def _big(n):
+        return ("".join(f"python3 scripts/check-{i}.py\n" for i in range(n)),
+                _wf(*(f"python3 scripts/check-{i}.py" for i in range(n))))
+
+    # Boundaries 99/100 and the real 105 form, wrapped across a line break.
+    for n in (99, 100, 105, 113):
+        blk, wf = _big(n)
+        c = Cap()
+        cg26_battery_parity(c, status=_st(blk), workflow=wf)
+        cases.append((f"CG-26 {n}-check count sentence matches",
+                      c.rows[0][0] == "OK"))
+    blk, wf = _big(105)
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred and five checks above are the "
+                           "same one hundred and\nfive the hosted workflow "
+                           "runs."),
+        workflow=wf)
+    cases.append(("CG-26 three-digit count wrapped across lines matches",
+                  c.rows[0][0] == "OK"))
+
+    # Mismatch in each position, at three digits.
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred and six checks above are the "
+                           "same one hundred and five the hosted workflow "
+                           "runs."), workflow=wf)
+    cases.append(("CG-26 three-digit published-count mismatch detected",
+                  c.rows[0][0] == "FAIL"
+                  and any("claims 106 published checks" in d
+                          for d in c.rows[0][4])))
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred and five checks above are the "
+                           "same one hundred and ten the hosted workflow "
+                           "runs."), workflow=wf)
+    cases.append(("CG-26 three-digit hosted-count mismatch detected",
+                  c.rows[0][0] == "FAIL"
+                  and any("claims 110 hosted checks" in d
+                          for d in c.rows[0][4])))
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred and five checks above are the "
+                           "same one hundred and five the hosted workflow "
+                           "runs."),
+        workflow=_big(104)[1])
+    cases.append(("CG-26 three-digit count vs hosted population detected",
+                  c.rows[0][0] == "FAIL"
+                  and any("claims 105 hosted checks" in d
+                          for d in c.rows[0][4])))
+
+    # Unreadable number is a finding.
+    c = Cap()
+    cg26_battery_parity(
+        c, status=_st(blk, "The one hundred and checks above are the same "
+                           "five the hosted workflow runs."), workflow=wf)
+    cases.append(("CG-26 unreadable three-digit count is a finding",
+                  c.rows[0][0] == "FAIL"
+                  and any("cannot read" in d for d in c.rows[0][4])))
+
+    # No count sentence at all is a finding, not a silent skip.
+    c = Cap()
+    cg26_battery_parity(c, status=_st(AGREE, "No count is stated here."),
+                        workflow=_wf("python3 scripts/a.py",
+                                     "python3 scripts/b.py --check"))
+    cases.append(("CG-26 absent count sentence is a finding, not a skip",
+                  c.rows[0][0] == "FAIL"
+                  and any("no parity count sentence" in d
+                          for d in c.rows[0][4])))
+    c = Cap()
+    cg26_battery_parity(c, status=_st(AGREE, "The 2 checks above are the "
+                                             "same 2 the hosted workflow runs."),
+                        workflow=_wf("python3 scripts/a.py",
+                                     "python3 scripts/b.py --check"))
+    cases.append(("CG-26 digit-form count sentence is not silently skipped",
+                  c.rows[0][0] == "FAIL"))
 
     c = Cap()
     cg26_battery_parity(c, status="# S\n\nno block here\n",
