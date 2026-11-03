@@ -1,12 +1,12 @@
 import { createHash } from 'node:crypto';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS, renderRegistryAct } from './recorder-fixtures.testkit.js';
+import { loadRecorderForms, renderRegistryAct } from './recorder-fixtures.testkit.js';
 import {
   DECISIONS_DIR, REGISTRY_GIT_SOURCE_ACT_FORM, createPackageAdmissionReader, readDigestBoundActState, type DigestBoundActForm, type PackageReaderFs,
 } from './package-reader.js';
 
-// The recorder forms render once, before any other hook of this file (syzygy-bpyt.4.8).
-beforeAll(loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS);
+// The recorder forms render once, before the file collects its tests: some tables render at collection (syzygy-bpyt.4.8).
+await loadRecorderForms();
 
 // The decisions sweep reads each swept file's text in its spellings once, whatever the number of needles, and only for that file
 // (syzygy-bpyt.8.20): a file walked after another is read in its own spellings, and a file's new bytes are read in theirs. Verdicts and

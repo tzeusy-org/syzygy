@@ -76,8 +76,8 @@ interface Rendered {
 let rendered: Rendered | undefined;
 let loading: Promise<void> | undefined;
 
-/** Render every form, once per process, through one asynchronous python3 run. Await it before the first render, in a file-level
- * `beforeAll` registered ahead of any other hook: `beforeAll(loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS)`. Loading this module
+/** Render every form, once per process, through one asynchronous python3 run. Await it before the first render, at the top level of
+ * the test file after its imports (`await loadRecorderForms();`), so a table a describe body builds at collection can render too. Loading this module
  * starts no process, so an import of the consent package's ./testing entry stays hermetic. */
 export function loadRecorderForms(): Promise<void> {
   loading ??= (async () => {
@@ -91,11 +91,9 @@ export function loadRecorderForms(): Promise<void> {
   })();
   return loading;
 }
-/** The hook timeout for `loadRecorderForms`: one python3 run importing eleven recorders, on a host that may be heavily loaded. */
-export const RECORDER_FORMS_TIMEOUT_MS = 120_000;
 
 function forms(): Rendered {
-  if (rendered === undefined) throw new Error('recorder render failed: the forms are not loaded; await loadRecorderForms() in a beforeAll first');
+  if (rendered === undefined) throw new Error('recorder render failed: the forms are not loaded; await loadRecorderForms() at the top of the test file first');
   return rendered;
 }
 

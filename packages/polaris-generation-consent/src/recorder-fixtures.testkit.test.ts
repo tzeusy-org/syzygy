@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
-  loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS, recorderRecordPaths, renderClassAct, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderPolicyAct, renderProviderV2Act,
+  loadRecorderForms, recorderRecordPaths, renderClassAct, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderPolicyAct, renderProviderV2Act,
   renderRecorderAct, renderRegistryAct, type DossierLocalAgentActKey, type RecorderActKey,
 } from './recorder-fixtures.testkit.js';
 
@@ -13,7 +13,7 @@ import {
 // holds every form it fills equal, byte for byte, to the recorder's own render of the same values, made the way the testkit made
 // each render before: one `render_act` (or `render_record`) call with the values themselves. Each slot gets a value no other slot
 // shares, so a slot filled from the wrong value, or left unfilled, differs.
-beforeAll(loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS);
+await loadRecorderForms();
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 

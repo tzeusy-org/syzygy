@@ -5,11 +5,11 @@ import { fileURLToPath } from 'node:url';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { AdmissionRecordError } from './admission-record.js';
 import { inForceRecords } from './consent-ports.js';
-import { loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS, HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS, renderClassAct, renderPolicyAct, renderRecorderAct } from './recorder-fixtures.testkit.js';
+import { loadRecorderForms, HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS, renderClassAct, renderPolicyAct, renderRecorderAct } from './recorder-fixtures.testkit.js';
 import { DECISIONS_DIR, EGRESS_V2_INSTANCE, INSTANCES_DIR, POLICY_ACT_FILE, POLICY_PATH, createAdmissionRecordsPort, createPackageAdmissionReader, createPackageAdmissionRecordsPort, createPackagePolicyReader, readClassActState, readInForceEgress, readPolicyActChain, type PackageReaderFs } from './package-reader.js';
 
-// The recorder forms render once, before any other hook of this file (syzygy-bpyt.4.8).
-beforeAll(loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS);
+// The recorder forms render once, before the file collects its tests: some tables render at collection (syzygy-bpyt.4.8).
+await loadRecorderForms();
 
 // The citation allowlist, replaced by a map the allowlist cases fill and clear: every other case reads with no file allowlisted.
 const ALLOWLIST = vi.hoisted(() => new Map<string, { readonly sha256: string; readonly reason: string }>());
