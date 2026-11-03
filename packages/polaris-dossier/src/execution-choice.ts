@@ -5,6 +5,7 @@ import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import type { ExecutionChoice, ExecutionChoiceSource } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
 import type { Outcome } from './outcome.js';
+import { launchedMarkerState } from './launched.js';
 import { reverifyPinnedRevision, type ReverifyOptions, type ReverifyRefusal } from './reverify.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
@@ -13,10 +14,10 @@ import { isoOf } from './iso-of.js';
  *
  * The owner's execution choice for one run: it names the run, its pinned revision, and what it covers, which is building and running
  * the observed project in the clone from that run's authoring session. It is taken only from this command, which the operator runs
- * personally; never from the run configuration, an earlier run, or a standing or per-project record. It is refused for another run or
- * revision, after the brief, while D9 is not established in force, when the configuration does not declare the operator to be the owner,
- * and without the operator's three declarations (R3-F2): that the owner started the authoring session, on the owner's own host, and
- * attends it. Syzygy cannot see who typed the command or whether the owner attends, so the record says both are the operator's
+ * personally; never from the run configuration, an earlier run, or a standing or per-project record. It is refused for a launched run
+ * or one whose launched marker cannot be read, for another run or revision, after the brief, while D9 is not established in force, when
+ * the configuration does not declare the operator to be the owner, and without the operator's three declarations (R3-F2): that the owner
+ * started the authoring session, on the owner's own host, and attends it. Syzygy cannot see who typed the command or whether the owner attends, so the record says both are the operator's
  * declaration, labelled Inferred. The record lies in the run directory, within the agent sessions' write reach.
  *
  * R3-F7: the record is not an execution consent (RFC5-12, `SOURCE-POLICY.md`) and approves no execution profile. Its format names it a
@@ -49,7 +50,7 @@ export interface AllowExecutionRequest {
   readonly declarations: readonly string[];
 }
 
-export type AllowExecutionStage = 'run' | 'reverify' | 'revision' | 'briefed' | 'd9' | 'owner' | 'declarations' | 'recorded-already' | 'write';
+export type AllowExecutionStage = 'launched' | 'run' | 'reverify' | 'revision' | 'briefed' | 'd9' | 'owner' | 'declarations' | 'recorded-already' | 'write';
 
 export interface AllowExecutionRefusal {
   readonly command: 'allow-execution';
@@ -87,6 +88,16 @@ export async function allowExecution(runDir: string, request: AllowExecutionRequ
   const run = path.resolve(runDir);
   const refuse = (stage: AllowExecutionStage, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]): AllowExecutionResult =>
     ({ ok: false, refusal: { command: 'allow-execution', outcome: 'refused', stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: DISCLOSURES } });
+  // syzygy-bpyt.8.11: a launched run takes no choice (SEC-3; candidate REQ-polaris-generation-044's falsifier), and neither does a run
+  // whose marker is present but not the one Syzygy writes (syzygy-bpyt.8.8). Checked first, where the CLI checked it before, so every
+  // caller of this function refuses at the same point and no other refusal moves.
+  const marker = launchedMarkerState(run);
+  if (marker === 'launched') {
+    return refuse('launched', 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing');
+  }
+  if (marker === 'unreadable') {
+    return refuse('launched', 'this run\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)');
+  }
   const runId = path.basename(run);
   if (!RUN_ID.test(runId)) return refuse('run', `${run} is not a run directory: its name is not of the form run-<32 hex>`);
 
