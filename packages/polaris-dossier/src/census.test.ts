@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { CENSUS_LISTED_LIMIT, censusPath, censusSection, loadCensus, withheldCensus, type CensusLoad } from './census.js';
+import { CENSUS_LISTED_LIMIT, censusPath, censusSection, loadCensus, screenCensusReport, withheldCensus, type CensusLoad } from './census.js';
 import { GitObjectReadRefusal, type PinnedObjectReader } from './git-object-reader.js';
 import { buildDossierScreen } from './screen.js';
 
@@ -138,5 +138,31 @@ describe('loadCensus', () => {
     expect(noScreen).toEqual({ ok: false, why: 'the screening policy cannot be read (ENOENT)' });
     const unlisted = await loadCensus(input, { loadScreen: async () => LOADED, openReader: reader(async () => { throw new GitObjectReadRefusal('object-missing' as never, 'gone'); }) });
     expect(unlisted).toEqual({ ok: false, why: 'the pinned tree could not be listed (object-missing)' });
+  });
+});
+
+describe('screenCensusReport (the author\'s census on check output)', () => {
+  it('merges every group into one path-sorted list of {path, outcome}, the class beside a class-gate path, and counts the secret path', () => {
+    const listed = screenCensusReport({ ok: true, census: withheldCensus(ENTRIES, SCREEN, []) });
+    if (listed.state !== 'listed') throw new Error('expected a listed census');
+    expect(listed.withheld).toEqual([
+      { path: '.env', outcome: 'denied-path' },
+      { path: 'Makefile', outcome: 'unknown-extraction-class' },
+      { path: 'README.md', outcome: 'unknown-extraction-class' },
+      { path: 'deps/certs/server.key', outcome: 'denied-path' },
+      { path: 'docs/link.md', outcome: 'unknown-extraction-class' },
+      { path: 'src/main.c', outcome: 'class-not-consented', missingClass: 'code-content' },
+      { path: 'tools/run.c', outcome: 'class-not-consented', missingClass: 'code-content' },
+    ]);
+    expect(listed.files).toBe(8);
+    expect(listed.secretDetectorPathMatches).toBe(1);
+    expect(listed.note.startsWith('8 of the 8 file(s) at the pinned revision are withheld by their path alone (1 by a secret detector match on the path, never named)')).toBe(true);
+    expect(JSON.stringify(listed)).not.toContain('abcdefghij');
+  });
+  it('is Unknown with the reason, never an empty list, when the census could not be taken', () => {
+    expect(screenCensusReport({ ok: false, why: 'the pinned tree could not be listed (object-missing)' })).toMatchObject({
+      state: 'unknown', why: 'the pinned tree could not be listed (object-missing)',
+    });
+    expect(screenCensusReport({ ok: false, why: 'x' })).not.toHaveProperty('withheld');
   });
 });

@@ -15,6 +15,7 @@ import { reverifyPinnedRevision, type ReverifyRefusal } from './reverify.js';
 import type { RunConfig } from './run-config.js';
 import { loadDossierScreen, type DossierScreen, type ScreenExclusion, type ScreenLoad } from './screen.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
+import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
 
 /** `syzygy dossier check <run> [--draft <file>]` (REQ-polaris-generation-033, 034, 036).
  *
@@ -185,6 +186,8 @@ export interface CheckReport extends CheckRecord {
   readonly run: string;
   readonly checkFile: string;
   readonly disclosures: readonly string[];
+  /** The path-only census of every file screening withholds at the pinned revision (`census.ts`); on the report, never the record. */
+  readonly screenCensus?: ScreenCensusReport;
 }
 
 export type CheckResult = Outcome<CheckReport, CheckRefusal>;
@@ -260,7 +263,8 @@ export interface SubjectPlan<R extends object, G> {
   readonly disclosures: readonly string[];
 }
 
-export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[] };
+/** `screenCensus` is on `check`'s report only (`census.ts`): advice to the author, never written to the check record. */
+export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -381,6 +385,17 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     findings.push(...derived.findings);
     ({ quotations, excludedContent, citedBlobs } = derived);
   }
+  // The author's path-only census of what the review will not see (syzygy-mea.3, lead ruling): every blob of the pinned tree, through the
+  // same screen and the class gate, on every check from the first. The reader re-lists the tree it listed for the derivation.
+  let screenCensus: ScreenCensusReport | undefined;
+  if (plan.command === 'check') {
+    try {
+      screenCensus = screenCensusReport({ ok: true, census: withheldCensus(await reader.listTree(), screen, checked.contentClasses) });
+    } catch (cause) {
+      if (!(cause instanceof GitObjectReadRefusal)) throw cause;
+      screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})` });
+    }
+  }
   if (credential.required && !credential.passed) {
     findings.push({ kind: 'adapter-credential-readable', at: '$', detail: `${credential.finding.why}. ${credential.finding.instruction}` });
   }
@@ -420,7 +435,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   }
   log({ outcome, revision, findings: findings.length });
   const disclosures = credential.required ? [...plan.disclosures, CREDENTIAL_CHECK_DISCLOSURE] : plan.disclosures;
-  return { ok: true, report: { command: plan.command, run, checkFile, ...record, disclosures } };
+  return { ok: true, report: { command: plan.command, run, checkFile, ...record, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }) } };
 }
 
 /** The instant the brief record states it was issued, or why the run counts as not briefed. */

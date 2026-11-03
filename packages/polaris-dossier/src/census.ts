@@ -13,7 +13,11 @@ import { loadDossierScreen, type DossierScreen, type ScreenLoad } from './screen
  * and the class gate's `unconsentedClass`. No blob is read: the census comes from the tree listing alone, so a body screening withholds
  * after reading it (a secret detector match, active content, text that is not UTF-8) or a span it withholds for a redacted line is not in
  * it, and the brief says so. A path a secret detector matches is counted and never named. It changes nothing screening admits, withholds
- * or redacts, and no readiness criterion: it is advice in a brief, never a finding.
+ * or redacts, and no readiness criterion: it is advice, never a finding.
+ *
+ * Where it goes: the inventory brief (`censusSection`), and `syzygy dossier check`'s output to the authoring session
+ * (`screenCensusReport`), never the authoring brief: REQ-polaris-generation-034 says "The brief SHALL carry no project content beyond the
+ * repository identity and the pinned revision", so the lead ruled (b) for the author's side of the owner direction's "both briefs".
  *
  * Each named path is written as a JSON string with every backtick, C1 control and line or paragraph separator escaped too, so a path
  * from the clone stays one inert line of the brief: it cannot open a code span or fence, or start a line of its own. */
@@ -129,4 +133,31 @@ export function censusSection(load: CensusLoad, checkCommand: 'check' | 'invento
     '',
     after,
   ].join('\n');
+}
+
+/** The census as `syzygy dossier check` reports it to the authoring session, beside `reviewVisibility` (lead ruling on syzygy-mea.3:
+ * REQ-034 keeps the authoring brief free of project content, so the author learns this from its own check output instead). Every
+ * withheld path at the pinned revision, not only the cited ones, as `{path, outcome}` (with the class no consent lists for a
+ * `class-not-consented` path), sorted by path; a path a secret detector matches is counted, never named. Advice, never a finding: it is
+ * not written to the check record. */
+export type ScreenCensusReport =
+  | { readonly state: 'listed'; readonly policy: WithheldCensus['policy']; readonly files: number;
+      readonly withheld: readonly { readonly path: string; readonly outcome: string; readonly missingClass?: string }[];
+      readonly secretDetectorPathMatches: number; readonly note: string }
+  | { readonly state: 'unknown'; readonly why: string; readonly note: string };
+
+const REPORT_NOTE = 'the review session is given a cited span\'s text only when screening admits its file and the per-project statement lists its class, so a block that cites only withheld files cannot be confirmed in review, and an unconfirmed row blocks readiness. Prefer admitted sources: where an admitted file states the same thing, cite it as well or instead; never leave out what only a withheld file states.';
+
+export function screenCensusReport(load: CensusLoad): ScreenCensusReport {
+  if (!load.ok) return { state: 'unknown', why: load.why, note: `Which files screening withholds by path is Unknown at this check. Otherwise: ${REPORT_NOTE}` };
+  const { census } = load;
+  const withheld = [
+    ...census.deniedPath.map((p) => ({ path: p, outcome: 'denied-path' })),
+    ...census.unknownExtractionClass.map((p) => ({ path: p, outcome: 'unknown-extraction-class' })),
+    ...census.classNotConsented.map((entry) => ({ path: entry.path, outcome: CLASS_NOT_CONSENTED, missingClass: entry.missingClass })),
+  ].sort((a, b) => byCodeUnit(a.path, b.path));
+  return {
+    state: 'listed', policy: census.policy, files: census.files, withheld, secretDetectorPathMatches: census.secretPath,
+    note: `${withheld.length + census.secretPath} of the ${census.files} file(s) at the pinned revision are withheld by their path alone (${census.secretPath} by a secret detector match on the path, never named), from the tree listing with no body read; a body screening withholds after reading it appears only under reviewVisibility, for the files you cite. ${REPORT_NOTE}`,
+  };
 }

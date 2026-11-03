@@ -8,7 +8,7 @@ import { issueBrief } from './brief.js';
 import { blobRedaction, checkDraft, deriveFindings, draftRules, lineRanges, reviewVisibility, type CheckDeps, type CheckResult } from './check.js';
 import { runDossierCli } from './cli.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
-import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
+import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
@@ -534,6 +534,52 @@ describe('check: the adapter-credential check after a permitting brief', () => {
 
 describe('check: the command', () => {
   const io = () => { const out: string[] = [], err: string[] = []; return { out, err, io: { stdout: (t: string) => { out.push(t); }, stderr: (t: string) => { err.push(t); } } }; };
+
+  // syzygy-mea.3, lead ruling (b): REQ-034 keeps the authoring brief free of project content, so the author learns from its own check
+  // output, from the first check on, every path the screen withholds at the pinned revision, cited or not.
+  it('reports the path-only census of every withheld file on the author\'s first check, outside the check record', async () => {
+    const run = await briefedRun();
+    writeDraft(run, valid());
+    const a = io();
+    expect(await runDossierCli(['check', run, '--json'], a.io, { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN })).toBe(0);
+    const printed = JSON.parse(a.out.join(''));
+    expect(printed.revision).toBe(0);
+    if (!SCREEN.ok) throw new Error(SCREEN.why);
+    expect(printed.screenCensus).toEqual({
+      state: 'listed',
+      policy: { policyId: 'fixture-public-source', policyVersion: '1', sha256: SCREEN.screen.policySha256 },
+      files: 8,
+      withheld: [{ path: '.env', outcome: 'denied-path' }, { path: 'README.md', outcome: 'unknown-extraction-class' }],
+      secretDetectorPathMatches: 1,
+      note: '3 of the 8 file(s) at the pinned revision are withheld by their path alone (1 by a secret detector match on the path, never named), from the tree listing with no body read; a body screening withholds after reading it appears only under reviewVisibility, for the files you cite. the review session is given a cited span\'s text only when screening admits its file and the per-project statement lists its class, so a block that cites only withheld files cannot be confirmed in review, and an unconfirmed row blocks readiness. Prefer admitted sources: where an admitted file states the same thing, cite it as well or instead; never leave out what only a withheld file states.',
+    });
+    // The valid draft cites no withheld file, so there is no reviewVisibility, yet the census is there.
+    expect(printed).not.toHaveProperty('reviewVisibility');
+    // Paths and outcomes only: no body text, never the secret path, and nothing of it in the stored record.
+    expect(a.out.join('')).not.toContain('Kestrel is a key-value server.');
+    expect(a.out.join('')).not.toContain('k'.repeat(24));
+    expect(read(run, 'checks/rev-0.json')).not.toContain('screenCensus');
+  });
+
+  it('says the census is Unknown, with the reason, when the tree cannot be listed again', async () => {
+    const run = await briefedRun();
+    writeDraft(run, valid());
+    const direct = report(await checkDraft(run, {}, deps()));
+    expect(direct.screenCensus?.state).toBe('listed');
+    const listings: number[] = [];
+    const flaky = (options: PinnedObjectReaderOptions): PinnedObjectReader => {
+      const real = openPinnedObjectReader(options);
+      return { ...real, algorithm: real.algorithm, readBlobs: (paths) => real.readBlobs(paths), listTree: async () => {
+        listings.push(listings.length);
+        // The step guard and the derivation list the tree; the census's own listing (the third) is refused.
+        if (listings.length === 3) throw new GitObjectReadRefusal('object-missing' as never, 'gone');
+        return real.listTree();
+      } } as PinnedObjectReader;
+    };
+    writeDraft(run, valid());
+    const unknown = report(await checkDraft(run, {}, deps({ openReader: flaky })));
+    expect(unknown.screenCensus).toMatchObject({ state: 'unknown', why: 'the pinned tree could not be listed (object-missing)' });
+  });
 
   it('exits 0 on a passing draft and 1 on findings, printing the same document with --json', async () => {
     const run = await briefedRun();
