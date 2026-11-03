@@ -440,7 +440,7 @@ the review packet.
   project documentation, a matched line withholds the body whole. A test or
   script whose line opens with `requirepass <value>` is withheld where
   version 4 admitted it. [Observed, `--self-corpus`] It matches 0 of Syzygy's
-  own 8,402 tracked text files. [Unknown] How many Redis files it matches.
+  own 8,405 tracked text files at `d2b48c50`. [Unknown] How many Redis files it matches.
 - **X: three more files join the documentation residuals**, for 3 spans.
 - **C: markup a human reader of the upstream page does not see now reaches
   the reviewer.** An HTML comment is invisible on a rendered GitHub page and
