@@ -1,0 +1,176 @@
+{
+ "unmutated": {
+  "exitCode": 0,
+  "testsLine": [
+   "Tests  13 passed (13)"
+  ]
+ },
+ "format": "mutation-evidence/1",
+ "bead": "syzygy-bpyt.6.9",
+ "subject": [
+  "packages/three-surface-poc-core/src/code-structure.ts",
+  "packages/three-surface-poc-core/src/code-structure.test.ts"
+ ],
+ "subjectSha256": {
+  "packages/three-surface-poc-core/src/code-structure.ts": "a3778c1ea3fad6b1fd4544be870a1236c0b8708939bfbe7c37c949135b5bfd47",
+  "packages/three-surface-poc-core/src/code-structure.test.ts": "662913174b6ac0482219f8e8bff12651b1d76335fdc0cc965078807de98012bc"
+ },
+ "commit": "53ec82a053250f240900134d89dfc65774ffafb7",
+ "command": "npx vitest run packages/three-surface-poc-core/src/code-structure.test.ts",
+ "mutants": [
+  {
+   "id": "R3-byte-filter-contains",
+   "edits": [
+    {
+     "old": "if (!GITLINK_HEAD.test(head)) kept.push(record);",
+     "new": "if (!new RegExp(GITLINK_HEAD.source.slice(1)).test(head)) kept.push(record);"
+    }
+   ],
+   "exitCode": 1,
+   "testsLine": [
+    "Tests  1 failed | 12 passed (13)"
+   ],
+   "failedTests": [],
+   "outcome": "killed"
+  },
+  {
+   "id": "R3-string-filter-contains",
+   "edits": [
+    {
+     "old": ".filter((record) => !GITLINK_HEAD.test(record))",
+     "new": ".filter((record) => !new RegExp(GITLINK_HEAD.source.slice(1)).test(record))"
+    }
+   ],
+   "exitCode": 1,
+   "testsLine": [
+    "Tests  1 failed | 12 passed (13)"
+   ],
+   "failedTests": [],
+   "outcome": "killed"
+  },
+  {
+   "id": "R3-both-filters-contain",
+   "edits": [
+    {
+     "old": "if (!GITLINK_HEAD.test(head)) kept.push(record);",
+     "new": "if (!new RegExp(GITLINK_HEAD.source.slice(1)).test(head)) kept.push(record);"
+    },
+    {
+     "old": ".filter((record) => !GITLINK_HEAD.test(record))",
+     "new": ".filter((record) => !new RegExp(GITLINK_HEAD.source.slice(1)).test(record))"
+    }
+   ],
+   "exitCode": 1,
+   "testsLine": [
+    "Tests  1 failed | 12 passed (13)"
+   ],
+   "failedTests": [],
+   "outcome": "killed"
+  },
+  {
+   "id": "prefix-only-restored",
+   "edits": [
+    {
+     "old": "const GITLINK_HEAD = /^160000 commit [0-9a-f]{40,64} +-\\t/;",
+     "new": "const GITLINK_HEAD = /^160000 /;"
+    }
+   ],
+   "exitCode": 1,
+   "testsLine": [
+    "Tests  1 failed | 12 passed (13)"
+   ],
+   "failedTests": [],
+   "outcome": "killed"
+  },
+  {
+   "id": "head-drops-commit-type",
+   "edits": [
+    {
+     "old": "/^160000 commit [0-9a-f]{40,64} +-\\t/",
+     "new": "/^160000 [a-z]+ [0-9a-f]{40,64} +-\\t/"
+    }
+   ],
+   "exitCode": 1,
+   "testsLine": [
+    "Tests  1 failed | 12 passed (13)"
+   ],
+   "failedTests": [],
+   "outcome": "killed"
+  },
+  {
+   "id": "head-id-any-length",
+   "edits": [
+    {
+     "old": "[0-9a-f]{40,64} +-",
+     "new": "[0-9a-f]* +-"
+    }
+   ],
+   "exitCode": 1,
+   "testsLine": [
+    "Tests  1 failed | 12 passed (13)"
+   ],
+   "failedTests": [],
+   "outcome": "killed"
+  },
+  {
+   "id": "head-size-column-any",
+   "edits": [
+    {
+     "old": "+-\\t/;",
+     "new": "+\\S*\\t/;"
+    }
+   ],
+   "exitCode": 1,
+   "testsLine": [
+    "Tests  1 failed | 12 passed (13)"
+   ],
+   "failedTests": [],
+   "outcome": "killed"
+  },
+  {
+   "id": "head-spaces-optional",
+   "edits": [
+    {
+     "old": "{40,64} +-",
+     "new": "{40,64} *-"
+    }
+   ],
+   "exitCode": 1,
+   "testsLine": [
+    "Tests  1 failed | 12 passed (13)"
+   ],
+   "failedTests": [],
+   "outcome": "killed"
+  },
+  {
+   "id": "head-drops-tab",
+   "edits": [
+    {
+     "old": " +-\\t/;",
+     "new": " +-/;"
+    }
+   ],
+   "exitCode": 1,
+   "testsLine": [
+    "Tests  1 failed | 12 passed (13)"
+   ],
+   "failedTests": [],
+   "outcome": "killed"
+  },
+  {
+   "id": "byte-slice-too-short",
+   "edits": [
+    {
+     "old": "GITLINK_HEAD_BYTES = 128",
+     "new": "GITLINK_HEAD_BYTES = 8"
+    }
+   ],
+   "exitCode": 1,
+   "testsLine": [
+    "Tests  1 failed | 12 passed (13)"
+   ],
+   "failedTests": [],
+   "outcome": "killed"
+  }
+ ]
+}
