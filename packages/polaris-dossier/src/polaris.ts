@@ -13,6 +13,7 @@ import { reviewLaunchRecordName, REVIEW_CHECKS } from './review.js';
 import { WAITING_DENIED_TOOLS, WAITING_TOOLS } from './session-handover.js';
 import { bwrapArgs, viewFor, viewProbeRefusal, viewSha256, type ViewRole } from './session-view.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
+import { isoOf } from './iso-of.js';
 
 /** `syzygy polaris <url>`: the one-command dossier run (candidate REQ-polaris-generation-040 to 044; prototype under owner direction
  * POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14, slices 1 to 5 of the candidate's design).
@@ -398,7 +399,7 @@ function launchSession(options: Options, ports: CliPorts, state: SupervisorState
   const pidText = spawnSync('tmux', ['list-panes', '-t', window, '-F', '#{pane_pid}'], { encoding: 'utf8' }).stdout.trim();
   const pid = /^\d+$/.test(pidText) ? Number(pidText) : null;
   const vsha = viewSha256(spec);
-  state.launches.push({ role: plan.role, pid, at: new Date(started).toISOString(), argvSha256: sha256(JSON.stringify(argv)), viewSha256: vsha });
+  state.launches.push({ role: plan.role, pid, at: isoOf(started), argvSha256: sha256(JSON.stringify(argv)), viewSha256: vsha });
   if (plan.role !== 'author') {
     const file = plan.role === 'inventory' ? path.join(RUN_LAYOUT.inventory, launchRecordName(plan.session)) : path.join(RUN_LAYOUT.reviews, reviewLaunchRecordName(plan.role, plan.session));
     if (!fs.existsSync(path.join(state.run, file))) {
@@ -536,7 +537,7 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
     const left = Math.max(0, deadline - Date.now());
     screen.draw([
       `run       ${state.runId}`, `repo      ${state.url}`, `phase     ${phase}`,
-      `deadline  ${new Date(deadline).toISOString()} (${Math.floor(left / 3_600_000)}h${Math.floor((left % 3_600_000) / 60_000)}m left)`,
+      `deadline  ${isoOf(deadline)} (${Math.floor(left / 3_600_000)}h${Math.floor((left % 3_600_000) / 60_000)}m left)`,
       `draft     ${draft === null ? 'no revision checked' : `revision ${draft.n}: ${String(draft.doc['outcome'])}`}`,
       `inventory ${inventory.counts ? `counts (revision ${inventory.revision})` : inventory.why}`,
       `fidelity  ${fidelityState}${fidelity ? ` (verdict ${fidelity.n})` : ''}    design ${designState}${design ? ` (verdict ${design.n})` : ''}    site ${site ?? '—'}`,
