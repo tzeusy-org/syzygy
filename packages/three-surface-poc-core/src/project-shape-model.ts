@@ -44,7 +44,6 @@ import {
   type SecretClassificationPolicy,
 } from './content-classification.js';
 import { createExactObjectReader } from './git-object-reader.js';
-import { indexGitTree, parseGitLsTree } from './git-tree.js';
 import {
   buildProjectShapeCoverage,
   type ClassCoverage,
@@ -61,18 +60,17 @@ import type { ExtractionClass, ManifestSource, PillarDiscovery, PillarKey, Sourc
 import {
   PWB_FAILURE_STATES,
   PWB_RESOURCE_LIMITS,
-  observeProjectShapeSources,
+  observePhaseA,
   type DeterministicInputs,
   type EmissionStamp,
-  type GitRunner,
   type ObservationDegradation,
   type ObservationScope,
   type PWB_OBSERVER_IDENTITY,
-  type PwbResourceLimits,
-  type ResourceLimitBreach,
 } from './project-shape-observation.js';
 import { observeProjectShape, type AdmissionFailureReason } from './project-shape-observer.js';
+import type { GitRunner, PwbResourceLimits, ResourceLimitBreach } from './pwb-types.js';
 import { createResourceLedger, type ResourceLedgerSummary } from './resource-ledger.js';
+import { createTransientBodies } from './transient-bodies.js';
 
 // The one consented repository identity (the consent record's scope anchor;
 // `governance-inputs.ts` proves the expectation byte-equal).
@@ -528,8 +526,10 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
       // phase B share the byte counter, the parse-pass counters and the
       // breach list; nothing resets between phases.
       const ledger = createResourceLedger(input.resourceLimits ?? PWB_RESOURCE_LIMITS);
-      // Phase A: revision, source population, seeds (P2.1/P2.2).
-      const observation = observeProjectShapeSources({
+      // The validated phase-A seed bodies phase B reuses instead of reading.
+      const bodies = createTransientBodies();
+      // Phase A: revision, tree, source population, seeds (P2.1/P2.2).
+      const { result: observation, tree } = observePhaseA({
         repositoryId,
         revision: input.revision,
         capturedAt: input.capturedAt,
@@ -537,6 +537,7 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
         authority,
         classifyPhaseA: (text, charge) => classifyPhaseASeed(phaseADetectors, text, charge),
         ledger,
+        bodies,
       });
       if (observation.kind === 'invalid-input') {
         return observationFailed(authority, {
@@ -554,28 +555,10 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
           detail: observation.detail,
         });
       }
-      // Phase B: the exact tree at the resolved commit bounds every read.
-      let listing: string;
-      try {
-        listing = new TextDecoder('utf-8', { fatal: true }).decode(input.runGit(['ls-tree', '-r', '-z', '-l', observation.revision]));
-      } catch (error) {
-        return observationFailed(authority, {
-          failureState: 'gitCaptureFailed',
-          degradationState: PWB_FAILURE_STATES.gitCaptureFailed.degradationState,
-          reason: PWB_FAILURE_STATES.gitCaptureFailed.unknownReason,
-          detail: `git ls-tree failed: ${error instanceof Error ? error.message : String(error)}`,
-        });
-      }
-      const parsed = parseGitLsTree(listing);
-      if (parsed.kind === 'malformed') {
-        return observationFailed(authority, {
-          failureState: 'gitCaptureFailed',
-          degradationState: PWB_FAILURE_STATES.gitCaptureFailed.degradationState,
-          reason: PWB_FAILURE_STATES.gitCaptureFailed.unknownReason,
-          detail: `ls-tree record is malformed: ${parsed.record}`,
-        });
-      }
-      const reader = createExactObjectReader({ runGit: input.runGit, tree: indexGitTree(parsed.entries), ledger });
+      // Phase B: the exact tree phase A listed at the resolved commit bounds
+      // every read; it is listed once per evaluation (syzygy-bpyt.6.5).
+      if (tree === undefined) throw new Error('an observed phase A always carries the tree it listed');
+      const reader = createExactObjectReader({ runGit: input.runGit, tree, ledger, bodies });
       // Policy before admission (P2.4), literal grammar (P2.5) on the transient body.
       const population = classifyManifestSources<SourceExtraction>(
         observation.manifest,
@@ -593,7 +576,7 @@ export function buildProjectShape(input: ProjectShapeBuildInput): ProjectShape {
         ledger,
       );
       // Phase B has read: the phase-A bodies the ledger held are dropped.
-      ledger.release();
+      bodies.release();
       const discoveryUnknown: FixedUnknown = {
         failureState: 'sourceMissingOrUnreadable',
         degradationState: PWB_FAILURE_STATES.sourceMissingOrUnreadable.degradationState,

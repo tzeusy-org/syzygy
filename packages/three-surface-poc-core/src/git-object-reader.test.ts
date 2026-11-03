@@ -16,6 +16,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
   ACTIVE_CONTENT_FORMS,
+  BLOB_READ_REFUSAL_REASONS,
+  PHASE_A_REFUSAL_REASONS,
+  PHASE_B_READ_POLICY,
   PWB_DENIED_PATH_RULES,
   PWB_POLICY_IDENTITY,
   READ_REFUSAL_REASONS,
@@ -32,8 +35,10 @@ import {
 import { indexGitTree, type GitTreeEntry } from './git-tree.js';
 import { recognizeCodeContexts } from './markdown-code-context.js';
 import type { ManifestSource } from './project-shape-manifest.js';
-import { PWB_RESOURCE_LIMITS, type PwbResourceLimits } from './project-shape-observation.js';
+import { PWB_RESOURCE_LIMITS } from './project-shape-observation.js';
+import type { PwbResourceLimits } from './pwb-types.js';
 import { createResourceLedger } from './resource-ledger.js';
+import { createTransientBodies } from './transient-bodies.js';
 
 // ---------------------------------------------------------------------
 // Fixture repository: bodies, real Git object ids, a tree with every
@@ -217,6 +222,17 @@ describe('read guard — paths that must never reach Git', () => {
     );
     const exercised = new Set([...MALICIOUS.map(([, reason]) => reason), 'object-id-differs-from-tree']);
     for (const reason of READ_REFUSAL_REASONS) expect(exercised.has(reason), reason).toBe(true);
+  });
+
+  it('both phase vocabularies are subsets of the one refusal set, sharing exactly the three tree checks (syzygy-bpyt.6.5)', () => {
+    expect([...PHASE_A_REFUSAL_REASONS]).toEqual(['not-in-tree', 'not-a-regular-blob', 'object-id-differs-from-tree', 'not-a-phase-a-seed-path']);
+    const union = new Set<string>([...READ_REFUSAL_REASONS, ...PHASE_A_REFUSAL_REASONS]);
+    expect([...union].sort()).toEqual([...BLOB_READ_REFUSAL_REASONS].sort());
+    expect(READ_REFUSAL_REASONS.filter((reason) => (PHASE_A_REFUSAL_REASONS as readonly string[]).includes(reason)).sort()).toEqual(
+      ['not-a-regular-blob', 'not-in-tree', 'object-id-differs-from-tree'],
+    );
+    expect(PHASE_B_READ_POLICY.refusals).toBe(READ_REFUSAL_REASONS);
+    expect(PHASE_B_READ_POLICY.trailingPasses).toEqual([]);
   });
 
   it('admits a regular blob by exact tree identity, executable mode included', () => {
@@ -729,9 +745,10 @@ describe('the reader charges one shared resource ledger', () => {
     // Phase A took the body, counted it and validated it (nine passes).
     expect(ledger.chargeBody(PATH, oidOf(PATH), size)).toBeUndefined();
     for (let i = 0; i < 9; i += 1) ledger.chargePass(PATH, 'utf8-and-nul-validation');
-    ledger.remember(PATH, oidOf(PATH), { bytes: BYTES[PATH] as Uint8Array, text: TEXTS[PATH] as string });
+    const bodies = createTransientBodies();
+    bodies.remember(PATH, oidOf(PATH), { bytes: BYTES[PATH] as Uint8Array, text: TEXTS[PATH] as string });
     const spy = gitSpy();
-    const r = createExactObjectReader({ runGit: spy.runGit, tree: indexGitTree(TREE), ledger });
+    const r = createExactObjectReader({ runGit: spy.runGit, tree: indexGitTree(TREE), ledger, bodies });
     const result = r.read(PATH);
     expect(result.kind).toBe('text');
     if (result.kind !== 'text') throw new Error('unreachable');

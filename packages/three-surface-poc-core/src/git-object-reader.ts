@@ -21,18 +21,26 @@
 // handed only to the caller's `consume` callback and is never stored on
 // any record this module returns.
 //
+// Phase A's seed reads (`project-shape-observation.ts`) go through the same
+// door: `readBoundedBlob` is the one bounded read — byte budgets, the one
+// `cat-file blob`, object-id, NUL and UTF-8 validation, the phase's
+// screening passes — and phase A and phase B differ only by the policy
+// value they pass and by the admission each applies first (syzygy-bpyt.6.5).
+//
 // The registry's resource limits are evaluation inputs: `evaluateLimit`
 // is the one comparison every consumer uses (the reader for source count
 // and bytes; the observer for index depth; later extraction/rendering for
 // parse time and rendered bytes), so a breach is always the same shape.
 
+import { createHash } from 'node:crypto';
 import { decodeUtf8, sha256 } from '@syzygy/support';
 
 import { type GitTreeEntry, type GitTreeIndex, normalizeRepositoryPath, posixBasename } from './git-tree.js';
 import { type MalformedCodeContext, maskMarkdownCodeContexts } from './markdown-code-context.js';
 import type { ManifestSource, ProjectShapeSourceManifest } from './project-shape-manifest.js';
-import { type GitRunner, PWB_RESOURCE_LIMITS, type PwbResourceLimits, type ResourceLimitBreach, gitBlobObjectId } from './project-shape-observation.js';
-import { createResourceLedger, ParsePassBudgetExceeded, type ParsePassCharge, type ResourceLedger } from './resource-ledger.js';
+import type { GitRunner, PwbResourceLimits, ResourceLimitBreach } from './pwb-types.js';
+import { createResourceLedger, type ParsePassCharge, type ParsePassIdentity, type ResourceLedger } from './resource-ledger.js';
+import type { TransientBodies } from './transient-bodies.js';
 
 // ---------------------------------------------------------------------
 // Policy-bound path rules (copies of the act-bound secret policy's
@@ -72,7 +80,10 @@ export function evaluateLimit(
 // ---------------------------------------------------------------------
 // Read guard.
 
-export const READ_REFUSAL_REASONS = [
+// The one refusal set both phases draw on. Each phase's vocabulary is the
+// subset its admission can return, derived below in this order; the
+// admissions themselves keep their own check order.
+export const BLOB_READ_REFUSAL_REASONS = [
   'path-escapes-repository', // absolute, NUL-bearing, empty, or `..` above the root
   'path-not-normalized', // contains `.`/`..`/empty segments or a trailing slash
   'denied-basename',
@@ -81,15 +92,41 @@ export const READ_REFUSAL_REASONS = [
   'not-in-tree',
   'not-a-regular-blob', // symlink, submodule or tree entry
   'object-id-differs-from-tree',
+  'not-a-phase-a-seed-path', // neither the root index nor a declared pillar index
 ] as const;
-type ReadRefusalReason = (typeof READ_REFUSAL_REASONS)[number];
+export type BlobReadRefusalReason = (typeof BLOB_READ_REFUSAL_REASONS)[number];
+
+// Phase B (`admitExactObjectRead`): every reason but the phase-A allowlist.
+type ReadRefusalReason = Exclude<BlobReadRefusalReason, 'not-a-phase-a-seed-path'>;
+export const READ_REFUSAL_REASONS: readonly ReadRefusalReason[] = BLOB_READ_REFUSAL_REASONS.filter(
+  (reason): reason is ReadRefusalReason => reason !== 'not-a-phase-a-seed-path',
+);
+
+// Phase A (`admitPhaseARead`): the seed allowlist and the three tree checks;
+// a seed path is fixed by the manifest, so the path-shape and denied-path
+// rules never apply to it.
+const PHASE_A_ONLY: readonly BlobReadRefusalReason[] = ['not-a-phase-a-seed-path', 'not-in-tree', 'object-id-differs-from-tree', 'not-a-regular-blob'];
+export type PhaseARefusalReason = Extract<BlobReadRefusalReason, 'not-a-phase-a-seed-path' | 'not-in-tree' | 'object-id-differs-from-tree' | 'not-a-regular-blob'>;
+export const PHASE_A_REFUSAL_REASONS: readonly PhaseARefusalReason[] = BLOB_READ_REFUSAL_REASONS.filter(
+  (reason): reason is PhaseARefusalReason => PHASE_A_ONLY.includes(reason),
+);
 
 type ReadAdmission =
   | { readonly kind: 'admitted'; readonly entry: GitTreeEntry }
   | { readonly kind: 'refused'; readonly reason: ReadRefusalReason };
 
-const REGULAR_BLOB_MODES: readonly string[] = ['100644', '100755'];
-const OBJECT_ID = /^[0-9a-f]{40}$|^[0-9a-f]{64}$/;
+export const REGULAR_BLOB_MODES: readonly string[] = ['100644', '100755'];
+export const OBJECT_ID = /^[0-9a-f]{40}$|^[0-9a-f]{64}$/;
+
+// Git's own blob identity: `blob <length>\0<bytes>` hashed with the object
+// format the id length reveals. Checking it proves the bytes the runner
+// returned are the exact object the tree named.
+export function gitBlobObjectId(bytes: Uint8Array, format: 'sha1' | 'sha256' = 'sha1'): string {
+  return createHash(format)
+    .update(`blob ${bytes.byteLength}\0`)
+    .update(bytes)
+    .digest('hex');
+}
 
 // The policy applies basename and prefix rules to the final segment and
 // suffix rules to the complete final segment. Comparison is
@@ -184,15 +221,32 @@ function positionOf(text: string, index: number): { readonly line: number; reado
   return { line, column: index - lineStart + 1 };
 }
 
-// `charge`, when a ledger is in force, is billed one registry pass before
-// each traversal: the code-context mask, the HTML/SVG/script/handler scan
-// and the unsafe-URL scan. It throws instead of letting a traversal run
-// past the source's budget.
-export function scanActiveContent(raw: string, charge?: ParsePassCharge): readonly ActiveContentFinding[] {
-  charge?.('markdown-code-context-mask');
+export type ActiveContentScan =
+  | { readonly kind: 'scanned'; readonly findings: readonly ActiveContentFinding[] }
+  | { readonly kind: 'over-limit'; readonly breach: ResourceLimitBreach };
+
+// The scan with no ledger in force (the verbatim route and public-source
+// screening): no pass is charged, so it always completes.
+export function scanActiveContent(raw: string): readonly ActiveContentFinding[] {
+  const scan = scanActiveContentCharged(raw, () => undefined);
+  if (scan.kind === 'over-limit') throw new Error('an uncharged scan cannot exceed a budget');
+  return scan.findings;
+}
+
+// `charge` is billed one registry pass before each traversal: the
+// code-context mask, the HTML/SVG/script/handler scan and the unsafe-URL
+// scan. A spent budget stops the scan before the traversal it would have
+// paid for and is returned as the breach.
+export function scanActiveContentCharged(raw: string, charge: ParsePassCharge): ActiveContentScan {
+  const spent = (pass: ParsePassIdentity): ActiveContentScan | undefined => {
+    const breach = charge(pass);
+    return breach === undefined ? undefined : { kind: 'over-limit', breach };
+  };
+  const maskSpent = spent('markdown-code-context-mask');
+  if (maskSpent !== undefined) return maskSpent;
   const mask = maskMarkdownCodeContexts(raw);
   if (mask.kind === 'malformed') {
-    return [{ form: 'malformed-code-context', line: mask.line, column: 1, context: mask.reason }];
+    return { kind: 'scanned', findings: [{ form: 'malformed-code-context', line: mask.line, column: 1, context: mask.reason }] };
   }
   // The mask keeps every newline and length, so positions found in the
   // masked text are positions in the raw text.
@@ -205,17 +259,19 @@ export function scanActiveContent(raw: string, charge?: ParsePassCharge): readon
     found.add(key);
     findings.push({ form, ...positionOf(text, index) });
   };
-  charge?.('active-html-svg-script-handler');
+  const tagSpent = spent('active-html-svg-script-handler');
+  if (tagSpent !== undefined) return tagSpent;
   for (const match of text.matchAll(HTML_TAG)) {
     const name = (match[1] ?? '').toLowerCase();
     add(name === 'script' ? 'script-element' : name === 'svg' ? 'svg-element' : 'html-tag', match.index);
   }
   for (const match of text.matchAll(HTML_DECLARATION)) add('html-comment-or-declaration', match.index);
   for (const match of text.matchAll(EVENT_HANDLER)) add('event-handler-attribute', match.index);
-  charge?.('unsafe-url-positions');
+  const urlSpent = spent('unsafe-url-positions');
+  if (urlSpent !== undefined) return urlSpent;
   for (const match of text.matchAll(UNSAFE_URL)) add('unsafe-url-scheme', match.index);
   for (const match of text.matchAll(OBFUSCATED_DESTINATION)) add('obfuscated-link-destination', match.index);
-  return findings.sort((a, b) => a.line - b.line || a.column - b.column || a.form.localeCompare(b.form));
+  return { kind: 'scanned', findings: findings.sort((a, b) => a.line - b.line || a.column - b.column || a.form.localeCompare(b.form)) };
 }
 
 // ---------------------------------------------------------------------
@@ -262,30 +318,34 @@ export interface ExactObjectReader {
   readonly totalBytes: () => number;
 }
 
-interface ExactObjectReaderInput {
+type ExactObjectReaderInput = {
   readonly runGit: GitRunner;
   readonly tree: GitTreeIndex;
-  readonly resourceLimits?: PwbResourceLimits;
   readonly deniedPathRules?: DeniedPathRules;
+  // The phase-A bodies still held: one is reused rather than taken from Git
+  // again. Absent → every body is read.
+  readonly bodies?: TransientBodies;
+} & (
   // The evaluation-wide ledger (registry `resourceLimitSemantics`): total
-  // bytes and parse passes continue from phase A, and a phase-A body the
-  // ledger still holds is reused rather than taken from Git again. A reader
-  // without one keeps a private ledger over `resourceLimits`.
-  readonly ledger?: ResourceLedger;
-}
+  // bytes and parse passes continue from phase A.
+  | { readonly ledger: ResourceLedger }
+  // Or a private ledger over this envelope (no default here: the registry
+  // values live with the observer, which this module does not import).
+  | { readonly resourceLimits: PwbResourceLimits }
+);
 
 export function contentDigestOf(bytes: Uint8Array): string {
   return `sha256:${sha256(bytes)}`;
 }
 
 export function createExactObjectReader(input: ExactObjectReaderInput): ExactObjectReader {
-  const ledger = input.ledger ?? createResourceLedger(input.resourceLimits ?? PWB_RESOURCE_LIMITS);
+  const ledger = 'ledger' in input ? input.ledger : createResourceLedger(input.resourceLimits);
   const limits = ledger.limits;
   const rules = input.deniedPathRules ?? PWB_DENIED_PATH_RULES;
   const records: ObjectReadRecord[] = [];
   let attempted = 0;
 
-  const unavailable = (record: ObjectReadRecord): ExactObjectRead => {
+  const settle = (record: ObjectReadRecord): ExactObjectRead => {
     records.push(record);
     return { kind: 'unavailable', record };
   };
@@ -295,74 +355,47 @@ export function createExactObjectReader(input: ExactObjectReaderInput): ExactObj
     const countBreach = evaluateLimit(limits, 'maxSources', attempted, path);
     if (countBreach !== undefined) {
       ledger.recordBreach(countBreach);
-      return unavailable({ path, outcome: 'over-limit', bytes: 0, detail: 'maxSources' });
+      return settle({ path, outcome: 'over-limit', bytes: 0, detail: 'maxSources' });
     }
     const admission = admitExactObjectRead(input.tree, path, expectedObjectId, rules);
-    if (admission.kind === 'refused') return unavailable({ path, outcome: 'refused', bytes: 0, detail: admission.reason });
-    const { objectId, sizeBytes } = admission.entry;
-    const objectFormat = objectId.length === 64 ? 'sha256' : 'sha1';
+    if (admission.kind === 'refused') return settle({ path, outcome: 'refused', bytes: 0, detail: admission.reason });
+    const { objectId } = admission.entry;
 
     // A body phase A already took, counted and validated (object id, NUL,
     // UTF-8, active content) is the same (path, object id) body: it is
     // reused, counted no second time and traversed by no repeated pass.
-    const held = ledger.recall(path, objectId);
+    const held = input.bodies?.recall(path, objectId);
     if (held !== undefined) {
       const record: ObjectReadRecord = { path, objectId, bytes: held.bytes.byteLength, contentDigest: contentDigestOf(held.bytes), outcome: 'read' };
       records.push(record);
       return { kind: 'text', text: held.text, record };
     }
 
-    if (sizeBytes !== undefined) {
-      const perSource = evaluateLimit(limits, 'maxBytesPerSource', sizeBytes, path);
-      if (perSource !== undefined) {
-        ledger.recordBreach(perSource);
-        return unavailable({ path, objectId, outcome: 'over-limit', bytes: 0, detail: 'maxBytesPerSource' });
+    const objectFormat = objectId.length === 64 ? 'sha256' : 'sha1';
+    const result = readBoundedBlob({ runGit: input.runGit, ledger, limits, path, objectFormat }, admission.entry, PHASE_B_READ_POLICY);
+    // A record that took bytes names them by count and digest.
+    const takenRecord = (taken: BlobTaken, outcome: ObjectReadOutcome) => ({ path, objectId, bytes: taken.bytes, contentDigest: taken.contentDigest, outcome });
+    switch (result.kind) {
+      case 'bytes': {
+        const record: ObjectReadRecord = takenRecord(result.taken, 'read');
+        records.push(record);
+        return { kind: 'text', text: result.text, record };
       }
-      if (ledger.projectBody(path, objectId, sizeBytes) !== undefined) {
-        return unavailable({ path, objectId, outcome: 'over-limit', bytes: 0, detail: 'maxTotalBytes' });
-      }
-    }
-
-    let bytes: Uint8Array;
-    try {
-      bytes = input.runGit(['cat-file', 'blob', objectId]);
-    } catch (error) {
-      const detail = error instanceof Error ? error.message : String(error);
-      return unavailable({ path, objectId, outcome: 'git-read-failed', bytes: 0, detail });
-    }
-    const contentDigest = contentDigestOf(bytes);
-    const taken = { path, objectId, bytes: bytes.byteLength, contentDigest };
-
-    // Sizes the listing did not declare are bounded after the read; the
-    // bytes are dropped without being decoded.
-    if (sizeBytes === undefined) {
-      const perSource = evaluateLimit(limits, 'maxBytesPerSource', bytes.byteLength, path);
-      if (perSource !== undefined) {
-        ledger.recordBreach(perSource);
-        return unavailable({ ...taken, outcome: 'over-limit', detail: 'maxBytesPerSource' });
-      }
-    }
-    if (ledger.chargeBody(path, objectId, bytes.byteLength) !== undefined) {
-      return unavailable({ ...taken, outcome: 'over-limit', detail: 'maxTotalBytes' });
-    }
-
-    if (gitBlobObjectId(bytes, objectFormat) !== objectId) return unavailable({ ...taken, outcome: 'object-id-mismatch' });
-    // Every traversal of the decoded source is charged, by registry name,
-    // before it runs; the budget's limit plus one is never traversed.
-    const charge = ledger.chargeFor(path);
-    try {
-      charge('utf8-and-nul-validation');
-      if (bytes.includes(0)) return unavailable({ ...taken, outcome: 'contains-nul' });
-      const text = decodeUtf8(bytes);
-      if (text === undefined) return unavailable({ ...taken, outcome: 'not-utf-8' });
-      const activeContent = scanActiveContent(text, charge);
-      if (activeContent.length > 0) return unavailable({ ...taken, outcome: 'active-content', activeContent });
-      const record: ObjectReadRecord = { ...taken, outcome: 'read' };
-      records.push(record);
-      return { kind: 'text', text, record };
-    } catch (error) {
-      if (error instanceof ParsePassBudgetExceeded) return unavailable({ ...taken, outcome: 'over-limit', detail: 'maxParsePassesPerSource' });
-      throw error;
+      case 'over-limit':
+        return settle(
+          result.taken === undefined
+            ? { path, objectId, outcome: 'over-limit', bytes: 0, detail: result.limit }
+            : { ...takenRecord(result.taken, 'over-limit'), detail: result.limit },
+        );
+      case 'git-read-failed':
+        return settle({ path, objectId, outcome: 'git-read-failed', bytes: 0, detail: result.detail });
+      case 'object-id-mismatch':
+      case 'contains-nul':
+      case 'not-utf-8':
+        return settle(takenRecord(result.taken, result.kind));
+      case 'excluded':
+        // Phase B's screen excludes only for active content.
+        return settle({ ...takenRecord(result.taken, 'active-content'), ...(result.activeContent === undefined ? {} : { activeContent: result.activeContent }) });
     }
   };
 
@@ -375,6 +408,143 @@ export function createExactObjectReader(input: ExactObjectReaderInput): ExactObj
     attempted: () => attempted,
     totalBytes: () => ledger.totalBytes(),
   };
+}
+
+// ---------------------------------------------------------------------
+// The one bounded blob read.
+//
+// Both phases read an admitted tree entry the same way, in this order:
+// the declared size against maxBytesPerSource and the cumulative
+// maxTotalBytes (before any byte moves); exactly one `cat-file blob
+// <object-id>`; an undeclared size against maxBytesPerSource; the body
+// charged once to maxTotalBytes; the bytes hashed to the tree-named
+// object id; one charged `utf8-and-nul-validation` pass, NUL and strict
+// UTF-8; the phase's screening passes; the phase's trailing passes. The
+// first failure ends the read and is returned as a value — no breach is
+// thrown — and the caller turns it into its own body-free record.
+
+export type BlobScreen =
+  | { readonly kind: 'safe' }
+  | { readonly kind: 'excluded'; readonly reason: 'secret-matched' | 'active-content'; readonly detail: string; readonly activeContent?: readonly ActiveContentFinding[] }
+  | { readonly kind: 'over-limit'; readonly breach: ResourceLimitBreach };
+
+// What distinguishes the phases once an entry is admitted. Scan order is
+// part of the policy because PWB-REQ-006 breach accounting depends on it:
+// phase A screens the seed with the secret detectors and then the
+// active-content scan before its link discovery; phase B scans active
+// content here and leaves the secret detectors to `classifySource`.
+export interface BlobReadPolicy {
+  readonly phase: 'A' | 'B';
+  // The refusals this phase's admission may return.
+  readonly refusals: readonly BlobReadRefusalReason[];
+  readonly screen: (text: string, charge: ParsePassCharge) => BlobScreen;
+  // Passes charged after a safe screen, before the body is handed on.
+  readonly trailingPasses: readonly ParsePassIdentity[];
+}
+
+export const PHASE_B_READ_POLICY: BlobReadPolicy = {
+  phase: 'B',
+  refusals: READ_REFUSAL_REASONS,
+  screen: (text, charge) => {
+    const scan = scanActiveContentCharged(text, charge);
+    if (scan.kind === 'over-limit') return scan;
+    if (scan.findings.length === 0) return { kind: 'safe' };
+    return { kind: 'excluded', reason: 'active-content', detail: String(scan.findings.length), activeContent: scan.findings };
+  },
+  trailingPasses: [],
+};
+
+// Phase A's screen is the injected seed classifier (production:
+// `classifyPhaseASeed`, secrets then active content), and its trailing pass
+// is the link discovery the validated seed feeds.
+export function phaseAReadPolicy(screen: BlobReadPolicy['screen']): BlobReadPolicy {
+  return { phase: 'A', refusals: PHASE_A_REFUSAL_REASONS, screen, trailingPasses: ['phase-a-link-discovery'] };
+}
+
+export interface BlobReadContext {
+  readonly runGit: GitRunner;
+  readonly ledger: ResourceLedger;
+  // The per-source byte limit this read is held to. The observer passes its
+  // own envelope, which need not be the ledger's (see the observer).
+  readonly limits: PwbResourceLimits;
+  readonly path: string;
+  readonly objectFormat: 'sha1' | 'sha256';
+}
+
+// The bytes Git returned, by count and digest (hash-not-body).
+export interface BlobTaken {
+  readonly bytes: number;
+  readonly contentDigest: string;
+}
+
+export type BlobReadFailure =
+  // `taken` is absent when the limit stopped the read before any byte moved.
+  | { readonly kind: 'over-limit'; readonly limit: keyof PwbResourceLimits; readonly taken?: BlobTaken }
+  | { readonly kind: 'git-read-failed'; readonly detail: string }
+  | { readonly kind: 'object-id-mismatch'; readonly taken: BlobTaken }
+  | { readonly kind: 'contains-nul'; readonly taken: BlobTaken }
+  | { readonly kind: 'not-utf-8'; readonly taken: BlobTaken }
+  | {
+      readonly kind: 'excluded';
+      readonly reason: 'secret-matched' | 'active-content';
+      readonly detail: string;
+      readonly activeContent?: readonly ActiveContentFinding[];
+      readonly taken: BlobTaken;
+    };
+
+export type BoundedBlobRead =
+  | { readonly kind: 'bytes'; readonly bytes: Uint8Array; readonly text: string; readonly taken: BlobTaken }
+  | BlobReadFailure;
+
+export function readBoundedBlob(ctx: BlobReadContext, entry: Pick<GitTreeEntry, 'objectId' | 'sizeBytes'>, policy: BlobReadPolicy): BoundedBlobRead {
+  const { ledger, limits, path } = ctx;
+  const { objectId, sizeBytes } = entry;
+  if (sizeBytes !== undefined) {
+    const perSource = evaluateLimit(limits, 'maxBytesPerSource', sizeBytes, path);
+    if (perSource !== undefined) {
+      ledger.recordBreach(perSource);
+      return { kind: 'over-limit', limit: 'maxBytesPerSource' };
+    }
+    if (ledger.projectBody(path, objectId, sizeBytes) !== undefined) return { kind: 'over-limit', limit: 'maxTotalBytes' };
+  }
+
+  let bytes: Uint8Array;
+  try {
+    bytes = ctx.runGit(['cat-file', 'blob', objectId]);
+  } catch (error) {
+    return { kind: 'git-read-failed', detail: error instanceof Error ? error.message : String(error) };
+  }
+  const taken: BlobTaken = { bytes: bytes.byteLength, contentDigest: contentDigestOf(bytes) };
+
+  // Sizes the listing did not declare are bounded after the read; the
+  // bytes are dropped without being decoded.
+  if (sizeBytes === undefined) {
+    const perSource = evaluateLimit(limits, 'maxBytesPerSource', bytes.byteLength, path);
+    if (perSource !== undefined) {
+      ledger.recordBreach(perSource);
+      return { kind: 'over-limit', limit: 'maxBytesPerSource', taken };
+    }
+  }
+  // One cumulative counter across both phases, this body counted once.
+  if (ledger.chargeBody(path, objectId, bytes.byteLength) !== undefined) return { kind: 'over-limit', limit: 'maxTotalBytes', taken };
+  if (gitBlobObjectId(bytes, ctx.objectFormat) !== objectId) return { kind: 'object-id-mismatch', taken };
+
+  // Every traversal of the decoded source is charged, by registry name,
+  // before it runs; the budget's limit plus one is never traversed.
+  const charge = ledger.chargeFor(path);
+  if (charge('utf8-and-nul-validation') !== undefined) return { kind: 'over-limit', limit: 'maxParsePassesPerSource', taken };
+  if (bytes.includes(0)) return { kind: 'contains-nul', taken };
+  const text = decodeUtf8(bytes);
+  if (text === undefined) return { kind: 'not-utf-8', taken };
+  const screened = policy.screen(text, charge);
+  if (screened.kind === 'over-limit') return { kind: 'over-limit', limit: screened.breach.limit, taken };
+  if (screened.kind === 'excluded') {
+    return { kind: 'excluded', reason: screened.reason, detail: screened.detail, ...(screened.activeContent === undefined ? {} : { activeContent: screened.activeContent }), taken };
+  }
+  for (const pass of policy.trailingPasses) {
+    if (charge(pass) !== undefined) return { kind: 'over-limit', limit: 'maxParsePassesPerSource', taken };
+  }
+  return { kind: 'bytes', bytes, text, taken };
 }
 
 // ---------------------------------------------------------------------
