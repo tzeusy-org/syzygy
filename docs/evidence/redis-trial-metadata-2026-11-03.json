@@ -1,0 +1,456 @@
+{
+  "format": "redis-trial-metadata/1",
+  "label": "Observed",
+  "measuredAt": "2026-11-03T13:55:10+08:00",
+  "measuredBy": "the owner, as tze, through the user-run wrapper (run 20261103135510, exit 0)",
+  "authority": "OWNER-DIRECTION-REDIS-SCREENING-NEXT-2026-11-03 item 3: a metadata-only script the owner runs as tze over the 2026-10-14 trial run's Syzygy-written JSON; paths, outcomes and counts only, never span or body text. The owner's choice settles, for this script only, whether a metadata-only read after the run's deadline is acceptable. As of this record the direction file is on a local branch, not on main.",
+  "measuredOn": {
+    "runId": "run-6648312f61b5e536315215e0c22422cf",
+    "runDirectory": "/home/tze/.local/state/syzygy-dossier/run-6648312f61b5e536315215e0c22422cf",
+    "verdictFile": "reviews/fidelity-verdict-3.json",
+    "packetFile": "reviews/fidelity-packet-56b3855c61082ad689ba74395e6651f67bf11ee0fc062653692ab77173089642/packet.json",
+    "packetSha256": "56b3855c61082ad689ba74395e6651f67bf11ee0fc062653692ab77173089642",
+    "packetSha256Basis": "the digest fidelity-verdict-3.json names, matched against the packet directory name by the script (log: named digest found: True; 3 fidelity packets in the run). The packet bytes were not re-hashed here.",
+    "pinnedCommit": "498ecd0d6d007db11ddb3aea9428552598a78622",
+    "pinnedCommitBasis": "the same runId's measuredOn.pinnedCommit in docs/evidence/redis-screening-v4-remeasure-2026-10-21.json",
+    "screeningPolicyAtStart": "PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V3-APPROVAL-2026-10-08 (same basis)"
+  },
+  "script": {
+    "payloadFile": "/home/orca/.tmp/redis-trial-metadata-20261103/payload.20261103135510.sh",
+    "payloadSha256": "96dde837bc72eaf865445a36f754d3f99d3d6ab1431a8d3c0e1202003cdd71ff",
+    "payloadText": "set -euo pipefail\nshopt -s inherit_errexit\nR=/home/tze/.local/state/syzygy-dossier/run-6648312f61b5e536315215e0c22422cf\ncd \"$R\"\necho \"run dir: $R\"\nls -1 reviews | sed 's/^/  reviews\\//'\npython3 -I - \"$R\" \"$ARTIFACTS/trial-metadata.json\" <<'PY'\n# Metadata only: prints paths, outcomes, ids and counts. Never prints span\n# text, body text, reasons or messages from the packet or verdict.\nimport json, os, sys, collections, glob\nrun, out = sys.argv[1], sys.argv[2]\nverdict_path = os.path.join(run, 'reviews', 'fidelity-verdict-3.json')\nverdict = json.load(open(verdict_path))\nnamed = None\nfor k in ('packetSha256', 'packet_sha256', 'packet'):\n    v = verdict.get(k)\n    if isinstance(v, str) and len(v) == 64: named = v\npackets = sorted(glob.glob(os.path.join(run, 'reviews', 'fidelity-packet-*', 'packet.json')), key=os.path.getmtime)\nchosen = next((p for p in packets if named and named in p), packets[-1])\npacket = json.load(open(chosen))\nspans = packet['spans']\nprint(f\"verdict: fidelity-verdict-3.json; verdict top-level keys: {sorted(verdict)}\")\nprint(f\"packet: {os.path.relpath(chosen, run)} (named digest found: {bool(named and named in chosen)}; {len(packets)} fidelity packets in run)\")\nprint(f\"span object keys seen: {sorted(set().union(*(s.keys() for s in spans)))}\")\nprint(f\"citedBy item keys seen: {sorted(set().union(*(c.keys() for s in spans for c in s.get('citedBy', []) if isinstance(c, dict))))}\")\noutcome_of = {s['id']: s['outcome'] for s in spans}\npath_of = {s['id']: (s.get('path') or '(withheld path)') for s in spans}\nby = collections.Counter((path_of[s['id']], s['outcome']) for s in spans)\nprint(f\"\\nspans: {len(spans)}; withheld (outcome != admitted): {sum(1 for s in spans if s['outcome'] != 'admitted')}\")\nprint(\"per file and outcome (non-admitted only):\")\nfor (path, oc), n in sorted(by.items(), key=lambda kv: (-kv[1], kv[0])):\n    if oc != 'admitted': print(f\"  {n:4d}  {oc:28s} {path}\")\nprint(\"outcome totals:\", dict(collections.Counter(s['outcome'] for s in spans)))\ndef rows(key): return [r for r in verdict.get(key, []) if isinstance(r, dict)]\ndef classify(ids):\n    ids = [i for i in ids if isinstance(i, str)]\n    if not ids: return 'no-spans-named'\n    w = sum(1 for i in ids if outcome_of.get(i, 'unknown-id') != 'admitted')\n    return 'all-withheld' if w == len(ids) else ('some-withheld' if w else 'none-withheld')\nsummary = {}\nfor key, idf, okf, okv in (('inventoryAccuracy', 'entryId', 'accuracy', 'accurate'), ('blockSupport', 'blockId', 'verdict', 'supported')):\n    bad = [r for r in rows(key) if r.get(okf) != okv]\n    span_key = next((k for k in ('spanIds', 'sourceIds', 'spans') if any(k in r for r in bad)), None)\n    cls = collections.Counter((r.get(okf), classify(r.get(span_key) or [])) for r in bad)\n    summary[key] = {'rows': len(rows(key)), 'notOk': len(bad), 'spanKey': span_key,\n                    'byStateAndWithholding': {f\"{a}|{b}\": n for (a, b), n in sorted(cls.items(), key=str)},\n                    'notOkIds': [r.get(idf) for r in bad]}\n    print(f\"\\n{key}: {len(rows(key))} rows, {len(bad)} not {okv} (span key: {span_key})\")\n    for (a, b), n in sorted(cls.items(), key=str): print(f\"  {n:4d}  {a} / {b}\")\ncov = [r for r in rows('inventoryCoverage') if r.get('disposition') not in ('represented', 'justified-omission')]\nprint(f\"\\ninventoryCoverage: {len(rows('inventoryCoverage'))} rows, {len(cov)} not represented/justified; dispositions: {dict(collections.Counter(r.get('disposition') for r in cov))}\")\njson.dump({'verdict': os.path.relpath(verdict_path, run), 'packet': os.path.relpath(chosen, run), 'spanCount': len(spans),\n           'perFileOutcome': [{'path': p, 'outcome': o, 'spans': n} for (p, o), n in sorted(by.items())],\n           'rows': summary, 'coverageNotOk': len(cov)}, open(out, 'w'), indent=1, sort_keys=True)\nPY\necho \"RESULT artifact=$ARTIFACTS/trial-metadata.json\"\n",
+    "wrapperFile": "/home/orca/.tmp/redis-trial-metadata-20261103/run.sh",
+    "wrapperSha256": "3d8af9cb8d4f77ef888521b5f3f0eaad86e9c85af9dad6e0727b35e696087795",
+    "logFile": "/home/orca/.tmp/redis-trial-metadata-20261103/20261103135510.log",
+    "logSha256": "9dff8ed279795ac15d1775849446387eb910cf91fe0a0248fdfc24515e08e461"
+  },
+  "capture": {
+    "file": "/home/orca/.tmp/redis-trial-metadata-20261103/artifacts/20261103135510/trial-metadata.json",
+    "sha256": "fd0187556b943de165bd78529630b5215ca66d1f76bb6868d22200a785de54f2",
+    "content": {
+      "coverageNotOk": 0,
+      "packet": "reviews/fidelity-packet-56b3855c61082ad689ba74395e6651f67bf11ee0fc062653692ab77173089642/packet.json",
+      "perFileOutcome": [
+        {
+          "outcome": "active-content",
+          "path": "00-RELEASENOTES",
+          "spans": 9
+        },
+        {
+          "outcome": "admitted",
+          "path": "CONTRIBUTING.md",
+          "spans": 5
+        },
+        {
+          "outcome": "active-content",
+          "path": "LICENSE.txt",
+          "spans": 1
+        },
+        {
+          "outcome": "unknown-extraction-class",
+          "path": "MANIFESTO",
+          "spans": 32
+        },
+        {
+          "outcome": "secret-detector-match",
+          "path": "README.md",
+          "spans": 41
+        },
+        {
+          "outcome": "unknown-extraction-class",
+          "path": "REDISCONTRIBUTIONS.txt",
+          "spans": 1
+        },
+        {
+          "outcome": "unknown-extraction-class",
+          "path": "SECURITY.md",
+          "spans": 10
+        },
+        {
+          "outcome": "unknown-extraction-class",
+          "path": "TLS.md",
+          "spans": 7
+        },
+        {
+          "outcome": "unknown-extraction-class",
+          "path": "modules/MODULES.md",
+          "spans": 2
+        },
+        {
+          "outcome": "unknown-extraction-class",
+          "path": "modules/vector-sets/README.md",
+          "spans": 1
+        },
+        {
+          "outcome": "unknown-extraction-class",
+          "path": "redis.conf",
+          "spans": 39
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/ae.c",
+          "spans": 3
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/aof.c",
+          "spans": 7
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/client_comp.c",
+          "spans": 1
+        },
+        {
+          "outcome": "unknown-extraction-class",
+          "path": "src/commands.def",
+          "spans": 1
+        },
+        {
+          "outcome": "unknown-extraction-class",
+          "path": "src/commands/README.md",
+          "spans": 1
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/config.c",
+          "spans": 5
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/evict.c",
+          "spans": 1
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/iothread.c",
+          "spans": 1
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/networking.c",
+          "spans": 23
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/rdb.c",
+          "spans": 6
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/replication.c",
+          "spans": 2
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/server.c",
+          "spans": 38
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/socket.c",
+          "spans": 2
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/t_string.c",
+          "spans": 4
+        },
+        {
+          "outcome": "admitted",
+          "path": "src/version.h",
+          "spans": 1
+        }
+      ],
+      "rows": {
+        "blockSupport": {
+          "byStateAndWithholding": {
+            "unresolved|all-withheld": 55,
+            "unresolved|some-withheld": 6
+          },
+          "notOk": 61,
+          "notOkIds": [
+            "intro",
+            "ci-1",
+            "ci-1a",
+            "ci-1b",
+            "ci-2",
+            "ci-2a",
+            "ci-3",
+            "ci-4",
+            "ci-6",
+            "ci-6a",
+            "ci-7",
+            "ci-7a",
+            "ci-8",
+            "ci-9",
+            "wf-0",
+            "wf-2",
+            "me-4",
+            "me-7",
+            "me-10a",
+            "ad-0",
+            "ad-1",
+            "ad-1a",
+            "ad-2",
+            "ad-3",
+            "ad-4",
+            "ad-5",
+            "ad-5b",
+            "ad-6",
+            "ad-7",
+            "ad-8",
+            "ad-9",
+            "ad-10",
+            "to-1",
+            "to-1a",
+            "to-1b",
+            "to-1c",
+            "to-1d",
+            "to-2",
+            "to-3",
+            "to-3a",
+            "to-3b",
+            "to-4",
+            "to-4a",
+            "to-5",
+            "to-5b",
+            "to-5d",
+            "to-5e",
+            "to-5a",
+            "to-6",
+            "to-6a",
+            "to-6b",
+            "to-7",
+            "to-9",
+            "to-9a",
+            "to-9c",
+            "to-9b",
+            "to-10",
+            "to-11",
+            "to-14",
+            "to-12",
+            "to-12a"
+          ],
+          "rows": 105,
+          "spanKey": "spanIds"
+        },
+        "inventoryAccuracy": {
+          "byStateAndWithholding": {
+            "unresolved|all-withheld": 39,
+            "unresolved|some-withheld": 1
+          },
+          "notOk": 40,
+          "notOkIds": [
+            "purpose-1",
+            "purpose-2",
+            "beneficiary-1",
+            "thesis-1",
+            "term-1",
+            "term-2",
+            "term-3",
+            "choice-1",
+            "choice-2",
+            "choice-3",
+            "choice-4",
+            "choice-5",
+            "choice-6",
+            "capability-1",
+            "capability-2",
+            "capability-3",
+            "capability-4",
+            "capability-5",
+            "capability-6",
+            "capability-7",
+            "capability-8",
+            "qual-1",
+            "qual-2",
+            "qual-3",
+            "qual-4",
+            "qual-5",
+            "qual-6",
+            "qual-7",
+            "qual-8",
+            "qual-9",
+            "qual-10",
+            "conflict-1",
+            "conflict-2",
+            "conflict-3",
+            "other-1",
+            "other-4",
+            "other-5",
+            "other-6",
+            "unknown-1",
+            "unknown-2"
+          ],
+          "rows": 43,
+          "spanKey": "spanIds"
+        }
+      },
+      "spanCount": 244,
+      "verdict": "reviews/fidelity-verdict-3.json"
+    }
+  },
+  "derived": {
+    "method": "computed by script from capture.content, never transcribed (verification rule 3)",
+    "spansTotal": 244,
+    "spansWithheld": 145,
+    "filesWithheld": 12,
+    "readmeSpans": 41,
+    "readmeOutcomeAtTrial": "secret-detector-match",
+    "readmeNote": "the trial ran under screening version 3; version 4 (variant span, 2026-10-20) addressed this file. Whether its spans now return is Unknown: the secret match ended screening before the markup check",
+    "byScreeningScopeV5Part": {
+      "B": {
+        "files": {
+          "SECURITY.md": 10,
+          "MANIFESTO": 32
+        },
+        "spans": 42,
+        "outcomeAtTrial": [
+          "unknown-extraction-class"
+        ]
+      },
+      "D": {
+        "files": {
+          "TLS.md": 7,
+          "modules/MODULES.md": 2
+        },
+        "spans": 9,
+        "outcomeAtTrial": [
+          "unknown-extraction-class"
+        ]
+      },
+      "C": {
+        "files": {
+          "00-RELEASENOTES": 9,
+          "LICENSE.txt": 1
+        },
+        "spans": 10,
+        "outcomeAtTrial": [
+          "active-content"
+        ]
+      },
+      "P": {
+        "files": {
+          "redis.conf": 39
+        },
+        "spans": 39,
+        "outcomeAtTrial": [
+          "unknown-extraction-class"
+        ]
+      },
+      "X": {
+        "files": {
+          "REDISCONTRIBUTIONS.txt": 1,
+          "modules/vector-sets/README.md": 1,
+          "src/commands/README.md": 1
+        },
+        "spans": 3,
+        "outcomeAtTrial": [
+          "unknown-extraction-class"
+        ]
+      }
+    },
+    "notGivenAPathByAnyVariant": {
+      "src/commands.def": 1
+    },
+    "byVariant": {
+      "t": {
+        "spansOnFilesGivenAPath": 0,
+        "spansStillWithheldOutsideReadme": 104,
+        "filesStillWithheldOutsideReadme": [
+          "00-RELEASENOTES",
+          "LICENSE.txt",
+          "MANIFESTO",
+          "REDISCONTRIBUTIONS.txt",
+          "SECURITY.md",
+          "TLS.md",
+          "modules/MODULES.md",
+          "modules/vector-sets/README.md",
+          "redis.conf",
+          "src/commands.def",
+          "src/commands/README.md"
+        ],
+        "beyondOwnersChosenScope": false
+      },
+      "b": {
+        "spansOnFilesGivenAPath": 42,
+        "spansStillWithheldOutsideReadme": 62,
+        "filesStillWithheldOutsideReadme": [
+          "00-RELEASENOTES",
+          "LICENSE.txt",
+          "REDISCONTRIBUTIONS.txt",
+          "TLS.md",
+          "modules/MODULES.md",
+          "modules/vector-sets/README.md",
+          "redis.conf",
+          "src/commands.def",
+          "src/commands/README.md"
+        ],
+        "beyondOwnersChosenScope": false
+      },
+      "bd": {
+        "spansOnFilesGivenAPath": 51,
+        "spansStillWithheldOutsideReadme": 53,
+        "filesStillWithheldOutsideReadme": [
+          "00-RELEASENOTES",
+          "LICENSE.txt",
+          "REDISCONTRIBUTIONS.txt",
+          "modules/vector-sets/README.md",
+          "redis.conf",
+          "src/commands.def",
+          "src/commands/README.md"
+        ],
+        "beyondOwnersChosenScope": false
+      },
+      "bcd": {
+        "spansOnFilesGivenAPath": 61,
+        "spansStillWithheldOutsideReadme": 43,
+        "filesStillWithheldOutsideReadme": [
+          "REDISCONTRIBUTIONS.txt",
+          "modules/vector-sets/README.md",
+          "redis.conf",
+          "src/commands.def",
+          "src/commands/README.md"
+        ],
+        "beyondOwnersChosenScope": false
+      },
+      "bcdp": {
+        "spansOnFilesGivenAPath": 100,
+        "spansStillWithheldOutsideReadme": 4,
+        "filesStillWithheldOutsideReadme": [
+          "REDISCONTRIBUTIONS.txt",
+          "modules/vector-sets/README.md",
+          "src/commands.def",
+          "src/commands/README.md"
+        ],
+        "beyondOwnersChosenScope": true
+      },
+      "bcdpx": {
+        "spansOnFilesGivenAPath": 103,
+        "spansStillWithheldOutsideReadme": 1,
+        "filesStillWithheldOutsideReadme": [
+          "src/commands.def"
+        ],
+        "beyondOwnersChosenScope": true
+      }
+    },
+    "variantReading": "spansOnFilesGivenAPath is an upper bound on cited spans that may return: each body still meets every screen step, and a returned span need not resolve its row",
+    "rows": {
+      "inventoryAccuracyNotOk": 40,
+      "inventoryAccuracyRows": 43,
+      "inventoryByWithholding": {
+        "unresolved|all-withheld": 39,
+        "unresolved|some-withheld": 1
+      },
+      "blockSupportNotOk": 61,
+      "blockSupportRows": 105,
+      "blockByWithholding": {
+        "unresolved|all-withheld": 55,
+        "unresolved|some-withheld": 6
+      },
+      "rowsByVariant": "Unknown: the capture names each failing row's id but not which files its spans sit on, so no per-variant row recovery can be derived"
+    },
+    "beadComparison": "Unknown cause: bead syzygy-olmr and the v5 package's round-2 text say 140 of 233 cited spans were withheld; this capture, over the packet verdict 3 names, has 145 of 244. The run holds three fidelity packets; which one the bead counted is not recorded"
+  }
+}
