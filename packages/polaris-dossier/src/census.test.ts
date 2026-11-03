@@ -56,12 +56,14 @@ describe('withheldCensus', () => {
 describe('withheldCensus, a path both a denied-path rule and a secret detector match (round-2 review finding 1)', () => {
   // `.env.` is a denied prefix and `token=abcdefghij` matches credential-assignment; `.pem` is a denied suffix and the ghp_ token matches
   // known-token-formats. `screenPath` reports denied-path for both, so only the census's own detector pass keeps them unnamed.
-  const BOTH = [blob('.env.token=abcdefghij'), blob('keys/ghp_ABCDEFGHIJKLMNOPQRSTUVWX.pem'), blob('.env.local'), blob('src/main.c')];
+  // `.env.<b>x` is denied and carries an HTML tag but no secret: only a detector match withholds a denied path's name, so it is listed.
+  const BOTH = [blob('.env.token=abcdefghij'), blob('keys/ghp_ABCDEFGHIJKLMNOPQRSTUVWX.pem'), blob('.env.local'), blob('src/main.c'), blob('.env.<b>x')];
 
   it('counts such a path under secretPath and names it nowhere: not in the census, the brief section or the check report', () => {
-    expect(BOTH.map((entry) => SCREEN.screenPath(entry.path))).toEqual(['denied-path', 'denied-path', 'denied-path', undefined]);
+    expect(BOTH.map((entry) => SCREEN.screenPath(entry.path))).toEqual(['denied-path', 'denied-path', 'denied-path', undefined, 'denied-path']);
+    expect(SCREEN.screenBody('.env.<b>x', '.env.<b>x')).toBe('active-content');
     const census = withheldCensus(BOTH, SCREEN, null);
-    expect(census.deniedPath).toEqual(['.env.local']);
+    expect(census.deniedPath).toEqual(['.env.<b>x', '.env.local']);
     expect(census.secretPath).toBe(2);
     const section = censusSection({ ok: true, census });
     const report = JSON.stringify(screenCensusReport({ ok: true, census }));
@@ -70,10 +72,10 @@ describe('withheldCensus, a path both a denied-path rule and a secret detector m
       expect(text).not.toContain('ghp_');
       expect(text).toContain('.env.local');
     }
-    expect(section).toContain('- `denied-path`, a denied-path rule names the file and no secret detector matches its path: 1');
+    expect(section).toContain('- `denied-path`, a denied-path rule names the file and no secret detector matches its path: 2');
     expect(section).toContain('- `secret-detector-match` on the path itself, whether or not a denied-path rule also names it: 2. Such a path is never named.');
     expect(JSON.parse(report).secretDetectorPathMatches).toBe(2);
-    expect(JSON.parse(report).groups[0]).toEqual({ outcome: 'denied-path', count: 1, listed: ['".env.local"'], notListed: 0 });
+    expect(JSON.parse(report).groups[0]).toEqual({ outcome: 'denied-path', count: 2, listed: ['".env.<b>x"', '".env.local"'], notListed: 0 });
   });
 });
 
