@@ -22,7 +22,7 @@ still performed later, through its own recorder, over its own reviewed bytes.
 
 [Observed by the coordinating session.] A Claude Code session prepared a local
 questionnaire over `origin/main` at `7268edcc` and the live Beads tracker on
-2026-11-03, published it as a token-gated web form on the tailnet, and ingested
+2026-11-03, served it as a token-gated web form at a tailnet address, and ingested
 the owner's submission.
 
 - Submitted: 2026-11-03T04:50:49Z, by "owner via questionnaire web form
@@ -48,6 +48,7 @@ final message, byte for byte (sha256 of source and copy compared this session).
 | `docs/reviews/VET-OWNER-QUESTIONNAIRE-2026-11-03-2-RAW.md` | Round 2, fresh reviewer, nine revised items | e.g. `p98-details-target` "Scope verdict: Revise — the premise is contradicted by the repository's own tests." (`:50`) |
 | `docs/reviews/VET-OWNER-QUESTIONNAIRE-2026-11-03-3-RAW.md` | Round 3, same reviewer, eight items | five items pass both verdicts (`:16-17`, `:25-26`, `:50-51`, `:61-62`, `:69-70`) |
 | `docs/reviews/VET-OWNER-QUESTIONNAIRE-2026-11-03-4-RAW.md` | Round 4, the three corrected items | all pass both verdicts (`:4-5`, `:10-11`, `:16-17`) |
+| `docs/reviews/V-OWNER-QUESTIONNAIRE-RECORD-1-RAW.md` | Fidelity check of this record against the packet and the submission | "Verdict: FAITHFUL WITH EDITS" (`:2`); its five edits are applied, and its notes 6, 7 and 11 too |
 
 [Observed] The packet bytes each round read were not frozen, so no raw names a
 packet digest (verification rule 10). Each raw is evidence of the round's
@@ -83,10 +84,20 @@ Picked: "C. Hold Redis runs until requests has run; agents may draft B
 meanwhile". Option B was "Commission a screening-policy `governance-text` rule
 for root `SECURITY`/`MANIFESTO`, then rerun".
 
-Scope: no Redis run is prepared or offered until a requests run has happened;
+Scope: no Redis run is offered or started until a requests run has happened;
 agents may draft a candidate screening-policy package for option B, which
 binds nothing until its own act. Excluded: no run, no change to screening,
 consent or provider statements.
+
+Owner revision, same day: after the submission, the owner wrote in the lead
+session, verbatim: "Witholding redis till requests runs isn't a strict rule,
+actually I would slightly prefer to finish redis before we look at requests".
+So the hold above is lifted, and the order is reversed as a preference, not a
+rule: Redis work toward a run that reaches fidelity-review ready comes first,
+and the requests work under item 1 follows it. The candidate rule draft for
+option B now serves that Redis run. Unchanged: the draft binds nothing until its
+own act, and no run starts unless the owner starts or attends it. This
+paragraph postdates the fidelity check below (`V-OWNER-QUESTIONNAIRE-RECORD-1`).
 
 ### 3. `arbitrary-public-repo` — answer C
 
@@ -113,11 +124,17 @@ verbatim: "'or by date' should be 2026-11-05. Don't wait so long."
 Scope, with the note applied: the walkthrough window opens after the first
 requests run or on 2026-11-05, whichever comes first. When it opens, no merge
 may touch `apps/three-surface-poc/src` or `packages/three-surface-poc-core/src`
-until the owner's judgment and the cycle report are recorded. Before the window,
-agents meet the invitation criteria on `syzygy-1z3.22` at one exact head.
-[Inferred] No requests run can happen before 2026-11-05, because its consent is
-not yet performed, so the window opens on 2026-11-05. Excluded: the met or not
-met judgment and its adoption phrase are separate acts at the sitting.
+until the owner's judgment and the cycle report are recorded. Agents prepare
+the `syzygy-1z3.22` invitation criteria so that they hold at the exact head the
+freeze pins; that preparation is lead work, not part of the option selected.
+[Inferred] A requests run before 2026-11-05 is unlikely: its consent, its
+provider statement (still to be drafted and reviewed) and its run route are all
+outstanding, so the window is expected to open on 2026-11-05. [Observed] The
+packet's ingested record for this item reads "Owner edits: None" and leaves the
+authorization boundary "unchanged by the owner", while recording the note
+above; the option itself invited the edit ("(edit the date)"), and this record
+applies the note. Excluded: the met or not met judgment and its adoption phrase
+are separate acts at the sitting.
 
 ### 5. `pwb-release-label` — answer A
 
@@ -141,7 +158,7 @@ Picked: "A. Align every knob toward refusal wherever one family refuses a world
 another accepts; stop and return if any family's verdict over the current
 `decisions/` tree changes".
 
-Scope: one implementation bead aligns the act-family knobs in
+Scope: one class-4 implementation bead aligns the act-family knobs in
 `packages/polaris-generation-consent/` toward refusal under that rule, with the
 GP-Q0 part 1 checks (`OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md`);
 it stops and returns to the owner if any family's verdict over the current
@@ -171,13 +188,14 @@ project overview, D3 bounded missions) and the P-12 knowledge-hygiene policy.
 
 Picked: "A. Knowingly hold all five".
 
-Scope: all five are held knowingly, with no agent work until a consumer needs
-one; checks CG-20, CG-21 and CG-27 stay advisory. Excluded: no act is performed
-or declined.
+Scope: all five are held knowingly; this records hold status only. Checks
+CG-20, CG-21 and CG-27, which P-12 would give an authoritative home, stay
+advisory. Excluded: no act is performed or declined.
 
 ## Items withdrawn before the owner saw them
 
-The reviews removed four drafted items, each recorded in the raws above:
+On the reviews' findings, four drafted items were withdrawn by the
+coordinating session, each finding recorded in the raws above:
 `next-focus` (priority ordering is not an owner gate; the owner's 2026-10-14
 ranking stands), `exact-source-render-mode` (explicitly excluded by the owner
 on 2026-10-21), `pwb-pin-structure` (drafting the fix is lead work) and
@@ -194,7 +212,7 @@ was written; the tracker, not this record, holds their current state.
 | Item | Answer | Beads |
 |---|---|---|
 | `second-project` | A | `syzygy-mea.2` (consent offering and provider statement), under `syzygy-mea` |
-| `redis-next-step` | C | `syzygy-ha5b` (candidate rule draft); hold noted on `syzygy-1z8m` |
+| `redis-next-step` | C, then revised: Redis first | `syzygy-ha5b` (candidate rule draft, raised to P1); order noted on `syzygy-1z8m` and `syzygy-mea.2` |
 | `arbitrary-public-repo` | C | `syzygy-cnwp` (REQ-038/039 change); park noted on `syzygy-mzge` |
 | `pwb-walkthrough` | B, 2026-11-05 | `syzygy-1z3.33` (readiness, due 2026-11-05), blocking `syzygy-1z3.22`; freeze noted on `.22` and `syzygy-1z3.25` |
 | `pwb-release-label` | A | P-85 marked parked; `syzygy-7yad` (later feature request); noted on `syzygy-l362` |
