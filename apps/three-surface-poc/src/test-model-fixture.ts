@@ -5,7 +5,7 @@ import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 
-import { BUTLERS_POC_SEEDS, buildPocModel, type PocEvaluationEvidence, type PocModel, type ProjectShapeModelInput, type WalkthroughJudgmentInputs } from '@syzygy/three-surface-poc-core';
+import { BUTLERS_POC_SEEDS, buildPocModel, walkthroughAcceptance, type PocEvaluationEvidence, type PocModel, type ProjectShapeModelInput, type WalkthroughJudgmentInputs } from '@syzygy/three-surface-poc-core';
 
 import { ownedCopyPrefix, ownedTemplatePrefix } from './fixture-directories.js';
 import { pwbReadinessTraversal } from './walkthrough-inputs.js';
@@ -195,10 +195,9 @@ export function buildFixtureModel(cleanups: string[], options: FixtureModelOptio
     runWorkItemQuery: (_repoRoot, sql) =>
       sql.includes('WHERE id LIKE') ? JSON.stringify(rows) : JSON.stringify([{ revision: doltRevision }]),
     ...(options.projectShape === undefined ? {} : { projectShape: options.projectShape }),
-    ...(options.walkthroughJudgment === undefined ? {} : { walkthroughJudgment: options.walkthroughJudgment }),
     // The production traversal predicate: readiness is assessed whenever a
     // pair is supplied, exactly as the daemon does.
-    walkthroughReadiness: { traversal: pwbReadinessTraversal() },
+    acceptance: walkthroughAcceptance({ judgment: options.walkthroughJudgment, traversal: pwbReadinessTraversal() }),
   });
 }
 

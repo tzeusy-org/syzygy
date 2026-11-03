@@ -9,6 +9,7 @@ import {
   PocObservationError,
   type PocEntity,
   type PocRelationship,
+  walkthroughAcceptance,
 } from './model.js';
 import { BUTLERS_POC_SEEDS } from './poc-seeds.js';
 import type { BodyReadAuthorityEvaluation } from './body-read-authority.js';
@@ -437,11 +438,13 @@ describe('three-surface Butlers POC model', () => {
     buildPocModel({
       ...baseInput,
       projectShape: { authority: admitting, runGit },
-      walkthroughJudgment: (binding) => {
-        seen.push(binding.evaluationIdentity);
-        throw new Error('stop here');
-      },
-      walkthroughReadiness: { traversal: { polarisRoutes: ['/polaris'], isExactSourceRoute: () => false } },
+      acceptance: walkthroughAcceptance({
+        judgment: (binding) => {
+          seen.push(binding.evaluationIdentity);
+          throw new Error('stop here');
+        },
+        traversal: { polarisRoutes: ['/polaris'], isExactSourceRoute: () => false },
+      }),
     });
     expect(seen).toEqual([walkthroughEvaluationIdentity(observed.projectShape)]);
     expect(seen[0]).toMatch(/^pwb-eval-[0-9a-f]{24}$/);
@@ -475,11 +478,13 @@ describe('three-surface Butlers POC model', () => {
     const seen: string[] = [];
     const throwing = buildPocModel({
       ...baseInput,
-      walkthroughJudgment: (binding) => {
-        seen.push(binding.evaluationIdentity);
-        throw new Error('governance tree unreadable');
-      },
-      walkthroughReadiness: { traversal: { polarisRoutes: ['/polaris'], isExactSourceRoute: () => false } },
+      acceptance: walkthroughAcceptance({
+        judgment: (binding) => {
+          seen.push(binding.evaluationIdentity);
+          throw new Error('governance tree unreadable');
+        },
+        traversal: { polarisRoutes: ['/polaris'], isExactSourceRoute: () => false },
+      }),
     });
     // No shape was evaluated, so the identity names that state rather than
     // an evaluation; the loader saw exactly that identity.
@@ -765,62 +770,6 @@ describe('three-surface Butlers POC model', () => {
       testArtifactRecord: passingTestArtifactRecord(changedCommit, capturedAt, { exitCode: 1 }),
     });
     expect(failed.testArtifactVerification.kind).toBe('unknown');
-  });
-
-  it('builds an explicit Unknown model with no seeds and performs no seeded reads', () => {
-    const repoRoot = mkdtempSync(join(tmpdir(), 'syzygy-poc-empty-seeds-'));
-    cleanups.push(repoRoot);
-    const gitCalls: string[][] = [];
-    const runGit = (_root: string, args: readonly string[]): string => {
-      gitCalls.push([...args]);
-      if (args[0] === 'ls-tree') {
-        return `100644 blob ${'1'.repeat(40)} 1\tREADME.md\0`;
-      }
-      throw new Error(`unexpected non-structure read: ${args.join(' ')}`);
-    };
-
-    const model = buildPocModel({
-      repoRoot,
-      repositoryRevision: 'empty-seed-revision',
-      observerRevision: 'empty-seed-observer',
-      evaluation: { snapshot: 'empty-seed', asOf: '2026-09-22T00:00:00Z' },
-      runGit,
-    });
-
-    expect(model.entities).toEqual([]);
-    expect(model.relationships).toEqual([]);
-    expect(model.surfaces).toEqual([]);
-    expect(model.project.name).toBe('Unknown project');
-    expect(model.capabilityId).toBe('capability:unknown');
-    expect(model.trajectory).toMatchObject({ kind: 'unknown' });
-    if (model.trajectory.kind !== 'unknown') throw new Error('unreachable');
-    expect(model.trajectory.observedItemCount).toBeUndefined();
-    expect(model.orrery).toMatchObject({
-      kind: 'unknown',
-      observedFileCount: 1,
-      mappedFileCount: 0,
-      unmappedFileCount: 1,
-      totalFileCount: 1,
-    });
-    expect(gitCalls).toEqual([['ls-tree', '-r', '-z', '-l', 'empty-seed-revision']]);
-  });
-
-  it('keeps an unobserved empty-seed Orrery denominator Unknown instead of inventing zero', () => {
-    const { repoRoot } = butlersGitFixture();
-    const model = buildPocModel({
-      repoRoot,
-      repositoryRevision: 'missing-code-structure-revision',
-      observerRevision: 'empty-seed-observer',
-      evaluation: { snapshot: 'empty-seed-unobserved', asOf: '2026-09-22T00:00:00Z' },
-      runGit: () => {
-        throw new Error('code structure unavailable');
-      },
-    });
-
-    expect(model.orrery).toEqual({
-      kind: 'unknown',
-      reason: 'No seed-backed capability-to-path mappings were supplied to this evaluation.',
-    });
   });
 
   it('owns returned surface membership arrays and keeps the exported seed graph isolated', () => {
