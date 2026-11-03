@@ -101,6 +101,12 @@ BUILDER_REL = pathlib.Path("scripts/build_public_source_screening_scope_v5.py")
 V4_ACT_REL = v4rec.ACT.record
 CONFIRMATION_REVIEW_REL = pathlib.Path("docs/reviews/R-HA5B-SCREENING-SCOPE-V5-2-RAW.md")
 DISPOSITION_REL = PKG / "ROUND-2-DISPOSITIONS.md"
+#: What the lead session observed at signing (its `git ls-remote` of the PR branch, right after the
+#: owner's words). Recorded as that session's observation, not re-checked here: after a rebase-merge the
+#: commit is reachable from no ref. Its manifest file hashed to the raw-2 head digest when recorded.
+SIGNING_BRANCH = "agent/screening-scope-v5-20261103"
+SIGNING_HEAD = "b2f25d9c74b0b4ad46448dd5d1ef02948ef76819"
+SIGNING_HEAD_READ_AT = "2026-11-03T06:17:55Z"
 #: The commit the confirming review read (provenance; binding is by the manifest digest in the raw's head).
 FROZEN_SUBJECT: str | None = "9daf9e0480b96d3cf09efebc7a357f6e21acda45"
 #: SHA-256 of each file the confirming review read, at FROZEN_SUBJECT, by `--freeze-table 9daf9e04`.
@@ -412,7 +418,22 @@ it):
 
 The words name the variant, and the variant names the manifest row.
 
-Chosen variant: `{variant}`.
+What stood before the owner at signing:
+
+- [Observed, by the lead session, not by this recorder] Right after the
+  owner's words, at {SIGNING_HEAD_READ_AT} as that session printed it, the
+  session ran `git ls-remote origin {SIGNING_BRANCH}`. It returned
+  `{SIGNING_HEAD}`. That commit's manifest file hashes to `{manifest_sha}`,
+  the digest the confirmation review's head binds (below).
+- Two later pushes to that branch added variants beyond the chosen scope.
+  They came after the words, and were reverted before this record. They bind
+  nothing.
+- [Observed, by the lead session] The owner read the lead session's summary
+  of the four cleared variants (`t`, `b`, `bd`, `bcd`), not the pull request
+  text.
+
+Chosen variant: `{variant}`; its manifest row's digest is the exact digest
+above.
 
 The argument was read from the chosen row of `{MANIFEST_REL.as_posix()}`,
 re-derived from the builder's proposed bytes for that variant at recording,
@@ -833,7 +854,14 @@ def selftest() -> int:
                         record.count(f"Owner's words given at (UTC): {WORDS_OK}") == 1
                         and record.count(f"At {WORDS_OK} the owner gave these words") == 1
                         and block.count(f"`{WORDS_OK}`") == 1))
-        results.append(("record names the chosen variant", "Chosen variant: `bcd`." in record))
+        results.append(("record names the chosen variant", "Chosen variant: `bcd`; its manifest row's" in record))
+        results.append(("record states the signing head, its read instant and the owner's reading, labelled Observed",
+                        record.count(f"`{SIGNING_HEAD}`") == 1
+                        and record.count(f"git ls-remote origin {SIGNING_BRANCH}") == 1
+                        and f"at {SIGNING_HEAD_READ_AT} as that session printed it" in record
+                        and record.count("[Observed, by the lead session") == 2
+                        and "not the pull request\n  text" in record
+                        and f"hashes to `{digest(real_manifest)}`" in record))
         results.append(("the bcd effect names T, B, D and C from the bytes",
                         "`private-key-header`, `credential-url-any-scheme`, `known-token-formats-extended`" in record
                         and "8 folded root names" in record and "places tls.md, modules/modules.md of" in record
@@ -864,7 +892,7 @@ def selftest() -> int:
                         block.count(BLOCK_BEGIN) == 1 and block.count(BLOCK_END) == 1))
         rt, _bt = expected(act, real_rows["t"], DATE_OK, OWNER_WORDS[3], real_inp, INSTANT_OK, WORDS_OK)
         results.append(("variant t renders its own record: T only, no class, placement or exemption",
-                        rt != record and "Chosen variant: `t`." in rt and "redact-span.v5-t" in rt
+                        rt != record and "Chosen variant: `t`; its manifest row's" in rt and "redact-span.v5-t" in rt
                         and " B: " not in rt and " D: " not in rt and " C: " not in rt
                         and "It names no repository." in rt))
         rbd, _bbd = expected(act, real_rows["bd"], DATE_OK, OWNER_WORDS[1], real_inp, INSTANT_OK, WORDS_OK)

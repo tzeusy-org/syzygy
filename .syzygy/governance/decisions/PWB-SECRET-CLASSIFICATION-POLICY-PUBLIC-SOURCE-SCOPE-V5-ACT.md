@@ -4,7 +4,7 @@ Date: 2026-11-03
 
 Owner's words given at (UTC): 2026-11-03T06:17:55Z
 
-Recorded at (UTC): 2026-11-03T06:37:35Z
+Recorded at (UTC): 2026-11-03T06:51:26Z
 
 Owner: Tzeusy
 
@@ -48,7 +48,22 @@ it):
 
 The words name the variant, and the variant names the manifest row.
 
-Chosen variant: `bcd`.
+What stood before the owner at signing:
+
+- [Observed, by the lead session, not by this recorder] Right after the
+  owner's words, at 2026-11-03T06:17:55Z as that session printed it, the
+  session ran `git ls-remote origin agent/screening-scope-v5-20261103`. It returned
+  `b2f25d9c74b0b4ad46448dd5d1ef02948ef76819`. That commit's manifest file hashes to `b9fdbc164952af642bb50aa2b82a21481a0322cccbb65fd0b4be35b73190a80f`,
+  the digest the confirmation review's head binds (below).
+- Two later pushes to that branch added variants beyond the chosen scope.
+  They came after the words, and were reverted before this record. They bind
+  nothing.
+- [Observed, by the lead session] The owner read the lead session's summary
+  of the four cleared variants (`t`, `b`, `bd`, `bcd`), not the pull request
+  text.
+
+Chosen variant: `bcd`; its manifest row's digest is the exact digest
+above.
 
 The argument was read from the chosen row of `.syzygy/governance/contracts/candidates/public-source-screening-scope-v5/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt`,
 re-derived from the builder's proposed bytes for that variant at recording,
