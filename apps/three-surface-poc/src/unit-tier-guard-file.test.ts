@@ -38,6 +38,9 @@ async function run(name: string): Promise<{ status: number; out: string }> {
   }
 }
 
+// The test whose own afterEach reports a swallowed refusal, named in the failure; a hook's refusal is reported at the file.
+const FAILS_AT_TEST: Record<string, string | undefined> = { swallowed: 'catches the refusal', server: 'listens' };
+
 describe('the unit setup fails the file, not only the call', () => {
   it('passes a file that reaches for neither a process nor a socket', async () => {
     expect((await run('clean')).status).toBe(0);
@@ -48,5 +51,7 @@ describe('the unit setup fails the file, not only the call', () => {
     expect(status).toBe(1);
     expect(out).toMatch(/unit tier refused (child_process\.execFileSync "git"|net\.Server\.listen)/);
     expect(out).toContain('a test may have caught the error');
+    const test = FAILS_AT_TEST[name];
+    if (test !== undefined) expect(out).toMatch(new RegExp(`FAIL .*${test}`));
   }, 60_000);
 });
