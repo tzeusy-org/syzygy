@@ -8,8 +8,9 @@ it ran at.
 
 A. Tree mutants. In <tree>, which must satisfy the gate and have no tracked
    change, the `export` keyword is put back on one self-only declaration per
-   declaring file (the first name the committed census record lists for that
-   file, one file at a time, bytes restored in a finally block). The gate must
+   declaring file (the first name --names lists for that file), plus the first
+   name of each declaration kind that pick left uncovered; one at a time, bytes
+   restored in a finally block. The gate must
    fail and name that declaration among its violations. The set of kinds
    (const, function, type, interface, class, enum) the sample covers is
    recorded; the denominator is the list of names the un-export removed.
@@ -63,11 +64,22 @@ def main() -> int:
     if not control['holds']:
         raise SystemExit('the unmutated tree does not satisfy the gate')
 
-    first_per_file: dict[str, str] = {}
+    kind_of = lambda file, name: (lambda m: m.group(1) if m else None)(re.search(rf'^(?:declare\s+)?(?:abstract\s+)?(?:async\s+)?(function|const|let|var|class|interface|type|enum)\*?\s+{re.escape(name)}\b', (tree / file).read_text(encoding='utf-8'), re.M))
+    # One name per declaring file (the first the list gives), plus the first name of every declaration kind the first pick did not cover.
+    sample: list[tuple[str, str]] = []
+    seen_files: set[str] = set()
     for item in names:
-        first_per_file.setdefault(item['file'], item['name'])
+        if item['file'] not in seen_files:
+            seen_files.add(item['file'])
+            sample.append((item['file'], item['name']))
+    covered = {kind_of(f, n) for f, n in sample}
+    for item in names:
+        kind = kind_of(item['file'], item['name'])
+        if kind not in covered:
+            covered.add(kind)
+            sample.append((item['file'], item['name']))
     tree_records = []
-    for file, name in sorted(first_per_file.items()):
+    for file, name in sorted(sample):
         path = tree / file
         original = path.read_bytes()
         text = original.decode('utf-8')
@@ -112,7 +124,7 @@ def main() -> int:
         'subjectSha256': hashlib.sha256(source.encode('utf-8')).hexdigest(),
         'ranAtCommit': commit,
         'unmutatedSelftestLast': base.stdout.strip().splitlines()[-1],
-        'treeMutants': {'sampledFiles': len(first_per_file), 'placed': len(placed), 'killed': sum(1 for r in placed if r['killed']),
+        'treeMutants': {'sampledFiles': len({f for f, _ in sample}), 'sampledNames': len(sample), 'declarationKindsInList': sorted({kind_of(i['file'], i['name']) for i in names}), 'placed': len(placed), 'killed': sum(1 for r in placed if r['killed']),
                         'kindsCovered': sorted({r['kind'] for r in placed}), 'survivors': [r['name'] for r in placed if not r['killed']],
                         'unplaced': [r['name'] for r in tree_records if not r['placed']], 'records': tree_records},
         'toolMutants': {'mutants': len(tool_records), 'killed': sum(1 for r in tool_records if r['killed']), 'survivors': [r['id'] for r in tool_records if not r['killed']], 'records': tool_records},
