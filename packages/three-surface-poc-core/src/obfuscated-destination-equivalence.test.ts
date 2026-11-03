@@ -21,14 +21,16 @@ const OLD_OBFUSCATED_DESTINATION = /\]\(\s*<?[^)\s]*&(?:#\d+|#[xX][0-9a-fA-F]+|[
 const oracle = (text: string): { index: number; value: string }[] =>
   [...text.matchAll(OLD_OBFUSCATED_DESTINATION)].map((match) => ({ index: match.index, value: match[0] }));
 
-// Compares both matchers over a population and returns the inputs that
-// differ, so a failure names them rather than a count.
+// Compares both matchers over a population and returns the first inputs
+// that differ, so a failure names them rather than a count; it stops at 20,
+// so a matcher that differs everywhere fails the assertion, not the heap.
 const differing = (inputs: Iterable<string>): { input: string; old: unknown; head: unknown }[] => {
   const out: { input: string; old: unknown; head: unknown }[] = [];
   for (const input of inputs) {
     const old = oracle(input);
     const head = obfuscatedDestinationMatches(input);
     if (JSON.stringify(old) !== JSON.stringify(head)) out.push({ input, old, head });
+    if (out.length === 20) break;
   }
   return out;
 };
