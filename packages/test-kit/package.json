@@ -1,0 +1,15 @@
+{
+  "name": "@syzygy/test-kit",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Test support only: temp directories, git fixtures, blob ids and an HTML query helper. Never a production dependency; consumers list it under devDependencies.",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  }
+}

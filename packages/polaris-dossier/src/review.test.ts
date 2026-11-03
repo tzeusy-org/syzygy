@@ -20,6 +20,7 @@ import { buildDossierScreen, type ScreenLoad } from './screen.js';
 import { launchForm, sessionPrompt } from './session-handover.js';
 import { recheckSessionStatement } from './session-statement.js';
 import { RUN_LAYOUT } from './state-directory.js';
+import { GIT_ENV } from '@syzygy/test-kit';
 
 // Asynchronous, so a slow command cannot starve the vitest worker's RPC (syzygy-w90k).
 const execFileAsync = promisify(execFile);
@@ -31,7 +32,6 @@ const execFileAsync = promisify(execFile);
 // modules that define them.
 
 const REAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-const GIT_ENV = { ...process.env, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null', GIT_AUTHOR_DATE: '2026-10-01T00:00:00Z', GIT_COMMITTER_DATE: '2026-10-01T00:00:00Z' };
 const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
 const LATER = NOW + 60_000;
 const RUN_ID = `run-${'e'.repeat(32)}`;

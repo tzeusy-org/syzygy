@@ -20,6 +20,7 @@ import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
 import { launchForm, sessionPrompt } from './session-handover.js';
+import { GIT_ENV } from '@syzygy/test-kit';
 
 // syzygy-qkea.10 (S9a): `render` (REQ-polaris-generation-033, 034, 036). The clone is a real Git repository built here with the git
 // CLI. Most cases draw through the real multi-page dossier renderer of apps/three-surface-poc, loaded by file URL because this package
@@ -28,7 +29,6 @@ import { launchForm, sessionPrompt } from './session-handover.js';
 
 const REAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const RENDERER_MODULE = pathToFileURL(path.join(REAL_ROOT, 'apps/three-surface-poc/src/polaris-generation/dossier-site.ts')).href;
-const GIT_ENV = { ...process.env, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null', GIT_AUTHOR_DATE: '2026-10-01T00:00:00Z', GIT_COMMITTER_DATE: '2026-10-01T00:00:00Z' };
 const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
 const LATER = NOW + 60_000;
 const RUN_ID = `run-${'f'.repeat(32)}`;

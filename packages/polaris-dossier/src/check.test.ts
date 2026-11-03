@@ -12,6 +12,7 @@ import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, 
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
+import { GIT_ENV } from '@syzygy/test-kit';
 
 // syzygy-qkea.7 (S6): `syzygy dossier check` (REQ-polaris-generation-033, 034, 036). The clone is a real Git repository built here
 // with the git CLI (the code under test runs no process); the screening policy is this checkout's detectors and denied paths with a
@@ -19,7 +20,6 @@ import { buildDossierScreen } from './screen.js';
 // kinds and paths are literals written before the checker ran, never imported from the module under test.
 
 const REAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-const GIT_ENV = { ...process.env, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null', GIT_AUTHOR_DATE: '2026-10-01T00:00:00Z', GIT_COMMITTER_DATE: '2026-10-01T00:00:00Z' };
 const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
 const LATER = NOW + 60_000;
 const RUN_ID = `run-${'c'.repeat(32)}`;
