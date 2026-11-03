@@ -2,14 +2,17 @@
 """Assemble or re-check the verification record for the NON_HUMAN_PRINCIPAL pin harness change.
 
 Usage:
-  assemble_verification.py <tree> <base-commit> <mutants.json> <selftest.json> <out.json>
+  assemble_verification.py <tree> <base-commit> <mutants.json> <selftest.json> <scratch-governance-dir> <out.json>
   assemble_verification.py --verify <record.json>
 
 Successor of the 2026-10-22 assembler (syzygy-bpyt.6.11). The logs are retained
 beside the record in logs/ (vitest-full.log, typecheck.log, governance-base.txt,
 governance-head.txt, authority-sweep.log, quotations-base.txt, quotations-head.txt),
 so every digest in logDigests can be re-derived: --verify re-hashes the retained
-files and stops on any mismatch. The governance note is computed from the line
+files and stops on any mismatch. The two governance logs are NOT retained: they
+quote a retired acceptance phrase, which CG-2a refuses in a tracked file. They
+are read from <scratch-governance-dir> (governance-base.txt, governance-head.txt),
+and the record carries their last lines and the computed difference, no digest. The governance note is computed from the line
 difference of the two governance logs, never written by hand.
 """
 import difflib
@@ -21,7 +24,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-LOG_NAMES = ['vitest-full.log', 'typecheck.log', 'governance-base.txt', 'governance-head.txt',
+LOG_NAMES = ['vitest-full.log', 'typecheck.log',
              'authority-sweep.log', 'quotations-base.txt', 'quotations-head.txt']
 GATE_FILES = [
     'packages/three-surface-poc-core/src/act-fields.ts',
@@ -59,7 +62,7 @@ def verify(record_path: Path) -> int:
         if not p.is_file() or sha256(p) != digest:
             bad.append(name)
     if sorted(record['logDigests']) != sorted(LOG_NAMES):
-        bad.append('log set differs from the seven expected')
+        bad.append('log set differs from the five expected')
     print(json.dumps({'checked': len(record['logDigests']), 'mismatched': bad}))
     return 1 if bad else 0
 
@@ -67,14 +70,14 @@ def verify(record_path: Path) -> int:
 def main() -> int:
     if sys.argv[1:2] == ['--verify']:
         return verify(Path(sys.argv[2]))
-    tree, base, mutants_path, selftest_path, out = Path(sys.argv[1]), sys.argv[2], Path(sys.argv[3]), Path(sys.argv[4]), Path(sys.argv[5])
+    tree, base, mutants_path, selftest_path, scratch, out = Path(sys.argv[1]), sys.argv[2], Path(sys.argv[3]), Path(sys.argv[4]), Path(sys.argv[5]), Path(sys.argv[6])
     logs = HERE / 'logs'
     head = git(tree, 'rev-parse', 'HEAD').strip()
     mutants = json.loads(mutants_path.read_text(encoding='utf-8'))
     selftest = json.loads(selftest_path.read_text(encoding='utf-8'))
     gate_diff = git(tree, 'diff', '--stat', base, 'HEAD', '--', *GATE_FILES)
     changed = git(tree, 'diff', '--name-only', base, 'HEAD').split()
-    gov_base, gov_head = logs / 'governance-base.txt', logs / 'governance-head.txt'
+    gov_base, gov_head = scratch / 'governance-base.txt', scratch / 'governance-head.txt'
     quot_base, quot_head = logs / 'quotations-base.txt', logs / 'quotations-head.txt'
     last = lambda p: p.read_text(encoding='utf-8').strip().splitlines()[-1]
 
@@ -94,7 +97,7 @@ def main() -> int:
             'governance': {
                 'command': 'python3 scripts/check_governance.py',
                 'baseLastLine': last(gov_base), 'headLastLine': last(gov_head),
-                'lineDifferenceBaseToHead': log_difference(gov_base, gov_head),
+                'logsRetained': False, 'lineDifferenceBaseToHead': log_difference(gov_base, gov_head),
             },
             'quotations': {'command': 'python3 scripts/check_quotations.py', 'outputsByteIdentical': quot_base.read_bytes() == quot_head.read_bytes()},
             'authoritySweep': {

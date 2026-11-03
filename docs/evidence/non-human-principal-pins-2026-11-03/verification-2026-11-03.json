@@ -1,7 +1,7 @@
 {
  "subject": "verification of the NON_HUMAN_PRINCIPAL pin harness and owner-table comment change (syzygy-bpyt.6.11)",
  "tree": {
-  "head": "0274a6902f77794e13f08c8f450ebd7cbffdcb7a",
+  "head": "6e58892bc7e49b7a206a8665a24645ab43dc9715",
   "base": "5f0ab21f"
  },
  "gateFiles": {
@@ -15,16 +15,24 @@
  },
  "filesChangedBaseToHead": [
   "docs/evidence/non-human-principal-pins-2026-11-03/assemble_verification.py",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/authority-sweep.log",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/governance-base.txt",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/governance-head.txt",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/quotations-base.txt",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/quotations-head.txt",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/typecheck.log",
+  "docs/evidence/non-human-principal-pins-2026-11-03/logs/vitest-full.log",
   "docs/evidence/non-human-principal-pins-2026-11-03/mutants-2026-11-03.json",
   "docs/evidence/non-human-principal-pins-2026-11-03/mutate_non_human_principal.py",
   "docs/evidence/non-human-principal-pins-2026-11-03/regex-differential.mjs",
   "docs/evidence/non-human-principal-pins-2026-11-03/selftest-2026-11-03.json",
+  "docs/evidence/non-human-principal-pins-2026-11-03/verification-2026-11-03.json",
   "packages/three-surface-poc-core/src/body-read-authority.test.ts",
   "packages/three-surface-poc-core/src/walkthrough-judgment.test.ts"
  ],
  "fullSuite": {
   "command": "npx vitest run",
-  "ranAt": "0274a6902f77794e13f08c8f450ebd7cbffdcb7a",
+  "ranAt": "6e58892bc7e49b7a206a8665a24645ab43dc9715",
   "testFilesLine": "Test Files  263 passed | 3 skipped (266)",
   "testsLine": "Tests  6110 passed | 5 skipped (6115)",
   "exitLine": "exit=0"
@@ -38,15 +46,16 @@
    "command": "python3 scripts/check_governance.py",
    "baseLastLine": "32 OK, 21 WARN, 0 FAIL (53 checks) \u2014 counts derived, not asserted",
    "headLastLine": "32 OK, 21 WARN, 0 FAIL (53 checks) \u2014 counts derived, not asserted",
+   "logsRetained": false,
    "lineDifferenceBaseToHead": [
-    "-/tmp/b611/base/scripts/record_pwb_behavior_amendment_acts.py:70: SyntaxWarning: \"\\d\" is an invalid escape sequence. Such sequences will not work in the future. Did you mean \"\\\\d\"? A raw string is also an option.",
-    "+/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.11/scripts/record_pwb_behavior_amendment_acts.py:70: SyntaxWarning: \"\\d\" is an invalid escape sequence. Such sequences will not work in the future. Did you mean \"\\\\d\"? A raw string is also an option.",
-    "-/tmp/b611/base/scripts/check_governance.py:6456: DeprecationWarning: 'maxsplit' is passed as positional argument",
+    "-/home/orca/.tmp-b611/base/scripts/record_pwb_behavior_amendment_acts.py:70: SyntaxWarning: \"\\d\" is an invalid escape sequence. Such sequences will not work in the future. Did you mean \"\\\\d\"? A raw string is also an option.",
+    "-  `^(\\d+)\\.\\s` (MULTILINE) AND a bold form `^\\*\\*Finding (\\d+)\\b`",
+    "-/home/orca/.tmp-b611/base/scripts/check_governance.py:6456: DeprecationWarning: 'maxsplit' is passed as positional argument",
     "+/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.11/scripts/check_governance.py:6456: DeprecationWarning: 'maxsplit' is passed as positional argument",
-    "-repo root: /tmp/b611/base",
+    "-repo root: /home/orca/.tmp-b611/base",
     "-scope:     clone \u2014 8453 file(s) examined (8453 tracked, 0 untracked-not-ignored)",
     "+repo root: /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.11",
-    "+scope:     clone \u2014 8459 file(s) examined (8458 tracked, 1 untracked-not-ignored)",
+    "+scope:     clone \u2014 8464 file(s) examined (8466 tracked, 0 untracked-not-ignored, 2 listed but absent)",
     "-WARN  CG-1f  frozen-lane path references \u2014 705 references examined, 0 findings \u2014 raw reviewer output and superseded round records \u2014 never edited, so classified and printed rather than failed",
     "+WARN  CG-1f  frozen-lane path references \u2014 699 references examined, 0 findings \u2014 raw reviewer output and superseded round records \u2014 never edited, so classified and printed rather than failed",
     "-        docs/reviews/R-GP-IMPL-HOST-TIDY-1-RAW.md -> node_modules/.package-lock.json",
@@ -56,9 +65,9 @@
     "-        docs/reviews/R-POLARIS-BASE-READABILITY-SUCCESSOR-2-RAW.md -> ../../../.syzygy/governance/decisions/POLARIS-GENERATOR-APPLICABILITY-ACT.md",
     "-        docs/reviews/R-POLARIS-BASE-READABILITY-SUCCESSOR-2-RAW.md -> ../../../.syzygy/governance/decisions/POLARIS-GENERATOR-SPECIFICATION-ADOPTION-ACT.md",
     "-OK    CG-2a  retired acceptance phrase confined \u2014 3684 files examined, 0 findings \u2014 2 retired phrase(s) declared; 0 presented as current, 0 unmarked",
-    "+OK    CG-2a  retired acceptance phrase confined \u2014 3687 files examined, 0 findings \u2014 2 retired phrase(s) declared; 0 presented as current, 0 unmarked",
+    "+OK    CG-2a  retired acceptance phrase confined \u2014 3688 files examined, 0 findings \u2014 2 retired phrase(s) declared; 0 presented as current, 0 unmarked",
     "-OK    CG-3   stale bootstrap routing absent \u2014 2653 files examined, 0 findings",
-    "+OK    CG-3   stale bootstrap routing absent \u2014 2654 files examined, 0 findings"
+    "+OK    CG-3   stale bootstrap routing absent \u2014 2655 files examined, 0 findings"
    ]
   },
   "quotations": {
@@ -108,8 +117,6 @@
  "logDigests": {
   "vitest-full.log": "918f7edb7dbce0c2a31a21749c55435f53ef154f6850b3cb12f1b73999f48853",
   "typecheck.log": "dedbcb3be10dbca462ac2344c8f3dd45ce13c35ef0c70df65ce011314a096808",
-  "governance-base.txt": "0476f19e5a47f1a2ed45435d1e07ec244b5ce77588b59c2c2ea0d45e281cf2ad",
-  "governance-head.txt": "b8e013123a7ac88d4a6f0837ee8329180ce7692c2715fc02d72791d53cfabf92",
   "authority-sweep.log": "f72eee2ad1919ab371a4f4375eca04ee7310c2d89fbd72b0611814de666f98e4",
   "quotations-base.txt": "2f803c427eea7f248b835eda5e6c114f035fa8325a33a6791e0135dd44add1d0",
   "quotations-head.txt": "2f803c427eea7f248b835eda5e6c114f035fa8325a33a6791e0135dd44add1d0"
