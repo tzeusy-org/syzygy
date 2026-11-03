@@ -15,7 +15,7 @@ import {
   PACKET_DIGEST_FILE, PACKET_FILE, REVIEW_CHECKS, isReviewKind, latestReviewSession, reviewCheck, reviewPromptRecordName, verdictFileName,
   writePacket, type ReviewCheckResult, type ReviewDeps, type ReviewKind,
 } from './review.js';
-import type { ScreenLoad } from './screen.js';
+import type { ScreenLoader } from './screen.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 
 /** Pre-started waiting sessions (owner direction `POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08`; the candidate v1.2 of
@@ -341,7 +341,7 @@ export interface AwaitDeps {
   /** Whether version 1.2 is signed off; by default `waitModeSignedIn` over the records root. */
   readonly waitModeSigned?: () => boolean;
   readonly probe: CheckDeps['probe'];
-  readonly loadScreen?: () => Promise<ScreenLoad>;
+  readonly loadScreen?: ScreenLoader;
   readonly openReader?: ReverifyOptions['openReader'];
 }
 

@@ -638,7 +638,7 @@ describe('the step guard runs before every review step (syzygy-qkea.23)', () => 
 describe('the content-class gate on the fidelity packet', () => {
   const DOC_POLICY = new TextEncoder().encode(JSON.stringify({
     policyId: 'fixture-public-source', policyVersion: '2', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
-    publicSourceScope: { contentClassification: { rules: LIVE_POLICY.publicSourceScope.contentClassification.rules } },
+    publicSourceScope: { contentClassification: LIVE_POLICY.publicSourceScope.contentClassification },
   }));
   const NOTES_CITED = [{ subject: 'draft', citationId: 'c-p2' }, { subject: 'inventory', citationId: 'c-e-snap' }];
   const spansOf = async (classes: readonly string[] | null): Promise<{ spans: Record<string, unknown>[]; text: string; counts: unknown }> => {
@@ -681,7 +681,7 @@ describe('the content-class gate on the fidelity packet', () => {
 describe('the fidelity packet over a body retained as redacted-span', () => {
   const DOC_POLICY = new TextEncoder().encode(JSON.stringify({
     policyId: 'fixture-public-source', policyVersion: '4', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
-    publicSourceScope: { contentClassification: { rules: LIVE_POLICY.publicSourceScope.contentClassification.rules } },
+    publicSourceScope: { contentClassification: LIVE_POLICY.publicSourceScope.contentClassification },
   }));
   const NOTES_CITED = [{ subject: 'draft', citationId: 'c-p2' }, { subject: 'inventory', citationId: 'c-e-snap' }];
   const packetWith = async (withheld: readonly number[]) => {

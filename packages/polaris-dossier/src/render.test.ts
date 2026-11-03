@@ -388,7 +388,7 @@ describe('render', () => {
   // project-documentation is quoted and given a source page only when the statement the run relies on lists the class.
   const DOC_SCREEN = buildDossierScreen(new TextEncoder().encode(JSON.stringify({
     policyId: 'fixture-public-source', policyVersion: '2', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
-    publicSourceScope: { contentClassification: { rules: LIVE_POLICY.publicSourceScope.contentClassification.rules } },
+    publicSourceScope: { contentClassification: LIVE_POLICY.publicSourceScope.contentClassification },
   })), true);
   it.each<[string, readonly string[] | null, string]>([
     ['a non-governed run, which relies on no statement', null, 'withheld from every agent-bound artifact: the run relies on no per-project statement, so no consent record lists project-documentation'],
@@ -444,7 +444,7 @@ describe('render', () => {
     const exempt = { ok: true as const, screen: { ...base, codeContentExemption: true, screenBody: (body: string, repositoryPath?: string) => (repositoryPath === undefined && body === KESTREL ? 'active-content' as const : base.screenBody(body, repositoryPath)) } };
     const deps = (renderer: DossierRenderer) => renderDeps({ loadScreen: async () => exempt, renderer });
     const undeclared: DossierRenderer = (input) => renderLocalDossier(input);
-    const why = (unconfirmed: string) => `1 cited blob(s) were admitted only under the screening policy's code-content exemption, and these pages cannot be confirmed to meet its render condition (${unconfirmed}); scanned as before for these pages they hold active content, so nothing is rendered`;
+    const why = (unconfirmed: string) => `1 cited blob(s) were admitted only under the screening policy's code-content or project-documentation exemption, and these pages cannot be confirmed to meet its render condition (${unconfirmed}); scanned as before for these pages they hold active content, so nothing is rendered`;
     expect(await renderRun(run, deps(undeclared))).toMatchObject({ ok: false, refusal: { stage: 'render', reason: why('the injected renderer does not declare that it writes every source byte as entity-encoded text') } });
     const noCsp: DossierRenderer = Object.assign((input: DossierRendererInput) => ({ files: new Map([...renderLocalDossier(input).files].map(([file, page]) => [file, file === 'index.html' ? page.replace(/<meta http-equiv="Content-Security-Policy"[^>]*>/u, '') : page])) }), { pageSinkContract: renderLocalDossier.pageSinkContract });
     expect(await renderRun(run, deps(noCsp))).toMatchObject({ ok: false, refusal: { stage: 'render', reason: expect.stringContaining('index.html') } });

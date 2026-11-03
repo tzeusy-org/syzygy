@@ -14,7 +14,7 @@ import type { Outcome } from './outcome.js';
 import type { ReverifyRefusal } from './reverify.js';
 import { recheckSessionStatement, type SessionStatementOfRecord } from './session-statement.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
-import { loadDossierScreen, type ScreenExclusion, type ScreenLoad } from './screen.js';
+import { loadDossierScreen, placementSubjectOf, type ScreenExclusion, type ScreenLoader } from './screen.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 
 /** `syzygy dossier review-packet` and `syzygy dossier review-check` (REQ-polaris-generation-035, 006; design decision 5).
@@ -111,7 +111,7 @@ export type PacketBuild =
 export interface ReviewDeps {
   readonly sources: GateSources;
   readonly now: () => number;
-  readonly loadScreen?: () => Promise<ScreenLoad>;
+  readonly loadScreen?: ScreenLoader;
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
 }
 
@@ -171,7 +171,7 @@ export async function buildFidelityPacket(opened: Extract<OpenedRun, { ok: true 
     }
   }
 
-  const screenLoad = await (deps.loadScreen ?? (() => loadDossierScreen(deps.sources.recordsRoot, deps.now())))();
+  const screenLoad = await (deps.loadScreen ?? ((placement) => loadDossierScreen(deps.sources.recordsRoot, deps.now(), undefined, placement)))(placementSubjectOf(subject));
   if (!screenLoad.ok) return { ok: false, stage: 'screen', reason: screenLoad.why };
   const screen = screenLoad.screen;
   const reader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });
