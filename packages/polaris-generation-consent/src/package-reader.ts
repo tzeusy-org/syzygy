@@ -101,11 +101,17 @@ async function walk(fs: PackageReaderFs, dir: string, prefix = '', depth = 0, fo
 
 interface Act { readonly type: 'observation' | 'egress'; readonly inForce: number; readonly artifact: string; readonly digest: string; readonly version: 1 | 2 }
 
-/** The act's effective instant: its one `Recorded at (UTC)` line (whole seconds, the same calendar day as `Date:`). The recorders
- * always write it; a record without one, or with a second or oddly spelled one, is unreadable. */
-function actInstant(text: string, date: string, label = 'Recorded at \\(UTC\\)', loose = /^\s*recorded at\b/gim): number {
-  const prose = outsideFences(text);
+/** The two instant labels the recorders write, each with the loose spelling that counts as a line of it. */
+const INSTANT_LABELS = { 'Recorded at (UTC)': { label: 'Recorded at \\(UTC\\)', loose: /^\s*recorded at\b/gim }, 'Act instant': { label: 'Act instant', loose: /^\s*act instant\b/gim } } as const;
+type InstantLabel = keyof typeof INSTANT_LABELS;
+/** The act's effective instant: its one line under `which` (whole seconds, the same calendar day as `Date:`). The recorders always
+ * write it; a record without one, with a second or oddly spelled one, or with any line under the other label, is unreadable: every
+ * family refuses an instant line it does not read (syzygy-bpyt.1.24, aligned toward refusal). */
+function actInstant(text: string, date: string, which: InstantLabel = 'Recorded at (UTC)'): number {
+  const prose = outsideFences(text), { label, loose } = INSTANT_LABELS[which];
   if ([...text.matchAll(loose)].length !== 1 || [...prose.matchAll(loose)].length !== 1) return refuse();   // absent, repeated, or only in a fence
+  const other = INSTANT_LABELS[which === 'Act instant' ? 'Recorded at (UTC)' : 'Act instant'].loose;
+  if ([...text.matchAll(other)].length !== 0) return refuse();   // a line under the label this family does not read, fenced or not
   const value = one(text, new RegExp(`^${label}: (\\S+)$`, 'gm'));
   const m = /^(\d{4}-\d{2}-\d{2})T\d{2}:\d{2}:\d{2}Z$/.exec(value);
   const at = m === null ? NaN : Date.parse(value);
@@ -233,7 +239,9 @@ const AGGREGATE_RECORD = 'ACCEPTANCE-ACT-RECORD.md';
  * (`contracts/candidates/public-egress-v2/REVIEW-BRIEF.md`). A name that carries a record-id or act-identity needle or a provider stem
  * other than version 2's (`public-egress-openai`) is never one, nor is a path with a segment at any depth that starts `instance` in
  * any case (`Instances/`, `instances.md`, `instance/`). Read through the reader's file system; an unreadable directory gives none.
- * Set aside only in an allowlisted file (`sweepText`). */
+ * Set aside only in an allowlisted file (`sweepText`), in every family. No citation carries a policy-family needle: `carriesId` drops
+ * every name with the policy or screening-scope stem, and the policy path lies outside both packages and `scripts/`. So giving the
+ * policy family the allowlist (syzygy-bpyt.1.24) only adds a refusal, where a set-aside citation joins its stem. */
 const PACKAGE_DIRS = ['.syzygy/governance/contracts/candidates/public-repo-admission', '.syzygy/governance/contracts/candidates/public-egress-v2'];
 const ID_NEEDLES = ['public-obs-', 'public-egress-anthropic', 'rfc5-project-documentation-amend', 'public-source-scope', 'pwb-secret-classification-policy'];
 const carriesId = (name: string): boolean =>
@@ -274,15 +282,14 @@ function sweepText(fs: PackageReaderFs, root: string): (rel: string, text: strin
 
 const ADMISSION_NEEDLES = [...ADMISSION_STEMS, ...ADMISSION_PATHS];
 /** The admission family: its four forms, the pinned owner-answers direction, and its sweep (the stems above in a file's text outside
- * the aggregate record; the stems and paths on every swept field line, `>` included; compared as written). Its records are read for
- * either admission act type, with no fixed lines and no supersession field. The paths are not text needles: each one's folded
- * spelling contains an admission stem's (`public-repo-admission` or `public-egress-v2`), so a text that carries a path carries that
- * stem, and the paths could never name an act the stems had not (syzygy-bpyt.8.22). */
+ * the aggregate record; the stems and paths on every swept field line). Its records are read under `Recorded at (UTC)`. The paths are
+ * not text needles: each one's folded spelling contains an admission stem's (`public-repo-admission` or `public-egress-v2`), so a text
+ * that carries a path carries that stem, and the paths could never name an act the stems had not (syzygy-bpyt.8.22). */
 const ADMISSION_FAMILY: ParsedActFamily<AdmissionActForm> = {
   forms: ADMISSION_ACT_FORMS,
   pins: new Map([[OWNER_ANSWERS_FILE, OWNER_ANSWERS_SHA256]]),
-  sweep: { stems: ADMISSION_STEMS, needles: [], fields: everyField(ADMISSION_NEEDLES), quoted: true, loose: false, citations: true },
-  dialect: { typeValue: 'consent-observation|consent-egress', fixedLines: 'none', instant: 'Recorded at (UTC)', supersession: false },
+  sweep: { stems: ADMISSION_STEMS, needles: [], fields: everyField(ADMISSION_NEEDLES) },
+  instant: 'Recorded at (UTC)',
 };
 
 export function createPackageAdmissionReader(options: { readonly root: string; readonly fs?: PackageReaderFs }): AdmissionRecordReader {
@@ -296,7 +303,7 @@ export function createPackageAdmissionReader(options: { readonly root: string; r
       for (const { form, text } of found.records) {
         let act: Act;
         try {
-          const parsed = parseActRecord(text, form, ADMISSION_FAMILY.dialect);
+          const parsed = parseActRecord(text, form, ADMISSION_FAMILY.instant);
           act = { type: form.type === 'consent-observation' ? 'observation' : 'egress', inForce: parsed.recordedAt, artifact: parsed.artifact, digest: parsed.digest, version: form.version };
         } catch { return refuse(); }
         let artifact: string;
@@ -373,20 +380,17 @@ const HISTORICAL_POLICY_ACTS: ReadonlyMap<string, string> = new Map([
 
 const POLICY_STEM = 'pwb-secret-classification-policy';
 const SCOPE_STEM = 'public-source-scope';
-/** The policy family: its four forms, the historical acts pinned above, and its sweep. A decisions file names the policy when a field
- * line (any case, spacing, dash spelling; a `>` before it does not count) carries its path, or an act identity of its family, or when
- * its name or (outside the aggregate acceptance record) its text carries the public-source-scope stem of the acts' identities and file
- * names, or its name carries the policy stem and a withdrawal word. Its records are read for an act type of lowercase letters and
- * dashes, the provenance line's opening as the one fixed line, and the supersession field the chain needs. */
-/* No allowlist here: every needle below is an id needle or the policy path, which no citation can carry (R-355-2 N-3c). */
+/** The policy family: its five forms, the historical acts pinned above, and its sweep. A decisions file names the policy when any of
+ * the four field lines (any case, spacing, dash spelling, `>` or bullet before it) carries its path or the policy stem, or when its
+ * name or (outside the aggregate acceptance record) its text carries the public-source-scope stem of the acts' identities and file
+ * names, or its text there carries the policy path, or its name carries the policy stem and a withdrawal word. The policy stem alone
+ * in text does not name it: the earlier Butlers-only policy acts and the decisions that cite them carry it. Its records are read
+ * under `Recorded at (UTC)`. */
 const POLICY_FAMILY: ParsedActFamily<PolicyActForm> = {
   forms: POLICY_ACT_FORMS,
   pins: HISTORICAL_POLICY_ACTS,
-  sweep: {
-    stems: [SCOPE_STEM], needles: [], fields: { 'artifact identity': [POLICY_PATH], 'act identity': [POLICY_PATH, POLICY_STEM] },
-    quoted: false, loose: false, citations: false, withdrawal: POLICY_STEM,
-  },
-  dialect: { typeValue: '[a-z-]+', fixedLines: 'provenance', instant: 'Recorded at (UTC)', supersession: true },
+  sweep: { stems: [SCOPE_STEM], needles: [POLICY_PATH], fields: everyField([POLICY_PATH, POLICY_STEM]), withdrawal: POLICY_STEM },
+  instant: 'Recorded at (UTC)',
 };
 
 /** The policy, its declared scope, and the recorder acts over it in chain order (version 1 to 5), every decisions file swept. The
@@ -401,7 +405,7 @@ async function readPolicyActs(fs: PackageReaderFs, root: string): Promise<{ read
   try { scope = (JSON.parse(policy) as { publicSourceScope?: unknown }).publicSourceScope; } catch { return refuse(); }
   if ('why' in found) return refuse();
   const parsed: Array<ParsedAct | null> = POLICY_ACT_FORMS.map(() => null);
-  for (const { form, text } of found.records) parsed[POLICY_ACT_FORMS.indexOf(form)] = parseActRecord(text, form, POLICY_FAMILY.dialect);
+  for (const { form, text } of found.records) parsed[POLICY_ACT_FORMS.indexOf(form)] = parseActRecord(text, form, POLICY_FAMILY.instant);
   // The recorded versions must be a prefix of the forms: a later version without every earlier one refuses.
   const count = parsed.indexOf(null) < 0 ? parsed.length : parsed.indexOf(null);
   if (parsed.slice(count).some(act => act !== null)) refuse();
@@ -469,12 +473,11 @@ export function readPolicyActChain(options: StrictReadOptions): Promise<ActState
 
 const CLASS_STEM = 'rfc5-project-documentation';
 /** The class-act family: its one form and its sweep (the stem in a file's name, the stem or the module's path in its text outside the
- * aggregate record, either on an `Artifact identity` or `Act identity` line, `>` included, compared as written). Its record is read for
- * any act type, with no fixed lines, the `Act instant` line and the supersession field. */
+ * aggregate record, either on any of the four field lines). Its record is read under `Act instant`. */
 const CLASS_FAMILY: ParsedActFamily<ActForm> = {
   forms: [CLASS_ACT_FORM],
-  sweep: { stems: [CLASS_STEM], needles: [CLASS_MODULE], fields: { 'artifact identity': [CLASS_MODULE, CLASS_STEM], 'act identity': [CLASS_MODULE, CLASS_STEM] }, quoted: true, loose: false, citations: true },
-  dialect: { typeValue: '[^`\\n]+', fixedLines: 'none', instant: 'Act instant', supersession: true },
+  sweep: { stems: [CLASS_STEM], needles: [CLASS_MODULE], fields: everyField([CLASS_MODULE, CLASS_STEM]) },
+  instant: 'Act instant',
 };
 async function readClassAct(fs: PackageReaderFs, root: string): Promise<{ readonly act: ParsedAct; readonly moduleDigest: string } | null> {
   const found = await findActRecords(fs, root, CLASS_FAMILY);
@@ -483,7 +486,7 @@ async function readClassAct(fs: PackageReaderFs, root: string): Promise<{ readon
   if (record === undefined) return null;
   let module: string;
   try { module = await fs.readFile(path.join(root, CLASS_MODULE)); } catch { return refuse(); }
-  const act = parseActRecord(record.text, record.form, CLASS_FAMILY.dialect);
+  const act = parseActRecord(record.text, record.form, CLASS_FAMILY.instant);
   if (act.digest !== sha256(module)) refuse();
   return { act, moduleDigest: sha256(module) };
 }
@@ -516,7 +519,7 @@ export function readInForceEgress(options: StrictReadOptions): Promise<ActState<
  * title, the act type, the identity it renders for a date, the one artifact it binds, and the stems that name it. The cross-check is
  * RFC3-16(a)'s: the act counts only when its record exists in exactly this form, its argument is the sha256 of the artifact's current
  * bytes and its instant is not after `now`. A status word in the artifact, or the artifact's presence, never counts. The record is
- * read as the admission, policy and class records are (`parseActRecord`, `RECORDER_DIALECT`), and swept by `digestBoundSweep`. */
+ * read as the admission, policy and class records are (`parseActRecord`, under `Recorded at (UTC)`), and swept by `digestBoundSweep`. */
 export interface DigestBoundActForm {
   readonly file: string;
   readonly title: string;
@@ -556,9 +559,9 @@ export const REGISTRY_GIT_SOURCE_ACT_FORM: DigestBoundActForm = Object.freeze({
 });
 
 /** A digest-bound form's sweep: its stems in a file's name; its stems or `artifact` in the text outside the aggregate record; its
- * stems, field stems or `artifact` on any of the four field lines, `>` included; text and values compared `loose` as well. */
+ * stems, field stems or `artifact` on any of the four field lines. */
 function digestBoundSweep(form: { readonly stems: readonly string[]; readonly fieldStems?: readonly string[] }, artifact: string): ActSweep {
-  return { stems: form.stems, needles: [artifact], fields: everyField([...form.stems, ...(form.fieldStems ?? []), artifact]), quoted: true, loose: true, citations: true };
+  return { stems: form.stems, needles: [artifact], fields: everyField([...form.stems, ...(form.fieldStems ?? []), artifact]) };
 }
 
 /** `value` with backticks dropped and the whitespace around each `:` and `,` removed, so a tuple reads the same however it is spaced
@@ -579,38 +582,22 @@ interface ActForm {
   readonly template?: RecorderTemplate | undefined;
 }
 
-/** How a family's reader holds an act record's head to what its recorder writes. The recorders all write the same head (the `Owner`,
- * `Provenance state` and A1 lines, one instant, a `Supersession / revocation:` field); the readers grew different checks of it, and
- * each family keeps its own (syzygy-bpyt.8.4), because holding one family to another's would refuse records it reads today. */
-interface ActDialect {
-  /** The pattern an `Act type:` value matches for the line to count as the field. */
-  readonly typeValue: string;
-  /** The fixed lines read, for a form with no template: all three of `recorderLines`, the provenance line's opening only, or none. */
-  readonly fixedLines: 'recorder' | 'provenance' | 'none';
-  /** The label of the one instant line. */
-  readonly instant: 'Recorded at (UTC)' | 'Act instant';
-  /** Whether the `Supersession / revocation:` field is read (a repeated one refuses); unread, the parsed act's is ''. */
-  readonly supersession: boolean;
-}
-/** The dialect of `DigestBoundActForm`: any act type, the recorder lines (or the template), `Recorded at (UTC)`, the supersession. */
-const RECORDER_DIALECT: ActDialect = Object.freeze({ typeValue: '[^`\\n]+', fixedLines: 'recorder', instant: 'Recorded at (UTC)', supersession: true });
+/* The recorders all write the same head (the `Owner`, `Provenance state` and A1 lines, one instant, a `Supersession / revocation:`
+ * field). Until syzygy-bpyt.1.24 each family's reader checked a different part of it (syzygy-bpyt.8.4 kept them as per-family knobs);
+ * owner answer A to consent-withdrawal-knobs (decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md) aligned every knob
+ * toward refusal, so every family now holds a record to all of it and differs only in the label of its instant line. */
 
 /** The folded label of a field line a sweep reads. */
 type SweptField = 'artifact identity' | 'act identity' | 'record id' | 'subject';
 /** What names an act in a decisions file that is none of its family's records, pins or exempt records: the file's name carrying one of
  * `stems` (as written, never `loose`); its text, outside the aggregate acceptance record, carrying one of `stems` or `needles`; or, in
  * any file, a field line whose folded value carries a needle `fields` lists for its label. A field line is optional whitespace, an
- * optional `-` or `*` bullet (or `>`, when `quoted`), any asterisks, the label in any case and spacing, then a colon. */
+ * optional `-`, `*` or `>`, any asterisks, the label in any case and spacing, then a colon. Text and field values count as written and
+ * once both they and the needle are read `loose`, in every family. */
 interface ActSweep {
   readonly stems: readonly string[];
   readonly needles: readonly string[];
   readonly fields: Readonly<Partial<Record<SweptField, readonly string[]>>>;
-  /** Whether a `>` before a field line still makes it one. */
-  readonly quoted: boolean;
-  /** Whether text and field values also count once both they and the needle are read `loose`. */
-  readonly loose: boolean;
-  /** Whether an allowlisted file's exact tooling citations are set aside first (`sweepText`). */
-  readonly citations: boolean;
   /** A stem that, with `withdraw` or `revok`, in a file's name names the act. */
   readonly withdrawal?: string;
 }
@@ -619,7 +606,6 @@ function everyField(needles: readonly string[]): ActSweep['fields'] {
   return { 'artifact identity': needles, 'act identity': needles, 'record id': needles, subject: needles };
 }
 const FIELD_LINE = /^\s*(?:[-*>]\s*)?\**\s*(artifact\s+identity|act\s+identity|record\s+id|subject)\s*\**\s*:\s*(.*)$/u;
-const UNQUOTED_FIELD_LINE = /^\s*(?:[-*]\s*)?\**\s*(artifact\s+identity|act\s+identity|record\s+id|subject)\s*\**\s*:\s*(.*)$/u;
 
 /** One swept file's text in the spellings a sweep compares needles in, each computed on its first use and kept for every later needle
  * (syzygy-bpyt.8.20): `plain`, its `stemFolds`; `slack`, the `stemFolds` of its `loose` reading; and `folded`, its `fold`, which the
@@ -642,14 +628,12 @@ function formsCarry(forms: TextForms, needle: string, loosely: boolean): boolean
 }
 
 function namesAct(sweep: ActSweep, rel: string, forms: TextForms): boolean {
-  const has = sweep.loose ? carriesLoosely : carries;
   if (sweep.stems.some(stem => carries(rel, stem))) return true;
   if (sweep.withdrawal !== undefined && carries(rel, sweep.withdrawal) && /withdraw|revok/u.test(fold(rel))) return true;
-  if (rel !== AGGREGATE_RECORD && [...sweep.stems, ...sweep.needles].some(needle => formsCarry(forms, needle, sweep.loose))) return true;
-  const line = sweep.quoted ? FIELD_LINE : UNQUOTED_FIELD_LINE;
+  if (rel !== AGGREGATE_RECORD && [...sweep.stems, ...sweep.needles].some(needle => formsCarry(forms, needle, true))) return true;
   return forms.folded().split('\n').some(each => {
-    const field = line.exec(each);
-    return field !== null && (sweep.fields[field[1]!.replace(/\s+/gu, ' ') as SweptField] ?? []).some(needle => has(field[2]!, needle));
+    const field = FIELD_LINE.exec(each);
+    return field !== null && (sweep.fields[field[1]!.replace(/\s+/gu, ' ') as SweptField] ?? []).some(needle => carriesLoosely(field[2]!, needle));
   });
 }
 
@@ -661,12 +645,12 @@ interface ActFamily<F extends { readonly file: string }> {
   readonly pins?: ReadonlyMap<string, string>;
   readonly exempt?: readonly ExemptRecord[] | undefined;
 }
-/** A family whose records `parseActRecord` reads, and the dialect it reads them in. */
-interface ParsedActFamily<F extends ActForm> extends ActFamily<F> { readonly dialect: ActDialect }
+/** A family whose records `parseActRecord` reads, and the label of their instant line. */
+interface ParsedActFamily<F extends ActForm> extends ActFamily<F> { readonly instant: InstantLabel }
 /** Each form's record found in the walk, in walk order, or why the sweep refuses and the file that named the act. */
 type FoundRecords<F> = { readonly records: readonly { readonly form: F; readonly text: string }[] } | { readonly why: string; readonly namedBy: string };
 async function findActRecords<F extends { readonly file: string }>(fs: PackageReaderFs, root: string, family: ActFamily<F>): Promise<FoundRecords<F>> {
-  const files = await walk(fs, path.join(root, DECISIONS_DIR)), swept = family.sweep.citations ? sweepText(fs, root) : async (_rel: string, text: string) => text;
+  const files = await walk(fs, path.join(root, DECISIONS_DIR)), swept = sweepText(fs, root);
   const records: { readonly form: F; readonly text: string }[] = [];
   for (const rel of files) {
     let text: string;
@@ -692,27 +676,27 @@ function fromTemplate(template: RecorderTemplate, text: string): Readonly<Record
 }
 
 /** The lines every recorder of these acts writes for RFC3-16(b) items 7 and 9 (owner, provenance state, the explicit A1 absence), for a
- * form with no template; a record without one of them, or with another, is not the recorder's form. */
+ * form with no template; a record without one of them, or with another, is not the recorder's form. The provenance line is held both
+ * whole and by its opening, so a second line that opens the same way with another tail refuses too. */
 function recorderLines(text: string): void {
   one(text, /^(Owner: Tzeusy)$/gm);
   one(text, /^(Provenance state: `owner-adopted \(bootstrap, uncorrelated\)` — state \(1\),)$/gm);
+  one(text, /^Provenance state: `(owner-adopted \(bootstrap, uncorrelated\))`/gm);
   one(text, /^(A1 audit-record identity \(RFC3-16\(b\) item 9\): \*\*explicitly absent\*\*)$/gm);
 }
 
-/** The record of `form`, read from prose as `dialect` holds it: the title; the template, or the dialect's fixed lines; one each of
- * `Date`, `Act identity`, `Act type`, `Artifact identity`, `Project identity` and `Exact digest (SHA-256)`; a real calendar date; the
- * form's identity for that date, its type and its artifact; the instant; and the supersession field. Anything else refuses. */
-function parseActRecord(text: string, form: ActForm, dialect: ActDialect): ParsedAct {
+/** The record of `form`, read from prose: the title; the template, or the recorder lines; one each of `Date`, `Act identity`, `Act type`
+ * (any value), `Artifact identity`, `Project identity` and `Exact digest (SHA-256)`; a real calendar date; the form's identity for that
+ * date, its type and its artifact; the one instant under `instant`; and the supersession field. Anything else refuses. */
+function parseActRecord(text: string, form: ActForm, instant: InstantLabel): ParsedAct {
   if (!text.startsWith(`${form.title}\n`)) refuse();
   if (form.template !== undefined) fromTemplate(form.template, text);
-  else if (dialect.fixedLines === 'recorder') recorderLines(text);
-  else if (dialect.fixedLines === 'provenance') one(text, /^Provenance state: `(owner-adopted \(bootstrap, uncorrelated\))`/gm);
-  const date = one(text, /^Date: (\d{4}-\d{2}-\d{2})$/gm), identity = one(text, /^Act identity: `([^`\n]+)`$/gm), type = one(text, new RegExp(`^Act type: \`(${dialect.typeValue})\`$`, 'gm'));
+  else recorderLines(text);
+  const date = one(text, /^Date: (\d{4}-\d{2}-\d{2})$/gm), identity = one(text, /^Act identity: `([^`\n]+)`$/gm), type = one(text, /^Act type: `([^`\n]+)`$/gm);
   const artifact = one(text, /^Artifact identity: `([^`\n]+)`$/gm), project = one(text, /^Project identity: `(project:syzygy)`$/gm), digest = one(text, /^Exact digest \(SHA-256\): `([0-9a-f]{64})`$/gm);
   const day = Date.parse(`${date}T00:00:00Z`);
   if (!Number.isSafeInteger(day) || new Date(day).toISOString().slice(0, 10) !== date || identity !== form.identity(date) || type !== form.type || artifact !== form.artifact) refuse();
-  const recordedAt = dialect.instant === 'Act instant' ? actInstant(text, date, 'Act instant', /^\s*act instant\b/gim) : actInstant(text, date);
-  return { file: form.file, identity, type, artifact, project, digest, date, recordedAt, supersession: dialect.supersession ? supersessionText(text) : '', text };
+  return { file: form.file, identity, type, artifact, project, digest, date, recordedAt: actInstant(text, date, instant), supersession: supersessionText(text), text };
 }
 
 /** Why the artifact's bound-files table does not hold for `bound`, or null when every listed file still hashes to its row. */
@@ -745,7 +729,7 @@ export function readDigestBoundActState(options: StrictReadOptions & { readonly 
     if ('why' in found) return { state: 'refused', why: found.why, namedBy: found.namedBy };
     const record = found.records.at(-1);
     if (record === undefined) return { state: 'absent', why: `no owner-act record ${DECISIONS_DIR}/${form.file} exists` };
-    const act = parseActRecord(record.text, form, RECORDER_DIALECT);
+    const act = parseActRecord(record.text, form, 'Recorded at (UTC)');
     let artifactText: string;
     try { artifactText = await fs.readFile(path.join(options.root, form.artifact)); } catch { return { state: 'refused', why: `the act's artifact ${form.artifact} cannot be read` }; }
     if (sha256(artifactText) !== act.digest) return { state: 'refused', why: `the bytes of ${form.artifact} differ from the act's argument` };

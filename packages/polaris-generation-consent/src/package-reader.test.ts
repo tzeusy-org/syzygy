@@ -320,13 +320,15 @@ describe('public-source policy act', () => {
       'a prepared packet quoting an act': `# PREPARED packet\n\n${policyAct()}`,
       'a fenced quotation': `# Notes\n\n\`\`\`text\n${line}\n\`\`\`\n`,
       'another act type under another name': policyAct({ type: 'adopt-doctrine' }),
+      // a block-quoted field line counts, as it does for every other family (syzygy-bpyt.1.24; before, the policy sweep skipped it)
+      'a block-quoted mention': `> ${line}\n`,
     };
     for (const [name, text] of Object.entries(forms)) await expect(policyReader(policyWorld(policyText(), policyAct(), { [`${DECISIONS_DIR}/SOME-OTHER-RECORD.md`]: text })).read(), name).rejects.toBeInstanceOf(AdmissionRecordError);
-    // a block-quoted mention is not a line that names the artifact, and the three historical acts are skipped by name
+    // the three historical acts are skipped by name
     const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
     const historical = ['PWB-SECRET-CLASSIFICATION-POLICY-ACT.md', 'PWB-SECRET-CLASSIFICATION-POLICY-AMENDMENT-ACT.md', 'PWB-SECRET-CLASSIFICATION-POLICY-BEHAVIOR-CONTRACT-REPIN-ACT.md'];
     const realBytes = Object.fromEntries(historical.map(name => [`${DECISIONS_DIR}/${name}`, readFileSync(path.join(repoRoot, DECISIONS_DIR, name), 'utf8')]));
-    const quiet = { [`${DECISIONS_DIR}/NOTES.md`]: `> ${line}\n`, ...realBytes };
+    const quiet = { ...realBytes };
     const files = policyWorld(policyText(false), policyAct({}, policyText(false)), quiet); delete files[POLICY_ACT];
     expect(await policyReader(files).read()).toEqual([]);
     // the same file names, edited: a forged withdrawal in a historical act refuses the read, whichever file it is placed in
