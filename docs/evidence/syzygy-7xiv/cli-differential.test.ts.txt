@@ -1,0 +1,157 @@
+import * as fs from 'node:fs';
+import { tmpdir } from 'node:os';
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { ADMISSION_ACT_FORMS } from '@syzygy/polaris-generation-consent';
+import { afterEach, describe, expect, it } from 'vitest';
+import { issueBrief } from './brief.js';
+import { runDossierCli } from './cli.js';
+import { allowExecution, readExecutionChoice, RUN_DIRECTORY_CHOICES } from './execution-choice.js';
+import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
+import type { PinnedObjectReader } from './git-object-reader.js';
+import { writeLaunchedMarker } from './launched.js';
+import { parseRunConfig } from './run-config.js';
+import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
+
+// syzygy-qkea.5 (S4): `syzygy dossier allow-execution` (REQ-polaris-generation-033, the execution-choice paragraph; R3-F2, R3-F7).
+// Gate sources are a fixture; D9 is in force only where a test says so. Expected values are literals.
+
+const REAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
+const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
+const REV = '498ecd0d6d007db11ddb3aea9428552598a78622';
+const RUN_ID = `run-${'a'.repeat(32)}`;
+const ALL = ['owner-started-session', 'owners-own-host', 'owner-attends'];
+const SUBJECT: RunSubject = {
+  repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },
+  clone: { path: '/srv/clones/redis', declaredBy: 'operator', label: 'Inferred', use: 'read' },
+  pinnedRevision: { commit: REV, label: '8.10.2', consentRecord: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', pinnedAt: '2026-10-07T10:00:00.000Z' },
+  startGates: { registryEntry: 'REGISTRY-ACT-FIXTURE', screeningPolicy: 'POLICY-ACT-FIXTURE' },
+  governed: { kind: 'non-governed', because: ['fixture'] },
+  providerStatement: null,
+  workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
+};
+
+const cleanups: (() => void)[] = [];
+afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
+const tempDir = (prefix: string): string => {
+  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
+  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
+  return dir;
+};
+const runDirectory = (operatorIsOwner = true, name = RUN_ID): string => {
+  const run = path.join(tempDir('dossier-choice-'), name);
+  fs.mkdirSync(run);
+  const parsed = parseRunConfig(JSON.stringify({
+    operator: 'Tzeusy', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic', model: 'claude-opus-5-5',
+    deadline: 'PT1H', agentTokenBudget: 100_000, maxRepairCycles: 3, maxQuestions: 2, audience: 'an operator', operatorIsOwner,
+  }));
+  if (!parsed.ok) throw new Error('fixture configuration refused');
+  fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(parsed.config, SUBJECT));
+  return run;
+};
+const OK: GateState = { state: 'ok', record: 'FIXTURE-ACT' };
+const sources = (over: Partial<GateSources> = {}): GateSources => ({
+  recordsRoot: REAL_ROOT,
+  repositoryIdsFor: async () => ['redis-redis'],
+  consentedRevisionsFor: async () => [{ label: '8.10.2', commitId: REV }],
+  observationConsentFor: async () => ({ satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' }),
+  registryEntry: async () => OK,
+  screeningPolicy: async () => OK,
+  d9: async () => OK,
+  rfc720Ruling: async () => OK,
+  projectInput: { drawerFor: async () => ({ stated: true, drawer: 'absent', record: 'PROJECT-INPUT-FIXTURE@1' }) },
+  providerStatements: NO_PROVIDER_STATEMENTS,
+  ...over,
+});
+/** The step guard lists the pinned tree; this fixture tree holds no openspec/ or .syzygy/ path, so the subject stays non-governed. */
+const openReader = () => ({ listTree: async () => [{ path: 'src/server.c' }] }) as unknown as PinnedObjectReader;
+const deps = (over: Partial<GateSources> = {}) => ({ sources: sources(over), now: () => NOW, recordId: () => 'choice-0123456789abcdef', openReader });
+let fifoN = 0;
+import { writeFileSync as wf } from 'node:fs';
+
+const cli = async (argv: readonly string[], over: Partial<GateSources> = {}) => {
+  let stdout = '', stderr = '';
+  const code = await runDossierCli(argv, { stdout: (t) => { stdout += t; }, stderr: (t) => { stderr += t; } }, { sources: sources(over), now: () => NOW, openReader });
+  return { code, stdout, stderr };
+};
+const VALID_MARKER = (run: string) => writeLaunchedMarker(run, RUN_ID, NOW);
+const plants: Record<string, ((m: string, run: string) => void) | null> = {
+  none: null,
+  launched: (_m, run) => VALID_MARKER(run),
+  'literal-valid-json': (m) => fs.writeFileSync(m, JSON.stringify({ format: 'polaris-dossier-launched/1' })),
+  empty: (m) => fs.writeFileSync(m, ''),
+  invalid: (m) => fs.writeFileSync(m, '{"format": "polaris-dossier-launched/1"'),
+  other: (m) => fs.writeFileSync(m, '{"format": "polaris-dossier-launched/2"}'),
+  dir: (m) => fs.mkdirSync(m),
+  symlink: (m, run) => { const t = path.join(path.dirname(run), 'real.json'); fs.writeFileSync(t, JSON.stringify({ format: 'polaris-dossier-launched/1' })); fs.symlinkSync(t, m); },
+  dangling: (m) => fs.symlinkSync('/nonexistent/x', m),
+  fifo: (m) => { const f = process.env.FIFO_DIR + '/' + (fifoN++); fs.renameSync(f, m); },
+  oversized: (m) => fs.writeFileSync(m, JSON.stringify({ format: 'polaris-dossier-launched/1', pad: 'x'.repeat(5000) })),
+  bom: (m) => fs.writeFileSync(m, '﻿' + JSON.stringify({ format: 'polaris-dossier-launched/1' })),
+};
+type Variant = { name: string; argv: (run: string) => string[]; over?: Partial<GateSources>; owner?: boolean; dirName?: string; pre?: (run: string) => void };
+const D = ALL.join(',');
+const variants: Variant[] = [
+  { name: 'all-good', argv: (r) => ['allow-execution', r, '--revision', REV, '--declare', D, '--json'] },
+  { name: 'all-good-text', argv: (r) => ['allow-execution', r, '--revision', REV, '--declare', D] },
+  { name: 'misnamed', dirName: 'not-a-run', argv: (r) => ['allow-execution', r, '--revision', REV, '--declare', D, '--json'] },
+  { name: 'wrong-revision', argv: (r) => ['allow-execution', r, '--revision', 'f'.repeat(40), '--declare', D, '--json'] },
+  { name: 'bad-declarations', argv: (r) => ['allow-execution', r, '--revision', REV, '--declare', 'owner-attends', '--json'] },
+  { name: 'unknown-declaration', argv: (r) => ['allow-execution', r, '--revision', REV, '--declare', D + ',x', '--json'] },
+  { name: 'd9-absent', over: { d9: async () => ({ state: 'absent', why: 'no act' }) }, argv: (r) => ['allow-execution', r, '--revision', REV, '--declare', D, '--json'] },
+  { name: 'not-owner', owner: false, argv: (r) => ['allow-execution', r, '--revision', REV, '--declare', D, '--json'] },
+  { name: 'no-revision', argv: (r) => ['allow-execution', r, '--declare', D, '--json'] },
+  { name: 'no-declare', argv: (r) => ['allow-execution', r, '--revision', REV, '--json'] },
+  { name: 'no-run', argv: () => ['allow-execution', '--revision', REV, '--declare', D, '--json'] },
+  { name: 'two-runs', argv: (r) => ['allow-execution', r, r, '--revision', REV, '--declare', D, '--json'] },
+  { name: 'unknown-option', argv: (r) => ['allow-execution', r, '--revision', REV, '--declare', D, '--bogus', '--json'] },
+  { name: 'no-run-json', pre: (r) => fs.rmSync(path.join(r, 'run.json')), argv: (r) => ['allow-execution', r, '--revision', REV, '--declare', D, '--json'] },
+  { name: 'recorded-already', pre: () => undefined, argv: (r) => ['allow-execution', r, '--revision', REV, '--declare', D, '--json'] },
+  { name: 'trailing-slash', argv: (r) => ['allow-execution', r + '/', '--revision', REV, '--declare', D, '--json'] },
+  { name: 'dot-segment', argv: (r) => ['allow-execution', path.join(r, '..', '.') + '/' + path.basename(r) + '/.', '--revision', REV, '--declare', D, '--json'] },
+];
+
+it('differential', async () => {
+  const out: unknown[] = [];
+  for (const [pname, plant] of Object.entries(plants)) {
+    for (const v of variants) {
+      const run = runDirectory(v.owner ?? true, v.dirName ?? RUN_ID);
+      const root = path.dirname(run);
+      v.pre?.(run);
+      if (v.name === 'recorded-already') {
+        const first = await cli(['allow-execution', run, '--revision', REV, '--declare', D, '--json']);
+        void first;
+      }
+      if (plant) plant(path.join(run, 'launched.json'), run);
+      const before = fs.existsSync(path.join(run, 'execution-choice.json')) ? fs.readFileSync(path.join(run, 'execution-choice.json'), 'utf8') : null;
+      const r = await cli(v.argv(run), v.over ?? {});
+      const after = fs.existsSync(path.join(run, 'execution-choice.json')) ? fs.readFileSync(path.join(run, 'execution-choice.json'), 'utf8') : null;
+      const norm = (s: string) => s.split(root).join('<ROOT>');
+      out.push({ plant: pname, variant: v.name, code: r.code, stdout: norm(r.stdout), stderr: norm(r.stderr), wrote: before !== after, choice: after === null ? null : norm(after) });
+    }
+  }
+  // Lexical versus physical `..` through a symlinked component.
+  for (const [where, launchedAt] of [['physical', 'physical'], ['lexical', 'lexical'], ['neither', 'none'], ['both', 'both']] as const) {
+    const base = tempDir('dossier-lex-');
+    // physical: <base>/p/inner is where link points; <base>/p/run-a is the physical target of link/../run-a.
+    // lexical: <base>/run-a is what path.resolve(<base>/link/../run-a) names.
+    fs.mkdirSync(path.join(base, 'p', 'inner'), { recursive: true });
+    const mk = (dir: string) => {
+      fs.mkdirSync(dir);
+      const src = runDirectory();
+      fs.copyFileSync(path.join(src, 'run.json'), path.join(dir, 'run.json'));
+    };
+    const phys = path.join(base, 'p', RUN_ID), lex = path.join(base, RUN_ID);
+    mk(phys); mk(lex);
+    fs.symlinkSync(path.join(base, 'p', 'inner'), path.join(base, 'link'));
+    if (launchedAt === 'physical' || launchedAt === 'both') writeLaunchedMarker(phys, RUN_ID, NOW);
+    if (launchedAt === 'lexical' || launchedAt === 'both') writeLaunchedMarker(lex, RUN_ID, NOW);
+    const arg = `${base}/link/../${RUN_ID}`;
+    const r = await cli(['allow-execution', arg, '--revision', REV, '--declare', D, '--json']);
+    const norm = (s: string) => s.split(base).join('<BASE>');
+    out.push({ plant: `symlink-dotdot:${where}`, variant: 'all-good', code: r.code, stdout: norm(r.stdout), stderr: norm(r.stderr),
+      wrotePhys: fs.existsSync(path.join(phys, 'execution-choice.json')), wroteLex: fs.existsSync(path.join(lex, 'execution-choice.json')) });
+  }
+  wf(process.env.DIFF_OUT!, JSON.stringify(out, null, 1));
+  expect(out.length).toBeGreaterThan(0);
+});
