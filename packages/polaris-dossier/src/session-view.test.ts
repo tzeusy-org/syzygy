@@ -1,7 +1,8 @@
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { authorRule, awaitRule } from './broker.js';
 import { exited } from './child-process.testkit.js';
 import { launchFormRefusal, launchedMarkerState, writeLaunchedMarker } from './launched.js';
@@ -17,7 +18,7 @@ describe('session views', () => {
   let base: string;
   const dirs: Record<string, string> = {};
   beforeAll(() => {
-    base = fs.mkdtempSync(path.join(os.tmpdir(), 'polaris-view-'));
+    base = tempDir('polaris-view-');
     for (const name of ['clone', 'checkout', 'run', 'run/drafts', 'run.sessions/session-1', 'run.sessions/fidelity-1', 'run.sessions/design-1', 'home-author', 'home-inventory', 'home-fidelity', 'shim', 'sock']) {
       dirs[name] = path.join(base, name);
       fs.mkdirSync(dirs[name]!, { recursive: true });
@@ -26,7 +27,6 @@ describe('session views', () => {
     fs.writeFileSync(path.join(dirs['run']!, 'brief.md'), 'brief');
     fs.writeFileSync(path.join(dirs['run.sessions/fidelity-1']!, 'packet.json'), '{}');
   });
-  afterAll(() => fs.rmSync(base, { recursive: true, force: true }));
 
   const inputs = (role: ViewRole) => ({
     role, clone: dirs['clone']!, runDir: dirs['run']!, sessionDir: role === 'author' ? dirs['run']! : role === 'inventory' ? dirs['run.sessions/session-1']! : dirs[`run.sessions/${role}-1`]!,
@@ -96,8 +96,7 @@ describe('broker rules', () => {
 
 describe('launch forms by kind of run', () => {
   let run: string;
-  beforeAll(() => { run = fs.mkdtempSync(path.join(os.tmpdir(), 'polaris-launched-')); });
-  afterAll(() => fs.rmSync(run, { recursive: true, force: true }));
+  beforeAll(() => { run = tempDir('polaris-launched-'); });
 
   it('an operator-started run counts terminal and bang, never syzygy-launched', () => {
     expect(launchedMarkerState(run)).toBe('absent');
@@ -116,16 +115,14 @@ describe('launch forms by kind of run', () => {
 
 describe('supervisor messages', () => {
   it('names unconfirmed rows, not blocking findings, when a verdict has only advisory findings', () => {
-    const run = fs.mkdtempSync(path.join(os.tmpdir(), 'polaris-why-'));
-    try {
-      fs.mkdirSync(path.join(run, 'reviews'));
-      fs.writeFileSync(path.join(run, 'reviews', 'fidelity-verdict-2.json'), JSON.stringify({
-        findings: [{ severity: 'advisory' }], blockSupport: [{ verdict: 'supported' }, { verdict: 'unresolved' }], inventoryAccuracy: [{ accuracy: 'unresolved' }], inventoryCoverage: [{ disposition: 'represented' }],
-      }));
-      const why = blockingWhy(run, 'fidelity', 2);
-      expect(why).not.toMatch(/blocking finding/);
-      expect(why).toMatch(/^2 block or entry row\(s\) not confirmed/);
-    } finally { fs.rmSync(run, { recursive: true, force: true }); }
+    const run = tempDir('polaris-why-');
+    fs.mkdirSync(path.join(run, 'reviews'));
+    fs.writeFileSync(path.join(run, 'reviews', 'fidelity-verdict-2.json'), JSON.stringify({
+      findings: [{ severity: 'advisory' }], blockSupport: [{ verdict: 'supported' }, { verdict: 'unresolved' }], inventoryAccuracy: [{ accuracy: 'unresolved' }], inventoryCoverage: [{ disposition: 'represented' }],
+    }));
+    const why = blockingWhy(run, 'fidelity', 2);
+    expect(why).not.toMatch(/blocking finding/);
+    expect(why).toMatch(/^2 block or entry row\(s\) not confirmed/);
   });
 });
 

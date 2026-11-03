@@ -1,11 +1,11 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { chmodSync, closeSync, constants as fsConstants, cpSync, existsSync, mkdirSync, mkdtempSync, openSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { chmodSync, closeSync, constants as fsConstants, cpSync, existsSync, mkdirSync, openSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { deflateSync } from 'node:zlib';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { GitObjectReadRefusal, hashAlgorithmOf, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 
 // Fixture clones are built with the git CLI (the reader under test spawns nothing). Dates, names and content are fixed, so every
@@ -79,7 +79,7 @@ const packFile = (repo: string): string => {
 };
 let ofsEntries: { offsets: Map<string, number>; deltas: number }, refEntries: { offsets: Map<string, number>; deltas: number };
 beforeAll(() => {
-  T = mkdtempSync(path.join(tmpdir(), 'git-object-reader-'));
+  T = tempDir('git-object-reader-');
   L = path.join(T, 'loose'); build(L, 'sha1');
   writeFileSync(path.join(L, 'src/quoted.txt'), 'An uncommitted working-tree edit.\n');   // the working tree differs from HEAD
   S = path.join(T, 'sha256'); build(S, 'sha256');
@@ -88,7 +88,6 @@ beforeAll(() => {
   SP = copy(S, 'sha256-packed'); git(SP, ['repack', '-q', '-a', '-d', '-f']); git(SP, ['prune-packed']);
   ofsEntries = packEntries(OFS); refEntries = packEntries(REF);
 });
-afterAll(() => { if (T !== '') rmSync(T, { recursive: true, force: true }); });
 
 const ALL_PATHS = [
   { path: 'README.md', mode: '100644', id: 'ce013625030ba8dba906f756967f9e9ca394464a' },
