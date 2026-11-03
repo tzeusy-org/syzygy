@@ -13,7 +13,7 @@ import { isoOf } from './iso-of.js';
 import type { Outcome } from './outcome.js';
 import { reverifyPinnedRevision, type ReverifyRefusal } from './reverify.js';
 import type { RunConfig } from './run-config.js';
-import { loadDossierScreen, placementSubjectOf, type DossierScreen, type ScreenExclusion, type ScreenLoader } from './screen.js';
+import { placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenExclusion, type ScreenLoader } from './screen.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
@@ -379,7 +379,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const gate = plan.gate(run, parseFault === null ? doc : undefined);
   if (!gate.ok) return refuse(gate.stage, gate.reason);
 
-  const screenLoad = await (deps.loadScreen ?? ((placement) => loadDossierScreen(deps.sources.recordsRoot, started, undefined, placement)))(placementSubjectOf(subject));
+  const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, started)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
   const screen = screenLoad.screen;
 

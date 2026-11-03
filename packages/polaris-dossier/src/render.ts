@@ -22,7 +22,7 @@ import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignRev
 import type { ReverifyRefusal } from './reverify.js';
 import { NO_WORK_ITEM_REASON } from './run-record.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass, unconsentedText } from './class-gate.js';
-import { loadDossierScreen, placementSubjectOf, type DossierScreen, type ScreenExclusion } from './screen.js';
+import { placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { continuationOf } from './waiting-sessions.js';
 
@@ -154,7 +154,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
     return refuse('draft', `draft revision ${draftRev.revision} is not one bounded JSON object`);
   }
 
-  const screenLoad = await (deps.loadScreen ?? ((placement) => loadDossierScreen(deps.sources.recordsRoot, now, undefined, placement)))(placementSubjectOf(subject));
+  const screenLoad = await screenLoaderOf(deps.loadScreen, deps.sources.recordsRoot, now)(placementSubjectOf(subject));
   if (!screenLoad.ok) return refuse('screen', screenLoad.why);
   const screen = screenLoad.screen;
   const reader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });

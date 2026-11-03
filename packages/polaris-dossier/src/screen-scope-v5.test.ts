@@ -9,7 +9,7 @@ import { renderPolicyAct } from '@syzygy/polaris-generation-consent/testing';
 import { readGovernanceTextRule, readProjectDocumentationExemption, readProjectDocumentationRule, readScopeDetectors, readSecretRedaction } from '@syzygy/polaris-generation-core/live';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { unconsentedClass } from './class-gate.js';
-import { buildDossierScreen, loadDossierScreen, placementSubjectOf, type DossierScreen } from './screen.js';
+import { buildDossierScreen, loadDossierScreen, placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenLoad } from './screen.js';
 
 // syzygy-mea.4 (P-116): the install of screening scope version 5, variant bcd (owner act of 2026-11-03,
 // decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md). Both screens, the dossier's and the any-repo reader's,
@@ -313,6 +313,16 @@ describe('D: the owner placements', () => {
   // The dossier's call sites (check, review, render) load the screen for the run's repository identity and pinned commit.
   it('forms the subject from the run\'s repository and pinned commit', () => {
     expect(placementSubjectOf({ repository: { repositoryId: 'redis-redis' }, pinnedRevision: { commit: TRIAL } })).toEqual(AT_TRIAL);
+  });
+
+  // Every step (check, review, render, the census) loads its screen through screenLoaderOf, so its own default forwards the subject.
+  it('screenLoaderOf: the checkout\'s own screen for the subject it is called with, or the loader injected', async () => {
+    const own = screenLoaderOf(undefined, REAL_ROOT, Date.UTC(2026, 10, 3, 12, 0, 0));
+    const [trial, other, none] = await Promise.all([own(AT_TRIAL), own({ repository: REDIS, commit: 'd2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7' }), own()]);
+    if (!trial.ok || !other.ok || !none.ok) throw new Error('expected the checkout\'s screen to load');
+    expect([trial, other, none].map((load) => load.ok && load.screen.contentClass('TLS.md'))).toEqual(['project-documentation', undefined, undefined]);
+    const injected: ScreenLoad = { ok: false, why: 'injected fixture' };
+    expect(await screenLoaderOf(async () => injected, '/nonexistent', 0)(AT_TRIAL)).toBe(injected);
   });
 
   const docRule = (): Record<string, unknown> => structuredClone(LIVE.publicSourceScope.contentClassification.rules.find((rule: Record<string, unknown>) => rule['class'] === 'project-documentation'));

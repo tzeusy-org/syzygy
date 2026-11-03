@@ -1187,8 +1187,7 @@ def step_policy(root: pathlib.Path, write: bool) -> bool:
             t = re.sub(r"const EVALUATION_INSTANT = '[^']+';", f"const EVALUATION_INSTANT = '{evaluation_instant(final)}';", t)
             J.write(root / INPUTS_TEST, t)
     # the status battery and the hosted workflow carry the final recorder's lines
-    check_cmd, selftest_cmd = (battery_lines_v4(final.text, final.arg, final.date, final.script) if final.key in ("v4", "v5")
-                               else battery_lines(final.text, final.arg, final.date, final.script))
+    check_cmd, selftest_cmd = final_battery_lines(final)
     status = (root / STATUS).read_text()
     workflow = (root / WORKFLOW).read_text()
     ns, nw = edit_battery(status, workflow, check_cmd, selftest_cmd, final.script)
@@ -1198,6 +1197,12 @@ def step_policy(root: pathlib.Path, write: bool) -> bool:
             J.write(root / STATUS, ns)
             J.write(root / WORKFLOW, nw)
     return changed
+
+
+def final_battery_lines(final: PolicyAct) -> tuple[str, str]:
+    """The status battery's two lines for the final act's recorder: its --check line and its --selftest line."""
+    return (battery_lines_v4(final.text, final.arg, final.date, final.script) if final.key in ("v4", "v5")
+            else battery_lines(final.text, final.arg, final.date, final.script))
 
 
 def evaluation_instant(final: PolicyAct) -> str:
@@ -1486,6 +1491,16 @@ def policy_selftests() -> list[tuple[str, bool]]:
             ok.append((f"chain edits: a partial version-5 install (hunk {k + 2} missing) is refused",
                        refused(lambda: policy_cg_v5_edits(five.replace(hunk, "", 1), "e" * 64))))
         ok.append(("chain edits: version 5 without version 4 is refused", refused(lambda: policy_cg_v5_edits(three, "e" * 64))))
+        try:
+            policy_cg_v5_edits(three, "e" * 64)
+            why = ""
+        except Refusal as refusal:
+            why = str(refusal)
+        ok.append(("chain edits: version 5 without version 4 is refused for that reason", "needs the version-4 install first" in why))
+        row_only5 = (five.replace(V5_OFFERING, "", 1).replace(V4_MANIFEST_GATE_NEW, V4_MANIFEST_GATE_OLD, 1)
+                     .replace(V5_EXEMPTION, "", 1))
+        ok.append(("chain edits: a partial version-5 install (the chain row alone) is refused",
+                   row_only5 != five and V5_CHAIN_ROW in row_only5 and refused(lambda: policy_cg_v5_edits(row_only5, "e" * 64))))
         # The live file carries the version-4 install (2026-10-20) and the version-5 hunks the version-5 recorder change
         # wrote (2026-11-03), neither with a mark: undoing each version's four hunks, newest first, and re-applying its edit
         # must give the bytes back exactly, though a later chain row (P-114's registry row) follows both.
@@ -1596,6 +1611,11 @@ def policy_selftests() -> list[tuple[str, bool]]:
     live5 = ROOT / V5_ACT
     if live5.is_file():
         live_acts = policy_acts(ROOT)
+        live_check, live_selftest = final_battery_lines(live_acts[-1])
+        status_text = (ROOT / STATUS).read_text()
+        ok.append(("battery lines: the final act's recorder lines are the live status battery's",
+                   live_acts[-1].script == V5_SCRIPT and f"{V5_SCRIPT}.py --check " in live_check
+                   and live_check in status_text and live_selftest in status_text))
         ok.append(("evaluation instant: the live read-gate test evaluates at the final act's",
                    f"const EVALUATION_INSTANT = '{evaluation_instant(live_acts[-1])}';" in (ROOT / INPUTS_TEST).read_text()))
         ok.append(("gate comment: version 5's, over the live record, is the live read gate's comment",
