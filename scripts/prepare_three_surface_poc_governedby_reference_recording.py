@@ -2552,6 +2552,20 @@ def selftest(root: Path) -> int:
         expect("candidate does not add a reconciliation successor",
                not any(later.get("package") == KEY for later in
                        reconciliation.successors_for(tree, next(c for c in reconciliation.CHILDREN if c["key"] == "poc"))))
+        # The frozen core census predates the CAP1 consent overlay's
+        # composition (syzygy-5oqc, CAP1 42 / 47 -> 42 / 57). Only that family
+        # may differ from the current checker's regeneration; every other
+        # family's frozen bytes must still match before it is regenerated.
+        population, report = census_report(tree)
+        frozen = json.loads((tree / reconciliation.CENSUS).read_text())["families"]
+        current = json.loads(reconciliation.census_json(population))["families"]
+        expect("baseline census differs from the frozen core in CAP1 alone",
+               {k for k in current if current[k] != frozen.get(k)} <= {"CAP1"}
+               and set(current) == set(frozen)
+               and report.findings.get("R3", []) in (
+                   [], [f"`{reconciliation.CENSUS}` differs from regeneration "
+                        "(a name or scenario title moved)"]))
+        (tree / reconciliation.CENSUS).write_text(reconciliation.census_json(population))
         expect("candidate reconciliation and baseline census pass",
                not outcomes(tree).failed and not census_report(tree)[1].failed)
         expect("candidate bootstrap history passes", bootstrap_ok(tree))
