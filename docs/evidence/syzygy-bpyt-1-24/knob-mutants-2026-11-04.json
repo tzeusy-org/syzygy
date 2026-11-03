@@ -1,12 +1,12 @@
 {
   "subject": {
-    "commit": "7f37e83bbc0437d9cd9730a4eee2614891302a44",
+    "commit": "c962c7bd77fdc5150b3a7c7203ea529e6da2ce2e",
     "branch": "agent/syzygy-bpyt.1.24",
     "fileSha256": {
-      "packages/polaris-generation-consent/src/package-reader.ts": "bdf7bdb4ce94c102a743de1903067b20da43826c0906b02ef87c55496df782b5"
+      "packages/polaris-generation-consent/src/package-reader.ts": "05a8097ffc3b22061984fe78c3a52c1bf5def7740300b8d4f3b7231237d38e72"
     },
     "testFileSha256": {
-      "packages/polaris-generation-consent/src/act-families.test.ts": "af3aa1b3fa69c56a464672676050acbbefd225f5b6a4a53dd8c60e8589ec0c91"
+      "packages/polaris-generation-consent/src/act-families.test.ts": "0c81a195a1bba57d9c80a60298edbfeaeb2180403d9b3f771f691ebf7b4a6ab1"
     }
   },
   "runnerPath": "scripts/rule6_mutation_runner.py",
@@ -14,7 +14,7 @@
   "runner": "single-occurrence textual replacement of `old` by `new` in `file`, then `npx vitest run --project <project> <testFiles>` in the tree; killed = at least one failed test; file restored from git after each run",
   "project": "integration",
   "helperSha256": "8cf2a981a9e44cb845b54c68270dae30dfc5e13affdbbb519ada3d108fbf2957",
-  "ranAt": "2026-11-03T19:27:14+00:00",
+  "ranAt": "2026-11-03T20:09:29+00:00",
   "mutants": [
     {
       "id": "k1-quoted-field-line",
@@ -27,7 +27,7 @@
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
       "failedTests": 4,
-      "totalTests": 69,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -62,13 +62,13 @@
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 69,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
       "failures": [
         {
-          "test": "each family sets aside exact tooling citations in an allowlisted file, the policy family too (syzygy-bpyt.1.24) public-source- scripts/a_b.py -scope",
+          "test": "each family reads an allowlisted file whole and with its exact tooling citations set aside, refusing on either (syzygy-bpyt.1.24) public-source- scripts/a_b.py -scope",
           "firstErrorLine": "AssertionError: allowlisted: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'refused', 'ok', 'ok' ]"
         }
       ],
@@ -85,7 +85,7 @@
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 69,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -108,7 +108,7 @@
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
       "failedTests": 6,
-      "totalTests": 69,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -151,7 +151,7 @@
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 69,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -174,7 +174,7 @@
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
       "failedTests": 6,
-      "totalTests": 69,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -217,7 +217,7 @@
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
       "failedTests": 4,
-      "totalTests": 69,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -252,7 +252,7 @@
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
       "failedTests": 4,
-      "totalTests": 69,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -287,7 +287,7 @@
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 69,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -309,8 +309,8 @@
       ],
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
-      "failedTests": 2,
-      "totalTests": 69,
+      "failedTests": 3,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -322,6 +322,10 @@
         {
           "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) a second instant labelled Recorded at (UTC)",
           "firstErrorLine": "AssertionError: expected [ 'refused', 'refused', 'ok', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        },
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) a second instant indented under the other label",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
         }
       ],
       "note": "instant label: a line under the other label is no longer refused"
@@ -337,7 +341,7 @@
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
       "failedTests": 2,
-      "totalTests": 69,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -364,7 +368,7 @@
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
       "failedTests": 1,
-      "totalTests": 69,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -387,7 +391,7 @@
       "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
       "outcome": "killed",
       "failedTests": 2,
-      "totalTests": 69,
+      "totalTests": 71,
       "skippedTests": 0,
       "exitCode": 1,
       "timedOut": false,
@@ -402,6 +406,137 @@
         }
       ],
       "note": "artifact path in text: the policy family no longer sweeps its path in text"
+    },
+    {
+      "id": "f1-set-aside-alone",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "if (namesAct(family.sweep, rel, textForms(text)) || (setAside !== text && namesAct(family.sweep, rel, textForms(setAside)))) {",
+      "new": "if (namesAct(family.sweep, rel, textForms(setAside))) {",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 4,
+      "totalTests": 71,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family reads an allowlisted file whole and with its exact tooling citations set aside, refusing on either (syzygy-bpyt.1.24) Built by scripts/build_public_egress_v2.py.",
+          "firstErrorLine": "AssertionError: allowlisted: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'refused', 'ok', 'ok', 'ok' ]"
+        },
+        {
+          "test": "each family reads an allowlisted file whole and with its exact tooling citations set aside, refusing on either (syzygy-bpyt.1.24) Recorded by scripts/record_rfc5_project_documentation_act.py.",
+          "firstErrorLine": "AssertionError: allowlisted: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'ok', 'refused', 'ok' ]"
+        },
+        {
+          "test": "each family reads an allowlisted file whole and with its exact tooling citations set aside, refusing on either (syzygy-bpyt.1.24) Checked by scripts/check_public_admission_registry_git_source.py.",
+          "firstErrorLine": "AssertionError: allowlisted: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'ok', 'ok', 'refused' ]"
+        },
+        {
+          "test": "each family reads an allowlisted file whole and with its exact tooling citations set aside, refusing on either (syzygy-bpyt.1.24) The check is public-source scope_check.py here.",
+          "firstErrorLine": "AssertionError: allowlisted: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'refused', 'ok', 'ok' ]"
+        }
+      ],
+      "note": "F1: every family reads the set-aside text alone (the reviewed head e8450656); the scope_check.py world is accepted again"
+    },
+    {
+      "id": "f1-whole-alone",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "if (namesAct(family.sweep, rel, textForms(text)) || (setAside !== text && namesAct(family.sweep, rel, textForms(setAside)))) {",
+      "new": "if (namesAct(family.sweep, rel, textForms(text))) {",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 71,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family reads an allowlisted file whole and with its exact tooling citations set aside, refusing on either (syzygy-bpyt.1.24) public-source- scripts/a_b.py -scope",
+          "firstErrorLine": "AssertionError: allowlisted: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'refused', 'ok', 'ok' ]"
+        },
+        {
+          "test": "each family reads an allowlisted file whole and with its exact tooling citations set aside, refusing on either (syzygy-bpyt.1.24) rfc5-project- scripts/a_b.py -documentation",
+          "firstErrorLine": "AssertionError: allowlisted: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'ok', 'refused', 'ok' ]"
+        }
+      ],
+      "note": "F1: every family reads the whole text alone; a set-aside citation that joins a stem is accepted again"
+    },
+    {
+      "id": "f1-policy-set-aside-alone",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "if (namesAct(family.sweep, rel, textForms(text)) || (setAside !== text && namesAct(family.sweep, rel, textForms(setAside)))) {",
+      "new": "if (family.sweep.withdrawal !== undefined ? namesAct(family.sweep, rel, textForms(setAside)) : (namesAct(family.sweep, rel, textForms(text)) || (setAside !== text && namesAct(family.sweep, rel, textForms(setAside))))) {",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 71,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family reads an allowlisted file whole and with its exact tooling citations set aside, refusing on either (syzygy-bpyt.1.24) The check is public-source scope_check.py here.",
+          "firstErrorLine": "AssertionError: allowlisted: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'refused', 'ok', 'ok' ]"
+        }
+      ],
+      "note": "F1: the policy family alone reads the set-aside text alone"
+    },
+    {
+      "id": "n1-act-instant-unindented",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "loose: /^\\s*act instant\\b/gim }",
+      "new": "loose: /^act instant\\b/gim }",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 71,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) a second instant indented under the other label",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'refused', 'ok' ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        }
+      ],
+      "note": "N1 (reviewer mutant R5): an indented Act instant line no longer counts"
+    },
+    {
+      "id": "n1-recorded-at-unindented",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "loose: /^\\s*recorded at\\b/gim }",
+      "new": "loose: /^recorded at\\b/gim }",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 71,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) a second instant indented under the other label",
+          "firstErrorLine": "AssertionError: expected [ 'refused', 'refused', 'ok', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        }
+      ],
+      "note": "N1: an indented Recorded at line no longer counts"
     }
   ]
 }

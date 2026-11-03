@@ -36,11 +36,11 @@
   },
   {
    "role": "new",
-   "commit": "5d889636d7a455e3df8a5d04da465f3a0dd16eef",
+   "commit": "c962c7bd77fdc5150b3a7c7203ea529e6da2ce2e",
    "clean": true,
    "sha256": {
-    "packageReaderTs": "bdf7bdb4ce94c102a743de1903067b20da43826c0906b02ef87c55496df782b5",
-    "packageReaderJs": "a6703aab6dbb609a5f378cfa24222fdf0b537b710496dc9e5fe699a09d955bcd",
+    "packageReaderTs": "05a8097ffc3b22061984fe78c3a52c1bf5def7740300b8d4f3b7231237d38e72",
+    "packageReaderJs": "be781279e691f882a982902e3db6ae3a445f57c78cab4c49b5f425d71771e6e4",
     "gateSourcesTs": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
     "gateSourcesJs": "83e72a5739b2351eb4f039284cb86c16864ba740fe32552fd2be1f77c1c7bce5",
     "testingJs": "57cfd748e29a5e26044e8c332496c5056a713d45e4fd012ec3be2756bb542900",
@@ -143,9 +143,9 @@
   "2026-10-22T12:00:00Z"
  ],
  "pool": {
-  "workers": 8,
+  "workers": 11,
   "node": "v24.6.0",
-  "wallSeconds": 903
+  "wallSeconds": 739
  },
  "readers": [
   "admission",
