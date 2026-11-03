@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { readDeclaration, registerProject } from '@syzygy/cap1-core';
-import { projectYaml } from './fixtures/index.js';
+import { corrupt, projectYaml } from './fixtures/index.js';
 
 // CAP1-REQ-002 — An invalid declaration is a named failure, never a
 // partial registration.
@@ -70,7 +70,7 @@ describe('CAP1-REQ-002 — invalid declaration is a named failure, never a parti
   });
 
   it('falsifier: no silent failure — every failure names what failed', () => {
-    const corrupted = VALID_SOURCE.replace('owner: uniquosity@gmail.com', 'owner: ""');
+    const corrupted = corrupt(VALID_SOURCE, 'owner: uniquosity@gmail.com', 'owner: ""');
     const read = readDeclaration(corrupted);
     expect(read.ok).toBe(false);
     if (!read.ok) {
