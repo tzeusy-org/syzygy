@@ -7,12 +7,34 @@ Each RECORD.json is a `scripts/rule6_mutation_runner.py` output (one test projec
 record the script first runs its test files unmutated with `-t NAME`, then applies each mutant exactly as the runner did (the first
 occurrence of `old` replaced by `new` in `file`), runs `npx vitest run --project <project> --reporter=json --outputFile=<tmp> -t NAME
 <test files>` in TREE, reads which selected tests failed by name, and restores the file from git. A mutant is killed when a selected
-test fails or the run reports no tests. OUT.json names the commit, each record's path and sha256, whether each mutated and test file at
+test fails; a run that reports no selected test, a test file that fails to load, a report that is missing, a nonzero exit with no
+failed test or a run past the timeout (`--timeout SEC`, default 900) is `errored`, never killed. A legacy `@syzygy/...` record project maps to
+the tier its test files are in (scripts/rule6_projects.py) or the record is refused. `--selftest` runs the classifier's fixtures. OUT.json names the commit, each record's path and sha256, whether each mutated and test file at
 HEAD has the bytes the record names, and per mutant its `old`/`new`, the selector and the failed test names."""
-import hashlib, json, os, subprocess, sys, tempfile, datetime
+import hashlib, importlib.util, json, os, subprocess, sys, tempfile, datetime
+_spec = importlib.util.spec_from_file_location('rule6_projects', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'rule6_projects.py'))
+projects = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(projects)
+
+def classify(result):
+    """killed: a selected test failed. survived: tests ran and none failed. errored: nothing ran or the run is not trustworthy."""
+    if result is None or result.get('timedOut') or result['selected'] == 0 or result['fileErrors']: return 'errored'
+    if result['failed']: return 'killed'
+    return 'survived' if result.get('exitCode') == 0 else 'errored'
+
+def selftest():
+    ran = lambda **kw: {'selected': 3, 'failed': [], 'fileErrors': [], 'exitCode': 0, **kw}
+    cases = [(ran(failed=['t'], exitCode=1), 'killed'), (ran(), 'survived'), (None, 'errored'), (ran(selected=0), 'errored'),
+             (ran(fileErrors=['x.test.ts'], exitCode=1), 'errored'), (ran(timedOut=True, exitCode=None), 'errored'), (ran(exitCode=1), 'errored')]
+    bad = [(r, want, classify(r)) for r, want in cases if classify(r) != want]
+    sys.exit('selftest FAIL: %r' % (bad,)) if bad else print('selftest ok: %d cases' % len(cases))
+
+if sys.argv[1:] == ['--selftest']: selftest(); sys.exit(0)
 
 SCRIPT = 'scripts/rerun_rule6_mutants_selected_tests.py'
 args = sys.argv[1:]
+timeout = 900
+if '--timeout' in args:
+    i = args.index('--timeout'); timeout = int(args[i + 1]); del args[i:i + 2]
 if len(args) < 6 or '--selector' not in args or '--out' not in args: sys.exit(__doc__.split('\n\n')[1])
 tree = os.path.abspath(args[0])
 selector, out_path = args[args.index('--selector') + 1], args[args.index('--out') + 1]
@@ -29,12 +51,13 @@ head = run(['git', 'rev-parse', 'HEAD']).stdout.decode().strip()
 def vitest(project, tests):
     with tempfile.TemporaryDirectory() as tmp:
         report = os.path.join(tmp, 'report.json')
-        run(['npx', 'vitest', 'run', '--project', project, '--reporter=json', f'--outputFile={report}', '-t', selector, *tests])
+        returncode, _, timed_out = projects.run_limited(['npx', 'vitest', 'run', '--project', project, '--reporter=json', f'--outputFile={report}', '-t', selector, *tests], tree, timeout)
+        if timed_out: return {'selected': 0, 'failed': [], 'fileErrors': [], 'exitCode': None, 'timedOut': True}
         if not os.path.exists(report): return None
         data = json.load(open(report))
     results = [a for f in data.get('testResults', []) for a in f.get('assertionResults', [])]
     ran = [a for a in results if a['status'] in ('passed', 'failed')]
-    return {'selected': len(ran), 'failed': sorted(a['fullName'] for a in ran if a['status'] == 'failed'),
+    return {'exitCode': returncode, 'timedOut': False, 'selected': len(ran), 'failed': sorted(a['fullName'] for a in ran if a['status'] == 'failed'),
             'fileErrors': sorted(os.path.relpath(f['name'], tree) for f in data.get('testResults', []) if f.get('status') == 'failed' and not f.get('assertionResults'))}
 
 out = {'schema': 'rule6-selected-rerun/1', 'bead': 'syzygy-bpyt.8.10',
@@ -44,28 +67,31 @@ out = {'schema': 'rule6-selected-rerun/1', 'bead': 'syzygy-bpyt.8.10',
 for record_path in record_paths:
     raw = open(record_path, 'rb').read()
     record = json.loads(raw)
-    project = record['project']
     tests = sorted({t for m in record['mutants'] for t in m['tests']})
-    entry = {'path': os.path.relpath(os.path.abspath(record_path), tree), 'sha256': sha(raw), 'recordCommit': record['subject']['commit'], 'project': project,
+    project = projects.resolve_project(tree, record['project'], tests)
+    entry = {'path': os.path.relpath(os.path.abspath(record_path), tree), 'sha256': sha(raw), 'recordCommit': record['subject']['commit'], 'recordProject': record['project'], 'project': project,
              'filesAsRecorded': {f: sha(at_head(f)) == d for f, d in record['subject']['fileSha256'].items()},
              'testFilesAsRecorded': {f: sha(at_head(f)) == d for f, d in record['subject']['testFileSha256'].items()},
              'baseline': vitest(project, tests), 'mutants': []}
     print(entry['path'], 'baseline', entry['baseline'], flush=True)
     for m in record['mutants']:
+        mutant_project = projects.resolve_project(tree, m.get('project', project), m['tests'])  # before the file is touched
         target = os.path.join(tree, m['file'])
         orig = open(target, encoding='utf8').read()
         if m['old'] not in orig: sys.exit(f"fragment not found for {m['id']}")
         open(target, 'w', encoding='utf8').write(orig.replace(m['old'], m['new'], 1))
         try:
-            result = vitest(m.get('project', project), m['tests'])
+            result = vitest(mutant_project, m['tests'])
         finally:
             run(['git', 'checkout', '--', m['file']])
-        killed = result is None or result['selected'] == 0 or bool(result['failed']) or bool(result['fileErrors'])
+        outcome = classify(result)
         entry['mutants'].append({'id': m['id'], 'file': m['file'], 'old': m['old'], 'new': m['new'], 'tests': m['tests'],
-                                 'outcome': 'killed' if killed else 'survived', 'run': result})
+                                 'outcome': outcome, 'run': result})
         print(m['id'], entry['mutants'][-1]['outcome'], len(result['failed']) if result else None, flush=True)
     out['records'].append(entry)
 assert clean(), 'tree not restored'
-out['totals'] = {'mutants': sum(len(r['mutants']) for r in out['records']), 'killed': sum(m['outcome'] == 'killed' for r in out['records'] for m in r['mutants'])}
+count = lambda o: sum(m['outcome'] == o for r in out['records'] for m in r['mutants'])
+out['totals'] = {'mutants': sum(len(r['mutants']) for r in out['records']), 'killed': count('killed'), 'survived': count('survived'), 'errored': count('errored')}
 json.dump(out, open(out_path, 'w'), indent=2); open(out_path, 'a').write('\n')
 print('totals', out['totals'])
+if out['totals']['errored']: sys.exit('errored mutants: see OUT.json')

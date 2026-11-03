@@ -1,6 +1,8 @@
 import childProcess from 'node:child_process';
 import dgram from 'node:dgram';
 import dns from 'node:dns';
+import inspector from 'node:inspector';
+import inspectorPromises from 'node:inspector/promises';
 import { syncBuiltinESMExports } from 'node:module';
 import net from 'node:net';
 import workerThreads from 'node:worker_threads';
@@ -41,6 +43,9 @@ function install(): void {
   refuseAll(dns.promises, 'dns.promises', resolving);
   refuseAll(dns.Resolver.prototype, 'dns.Resolver', resolving);
   refuseAll(dns.promises.Resolver.prototype, 'dns.promises.Resolver', resolving);
+  // `inspector.open()` binds a LISTEN socket for the debugger from native code, through none of the functions above; the promise API is a
+  // second export object holding the same function.
+  for (const target of [inspector, inspectorPromises]) (target as unknown as Record<string, unknown>).open = () => refuse('inspector.open');
   // A worker thread is a second isolate this guard is not installed in, and it may start a process or open a socket there.
   (workerThreads as { Worker: unknown }).Worker = function Worker() { return refuse('worker_threads.Worker'); };
   // The raw bindings behind child_process, net and dgram, reachable without any of the patched functions.

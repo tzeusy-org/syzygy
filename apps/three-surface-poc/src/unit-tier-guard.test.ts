@@ -2,6 +2,8 @@ import { exec, execFile, execFileSync, execSync, fork, spawn, spawnSync } from '
 import { createSocket } from 'node:dgram';
 import { Resolver, lookup, resolve4 } from 'node:dns';
 import { promises as dnsPromises } from 'node:dns';
+import inspector from 'node:inspector';
+import inspectorPromises from 'node:inspector/promises';
 import { connect, createServer } from 'node:net';
 import { Worker } from 'node:worker_threads';
 import { describe, expect, it } from 'vitest';
@@ -29,7 +31,10 @@ const ROUTES: readonly (readonly [name: string, call: () => unknown, refused: Re
   ['dns resolve (c-ares UDP)', () => resolve4('example.invalid', () => undefined), /dns\.resolve4/],
   ['dns lookup', () => lookup('example.invalid', () => undefined), /dns\.lookup/],
   ['dns Resolver', () => new Resolver().resolveTxt('example.invalid', () => undefined), /dns\.Resolver\.resolveTxt/],
+  ['dns Resolver (promises class)', () => new dnsPromises.Resolver().resolveTxt('example.invalid'), /dns\.promises\.Resolver\.resolveTxt/],
   ['dns.promises resolve', () => dnsPromises.resolve4('example.invalid'), /dns\.promises\.resolve4/],
+  ['inspector open (a debugger LISTEN socket)', () => inspector.open(0, '127.0.0.1'), /inspector\.open/],
+  ['inspector/promises open', () => inspectorPromises.open(0, '127.0.0.1'), /inspector\.open/],
   ['worker thread', () => new Worker('/nonexistent-worker.js'), /worker_threads\.Worker/],
   ['raw spawn_sync binding', () => binding('spawn_sync'), /process\.binding "spawn_sync"/],
   ['raw udp_wrap binding', () => binding('udp_wrap'), /process\.binding "udp_wrap"/],
