@@ -1,0 +1,407 @@
+{
+  "subject": {
+    "commit": "7f37e83bbc0437d9cd9730a4eee2614891302a44",
+    "branch": "agent/syzygy-bpyt.1.24",
+    "fileSha256": {
+      "packages/polaris-generation-consent/src/package-reader.ts": "bdf7bdb4ce94c102a743de1903067b20da43826c0906b02ef87c55496df782b5"
+    },
+    "testFileSha256": {
+      "packages/polaris-generation-consent/src/act-families.test.ts": "af3aa1b3fa69c56a464672676050acbbefd225f5b6a4a53dd8c60e8589ec0c91"
+    }
+  },
+  "runnerPath": "scripts/rule6_mutation_runner.py",
+  "runnerSha256": "1b404998373bbb866040714e0cc11ef81429ce2321f1b4d270a7f3ffa873d737",
+  "runner": "single-occurrence textual replacement of `old` by `new` in `file`, then `npx vitest run --project <project> <testFiles>` in the tree; killed = at least one failed test; file restored from git after each run",
+  "project": "integration",
+  "helperSha256": "8cf2a981a9e44cb845b54c68270dae30dfc5e13affdbbb519ada3d108fbf2957",
+  "ranAt": "2026-11-03T19:27:14+00:00",
+  "mutants": [
+    {
+      "id": "k1-quoted-field-line",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "const FIELD_LINE = /^\\s*(?:[-*>]\\s*)?",
+      "new": "const FIELD_LINE = /^\\s*(?:[-*]\\s*)?",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 4,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) a quoted policy field line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'refused', 'ok', 'ok' ]"
+        },
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) a quoted admission field line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'refused', 'ok', 'ok', 'ok' ]"
+        },
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) a quoted class field line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'ok', 'refused', 'ok' ]"
+        },
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) a quoted registry field line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'ok', 'ok', 'refused' ]"
+        }
+      ],
+      "note": "knob 1: a `>` field line no longer counts (the policy family's old reading, now for every family)"
+    },
+    {
+      "id": "k2-policy-no-allowlist",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "swept = sweepText(fs, root);",
+      "new": "swept = family.sweep.withdrawal === undefined ? sweepText(fs, root) : async (_rel: string, text: string) => text;",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family sets aside exact tooling citations in an allowlisted file, the policy family too (syzygy-bpyt.1.24) public-source- scripts/a_b.py -scope",
+          "firstErrorLine": "AssertionError: allowlisted: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'refused', 'ok', 'ok' ]"
+        }
+      ],
+      "note": "knob 2: the policy family (the one with a withdrawal name rule) sweeps the whole text again"
+    },
+    {
+      "id": "k3-provenance-opening",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "  one(text, /^Provenance state: `(owner-adopted \\(bootstrap, uncorrelated\\))`/gm);\n",
+      "new": "",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) a second provenance line with the same opening and another tail",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        }
+      ],
+      "note": "knob 3: the provenance opening is no longer held beside the whole line"
+    },
+    {
+      "id": "k4-admission-no-recorder-lines",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "  else recorderLines(text);",
+      "new": "  else if (!('version' in form)) recorderLines(text);",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 6,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) no Owner line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'refused', 'refused', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        },
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) the Owner line twice",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'refused', 'refused', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        },
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) no A1 line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'refused', 'refused', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        },
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) the provenance line without its state tail",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'refused', 'refused', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        },
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) the provenance line naming another state",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'refused', 'refused', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        },
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) a second provenance line with the same opening and another tail",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'refused', 'refused', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        }
+      ],
+      "note": "knob 4: admission records (forms with a version) are held to no recorder lines again"
+    },
+    {
+      "id": "k4-admission-no-supersession",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "supersession: supersessionText(text), text };\n}",
+      "new": "supersession: 'version' in form ? '' : supersessionText(text), text };\n}",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) a second Supersession / revocation field",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'refused', 'refused', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        }
+      ],
+      "note": "knob 4: admission records read no supersession field again"
+    },
+    {
+      "id": "k5-class-no-recorder-lines",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "  else recorderLines(text);",
+      "new": "  else if (instant !== 'Act instant') recorderLines(text);",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 6,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) no Owner line",
+          "firstErrorLine": "AssertionError: expected [ 'refused', 'refused', 'ok', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        },
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) the Owner line twice",
+          "firstErrorLine": "AssertionError: expected [ 'refused', 'refused', 'ok', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        },
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) no A1 line",
+          "firstErrorLine": "AssertionError: expected [ 'refused', 'refused', 'ok', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        },
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) the provenance line without its state tail",
+          "firstErrorLine": "AssertionError: expected [ 'refused', 'refused', 'ok', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        },
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) the provenance line naming another state",
+          "firstErrorLine": "AssertionError: expected [ 'refused', 'refused', 'ok', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        },
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) a second provenance line with the same opening and another tail",
+          "firstErrorLine": "AssertionError: expected [ 'refused', 'refused', 'ok', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        }
+      ],
+      "note": "knob 5: the class record (Act instant) is held to no recorder lines again"
+    },
+    {
+      "id": "k6-text-not-loose",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "formsCarry(forms, needle, true)",
+      "new": "formsCarry(forms, needle, false)",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 4,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) an admission stem split by backticks in text",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'refused', 'ok', 'ok', 'ok' ]"
+        },
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) the screening-scope stem split by backticks in text",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'refused', 'ok', 'ok' ]"
+        },
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) the class stem split by backticks in text",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'ok', 'refused', 'ok' ]"
+        },
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) the registry stem split by backticks in text",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'ok', 'ok', 'refused' ]"
+        }
+      ],
+      "note": "knob 6: text needles no longer count read loosely"
+    },
+    {
+      "id": "k6-fields-not-loose",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": ".some(needle => carriesLoosely(field[2]!, needle));",
+      "new": ".some(needle => carries(field[2]!, needle));",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 4,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) an admission stem split by backticks on a field line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'refused', 'ok', 'ok', 'ok' ]"
+        },
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) the policy stem split by backticks on a field line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'refused', 'ok', 'ok' ]"
+        },
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) the class stem split by backticks on a field line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'ok', 'refused', 'ok' ]"
+        },
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) the registry stem split by backticks on a field line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'ok', 'ok', 'refused' ]"
+        }
+      ],
+      "note": "knob 6: field values no longer count read loosely"
+    },
+    {
+      "id": "k7-act-type-pattern",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "type = one(text, /^Act type: `([^`\\n]+)`$/gm);",
+      "new": "type = one(text, /^Act type: `([a-z-]+)`$/gm);",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) a second Act type line whose value has capitals and a space",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        }
+      ],
+      "note": "knob 7: an Act type value counts only in the policy family's old pattern"
+    },
+    {
+      "id": "instant-other-label",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "  if ([...text.matchAll(other)].length !== 0) return refuse();",
+      "new": "  if ([...text.matchAll(other)].length !== 0 && other !== other) return refuse();",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) a second instant labelled Act instant",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'refused', 'ok' ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        },
+        {
+          "test": "each family holds its own record to every head line its recorder writes, aligned toward refusal (syzygy-bpyt.1.24) a second instant labelled Recorded at (UTC)",
+          "firstErrorLine": "AssertionError: expected [ 'refused', 'refused', 'ok', \u2026(1) ] to deeply equal [ 'refused', 'refused', \u2026(2) ]"
+        }
+      ],
+      "note": "instant label: a line under the other label is no longer refused"
+    },
+    {
+      "id": "fields-policy-two-labels",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "fields: everyField([POLICY_PATH, POLICY_STEM]), withdrawal",
+      "new": "fields: { 'artifact identity': [POLICY_PATH], 'act identity': [POLICY_PATH, POLICY_STEM] }, withdrawal",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) a policy act identity on an Artifact identity line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'refused', 'ok', 'ok' ]"
+        },
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) the policy path on a Record ID line and a Subject line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'refused', 'ok', 'ok' ]"
+        }
+      ],
+      "note": "field labels: the policy family reads two labels again"
+    },
+    {
+      "id": "fields-class-two-labels",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "fields: everyField([CLASS_MODULE, CLASS_STEM]) }",
+      "new": "fields: { 'artifact identity': [CLASS_MODULE, CLASS_STEM], 'act identity': [CLASS_MODULE, CLASS_STEM] } }",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 1,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) the class identity on a Record ID line and its stem on a Subject line",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'ok', 'refused', 'ok' ]"
+        }
+      ],
+      "note": "field labels: the class family reads two labels again"
+    },
+    {
+      "id": "policy-path-text-needle",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "stems: [SCOPE_STEM], needles: [POLICY_PATH]",
+      "new": "stems: [SCOPE_STEM], needles: []",
+      "tests": [
+        "packages/polaris-generation-consent/src/act-families.test.ts"
+      ],
+      "command": "npx vitest run --project integration packages/polaris-generation-consent/src/act-families.test.ts",
+      "outcome": "killed",
+      "failedTests": 2,
+      "totalTests": 69,
+      "skippedTests": 0,
+      "exitCode": 1,
+      "timedOut": false,
+      "failures": [
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) text carrying the policy path and the policy stem",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'refused', 'ok', 'ok' ]"
+        },
+        {
+          "test": "each family's sweep names it in another decisions file, aligned toward refusal (syzygy-bpyt.1.24) text carrying the policy path alone",
+          "firstErrorLine": "AssertionError: expected [ 'ok', 'ok', 'ok', 'ok' ] to deeply equal [ 'ok', 'refused', 'ok', 'ok' ]"
+        }
+      ],
+      "note": "artifact path in text: the policy family no longer sweeps its path in text"
+    }
+  ]
+}
