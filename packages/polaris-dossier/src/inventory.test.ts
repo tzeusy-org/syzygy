@@ -12,7 +12,7 @@ import { runDossierCli } from './cli.js';
 import { readSec3 } from './doctrine-quote.js';
 import { opensOf } from './fs-patch.testkit.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
-import type { PinnedObjectReader, PinnedObjectReaderOptions } from './git-object-reader.js';
+import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { buildInventoryBrief, checkInventory, inventoryBrief, inventoryOfRecord, openRun, type InventoryCheckResult } from './inventory.js';
 import { writeLaunchedMarker } from './launched.js';
 import { parseRunConfig } from './run-config.js';
@@ -568,9 +568,9 @@ describe('what the review will not see (syzygy-mea.3)', () => {
     expect(brief).toContain('\n## What the review will not see\n');
     expect(brief).toContain('Syzygy listed the 2 file(s) at the pinned revision and screened each path under the screening policy in force (`fixture-public-source` version `1`');
     expect(brief).toContain('- `unknown-extraction-class`, no content class of the policy covers the path: 1\n  - "docs/notes.txt"\n');
-    expect(brief).toContain('- `denied-path`, a denied-path rule names the file: 0\n');
+    expect(brief).toContain('- `denied-path`, a denied-path rule names the file and no secret detector matches its path: 0\n');
     expect(brief).toContain('Prefer admitted sources: where an admitted file states the same thing, cite it, as well as or instead of a withheld one.');
-    expect(brief).toContain('`syzygy dossier inventory-check` names every cited file screening withholds, under `reviewVisibility`.');
+    expect(brief).toContain('`syzygy dossier inventory-check` names every cited file the review will not see, whether screening or the class gate withholds it, under `reviewVisibility`.');
     // Paths only: no body of the clone reaches the brief.
     expect(brief).not.toContain('Snapshots are written periodically.');
     expect(brief).not.toContain('Kestrel keeps every key in memory.');
@@ -591,6 +591,24 @@ describe('what the review will not see (syzygy-mea.3)', () => {
     expect(listsCode.text).toContain('does not list: 0\n');
   });
 
+  it('never names a path both a denied-path rule and a secret detector match in the inventory brief (round-2 review finding 1)', async () => {
+    const run = await runWithDrafts();
+    const opened = await openRun(run, sources(), LATER, 'fixture');
+    if (!opened.ok) throw new Error(opened.reason);
+    const forged = ['.env.token=abcdefghij', 'keys/ghp_ABCDEFGHIJKLMNOPQRSTUVWX.pem'];
+    const openReader = (options: PinnedObjectReaderOptions): PinnedObjectReader => {
+      const real = openPinnedObjectReader(options);
+      return { ...real, algorithm: real.algorithm, readBlobs: (paths) => real.readBlobs(paths),
+        listTree: async () => [...await real.listTree(), ...forged.map((p) => ({ path: p, mode: '100644', id: 'f'.repeat(40) }))] } as PinnedObjectReader;
+    };
+    const brief = await buildInventoryBrief(opened, 1, sources(), LATER, { loadScreen: async () => SCREEN, openReader });
+    if (!brief.ok) throw new Error(brief.reason);
+    expect(brief.text).not.toContain('abcdefghij');
+    expect(brief.text).not.toContain('ghp_');
+    expect(brief.text).toContain('- `denied-path`, a denied-path rule names the file and no secret detector matches its path: 0\n');
+    expect(brief.text).toContain('- `secret-detector-match` on the path itself, whether or not a denied-path rule also names it: 2. Such a path is never named.\n');
+  });
+
   it('inventory-check reports the cited files the review will not see, as check does, and nothing when every cited file is admitted', async () => {
     const run = await runWithDrafts();
     const dir = await handedOver(run);
@@ -604,7 +622,7 @@ describe('what the review will not see (syzygy-mea.3)', () => {
     expect(report).not.toHaveProperty('screenCensus');
     expect(report.reviewVisibility).toEqual({
       withheld: [{ path: 'docs/notes.txt', outcome: 'unknown-extraction-class' }],
-      note: 'screening withholds 1 cited file(s) from the review session, so it cannot confirm the blocks and inventory entries that rest on them; unconfirmed rows block readiness. Where the same fact is stated in an admitted file, cite that file as well or instead.',
+      note: '1 cited file(s) are withheld from the review session, by screening or by the class gate, so it cannot confirm the blocks and inventory entries that rest on them; unconfirmed rows block readiness. Where the same fact is stated in an admitted file, cite that file as well or instead.',
     });
     // Advice, never a finding: the stored check record is unchanged by it.
     expect(fs.readFileSync(path.join(run, 'inventory', 'checks', 'rev-0.json'), 'utf8')).not.toContain('reviewVisibility');

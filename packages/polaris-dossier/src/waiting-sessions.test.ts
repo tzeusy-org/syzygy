@@ -532,7 +532,7 @@ describe('await --submit --stdin: the session writes nothing, Syzygy writes its 
     expect(submitted).toMatchObject({ exit: 0, doc: { outcome: 'submitted', role: 'inventory', passed: true } });
     expect((submitted.doc['check'] as Doc)['reviewVisibility']).toEqual({
       withheld: [{ path: 'README.md', outcome: 'unknown-extraction-class' }],
-      note: 'screening withholds 1 cited file(s) from the review session, so it cannot confirm the blocks and inventory entries that rest on them; unconfirmed rows block readiness. Where the same fact is stated in an admitted file, cite that file as well or instead.',
+      note: '1 cited file(s) are withheld from the review session, by screening or by the class gate, so it cannot confirm the blocks and inventory entries that rest on them; unconfirmed rows block readiness. Where the same fact is stated in an admitted file, cite that file as well or instead.',
     });
     expect(fs.readFileSync(path.join(h.run, 'inventory', 'checks', 'rev-0.json'), 'utf8')).not.toContain('reviewVisibility');
     // An inventory citing only admitted files carries none.

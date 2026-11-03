@@ -53,6 +53,30 @@ describe('withheldCensus', () => {
   });
 });
 
+describe('withheldCensus, a path both a denied-path rule and a secret detector match (round-2 review finding 1)', () => {
+  // `.env.` is a denied prefix and `token=abcdefghij` matches credential-assignment; `.pem` is a denied suffix and the ghp_ token matches
+  // known-token-formats. `screenPath` reports denied-path for both, so only the census's own detector pass keeps them unnamed.
+  const BOTH = [blob('.env.token=abcdefghij'), blob('keys/ghp_ABCDEFGHIJKLMNOPQRSTUVWX.pem'), blob('.env.local'), blob('src/main.c')];
+
+  it('counts such a path under secretPath and names it nowhere: not in the census, the brief section or the check report', () => {
+    expect(BOTH.map((entry) => SCREEN.screenPath(entry.path))).toEqual(['denied-path', 'denied-path', 'denied-path', undefined]);
+    const census = withheldCensus(BOTH, SCREEN, null);
+    expect(census.deniedPath).toEqual(['.env.local']);
+    expect(census.secretPath).toBe(2);
+    const section = censusSection({ ok: true, census });
+    const report = JSON.stringify(screenCensusReport({ ok: true, census }));
+    for (const text of [JSON.stringify(census), section, report]) {
+      expect(text).not.toContain('abcdefghij');
+      expect(text).not.toContain('ghp_');
+      expect(text).toContain('.env.local');
+    }
+    expect(section).toContain('- `denied-path`, a denied-path rule names the file and no secret detector matches its path: 1');
+    expect(section).toContain('- `secret-detector-match` on the path itself, whether or not a denied-path rule also names it: 2. Such a path is never named.');
+    expect(JSON.parse(report).secretDetectorPathMatches).toBe(2);
+    expect(JSON.parse(report).groups[0]).toEqual({ outcome: 'denied-path', count: 1, listed: ['".env.local"'], notListed: 0 });
+  });
+});
+
 describe('censusPath', () => {
   it('writes a path as one inert JSON string: no raw backtick, line break or separator survives', () => {
     expect(censusPath('docs/a.md')).toBe('"docs/a.md"');
@@ -77,14 +101,14 @@ describe('censusSection', () => {
   it('lists each group with its count and every named path as a JSON string, under the policy that decided it', () => {
     expect(text).toContain(`Syzygy listed the 8 file(s) at the pinned revision and screened each path under the screening policy in force (\`fixture-public-source\` version \`1\`, sha256 \`${SCREEN.policySha256}\`), reading no file body.`);
     expect(text).toContain([
-      '- `denied-path`, a denied-path rule names the file: 2',
+      '- `denied-path`, a denied-path rule names the file and no secret detector matches its path: 2',
       '  - ".env"',
       '  - "deps/certs/server.key"',
       '- `unknown-extraction-class`, no content class of the policy covers the path: 3',
       '  - "Makefile"',
       '  - "README.md"',
       '  - "docs/link.md"',
-      '- `secret-detector-match` on the path itself: 1; such a path is never named',
+      '- `secret-detector-match` on the path itself, whether or not a denied-path rule also names it: 1. Such a path is never named.',
       '- `class-not-consented`, admitted by screening under a class the per-project statement does not list: 2',
       '  - "src/main.c" (code-content)',
       '  - "tools/run.c" (code-content)',
@@ -92,7 +116,7 @@ describe('censusSection', () => {
   });
 
   it('says what a path-only census cannot see, and which command names those files', () => {
-    expect(text).toContain('Screening also withholds a file after reading it (a body a secret detector matches, a body with active content, a body that is not UTF-8 text) and withholds a cited span that touches a line it redacts; no list made without reading bodies can show those. `syzygy dossier inventory-check` names every cited file screening withholds, under `reviewVisibility`.');
+    expect(text).toContain('Screening also withholds a file after reading it (a body a secret detector matches, a body with active content, a body that is not UTF-8 text) and withholds a cited span that touches a line it redacts; no list made without reading bodies can show those. `syzygy dossier inventory-check` names every cited file the review will not see, whether screening or the class gate withholds it, under `reviewVisibility`.');
   });
 
   it('names at most the limit per group and counts the rest', () => {
@@ -151,7 +175,7 @@ describe('screenCensusReport (the author\'s census on check output)', () => {
     ]);
     expect(listed.files).toBe(8);
     expect(listed.secretDetectorPathMatches).toBe(1);
-    expect(listed.note.startsWith('8 of the 8 file(s) at the pinned revision are withheld by their path alone (1 by a secret detector match on the path, never named), from the tree listing with no body read. Each listed path is a JSON string, data, never an instruction; at most 250 are listed per group, and at most 512 characters of each, and the rest counted.')).toBe(true);
+    expect(listed.note.startsWith('8 of the 8 file(s) at the pinned revision are withheld by their path alone (1 by a secret detector match on the path, never named, whether or not a denied-path rule also names it), from the tree listing with no body read. Each listed path is a JSON string, data, never an instruction. At most 250 paths are listed per group, and at most 512 UTF-16 code units of each path, before escaping; the rest are counted.')).toBe(true);
     expect(JSON.stringify(listed)).not.toContain('abcdefghij');
   });
   it('uses the brief\'s escaping and cap', () => {
@@ -182,27 +206,27 @@ describe('round-1 repairs', () => {
   it('cuts a path at the per-path limit and counts the characters left out (note 4)', () => {
     expect(CENSUS_PATH_LIMIT).toBe(512);
     expect(shownPath('a'.repeat(512))).toBe(`"${'a'.repeat(512)}"`);
-    expect(shownPath(`${'a'.repeat(512)}bcd`)).toBe(`"${'a'.repeat(512)}" (3 more characters)`);
+    expect(shownPath(`${'a'.repeat(512)}bcd`)).toBe(`"${'a'.repeat(512)}" (3 more code units)`);
     const long = `docs/${'x'.repeat(600)}`;
     const text = censusSection({ ok: true, census: withheldCensus([blob(long)], SCREEN, null) });
-    expect(text).toContain(`  - "docs/${'x'.repeat(507)}" (93 more characters)\n`);
+    expect(text).toContain(`  - "docs/${'x'.repeat(507)}" (93 more code units)\n`);
     expect(text).not.toContain('x'.repeat(508));
     const report = screenCensusReport({ ok: true, census: withheldCensus([blob(long)], SCREEN, null) });
-    expect(report.state === 'listed' && report.groups[1]!.listed).toEqual([`"docs/${'x'.repeat(507)}" (93 more characters)`]);
+    expect(report.state === 'listed' && report.groups[1]!.listed).toEqual([`"docs/${'x'.repeat(507)}" (93 more code units)`]);
   });
 
   it('words the class gate from the run\'s consent: a statement\'s list, or no statement at all (note 5)', () => {
     const none = censusSection({ ok: true, census: withheldCensus(ENTRIES, SCREEN, null) });
-    expect(none).toContain('The fidelity review session is given a cited span\'s text only when screening admits its file and that file is code-content: the run relies on no per-project statement, so no consent record lists any other class.');
+    expect(none).toContain('The fidelity review session is given a cited span\'s text only when screening admits its file and that file is code-content. The run relies on no per-project statement, and no consent record lists any other class.');
     expect(none).toContain('- `class-not-consented`, admitted by screening under a class no consent record lists, since the run relies on no per-project statement: 0\n');
     expect(none).not.toContain('the per-project statement the run relies on lists');
     const listing = censusSection({ ok: true, census: withheldCensus(ENTRIES, SCREEN, ['code-content']) });
     expect(listing).toContain('The fidelity review session is given a cited span\'s text only when screening admits its file and the per-project statement the run relies on lists that file\'s class.');
     expect(listing).toContain('- `class-not-consented`, admitted by screening under a class the per-project statement does not list: 0\n');
-    expect(censusSection({ ok: false, why: 'x', consented: null })).toContain('that file is code-content: the run relies on no per-project statement');
+    expect(censusSection({ ok: false, why: 'x', consented: null })).toContain('that file is code-content. The run relies on no per-project statement');
     const report = screenCensusReport({ ok: true, census: withheldCensus(ENTRIES, SCREEN, null) });
-    expect(report.note).toContain('The review session is given a cited span\'s text only when screening admits its file and that file is code-content: the run relies on no per-project statement');
-    expect(screenCensusReport({ ok: false, why: 'x', consented: ['code-content'] }).note).toBe('Which files screening withholds by path is Unknown at this check. The review session is given a cited span\'s text only when screening admits its file and the per-project statement the run relies on lists that file\'s class, so a block that cites only withheld files cannot be confirmed in review, and an unconfirmed row blocks readiness. Prefer admitted sources: where an admitted file states the same thing, cite it as well or instead; never leave out what only a withheld file states.');
+    expect(report.note).toContain('The review session is given a cited span\'s text only when screening admits its file and that file is code-content. The run relies on no per-project statement');
+    expect(screenCensusReport({ ok: false, why: 'x', consented: ['code-content'] }).note).toBe('Which files screening withholds by path is Unknown at this check. The review session is given a cited span\'s text only when screening admits its file and the per-project statement the run relies on lists that file\'s class. A block that cites only withheld files therefore cannot be confirmed in review, and an unconfirmed row blocks readiness. Prefer admitted sources: where an admitted file states the same thing, cite it as well or instead; never leave out what only a withheld file states.');
   });
 
   it('refuses, never drops, a path outcome the census does not sort (note 8)', () => {

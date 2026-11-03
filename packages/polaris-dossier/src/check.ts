@@ -16,6 +16,7 @@ import type { RunConfig } from './run-config.js';
 import { loadDossierScreen, type DossierScreen, type ScreenExclusion, type ScreenLoad } from './screen.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
+import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 
 /** `syzygy dossier check <run> [--draft <file>]` (REQ-polaris-generation-033, 034, 036).
  *
@@ -85,17 +86,27 @@ export interface ExcludedQuotation {
 }
 
 /** The cited files the review session will not see, from a check's cited blobs (bead syzygy-olmr). The fidelity packet carries a span's
- * text only when screening admits its file, so a block or inventory entry that cites only withheld files stays unresolved in review, and
- * an unresolved row blocks readiness. `checkSubject` puts it on the report of both `check` and `inventory-check`, whichever caller runs
+ * text only when screening admits its file and the class gate passes its class (`class-gate.ts`, as `review.ts` applies it), so a block
+ * or inventory entry that cites only withheld files stays unresolved in review, and an unresolved row blocks readiness. A file screening
+ * admits under a class the run's consent does not cover is listed as `class-not-consented` with that class (round-2 review note 3). `checkSubject` puts it on the report of both `check` and `inventory-check`, whichever caller runs
  * them (the CLI commands, or `await --submit` for a waiting inventory session: syzygy-mea.3 round-1 finding 1), so the session can
  * prefer admitted evidence before spending repair cycles; it is advice, never a finding, and never written to the check record. */
-export type ReviewVisibility = { readonly withheld: readonly { readonly path: string; readonly outcome: ScreenExclusion }[]; readonly note: string };
-export function reviewVisibility(citedBlobs: readonly CitedBlob[]): ReviewVisibility | null {
-  const withheld = citedBlobs.flatMap((blob) => (blob.outcome === 'admitted' ? [] : [{ path: blob.path ?? '(a path a secret detector matches)', outcome: blob.outcome }]));
+export type ReviewVisibility = {
+  readonly withheld: readonly ({ readonly path: string; readonly outcome: ScreenExclusion } | { readonly path: string; readonly outcome: typeof CLASS_NOT_CONSENTED; readonly missingClass: string })[];
+  readonly note: string;
+};
+/** `contentClass` is the screen's, and `consented` the classes the run's per-project statement lists, or null when it relies on none. */
+export function reviewVisibility(citedBlobs: readonly CitedBlob[], contentClass: DossierScreen['contentClass'], consented: readonly string[] | null): ReviewVisibility | null {
+  const withheld = citedBlobs.flatMap((blob): ReviewVisibility['withheld'] => {
+    if (blob.outcome !== 'admitted') return [{ path: blob.path ?? '(a path a secret detector matches)', outcome: blob.outcome }];
+    if (blob.path === null) return [];
+    const missingClass = unconsentedClass(contentClass(blob.path), consented);
+    return missingClass === undefined ? [] : [{ path: blob.path, outcome: CLASS_NOT_CONSENTED, missingClass }];
+  });
   if (withheld.length === 0) return null;
   return {
     withheld,
-    note: `screening withholds ${withheld.length} cited file(s) from the review session, so it cannot confirm the blocks and inventory entries that rest on them; unconfirmed rows block readiness. Where the same fact is stated in an admitted file, cite that file as well or instead.`,
+    note: `${withheld.length} cited file(s) are withheld from the review session, by screening or by the class gate, so it cannot confirm the blocks and inventory entries that rest on them; unconfirmed rows block readiness. Where the same fact is stated in an admitted file, cite that file as well or instead.`,
   };
 }
 
@@ -188,7 +199,7 @@ export interface CheckReport extends CheckRecord {
   readonly disclosures: readonly string[];
   /** The path-only census of every file screening withholds at the pinned revision (`census.ts`); on the report, never the record. */
   readonly screenCensus?: ScreenCensusReport;
-  /** The cited files screening withholds from the review session (`reviewVisibility`); on the report, never the record. */
+  /** The cited files withheld from the review session, by screening or the class gate (`reviewVisibility`); on the report, never the record. */
   readonly reviewVisibility?: ReviewVisibility;
 }
 
@@ -437,7 +448,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   }
   log({ outcome, revision, findings: findings.length });
   const disclosures = credential.required ? [...plan.disclosures, CREDENTIAL_CHECK_DISCLOSURE] : plan.disclosures;
-  const visibility = reviewVisibility(citedBlobs);
+  const visibility = reviewVisibility(citedBlobs, screen.contentClass, checked.contentClasses);
   return { ok: true, report: { command: plan.command, run, checkFile, ...record, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }), ...(visibility === null ? {} : { reviewVisibility: visibility }) } };
 }
 
