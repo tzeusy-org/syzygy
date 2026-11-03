@@ -1,0 +1,38 @@
+{
+ "subject": "syzygy-bpyt.6.5 reader predicates",
+ "commit": "fd048f4d0a110b6fb00fc2bea19f99425b26c5e0",
+ "mutantsFile": "docs/evidence/syzygy-bpyt-6-5/rule6_mutants.json (R06 and R23 only)",
+ "suite": "npx vitest run --project @syzygy/three-surface-poc-core",
+ "mutants": 2,
+ "killed": 2,
+ "survived": [],
+ "notKilledOrApplied": [],
+ "results": [
+  {
+   "id": "R06-validation-pass-budget",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (charge('utf8-and-nul-validation') !== undefined) return",
+   "new": "if (charge('utf8-and-nul-validation') !== undefined && false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  1 failed | 1304 passed | 2 skipped (1307)",
+   "failingTests": [
+    "the validation pass is charged before validation runs > maxParsePassesPerSource 0 leaves a NUL-bearing body over-limit, not contains-nul, with the bytes it took counted"
+   ]
+  },
+  {
+   "id": "R23-phase-a-active-budget",
+   "file": "packages/three-surface-poc-core/src/content-classification.ts",
+   "old": "  if (active.kind === 'over-limit') return active;",
+   "new": "  if (false) return active;",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  1 failed | 1304 passed | 2 skipped (1307)",
+   "failingTests": [
+    "PWB-REQ-006 (amended) — classification charges one shared resource ledger > classifyPhaseASeed reports over-limit when the budget runs out at the first active-content pass, after all four detectors"
+   ]
+  }
+ ]
+}
