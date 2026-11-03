@@ -22,20 +22,34 @@ function refuse(what: string, command?: unknown): never {
   throw new Error(`unit tier refuses ${named}: a unit test starts no process and opens no socket; list this file in vitest.tiers.ts under INTEGRATION_TESTS or E2E_TESTS`);
 }
 
+/** Replace `target[name]` with a refusing function the test cannot put back. The property becomes a non-configurable accessor whose
+ * getter returns the refuser and whose setter is itself refused and recorded: a test that reassigns a route (to a mock, or to an
+ * original it kept) throws there, and the file fails even where the test caught the throw. A route stays reachable only through a
+ * function the setup did not patch. Stated residuals (syzygy-e8lv), not refused because no cheap hook exists or the work is not a
+ * process or a socket: `--expose-internals` (NODE_OPTIONS or execArgv) exposes `internalBinding` and the unpatched originals; a native
+ * addon a test loads before the setup; `process.binding('fs_event_wrap')` and `fs` (local file work, allowed in the unit tier);
+ * `process.kill` and signals to an existing pid; `node:wasi`, `node:quic` and other flag-gated experimental modules; a handle wrapped
+ * on an inherited fd (`new net.Socket({ fd })`), which opens nothing new. */
+function lock(target: object, name: string, label: string, refuser: (...args: unknown[]) => never): void {
+  Object.defineProperty(target, name, {
+    configurable: false,
+    enumerable: true,
+    get: () => refuser,
+    set: () => refuse(`reassignment of ${label}.${name} (the unit tier's refusal is not restorable or replaceable)`),
+  });
+}
+
 function install(): void {
-  const process_ = childProcess as unknown as Record<string, unknown>;
-  for (const name of ['spawnSync', 'execSync', 'execFileSync']) process_[name] = (command: unknown) => refuse(`child_process.${name}`, command);
+  for (const name of ['spawnSync', 'execSync', 'execFileSync']) lock(childProcess, name, 'child_process', (command: unknown) => refuse(`child_process.${name}`, command));
   // spawn, exec, execFile and fork all end in ChildProcess.prototype.spawn.
-  childProcess.ChildProcess.prototype.spawn = function (this: unknown, options: { file?: string }) {
-    return refuse('child_process (async spawn, exec, execFile or fork)', options?.file);
-  };
-  net.Socket.prototype.connect = () => refuse('net.Socket.connect (any TCP, TLS, HTTP or fetch client)');
-  net.Server.prototype.listen = () => refuse('net.Server.listen (any TCP, HTTP or IPC server)');
-  for (const name of ['bind', 'connect', 'send'] as const) dgram.Socket.prototype[name] = (() => refuse(`dgram.Socket.${name}`)) as never;
+  lock(childProcess.ChildProcess.prototype, 'spawn', 'ChildProcess.prototype', (options: unknown) => refuse('child_process (async spawn, exec, execFile or fork)', (options as { file?: string } | undefined)?.file));
+  lock(net.Socket.prototype, 'connect', 'net.Socket.prototype', () => refuse('net.Socket.connect (any TCP, TLS, HTTP or fetch client)'));
+  lock(net.Server.prototype, 'listen', 'net.Server.prototype', () => refuse('net.Server.listen (any TCP, HTTP or IPC server)'));
+  for (const name of ['bind', 'connect', 'send'] as const) lock(dgram.Socket.prototype, name, 'dgram.Socket.prototype', () => refuse(`dgram.Socket.${name}`));
   // DNS leaves the machine without touching `dgram` or `net` (c-ares opens its own UDP socket; getaddrinfo runs on the libuv pool).
   const refuseAll = (target: object, label: string, pick: (name: string) => boolean): void => {
     for (const name of Object.getOwnPropertyNames(target)) {
-      if (pick(name) && typeof (target as Record<string, unknown>)[name] === 'function') (target as Record<string, unknown>)[name] = () => refuse(`${label}.${name}`);
+      if (pick(name) && typeof (target as Record<string, unknown>)[name] === 'function') lock(target, name, label, () => refuse(`${label}.${name}`));
     }
   };
   const resolving = (name: string): boolean => /^(resolve|reverse|lookup)/.test(name);
@@ -45,15 +59,20 @@ function install(): void {
   refuseAll(dns.promises.Resolver.prototype, 'dns.promises.Resolver', resolving);
   // `inspector.open()` binds a LISTEN socket for the debugger from native code, through none of the functions above; the promise API is a
   // second export object holding the same function.
-  for (const target of [inspector, inspectorPromises]) (target as unknown as Record<string, unknown>).open = () => refuse('inspector.open');
+  for (const target of [inspector, inspectorPromises]) lock(target, 'open', 'inspector', () => refuse('inspector.open'));
   // A worker thread is a second isolate this guard is not installed in, and it may start a process or open a socket there.
-  (workerThreads as { Worker: unknown }).Worker = function Worker() { return refuse('worker_threads.Worker'); };
-  // The raw bindings behind child_process, net and dgram, reachable without any of the patched functions.
-  const RAW = new Set(['spawn_sync', 'process_wrap', 'tcp_wrap', 'pipe_wrap', 'udp_wrap', 'cares_wrap', 'tls_wrap']);
+  lock(workerThreads, 'Worker', 'worker_threads', function Worker() { return refuse('worker_threads.Worker'); });
+  // The raw bindings behind child_process, net, dgram, dns, the debugger and a terminal, reachable without any of the patched functions.
+  // `process.binding` allows only a fixed list of names; those listed here are the ones that start a process, open a socket or a debugger,
+  // wrap a stream handle, or open a TTY. The rest (fs, os, zlib, buffer, constants, util, uv, natives, icu, contextify, config,
+  // fs_event_wrap) do file or in-process work a unit test may do.
+  const RAW = new Set(['spawn_sync', 'process_wrap', 'tcp_wrap', 'pipe_wrap', 'udp_wrap', 'cares_wrap', 'tls_wrap', 'inspector', 'tty_wrap', 'stream_wrap', 'js_stream']);
   const binding = process.binding.bind(process);
-  process.binding = ((name: string) => (RAW.has(name) ? refuse('process.binding', name) : binding(name))) as typeof process.binding;
-  (process as unknown as Record<string, unknown>)._linkedBinding = (name: unknown) => refuse('process._linkedBinding', name);
-  (process as unknown as Record<string, unknown>).dlopen = (_module: unknown, name: unknown) => refuse('process.dlopen', name);
+  lock(process, 'binding', 'process', (name: unknown) => (RAW.has(name as string) ? refuse('process.binding', name) : binding(name as string)));
+  lock(process, '_linkedBinding', 'process', (name: unknown) => refuse('process._linkedBinding', name));
+  lock(process, 'dlopen', 'process', (_module: unknown, name: unknown) => refuse('process.dlopen', name));
+  // `process.execve` replaces the worker's image with another program (Node 23.11 and later).
+  if (typeof (process as unknown as { execve?: unknown }).execve === 'function') lock(process, 'execve', 'process', (file: unknown) => refuse('process.execve', file));
   // The named exports of a builtin are copies until synced; a test file imports them after this setup runs.
   syncBuiltinESMExports();
 }
