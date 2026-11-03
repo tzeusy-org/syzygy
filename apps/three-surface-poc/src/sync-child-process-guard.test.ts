@@ -36,8 +36,6 @@ const EXEMPT: Readonly<Record<string, string>> = {
   "packages/polaris-dossier/src/polaris.ts 'sh'": LAUNCHER,
   "packages/polaris-dossier/src/polaris.ts claudeExecutable(": LAUNCHER,
   "packages/polaris-dossier/src/session-view.ts 'bwrap'": 'viewProbeRefusal, called only by the launcher at run time; suite tests import only the pure view builders',
-  "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts 'python3'":
-    'renders an act through a repository recorder, cached per process. Measured 2026-10-21 over the dossier and consent projects at load 27 on 12 cores: 192 calls, p50 508 ms, max 2.5 s, at most 7.8 s summed within one test and 14.5 s outside tests in one file (docs/evidence/recorder-testkit-sync-render-timing-2026-10-21.json)',
 };
 const SELF = 'apps/three-surface-poc/src/sync-child-process-guard.test.ts';
 const SYNC_FUNCTIONS = ['execFileSync', 'execSync', 'spawnSync'];
