@@ -1,0 +1,183 @@
+{
+ "bead": "syzygy-bpyt.8.5",
+ "subject": {
+  "commit": "ba8eb516",
+  "baseCommit": "bcb259aa2c500d778ed8d61050f123151d488baa",
+  "files": {
+   "packages/polaris-generation-core/src/closed-schema.ts": "31910355f0919a0e163c775af34f48d56c15e96ed8fb710a0d762db8116d41c0",
+   "packages/polaris-dossier/src/draft-schema.ts": "3684d3e940ed20c69d7d01fcf0e0f19a0466b8a8ed07ccea028e6956f04ae8e0",
+   "packages/polaris-generation-core/src/provider-draft.ts": "b417f8d7925c7f9de63020c9712b8330d7218728cd58fd7614a53cf5367ac295",
+   "packages/polaris-generation-core/src/rendered-design.ts": "4ed46e138d911aea40957a40e407d33b996c8b61d374662e6acb09e01884deb0",
+   "packages/polaris-generation-core/src/draft-model.ts": "4ee4cbd828bd66fd76dc2bbb2ab81538877cfda56741db5432ca7dc95fe4817f"
+  }
+ },
+ "golden": {
+  "how": "golden-capture.test.ts.txt, copied to packages/polaris-dossier/src/zz-bpyt85-golden.test.ts and run with GOLDEN_OUT set; the output (about 24 MB) is regenerable and not retained",
+  "beforeCommit": "bcb259aa2c500d778ed8d61050f123151d488baa (worktree clean but for the capture file)",
+  "afterTree": "the ba8eb516 tree (capture file added)",
+  "beforeSha256": "bf3f630d265cba4b40045e4f4a9e43575eea6ecf9c20c5c4f72b3148129d0cea",
+  "afterSha256": "bf3f630d265cba4b40045e4f4a9e43575eea6ecf9c20c5c4f72b3148129d0cea",
+  "byteIdentical": true,
+  "population": {
+   "documents": 32,
+   "parameterRefusals": 7,
+   "shape": 124640,
+   "closed": 34162,
+   "fixtures": 4087
+  },
+  "populationMeaning": {
+   "documents": "every emitted JSON Schema document and internal {root, defs} (draft at 40/64-hex revisions and question limits 0, 1, 7; inventory, fidelity verdict and design verdict at both revisions) and the eight provider stage schemas",
+   "parameterRefusals": "the thrown message for bad schema parameters",
+   "shape": "checkDraftShape over mutants of schema-synthesized draft, inventory, verdict and design-verdict values (four oneOf arms each)",
+   "closed": "check (the throwing form) over mutants of synthesized values for six provider stage schemas (three arms each)",
+   "fixtures": "renderedDesignVerdict, validateDraftRecord and validateStage(inventory) over mutants of hand-built fixtures"
+  },
+  "firstAfterRun": "differed in 165 of 38,249 closed/fixture cases: an array with a plain-object prototype at a refs position threw a TypeError from the repeat test where check had stopped at the item breach; repaired (check stops before the repeat test) and the second run is byte-identical"
+ },
+ "registryBoundReader": {
+  "path": "packages/polaris-dossier/src/git-object-reader.ts",
+  "sha256Before": "9f33e5fbbf464b1df28b79c3fcf5016b8ad7db1910041734c5fb8e4a790998f3",
+  "sha256After": "9f33e5fbbf464b1df28b79c3fcf5016b8ad7db1910041734c5fb8e4a790998f3"
+ },
+ "mutants": {
+  "ranAt": "ba8eb516 bytes of closed-schema.ts (sha256 31910355f0919a0e163c775af34f48d56c15e96ed8fb710a0d762db8116d41c0), uncommitted at run time, with closed-schema.test.ts present",
+  "command": "npx vitest run closed-schema, draft-schema, provider-draft, rendered-design, discovery-provider, check and review test files",
+  "results": [
+   {
+    "mutant": "proxy",
+    "old": "if (typeof value !== 'object' || value === null || types.isProxy(value)) { fail(walk, 'invalid-structure'",
+    "new": "if (typeof value !== 'object' || value === null) { fail(walk, 'invalid-structure'",
+    "tests": "Tests  2 failed | 251 passed (253)"
+   },
+   {
+    "mutant": "accessor",
+    "old": "typeof key !== 'string' || !('value' in descriptors[key]!)",
+    "new": "typeof key !== 'string'",
+    "tests": "Tests  3 failed | 250 passed (253)"
+   },
+   {
+    "mutant": "symbol",
+    "old": "typeof key !== 'string' || !('value' in descriptors[key]!)",
+    "new": "!('value' in descriptors[key]!)",
+    "tests": "Tests  1 failed | 252 passed (253)"
+   },
+   {
+    "mutant": "prototype",
+    "old": "const plain = prototype === Object.prototype || prototype === null;",
+    "new": "const plain = true;",
+    "tests": "Tests  1 failed | 252 passed (253)"
+   },
+   {
+    "mutant": "nonenumerable",
+    "old": "    else if (!descriptors[key]!.enumerable) fail(",
+    "new": "    else if (false) fail(",
+    "tests": "Tests  1 failed | 252 passed (253)"
+   },
+   {
+    "mutant": "missing-first",
+    "old": "    if (missing !== undefined) fail(walk, 'invalid-fields'",
+    "new": "    if (false) fail(walk, 'invalid-fields'",
+    "tests": "Tests  5 failed | 248 passed (253)"
+   },
+   {
+    "mutant": "unique-stop",
+    "old": "    if (walk.firstFailure && walk.failures.length > 0) return;\n",
+    "new": "",
+    "tests": "Tests  1 failed | 252 passed (253)"
+   },
+   {
+    "mutant": "value-order",
+    "old": "    for (const key of keys) visit(walk, schema.properties[key]!",
+    "new": "    for (const key of Object.keys(schema.properties)) if (Object.hasOwn(descriptors, key)) visit(walk, schema.properties[key]!",
+    "tests": "Tests  1 failed | 252 passed (253)"
+   },
+   {
+    "mutant": "hole",
+    "old": "if (item === undefined && walk.firstFailure)",
+    "new": "if (false)",
+    "tests": "Tests  1 failed | 252 passed (253)"
+   }
+  ],
+  "killed": 9,
+  "total": 9
+ },
+ "sweeps": {
+  "population": {
+   "files": 75,
+   "roots": [
+    "packages/polaris-dossier/src",
+    "packages/polaris-generation-core/src",
+    "packages/polaris-generation-consent/src"
+   ],
+   "excluded": "*.test.ts and *.testkit.ts"
+  },
+  "regex": {
+   "schemaBuilderDefinition": "^(?:export )?const (?:text|handle|list|object|refs|one|choice|ref)\\s*[:=]",
+   "schemaWalker": "'oneOf' in schema",
+   "sha256Definition": "(?:function|const|let)\\s+sha256\\b",
+   "inlineSha256Hex": "createHash\\('sha256'\\)[^\\n]*digest\\('hex'\\)",
+   "recordTestDefinition": "(?:function|const)\\s+(?:isObj|isObject|isRecord|isPlainObject)\\b",
+   "isoOfDefinition": "(?:function|const)\\s+isoOf\\b",
+   "suppliedInstantToIso": "new Date\\([^)\\n]+\\)\\.toISOString\\(\\)",
+   "clockReadToIso": "new Date\\(\\)\\.toISOString\\(\\)"
+  },
+  "hits": {
+   "schemaBuilderDefinition": [
+    "packages/polaris-dossier/src/check.ts:194",
+    "packages/polaris-dossier/src/check.ts:195",
+    "packages/polaris-dossier/src/close.ts:87",
+    "packages/polaris-dossier/src/design-review.ts:28",
+    "packages/polaris-dossier/src/design-review.ts:29",
+    "packages/polaris-dossier/src/execution-flags.ts:44",
+    "packages/polaris-dossier/src/render.ts:121",
+    "packages/polaris-dossier/src/render.ts:122",
+    "packages/polaris-dossier/src/review.ts:61",
+    "packages/polaris-dossier/src/review.ts:62",
+    "packages/polaris-generation-consent/src/in-force.ts:7",
+    "packages/polaris-generation-consent/src/package-reader.ts:74",
+    "packages/polaris-generation-core/src/closed-schema.ts:24",
+    "packages/polaris-generation-core/src/closed-schema.ts:25",
+    "packages/polaris-generation-core/src/closed-schema.ts:26",
+    "packages/polaris-generation-core/src/closed-schema.ts:28",
+    "packages/polaris-generation-core/src/closed-schema.ts:30",
+    "packages/polaris-generation-core/src/closed-schema.ts:33",
+    "packages/polaris-generation-core/src/closed-schema.ts:35",
+    "packages/polaris-generation-core/src/closed-schema.ts:36",
+    "packages/polaris-generation-core/src/dossier-evaluation.ts:51",
+    "packages/polaris-generation-core/src/generation-source.ts:72",
+    "packages/polaris-generation-core/src/reader-questions.ts:22"
+   ],
+   "schemaWalker": [
+    "packages/polaris-generation-core/src/closed-schema.ts:84"
+   ],
+   "sha256Definition": [],
+   "inlineSha256Hex": [],
+   "recordTestDefinition": [],
+   "isoOfDefinition": [
+    "packages/polaris-dossier/src/iso-of.ts:9"
+   ],
+   "suppliedInstantToIso": [
+    "packages/polaris-dossier/src/iso-of.ts:9",
+    "packages/polaris-generation-consent/src/package-reader.ts:112",
+    "packages/polaris-generation-consent/src/package-reader.ts:707",
+    "packages/polaris-generation-consent/src/package-reader.ts:887"
+   ],
+   "clockReadToIso": [
+    "packages/polaris-dossier/src/polaris.ts:190",
+    "packages/polaris-dossier/src/polaris.ts:211",
+    "packages/polaris-dossier/src/polaris.ts:240",
+    "packages/polaris-dossier/src/polaris.ts:531"
+   ]
+  }
+ },
+ "sweepReading": {
+  "schemaBuilderDefinition": "8 of the hits are Schema-valued builders, all in closed-schema.ts; the other 15 are JSON value readers named list/text (check, close, design-review, execution-flags, render, review), a consent regex helper one and record ref, and three handle RegExps: not schema builders, left alone",
+  "schemaWalker": "one walker over the 75 files",
+  "suppliedInstantToIso": "iso-of.ts itself plus three date round-trip checks in polaris-generation-consent/package-reader.ts, which cannot import polaris-dossier (dependency direction) and slice the result",
+  "clockReadToIso": "four clock reads in polaris.ts; isoOf takes a supplied instant"
+ },
+ "knownPreserved": [
+  "checkShape throws a TypeError on an array hole a named key stands in for (check refuses it)",
+  "checkShape throws a TypeError from the repeat test on an array with a plain-object prototype; both unreachable from parsed JSON, kept byte-for-byte and reported as a follow-up"
+ ]
+}
