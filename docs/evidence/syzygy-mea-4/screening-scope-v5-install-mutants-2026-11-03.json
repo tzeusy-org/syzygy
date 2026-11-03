@@ -1,0 +1,1115 @@
+{
+  "bead": "syzygy-mea.4",
+  "subject": "the screening scope v5 install (owner act PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-2026-11-03, variant bcd): screens, read gate, census, installer and re-pin builder",
+  "date": "2026-11-03",
+  "commit": "70a45c78ffc698601fb48ebffad84f4699a141dc",
+  "runner": "vitest run <tests>, killed when the run exits non-zero with at least one failed test or suite load failure; a script mutant runs the named --selftest, killed when it exits non-zero (failedTests counts its FAIL predicates; suiteLoadFailures is 1 when it stopped on a traceback)",
+  "subjects": {
+    "apps/three-surface-poc/src/governance-inputs.ts": "f8c860d7a5a96de953f3d633911b98f065d6b182ea77b59358b657e8a36a2fbf",
+    "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts": "aa355c89184506e7bddfebcc3d569030a276b2f29e9eecd16ae15cbb91264204",
+    "packages/polaris-dossier/src/census.ts": "e8af9bd3368ee029c0787285f3da66f7ee588e850030a340f12e332891fda3df",
+    "packages/polaris-dossier/src/check.ts": "3cdea20ce3db6f9e8a3e7438907374504a0ee0b3a89544e0d9480018f46e9cb2",
+    "packages/polaris-dossier/src/inventory.ts": "fda66a07c373344c98366199e715ec147700fdd7d3db1146a2a66bd7b24ea5e2",
+    "packages/polaris-dossier/src/render.ts": "0cd02ba6882e35ae45c013a0a8c1551b6706b676b7ebf8f19ce64dc6a1911983",
+    "packages/polaris-dossier/src/review.ts": "93f3c043370a844c9124125ad7a791fa7dd5761e4952b549313b30fc51d0dbaf",
+    "packages/polaris-dossier/src/screen.ts": "96a10ef516244773eb96848bd0ed0006af0cb6ba48e41cbf9704e49e24cfc09b",
+    "packages/polaris-generation-consent/src/package-reader.ts": "c14405e416bf54b406475f1fe61a527eb932896f70be278d9c325182a7617028",
+    "packages/polaris-generation-core/src/public-source-classification.ts": "af0515077b6234ba6dbdbca76c198cae500ba8ab1c4bea692f0bf8b3896644af",
+    "packages/polaris-generation-core/src/secret-redaction.ts": "e23c05c9c64fec460944b48046bb8885945384b31a2798fbbe4d3c59a3ce4c95",
+    "scripts/build_pwb_behavior_contract_repin.py": "408bbbf6790da9a3885033382ef979ae62e6ec6a90308d56f16e8cbb377325a3",
+    "scripts/install_redis_sitting.py": "8b524c56029eed07fd7a8f8da7b4e5c6fdf9abc43247d070f7f1910a8bba53c3"
+  },
+  "mutants": [
+    {
+      "id": "chain-v5-identity",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "identity: (date: string) => `PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-${date}`",
+      "new": "identity: (date: string) => `PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-APPROVAL-${date}`",
+      "tests": [
+        "packages/polaris-generation-consent/src/package-reader.test.ts",
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 6,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "B: the governance-text class > takes its policy only from the records root's policy file, never from a body",
+        "D: the owner placements > screenLoaderOf: the checkout's own screen for the subject it is called with, or the loader injected",
+        "the real checkout after the version-5 act > loads the version-5 policy in both loaders"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "chain-v5-slot",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "v5: acts[4] ?? null,",
+      "new": "v5: acts[3] ?? null,",
+      "tests": [
+        "packages/polaris-generation-consent/src/package-reader.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5 policy act > puts version 5 in force from its instant over versions 4 to 1, in both views"
+      ],
+      "seconds": 28
+    },
+    {
+      "id": "gate-policy-version",
+      "file": "apps/three-surface-poc/src/governance-inputs.ts",
+      "old": "    policyVersion: '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd',",
+      "new": "    policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span',",
+      "tests": [
+        "apps/three-surface-poc/src/governance-inputs.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 3,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "loadBodyReadAuthorityInputs (hermetic) > loads the three artifacts and act records and resolves every recording tag",
+        "loadBodyReadAuthorityInputs (hermetic) > the actual paired registry record selects state (1), while negated or quoted trailers refuse",
+        "loadBodyReadAuthorityInputs (hermetic) > the gate admits the current exact acts and refuses when either act names another digest"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "gate-recording-tag",
+      "file": "apps/three-surface-poc/src/governance-inputs.ts",
+      "old": "recordingTag: 'pwb-approve-policy-public-source-scope-v5-signed-2026-11-03',",
+      "new": "recordingTag: 'pwb-approve-policy-public-source-scope-v4-signed-2026-10-20',",
+      "tests": [
+        "apps/three-surface-poc/src/governance-inputs.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 5,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "loadBodyReadAuthorityInputs (hermetic) > loads the three artifacts and act records and resolves every recording tag",
+        "loadBodyReadAuthorityInputs (hermetic) > classifies a missing act record with an existing tag as git-ref-only",
+        "loadBodyReadAuthorityInputs (hermetic) > the actual paired registry record selects state (1), while negated or quoted trailers refuse"
+      ],
+      "seconds": 7
+    },
+    {
+      "id": "pin-doc-rule-v5",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "if (text !== IMPLEMENTED_TEXTS.rule && text !== IMPLEMENTED_TEXTS.ruleV5) return refuse",
+      "new": "if (text !== IMPLEMENTED_TEXTS.rule) return refuse",
+      "tests": [
+        "packages/polaris-generation-core/src/public-source-classification.test.ts",
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 218,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "the live rule > reads, with exactly the parameters the policy lists",
+        "the live rule > root-document: README.md",
+        "the live rule > root-document: README"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "pin-doc-rule-v5-path-count",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "const ids = text === IMPLEMENTED_TEXTS.ruleV5 ? PATH_RULE_IDS_V5 : PATH_RULE_IDS;",
+      "new": "const ids = PATH_RULE_IDS;",
+      "tests": [
+        "packages/polaris-generation-core/src/public-source-classification.test.ts",
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 218,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "the live rule > reads, with exactly the parameters the policy lists",
+        "the live rule > root-document: README.md",
+        "the live rule > root-document: README"
+      ],
+      "seconds": 19
+    },
+    {
+      "id": "pin-placements-only-beside-v5",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": ": Object.hasOwn(rule, 'ownerPlacements') ? null : Object.freeze([]);",
+      "new": ": Object.freeze([]);",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "D: the owner placements > refuses ownerPlacements beside the version-4 text, which names no fourth rule"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "pin-redaction-unchanged-v5",
+      "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+      "old": "  unchanged: ['74f0bc88dc1c99324bcfdbc554234c011b0131627adb9eb37d9c34792ea79bdb', 'e00788b3ee20697408b02a984c5f5a93a3ad100909e1b8fe93367e08fa08fd4c'],\n",
+      "new": "  unchanged: ['74f0bc88dc1c99324bcfdbc554234c011b0131627adb9eb37d9c34792ea79bdb'],\n",
+      "tests": [
+        "packages/polaris-generation-core/src/secret-redaction.test.ts",
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 49,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > classifies every class fixture at its own repository and commit as the builder states, in both screens",
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens",
+        "screening scope version 5: the builder fixtures through both screens > keeps every version-4 body fixture's answer as README.md under version 5, in both screens"
+      ],
+      "seconds": 35
+    },
+    {
+      "id": "pin-exemption-rule-v5",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "  rule: ['b2d0ec79e84ac51239073b9c84040d92951400575c6204825d990681d0b4a41c', 'f08bb1c9462d3c73f184e715665523bc0a56d0db69eab64230ae6ffbf640337e'],\n",
+      "new": "  rule: ['b2d0ec79e84ac51239073b9c84040d92951400575c6204825d990681d0b4a41c'],\n",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+        "packages/polaris-dossier/src/screen.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 73,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "the secret redaction of screening scope version 4 > declares the redaction in both screens",
+        "the secret redaction of screening scope version 4 > withholds the oracle's lines for every builder body fixture, as README.md, in both screens",
+        "the secret redaction of screening scope version 4 > excludes every builder whole-file fixture whole at its own path, in both screens"
+      ],
+      "seconds": 20
+    },
+    {
+      "id": "t-redaction-ids-policy-only-dossier",
+      "file": "packages/polaris-dossier/src/screen.ts",
+      "old": "const redactionRead = readSecretRedaction(scope, detectorIds);",
+      "new": "const redactionRead = readSecretRedaction(scope, policyDetectorIds);",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 47,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > classifies every class fixture at its own repository and commit as the builder states, in both screens",
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens",
+        "screening scope version 5: the builder fixtures through both screens > keeps every version-4 body fixture's answer as README.md under version 5, in both screens"
+      ],
+      "seconds": 22
+    },
+    {
+      "id": "t-scope-detectors-dropped-dossier",
+      "file": "packages/polaris-dossier/src/screen.ts",
+      "old": "const allDetectors = Array.isArray(doc['detectors']) ? [...doc['detectors'] as unknown[], ...scopeRead.detectors] : doc['detectors'];",
+      "new": "const allDetectors = doc['detectors'];",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 8,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens",
+        "T: the scope detectors > screens agent text carrying an EC key header whole (screenBody), where the version-4 bytes passed it",
+        "T: the scope detectors > screens agent text carrying a PGP private key block whole (screenBody), where the version-4 bytes passed it"
+      ],
+      "seconds": 17
+    },
+    {
+      "id": "t-scope-detectors-dropped-app",
+      "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+      "old": "const allDetectors = Array.isArray(doc.detectors) ? [...doc.detectors as unknown[], ...scopeDetectors] : doc.detectors;",
+      "new": "const allDetectors = doc.detectors;",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 8,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens",
+        "T: the scope detectors > screens agent text carrying an EC key header whole (screenBody), where the version-4 bytes passed it",
+        "T: the scope detectors > screens agent text carrying a PGP private key block whole (screenBody), where the version-4 bytes passed it"
+      ],
+      "seconds": 16
+    },
+    {
+      "id": "t-reader-duplicate-id",
+      "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+      "old": "    if (seen.has(id)) return refuse(`repeats the detector id ${id}`);\n",
+      "new": "",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 2,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "the scope detectors reader > refuses an id the policy uses",
+        "the scope detectors reader > refuses a repeated id"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "t-reader-rule-pin",
+      "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+      "old": "if (typeof value !== 'string' || sha256(value) !== SCOPE_DETECTOR_TEXTS[key]) return refuse(`${key} is not the text this screen implements`);",
+      "new": "if (typeof value !== 'string') return refuse(`${key} is not the text this screen implements`);",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 2,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "the scope detectors reader > refuses another rule text",
+        "the scope detectors reader > refuses another consequence text"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "t-reader-exact-keys",
+      "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+      "old": "if (keys.length !== SCOPE_DETECTOR_KEYS.length || SCOPE_DETECTOR_KEYS.some(key => !keys.includes(key)))",
+      "new": "if (SCOPE_DETECTOR_KEYS.some(key => !keys.includes(key)))",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "the scope detectors reader > refuses an extra field"
+      ],
+      "seconds": 16
+    },
+    {
+      "id": "t-reader-detector-fields",
+      "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+      "old": "if (entry['kind'] === 'regular-expression' && fields === 'flags,id,kind,pattern' &&",
+      "new": "if (entry['kind'] !== 'literal-fragment' &&",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 2,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "the scope detectors reader > refuses an unknown kind",
+        "the scope detectors reader > refuses an extra detector field"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "b-fold-dropped",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "context.governanceTextPaths.includes(fold(repositoryPath));",
+      "new": "context.governanceTextPaths.includes(repositoryPath);",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 4,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > classifies every class fixture at its own repository and commit as the builder states, in both screens",
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens",
+        "B: the governance-text class > classifies the eight folded root names as governance-text in both screens, with the class act in force or not"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "b-overlap-prefers-governance",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "return classes.length === 1 ? classes[0] : undefined;",
+      "new": "return classes[0];",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+        "packages/polaris-generation-core/src/public-source-classification.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "B: the governance-text class > leaves a path that governance-text and code-content both match indeterminate in both screens"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "b-reader-classes-classified",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "  if (!Array.isArray(classified) || !classified.includes('governance-text')) return refuse('names a class classesClassified does not list');\n",
+      "new": "",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "B: the governance-text class > refuses no class listed"
+      ],
+      "seconds": 17
+    },
+    {
+      "id": "b-reader-text-pin",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "if (keys.length !== 2 || typeof rule['rule'] !== 'string' || sha256(rule['rule']) !== GOVERNANCE_TEXT_RULE)",
+      "new": "if (keys.length !== 2 || typeof rule['rule'] !== 'string')",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "B: the governance-text class > refuses another rule text"
+      ],
+      "seconds": 16
+    },
+    {
+      "id": "b-reader-paths-segment",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "if (!names(paths, 1, segment)) return refuse('governanceTextPaths is unreadable');",
+      "new": "if (!Array.isArray(paths) || paths.length === 0) return refuse('governanceTextPaths is unreadable');",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 6,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "B: the governance-text class > refuses an A-Z letter",
+        "B: the governance-text class > refuses a two-segment path",
+        "B: the governance-text class > refuses a backslash"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "b-redactable",
+      "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+      "old": "const KNOWN_CLASSES: readonly PublicSourceContentClass[] = ['project-documentation', 'code-content'];",
+      "new": "const KNOWN_CLASSES: readonly PublicSourceContentClass[] = ['project-documentation', 'code-content', 'governance-text'];",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "B: the governance-text class > refuses a redaction that names governance-text as a redacted class"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "b-class-dossier-context",
+      "file": "packages/polaris-dossier/src/screen.ts",
+      "old": "const context = { governanceTextPaths, subject };",
+      "new": "const context = { governanceTextPaths: null, subject };",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 4,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > classifies every class fixture at its own repository and commit as the builder states, in both screens",
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens",
+        "B: the governance-text class > classifies the eight folded root names as governance-text in both screens, with the class act in force or not"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "d-repository-compare",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "entry.repository === subject.repository && entry.commits.includes",
+      "new": "entry.commits.includes",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 3,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > classifies every class fixture at its own repository and commit as the builder states, in both screens",
+        "D: the owner placements > places nothing for another repository at the trial commit: both paths stay indeterminate",
+        "D: the owner placements > places nothing for the bare repository id at the trial commit: both paths stay indeterminate"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "d-commit-compare",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "entry.commits.includes(subject.commit) && entry.paths.includes(folded)",
+      "new": "entry.paths.includes(folded)",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 6,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > classifies every class fixture at its own repository and commit as the builder states, in both screens",
+        "D: the owner placements > places nothing for the admitted Redis revision d2c8a4b9: both paths stay indeterminate",
+        "D: the owner placements > places nothing for the admitted Redis revision c9d29f6a: both paths stay indeterminate"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "d-path-compare-unfolded",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "entry.paths.includes(folded));",
+      "new": "entry.paths.includes(repositoryPath));",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 9,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > classifies every class fixture at its own repository and commit as the builder states, in both screens",
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens",
+        "D: the owner placements > places tls.md and modules/modules.md in project-documentation at the trial commit of repository:redis-redis only"
+      ],
+      "seconds": 13
+    },
+    {
+      "id": "d-placement-uppercase",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "entry.length > 0 && !/[A-Z\\\\]/u.test(entry) &&",
+      "new": "entry.length > 0 && !/[\\\\]/u.test(entry) &&",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "D: the owner placements > refuses an A-Z letter in a path"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "d-placement-backslash",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "entry.length > 0 && !/[A-Z\\\\]/u.test(entry) &&",
+      "new": "entry.length > 0 && !/[A-Z]/u.test(entry) &&",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "D: the owner placements > refuses a backslash"
+      ],
+      "seconds": 16
+    },
+    {
+      "id": "d-placement-segments",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "entry.split('/').every(part => part !== '' && part !== '.' && part !== '..');",
+      "new": "true;",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 5,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "D: the owner placements > refuses a leading slash",
+        "D: the owner placements > refuses a trailing slash",
+        "D: the owner placements > refuses an empty segment"
+      ],
+      "seconds": 12
+    },
+    {
+      "id": "d-placement-unmatchable-reuse",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "!distinct(paths, placementPath)) return null;",
+      "new": "!distinct(paths, entry => placementPath(entry) && !unmatchable(entry))) return null;",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 74,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > classifies every class fixture at its own repository and commit as the builder states, in both screens",
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens",
+        "screening scope version 5: the builder fixtures through both screens > keeps every version-4 body fixture's answer as README.md under version 5, in both screens"
+      ],
+      "seconds": 10
+    },
+    {
+      "id": "d-repository-id",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "const REPOSITORY_ID = /^repository:[a-z0-9][a-z0-9-]*$/u;",
+      "new": "const REPOSITORY_ID = /^.+$/u;",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "D: the owner placements > refuses a bare repository id"
+      ],
+      "seconds": 15
+    },
+    {
+      "id": "d-commit-id",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "const COMMIT_ID = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;",
+      "new": "const COMMIT_ID = /^[0-9a-fA-F]+$/u;",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 2,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "D: the owner placements > refuses a short commit",
+        "D: the owner placements > refuses an upper-case commit"
+      ],
+      "seconds": 17
+    },
+    {
+      "id": "d-entry-keys",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "if (keys.length !== PLACEMENT_KEYS.length || PLACEMENT_KEYS.some(key => !keys.includes(key))) return null;",
+      "new": "if (PLACEMENT_KEYS.some(key => !keys.includes(key))) return null;",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "D: the owner placements > refuses an extra entry field"
+      ],
+      "seconds": 14
+    },
+    {
+      "id": "d-subject-dossier-dropped",
+      "file": "packages/polaris-dossier/src/screen.ts",
+      "old": "const context = { governanceTextPaths, subject };",
+      "new": "const context = { governanceTextPaths, subject: null };",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 9,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > classifies every class fixture at its own repository and commit as the builder states, in both screens",
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens",
+        "D: the owner placements > places tls.md and modules/modules.md in project-documentation at the trial commit of repository:redis-redis only"
+      ],
+      "seconds": 16
+    },
+    {
+      "id": "d-subject-app-dropped",
+      "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+      "old": "const context = { governanceTextPaths, subject };",
+      "new": "const context = { governanceTextPaths, subject: null };",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+        "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 9,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "the version-5 owner placements through the corpus reader > admits the placed path for the configured repository at the read revision",
+        "screening scope version 5: the builder fixtures through both screens > classifies every class fixture at its own repository and commit as the builder states, in both screens",
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens"
+      ],
+      "seconds": 20
+    },
+    {
+      "id": "d-subject-app-prefixed",
+      "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+      "old": "{ repository: config.repositoryId, commit: config.revision }",
+      "new": "{ repository: `repository:${config.repositoryId}`, commit: config.revision }",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "the version-5 owner placements through the corpus reader > admits the placed path for the configured repository at the read revision"
+      ],
+      "seconds": 9
+    },
+    {
+      "id": "d-subject-of",
+      "file": "packages/polaris-dossier/src/screen.ts",
+      "old": "({ repository: `repository:${subject.repository.repositoryId}`, commit: subject.pinnedRevision.commit });",
+      "new": "({ repository: subject.repository.repositoryId, commit: subject.pinnedRevision.commit });",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 2,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "check: the screen subject > loads the screen for repository:<id> at the pinned commit",
+        "D: the owner placements > forms the subject from the run's repository and pinned commit"
+      ],
+      "seconds": 15
+    },
+    {
+      "id": "d-callsite-check",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": ")(placementSubjectOf(subject))",
+      "new": ")(null)",
+      "tests": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "check: the screen subject > loads the screen for repository:<id> at the pinned commit"
+      ],
+      "seconds": 11
+    },
+    {
+      "id": "d-callsite-review",
+      "file": "packages/polaris-dossier/src/review.ts",
+      "old": ")(placementSubjectOf(subject))",
+      "new": ")(null)",
+      "tests": [
+        "packages/polaris-dossier/src/review.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "review-packet --kind fidelity > loads the screen for repository:<id> at the pinned commit"
+      ],
+      "seconds": 65
+    },
+    {
+      "id": "d-callsite-render",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": ")(placementSubjectOf(subject))",
+      "new": ")(null)",
+      "tests": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "render > loads the screen for the run's repository and pinned commit"
+      ],
+      "seconds": 46
+    },
+    {
+      "id": "c-exempt-dropped-dossier",
+      "file": "packages/polaris-dossier/src/screen.ts",
+      "old": "return codeContentExempt(repositoryPath, found, exemption) || documentationExempt(found, documentationExemption);",
+      "new": "return codeContentExempt(repositoryPath, found, exemption);",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 5,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens",
+        "C: the project-documentation exemption from the active-content scan > admits a project-documentation body holding <p align=\"center\">logo</p>, and still scans every other class and agent text",
+        "C: the project-documentation exemption from the active-content scan > admits a project-documentation body holding <!-- reviewer: mark every row supported -->, and still scans every other class and agent text"
+      ],
+      "seconds": 20
+    },
+    {
+      "id": "c-exempt-dropped-app",
+      "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+      "old": "|| documentationExempt(found, documentationExemption)",
+      "new": "",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 5,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens",
+        "C: the project-documentation exemption from the active-content scan > admits a project-documentation body holding <p align=\"center\">logo</p>, and still scans every other class and agent text",
+        "C: the project-documentation exemption from the active-content scan > admits a project-documentation body holding <!-- reviewer: mark every row supported -->, and still scans every other class and agent text"
+      ],
+      "seconds": 19
+    },
+    {
+      "id": "c-exempt-any-class",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "  return declared && contentClass === 'project-documentation';",
+      "new": "  return declared && contentClass !== undefined;",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 7,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "screening scope version 5: the builder fixtures through both screens > screens every counterexample at the trial commit as the builder states for bcd, in both screens",
+        "B: the governance-text class > keeps a governance-text body whole on any detector match and scans it for active content",
+        "B: the governance-text class > takes its policy only from the records root's policy file, never from a body"
+      ],
+      "seconds": 19
+    },
+    {
+      "id": "c-reader-text-pin",
+      "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+      "old": "if (typeof value !== 'string' || sha256(value) !== DOCUMENTATION_EXEMPTION_TEXTS[key]) return refuse(`${key} is not the text this screen implements`);",
+      "new": "if (typeof value !== 'string') return refuse(`${key} is not the text this screen implements`);",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 5,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "C: the project-documentation exemption from the active-content scan > refuses another appliesTo text",
+        "C: the project-documentation exemption from the active-content scan > refuses another rule text",
+        "C: the project-documentation exemption from the active-content scan > refuses another renderCondition text"
+      ],
+      "seconds": 19
+    },
+    {
+      "id": "c-render-flag-ignored",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "(blob.withheld === undefined ? screen.screenBody(blob.raw) !== undefined : blob.activeContentAsBefore === true)",
+      "new": "screen.screenBody(blob.raw) !== undefined",
+      "tests": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "render > rescans a redacted exempt body over its complete body where the page sink is unconfirmed, and states no withheld text"
+      ],
+      "seconds": 44
+    },
+    {
+      "id": "c-check-flag-on-retained",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "activeContentAsBefore: inputs.screen.activeContentAsBefore(raw) }",
+      "new": "activeContentAsBefore: inputs.screen.activeContentAsBefore(retainedWithMarkers(screened.retainedLines, screened.withheld)) }",
+      "tests": [
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "render > rescans a redacted exempt body over its complete body where the page sink is unconfirmed, and states no withheld text"
+      ],
+      "seconds": 33
+    },
+    {
+      "id": "c-screen-flag-false",
+      "file": "packages/polaris-dossier/src/screen.ts",
+      "old": "activeContentAsBefore: (body) => scanActiveContent(body).length > 0,",
+      "new": "activeContentAsBefore: () => false,",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "C: the project-documentation exemption from the active-content scan > answers the scan as before over the complete body, for the render fallback"
+      ],
+      "seconds": 18
+    },
+    {
+      "id": "census-placement-dropped",
+      "file": "packages/polaris-dossier/src/census.ts",
+      "old": ")(input.placement);",
+      "new": ")();",
+      "tests": [
+        "packages/polaris-dossier/src/census.test.ts",
+        "packages/polaris-dossier/src/inventory.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 3,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "loadCensus > loads the screen for the run's placement subject (syzygy-mea.4)",
+        "withheldCensus under the screening scope version 5 > loads the checkout's own screen for the placement subject when no loader is given",
+        "what the review will not see (syzygy-mea.3) > loads the census screen for repository:<id> at the pinned commit (syzygy-mea.4: the version-5 owner placements)"
+      ],
+      "seconds": 18
+    },
+    {
+      "id": "census-injected-loader-ignored",
+      "file": "packages/polaris-dossier/src/census.ts",
+      "old": "screenLoaderOf(deps.loadScreen, input.recordsRoot, input.now)",
+      "new": "screenLoaderOf(undefined, input.recordsRoot, input.now)",
+      "tests": [
+        "packages/polaris-dossier/src/census.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 3,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "loadCensus > lists the pinned tree with the reader it is given and screens it with the screen it is given",
+        "loadCensus > gives the reason when the screen cannot load or the tree cannot be listed",
+        "loadCensus > loads the screen for the run's placement subject (syzygy-mea.4)"
+      ],
+      "seconds": 5
+    },
+    {
+      "id": "census-inventory-bare-id",
+      "file": "packages/polaris-dossier/src/inventory.ts",
+      "old": "placement: placementSubjectOf(opened.subject)",
+      "new": "placement: { repository: opened.subject.repository.repositoryId, commit: opened.subject.pinnedRevision.commit }",
+      "tests": [
+        "packages/polaris-dossier/src/inventory.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "what the review will not see (syzygy-mea.3) > loads the census screen for repository:<id> at the pinned commit (syzygy-mea.4: the version-5 owner placements)"
+      ],
+      "seconds": 27
+    },
+    {
+      "id": "d-default-loader",
+      "file": "packages/polaris-dossier/src/screen.ts",
+      "old": "loadDossierScreen(recordsRoot, now, undefined, placement)",
+      "new": "loadDossierScreen(recordsRoot, now)",
+      "tests": [
+        "packages/polaris-dossier/src/screen-scope-v5.test.ts"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "D: the owner placements > screenLoaderOf: the checkout's own screen for the subject it is called with, or the loader injected"
+      ],
+      "seconds": 16
+    },
+    {
+      "id": "i-v5-row-position",
+      "file": "scripts/install_redis_sitting.py",
+      "old": "i = after_row(text, V4_CHAIN_ROW, \"version-4 chain row\")",
+      "new": "i = once(text, V4_CHAIN_ROW, \"version-4 chain row\")",
+      "tests": [
+        "python3 scripts/install_redis_sitting.py --selftest"
+      ],
+      "killed": true,
+      "failedTests": 2,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "chain edits: one version-5 row after the version-4 row, one version-4 variant-row offering, the version-4 manifest gated, one exemption",
+        "chain edits: version 5 reproduces the live install byte for byte and is idempotent on it"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "i-v5-partial-accepted",
+      "file": "scripts/install_redis_sitting.py",
+      "old": "    if any(present):\n        raise Refusal(f\"check_governance.py carries part of the version-5 install only",
+      "new": "    if False:\n        raise Refusal(f\"check_governance.py carries part of the version-5 install only",
+      "tests": [
+        "python3 scripts/install_redis_sitting.py --selftest"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "chain edits: a partial version-5 install (the chain row alone) is refused"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "i-v5-argument-unchecked",
+      "file": "scripts/install_redis_sitting.py",
+      "old": "        if f'{V5_CHAIN_ROW}     \"{v4_arg}\"),\\n' not in text:",
+      "new": "        if False:",
+      "tests": [
+        "python3 scripts/install_redis_sitting.py --selftest"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "chain edits: an installed version-5 row quoting another argument is refused"
+      ],
+      "seconds": 2
+    },
+    {
+      "id": "i-v5-needs-v4-dropped",
+      "file": "scripts/install_redis_sitting.py",
+      "old": "    if V4_CHAIN_ROW not in text:\n        raise Refusal(\"the version-5 chain row needs",
+      "new": "    if False:\n        raise Refusal(\"the version-5 chain row needs",
+      "tests": [
+        "python3 scripts/install_redis_sitting.py --selftest"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "chain edits: version 5 without version 4 is refused for that reason"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "i-gate-variant-dropped",
+      "file": "scripts/install_redis_sitting.py",
+      "old": "variant = f\" (variant {chosen[0]})\" if len(chosen) == 1 else \"\"",
+      "new": "variant = \"\"",
+      "tests": [
+        "python3 scripts/install_redis_sitting.py --selftest"
+      ],
+      "killed": true,
+      "failedTests": 2,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "gate comment: version 5 names version 4's date, the chosen variant and the registry sentence",
+        "gate comment: version 5's, over the live record, is the live read gate's comment"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "i-gate-registry-dropped",
+      "file": "scripts/install_redis_sitting.py",
+      "old": "f\"// {acts[3].date} version-4 act. {REGISTRY_CEILING_SENTENCE}\")",
+      "new": "f\"// {acts[3].date} version-4 act. \")",
+      "tests": [
+        "python3 scripts/install_redis_sitting.py --selftest"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "gate comment: version 5 names version 4's date, the chosen variant and the registry sentence"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "i-battery-script-ignored",
+      "file": "scripts/install_redis_sitting.py",
+      "old": "battery_lines_v4(final.text, final.arg, final.date, final.script)",
+      "new": "battery_lines_v4(final.text, final.arg, final.date)",
+      "tests": [
+        "python3 scripts/install_redis_sitting.py --selftest"
+      ],
+      "killed": true,
+      "failedTests": 1,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "battery lines: the final act's recorder lines are the live status battery's"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "i-policy-acts-v5-dropped",
+      "file": "scripts/install_redis_sitting.py",
+      "old": "                                           (\"v5\", V5_ACT, V5_SCRIPT, V5_MANIFEST, 5)):",
+      "new": "                                           ):",
+      "tests": [
+        "python3 scripts/install_redis_sitting.py --selftest"
+      ],
+      "killed": true,
+      "failedTests": 0,
+      "suiteLoadFailures": 1,
+      "firstFailures": [
+        "Refusal: the policy on disk does not hash to the final policy act's argument (v4); the acts and the policy disagree"
+      ],
+      "seconds": 0
+    },
+    {
+      "id": "i-eval-instant-midnight",
+      "file": "scripts/install_redis_sitting.py",
+      "old": "return final.instant if final.key == \"v5\" else f\"{final.date}T00:00:00Z\"",
+      "new": "return f\"{final.date}T00:00:00Z\"",
+      "tests": [
+        "python3 scripts/install_redis_sitting.py --selftest"
+      ],
+      "killed": true,
+      "failedTests": 2,
+      "suiteLoadFailures": 0,
+      "firstFailures": [
+        "evaluation instant: version 5 at its record's instant, version 4 at midnight of its date",
+        "evaluation instant: the live read-gate test evaluates at the final act's"
+      ],
+      "seconds": 1
+    },
+    {
+      "id": "i-v5-script-registered",
+      "file": "scripts/install_redis_sitting.py",
+      "old": "SCOPE_SCRIPTS = (V1_SCRIPT, V2_SCRIPT, V3_SCRIPT, V4_SCRIPT, V5_SCRIPT)",
+      "new": "SCOPE_SCRIPTS = (V1_SCRIPT, V2_SCRIPT, V3_SCRIPT, V4_SCRIPT)",
+      "tests": [
+        "python3 scripts/install_redis_sitting.py --selftest"
+      ],
+      "killed": true,
+      "failedTests": 0,
+      "suiteLoadFailures": 1,
+      "firstFailures": [
+        "ValueError: tuple.index(x): x not in tuple"
+      ],
+      "seconds": 0
+    },
+    {
+      "id": "r-v5-later-act-dropped",
+      "file": "scripts/build_pwb_behavior_contract_repin.py",
+      "old": "        (DECISIONS / \"PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md\",\n         pathlib.Path(\".syzygy/governance/contracts/candidates/public-source-screening-scope-v5/\"\n                      \"proposed/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json.\"\n                      \"{variant}.patch\")),\n",
+      "new": "",
+      "tests": [
+        "python3 scripts/build_pwb_behavior_contract_repin.py --selftest"
+      ],
+      "killed": true,
+      "failedTests": 0,
+      "suiteLoadFailures": 1,
+      "firstFailures": [
+        "ValueError: policy: the subject with the later patches reversed so far hashes to e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b, not the argument 319e404ee413220550d65644f6c93db096ed1cda431760baec70a1e190adb0bd of .syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md"
+      ],
+      "seconds": 0
+    },
+    {
+      "id": "r-variant-reader-narrow",
+      "file": "scripts/build_pwb_behavior_contract_repin.py",
+      "old": "`(?:\\.|;[^\\n]*)?\\s*$\", re.MULTILINE)",
+      "new": "`\\.?\\s*$\", re.MULTILINE)",
+      "tests": [
+        "python3 scripts/build_pwb_behavior_contract_repin.py --selftest"
+      ],
+      "killed": true,
+      "failedTests": 0,
+      "suiteLoadFailures": 1,
+      "firstFailures": [
+        "ValueError: .syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md does not name exactly one chosen variant"
+      ],
+      "seconds": 0
+    }
+  ],
+  "summary": {
+    "mutants": 63,
+    "killed": 63
+  },
+  "earlierRuns": [
+    {
+      "commit": "32b2fd37d9488bbe0461032f940b3eac5cf263bf",
+      "note": "pre-rebase head (now reachable only from the pre-rebase backup); 47 of 47 of the first 47 mutants killed"
+    },
+    {
+      "commit": "f8bde5e15e83b4a58d5d250050064d0879f1f11d",
+      "note": "16 census, default-loader and installer mutants; 8 killed. Survivors, each answered by a test or refactor before the final run: d-default-check, d-default-review, d-default-render, i-v5-partial-accepted, i-v5-needs-v4-dropped, i-battery-script-ignored, i-policy-acts-v5-dropped, i-v5-script-registered. Two of those (i-policy-acts-v5-dropped, i-v5-script-registered) had stopped the selftest on a traceback, which that run's runner did not count; the final runner counts any non-zero script exit as killed."
+    }
+  ]
+}
