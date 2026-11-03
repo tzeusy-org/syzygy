@@ -538,7 +538,7 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
     } };
   }
 
-  const roundDir = path.join(resolved.real, roundDirName(round));
+  const roundDir = path.join(directory, roundDirName(round));
   const sleep = deps.sleep ?? ((ms: number) => new Promise<void>((resolve) => { setTimeout(resolve, ms); }));
   const sliceEnds = Math.min(startedAt + minutes * 60_000, opened.deadlineEnds);
   for (;;) {
