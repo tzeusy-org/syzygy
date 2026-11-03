@@ -1,8 +1,8 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { proveSelfCorpus, readSelfCorpus } from './self-corpus.js';
 
@@ -12,13 +12,11 @@ import { proveSelfCorpus, readSelfCorpus } from './self-corpus.js';
 // record binds (docs/evidence/polaris-m7-synthetic-successor-2026-09-23.json),
 // and node-ci.yml's fetch-depth: 0 is there to keep it in a hosted checkout.
 const PINNED_MAIN = '133106eb0f2564f1cefddd19d11985f1b2619397';
-const cleanups: string[] = [];
 // readSelfCorpus spawns one `git cat-file` per selected blob, over a hundred
 // at the pinned commit (about 1-2 s alone). Measured worst case 7.8 s under
 // the parallel-load protocol (syzygy-gb4l,
 // docs/evidence/load-timeouts-gb4l-2026-10-03.json).
 const PINNED_READ_TIMEOUT_MS = 60_000;
-afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });
 
 describe('zero-egress Syzygy self-corpus proof', () => {
   it('reads only tracked blobs from the pinned commit and independently recounts its denominator', () => {
@@ -53,8 +51,7 @@ describe('zero-egress Syzygy self-corpus proof', () => {
   });
 
   it('does not read a local or untracked file even when it lies in the allowed-looking path', () => {
-    const root = mkdtempSync(join(tmpdir(), 'syzygy-self-corpus-fixture-'));
-    cleanups.push(root);
+    const root = tempDir('syzygy-self-corpus-fixture-');
     execFileSync('git', ['init', '-q', root]);
     execFileSync('git', ['-C', root, 'config', 'gc.auto', '0']);
     execFileSync('git', ['-C', root, 'config', 'maintenance.auto', 'false']);

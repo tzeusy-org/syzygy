@@ -1,11 +1,11 @@
 import { execFile, execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { withConsent, POLICY_ACT_FORMS, type AdmissionRecord } from '@syzygy/polaris-generation-consent';
 import { DEFAULT_DISCOVERY_BUDGET, discoverAndSelect, excludedSourceId, generationSourceIdentity, generationSourcesForBody, gitBlobObjectId, runGenerationPipeline, stageSchema, validateGenerationSources, validateStage, reviewVerdict, type GenerationSource, type PipelinePorts, type PipelineResult } from '@syzygy/polaris-generation-core';
@@ -83,10 +83,8 @@ const goodPolicy = policyBytes();
 const goodPort = port(actRecord(sha(goodPolicy)), goodPolicy);
 
 let root = '', commit = '', emptyRoot = '', emptyCommit = '';
-const scratch: string[] = [];
 const fixtureRepo = (files: Record<string, string | Buffer>): { root: string; commit: string } => {
-  const dir = mkdtempSync(join(tmpdir(), 'syzygy-public-screen-'));
-  scratch.push(dir);
+  const dir = tempDir('syzygy-public-screen-');
   const run = (...args: string[]): string => execFileSync('git', ['-C', dir, ...args], { encoding: 'utf8' }).trim();
   run('init', '-q'); run('config', 'gc.auto', '0'); run('config', 'maintenance.auto', 'false'); run('config', 'user.email', 'f@example.invalid'); run('config', 'user.name', 'F');
   for (const [path, body] of Object.entries(files)) { mkdirSync(dirname(join(dir, path)), { recursive: true }); writeFileSync(join(dir, path), body); }
@@ -97,7 +95,6 @@ beforeAll(() => {
   ({ root, commit } = fixtureRepo(FILES));
   ({ root: emptyRoot, commit: emptyCommit } = fixtureRepo({}));
 });
-afterAll(() => { for (const dir of scratch) rmSync(dir, { recursive: true, force: true }); });
 
 const cfg = (revision = commit) => ({ repositoryId: 'repository:fixture', revision, include: ['**'], exclude: [], oversize: 'split' as const });
 const leaks = (text: string): string[] => [SENTINEL, PATH_TOKEN, DIR_TOKEN, 'filler_line_of_code', ...Object.values(SECRETS).map(secret => secret.trim()), ...WITHHELD].filter(needle => text.includes(needle));

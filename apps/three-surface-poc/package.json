@@ -24,5 +24,8 @@
     "@syzygy/polaris-generation-consent": "0.0.0",
     "@syzygy/polaris-generation-core": "0.0.0",
     "@syzygy/support": "0.0.0"
+  },
+  "devDependencies": {
+    "@syzygy/test-kit": "0.0.0"
   }
 }
