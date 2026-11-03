@@ -1,0 +1,389 @@
+// syzygy-bpyt.6.5 before/after differential harness.
+//
+// Copy to apps/three-surface-poc/src/zz-bpyt65-differential.test.ts and run
+//   BPYT65_OUT=<file.json> npx vitest run --project three-surface-poc zz-bpyt65-differential
+// at the base commit and at the PR head, then compare the two outputs with
+// compare_differential.py. Fixtures only: every Git runner here is in
+// memory, except the model-level rows, which use the committed fixture
+// repository `buildFixtureModel` copies; no observed repository is read.
+//
+// It drives only the public, unchanged entry points (`buildProjectShape`,
+// `createExactObjectReader` with a private ledger, `buildPocModel` through
+// `buildFixtureModel`, and the `/api/poc` route handler), so the same file
+// runs on both sides of the refactor.
+import { createHash } from 'node:crypto';
+import { cpSync, rmSync, writeFileSync } from 'node:fs';
+
+import { describe, expect, it } from 'vitest';
+
+import {
+  PWB_RESOURCE_LIMITS,
+  buildProjectShape,
+  classifyPhaseASeed,
+  compileDetectors,
+  observeProjectShapeSources,
+  PWB_SECRET_POLICY,
+  createExactObjectReader,
+  indexGitTree,
+  parseGitLsTree,
+  type GitRunner,
+  type PwbResourceLimits,
+} from '@syzygy/three-surface-poc-core';
+
+import { pocRoutes, renderPocPage } from './routes.js';
+import { buildFixtureModel, fixtureRepoWithGit } from './test-model-fixture.js';
+import { ADMITTING_AUTHORITY, PROJECT_SHAPE_FIXTURE_TEXTS, REJECTING_AUTHORITY } from './test-project-shape-fixture.js';
+
+const COMMIT = '4'.repeat(40);
+const COMMITTED_AT = '2026-08-15T10:00:00+00:00';
+const encoder = new TextEncoder();
+const sha256 = (data: string | Uint8Array): string => createHash('sha256').update(data).digest('hex');
+const sha1Blob = (bytes: Uint8Array): string => createHash('sha1').update(`blob ${bytes.byteLength}\0`).update(bytes).digest('hex');
+
+interface Entry {
+  readonly path: string;
+  readonly body: Uint8Array;
+  readonly mode?: string;
+  readonly type?: 'blob' | 'commit';
+  // Bytes cat-file returns instead of `body` (object-id mismatch).
+  readonly served?: Uint8Array;
+}
+
+interface Faults {
+  readonly undeclaredSizes?: boolean;
+  readonly catFileFails?: readonly string[];
+  readonly lsTreeFailsOnCall?: number;
+  readonly lsTreeMalformedOnCall?: number;
+  readonly revParseFails?: boolean;
+  readonly showFails?: boolean;
+}
+
+function runnerFor(entries: readonly Entry[], faults: Faults, log: string[]): GitRunner {
+  const byOid = new Map(entries.map((entry) => [sha1Blob(entry.body), entry]));
+  const listing = entries
+    .map((entry) => {
+      const oid = sha1Blob(entry.body);
+      const size = faults.undeclaredSizes === true ? '' : ` ${String(entry.body.byteLength).padStart(7)}`;
+      const type = entry.type ?? 'blob';
+      return `${entry.mode ?? '100644'} ${type} ${oid}${type === 'commit' ? ' ' + '-'.padStart(7) : size}\t${entry.path}\x00`;
+    })
+    .join('');
+  let lsTreeCalls = 0;
+  return (args) => {
+    log.push(args.join(' '));
+    switch (args[0]) {
+      case 'rev-parse':
+        if (faults.revParseFails === true) throw new Error('fixture: rev-parse refused');
+        return encoder.encode(`${COMMIT}\n`);
+      case 'show':
+        if (faults.showFails === true) throw new Error('fixture: show refused');
+        return encoder.encode(`${COMMITTED_AT}\n`);
+      case 'ls-tree':
+        lsTreeCalls += 1;
+        if (faults.lsTreeFailsOnCall === lsTreeCalls) throw new Error('fixture: ls-tree refused');
+        if (faults.lsTreeMalformedOnCall === lsTreeCalls) return encoder.encode('garbage\x00');
+        return encoder.encode(listing);
+      case 'cat-file': {
+        const entry = byOid.get(args[2] ?? '');
+        if (entry === undefined) throw new Error(`fixture has no object ${args[2] ?? ''}`);
+        if ((faults.catFileFails ?? []).includes(entry.path)) throw new Error('fixture: body read refused');
+        return entry.served ?? entry.body;
+      }
+      default:
+        throw new Error(`unexpected git command ${args.join(' ')}`);
+    }
+  };
+}
+
+type TextMutation = (texts: Record<string, string | Uint8Array>) => void;
+
+const ROOT = 'about/README.md';
+const HS_README = 'about/heart-and-soul/README.md';
+const VISION = 'about/heart-and-soul/vision.md';
+const V1 = 'about/heart-and-soul/v1.md';
+const CRAFT_README = 'about/craft-and-care/README.md';
+
+const append = (path: string, extra: string): TextMutation => (texts) => {
+  texts[path] = `${String(texts[path])}${extra}`;
+};
+
+const MUTATIONS: Readonly<Record<string, TextMutation>> = {
+  base: () => undefined,
+  'root-secret-key': append(ROOT, '\n-----BEGIN RSA PRIVATE KEY-----\nMIIB\n-----END RSA PRIVATE KEY-----\n'),
+  'root-active-script': append(ROOT, '\n<script>alert(1)</script>\n'),
+  'hs-readme-token': append(HS_README, '\nAKIAABCDEFGHIJKLMNOP\n'),
+  'hs-readme-active-svg': append(HS_README, '\n<svg onload="x"></svg>\n'),
+  'hs-readme-malformed-fence': append(HS_README, '\n```\nunclosed fence\n'),
+  'hs-readme-nul': append(HS_README, '\nnul\u0000here\n'),
+  'hs-readme-invalid-utf8': (texts) => {
+    texts[HS_README] = new Uint8Array([...encoder.encode(String(texts[HS_README])), 0xff, 0xfe, 0x0a]);
+  },
+  'craft-readme-assignment': append(CRAFT_README, '\npassword = hunter2hunter2\n'),
+  'vision-active-link': append(VISION, '\n[x](javascript:alert(1))\n'),
+  'vision-obfuscated-link': append(VISION, '\n[x](jav&#x61;script:alert(1))\n'),
+  'vision-html-comment': append(VISION, '\n<!-- note -->\n'),
+  'vision-credential-url': append(VISION, '\nhttps://user:pass@example.com/\n'),
+  'vision-nul': append(VISION, '\n\u0000\n'),
+  'vision-invalid-utf8': (texts) => {
+    texts[VISION] = new Uint8Array([...encoder.encode(String(texts[VISION])), 0xc3, 0x28]);
+  },
+  'vision-inert-code-span': append(VISION, '\n`<script>` inside a span\n'),
+  'vision-altered-prose': (texts) => {
+    texts[VISION] = String(texts[VISION]).replace('## What Success Looks Like', '## What Success Looks Like, Roughly');
+  },
+  'v1-altered-prose': (texts) => {
+    texts[V1] = String(texts[V1]).replace('### Butlers', '### Butlers:');
+  },
+  'root-altered-precedence': (texts) => {
+    texts[ROOT] = String(texts[ROOT]).replace('Precedence Order When Layers Disagree', 'Precedence Order');
+  },
+  'hs-readme-denied-links': (texts) => {
+    texts[HS_README] = `${String(texts[HS_README])}- [Env](.env)\n- [Key](server.key)\n- [Up](../../outside.md)\n- [Dot](./vision.md)\n`;
+    texts['about/heart-and-soul/.env'] = 'A=1\n';
+    texts['about/heart-and-soul/server.key'] = 'k\n';
+  },
+  'vision-removed': (texts) => {
+    delete texts[VISION];
+  },
+  'hs-readme-removed': (texts) => {
+    delete texts[HS_README];
+  },
+  'root-removed': (texts) => {
+    delete texts[ROOT];
+  },
+};
+
+type EntryMutation = (entries: Entry[]) => Entry[];
+const ENTRY_MUTATIONS: Readonly<Record<string, EntryMutation>> = {
+  none: (entries) => entries,
+  'vision-symlink': (entries) => entries.map((entry) => (entry.path === VISION ? { ...entry, mode: '120000' } : entry)),
+  'hs-readme-symlink': (entries) => entries.map((entry) => (entry.path === HS_README ? { ...entry, mode: '120000' } : entry)),
+  'vision-executable': (entries) => entries.map((entry) => (entry.path === VISION ? { ...entry, mode: '100755' } : entry)),
+  'vision-gitlink': (entries) => entries.map((entry) => (entry.path === VISION ? { ...entry, mode: '160000', type: 'commit' } : entry)),
+  'vision-mismatch': (entries) => entries.map((entry) => (entry.path === VISION ? { ...entry, served: encoder.encode('tampered\n') } : entry)),
+  'hs-readme-mismatch': (entries) => entries.map((entry) => (entry.path === HS_README ? { ...entry, served: encoder.encode('tampered\n') } : entry)),
+  'root-mismatch': (entries) => entries.map((entry) => (entry.path === ROOT ? { ...entry, served: encoder.encode('tampered\n') } : entry)),
+};
+
+const FAULTS: Readonly<Record<string, Faults>> = {
+  none: {},
+  undeclared: { undeclaredSizes: true },
+  'cat-vision': { catFileFails: [VISION] },
+  'cat-hs-readme': { catFileFails: [HS_README] },
+  'cat-root': { catFileFails: [ROOT] },
+  'ls-tree-1-fails': { lsTreeFailsOnCall: 1 },
+  'ls-tree-1-malformed': { lsTreeMalformedOnCall: 1 },
+  // Faults on a second listing: the base lists the tree again for phase B,
+  // the head does not, so these are the one expected difference.
+  'ls-tree-2-fails': { lsTreeFailsOnCall: 2 },
+  'ls-tree-2-malformed': { lsTreeMalformedOnCall: 2 },
+  'rev-parse-fails': { revParseFails: true },
+  'show-fails': { showFails: true },
+};
+
+function limitVariants(): Readonly<Record<string, PwbResourceLimits>> {
+  const out: Record<string, PwbResourceLimits> = { registry: PWB_RESOURCE_LIMITS };
+  for (const n of [0, 1, 2, 5, 10, 14]) out[`maxSources=${n}`] = { ...PWB_RESOURCE_LIMITS, maxSources: n };
+  for (const n of [0, 10, 40, 100, 300, 600]) out[`maxBytesPerSource=${n}`] = { ...PWB_RESOURCE_LIMITS, maxBytesPerSource: n };
+  for (const n of [0, 50, 200, 400, 700, 1000, 1500, 2500, 4000]) out[`maxTotalBytes=${n}`] = { ...PWB_RESOURCE_LIMITS, maxTotalBytes: n };
+  for (let n = 0; n <= 16; n += 1) out[`maxParsePassesPerSource=${n}`] = { ...PWB_RESOURCE_LIMITS, maxParsePassesPerSource: n };
+  out['maxIndexDepth=3'] = { ...PWB_RESOURCE_LIMITS, maxIndexDepth: 3 };
+  return out;
+}
+
+function entriesFor(mutation: TextMutation, entryMutation: EntryMutation): Entry[] {
+  const texts: Record<string, string | Uint8Array> = { ...PROJECT_SHAPE_FIXTURE_TEXTS };
+  mutation(texts);
+  const entries = Object.entries(texts).map(([path, text]) => ({ path, body: typeof text === 'string' ? encoder.encode(text) : text }));
+  return entryMutation(entries);
+}
+
+// Only shape outputs the model serves; the Git call log is reported
+// separately because the refactor deliberately drops one ls-tree.
+function shapeRecord(shape: ReturnType<typeof buildProjectShape>): unknown {
+  const json = JSON.stringify(shape);
+  if (shape.kind !== 'observed') return { kind: shape.kind, digest: sha256(json), ...(shape.kind === 'observation-failed' ? { failure: shape.failure } : {}) };
+  return {
+    kind: shape.kind,
+    digest: sha256(json),
+    limitBreaches: shape.limitBreaches,
+    resourceUse: shape.resourceUse,
+    degradation: shape.degradation,
+    claim: shape.claim.epistemic,
+    reads: shape.sources.map((source) => ({ path: source.path, record: source.record })),
+  };
+}
+
+describe('syzygy-bpyt.6.5 differential', () => {
+  it('records every scenario', () => {
+    const out: Record<string, unknown> = {};
+    const calls: Record<string, readonly string[]> = {};
+    const phaseA: Record<string, unknown> = {};
+    const limits = limitVariants();
+    let rows = 0;
+    for (const [mutationName, mutation] of Object.entries(MUTATIONS)) {
+      for (const [entryName, entryMutation] of Object.entries(ENTRY_MUTATIONS)) {
+        // Entry mutations are crossed with the base text only.
+        if (entryName !== 'none' && mutationName !== 'base') continue;
+        for (const [faultName, fault] of Object.entries(FAULTS)) {
+          for (const [limitName, limit] of Object.entries(limits)) {
+            // Faults other than size declaration are crossed with the registry limits only.
+            if (faultName !== 'none' && faultName !== 'undeclared' && limitName !== 'registry') continue;
+            const key = `${mutationName}|${entryName}|${faultName}|${limitName}`;
+            const log: string[] = [];
+            const runGit = runnerFor(entriesFor(mutation, entryMutation), fault, log);
+            let result: unknown;
+            try {
+              result = shapeRecord(
+                buildProjectShape({ authority: ADMITTING_AUTHORITY, revision: 'HEAD', capturedAt: '2026-08-30T12:00:00Z', runGit, resourceLimits: limit }),
+              );
+            } catch (error) {
+              result = { threw: error instanceof Error ? `${error.name}: ${error.message}` : String(error) };
+            }
+            out[key] = result;
+            calls[key] = log;
+            // Phase A on its own: the observation record and its seed reads.
+            const detectors = compileDetectors(PWB_SECRET_POLICY);
+            try {
+              const observation = observeProjectShapeSources({
+                repositoryId: 'repository:fixture',
+                revision: 'HEAD',
+                capturedAt: '2026-08-30T12:00:00Z',
+                runGit: runnerFor(entriesFor(mutation, entryMutation), fault, []),
+                classifyPhaseA: (text, charge) => classifyPhaseASeed(detectors, text, charge),
+                resourceLimits: limit,
+              });
+              phaseA[key] = { digest: sha256(JSON.stringify(observation)), ...(observation.kind === 'observed' ? { reads: observation.reads, breaches: observation.limitBreaches, degradation: observation.degradation } : { observation }) };
+            } catch (error) {
+              phaseA[key] = { threw: error instanceof Error ? `${error.name}: ${error.message}` : String(error) };
+            }
+            rows += 1;
+          }
+        }
+      }
+    }
+    // Not admitted: no Git command at all.
+    {
+      const log: string[] = [];
+      const runGit = runnerFor(entriesFor(MUTATIONS.base as TextMutation, ENTRY_MUTATIONS.none as EntryMutation), {}, log);
+      out['not-admitted'] = shapeRecord(buildProjectShape({ authority: REJECTING_AUTHORITY, revision: 'HEAD', capturedAt: '2026-08-30T12:00:00Z', runGit }));
+      calls['not-admitted'] = log;
+      rows += 1;
+    }
+    // The reader on its own (private ledger): every refusal and breach path.
+    const readerRows: Record<string, unknown> = {};
+    for (const [limitName, limit] of Object.entries(limits)) {
+      for (const undeclared of [false, true]) {
+        const entries = entriesFor(MUTATIONS['hs-readme-denied-links'] as TextMutation, ENTRY_MUTATIONS.none as EntryMutation);
+        const extra: Entry[] = [
+          { path: 'link', body: encoder.encode('target'), mode: '120000' },
+          { path: 'sub', body: encoder.encode('x'), mode: '160000', type: 'commit' },
+          { path: 'nul.md', body: encoder.encode('a\u0000b') },
+          { path: 'bad.md', body: new Uint8Array([0xff]) },
+          { path: 'active.md', body: encoder.encode('<b>x</b>') },
+          { path: 'fence.md', body: encoder.encode('```\nx\n') },
+          { path: 'id_rsa', body: encoder.encode('x') },
+          { path: 'a/.env.prod', body: encoder.encode('x') },
+          { path: 'cert.PEM', body: encoder.encode('x') },
+          { path: 'swap.md', body: encoder.encode('original'), served: encoder.encode('swapped') },
+        ];
+        const all = [...entries, ...extra];
+        const log: string[] = [];
+        const runGit = runnerFor(all, { undeclaredSizes: undeclared, catFileFails: ['about/heart-and-soul/v1.md'] }, log);
+        const listing = new TextDecoder().decode(runGit(['ls-tree', '-r', '-z', '-l', COMMIT]));
+        const parsed = parseGitLsTree(listing);
+        if (parsed.kind !== 'parsed') throw new Error('fixture listing malformed');
+        const reader = createExactObjectReader({ runGit, tree: indexGitTree(parsed.entries), resourceLimits: limit });
+        const probes: [string, string | undefined][] = [
+          ...all.map((entry): [string, string | undefined] => [entry.path, undefined]),
+          ['/abs', undefined],
+          ['a/../b', undefined],
+          ['a//b', undefined],
+          ['./a', undefined],
+          ['dir/', undefined],
+          ['nope.md', undefined],
+          ['about', undefined],
+          [VISION, '0'.repeat(40)],
+          [VISION, undefined],
+        ];
+        const results = probes.map(([path, oid]) => {
+          try {
+            const read = reader.read(path, oid);
+            return read.kind === 'text' ? { kind: 'text', textDigest: sha256(read.text), record: read.record } : read;
+          } catch (error) {
+            return { threw: error instanceof Error ? error.message : String(error) };
+          }
+        });
+        readerRows[`${limitName}|${undeclared ? 'undeclared' : 'declared'}`] = {
+          results,
+          breaches: reader.breaches,
+          summary: reader.ledger.summary(),
+          attempted: reader.attempted(),
+          totalBytes: reader.totalBytes(),
+        };
+        rows += 1;
+      }
+    }
+    // Model level: the served /api/poc bytes and the human page.
+    const modelRows: Record<string, unknown> = {};
+    const cleanups: string[] = [];
+    // One fixture repository for every model row; its temporary root is
+    // replaced by a placeholder before hashing, so two runs compare.
+    // The evaluation inputs digest names the repository root, so it is
+    // copied to one fixed path for both runs.
+    const copied = fixtureRepoWithGit(cleanups);
+    const fixedRoot = `${process.env.TMPDIR ?? '/tmp'}/bpyt65-fixture-root`;
+    rmSync(fixedRoot, { recursive: true, force: true });
+    cpSync(copied.repoRoot, fixedRoot, { recursive: true });
+    cleanups.push(fixedRoot);
+    const fixtureRepo = { repoRoot: fixedRoot, revision: copied.revision };
+    const normalized = (text: string): string => text.split(fixtureRepo.repoRoot).join('<fixture-root>');
+    const modelCases: [string, string, string, string][] = [
+      ['base', 'none', 'none', 'registry'],
+      ['base', 'none', 'undeclared', 'registry'],
+      ['base', 'vision-mismatch', 'none', 'registry'],
+      ['base', 'vision-symlink', 'none', 'registry'],
+      ['base', 'none', 'cat-vision', 'registry'],
+      ['base', 'none', 'ls-tree-1-fails', 'registry'],
+      ['root-secret-key', 'none', 'none', 'registry'],
+      ['hs-readme-active-svg', 'none', 'none', 'registry'],
+      ['vision-active-link', 'none', 'none', 'registry'],
+      ['vision-credential-url', 'none', 'none', 'registry'],
+      ['vision-altered-prose', 'none', 'none', 'registry'],
+      ['hs-readme-denied-links', 'none', 'none', 'registry'],
+      ['base', 'none', 'none', 'maxSources=5'],
+      ['base', 'none', 'none', 'maxBytesPerSource=300'],
+      ['base', 'none', 'none', 'maxTotalBytes=1500'],
+      ['base', 'none', 'undeclared', 'maxTotalBytes=1500'],
+      ['base', 'none', 'none', 'maxParsePassesPerSource=3'],
+      ['base', 'none', 'none', 'maxParsePassesPerSource=6'],
+      ['base', 'none', 'none', 'maxIndexDepth=3'],
+    ];
+    try {
+      for (const [mutationName, entryName, faultName, limitName] of modelCases) {
+        const runGit = runnerFor(
+          entriesFor(MUTATIONS[mutationName] as TextMutation, ENTRY_MUTATIONS[entryName] as EntryMutation),
+          FAULTS[faultName] as Faults,
+          [],
+        );
+        const model = buildFixtureModel(cleanups, { fixtureRepo, projectShape: { authority: ADMITTING_AUTHORITY, runGit, resourceLimits: limits[limitName] as PwbResourceLimits } });
+        const routes = pocRoutes(() => model);
+        const machine = routes.find((route) => route.path === '/api/poc' && route.method === 'GET');
+        if (machine === undefined) throw new Error('no /api/poc route');
+        const answer = machine.handle({ request: { method: 'GET', path: '/api/poc', query: new URLSearchParams(), headers: {} } }) as { status: number; body: string };
+        modelRows[`${mutationName}|${entryName}|${faultName}|${limitName}`] = {
+          apiPocStatus: answer.status,
+          apiPocBytes: answer.body.length,
+          apiPocSha256: sha256(normalized(answer.body)),
+          humanSha256: sha256(normalized(renderPocPage(model))),
+        };
+        rows += 1;
+      }
+    } finally {
+      // buildFixtureModel's copies are removed by the suite's own hook.
+    }
+    const file = process.env.BPYT65_OUT;
+    expect(file).toBeDefined();
+    writeFileSync(file as string, `${JSON.stringify({ rows, shapes: out, phaseA, reader: readerRows, models: modelRows, gitCalls: calls }, null, 1)}\n`);
+  }, 600_000);
+});

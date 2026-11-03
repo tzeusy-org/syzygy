@@ -33,10 +33,11 @@
 
 import type { UnknownReason } from '@syzygy/cap1-core';
 
-import { PWB_POLICY_IDENTITY, scanActiveContent, type ExactObjectReader, type ObjectReadRecord, readManifestSources } from './git-object-reader.js';
+import { PWB_POLICY_IDENTITY, scanActiveContentCharged, type ExactObjectReader, type ObjectReadRecord, readManifestSources } from './git-object-reader.js';
 import { EXTRACTION_CLASSES, type ManifestSource, type ProjectShapeSourceManifest } from './project-shape-manifest.js';
-import { PWB_FAILURE_STATES, type PwbFailureState, type PwbResourceLimits, type ResourceLimitBreach } from './project-shape-observation.js';
-import { ParsePassBudgetExceeded, type ParsePassCharge, type ParsePassIdentity, type ResourceLedger, SECRET_DETECTOR_PASSES } from './resource-ledger.js';
+import { PWB_FAILURE_STATES, type PwbFailureState } from './project-shape-observation.js';
+import type { PwbResourceLimits, ResourceLimitBreach } from './pwb-types.js';
+import { type ParsePassCharge, type ParsePassIdentity, type ResourceLedger, SECRET_DETECTOR_PASSES } from './resource-ledger.js';
 
 // ---------------------------------------------------------------------
 // The policy, as an evaluation input.
@@ -171,16 +172,27 @@ export function compileDetectors(policy: Pick<SecretClassificationPolicy, 'detec
 // Runs every detector, in policy order, and names the first that matched.
 // Every detector runs so that a later detector's failure to compile or
 // evaluate cannot hide behind an earlier match.
+export function detectSecrets(detectors: readonly CompiledDetector[], text: string): string | undefined {
+  const run = detectSecretsCharged(detectors, text, () => undefined);
+  return run.kind === 'ran' ? run.detectorId : undefined;
+}
+
+export type SecretDetection =
+  | { readonly kind: 'ran'; readonly detectorId: string | undefined }
+  | { readonly kind: 'over-limit'; readonly breach: ResourceLimitBreach };
+
 // With a ledger in force each detector is one registry pass, charged by the
 // policy detector's registry identity before it runs (an identity the
-// registry does not list is refused by the ledger).
-export function detectSecrets(detectors: readonly CompiledDetector[], text: string, charge?: ParsePassCharge): string | undefined {
+// registry does not list is refused by the ledger). A spent budget stops
+// before the detector it would have paid for, whatever earlier ones found.
+export function detectSecretsCharged(detectors: readonly CompiledDetector[], text: string, charge: ParsePassCharge): SecretDetection {
   let first: string | undefined;
   for (const detector of detectors) {
-    charge?.(SECRET_DETECTOR_PASSES[detector.id] ?? (detector.id as ParsePassIdentity));
+    const breach = charge(SECRET_DETECTOR_PASSES[detector.id] ?? (detector.id as ParsePassIdentity));
+    if (breach !== undefined) return { kind: 'over-limit', breach };
     if (detector.matches(text) && first === undefined) first = detector.id;
   }
-  return first;
+  return { kind: 'ran', detectorId: first };
 }
 
 export type PhaseAClassification =
@@ -190,17 +202,14 @@ export type PhaseAClassification =
 
 // Phase-A indexes derive later read paths, so the same approved detectors and
 // active-content guard must screen their transient text before link parsing.
-export function classifyPhaseASeed(detectors: readonly CompiledDetector[], text: string, charge?: ParsePassCharge): PhaseAClassification {
-  try {
-    const detectorId = detectSecrets(detectors, text, charge);
-    if (detectorId !== undefined) return { kind: 'excluded', reason: 'secret-matched', detail: detectorId };
-    const active = scanActiveContent(text, charge);
-    if (active.length > 0) return { kind: 'excluded', reason: 'active-content', detail: String(active.length) };
-    return { kind: 'safe' };
-  } catch (error) {
-    if (error instanceof ParsePassBudgetExceeded) return { kind: 'over-limit', breach: error.breach };
-    throw error;
-  }
+export function classifyPhaseASeed(detectors: readonly CompiledDetector[], text: string, charge: ParsePassCharge = () => undefined): PhaseAClassification {
+  const secrets = detectSecretsCharged(detectors, text, charge);
+  if (secrets.kind === 'over-limit') return secrets;
+  if (secrets.detectorId !== undefined) return { kind: 'excluded', reason: 'secret-matched', detail: secrets.detectorId };
+  const active = scanActiveContentCharged(text, charge);
+  if (active.kind === 'over-limit') return active;
+  if (active.findings.length > 0) return { kind: 'excluded', reason: 'active-content', detail: String(active.findings.length) };
+  return { kind: 'safe' };
 }
 
 // ---------------------------------------------------------------------
@@ -403,13 +412,9 @@ export function classifySource(input: ClassifyInput, source: ManifestSource, rec
   // 3. every detector over the transient text, before any parsing; each is
   // one charged pass, and a spent budget withholds the source over-limit
   // without running the detector that would have exceeded it.
-  let detectorId: string | undefined;
-  try {
-    detectorId = detectSecrets(detectors, text, charge);
-  } catch (error) {
-    if (error instanceof ParsePassBudgetExceeded) return unclassifiable(policy, record, 'resource-limit', 'maxParsePassesPerSource', OVER_LIMIT);
-    throw error;
-  }
+  const secrets = detectSecretsCharged(detectors, text, charge ?? (() => undefined));
+  if (secrets.kind === 'over-limit') return unclassifiable(policy, record, 'resource-limit', 'maxParsePassesPerSource', OVER_LIMIT);
+  const { detectorId } = secrets;
   if (detectorId !== undefined) {
     return excluded(
       policy,

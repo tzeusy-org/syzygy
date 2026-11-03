@@ -1,0 +1,574 @@
+{
+ "subject": "syzygy-bpyt.6.5 reader predicates",
+ "commit": "10d9d943cd5b593837703fb5b3c76c9af28bcace",
+ "mutantsFile": "docs/evidence/syzygy-bpyt-6-5/rule6_mutants.json",
+ "suite": "npx vitest run --project @syzygy/three-surface-poc-core",
+ "mutants": 34,
+ "killed": 32,
+ "survived": [
+  "R06-validation-pass-budget",
+  "R23-phase-a-active-budget"
+ ],
+ "notKilledOrApplied": [],
+ "results": [
+  {
+   "id": "R01-declared-size-per-source",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "const perSource = evaluateLimit(limits, 'maxBytesPerSource', sizeBytes, path);",
+   "new": "const perSource = undefined as ResourceLimitBreach | undefined;",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  3 failed | 34 passed | 2 skipped (39)",
+   "tests": "Tests  3 failed | 1300 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-003 — the population survives every fault > an over-limit source is excluded unclassifiable with the limit named, never opened, and stays counted",
+    "declared resource limits are evaluation inputs > maxBytesPerSource: a declared over-size blob is never opened",
+    "observeProjectShapeSources — reads only the phase A allowlist > does not open a seed over maxBytesPerSource and records the breach against the declared limit"
+   ]
+  },
+  {
+   "id": "R02-declared-size-total-projection",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (ledger.projectBody(path, objectId, sizeBytes) !== undefined) return",
+   "new": "if (ledger.projectBody(path, objectId, sizeBytes) !== undefined && false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  3 failed | 34 passed | 2 skipped (39)",
+   "tests": "Tests  3 failed | 1300 passed | 2 skipped (1305)",
+   "failingTests": [
+    "declared resource limits are evaluation inputs > maxTotalBytes: the read that would cross the total is not opened; later smaller reads still may be",
+    "observeProjectShapeSources — reads only the phase A allowlist > stops reading once maxTotalBytes would be exceeded, keeping the population",
+    "one resource envelope across both phases (PWB-REQ-006, amended) > maxTotalBytes is one cumulative counter: the exact total fits, one byte less refuses only the last body"
+   ]
+  },
+  {
+   "id": "R03-undeclared-size-per-source",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "const perSource = evaluateLimit(limits, 'maxBytesPerSource', bytes.byteLength, path);",
+   "new": "const perSource = undefined as ResourceLimitBreach | undefined;",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  1 failed | 1302 passed | 2 skipped (1305)",
+   "failingTests": [
+    "declared resource limits are evaluation inputs > a blob the listing did not size is bounded after the read and its bytes are dropped"
+   ]
+  },
+  {
+   "id": "R04-total-bytes-charge",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (ledger.chargeBody(path, objectId, bytes.byteLength) !== undefined) return",
+   "new": "if (ledger.chargeBody(path, objectId, bytes.byteLength) !== undefined && false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  1 failed | 1302 passed | 2 skipped (1305)",
+   "failingTests": [
+    "declared resource limits are evaluation inputs > a blob the listing did not size is bounded after the read and its bytes are dropped"
+   ]
+  },
+  {
+   "id": "R05-object-id-check",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (gitBlobObjectId(bytes, ctx.objectFormat) !== objectId) return",
+   "new": "if (false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  2 failed | 35 passed | 2 skipped (39)",
+   "tests": "Tests  2 failed | 1301 passed | 2 skipped (1305)",
+   "failingTests": [
+    "exact object reads > rejects bytes that do not hash to the tree-named object",
+    "observeProjectShapeSources — reads only the phase A allowlist > rejects bytes that are not the tree-named object, NUL-bearing bytes and non-UTF-8 bytes"
+   ]
+  },
+  {
+   "id": "R06-validation-pass-budget",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (charge('utf8-and-nul-validation') !== undefined) return",
+   "new": "if (charge('utf8-and-nul-validation') !== undefined && false) return",
+   "outcome": "survived",
+   "exitCode": 0,
+   "testFiles": "Test Files  37 passed | 2 skipped (39)",
+   "tests": "Tests  1303 passed | 2 skipped (1305)",
+   "failingTests": []
+  },
+  {
+   "id": "R07-nul-check",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (bytes.includes(0)) return",
+   "new": "if (false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  3 failed | 34 passed | 2 skipped (39)",
+   "tests": "Tests  8 failed | 1295 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-003 — the population survives every fault > counts add up to the source denominator and the redaction classes are the two emitted ones",
+    "PWB-REQ-003 — the population survives every fault > hands a body only to the consumer, and only for classified sources",
+    "PWB-REQ-003 — the population survives every fault > no secret, active or body byte reaches the returned model, records, counts or exclusions",
+    "PWB-REQ-003 — the population survives every fault > returns exactly one result per manifest source, in manifest order, with the hand-typed outcome",
+    "exact object reads > rejects NUL bytes and invalid UTF-8 after the identity check",
+    "observeProjectShapeSources — reads only the phase A allowlist > rejects bytes that are not the tree-named object, NUL-bearing bytes and non-UTF-8 bytes",
+    "phase B population read never shrinks > one result per source, in order, bodies only via consume, every rejected source visible",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a root index that fails NUL validation declares nothing either"
+   ]
+  },
+  {
+   "id": "R08-strict-utf8",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "  const text = decodeUtf8(bytes);\n  if (text === undefined) return { kind: 'not-utf-8', taken };",
+   "new": "  const text = decodeUtf8(bytes) ?? new TextDecoder().decode(bytes);\n  if (text === undefined) return { kind: 'not-utf-8', taken };",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  3 failed | 34 passed | 2 skipped (39)",
+   "tests": "Tests  7 failed | 1296 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-003 — the population survives every fault > counts add up to the source denominator and the redaction classes are the two emitted ones",
+    "PWB-REQ-003 — the population survives every fault > hands a body only to the consumer, and only for classified sources",
+    "PWB-REQ-003 — the population survives every fault > no secret, active or body byte reaches the returned model, records, counts or exclusions",
+    "PWB-REQ-003 — the population survives every fault > returns exactly one result per manifest source, in manifest order, with the hand-typed outcome",
+    "exact object reads > rejects NUL bytes and invalid UTF-8 after the identity check",
+    "observeProjectShapeSources — reads only the phase A allowlist > rejects bytes that are not the tree-named object, NUL-bearing bytes and non-UTF-8 bytes",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a seed whose bytes are not UTF-8 is refused with its reason and a not-utf-8 read record"
+   ]
+  },
+  {
+   "id": "R09-screen-over-limit",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (screened.kind === 'over-limit') return",
+   "new": "if (false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  2 failed | 35 passed | 2 skipped (39)",
+   "tests": "Tests  2 failed | 1301 passed | 2 skipped (1305)",
+   "failingTests": [
+    "phase A charges one shared resource ledger > maxParsePassesPerSource 1 stops a seed before its first classifier pass",
+    "the reader charges one shared resource ledger > maxParsePassesPerSource: limit − 1 and limit stop the read closed at the pass that never ran; limit + 1 reads"
+   ]
+  },
+  {
+   "id": "R10-screen-excluded",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (screened.kind === 'excluded') {",
+   "new": "if (false) {",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  4 failed | 33 passed | 2 skipped (39)",
+   "tests": "Tests  33 failed | 1270 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-003 — the population survives every fault > counts add up to the source denominator and the redaction classes are the two emitted ones",
+    "PWB-REQ-003 — the population survives every fault > hands a body only to the consumer, and only for classified sources",
+    "PWB-REQ-003 — the population survives every fault > no secret, active or body byte reaches the returned model, records, counts or exclusions",
+    "PWB-REQ-003 — the population survives every fault > returns exactly one result per manifest source, in manifest order, with the hand-typed outcome",
+    "PWB-REQ-006 (amended) — classification charges one shared resource ledger > maxParsePassesPerSource 7 excludes every read source as resource-limit before consume; 8 classifies them",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) > CR: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) > CRLF: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) > LF: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a CRLF or CR blob gets the outcome its LF form gets > CR: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "a CRLF or CR blob gets the outcome its LF form gets > CRLF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "a CRLF or CR blob gets the outcome its LF form gets > LF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "a malformed code context is excluded whole, and the recognizer's recovery is never acted on > backtick-fence-with-backtick-in-info-string: the reader refuses the blob and hands on no text"
+   ]
+  },
+  {
+   "id": "R11-trailing-pass-budget",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (charge(pass) !== undefined) return",
+   "new": "if (charge(pass) !== undefined && false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  1 failed | 1302 passed | 2 skipped (1305)",
+   "failingTests": [
+    "phase A charges one shared resource ledger > maxParsePassesPerSource 8 stops the root closed at link discovery, so nothing below it is discovered; 9 reads every seed"
+   ]
+  },
+  {
+   "id": "R12-phase-b-max-sources",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "const countBreach = evaluateLimit(limits, 'maxSources', attempted, path);",
+   "new": "const countBreach = undefined as ResourceLimitBreach | undefined;",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  1 failed | 1302 passed | 2 skipped (1305)",
+   "failingTests": [
+    "declared resource limits are evaluation inputs > maxSources: reads beyond the count stay counted as over-limit and issue no Git call"
+   ]
+  },
+  {
+   "id": "R13-phase-b-recall",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "const held = input.bodies?.recall(path, objectId);",
+   "new": "const held = undefined as { readonly bytes: Uint8Array; readonly text: string } | undefined;",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  3 failed | 34 passed | 2 skipped (39)",
+   "tests": "Tests  15 failed | 1288 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-002 (class-granular) — a failing class keeps its siblings in the machine answer > the source D is Unknown and the source is not withheld whole",
+    "PWB-REQ-002 (class-granular) — counts without a read root index say so > qualifies nothing when the root index was read",
+    "an admitted, fully readable fixture > accounts for every declared identity, all modeled",
+    "an admitted, fully readable fixture > aggregates per class with known denominators, Observed claims and zero reason counts",
+    "an admitted, fully readable fixture > carries the complete source population with stamps, identities and Observed claims",
+    "an admitted, fully readable fixture > every claim is a complete tuple from the closed vocabularies",
+    "contradictions are disclosed, resolved only by a root-declared layer rule (PWB-REQ-004) > a stated summary disagreeing with the derived count is contradicted, both anchors kept, tier suspended",
+    "contradictions are disclosed, resolved only by a root-declared layer rule (PWB-REQ-004) > with the root precedence table, row 1 makes the derived count effective and the citation travels",
+    "faults never shrink the population (PWB-REQ-003) > a grammar failure leaves the source counted with a parse-failure exclusion and an Unknown denominator",
+    "faults never shrink the population (PWB-REQ-003) > a secret-bearing index is excluded hash-not-body before child derivation; its class denominator and the project shape go Unknown",
+    "faults never shrink the population (PWB-REQ-003) > combined faults keep one primary reason and deduplicated secondaries on the whole-shape claim",
+    "one resource envelope across both phases (PWB-REQ-006, amended) > every body is taken from Git once, counted once and validated once across both phases"
+   ]
+  },
+  {
+   "id": "R14-phase-a-remember",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "    deps.bodies?.remember(path, objectId, { bytes, text });\n",
+   "new": "",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  3 failed | 34 passed | 2 skipped (39)",
+   "tests": "Tests  15 failed | 1288 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-002 (class-granular) — a failing class keeps its siblings in the machine answer > the source D is Unknown and the source is not withheld whole",
+    "PWB-REQ-002 (class-granular) — counts without a read root index say so > qualifies nothing when the root index was read",
+    "an admitted, fully readable fixture > accounts for every declared identity, all modeled",
+    "an admitted, fully readable fixture > aggregates per class with known denominators, Observed claims and zero reason counts",
+    "an admitted, fully readable fixture > carries the complete source population with stamps, identities and Observed claims",
+    "an admitted, fully readable fixture > every claim is a complete tuple from the closed vocabularies",
+    "contradictions are disclosed, resolved only by a root-declared layer rule (PWB-REQ-004) > a stated summary disagreeing with the derived count is contradicted, both anchors kept, tier suspended",
+    "contradictions are disclosed, resolved only by a root-declared layer rule (PWB-REQ-004) > with the root precedence table, row 1 makes the derived count effective and the citation travels",
+    "faults never shrink the population (PWB-REQ-003) > a grammar failure leaves the source counted with a parse-failure exclusion and an Unknown denominator",
+    "faults never shrink the population (PWB-REQ-003) > a secret-bearing index is excluded hash-not-body before child derivation; its class denominator and the project shape go Unknown",
+    "faults never shrink the population (PWB-REQ-003) > combined faults keep one primary reason and deduplicated secondaries on the whole-shape claim",
+    "one resource envelope across both phases (PWB-REQ-006, amended) > every body is taken from Git once, counted once and validated once across both phases"
+   ]
+  },
+  {
+   "id": "R15-phase-b-screen-findings",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "    if (scan.findings.length === 0) return { kind: 'safe' };",
+   "new": "    if (scan.findings.length >= 0) return { kind: 'safe' };",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  2 failed | 35 passed | 2 skipped (39)",
+   "tests": "Tests  25 failed | 1278 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-003 — the population survives every fault > counts add up to the source denominator and the redaction classes are the two emitted ones",
+    "PWB-REQ-003 — the population survives every fault > hands a body only to the consumer, and only for classified sources",
+    "PWB-REQ-003 — the population survives every fault > no secret, active or body byte reaches the returned model, records, counts or exclusions",
+    "PWB-REQ-003 — the population survives every fault > returns exactly one result per manifest source, in manifest order, with the hand-typed outcome",
+    "PWB-REQ-006 (amended) — classification charges one shared resource ledger > maxParsePassesPerSource 7 excludes every read source as resource-limit before consume; 8 classifies them",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) > CR: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) > CRLF: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a 200,000-line closed fence under the read limit (GP-B2 Q1) > LF: a script element after a 200,000-line closed fence is found, with a body-free record",
+    "a CRLF or CR blob gets the outcome its LF form gets > CR: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "a CRLF or CR blob gets the outcome its LF form gets > CRLF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "a CRLF or CR blob gets the outcome its LF form gets > LF: a backtick opener whose info text holds a backtick is excluded as a malformed code context, with a body-free record",
+    "a malformed code context is excluded whole, and the recognizer's recovery is never acted on > backtick-fence-with-backtick-in-info-string: the reader refuses the blob and hands on no text"
+   ]
+  },
+  {
+   "id": "R16-phase-a-trailing-link-discovery",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "trailingPasses: ['phase-a-link-discovery']",
+   "new": "trailingPasses: []",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  2 failed | 35 passed | 2 skipped (39)",
+   "tests": "Tests  4 failed | 1299 passed | 2 skipped (1305)",
+   "failingTests": [
+    "one resource envelope across both phases (PWB-REQ-006, amended) > every body is taken from Git once, counted once and validated once across both phases",
+    "one resource envelope across both phases (PWB-REQ-006, amended) > maxParsePassesPerSource counts phase B against a seed already validated in phase A",
+    "phase A charges one shared resource ledger > a safe seed costs exactly nine registry passes, each identity once, and its body counts once",
+    "phase A charges one shared resource ledger > maxParsePassesPerSource 8 stops the root closed at link discovery, so nothing below it is discovered; 9 reads every seed"
+   ]
+  },
+  {
+   "id": "R17-secret-detector-budget",
+   "file": "packages/three-surface-poc-core/src/content-classification.ts",
+   "old": "if (breach !== undefined) return { kind: 'over-limit', breach };",
+   "new": "if (breach !== undefined && false) return { kind: 'over-limit', breach };",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  3 failed | 34 passed | 2 skipped (39)",
+   "tests": "Tests  5 failed | 1298 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-006 (amended) — classification charges one shared resource ledger > classifyPhaseASeed reports over-limit with the breach when a detector pass exceeds the budget",
+    "PWB-REQ-006 (amended) — classification charges one shared resource ledger > classifySource turns the budget breach into an excluded resource-limit record without the body",
+    "PWB-REQ-006 (amended) — classification charges one shared resource ledger > maxParsePassesPerSource 7 excludes every read source as resource-limit before consume; 8 classifies them",
+    "one resource envelope across both phases (PWB-REQ-006, amended) > maxParsePassesPerSource counts phase B against a seed already validated in phase A",
+    "phase A charges one shared resource ledger > maxParsePassesPerSource 1 stops a seed before its first classifier pass"
+   ]
+  },
+  {
+   "id": "R18-active-scan-budget",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "return breach === undefined ? undefined : { kind: 'over-limit', breach };",
+   "new": "return undefined;",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  1 failed | 1302 passed | 2 skipped (1305)",
+   "failingTests": [
+    "the reader charges one shared resource ledger > maxParsePassesPerSource: limit − 1 and limit stop the read closed at the pass that never ran; limit + 1 reads"
+   ]
+  },
+  {
+   "id": "R19-extraction-class-budget",
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "old": "if (breach !== undefined) return { kind: 'over-limit', path, classes, pass: EXTRACTION_PASSES[cls], class: cls, breach };",
+   "new": "if (breach !== undefined && false) return { kind: 'over-limit', path, classes, pass: EXTRACTION_PASSES[cls], class: cls, breach };",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  2 failed | 35 passed | 2 skipped (39)",
+   "tests": "Tests  2 failed | 1301 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-006 (amended) — extraction charges one registry pass per class > a spent budget yields over-limit naming the class whose traversal never ran, with no partial items",
+    "one resource envelope across both phases (PWB-REQ-006, amended) > a budget spent at extraction makes that source Unknown with no partial items"
+   ]
+  },
+  {
+   "id": "R20-extraction-root-budget",
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "old": "if (breach !== undefined) return { kind: 'over-limit', path, classes, pass: ROOT_INDEX_PASS, breach };",
+   "new": "if (breach !== undefined && false) return { kind: 'over-limit', path, classes, pass: ROOT_INDEX_PASS, breach };",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  1 failed | 1302 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-006 (amended) — the root index charges one fact-and-precedence pass > a spent budget yields over-limit naming the root pass with no class and no grammar result"
+   ]
+  },
+  {
+   "id": "R21-classify-source-budget",
+   "file": "packages/three-surface-poc-core/src/content-classification.ts",
+   "old": "if (secrets.kind === 'over-limit') return unclassifiable(",
+   "new": "if (false) return unclassifiable(",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  2 failed | 35 passed | 2 skipped (39)",
+   "tests": "Tests  3 failed | 1300 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-006 (amended) — classification charges one shared resource ledger > classifySource turns the budget breach into an excluded resource-limit record without the body",
+    "PWB-REQ-006 (amended) — classification charges one shared resource ledger > maxParsePassesPerSource 7 excludes every read source as resource-limit before consume; 8 classifies them",
+    "one resource envelope across both phases (PWB-REQ-006, amended) > maxParsePassesPerSource counts phase B against a seed already validated in phase A"
+   ]
+  },
+  {
+   "id": "R22-phase-a-secret-budget",
+   "file": "packages/three-surface-poc-core/src/content-classification.ts",
+   "old": "  if (secrets.kind === 'over-limit') return secrets;",
+   "new": "  if (false) return secrets;",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  2 failed | 35 passed | 2 skipped (39)",
+   "tests": "Tests  2 failed | 1301 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-006 (amended) — classification charges one shared resource ledger > classifyPhaseASeed reports over-limit with the breach when a detector pass exceeds the budget",
+    "phase A charges one shared resource ledger > maxParsePassesPerSource 1 stops a seed before its first classifier pass"
+   ]
+  },
+  {
+   "id": "R23-phase-a-active-budget",
+   "file": "packages/three-surface-poc-core/src/content-classification.ts",
+   "old": "  if (active.kind === 'over-limit') return active;",
+   "new": "  if (false) return active;",
+   "outcome": "survived",
+   "exitCode": 0,
+   "testFiles": "Test Files  37 passed | 2 skipped (39)",
+   "tests": "Tests  1303 passed | 2 skipped (1305)",
+   "failingTests": []
+  },
+  {
+   "id": "R24-ledger-pass-budget",
+   "file": "packages/three-surface-poc-core/src/resource-ledger.ts",
+   "old": "if (next > limits.maxParsePassesPerSource) {",
+   "new": "if (false) {",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  5 failed | 32 passed | 2 skipped (39)",
+   "tests": "Tests  11 failed | 1292 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-006 (amended) — classification charges one shared resource ledger > maxParsePassesPerSource 7 excludes every read source as resource-limit before consume; 8 classifies them",
+    "maxParsePassesPerSource — one budget per source, wall-clock never an input > budgets are per source: a second path starts at zero",
+    "maxParsePassesPerSource — one budget per source, wall-clock never an input > chargeFor returns the recorded breach, never throws, and leaves the pass that never ran uncounted",
+    "maxParsePassesPerSource — one budget per source, wall-clock never an input > limit − 1 and limit pass; limit + 1 breaches and is recorded once per crossing",
+    "maxParsePassesPerSource — one budget per source, wall-clock never an input > repeating a pass counts again",
+    "one resource envelope across both phases (PWB-REQ-006, amended) > a budget spent at extraction makes that source Unknown with no partial items",
+    "one resource envelope across both phases (PWB-REQ-006, amended) > maxParsePassesPerSource counts phase B against a seed already validated in phase A",
+    "phase A charges one shared resource ledger > maxParsePassesPerSource 1 stops a seed before its first classifier pass",
+    "phase A charges one shared resource ledger > maxParsePassesPerSource 8 stops the root closed at link discovery, so nothing below it is discovered; 9 reads every seed",
+    "summary and breach order > the summary is a snapshot with every identity present and breaches in occurrence order",
+    "the reader charges one shared resource ledger > maxParsePassesPerSource: limit − 1 and limit stop the read closed at the pass that never ran; limit + 1 reads"
+   ]
+  },
+  {
+   "id": "R25-one-listing",
+   "file": "packages/three-surface-poc-core/src/project-shape-model.ts",
+   "old": "      const reader = createExactObjectReader({ runGit: input.runGit, tree, ledger, bodies });",
+   "new": "      input.runGit(['ls-tree', '-r', '-z', '-l', observation.revision]);\n      const reader = createExactObjectReader({ runGit: input.runGit, tree, ledger, bodies });",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  1 failed | 1302 passed | 2 skipped (1305)",
+   "failingTests": [
+    "observation failures stay Unknown with the registry reason > one evaluation lists the tree once, with -z, and phase B reads against that listing (syzygy-bpyt.6.5)"
+   ]
+  },
+  {
+   "id": "A01-phase-a-seed-allowlist",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "if (!isPhaseASeedPath(seed.path, declaredRoots)) return",
+   "new": "if (false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  11 failed | 1292 passed | 2 skipped (1305)",
+   "failingTests": [
+    "admitPhaseARead > a declared home admits its index wherever it sits; a directory merely named for a pillar declares nothing (syzygy-1z3.29)",
+    "admitPhaseARead > admits only tree-matching regular blobs at the root index or a declared pillar index",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a declared pillar index asked for before the root index is refused, and read after it",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a pillar declared at two different homes admits neither index",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a pillar index naming a pillar-keyed directory declares no home: only the root index widens the set",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a pillar index that is read declares nothing: only the root index widens the set",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a root index that fails NUL validation declares nothing either",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a root index the classifier excludes declares nothing: its pillar index stays refused",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a root index with a backtick opener with a backtick in its info string declares nothing: its pillar index stays refused",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a root index with a span open at a fence opener declares nothing: its pillar index stays refused",
+    "the seed reader widens phase A only after a validated root index (syzygy-1z3.29 review) > a root index with an unclosed fence declares nothing: its pillar index stays refused"
+   ]
+  },
+  {
+   "id": "A02-phase-a-object-id",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "if (entry.objectId !== seed.objectId) return",
+   "new": "if (false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  1 failed | 1302 passed | 2 skipped (1305)",
+   "failingTests": [
+    "admitPhaseARead > admits only tree-matching regular blobs at the root index or a declared pillar index"
+   ]
+  },
+  {
+   "id": "A03-phase-a-regular-blob",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "if (entry.type !== 'blob' || !REGULAR_BLOB_MODES.includes(entry.mode)) return",
+   "new": "if (false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  2 failed | 1301 passed | 2 skipped (1305)",
+   "failingTests": [
+    "admitPhaseARead > admits only tree-matching regular blobs at the root index or a declared pillar index",
+    "observeProjectShapeSources — reads only the phase A allowlist > refuses a symlinked pillar index without opening it and leaves the pillar counted and Unknown"
+   ]
+  },
+  {
+   "id": "A04-phase-a-not-in-tree",
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "old": "if (entry === undefined) return { kind: 'refused', reason: 'not-in-tree' };",
+   "new": "if (entry === undefined) return { kind: 'refused', reason: 'not-a-regular-blob' };",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  1 failed | 1302 passed | 2 skipped (1305)",
+   "failingTests": [
+    "admitPhaseARead > admits only tree-matching regular blobs at the root index or a declared pillar index"
+   ]
+  },
+  {
+   "id": "B01-phase-b-normalized",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (normalized !== path) return",
+   "new": "if (false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  6 failed | 1297 passed | 2 skipped (1305)",
+   "failingTests": [
+    "read guard — paths that must never reach Git > refuses \"./about/README.md\" as path-not-normalized without any Git call",
+    "read guard — paths that must never reach Git > refuses \"about/../about/README.md\" as path-not-normalized without any Git call",
+    "read guard — paths that must never reach Git > refuses \"about/./README.md\" as path-not-normalized without any Git call",
+    "read guard — paths that must never reach Git > refuses \"about//README.md\" as path-not-normalized without any Git call",
+    "read guard — paths that must never reach Git > refuses \"about/README.md/\" as path-not-normalized without any Git call",
+    "read guard — paths that must never reach Git > refuses \"about/heart-and-soul/README.md/../vision.md\" as path-not-normalized without any Git call"
+   ]
+  },
+  {
+   "id": "B02-phase-b-denied-path",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (denied !== undefined) return",
+   "new": "if (false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  2 failed | 35 passed | 2 skipped (39)",
+   "tests": "Tests  13 failed | 1290 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-003 — the population survives every fault > counts add up to the source denominator and the redaction classes are the two emitted ones",
+    "PWB-REQ-003 — the population survives every fault > hands a body only to the consumer, and only for classified sources",
+    "PWB-REQ-003 — the population survives every fault > no secret, active or body byte reaches the returned model, records, counts or exclusions",
+    "PWB-REQ-003 — the population survives every fault > reads each admitted blob exactly once and nothing for denied, missing or non-blob sources",
+    "PWB-REQ-003 — the population survives every fault > returns exactly one result per manifest source, in manifest order, with the hand-typed outcome",
+    "PWB-REQ-003 — the population survives every fault > the three spec faults: a removed source, a denied read and a classifier-excluded source all stay counted",
+    "phase B population read never shrinks > one result per source, in order, bodies only via consume, every rejected source visible",
+    "read guard — paths that must never reach Git > refuses \".env\" as denied-basename without any Git call",
+    "read guard — paths that must never reach Git > refuses \"certs/Server.KEY\" as denied-suffix without any Git call",
+    "read guard — paths that must never reach Git > refuses \"certs/server.pem\" as denied-suffix without any Git call",
+    "read guard — paths that must never reach Git > refuses \"config/secrets.json\" as denied-basename without any Git call",
+    "read guard — paths that must never reach Git > refuses \"keys/.env.staging\" as denied-prefix without any Git call"
+   ]
+  },
+  {
+   "id": "B03-phase-b-regular-blob",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (entry.type !== 'blob' || !REGULAR_BLOB_MODES.includes(entry.mode) || !OBJECT_ID.test(entry.objectId)) {",
+   "new": "if (false) {",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  2 failed | 35 passed | 2 skipped (39)",
+   "tests": "Tests  7 failed | 1296 passed | 2 skipped (1305)",
+   "failingTests": [
+    "PWB-REQ-003 — the population survives every fault > reads each admitted blob exactly once and nothing for denied, missing or non-blob sources",
+    "PWB-REQ-003 — the population survives every fault > returns exactly one result per manifest source, in manifest order, with the hand-typed outcome",
+    "phase B population read never shrinks > one result per source, in order, bodies only via consume, every rejected source visible",
+    "read guard — paths that must never reach Git > refuses \"about/link.md\" as not-a-regular-blob without any Git call",
+    "read guard — paths that must never reach Git > refuses \"about/tree-entry\" as not-a-regular-blob without any Git call",
+    "read guard — paths that must never reach Git > refuses \"vendor/mislabeled\" as not-a-regular-blob without any Git call",
+    "read guard — paths that must never reach Git > refuses \"vendor/sub\" as not-a-regular-blob without any Git call"
+   ]
+  },
+  {
+   "id": "B04-phase-b-expected-object-id",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (expectedObjectId !== undefined && expectedObjectId !== entry.objectId) return",
+   "new": "if (false) return",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  2 failed | 1301 passed | 2 skipped (1305)",
+   "failingTests": [
+    "phase B population read never shrinks > one result per source, in order, bodies only via consume, every rejected source visible",
+    "read guard — paths that must never reach Git > refuses a caller-supplied object id that differs from the tree"
+   ]
+  },
+  {
+   "id": "B05-phase-b-not-in-tree",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "if (entry === undefined) return { kind: 'refused', reason: 'not-in-tree' };",
+   "new": "if (entry === undefined) return { kind: 'refused', reason: 'not-a-regular-blob' };",
+   "outcome": "killed",
+   "exitCode": 1,
+   "testFiles": "Test Files  1 failed | 36 passed | 2 skipped (39)",
+   "tests": "Tests  4 failed | 1299 passed | 2 skipped (1305)",
+   "failingTests": [
+    "read guard — paths that must never reach Git > refuses \".git/config\" as not-in-tree without any Git call",
+    "read guard — paths that must never reach Git > refuses \"C:\\\\Windows\\\\system32\" as not-in-tree without any Git call",
+    "read guard — paths that must never reach Git > refuses \"about/missing.md\" as not-in-tree without any Git call",
+    "read guard — paths that must never reach Git > refuses \"vendor/sub/README.md\" as not-in-tree without any Git call"
+   ]
+  }
+ ]
+}

@@ -1,8 +1,8 @@
-import { execFileSync } from 'node:child_process';
 
 import { decodeUtf8 } from '@syzygy/support';
 
 import { parseGitLsTree } from './git-tree.js';
+import { gitRunnerFor } from './project-shape-observation.js';
 import type { PocProvenance } from './model.js';
 
 const CODE_LANGUAGE_CLASSIFICATIONS = [
@@ -114,10 +114,9 @@ function withoutGitlinkRecords(bytes: Buffer): Buffer {
 }
 
 function defaultRunGit(repoRoot: string, args: readonly string[]): string {
-  const bytes = execFileSync('git', ['--no-optional-locks', '-C', repoRoot, ...args], {
-    maxBuffer: 256 * 1024 * 1024,
-    stdio: ['ignore', 'pipe', 'ignore'],
-  });
+  // The one production Git runner (same flags, buffer bound and stdio as the PWB reader's); the decode below is this observer's own.
+  const stdout = gitRunnerFor(repoRoot)(args);
+  const bytes = Buffer.from(stdout.buffer, stdout.byteOffset, stdout.byteLength);
   // The gitlink filter runs inside the try, as the decode always did: a copy it cannot allocate is reported like the bytes that
   // could not be decoded, so the Unknown reason for a failure here is the one this module has always given.
   try {

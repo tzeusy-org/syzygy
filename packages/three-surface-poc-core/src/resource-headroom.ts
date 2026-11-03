@@ -1,5 +1,6 @@
 import type { ProjectShape } from './project-shape-model.js';
-import { PWB_RESOURCE_LIMITS, type PwbResourceLimits } from './project-shape-observation.js';
+import { PWB_RESOURCE_LIMITS } from './project-shape-observation.js';
+import type { PwbResourceLimits } from './pwb-types.js';
 import {
   DECLARED_RESOURCE_LIMIT_IDENTITIES,
   type ResourceLedgerCostRecord,

@@ -1,0 +1,761 @@
+{
+ "subject": "syzygy-bpyt.6.5: old-versus-new differential of the PWB read pipeline (one bounded blob reader, one tree listing)",
+ "date": "2026-11-03",
+ "baseCommit": "85c54814",
+ "headCommit": "c7acb223 (implementation) at branch head 2fce45b1; rebased onto 85c54814",
+ "headCommitNote": "the implementation commit the head run used; a later rebase re-hashes it, so the per-file digests below are the stable anchor",
+ "subjectFiles": {
+  "packages/three-surface-poc-core/src/code-structure.ts": "sha256:e72b00ee273372ed52fa638275534bc3fab15c2a907be7187ede51357d2ee85c",
+  "packages/three-surface-poc-core/src/content-classification.test.ts": "sha256:1c6aa1293e20be65b1f00c46a120d295d682b9d7c10e2364071b0fb3a74cb901",
+  "packages/three-surface-poc-core/src/content-classification.ts": "sha256:9a2d3fc55714e6c6bffcaf16cdbda2761810211f06d72dae883e7dcd0971919e",
+  "packages/three-surface-poc-core/src/git-object-reader.test.ts": "sha256:d03d71ac37acf8af5bf0d70f00cd970a6519214afce4ea0aac883acc368f1081",
+  "packages/three-surface-poc-core/src/git-object-reader.ts": "sha256:5541835c517b8da600cc2d8032f7edce31f4c17e4ef95e442ef6bf181d328f1e",
+  "packages/three-surface-poc-core/src/index.ts": "sha256:34601bba8c9702370f632d6f5cc5e1871490d53bef4c0ed5d87c78a8014a430b",
+  "packages/three-surface-poc-core/src/model.ts": "sha256:6697eead669c071b47460e583a1cac1b26cffe9d8d66d3f76f60e811156ba1d0",
+  "packages/three-surface-poc-core/src/project-shape-extraction.test.ts": "sha256:9c3e3ba745ddc9178965e830828021781dc4c2863ca0186c4d9ba48ce0631f13",
+  "packages/three-surface-poc-core/src/project-shape-extraction.ts": "sha256:eb2bea76eec75516210d19c1a91ab28ba952523d0a3add97fdebe6cd4a0b6ffe",
+  "packages/three-surface-poc-core/src/project-shape-git-text.test.ts": "sha256:06d536a5ebff08a4b67e43e2c790921feee74d19fdf8ce7ee1b70d38173755c3",
+  "packages/three-surface-poc-core/src/project-shape-model.test.ts": "sha256:150139498bb6b95d1008ceb7b8e9fa93bc8c56d3a58a6fe19aea087909494972",
+  "packages/three-surface-poc-core/src/project-shape-model.ts": "sha256:0f6129a3dd59f6d59cc8f4e188a70f5f13554a7e1e5261fa5d6006cbd8c3a2e2",
+  "packages/three-surface-poc-core/src/project-shape-observation.test.ts": "sha256:9c94dca387d1afe6c3b83ca4187b917f5156b17b4b7e416c7cd80597eef7b5dd",
+  "packages/three-surface-poc-core/src/project-shape-observation.ts": "sha256:f5d700fd2d427ed123c3045525a70559926a654d82a972e783afc2452140fb4e",
+  "packages/three-surface-poc-core/src/pwb-types.ts": "sha256:21029d959cdfd603daa9db5a9b9ada58994adf409df73ea616118fb5aceb5290",
+  "packages/three-surface-poc-core/src/resource-headroom.ts": "sha256:3a4f327de80d16296d84c2b7e5708124207ae5153901c1817d75861022daccc3",
+  "packages/three-surface-poc-core/src/resource-ledger.test.ts": "sha256:cc4e42f904ffad43bb6937f3b49229e7f7c0f609d3cef6ce53c630cb516b317f",
+  "packages/three-surface-poc-core/src/resource-ledger.ts": "sha256:66944f8c7712610d4c4f46a367d3e35f541dd9c36e4e644e975044bdda10391d",
+  "packages/three-surface-poc-core/src/transient-bodies.ts": "sha256:ca1b2734edfd91b60c834bf6bb31f090f13ef626025ee1c2a0192c33f9d93bfb"
+ },
+ "harness": {
+  "path": "docs/evidence/syzygy-bpyt-6-5/differential-harness.test.ts.txt",
+  "sha256": "sha256:fb8288232d272bc4859954a47a3d5a40ba58cab83dffe798decb521b465f5098",
+  "comparator": "docs/evidence/syzygy-bpyt-6-5/compare_differential.py",
+  "comparatorSha256": "sha256:d506f285570366207715f273382c9bbddf40c58ee5016a294de5cbd8777e45d7",
+  "run": "copy to apps/three-surface-poc/src/zz-bpyt65-differential.test.ts; TMPDIR=/tmp/b65 BPYT65_OUT=<out> npx vitest run apps/three-surface-poc/src/zz-bpyt65-differential.test.ts; base run with packages/ stashed to the base commit, head run at the head commit"
+ },
+ "outputs": {
+  "base": {
+   "sha256": "sha256:db3cb9d69c16d2428650c9a522b99728de1d83e6023dd71f358629df206b492b",
+   "bytes": 30859987
+  },
+  "head": {
+   "sha256": "sha256:b66f5ddd88e6e3126281f558c99b81a9b11a5f76fd9e326f926880403270758d",
+   "bytes": 31299219
+  },
+  "retained": false,
+  "why": "28 MB each; regenerable from the harness at the two commits; the comparator summary below is the record"
+ },
+ "corpus": {
+  "textMutations": 23,
+  "entryMutations": 8,
+  "faults": 11,
+  "limitVariants": 40,
+  "description": "buildProjectShape and observeProjectShapeSources over in-memory fixtures: base texts plus altered-prose, secret, active-content, malformed-fence, NUL, invalid-UTF-8, denied-link and removed-source records; symlink, gitlink, executable and object-id-swap tree entries; cat-file, rev-parse, show and first/second ls-tree faults; every resource limit narrowed across its breach points (maxSources 0..14, maxBytesPerSource 0..600, maxTotalBytes 0..4000, maxParsePassesPerSource 0..16, maxIndexDepth 3), declared and undeclared sizes; createExactObjectReader alone over every refusal and breach path under each limit; 19 full models through buildFixtureModel with the served /api/poc bytes and the human page hashed"
+ },
+ "comparison": {
+  "rows": {
+   "base": 2770,
+   "head": 2770
+  },
+  "sections": {
+   "shapes": {
+    "scenarios": 2671,
+    "identical": 2611,
+    "differ": 60
+   },
+   "phaseA": {
+    "scenarios": 2670,
+    "identical": 2670,
+    "differ": 0
+   },
+   "reader": {
+    "scenarios": 80,
+    "identical": 80,
+    "differ": 0
+   },
+   "models": {
+    "scenarios": 19,
+    "identical": 19,
+    "differ": 0
+   }
+  },
+  "gitCalls": {
+   "scenarios": 2671,
+   "identical": 121,
+   "secondListingDropped": 2550
+  },
+  "expectedDifferences": [
+   {
+    "scenario": "base|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "base|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "base|vision-symlink|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "base|vision-symlink|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "base|hs-readme-symlink|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "base|hs-readme-symlink|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "base|vision-executable|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "base|vision-executable|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "base|vision-gitlink|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "base|vision-gitlink|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "base|vision-mismatch|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "base|vision-mismatch|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "base|hs-readme-mismatch|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "base|hs-readme-mismatch|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "base|root-mismatch|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "base|root-mismatch|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "root-secret-key|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "root-secret-key|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "root-active-script|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "root-active-script|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "hs-readme-token|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "hs-readme-token|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "hs-readme-active-svg|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "hs-readme-active-svg|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "hs-readme-malformed-fence|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "hs-readme-malformed-fence|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "hs-readme-nul|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "hs-readme-nul|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "hs-readme-invalid-utf8|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "hs-readme-invalid-utf8|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "craft-readme-assignment|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "craft-readme-assignment|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "vision-active-link|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "vision-active-link|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "vision-obfuscated-link|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "vision-obfuscated-link|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "vision-html-comment|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "vision-html-comment|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "vision-credential-url|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "vision-credential-url|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "vision-nul|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "vision-nul|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "vision-invalid-utf8|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "vision-invalid-utf8|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "vision-inert-code-span|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "vision-inert-code-span|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "vision-altered-prose|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "vision-altered-prose|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "v1-altered-prose|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "v1-altered-prose|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "root-altered-precedence|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "root-altered-precedence|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "hs-readme-denied-links|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "hs-readme-denied-links|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "vision-removed|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "vision-removed|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "hs-readme-removed|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "hs-readme-removed|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   },
+   {
+    "scenario": "root-removed|none|ls-tree-2-fails|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "git ls-tree failed: fixture: ls-tree refused"
+    }
+   },
+   {
+    "scenario": "root-removed|none|ls-tree-2-malformed|registry",
+    "base": "observation-failed",
+    "head": "observed",
+    "baseFailure": {
+     "failureState": "gitCaptureFailed",
+     "degradationState": "Observer failed",
+     "reason": "source-uncaptured-or-unreachable",
+     "detail": "ls-tree record is malformed: garbage"
+    }
+   }
+  ],
+  "unexpectedDifferences": []
+ },
+ "verdict": "identical except the 60 scenarios whose fault fires only on a second ls-tree: the base listed the tree again for phase B (and so failed gitCaptureFailed), the head lists it once and observes exactly what the unfaulted run observes",
+ "rule6": {
+  "mutants": "docs/evidence/syzygy-bpyt-6-5/rule6_mutants.json",
+  "run1": "docs/evidence/syzygy-bpyt-6-5/rule6-run-1-2026-11-03.json (34 mutants, 32 killed, R06 and R23 survived; at the pre-rebase commit 10d9d943)",
+  "run2": "docs/evidence/syzygy-bpyt-6-5/rule6-run-2-survivors-2026-11-03.json (R06 and R23 killed by the two tests added in a51b5e39; pre-rebase commit)"
+ },
+ "cycleCheck": {
+  "method": "Tarjan SCC over every relative import (value and type) among packages/three-surface-poc-core/src/*.ts, tests excluded",
+  "base": "2 cyclic components: [content-classification, git-object-reader, project-shape-observation, resource-ledger] and [code-structure, model, orrery-projection, poc-seeds, proposed-work, trajectory-projection, work-items]",
+  "head": "1 cyclic component: [code-structure, model, orrery-projection, poc-seeds, proposed-work, trajectory-projection, work-items] (pre-existing, outside the PWB reader, via PocProvenance and seeds)"
+ }
+}

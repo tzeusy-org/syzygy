@@ -25,12 +25,14 @@
 // charged by its registry identity; a name outside the closed list throws,
 // because an unregistered traversal is forbidden rather than tolerated.
 //
-// The ledger also keeps the validated phase-A seed bodies for the phase-B
-// reader, so one (path, object id) body is taken from Git once, counted
-// once and validated once; `release()` drops them once phase B has read.
+// A spent budget is a value, never an exception: `chargePass` and the
+// per-source `ParsePassCharge` return the recorded breach, and each stage
+// turns it into its own over-limit outcome (syzygy-bpyt.6.5). The validated
+// phase-A bodies phase B reuses live beside the ledger, in
+// `transient-bodies.ts`, not in it.
 
 import { PWB_INDEX_DEPTH } from './project-shape-manifest.js';
-import type { PwbResourceLimits, ResourceLimitBreach } from './project-shape-observation.js';
+import type { PwbResourceLimits, ResourceLimitBreach } from './pwb-types.js';
 
 export const PARSE_PASS_IDENTITIES = [
   'utf8-and-nul-validation',
@@ -56,28 +58,11 @@ export const SECRET_DETECTOR_PASSES: Readonly<Record<string, ParsePassIdentity>>
   'credential-bearing-url': 'secret-credential-bearing-url',
 };
 
-// Thrown by a source's charge when the next pass would exceed
-// maxParsePassesPerSource; the stage boundary turns it into an over-limit
-// outcome for that one source. The traversal it guards never runs.
-export class ParsePassBudgetExceeded extends Error {
-  readonly breach: ResourceLimitBreach;
-  readonly pass: ParsePassIdentity;
-  constructor(breach: ResourceLimitBreach, pass: ParsePassIdentity) {
-    super(`parse pass budget exceeded on ${breach.path ?? '?'} at ${pass}: ${breach.observed} > ${breach.declared}`);
-    this.name = 'ParsePassBudgetExceeded';
-    this.breach = breach;
-    this.pass = pass;
-  }
-}
-
-// Charges one named pass for one source; throws `ParsePassBudgetExceeded`
-// when the budget is spent, or a plain Error for an unregistered name.
-export type ParsePassCharge = (pass: ParsePassIdentity) => void;
-
-interface TransientBody {
-  readonly bytes: Uint8Array;
-  readonly text: string;
-}
+// Charges one named pass for one source before it runs. Returns the
+// recorded `maxParsePassesPerSource` breach when the budget is spent (the
+// pass is then not counted, because its traversal must not run), undefined
+// otherwise; throws only for an unregistered name, a programming error.
+export type ParsePassCharge = (pass: ParsePassIdentity) => ResourceLimitBreach | undefined;
 
 // The registry's seven declared limits, in the order `PwbResourceLimits`
 // names them — used only to iterate; it invents no eighth limit.
@@ -219,13 +204,8 @@ export interface ResourceLedger {
   // runs; throws for an unregistered identity.
   chargePass(path: string, pass: ParsePassIdentity): ResourceLimitBreach | undefined;
   passesFor(path: string): number;
-  // The throwing form one stage hands to its pass functions.
+  // `chargePass` bound to one source, the form a stage hands its passes.
   chargeFor(path: string): ParsePassCharge;
-
-  // Transient phase-A bodies for phase B.
-  remember(path: string, objectId: string, body: TransientBody): void;
-  recall(path: string, objectId: string): TransientBody | undefined;
-  release(): void;
 
   summary(): ResourceLedgerSummary;
 }
@@ -244,7 +224,6 @@ export function createResourceLedger(limits: PwbResourceLimits): ResourceLedger 
   let total = 0;
   const passes = new Map<string, number>();
   const byIdentity = new Map<ParsePassIdentity, number>(PARSE_PASS_IDENTITIES.map((pass) => [pass, 0]));
-  const transient = new Map<string, TransientBody>();
   // Undeclared until the observation pipeline calls `declareSourcePopulation`
   // — distinct from a declared population of 0, which is real evidence.
   let sourcePopulation: number | undefined;
@@ -299,17 +278,7 @@ export function createResourceLedger(limits: PwbResourceLimits): ResourceLedger 
     totalBytes: () => total,
     chargePass,
     passesFor: (path) => passes.get(path) ?? 0,
-    chargeFor: (path) => (pass) => {
-      const breach = chargePass(path, pass);
-      if (breach !== undefined) throw new ParsePassBudgetExceeded(breach, pass);
-    },
-    remember: (path, objectId, body) => {
-      transient.set(bodyKey(path, objectId), body);
-    },
-    recall: (path, objectId) => transient.get(bodyKey(path, objectId)),
-    release: () => {
-      transient.clear();
-    },
+    chargeFor: (path) => (pass) => chargePass(path, pass),
     summary: () => {
       const bodiesCounted = bodies.size;
       const totalBytesNow = total;

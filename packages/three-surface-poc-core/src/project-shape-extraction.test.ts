@@ -24,7 +24,7 @@ import {
   type RootIndexExtraction,
   type SourceExtraction,
 } from './project-shape-extraction.js';
-import { ParsePassBudgetExceeded, type ParsePassIdentity } from './resource-ledger.js';
+import type { ParsePassIdentity } from './resource-ledger.js';
 
 // ---------------------------------------------------------------------
 // Fixtures — hand-written in the literal grammar. Composed characters use
@@ -917,6 +917,7 @@ describe('PWB-REQ-006 (amended) — extraction charges one registry pass per cla
     const charged: ParsePassIdentity[] = [];
     const r = extractSource(source, VISION, (pass) => {
       charged.push(pass);
+      return undefined;
     });
     expect(r.kind).toBe('extracted');
     expect(charged).toEqual(['project-account-extraction', 'declared-item-extraction', 'declared-item-extraction']);
@@ -927,7 +928,7 @@ describe('PWB-REQ-006 (amended) — extraction charges one registry pass per cla
     let calls = 0;
     const r = extractSource(source, VISION, (pass) => {
       calls += 1;
-      if (calls === 2) throw new ParsePassBudgetExceeded(breach, pass);
+      return calls === 2 && pass === 'declared-item-extraction' ? breach : undefined;
     });
     expect(r).toEqual({ kind: 'over-limit', path: source.path, classes: [...source.extractionClasses], pass: 'declared-item-extraction', class: 'principle', breach });
     expect('items' in r).toBe(false);
@@ -1126,6 +1127,7 @@ describe('PWB-REQ-006 (amended) — the root index charges one fact-and-preceden
     const charged: ParsePassIdentity[] = [];
     const r = extractSource(root, ROOT, (pass) => {
       charged.push(pass);
+      return undefined;
     });
     expect(charged).toEqual(['fact-and-precedence-extraction']);
     expect(r.kind).toBe('extracted');
@@ -1136,6 +1138,7 @@ describe('PWB-REQ-006 (amended) — the root index charges one fact-and-preceden
     }
     const notRoot = extractSource({ ...root, rule: 'pillar-index' }, ROOT, (pass) => {
       charged.push(pass);
+      return undefined;
     });
     expect(charged).toEqual(['fact-and-precedence-extraction']);
     expect(notRoot.kind === 'extracted' && 'rootIndex' in notRoot).toBe(false);
@@ -1143,9 +1146,7 @@ describe('PWB-REQ-006 (amended) — the root index charges one fact-and-preceden
 
   it('a spent budget yields over-limit naming the root pass with no class and no grammar result', () => {
     const breach = { limit: 'maxParsePassesPerSource' as const, declared: 13, observed: 14, path: root.path };
-    const r = extractSource(root, ROOT, (pass) => {
-      throw new ParsePassBudgetExceeded(breach, pass);
-    });
+    const r = extractSource(root, ROOT, () => breach);
     expect(r).toEqual({ kind: 'over-limit', path: root.path, classes: [], pass: 'fact-and-precedence-extraction', breach });
     expect('rootIndex' in r).toBe(false);
   });

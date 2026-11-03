@@ -17,20 +17,21 @@ import { PWB_SECRET_POLICY, classifyPhaseASeed, compileDetectors } from './conte
 import { indexGitTree, type GitTreeEntry } from './git-tree.js';
 import { observeProjectShape } from './project-shape-observer.js';
 import { createResourceLedger, type ParsePassCharge } from './resource-ledger.js';
+import { createTransientBodies } from './transient-bodies.js';
 import {
   PWB_CONTENT_CLASS,
   PWB_FAILURE_STATES,
   PWB_OBSERVER_IDENTITY,
-  PWB_RESOURCE_LIMITS,
   admitPhaseARead,
   createPhaseASeedReader,
-  gitBlobObjectId,
   observeProjectShapeSources,
   resourceLimitsDigest,
   sourceIdentityOf,
   type ProjectShapeSourceObservation,
-  type PwbResourceLimits,
 } from './project-shape-observation.js';
+import { gitBlobObjectId } from './git-object-reader.js';
+import { PWB_RESOURCE_LIMITS } from './project-shape-observation.js';
+import type { PwbResourceLimits } from './pwb-types.js';
 
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 const REPOSITORY = 'repository:butlers-configured-poc';
@@ -871,14 +872,15 @@ describe('phase A charges one shared resource ledger', () => {
 
   function observeWith(limits: Partial<PwbResourceLimits>) {
     const ledger = createResourceLedger({ ...PWB_RESOURCE_LIMITS, ...limits });
+    const bodies = createTransientBodies();
     const git = runner({});
-    const result = observeProjectShapeSources({ repositoryId: REPOSITORY, revision: 'main', capturedAt: CAPTURED_AT, runGit: git.runGit, classifyPhaseA: chargingClassifier, ledger });
+    const result = observeProjectShapeSources({ repositoryId: REPOSITORY, revision: 'main', capturedAt: CAPTURED_AT, runGit: git.runGit, classifyPhaseA: chargingClassifier, ledger, bodies });
     if (result.kind !== 'observed') throw new Error(`expected observed, got ${result.kind}`);
-    return { observation: result, ledger, calls: git.calls };
+    return { observation: result, ledger, bodies, calls: git.calls };
   }
 
   it('a safe seed costs exactly nine registry passes, each identity once, and its body counts once', () => {
-    const { observation, ledger } = observeWith({});
+    const { observation, ledger, bodies } = observeWith({});
     for (const path of PHASE_A) expect(ledger.passesFor(path), path).toBe(9);
     const summary = ledger.summary();
     expect(summary.passesByIdentity).toEqual({
@@ -901,7 +903,7 @@ describe('phase A charges one shared resource ledger', () => {
     expect(summary.totalBytes).toBe(PHASE_A.reduce((sum, path) => sum + (BYTES.get(path)?.byteLength ?? 0), 0));
     expect(observation.limitBreaches).toEqual([]);
     for (const path of PHASE_A) {
-      const held = ledger.recall(path, oidOf(path));
+      const held = bodies.recall(path, oidOf(path));
       expect(held?.text, path).toBe(TEXTS[path]);
     }
   });
@@ -920,7 +922,7 @@ describe('phase A charges one shared resource ledger', () => {
     // Nothing was discovered from a seed that never reached link discovery;
     // the root itself stays in the population.
     expect(under.observation.manifest.sources.map((source) => source.path).filter((path) => path.startsWith('about/'))).toEqual([root]);
-    expect(under.ledger.recall(root, oidOf(root))).toBeUndefined();
+    expect(under.bodies.recall(root, oidOf(root))).toBeUndefined();
     const at = observeWith({ maxParsePassesPerSource: 9 });
     expect(at.observation.reads.every((read) => read.outcome === 'read')).toBe(true);
     expect(at.observation.limitBreaches).toEqual([]);
