@@ -1,18 +1,11 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { observeCodeStructure } from './code-structure.js';
-
-const cleanups: string[] = [];
-
-afterEach(() => {
-  for (const directory of cleanups.splice(0)) {
-    rmSync(directory, { recursive: true, force: true });
-  }
-});
 
 function git(root: string, args: readonly string[]): string {
   return execFileSync('git', ['-C', root, ...args], {
@@ -22,8 +15,7 @@ function git(root: string, args: readonly string[]): string {
 }
 
 function fixtureRepo(sentinel: string): { root: string; revision: string } {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-code-structure-'));
-  cleanups.push(root);
+  const root = tempDir('syzygy-poc-code-structure-');
   const files: Readonly<Record<string, string>> = {
     'src/app.ts': `export const value = 1; // ${sentinel}\n`,
     'src/nested/lib.py': `def value():\n    return "${sentinel}"\n`,
@@ -127,10 +119,7 @@ describe('code-structure observer', () => {
       git(root, ['add', '-A']);
       git(root, ['commit', '-qm', 'quote and newline paths']);
       revision = git(root, ['rev-parse', 'HEAD']);
-      // fixtureRepo registered the directory for afterEach; keep it for the whole block and remove it in afterAll.
-      cleanups.splice(cleanups.indexOf(root), 1);
     });
-    afterAll(() => rmSync(root, { recursive: true, force: true }));
 
     it('records each such path exactly as committed in an Observed inventory', () => {
       const result = observeCodeStructure({ repoRoot: root, revision, capturedAt: '2026-11-04T00:00:00Z' });
@@ -221,8 +210,7 @@ describe('code-structure observer', () => {
 
   it('keeps an unterminated tail from git for the NUL check to refuse, never dropping it as a record', () => {
     // A `git` on PATH that answers with one record and no final NUL, which real git never emits.
-    const bin = mkdtempSync(join(tmpdir(), 'syzygy-poc-fake-git-'));
-    cleanups.push(bin);
+    const bin = tempDir('syzygy-poc-fake-git-');
     writeFileSync(join(bin, 'git'), `#!/bin/sh\nprintf '100644 blob ${'1'.repeat(40)}      12\\tok.ts'\n`, { mode: 0o755 });
     const path = process.env['PATH'];
     process.env['PATH'] = `${bin}:${path ?? ''}`;
@@ -236,8 +224,7 @@ describe('code-structure observer', () => {
 
   // A `git` on PATH that prints `printfFormat` (a printf format, so a byte is written as an octal escape), for the default runner.
   function observeWithFakeGit(printfFormat: string) {
-    const bin = mkdtempSync(join(tmpdir(), 'syzygy-poc-fake-git-'));
-    cleanups.push(bin);
+    const bin = tempDir('syzygy-poc-fake-git-');
     writeFileSync(join(bin, 'git'), `#!/bin/sh\nprintf '${printfFormat}'\n`, { mode: 0o755 });
     const path = process.env['PATH'];
     process.env['PATH'] = `${bin}:${path ?? ''}`;

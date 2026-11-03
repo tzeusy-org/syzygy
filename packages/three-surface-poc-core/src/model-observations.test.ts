@@ -1,19 +1,11 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { buildPocModel } from './model.js';
 import { BUTLERS_POC_SEEDS } from './poc-seeds.js';
-
-const cleanups: string[] = [];
-
-afterEach(() => {
-  for (const directory of cleanups.splice(0)) {
-    rmSync(directory, { recursive: true, force: true });
-  }
-});
 
 function git(root: string, args: readonly string[]): string {
   return execFileSync('git', ['-C', root, ...args], {
@@ -23,8 +15,7 @@ function git(root: string, args: readonly string[]): string {
 }
 
 function butlersFixtureWithGit(): { repoRoot: string; revision: string } {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-model-obs-'));
-  cleanups.push(root);
+  const root = tempDir('syzygy-poc-model-obs-');
   const files: Readonly<Record<string, string>> = {
     'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md':
       '# design\nStatus: Approved for implementation\n',

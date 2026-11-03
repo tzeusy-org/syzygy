@@ -14,7 +14,7 @@ import { initRun, type InitResult } from './init.js';
 import { preflight } from './preflight.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { runStatus } from './status.js';
-import { tempDir } from '@syzygy/test-kit';
+import { GIT_ENV_NO_MAINTENANCE as GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // syzygy-qkea.4 (S3): every refusal arm of REQ-polaris-generation-033's start gates, with independently prepared fixtures. The records
 // root is a temporary Syzygy checkout whose act records are rendered by the real recorders; the clone is a real Git repository built
@@ -23,12 +23,14 @@ import { tempDir } from '@syzygy/test-kit';
 const sha = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
 const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
 const URL_ = 'https://github.com/redis/redis';
+/** The kit's `git` runs under plain GIT_ENV and would drop the no-maintenance keys, so these helpers keep their own env (syzygy-y733). */
+const gitIn = (cwd: string, ...args: string[]): string => execFileSync('git', ['-C', cwd, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
+
 const REAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 // After the sitting the real-tree preflight reads every act record and sweeps every decisions file (about 4.4 s alone), past Vitest's 5 s default under load; gate-acts.test.ts gives its real-tree tests the same budget (30d2c2c9).
 const TREE_TIMEOUT = 60_000;
-// No automatic gc or maintenance in the fixture repositories (syzygy-y733), through the environment: config would be refused by init.
-const NO_MAINTENANCE = { GIT_CONFIG_COUNT: '2', GIT_CONFIG_KEY_0: 'gc.auto', GIT_CONFIG_VALUE_0: '0', GIT_CONFIG_KEY_1: 'maintenance.auto', GIT_CONFIG_VALUE_1: 'false' };
-const GIT_ENV = { ...process.env, GIT_CONFIG_GLOBAL: '/dev/null', GIT_CONFIG_SYSTEM: '/dev/null', ...NO_MAINTENANCE, GIT_AUTHOR_DATE: '2026-10-01T00:00:00Z', GIT_COMMITTER_DATE: '2026-10-01T00:00:00Z' };
+// The fixture repositories run git under the kit's GIT_ENV_NO_MAINTENANCE (no user or system config, fixed dates, no automatic gc or
+// maintenance: syzygy-y733), through the environment because config would be refused by init.
 
 // The clone: commit A (plain), commit B (adds a .syzygy/ path), commit C (adds an openspec/ path), commit U (never consented by the
 // default records), and off A, commits S (a symlink entry named .syzygy), G (a gitlink entry named openspec) and A2 (plain).
@@ -36,7 +38,7 @@ let origin: string;
 const commits: Record<'A' | 'B' | 'C' | 'U' | 'S' | 'G' | 'A2', string> = { A: '', B: '', C: '', U: '', S: '', G: '', A2: '' };
 beforeAll(() => {
   origin = tempDir('dossier-origin-');
-  const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
+  const git = (...args: string[]): string => gitIn(origin, ...args);
   const commit = (file: string, text: string): string => {
     fs.mkdirSync(path.dirname(path.join(origin, file)), { recursive: true });
     fs.writeFileSync(path.join(origin, file), text);
@@ -230,6 +232,10 @@ describe('init: a run that passes every start gate', () => {
 });
 
 describe('init: the clone holds the consented commit alone (syzygy-qkea.24)', () => {
+  it('runs the fixture git helpers with automatic gc and maintenance off (syzygy-y733)', () => {
+    expect(gitIn(origin, 'config', '--get', 'gc.auto')).toBe('0');
+    expect(gitIn(origin, 'config', '--get', 'maintenance.auto')).toBe('false');
+  });
   const SHAPE = 'the clone must hold the consented commit alone, fetched into an empty repository (git init, git fetch --depth=1 <url> <commit>, git checkout --detach FETCH_HEAD)';
   const REMAKE = 'make it again in a new directory with git init --template= <dir> (an empty template, so no template or global init configuration adds anything), then the printed fetch and checkout';
   // A .git refusal (before any object is read) also says how to make the clone again; a store refusal does not.
@@ -238,7 +244,7 @@ describe('init: the clone holds the consented commit alone (syzygy-qkea.24)', ()
     expect(refusal(run.result)).toMatchObject({ stage: 'clone-shape', reason: objectsRead ? `${reason}; ${SHAPE}` : `${reason}; ${SHAPE}; ${REMAKE}`, objectsRead });
     expect(fs.existsSync(run.stateRoot)).toBe(false);
   };
-  const git = (clone: string, ...args: string[]): string => execFileSync('git', ['-C', clone, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
+  const git = gitIn;
   const dotGit = (clone: string, ...parts: string[]): string => path.join(clone, '.git', ...parts);
   const never = (name: string): string => `.git holds ${name}, which the consented form never leaves there`;
   const packStem = (clone: string): string => {
