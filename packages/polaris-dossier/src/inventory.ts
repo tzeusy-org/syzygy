@@ -4,6 +4,7 @@ import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import { QUOTATION_RULE } from './brief.js';
+import { censusSection, loadCensus, type CensusDeps, type CensusLoad } from './census.js';
 import {
   briefIssuedAt, checkSubject, declaredSessionId, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckedRevision,
   type ExcludedQuotation, type CitedBlob, type SubjectBlock, type SubjectPlan, type SubjectReport, type SubjectRules, type VerifiedQuotation,
@@ -146,6 +147,8 @@ export interface InventoryBriefInput {
   readonly deadlineEnds: number;
   readonly session: number;
   readonly executionRule: ExecutionRule;
+  /** The path-only census of the files screening withholds from the review session (`census.ts`), or why it is Unknown. */
+  readonly census: CensusLoad;
 }
 
 const KIND_GLOSS: Readonly<Record<(typeof INVENTORY_ENTRY_KINDS)[number], string>> = {
@@ -160,8 +163,9 @@ const KIND_GLOSS: Readonly<Record<(typeof INVENTORY_ENTRY_KINDS)[number], string
   other: 'anything else it states that a reader would need',
 };
 
-/** The inventory brief. Pure: built from the run record, the brief record's deadline, Syzygy-authored text and the doctrine file;
- * it carries nothing of any draft. */
+/** The inventory brief. Pure: built from the run record, the brief record's deadline, Syzygy-authored text, the doctrine file and the
+ * path-only census of withheld files (from the pinned tree's listing and the screen in force, no body read); it carries nothing of any
+ * draft. */
 export function renderInventoryBrief(input: InventoryBriefInput): string {
   const { subject, declared } = input;
   const commit = subject.pinnedRevision.commit;
@@ -199,6 +203,8 @@ export function renderInventoryBrief(input: InventoryBriefInput): string {
     '',
     `${INVENTORY_QUOTATION_FORM} Only an \`inferred\` entry carries quotations. ${QUOTATION_RULE}`,
     '',
+    censusSection(input.census, 'inventory-check', 'entry'),
+    '',
     '## Coverage',
     '',
     'Keep `coverage`: the paths you inspected (`inspected`), what you excluded or deferred and why (`excluded`, `deferred`), and why you stopped (`stoppingReason`). Syzygy records it as your self-report, labelled Inferred, never as complete or verified, and reports as findings the paths in it that name no file at the pinned revision.',
@@ -226,15 +232,16 @@ export function renderInventoryBrief(input: InventoryBriefInput): string {
 export type InventoryBriefLoad = { readonly ok: true; readonly text: string; readonly executionRule: ExecutionRule } | { readonly ok: false; readonly stage: 'doctrine'; readonly reason: string };
 
 /** Syzygy's rendering of session `session`'s inventory brief, with the execution rule it carries: always SEC-3's, never the permission. */
-export async function buildInventoryBrief(opened: Extract<OpenedRun, { ok: true }>, session: number, sources: GateSources, now: number): Promise<InventoryBriefLoad> {
+export async function buildInventoryBrief(opened: Extract<OpenedRun, { ok: true }>, session: number, sources: GateSources, now: number, deps: CensusDeps = {}): Promise<InventoryBriefLoad> {
   const doctrine = readSec3(sources.recordsRoot);
   if (!doctrine.ok) return { ok: false, stage: 'doctrine', reason: `SEC-3 cannot be quoted as adopted: ${doctrine.reason}` };
   const executionRule = await decideExecutionRule({
     role: 'inventory', runDir: opened.run, runId: opened.runId, pinnedRevision: opened.subject.pinnedRevision.commit,
     operatorIsOwner: opened.declared.operatorIsOwner, sec3: doctrine.sec3, now, d9: sources.d9, launched: () => launchedMarkerState(opened.run), permitting: { enabled: PERMITTING_ARM_ENABLED },
   });
+  const census = await loadCensus({ clonePath: opened.subject.clone.path, pinned: opened.subject.pinnedRevision.commit, consented: opened.contentClasses, recordsRoot: sources.recordsRoot, now }, deps);
   const text = renderInventoryBrief({
-    runDir: opened.run, runId: opened.runId, subject: opened.subject, declared: opened.declared, deadlineEnds: opened.deadlineEnds, session, executionRule,
+    runDir: opened.run, runId: opened.runId, subject: opened.subject, declared: opened.declared, deadlineEnds: opened.deadlineEnds, session, executionRule, census,
   });
   return { ok: true, text, executionRule };
 }
@@ -250,7 +257,7 @@ export type InventoryBriefResult = Outcome<
 >;
 
 /** `syzygy dossier inventory-brief <run>`: print Syzygy's rendering of the latest inventory session's brief. Writes nothing. */
-export async function inventoryBrief(runDir: string, deps: { readonly sources: GateSources; readonly now: () => number; readonly openReader?: ReverifyOptions['openReader'] }): Promise<InventoryBriefResult> {
+export async function inventoryBrief(runDir: string, deps: { readonly sources: GateSources; readonly now: () => number; readonly openReader?: ReverifyOptions['openReader']; readonly loadScreen?: CensusDeps['loadScreen'] }): Promise<InventoryBriefResult> {
   const now = deps.now();
   const refuse = (stage: string, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]): InventoryBriefResult =>
     ({ ok: false, refusal: { command: 'inventory-brief', outcome: 'refused', stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: BRIEF_DISCLOSURES } });
@@ -258,7 +265,7 @@ export async function inventoryBrief(runDir: string, deps: { readonly sources: G
   if (!opened.ok) return refuse(opened.stage, opened.reason, opened.reasons, opened.refusals);
   const session = latestInventorySession(opened.run);
   if (session === 0) return refuse('session', `no inventory session has been handed over: run \`syzygy dossier session-prompt ${opened.run} inventory\` first`);
-  const built = await buildInventoryBrief(opened, session, deps.sources, now);
+  const built = await buildInventoryBrief(opened, session, deps.sources, now, deps);
   if (!built.ok) return refuse(built.stage, built.reason);
   let stored: string | undefined;
   try { stored = fs.readFileSync(path.join(sessionDirectory(opened.run, session), INVENTORY_BRIEF_FILE), 'utf8'); } catch { stored = undefined; }

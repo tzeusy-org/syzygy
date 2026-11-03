@@ -364,7 +364,7 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     synopsis: 'inventory-brief <run>',
     args: { kind: 'one', noun: RUN },
     run: async ({ positional: [run] }, ctx) => {
-      const result = await inventoryBrief(run!, ctx.deps('openReader'));
+      const result = await inventoryBrief(run!, ctx.deps('openReader', 'loadScreen'));
       if (!result.ok) return ctx.refused(result.refusal);
       if (ctx.json) return ctx.report(result.report, EXIT.clean);
       const { brief, ...summary } = result.report;
@@ -379,7 +379,9 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
       const inventoryFile = values.get('--inventory');
       const result = await checkInventory(run!, inventoryFile === undefined ? {} : { inventoryFile }, ctx.deps('probe', 'openReader', 'loadScreen'));
       if (!result.ok) return ctx.refused(result.refusal);
-      return ctx.report(result.report, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);
+      // The same advice `check` gives the author: the inventory session is told which cited files the review will not see (syzygy-mea.3).
+      const visibility = reviewVisibility(result.report.citedBlobs);
+      return ctx.report(visibility === null ? result.report : { ...result.report, reviewVisibility: visibility }, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);
     },
   },
   'review-packet': {

@@ -195,7 +195,7 @@ export async function sessionPrompt(runDir: string, request: SessionPromptReques
   const session = latestInventorySession(run) + 1;
   const inventoryDir = path.join(run, RUN_LAYOUT.inventory);
   const directory = sessionDirectory(run, session);
-  const built = await buildInventoryBrief(opened, session, deps.sources, now);
+  const built = await buildInventoryBrief(opened, session, deps.sources, now, deps);
   if (!built.ok) return refuse(built.stage, built.reason);
   if (built.executionRule.arm !== 'sec-3') return refuse('execution-rule', 'an inventory brief may carry only SEC-3\'s rule');
   const prompt = inventoryPrompt(runId);
@@ -405,7 +405,7 @@ export async function startSessions(runDir: string, request: Omit<SessionPromptR
   if (!PLAIN_PATH.test(root)) return refuse('sessions-root', `the sessions root ${root} holds a character a printed permission rule cannot carry unquoted (only letters, digits, '.', '_', '-' and '/'); choose a state root whose path has none`);
 
   const inventorySession = latestInventorySession(run) + 1;
-  const built = await buildInventoryBrief(opened, inventorySession, deps.sources, now);
+  const built = await buildInventoryBrief(opened, inventorySession, deps.sources, now, deps);
   if (!built.ok) return refuse(built.stage, built.reason);
   if (built.executionRule.arm !== 'sec-3') return refuse('execution-rule', 'an inventory brief may carry only SEC-3\'s rule');
   const plan: { readonly started: StartedSession; readonly recordFile: string; readonly extra: Readonly<Record<string, unknown>> }[] = [];

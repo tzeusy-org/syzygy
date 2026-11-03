@@ -5,7 +5,7 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { issueBrief } from './brief.js';
-import { checkDraft, deriveFindings, draftRules, reviewVisibility, type CheckDeps, type CheckResult } from './check.js';
+import { blobRedaction, checkDraft, deriveFindings, draftRules, lineRanges, reviewVisibility, type CheckDeps, type CheckResult } from './check.js';
 import { runDossierCli } from './cli.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
@@ -291,13 +291,17 @@ describe('check: a quotation from a body retained as redacted-span', () => {
     }));
     return { run, result: report(await checkDraft(run, {}, deps({ loadScreen: async () => REDACTING }))) };
   };
-  it('verifies a quotation from a line no match or guard touches, and records the redaction count, not the lines', async () => {
+  it('verifies a quotation from a line no match or guard touches, and records the redaction count, detector ids and line ranges, not the lines', async () => {
     const { run, result } = await withQuote('int port = 6379;', 3);
     expect(result.findings).toEqual([]);
     expect(result.excludedContent).toEqual([]);
     expect(result.quotations.map((q) => q.blockId)).toEqual(['intro', 'p1', 'p2']);
-    expect(result.citedBlobs.find((blob) => blob.path === 'src/config.c')).toMatchObject({ outcome: 'admitted', redaction: { redactionClass: 'redacted-span', withheldLines: 2 } });
+    // syzygy-ts8u: the policy's provenance (detector ids, withheld line numbers) beside the count; line 1 matches, line 2 is its guard.
+    expect(result.citedBlobs.find((blob) => blob.path === 'src/config.c')?.redaction).toEqual({
+      redactionClass: 'redacted-span', withheldLines: 2, detectorIds: ['credential-assignment'], withheldLineRanges: [[1, 2]],
+    });
     expect(read(run, 'checks/rev-0.json')).not.toContain(SECRET);
+    expect(read(run, 'checks/rev-0.json')).not.toContain('The port is fixed.');
     if (!REDACTING.ok) throw new Error(REDACTING.why);
     const derived = await deriveFindings(JSON.parse(read(run, 'drafts/rev-0.json')), {
       pinned: commit, screen: REDACTING.screen, reader: openPinnedObjectReader({ gitDir: path.join(origin, '.git'), revision: commit }),
@@ -311,7 +315,10 @@ describe('check: a quotation from a body retained as redacted-span', () => {
     const { result } = await withQuote('last', 6, 'docs/mixed.txt');
     expect(result.findings).toEqual([]);
     expect(result.quotations.find(q => q.blockId === 'p2')).toMatchObject({ path: 'docs/mixed.txt', byteRange: [31, 35] });
-    expect(result.citedBlobs.find(blob => blob.path === 'docs/mixed.txt')?.redaction).toEqual({ redactionClass: 'redacted-span', withheldLines: 3 });
+    // Lines split at CR too, so the match is on line 3 and its guards are lines 2 and 4.
+    expect(result.citedBlobs.find(blob => blob.path === 'docs/mixed.txt')?.redaction).toEqual({
+      redactionClass: 'redacted-span', withheldLines: 3, detectorIds: ['credential-assignment'], withheldLineRanges: [[2, 4]],
+    });
   });
   it('renders a quotation from a withheld guard line Unknown (excluded-content), with no finding', async () => {
     const { result } = await withQuote('The port is fixed.', 2);
@@ -571,5 +578,22 @@ describe('check: the command', () => {
     const a = io();
     expect(await runDossierCli(argv, a.io, { sources: sources(), now: () => LATER })).toBe(2);
     expect(a.err.join('')).toContain(`syzygy dossier: ${message}`);
+  });
+});
+
+// syzygy-ts8u: a redacted body's provenance carries detector ids and withheld line ranges, never matched text.
+describe('redacted-span provenance', () => {
+  it('collapses ascending withheld line numbers into inclusive ranges of consecutive lines', () => {
+    expect(lineRanges([])).toEqual([]);
+    expect(lineRanges([4])).toEqual([[4, 4]]);
+    expect(lineRanges([1, 2])).toEqual([[1, 2]]);
+    expect(lineRanges([2, 3, 4, 9])).toEqual([[2, 4], [9, 9]]);
+    expect(lineRanges([1, 3, 5, 6, 7, 10, 11])).toEqual([[1, 1], [3, 3], [5, 7], [10, 11]]);
+  });
+  it('states the class, the count, the detector ids and the ranges, and copies the ids', () => {
+    const ids = ['credential-assignment', 'credential-bearing-url'];
+    const redaction = blobRedaction([1, 2, 3, 7, 8, 9], ids);
+    expect(redaction).toEqual({ redactionClass: 'redacted-span', withheldLines: 6, detectorIds: ['credential-assignment', 'credential-bearing-url'], withheldLineRanges: [[1, 3], [7, 9]] });
+    expect(redaction.detectorIds).not.toBe(ids);
   });
 });

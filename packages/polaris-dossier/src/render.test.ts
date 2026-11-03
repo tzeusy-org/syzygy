@@ -14,7 +14,7 @@ import { designVerdictSchemaDocument } from './draft-schema.js';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
 import { checkInventory, openRun } from './inventory.js';
-import { NO_RENDERER, renderRun, type DossierRenderer, type DossierRendererInput, type RenderDeps } from './render.js';
+import { NO_RENDERER, redactionDetails, renderRun, type DossierRenderer, type DossierRendererInput, type RenderDeps } from './render.js';
 import { buildStoredDesignPacket, designReviewOfRecord, reviewCheck, reviewPacket } from './review.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
@@ -477,6 +477,13 @@ describe('render', () => {
     expect(pages).toContain('[redacted-span: 1 withheld line(s) in this file]');
     expect(pages).toContain('surviving spans use original Git byte coordinates');
     expect(pages).toContain('each withheld run is marked on its source page; surviving spans retain their original coordinates');
+    // syzygy-ts8u: the discovery row states the body partially retained, with its withheld and total line counts, and its provenance
+    // (the detectors that matched and the withheld line ranges); it never reads as a body not retained.
+    expect(pages).toContain('read at this render, re-hashed, and partially retained by screening as redacted-span: 1 of its 5 line(s) withheld;');
+    expect(pages).toContain('detectors matched: credential-assignment');
+    expect(pages).toContain('withheld lines: 4');
+    expect(pages).not.toContain('not retained');
+    expect(pages).not.toContain('body-not-retained-for-generation');
     const sourcePage = [...readSite(result.report.site).entries()].find(([file, page]) => file.startsWith('sources/') && page.includes('Kestrel keeps every key'))![1];
     expect(sourcePage).toContain(`data-quote-start="${Buffer.byteLength(lines.slice(0, 4).join(''))}"`);
     expect(sourcePage.match(/class="redaction-note"/gu)).toHaveLength(1);
@@ -841,5 +848,14 @@ describe('rendered-design review (S9b)', () => {
     const c = capture();
     expect(await runDossierCli(['render', run, '--json'], c.io, ports)).toBe(0);
     expect(JSON.parse(c.out.stdout).designReview).toEqual({ counts: true, packetSha256, label: 'Observed' });
+  });
+});
+
+// syzygy-ts8u: the discovery row's provenance details for a redacted body.
+describe('redactionDetails', () => {
+  it('names the matched detectors and the withheld ranges, a single line as one number and a run with an en dash', () => {
+    expect(redactionDetails(undefined)).toEqual([]);
+    expect(redactionDetails({ redactionClass: 'redacted-span', withheldLines: 5, detectorIds: ['credential-assignment', 'credential-bearing-url'], withheldLineRanges: [[1, 3], [9, 9], [12, 13]] }))
+      .toEqual(['detectors matched: credential-assignment, credential-bearing-url', 'withheld lines: 1\u20133, 9, 12\u201313']);
   });
 });
