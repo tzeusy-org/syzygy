@@ -464,10 +464,24 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
     const source = readFileSync(join(dir, 'cdp-browser.ts'), 'utf8');
     expect(source.match(/mkdtempSync\(/g)).toHaveLength(1);
     expect(source.match(/const profile = mkdtempSync\(join\(tmpdir\(\), 'syzygy-poc-browser-'\)\);/g)).toHaveLength(1);
-    // Every call that passes a profile passes launchBrowser's `profile`.
-    const calls = [...source.matchAll(/closeDisposableBrowser\(\{[^\n]*?\}, child, (\w+),|closeDisposableBrowser\(connection, child, (\w+),|(?<!=> )removeBrowserProfile\((\w+),/g)];
-    expect(calls.length).toBeGreaterThan(0);
-    for (const call of calls) expect(call[1] ?? call[2] ?? call[3]).toBe('profile');
+    // Every call that passes a profile passes launchBrowser's `profile`, on one line or several.
+    const profileArgument = (name: string, index: number): (string | undefined)[] => [...source.matchAll(new RegExp(`(?<!function\\s)(?<!=>\\s*)\\b${name}\\(`, 'g'))].map((match) => {
+      let depth = 1;
+      const args: string[] = [''];
+      for (const char of source.slice(match.index + match[0].length)) {
+        if (char === '(' || char === '{' || char === '[') depth++;
+        else if (char === ')' || char === '}' || char === ']') depth--;
+        if (depth === 0) break;
+        if (char === ',' && depth === 1) args.push('');
+        else args[args.length - 1] += char;
+      }
+      return args[index]?.trim();
+    });
+    const closes = profileArgument('closeDisposableBrowser', 2);
+    const removals = profileArgument('removeBrowserProfile', 0);
+    expect(closes.length).toBe(3);
+    expect(removals.length).toBe(0);
+    for (const argument of [...closes, ...removals]) expect(argument).toBe('profile');
   });
 
   it('keeps the directory a link names when the profile is not the running user\'s, as in a shared temp directory where another user made it first', () => {
@@ -498,6 +512,15 @@ describe('Chrome singleton directory (syzygy-bpyt.4.11)', () => {
     removeBrowserProfile(profile, { remove: () => undefined, readLink, lstat: lstatWith(link, { uid: lstatSync(link, { bigint: true }).uid + 1n }) });
     expect(readLink).not.toHaveBeenCalled();
     expect(existsSync(join(victim, 'SingletonSocket'))).toBe(true);
+  });
+
+  it('reads the profile\'s link through the readLink it is given', () => {
+    const { profile, victim } = linkedProfile();
+    const link = join(profile, 'SingletonSocket');
+    const readLink = vi.fn((path: string): string => readlinkSync(path));
+    removeBrowserProfile(profile, { remove: () => undefined, readLink });
+    expect(readLink).toHaveBeenCalledExactlyOnceWith(link);
+    expect(existsSync(victim)).toBe(false);
   });
 
   it('keeps a directory made under the same name after the one that was read, as when Chrome exits cleanly and another Chrome follows', () => {
