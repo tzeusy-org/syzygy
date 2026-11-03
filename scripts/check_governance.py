@@ -8176,6 +8176,29 @@ def selftest():
         cases.append((f"CG-26 sentence wrapped at {label} still matches",
                       c.rows[0][0] == "OK"))
 
+    # The other seven `\s+` joints of the claim regex, each wrapped alone.
+    # `before` is the text up to the joint; the next char is the space.
+    words = ("The one hundred and five checks above are the same one "
+             "hundred and five the hosted workflow runs.")
+    for label, before in (
+            ("number/checks", "The one hundred and five"),
+            ("above/are", "The one hundred and five checks above"),
+            ("are/the", "The one hundred and five checks above are"),
+            ("the/same", "The one hundred and five checks above are the"),
+            ("the/hosted", "The one hundred and five checks above are the "
+                           "same one hundred and five the"),
+            ("hosted/workflow", "The one hundred and five checks above are "
+                                "the same one hundred and five the hosted"),
+            ("workflow/runs", "The one hundred and five checks above are "
+                              "the same one hundred and five the hosted "
+                              "workflow")):
+        assert words.startswith(before + " ")
+        claim = before + "\n" + words[len(before) + 1:]
+        c = Cap()
+        cg26_battery_parity(c, status=_st(blk, claim), workflow=wf)
+        cases.append((f"CG-26 sentence wrapped at {label} still matches",
+                      c.rows[0][0] == "OK"))
+
     # Extra tail words after the number are unreadable, not truncated.
     c = Cap()
     cg26_battery_parity(
@@ -8194,7 +8217,8 @@ def selftest():
                            "runs."), workflow=wf)
     cases.append(("CG-26 capitalized count names case in the finding",
                   c.rows[0][0] == "FAIL"
-                  and any("case" in d for d in c.rows[0][4])))
+                  and any("matching only when case is ignored" in d
+                          for d in c.rows[0][4])))
 
     # No count sentence at all is a finding, not a silent skip.
     c = Cap()
@@ -8205,6 +8229,8 @@ def selftest():
                   c.rows[0][0] == "FAIL"
                   and any("no parity count sentence" in d
                           for d in c.rows[0][4])))
+    cases.append(("CG-26 absent count sentence gets no case note",
+                  not any("case is ignored" in d for d in c.rows[0][4])))
     c = Cap()
     cg26_battery_parity(c, status=_st(AGREE, "The 2 checks above are the "
                                              "same 2 the hosted workflow runs."),
