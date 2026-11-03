@@ -24,7 +24,8 @@ def classify(result):
 def selftest():
     ran = lambda **kw: {'selected': 3, 'failed': [], 'fileErrors': [], 'exitCode': 0, **kw}
     cases = [(ran(failed=['t'], exitCode=1), 'killed'), (ran(), 'survived'), (None, 'errored'), (ran(selected=0), 'errored'),
-             (ran(fileErrors=['x.test.ts'], exitCode=1), 'errored'), (ran(timedOut=True, exitCode=None), 'errored'), (ran(exitCode=1), 'errored')]
+             (ran(fileErrors=['x.test.ts'], exitCode=1), 'errored'), (ran(timedOut=True, exitCode=None), 'errored'), (ran(exitCode=1), 'errored'),
+             (ran(failed=['t'], fileErrors=['x.test.ts'], exitCode=1), 'errored'), (ran(fileErrors=['x.test.ts']), 'errored')]
     bad = [(r, want, classify(r)) for r, want in cases if classify(r) != want]
     sys.exit('selftest FAIL: %r' % (bad,)) if bad else print('selftest ok: %d cases' % len(cases))
 
