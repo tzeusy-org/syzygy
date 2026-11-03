@@ -44,6 +44,13 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: '@syzygy/cap1-core',
+          include: ['packages/cap1-core/src/**/*.test.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: '@syzygy/cap1-conformance',
           include: ['packages/cap1-conformance/src/**/*.test.ts'],
         },
