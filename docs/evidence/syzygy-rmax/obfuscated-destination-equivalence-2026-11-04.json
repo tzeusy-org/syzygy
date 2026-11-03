@@ -3,7 +3,7 @@
  "date": "2026-11-04",
  "subject": {
   "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
-  "sha256": "5fc8ada07e08595f80456f491cfadc411eff9f11087e36de55ad8d63f24f8e6f",
+  "sha256": "c8d51daa308e599ed430ede5fa1f58a4e0826b8282901c91ec8ab7b9bed862c2",
   "test": {
    "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
    "sha256": "aef94e2ed8096fdb2415fe74e1fa5d0d30c5aae0cd6479370494b793da024d5a"
@@ -12,10 +12,18 @@
  "oldPattern": "/\\]\\(\\s*<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);/g",
  "newPattern": "/\\]\\(\\s*(?:<?[^)\\s]*&(?:#\\d+|#[xX][0-9a-fA-F]+|[A-Za-z][A-Za-z0-9]*);|((?:[^)\\s\\]]|\\](?!\\(\\s))*))/g, matches with group 1 defined dropped (obfuscatedDestinationMatches)",
  "sweptTree": {
-  "note": "the tracked tree of baseCommit plus exactly the branchFiles below, at these digests; this record is the one file the sweep did not read",
-  "baseCommit": "22238200b8bd69e927530d6f6b89c59c12515b62",
-  "baseCommitReachableFrom": "origin/main",
+  "note": "the tracked tree of baseCommit plus exactly the branchFiles below, at these digests; this record is the one tracked file the sweep did not read",
+  "baseCommit": "a332ff69f14868128a1667b685b258b9add36953",
+  "baseCommitReachableFrom": "origin/main (the #638 merge commit)",
   "branchFiles": [
+   {
+    "path": "docs/evidence/syzygy-bpyt-52/unsafe-url-equivalence-2026-11-04.json",
+    "sha256": "0c5b2d33d329a4341eb5505008270ac18cf5bca78ca74e9de075712fd57364da"
+   },
+   {
+    "path": "docs/evidence/syzygy-rmax/obfuscated-destination-equivalence-2026-11-04.json",
+    "sha256": "17660cda820f2a4c562ac1079e3e3ca229be9c166b24c6e274ad540583066754"
+   },
    {
     "path": "docs/evidence/syzygy-rmax/tools/mutants.py",
     "sha256": "3773b1064c58acc2e0614aee47a64154c9e270c55e12c0a78f73aad3bb95c179"
@@ -30,62 +38,63 @@
    },
    {
     "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
-    "sha256": "5fc8ada07e08595f80456f491cfadc411eff9f11087e36de55ad8d63f24f8e6f"
+    "sha256": "c8d51daa308e599ed430ede5fa1f58a4e0826b8282901c91ec8ab7b9bed862c2"
    },
    {
     "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
     "sha256": "aef94e2ed8096fdb2415fe74e1fa5d0d30c5aae0cd6479370494b793da024d5a"
    }
   ],
-  "provenanceCommit": "f67f0d3023d83dc36ef653ebd2526c17e060a98a",
-  "provenanceNote": "branch commit agent/syzygy-rmax; a rebase-merge may leave it reachable from no ref, so the tree is identified by baseCommit plus branchFiles"
+  "provenanceCommit": "5ec1358a3f1e22d1efa03cc4193fb1236a48344b",
+  "provenanceNote": "branch commit on agent/syzygy-rmax; a rebase-merge may leave it reachable from no ref, so the tree is identified by baseCommit plus branchFiles"
  },
  "sweep": {
   "tool": "docs/evidence/syzygy-rmax/tools/sweep.mjs",
-  "oracle": "old pattern in a worker thread, source and flags asserted, 120 s cap per form",
+  "args": "<root> sweep.json 120000 8",
+  "predicate": "every file of `git ls-files -z`, NUL-bearing files skipped, decoded as strict UTF-8; each compared raw and, where the PWB-REQ-006 mask is not malformed, masked; a form is same when JSON of [{index,value}] from the oracle matchAll equals obfuscatedDestinationMatches; the oracle runs in a worker (source and flags asserted) terminated at the cap",
   "headMatcher": "packages/three-surface-poc-core/dist/git-object-reader.js built from the subject",
   "capMs": 120000,
-  "trackedFiles": 8545,
+  "trackedFiles": 8551,
   "skipped": 13,
-  "comparedForms": 16750,
-  "same": 16750,
+  "comparedForms": 16760,
+  "same": 16760,
   "oracleMatches": 77,
   "filesWithMatches": 5,
   "slowestOld": [
    {
-    "f": "packages/three-surface-poc-core/src/materialization.ts",
+    "f": "docs/evidence/syzygy-bpyt-4-5/daemon-entry-round1-test.json",
     "form": "raw",
-    "bytes": 17299,
-    "oldMs": 17.1,
-    "headMs": 0.02
+    "bytes": 161479,
+    "oldMs": 12.3,
+    "headMs": 0.11
    },
    {
-    "f": "docs/reviews/R-POLARIS-MANIFESTO-NAVIGATION-CODE-RAW.md",
-    "form": "masked",
-    "bytes": 1181,
-    "oldMs": 8.7,
+    "f": "docs/evidence/syzygy-bpyt-8-34/island_differential.py",
+    "form": "raw",
+    "bytes": 4185,
+    "oldMs": 11.5,
     "headMs": 0.01
    },
    {
-    "f": "docs/reviews/R-POLARIS-MANIFESTO-DESIGN-THIRD-RAW.md",
+    "f": "docs/evidence/syzygy-prn1-ci-contract-index-selftest-rule6-2026-10-04.json",
     "form": "masked",
-    "bytes": 1523,
-    "oldMs": 6.7,
+    "bytes": 2163,
+    "oldMs": 11.2,
+    "headMs": 0
+   },
+   {
+    "f": "docs/evidence/guard-pins-notes-review-2026-10-28/r2/tools/proposed_fixes.py",
+    "form": "raw",
+    "bytes": 4705,
+    "oldMs": 9.2,
     "headMs": 0.01
    },
    {
-    "f": "docs/reviews/R-GP-IMPL-POC-CORE-HYGIENE-2-RAW.md",
-    "form": "masked",
-    "bytes": 38317,
-    "oldMs": 5.2,
-    "headMs": 0.03
-   },
-   {
-    "f": "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-GITLINK-1-RAW.md",
+    "f": "docs/evidence/consent-act-family-differential-2026-10-22.json",
     "form": "raw",
-    "bytes": 10221,
-    "oldMs": 5.1,
-    "headMs": 0.03
+    "bytes": 1451973,
+    "oldMs": 7.9,
+    "headMs": 0.83
    }
   ],
   "skippedFiles": [
@@ -165,26 +174,26 @@
    {
     "flood": "10000 x \"](\"",
     "headMatcherMs": 1,
-    "headScanMs": 1,
-    "oldMs": 273.29
+    "headScanMs": 2,
+    "oldMs": 256.81
    },
    {
     "flood": "10000 x \"](<\"",
-    "headMatcherMs": 1.14,
-    "headScanMs": 0.76,
-    "oldMs": 820.85
+    "headMatcherMs": 0.99,
+    "headScanMs": 1,
+    "oldMs": 758.52
    },
    {
     "flood": "10000 x \"](&\"",
     "headMatcherMs": 0,
     "headScanMs": 1,
-    "oldMs": 455.91
+    "oldMs": 444.58
    },
    {
     "flood": "10000 x \"](&a\"",
-    "headMatcherMs": 1,
-    "headScanMs": 0,
-    "oldMs": 896.31
+    "headMatcherMs": 0.95,
+    "headScanMs": 0.94,
+    "oldMs": 853.09
    },
    {
     "flood": "10000 x \"](\" + \"&amp;\"",
@@ -195,38 +204,38 @@
    {
     "flood": "30000 x \"](\"",
     "headMatcherMs": 0,
-    "headScanMs": 2,
-    "oldMs": 3016.95
+    "headScanMs": 1,
+    "oldMs": 2329.27
    },
    {
     "flood": "30000 x \"](<\"",
     "headMatcherMs": 1,
-    "headScanMs": 3,
-    "oldMs": 9766.06
+    "headScanMs": 2,
+    "oldMs": 6588.13
    },
    {
     "flood": "30000 x \"](&\"",
-    "headMatcherMs": 1,
-    "headScanMs": 1.91,
-    "oldMs": 5407.54
+    "headMatcherMs": 0,
+    "headScanMs": 1,
+    "oldMs": 3828.13
    },
    {
     "flood": "30000 x \"](&a\"",
-    "headMatcherMs": 1.12,
-    "headScanMs": 1.85,
-    "oldMs": 9172.35
+    "headMatcherMs": 2,
+    "headScanMs": 2,
+    "oldMs": 6483.33
    },
    {
     "flood": "30000 x \"](\" + \"&amp;\"",
     "headMatcherMs": 0,
     "headScanMs": 1,
-    "oldMs": 1
+    "oldMs": 0
    },
    {
     "flood": "100000 x \"](\"",
-    "headMatcherMs": 3.98,
-    "headScanMs": 4.98,
-    "oldMs": 27960.86
+    "headMatcherMs": 2,
+    "headScanMs": 2,
+    "oldMs": 25216.79
    },
    {
     "flood": "100000 x \"](<\"",
@@ -236,12 +245,12 @@
    {
     "flood": "100000 x \"](&\"",
     "headMatcherMs": 2,
-    "headScanMs": 3
+    "headScanMs": 5
    },
    {
     "flood": "100000 x \"](&a\"",
-    "headMatcherMs": 3,
-    "headScanMs": 5
+    "headMatcherMs": 2.99,
+    "headScanMs": 6
    },
    {
     "flood": "100000 x \"](\" + \"&amp;\"",
@@ -249,13 +258,13 @@
     "headScanMs": 2
    }
   ],
-  "note": "old pattern measured at 100,000 only for the bare '](' flood; the ending-in-entity rows match at the first start so the old pattern is fast there"
+  "note": "old pattern measured at 100,000 only for the bare '](' flood; the ending-in-entity rows match at the first start, so the old pattern is fast there. An earlier run on the pre-rebase branch measured the old pattern at 0.27 s, 3.0 s and 28 s for 10,000, 30,000 and 100,000 '](' (the figures in the test and reader comments)"
  },
  "mutants": {
   "tool": "docs/evidence/syzygy-rmax/tools/mutants.py",
   "ranAt": {
-   "commit": "f67f0d3023d83dc36ef653ebd2526c17e060a98a",
-   "subjectSha256": "5fc8ada07e08595f80456f491cfadc411eff9f11087e36de55ad8d63f24f8e6f"
+   "commit": "5ec1358a3f1e22d1efa03cc4193fb1236a48344b",
+   "subjectSha256": "c8d51daa308e599ed430ede5fa1f58a4e0826b8282901c91ec8ab7b9bed862c2"
   },
   "judge": "the differential rows (-t 'matches the replaced pattern'); a mutant they do not kill is run against the timing rows (-t linear)",
   "killed": 10,
