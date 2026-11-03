@@ -4,7 +4,7 @@ Date: 2026-11-03
 
 Owner's words given at (UTC): 2026-11-03T06:17:55Z
 
-Recorded at (UTC): 2026-11-03T06:51:26Z
+Recorded at (UTC): 2026-11-03T06:58:26Z
 
 Owner: Tzeusy
 
@@ -31,10 +31,31 @@ A1 audit-record identity (RFC3-16(b) item 9): **explicitly absent**
 
 ## Ceremony
 
-The owner was presented the packet at `.syzygy/governance/contracts/candidates/public-source-screening-scope-v5/OWNER-DECISION-PACKET.md`, which by
-design carries no digest. Its one question offers four variants and decline;
-the package manifest has four rows, one per variant, and the owner named
-exactly one. The act takes this phrase, whose argument is the chosen row:
+How the owner came to the choice:
+
+- Earlier on 2026-11-03, the owner chose "Draft v5 with B+C+D" in a structured
+  question. The plain owner direction
+  `OWNER-DIRECTION-REDIS-SCREENING-NEXT-2026-11-03.md` records that choice. When this act was recorded, that
+  direction was on branch `agent/redis-screening-a-20261103` (PR #596), not on
+  `main`.
+- [Observed, by the lead session] Immediately before the act, the lead
+  session gave the owner a chat summary.
+  - It named the variants `t`, `b`, `bd` and `bcd` as cumulative, each adding
+    to the one before, and recommended `bcd`.
+  - It said T is in every variant: EC and PGP key headers, credential URLs in
+    any scheme, and more token formats.
+  - It gave the reviews: round 1 REVISE, repaired once; round 2 CONFIRM WITH
+    EXCEPTIONS, notes only.
+  - It gave the words the owner would use: "Sign screening scope version 5, variant bcd".
+- [Unknown] Whether the owner opened the packet. The packet
+  `.syzygy/governance/contracts/candidates/public-source-screening-scope-v5/OWNER-DECISION-PACKET.md` was available on PR #599 at
+  `b2f25d9c74b0b4ad46448dd5d1ef02948ef76819`, but there is no evidence the owner opened it.
+  - By design the packet carries no digest.
+  - Its one question offers four variants and decline.
+  - The package manifest has four rows, one per variant.
+
+The owner named exactly one variant. The act takes this phrase, whose
+argument is the chosen row:
 
 ```text
 APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY: e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b
@@ -48,19 +69,20 @@ it):
 
 The words name the variant, and the variant names the manifest row.
 
-What stood before the owner at signing:
+The branch head when the act was performed:
 
-- [Observed, by the lead session, not by this recorder] Right after the
-  owner's words, at 2026-11-03T06:17:55Z as that session printed it, the
-  session ran `git ls-remote origin agent/screening-scope-v5-20261103`. It returned
-  `b2f25d9c74b0b4ad46448dd5d1ef02948ef76819`. That commit's manifest file hashes to `b9fdbc164952af642bb50aa2b82a21481a0322cccbb65fd0b4be35b73190a80f`,
-  the digest the confirmation review's head binds (below).
-- Two later pushes to that branch added variants beyond the chosen scope.
-  They came after the words, and were reverted before this record. They bind
-  nothing.
-- [Observed, by the lead session] The owner read the lead session's summary
-  of the four cleared variants (`t`, `b`, `bd`, `bcd`), not the pull request
-  text.
+- [Observed: `gh api repos/tzeusy-org/syzygy/activity?ref=refs/heads/agent/screening-scope-v5-20261103`]
+  The branch received these pushes:
+  - `9daf9e0480b96d3cf09efebc7a357f6e21acda45` to `b2f25d9c74b0b4ad46448dd5d1ef02948ef76819` at 2026-11-03T06:10:42Z;
+  - `b2f25d9c74b0b4ad46448dd5d1ef02948ef76819` to `d2b48c50f6e76c74eb0063c27ea970c96f8e94d8` at 2026-11-03T06:27:05Z;
+  - `d2b48c50f6e76c74eb0063c27ea970c96f8e94d8` to `8c1832cabf5f01030f746266983936d69bdec613` at 2026-11-03T06:28:38Z.
+- The words came at 2026-11-03T06:17:55Z, so the head on GitHub at the act was
+  `b2f25d9c74b0b4ad46448dd5d1ef02948ef76819`. The lead session's own `git ls-remote`, run right after
+  the words, returned the same commit [Observed, by the lead session].
+- That commit's manifest file hashes to `b9fdbc164952af642bb50aa2b82a21481a0322cccbb65fd0b4be35b73190a80f`. That is the digest
+  the confirmation review's head binds (below).
+- The two later pushes added variants beyond the chosen scope. They were
+  reverted before this record, and they bind nothing.
 
 Chosen variant: `bcd`; its manifest row's digest is the exact digest
 above.

@@ -105,8 +105,16 @@ DISPOSITION_REL = PKG / "ROUND-2-DISPOSITIONS.md"
 #: owner's words). Recorded as that session's observation, not re-checked here: after a rebase-merge the
 #: commit is reachable from no ref. Its manifest file hashed to the raw-2 head digest when recorded.
 SIGNING_BRANCH = "agent/screening-scope-v5-20261103"
+SIGNING_PR = 599
 SIGNING_HEAD = "b2f25d9c74b0b4ad46448dd5d1ef02948ef76819"
-SIGNING_HEAD_READ_AT = "2026-11-03T06:17:55Z"
+#: The branch's push log (GitHub activity API): REVIEWED_HEAD -> SIGNING_HEAD -> LATER_PUSHES, at PUSH_TIMES.
+REVIEWED_HEAD = "9daf9e0480b96d3cf09efebc7a357f6e21acda45"
+LATER_PUSHES = ("d2b48c50f6e76c74eb0063c27ea970c96f8e94d8", "8c1832cabf5f01030f746266983936d69bdec613")
+PUSH_TIMES = ("2026-11-03T06:10:42Z", "2026-11-03T06:27:05Z", "2026-11-03T06:28:38Z")
+#: The plain owner direction that chose "Draft v5 with B+C+D", cited by name (not on main when recorded).
+DIRECTION_NAME = "OWNER-DIRECTION-REDIS-SCREENING-NEXT-2026-11-03.md"
+DIRECTION_BRANCH = "agent/redis-screening-a-20261103"
+DIRECTION_PR = 596
 #: The commit the confirming review read (provenance; binding is by the manifest digest in the raw's head).
 FROZEN_SUBJECT: str | None = "9daf9e0480b96d3cf09efebc7a357f6e21acda45"
 #: SHA-256 of each file the confirming review read, at FROZEN_SUBJECT, by `--freeze-table 9daf9e04`.
@@ -401,10 +409,31 @@ A1 audit-record identity (RFC3-16(b) item 9): **explicitly absent**
 
 ## Ceremony
 
-The owner was presented the packet at `{PACKET_REL.as_posix()}`, which by
-design carries no digest. Its one question offers four variants and decline;
-the package manifest has four rows, one per variant, and the owner named
-exactly one. The act takes this phrase, whose argument is the chosen row:
+How the owner came to the choice:
+
+- Earlier on {date}, the owner chose "Draft v5 with B+C+D" in a structured
+  question. The plain owner direction
+  `{DIRECTION_NAME}` records that choice. When this act was recorded, that
+  direction was on branch `{DIRECTION_BRANCH}` (PR #{DIRECTION_PR}), not on
+  `main`.
+- [Observed, by the lead session] Immediately before the act, the lead
+  session gave the owner a chat summary.
+  - It named the variants `t`, `b`, `bd` and `bcd` as cumulative, each adding
+    to the one before, and recommended `bcd`.
+  - It said T is in every variant: EC and PGP key headers, credential URLs in
+    any scheme, and more token formats.
+  - It gave the reviews: round 1 REVISE, repaired once; round 2 CONFIRM WITH
+    EXCEPTIONS, notes only.
+  - It gave the words the owner would use: "{OWNER_WORDS[0]}".
+- [Unknown] Whether the owner opened the packet. The packet
+  `{PACKET_REL.as_posix()}` was available on PR #{SIGNING_PR} at
+  `{SIGNING_HEAD}`, but there is no evidence the owner opened it.
+  - By design the packet carries no digest.
+  - Its one question offers four variants and decline.
+  - The package manifest has four rows, one per variant.
+
+The owner named exactly one variant. The act takes this phrase, whose
+argument is the chosen row:
 
 ```text
 {phrase_for(act, argument)}
@@ -418,19 +447,20 @@ it):
 
 The words name the variant, and the variant names the manifest row.
 
-What stood before the owner at signing:
+The branch head when the act was performed:
 
-- [Observed, by the lead session, not by this recorder] Right after the
-  owner's words, at {SIGNING_HEAD_READ_AT} as that session printed it, the
-  session ran `git ls-remote origin {SIGNING_BRANCH}`. It returned
-  `{SIGNING_HEAD}`. That commit's manifest file hashes to `{manifest_sha}`,
-  the digest the confirmation review's head binds (below).
-- Two later pushes to that branch added variants beyond the chosen scope.
-  They came after the words, and were reverted before this record. They bind
-  nothing.
-- [Observed, by the lead session] The owner read the lead session's summary
-  of the four cleared variants (`t`, `b`, `bd`, `bcd`), not the pull request
-  text.
+- [Observed: `gh api repos/tzeusy-org/syzygy/activity?ref=refs/heads/{SIGNING_BRANCH}`]
+  The branch received these pushes:
+  - `{REVIEWED_HEAD}` to `{SIGNING_HEAD}` at {PUSH_TIMES[0]};
+  - `{SIGNING_HEAD}` to `{LATER_PUSHES[0]}` at {PUSH_TIMES[1]};
+  - `{LATER_PUSHES[0]}` to `{LATER_PUSHES[1]}` at {PUSH_TIMES[2]}.
+- The words came at {words_at}, so the head on GitHub at the act was
+  `{SIGNING_HEAD}`. The lead session's own `git ls-remote`, run right after
+  the words, returned the same commit [Observed, by the lead session].
+- That commit's manifest file hashes to `{manifest_sha}`. That is the digest
+  the confirmation review's head binds (below).
+- The two later pushes added variants beyond the chosen scope. They were
+  reverted before this record, and they bind nothing.
 
 Chosen variant: `{variant}`; its manifest row's digest is the exact digest
 above.
@@ -529,6 +559,9 @@ def expected(act: Act, argument: str, date: str, words: str, inp: Inputs, instan
         raise ValueError(f"words-at {words_at} is not after the version-4 act's {inp.predecessor_instant}")
     if instant < words_at:
         raise ValueError(f"instant {instant} is before the owner gave the words at {words_at}")
+    if not PUSH_TIMES[0] < words_at < PUSH_TIMES[1]:
+        raise ValueError(f"words-at {words_at} is outside the push window {PUSH_TIMES[0]}..{PUSH_TIMES[1]} "
+                         f"in which {SIGNING_HEAD} was the branch head")
     if VARIANT_OF_WORDS[words] != variant:
         raise ValueError(f"the owner words {words!r} name variant {VARIANT_OF_WORDS[words]}, "
                          f"not the argument's variant {variant}")
@@ -855,13 +888,28 @@ def selftest() -> int:
                         and record.count(f"At {WORDS_OK} the owner gave these words") == 1
                         and block.count(f"`{WORDS_OK}`") == 1))
         results.append(("record names the chosen variant", "Chosen variant: `bcd`; its manifest row's" in record))
-        results.append(("record states the signing head, its read instant and the owner's reading, labelled Observed",
-                        record.count(f"`{SIGNING_HEAD}`") == 1
-                        and record.count(f"git ls-remote origin {SIGNING_BRANCH}") == 1
-                        and f"at {SIGNING_HEAD_READ_AT} as that session printed it" in record
-                        and record.count("[Observed, by the lead session") == 2
-                        and "not the pull request\n  text" in record
-                        and f"hashes to `{digest(real_manifest)}`" in record))
+        results.append(("the ceremony gives the true account: direction by name, the lead's summary, packet opening Unknown",
+                        "The owner was presented the packet" not in record
+                        and f"`{DIRECTION_NAME}` records that choice" in record
+                        and f"branch `{DIRECTION_BRANCH}` (PR #{DIRECTION_PR}), not on\n  `main`" in record
+                        and "[Observed, by the lead session] Immediately before the act" in record
+                        and "as cumulative, each adding\n    to the one before, and recommended `bcd`" in record
+                        and "round 1 REVISE, repaired once; round 2 CONFIRM WITH\n    EXCEPTIONS, notes only" in record
+                        and f'the owner would use: "{OWNER_WORDS[0]}"' in record
+                        and "[Unknown] Whether the owner opened the packet" in record
+                        and f"available on PR #{SIGNING_PR} at\n  `{SIGNING_HEAD}`" in record))
+        results.append(("the head at the act follows from the push log and the words instant",
+                        f"[Observed: `gh api repos/tzeusy-org/syzygy/activity?ref=refs/heads/{SIGNING_BRANCH}`]" in record
+                        and f"`{REVIEWED_HEAD}` to `{SIGNING_HEAD}` at {PUSH_TIMES[0]};" in record
+                        and f"`{SIGNING_HEAD}` to `{LATER_PUSHES[0]}` at {PUSH_TIMES[1]};" in record
+                        and f"`{LATER_PUSHES[0]}` to `{LATER_PUSHES[1]}` at {PUSH_TIMES[2]}." in record
+                        and f"so the head on GitHub at the act was\n  `{SIGNING_HEAD}`" in record
+                        and f"manifest file hashes to `{digest(real_manifest)}`" in record))
+        results.append(("words given outside the signing head's push window refused",
+                        _raises(lambda: expected(act, real_rows["bcd"], DATE_OK, words, real_inp, INSTANT_OK,
+                                                 "2026-11-03T06:27:05Z"), "push window")
+                        and _raises(lambda: expected(act, real_rows["bcd"], DATE_OK, words, real_inp, INSTANT_OK,
+                                                     "2026-11-03T06:10:42Z"), "push window")))
         results.append(("the bcd effect names T, B, D and C from the bytes",
                         "`private-key-header`, `credential-url-any-scheme`, `known-token-formats-extended`" in record
                         and "8 folded root names" in record and "places tls.md, modules/modules.md of" in record

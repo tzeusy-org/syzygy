@@ -1735,7 +1735,7 @@ APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY: e8a2f4f375fcf3ce1db753a5a3
 | Manifest | `.syzygy/governance/contracts/candidates/public-source-screening-scope-v5/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt`, SHA-256 `b9fdbc164952af642bb50aa2b82a21481a0322cccbb65fd0b4be35b73190a80f` |
 | Review outcome | `docs/reviews/R-HA5B-SCREENING-SCOPE-V5-2-RAW.md`: `CONFIRM WITH EXCEPTIONS`, its head bound to the manifest file |
 | Owner's words given (UTC) | `2026-11-03T06:17:55Z` |
-| Recorded at (UTC) | `2026-11-03T06:51:26Z` |
+| Recorded at (UTC) | `2026-11-03T06:58:26Z` |
 | Recording | `.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md`; annotated tag `pwb-approve-policy-public-source-scope-v5-signed-2026-11-03` on the commit carrying these records |
 
 Effective status: this one record is **effective owner authority —
