@@ -1,0 +1,31 @@
+# R-GP-IMPL-OWNER-ACT-PROSE-CENSUS-1 — CC-REV-1 implementation review of syzygy-bpyt.6.10 (PR 616), round 1
+Verdict: CONFIRM WITH EXCEPTIONS
+Reviewed commit: de318b1cc3a7cd8871c08d8e0ee96a4892a74b8e
+Subject: pull request 616 diff (gh pr diff 616) sha256 6e10cb221da129472725bef18adc8e85058a2598abd8496e051101091d18ebb1
+
+Reviewer context: fresh; read the bead (bd show syzygy-bpyt.6.10), the four changed files and the code they exercise (owner-act-record.ts, body-read-authority.ts, governance-inputs.ts). Checkout detached at the head above, npm ci, tsc -b of the three projects named in the script header.
+
+## Findings
+
+E1 (low, wording, evidence report). The report's Outcome says "[Inferred] ... moving [the tag] to a commit carrying altered bytes would admit them ... This report did not test a moved tag." The parser-isolated reading is that case: it keeps the recording tag resolved over the altered bytes (test: verdictOf with reading 'isolated' sets tree.taggedRecords to the altered text, so tagExists and the blob byte comparison both pass). Its verdicts (limits-removed, withdrawal-appended, effect-appended-grant all valid) are therefore Observed for a moved tag, modulo the real git ref lookup, which tagExists/readGitBlob perform and no test runs against a real moved ref. Change the sentence to say the isolated reading is the moved-tag case, with only the git ref step unexercised. A separate moved-tag characterization test would duplicate the isolated reading and is not worth adding; a scratch-repo test using real git tag -f would add only coverage of two already-tested helpers.
+
+E2 (low, scope disclosure). The script's loader-faithful reading is a splice, not the production path: it calls resolveRecordingTag directly and substitutes the result into inputs built once from the unaltered load, so lifecycle (lifecycleFor over actIdentityOf of the record text) is not recomputed for the altered text. The script header says "resolves the tag as the loader does", which is true of the tag step only. The tests do go through the real loadBodyReadAuthorityInputs (verdictOf -> loaderFor(tree)) over an injected fake git tree, so the 0/169 is reproduced through the production loader function in the census tests. The two paths agree on every count. The report should say that the 0/169 figure is checked two ways (script splice; tests through the loader with injected git) and that neither reads a real tag move.
+
+## Notes (no action required)
+
+N1. No production behaviour change [Observed]. Changed paths: apps/three-surface-poc/src/governance-inputs.test.ts, docs/evidence/syzygy-bpyt-6-10/ (json, md), scripts/measure_owner_act_parser_recognition.mjs. The only path under a src directory is the test file. The script writes only the --out file.
+N2. Counts reproduce [Observed]. Rebuilt and re-ran the script at the head: totals records 3, nonBlankLines 169 (56, 61, 52), append ignored parser-isolated 127 (42, 47, 38), delete 109 (37, 42, 30), loader-faithful 0 and 0. The generated record's script digest, four subject digests and per-record sections (including per-line rows) equal the committed JSON. Only measuredOn.commit differs: committed value 0cbb2b25 (test commit, ancestor of the head; the head commit only adds the evidence), re-run value de318b1c. Rule 11 is met: the record names its commit, the script digest and the subject digests. Denominator: the 169 is every non-blank line of the three PWB_ACT_RECORDS; the three records are the whole set the gate evaluates.
+N3. 0/169 loader-faithful is true by construction [Inferred]. sameBytes in resolveRecordingTag fails on any byte difference, so every append and delete on a tagged record reads recording-tag-mismatched. It is correct and useful as the statement that the byte check is the sole guard, but it is not an independent finding about the parser.
+N4. Tests pass [Observed]. governance-inputs.test.ts: 51 tests passed (the +25 are the new block: 1 baseline, 18 verdict rows, 3 census rows, 3 single tests). PR states Tests +25 ~0 -0. Hosted checks node (unit, integration, e2e) SUCCESS.
+N5. Rule 6, per predicate (run by this reviewer; each mutant applied to one src fragment, the test file run, source restored, git status clean afterwards):
+- M1 owner-act-record.ts tag-line pattern anchored with a trailing end-of-line: killed (baseline and loader tests fail, because the real records carry trailing text on that line; the new tag-line fail-open test is covered by the same kill).
+- M2 owner-act-record.ts Supersession none pattern end-anchored: killed (same reason, real records carry trailing prose).
+- M3 body-read-authority.ts recording-tag resolved check removed: killed; the new loader-faithful rows fail (consent/policy/registry limits-removed, withdrawal-appended, effect-appended-grant, selection-replaced).
+- M4 body-read-authority.ts scope-anchor check disabled: killed; the effect-widened rows, the "refused only because anchors dropped" test and all three census tests fail.
+- M5 owner-act-record.ts scope field made malformed when the text carries a grant or withdrawal sentence (a plausible tightening): killed; withdrawal-appended and effect-appended-grant rows and the FAIL-OPEN test fail (11 failed, 40 passed). So the new tests do flip under the tightenings the owner question lists.
+M1 and M2 are killed partly by existing tests; the new tests add no isolated kill for those two predicates (a tightening that still accepts the real records would be needed), which is acceptable for a characterization pin.
+N6. Drift risks [Inferred]. The test block's ALTERATIONS are copies of PROSE_ALTERATIONS (package boundary), with no test tying the copies to the originals; the literal verdict and census numbers also depend on the live bytes of the three act records, so a lawful amendment or supersession of one record will fail them by design.
+N7. The owner question (GP-Q0) is framed, with options (a) to (d), and nothing is implemented. No act argument or truncated digest is quoted.
+
+## Disposition request
+Repair E1 and E2 as prose edits to the evidence report (and the script header sentence if wanted); no code change is needed. Prose repair retires this confirmation per rule 10 only if the author asks for it to be re-bound.
