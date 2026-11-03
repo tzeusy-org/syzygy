@@ -311,18 +311,23 @@ function ownedByRunningUser(entry: BigIntStats): boolean {
  * Scope of the guarantee: it is for a private profile (`mkdtemp`, mode 0700) in a sticky or
  * private temp directory. Each owner check holds at the instant of its `lstat`, and the
  * profile is judged as the entry itself (a symlink another user made is theirs, whatever it
- * points at), never after resolving it. Two windows for a same-user racer stay open: between
- * the owner `lstat` and `readlink` of the link, and between the identity `lstat` and the
- * `rmSync` in removeChromeSingletonDirectory (the latter measured: a same-user racer
- * removed the replacement in 12 of 1000 trials). Another account cannot use either in a
- * private or sticky temp directory. Refusing a group- or world-writable profile is not
- * done (syzygy-bpyt.4.28 item 3): mkdtemp makes the profile 0700 and a writable one is
- * already not private, so the owner checks above are the whole rule. */
-function chromeSingletonDirectory(profile: string, lstat: ReadEntry = readEntry): ChromeSingletonDirectory | undefined {
+ * points at), never after resolving it. The owner check covers the final path component
+ * only, not its mode. A window for a same-user racer stays open between the owner `lstat`
+ * and `readlink` of the link; the window before `rmSync` is in
+ * removeChromeSingletonDirectory. [Inferred from permission semantics: the link lives in a
+ * 0700 profile, so only the running user or root can swap it.]
+ *
+ * Refusing a group- or world-writable profile is not done (syzygy-bpyt.4.28 item 3). That
+ * holds because `launchBrowser`'s `mkdtempSync` (mode 0700, even under umask 0) is the sole
+ * creator of a profile: every path reaching here from production code was made by it. A
+ * caller of the exported `removeBrowserProfile` or `closeDisposableBrowser` that passes a
+ * profile made any other way (a shared, non-sticky scratch directory, say) is outside the
+ * guarantee and must add the mode refusal first. A test pins the callers and the one creator. */
+function chromeSingletonDirectory(profile: string, lstat: ReadEntry = readEntry, readLink: (path: string) => string = readlinkSync): ChromeSingletonDirectory | undefined {
   const link = join(profile, 'SingletonSocket');
   try {
     if (!ownedByRunningUser(lstat(profile)) || !ownedByRunningUser(lstat(link))) return undefined;
-    const path = dirname(readlinkSync(link));
+    const path = dirname(readLink(link));
     if (!isChromeSingletonDirectory(path)) return undefined;
     const { dev, ino } = lstat(path);
     return { path, dev, ino };
@@ -331,7 +336,12 @@ function chromeSingletonDirectory(profile: string, lstat: ReadEntry = readEntry)
 
 /** Removes the directory only if it is named like Chrome's, directly under the temp
  * directory, a real directory (never a link), the running user's and the very directory that
- * was read. A failure leaves it: tidying must not fail the run. */
+ * was read. A failure leaves it: tidying must not fail the run.
+ *
+ * Window for a same-user racer: between the identity `lstat` below and the `rmSync`, the
+ * entry can be replaced; measured, a same-user racer removed the replacement in 12 of 1000
+ * trials. [Inferred from permission semantics: another account cannot rename or remove the
+ * directory in a sticky or private temp directory, so only a same-user racer reaches it.] */
 function removeChromeSingletonDirectory(recorded: ChromeSingletonDirectory, lstat: ReadEntry = readEntry): void {
   if (!isChromeSingletonDirectory(recorded.path)) return;
   try {
@@ -346,6 +356,8 @@ export interface BrowserProfileRemoval extends TemporaryDirectoryCleanupOptions 
   /** How entries are read, `lstatSync` with exact numbers by default. A test answers another
    * owner or device for one path, which a file system cannot be made to do without privilege. */
   readonly lstat?: (path: string) => BigIntStats;
+  /** How the profile's link is read, `readlinkSync` by default. A test counts the reads. */
+  readonly readLink?: (path: string) => string;
 }
 
 // Test seam: exported for the tests; production code reaches it only inside this file.
@@ -355,7 +367,7 @@ export function removeBrowserProfile(
   profile: string,
   options: BrowserProfileRemoval = {},
 ): void {
-  const singleton = options.singleton ?? chromeSingletonDirectory(profile, options.lstat);
+  const singleton = options.singleton ?? chromeSingletonDirectory(profile, options.lstat, options.readLink);
   removeTemporaryDirectory(profile, options);
   if (singleton !== undefined) removeChromeSingletonDirectory(singleton, options.lstat);
 }
