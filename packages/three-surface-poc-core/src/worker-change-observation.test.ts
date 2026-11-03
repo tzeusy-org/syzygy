@@ -1,18 +1,10 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { observeWorkerChange, type WorkerChangeSeam } from './worker-change-observation.js';
-
-const cleanups: string[] = [];
-
-afterEach(() => {
-  for (const directory of cleanups.splice(0)) {
-    rmSync(directory, { recursive: true, force: true });
-  }
-});
 
 function git(root: string, args: readonly string[]): string {
   return execFileSync('git', ['-C', root, ...args], {
@@ -41,8 +33,7 @@ function writeSeam(root: string, sourceContents: string): void {
  * remote (`refs/remotes/origin/*`) — no real network remote is required
  * since the observer only ever reads local ref state. */
 function initRepo(): string {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-worker-change-'));
-  cleanups.push(root);
+  const root = tempDir('syzygy-poc-worker-change-');
   writeSeam(root, 'x = 1\n');
   git(root, ['init', '-q', '-b', 'main']);
   git(root, ['config', 'gc.auto', '0']);
@@ -73,8 +64,7 @@ describe('worker-change observer', () => {
   });
 
   it('returns Unknown when the default branch cannot be resolved', () => {
-    const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-worker-change-noorigin-'));
-    cleanups.push(root);
+    const root = tempDir('syzygy-poc-worker-change-noorigin-');
     writeSeam(root, 'x = 1\n');
     git(root, ['init', '-q', '-b', 'main']);
     git(root, ['config', 'gc.auto', '0']);

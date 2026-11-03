@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import {
   buildOperatorReportedTestArtifactRecord,
@@ -33,16 +33,8 @@ const cpuMsSince = (from: NodeJS.CpuUsage): number => { const { user, system } =
 const TAG_SCAN_CPU_MS = 1_500; // the `<testsuite\s+([^>]*?)\/?>` scan 169e38db replaced
 const ATTRIBUTE_SCAN_CPU_MS = 3_000; // the `(\w+)="…"` attribute scan 169e38db replaced
 
-const cleanups: string[] = [];
-afterEach(() => {
-  for (const directory of cleanups.splice(0)) {
-    rmSync(directory, { recursive: true, force: true });
-  }
-});
-
 function stateDir(): string {
-  const dir = mkdtempSync(join(tmpdir(), 'syzygy-poc-test-artifact-'));
-  cleanups.push(dir);
+  const dir = tempDir('syzygy-poc-test-artifact-');
   return dir;
 }
 
