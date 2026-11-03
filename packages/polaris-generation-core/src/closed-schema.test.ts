@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { check, checkShape, handle, list, object, refs, text } from './closed-schema.js';
+import { check, checkShape, handle, list, object, one, refs, text } from './closed-schema.js';
+import { disposition } from './draft-model.js';
 
 // The one closed-schema checker's hardening against untrusted values, in both of its forms (syzygy-bpyt.8.5): `check` throws
 // the first breach's code, `checkShape` lists breaches by path. Expected codes and messages are literals.
@@ -51,4 +52,38 @@ describe('closed-schema checker', () => {
     ]);
     expect(checkShape({ root: list(text, 0, 2), defs: {} }, ['a', 'a', 'a'])).toEqual([{ path: '$', detail: 'must hold 0 to 2 items; holds 3' }]);
   });
+
+  it('refuses an array that carries a named key beside its items', () => {
+    const ids = Object.assign(['s1'], { x: 1 });
+    expect(code({ ...good(), ids })).toBe('invalid-array');
+    expect(checkShape(shape, { ...good(), ids })).toEqual([{ path: '$.ids', detail: 'must be an array' }]);
+  });
+
+  // R-GP-IMPL-CLOSED-SCHEMA-1 F1: the pre-dedup `check` ran each oneOf arm under `try {} catch {}`, so an arm that throws
+  // is a miss. Outside a oneOf the same throw escapes, as it always has.
+  const protoArr = (items: unknown[]): unknown => Object.setPrototypeOf([...items], Object.prototype);
+  const thrown = (f: () => unknown): string => { try { f(); return 'ok'; } catch (error) { return `${(error as Error).constructor.name}: ${(error as Error).message}`; } };
+
+  it('check counts an arm that throws as a miss', () => {
+    expect(thrown(() => check(disposition, { kind: 'produced', assetIds: protoArr(['a1']) }))).toBe('Error: invalid-disposition');
+    expect(thrown(() => check(disposition, { kind: 'omitted', reason: 'r', references: protoArr(['a1']) }))).toBe('Error: invalid-disposition');
+    expect(thrown(() => check(record, { ...good(), ids: protoArr(['s1']) }))).toMatch(/^TypeError: /);
+  });
+
+  it('checkShape walks every arm, so a later arm that throws throws even after an earlier arm passes', () => {
+    const plainList = list(handle, 1);
+    expect(thrown(() => checkShape({ root: { oneOf: [plainList, refs()] }, defs: {} }, protoArr(['a1'])))).toMatch(/^TypeError: /);
+    expect(thrown(() => checkShape({ root: { oneOf: [refs(), plainList] }, defs: {} }, protoArr(['a1'])))).toMatch(/^TypeError: /);
+  });
+
+  it('checkShape names no form for a proxy, whatever its target claims', () => {
+    const forms = { root: { oneOf: [object({ kind: one('a'), n: text }), object({ kind: one('b'), m: text })] }, defs: {} };
+    expect(checkShape(forms, new Proxy({ kind: 'a', n: 3 }, {}))).toEqual([{ path: '$', detail: 'matches none of the permitted forms (kind a; kind b)' }]);
+    expect(checkShape(forms, { kind: 'a', n: 3 })).toEqual([{ path: '$.n', detail: 'must be a string' }]);
+  });
+
+  it('freezes the shared string parts', () => {
+    expect([Object.isFrozen(text), Object.isFrozen(handle)]).toEqual([true, true]);
+  });
 });
+

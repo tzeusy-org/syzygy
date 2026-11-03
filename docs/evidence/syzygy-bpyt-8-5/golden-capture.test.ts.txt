@@ -79,8 +79,14 @@ function mutants(seed: unknown): [string, unknown][] {
         out.push([`${label}:empty`, setAt(clone(seed), at, (p, k) => { p[k] = []; })]);
         if (at.length <= 2) out.push([`${label}:many`, setAt(clone(seed), at, (p, k) => { p[k] = Array.from({ length: 6000 }, () => clone(p[k][0] ?? 'a1')); })]);
         out.push([`${label}:reverse`, setAt(clone(seed), at, (p, k) => { p[k].reverse(); })]);
+        // Round 2 (R-GP-IMPL-CLOSED-SCHEMA-1 F1, N1): the same valid items under a plain object's prototype, so the repeat
+        // test is reached; and a named key beside full items, so only the key count refuses it.
+        out.push([`${label}:protoArr`, setAt(clone(seed), at, (p, k) => { p[k] = Object.setPrototypeOf(p[k], Object.prototype); })]);
+        out.push([`${label}:named`, setAt(clone(seed), at, (p, k) => { p[k].zz = 'a1'; })]);
       } else {
         out.push([`${label}:reorder`, setAt(clone(seed), at, (p, k) => { p[k] = Object.fromEntries(Object.entries(p[k]).reverse()); })]);
+        // Round 2 (N2): a proxy over the valid object, so a form is named only if the proxy guard is absent.
+        out.push([`${label}:proxied`, setAt(clone(seed), at, (p, k) => { p[k] = new Proxy(p[k], {}); })]);
       }
     }
   }

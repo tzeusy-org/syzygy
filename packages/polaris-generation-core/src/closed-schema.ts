@@ -21,8 +21,9 @@ export type Schema =
 export interface SchemaWithDefs { readonly root: Schema; readonly defs: Readonly<Record<string, Schema>> }
 
 // The string parts declare their arm: importers spread an `enum` into them, and an imported const keeps its declared type.
-export const text: Extract<Schema, { type: 'string' }> = { type: 'string', minLength: 1, maxLength: 8000 };
-export const handle: Extract<Schema, { type: 'string' }> = { type: 'string', minLength: SOURCE_ID_MIN_LENGTH, maxLength: SOURCE_ID_MAX_LENGTH, pattern: SOURCE_ID_PATTERN };
+// Both are shared by reference across every schema built here, so they are frozen: an importer cannot move them all at once.
+export const text: Extract<Schema, { type: 'string' }> = Object.freeze({ type: 'string', minLength: 1, maxLength: 8000 });
+export const handle: Extract<Schema, { type: 'string' }> = Object.freeze({ type: 'string', minLength: SOURCE_ID_MIN_LENGTH, maxLength: SOURCE_ID_MAX_LENGTH, pattern: SOURCE_ID_PATTERN });
 export const list = (items: Schema, minItems = 0, maxItems = 200): Extract<Schema, { type: 'array' }> => ({ type: 'array', items, minItems, maxItems });
 /** A distinct list of handles. */
 export const refs = (minItems = 1, maxItems = 200): Extract<Schema, { type: 'array' }> => ({ ...list(handle, minItems, maxItems), uniqueItems: true });
@@ -82,18 +83,31 @@ function visit(walk: Walk, reference: Schema, value: unknown, at: string): void 
   const schema = resolve(walk.defs, reference);
   if ('$ref' in schema) throw new Error('draft-schema: a definition is itself a reference');
   if ('oneOf' in schema) {
-    const attempts = [];
-    for (const arm of schema.oneOf) {
+    if (walk.firstFailure) {
+      // `check` takes the first arm that passes, and an arm that throws, not only one that records a breach, is a miss:
+      // the pre-dedup checker ran each arm as `try { check(arm, value); return; } catch {}`. Without the catch, an array
+      // with a plain object's prototype whose items pass throws a TypeError from the repeat test instead of being refused
+      // as `invalid-disposition` (R-GP-IMPL-CLOSED-SCHEMA-1 F1).
+      for (const arm of schema.oneOf) {
+        const found: Walk = { ...walk, failures: [] };
+        try { visit(found, arm, value, at); } catch { continue; }
+        if (found.failures.length === 0) return;
+      }
+      fail(walk, 'invalid-disposition', at, 'matches none of the permitted forms');
+      return;
+    }
+    // `checkShape` walks every arm, even after one passes, as the pre-dedup `checkDraftShape` did, so an arm that throws
+    // throws whatever arm passed before it (unreachable from parsed JSON; kept unchanged).
+    const attempts = schema.oneOf.map((arm) => {
       const found: Walk = { ...walk, failures: [] };
       visit(found, arm, value, at);
-      if (found.failures.length === 0) return;
-      attempts.push({ arm: resolve(walk.defs, arm), found: found.failures });
-    }
+      return { arm: resolve(walk.defs, arm), found: found.failures };
+    });
+    if (attempts.some((attempt) => attempt.found.length === 0)) return;
     // Report against the form the value names by its single-valued fields (label, basis, kind), or say it names none.
-    const named = walk.firstFailure ? [] : attempts.filter((attempt) => discriminatorsMatch(attempt.arm, value));
+    const named = attempts.filter((attempt) => discriminatorsMatch(attempt.arm, value));
     if (named.length === 1) { for (const failure of named[0]!.found) fail(walk, failure.code, failure.path, failure.detail); return; }
-    if (walk.firstFailure) fail(walk, 'invalid-disposition', at, 'matches none of the permitted forms');
-    else fail(walk, 'invalid-disposition', at, `matches none of the permitted forms (${schema.oneOf.map(describeForm).join('; ')})`);
+    fail(walk, 'invalid-disposition', at, `matches none of the permitted forms (${schema.oneOf.map(describeForm).join('; ')})`);
     return;
   }
   if (schema.type === 'string') {

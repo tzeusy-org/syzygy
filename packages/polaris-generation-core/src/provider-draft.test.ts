@@ -182,6 +182,14 @@ describe('provider-local intermediate validation', () => {
     expect(called).toBe(false);
     expect(() => validateStage('inventory', { entries: new Array(2) }, context)).toThrow('invalid-array');
   });
+
+  it('refuses an array with a plain object\'s prototype under a disposition as invalid-disposition, not a TypeError', () => {
+    // R-GP-IMPL-CLOSED-SCHEMA-1 F1: its handles pass, so the repeat test throws inside the oneOf arm; the arm is a miss.
+    const assetIds = Object.setPrototypeOf(['intro'], Object.prototype) as unknown;
+    const entry = { id: 'i1', sourceIds: ['s1'], statement: 'Purpose', kind: 'purpose', disposition: { kind: 'produced', assetIds } };
+    const outcome = (() => { try { validateStage('inventory', { entries: [entry] }, context); return 'ok'; } catch (error) { return `${(error as Error).constructor.name}: ${(error as Error).message}`; } })();
+    expect(outcome).toBe('Error: invalid-disposition');
+  });
   it('versions only the draft stages at v2', () => {
     expect(['inventory', 'plan', 'author', 'edit', 'repair', 'fidelity'].map(stage => stageSchema(stage as 'author').version)).toEqual([
       'polaris-provider-inventory-v1', 'polaris-provider-plan-v1', 'polaris-provider-author-v2',
