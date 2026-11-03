@@ -94,7 +94,7 @@ their cells; the current populations are [`census.json`](census.json) (§2).
 
 | Family | Requirements | Scenarios | Identities |
 |---|---|---|---|
-| CAP1-REQ | 42 | 47 | 001–006, 010–016, 020–023, 030–038, 040–046, 050–053, 060–064 |
+| CAP1-REQ | 42 | 47 [57 since 2026-11-04, the consent overlay composed, §13] | 001–006, 010–016, 020–023, 030–038, 040–046, 050–053, 060–064 |
 | POC-REQ | 24 | 24 | 001–004, 010–013, 020–022, 030–032, 040–043, 050–053, 060–061 |
 | PWB-REQ | 17 | 44 [51 since 2026-10-03, §10] | 001–007, 010–016, 020–022 |
 | REQ-polaris-generation (effective) | 31 [as of 2026-10-02] | 182 [as of 2026-10-02] | 001–031 [as of 2026-10-02] |
@@ -394,3 +394,42 @@ sign-off's recording commit by `--regenerate`, never by hand.
   unchanged. Third method: not run [Unknown].
 - **Results** [Observed, `--check` at the recording commit]: R1 to R5 and
   R7 pass; R6 reports the two PWB pins of §10, unchanged.
+
+## 13. The CAP1 consent overlay composed — 2026-11-04
+
+Not a new outcome: the composition of an outcome recorded 2026-10-15,
+which the census had not yet read (`syzygy-5oqc`).
+
+- **The outcome** [Observed]: `cap1-trusted-bootstrap-consent` v1.0,
+  adopted by version tag 2026-10-15. Record:
+  `.syzygy/governance/decisions/CAP1-TRUSTED-BOOTSTRAP-CONSENT-SIGNOFF-v1.0.md`.
+  Its `spec.md` fully replaces CAP1-REQ-011 and CAP1-REQ-046 in the bound
+  Capability 1 file, which stays unedited.
+- **What the checker does** [Observed]: R3 composes the CAP1 population
+  only when that record (package, version 1.0 and its tag line) terminates
+  the overlay; otherwise it counts the bound file alone and fails. Method A
+  parses both files by regular expression and replaces by identifier;
+  method B splices the overlay's blocks into the bound text line by line
+  and parses the result with the line state machine, and the spliced bytes
+  must hash to the `composed_spec_sha256` the adoption builder recorded in
+  the change's `GOVERNING-DEPENDENCIES.json`. Both refuse an overlay that
+  replaces anything but exactly those two identifiers, names one the bound
+  file lacks, carries any level-2 heading but `## MODIFIED Requirements` or
+  any other delta heading, a U+FEFF, a carriage return, or a non-canonical
+  or fenced requirement header. The literal census is 011: 8 and 046: 4
+  scenarios, totals 42 / 57. R4 requires that JSON record's
+  `requirement_count` and source digests and the `ADOPTION.md` figure to
+  agree with the composed census, and scans the change's directory for
+  identifier mentions; R5 requires its `openspec/README.md` row and
+  `PROJECT-STATUS.md` to cite the record.
+- **Figures**: CAP1 42 requirements / 57 scenarios (47 in the bound file
+  alone); [`census.json`](census.json) regenerated. POC, PWB and Polaris
+  unchanged. Third method: the adoption builder's own figure in
+  `ADOPTION.md`, a separate program, agrees (R4).
+- **Known residue**: `ADOPTION.md` still says the checker "still counts
+  the bound file alone for CAP1"; it is generated and tag-bound, so it is
+  read as of 2026-10-15 and not edited.
+- **Results** [Observed, `--check` at the recording commit]: R1 to R5 and
+  R7 pass; R6 reports the two PWB pins of §10, unchanged. Mutants: the
+  `cap1-overlay-*` rows of
+  [`selftest-witnesses.json`](selftest-witnesses.json).

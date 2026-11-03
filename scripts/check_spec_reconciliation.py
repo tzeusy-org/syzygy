@@ -55,7 +55,17 @@ Predicates, each printed with its denominator:
   regular expressions; Polaris composes by ID line in one and by requirement
   name in the other). Both must agree, identifiers must be unique, and the
   result must equal the hard-coded literal census below and the committed
-  `census.json`. A Polaris addition is any other change whose
+  `census.json`. CAP1 is the effective composition (`syzygy-5oqc`): the
+  bound file with the adopted `cap1-trusted-bootstrap-consent` overlay's
+  blocks for exactly CAP1-REQ-011 and 046 in place of its own, composed only
+  while its declared v1.0 sign-off record terminates it. Method A parses
+  both files by regular expression and replaces by identifier; method B
+  splices the overlay's blocks into the bound text by lines, parses that
+  with the state machine, and requires the spliced bytes to hash to the
+  `composed_spec_sha256` the adoption builder recorded. Both refuse any
+  other replaced set, a name the bound file lacks, any level-2 heading but
+  `## MODIFIED Requirements` or other delta heading, U+FEFF, a carriage
+  return, and a non-canonical or fenced requirement header. A Polaris addition is any other change whose
   `specs/polaris-generation/spec.md` is installed (by a version-tagged
   sign-off's builder, or by the install step after an adoption record); it
   is signed when R1 finds its terminal record. It may only ADD requirements
@@ -75,13 +85,17 @@ Predicates, each printed with its denominator:
 - R4 generated rows: each generated dependency file's source digest and
   requirement count match the spec; every full or continuation-form
   identifier mention in the five change directories, each signed addition's
-  directory and the default route pages resolves to the population; the CAP1
+  directory, the CAP1 overlay's directory and the default route pages
+  resolves to the population; the CAP1 overlay's generated
+  `GOVERNING-DEPENDENCIES.json` (requirement count, source digests) and its
+  `ADOPTION.md` figure agree with the composed census; the CAP1
   and PWB capability coverage tables carry the whole population; and each
   signed addition's generated union equals its spec's warrants (a FAIL,
   since that union is generated and never signed).
 - R5 default routes: `openspec/README.md` has one row per tracked change
   directory naming its terminal record; `PROJECT-STATUS.md` cites every
-  terminal record (a signed addition's sign-off record included) and states
+  terminal record (a signed addition's and the CAP1 overlay's sign-off
+  records included; the overlay's row must name its record) and states
   the Polaris composition the census computes.
 - R6 behaviour-contract pins (report only, never green): the observer
   registry entry and the secret-classification policy pin a PWB `spec.md`
