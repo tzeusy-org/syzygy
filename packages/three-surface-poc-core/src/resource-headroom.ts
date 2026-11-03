@@ -17,7 +17,7 @@ import {
 // registry's and stay known. The block carries no capture instant, so the
 // response identity's content key covers it and no exclusion is added.
 
-export type ResourceHeadroomId = `resource-headroom:${keyof PwbResourceLimits}`;
+type ResourceHeadroomId = `resource-headroom:${keyof PwbResourceLimits}`;
 
 export interface ResourceHeadroomEntry {
   readonly id: ResourceHeadroomId;
@@ -27,9 +27,9 @@ export interface ResourceHeadroomEntry {
   readonly remaining: ResourceLimitObservation;
 }
 
-export const RESOURCE_COST_ID = 'resource-cost' as const;
+const RESOURCE_COST_ID = 'resource-cost' as const;
 
-export type ResourceCost =
+type ResourceCost =
   | ({ readonly id: typeof RESOURCE_COST_ID; readonly state: 'observed' } & ResourceLedgerCostRecord)
   | { readonly id: typeof RESOURCE_COST_ID; readonly state: 'unknown'; readonly reason: string };
 
@@ -39,7 +39,7 @@ export interface ResourceHeadroom {
   readonly cost: ResourceCost;
 }
 
-export function resourceHeadroomId(limit: keyof PwbResourceLimits): ResourceHeadroomId {
+function resourceHeadroomId(limit: keyof PwbResourceLimits): ResourceHeadroomId {
   return `resource-headroom:${limit}`;
 }
 

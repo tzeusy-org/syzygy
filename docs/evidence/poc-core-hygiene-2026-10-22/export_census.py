@@ -26,15 +26,22 @@ non-test files under the prefix use it, none outside), public (a non-test file
 outside the prefix uses it). --raw skips comment stripping (comments then count
 as uses), the cross-check for the lexer.
 
-Known limits of the lexer. Both under-count uses, so an export in use could be
-classed `dead`:
+Known limits of the lexer. Each can UNDER-count or OVER-count uses, so the
+class of an export that a limit touches could be wrong in either direction (a
+`dead` or `self-only` export lifted into `test-only`, `internal` or `public`,
+or an export in use classed `dead`):
   - a regex literal after the `)` of a control header, as in
     `if (a) /\\/*/.test(s); X /* c */`, is read as division, so the `/*` inside it
-    opens a comment that swallows code up to a later `*/`;
-  - a regex literal after `export default` is read as division the same way.
-Before trusting a `dead` or `self-only` class on a corpus that may contain
-either form, cross-check the identifier counts against TypeScript's
-createSourceFile printed with removeComments.
+    opens a comment that swallows code up to a later `*/` (under-count);
+  - the same misread of a regex that holds a quote, as in
+    `if (a) /'/.test(s); // X`, opens a string, and the lexer keeps string text,
+    comments included (over-count);
+  - a regex literal after `export default` is read as division the same way
+    (under- or over-count by the same two routes).
+Before trusting ANY class on a corpus that may contain one of these forms,
+cross-check the identifier counts against TypeScript's createSourceFile printed
+with removeComments (`lexer_vs_printer.py`, same directory, which does this over
+every tracked code file and records the denominator).
 """
 import json
 import re
@@ -120,6 +127,7 @@ def strip_comments(src: str) -> str:
     return ''.join(out)
 
 
+CODE_EXT = ('.ts', '.mts', '.mjs', '.js', '.cjs')
 TOKEN = re.compile(r'[A-Za-z_$][\w$]*')
 
 
@@ -156,6 +164,10 @@ def selftest() -> int:
         ('comment after braces inside a template expression is a comment', "const s = `${ {a: 1}.a /* X */ } tail`; X", 'X', 1),
         ('slash inside a regex character class does not end the regex', "const r = /[/]\\/*x/; X /* c */", 'X', 1),
         ('division after a parenthesis is not a regex', "const q = (a) / b; // X\nX", 'X', 1),
+        # A backtick inside a template expression opens a nested template; text after
+        # the expression's closing brace is template text again, not code.
+        ('nested template inside a template expression is entered', "const s = `${`/* X`}`; X", 'X', 2),
+        ('text after a template expression close is template text', "const g = `${d}/*`; X /* c */", 'X', 1),
     ]
     failed = 0
     for label, src, name, expected in cases:
@@ -243,8 +255,7 @@ def classification_selftest() -> int:
 def census(tree: Path, prefix: str, barrels: set[str], raw: bool) -> tuple[list[dict], list[str], int]:
     """Return (rows, star re-export files, declaring file count) for one tree."""
     files = subprocess.run(['git', 'ls-files', '-z'], cwd=tree, capture_output=True, check=True).stdout.decode().split('\0')
-    code_ext = ('.ts', '.mts', '.mjs', '.js', '.cjs')
-    code = [f for f in files if f.endswith(code_ext) and not f.startswith('node_modules/')]
+    code = [f for f in files if f.endswith(CODE_EXT) and not f.startswith('node_modules/')]
     is_test = lambda f: bool(re.search(r'\.test\.(ts|mjs|js)$', f))
     text = {f: (tree / f).read_text(encoding='utf-8', errors='replace') for f in code}
     counts = {f: count_tokens(text[f] if raw else strip_comments(text[f])) for f in code}

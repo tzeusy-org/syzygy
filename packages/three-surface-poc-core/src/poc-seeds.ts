@@ -10,7 +10,7 @@ import type { WorkerChangeSeam } from './worker-change-observation.js';
  * the graph names.  Observation facts still come from the builder's explicit
  * inputs and observers.
  */
-export type PocSeedEntityRole =
+type PocSeedEntityRole =
   | 'project'
   | 'capability'
   | 'intent'
@@ -21,7 +21,7 @@ export type PocSeedEntityRole =
   | 'runtime'
   | 'unknown-region';
 
-export type PocSeedRelationshipRole =
+type PocSeedRelationshipRole =
   | 'project-to-capability'
   | 'capability-to-intent'
   | 'capability-to-code'
@@ -52,7 +52,7 @@ export interface PocSeedRelationship {
   readonly statement: string;
 }
 
-export interface PocSeedArtifacts {
+interface PocSeedArtifacts {
   readonly design: string;
   readonly proposal: string;
   readonly requirement: string;
@@ -60,7 +60,7 @@ export interface PocSeedArtifacts {
   readonly test: string;
 }
 
-export interface PocSeedIntentMarkers {
+interface PocSeedIntentMarkers {
   readonly design: readonly string[];
   readonly proposal: readonly string[];
   readonly requirement: readonly string[];

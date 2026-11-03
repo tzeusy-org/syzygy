@@ -74,7 +74,7 @@ export class ParsePassBudgetExceeded extends Error {
 // when the budget is spent, or a plain Error for an unregistered name.
 export type ParsePassCharge = (pass: ParsePassIdentity) => void;
 
-export interface TransientBody {
+interface TransientBody {
   readonly bytes: Uint8Array;
   readonly text: string;
 }

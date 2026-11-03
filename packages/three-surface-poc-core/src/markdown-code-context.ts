@@ -110,7 +110,7 @@ function splitLines(text: string): { readonly lines: string[]; readonly terminat
 // must not act on the ranges. `fences` and `spans` count the contexts that closed, so an unclosed fence has a range and no count.
 export type CodeContextRange = readonly [start: number, end: number];
 
-export interface CodeContextRecognition {
+interface CodeContextRecognition {
   readonly fenceRanges: readonly CodeContextRange[];
   readonly spanRanges: readonly CodeContextRange[];
   readonly fences: number;

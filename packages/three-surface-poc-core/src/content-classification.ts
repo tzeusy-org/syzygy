@@ -52,8 +52,8 @@ export type SecretDetector =
   | { readonly id: string; readonly kind: 'regular-expression'; readonly pattern: string; readonly flags: string };
 
 export const REDACTION_CLASSES = ['excluded-artifact', 'redacted-span', 'unclassifiable-excluded'] as const;
-export type RedactionClass = (typeof REDACTION_CLASSES)[number];
-export type EmittedRedactionClass = 'excluded-artifact' | 'unclassifiable-excluded';
+type RedactionClass = (typeof REDACTION_CLASSES)[number];
+type EmittedRedactionClass = 'excluded-artifact' | 'unclassifiable-excluded';
 
 export interface SecretClassificationPolicy {
   readonly policyId: string;
@@ -127,7 +127,7 @@ export const PWB_SECRET_POLICY: SecretClassificationPolicy = {
 // detectors cannot be compiled cannot screen, so compilation fails loudly
 // rather than admitting anything; the observer maps that to Observer failed.
 
-export interface CompiledDetector {
+interface CompiledDetector {
   readonly id: string;
   readonly matches: (text: string) => boolean;
 }
@@ -217,7 +217,7 @@ export const EXCLUSION_REASONS = [
   'unknown-extraction-class',
   'parse-failure',
 ] as const;
-export type ExclusionReason = (typeof EXCLUSION_REASONS)[number];
+type ExclusionReason = (typeof EXCLUSION_REASONS)[number];
 
 // Reasons a source stays counted but could not be read at all. These are not
 // exclusions: the policy never saw a body. Closed.
@@ -281,7 +281,7 @@ export type ClassificationRecord =
       readonly unknown: FixedUnknown;
     };
 
-export type SourceClassification =
+type SourceClassification =
   | { readonly kind: 'classified'; readonly text: string; readonly record: ClassificationRecord & { readonly outcome: 'classified' } }
   | { readonly kind: 'withheld'; readonly record: ClassificationRecord & { readonly outcome: 'excluded' | 'unavailable' } };
 
@@ -351,7 +351,7 @@ function isManifestMember(manifest: Pick<ProjectShapeSourceManifest, 'sources'>,
   return true;
 }
 
-export interface ClassifyInput {
+interface ClassifyInput {
   readonly policy: SecretClassificationPolicy;
   readonly detectors: readonly CompiledDetector[];
   readonly manifest: Pick<ProjectShapeSourceManifest, 'sources'>;
@@ -480,7 +480,7 @@ export interface ClassificationCounts {
   readonly byRedactionClass: Readonly<Record<EmittedRedactionClass, number>>;
 }
 
-export interface ClassifiedPopulation<T> {
+interface ClassifiedPopulation<T> {
   readonly policyId: string;
   readonly policyVersion: string;
   readonly results: readonly ClassifiedSource<T>[];
@@ -488,7 +488,7 @@ export interface ClassifiedPopulation<T> {
   readonly counts: ClassificationCounts;
 }
 
-export type PathOnlyDerivation<T> = (source: ManifestSource) => { readonly kind: 'derived'; readonly value: T } | { readonly kind: 'body' };
+type PathOnlyDerivation<T> = (source: ManifestSource) => { readonly kind: 'derived'; readonly value: T } | { readonly kind: 'body' };
 
 export function classificationCounts(records: readonly ClassificationRecord[]): ClassificationCounts {
   const exclusions = records.flatMap((record) => (record.outcome === 'excluded' ? [record.exclusion] : []));

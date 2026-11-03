@@ -19,18 +19,18 @@ import { decodeUtf8, isRecord } from '@syzygy/support';
 
 export type ArtifactField = { readonly kind: 'present'; readonly value: unknown } | { readonly kind: 'missing' };
 
-export interface ConsentArtifactFields {
+interface ConsentArtifactFields {
   readonly observingProject: ArtifactField;
   readonly configuredRepository: ArtifactField;
   readonly contentClass: ArtifactField;
 }
 
-export interface PolicyArtifactFields {
+interface PolicyArtifactFields {
   readonly policyOwningProject: ArtifactField;
   readonly policyVersion: ArtifactField;
 }
 
-export interface RegistryArtifactFields {
+interface RegistryArtifactFields {
   readonly governanceHome: ArtifactField;
   readonly project: ArtifactField;
   readonly repository: ArtifactField;
@@ -38,7 +38,7 @@ export interface RegistryArtifactFields {
   readonly writeSurface: ArtifactField;
 }
 
-export type ArtifactParse<T> =
+type ArtifactParse<T> =
   | { readonly kind: 'parsed'; readonly fields: T }
   | { readonly kind: 'undecodable'; readonly detail: string };
 

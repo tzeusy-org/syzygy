@@ -1,0 +1,571 @@
+{
+ "tool": "export_gate.py",
+ "treeCommit": "695bf136da35dc9d94bf4abf80c709f3d4244adb",
+ "trackedChangesInTree": false,
+ "prefix": "packages/three-surface-poc-core/src/",
+ "barrels": [
+  "packages/three-surface-poc-core/src/index.ts"
+ ],
+ "denominators": {
+  "trackedFiles": 8377,
+  "declaringFiles": 39,
+  "exportsScanned": 422,
+  "classes": {
+   "dead": 1,
+   "internal": 128,
+   "public": 160,
+   "self-only": 45,
+   "test-only": 88
+  },
+  "selfOnlyOrDead": 46,
+  "nonCodeFilesRead": 7518,
+  "nonCodeFilesSkippedAsBinary": 12,
+  "machineRecordRules": [
+   "tool output or tool source under docs/evidence",
+   "pursuit data under docs/pursuits"
+  ]
+ },
+ "parseTreeCrossCheck": {
+  "parseTreeExports": 422,
+  "censusExports": 422,
+  "inCensusOnly": [],
+  "inParseTreeOnly": [],
+  "starReexportFiles": [],
+  "agrees": true
+ },
+ "citerMethodsAgree": true,
+ "exceptions": [
+  {
+   "file": "packages/three-surface-poc-core/src/body-read-authority.ts",
+   "name": "COMMON_INVALID_CASES",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-GP-IMPL-POC-CORE-HYGIENE-1-RAW.md",
+    "docs/reviews/R-GP-IMPL-POC-CORE-HYGIENE-2-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 8
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/code-structure.ts",
+   "name": "CodeStructureFileEntry",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/three-surface-poc-block-provenance-amendment/IMPACT-LEDGER.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/code-structure.ts",
+   "name": "ObserveCodeStructureInput",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-2-RAW.md",
+    "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/content-classification.ts",
+   "name": "UnavailableReason",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/effect-authority.ts",
+   "name": "Foreclosure",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/04-CLAUSE-MIGRATION-MATRIX.md",
+    ".syzygy/governance/contracts/candidates/matrix-rows/RFC-0003-rows.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/markdown-code-context.ts",
+   "name": "CodeContextMask",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/VET-GP-FOLLOWUPS-2-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 3
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/materialization.ts",
+   "name": "MATERIALIZATION_TARGET_BEAD_PREFIX",
+   "class": "self-only",
+   "citers": [
+    "docs/design/POLARIS-M4-OWNER-LOOP-FUNNEL.md",
+    "docs/reviews/R-POLARIS-M4-OWNER-LOOP-FUNNEL-2-RAW.md",
+    "docs/reviews/R-POLARIS-M4-OWNER-LOOP-FUNNEL-RAW.md",
+    "docs/reviews/R-POLARIS-M5-AGENT-BRIEFING-FUNNEL-2-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 3
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/materialization.ts",
+   "name": "MaterializationGoverningIntent",
+   "class": "self-only",
+   "citers": [
+    "docs/design/POLARIS-M4-OWNER-LOOP-FUNNEL.md",
+    "docs/design/POLARIS-M5-AGENT-BRIEFING-FUNNEL.md",
+    "docs/reviews/R-POLARIS-M5-AGENT-BRIEFING-FUNNEL-2-RAW.md",
+    "docs/reviews/R-POLARIS-M5-AGENT-BRIEFING-FUNNEL-3-RAW.md",
+    "docs/reviews/R-POLARIS-M5-AGENT-BRIEFING-FUNNEL-4-RAW.md",
+    "docs/reviews/R-POLARIS-M5-AGENT-BRIEFING-FUNNEL-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "name": "BuildPocModelInput",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-2-RAW.md",
+    "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-3-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "name": "PocUnknownSubject",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/DESIGN.md",
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/fixtures/wire-cases.json"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "name": "WalkthroughJudgmentPresentation",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/model.ts",
+   "name": "WalkthroughReadinessPresentation",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+   "name": "FACT_FAMILIES",
+   "class": "dead",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/pwb-registry-currency-briefing-amendment/REVIEW-BRIEF.md",
+    ".syzygy/governance/contracts/candidates/pwb-registry-currency-briefing-amendment/SEMANTIC-DELTA.md",
+    "docs/design/POLARIS-M8-PORTABILITY-FUNNEL.md",
+    "docs/reviews/R-GP-IMPL-POC-CORE-HYGIENE-1-RAW.md",
+    "docs/reviews/R-GP-IMPL-POC-CORE-HYGIENE-2-RAW.md",
+    "docs/reviews/R-POLARIS-M8-PORTABILITY-FUNNEL-RAW.md",
+    "docs/reviews/R-PWB-REGISTRY-CURRENCY-BRIEFING-DELTA-CONFIRMATION-2-RAW.md",
+    "docs/reviews/R-PWB-REGISTRY-CURRENCY-BRIEFING-DELTA-CONFIRMATION-3-RAW.md",
+    "scripts/build_pwb_registry_currency_briefing_amendment.py"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 9
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+   "name": "ItemDenominator",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+   "name": "UNENUMERATED_UNKNOWN",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-GP-IMPL-TYPED-UNKNOWN-REASONS-1-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 1
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+   "name": "catalogCountFact",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-PWB-REGISTRY-CURRENCY-BRIEFING-DELTA-CONFIRMATION-2-RAW.md",
+    "docs/reviews/R-PWB-REGISTRY-CURRENCY-BRIEFING-DELTA-CONFIRMATION-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+   "name": "projectAccountFact",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-PWB-REGISTRY-CURRENCY-BRIEFING-DELTA-CONFIRMATION-2-RAW.md",
+    "docs/reviews/R-PWB-REGISTRY-CURRENCY-BRIEFING-DELTA-CONFIRMATION-RAW.md",
+    "docs/reviews/R-PWB-REGISTRY-CURRENCY-BRIEFING-DELTA-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "CRAFT_POLICY_FILE_COLUMN",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-DOV24-LOADED-PROFILE-AMENDMENT-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "CRAFT_POLICY_HEADING",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/pwb-registry-loaded-profile-amendment/IMPACT-LEDGER.md",
+    "docs/reviews/R-PWB-N8-SLICE1-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "DESIGN_CONTRACT_HEADING",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/pwb-registry-loaded-profile-amendment/IMPACT-LEDGER.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "EXTRACTION_PASSES",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-PWB-N3-SLICES1-2-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "ROOT_INDEX_PASS",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-PWB-N3-SLICES1-2-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "V1_HEADINGS",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/pwb-registry-loaded-profile-amendment/IMPACT-LEDGER.md",
+    "docs/reviews/R-DOV24-LOADED-PROFILE-AMENDMENT-3-RAW.md",
+    "docs/reviews/R-DOV24-LOADED-PROFILE-AMENDMENT-RAW.md",
+    "docs/reviews/R-PWB-N8-SLICE1-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 4
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "VISION_HEADINGS",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/pwb-registry-loaded-profile-amendment/IMPACT-LEDGER.md",
+    "docs/reviews/R-DOV24-LOADED-PROFILE-AMENDMENT-RAW.md",
+    "docs/reviews/R-PWB-N8-SLICE1-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 4
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "extractCatalogEntries",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/pwb-class-granular-extraction-amendment/IMPACT-LEDGER.md",
+    ".syzygy/governance/contracts/candidates/pwb-class-granular-extraction-amendment/SEMANTIC-DELTA.md",
+    "docs/design/POLARIS-M15-PIPELINE-TRUTHFULNESS-FUNNEL.md",
+    "docs/reviews/R-N8-CONTAINER-SHAPE-PROFILE-2-RAW.md",
+    "docs/reviews/R-N8-CONTAINER-SHAPE-PROFILE-RAW.md",
+    "docs/reviews/R-POLARIS-M15-PIPELINE-TRUTHFULNESS-FUNNEL-1-RAW.md",
+    "docs/reviews/R-PWB-CLASS-GRANULAR-EXTRACTION-AMENDMENT-1-RAW.md",
+    "docs/reviews/R-PWB-CLASS-GRANULAR-EXTRACTION-AMENDMENT-2-RAW.md",
+    "docs/reviews/R-PWB-CLASS-GRANULAR-EXTRACTION-AMENDMENT-3-RAW.md",
+    "docs/reviews/R-PWB-CLASS-GRANULAR-EXTRACTION-IMPL-2-RAW.md",
+    "docs/reviews/R-PWB-N8-SLICE1-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 5
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "extractCraftPolicies",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-N8-CONTAINER-SHAPE-PROFILE-2-RAW.md",
+    "docs/reviews/R-PWB-N8-SLICE1-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 6
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "extractDesignContracts",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-PWB-N8-SLICE1-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "extractPrinciples",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-N8-CONTAINER-SHAPE-PROFILE-2-RAW.md",
+    "docs/reviews/R-N8-CONTAINER-SHAPE-PROFILE-RAW.md",
+    "docs/reviews/R-PWB-N8-SLICE1-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 6
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "extractProjectAccountSections",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-N8-CONTAINER-SHAPE-PROFILE-2-RAW.md",
+    "docs/reviews/R-N8-CONTAINER-SHAPE-PROFILE-RAW.md",
+    "docs/reviews/R-PWB-N8-SLICE1-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 4
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "extractRosterIdentity",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-N8-CONTAINER-SHAPE-PROFILE-2-RAW.md",
+    "docs/reviews/R-PWB-N8-SLICE1-REVIEW-RAW.md",
+    "docs/reviews/R-PWB-N8-SLICE2-CONFIRMATION-RAW.md",
+    "docs/reviews/R-PWB-N8-SLICE2-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 6
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "extractSuccessCriteria",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-N8-CONTAINER-SHAPE-PROFILE-2-RAW.md",
+    "docs/reviews/R-N8-CONTAINER-SHAPE-PROFILE-RAW.md",
+    "docs/reviews/R-PWB-N8-SLICE1-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 6
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+   "name": "extractTopologyComponents",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-N8-CONTAINER-SHAPE-PROFILE-2-RAW.md",
+    "docs/reviews/R-PWB-N8-SLICE1-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "name": "RootIndexState",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/pwb-class-granular-extraction-amendment/SEMANTIC-DELTA.md",
+    "docs/reviews/R-PWB-CLASS-GRANULAR-EXTRACTION-AMENDMENT-3-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+   "name": "SourceAnchor",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-model.ts",
+   "name": "ChallengeState",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+    "docs/design/POLARIS-M12-RETAINED-EVALUATIONS-FUNNEL.md",
+    "docs/design/POLARIS-M9-ONE-IDENTITY-FUNNEL.md",
+    "docs/reviews/R-POLARIS-M12-RETAINED-EVALUATIONS-FUNNEL-2-RAW.md",
+    "docs/reviews/R-POLARIS-M12-RETAINED-EVALUATIONS-FUNNEL-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 3
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-model.ts",
+   "name": "ProjectShapeCounts",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-model.ts",
+   "name": "ProjectShapeIdentity",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+    "docs/design/POLARIS-M7-GENERATION-LOOP-FUNNEL.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 2
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-model.ts",
+   "name": "ResolutionRoute",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+    "docs/design/POLARIS-M12-RETAINED-EVALUATIONS-FUNNEL.md",
+    "docs/design/POLARIS-M4-OWNER-LOOP-FUNNEL.md",
+    "docs/design/POLARIS-M5-AGENT-BRIEFING-FUNNEL.md",
+    "docs/design/POLARIS-M9-ONE-IDENTITY-FUNNEL.md",
+    "docs/reviews/R-POLARIS-M4-OWNER-LOOP-FUNNEL-2-RAW.md",
+    "docs/reviews/R-POLARIS-M4-OWNER-LOOP-FUNNEL-3-RAW.md",
+    "docs/reviews/R-POLARIS-M4-OWNER-LOOP-FUNNEL-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 3
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "name": "ProjectShapeObservationResult",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-PWB-N3-SLICES1-2-CONFIRMATION-2-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+   "name": "ProjectShapeObservationUnknown",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-GP-IMPL-TYPED-UNKNOWN-REASONS-1-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/resource-ledger.ts",
+   "name": "ResourceLimitUsage",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-PWB-N3-SLICES1-2-REVIEW-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/trajectory-projection.ts",
+   "name": "TrajectoryProjectionUnknown",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-IMPL-P100-GOVERNING-INTENT-2-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+   "name": "JudgmentInvalidCase",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-GP-IMPL-POC-CORE-HYGIENE-2-RAW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 3
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/work-items.ts",
+   "name": "GoverningIntentUnknown",
+   "class": "self-only",
+   "citers": [
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/IMPACT-LEDGER.md",
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/IMPACT-SWEEP.json",
+    ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/compatibility/STATIC-TRACE.json",
+    "scripts/build_three_surface_poc_governedby_reference_amendment.py"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 3
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+   "name": "WorkerChangeCommit",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-POC-CYCLE-3-CONFIRMATION.md",
+    "docs/reviews/R-POC-CYCLE-3-REVIEW.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  },
+  {
+   "file": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+   "name": "WorkerChangeContainingRef",
+   "class": "self-only",
+   "citers": [
+    "docs/reviews/R-POC-CYCLE-3-CONFIRMATION.md"
+   ],
+   "machineRecordCitersOnly": false,
+   "machineRecordCiters": 0
+  }
+ ],
+ "violations": [],
+ "withMachineRecordsCounted": 46,
+ "holds": true
+}

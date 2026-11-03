@@ -22,7 +22,7 @@ export interface TrajectoryLaneItem {
   readonly verification: 'unknown';
 }
 
-export interface TrajectoryProjectionObserved {
+interface TrajectoryProjectionObserved {
   readonly kind: 'observed';
   readonly doltRevision: string;
   readonly selectionRule: string;
@@ -42,7 +42,7 @@ export interface TrajectoryProjectionUnknown {
 
 export type TrajectoryProjection = TrajectoryProjectionObserved | TrajectoryProjectionUnknown;
 
-export interface ProjectTrajectoryOptions {
+interface ProjectTrajectoryOptions {
   readonly nonClosedLimit: number;
   readonly recentClosedWindow: number;
 }

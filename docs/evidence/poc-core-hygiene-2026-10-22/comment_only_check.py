@@ -4,8 +4,13 @@
 Usage: comment_only_check.py <tree> <old-commit> <out.json> [--merge-with <ref>]
 
 For every file under packages/ and apps/ that differs between the baseline and
-the tree's working files, strips comments from both versions with
-export_census.py's lexer and compares them. The baseline is <old-commit>, or,
+the tree's working files, prints both versions with TypeScript's printer,
+removeComments true (ts_printer.py), and compares the prints. A print keeps the
+text of strings and template literals byte for byte, so an edit to whitespace or
+a blank line inside a literal is a code change here; layout outside literals is
+normalised. (The earlier form compared strip_comments output with blank lines
+and trailing blanks dropped everywhere, which read such an edit as comment-only:
+review R-GP-IMPL-POC-CORE-HYGIENE-2, N8.) The baseline is <old-commit>, or,
 with --merge-with, the tree git builds by merging <old-commit> with <ref>
 (`git merge-tree --write-tree`): changes that arrived from <ref> (for example a
 merge of main after the reviewed commit) are then part of the baseline, and only
@@ -26,11 +31,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from export_census import strip_comments  # noqa: E402
-
-
-def norm(text: str) -> list[str]:
-    return [line.rstrip() for line in strip_comments(text).splitlines() if line.strip()]
+from ts_printer import print_without_comments  # noqa: E402
 
 
 def main() -> int:
@@ -41,13 +42,19 @@ def main() -> int:
         ref = sys.argv[sys.argv.index('--merge-with') + 1]
         baseline = git('merge-tree', '--write-tree', old, ref).splitlines()[0]
         merged_with = {'ref': ref, 'commit': git('rev-parse', ref).strip(), 'baselineTree': baseline}
-    files = []
+    changed = []
     for line in git('diff', '--name-status', baseline, '--', 'packages', 'apps').splitlines():
         status, path = line.split('\t', 1)
         before = git('show', f'{baseline}:{path}') if status != 'A' else ''
         after = (tree / path).read_text(encoding='utf-8') if status != 'D' else ''
+        changed.append((status, path, before, after))
+    printable = [(status, path, before, after) for status, path, before, after in changed if status == 'M']
+    prints = iter(print_without_comments([(path, text) for _, path, before, after in printable for text in (before, after)]))
+    printed = {path: (next(prints), next(prints)) for _, path, _, _ in printable}
+    files = []
+    for status, path, before, after in changed:
         files.append({'file': path, 'status': status, 'sha256Before': hashlib.sha256(before.encode()).hexdigest(), 'sha256After': hashlib.sha256(after.encode()).hexdigest(),
-                      'identicalAfterCommentStrip': status == 'M' and norm(before) == norm(after)})
+                      'identicalAfterCommentStrip': status == 'M' and printed[path][0] == printed[path][1]})
     script = ("const m = await import(process.argv[1] + '/packages/three-surface-poc-core/dist/evidence-population.js');"
               "const b = await import(process.argv[1] + '/packages/three-surface-poc-core/dist/index.js');"
               "console.log(JSON.stringify({moduleExportsFunction: typeof m.derivePopulationBlock === 'function', barrelReexportsSameFunction: typeof b.derivePopulationBlock === 'function' && b.derivePopulationBlock === m.derivePopulationBlock}));")

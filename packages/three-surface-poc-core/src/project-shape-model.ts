@@ -124,14 +124,14 @@ export interface ProjectShapeSupport {
 // renders verbatim. One row per reason; the classification is this
 // implementation's reading of each `UNKNOWN_REASON_ROUTES` sentence
 // [Inferred], never a contract value.
-export const ROUTE_ACTORS = ['owner', 'operator', 'agent'] as const;
-export type RouteActor = (typeof ROUTE_ACTORS)[number];
-export const ROUTE_VERBS = ['draft', 'capture', 'declare', 'consent', 'decide', 'adjudicate', 'repair', 'run'] as const;
-export type RouteVerb = (typeof ROUTE_VERBS)[number];
-export const ROUTE_TARGETS = ['artifact', 'act', 'policy', 'evaluation', 'external-work'] as const;
-export type RouteTarget = (typeof ROUTE_TARGETS)[number];
+const ROUTE_ACTORS = ['owner', 'operator', 'agent'] as const;
+type RouteActor = (typeof ROUTE_ACTORS)[number];
+const ROUTE_VERBS = ['draft', 'capture', 'declare', 'consent', 'decide', 'adjudicate', 'repair', 'run'] as const;
+type RouteVerb = (typeof ROUTE_VERBS)[number];
+const ROUTE_TARGETS = ['artifact', 'act', 'policy', 'evaluation', 'external-work'] as const;
+type RouteTarget = (typeof ROUTE_TARGETS)[number];
 
-export const UNKNOWN_REASON_ACTIONS: Readonly<Record<UnknownReason, { readonly actor: RouteActor; readonly verb: RouteVerb; readonly target: RouteTarget }>> = {
+const UNKNOWN_REASON_ACTIONS: Readonly<Record<UnknownReason, { readonly actor: RouteActor; readonly verb: RouteVerb; readonly target: RouteTarget }>> = {
   'missing-declaration': { actor: 'agent', verb: 'draft', target: 'artifact' },
   'missing-evidence': { actor: 'operator', verb: 'capture', target: 'evaluation' },
   'no-currency-bound-declared': { actor: 'owner', verb: 'declare', target: 'policy' },
@@ -262,7 +262,7 @@ export interface ProjectShapeItem extends ItemCoverage {
 // An unenumerated heading surfaced as a fact (PWB-REQ-002 as amended): its
 // text, level and exact anchor, the source it routes to, and an Unknown claim
 // whose route says the grammar has no row for it. It mints no item.
-export interface ProjectShapeUnenumeratedHeading extends SurfacedUnenumeratedHeading {
+interface ProjectShapeUnenumeratedHeading extends SurfacedUnenumeratedHeading {
   readonly sourceIdentity: string;
   readonly claim: ProjectShapeClaim;
 }
@@ -368,7 +368,7 @@ export type ProjectShape =
       readonly claim: ProjectShapeClaim;
     };
 
-export interface ProjectShapeBuildInput {
+interface ProjectShapeBuildInput {
   readonly authority: BodyReadAuthorityEvaluation;
   readonly revision: string;
   readonly capturedAt: string;

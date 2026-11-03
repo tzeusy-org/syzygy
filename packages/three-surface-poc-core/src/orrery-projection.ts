@@ -6,7 +6,7 @@ export interface OrreryDeclaredMapping {
   readonly capabilityId: string;
 }
 
-export interface OrreryDistrict {
+interface OrreryDistrict {
   readonly id: string;
   readonly path: string;
   readonly fileCount: number;
@@ -14,14 +14,14 @@ export interface OrreryDistrict {
   readonly languages: readonly CodeLanguageClassification[];
 }
 
-export interface OrreryMappedRegion {
+interface OrreryMappedRegion {
   readonly id: string;
   readonly path: string;
   readonly capabilityId: string;
   readonly sizeBytes: number;
 }
 
-export interface OrreryProjectionObserved {
+interface OrreryProjectionObserved {
   readonly kind: 'observed';
   readonly revision: string;
   readonly districts: readonly OrreryDistrict[];
@@ -31,7 +31,7 @@ export interface OrreryProjectionObserved {
   readonly totalFileCount: number;
 }
 
-export interface OrreryProjectionUnknown {
+interface OrreryProjectionUnknown {
   readonly kind: 'unknown';
   readonly reason: string;
   /** Denominator from the independent code-structure observation. */

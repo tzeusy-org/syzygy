@@ -44,10 +44,10 @@ export type DispatchDisclosure =
       readonly createdAt: string;
     };
 
-export const MATERIALIZATION_SUPPORTED_REPOSITORY_ID =
+const MATERIALIZATION_SUPPORTED_REPOSITORY_ID =
   'repository:butlers-configured-poc' as const;
 
-export interface BuildDispatchDisclosureInput extends BuildMaterializationPacketInput {
+interface BuildDispatchDisclosureInput extends BuildMaterializationPacketInput {
   readonly seedRepositoryId: string;
   readonly materializedBeadId: string | null;
   readonly materializedCreatedAt: string | null;
@@ -72,7 +72,7 @@ export function buildDispatchDisclosure(
   };
 }
 
-export interface BuildMaterializationPacketInput {
+interface BuildMaterializationPacketInput {
   readonly targetRepoRoot: string;
   readonly proposalPath: string;
   readonly designPath: string;
@@ -128,7 +128,7 @@ export interface MaterializationRecord {
 // throws, and callers must render that as a named Unknown rather than
 // silently risking a duplicate create.
 
-export const MATERIALIZATION_RECORD_FILE_NAME = 'materialization-record.json' as const;
+const MATERIALIZATION_RECORD_FILE_NAME = 'materialization-record.json' as const;
 const MATERIALIZATION_STATE_DIR_MODE = 0o700;
 const MATERIALIZATION_RECORD_FILE_MODE = 0o600;
 
@@ -185,16 +185,16 @@ export function clearMaterializationRecordFile(stateDir: string): void {
 
 // --- Materialize action -----------------------------------------------
 
-export type ReadMaterializationRecord = () => MaterializationRecord | null;
-export type WriteMaterializationRecord = (record: MaterializationRecord) => void;
-export type ClearMaterializationRecord = () => void;
+type ReadMaterializationRecord = () => MaterializationRecord | null;
+type WriteMaterializationRecord = (record: MaterializationRecord) => void;
+type ClearMaterializationRecord = () => void;
 
 export type MaterializeResult =
   | { readonly kind: 'created'; readonly beadId: string; readonly record: MaterializationRecord }
   | { readonly kind: 'reused'; readonly beadId: string; readonly record: MaterializationRecord }
   | { readonly kind: 'unknown'; readonly reason: string; readonly beadId?: string };
 
-export interface MaterializeWorkItemInput {
+interface MaterializeWorkItemInput {
   readonly targetRepoRoot: string;
   readonly packet: MaterializationPacket;
   readonly attribution: string;
@@ -432,12 +432,12 @@ export function materializeWorkItem(input: MaterializeWorkItemInput): Materializ
 // POC-created Bead, attributed, and clears the local record. Code and
 // governance are never touched.
 
-export type RollbackResult =
+type RollbackResult =
   | { readonly kind: 'rolled-back'; readonly beadId: string }
   | { readonly kind: 'no-materialization' }
   | { readonly kind: 'unknown'; readonly reason: string };
 
-export interface RollbackMaterializedWorkItemInput {
+interface RollbackMaterializedWorkItemInput {
   readonly targetRepoRoot: string;
   readonly attribution: string;
   readonly reason: string;

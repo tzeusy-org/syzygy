@@ -22,7 +22,7 @@ export type ParsedField<T> =
   | { readonly kind: 'missing' }
   | { readonly kind: 'malformed'; readonly raw: string };
 
-export interface ProvenanceStateField {
+interface ProvenanceStateField {
   // The backticked state label exactly as written.
   readonly label: string;
   // Whether the record states that the state was explicitly selected by
@@ -30,11 +30,11 @@ export interface ProvenanceStateField {
   readonly explicitSelection: boolean;
 }
 
-export type A1Field =
+type A1Field =
   | { readonly absent: true }
   | { readonly absent: false; readonly identity: string };
 
-export type SupersessionField =
+type SupersessionField =
   | { readonly relation: 'none' }
   | {
       readonly relation: 'supersedes' | 'revokes';

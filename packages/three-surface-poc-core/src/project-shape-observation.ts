@@ -125,15 +125,15 @@ export function gitBlobObjectId(bytes: Uint8Array, format: 'sha1' | 'sha256' = '
 // ---------------------------------------------------------------------
 // Phase A read admission — the allowlist, applied before any read.
 
-export const PHASE_A_REFUSAL_REASONS = [
+const PHASE_A_REFUSAL_REASONS = [
   'not-a-phase-a-seed-path',
   'not-in-tree',
   'object-id-differs-from-tree',
   'not-a-regular-blob',
 ] as const;
-export type PhaseARefusalReason = (typeof PHASE_A_REFUSAL_REASONS)[number];
+type PhaseARefusalReason = (typeof PHASE_A_REFUSAL_REASONS)[number];
 
-export type PhaseAAdmission =
+type PhaseAAdmission =
   | { readonly kind: 'admitted'; readonly entry: GitTreeEntry }
   | { readonly kind: 'refused'; readonly reason: PhaseARefusalReason };
 
@@ -171,7 +171,7 @@ export function admitPhaseARead(
 // ---------------------------------------------------------------------
 // Observation record.
 
-export const PHASE_A_READ_OUTCOMES = [
+const PHASE_A_READ_OUTCOMES = [
   'read',
   'refused',
   'over-limit',
@@ -182,9 +182,9 @@ export const PHASE_A_READ_OUTCOMES = [
   'secret-matched',
   'active-content',
 ] as const;
-export type PhaseAReadOutcome = (typeof PHASE_A_READ_OUTCOMES)[number];
+type PhaseAReadOutcome = (typeof PHASE_A_READ_OUTCOMES)[number];
 
-export interface PhaseAReadRecord {
+interface PhaseAReadRecord {
   readonly path: string;
   readonly objectId: string;
   readonly outcome: PhaseAReadOutcome;
@@ -224,7 +224,7 @@ export interface StampedSource extends ManifestSource {
   readonly stamp: EmissionStamp;
 }
 
-export type AuthorityInputIdentity =
+type AuthorityInputIdentity =
   | { readonly kind: 'valid'; readonly provenance: 'state-1' | 'state-2'; readonly actIdentity: string; readonly artifactDigest: string }
   | { readonly kind: 'invalid'; readonly caseId: string; readonly artifactDigest: string }
   | { readonly kind: 'absent'; readonly what: string; readonly artifactDigest: string | undefined };
@@ -299,7 +299,7 @@ export type ProjectShapeObservationResult =
   | ProjectShapeObservationUnknown
   | { readonly kind: 'invalid-input'; readonly reason: string };
 
-export interface ObserveProjectShapeSourcesInput {
+interface ObserveProjectShapeSourcesInput {
   readonly repositoryId: string;
   // Any revision expression; resolved to an exact commit before anything
   // else is read.
@@ -366,7 +366,7 @@ function gitText(runGit: GitRunner, args: readonly string[]): { readonly kind: '
 // classifier before its text is returned; the validated root index is the
 // only thing that widens the admissible set. It is a separate function so
 // the ordering guarantee can be tested directly, seed by seed.
-export interface PhaseASeedReaderDeps {
+interface PhaseASeedReaderDeps {
   readonly tree: GitTreeIndex;
   readonly limits: PwbResourceLimits;
   readonly ledger: ResourceLedger;

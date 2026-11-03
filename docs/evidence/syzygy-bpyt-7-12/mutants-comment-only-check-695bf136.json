@@ -1,0 +1,102 @@
+{
+ "subject": "comment_only_check.py",
+ "ranAtCommit": "695bf136da35dc9d94bf4abf80c709f3d4244adb",
+ "oldCommit": "HEAD",
+ "checkArguments": [],
+ "controls": [],
+ "mutants": 7,
+ "killed": 7,
+ "survivors": [],
+ "negativeControls": 1,
+ "negativeControlsHolding": 1,
+ "records": [
+  {
+   "id": "source-code-token-added",
+   "negativeControl": false,
+   "file": "packages/three-surface-poc-core/src/evidence-population.ts",
+   "old": "// Keep the name, the path and the barrel export.\n",
+   "new": "// Keep the name, the path and the barrel export.\nexport const ZZ_MUTANT = 1;\n",
+   "deletesTheFile": false,
+   "expectedFailure": "comment-only-false",
+   "killed": true,
+   "firstOutputLine": "changed=1 allCommentOnly=False retainedExport={'moduleExportsFunction': True, 'barrelReexportsSameFunction': True}"
+  },
+  {
+   "id": "source-comment-edit-is-not-a-failure",
+   "negativeControl": true,
+   "file": "packages/three-surface-poc-core/src/evidence-population.ts",
+   "old": "// Keep the name, the path and the barrel export.\n",
+   "new": "// Keep the name, the path and the barrel export. (edited)\n",
+   "deletesTheFile": false,
+   "expectedFailure": "comment-only-true",
+   "killed": true,
+   "firstOutputLine": "changed=1 allCommentOnly=True retainedExport={'moduleExportsFunction': True, 'barrelReexportsSameFunction': True}"
+  },
+  {
+   "id": "template-literal-trailing-space-added",
+   "negativeControl": false,
+   "file": "apps/three-surface-poc/src/materialize-action.ts",
+   "old": "  .materialize-status { font-size: .85rem; }\n",
+   "new": "  .materialize-status { font-size: .85rem; } \n",
+   "deletesTheFile": false,
+   "expectedFailure": "comment-only-false",
+   "killed": true,
+   "firstOutputLine": "changed=1 allCommentOnly=False retainedExport={'moduleExportsFunction': True, 'barrelReexportsSameFunction': True}"
+  },
+  {
+   "id": "template-literal-blank-line-added",
+   "negativeControl": false,
+   "file": "apps/three-surface-poc/src/materialize-action.ts",
+   "old": "  .materialize-panel dt { color: var(--muted); }\n",
+   "new": "  .materialize-panel dt { color: var(--muted); }\n\n",
+   "deletesTheFile": false,
+   "expectedFailure": "comment-only-false",
+   "killed": true,
+   "firstOutputLine": "changed=1 allCommentOnly=False retainedExport={'moduleExportsFunction': True, 'barrelReexportsSameFunction': True}"
+  },
+  {
+   "id": "template-literal-indent-changed",
+   "negativeControl": false,
+   "file": "apps/three-surface-poc/src/materialize-action.ts",
+   "old": "  .materialize-panel dd { margin: 0;",
+   "new": "    .materialize-panel dd { margin: 0;",
+   "deletesTheFile": false,
+   "expectedFailure": "comment-only-false",
+   "killed": true,
+   "firstOutputLine": "changed=1 allCommentOnly=False retainedExport={'moduleExportsFunction': True, 'barrelReexportsSameFunction': True}"
+  },
+  {
+   "id": "source-file-deleted",
+   "negativeControl": false,
+   "file": "packages/three-surface-poc-core/src/test-cleanup.ts",
+   "old": null,
+   "new": null,
+   "deletesTheFile": true,
+   "expectedFailure": "comment-only-false",
+   "killed": true,
+   "firstOutputLine": "changed=1 allCommentOnly=False retainedExport={'moduleExportsFunction': True, 'barrelReexportsSameFunction': True}"
+  },
+  {
+   "id": "dist-module-export-removed",
+   "negativeControl": false,
+   "file": "packages/three-surface-poc-core/dist/evidence-population.js",
+   "old": "export function derivePopulationBlock",
+   "new": "function derivePopulationBlock",
+   "deletesTheFile": false,
+   "expectedFailure": "module-export-false",
+   "killed": true,
+   "firstOutputLine": "changed=0 allCommentOnly=True retainedExport={'moduleExportsFunction': False, 'barrelReexportsSameFunction': False}"
+  },
+  {
+   "id": "dist-barrel-reexport-removed",
+   "negativeControl": false,
+   "file": "packages/three-surface-poc-core/dist/index.js",
+   "old": "export * from './evidence-population.js';",
+   "new": "",
+   "deletesTheFile": false,
+   "expectedFailure": "barrel-false",
+   "killed": true,
+   "firstOutputLine": "changed=0 allCommentOnly=True retainedExport={'moduleExportsFunction': True, 'barrelReexportsSameFunction': False}"
+  }
+ ]
+}

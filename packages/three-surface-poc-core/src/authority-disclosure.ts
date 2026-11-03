@@ -24,7 +24,7 @@ export const STATE_1_DISCLOSURE =
 export const STATE_2_DISCLOSURE =
   'Independently verified: the owner act correlates with an A1 audit record kept outside this tree.' as const;
 
-export interface AuthorityStateDisclosure {
+interface AuthorityStateDisclosure {
   readonly authority: AuthorityKind;
   // RFC3-16(c)'s label for a valid act, or the non-valid kind.
   readonly state: typeof STATE_1_LABEL | typeof STATE_2_LABEL | 'invalid act' | 'absent';
@@ -36,7 +36,7 @@ export interface AuthorityStateDisclosure {
   readonly invalidCase: string | undefined;
 }
 
-export interface AuthorityMayNot {
+interface AuthorityMayNot {
   readonly id: string;
   readonly statement: string;
   readonly actIdentity: string | undefined;
@@ -94,7 +94,7 @@ export interface AuthorityDisclosure {
   readonly contradiction: string | undefined;
 }
 
-export function discloseAuthorityState(authority: AuthorityKind, state: AuthorityState): AuthorityStateDisclosure {
+function discloseAuthorityState(authority: AuthorityKind, state: AuthorityState): AuthorityStateDisclosure {
   if (state.kind === 'valid') {
     return {
       authority,

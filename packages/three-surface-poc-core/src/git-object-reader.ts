@@ -82,9 +82,9 @@ export const READ_REFUSAL_REASONS = [
   'not-a-regular-blob', // symlink, submodule or tree entry
   'object-id-differs-from-tree',
 ] as const;
-export type ReadRefusalReason = (typeof READ_REFUSAL_REASONS)[number];
+type ReadRefusalReason = (typeof READ_REFUSAL_REASONS)[number];
 
-export type ReadAdmission =
+type ReadAdmission =
   | { readonly kind: 'admitted'; readonly entry: GitTreeEntry }
   | { readonly kind: 'refused'; readonly reason: ReadRefusalReason };
 
@@ -149,9 +149,9 @@ export const ACTIVE_CONTENT_FORMS = [
   'obfuscated-link-destination', // an HTML entity inside a Markdown link destination
   'malformed-code-context', // an inert context that never closed, or an invalid backtick info string
 ] as const;
-export type ActiveContentForm = (typeof ACTIVE_CONTENT_FORMS)[number];
+type ActiveContentForm = (typeof ACTIVE_CONTENT_FORMS)[number];
 
-export interface ActiveContentFinding {
+interface ActiveContentFinding {
   readonly form: ActiveContentForm;
   readonly line: number;
   readonly column: number;
@@ -221,7 +221,7 @@ export function scanActiveContent(raw: string, charge?: ParsePassCharge): readon
 // ---------------------------------------------------------------------
 // Reader.
 
-export const OBJECT_READ_OUTCOMES = [
+const OBJECT_READ_OUTCOMES = [
   'read',
   'not-read',
   'refused',
@@ -232,7 +232,7 @@ export const OBJECT_READ_OUTCOMES = [
   'not-utf-8',
   'active-content',
 ] as const;
-export type ObjectReadOutcome = (typeof OBJECT_READ_OUTCOMES)[number];
+type ObjectReadOutcome = (typeof OBJECT_READ_OUTCOMES)[number];
 
 // Body-free. `detail` is always a closed reason or limit name, never bytes
 // of the source.
@@ -247,7 +247,7 @@ export interface ObjectReadRecord {
   readonly activeContent?: readonly ActiveContentFinding[];
 }
 
-export type ExactObjectRead =
+type ExactObjectRead =
   | { readonly kind: 'text'; readonly text: string; readonly record: ObjectReadRecord }
   | { readonly kind: 'unavailable'; readonly record: ObjectReadRecord };
 
@@ -262,7 +262,7 @@ export interface ExactObjectReader {
   readonly totalBytes: () => number;
 }
 
-export interface ExactObjectReaderInput {
+interface ExactObjectReaderInput {
   readonly runGit: GitRunner;
   readonly tree: GitTreeIndex;
   readonly resourceLimits?: PwbResourceLimits;
@@ -381,7 +381,7 @@ export function createExactObjectReader(input: ExactObjectReaderInput): ExactObj
 // Phase B population read — one result per manifest source, in manifest
 // order; the body reaches only `consume` and is not retained here.
 
-export interface SourceReadResult<T> {
+interface SourceReadResult<T> {
   readonly source: ManifestSource;
   readonly record: ObjectReadRecord;
   readonly value?: T;

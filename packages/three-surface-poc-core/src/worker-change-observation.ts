@@ -1,8 +1,8 @@
 import { execFileSync } from 'node:child_process';
 
-export const WORKER_CHANGE_LIFECYCLE_STATES = ['planned', 'active', 'changed-or-merged'] as const;
+const WORKER_CHANGE_LIFECYCLE_STATES = ['planned', 'active', 'changed-or-merged'] as const;
 
-export type WorkerChangeLifecycleState = (typeof WORKER_CHANGE_LIFECYCLE_STATES)[number];
+type WorkerChangeLifecycleState = (typeof WORKER_CHANGE_LIFECYCLE_STATES)[number];
 
 export interface WorkerChangeSeam {
   readonly sourcePath: string;
@@ -44,14 +44,14 @@ export interface WorkerChangeObserved {
   readonly capturedAt: string;
 }
 
-export interface WorkerChangeUnknown {
+interface WorkerChangeUnknown {
   readonly kind: 'unknown';
   readonly reason: string;
 }
 
 export type WorkerChangeResult = WorkerChangeObserved | WorkerChangeUnknown;
 
-export interface ObserveWorkerChangeInput {
+interface ObserveWorkerChangeInput {
   readonly repoRoot: string;
   /** The materialized Bead this observation is scoped to; `null` when no
    * work item has been materialized yet (nothing to observe git activity

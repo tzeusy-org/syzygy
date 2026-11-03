@@ -99,7 +99,7 @@ export interface ExtractionFailureRecord {
 
 // One literal V1 catalog heading and the line it sits on: the anchor of the
 // derived `catalog-count:<catalog-key>` declaration.
-export interface CatalogHeading {
+interface CatalogHeading {
   readonly key: (typeof CATALOG_HEADINGS)[number];
   readonly line: number;
 }
@@ -789,10 +789,10 @@ export function extractSource(
 // `Precedence Order When Layers Disagree` is admitted only as the exact
 // seven-row registry vocabulary. Nothing else in the root mints anything.
 
-export const ROOT_SUMMARY_HEADING = 'Key Architectural Facts';
-export const PRECEDENCE_HEADING = 'Precedence Order When Layers Disagree';
-export const PRECEDENCE_COLUMNS = ['#', 'Layer', 'Owns', 'Home'] as const;
-export const LAYER_ORDINALS = [1, 2, 3, 4, 5, 6, 7] as const;
+const ROOT_SUMMARY_HEADING = 'Key Architectural Facts';
+const PRECEDENCE_HEADING = 'Precedence Order When Layers Disagree';
+const PRECEDENCE_COLUMNS = ['#', 'Layer', 'Owns', 'Home'] as const;
+const LAYER_ORDINALS = [1, 2, 3, 4, 5, 6, 7] as const;
 export type LayerOrdinal = (typeof LAYER_ORDINALS)[number];
 
 export interface LayerRow {
@@ -815,8 +815,8 @@ export const LAYER_ROWS: readonly LayerRow[] = [
 export const ROSTER_HOME_TEMPLATE = 'roster/{butler}/';
 export const INERT_HOME = 'src/, alembic/, tests/';
 
-export const STATED_COUNT_FACTS = ['catalog-count:Staffers', 'catalog-count:Butlers'] as const;
-export type StatedCountFact = (typeof STATED_COUNT_FACTS)[number];
+const STATED_COUNT_FACTS = ['catalog-count:Staffers', 'catalog-count:Butlers'] as const;
+type StatedCountFact = (typeof STATED_COUNT_FACTS)[number];
 
 export interface StatedCount {
   readonly fact: StatedCountFact;
@@ -825,16 +825,16 @@ export interface StatedCount {
   readonly line: number;
 }
 
-export type RootSummaryExtraction =
+type RootSummaryExtraction =
   | { readonly kind: 'emitted'; readonly line: number; readonly declarations: readonly StatedCount[] }
   | { readonly kind: 'absent'; readonly reason: ExtractionFailure; readonly line?: number; readonly detail?: string };
 
-export interface AdmittedLayerRule extends LayerRow {
+interface AdmittedLayerRule extends LayerRow {
   // The table row's line.
   readonly line: number;
 }
 
-export type PrecedenceExtraction =
+type PrecedenceExtraction =
   | { readonly kind: 'admitted'; readonly line: number; readonly rules: readonly AdmittedLayerRule[] }
   | { readonly kind: 'absent'; readonly reason: ExtractionFailure; readonly line?: number; readonly detail?: string };
 
@@ -852,7 +852,7 @@ function absentSummary(reason: ExtractionFailure, line?: number, detail?: string
   return { kind: 'absent', reason, ...(line === undefined ? {} : { line }), ...(detail === undefined ? {} : { detail }) };
 }
 
-export function extractRootSummary(doc: Doc): RootSummaryExtraction {
+function extractRootSummary(doc: Doc): RootSummaryExtraction {
   const found = headingsOf(doc, 2, ROOT_SUMMARY_HEADING);
   if (found.length === 0) return absentSummary('missing-heading', undefined, ROOT_SUMMARY_HEADING);
   if (found.length > 1) return absentSummary('duplicate-key', (found[1] as Heading).index + 1, ROOT_SUMMARY_HEADING);
@@ -894,7 +894,7 @@ function absentPrecedence(reason: ExtractionFailure, line?: number, detail?: str
   return { kind: 'absent', reason, ...(line === undefined ? {} : { line }), ...(detail === undefined ? {} : { detail }) };
 }
 
-export function extractPrecedenceTable(doc: Doc): PrecedenceExtraction {
+function extractPrecedenceTable(doc: Doc): PrecedenceExtraction {
   const found = headingsOf(doc, 3, PRECEDENCE_HEADING);
   if (found.length === 0) return absentPrecedence('missing-heading', undefined, PRECEDENCE_HEADING);
   if (found.length > 1) return absentPrecedence('duplicate-key', (found[1] as Heading).index + 1, PRECEDENCE_HEADING);

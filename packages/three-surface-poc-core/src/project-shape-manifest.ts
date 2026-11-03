@@ -135,8 +135,8 @@ export type PillarDiscovery =
       readonly ignoredLinks: readonly IgnoredLink[];
     };
 
-export const IGNORED_LINK_REASONS = ['external', 'escapes-repository', 'outside-pillar-root', 'names-a-directory', 'self'] as const;
-export interface IgnoredLink {
+const IGNORED_LINK_REASONS = ['external', 'escapes-repository', 'outside-pillar-root', 'names-a-directory', 'self'] as const;
+interface IgnoredLink {
   readonly target: string;
   readonly reason: (typeof IGNORED_LINK_REASONS)[number];
 }
@@ -161,13 +161,13 @@ export interface ProjectShapeSourceManifest {
   readonly digest: string;
 }
 
-export type DeclaredPillarRoots = ReadonlyMap<PillarKey, { readonly root: string; readonly ambiguous: boolean }>;
+type DeclaredPillarRoots = ReadonlyMap<PillarKey, { readonly root: string; readonly ambiguous: boolean }>;
 
 export type SeedRead =
   | { readonly kind: 'text'; readonly text: string; readonly pillarRoots?: DeclaredPillarRoots }
   | { readonly kind: 'unavailable'; readonly reason: string };
 
-export interface DeriveManifestInput {
+interface DeriveManifestInput {
   readonly repositoryId: string;
   readonly revision: string;
   readonly discoveryVersion?: string;
@@ -178,7 +178,7 @@ export interface DeriveManifestInput {
   readonly readSeed: (seed: { readonly path: string; readonly objectId: string }) => SeedRead;
 }
 
-export type DeriveManifestResult =
+type DeriveManifestResult =
   | { readonly kind: 'manifest'; readonly manifest: ProjectShapeSourceManifest }
   | { readonly kind: 'invalid-input'; readonly reason: string };
 
