@@ -1,0 +1,67 @@
+# R-GP-IMPL-CONSENT-KNOBS-REFUSAL-2 — CC-REV-1 round-2 confirmation review of PR #640 (consent act-family knobs aligned toward refusal)
+Verdict: CONFIRM WITH EXCEPTIONS
+Reviewed commit: 6d2970c1b304a9effd8296ac97b6a440528eb818
+Subject: PR #640
+
+- Bead: `syzygy-bpyt.1.24` (review task `syzygy-pkym`). CC-REV-1 classes 1 and 4. Round 1: `docs/reviews/R-GP-IMPL-CONSENT-KNOBS-REFUSAL-1-RAW.md`, REVISE over `e8450656`.
+- Authority: `.syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md` item 6 (`consent-withdrawal-knobs`, answer A), lines 156-158: "A. Align every knob toward refusal wherever one family refuses a world another accepts; stop and return if any family's verdict over the current `decisions/` tree changes". The knob list the owner answered is `syzygy-bpyt.1.12`'s; its knob 2 reads "The policy family has no citation allowlist."
+- Subject bytes: `packages/polaris-generation-consent/src/package-reader.ts` sha256 `05a8097ffc3b22061984fe78c3a52c1bf5def7740300b8d4f3b7231237d38e72`, identical at `c962c7bd` and at the head (`git show c962c7bd:… | sha256sum`). Base reader `e1f43f7c` sha256 `c14405e416bf54b406475f1fe61a527eb932896f70be278d9c325182a7617028`. The head sits on `a332ff69`; `git diff --name-only 6d2970c1 a332ff69 -- .syzygy/governance/decisions` is empty, and `e1f43f7c..6d2970c1` changes 0 files under `.syzygy/` or `openspec/` [Observed].
+- Method: detached scratch worktrees at `6d2970c1` (head), `e1f43f7c` (base) and `origin/main` `a332ff69`, `npm ci`, `tsc -b` of the consent and dossier packages, then the reviewer's own scripts (not the author's `verdicts_over_tree.mjs` or `direction_check.py`).
+
+## Verdict basis
+
+F1, E1 and N1 are repaired and confirmed independently. The F1 repair (every family names its act when either the whole text or the citation-set-aside text carries a needle) is refusal-ward against every prior family, and its consequence (an allowlist entry can no longer cure a refusal) is within answer A, not a new owner question. The stop condition held: 0 of 160 answers over the current decisions tree change. One exception: N2 was repaired in the PR body but not in the test comment that introduces the exclusion, which still calls the policy stem "Not a knob". The policy-stem item stays an owner question; the coordinator's bead comment of 2026-11-03 says the PR must not merge until it is answered, and nothing in this round changes that.
+
+## Checks
+
+1. Verdicts over the current tree — unchanged [Observed].
+   - Reviewer script `/tmp/r2640/tools/verdicts.mjs` (scratch, deleted): walks every export of the consent index and `polaris-dossier/dist/gate-sources.js` for an object with `file` and `stems` (9 forms: `LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM`, `REGISTRY_GIT_SOURCE_ACT_FORM`, `D9_ACT_FORM`, `DRAWER_FORMS.redis-redis`, `PROVIDER_V2_FORM`, `RFC7_20_RULING_ACT_FORM`, `STATEMENT_FORMS.redis-redis.0.form`, `.0.successor`, `.1.form`), reads each with `readVersionedSignoffState` or `readDigestBoundActState`, plus the admission reader, policy reader, `readPolicyActChain`, `readClassActState`, `readInForceEgress`, the admission records port (3 kinds × 3 repository ids), and `createPackageGateSources` (`registryEntry`, `screeningPolicy`, `d9`, `rfc720Ruling`, `repositoryIdsFor`, `consentAbsenceFor`, `consentedRevisionsFor`, drawer, statements), at 2026-10-08T09:30Z, 2026-10-22T12:00Z, 2026-11-03T12:00Z, 2026-11-04T12:00Z and 2026-11-04T23:59Z. Each answer is compared as its whole JSON.
+   - 160 answers per run. Base readers vs head readers over the head checkout's decisions tree (191 tracked files): **0 of 160 differ**. Same over `origin/main` `a332ff69`: **0 of 160 differ**.
+   - Not vacuous: 28 `ok` and 17 `absent` form reads, 18 `ok` and 2 `refused` gate reads, 9 satisfied and 36 unsatisfied port answers, policy chain `ok` at 3 instants and `refused` at 2, class act `ok` at all 5.
+   - Second method: the author's `verdicts-over-tree-2026-11-04.json` reports `verdictsChanged: []` over 85 compared, `subject.readerAfter` = `c962c7bd`, sha256 `05a8097f…` (the head's bytes).
+2. Direction of the corpus differential — 0 refusal → acceptance [Observed].
+   - Reviewer's own tally of `act-family-differential-2026-11-04.json` (new tree `c962c7bd`, `packageReaderTs` `05a8097f…`, `clean: true`): 1426 mismatches. Every new label falls in one of four prefixes, all refusals: `throws AdmissionRecordError: invalid-records` 519, `refused: invalid-records` 455, `identity=; admitted=kind=refused; …` 275, `ok=false; why=no screening policy is in force: …` 177. Old labels: `refused: the policy bytes differ …` 354 and `ok=false; …` 177 (531 refusal → refusal); the other 895 are acceptances (record lists, `live=[…]`, `kind=reserved`, `ok …`). Kinds: `line` 703, `named` 571, `probe` 140, `real-file` 12; 0 in `base` or `base-reduced`.
+   - Second method: the author's `direction_check.py` gives `refuseToAccept 0, acceptToRefuse 895, refuseToRefuse 531` — the same split.
+   - Not re-run: the differential itself (739 s wall on 11 workers in the author's run). The corpus still runs with the allowlist empty, so it cannot see knob 2; checks 3 and 4 cover it.
+3. F1 — repaired [Observed].
+   - Code: `findActRecords` now refuses on `namesAct(…, textForms(text)) || (setAside !== text && namesAct(…, textForms(setAside)))`, for every family.
+   - The round-1 world rebuilt: a copy of the head's `.syzygy/` and `scripts/`, an empty `scripts/scope_check.py`, `decisions/REVIEWER-NOTE.md` = `The check is public-source scope_check.py here.`, and an allowlist entry for its sha256 patched into each tree's compiled `citation-allowlist.js` (restored and byte-compared afterwards). Base: `readPolicyActChain` refused `invalid-records`, policy reader throws. Head: the same. Control without `scripts/scope_check.py`: refused in both. Round 1 recorded the `e8450656` head accepting this world; the head no longer does.
+   - The test row exists: `act-families.test.ts:295`, before/after/head vectors `['ok', 'refused', 'ok', 'ok']`, with `scripts/scope_check.py` present.
+   - The three false sentences are replaced: the code comment above `PACKAGE_DIRS`, the comment above `sweepText`, the test comment above the citations rows, and the PR body knob-2 row now describe the two readings.
+4. The allowlist-can-no-longer-cure consequence — within answer A [Observed for the behaviour; Inferred for the judgment].
+   - Behaviour, second constructed world: the same copied tree with `decisions/REVIEWER-NOTE.md` = ``Run `scripts/build_public_egress_v2.py --check`.`` (a tooling citation carrying an admission stem). Unallowlisted: admission reader throws `invalid-records` in both trees. Allowlisted for its exact bytes: the base admission reader accepts (`ok`, 1 record); the head admission reader throws `invalid-records`. Policy chain and class act are `ok` in all four runs. So the head removes the cure the base allowlist gave the admission, class and registry families.
+   - Judgment: knob 2 as the owner answered it is "The policy family has no citation allowlist" (`syzygy-bpyt.1.12`). One family refusing a world another accepts is exactly what the allowlist's cure created, and the refusal side of that knob is the family without the cure. Answer A says to align toward refusal; making every family refuse wherever the whole text refuses is that alignment, and the union adds the set-aside refusals so no prior family refuses a world the head accepts. The stop clause is not engaged: `CITATION_ALLOWLIST` is `new Map([])` at the head, so no verdict over the current tree changes (check 1).
+   - The allowlist and its remedy are not owner-ruled: `CITATION_ALLOWLIST` occurs in 0 of 1421 tracked files under `.syzygy/` and `openspec/` at `a332ff69`, and `citation allowlist` (case-folded, `grep -F -i`) in 1, an unrelated CG-12b check name in `round-2026-08d/reviews/RD-17-validation-RAW.md:93`. The remedy "add a reviewed entry" was implementation guidance from the R-361-1 review, so withdrawing it needs no new owner act.
+   - So this is not a GP-Q0 owner question. It belongs in the non-blocking owner notice GP-Q0 part 1 already requires, which the PR body's consequence paragraph supplies.
+5. E1 — repaired [Observed]. `git merge-base --is-ancestor c962c7bd 6d2970c1` succeeds; `git branch -r --contains c962c7bd` lists `origin/agent/syzygy-bpyt.1.24`. All three records name `c962c7bd` and the reader sha256 `05a8097f…`. The knob-mutant record's `subject.testFileSha256` names `act-families.test.ts` `0c81a195…`, the `c962c7bd` test bytes; the later test-and-doc commits change no line of `package-reader.ts`.
+6. N1 — repaired [Observed]. New row `a second instant indented under the other label` (`act-families.test.ts:167`). The author's record holds `n1-act-instant-unindented` (the round-1 R5) and `n1-recorded-at-unindented`, both killed; 18 of 18 mutants killed, each storing `old` and `new`.
+7. No act record edited; nothing under `.syzygy/**` or `openspec/**` changed (0 files). `syzygy-bpyt.1.8` is untouched [Observed].
+8. Gates at the head, scratch worktree: `npm run typecheck` exit 0; `npm test` 166 files, 3629 / 3629; `vitest run --project integration packages/polaris-generation-consent packages/polaris-dossier` 21 files, 1494 / 1494; `python3 scripts/check_governance.py` 32 OK, 21 WARN, 0 FAIL. `gh pr checks 640`: `node`, `node (unit)`, `node (integration)`, `node (e2e)` pass; `checks` pending when read [Observed].
+9. Reviewer rule-6 mutants (5, distinct from the author's 18 and from round 1's R1–R8), each a single-occurrence replacement in `package-reader.ts`, run with `vitest run packages/polaris-generation-consent packages/polaris-dossier/src/gate-sources` (524 tests), file restored and sha-checked after each:
+
+   | id | old | new | outcome |
+   |---|---|---|---|
+   | Q1 | `if (entry === undefined \|\| entry.sha256 !== sha256(text)) return text;` | `if (entry === undefined) return text;` | survived |
+   | Q2 | `citations.has(core) ? ' ' + token.slice(core.length) : token` | `citations.has(core) ? '' + token.slice(core.length) : token` | survived |
+   | Q3 | `textForms(text)) \|\| (setAside !== text &&` | `textForms(text)) && (setAside !== text &&` | killed (285) |
+   | Q4 | `loose: /^\s*recorded at\b/gim }` | `loose: /^\s*recorded at\b/gm }` | killed (324) |
+   | Q5 | `'public-source-scope', 'pwb-secret-classification-policy'];` | `'pwb-secret-classification-policy'];` | survived |
+
+   - Q3 is the intersection reading, the loosening opposite of the repair; it dies.
+   - Q1, Q2 and Q5 survive, and none of them can loosen [Inferred from the code]. Under the union the whole-text reading always runs, so the set-aside reading can only add refusals. Q1 and Q5 widen the set-aside: Q1 applies it to a file whose bytes no longer match its entry, and Q5 sets aside a citation carrying the screening-scope stem. Either way the whole text still refuses, and the change can only add joined-stem refusals. Q2 changes the gap a blanked citation leaves. All three touch predicates this PR did not change, so they are no rule-6 debt of this bead. But the sha gate and `carriesId`'s needle exclusion now bound only those added refusals, never an acceptance.
+
+## Findings
+
+### X1 (exception) — N2 repaired in the PR body, not in the test comment that introduces the exclusion
+
+- Round 1's N2 asked that "The PR body and the test row should cite the stop clause as the reason, not a reclassification." The body now does. The comment introduced in this PR (`3bff8949`) at `act-families.test.ts:213-214` still reads "Not a knob, and not aligned: the policy stem names the whole Butlers policy … so it names the policy on field lines only." It decides the first of the owner's two questions in the owner's place.
+- Smaller, same item: the body says the stem "still counts only on field lines and in filenames". The rows at `act-families.test.ts:205-207` show that a filename carrying the stem refuses only with a withdrawal or revocation word, and that `PWB-SECRET-CLASSIFICATION-POLICY-NOTES.md` reads `ok` in every family. The owner's question covers that filename reading too.
+- Repair: reword the comment to cite answer A's stop clause and the pending owner question, and state the filename behaviour in the body. It is prose only; no answer changes.
+
+### N1 (note) — the policy-stem item still gates the merge
+
+- The policy stem is still excluded, pinned by the row `text carrying the policy stem alone` (`ok` in all four families). No owner ruling exists: `bpyt.1.24` appears in only one decisions file at `a332ff69`, the answers record itself. The 2026-11-03 coordinator comment on `syzygy-bpyt.1.24` says PR #640 must not merge until the owner answers both parts: whether the stem is a knob, and whether the stop clause halts only that knob or the whole alignment. This review confirms the bytes, not that answer.
+
+### N2 (note) — two allowlist predicates now bound only refusals
+
+- From check 9: with every family reading the whole text, the allowlist's sha gate and `carriesId`'s needle exclusion no longer protect any acceptance. They only limit which set-aside refusals are added. The comment above `PACKAGE_DIRS` still describes the needle exclusion as a property of what a citation can be, which is true but no longer load-bearing. Simplifying or removing the allowlist is a separate change and is not asked of this PR. Removing the set-aside reading would withdraw refusals, so it would itself need a stop-clause check.
