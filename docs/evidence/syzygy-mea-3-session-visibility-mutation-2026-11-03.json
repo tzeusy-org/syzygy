@@ -1,259 +1,574 @@
 {
-  "format": "syzygy-rule-6-mutation-record/1",
+  "format": "syzygy-rule-6-mutation-record/2",
   "bead": "syzygy-mea.3 (includes syzygy-ts8u)",
-  "authority": ".syzygy/governance/decisions/OWNER-DIRECTION-REDIS-SCREENING-NEXT-2026-11-03.md, item 1",
-  "commit": "43b63728287f237d5283ffb1e4daba9074a54759",
-  "subject": [
-    {
-      "path": "packages/polaris-dossier/src/census.test.ts",
-      "sha256": "1ef57c68865d5956b5dfbaf9f4844999beb87d5b7387723f1eb7c920a55f73ee"
-    },
-    {
-      "path": "packages/polaris-dossier/src/census.ts",
-      "sha256": "f591cc20c681069f83490e77af3982138ab6782dcaeeed096fe04055e7440960"
-    },
-    {
-      "path": "packages/polaris-dossier/src/check.test.ts",
-      "sha256": "f73120352dd654dafd464cf85a9adb3e5454df2fb6ba57d4bc1c3448c43c458c"
-    },
-    {
-      "path": "packages/polaris-dossier/src/check.ts",
-      "sha256": "b2ad89c5406227def902b2c4419eeb53fc5a2258b00636c6b740b417028b70c0"
-    },
-    {
-      "path": "packages/polaris-dossier/src/cli.ts",
-      "sha256": "ca48795748d145c006bfff4a21908352710fcdc210dc97fb93d894877e400780"
-    },
-    {
-      "path": "packages/polaris-dossier/src/inventory.test.ts",
-      "sha256": "85e66ce5bfdfd910fb8c595c0f45cbf8d4b55c09605d1c85fe6c1f898ebea1d3"
-    },
-    {
-      "path": "packages/polaris-dossier/src/inventory.ts",
-      "sha256": "5d9a25928e0b677f91651175d7354a9b7a471a3ba0cfcf675d9ef705b7423f9c"
-    },
-    {
-      "path": "packages/polaris-dossier/src/render.test.ts",
-      "sha256": "2eefc12d7dc1ceaed3dfd24400019056b4468a053041f3c7ea9e8d42c9d37e23"
-    },
-    {
-      "path": "packages/polaris-dossier/src/render.ts",
-      "sha256": "def7d342e6d2daf1ee88de3aaa6ece2abceda8fa391c0bf830142ef53960c9f3"
-    }
-  ],
+  "authority": ".syzygy/governance/decisions/OWNER-DIRECTION-REDIS-SCREENING-NEXT-2026-11-03.md, item 1, with the lead's ruling (b): the authoring session gets the census on `check` output, not in its brief (REQ-polaris-generation-034)",
   "method": "Each mutant replaces exactly one occurrence of `old` with `new` in `file` (the script asserts the count is 1), runs `npx vitest run <tests>` from the repository root, and restores the file; the working tree is asserted clean before and after. Killed means vitest exited non-zero with failed tests.",
-  "denominator": {
-    "mutants": 17,
-    "killed": 17,
-    "survived": 0
-  },
-  "mutants": [
+  "runs": [
     {
-      "id": "census-blob-mode-filter",
-      "file": "packages/polaris-dossier/src/census.ts",
-      "old": "    if (!BLOB_MODES.has(entry.mode)) continue;\n",
-      "new": "",
-      "tests": [
-        "packages/polaris-dossier/src/census.test.ts"
+      "run": 1,
+      "scope": "inventory-brief census, inventory-check reviewVisibility, syzygy-ts8u",
+      "commit": "43b63728287f237d5283ffb1e4daba9074a54759",
+      "subject": [
+        {
+          "path": "packages/polaris-dossier/src/census.test.ts",
+          "sha256": "1ef57c68865d5956b5dfbaf9f4844999beb87d5b7387723f1eb7c920a55f73ee"
+        },
+        {
+          "path": "packages/polaris-dossier/src/census.ts",
+          "sha256": "f591cc20c681069f83490e77af3982138ab6782dcaeeed096fe04055e7440960"
+        },
+        {
+          "path": "packages/polaris-dossier/src/check.test.ts",
+          "sha256": "f73120352dd654dafd464cf85a9adb3e5454df2fb6ba57d4bc1c3448c43c458c"
+        },
+        {
+          "path": "packages/polaris-dossier/src/check.ts",
+          "sha256": "b2ad89c5406227def902b2c4419eeb53fc5a2258b00636c6b740b417028b70c0"
+        },
+        {
+          "path": "packages/polaris-dossier/src/cli.ts",
+          "sha256": "ca48795748d145c006bfff4a21908352710fcdc210dc97fb93d894877e400780"
+        },
+        {
+          "path": "packages/polaris-dossier/src/inventory.test.ts",
+          "sha256": "85e66ce5bfdfd910fb8c595c0f45cbf8d4b55c09605d1c85fe6c1f898ebea1d3"
+        },
+        {
+          "path": "packages/polaris-dossier/src/inventory.ts",
+          "sha256": "5d9a25928e0b677f91651175d7354a9b7a471a3ba0cfcf675d9ef705b7423f9c"
+        },
+        {
+          "path": "packages/polaris-dossier/src/render.test.ts",
+          "sha256": "2eefc12d7dc1ceaed3dfd24400019056b4468a053041f3c7ea9e8d42c9d37e23"
+        },
+        {
+          "path": "packages/polaris-dossier/src/render.ts",
+          "sha256": "def7d342e6d2daf1ee88de3aaa6ece2abceda8fa391c0bf830142ef53960c9f3"
+        }
       ],
-      "exit": 1,
-      "summary": "3 failed | 9 passed (12)",
-      "outcome": "killed"
+      "denominator": {
+        "mutants": 17,
+        "killed": 17,
+        "survived": 0
+      },
+      "mutants": [
+        {
+          "id": "census-blob-mode-filter",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "    if (!BLOB_MODES.has(entry.mode)) continue;\n",
+          "new": "",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts"
+          ],
+          "exit": 1,
+          "summary": "3 failed | 9 passed (12)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-denied-path-group",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "if (outcome === 'denied-path') deniedPath.push(entry.path);",
+          "new": "if (outcome === 'denied-path') unknownExtractionClass.push(entry.path);",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts"
+          ],
+          "exit": 1,
+          "summary": "3 failed | 9 passed (12)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-secret-path-counted-not-named",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "else if (outcome === 'secret-detector-match') secretPath++;",
+          "new": "else if (outcome === 'secret-detector-match') unknownExtractionClass.push(entry.path);",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts"
+          ],
+          "exit": 1,
+          "summary": "4 failed | 8 passed (12)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-class-gate",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "if (missingClass !== undefined) classNotConsented.push",
+          "new": "if (false) classNotConsented.push",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts",
+            "packages/polaris-dossier/src/inventory.test.ts"
+          ],
+          "exit": 1,
+          "summary": "4 failed | 55 passed (59)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-path-backtick-escape",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "replace(/[`\\u0080-",
+          "new": "replace(/[\\u0080-",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 11 passed (12)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-listing-cap",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "...paths.slice(0, CENSUS_LISTED_LIMIT).map(",
+          "new": "...paths.map(",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts"
+          ],
+          "exit": 1,
+          "summary": "2 failed | 10 passed (12)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-unknown-not-empty",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "if (!screenLoad.ok) return { ok: false, why: screenLoad.why };",
+          "new": "if (!screenLoad.ok) return { ok: true, census: withheldCensus([], { policyId: '', policyVersion: '', policySha256: '', screenPath: () => undefined, contentClass: () => undefined } as never, input.consented) };",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 11 passed (12)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-prefer-admitted-instruction",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "Prefer admitted sources: where an admitted file states the same thing, cite it, as well as or instead of a withheld one. ",
+          "new": "",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts",
+            "packages/polaris-dossier/src/inventory.test.ts"
+          ],
+          "exit": 1,
+          "summary": "3 failed | 56 passed (59)",
+          "outcome": "killed"
+        },
+        {
+          "id": "inventory-brief-carries-census",
+          "file": "packages/polaris-dossier/src/inventory.ts",
+          "old": "    censusSection(input.census, 'inventory-check', 'entry'),\n    '',\n",
+          "new": "",
+          "tests": [
+            "packages/polaris-dossier/src/inventory.test.ts"
+          ],
+          "exit": 1,
+          "summary": "2 failed | 45 passed (47)",
+          "outcome": "killed"
+        },
+        {
+          "id": "inventory-brief-census-uses-statement-classes",
+          "file": "packages/polaris-dossier/src/inventory.ts",
+          "old": "consented: opened.contentClasses,",
+          "new": "consented: null,",
+          "tests": [
+            "packages/polaris-dossier/src/inventory.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 46 passed (47)",
+          "outcome": "killed"
+        },
+        {
+          "id": "inventory-check-review-visibility",
+          "file": "packages/polaris-dossier/src/cli.ts",
+          "old": "      const visibility = reviewVisibility(result.report.citedBlobs);\n      return ctx.report(visibility === null ? result.report : { ...result.report, reviewVisibility: visibility }, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);\n    },\n  },\n  'review-packet'",
+          "new": "      return ctx.report(result.report, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);\n    },\n  },\n  'review-packet'",
+          "tests": [
+            "packages/polaris-dossier/src/inventory.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 46 passed (47)",
+          "outcome": "killed"
+        },
+        {
+          "id": "line-ranges-consecutive",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "if (last !== undefined && line === last[1] + 1) last[1] = line;",
+          "new": "if (last !== undefined && line === last[1]) last[1] = line;",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "4 failed | 59 passed (63)",
+          "outcome": "killed"
+        },
+        {
+          "id": "blob-redaction-detector-ids",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "detectorIds: [...detectorIds], withheldLineRanges",
+          "new": "detectorIds: [], withheldLineRanges",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "3 failed | 60 passed (63)",
+          "outcome": "killed"
+        },
+        {
+          "id": "cited-blob-carries-provenance",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "{ redaction: blobRedaction(state.withheld, state.detectorIds!) }",
+          "new": "{ redaction: { redactionClass: 'redacted-span', withheldLines: state.withheld.length } }",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "2 failed | 61 passed (63)",
+          "outcome": "killed"
+        },
+        {
+          "id": "render-partially-retained",
+          "file": "packages/polaris-dossier/src/render.ts",
+          "old": "and partially retained by screening as redacted-span: ",
+          "new": "and retained by screening as redacted-span: ",
+          "tests": [
+            "packages/polaris-dossier/src/render.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 42 passed (43)",
+          "outcome": "killed"
+        },
+        {
+          "id": "render-redaction-details-on-row",
+          "file": "packages/polaris-dossier/src/render.ts",
+          "old": "`revision ${pinned}`, ...redactionDetails(cited.redaction)]",
+          "new": "`revision ${pinned}`]",
+          "tests": [
+            "packages/polaris-dossier/src/render.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 42 passed (43)",
+          "outcome": "killed"
+        },
+        {
+          "id": "render-redaction-details-single-line",
+          "file": "packages/polaris-dossier/src/render.ts",
+          "old": "(first === last ? `${first}` : `${first}\\u2013${last}`)",
+          "new": "`${first}\\u2013${last}`",
+          "tests": [
+            "packages/polaris-dossier/src/render.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 42 passed (43)",
+          "outcome": "killed"
+        }
+      ]
     },
     {
-      "id": "census-denied-path-group",
-      "file": "packages/polaris-dossier/src/census.ts",
-      "old": "if (outcome === 'denied-path') deniedPath.push(entry.path);",
-      "new": "if (outcome === 'denied-path') unknownExtractionClass.push(entry.path);",
-      "tests": [
-        "packages/polaris-dossier/src/census.test.ts"
+      "run": 2,
+      "scope": "check-output census, first shape (an uncapped flat {path, outcome} list)",
+      "commit": "6570912dc749d1253b84364b946d48d814ab8fbd",
+      "subject": [
+        {
+          "path": "packages/polaris-dossier/src/census.test.ts",
+          "sha256": "024a5e6c10866e5748d4319ac82f4e1e067d3bcb452d005d18839526a67dc0c4"
+        },
+        {
+          "path": "packages/polaris-dossier/src/census.ts",
+          "sha256": "29275f751d207d6d332c3f9f1f3c7fff898995c59467176b9e3e803ddcb2292a"
+        },
+        {
+          "path": "packages/polaris-dossier/src/check.test.ts",
+          "sha256": "9dbafb36b28a7762920e19855c7a773ff0a0fd216ee1921055cab71aecb77972"
+        },
+        {
+          "path": "packages/polaris-dossier/src/check.ts",
+          "sha256": "f60610a70d131cef06aebe75a8dc0cd84cc1b129de5239626c4fc16df2f55a73"
+        },
+        {
+          "path": "packages/polaris-dossier/src/inventory.test.ts",
+          "sha256": "dce54620d1a9eed0f59a549b9a16e008a49d8126b46de0ca74afe66e6d7851bf"
+        }
       ],
-      "exit": 1,
-      "summary": "3 failed | 9 passed (12)",
-      "outcome": "killed"
+      "denominator": {
+        "mutants": 8,
+        "killed": 8,
+        "survived": 0
+      },
+      "supersededBy": "run 3: the lead restated ruling (b) as the inventory brief's groups, escaping and caps, so the report shape these mutants exercised was replaced at 88f85f01",
+      "mutants": [
+        {
+          "id": "check-census-on-check",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "  if (plan.command === 'check') {\n    try {\n      screenCensus",
+          "new": "  if (false) {\n    try {\n      screenCensus",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "2 failed | 63 passed (65)",
+          "outcome": "killed"
+        },
+        {
+          "id": "check-census-not-on-inventory-check",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "  if (plan.command === 'check') {\n    try {\n      screenCensus",
+          "new": "  if (true) {\n    try {\n      screenCensus",
+          "tests": [
+            "packages/polaris-dossier/src/inventory.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 46 passed (47)",
+          "outcome": "killed"
+        },
+        {
+          "id": "check-census-unknown-on-listing-refusal",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "      screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})` });",
+          "new": "      screenCensus = undefined;",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 64 passed (65)",
+          "outcome": "killed"
+        },
+        {
+          "id": "check-census-statement-classes",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "withheldCensus(await reader.listTree(), screen, checked.contentClasses)",
+          "new": "withheldCensus(await reader.listTree(), screen, [])",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 64 passed (65)",
+          "outcome": "killed"
+        },
+        {
+          "id": "check-census-not-in-record",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "fs.writeFileSync(checkFile, `${JSON.stringify(record, null, 2)}\\n`",
+          "new": "fs.writeFileSync(checkFile, `${JSON.stringify({ ...record, screenCensus }, null, 2)}\\n`",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 64 passed (65)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-report-sorted-by-path",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "  ].sort((a, b) => byCodeUnit(a.path, b.path));\n  return {\n    state: 'listed'",
+          "new": "  ];\n  return {\n    state: 'listed'",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 13 passed (14)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-report-class-beside-path",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "outcome: CLASS_NOT_CONSENTED, missingClass: entry.missingClass }",
+          "new": "outcome: CLASS_NOT_CONSENTED }",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 13 passed (14)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-report-unknown-state",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "if (!load.ok) return { state: 'unknown', why: load.why,",
+          "new": "if (!load.ok) return { state: 'unknown', why: '',",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts",
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "2 failed | 77 passed (79)",
+          "outcome": "killed"
+        }
+      ]
     },
     {
-      "id": "census-secret-path-counted-not-named",
-      "file": "packages/polaris-dossier/src/census.ts",
-      "old": "else if (outcome === 'secret-detector-match') secretPath++;",
-      "new": "else if (outcome === 'secret-detector-match') unknownExtractionClass.push(entry.path);",
-      "tests": [
-        "packages/polaris-dossier/src/census.test.ts"
+      "run": 3,
+      "scope": "check-output census as the inventory brief's groups, escaping and caps (`censusGroups`), and the check wiring re-run at this commit",
+      "commit": "88f85f017cfa25fa3ec09ff524c0eba312c23051",
+      "subject": [
+        {
+          "path": "packages/polaris-dossier/src/census.test.ts",
+          "sha256": "c340aaa61621babdf93e9a008851ddf8e0910045f12acebafcfa94f008657b1c"
+        },
+        {
+          "path": "packages/polaris-dossier/src/census.ts",
+          "sha256": "e71dc47f3fd5e85ff937fa120f1a18a9b716ada4510859e0b2583a6990bf3ce4"
+        },
+        {
+          "path": "packages/polaris-dossier/src/check.test.ts",
+          "sha256": "50d8607a5aaa8aa69589cd59046723acfa106d2fe972d981c85bf561bbd721bb"
+        },
+        {
+          "path": "packages/polaris-dossier/src/check.ts",
+          "sha256": "f60610a70d131cef06aebe75a8dc0cd84cc1b129de5239626c4fc16df2f55a73"
+        },
+        {
+          "path": "packages/polaris-dossier/src/inventory.test.ts",
+          "sha256": "dce54620d1a9eed0f59a549b9a16e008a49d8126b46de0ca74afe66e6d7851bf"
+        }
       ],
-      "exit": 1,
-      "summary": "4 failed | 8 passed (12)",
-      "outcome": "killed"
-    },
-    {
-      "id": "census-class-gate",
-      "file": "packages/polaris-dossier/src/census.ts",
-      "old": "if (missingClass !== undefined) classNotConsented.push",
-      "new": "if (false) classNotConsented.push",
-      "tests": [
-        "packages/polaris-dossier/src/census.test.ts",
-        "packages/polaris-dossier/src/inventory.test.ts"
-      ],
-      "exit": 1,
-      "summary": "4 failed | 55 passed (59)",
-      "outcome": "killed"
-    },
-    {
-      "id": "census-path-backtick-escape",
-      "file": "packages/polaris-dossier/src/census.ts",
-      "old": "replace(/[`\\u0080-",
-      "new": "replace(/[\\u0080-",
-      "tests": [
-        "packages/polaris-dossier/src/census.test.ts"
-      ],
-      "exit": 1,
-      "summary": "1 failed | 11 passed (12)",
-      "outcome": "killed"
-    },
-    {
-      "id": "census-listing-cap",
-      "file": "packages/polaris-dossier/src/census.ts",
-      "old": "...paths.slice(0, CENSUS_LISTED_LIMIT).map(",
-      "new": "...paths.map(",
-      "tests": [
-        "packages/polaris-dossier/src/census.test.ts"
-      ],
-      "exit": 1,
-      "summary": "2 failed | 10 passed (12)",
-      "outcome": "killed"
-    },
-    {
-      "id": "census-unknown-not-empty",
-      "file": "packages/polaris-dossier/src/census.ts",
-      "old": "if (!screenLoad.ok) return { ok: false, why: screenLoad.why };",
-      "new": "if (!screenLoad.ok) return { ok: true, census: withheldCensus([], { policyId: '', policyVersion: '', policySha256: '', screenPath: () => undefined, contentClass: () => undefined } as never, input.consented) };",
-      "tests": [
-        "packages/polaris-dossier/src/census.test.ts"
-      ],
-      "exit": 1,
-      "summary": "1 failed | 11 passed (12)",
-      "outcome": "killed"
-    },
-    {
-      "id": "census-prefer-admitted-instruction",
-      "file": "packages/polaris-dossier/src/census.ts",
-      "old": "Prefer admitted sources: where an admitted file states the same thing, cite it, as well as or instead of a withheld one. ",
-      "new": "",
-      "tests": [
-        "packages/polaris-dossier/src/census.test.ts",
-        "packages/polaris-dossier/src/inventory.test.ts"
-      ],
-      "exit": 1,
-      "summary": "3 failed | 56 passed (59)",
-      "outcome": "killed"
-    },
-    {
-      "id": "inventory-brief-carries-census",
-      "file": "packages/polaris-dossier/src/inventory.ts",
-      "old": "    censusSection(input.census, 'inventory-check', 'entry'),\n    '',\n",
-      "new": "",
-      "tests": [
-        "packages/polaris-dossier/src/inventory.test.ts"
-      ],
-      "exit": 1,
-      "summary": "2 failed | 45 passed (47)",
-      "outcome": "killed"
-    },
-    {
-      "id": "inventory-brief-census-uses-statement-classes",
-      "file": "packages/polaris-dossier/src/inventory.ts",
-      "old": "consented: opened.contentClasses,",
-      "new": "consented: null,",
-      "tests": [
-        "packages/polaris-dossier/src/inventory.test.ts"
-      ],
-      "exit": 1,
-      "summary": "1 failed | 46 passed (47)",
-      "outcome": "killed"
-    },
-    {
-      "id": "inventory-check-review-visibility",
-      "file": "packages/polaris-dossier/src/cli.ts",
-      "old": "      const visibility = reviewVisibility(result.report.citedBlobs);\n      return ctx.report(visibility === null ? result.report : { ...result.report, reviewVisibility: visibility }, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);\n    },\n  },\n  'review-packet'",
-      "new": "      return ctx.report(result.report, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);\n    },\n  },\n  'review-packet'",
-      "tests": [
-        "packages/polaris-dossier/src/inventory.test.ts"
-      ],
-      "exit": 1,
-      "summary": "1 failed | 46 passed (47)",
-      "outcome": "killed"
-    },
-    {
-      "id": "line-ranges-consecutive",
-      "file": "packages/polaris-dossier/src/check.ts",
-      "old": "if (last !== undefined && line === last[1] + 1) last[1] = line;",
-      "new": "if (last !== undefined && line === last[1]) last[1] = line;",
-      "tests": [
-        "packages/polaris-dossier/src/check.test.ts"
-      ],
-      "exit": 1,
-      "summary": "4 failed | 59 passed (63)",
-      "outcome": "killed"
-    },
-    {
-      "id": "blob-redaction-detector-ids",
-      "file": "packages/polaris-dossier/src/check.ts",
-      "old": "detectorIds: [...detectorIds], withheldLineRanges",
-      "new": "detectorIds: [], withheldLineRanges",
-      "tests": [
-        "packages/polaris-dossier/src/check.test.ts"
-      ],
-      "exit": 1,
-      "summary": "3 failed | 60 passed (63)",
-      "outcome": "killed"
-    },
-    {
-      "id": "cited-blob-carries-provenance",
-      "file": "packages/polaris-dossier/src/check.ts",
-      "old": "{ redaction: blobRedaction(state.withheld, state.detectorIds!) }",
-      "new": "{ redaction: { redactionClass: 'redacted-span', withheldLines: state.withheld.length } }",
-      "tests": [
-        "packages/polaris-dossier/src/check.test.ts"
-      ],
-      "exit": 1,
-      "summary": "2 failed | 61 passed (63)",
-      "outcome": "killed"
-    },
-    {
-      "id": "render-partially-retained",
-      "file": "packages/polaris-dossier/src/render.ts",
-      "old": "and partially retained by screening as redacted-span: ",
-      "new": "and retained by screening as redacted-span: ",
-      "tests": [
-        "packages/polaris-dossier/src/render.test.ts"
-      ],
-      "exit": 1,
-      "summary": "1 failed | 42 passed (43)",
-      "outcome": "killed"
-    },
-    {
-      "id": "render-redaction-details-on-row",
-      "file": "packages/polaris-dossier/src/render.ts",
-      "old": "`revision ${pinned}`, ...redactionDetails(cited.redaction)]",
-      "new": "`revision ${pinned}`]",
-      "tests": [
-        "packages/polaris-dossier/src/render.test.ts"
-      ],
-      "exit": 1,
-      "summary": "1 failed | 42 passed (43)",
-      "outcome": "killed"
-    },
-    {
-      "id": "render-redaction-details-single-line",
-      "file": "packages/polaris-dossier/src/render.ts",
-      "old": "(first === last ? `${first}` : `${first}\\u2013${last}`)",
-      "new": "`${first}\\u2013${last}`",
-      "tests": [
-        "packages/polaris-dossier/src/render.test.ts"
-      ],
-      "exit": 1,
-      "summary": "1 failed | 42 passed (43)",
-      "outcome": "killed"
+      "denominator": {
+        "mutants": 11,
+        "killed": 11,
+        "survived": 0
+      },
+      "residual": "check-census-statement-classes shows the statement classes reach the census (replacing them with [] changes the output), but the check.test.ts fixture run is non-governed, so the classes it carries are null; a run whose statement lists a class is exercised only in inventory.test.ts (buildInventoryBrief) and census.test.ts (withheldCensus).",
+      "mutants": [
+        {
+          "id": "check-census-on-check",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "  if (plan.command === 'check') {\n    try {\n      screenCensus",
+          "new": "  if (false) {\n    try {\n      screenCensus",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "2 failed | 63 passed (65)",
+          "outcome": "killed"
+        },
+        {
+          "id": "check-census-not-on-inventory-check",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "  if (plan.command === 'check') {\n    try {\n      screenCensus",
+          "new": "  if (true) {\n    try {\n      screenCensus",
+          "tests": [
+            "packages/polaris-dossier/src/inventory.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 46 passed (47)",
+          "outcome": "killed"
+        },
+        {
+          "id": "check-census-unknown-on-listing-refusal",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "      screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})` });",
+          "new": "      screenCensus = undefined;",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 64 passed (65)",
+          "outcome": "killed"
+        },
+        {
+          "id": "check-census-statement-classes",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "withheldCensus(await reader.listTree(), screen, checked.contentClasses)",
+          "new": "withheldCensus(await reader.listTree(), screen, [])",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 64 passed (65)",
+          "outcome": "killed"
+        },
+        {
+          "id": "check-census-not-in-record",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "fs.writeFileSync(checkFile, `${JSON.stringify(record, null, 2)}\\n`",
+          "new": "fs.writeFileSync(checkFile, `${JSON.stringify({ ...record, screenCensus }, null, 2)}\\n`",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 64 passed (65)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-groups-escaped",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "group('unknown-extraction-class', census.unknownExtractionClass.map(censusPath)),",
+          "new": "group('unknown-extraction-class', census.unknownExtractionClass.map((p) => p)),",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts",
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "5 failed | 75 passed (80)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-groups-cap",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "listed: shown.slice(0, CENSUS_LISTED_LIMIT),",
+          "new": "listed: shown,",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts"
+          ],
+          "exit": 1,
+          "summary": "3 failed | 12 passed (15)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-groups-not-listed-count",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "notListed: Math.max(0, shown.length - CENSUS_LISTED_LIMIT)",
+          "new": "notListed: 0",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts"
+          ],
+          "exit": 1,
+          "summary": "3 failed | 12 passed (15)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-groups-class-beside-path",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "`${censusPath(entry.path)} (${entry.missingClass})`",
+          "new": "censusPath(entry.path)",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts",
+            "packages/polaris-dossier/src/inventory.test.ts"
+          ],
+          "exit": 1,
+          "summary": "4 failed | 58 passed (62)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-report-secret-count",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "secretDetectorPathMatches: census.secretPath,",
+          "new": "secretDetectorPathMatches: 0,",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts",
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "2 failed | 78 passed (80)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-report-unknown-state",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "if (!load.ok) return { state: 'unknown', why: load.why,",
+          "new": "if (!load.ok) return { state: 'unknown', why: '',",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts",
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "2 failed | 78 passed (80)",
+          "outcome": "killed"
+        }
+      ]
     }
   ],
+  "denominator": {
+    "mutants": 36,
+    "killed": 36,
+    "survived": 0,
+    "basis": "every mutant of every run; the code each run exercised is the commit that run names"
+  },
   "label": "Observed"
 }
