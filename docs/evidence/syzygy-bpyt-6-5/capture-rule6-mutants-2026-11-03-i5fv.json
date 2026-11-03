@@ -1,0 +1,192 @@
+{
+ "subject": "syzygy-i5fv: rule-6 mutants for the capture comparators (review R-GP-IMPL-PWB-ONE-BLOB-READER-CAPTURE-1-RAW.md E3)",
+ "date": "2026-11-03",
+ "inputs": {
+  "baseCommit": "85c54814580a09bf07e0f8d3536259e126b9ffb5",
+  "headCommit": "08f2287d5b9424c549250088690c5abe3da4c357",
+  "note": "outputs regenerated with the retained capture-harness.test.ts.txt and vitest.differential.config.ts.txt in clean worktrees of those commits (npm ci each, own TMPDIR); cap-base sha256 a91d300f4b5841698ebc60fdba8f963937f36e9761fdb7e93ac5829f597ef2c0 and cap-head sha256 9ab9afcd996ba7ab19b6d6fcb99320554ee25c429c9133547204cc179e405112 equal the q44o record's outputs.cap-base and outputs.cap-head. The outputs are not retained (234 KB each; regenerable).",
+  "runner": "run_capture_mutants.py"
+ },
+ "runs": [
+  {
+   "comparator": "compare_capture.py",
+   "allPass": false,
+   "mutants": [
+    {
+     "id": "noop-control",
+     "old": "\"mode\": \"real-git-fixture\"",
+     "new": "\"mode\": \"real-git-fixture\"",
+     "exit": 0,
+     "traceback": false
+    },
+    {
+     "id": "shape-digest",
+     "old": "\"digest\": \"db28dfc6b0a534dde8ca07916168da46da8fcb6c2ff8b4c897bcd19614c43f29\"",
+     "new": "\"digest\": \"db28dfc6b0a534dde8ca07916168da46da8fcb6c2ff8b4c897bcd19614c43f2a\"",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "shape-field",
+     "old": "\"sourceCount\": 15,",
+     "new": "\"sourceCount\": 16,",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "extra-cat-file",
+     "old": "\"cat-file blob 14fd6e025ebd486127572eb984fe0a51d8cbb83c\",",
+     "new": "\"cat-file blob 14fd6e025ebd486127572eb984fe0a51d8cbb83c\",\n      \"cat-file blob 14fd6e025ebd486127572eb984fe0a51d8cbb83c\",",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "extra-ls-tree",
+     "old": "\"ls-tree -r -z -l 217150de40b1108e632829d0954b6e9728323974\",",
+     "new": "\"ls-tree -r -z -l 217150de40b1108e632829d0954b6e9728323974\",\n      \"ls-tree -r -z -l 217150de40b1108e632829d0954b6e9728323974\",",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "ls-tree-removed",
+     "old": "\"ls-tree -r -z -l 217150de40b1108e632829d0954b6e9728323974\",",
+     "new": "\"rev-parse --verify HEAD\",",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "revision",
+     "old": "\"base\": \"217150de40b1108e632829d0954b6e9728323974\"",
+     "new": "\"base\": \"317150de40b1108e632829d0954b6e9728323974\"",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "scenario-missing",
+     "old": "\"base\": {",
+     "new": "\"basex\": {",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "mode",
+     "old": "\"mode\": \"real-git-fixture\"",
+     "new": "\"mode\": \"live\"",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "shapes-section-absent",
+     "old": "\"shapes\":",
+     "new": "\"shapez\":",
+     "exit": 1,
+     "traceback": true
+    },
+    {
+     "id": "gitCalls-section-absent",
+     "old": "\"gitCalls\":",
+     "new": "\"gitCallz\":",
+     "exit": 1,
+     "traceback": true
+    },
+    {
+     "id": "mode-section-absent",
+     "old": "\"mode\": \"real-git-fixture\"",
+     "new": "\"modez\": \"real-git-fixture\"",
+     "exit": 1,
+     "traceback": true
+    }
+   ]
+  },
+  {
+   "comparator": "compare_capture_v2.py",
+   "allPass": true,
+   "mutants": [
+    {
+     "id": "noop-control",
+     "old": "\"mode\": \"real-git-fixture\"",
+     "new": "\"mode\": \"real-git-fixture\"",
+     "exit": 0,
+     "traceback": false
+    },
+    {
+     "id": "shape-digest",
+     "old": "\"digest\": \"db28dfc6b0a534dde8ca07916168da46da8fcb6c2ff8b4c897bcd19614c43f29\"",
+     "new": "\"digest\": \"db28dfc6b0a534dde8ca07916168da46da8fcb6c2ff8b4c897bcd19614c43f2a\"",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "shape-field",
+     "old": "\"sourceCount\": 15,",
+     "new": "\"sourceCount\": 16,",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "extra-cat-file",
+     "old": "\"cat-file blob 14fd6e025ebd486127572eb984fe0a51d8cbb83c\",",
+     "new": "\"cat-file blob 14fd6e025ebd486127572eb984fe0a51d8cbb83c\",\n      \"cat-file blob 14fd6e025ebd486127572eb984fe0a51d8cbb83c\",",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "extra-ls-tree",
+     "old": "\"ls-tree -r -z -l 217150de40b1108e632829d0954b6e9728323974\",",
+     "new": "\"ls-tree -r -z -l 217150de40b1108e632829d0954b6e9728323974\",\n      \"ls-tree -r -z -l 217150de40b1108e632829d0954b6e9728323974\",",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "ls-tree-removed",
+     "old": "\"ls-tree -r -z -l 217150de40b1108e632829d0954b6e9728323974\",",
+     "new": "\"rev-parse --verify HEAD\",",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "revision",
+     "old": "\"base\": \"217150de40b1108e632829d0954b6e9728323974\"",
+     "new": "\"base\": \"317150de40b1108e632829d0954b6e9728323974\"",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "scenario-missing",
+     "old": "\"base\": {",
+     "new": "\"basex\": {",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "mode",
+     "old": "\"mode\": \"real-git-fixture\"",
+     "new": "\"mode\": \"live\"",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "shapes-section-absent",
+     "old": "\"shapes\":",
+     "new": "\"shapez\":",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "gitCalls-section-absent",
+     "old": "\"gitCalls\":",
+     "new": "\"gitCallz\":",
+     "exit": 1,
+     "traceback": false
+    },
+    {
+     "id": "mode-section-absent",
+     "old": "\"mode\": \"real-git-fixture\"",
+     "new": "\"modez\": \"real-git-fixture\"",
+     "exit": 1,
+     "traceback": false
+    }
+   ]
+  }
+ ]
+}
