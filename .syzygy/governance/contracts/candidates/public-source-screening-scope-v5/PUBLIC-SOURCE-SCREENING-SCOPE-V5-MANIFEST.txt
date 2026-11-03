@@ -1,0 +1,10 @@
+# PUBLIC-SOURCE SCREENING SCOPE VERSION 5 MANIFEST
+# Candidate; this file and its rows bind nothing by themselves.
+# 4 rows, one per variant (bcd, bd, b, t). Each row hashes the PROPOSED bytes
+# (the version-4 policy, variant span, with that variant's
+# proposed/<name>.<variant>.patch applied). The owner picks at most one row;
+# that row is the argument of one superseding approve-policy act.
+b6c1bddb019be6bf8cf20a38b9f2e3532ecf6d657351ad0aa92deb2860867a2e  .syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json  [variant: bcd]
+40ca5938c9d617237864d6cfc827dfd4e4890aed8b92c342510051e153579dea  .syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json  [variant: bd]
+aeb036881b1aa21a8ac72ce9f98289539428494f459bce31134f77fb1e9ad985  .syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json  [variant: b]
+b83f7cde501f5ca3e9cc83c471de12f3bb91d904893d530190b26918af4cf591  .syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json  [variant: t]
