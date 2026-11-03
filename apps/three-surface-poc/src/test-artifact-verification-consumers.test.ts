@@ -55,6 +55,8 @@ const EXPECTED_CONSUMERS: Readonly<Record<string, string>> = {
     'renders `reported` in the Unknown encoding with its disclosure, never "Verified" (trajectory.test.ts)',
   'packages/three-surface-poc-core/src/model.ts':
     'adds `reported` to the Unknown subjects as `execution-blocked` with its disclosure (trajectory.test.ts reads it back)',
+  'packages/three-surface-poc-core/src/model-slices.ts':
+    'the Trajectory slice resolves the verification and returns it verbatim to the compose step; it branches on no kind (model.test.ts)',
   'apps/three-surface-poc/src/fresh-checkout-demo-main.ts':
     'copies the kind string into its evidence record; it gates nothing on it',
 };

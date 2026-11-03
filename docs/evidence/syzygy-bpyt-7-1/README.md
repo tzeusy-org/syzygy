@@ -55,7 +55,8 @@ commit it names (verification rule 7).
   killed, 4 survived (`compose-identity-over-other-model`,
   `table-capability-provenance-short`, `table-orrery-membership-moved`,
   `table-unsupported-role-accepted`); the test commit after it adds one
-  assertion per survivor. The final record names its own commit.
+  assertion per survivor. `mutants-4321fc94.json`, at the PR's product
+  head: 20 killed, 0 survived.
 - `spec-checks.json` (acceptance criterion 3), file:line quotes for both:
   - Walkthrough independence: `walkthrough-readiness.ts` imports the run-record
     type and its field parser from `walkthrough-judgment.ts` and never the
