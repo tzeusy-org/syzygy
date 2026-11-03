@@ -1,0 +1,46 @@
+{
+  "subject": "packages/polaris-dossier/src/execution-choice.ts",
+  "test": "packages/polaris-dossier/src/execution-choice.test.ts",
+  "commit": "e8b8b0bb48966c5aed4608c5166b9417de18c02e",
+  "mutants": [
+    {
+      "id": "M1-launched-arm",
+      "old": "  if (marker === 'launched') {",
+      "new": "  if (marker === ('launched' as string) && false) {",
+      "exit": 1,
+      "killed": true,
+      "failedTests": [
+        "\u00d7 allow-execution: refused > refuses a launched run and records nothing 10ms",
+        "\u00d7 allow-execution: refused > checks the marker before every other refusal, where the CLI checked it before 2ms",
+        "\u00d7 syzygy dossier allow-execution > refuses a launched run and records nothing 2ms"
+      ]
+    },
+    {
+      "id": "M2-unreadable-arm",
+      "old": "  if (marker === 'unreadable') {",
+      "new": "  if (marker === ('unreadable' as string) && false) {",
+      "exit": 1,
+      "killed": true,
+      "failedTests": [
+        "\u00d7 allow-execution: refused > refuses a run whose launched marker is an empty file, as a launched run, and records nothing 10ms",
+        "\u00d7 allow-execution: refused > refuses a run whose launched marker is invalid JSON, as a launched run, and records nothing 3ms",
+        "\u00d7 allow-execution: refused > refuses a run whose launched marker is another format, as a launched run, and records nothing 3ms",
+        "\u00d7 allow-execution: refused > refuses a run whose launched marker is a directory, as a launched run, and records nothing 3ms",
+        "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is an empty file, as a launched run, and records nothing 2ms",
+        "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is invalid JSON, as a launched run, and records nothing 1ms",
+        "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is another format, as a launched run, and records nothing 1ms",
+        "\u00d7 syzygy dossier allow-execution > refuses a run whose launched marker is a directory, as a launched run, and records nothing 1ms"
+      ]
+    },
+    {
+      "id": "M3-after-run-name",
+      "old": "  // syzygy-bpyt.8.11: a launched run takes no choice (SEC-3; candidate REQ-polaris-generation-044's falsifier), and neither does a run\n  // whose marker is present but not the one Syzygy writes (syzygy-bpyt.8.8). Checked first, where the CLI checked it before, so every\n  // caller of this function refuses at the same point and no other refusal moves.\n  const marker = launchedMarkerState(run);\n  if (marker === 'launched') {\n    return refuse('launched', 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing');\n  }\n  if (marker === 'unreadable') {\n    return refuse('launched', 'this run\\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)');\n  }\nconst runId ... RUN_ID refusal",
+      "new": "RUN_ID refusal\n  // syzygy-bpyt.8.11: a launched run takes no choice (SEC-3; candidate REQ-polaris-generation-044's falsifier), and neither does a run\n  // whose marker is present but not the one Syzygy writes (syzygy-bpyt.8.8). Checked first, where the CLI checked it before, so every\n  // caller of this function refuses at the same point and no other refusal moves.\n  const marker = launchedMarkerState(run);\n  if (marker === 'launched') {\n    return refuse('launched', 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing');\n  }\n  if (marker === 'unreadable') {\n    return refuse('launched', 'this run\\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)');\n  }\n",
+      "exit": 1,
+      "killed": true,
+      "failedTests": [
+        "\u00d7 allow-execution: refused > checks the marker before every other refusal, where the CLI checked it before 11ms"
+      ]
+    }
+  ]
+}
