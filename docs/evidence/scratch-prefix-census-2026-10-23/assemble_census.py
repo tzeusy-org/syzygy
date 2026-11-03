@@ -422,9 +422,10 @@ AGG_RECORDS = {
     'c': {'mode': 'clean', 'seconds': 10.0, 'privateDirectory': '/p/c', 'listingAtEnd': []},
     'k': {'mode': 'kill', 'seconds': 5.0, 'privateDirectory': '/p/k',
           'listingAtEnd': [{'name': 'tk-ZZZZZZ', 'bytes': 10, 'mtime': 1.0}, {'name': 'nt-YYYYYY', 'bytes': 20, 'mtime': 2.0}, {'name': '.com.google.Chrome.xYzAbC', 'bytes': 30, 'mtime': 3.0},
-                            {'name': 'tk-ZZZZZZ-out.md', 'bytes': 5, 'mtime': 4.0}]},
+                            {'name': 'tk-ZZZZZZ-out.md', 'bytes': 5, 'mtime': 4.0},
+                            {'name': 'tk-VVVVVV', 'bytes': 7, 'mtime': 6.0}]},
     'f': {'mode': 'clean', 'seconds': 5.0, 'privateDirectory': '/p/f',
-          'seededFrom': {'privateDirectory': '/p/k', 'entriesMovedIn': ['tk-ZZZZZZ', 'nt-YYYYYY', '.com.google.Chrome.xYzAbC', 'tk-ZZZZZZ-out.md']},
+          'seededFrom': {'privateDirectory': '/p/k', 'entriesMovedIn': ['tk-ZZZZZZ', 'nt-YYYYYY', '.com.google.Chrome.xYzAbC', 'tk-ZZZZZZ-out.md', 'tk-VVVVVV']},
           'listingAtEnd': [{'name': 'tk-ZZZZZZ', 'bytes': 10, 'mtime': 1.0}, {'name': '.com.google.Chrome.xYzAbC', 'bytes': 30, 'mtime': 3.0},
                            {'name': 'tk-WWWWWW', 'bytes': 40, 'mtime': 7.0}]},
 }
@@ -442,6 +443,7 @@ AGG_TRACES = {
         {'kind': 'mkdtemp', 'path': '/t/tk-ZZZZZZ', 'prefix': 'tk-', 'frames': ['packages/q/src/kit.testkit.ts:3']},
         {'kind': 'mkdtemp', 'path': '/t/nt-YYYYYY', 'prefix': 'nt-', 'frames': ['packages/q/src/operator.ts:6']},
         {'kind': 'writeFile', 'path': '/t/tk-ZZZZZZ-out.md', 'frames': ['packages/q/src/kit.testkit.ts:3']},
+        {'kind': 'mkdtemp', 'path': '/t/tk-VVVVVV', 'prefix': 'tk-', 'frames': ['packages/q/src/kit.testkit.ts:3']},
     ],
     'f': [
         {'kind': 'mkdtemp', 'path': '/t/tk-WWWWWW', 'prefix': 'tk-', 'frames': ['packages/q/src/kit.testkit.ts:3']},
@@ -485,8 +487,12 @@ LG_ROWS = [
     # 1.0-3.0, in a class that is not published, so the published filter alone keeps it out of the answer.
     {'kind': 'mkdtemp', 'path': '/t/u-KKKKKK', 'prefix': 'u-', 't': 6700, 'frames': ['packages/q/src/a.ts:5']},
     {'kind': 'mkdtemp', 'path': '/t/v-LLLLLL', 'prefix': 'v-', 't': 2700, 'frames': ['packages/q/src/a.ts:6']},
+    # Never sampled, created exactly on a bound: w-MMMMMM at 3.0 s, the upper bound of the long gap 1.0-3.0 (inside it); x-NNNNNN at 4.0 s, the lower
+    # bound of the long gap 4.0-6.0 (outside it: the gap is open at the start, and 4.0 is the upper bound of the shorter gap 3.5-4.0).
+    {'kind': 'mkdtemp', 'path': '/t/w-MMMMMM', 'prefix': 'w-', 't': 3200, 'frames': ['packages/q/src/a.ts:7']},
+    {'kind': 'mkdtemp', 'path': '/t/x-NNNNNN', 'prefix': 'x-', 't': 4200, 'frames': ['packages/q/src/a.ts:8']},
 ]
-LG_PUBLISHED = {'p-', 'q-', 'r-', 's-', 'u-', 'chrome-singleton-directory'}
+LG_PUBLISHED = {'p-', 'q-', 'r-', 's-', 'u-', 'w-', 'x-', 'z-', 'chrome-singleton-directory'}  # z- has no name at all
 EXPECTED_AGGREGATE = {
     'gap': {'gapSeconds': 0.6, 'sightingInstants': 9, 'gapsBetweenSightings': 8, 'gapsUnderTwoIntervals': 2, 'gapsOfTwoIntervalsOrMore': 6, 'smallestGapOfTwoIntervalsOrMore': 1.0},
     'byRule': {'R1-fixture-sweep-landed': 1, 'R2-chrome-singleton': 1, 'R3-browser-profile': 1, 'R6-non-test-module': 2, 'R9-test-file': 3},
@@ -504,20 +510,21 @@ EXPECTED_AGGREGATE = {
         'two-': {'run': 'c', 'namesSampled': 1, 'namesNeverSampled': 0, 'expectedNamesPresentAtARandomMoment': {'lowerBound': 0.0, 'upperBound': 0.12}},
     },
     'longGaps': {
-        'clockOffsetSeconds': 0.2, 'clockOffsetWindowSeconds': 0.4, 'tracedNames': 10, 'tracedNamesTheSamplerSaw': 4, 'tracedNamesCreatedInNoGap': 0,
-        'gapsOfTwoIntervalsOrMore': {'gaps': 3, 'seconds': 5.0, 'namesCreatedInside': 6, 'ofThemEverSampled': 2,
-                                     'perGap': [{'from': 1.0, 'to': 3.0, 'seconds': 2.0, 'namesCreatedInside': 3, 'ofThemEverSampled': 1},
+        'clockOffsetSeconds': 0.2, 'clockOffsetWindowSeconds': 0.4, 'tracedNames': 12, 'tracedNamesTheSamplerSaw': 4, 'tracedNamesCreatedInNoGap': 0,
+        'gapsOfTwoIntervalsOrMore': {'gaps': 3, 'seconds': 5.0, 'namesCreatedInside': 7, 'ofThemEverSampled': 2,
+                                     'perGap': [{'from': 1.0, 'to': 3.0, 'seconds': 2.0, 'namesCreatedInside': 4, 'ofThemEverSampled': 1},
                                                 {'from': 4.0, 'to': 6.0, 'seconds': 2.0, 'namesCreatedInside': 1, 'ofThemEverSampled': 0},
                                                 {'from': 6.0, 'to': 7.0, 'seconds': 1.0, 'namesCreatedInside': 2, 'ofThemEverSampled': 1}]},
-        'shorterGaps': {'gaps': 4, 'seconds': 2.0, 'namesCreatedInside': 4, 'ofThemEverSampled': 2},
-        'publishedClasses': 6,
+        'shorterGaps': {'gaps': 4, 'seconds': 2.0, 'namesCreatedInside': 5, 'ofThemEverSampled': 2},
+        'publishedClasses': 9,
         'publishedClassesThatDependOnThem': {
             'chrome-singleton-directory': {'names': 1, 'neverSampledCreatedInALongGap': 0, 'sampledWithALongGapBesideItsSightings': 1},
             'p-': {'names': 3, 'neverSampledCreatedInALongGap': 0, 'sampledWithALongGapBesideItsSightings': 3},
             'q-': {'names': 1, 'neverSampledCreatedInALongGap': 0, 'sampledWithALongGapBesideItsSightings': 1},
             'r-': {'names': 3, 'neverSampledCreatedInALongGap': 2, 'sampledWithALongGapBesideItsSightings': 0},
-            'u-': {'names': 1, 'neverSampledCreatedInALongGap': 1, 'sampledWithALongGapBesideItsSightings': 0}},
-        'publishedClassesThatDoNot': ['s-'],
+            'u-': {'names': 1, 'neverSampledCreatedInALongGap': 1, 'sampledWithALongGapBesideItsSightings': 0},
+            'w-': {'names': 1, 'neverSampledCreatedInALongGap': 1, 'sampledWithALongGapBesideItsSightings': 0}},
+        'publishedClassesThatDoNot': ['s-', 'x-', 'z-'],
     },
     # What each run left, per class, hand-derived from AGG_RECORDS: k left tk-ZZZZZZ, nt-YYYYYY, a Chrome singleton and the derived tk-ZZZZZZ-out.md; the
     # fresh run f, seeded from k, still holds two of those (tk-ZZZZZZ and the singleton, 10 and 30 bytes) and left tk-WWWWWW of its own. A seed is
@@ -527,8 +534,8 @@ EXPECTED_AGGREGATE = {
                                        'afterTheNextFreshRun': {'f': {'killRun': 'k', 'leftBySIGKILL': 1, 'stillThere': 1, 'bytesStillThere': 30}}, 'leftByTheFreshRunItself': {}},
         'nt-': {'leftAfterSIGKILL': {'k': {'entries': 1, 'bytes': 20, 'oldestMtime': 2.0, 'newestMtime': 2.0}},
                 'afterTheNextFreshRun': {'f': {'killRun': 'k', 'leftBySIGKILL': 1, 'stillThere': 0, 'bytesStillThere': 0}}, 'leftByTheFreshRunItself': {}},
-        'tk-': {'leftAfterSIGKILL': {'k': {'entries': 1, 'bytes': 10, 'oldestMtime': 1.0, 'newestMtime': 1.0}},
-                'afterTheNextFreshRun': {'f': {'killRun': 'k', 'leftBySIGKILL': 1, 'stillThere': 1, 'bytesStillThere': 10}},
+        'tk-': {'leftAfterSIGKILL': {'k': {'entries': 2, 'bytes': 17, 'oldestMtime': 1.0, 'newestMtime': 6.0}},
+                'afterTheNextFreshRun': {'f': {'killRun': 'k', 'leftBySIGKILL': 2, 'stillThere': 1, 'bytesStillThere': 10}},
                 'leftByTheFreshRunItself': {'f': {'entries': 1, 'bytes': 40, 'oldestMtime': 7.0, 'newestMtime': 7.0}}},
         'tk-<random>-out.md': {'leftAfterSIGKILL': {'k': {'entries': 1, 'bytes': 5, 'oldestMtime': 4.0, 'newestMtime': 4.0}},
                                'afterTheNextFreshRun': {'f': {'killRun': 'k', 'leftBySIGKILL': 1, 'stillThere': 0, 'bytesStillThere': 0}}, 'leftByTheFreshRunItself': {}},
@@ -618,6 +625,12 @@ def selftest(out: pathlib.Path) -> None:
         'seed-entries-counted-as-the-runs-own': ("slot = item['leftFromSeed' if name in seed_names else 'leftAtEnd']", "slot = item['leftAtEnd']"),
         'mkdtemp-count-includes-derived': ("sum(1 for r in table if r['family'] == 'mkdtemp')", "sum(1 for r in table if r['family'] in ('mkdtemp', 'derived'))"),
         'r3-long-gap-strict-threshold': ('is_long = lambda earlier, later: round(later - earlier, 2) >= 2 * interval', 'is_long = lambda earlier, later: round(later - earlier, 2) > 2 * interval'),
+        'r3-oldest-mtime-takes-the-max': ("min(slot['oldestMtime'], entry['mtime'])", "max(slot['oldestMtime'], entry['mtime'])"),
+        'r3-newest-mtime-takes-the-min': ("max(slot['newestMtime'], entry['mtime'])", "min(slot['newestMtime'], entry['mtime'])"),
+        'r3-never-sampled-long-gap-upper-bound-open': ("return any(earlier < made <= later for earlier, later in gaps if is_long(earlier, later))", "return any(earlier < made < later for earlier, later in gaps if is_long(earlier, later))"),
+        'r3-never-sampled-long-gap-lower-bound-closed': ("return any(earlier < made <= later for earlier, later in gaps if is_long(earlier, later))", "return any(earlier <= made <= later for earlier, later in gaps if is_long(earlier, later))"),
+        'r3-per-gap-names-lower-bound-closed': ("inside = [name for name, made in created.items() if earlier < made <= later]", "inside = [name for name, made in created.items() if earlier <= made <= later]"),
+        'r3-published-count-from-the-classes-with-names': ("'publishedClasses': len(published),", "'publishedClasses': len(by_class),"),
         'r3-published-filter-dropped': ('        if cls not in published:\n            continue\n        slot = by_class', '        slot = by_class'),
         'long-gap-before-the-first-sighting-ignored': ("return is_long(before, first) or (after < len(known) and is_long(last, known[after]))", "return after < len(known) and is_long(last, known[after])"),
     }
