@@ -1,0 +1,165 @@
+{
+ "bead": "syzygy-bpyt.1.24",
+ "authority": ".syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md (consent-withdrawal-knobs, answer A)",
+ "stopCondition": "no act family's verdict over the current decisions/ tree changes",
+ "subject": {
+  "decisionsFiles": 191,
+  "decisionsTreeSha256": "becc17e9a3f086b008bd18baebb9edab85dd6d7578571c8fc129bc0030f880c8",
+  "readerBefore": {
+   "commit": "e1f43f7c9ca2c2643473157372dbee3850f1c04a",
+   "packageReaderSha256": "c14405e416bf54b406475f1fe61a527eb932896f70be278d9c325182a7617028"
+  },
+  "readerAfter": {
+   "commit": "4d4351f6b951bdabf938d15ecceb4eb71f0f10c7",
+   "packageReaderSha256": "bdf7bdb4ce94c102a743de1903067b20da43826c0906b02ef87c55496df782b5"
+  }
+ },
+ "now": "2026-11-04T12:00:00.000Z",
+ "verdictsCompared": 17,
+ "verdictsChanged": [],
+ "before": {
+  "admission": [
+   "PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7 inForceAt=1791395425000"
+  ],
+  "policyReader": [
+   "PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-2026-11-03 1793689106000..null"
+  ],
+  "policyChain": {
+   "state": "ok",
+   "identity": "PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-2026-11-03"
+  },
+  "classAct": {
+   "state": "ok",
+   "identity": "RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-07"
+  },
+  "inForceEgress": {
+   "state": "absent",
+   "why": "no egress record is in force"
+  },
+  "registryGitSource": {
+   "state": "absent",
+   "why": "no owner-act record .syzygy/governance/decisions/PUBLIC-ADMISSION-REGISTRY-GIT-SOURCE-ACT.md exists"
+  },
+  "localAgentSignoff": {
+   "state": "ok",
+   "identity": "public-git-source-acquisition-local-agent-v1.0"
+  },
+  "d9": {
+   "state": "ok",
+   "identity": "D9-IN-FORCE-OPERATOR-AGENT-2026-10-07"
+  },
+  "rfc720": {
+   "state": "ok",
+   "identity": "RFC7-20-READING-IN-FORCE-OPERATOR-AGENT-2026-10-07"
+  },
+  "drawer:redis-redis": {
+   "state": "absent",
+   "why": "no owner-act record .syzygy/governance/decisions/DOSSIER-LOCAL-AGENT-REDIS-NO-EVIDENCE-DRAWER-ACT.md exists"
+  },
+  "providerV2": {
+   "state": "ok",
+   "identity": "AGENT-PROVIDER-V2-REDIS-ANTHROPIC-2026-10-08"
+  },
+  "statement:redis-redis:claude-code:anthropic": {
+   "state": "ok",
+   "identity": "AGENT-PROVIDER-REDIS-ANTHROPIC-2026-10-07"
+  },
+  "statement:redis-redis:claude-code:anthropic:successor": {
+   "state": "ok",
+   "identity": "AGENT-PROVIDER-V2-REDIS-ANTHROPIC-2026-10-08"
+  },
+  "statement:redis-redis:codex:openai": {
+   "state": "absent",
+   "why": "no owner-act record .syzygy/governance/decisions/DOSSIER-LOCAL-AGENT-REDIS-AGENT-OPENAI-ACT.md exists"
+  },
+  "port:observation-consent": {
+   "satisfied": true,
+   "record": "PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7"
+  },
+  "port:egress-consent": {
+   "satisfied": false,
+   "why": "no record found: no owner act puts a egress-consent for redis-redis in force"
+  },
+  "port:public-source-policy": {
+   "satisfied": true,
+   "record": "PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-2026-11-03"
+  }
+ },
+ "after": {
+  "admission": [
+   "PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7 inForceAt=1791395425000"
+  ],
+  "policyReader": [
+   "PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-2026-11-03 1793689106000..null"
+  ],
+  "policyChain": {
+   "state": "ok",
+   "identity": "PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-2026-11-03"
+  },
+  "classAct": {
+   "state": "ok",
+   "identity": "RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-07"
+  },
+  "inForceEgress": {
+   "state": "absent",
+   "why": "no egress record is in force"
+  },
+  "registryGitSource": {
+   "state": "absent",
+   "why": "no owner-act record .syzygy/governance/decisions/PUBLIC-ADMISSION-REGISTRY-GIT-SOURCE-ACT.md exists"
+  },
+  "localAgentSignoff": {
+   "state": "ok",
+   "identity": "public-git-source-acquisition-local-agent-v1.0"
+  },
+  "d9": {
+   "state": "ok",
+   "identity": "D9-IN-FORCE-OPERATOR-AGENT-2026-10-07"
+  },
+  "rfc720": {
+   "state": "ok",
+   "identity": "RFC7-20-READING-IN-FORCE-OPERATOR-AGENT-2026-10-07"
+  },
+  "drawer:redis-redis": {
+   "state": "absent",
+   "why": "no owner-act record .syzygy/governance/decisions/DOSSIER-LOCAL-AGENT-REDIS-NO-EVIDENCE-DRAWER-ACT.md exists"
+  },
+  "providerV2": {
+   "state": "ok",
+   "identity": "AGENT-PROVIDER-V2-REDIS-ANTHROPIC-2026-10-08"
+  },
+  "statement:redis-redis:claude-code:anthropic": {
+   "state": "ok",
+   "identity": "AGENT-PROVIDER-REDIS-ANTHROPIC-2026-10-07"
+  },
+  "statement:redis-redis:claude-code:anthropic:successor": {
+   "state": "ok",
+   "identity": "AGENT-PROVIDER-V2-REDIS-ANTHROPIC-2026-10-08"
+  },
+  "statement:redis-redis:codex:openai": {
+   "state": "absent",
+   "why": "no owner-act record .syzygy/governance/decisions/DOSSIER-LOCAL-AGENT-REDIS-AGENT-OPENAI-ACT.md exists"
+  },
+  "port:observation-consent": {
+   "satisfied": true,
+   "record": "PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7"
+  },
+  "port:egress-consent": {
+   "satisfied": false,
+   "why": "no record found: no owner act puts a egress-consent for redis-redis in force"
+  },
+  "port:public-source-policy": {
+   "satisfied": true,
+   "record": "PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-2026-11-03"
+  }
+ },
+ "differentialTest": {
+  "file": "packages/polaris-generation-consent/src/act-families.test.ts",
+  "sha256": "af3aa1b3fa69c56a464672676050acbbefd225f5b6a4a53dd8c60e8589ec0c91",
+  "beforeLiteralsCheckedAgainstBaseReader": "the file at the change, with its three after-assertions switched to before, run over package-reader.ts from e1f43f7c: Tests 69 passed (69)",
+  "afterAtChange": "Tests 69 passed (69)"
+ },
+ "probesNotAligned": {
+  "policy stem as a text needle (POLICY_STEM in ActSweep.needles)": "refuses the current tree (policyReader throws invalid-records; policyChain refused; port public-source-policy unsatisfied): not a reading knob, left unchanged, reported to the owner"
+ }
+}
