@@ -94,8 +94,27 @@ start between the act and the install**.
   policy's detectors only.
 - **Regex dialect.** The builder's oracle runs Python `re`; the screens run
   JavaScript `RegExp`. The three patterns use no lookbehind or Unicode class,
-  but `\s` differs, so the install runs the builder's fixtures through the
-  TypeScript screens (as version 4 required).
+  but the engines differ (round 1, finding 8):
+  - `\s` (U+FEFF is whitespace in JavaScript, not in Python; U+001C–U+001F
+    the other way);
+  - case folding under the `i` flag (U+212A, the Kelvin sign, folds to `k` in
+    Python, not in JavaScript without `u`).
+
+  None is a realistic credential. The install runs the builder's fixtures
+  through the TypeScript screens, as version 4 required.
+- **Linear scanning.** `compileEveryOffsetMatcher` in
+  `packages/polaris-generation-core/src/secret-redaction.ts` replaces the base
+  `credential-bearing-url` regex with an exact linear recognizer, keyed to that
+  pattern's text (`CREDENTIAL_URL_PATTERN`). Its module header asserts that
+  "other declared regexes have no nested ambiguous quantifier".
+  - `credential-url-any-scheme` is written to keep that true: the user part
+    excludes `:`, and the scheme is bounded.
+  - The install pins it with a timing or step-count test over a long colon
+    run and a long letter run, in both screens (round 1, finding 3).
+  - The plain `detectSecrets` path
+    (`packages/three-surface-poc-core/src/content-classification.ts`) is
+    already quadratic for the base `https?://` form. The reviewer observed
+    this, and version 5 does not change it.
 - **Agent text.** `render.ts` (lines 280, 388) and `close.ts` (line 123)
   screen agent-written prose through `screenBody`; the scope detectors join
   it, so an agent draft
@@ -119,7 +138,10 @@ start between the act and the install**.
 ### D (`bd`, `bcd`)
 
 - `readProjectDocumentationRule` learns the fourth path rule and
-  `ownerPlacements`.
+  `ownerPlacements`. Like the rule's other lists, the listed paths are
+  compared as given against the folded path. The reader refuses an entry that
+  could never match a folded path (an A-Z letter), as `unmatchable` already
+  does for the other lists.
 - `publicSourceContentClass` and the screens' `contentClass(path)` take the
   repository identity and the admitted commit. Today they take a path alone,
   so the call sites in `review.ts`, `check.ts`, `render.ts` and the app's
