@@ -27,6 +27,10 @@ const GENERATOR_REQUIREMENT = /^REQ-polaris-generation-\d{3}$/;
  * direction; each must be declared by a `Decision ID:` line under decisions/. */
 const DOSSIER_DECISION = /^POLARIS-DOSSIER-(?:LOCAL-AGENT-[A-Z0-9]+(?:-[A-Z0-9]+)*|WAITING-SESSIONS|ONE-COMMAND-RUN)-\d{4}-\d{2}-\d{2}$/;
 
+/** A `Decision ID:` declaration line: the id in code ticks, then the line's end or a parenthetical (the waiting-sessions direction names
+ * the id's origin that way). Any other trailing text, such as "withdrawn", does not declare. */
+const DECISION_DECLARATION = /^Decision ID: `([A-Z0-9-]+)`(?:$| \()/gm;
+
 /** Owner directions on the dossier's local agent CLI runner (P-111); each must be declared by a `Decision ID:` line under decisions/. */
 const DOSSIER_RUNNER_DECISION = /^DOSSIER-(?:LOCAL-CLI-SUBPROCESS|CLI-RUNNER-[A-Z0-9]+(?:-[A-Z0-9]+)*)-\d{4}-\d{2}-\d{2}$/;
 
@@ -137,7 +141,7 @@ describe('Zero downstream citations of Polaris as authority (PWB-REQ-014)', () =
     const decisionsDirectory = join(REPO_ROOT, '.syzygy/governance/decisions');
     const declaredDecisions = new Set<string>();
     for (const file of walk(decisionsDirectory, isSpec)) {
-      for (const match of readFileSync(file, 'utf8').matchAll(/^Decision ID: `([A-Z0-9-]+)`(?:$| )/gm)) declaredDecisions.add(match[1] as string);
+      for (const match of readFileSync(file, 'utf8').matchAll(DECISION_DECLARATION)) declaredDecisions.add(match[1] as string);
     }
     for (const entry of entries.filter((candidate) => DOSSIER_RUNNER_DECISION.test(candidate.value) || MACHINE_CEILING_DECISION.test(candidate.value))) {
       expect(entry.key).toBe('decisions');
@@ -157,6 +161,13 @@ describe('Zero downstream citations of Polaris as authority (PWB-REQ-014)', () =
         expect(entry.value).toMatch(/^POLARIS-DIR-\d{4}-\d{2}-\d{2}$/);
       }
     }
+  });
+
+  it('reads a Decision ID declaration only at the line end or before a parenthetical (mutant: leave the end unanchored)', () => {
+    const declared = (text: string): string[] => [...text.matchAll(DECISION_DECLARATION)].map((match) => match[1] as string);
+    expect(declared('Decision ID: `A-1`\nDecision ID: `B-2` (named for the\ndirection)\n')).toEqual(['A-1', 'B-2']);
+    expect(declared('Decision ID: `A-1` (withdrawn; see B)\n')).toEqual(['A-1']);
+    expect(declared('Decision ID: `A-1` withdrawn\nDecision ID: `B-2`, superseded\nDecision ID: `C-3`x\n')).toEqual([]);
   });
 
   it('recognizes dossier decision identity syntax without accepting presentation references', () => {

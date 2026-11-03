@@ -71,12 +71,17 @@ With a URL (the author, driving the loop):
    a session the operator starts. Waiting sessions first: right after
    `syzygy dossier brief <run>`, run `syzygy dossier session-prompt <run> all`
    and show the operator the three terminal commands it prints. The
-   operator starts each in a new terminal, never behind `!`, and can then
-   walk away. Each session waits on its own
-   `syzygy dossier await <session-dir>/` command, reads only its own
-   directory (the inventory session also the clone), writes no file, and
-   hands its inventory or verdict to that command on standard input, in the
-   quoted heredoc its prompt prints; Syzygy writes the file. When the
+   operator starts each in a new terminal, never behind `!`. The printed
+   command pre-approves only the session's reads and its one await command,
+   and the operator can then walk away, with two limits: an allow rule in
+   the operator's own `~/.claude` or project settings still runs unattended
+   in the session, and whether the heredoc hand-over runs without a prompt
+   is Unknown, so a stalled submission is possible. Each session waits on
+   its own `syzygy dossier await <session-dir>/` command, reads only its
+   own directory (the inventory session also the clone), and writes no file
+   through anything the printed command pre-approves. It hands its
+   inventory or verdict to that command on standard input, in the quoted
+   heredoc its prompt prints; Syzygy writes the file. When the
    operator says each is started, record it with
    `syzygy dossier launch-form <run> inventory terminal`, or
    `syzygy dossier launch-form <run> review terminal --kind fidelity|design`.

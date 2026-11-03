@@ -9,7 +9,7 @@ import { runDossierCli, type CliPorts } from './cli.js';
 import { FIXTURE_SCREEN, FIXTURE_URL, LATER, NOW, REAL_ROOT, designVerdict, draft, fidelityVerdict, fixtureSources, inventory, makeClone, type Doc } from './full-run.testkit.js';
 import type { GateSources, ProviderStatementRecord } from './gate-sources.js';
 import type { DossierRenderer } from './render.js';
-import { readStdinBytes, sessionDirectoryRefusal, signoffRecordHolds, waitModeSignedIn } from './waiting-sessions.js';
+import { deliverToWaiting, readStdinBytes, resolveSessionDirectory, sessionDirectoryRefusal, signoffRecordHolds, waitModeRefusal, waitModeSignedIn, waitModeStatus, waitingReviewSession } from './waiting-sessions.js';
 
 // Pre-started waiting sessions (owner direction POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08; candidate v1.2 of the local-agent mode,
 // REQ-polaris-generation-035 as amended there). Every step runs through the CLI as a session would. Expected prompts, permission rules,
@@ -48,7 +48,7 @@ interface Harness {
   readonly run: string; readonly commit: string; readonly clone: string; readonly sessions: string;
   readonly cli: (argv: readonly string[]) => Promise<{ readonly exit: number; readonly doc: Doc; readonly stderr: string }>;
   readonly clock: { now: number };
-  readonly world: { signed: boolean; statements: ProviderStatementRecord[]; stdin: string | Uint8Array; onSleep?: () => void };
+  readonly world: { signed: boolean; statements: ProviderStatementRecord[]; stdin: string | Uint8Array; onSleep?: () => void; /** A records root: read the gate from it, not from `signed`. */ realGate?: string };
 }
 
 /** A briefed fixture run, through the CLI. `governed` makes the subject governed, relying on the statements in `world`. */
@@ -59,7 +59,9 @@ async function harness(options: { readonly governed?: boolean; readonly stateDir
   fs.mkdirSync(stateRoot, { recursive: true });
   const clock = { now: NOW };
   const world: Harness['world'] = { signed: true, statements: options.governed ? [statement('claude-code'), statement('codex')] : [], stdin: '' };
-  const base = fixtureSources(commit);
+  const fixture = fixtureSources(commit);
+  // With `world.realGate` set, the records root is that directory and the CLI carries no injected gate: the gate reads its records.
+  const base: GateSources = Object.defineProperty({ ...fixture }, 'recordsRoot', { get: () => world.realGate ?? fixture.recordsRoot, enumerable: true });
   const sources: GateSources = options.governed ? {
     ...base,
     projectInput: { drawerFor: async () => ({ stated: true, drawer: 'present', record: 'PROJECT-INPUT-FIXTURE@1' }) },
@@ -67,7 +69,7 @@ async function harness(options: { readonly governed?: boolean; readonly stateDir
   } : base;
   const ports: CliPorts = {
     env: {}, now: () => clock.now, sources, loadScreen: async () => FIXTURE_SCREEN, renderer,
-    waitModeSigned: () => world.signed, sleep: async (ms) => { clock.now += ms; world.onSleep?.(); },
+    get waitModeSigned() { return world.realGate === undefined ? () => world.signed : undefined; }, sleep: async (ms) => { clock.now += ms; world.onSleep?.(); },
     readStdin: async (maxBytes) => {
       const bytes = typeof world.stdin === 'string' ? new Uint8Array(Buffer.from(world.stdin, 'utf8')) : world.stdin;
       return bytes.length > maxBytes ? null : bytes;
@@ -288,6 +290,51 @@ describe('the v1.2 gate', () => {
     mutate(root, decisions);
     expect(waitModeSignedIn(root)).toBe(false);
   });
+
+  // Review-408 round 3, note 3: a record whose applied subject drifted is refused as such, not as an unsigned wait mode. The gate itself
+  // opens and closes exactly as before; only the reason differs.
+  it('tells a drifted applied subject from no record, and opens on neither (mutant: report drifted as unsigned)', () => {
+    const root = tempDir('dossier-signoff-');
+    const decisions = decisionsIn(root);
+    expect(waitModeStatus(root)).toBe('unsigned');
+    expect(waitModeRefusal(root)).toContain('which the owner has not signed off');
+    signoff(decisions, '1.1');
+    expect(waitModeStatus(root)).toBe('unsigned');
+    signoff(decisions, '1.2', 'CONFIRM');
+    expect(waitModeStatus(root)).toBe('signed');
+    expect(waitModeRefusal(root)).toBeNull();
+    fs.appendFileSync(path.join(root, SPEC_REL), 'edited\n');
+    expect(waitModeStatus(root)).toBe('drifted');
+    expect(waitModeSignedIn(root)).toBe(false);
+    expect(waitModeRefusal(root)).toContain('a sign-off record for it exists, but the signed subject it names is not what is installed');
+    expect(waitModeRefusal(root)).not.toContain('has not signed off');
+    // A record that fails its own head check is no record: unsigned, as before.
+    fs.rmSync(path.join(decisions, 'ACCEPTANCE-ACT-RECORD.md'));
+    expect(waitModeStatus(root)).toBe('unsigned');
+    // A closed injected gate cannot say why, so it keeps the unsigned reason.
+    expect(waitModeRefusal(root, () => false)).toContain('which the owner has not signed off');
+    expect(waitModeRefusal(root, () => true)).toBeNull();
+  });
+
+  it.each<[string[], boolean, string]>([
+    [['session-prompt', '<run>', 'all'], false, 'which the owner has not signed off'],
+    [['session-prompt', '<run>', 'all'], true, 'is not what is installed'],
+    [['await', '<sessions>/session-1/'], false, 'which the owner has not signed off'],
+    [['await', '<sessions>/session-1/'], true, 'is not what is installed'],
+  ])('says in its refusal which state the gate is in, for %j with a drifted record %s (mutant: one reason for both states)', async (argv, drifted, expected) => {
+    const h = await harness();
+    const root = tempDir('dossier-signoff-');
+    const decisions = decisionsIn(root);
+    if (drifted) {
+      signoff(decisions, '1.2', 'CONFIRM');
+      fs.appendFileSync(path.join(root, SPEC_REL), 'edited\n');
+    }
+    h.world.realGate = root;
+    const result = await h.cli(argv.map((arg) => arg.replace('<run>', h.run).replace('<sessions>', h.sessions)));
+    expect(result.exit).toBe(1);
+    expect(result.doc).toMatchObject({ outcome: 'refused', stage: 'unsigned' });
+    expect(result.doc['reason']).toContain(expected);
+  });
 });
 
 describe('session-prompt <run> all', () => {
@@ -343,7 +390,7 @@ describe('session-prompt <run> all', () => {
     expect(started.doc['disclosures'].join(' ')).toContain('whether a tool from outside the built-in set (a connector of the operator\'s claude.ai account) remains available');
   });
 
-  it('prints no pre-approval for Codex, and says so (mutant: print the Claude rules for Codex)', async () => {
+  it('prints no pre-approval for Codex, and says what a waiting Codex session does depends on the operator\'s Codex policy (mutant: print the Claude rules for Codex; state that it asks)', async () => {
     const h = await harness();
     const started = await h.cli(['session-prompt', h.run, 'all', '--tool', 'codex']);
     expect(started.exit).toBe(0);
@@ -351,6 +398,10 @@ describe('session-prompt <run> all', () => {
       expect(session['commands']['allowedTools']).toBeNull();
       expect(session['commands']['terminal']).toBe(`cd '${session['directory']}' && codex '${(session['prompt'] as string).replace(/'/gu, `'\\''`)}'`);
       expect(session['commands']['note']).toContain('Syzygy prints no pre-approval for Codex');
+      // Review-408 round 3, note 5 / round 4, finding 1: whether the session asks is the operator's Codex policy, never stated as fact.
+      expect(session['commands']['note']).toContain('depends on the approval policy in your own Codex configuration (~/.codex/config.toml');
+      expect(session['commands']['note']).toContain('under a policy that does not ask, it runs without asking');
+      expect(session['commands']['note']).not.toContain('asks you before each call');
     }
   });
 
@@ -889,6 +940,40 @@ describe('link-safe session directories (review-408 F1)', () => {
     fs.mkdirSync(path.join(other, 'fidelity-1'));
     expect(sessionDirectoryRefusal(root, path.join(root, 'fidelity-1'))).toBeNull();
     expect(sessionDirectoryRefusal(root, path.join(other, 'fidelity-1'))).toContain('not to the sessions root\'s fidelity-1');
+  });
+
+  // Review-408 round 3, note 1: the check resolves once and returns the real path it checked, and a delivery writes only through it.
+  it('returns the real path it checked, which differs from a lexical path through a linked ancestor (mutant: return the lexical directory)', () => {
+    const real = tempDir('dossier-real-');
+    const holder = tempDir('dossier-holder-');
+    const alias = path.join(holder, 'alias');
+    fs.symlinkSync(real, alias);
+    fs.mkdirSync(path.join(real, 'run.sessions', 'fidelity-1'), { recursive: true });
+    const root = path.join(alias, 'run.sessions');
+    expect(resolveSessionDirectory(root, path.join(root, 'fidelity-1'))).toEqual({ ok: true, real: path.join(real, 'run.sessions', 'fidelity-1') });
+    expect(resolveSessionDirectory(root, path.join(root, 'absent')).ok).toBe(false);
+  });
+
+  it('writes a delivery through the checked real path when an ancestor link is swapped after the check (mutant: write through the lexical directory)', async () => {
+    const h = await harness();
+    await readyForReview(h);
+    const stateRoot = path.dirname(h.run);
+    const holder = tempDir('dossier-holder-');
+    const elsewhere = tempDir('dossier-elsewhere-');
+    fs.cpSync(stateRoot, elsewhere, { recursive: true });
+    const alias = path.join(holder, 'alias');
+    fs.symlinkSync(stateRoot, alias);
+    const run = path.join(alias, path.basename(h.run));
+    const waiting = waitingReviewSession(run, 'fidelity');
+    expect(waiting).not.toBeNull();
+    const bytes = '{"packet":true}\n';
+    const built = { bytes, sha256: sha256(bytes) };
+    // Between the check and the writes the link is repointed at a copy of the state directory: lexical writes would land there.
+    const swap = (): void => { fs.unlinkSync(alias); fs.symlinkSync(elsewhere, alias); };
+    const result = deliverToWaiting(run, path.basename(h.run), 'fidelity', waiting!, built, {}, NOW, swap);
+    expect(result.ok).toBe(true);
+    expect(fs.readdirSync(path.join(h.sessions, 'fidelity-1', 'round-1')).sort()).toEqual(['delivery.json', 'packet.json', 'packet.sha256']);
+    expect(fs.existsSync(path.join(elsewhere, `${path.basename(h.run)}.sessions`, 'fidelity-1', 'round-1'))).toBe(false);
   });
 
   it('delivers nothing into a review session directory replaced by a link (mutant: skip the directory check in delivery)', async () => {

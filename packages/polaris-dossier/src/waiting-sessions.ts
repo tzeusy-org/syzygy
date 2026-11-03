@@ -113,42 +113,83 @@ export function appliedSubjectHolds(recordsRoot: string, recordFile: string, ver
   return digests.length === 1 && sha256(spec) === digests[0] && spec.toString('utf8').includes(`Exact behavioral delta, version ${version}.`);
 }
 
-/** Whether the owner has signed off a version of the local-agent mode at or after 1.2: a sign-off record for it in the records root's
- * decisions that `signoffRecordHolds`, over a tree that carries its applied subject (`appliedSubjectHolds`). The record lies in the Syzygy
- * checkout, not the run's state directory. */
-export function waitModeSignedIn(recordsRoot: string): boolean {
+/** Where the v1.2 gate stands: `signed` (a sign-off record of a version at or after 1.2 holds, over a tree that carries its applied
+ * subject), `drifted` (such a record holds, but no record's applied subject does: the installed spec or the review it names no longer
+ * agrees with it), or `unsigned` (no record at or after 1.2 holds). Only `signed` opens the gate; `drifted` is a reason, not a mode. */
+export type WaitModeStatus = 'signed' | 'drifted' | 'unsigned';
+
+/** The gate's state over the records root: a sign-off record for a version at or after 1.2 in the records root's decisions that
+ * `signoffRecordHolds`, over a tree that carries its applied subject (`appliedSubjectHolds`). The record lies in the Syzygy checkout, not
+ * the run's state directory. */
+export function waitModeStatus(recordsRoot: string): WaitModeStatus {
   const decisions = path.join(recordsRoot, DECISIONS);
   let names: string[];
-  try { names = fs.readdirSync(decisions); } catch { return false; }
-  return names.some((name) => {
+  try { names = fs.readdirSync(decisions); } catch { return 'unsigned'; }
+  let recorded = false;
+  for (const name of names) {
     const match = SIGNOFF_RECORD.exec(name);
-    const version = match === null ? '' : `${match[1]}.${match[2]}`;
-    return match !== null && (Number(match[1]) > 1 || (Number(match[1]) === 1 && Number(match[2]) >= 2))
-      && signoffRecordHolds(decisions, name, version) && appliedSubjectHolds(recordsRoot, path.join(decisions, name), version);
-  });
+    if (match === null || !(Number(match[1]) > 1 || (Number(match[1]) === 1 && Number(match[2]) >= 2))) continue;
+    const version = `${match[1]}.${match[2]}`;
+    if (!signoffRecordHolds(decisions, name, version)) continue;
+    if (appliedSubjectHolds(recordsRoot, path.join(decisions, name), version)) return 'signed';
+    recorded = true;
+  }
+  return recorded ? 'drifted' : 'unsigned';
 }
 
-/** Why a session directory may not be written into or delivered to, or null. The sessions root and the session directory must each be
- * a directory itself, never a link (lstat), and each real path must be its real parent's entry of its own name: a linked root would move
+/** Whether the owner has signed off a version of the local-agent mode at or after 1.2; see `waitModeStatus`. */
+export function waitModeSignedIn(recordsRoot: string): boolean {
+  return waitModeStatus(recordsRoot) === 'signed';
+}
+
+/** A session directory that passed the link checks, with its real path, or why it may not be written into. */
+export type ResolvedSessionDirectory = { readonly ok: true; readonly real: string } | { readonly ok: false; readonly reason: string };
+
+/** Check a session directory once and hand back the real path the checks resolved, so that a caller writes through that path and never
+ * resolves the lexical one a second time (review-408 round 3, note 1). The sessions root and the session directory must each be a
+ * directory itself, never a link (lstat), and each real path must be its real parent's entry of its own name: a linked root would move
  * the root and its entries together, so checking the entry against the resolved root alone is not enough. Then no write Syzygy makes
- * for a session lands outside the root, or the root outside its parent in the state directory. */
-export function sessionDirectoryRefusal(root: string, directory: string): string | null {
+ * for a session lands outside the root, or the root outside its parent in the state directory.
+ *
+ * Residual, named: a real path is still a path. A writer racing in the state root between this check and the writes could replace the
+ * session directory's own entry (or the root's) with a link, and Node offers no `openat` to pin the checked inode. Writing through
+ * `real` removes the re-resolution of the lexical path (a link in an ancestor swapped in after the check no longer moves the writes),
+ * not that last swap. The window is a few synchronous calls wide, and the writer is the party the F1 threat already names. */
+export function resolveSessionDirectory(root: string, directory: string): ResolvedSessionDirectory {
+  const refuse = (reason: string): ResolvedSessionDirectory => ({ ok: false, reason });
   let rootStats: fs.Stats;
-  try { rootStats = fs.lstatSync(root); } catch (cause) { return `the sessions root ${root} cannot be read (${errno(cause)})`; }
-  if (!rootStats.isDirectory()) return `the sessions root ${root} is not a directory of its own (a link, or another kind of file), so Syzygy writes nothing through it`;
-  let realRootOwn: string, realParent: string;
-  try { realRootOwn = fs.realpathSync(root); realParent = fs.realpathSync(path.dirname(root)); } catch (cause) { return `the sessions root ${root} cannot be resolved (${errno(cause)})`; }
-  if (realRootOwn !== path.join(realParent, path.basename(root))) return `the sessions root ${root} resolves to ${realRootOwn}, not to its parent's ${path.basename(root)}, so Syzygy writes nothing there`;
+  try { rootStats = fs.lstatSync(root); } catch (cause) { return refuse(`the sessions root ${root} cannot be read (${errno(cause)})`); }
+  if (!rootStats.isDirectory()) return refuse(`the sessions root ${root} is not a directory of its own (a link, or another kind of file), so Syzygy writes nothing through it`);
+  let realRoot: string, realParent: string;
+  try { realRoot = fs.realpathSync(root); realParent = fs.realpathSync(path.dirname(root)); } catch (cause) { return refuse(`the sessions root ${root} cannot be resolved (${errno(cause)})`); }
+  if (realRoot !== path.join(realParent, path.basename(root))) return refuse(`the sessions root ${root} resolves to ${realRoot}, not to its parent's ${path.basename(root)}, so Syzygy writes nothing there`);
   let stats: fs.Stats;
-  try { stats = fs.lstatSync(directory); } catch (cause) { return `${directory} cannot be read (${errno(cause)})`; }
-  if (!stats.isDirectory()) return `${directory} is not a directory of its own (a link, or another kind of file), so Syzygy writes nothing through it`;
-  let real: string, realRoot: string;
-  try { real = fs.realpathSync(directory); realRoot = fs.realpathSync(root); } catch (cause) { return `${directory} cannot be resolved (${errno(cause)})`; }
-  if (real !== path.join(realRoot, path.basename(directory))) return `${directory} resolves to ${real}, not to the sessions root's ${path.basename(directory)}, so Syzygy writes nothing there`;
-  return null;
+  try { stats = fs.lstatSync(directory); } catch (cause) { return refuse(`${directory} cannot be read (${errno(cause)})`); }
+  if (!stats.isDirectory()) return refuse(`${directory} is not a directory of its own (a link, or another kind of file), so Syzygy writes nothing through it`);
+  let real: string;
+  try { real = fs.realpathSync(directory); } catch (cause) { return refuse(`${directory} cannot be resolved (${errno(cause)})`); }
+  if (real !== path.join(realRoot, path.basename(directory))) return refuse(`${directory} resolves to ${real}, not to the sessions root's ${path.basename(directory)}, so Syzygy writes nothing there`);
+  return { ok: true, real };
+}
+
+/** Why a session directory may not be written into, or null; see `resolveSessionDirectory`. */
+export function sessionDirectoryRefusal(root: string, directory: string): string | null {
+  const resolved = resolveSessionDirectory(root, directory);
+  return resolved.ok ? null : resolved.reason;
 }
 
 export const WAIT_MODE_UNSIGNED = `wait mode is specified only by ${WAIT_MODE_SPEC}, which the owner has not signed off; until the version-tagged sign-off is recorded, hand each session over with session-prompt as signed in v1.1`;
+/** The same refusal when a sign-off record exists but its applied subject no longer holds (review-408 round 3, note 3): failing closed is
+ * right, and the reason says which state it is. It refines the reason text only; the gate opens and closes exactly as before. */
+export const WAIT_MODE_DRIFTED = `wait mode is specified only by ${WAIT_MODE_SPEC}; a sign-off record for it exists, but the signed subject it names is not what is installed (the installed specification does not hash to the digest in the review the record names, or that review or the specification's version head is missing or disagrees); hand each session over with session-prompt as signed in v1.1, and tell the owner`;
+
+/** The reason a wait-mode step refuses, or null when the gate is open. An injected `signed` (a test's, or a caller's) can say only open or
+ * closed, so its closed state keeps the unsigned reason. */
+export function waitModeRefusal(recordsRoot: string, signed?: () => boolean): string | null {
+  if (signed !== undefined) return signed() ? null : WAIT_MODE_UNSIGNED;
+  const status = waitModeStatus(recordsRoot);
+  return status === 'signed' ? null : status === 'drifted' ? WAIT_MODE_DRIFTED : WAIT_MODE_UNSIGNED;
+}
 
 /** The prompt record of a waiting session: written by `session-prompt <run> all`. */
 export interface WaitingSession { readonly session: number; readonly record: Readonly<Record<string, unknown>> }
@@ -201,22 +242,24 @@ export const DELIVERY_DISCLOSURES = [
  * `round-N/` files, `delivery.json` last and by rename, so a waiting slice never sees a partial round. */
 export function deliverToWaiting(
   run: string, runId: string, kind: ReviewKind, waiting: WaitingSession, built: { readonly bytes: string; readonly sha256: string },
-  packet: Readonly<Record<string, unknown>>, now: number,
+  packet: Readonly<Record<string, unknown>>, now: number, afterCheck: () => void = () => undefined,
 ): { readonly ok: true; readonly report: DeliveryReport } | { readonly ok: false; readonly reason: string } {
   const { session } = waiting;
   const relative = waiting.record['directory'];
   if (typeof relative !== 'string') return { ok: false, reason: `the prompt record of waiting ${kind} session ${session} names no directory` };
   const directory = path.join(path.dirname(run), relative);
   if (path.dirname(directory) !== sessionsRoot(run)) return { ok: false, reason: `the prompt record of waiting ${kind} session ${session} names a directory outside the sessions root` };
-  const unsafe = sessionDirectoryRefusal(sessionsRoot(run), directory);
-  if (unsafe !== null) return { ok: false, reason: unsafe };
+  const resolved = resolveSessionDirectory(sessionsRoot(run), directory);
+  if (!resolved.ok) return { ok: false, reason: resolved.reason };
+  // `afterCheck` is a test seam, run in the window between the check and the writes; every write for the session goes through `resolved.real`.
+  afterCheck();
   const earlier = deliveries(run, kind, session);
   const round = earlier.length === 0 ? 1 : earlier[earlier.length - 1]!.round + 1;
   const record = {
     format: DELIVERY_FORMAT, role: 'review', kind, runId, session, round, packetSha256: built.sha256, packet, deliveredAt: isoOf(now),
     continuing: round > 1, earlierRounds: earlier.map((entry) => entry.round), label: 'Inferred',
   };
-  const roundDir = path.join(directory, roundDirName(round));
+  const roundDir = path.join(resolved.real, roundDirName(round));
   try {
     writePacket(run, kind, built);
     fs.writeFileSync(path.join(run, RUN_LAYOUT.reviews, deliveryRecordName(kind, session, round)), `${JSON.stringify(record, null, 2)}\n`, { mode: 0o600, flag: 'wx' });
@@ -401,8 +444,8 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   const startedAt = deps.now();
   const refuse = (stage: string, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]): AwaitResult =>
     ({ ok: false, refusal: { command: 'await', outcome: 'refused', stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: AWAIT_DISCLOSURES } });
-  const signed = deps.waitModeSigned ?? (() => waitModeSignedIn(deps.sources.recordsRoot));
-  if (!signed()) return refuse('unsigned', WAIT_MODE_UNSIGNED);
+  const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned);
+  if (gateRefusal !== null) return refuse('unsigned', gateRefusal);
 
   // The directory: absolute, normalised, ending in one slash, so the printed permission rule's prefix names exactly this session.
   if (!PLAIN_PATH.test(directoryArg) || !directoryArg.endsWith('/') || path.normalize(directoryArg) !== directoryArg || directoryArg.split('/').some((part) => part === '.' || part === '..')) {
@@ -431,22 +474,21 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   const opened = await openRun(run, deps.sources, startedAt, what, deps.openReader ? { openReader: deps.openReader } : {});
   if (!opened.ok) return refuse(opened.stage, opened.reason, opened.reasons, opened.refusals);
   const self = `syzygy dossier await ${directoryArg}`;
-  const unsafe = sessionDirectoryRefusal(parent, directory);
-  if (unsafe !== null) return refuse('directory', unsafe);
+  const resolved = resolveSessionDirectory(parent, directory);
+  if (!resolved.ok) return refuse('directory', resolved.reason);
+  const realDir = resolved.real;
 
   if (request.stdin === true && request.submit === undefined) return refuse('usage', '--stdin applies only with --submit');
   if (request.submit !== undefined) {
     if (request.round !== undefined || request.waitMinutes !== undefined) return refuse('usage', '--submit takes no --round or --wait-minutes');
     const latest = role.role === 'inventory' ? latestInventorySession(run) : latestReviewSession(run, role.kind);
     if (latest !== role.session) return refuse('submit', `${name} is no longer the latest ${role.role === 'inventory' ? 'inventory' : role.kind} session, so its file is not checked`);
-    const realDir = realOrNull(directory);
-    if (realDir === null) return refuse('submit', `${directory} cannot be read`);
     if (request.stdin === true) {
       // The session holds no write permission: Syzygy writes the role's own file from standard input, then checks it.
       const stdinRefusal = await writeFromStdin(realDir, role, request.submit, deps.readStdin ?? ((maxBytes) => readStdinBytes(maxBytes)));
       if (stdinRefusal !== null) return refuse('submit', stdinRefusal);
     }
-    const file = realOrNull(path.resolve(directory, request.submit));
+    const file = realOrNull(path.resolve(realDir, request.submit));
     if (file === null || !file.startsWith(`${realDir}${path.sep}`)) return refuse('submit', `the file to submit must exist inside ${directory}`);
     const deps2: CheckDeps & ReviewDeps = {
       sources: deps.sources, now: deps.now, probe: deps.probe, ...(deps.loadScreen ? { loadScreen: deps.loadScreen } : {}), ...(deps.openReader ? { openReader: deps.openReader } : {}),
