@@ -1892,6 +1892,12 @@ PWB_EFFECT_AMENDMENT_ACTS = (
      f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V3-ACT.md",
      f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md",
      "c13bd56c70698ccdf55fa2b0a81ed51f4b3f385848d5eccd97b8be3cfad48fce"),
+    # The version-5 screening-scope act (P-116, variant bcd, 2026-11-03) supersedes the
+    # version-4 act for the policy subject.
+    (PWB_EFFECT_ACTS[1][0], PWB_EFFECT_ACTS[1][1],
+     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md",
+     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md",
+     "319e404ee413220550d65644f6c93db096ed1cda431760baec70a1e190adb0bd"),
     # P-114's one registry row supersedes act B; all old copies stay history.
     (PWB_EFFECT_ACTS[2][0], PWB_EFFECT_ACTS[2][1],
      f"{DECISIONS}/PWB-OBSERVER-REGISTRY-BEHAVIOR-CONTRACT-REPIN-ACT.md",
@@ -1937,6 +1943,10 @@ PWB_EFFECT_AMENDMENT_OFFERINGS = {
     # The version-3 screening-scope act was offered the same way (variant row of its manifest).
     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V3-ACT.md": {
         f"{CANDIDATES}/public-source-screening-scope-v3/PUBLIC-SOURCE-SCREENING-SCOPE-V3-MANIFEST.txt": "variant-row",
+    },
+    # The version-4 screening-scope act was offered the same way (variant row of its manifest).
+    f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md": {
+        f"{CANDIDATES}/public-source-screening-scope-v4/PUBLIC-SOURCE-SCREENING-SCOPE-V4-MANIFEST.txt": "variant-row",
     },
 }
 PWB_STATE1_SUBJECTS = tuple(sorted((
@@ -3684,11 +3694,36 @@ PUBLIC_SOURCE_SCOPE_V4_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBL
 def _activate_public_source_scope_v4_copy_registry():
     """The version-4 manifest is a current copy of the policy argument once the act exists."""
     if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V4_ACT))
-            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V4_MANIFEST))):
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V4_MANIFEST))
+            # once the version-5 act exists the version-4 manifest is history (pinned by the amendment registries)
+            and not os.path.isfile(os.path.join(ROOT, f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md"))):
         ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V4_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
 
 
 _activate_public_source_scope_v4_copy_registry()
+
+
+#: The public-source screening scope, version 5 (`syzygy-ha5b`, register row
+#: P-116; recorder `scripts/record_public_source_screening_scope_v5_act.py`):
+#: one `approve-policy` act over ONE of four manifest rows (variants `bcd`,
+#: `bd`, `b`, `t`), reusing the policy's phrase label and superseding the
+#: version-4 act. Its packet carries no digest, so the manifest is the only
+#: copy. Gated on the performed record (2026-11-03, variant `bcd`), for the
+#: reason the version-2 registration gives; the version-4 copies are pinned as
+#: history by the chain link and the version-4 manifest's offering entry.
+PUBLIC_SOURCE_SCOPE_V5_DIR = f"{CANDIDATES}/public-source-screening-scope-v5"
+PUBLIC_SOURCE_SCOPE_V5_MANIFEST = f"{PUBLIC_SOURCE_SCOPE_V5_DIR}/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt"
+PUBLIC_SOURCE_SCOPE_V5_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md"
+
+
+def _activate_public_source_scope_v5_copy_registry():
+    """The version-5 manifest is a current copy of the policy argument once the act exists."""
+    if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V5_ACT))
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V5_MANIFEST))):
+        ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V5_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
+
+
+_activate_public_source_scope_v5_copy_registry()
 
 
 #: The act-time digests the specification-policy restyle supersedes as the
@@ -3991,6 +4026,7 @@ BARE_DIGEST_HEADING_MANIFEST_EXEMPTIONS = {
     (PUBLIC_SOURCE_SCOPE_V2_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V2_MANIFEST,
     (PUBLIC_SOURCE_SCOPE_V3_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V3_MANIFEST,
     (f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md", "manifest"): f"{CANDIDATES}/public-source-screening-scope-v4/PUBLIC-SOURCE-SCREENING-SCOPE-V4-MANIFEST.txt",
+    (f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md", "manifest"): f"{CANDIDATES}/public-source-screening-scope-v5/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt",
 }
 
 
