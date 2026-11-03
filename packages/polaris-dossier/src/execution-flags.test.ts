@@ -1,13 +1,13 @@
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { CREDENTIAL_LIST_ENV, CREDENTIAL_LIST_FORMAT } from './credential-probe.js';
 import { checkDraftShape, localDraftSchema } from './draft-schema.js';
 import { executionFlags, flagCommand } from './execution-flags.js';
 import { REAL_ROOT, draft, fullFixtureRun, makeClone } from './full-run.testkit.js';
 import type { DossierRenderer } from './render.js';
+import { tempDir } from '@syzygy/test-kit';
 
 /** The N6 runtime half (v1.1, REQ-polaris-generation-033; scenario "Reported command outside the named scope"): where execution was
  * permitted, a reported command without a working directory, with one outside the clone, or stated outside the owner's choice is flagged
@@ -19,13 +19,6 @@ beforeAll(async () => {
   renderer = ((await import(module)) as { renderLocalDossier: DossierRenderer }).renderLocalDossier;
 });
 
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (prefix: string): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 type Doc = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 const readJson = (file: string): Doc => JSON.parse(fs.readFileSync(file, 'utf8'));
 

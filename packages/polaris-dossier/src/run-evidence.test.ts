@@ -1,13 +1,13 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
-import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { exited, type Exited } from './child-process.testkit.js';
 import { FIXTURE_URL, PLANTED_SECRET, REAL_ROOT, fullFixtureRun, makeClone } from './full-run.testkit.js';
 import type { DossierRenderer } from './render.js';
+import { tempDir } from '@syzygy/test-kit';
 
 /** scripts/dossier_run_evidence.mjs, the S12 evidence-record builder (syzygy-qkea.13): every file is named by path, size and a
  * digest computed here, no body is copied, a link is listed and never followed, and the subject is named (rules 3 and 11). */
@@ -20,13 +20,6 @@ beforeAll(async () => {
   renderer = ((await import(module)) as { renderLocalDossier: DossierRenderer }).renderLocalDossier;
 });
 
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (prefix: string): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 type Doc = Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 const sha256 = (file: string): string => createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 

@@ -20,7 +20,7 @@ import { buildDossierScreen, type ScreenLoad } from './screen.js';
 import { launchForm, sessionPrompt } from './session-handover.js';
 import { recheckSessionStatement } from './session-statement.js';
 import { RUN_LAYOUT } from './state-directory.js';
-import { GIT_ENV } from '@syzygy/test-kit';
+import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // Asynchronous, so a slow command cannot starve the vitest worker's RPC (syzygy-w90k).
 const execFileAsync = promisify(execFile);
@@ -72,14 +72,6 @@ beforeAll(() => {
   for (const file of Object.keys(FILES)) objectIds[file] = git('rev-parse', `${commit}:${file}`);
 });
 afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));
-
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (prefix: string): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 
 // R-PR403-SCREEN-DOCS-1 finding 1: the class-gate tests run in a world with the project-documentation screen and, for a governed
 // subject, one in-force per-project statement listing `classes`; every other test runs with `world` null, as before.

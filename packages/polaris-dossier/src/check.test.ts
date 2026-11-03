@@ -12,7 +12,7 @@ import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, 
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
-import { GIT_ENV } from '@syzygy/test-kit';
+import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // syzygy-qkea.7 (S6): `syzygy dossier check` (REQ-polaris-generation-033, 034, 036). The clone is a real Git repository built here
 // with the git CLI (the code under test runs no process); the screening policy is this checkout's detectors and denied paths with a
@@ -78,14 +78,6 @@ beforeAll(() => {
   other = git('rev-parse', 'HEAD');
 });
 afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));
-
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (prefix: string): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 
 /** A clone at the pinned commit whose working tree differs from it in the quoted file. */
 const cloneOf = (): string => {

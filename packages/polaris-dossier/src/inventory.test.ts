@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { issueBrief } from './brief.js';
 import type { CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
@@ -19,7 +19,7 @@ import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
 import { launchForm, sessionPrompt, shellQuote } from './session-handover.js';
-import { GIT_ENV } from '@syzygy/test-kit';
+import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // Asynchronous, so a slow command cannot starve the vitest worker's RPC (syzygy-w90k).
 const execFileAsync = promisify(execFile);
@@ -66,14 +66,6 @@ beforeAll(() => {
   commit = git('rev-parse', 'HEAD');
 });
 afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));
-
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (prefix: string): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 
 const subject = (clone: string): RunSubject => ({
   repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },

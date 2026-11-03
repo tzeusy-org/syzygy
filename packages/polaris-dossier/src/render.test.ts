@@ -20,7 +20,7 @@ import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { buildDossierScreen } from './screen.js';
 import { launchForm, sessionPrompt } from './session-handover.js';
-import { GIT_ENV } from '@syzygy/test-kit';
+import { GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // syzygy-qkea.10 (S9a): `render` (REQ-polaris-generation-033, 034, 036). The clone is a real Git repository built here with the git
 // CLI. Most cases draw through the real multi-page dossier renderer of apps/three-surface-poc, loaded by file URL because this package
@@ -71,14 +71,6 @@ beforeAll(async () => {
   for (const file of Object.keys(FILES)) objectIds[file] = git('rev-parse', `${commit}:${file}`);
 });
 afterAll(() => fs.rmSync(origin, { recursive: true, force: true }));
-
-const cleanups: (() => void)[] = [];
-afterEach(() => { for (const cleanup of cleanups.splice(0).reverse()) cleanup(); });
-const tempDir = (prefix: string): string => {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(tmpdir(), prefix)));
-  cleanups.push(() => fs.rmSync(dir, { recursive: true, force: true }));
-  return dir;
-};
 
 // R-PR403-SCREEN-DOCS-1 finding 1: with `statementClasses` set the subject is governed and relies on one in-force per-project statement
 // listing those classes; every other test runs with it null, a non-governed subject, as before.
