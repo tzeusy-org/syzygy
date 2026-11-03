@@ -8,7 +8,7 @@ import {
   type DossierDraft, type DraftBlock, type DraftParagraph,
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
-import { collectBlocks, deriveFindings, draftRules, type Derived } from './check.js';
+import { collectBlocks, deriveFindings, draftRules, type BlobRedaction, type Derived } from './check.js';
 import { CREDENTIAL_CHECK_DISCLOSURE, credentialStepCheck, storedBriefArm, type CredentialStepResult } from './credential-probe.js';
 import { UNDERSTANDING_ITEMS } from './draft-schema.js';
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
@@ -272,6 +272,19 @@ interface BuildInputs {
 
 type Built = { readonly ok: true; readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] } | { readonly ok: false; readonly stage: RenderStage; readonly reason: string };
 
+/** How much of a redacted-span body screening kept: partially retained, or, where the emptied body no longer matches a detector and
+ * `redactBody` withholds every line, retained with every line withheld (syzygy-mea.3 round-1 note 6). Never "not retained". */
+export const redactedExtent = ({ withheld, lines }: { readonly withheld: number; readonly lines: number }): string => (withheld >= lines
+  ? `retained by screening as redacted-span with every one of its ${lines} line(s) withheld`
+  : `partially retained by screening as redacted-span: ${withheld} of its ${lines} line(s) withheld`);
+
+/** A redacted body's provenance as the discovery row states it: the detectors that matched and the withheld line ranges, never the
+ * matched text (syzygy-ts8u). */
+export const redactionDetails = (redaction: BlobRedaction | undefined): string[] => (redaction === undefined ? [] : [
+  `detectors matched: ${redaction.detectorIds.join(', ')}`,
+  `withheld lines: ${redaction.withheldLineRanges.map(([first, last]) => (first === last ? `${first}` : `${first}\u2013${last}`)).join(', ')}`,
+]);
+
 /** The adapter from the checked local draft to the renderer's operator-agent input. */
 export function buildLocalInput(inputs: BuildInputs): Built {
   const { opened, doc, derived, review, design, ruling, screen, credential, algorithm } = inputs;
@@ -288,7 +301,8 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     const missing = unconsentedClass(screen.contentClass(repositoryPath), consented);
     if (missing !== undefined) withheldClass.set(repositoryPath, missing);
   }
-  const redacted = new Map([...derived.admitted].flatMap(([repositoryPath, blob]) => (blob.withheld === undefined ? [] : [[repositoryPath, blob.withheld.length] as const])));
+  // A body retained as redacted-span is partially retained, never "not retained" (syzygy-ts8u): its withheld and total line counts.
+  const redacted = new Map([...derived.admitted].flatMap(([repositoryPath, blob]) => (blob.withheld === undefined ? [] : [[repositoryPath, { withheld: blob.withheld.length, lines: blob.retainedLines!.length }] as const])));
   const admitted = new Map([...derived.admitted].filter(([repositoryPath]) => !withheldClass.has(repositoryPath)));
 
   // Sources: every cited blob read now and admitted (whole, or in pieces when too long to quote whole), and every cited blob screening
@@ -461,9 +475,9 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     title: cited.path === null ? SECRET_PATH : cited.path,
     text: cited.outcome !== 'admitted' ? `${cited.read ? 'read at this render and re-hashed' : 'named by the pinned tree and not read'}; excluded by screening (${cited.outcome})`
       : cited.path !== null && withheldClass.has(cited.path) ? `read at this render, re-hashed, and admitted by screening as ${withheldClass.get(cited.path)!}; ${unconsentedText(withheldClass.get(cited.path)!, consented)} (${CLASS_NOT_CONSENTED})`
-        : cited.path !== null && redacted.has(cited.path) ? `read at this render, re-hashed, and retained by screening as redacted-span with ${redacted.get(cited.path)!} withheld line(s); each withheld run is marked on its source page; surviving spans retain their original coordinates`
+        : cited.path !== null && redacted.has(cited.path) ? `read at this render, re-hashed, and ${redactedExtent(redacted.get(cited.path)!)}; each withheld run is marked on its source page; surviving spans retain their original coordinates`
         : 'read at this render, re-hashed, and admitted by screening',
-    details: [`object ${cited.objectId === null ? '(not shown)' : `${algorithm}:${cited.objectId}`}`, `revision ${pinned}`],
+    details: [`object ${cited.objectId === null ? '(not shown)' : `${algorithm}:${cited.objectId}`}`, `revision ${pinned}`, ...redactionDetails(cited.redaction)],
     sourceIds: cited.outcome === 'admitted' && cited.path !== null ? (pieces.get(cited.path) ?? []).slice(0, 1).map((source) => source.sourceId) : [],
   }));
   const discoveryPage: LocalPage = {

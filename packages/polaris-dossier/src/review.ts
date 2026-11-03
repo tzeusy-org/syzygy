@@ -7,7 +7,7 @@ import { expectedLaunch, launchFormRefusal, launchedMarkerState } from './launch
 import { CHECK_RECORD_FORMAT, collectBlocks, collectCitations, declaredSessionId, nextRevision } from './check.js';
 import { DEFICIENT_SUBJECTS, LOCAL_FIDELITY_VERDICT_SCHEMA_VERSION, VERDICT_QUOTATION_FORM, checkDraftShape, localVerdictSchema, verdictSchemaDocument } from './draft-schema.js';
 import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
-import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions, type TreeEntry } from './git-object-reader.js';
+import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions, type TreeEntry } from './git-object-reader.js';
 import { INVENTORY_INFERRED, authoringSessionIds, errno, inventoryOfRecord, logStep, openRun, readRecord, sessionsRoot, type OpenedRun } from './inventory.js';
 import { buildDesignPacket, designBlocking, readLatestSite, validateDesignVerdict, type DesignPacketBuild } from './design-review.js';
 import type { Outcome } from './outcome.js';
@@ -57,7 +57,6 @@ export const reviewSessionDirectory = (run: string, kind: ReviewKind, n: number)
 
 const SUBJECT_JSON_LIMITS = Object.freeze({ maxBytes: 4 * 1024 * 1024, maxNodes: 500_000, maxDepth: 16 });
 const VERDICT_MAX_BYTES = 4 * 1024 * 1024;
-const BLOB_MODES: ReadonlySet<string> = new Set(['100644', '100755', '120000']);
 const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? value : []);
 const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
 

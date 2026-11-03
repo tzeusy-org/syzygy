@@ -12,8 +12,8 @@ import { runDossierCli } from './cli.js';
 import { readSec3 } from './doctrine-quote.js';
 import { opensOf } from './fs-patch.testkit.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
-import type { PinnedObjectReader, PinnedObjectReaderOptions } from './git-object-reader.js';
-import { checkInventory, inventoryBrief, inventoryOfRecord, type InventoryCheckResult } from './inventory.js';
+import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
+import { buildInventoryBrief, checkInventory, inventoryBrief, inventoryOfRecord, openRun, type InventoryCheckResult } from './inventory.js';
 import { writeLaunchedMarker } from './launched.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
@@ -42,6 +42,12 @@ const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/gov
 const SCREEN = buildDossierScreen(new TextEncoder().encode(JSON.stringify({
   policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
   publicSourceScope: { contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.c', '.txt'] }] } },
+})));
+
+/** The same policy with `.txt` outside every class, so `docs/notes.txt` is withheld by its path (`unknown-extraction-class`). */
+const SCREEN_C_ONLY = buildDossierScreen(new TextEncoder().encode(JSON.stringify({
+  policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
+  publicSourceScope: { contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.c'] }] } },
 })));
 
 let origin: string, commit: string;
@@ -547,6 +553,82 @@ describe('inventory-brief', () => {
     expect(await opensOf(marker, () => handedOver(run))).toBe(0);
     expect(await opensOf(marker, () => inventoryBrief(run, hand))).toBe(0);
     expect(await opensOf(marker, () => launchForm(run, { role: 'inventory', form: 'terminal' }, hand))).toBe(1);
+  });
+});
+
+describe('what the review will not see (syzygy-mea.3)', () => {
+  const io = () => { const out: string[] = []; return { out, io: { stdout: (t: string) => { out.push(t); }, stderr: () => {} } }; };
+
+  it('the inventory brief names, by path only, the files screening withholds, and tells the session to prefer admitted sources', async () => {
+    const run = await runWithDrafts();
+    const handing = { ...hand, loadScreen: async () => SCREEN_C_ONLY };
+    const result = await sessionPrompt(run, { role: 'inventory' }, handing);
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const brief = fs.readFileSync(path.join(result.report.directory, 'inventory-brief.md'), 'utf8');
+    expect(brief).toContain('\n## What the review will not see\n');
+    expect(brief).toContain('Syzygy listed the 2 file(s) at the pinned revision and screened each path under the screening policy in force (`fixture-public-source` version `1`');
+    expect(brief).toContain('- `unknown-extraction-class`, no content class of the policy covers the path: 1\n  - "docs/notes.txt"\n');
+    expect(brief).toContain('- `denied-path`, a denied-path rule names the file and no secret detector matches its path: 0\n');
+    expect(brief).toContain('Prefer admitted sources: where an admitted file states the same thing, cite it, as well as or instead of a withheld one.');
+    expect(brief).toContain('`syzygy dossier inventory-check` names every cited file the review will not see, whether screening or the class gate withholds it, under `reviewVisibility`.');
+    // Paths only: no body of the clone reaches the brief.
+    expect(brief).not.toContain('Snapshots are written periodically.');
+    expect(brief).not.toContain('Kestrel keeps every key in memory.');
+    // Syzygy's own rendering, under the same screen, matches the stored copy.
+    expect(await inventoryBrief(run, handing)).toMatchObject({ ok: true, report: { storedCopy: 'matches' } });
+  });
+
+  it('the census applies the class gate with the classes the run\'s statement lists, read at this step', async () => {
+    const run = await runWithDrafts();
+    const opened = await openRun(run, sources(), LATER, 'fixture');
+    if (!opened.ok) throw new Error(opened.reason);
+    const census = { loadScreen: async () => SCREEN };
+    const listsNothing = await buildInventoryBrief({ ...opened, contentClasses: [] }, 1, sources(), LATER, census);
+    if (!listsNothing.ok) throw new Error(listsNothing.reason);
+    expect(listsNothing.text).toContain('does not list: 2\n  - "docs/notes.txt" (code-content)\n  - "src/kestrel.c" (code-content)\n');
+    const listsCode = await buildInventoryBrief({ ...opened, contentClasses: ['code-content'] }, 1, sources(), LATER, census);
+    if (!listsCode.ok) throw new Error(listsCode.reason);
+    expect(listsCode.text).toContain('does not list: 0\n');
+  });
+
+  it('never names a path both a denied-path rule and a secret detector match in the inventory brief (round-2 review finding 1)', async () => {
+    const run = await runWithDrafts();
+    const opened = await openRun(run, sources(), LATER, 'fixture');
+    if (!opened.ok) throw new Error(opened.reason);
+    const forged = ['.env.token=abcdefghij', 'keys/ghp_ABCDEFGHIJKLMNOPQRSTUVWX.pem'];
+    const openReader = (options: PinnedObjectReaderOptions): PinnedObjectReader => {
+      const real = openPinnedObjectReader(options);
+      return { ...real, algorithm: real.algorithm, readBlobs: (paths) => real.readBlobs(paths),
+        listTree: async () => [...await real.listTree(), ...forged.map((p) => ({ path: p, mode: '100644', id: 'f'.repeat(40) }))] } as PinnedObjectReader;
+    };
+    const brief = await buildInventoryBrief(opened, 1, sources(), LATER, { loadScreen: async () => SCREEN, openReader });
+    if (!brief.ok) throw new Error(brief.reason);
+    expect(brief.text).not.toContain('abcdefghij');
+    expect(brief.text).not.toContain('ghp_');
+    expect(brief.text).toContain('- `denied-path`, a denied-path rule names the file and no secret detector matches its path: 0\n');
+    expect(brief.text).toContain('- `secret-detector-match` on the path itself, whether or not a denied-path rule also names it: 2. Such a path is never named.\n');
+  });
+
+  it('inventory-check reports the cited files the review will not see, as check does, and nothing when every cited file is admitted', async () => {
+    const run = await runWithDrafts();
+    const dir = await handedOver(run);
+    writeInventory(dir, validInventory());
+    const withheld = io();
+    const ports = { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN_C_ONLY, env: {} };
+    expect(await runDossierCli(['inventory-check', run, '--inventory', path.join(dir, 'inventory.json'), '--json'], withheld.io, ports)).toBe(0);
+    const report = JSON.parse(withheld.out.join(''));
+    expect(report.outcome).toBe('passed');
+    // The census goes to the author on check; the inventory session has it in its brief.
+    expect(report).not.toHaveProperty('screenCensus');
+    expect(report.reviewVisibility).toEqual({
+      withheld: [{ path: 'docs/notes.txt', outcome: 'unknown-extraction-class' }],
+      note: '1 cited file(s) are withheld from the review session, by screening or by the class gate, so it cannot confirm the blocks and inventory entries that rest on them; unconfirmed rows block readiness. Where the same fact is stated in an admitted file, cite that file as well or instead.',
+    });
+    // Advice, never a finding: the stored check record is unchanged by it.
+    expect(fs.readFileSync(path.join(run, 'inventory', 'checks', 'rev-0.json'), 'utf8')).not.toContain('reviewVisibility');
+    const admitted = io();
+    expect(await runDossierCli(['inventory-check', run, '--inventory', path.join(dir, 'inventory.json'), '--json'], admitted.io, { ...ports, loadScreen: async () => SCREEN })).toBe(0);
+    expect(JSON.parse(admitted.out.join(''))).not.toHaveProperty('reviewVisibility');
   });
 });
 

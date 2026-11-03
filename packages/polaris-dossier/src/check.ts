@@ -8,13 +8,15 @@ import { SESSION_ID_PATTERN, UNDERSTANDING_ITEMS, checkDraftShape, localDraftSch
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
-import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions, type TreeEntry } from './git-object-reader.js';
+import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions, type TreeEntry } from './git-object-reader.js';
 import { isoOf } from './iso-of.js';
 import type { Outcome } from './outcome.js';
 import { reverifyPinnedRevision, type ReverifyRefusal } from './reverify.js';
 import type { RunConfig } from './run-config.js';
 import { loadDossierScreen, type DossierScreen, type ScreenExclusion, type ScreenLoad } from './screen.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
+import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
+import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 
 /** `syzygy dossier check <run> [--draft <file>]` (REQ-polaris-generation-033, 034, 036).
  *
@@ -44,8 +46,6 @@ export const DEFAULT_DRAFT = 'next.json';
 export const DRAFT_MAX_BYTES = 4 * 1024 * 1024;
 const DRAFT_JSON_LIMITS = Object.freeze({ maxBytes: DRAFT_MAX_BYTES, maxNodes: 500_000, maxDepth: 16 });
 const BRIEF_JSON_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 });
-/** Tree entry modes whose object is a blob: regular, executable and symbolic-link files. A submodule (`160000`) is not one. */
-const BLOB_MODES: ReadonlySet<string> = new Set(['100644', '100755', '120000']);
 
 export type CheckFindingKind =
   | 'not-json' | 'schema' | 'wrong-revision' | 'duplicate-id' | 'unresolved-reference'
@@ -86,20 +86,33 @@ export interface ExcludedQuotation {
 }
 
 /** The cited files the review session will not see, from a check's cited blobs (bead syzygy-olmr). The fidelity packet carries a span's
- * text only when screening admits its file, so a block or inventory entry that cites only withheld files stays unresolved in review, and
- * an unresolved row blocks readiness. Reported to the author at check time so it can prefer admitted evidence before spending repair
- * cycles; it is advice, never a finding, and the check record is unchanged. */
-export function reviewVisibility(citedBlobs: readonly CitedBlob[]): { readonly withheld: readonly { readonly path: string; readonly outcome: ScreenExclusion }[]; readonly note: string } | null {
-  const withheld = citedBlobs.flatMap((blob) => (blob.outcome === 'admitted' ? [] : [{ path: blob.path ?? '(a path a secret detector matches)', outcome: blob.outcome }]));
+ * text only when screening admits its file and the class gate passes its class (`class-gate.ts`, as `review.ts` applies it), so a block
+ * or inventory entry that cites only withheld files stays unresolved in review, and an unresolved row blocks readiness. A file screening
+ * admits under a class the run's consent does not cover is listed as `class-not-consented` with that class (round-2 review note 3). `checkSubject` puts it on the report of both `check` and `inventory-check`, whichever caller runs
+ * them (the CLI commands, or `await --submit` for a waiting inventory session: syzygy-mea.3 round-1 finding 1), so the session can
+ * prefer admitted evidence before spending repair cycles; it is advice, never a finding, and never written to the check record. */
+export type ReviewVisibility = {
+  readonly withheld: readonly ({ readonly path: string; readonly outcome: ScreenExclusion } | { readonly path: string; readonly outcome: typeof CLASS_NOT_CONSENTED; readonly missingClass: string })[];
+  readonly note: string;
+};
+/** `contentClass` is the screen's, and `consented` the classes the run's per-project statement lists, or null when it relies on none. */
+export function reviewVisibility(citedBlobs: readonly CitedBlob[], contentClass: DossierScreen['contentClass'], consented: readonly string[] | null): ReviewVisibility | null {
+  const withheld = citedBlobs.flatMap((blob): ReviewVisibility['withheld'] => {
+    if (blob.outcome !== 'admitted') return [{ path: blob.path ?? '(a path a secret detector matches)', outcome: blob.outcome }];
+    if (blob.path === null) return [];
+    const missingClass = unconsentedClass(contentClass(blob.path), consented);
+    return missingClass === undefined ? [] : [{ path: blob.path, outcome: CLASS_NOT_CONSENTED, missingClass }];
+  });
   if (withheld.length === 0) return null;
   return {
     withheld,
-    note: `screening withholds ${withheld.length} cited file(s) from the review session, so it cannot confirm the blocks and inventory entries that rest on them; unconfirmed rows block readiness. Where the same fact is stated in an admitted file, cite that file as well or instead.`,
+    note: `${withheld.length} cited file(s) are withheld from the review session, by screening or by the class gate, so it cannot confirm the blocks and inventory entries that rest on them; unconfirmed rows block readiness. Where the same fact is stated in an admitted file, cite that file as well or instead.`,
   };
 }
 
 /** A cited blob as this step found it. A path a secret detector matches is named by neither path nor object identifier. An admitted
- * blob screening retained as RFC5-17's `redacted-span` (policy version 4) carries `redaction`, its count of withheld lines. */
+ * blob screening retained as RFC5-17's `redacted-span` (policy version 4) carries `redaction`: its count of withheld lines, the ids of
+ * the detectors that matched and the withheld line ranges, the policy's `secretRedaction.provenance` beside the object id (syzygy-ts8u). */
 export interface CitedBlob {
   readonly path: string | null;
   readonly objectId: string | null;
@@ -107,8 +120,30 @@ export interface CitedBlob {
   readonly outcome: 'admitted' | ScreenExclusion;
   readonly redaction?: BlobRedaction;
 }
-/** A retained body's redaction: its class and how many of its lines are withheld. No withheld line, nor any digest of one, is carried. */
-export interface BlobRedaction { readonly redactionClass: 'redacted-span'; readonly withheldLines: number }
+/** A retained body's redaction: its class, how many of its lines are withheld, the ids of the detectors that matched, in policy order,
+ * and the withheld lines as inclusive 1-based `[first, last]` ranges, ascending. Line numbers and detector ids only: no withheld line,
+ * no matched text, nor any digest of either, is carried. */
+export interface BlobRedaction {
+  readonly redactionClass: 'redacted-span';
+  readonly withheldLines: number;
+  readonly detectorIds: readonly string[];
+  readonly withheldLineRanges: readonly (readonly [number, number])[];
+}
+
+/** Ascending 1-based line numbers as inclusive `[first, last]` ranges of consecutive lines: `[2, 3, 4, 9]` is `[[2, 4], [9, 9]]`. */
+export function lineRanges(lines: readonly number[]): [number, number][] {
+  const ranges: [number, number][] = [];
+  for (const line of lines) {
+    const last = ranges[ranges.length - 1];
+    if (last !== undefined && line === last[1] + 1) last[1] = line;
+    else ranges.push([line, line]);
+  }
+  return ranges;
+}
+
+/** A redacted body's provenance as `BlobRedaction` states it. */
+export const blobRedaction = (withheld: readonly number[], detectorIds: readonly string[]): BlobRedaction =>
+  ({ redactionClass: 'redacted-span', withheldLines: withheld.length, detectorIds: [...detectorIds], withheldLineRanges: lineRanges(withheld) });
 
 export type CheckStage = 'run' | 'reverify' | 'not-briefed' | 'deadline' | 'repair-limit' | 'session' | 'authoring-session' | 'session-identity'
   | 'draft' | 'inventory' | 'screen' | 'object-read' | 'freeze' | 'write';
@@ -162,6 +197,10 @@ export interface CheckReport extends CheckRecord {
   readonly run: string;
   readonly checkFile: string;
   readonly disclosures: readonly string[];
+  /** The path-only census of every file screening withholds at the pinned revision (`census.ts`); on the report, never the record. */
+  readonly screenCensus?: ScreenCensusReport;
+  /** The cited files withheld from the review session, by screening or the class gate (`reviewVisibility`); on the report, never the record. */
+  readonly reviewVisibility?: ReviewVisibility;
 }
 
 export type CheckResult = Outcome<CheckReport, CheckRefusal>;
@@ -237,7 +276,8 @@ export interface SubjectPlan<R extends object, G> {
   readonly disclosures: readonly string[];
 }
 
-export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[] };
+/** `screenCensus` is on `check`'s report only (`census.ts`): advice to the author, never written to the check record. */
+export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly reviewVisibility?: ReviewVisibility };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -358,6 +398,17 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
     findings.push(...derived.findings);
     ({ quotations, excludedContent, citedBlobs } = derived);
   }
+  // The author's path-only census of what the review will not see (syzygy-mea.3, lead ruling): every blob of the pinned tree, through the
+  // same screen and the class gate, on every check from the first. The reader re-lists the tree it listed for the derivation.
+  let screenCensus: ScreenCensusReport | undefined;
+  if (plan.command === 'check') {
+    try {
+      screenCensus = screenCensusReport({ ok: true, census: withheldCensus(await reader.listTree(), screen, checked.contentClasses) });
+    } catch (cause) {
+      if (!(cause instanceof GitObjectReadRefusal)) throw cause;
+      screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})`, consented: checked.contentClasses });
+    }
+  }
   if (credential.required && !credential.passed) {
     findings.push({ kind: 'adapter-credential-readable', at: '$', detail: `${credential.finding.why}. ${credential.finding.instruction}` });
   }
@@ -397,7 +448,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   }
   log({ outcome, revision, findings: findings.length });
   const disclosures = credential.required ? [...plan.disclosures, CREDENTIAL_CHECK_DISCLOSURE] : plan.disclosures;
-  return { ok: true, report: { command: plan.command, run, checkFile, ...record, disclosures } };
+  const visibility = reviewVisibility(citedBlobs, screen.contentClass, checked.contentClasses);
+  return { ok: true, report: { command: plan.command, run, checkFile, ...record, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }), ...(visibility === null ? {} : { reviewVisibility: visibility }) } };
 }
 
 /** The instant the brief record states it was issued, or why the run counts as not briefed. */
@@ -442,7 +494,7 @@ export interface Derived {
   readonly citedBlobs: CitedBlob[];
   /** Each admitted blob's text: the whole body, or for a body retained as `redacted-span` the retained text (every withheld line emptied,
    * its terminator kept) with the withheld line numbers. */
-  readonly admitted: ReadonlyMap<string, { readonly objectId: string; readonly raw: string; readonly withheld?: readonly number[];
+  readonly admitted: ReadonlyMap<string, { readonly objectId: string; readonly raw: string; readonly withheld?: readonly number[]; readonly detectorIds?: readonly string[];
     readonly retainedLines?: readonly string[]; readonly lineByteOffsets?: readonly number[]; readonly originalBytes?: number; readonly contentSha256?: string; readonly projection?: VerifiedRedactedBody }>;
 }
 
@@ -484,7 +536,7 @@ type BlobState =
   | { readonly state: 'absent' }
   | { readonly state: 'excluded'; readonly outcome: ScreenExclusion }
   | { readonly state: 'admitted'; readonly entry: TreeEntry; readonly raw: string; readonly lines: number; tracked: TrackedText | null; readonly withheld?: readonly number[];
-      readonly retainedLines?: readonly string[]; readonly lineByteOffsets?: readonly number[]; readonly originalBytes?: number; readonly contentSha256?: string; readonly projection?: VerifiedRedactedBody };
+      readonly detectorIds?: readonly string[]; readonly retainedLines?: readonly string[]; readonly lineByteOffsets?: readonly number[]; readonly originalBytes?: number; readonly contentSha256?: string; readonly projection?: VerifiedRedactedBody };
 
 /** Every check over a parsed subject. Each walker tolerates a subject of the wrong shape, so one submission reports every finding it
  * carries, not only its schema faults. It freezes and writes nothing: `checkSubject` freezes, and `render` derives again from a frozen
@@ -598,7 +650,7 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     const screened = inputs.screen.screenTargetBody(raw, blob.path);
     blobs.set(blob.path, screened.kind === 'excluded' ? { state: 'excluded', outcome: screened.outcome }
       : screened.kind === 'redacted' ? { state: 'admitted', entry: blob, raw: retainedWithMarkers(screened.retainedLines, screened.withheld), lines: screened.retainedLines.length,
-        tracked: null, withheld: screened.withheld, retainedLines: screened.retainedLines, lineByteOffsets: screened.lineByteOffsets,
+        tracked: null, withheld: screened.withheld, detectorIds: screened.detectorIds, retainedLines: screened.retainedLines, lineByteOffsets: screened.lineByteOffsets,
         originalBytes: screened.originalBytes, contentSha256: screened.contentSha256, projection: verifiedRedactedBody(raw, blob.id, blob.path, inputs.screen.screenTargetBody) }
         : { state: 'admitted', entry: blob, raw, lines: lineCount(raw), tracked: null });
   }
@@ -606,7 +658,7 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   const citedBlobs: CitedBlob[] = firstCited.map((cited) => [cited, blobs.get(cited)!] as const).flatMap(([cited, state]): CitedBlob[] => {
     if (state.state === 'absent') return [];
     if (state.state === 'admitted') {
-      return [{ path: cited, objectId: state.entry.id, read: true, outcome: 'admitted', ...(state.withheld === undefined ? {} : { redaction: { redactionClass: 'redacted-span', withheldLines: state.withheld.length } }) }];
+      return [{ path: cited, objectId: state.entry.id, read: true, outcome: 'admitted', ...(state.withheld === undefined ? {} : { redaction: blobRedaction(state.withheld, state.detectorIds!) }) }];
     }
     const pathSecret = state.outcome === 'secret-detector-match' && inputs.screen.screenPath(cited) === 'secret-detector-match';
     return [{ path: pathSecret ? null : cited, objectId: pathSecret ? null : tree.get(cited)!.id, read: toRead.some((entry) => entry.path === cited), outcome: state.outcome }];
@@ -673,7 +725,7 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   }
 
   const admitted = new Map([...blobs].flatMap(([cited, state]) => (state.state === 'admitted'
-    ? [[cited, { objectId: state.entry.id, raw: state.raw, ...(state.withheld === undefined ? {} : { withheld: state.withheld,
+    ? [[cited, { objectId: state.entry.id, raw: state.raw, ...(state.withheld === undefined ? {} : { withheld: state.withheld, detectorIds: state.detectorIds!,
       retainedLines: state.retainedLines!, lineByteOffsets: state.lineByteOffsets!, originalBytes: state.originalBytes!, contentSha256: state.contentSha256!, projection: state.projection! }) }] as const] : [])));
   return { findings, quotations, excludedContent, citedBlobs, admitted };
 }
