@@ -163,6 +163,8 @@ const DIALECT: ReadonlyArray<readonly [string, (text: string, family: Family) =>
   // The instant label: a family refuses a line under the label it does not read, as it refuses a second line under its own.
   ['a second instant labelled Act instant', (t, f) => `${t}\nAct instant: ${INSTANT[f]}\n`, ['ok', 'ok', 'refused', 'ok'], REFUSED],
   ['a second instant labelled Recorded at (UTC)', (t, f) => `${t}\nRecorded at (UTC): ${INSTANT[f]}\n`, ['refused', 'refused', 'ok', 'refused'], REFUSED],
+  // The other label's line indented, as the loose pattern reads it (R-GP-IMPL-CONSENT-KNOBS-REFUSAL-1 N1, mutant R5).
+  ['a second instant indented under the other label', t => (t.includes('\nAct instant:') ? `${t}\n  Recorded at (UTC): 2026-10-03T09:30:00Z\n` : `${t}\n  Act instant: 2026-10-04T09:30:00Z\n`), ['ok', 'ok', 'ok', 'ok'], REFUSED],
   ['the one instant under the other label', t => (t.includes('\nAct instant:') ? t.replace('\nAct instant:', '\nRecorded at (UTC):') : t.replace('\nRecorded at (UTC):', '\nAct instant:')), REFUSED, REFUSED],
   // The supersession field (knob 4): every family reads it, so a repeated one refuses.
   ['a second Supersession / revocation field', t => `${t}\nSupersession / revocation: none.\n`, ['ok', 'refused', 'refused', 'refused'], REFUSED],
@@ -268,25 +270,35 @@ describe('each family\'s pinned files and records are read by name and bytes', (
   });
 });
 
-// The allowlist (knob 2) now applies in every family. No citation carries a policy-family needle, so for the policy family it can only
-// add a refusal: a set-aside citation that joins the screening-scope stem (the last row), as it joins any other family's.
-describe('each family sets aside exact tooling citations in an allowlisted file, the policy family too (syzygy-bpyt.1.24)', () => {
-  const allowlisted = (text: string): Record<string, string> => { ALLOWLIST.set('NOTES.md', { sha256: sha(text), reason: 'test' }); return withFile('NOTES.md', text); };
-  /** [text, allowlisted before, allowlisted after, not allowlisted]. */
-  const CITATIONS: ReadonlyArray<readonly [string, Verdicts, Verdicts, Verdicts]> = [
-    ['Built by scripts/build_public_egress_v2.py.\n', ['ok', 'ok', 'ok', 'ok'], ['ok', 'ok', 'ok', 'ok'], ['refused', 'ok', 'ok', 'ok']],
-    ['Recorded by scripts/record_rfc5_project_documentation_act.py.\n', ['ok', 'ok', 'ok', 'ok'], ['ok', 'ok', 'ok', 'ok'], ['ok', 'ok', 'refused', 'ok']],
-    ['Checked by scripts/check_public_admission_registry_git_source.py.\n', ['ok', 'ok', 'ok', 'ok'], ['ok', 'ok', 'ok', 'ok'], ['ok', 'ok', 'ok', 'refused']],
-    // Set aside, the citation leaves `public-source- -scope`, which folds to the screening-scope stem: before, the policy sweep read the
-    // whole text and accepted it; now it reads the set-aside text and refuses, as the class family refuses its own stem joined so.
+// The allowlist (knob 2). Before syzygy-bpyt.1.24 the policy family swept an allowlisted file's whole text and every other family its
+// citation-set-aside text. Neither reading is a superset of the other's refusals: setting a citation aside can join a stem across the
+// gap (`rfc5-project- scripts/a_b.py -documentation`), and keeping it can fold adjacent text into a stem (`public-source scope_check.py`
+// carries `public-source-scope`; `scope_check.py` alone carries no needle, so it is a citation). Now every family reads both and
+// refuses when either names its act, so each row's allowlisted verdict refuses wherever any family's earlier reading refused. The
+// reviewed head e8450656 gave the policy family the set-aside reading alone and accepted the scope_check.py world (the last row,
+// R-GP-IMPL-CONSENT-KNOBS-REFUSAL-1 F1); its base and this reader refuse it.
+describe('each family reads an allowlisted file whole and with its exact tooling citations set aside, refusing on either (syzygy-bpyt.1.24)', () => {
+  const allowlisted = (text: string, extra: Readonly<Record<string, string>>): Record<string, string> => {
+    ALLOWLIST.set('NOTES.md', { sha256: sha(text), reason: 'test' });
+    return { ...withFile('NOTES.md', text), ...extra };
+  };
+  /** [text, allowlisted before, allowlisted after, not allowlisted, files beside BASE]. */
+  const CITATIONS: ReadonlyArray<readonly [string, Verdicts, Verdicts, Verdicts, Readonly<Record<string, string>>?]> = [
+    // A citation that carries a family's stem is no longer set aside for that family: the whole text names it.
+    ['Built by scripts/build_public_egress_v2.py.\n', ['ok', 'ok', 'ok', 'ok'], ['refused', 'ok', 'ok', 'ok'], ['refused', 'ok', 'ok', 'ok']],
+    ['Recorded by scripts/record_rfc5_project_documentation_act.py.\n', ['ok', 'ok', 'ok', 'ok'], ['ok', 'ok', 'refused', 'ok'], ['ok', 'ok', 'refused', 'ok']],
+    ['Checked by scripts/check_public_admission_registry_git_source.py.\n', ['ok', 'ok', 'ok', 'ok'], ['ok', 'ok', 'ok', 'refused'], ['ok', 'ok', 'ok', 'refused']],
+    // Set aside, the citation leaves `public-source- -scope`, which folds to the screening-scope stem: the set-aside reading refuses.
     ['public-source- scripts/a_b.py -scope\n', ['ok', 'ok', 'ok', 'ok'], ['ok', 'refused', 'ok', 'ok'], ['ok', 'ok', 'ok', 'ok']],
     ['rfc5-project- scripts/a_b.py -documentation\n', ['ok', 'ok', 'refused', 'ok'], ['ok', 'ok', 'refused', 'ok'], ['ok', 'ok', 'ok', 'ok']],
+    // Kept, the citation's `scope_check` folds with the `public-source` before it into the screening-scope stem: the whole text refuses.
+    ['The check is public-source scope_check.py here.\n', ['ok', 'refused', 'ok', 'ok'], ['ok', 'refused', 'ok', 'ok'], ['ok', 'refused', 'ok', 'ok'], { 'scripts/scope_check.py': '' }],
   ];
-  for (const [text, before, after, otherwise] of CITATIONS) {
+  for (const [text, before, after, otherwise, extra = {}] of CITATIONS) {
     it(text.trim(), async () => {
       expect(towardRefusal(before, after), 'the change only adds refusals').toBe(true);
-      expect(await verdicts(withFile('NOTES.md', text)), 'not allowlisted').toEqual(otherwise);
-      expect(await verdicts(allowlisted(text)), 'allowlisted').toEqual(after);
+      expect(await verdicts({ ...withFile('NOTES.md', text), ...extra }), 'not allowlisted').toEqual(otherwise);
+      expect(await verdicts(allowlisted(text, extra)), 'allowlisted').toEqual(after);
     });
   }
 });

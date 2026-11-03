@@ -239,9 +239,13 @@ const AGGREGATE_RECORD = 'ACCEPTANCE-ACT-RECORD.md';
  * (`contracts/candidates/public-egress-v2/REVIEW-BRIEF.md`). A name that carries a record-id or act-identity needle or a provider stem
  * other than version 2's (`public-egress-openai`) is never one, nor is a path with a segment at any depth that starts `instance` in
  * any case (`Instances/`, `instances.md`, `instance/`). Read through the reader's file system; an unreadable directory gives none.
- * Set aside only in an allowlisted file (`sweepText`), in every family. No citation carries a policy-family needle: `carriesId` drops
- * every name with the policy or screening-scope stem, and the policy path lies outside both packages and `scripts/`. So giving the
- * policy family the allowlist (syzygy-bpyt.1.24) only adds a refusal, where a set-aside citation joins its stem. */
+ * Set aside only in an allowlisted file (`sweepText`), and then only as a second reading: every family names the act when either the
+ * whole text or the set-aside text carries a needle (`findActRecords`). Neither reading alone is toward refusal for every family. The
+ * set-aside reading refuses where a blanked citation joins a stem (`rfc5-project- scripts/a_b.py -documentation`); the whole text
+ * refuses where a citation adjoins text that folds into a stem (`public-source scope_check.py` carries `public-source-scope`, and
+ * `scope_check.py` alone carries no needle), which the policy family refused before syzygy-bpyt.1.24 and the other families did not.
+ * So an allowlisted file is refused by every reading any family refused it by before, and the allowlist sets nothing aside that a
+ * whole-text sweep would refuse. */
 const PACKAGE_DIRS = ['.syzygy/governance/contracts/candidates/public-repo-admission', '.syzygy/governance/contracts/candidates/public-egress-v2'];
 const ID_NEEDLES = ['public-obs-', 'public-egress-anthropic', 'rfc5-project-documentation-amend', 'public-source-scope', 'pwb-secret-classification-policy'];
 const carriesId = (name: string): boolean =>
@@ -266,10 +270,10 @@ async function toolingCitations(fs: PackageReaderFs, root: string): Promise<Read
  * is one of `citations` blanked; every other token, any part of a token, and any spelling the citation does not match exactly stays. */
 const withoutCitations = (text: string, citations: ReadonlySet<string>): string =>
   text.replace(/[A-Za-z0-9_./-]+/g, token => { const core = token.replace(/\.+$/, ''); return citations.has(core) ? ' ' + token.slice(core.length) : token; });
-/** The text a sweep reads from the decisions file at `rel`: the file's own text, every stem counting wherever it sits (in a script
- * name or package path too), unless the file is in `CITATION_ALLOWLIST` at exactly that path with exactly those bytes. Then, and only
- * then, its exact tooling citations are set aside. A new, edited, renamed or copied file gets the whole text. The citations are read
- * once per sweep, on the first allowlisted file. */
+/** The second text a sweep reads from the decisions file at `rel`, beside its whole text (`findActRecords`): the whole text itself,
+ * unless the file is in `CITATION_ALLOWLIST` at exactly that path with exactly those bytes. Then, and only then, its exact tooling
+ * citations are set aside. A new, edited, renamed or copied file gets the whole text. The citations are read once per sweep, on the
+ * first allowlisted file. */
 function sweepText(fs: PackageReaderFs, root: string): (rel: string, text: string) => Promise<string> {
   let citations: Promise<ReadonlySet<string>> | null = null;
   return async (rel, text) => {
@@ -660,7 +664,8 @@ async function findActRecords<F extends { readonly file: string }>(fs: PackageRe
     const pinned = family.pins?.get(rel);
     if (pinned !== undefined) { if (sha256(text) !== pinned) refuse(); continue; }
     if ((family.exempt ?? []).some(exempt => exempt.file === rel && templateFields(exempt.template, text) !== null)) continue;
-    if (namesAct(family.sweep, rel, textForms(await swept(rel, text)))) {
+    const setAside = await swept(rel, text);
+    if (namesAct(family.sweep, rel, textForms(text)) || (setAside !== text && namesAct(family.sweep, rel, textForms(setAside)))) {
       return { why: `${DECISIONS_DIR}/${rel} names the act without being its record: a withdrawal or a form this reader does not define`, namedBy: `${DECISIONS_DIR}/${rel}` };
     }
   }
