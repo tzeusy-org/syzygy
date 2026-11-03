@@ -22,13 +22,14 @@ const CASES: Record<string, string> = {
   swallowed: `${HEAD}it('catches the refusal', () => { try { execFileSync('git', ['--version']); } catch { /* swallowed */ } });\n`,
   server: `${HEAD}it('listens', () => { try { createServer().listen(0, '127.0.0.1'); } catch { /* swallowed */ } });\n`,
   hook: `${HEAD}beforeAll(() => { try { execFileSync('git', ['--version']); } catch { /* swallowed */ } });\nit('does nothing', () => undefined);\n`,
+  drained: `${HEAD}it('drains the record', () => { try { execFileSync('git', ['--version']); } catch { /* swallowed */ } try { globalThis.syzygyUnitTierGuardTake(); } catch { /* swallowed */ } });\n`,
   teardown: `${HEAD}afterAll(() => { try { execFileSync('git', ['--version']); } catch { /* swallowed */ } });\nit('does nothing', () => undefined);\n`,
 };
 for (const [name, source] of Object.entries(CASES)) writeFileSync(join(scratch, `${name}.scratch.test.mjs`), source);
 
 // Asynchronous: a synchronous child past the worker's 60 s RPC bound would fail the run (sync-child-process-guard.test.ts).
-async function run(name: string): Promise<{ status: number; out: string }> {
-  const args = [join(ROOT, 'node_modules/vitest/vitest.mjs'), 'run', '--root', scratch, `${name}.scratch.test.mjs`];
+async function run(name: string, ...extra: string[]): Promise<{ status: number; out: string }> {
+  const args = [join(ROOT, 'node_modules/vitest/vitest.mjs'), 'run', '--root', scratch, `${name}.scratch.test.mjs`, ...extra];
   try {
     const done = await promisify(execFile)(process.execPath, args, { cwd: scratch });
     return { status: 0, out: done.stdout + done.stderr };
@@ -39,14 +40,20 @@ async function run(name: string): Promise<{ status: number; out: string }> {
 }
 
 // The test whose own afterEach reports a swallowed refusal, named in the failure; a hook's refusal is reported at the file.
-const FAILS_AT_TEST: Record<string, string | undefined> = { swallowed: 'catches the refusal', server: 'listens' };
+const FAILS_AT_TEST: Record<string, string | undefined> = { swallowed: 'catches the refusal', server: 'listens', drained: 'drains the record' };
 
 describe('the unit setup fails the file, not only the call', () => {
   it('passes a file that reaches for neither a process nor a socket', async () => {
     expect((await run('clean')).status).toBe(0);
   }, 60_000);
 
-  it.each(['swallowed', 'server', 'hook', 'teardown'])('fails a file whose %s refusal was caught', async (name) => {
+  it('fails a run without isolation, where a later file would escape the per-file hooks', async () => {
+    const { status, out } = await run('clean', '--no-isolate');
+    expect(status).toBe(1);
+    expect(out).toContain('unit tier refuses a run without isolation');
+  }, 60_000);
+
+  it.each(['swallowed', 'server', 'hook', 'teardown', 'drained'])('fails a file whose %s refusal was caught', async (name) => {
     const { status, out } = await run(name);
     expect(status).toBe(1);
     expect(out).toMatch(/unit tier refused (child_process\.execFileSync "git"|net\.Server\.listen)/);
