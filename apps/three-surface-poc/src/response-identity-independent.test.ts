@@ -257,4 +257,9 @@ describe('response identity independent census and mutation proofs', () => {
     right.runtime = { unlistedInstant: SECOND_AS_OF };
     expect(() => assertStable(left, right, EXCLUDES)).toThrow('runtime.unlistedInstant');
   });
+
+  it('serves the content key of the very body it is served with', () => {
+    const [model] = completeModels();
+    expect(model.responseIdentity.contentKey).toBe(independentKey(model, EXCLUDES).key);
+  });
 });

@@ -241,6 +241,10 @@ describe('three-surface Butlers POC model', () => {
     ]);
 
     const entities = byId(first.entities);
+    expect(entities.get('capability:whatsapp-transport-identity')?.provenance.map((provenance) => provenance.source)).toEqual([
+      'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md',
+      'openspec/changes/repair-whatsapp-identity-reconciliation/specs/switchboard-identity/spec.md',
+    ]);
     expect(entities.get('intent:req-switchboard-identity-001')?.epistemic.label).toBe(
       'Observed',
     );
@@ -784,6 +788,11 @@ describe('three-surface Butlers POC model', () => {
     const first = buildPocModel(input);
     const firstPolaris = first.surfaces.find((surface) => surface.id === 'polaris');
     if (firstPolaris === undefined) throw new Error('missing Polaris surface');
+    // Orrery holds the whole graph; the other two keep their seeded members.
+    expect(first.surfaces.find((surface) => surface.id === 'orrery')?.entityIds).toEqual(first.entities.map((entity) => entity.id));
+    expect(first.surfaces.find((surface) => surface.id === 'orrery')?.relationshipIds).toEqual(first.relationships.map((relationship) => relationship.id));
+    expect(firstPolaris.entityIds).toEqual(BUTLERS_POC_SEEDS.surfaces.find((surface) => surface.id === 'polaris')?.entityIds);
+    expect(firstPolaris.entityIds.length).toBeLessThan(first.entities.length);
     expect(Object.isFrozen(firstPolaris.entityIds)).toBe(true);
     expect(Object.isFrozen(BUTLERS_POC_SEEDS.surfaces[0]?.entityIds)).toBe(true);
     expect(() => (firstPolaris.entityIds as string[]).push('entity:mutated-only-in-first-build')).toThrow();
@@ -948,6 +957,29 @@ describe('three-surface Butlers POC model', () => {
         expect.objectContaining({ kind: 'invalid-seed-graph' }),
       );
     }
+  });
+
+  it('names a seed role the role tables do not carry', () => {
+    const baseInput = {
+      repoRoot: butlersFixture(),
+      repositoryRevision: 'c13894238989d3bebb24094730992970b31fe546',
+      observerRevision: 'bfdb7963e4ff5628d0d1ec0f59e831d7e8209abe',
+      evaluation: { snapshot: 'butlers@unsupported-role', asOf: '2026-09-22T00:00:00Z' },
+    } as const;
+    const entityRole = {
+      ...BUTLERS_POC_SEEDS,
+      entities: BUTLERS_POC_SEEDS.entities.map((entity) =>
+        entity.role === 'runtime' ? { ...entity, role: 'oracle' as unknown as 'runtime' } : entity,
+      ),
+    };
+    const relationshipRole = {
+      ...BUTLERS_POC_SEEDS,
+      relationships: BUTLERS_POC_SEEDS.relationships.map((relationship) =>
+        relationship.role === 'code-to-runtime' ? { ...relationship, role: 'oracle' as unknown as 'code-to-runtime' } : relationship,
+      ),
+    };
+    expect(() => buildPocModel({ ...baseInput, seeds: entityRole })).toThrowError(/entity [^ ]+ has unsupported role oracle/);
+    expect(() => buildPocModel({ ...baseInput, seeds: relationshipRole })).toThrowError(/relationship [^ ]+ has unsupported role oracle/);
   });
 
   it('rejects a seeded Orrery mapping that is absent from the observed inventory', () => {
