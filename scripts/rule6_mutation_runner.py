@@ -3,8 +3,27 @@
 usage: python3 scripts/rule6_mutation_runner.py [--tree DIR] SPEC.json OUT.json   (DIR, default the cwd: a worktree root, committed and clean)
 SPEC.json carries `project` and `mutants` (id, file, old, new, tests, optional project and note); a previous OUT.json is a valid SPEC.
 OUT.json records the commit, the sha256 of each mutated file and of each test file as committed, and this runner's path and sha256; each
-mutant's record carries the command it ran and, for each failed test (or test file that failed to load), its name and first error line."""
+mutant's record carries the command it ran and, for each failed test (or test file that failed to load), its name and first error line.
+An outcome is `killed` only when vitest ran at least one test and one failed; a run that ran no test (no project matched, a file that
+failed to load, a compile error) is `errored`, never killed, and the runner exits 1 after writing OUT.json if any mutant errored.
+`--selftest` runs the classifier's fixtures and exits."""
 import hashlib, json, os, re, subprocess, sys, tempfile, datetime
+def parse_counts(text):
+    """(failed, total) from vitest's summary text; (None, None) when the run printed no `Tests` line (it errored before running a test)."""
+    f = re.search(r'Tests\s+(\d+) failed', text)
+    tot = re.search(r'Tests\s+.*?\((\d+)\)', text)
+    return (int(f.group(1)) if f else (0 if tot else None)), (int(tot.group(1)) if tot else None)
+def classify(failed, total):
+    """killed: some test ran and failed. survived: tests ran and all passed. errored: no test ran (never a kill)."""
+    if total is None or total == 0: return 'errored'
+    return 'killed' if (failed or 0) > 0 else 'survived'
+def selftest():
+    cases = [('Test Files  1 failed (1)\n      Tests  2 failed | 5 passed (7)', 'killed'), ('      Tests  7 passed (7)', 'survived'),
+             ('No projects matched the filter "@syzygy/gone".', 'errored'), ('Test Files  1 failed (1)\n      Tests  no tests', 'errored'),
+             ('      Tests  0 passed (0)', 'errored'), ('', 'errored')]
+    bad = [(text, want, classify(*parse_counts(text))) for text, want in cases if classify(*parse_counts(text)) != want]
+    sys.exit('selftest FAIL: %r' % (bad,)) if bad else print('selftest ok: %d cases' % len(cases))
+if sys.argv[1:] == ['--selftest']: selftest(); sys.exit(0)
 args = sys.argv[1:]
 tree = '.'
 if '--tree' in args:
@@ -44,12 +63,10 @@ for m in spec['mutants']:
         try: report = json.load(open(report_path))
         except (OSError, ValueError): report = {}
     text = r.stdout + r.stderr
-    f = re.search(r'Tests\s+(\d+) failed', text)
-    tot = re.search(r'Tests\s+.*?\((\d+)\)', text)
-    failed = int(f.group(1)) if f else (0 if tot else None)
-    total = int(tot.group(1)) if tot else None
-    killed = (failed or 0) > 0 or tot is None   # no Tests line = the run errored (collection or compile failure)
-    out['mutants'].append({'id': m['id'], 'file': m['file'], 'old': m['old'], 'new': m['new'], 'tests': m['tests'], 'command': ' '.join(command), 'outcome': ('errored' if tot is None else 'killed') if killed else 'survived', 'failedTests': failed, 'totalTests': total, 'failures': failures(report), **({'note': m['note']} if 'note' in m else {})})
+    failed, total = parse_counts(text)
+    outcome = classify(failed, total)
+    out['mutants'].append({'id': m['id'], 'file': m['file'], 'old': m['old'], 'new': m['new'], 'tests': m['tests'], 'command': ' '.join(command), 'outcome': outcome, 'failedTests': failed, 'totalTests': total, 'failures': failures(report), **({'note': m['note']} if 'note' in m else {})})
     print(m['id'], out['mutants'][-1]['outcome'], failed, flush=True)
 assert not run(['git','status','--porcelain','--untracked-files=no']).stdout.strip(), 'tree not restored'
 json.dump(out, open(args[1], 'w'), indent=2); open(args[1], 'a').write('\n')
+if any(m['outcome'] == 'errored' for m in out['mutants']): sys.exit('errored mutants: ' + ', '.join(m['id'] for m in out['mutants'] if m['outcome'] == 'errored'))
