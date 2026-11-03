@@ -3,7 +3,7 @@
 because the tools may run under `python3 -I`, which puts no script directory on sys.path (syzygy-l9vt).
 `resolve_project(tree, project, tests)`: vitest projects are the tiers of vitest.tiers.ts (unit, integration, e2e, live). A record written
 before the tier split names `@syzygy/<package>`, which matches no project now; it maps to the one tier all of its test files are in at
-`tree`, and is refused (SystemExit, naming the files) when they span tiers never guessed; a file no tier list names is unit (the unit tier is the complement of the lists), and a missing one runs no test and scores `errored`. Any other name is refused.
+`tree`, and is refused (SystemExit, naming the files) when they span tiers never guessed; a file no tier list names is unit (the unit tier is the complement of the lists), and a missing one is not checked here: vitest reports "No test files found" and the mutant scores `errored` only when it is the lone file; beside a real file vitest silently drops it and the run scores on the rest (checked 2026-11-04, vitest in the lockfile). Any other name is refused.
 `run_limited(cmd, cwd, timeout)`: (returncode, output, timed_out); a run past `timeout` seconds is killed with its whole process group
 (a hung vitest worker would otherwise outlive `npx`). `--selftest` runs the fixtures."""
 import os, re, signal, subprocess, sys
@@ -17,8 +17,8 @@ def tier_lists(tiers_source):
     return lists
 def tier_of(lists, test):
     """The tier of one test path. The unit tier is the complement of the listed tiers (vitest.tiers.ts lists only e2e, integration and live), so
-    a path no list names is `unit` by definition and an unknown file cannot be told from a unit one here; a missing file fails at vitest, which
-    runs nothing and scores `errored`."""
+    a path no list names is `unit` by definition and an unknown file cannot be told from a unit one here; a missing file is not refused here: alone it
+    fails at vitest (`errored`), beside a real file vitest silently drops it."""
     if test in lists.get('E2E_TESTS', ()) or test.endswith(SYSTEM_SUFFIX): return 'e2e'
     if test in lists.get('INTEGRATION_TESTS', ()): return 'integration'
     if test in lists.get('LIVE_TESTS', ()): return 'live'
