@@ -388,11 +388,18 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   overwrites silently: pass a suffixed `--date` (`2026-09-06-gen2`) when a
   same-day file exists. Rebase-merge re-hashes the recorded head; the
   surface version (sha256 over both `src` trees) is the stable anchor.
-- **A response-ceiling breach serves nothing and logs nothing.** `routes.ts`'s
-  `boundedResponse` answers HTTP 503 with a JSON body (`served: 'nothing'`,
-  readiness false); no ledger, stderr line or status record sees it — the 503
-  body of the breaching request is the only trace. The resource ledger is
-  the input-side reader budget and never sees a response ceiling. Two
+- **A response-ceiling breach serves nothing; it no longer logs nothing.**
+  `routes.ts`'s `boundedResponse` answers HTTP 503 with a JSON body
+  (`served: 'nothing'`, readiness false). *Stale 2026-11-04 (superseded
+  2026-09-23, `syzygy-dov.11.1`): this note used to say "logs nothing" and
+  that no stderr line or status record sees a breach.* Now `boundedResponse`
+  records the breach in the process-local `ServedResponseRecorder`, which
+  feeds served readiness, and `http-host`'s `emitNonSuccess` writes one
+  `daemon-http-outcome` stderr line (`reason: 'response-limit-breached'`)
+  built by `safeResponseDiagnostic`: digest, as-of, limit, declared and
+  observed bytes, population counts. A diagnostic failing that allow-list
+  falls back to the generic `route-non-success` line. The resource ledger is
+  still the input-side reader budget and never sees a response ceiling. Two
   governance records said "degrades honestly" / "the ledger reports the
   breach" for a day; both marked 2026-09-07. `/polaris` sat 44 KB under
   the 2 MB ceiling; the P-63 trim (`syzygy-1z3.27`) cut 434,960 bytes on
