@@ -582,3 +582,30 @@ describe('the v4 redacted corpus behind the original-object verification boundar
   });
 
 });
+
+// P-116 (screening scope version 5, D): the reader loads the screen for the repository it reads (its consent identity, as configured)
+// at the revision it reads, so an owner placement applies only there. The live policy with its one placement re-pointed at this fixture.
+describe('the version-5 owner placements through the corpus reader', () => {
+  const live = JSON.parse(readFileSync(new URL('../../../../.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json', import.meta.url), 'utf8')) as Record<string, any>;
+  const placing = (repository: string, commits: readonly string[]): PublicSourcePolicyActPort => {
+    const doc = structuredClone(live);
+    const rule = (doc.publicSourceScope.contentClassification.rules as Record<string, unknown>[]).find(entry => entry['class'] === 'project-documentation')!;
+    rule['ownerPlacements'] = [{ repository, commits, paths: ['tls.md'] }];
+    const bytes = new TextEncoder().encode(`${JSON.stringify(doc, null, 2)}\n`);
+    return { read: async () => ({ actRecord: actRecord(sha(bytes)), policy: bytes, classActInForce: true }) };
+  };
+  let placed: { root: string; commit: string };
+  beforeAll(() => { placed = fixtureRepo({ 'TLS.md': '# TLS\nUse port 6380.\n', 'src/a.c': 'int a;\n' }); });
+  const paths = async (policyAct: PublicSourcePolicyActPort): Promise<string[]> =>
+    (await readScreenedRepoCorpus(placed.root, cfg(placed.commit), { admission: allow, policyAct })).sources.filter(source => !source.exclusion.excluded).map(source => source.path).sort();
+
+  it('admits the placed path for the configured repository at the read revision', async () => {
+    expect(await paths(placing('repository:fixture', [placed.commit]))).toEqual(['TLS.md', 'src/a.c']);
+  });
+  it.each<[string, string, () => string[]]>([
+    ['another revision', 'repository:fixture', () => ['0'.repeat(40)]],
+    ['another repository', 'repository:other', () => [placed.commit]],
+  ])('withholds it for %s', async (_name, repository, commits) => {
+    expect(await paths(placing(repository, commits()))).toEqual(['src/a.c']);
+  });
+});

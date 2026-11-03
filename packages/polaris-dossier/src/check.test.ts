@@ -219,6 +219,18 @@ describe('check: a draft that follows every rule', () => {
   });
 });
 
+// P-116 (screening scope version 5, D): the screen is loaded for the run's repository identity and pinned commit, which the owner
+// placements compare.
+describe('check: the screen subject', () => {
+  it('loads the screen for repository:<id> at the pinned commit', async () => {
+    const run = await briefedRun();
+    writeDraft(run, JSON.stringify(valid(), null, 2));
+    const seen: unknown[] = [];
+    report(await checkDraft(run, {}, deps({ loadScreen: async (placement) => { seen.push(placement); return SCREEN; } })));
+    expect(seen).toEqual([{ repository: 'repository:redis-redis', commit }]);
+  });
+});
+
 describe('check: each rule refuses its own violation', () => {
   const kestrel = (d: Draft) => d.sections[0].paragraphs[0];
   it.each<[string, (d: Draft) => void, { kind: string; at: string; blockId?: string; citationId?: string }]>([
