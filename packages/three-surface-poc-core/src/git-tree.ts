@@ -6,8 +6,8 @@
 // lives here. Callers must pass `-z`: a quoted (escaped) path from the
 // newline format is rejected as malformed rather than guessed at.
 
-export const GIT_TREE_OBJECT_TYPES = ['blob', 'tree', 'commit'] as const;
-export type GitTreeObjectType = (typeof GIT_TREE_OBJECT_TYPES)[number];
+const GIT_TREE_OBJECT_TYPES = ['blob', 'tree', 'commit'] as const;
+type GitTreeObjectType = (typeof GIT_TREE_OBJECT_TYPES)[number];
 
 export interface GitTreeEntry {
   readonly mode: string;
@@ -18,7 +18,7 @@ export interface GitTreeEntry {
   readonly path: string;
 }
 
-export type ParsedGitTree =
+type ParsedGitTree =
   | { readonly kind: 'parsed'; readonly entries: readonly GitTreeEntry[] }
   | { readonly kind: 'malformed'; readonly record: string };
 

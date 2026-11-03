@@ -66,20 +66,20 @@ import { parseOwnerActRecord, type ParsedField, type ParsedOwnerActRecord } from
 // Closed vocabularies.
 // ---------------------------------------------------------------------
 
-export const RUN_RECORD_HOME = '.syzygy/governance/records/' as const;
-export const JUDGMENT_HOME = '.syzygy/governance/decisions/' as const;
+const RUN_RECORD_HOME = '.syzygy/governance/records/' as const;
+const JUDGMENT_HOME = '.syzygy/governance/decisions/' as const;
 
 // Exact recorded value for every present-invalid case (PWB-REQ-022).
 export const VERDICT_UNLAWFUL = 'verdict-unlawful' as const;
 
-export const WALKTHROUGH_MODES = ['nonvisual-keyboard-only', 'visual-pointer'] as const;
-export type WalkthroughMode = (typeof WALKTHROUGH_MODES)[number];
+const WALKTHROUGH_MODES = ['nonvisual-keyboard-only', 'visual-pointer'] as const;
+type WalkthroughMode = (typeof WALKTHROUGH_MODES)[number];
 
-export const VERDICT_VALUES = ['met', 'not-met'] as const;
-export type VerdictValue = (typeof VERDICT_VALUES)[number];
+const VERDICT_VALUES = ['met', 'not-met'] as const;
+type VerdictValue = (typeof VERDICT_VALUES)[number];
 
 // Run-record fields — 15 (five fields × missing / malformed / wrong).
-export const RUN_RECORD_INVALID_CASES = [
+const RUN_RECORD_INVALID_CASES = [
   'run-record-identity-missing',
   'run-record-identity-malformed',
   'run-record-identity-wrong',
@@ -98,7 +98,7 @@ export const RUN_RECORD_INVALID_CASES = [
 ] as const;
 
 // Judgment fields — 12 (four fields × missing / malformed / wrong).
-export const JUDGMENT_FIELD_INVALID_CASES = [
+const JUDGMENT_FIELD_INVALID_CASES = [
   'verdict-missing',
   'verdict-malformed',
   'verdict-wrong',
@@ -114,7 +114,7 @@ export const JUDGMENT_FIELD_INVALID_CASES = [
 ] as const;
 
 // Governance homes — 2.
-export const GOVERNANCE_HOME_INVALID_CASES = [
+const GOVERNANCE_HOME_INVALID_CASES = [
   'run-record-outside-records-home',
   'judgment-outside-decisions-home',
 ] as const;
@@ -125,8 +125,8 @@ export type JudgmentInvalidCase =
   | (typeof JUDGMENT_FIELD_INVALID_CASES)[number]
   | (typeof GOVERNANCE_HOME_INVALID_CASES)[number];
 
-export const JUDGMENT_ABSENT_CASES = ['no-run-record', 'no-judgment'] as const;
-export type JudgmentAbsentCase = (typeof JUDGMENT_ABSENT_CASES)[number];
+const JUDGMENT_ABSENT_CASES = ['no-run-record', 'no-judgment'] as const;
+type JudgmentAbsentCase = (typeof JUDGMENT_ABSENT_CASES)[number];
 
 // ---------------------------------------------------------------------
 // Inputs.
@@ -148,7 +148,7 @@ export interface JudgmentInput {
   readonly recordingTag: RecordingTagResolution;
 }
 
-export interface JudgmentActExpectation {
+interface JudgmentActExpectation {
   readonly artifactPath: string;
   readonly actIdentity: string;
   readonly actType: string;
@@ -180,7 +180,7 @@ export interface WalkthroughJudgmentExpectations {
   readonly otherActBoundArtifacts: readonly string[];
 }
 
-export interface JudgmentCorrelationRequest {
+interface JudgmentCorrelationRequest {
   readonly subject: 'walkthrough-judgment';
   readonly actIdentity: string;
   readonly a1Identity: string;
@@ -204,14 +204,14 @@ export interface WalkthroughJudgmentInputs {
 // Outputs.
 // ---------------------------------------------------------------------
 
-export interface RfcJudgmentContradiction {
+interface RfcJudgmentContradiction {
   readonly clause: 'RFC3-16(a)';
   readonly definedTerm: 'authorization-bearing governance artifact';
   readonly statement: string;
   readonly failing: readonly { readonly subject: 'walkthrough-judgment'; readonly state: string }[];
 }
 
-export interface RunRecordSummary {
+interface RunRecordSummary {
   readonly identity: string;
   readonly digest: string;
   readonly surfaceVersion: string;
@@ -220,14 +220,14 @@ export interface RunRecordSummary {
   readonly traversedPaths: readonly string[];
 }
 
-export interface OwnerVerdict {
+interface OwnerVerdict {
   readonly criterion: string;
   readonly value: VerdictValue;
   readonly rationale: string;
   readonly judgingParty: string;
 }
 
-export type WalkthroughJudgmentOutcome =
+type WalkthroughJudgmentOutcome =
   | {
       readonly kind: 'absent';
       readonly what: JudgmentAbsentCase;
@@ -376,7 +376,7 @@ function rationaleField(text: string): ParsedField<string> {
   return { kind: 'present', value: trimmed };
 }
 
-export interface ParsedRunRecord {
+interface ParsedRunRecord {
   readonly identity: ParsedField<string>;
   readonly surfaceVersion: ParsedField<string>;
   readonly evaluationIdentity: ParsedField<string>;
@@ -395,14 +395,14 @@ export function parseRunRecord(text: string): ParsedRunRecord {
   };
 }
 
-export interface ParsedJudgment {
+interface ParsedJudgment {
   readonly verdict: ParsedField<string>;
   readonly rationale: ParsedField<string>;
   readonly judgingParty: ParsedField<string>;
   readonly runRecordReference: ParsedField<string>;
 }
 
-export function parseJudgment(text: string): ParsedJudgment {
+function parseJudgment(text: string): ParsedJudgment {
   const head = headOf(text);
   return {
     verdict: backtickedField(head, JUDGMENT_LABELS.verdict),

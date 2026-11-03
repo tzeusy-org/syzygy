@@ -5,7 +5,7 @@ import { decodeUtf8 } from '@syzygy/support';
 import { parseGitLsTree } from './git-tree.js';
 import type { PocProvenance } from './model.js';
 
-export const CODE_LANGUAGE_CLASSIFICATIONS = [
+const CODE_LANGUAGE_CLASSIFICATIONS = [
   'typescript',
   'javascript',
   'python',
@@ -74,7 +74,7 @@ export interface CodeStructureObserved {
   readonly files: readonly CodeStructureFileEntry[];
 }
 
-export interface CodeStructureUnknown {
+interface CodeStructureUnknown {
   readonly kind: 'unknown';
   readonly reason: string;
 }

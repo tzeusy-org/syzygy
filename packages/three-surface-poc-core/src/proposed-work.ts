@@ -20,16 +20,16 @@ import {
  * `polaris.ts` owns the placement).
  */
 
-export const PROPOSED_WORK_LIFECYCLE_STATES = ['active', 'archived'] as const;
-export type ProposedWorkLifecycleState = (typeof PROPOSED_WORK_LIFECYCLE_STATES)[number];
+const PROPOSED_WORK_LIFECYCLE_STATES = ['active', 'archived'] as const;
+type ProposedWorkLifecycleState = (typeof PROPOSED_WORK_LIFECYCLE_STATES)[number];
 
-export interface ProposedWorkArtifact {
+interface ProposedWorkArtifact {
   readonly path: string;
   readonly revision: string;
   readonly digest: string;
 }
 
-export type ProposedWorkLifecycle =
+type ProposedWorkLifecycle =
   | {
       readonly kind: 'observed';
       readonly state: ProposedWorkLifecycleState;
@@ -82,7 +82,7 @@ export interface ProposedWork {
 
 const CHANGE_DELTA = /^openspec\/changes\/([^/]+)\/specs\/([^/]+)\/spec\.md$/;
 
-export interface ParsedChangeDelta {
+interface ParsedChangeDelta {
   readonly changeId: string;
   readonly specKey: string;
 }
@@ -142,7 +142,7 @@ export function deriveCurrentAuthority(specKey: string, projectShape: ProjectSha
   return { kind: 'baseline-spec', key: item.key, path: item.anchors[0]?.path ?? path, claim: item.claim };
 }
 
-export interface DeriveProposedWorkInput {
+interface DeriveProposedWorkInput {
   readonly capabilityId: string;
   readonly proposal: ProposedWorkArtifact;
   readonly delta: ProposedWorkArtifact;

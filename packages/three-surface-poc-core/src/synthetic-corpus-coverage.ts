@@ -56,7 +56,7 @@ import { EXTRACTION_CLASSES, type ExtractionClass } from './project-shape-manife
 import { extractClass, type ClassExtraction } from './project-shape-extraction.js';
 import { SYNTHETIC_CORPORA, type SyntheticCorpusFixture } from './fixtures/synthetic-corpora.js';
 
-export type RepairKind = 'profile-row' | 'code-path';
+type RepairKind = 'profile-row' | 'code-path';
 
 // The extraction failures a genuine shape mismatch can produce (N8 slice
 // 2, corrected in review): the line/table/TOML walker ran and found
@@ -69,7 +69,7 @@ export type RepairKind = 'profile-row' | 'code-path';
 // `repairFor` must not label it 'code-path'.
 const SHAPE_MISMATCH_REASONS = ['malformed-list', 'malformed-row', 'malformed-toml'] as const;
 
-export interface ClassCellResult {
+interface ClassCellResult {
   readonly class: ExtractionClass;
   readonly outcome: 'extracted' | 'unknown';
   // Present only when `outcome` is `extracted`; PWB-REQ-002 never yields a

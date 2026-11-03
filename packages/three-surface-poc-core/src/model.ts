@@ -117,7 +117,7 @@ export interface PocSurface {
 /** The second, explicitly identified evaluation that compares the pinned
  * repository revision with the current head. It is a disclosure about this
  * render, never a project-shape claim or a freshness value. */
-export interface CurrencyProbe {
+interface CurrencyProbe {
   readonly claimId: 'claim:currency-probe';
   readonly evaluationId: string;
   readonly evaluationInstant: string;
@@ -483,7 +483,7 @@ function fileProvenance(artifact: ObservedArtifact, repositoryRevision: string):
 
 /** Exported for the renderers: the work-item verification Unknown every
  * Trajectory card discloses, and the worker-change verification beside it. */
-export const WORK_ITEM_VERIFICATION_BASIS =
+const WORK_ITEM_VERIFICATION_BASIS =
   'Activity is not verification: no test evidence has been ingested for this item.';
 
 export function workItemVerificationId(itemId: string): string {

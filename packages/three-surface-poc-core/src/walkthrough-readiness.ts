@@ -40,7 +40,7 @@ export const ANSWER_IDENTITIES = [
   'architecture-and-groups',
   'v1-success',
 ] as const;
-export type AnswerIdentity = (typeof ANSWER_IDENTITIES)[number];
+type AnswerIdentity = (typeof ANSWER_IDENTITIES)[number];
 
 /** The ten readiness arms, one per clause of the requirement's readiness
  * sentence. Each makes readiness false; none is an act-validity case. */
@@ -56,9 +56,9 @@ export const READINESS_ARMS = [
   'resource-breach',
   'authority-unresolvable',
 ] as const;
-export type ReadinessArm = (typeof READINESS_ARMS)[number];
+type ReadinessArm = (typeof READINESS_ARMS)[number];
 
-export const ANSWERS_SECTION = 'Answers' as const;
+const ANSWERS_SECTION = 'Answers' as const;
 const SOURCES_LABEL = 'Sources:';
 const AUTHORITY_LABEL = 'Authority:';
 
@@ -131,13 +131,13 @@ export function walkthroughEvaluationIdentity(shape: ProjectShape): string {
 // Outputs.
 // ---------------------------------------------------------------------
 
-export interface AnswerAnchor {
+interface AnswerAnchor {
   readonly path: string;
   readonly line: number;
   readonly resolved: boolean;
 }
 
-export interface RetainedAnswer {
+interface RetainedAnswer {
   readonly identity: string;
   /** The owner's own words, retained verbatim and never judged here. */
   readonly text: string;
@@ -145,7 +145,7 @@ export interface RetainedAnswer {
   readonly authority?: { readonly path: string; readonly resolved: boolean };
 }
 
-export interface ReadinessFinding {
+interface ReadinessFinding {
   readonly arm: ReadinessArm;
   readonly detail: string;
 }

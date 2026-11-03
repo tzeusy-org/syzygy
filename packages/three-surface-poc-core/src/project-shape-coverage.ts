@@ -51,13 +51,13 @@ import {
 // Vocabulary.
 
 export const COVERAGE_STATES = ['modeled', 'unknown', 'contradicted'] as const;
-export type CoverageState = (typeof COVERAGE_STATES)[number];
+type CoverageState = (typeof COVERAGE_STATES)[number];
 
 // RFC2-24 reasons this module can emit, spelled verbatim.
 export const CONTRADICTED_REASON = 'contradicted-pending-adjudication' as const;
 
 export const DECLARATION_BASES = ['extracted-item', 'derived-count', 'stated-summary'] as const;
-export type DeclarationBasis = (typeof DECLARATION_BASES)[number];
+type DeclarationBasis = (typeof DECLARATION_BASES)[number];
 
 export interface DeclarationAnchor {
   readonly path: string;
@@ -82,7 +82,7 @@ export interface Declaration {
 // stays because the registry-currency amendment packet cites it by name.
 export const FACT_FAMILIES = ['item', 'count', 'catalog-count', 'project-account'] as const;
 
-export type FactFamily =
+type FactFamily =
   | { readonly kind: 'item' | 'count'; readonly class: ExtractionClass }
   | { readonly kind: 'catalog-count' }
   | { readonly kind: 'project-account' };
@@ -100,13 +100,13 @@ const CLASS_ROWS: Readonly<Record<ExtractionClass, LayerOrdinal>> = {
 };
 
 // The twenty `factFamilyRows` entries, spelled as the registry spells them.
-export const FACT_FAMILY_ROWS: Readonly<Record<string, LayerOrdinal>> = {
+const FACT_FAMILY_ROWS: Readonly<Record<string, LayerOrdinal>> = {
   ...Object.fromEntries(EXTRACTION_CLASSES.flatMap((cls) => [[`item:${cls}`, CLASS_ROWS[cls]], [`count:${cls}`, CLASS_ROWS[cls]]])),
   'catalog-count': 1,
   'project-account': 1,
 };
 
-export function factFamilyOf(fact: string): FactFamily | undefined {
+function factFamilyOf(fact: string): FactFamily | undefined {
   const [kind, second] = fact.split(':');
   if ((kind === 'item' || kind === 'count') && (EXTRACTION_CLASSES as readonly string[]).includes(second ?? '')) {
     return { kind, class: second as ExtractionClass };
@@ -117,7 +117,7 @@ export function factFamilyOf(fact: string): FactFamily | undefined {
 }
 
 // The layer row that owns a fact, or undefined for a fact outside the grammar.
-export function factFamilyRow(fact: string): LayerOrdinal | undefined {
+function factFamilyRow(fact: string): LayerOrdinal | undefined {
   const family = factFamilyOf(fact);
   if (family === undefined) return undefined;
   return FACT_FAMILY_ROWS[family.kind === 'item' || family.kind === 'count' ? `${family.kind}:${family.class}` : family.kind];
@@ -130,7 +130,7 @@ export interface LayerRule extends LayerRow {
   readonly anchor: DeclarationAnchor;
 }
 
-export const layerRuleId = (ordinal: LayerOrdinal): string => `layer:${ordinal}`;
+const layerRuleId = (ordinal: LayerOrdinal): string => `layer:${ordinal}`;
 
 export const RULE_REJECTIONS = [
   'anchor-not-in-population',
@@ -140,7 +140,7 @@ export const RULE_REJECTIONS = [
   'no-declaration-under-home',
   'more-than-one-declaration-under-home',
 ] as const;
-export type RuleRejection = (typeof RULE_REJECTIONS)[number];
+type RuleRejection = (typeof RULE_REJECTIONS)[number];
 
 export interface PrecedenceCitation {
   readonly ruleId: string;
@@ -151,7 +151,7 @@ export interface PrecedenceCitation {
   readonly statement: string;
 }
 
-export interface ConsideredRule {
+interface ConsideredRule {
   readonly ruleId: string;
   readonly outcome: 'applied' | RuleRejection;
 }
@@ -189,7 +189,7 @@ export type ReconciledFact =
 // are not read, and the grammar has no row for them (RFC2-24 #1, "mapping"),
 // so the reason word is `unenumerated-heading` and the closed reason is
 // `missing-declaration`.
-export interface UnenumeratedUnknown {
+interface UnenumeratedUnknown {
   readonly reason: 'unenumerated-heading';
   readonly unknownReason: 'missing-declaration';
 }
@@ -220,7 +220,7 @@ export type ClassDenominator =
       readonly unenumeratedHeadings?: number;
     };
 
-export interface SourceClassOutcome {
+interface SourceClassOutcome {
   readonly class: ExtractionClass;
   readonly denominator: ClassDenominator;
 }
@@ -336,13 +336,13 @@ const underHome = (path: string, home: string): boolean => path.startsWith(home)
 
 // The homes a row's `Home` cell expands to: rows 1–5 their exact root, row
 // 6 one `roster/<key>/` per admitted roster key, row 7 nothing (inert).
-export function expandedHomes(rule: Pick<LayerRule, 'home'>, rosterKeys: ReadonlySet<string>): readonly string[] {
+function expandedHomes(rule: Pick<LayerRule, 'home'>, rosterKeys: ReadonlySet<string>): readonly string[] {
   if (rule.home === INERT_HOME) return [];
   if (rule.home === ROSTER_HOME_TEMPLATE) return [...rosterKeys].sort().map((key) => ROSTER_HOME_TEMPLATE.replace('{butler}', key));
   return [rule.home];
 }
 
-export interface ReconcileInput {
+interface ReconcileInput {
   readonly rules: readonly LayerRule[];
   // Paths of the admitted source population a rule may be cited from and
   // a home may be applied over.
@@ -351,7 +351,7 @@ export interface ReconcileInput {
   readonly rosterKeys: ReadonlySet<string>;
 }
 
-export function considerRule(
+function considerRule(
   rule: LayerRule,
   fact: string,
   declarations: readonly Declaration[],
@@ -370,7 +370,7 @@ export function considerRule(
   return { outcome: 'applied', winner: under[0] as Declaration };
 }
 
-export function rowStatement(rule: LayerRow): string {
+function rowStatement(rule: LayerRow): string {
   return `| ${rule.ordinal} | ${rule.layer} | ${rule.owns} | ${rule.home} |`;
 }
 
@@ -416,7 +416,7 @@ export function reconcileFact(fact: string, declarations: readonly Declaration[]
 
 export type CoverageSourceInput = ClassifiedSource<SourceExtraction>;
 
-export interface CoverageInput {
+interface CoverageInput {
   // Every declaration and every rule comes from these admitted sources;
   // there is no seam for injected facts or rules.
   readonly sources: readonly CoverageSourceInput[];
