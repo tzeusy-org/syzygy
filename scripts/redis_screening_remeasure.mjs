@@ -387,7 +387,10 @@ async function measure(options) {
   const run = path.resolve(options.run);
   const runId = path.basename(run);
   const now = Date.now();
-  const { createPackageGateSources, buildFidelityPacket, buildDossierScreen, loadDossierScreen, openPinnedObjectReader } = await dist('packages/polaris-dossier/dist/index.js');
+  const { createPackageGateSources } = await dist('packages/polaris-dossier/dist/gate-sources.js');
+  const { buildFidelityPacket } = await dist('packages/polaris-dossier/dist/review.js');
+  const { buildDossierScreen, loadDossierScreen } = await dist('packages/polaris-dossier/dist/screen.js');
+  const { openPinnedObjectReader } = await dist('packages/polaris-dossier/dist/git-object-reader.js');
   const { collectBlocks, collectCitations } = await dist('packages/polaris-dossier/dist/check.js');
   const { openRun } = await dist('packages/polaris-dossier/dist/inventory.js');
   const { POLICY_PATH, readClassActState } = await dist('packages/polaris-generation-consent/dist/index.js');
