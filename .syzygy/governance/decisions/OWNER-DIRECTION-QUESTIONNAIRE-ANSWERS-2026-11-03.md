@@ -68,9 +68,8 @@ Picked: "A. Offer the cleared `v2.34.2` consent now (after the peeled-commit
 check); a later consent version adds a revision for regeneration".
 
 Scope: agents re-verify the `v2.34.2` peeled commit and offer the round-7
-cleared requests observation consent
-(`contracts/candidates/public-repo-admission/instances/requests/OBSERVATION-CONSENT.md`)
-for the owner's act, with a drafted and reviewed Anthropic agent-provider
+cleared requests observation consent (the `requests` instance of the
+public-repository admission package's observation consent) for the owner's act, with a drafted and reviewed Anthropic agent-provider
 statement; a revision-adding consent successor is prepared later. Excluded: no
 consent or statement is performed by this record; no clone, body read or run;
 no run route is chosen (it is asked once the consent is in force).
