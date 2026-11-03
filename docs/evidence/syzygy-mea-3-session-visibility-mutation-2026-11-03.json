@@ -777,11 +777,164 @@
           "outcome": "killed"
         }
       ]
+    },
+    {
+      "run": 5,
+      "scope": "repairs of the round-2 review R-PR596-SESSION-VISIBILITY-2 (finding 1; notes 3 and 4): the census never names a denied path a secret detector matches, reviewVisibility lists class-gated cited files, the per-path cap counts code units",
+      "commit": "3f94e73fbf33f4d7472f103f76c20fe8f211f628",
+      "subject": [
+        {
+          "path": "packages/polaris-dossier/src/census.test.ts",
+          "sha256": "417672240e7f97e17b18ec250c36b911fc9895b4af60107b4cf10f7200b6ae40"
+        },
+        {
+          "path": "packages/polaris-dossier/src/census.ts",
+          "sha256": "a2aa815c3a4253f4d54739df0707cf1901adc5c35ea00f3d39b40d728344da9f"
+        },
+        {
+          "path": "packages/polaris-dossier/src/check.test.ts",
+          "sha256": "140c7a74e27797df96fb08688f546c2c9b1f22cc7bd9c12849fb45efce767ae6"
+        },
+        {
+          "path": "packages/polaris-dossier/src/check.ts",
+          "sha256": "ac230edf2023a2a0667c641108605606a087439f9b2acdf44caa261731af2ba9"
+        },
+        {
+          "path": "packages/polaris-dossier/src/inventory.test.ts",
+          "sha256": "62f619903d924917a3ba78ee68932d58c509f05581e159b2cedaebaeb33096ca"
+        },
+        {
+          "path": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+          "sha256": "09e99b8fd8f8cb74110f1b864fce108985f94c9d6c4b408806284cd60921f48e"
+        }
+      ],
+      "denominator": {
+        "mutants": 7,
+        "killed": 7,
+        "survived": 0
+      },
+      "mutants": [
+        {
+          "id": "census-denied-secret-unnamed",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "case 'denied-path': if (screen.screenBody(entry.path, entry.path) === 'secret-detector-match') secretPath++; else deniedPath.push(entry.path); break;",
+          "new": "case 'denied-path': deniedPath.push(entry.path); break;",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts",
+            "packages/polaris-dossier/src/inventory.test.ts",
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "3 failed | 133 passed (136)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-denied-secret-counted",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "=== 'secret-detector-match') secretPath++; else deniedPath.push(entry.path); break;",
+          "new": "=== 'secret-detector-match') {} else deniedPath.push(entry.path); break;",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts",
+            "packages/polaris-dossier/src/inventory.test.ts",
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "3 failed | 133 passed (136)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-denied-secret-detector-only",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "if (screen.screenBody(entry.path, entry.path) === 'secret-detector-match')",
+          "new": "if (screen.screenBody(entry.path, entry.path) !== undefined)",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts",
+            "packages/polaris-dossier/src/inventory.test.ts",
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 135 passed (136)",
+          "outcome": "killed"
+        },
+        {
+          "id": "review-visibility-class-gate",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "return missingClass === undefined ? [] : [{ path: blob.path, outcome: CLASS_NOT_CONSENTED, missingClass }];",
+          "new": "return [];",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts",
+            "packages/polaris-dossier/src/inventory.test.ts",
+            "packages/polaris-dossier/src/waiting-sessions.test.ts"
+          ],
+          "exit": 1,
+          "summary": "2 failed | 232 passed (234)",
+          "outcome": "killed"
+        },
+        {
+          "id": "review-visibility-uses-screen-class",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "const visibility = reviewVisibility(citedBlobs, screen.contentClass, checked.contentClasses);",
+          "new": "const visibility = reviewVisibility(citedBlobs, () => 'code-content', checked.contentClasses);",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts",
+            "packages/polaris-dossier/src/inventory.test.ts",
+            "packages/polaris-dossier/src/waiting-sessions.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 233 passed (234)",
+          "outcome": "killed"
+        },
+        {
+          "id": "review-visibility-consent-wiring",
+          "file": "packages/polaris-dossier/src/check.ts",
+          "old": "const visibility = reviewVisibility(citedBlobs, screen.contentClass, checked.contentClasses);",
+          "new": "const visibility = reviewVisibility(citedBlobs, screen.contentClass, ['code-content', 'project-documentation']);",
+          "tests": [
+            "packages/polaris-dossier/src/check.test.ts",
+            "packages/polaris-dossier/src/inventory.test.ts",
+            "packages/polaris-dossier/src/waiting-sessions.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 233 passed (234)",
+          "outcome": "killed"
+        },
+        {
+          "id": "census-cap-remainder-unit",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "(${repositoryPath.length - CENSUS_PATH_LIMIT} more code units)",
+          "new": "(${repositoryPath.length - CENSUS_PATH_LIMIT} more characters)",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts"
+          ],
+          "exit": 1,
+          "summary": "1 failed | 18 passed (19)",
+          "outcome": "killed"
+        }
+      ],
+      "earlierAttempt": {
+        "commit": "b6dd2e2b4772176a0c87629140b6eecbf9448bc2",
+        "note": "The same seven mutants first ran at the repair commit; six were killed and this one survived, because no test held a denied path that screenBody flags for active content and no detector matches. The next commit added such a path to the census test, and every mutant was re-run at the commit this run names.",
+        "survivor": {
+          "id": "census-denied-secret-detector-only",
+          "file": "packages/polaris-dossier/src/census.ts",
+          "old": "if (screen.screenBody(entry.path, entry.path) === 'secret-detector-match')",
+          "new": "if (screen.screenBody(entry.path, entry.path) !== undefined)",
+          "tests": [
+            "packages/polaris-dossier/src/census.test.ts",
+            "packages/polaris-dossier/src/inventory.test.ts",
+            "packages/polaris-dossier/src/check.test.ts"
+          ],
+          "exit": 0,
+          "summary": "136 passed (136)",
+          "outcome": "survived"
+        }
+      },
+      "residual": "The check and inventory fixtures carry no denied path whose name a detector matches in a cited position; the stored citedBlobs and review records still name such a path (check.ts, review.ts), unchanged by lead ruling and filed as syzygy-mea.5."
     }
   ],
   "denominator": {
-    "mutants": 49,
-    "killed": 49,
+    "mutants": 56,
+    "killed": 56,
     "survived": 0,
     "basis": "every mutant of every run; the code each run exercised is the commit that run names"
   },
