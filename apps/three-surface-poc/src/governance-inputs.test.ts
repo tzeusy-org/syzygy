@@ -32,7 +32,7 @@ import {
 } from './governance-inputs.js';
 
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
-const EVALUATION_INSTANT = '2026-11-03T07:00:00Z';
+const EVALUATION_INSTANT = '2026-11-03T06:58:26Z';
 const CURRENT_COMMIT = 'f'.repeat(40);
 const cleanups: string[] = [];
 
