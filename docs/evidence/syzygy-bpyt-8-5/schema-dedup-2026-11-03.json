@@ -1,29 +1,35 @@
 {
  "bead": "syzygy-bpyt.8.5",
  "subject": {
-  "commit": "ba8eb516",
-  "baseCommit": "bcb259aa2c500d778ed8d61050f123151d488baa",
+  "commit": "a589cb059cc51c1000b90158c7080249ab113e9a",
+  "commitNote": "the round-2 repair commit; the record lands in the commit after it, which changes no file listed here. Round 1 cited ba8eb516, a pre-rebase commit not on the PR branch (R-GP-IMPL-CLOSED-SCHEMA-1 N5)",
+  "baseCommit": "08f2287d5b9424c549250088690c5abe3da4c357",
+  "baseNote": "origin/main at the rebase; no file of this change differs between it and bcb259aa2c500d778ed8d61050f123151d488baa, the round-1 base (git diff --stat empty)",
   "files": {
-   "packages/polaris-generation-core/src/closed-schema.ts": "31910355f0919a0e163c775af34f48d56c15e96ed8fb710a0d762db8116d41c0",
+   "packages/polaris-generation-core/src/closed-schema.ts": "aff1c28f9d34d6df9797d89f675b70ad78f6b5bb2c466dc326ab27fa409389ec",
    "packages/polaris-dossier/src/draft-schema.ts": "3684d3e940ed20c69d7d01fcf0e0f19a0466b8a8ed07ccea028e6956f04ae8e0",
    "packages/polaris-generation-core/src/provider-draft.ts": "b417f8d7925c7f9de63020c9712b8330d7218728cd58fd7614a53cf5367ac295",
    "packages/polaris-generation-core/src/rendered-design.ts": "4ed46e138d911aea40957a40e407d33b996c8b61d374662e6acb09e01884deb0",
-   "packages/polaris-generation-core/src/draft-model.ts": "4ee4cbd828bd66fd76dc2bbb2ab81538877cfda56741db5432ca7dc95fe4817f"
+   "packages/polaris-generation-core/src/draft-model.ts": "4ee4cbd828bd66fd76dc2bbb2ab81538877cfda56741db5432ca7dc95fe4817f",
+   "packages/polaris-generation-core/src/live.ts": "64b389b9a940c44f118a7a9a99e3c22a87245d457096a6058e125522fa54b26f",
+   "packages/polaris-generation-core/src/closed-schema.test.ts": "5849a3dd34114cb7bc14a93ce5012aac60ae3ddd4a8d22ff07a8bf9545b09342",
+   "packages/polaris-generation-core/src/provider-draft.test.ts": "d6be7ab0bf503b7147f35e1970ec4ff8fe1eca3b68f9c72748185778a1f75b6e",
+   "docs/evidence/syzygy-bpyt-8-5/golden-capture.test.ts.txt": "9fc7d5bdf6884b8e7b950020dce5cfbbc905793742df0c7483428b9b75f8bf46"
   }
  },
  "golden": {
-  "how": "golden-capture.test.ts.txt, copied to packages/polaris-dossier/src/zz-bpyt85-golden.test.ts and run with GOLDEN_OUT set; the output (about 24 MB) is regenerable and not retained",
-  "beforeCommit": "bcb259aa2c500d778ed8d61050f123151d488baa (worktree clean but for the capture file)",
-  "afterTree": "the ba8eb516 tree (capture file added)",
-  "beforeSha256": "bf3f630d265cba4b40045e4f4a9e43575eea6ecf9c20c5c4f72b3148129d0cea",
-  "afterSha256": "bf3f630d265cba4b40045e4f4a9e43575eea6ecf9c20c5c4f72b3148129d0cea",
+  "how": "golden-capture.test.ts.txt, copied to packages/polaris-dossier/src/zz-bpyt85-golden.test.ts and run with GOLDEN_OUT set; the output (about 25 MB) is regenerable and not retained. Each run prints Tests 1 passed (1) and then exits 1 on Error: [vitest-worker]: Timeout calling \"onTaskUpdate\", a harness artifact of one ~520 s test on both sides: read GOLDEN_OUT and the Tests line, never the exit code (rule 4)",
+  "beforeTree": "a detached worktree of 08f2287d (npm ci run in it), capture file added",
+  "afterTree": "the a589cb05 tree, capture file added, worktree otherwise clean",
+  "beforeSha256": "a4eea846e3d4eb70d81da0f9467ee88b7e7f2a48bbc5b8f03ca5756b5498ad55",
+  "afterSha256": "a4eea846e3d4eb70d81da0f9467ee88b7e7f2a48bbc5b8f03ca5756b5498ad55",
   "byteIdentical": true,
   "population": {
    "documents": 32,
    "parameterRefusals": 7,
-   "shape": 124640,
-   "closed": 34162,
-   "fixtures": 4087
+   "shape": 126624,
+   "closed": 34849,
+   "fixtures": 4172
   },
   "populationMeaning": {
    "documents": "every emitted JSON Schema document and internal {root, defs} (draft at 40/64-hex revisions and question limits 0, 1, 7; inventory, fidelity verdict and design verdict at both revisions) and the eight provider stage schemas",
@@ -32,7 +38,36 @@
    "closed": "check (the throwing form) over mutants of synthesized values for six provider stage schemas (three arms each)",
    "fixtures": "renderedDesignVerdict, validateDraftRecord and validateStage(inventory) over mutants of hand-built fixtures"
   },
-  "firstAfterRun": "differed in 165 of 38,249 closed/fixture cases: an array with a plain-object prototype at a refs position threw a TypeError from the repeat test where check had stopped at the item breach; repaired (check stops before the repeat test) and the second run is byte-identical"
+  "round2Corpus": "three mutants added per node (R-GP-IMPL-CLOSED-SCHEMA-1 F1, N1, N2): an array node's own valid items under Object.prototype (:protoArr, which reaches the repeat test), a named key beside full items (:named, refused only by the key count), and a proxy over a valid object node (:proxied, which names a form only without the discriminator proxy guard). 34 :protoArr closed/fixture cases report invalid-disposition",
+  "catchesRound1": {
+   "mutant": "drop-arm-catch (the round-1 head behaviour)",
+   "ranAt": "a589cb05 tree with the mutant applied",
+   "sha256": "401cdccb644540c44896b9c0c0a38c6d595ed98afee7be1c82d7b1ad05be355a",
+   "differingCases": 34,
+   "bySection": {
+    "closed": 30,
+    "fixtures": 4
+   },
+   "example": {
+    "case": "inventory#0|entries.0.disposition.assetIds:protoArr",
+    "section": "closed",
+    "repaired": "THROW Error: invalid-disposition",
+    "mutant": "THROW TypeError: object is not iterable (cannot read property Symbol(Symbol.iterator))"
+   }
+  },
+  "round1": {
+   "beforeSha256": "bf3f630d265cba4b40045e4f4a9e43575eea6ecf9c20c5c4f72b3148129d0cea",
+   "afterSha256": "bf3f630d265cba4b40045e4f4a9e43575eea6ecf9c20c5c4f72b3148129d0cea",
+   "population": {
+    "documents": 32,
+    "parameterRefusals": 7,
+    "shape": 124640,
+    "closed": 34162,
+    "fixtures": 4087
+   },
+   "firstAfterRun": "differed in 165 of 38,249 closed/fixture cases: an array with a plain-object prototype at a refs position threw a TypeError from the repeat test where check had stopped at the item breach; repaired (check stops before the repeat test) and the second run is byte-identical",
+   "missed": "its only plain-object-prototype array held the item 1, which fails handle first, so check stopped before the repeat test; a valid-item array under a oneOf threw a TypeError at the round-1 head where the base refused invalid-disposition (F1)"
+  }
  },
  "registryBoundReader": {
   "path": "packages/polaris-dossier/src/git-object-reader.ts",
@@ -40,66 +75,103 @@
   "sha256After": "9f33e5fbbf464b1df28b79c3fcf5016b8ad7db1910041734c5fb8e4a790998f3"
  },
  "mutants": {
-  "ranAt": "ba8eb516 bytes of closed-schema.ts (sha256 31910355f0919a0e163c775af34f48d56c15e96ed8fb710a0d762db8116d41c0), uncommitted at run time, with closed-schema.test.ts present",
-  "command": "npx vitest run closed-schema, draft-schema, provider-draft, rendered-design, discovery-provider, check and review test files",
+  "ranAt": "a589cb05 bytes of closed-schema.ts (sha256 aff1c28f9d34d6df9797d89f675b70ad78f6b5bb2c466dc326ab27fa409389ec), each mutant applied in place and restored",
+  "command": "npx vitest run packages/polaris-dossier/src/{check,draft-schema,review}.test.ts packages/polaris-generation-core/src/{closed-schema,discovery-provider,provider-draft,rendered-design}.test.ts",
+  "baseline": "Tests  259 passed (259)",
   "results": [
    {
     "mutant": "proxy",
     "old": "if (typeof value !== 'object' || value === null || types.isProxy(value)) { fail(walk, 'invalid-structure'",
     "new": "if (typeof value !== 'object' || value === null) { fail(walk, 'invalid-structure'",
-    "tests": "Tests  2 failed | 251 passed (253)"
+    "tests": "Tests  2 failed | 257 passed (259)"
    },
    {
     "mutant": "accessor",
     "old": "typeof key !== 'string' || !('value' in descriptors[key]!)",
     "new": "typeof key !== 'string'",
-    "tests": "Tests  3 failed | 250 passed (253)"
+    "tests": "Tests  3 failed | 256 passed (259)"
    },
    {
     "mutant": "symbol",
     "old": "typeof key !== 'string' || !('value' in descriptors[key]!)",
     "new": "!('value' in descriptors[key]!)",
-    "tests": "Tests  1 failed | 252 passed (253)"
+    "tests": "Tests  1 failed | 258 passed (259)"
    },
    {
     "mutant": "prototype",
     "old": "const plain = prototype === Object.prototype || prototype === null;",
     "new": "const plain = true;",
-    "tests": "Tests  1 failed | 252 passed (253)"
+    "tests": "Tests  1 failed | 258 passed (259)"
    },
    {
     "mutant": "nonenumerable",
     "old": "    else if (!descriptors[key]!.enumerable) fail(",
     "new": "    else if (false) fail(",
-    "tests": "Tests  1 failed | 252 passed (253)"
+    "tests": "Tests  1 failed | 258 passed (259)"
    },
    {
     "mutant": "missing-first",
     "old": "    if (missing !== undefined) fail(walk, 'invalid-fields'",
     "new": "    if (false) fail(walk, 'invalid-fields'",
-    "tests": "Tests  5 failed | 248 passed (253)"
+    "tests": "Tests  5 failed | 254 passed (259)"
    },
    {
     "mutant": "unique-stop",
     "old": "    if (walk.firstFailure && walk.failures.length > 0) return;\n",
     "new": "",
-    "tests": "Tests  1 failed | 252 passed (253)"
+    "tests": "Tests  1 failed | 258 passed (259)"
    },
    {
     "mutant": "value-order",
     "old": "    for (const key of keys) visit(walk, schema.properties[key]!",
     "new": "    for (const key of Object.keys(schema.properties)) if (Object.hasOwn(descriptors, key)) visit(walk, schema.properties[key]!",
-    "tests": "Tests  1 failed | 252 passed (253)"
+    "tests": "Tests  1 failed | 258 passed (259)"
    },
    {
     "mutant": "hole",
     "old": "if (item === undefined && walk.firstFailure)",
     "new": "if (false)",
-    "tests": "Tests  1 failed | 252 passed (253)"
+    "tests": "Tests  1 failed | 258 passed (259)"
+   },
+   {
+    "mutant": "drop-arm-catch",
+    "old": "        try { visit(found, arm, value, at); } catch { continue; }\n",
+    "new": "        visit(found, arm, value, at);\n",
+    "tests": "Tests  2 failed | 257 passed (259)"
+   },
+   {
+    "mutant": "shape-first-arm-stop",
+    "old": "    const attempts = schema.oneOf.map((arm) => {\n      const found: Walk = { ...walk, failures: [] };\n      visit(found, arm, value, at);\n      return { arm: resolve(walk.defs, arm), found: found.failures };\n    });\n    if (attempts.some((attempt) => attempt.found.length === 0)) return;\n",
+    "new": "    const attempts = [];\n    for (const arm of schema.oneOf) {\n      const found: Walk = { ...walk, failures: [] };\n      visit(found, arm, value, at);\n      if (found.failures.length === 0) return;\n      attempts.push({ arm: resolve(walk.defs, arm), found: found.failures });\n    }\n",
+    "tests": "Tests  1 failed | 258 passed (259)"
+   },
+   {
+    "mutant": "keycount",
+    "old": "if (!Array.isArray(value) || Object.keys(descriptors).length !== value.length + 1) { fail(walk, 'invalid-array'",
+    "new": "if (!Array.isArray(value)) { fail(walk, 'invalid-array'",
+    "tests": "Tests  1 failed | 258 passed (259)"
+   },
+   {
+    "mutant": "discriminator-proxy-guard",
+    "old": "if (typeof value !== 'object' || value === null || Array.isArray(value) || types.isProxy(value)) return false;",
+    "new": "if (typeof value !== 'object' || value === null || Array.isArray(value)) return false;",
+    "tests": "Tests  1 failed | 258 passed (259)"
+   },
+   {
+    "mutant": "freeze-text",
+    "old": "Object.freeze({ type: 'string', minLength: 1, maxLength: 8000 })",
+    "new": "({ type: 'string', minLength: 1, maxLength: 8000 })",
+    "tests": "Tests  1 failed | 258 passed (259)"
+   },
+   {
+    "mutant": "freeze-handle",
+    "old": "Object.freeze({ type: 'string', minLength: SOURCE_ID_MIN_LENGTH, maxLength: SOURCE_ID_MAX_LENGTH, pattern: SOURCE_ID_PATTERN })",
+    "new": "({ type: 'string', minLength: SOURCE_ID_MIN_LENGTH, maxLength: SOURCE_ID_MAX_LENGTH, pattern: SOURCE_ID_PATTERN })",
+    "tests": "Tests  1 failed | 258 passed (259)"
    }
   ],
-  "killed": 9,
-  "total": 9
+  "killed": 15,
+  "total": 15
  },
  "sweeps": {
   "population": {
@@ -177,7 +249,20 @@
   "clockReadToIso": "four clock reads in polaris.ts; isoOf takes a supplied instant"
  },
  "knownPreserved": [
+  "check, inside a oneOf, counts an arm that throws as a miss (the pre-dedup try/catch), so a plain-object-prototype array of valid handles under a disposition is refused invalid-disposition; outside a oneOf the same TypeError escapes, as it did before",
+  "checkShape walks every oneOf arm, even after one passes, as checkDraftShape did, so a later arm that throws throws",
   "checkShape throws a TypeError on an array hole a named key stands in for (check refuses it)",
-  "checkShape throws a TypeError from the repeat test on an array with a plain-object prototype; both unreachable from parsed JSON, kept byte-for-byte and reported as a follow-up"
- ]
+  "checkShape throws a TypeError from the repeat test on an array with a plain-object prototype; these throws are unreachable from parsed JSON, kept byte-for-byte and reported as a follow-up"
+ ],
+ "round2": {
+  "review": "docs/reviews/R-GP-IMPL-CLOSED-SCHEMA-1-RAW.md on branch agent/syzygy-gd0g (verdict REVISE)",
+  "dispositions": {
+   "F1": "repaired: check-mode oneOf arms run under try/catch; checkShape walks every arm; tests in closed-schema.test.ts and provider-draft.test.ts (validateStage inventory); golden corpus extended; mutants drop-arm-catch and shape-first-arm-stop killed",
+   "N1": "repaired: closed-schema.test.ts pins the key count; mutant keycount killed",
+   "N2": "repaired: the guard is reachable (a proxy over an object whose kind names an arm); closed-schema.test.ts pins it; mutant discriminator-proxy-guard killed",
+   "N3": "golden.how now says to read the Tests line and GOLDEN_OUT, not the exit code; edit and repair stay emitted-only, as in round 1",
+   "N4": "repaired: text and handle are frozen; every emitted document is unchanged (golden byte-identical); mutants freeze-text and freeze-handle killed",
+   "N5": "repaired: subject cites the repair commit and every file digest"
+  }
+ }
 }
