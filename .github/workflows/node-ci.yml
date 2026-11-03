@@ -2,9 +2,17 @@
 #
 # This workflow is the hosted denominator for the Capability 1
 # implementation code: on a fresh checkout it installs, builds,
-# typechecks, runs the unit/conformance suites, and runs the system-test
-# suite, which spawns the real daemon and drives it over HTTP — the
-# epic's fresh-clone demonstration, automated on every push.
+# typechecks, runs the unit/conformance tier, then the integration and
+# e2e tiers in parallel (the e2e tier includes the system-test suite,
+# which spawns the real daemon and drives it over HTTP — the epic's
+# fresh-clone demonstration, automated on every push). The tiers are
+# defined in vitest.tiers.ts and documented in CONTRIBUTING.md.
+#
+# Required check: the branch protection and the merge queue require a
+# check named `node`. The last job, `node`, reports it and passes only
+# when the unit, integration and e2e jobs all passed; a skipped or
+# cancelled tier fails it. Never rename that job or give a tier job
+# the name `node`.
 #
 # It is deliberately separate from governance-docs.yml: that workflow is
 # the governance battery's hosted denominator (compared by CG-26) and
@@ -41,12 +49,107 @@ permissions:
   contents: read
 
 jobs:
-  node:
+  # First: the quickest tier, the build, the typecheck and the builder
+  # checks. A failure here stops the two slower tiers before they start.
+  unit:
+    name: node (unit)
     runs-on: ubuntu-latest
     steps:
       # The M7 self-corpus test reads Git blobs at its recorded historical
       # commit. A depth-1 PR checkout omits that object and changes the test
       # denominator; retain reachable history rather than substitute HEAD.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      # Fresh install from the lockfile — a drifted or missing lockfile
+      # fails here, before any code runs.
+      - name: install (npm ci)
+        run: npm ci
+
+      # The workspace entry reader (workspace-reach.testkit.ts) copies two
+      # regexes from Node's exports resolver, and workspace-reach.test.ts's
+      # case rows record Node 24.6.0's outcome for each target, while
+      # node-version above floats within 24. This pins both against the
+      # job's own Node: exit 1 on a mismatch, exit 2 when this Node's
+      # resolver source cannot be read (syzygy-bpyt.76). It imports the
+      # testkit's source, so it needs no build.
+      - name: Node segment rules (scripts/check_node_segment_rules.mjs)
+        run: node scripts/check_node_segment_rules.mjs
+
+      # Compile all packages; emit errors are build failures, not test noise.
+      - name: build (npm run build)
+        run: npm run build
+
+      # Type errors surface here even where build output would still emit.
+      - name: typecheck (npm run typecheck)
+        run: npm run typecheck
+
+      # Every test file is in exactly one tier, by two methods: the lists
+      # in vitest.tiers.ts against the tree, and what vitest itself lists.
+      # A test dropped from every tier, or in two, is red here.
+      - name: test tiers partition (npm run test:tiers)
+        run: npm run test:tiers
+
+      # The egress records embed a carried-content table generated from the
+      # generator's code (scripts/derive_generator_sent_text.mjs). A change to
+      # the generator, or to the script, that moves the table without
+      # regenerating the records, or that makes the derivation fail, is red
+      # here. Both builders need the compiled packages and node, so they live
+      # in this workflow and not in the stdlib-only governance battery.
+      - name: public-repo admission builder --check
+        run: python3 scripts/build_public_repo_admission.py --check
+
+      - name: public egress v2 builder --check
+        run: python3 scripts/build_public_egress_v2.py --check
+
+      - name: redis-observation --check
+        run: python3 scripts/record_public_repo_admission_acts.py --check redis-observation a733220dcbc4276d396e32f51c39dcc4665e07579ecca3f0074e7e6e5a1916a4 --date 2026-10-07 --question-opening 'Do you sign the Redis observation consent, redis/OBSERVATION-CONSENT.md at its row of the public-repo admission manifest?' --selection-label 'Sign it' --selection-description 'Syzygy may read the Git objects of the four consented Redis commits and nothing else of Redis.'
+
+      # Unit tier: hermetic. The unit setup refuses a process or a socket at
+      # the call, so this tier cannot grow a git, node or network dependency.
+      - name: unit tests (npm test)
+        run: npm test
+
+  # Integration tier: git, a real tree, loopback servers, python recorders.
+  # Parallel with e2e; both wait for the unit job.
+  integration:
+    name: node (integration)
+    needs: unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: install (npm ci)
+        run: npm ci
+
+      - name: integration tests (npm run test:integration)
+        run: npm run test:integration
+
+  # e2e tier: a browser, a build and `npm ci` in clones, strace, and the
+  # compiled daemon of the system-test suite. The job runs as the default
+  # unprivileged runner user. Several tests chmod fixtures to 000 to provoke
+  # permission failures, and those tests skip themselves under root (root
+  # ignores mode bits) — running privileged would silently shrink the
+  # denominator.
+  e2e:
+    name: node (e2e)
+    needs: unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -88,56 +191,34 @@ jobs:
           echo "Chrome or Chromium is required for the browser geometry and accessibility checks."
           exit 1
 
-      # Fresh install from the lockfile — a drifted or missing lockfile
-      # fails here, before any code runs.
       - name: install (npm ci)
         run: npm ci
 
-      # The workspace entry reader (workspace-reach.testkit.ts) copies two
-      # regexes from Node's exports resolver, and workspace-reach.test.ts's
-      # case rows record Node 24.6.0's outcome for each target, while
-      # node-version above floats within 24. This pins both against the
-      # job's own Node: exit 1 on a mismatch, exit 2 when this Node's
-      # resolver source cannot be read (syzygy-bpyt.76). It imports the
-      # testkit's source, so it needs no build.
-      - name: Node segment rules (scripts/check_node_segment_rules.mjs)
-        run: node scripts/check_node_segment_rules.mjs
-
-      # Compile all packages; emit errors are build failures, not test noise.
-      - name: build (npm run build)
-        run: npm run build
-
-      # Type errors surface here even where build output would still emit.
-      - name: typecheck (npm run typecheck)
-        run: npm run typecheck
-
-      # The egress records embed a carried-content table generated from the
-      # generator's code (scripts/derive_generator_sent_text.mjs). A change to
-      # the generator, or to the script, that moves the table without
-      # regenerating the records, or that makes the derivation fail, is red
-      # here. Both builders need the compiled packages and node, so they live
-      # in this workflow and not in the stdlib-only governance battery.
-      - name: public-repo admission builder --check
-        run: python3 scripts/build_public_repo_admission.py --check
-
-      - name: public egress v2 builder --check
-        run: python3 scripts/build_public_egress_v2.py --check
-
-      - name: redis-observation --check
-        run: python3 scripts/record_public_repo_admission_acts.py --check redis-observation a733220dcbc4276d396e32f51c39dcc4665e07579ecca3f0074e7e6e5a1916a4 --date 2026-10-07 --question-opening 'Do you sign the Redis observation consent, redis/OBSERVATION-CONSENT.md at its row of the public-repo admission manifest?' --selection-label 'Sign it' --selection-description 'Syzygy may read the Git objects of the four consented Redis commits and nothing else of Redis.'
-
-      # Unit and conformance suites: the pure domain model against the
-      # adopted Capability 1 requirements.
-      - name: unit + conformance tests (npm test)
-        run: npm test
-
-      # System tests: spawn the real daemon, load real credentials and
-      # consent references from disk, and exercise the machine and human
-      # endpoints over HTTP. SYZYGY_FRESH_CLONE=1 enables the guarded
-      # fresh-clone test; the timeout bounds a daemon that hangs instead
-      # of failing.
-      - name: system tests (npm run test:system)
-        run: npm run test:system
+      # The e2e project of the root config, then the system tests: they spawn
+      # the real daemon, load real credentials and consent references from
+      # disk, and exercise the machine and human endpoints over HTTP
+      # (`test:system` builds first; the tests run the compiled daemon).
+      # SYZYGY_FRESH_CLONE=1 enables the guarded fresh-clone test.
+      - name: e2e tests (npm run test:e2e)
+        run: npm run test:e2e
         env:
           SYZYGY_FRESH_CLONE: '1'
-        timeout-minutes: 20
+
+  # The one required check. It reports as `node` and passes only when every
+  # tier job succeeded; `if: always()` makes a failed, skipped or cancelled
+  # tier fail it instead of leaving it unreported.
+  node:
+    runs-on: ubuntu-latest
+    needs: [unit, integration, e2e]
+    if: ${{ always() }}
+    steps:
+      - name: every tier passed
+        env:
+          UNIT: ${{ needs.unit.result }}
+          INTEGRATION: ${{ needs.integration.result }}
+          E2E: ${{ needs.e2e.result }}
+        run: |
+          echo "unit=${UNIT} integration=${INTEGRATION} e2e=${E2E}"
+          test "${UNIT}" = success
+          test "${INTEGRATION}" = success
+          test "${E2E}" = success

@@ -141,6 +141,10 @@ A generator that quotes prose has re-opened the door it closed.
 `PROJECT-STATUS.md` §"How to verify this page" owns the canonical battery;
 run that block, never a copy. Everyday: `python3 scripts/check_governance.py`
 (`--selftest` runs the fixtures). All read-only; run before claiming clean.
+Code: `npm run check` (typecheck plus the hermetic unit tier) while working,
+`npm run check:all` (adds the integration and e2e tiers and that battery, read
+from `PROJECT-STATUS.md`) before a PR; `CONTRIBUTING.md` ("Checking a change")
+defines the tiers and `vitest.tiers.ts` places each test file.
 
 ## Beads scope
 

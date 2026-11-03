@@ -281,15 +281,17 @@ describe('fixture directories a killed run left behind (syzygy-bpyt.4.10)', () =
     expect(entries(tmp)).toEqual([live]);
   });
 
-  it('is registered as a global setup of the app project and of no other project, so it runs once per run', async () => {
+  it('is registered as the one global setup of every tier project and of no other entry', async () => {
     const config = (await import(/* @vite-ignore */ new URL('../../../vitest.config.ts', import.meta.url).href)).default as {
       readonly test: { readonly globalSetup?: unknown; readonly projects: readonly { readonly test: { readonly name: string; readonly globalSetup?: readonly string[] } }[] };
     };
     const withSetup = config.test.projects.filter((project) => project.test.globalSetup !== undefined);
     expect(config.test.globalSetup).toBeUndefined();
-    expect(withSetup.map((project) => project.test.name)).toEqual(['@syzygy/three-surface-poc-app']);
-    const files = withSetup[0]?.test.globalSetup ?? [];
-    expect(files).toHaveLength(1);
-    expect(files[0]?.endsWith('/apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts')).toBe(true);
+    expect(withSetup.map((project) => project.test.name)).toEqual(['unit', 'integration', 'e2e', 'live']);
+    expect(config.test.projects).toHaveLength(4);
+    for (const { test } of withSetup) {
+      expect(test.globalSetup, test.name).toHaveLength(1);
+      expect(test.globalSetup?.[0]?.endsWith('/apps/three-surface-poc/src/test-fixture-sweep.global-setup.ts'), test.name).toBe(true);
+    }
   }, 30_000); // importing the config timed out at the 5 s default at load 95 (3f08143c)
 });

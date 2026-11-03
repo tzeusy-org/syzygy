@@ -101,6 +101,46 @@ delta, and expect a fresh-context review.
 5. **Never edit a digest-bound artifact after its act** — it voids the act.
    Propose a re-offer instead.
 
+## Checking a change
+
+Tests run in tiers so that "is my change green" has a quick answer and a
+complete one. Run `npm ci` once; every command below runs from the repository
+root.
+
+| Command | What it runs | Needs |
+|---|---|---|
+| `npm test` | the **unit** tier | node only |
+| `npm run check` | `npm run typecheck`, then `npm test` | node only |
+| `npm run test:integration` | the **integration** tier | git, python3 |
+| `npm run test:e2e` | the **e2e** tier, then the system tests (`npm run test:system`, which builds first) | Chrome or Chromium, strace, git, npm |
+| `npm run check:all` | `check`, `test:tiers`, `test:integration`, `test:e2e`, then the governance battery (`npm run check:battery`) | all of the above |
+| `npm run test:live` | the **live** tier: operator-run, skips unless `SYZYGY_POC_BUTLERS_REPO` names a real repository | a Butlers checkout |
+| `npm run test:tiers` | every test file is in exactly one tier (two methods, with a count) | node only |
+
+- **Unit** is hermetic. The unit setup (`vitest.unit-guard.setup.ts`) refuses
+  a child process (git, node, python, a browser), a socket and a server at the
+  call, and fails the file even where a test caught the error. A test that
+  needs one belongs in a higher tier.
+- **Integration** may use git, a real tree, loopback servers, python recorders
+  and other child processes.
+- **e2e** drives a browser, builds or installs in a clone, traces with strace
+  or runs the compiled daemon (the `*.system.test.ts` files under
+  `packages/cap1-system`, which keep their own config).
+- **Live** never runs in a workflow.
+- **Where a test goes.** A new test file is a unit test until
+  `vitest.tiers.ts` lists it under `INTEGRATION_TESTS`, `E2E_TESTS` or
+  `LIVE_TESTS`; list it under the lowest tier that holds what it uses. The
+  unit setup names the file and the call when a unit test reaches for a
+  process or a socket. Vitest refuses to start when a list names a file that
+  does not exist or a file is in two tiers.
+- **Hosted CI** (`.github/workflows/node-ci.yml`) runs the unit job first,
+  then the integration and e2e jobs in parallel; the job named `node` (the
+  required check) passes only when all three passed.
+- **What `check:all` leaves to CI:** the node-segment-rules pin and the egress
+  and Redis-observation builders, which `node-ci` runs in its unit job, and
+  `governance-docs.yml`, whose battery `check:battery` reads from
+  `PROJECT-STATUS.md` ("How to verify this page") and never copies.
+
 ## Public-clone validation is part of done
 
 Any governance change must leave a fresh `git clone` able to reconstruct the

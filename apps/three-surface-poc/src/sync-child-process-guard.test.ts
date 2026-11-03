@@ -4,12 +4,13 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { WORKSPACE, resolveIn, type Workspace } from '../../../packages/polaris-generation-core/src/workspace-reach.testkit.js';
+import { SYSTEM_TEST_SUFFIX, TIERS, workspaceDirectories } from '../../../vitest.tiers.js';
 
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 
-// The root suite's test roots are the vitest.config.ts `test.projects` include
-// globs, read from the config so that a project added there is scanned here
-// (syzygy-bpyt.4.1: a hand list had missed two of seven). A vitest worker
+// The test roots are the `src/` of each workspace package of the root package.json, derived through vitest.tiers.ts, which
+// the vitest.config.ts tier projects use too, so a package added there is scanned here (syzygy-bpyt.4.1: a hand list had missed
+// two of seven; syzygy-bpyt.4.3: the config names tiers, not roots). A vitest worker
 // answers its parent over an RPC with a fixed 60s
 // timeout; a test that blocks the worker's event loop longer than that makes
 // the pending `onTaskUpdate` call time out, and the run exits 1 with every
@@ -17,9 +18,6 @@ const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 // run past 60s under load, so only short local tools may run synchronously,
 // in a test file or in any module a test file imports (syzygy-3f5c).
 const VITEST_CONFIG = 'vitest.config.ts';
-const PROJECT_INCLUDE = /\binclude:\s*\[\s*'([^']+)'\s*\]/g;
-const INCLUDE_KEY = /\binclude:/g;
-const PROJECT_NAME = /\bname:\s*'/g;
 // A test that imports a workspace package runs its source, through the `source` condition of the package's exports, which the
 // config resolves first (syzygy-bpyt.4.2). The scan follows the same exports, so it refuses a config that loads them otherwise.
 const SOURCE_CONDITION = /\bssr:\s*\{\s*resolve:\s*\{\s*conditions:\s*\[\s*'source'\s*,/;
@@ -58,25 +56,16 @@ const CHILD_PROCESS_NON_BINDINGS = [
 ];
 
 interface SyncCall { readonly line: number; readonly command: string }
-interface SuiteConfig { readonly roots: readonly string[] }
 
-/** The test roots of the root vitest config, which loads each workspace package by its source condition; any shape it does not
- * recognize throws. */
-function suiteConfig(config: string): SuiteConfig {
+/** Refuses a root vitest config that loads a workspace package other than by its source condition: a plugin, an alias, or no
+ * `source` first in the server conditions. The test files themselves come from the tier lists (vitest.tiers.ts). */
+function checkSuiteConfig(config: string): void {
   if (PLUGINS_KEY.test(config)) throw new Error(`${VITEST_CONFIG}: a plugin may load a workspace package by other than its source condition`);
-  const includes = [...config.matchAll(PROJECT_INCLUDE)].map((match) => match[1]!);
-  const projects = config.match(PROJECT_NAME)?.length ?? 0;
-  if (includes.length !== (config.match(INCLUDE_KEY)?.length ?? 0) || includes.length !== projects) {
-    throw new Error(`${VITEST_CONFIG}: ${projects} projects but ${includes.length} recognized single-glob includes`);
-  }
-  const roots = includes.map((glob) => {
-    const root = /^((?:apps|packages)\/[\w.-]+\/src\/)\*\*\/\*\.test\.ts$/.exec(glob)?.[1];
-    if (root === undefined) throw new Error(`${VITEST_CONFIG}: unrecognized project include ${glob}`);
-    return root;
-  });
   if (!SOURCE_CONDITION.test(config) || ALIAS_KEY.test(config)) throw new Error(`${VITEST_CONFIG}: workspace packages do not load by their source condition alone`);
-  return { roots };
 }
+
+/** The `src/` roots of the workspace packages, whose tests every tier scans. */
+const suiteRoots = (): string[] => workspaceDirectories(REPO_ROOT).map((directory) => `${directory}/src/`);
 
 /** The path of every own key in `value`, through objects and arrays at any depth. The text checks above miss an alias written
  * in shorthand (`resolve: { alias }`), so the loaded config is read too (syzygy-bpyt.70, the PR 554 round-2 review's N4). */
@@ -196,13 +185,17 @@ function trackedTypeScript(): Map<string, string> {
 describe('suite child processes and the vitest worker RPC', () => {
   it('runs only short local tools synchronously in a suite test file or any module it imports', () => {
     const sources = trackedTypeScript();
-    const { roots } = suiteConfig(readFileSync(join(REPO_ROOT, VITEST_CONFIG), 'utf8'));
-    const tests = [...sources.keys()].filter((path) => path.endsWith('.test.ts') && roots.some((root) => path.startsWith(root)));
+    checkSuiteConfig(readFileSync(join(REPO_ROOT, VITEST_CONFIG), 'utf8'));
+    const roots = suiteRoots();
+    // The system tests run under their own config (packages/cap1-system/vitest.config.ts), as before this scan followed tiers.
+    const tests = [...sources.keys()].filter((path) => path.endsWith('.test.ts') && !path.endsWith(SYSTEM_TEST_SUFFIX) && roots.some((root) => path.startsWith(root)));
     const modules = importClosure(tests, (path) => sources.get(path));
-    // Every project the config runs is scanned.
+    // Every workspace package's tests, in every tier, are scanned.
     expect(roots.length).toBeGreaterThanOrEqual(7);
     expect(roots).toEqual(expect.arrayContaining(['packages/polaris-dossier/src/', 'packages/polaris-generation-consent/src/']));
-    for (const root of roots) expect(tests.some((path) => path.startsWith(root)), root).toBe(true);
+    // The workspaces with no test file here are the only roots left unscanned: the daemon entry app, and cap1-system (system
+    // tests only).
+    expect(roots.filter((root) => !tests.some((path) => path.startsWith(root)))).toEqual(['packages/cap1-system/src/', 'apps/syzygy/src/']);
     expect(tests.length).toBeGreaterThan(100);
     expect(tests).toContain(SELF);
     expect(modules.length).toBeGreaterThan(tests.length + 100);
@@ -259,29 +252,22 @@ describe('suite child processes and the vitest worker RPC', () => {
     expect(commands(`${named}execFileSync('git', ['status']);\nactual.execFileSync(file, args);\nconst passed = actual.execFileSync;\nconst o = { execFileSyncLike: 1 };`)).toEqual([]);
   });
 
-  it('reads every project root from the vitest config, and fails closed on a shape it does not recognize', () => {
-    const project = (include: string): string => `{ extends: true, test: { name: 'p', include: [${include}] } },`;
+  it('refuses a vitest config that could load a workspace package other than by its source condition', () => {
+    const project = "{ extends: true, test: { name: 'p', include: ['packages/a/src/**/*.test.ts'] } },";
     const ssr = "ssr: { resolve: { conditions: ['source', 'module', 'node', 'development|production'] } },";
-    expect(suiteConfig(`${ssr}\n${project("'packages/a/src/**/*.test.ts'")}\n${project("'apps/b/src/**/*.test.ts'")}`)).toEqual({
-      roots: ['packages/a/src/', 'apps/b/src/'],
-    });
-    expect(() => suiteConfig(`${ssr}\n${project('"packages/a/src/**/*.test.ts"')}`)).toThrow(/recognized single-glob includes/);
-    expect(() => suiteConfig(`${ssr}\n${project("'packages/a/src/**/*.test.ts', 'packages/b/src/**/*.test.ts'")}`)).toThrow(/recognized single-glob includes/);
-    expect(() => suiteConfig(`${ssr}\n${project("'packages/a/**/*.spec.ts'")}`)).toThrow(/unrecognized project include/);
-    expect(() => suiteConfig(`${ssr}\n{ name: 'p', include: ['packages/a/src/**/*.test.ts'] }, { name: 'q' }`)).toThrow(/2 projects/);
+    expect(() => checkSuiteConfig(`${ssr}\n${project}`)).not.toThrow();
     // A config that loads a workspace package by anything but its source condition: the scan would follow other modules.
-    expect(() => suiteConfig(project("'packages/a/src/**/*.test.ts'"))).toThrow(/source condition alone/);
-    expect(() => suiteConfig(`ssr: { resolve: { conditions: ['module', 'source'] } },\n${project("'packages/a/src/**/*.test.ts'")}`)).toThrow(/source condition alone/);
-    expect(() => suiteConfig(`resolve: { alias: { '@syzygy/a': path.join(root, 'a') } },\n${ssr}\n${project("'packages/a/src/**/*.test.ts'")}`))
-      .toThrow(/source condition alone/);
+    expect(() => checkSuiteConfig(project)).toThrow(/source condition alone/);
+    expect(() => checkSuiteConfig(`ssr: { resolve: { conditions: ['module', 'source'] } },\n${project}`)).toThrow(/source condition alone/);
+    expect(() => checkSuiteConfig(`resolve: { alias: { '@syzygy/a': path.join(root, 'a') } },\n${ssr}\n${project}`)).toThrow(/source condition alone/);
     // A plugin, in a project entry or at the root, its name single- or double-quoted, under a bare or a quoted key (syzygy-bpyt.65).
     const plugin = (name: string): string => `plugins: [{ name: ${name}, resolveId: (id: string) => (id === '@syzygy/a' ? 'a/dist/index.js' : null) }],`;
     for (const config of [
       `${ssr}\n{ extends: true, ${plugin("'p'")} test: { name: 'p', include: ['packages/a/src/**/*.test.ts'] } },`,
       `${ssr}\n{ extends: true, ${plugin('"p"')} test: { name: 'p', include: ['packages/a/src/**/*.test.ts'] } },`,
-      `${plugin('"p"')}\n${ssr}\n${project("'packages/a/src/**/*.test.ts'")}`,
-      `'plugins': [],\n${ssr}\n${project("'packages/a/src/**/*.test.ts'")}`,
-    ]) expect(() => suiteConfig(config), config).toThrow(/a plugin may load a workspace package by other than its source condition/);
+      `${plugin('"p"')}\n${ssr}\n${project}`,
+      `'plugins': [],\n${ssr}\n${project}`,
+    ]) expect(() => checkSuiteConfig(config), config).toThrow(/a plugin may load a workspace package by other than its source condition/);
   });
 
   it('loads the vitest config and finds no alias key at any depth and no project entry detached from the root config', async () => {
@@ -292,6 +278,15 @@ describe('suite child processes and the vitest worker RPC', () => {
     expect(aliasKeys(config)).toEqual([]);
     // Joined, so that a failure names each entry: vitest abbreviates a longer array in its message.
     expect(detachedProjects(config).join('; ')).toBe('');
+  });
+
+  it('runs the hermetic unit tier under the refusal setup and no other tier under it (syzygy-bpyt.4.3)', async () => {
+    const config = (await import(pathToFileURL(join(REPO_ROOT, VITEST_CONFIG)).href)).default as {
+      readonly test: { readonly projects: readonly { readonly test: { readonly name: string; readonly setupFiles?: readonly string[] } }[] };
+    };
+    expect(config.test.projects.map((project) => project.test.name)).toEqual([...TIERS]);
+    const guarded = config.test.projects.filter((project) => (project.test.setupFiles ?? []).some((file) => file.endsWith('/vitest.unit-guard.setup.ts')));
+    expect(guarded.map((project) => project.test.name)).toEqual(['unit']);
   });
 
   it('reads an alias key wherever the config holds one, and no other key', () => {
