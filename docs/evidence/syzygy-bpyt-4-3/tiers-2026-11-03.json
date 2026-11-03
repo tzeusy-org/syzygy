@@ -1,0 +1,397 @@
+{
+ "subject": "syzygy-bpyt.4.3: unit, integration, e2e and live test tiers; npm run check and check:all",
+ "baseCommit": "8ec03f2df7e003f23e28c198f703e72054be3a9a",
+ "subjectFileSha256": {
+  "vitest.config.ts": "3b677756d41400ea04e50816c4b834d07a96593bef097b67c7d1934d5ca9de22",
+  "vitest.tiers.ts": "c76e80a28f8e95f45e8bedcc76d623c44ef80d5af4d389774355ebd21f0936ee",
+  "vitest.unit-guard.setup.ts": "5fb895818bd08856b981b51aaa7314214109b5e73d62e79739d4edef0d04f0c5",
+  "scripts/check_test_tiers.mjs": "64b3cb86a217cc14f7e2ea060dc1282587e8edb7dc74dcbbd6517c1eb78b90f4",
+  "scripts/run_status_battery.py": "2bc7b01885843920c6f4a28c387cc3088957224d4f56f32782aeba81084a9dfc",
+  ".github/workflows/node-ci.yml": "c10912c65161346a47799e82e56f806b8f05b1760d36b55dfd4117a866945929"
+ },
+ "denominator": {
+  "before": {
+   "method": "npx vitest run --reporter=json at the base commit, root config",
+   "files": 260,
+   "tests": 6029,
+   "skipped": 5
+  },
+  "after": {
+   "method": "npx vitest run --reporter=json at the measured commit, all four tier projects",
+   "files": 263,
+   "tests": 6052,
+   "skipped": 5,
+   "failed": 0
+  },
+  "filesDroppedByVitestListFilesOnly": 0,
+  "filesAdded": [
+   "apps/three-surface-poc/src/test-tiers.test.ts",
+   "apps/three-surface-poc/src/unit-tier-guard-file.test.ts",
+   "apps/three-surface-poc/src/unit-tier-guard.test.ts"
+  ],
+  "perFileTestCountChanges": {
+   "apps/three-surface-poc/src/sync-child-process-guard.test.ts": {
+    "before": 9,
+    "after": 10
+   }
+  },
+  "testsAddedChangedRemoved": "+23 ~2 -0 (new files 13+4+5 tests, one new test in sync-child-process-guard.test.ts; replaced \"reads every project root\" test there and edited the global-setup test in fixture-directories.test.ts)",
+  "tierFilesIncludingSystemTests": {
+   "total": 274,
+   "tiers": {
+    "integration": 86,
+    "unit": 161,
+    "e2e": 24,
+    "live": 3
+   }
+  },
+  "systemTests": {
+   "files": 11,
+   "tests": 53,
+   "config": "packages/cap1-system/vitest.config.ts",
+   "note": "e2e by suffix; not in the root denominator before or after"
+  }
+ },
+ "unitTierWall": {
+  "seconds": 27.6,
+  "files": 161,
+  "tests": 3552,
+  "host": "12 cores, load average about 12 (shared with other lanes), dist directories absent",
+  "command": "npm test",
+  "floor": "the slowest unit file, packages/three-surface-poc-core/src/test-artifact-verification-live-source.test.ts (58 tests, TypeScript syntax-tree reads), took 31 s in the baseline run and 32 s in the first tier run, so it bounds the tier from below under load"
+ },
+ "unitTierBeforeSplit": {
+  "note": "the single root run took 2 m 20 s wall at load 13-19 over 260 files"
+ },
+ "classification": {
+  "method": "ran the unit project with the refusal setup, read each refusing file and the command it reached (git 67 files, which 10, python3 5, mkfifo 3, bd, node, listen 5), then put browser, build/npm and strace files in e2e and the rest in integration",
+  "e2e": [
+   "10 files that launch Chrome (7 *.browser.test.ts plus proposal-disclosure, surface-routes, tuple-encoding)",
+   "pipeline-demo.test.ts (npm ci in a clone)",
+   "product-build.test.ts (tsc builds)",
+   "no-egress.test.ts (strace)"
+  ],
+  "live": "the three *.live.test.ts files"
+ },
+ "governanceBattery": {
+  "command": "python3 scripts/run_status_battery.py",
+  "result": "114 ok, 0 failed, 114 commands",
+  "note": "commands are read from PROJECT-STATUS.md at run time"
+ },
+ "rule6Mutants": [
+  {
+   "id": "G1",
+   "name": "G1 spawnSync not patched",
+   "file": "vitest.unit-guard.setup.ts",
+   "old": "['spawnSync', 'execSync', 'execFileSync']",
+   "new": "['execSync', 'execFileSync']",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "G2",
+   "name": "G2 execSync not patched",
+   "file": "vitest.unit-guard.setup.ts",
+   "old": "['spawnSync', 'execSync', 'execFileSync']",
+   "new": "['spawnSync', 'execFileSync']",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "G3",
+   "name": "G3 execFileSync not patched",
+   "file": "vitest.unit-guard.setup.ts",
+   "old": "['spawnSync', 'execSync', 'execFileSync']",
+   "new": "['spawnSync', 'execSync']",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "G4",
+   "name": "G4 async spawn not patched",
+   "file": "vitest.unit-guard.setup.ts",
+   "old": "  childProcess.ChildProcess.prototype.spawn = function",
+   "new": "  const unused = function",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "G5",
+   "name": "G5 socket connect not patched",
+   "file": "vitest.unit-guard.setup.ts",
+   "old": "  net.Socket.prototype.connect = () =>",
+   "new": "  const unusedConnect = () =>",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "G6",
+   "name": "G6 server listen not patched",
+   "file": "vitest.unit-guard.setup.ts",
+   "old": "  net.Server.prototype.listen = () =>",
+   "new": "  const unusedListen = () =>",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "G7",
+   "name": "G7 dgram bind not patched",
+   "file": "vitest.unit-guard.setup.ts",
+   "old": "['bind', 'connect', 'send']",
+   "new": "['connect', 'send']",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "G8",
+   "name": "G8 dgram send not patched",
+   "file": "vitest.unit-guard.setup.ts",
+   "old": "['bind', 'connect', 'send']",
+   "new": "['bind', 'connect']",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "G9",
+   "name": "G9 builtin ESM exports not synced",
+   "file": "vitest.unit-guard.setup.ts",
+   "old": "  syncBuiltinESMExports();\n}",
+   "new": "}",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "G10",
+   "name": "G10 afterEach complaint removed",
+   "file": "vitest.unit-guard.setup.ts",
+   "old": "afterEach(complain);",
+   "new": "",
+   "command": "npx vitest run --project integration apps/three-surface-poc/src/unit-tier-guard-file.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "G11",
+   "name": "G11 afterAll complaint removed",
+   "file": "vitest.unit-guard.setup.ts",
+   "old": "afterAll(complain);",
+   "new": "",
+   "command": "npx vitest run --project integration apps/three-surface-poc/src/unit-tier-guard-file.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "G12",
+   "name": "G12 refusal does not throw",
+   "file": "vitest.unit-guard.setup.ts",
+   "old": "  throw new Error(`unit tier refuses",
+   "new": "  return undefined as never; throw new Error(`unit tier refuses",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "T1",
+   "name": "T1 stale list entry not reported",
+   "file": "vitest.tiers.ts",
+   "old": "if (!present.has(path)) problems.push",
+   "new": "if (false) problems.push",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "T2",
+   "name": "T2 two-tier file not reported",
+   "file": "vitest.tiers.ts",
+   "old": "if (tiers.length > 1) problems.push",
+   "new": "if (false) problems.push",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "T3",
+   "name": "T3 repeated path not reported",
+   "file": "vitest.tiers.ts",
+   "old": "if (new Set(paths).size !== paths.length) problems.push",
+   "new": "if (false) problems.push",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "T4",
+   "name": "T4 unsorted list not reported",
+   "file": "vitest.tiers.ts",
+   "old": "if (paths.some((path, index) => path !== sorted[index])) problems.push",
+   "new": "if (false) problems.push",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "T5",
+   "name": "T5 listed system test not reported",
+   "file": "vitest.tiers.ts",
+   "old": "if (path.endsWith(SYSTEM_TEST_SUFFIX)) problems.push",
+   "new": "if (false) problems.push",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "T6",
+   "name": "T6 system suffix not e2e",
+   "file": "vitest.tiers.ts",
+   "old": "|| path.endsWith(SYSTEM_TEST_SUFFIX)) return 'e2e'",
+   "new": "&& false) return 'e2e'",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "T7",
+   "name": "T7 live does not win",
+   "file": "vitest.tiers.ts",
+   "old": "if (lists.live.includes(path)) return 'live';\n  if (lists.e2e.includes(path)",
+   "new": "if (lists.e2e.includes(path)",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "T8",
+   "name": "T8 workspace walk skips apps",
+   "file": "vitest.tiers.ts",
+   "old": "const parent = match[1]!;",
+   "new": "const parent = match[1]!; if (parent === 'apps') return [];",
+   "command": "npx vitest run --project unit apps/three-surface-poc/src/unit-tier-guard.test.ts apps/three-surface-poc/src/test-tiers.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "C1",
+   "name": "C1 unit setup guard dropped from config",
+   "file": "vitest.config.ts",
+   "old": "setupFiles: [fileURLToPath(new URL('./vitest.unit-guard.setup.ts', import.meta.url))],",
+   "new": "",
+   "command": "npx vitest run --project integration apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "C2",
+   "name": "C2 guard setup added to integration tier",
+   "file": "vitest.config.ts",
+   "old": "tier('integration', { include: [...INTEGRATION_TESTS] }),",
+   "new": "tier('integration', { include: [...INTEGRATION_TESTS], setupFiles: [fileURLToPath(new URL('./vitest.unit-guard.setup.ts', import.meta.url))] }),",
+   "command": "npx vitest run --project integration apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "C3",
+   "name": "C3 tier project renamed",
+   "file": "vitest.config.ts",
+   "old": "tier('e2e', {",
+   "new": "tier('end-to-end', {",
+   "command": "npx vitest run --project integration apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+   "outcome": "killed"
+  },
+  {
+   "id": "C4",
+   "name": "C4 unit excludes drop the lists",
+   "file": "vitest.config.ts",
+   "old": "...INTEGRATION_TESTS, ...E2E_TESTS, ...LIVE_TESTS],",
+   "new": "],",
+   "command": "node scripts/check_test_tiers.mjs",
+   "outcome": "killed"
+  },
+  {
+   "id": "C5",
+   "name": "C5 integration project includes nothing",
+   "file": "vitest.config.ts",
+   "old": "tier('integration', { include: [...INTEGRATION_TESTS] }),",
+   "new": "tier('integration', { include: [] }),",
+   "command": "node scripts/check_test_tiers.mjs",
+   "outcome": "killed"
+  },
+  {
+   "id": "C6",
+   "name": "C6 unit includes the system tests",
+   "file": "vitest.config.ts",
+   "old": "`**/*${SYSTEM_TEST_SUFFIX}`, ",
+   "new": "",
+   "command": "node scripts/check_test_tiers.mjs",
+   "outcome": "killed"
+  },
+  {
+   "id": "S1",
+   "name": "script ignores a file listed under another tier's project",
+   "divergenceEdits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "tier('e2e', { include: [...E2E_TESTS] }),",
+     "new": "tier('e2e', { include: [] }),"
+    },
+    {
+     "file": "vitest.config.ts",
+     "old": "tier('integration', { include: [...INTEGRATION_TESTS] }),",
+     "new": "tier('integration', { include: [...INTEGRATION_TESTS, ...E2E_TESTS] }),"
+    },
+    {
+     "file": "vitest.config.ts",
+     "old": "exclude: [...configDefaults.exclude, `**/*${SYSTEM_TEST_SUFFIX}`, ...INTEGRATION_TESTS, ...E2E_TESTS, ...LIVE_TESTS],",
+     "new": "exclude: [...configDefaults.exclude, `**/*${SYSTEM_TEST_SUFFIX}`, ...INTEGRATION_TESTS, ...E2E_TESTS, ...LIVE_TESTS],"
+    }
+   ],
+   "mutation": [
+    {
+     "file": "scripts/check_test_tiers.mjs",
+     "old": "|| rows[0].project !== tier)",
+     "new": "|| false)"
+    }
+   ],
+   "command": "node scripts/check_test_tiers.mjs",
+   "exitWithDivergenceOnly": 1,
+   "exitWithDivergenceAndMutation": 0,
+   "outcome": "killed"
+  },
+  {
+   "id": "S2",
+   "name": "script ignores a file vitest lists that the tree walk did not find",
+   "divergenceEdits": [
+    {
+     "file": "vitest.config.ts",
+     "old": "include: WORKSPACE_TESTS,",
+     "new": "include: [...WORKSPACE_TESTS, 'docs/evidence/crlf-mask-review-2026-10-28/r3/tools/candidate-pins.test.ts'],"
+    }
+   ],
+   "mutation": [
+    {
+     "file": "scripts/check_test_tiers.mjs",
+     "old": "if (!inRoot.includes(row.path)) problems.push",
+     "new": "if (false) problems.push"
+    }
+   ],
+   "command": "node scripts/check_test_tiers.mjs",
+   "exitWithDivergenceOnly": 1,
+   "exitWithDivergenceAndMutation": 0,
+   "outcome": "killed"
+  },
+  {
+   "id": "C7",
+   "name": "config does not refuse a stale list entry (a duplicate of partitionProblems in the script and the unit test)",
+   "divergenceEdits": [
+    {
+     "file": "vitest.tiers.ts",
+     "old": "export const E2E_TESTS: readonly string[] = [\n",
+     "new": "export const E2E_TESTS: readonly string[] = [\n  'apps/three-surface-poc/src/does-not-exist.test.ts',\n"
+    }
+   ],
+   "mutation": [
+    {
+     "file": "vitest.config.ts",
+     "old": "if (problems.length > 0) throw",
+     "new": "if (false) throw"
+    }
+   ],
+   "command": "node scripts/check_test_tiers.mjs",
+   "exitWithDivergenceOnly": 1,
+   "exitWithDivergenceAndMutation": 1,
+   "outcome": "redundant: the stale-entry check also runs in partitionProblems (script and unit test), which still fail with this mutation"
+  }
+ ],
+ "mutantNotes": "Each mutant replaces old with new in the named file, runs the command, and restores the file. A mutant is killed when the command exits non-zero. S1/S2/C7 need a config/list divergence for the script to see; the divergence edits are listed. G10 first survived at commit ecc1bcdd (afterAll also failed the file) and was killed after 22b42361 attributed a swallowed refusal to its test.",
+ "mutantsRanAtCommit": "22b423613bb0d74bff80d4a0bd5e94710af19e08",
+ "subjectFilesAtCommit": "5e518b5b6cf1a8f4fce09ce1cdd81a8eff6c1d37",
+ "sinceMutantRun": "the header comment of scripts/check_test_tiers.mjs and the test:tiers script flag --disable-warning=MODULE_TYPELESS_PACKAGE_JSON; neither is a mutated fragment"
+}

@@ -13,7 +13,7 @@
     "test:integration": "vitest run --project integration",
     "test:e2e": "vitest run --project e2e && npm run test:system",
     "test:live": "vitest run --project live",
-    "test:tiers": "node scripts/check_test_tiers.mjs",
+    "test:tiers": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_test_tiers.mjs",
     "check": "npm run typecheck && npm test",
     "check:battery": "python3 scripts/run_status_battery.py",
     "check:all": "npm run check && npm run test:tiers && npm run test:integration && npm run test:e2e && npm run check:battery",

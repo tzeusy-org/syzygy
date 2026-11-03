@@ -1,6 +1,6 @@
 // Every workspace test file is in exactly one test tier, and vitest runs it there (syzygy-bpyt.4.3).
 //
-//   node scripts/check_test_tiers.mjs        # npm run test:tiers
+//   npm run test:tiers   (node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_test_tiers.mjs)
 //
 // Two methods over one denominator, the `*.test.ts` files under each workspace's `src/`:
 // 1. a walk of the tree against the lists in vitest.tiers.ts (`partitionProblems`): a file in two lists, a list entry that
