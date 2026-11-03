@@ -515,6 +515,32 @@ describe('await', () => {
 });
 
 describe('await --submit --stdin: the session writes nothing, Syzygy writes its file', () => {
+  // syzygy-mea.3 round-1 finding 1 (R-PR596-SESSION-VISIBILITY-1): the waiting inventory session, the one `syzygy polaris` starts,
+  // gets the same reviewVisibility as the CLI's inventory-check, which its brief promises; never in the stored record.
+  it('returns reviewVisibility for a cited file the review will not see, as inventory-check does (mutant: the CLI alone attaches it)', async () => {
+    const h = await harness();
+    await h.cli(['session-prompt', h.run, 'all']);
+    fs.mkdirSync(path.join(h.run, 'drafts'), { recursive: true });
+    write(path.join(h.run, 'drafts', 'next.json'), draft(h.commit));
+    await h.cli(['check', h.run]);
+    const inv = path.join(h.sessions, 'session-1');
+    const base = inventory(h.commit);
+    // README.md is in no class of the fixture screen (.c and .txt only), so screening withholds it by its path.
+    const readme = { id: 'e-name', kind: 'term', label: 'inferred', statement: 'The project is named Kestrel.', citations: [{ id: 'c-e-name', path: 'README.md', startLine: 1, endLine: 1 }], quotations: [] };
+    h.world.stdin = JSON.stringify({ ...base, entries: [...(base['entries'] as unknown[]), readme] });
+    const submitted = await h.cli(['await', `${inv}/`, '--submit', 'inventory.json', '--stdin']);
+    expect(submitted).toMatchObject({ exit: 0, doc: { outcome: 'submitted', role: 'inventory', passed: true } });
+    expect((submitted.doc['check'] as Doc)['reviewVisibility']).toEqual({
+      withheld: [{ path: 'README.md', outcome: 'unknown-extraction-class' }],
+      note: 'screening withholds 1 cited file(s) from the review session, so it cannot confirm the blocks and inventory entries that rest on them; unconfirmed rows block readiness. Where the same fact is stated in an admitted file, cite that file as well or instead.',
+    });
+    expect(fs.readFileSync(path.join(h.run, 'inventory', 'checks', 'rev-0.json'), 'utf8')).not.toContain('reviewVisibility');
+    // An inventory citing only admitted files carries none.
+    h.world.stdin = JSON.stringify(base);
+    const clean = await h.cli(['await', `${inv}/`, '--submit', 'inventory.json', '--stdin']);
+    expect(clean.doc['check'] as Doc).not.toHaveProperty('reviewVisibility');
+  });
+
   it('writes the inventory from standard input into the session directory, byte for byte, and checks it (mutant: check without writing)', async () => {
     const h = await harness();
     await h.cli(['session-prompt', h.run, 'all']);

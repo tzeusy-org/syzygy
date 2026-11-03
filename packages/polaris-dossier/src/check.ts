@@ -8,7 +8,7 @@ import { SESSION_ID_PATTERN, UNDERSTANDING_ITEMS, checkDraftShape, localDraftSch
 import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './execution-flags.js';
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH, type GateSources } from './gate-sources.js';
-import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions, type TreeEntry } from './git-object-reader.js';
+import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions, type TreeEntry } from './git-object-reader.js';
 import { isoOf } from './iso-of.js';
 import type { Outcome } from './outcome.js';
 import { reverifyPinnedRevision, type ReverifyRefusal } from './reverify.js';
@@ -45,8 +45,6 @@ export const DEFAULT_DRAFT = 'next.json';
 export const DRAFT_MAX_BYTES = 4 * 1024 * 1024;
 const DRAFT_JSON_LIMITS = Object.freeze({ maxBytes: DRAFT_MAX_BYTES, maxNodes: 500_000, maxDepth: 16 });
 const BRIEF_JSON_LIMITS = Object.freeze({ maxBytes: 262_144, maxNodes: 4096, maxDepth: 8 });
-/** Tree entry modes whose object is a blob: regular, executable and symbolic-link files. A submodule (`160000`) is not one. */
-const BLOB_MODES: ReadonlySet<string> = new Set(['100644', '100755', '120000']);
 
 export type CheckFindingKind =
   | 'not-json' | 'schema' | 'wrong-revision' | 'duplicate-id' | 'unresolved-reference'
@@ -88,9 +86,11 @@ export interface ExcludedQuotation {
 
 /** The cited files the review session will not see, from a check's cited blobs (bead syzygy-olmr). The fidelity packet carries a span's
  * text only when screening admits its file, so a block or inventory entry that cites only withheld files stays unresolved in review, and
- * an unresolved row blocks readiness. Reported to the author at check time so it can prefer admitted evidence before spending repair
- * cycles; it is advice, never a finding, and the check record is unchanged. */
-export function reviewVisibility(citedBlobs: readonly CitedBlob[]): { readonly withheld: readonly { readonly path: string; readonly outcome: ScreenExclusion }[]; readonly note: string } | null {
+ * an unresolved row blocks readiness. `checkSubject` puts it on the report of both `check` and `inventory-check`, whichever caller runs
+ * them (the CLI commands, or `await --submit` for a waiting inventory session: syzygy-mea.3 round-1 finding 1), so the session can
+ * prefer admitted evidence before spending repair cycles; it is advice, never a finding, and never written to the check record. */
+export type ReviewVisibility = { readonly withheld: readonly { readonly path: string; readonly outcome: ScreenExclusion }[]; readonly note: string };
+export function reviewVisibility(citedBlobs: readonly CitedBlob[]): ReviewVisibility | null {
   const withheld = citedBlobs.flatMap((blob) => (blob.outcome === 'admitted' ? [] : [{ path: blob.path ?? '(a path a secret detector matches)', outcome: blob.outcome }]));
   if (withheld.length === 0) return null;
   return {
@@ -188,6 +188,8 @@ export interface CheckReport extends CheckRecord {
   readonly disclosures: readonly string[];
   /** The path-only census of every file screening withholds at the pinned revision (`census.ts`); on the report, never the record. */
   readonly screenCensus?: ScreenCensusReport;
+  /** The cited files screening withholds from the review session (`reviewVisibility`); on the report, never the record. */
+  readonly reviewVisibility?: ReviewVisibility;
 }
 
 export type CheckResult = Outcome<CheckReport, CheckRefusal>;
@@ -264,7 +266,7 @@ export interface SubjectPlan<R extends object, G> {
 }
 
 /** `screenCensus` is on `check`'s report only (`census.ts`): advice to the author, never written to the check record. */
-export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport };
+export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly reviewVisibility?: ReviewVisibility };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -393,7 +395,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
       screenCensus = screenCensusReport({ ok: true, census: withheldCensus(await reader.listTree(), screen, checked.contentClasses) });
     } catch (cause) {
       if (!(cause instanceof GitObjectReadRefusal)) throw cause;
-      screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})` });
+      screenCensus = screenCensusReport({ ok: false, why: `the pinned tree could not be listed (${cause.reason})`, consented: checked.contentClasses });
     }
   }
   if (credential.required && !credential.passed) {
@@ -435,7 +437,8 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   }
   log({ outcome, revision, findings: findings.length });
   const disclosures = credential.required ? [...plan.disclosures, CREDENTIAL_CHECK_DISCLOSURE] : plan.disclosures;
-  return { ok: true, report: { command: plan.command, run, checkFile, ...record, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }) } };
+  const visibility = reviewVisibility(citedBlobs);
+  return { ok: true, report: { command: plan.command, run, checkFile, ...record, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }), ...(visibility === null ? {} : { reviewVisibility: visibility }) } };
 }
 
 /** The instant the brief record states it was issued, or why the run counts as not briefed. */

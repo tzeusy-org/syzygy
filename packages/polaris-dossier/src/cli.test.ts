@@ -107,6 +107,13 @@ describe('syzygy dossier', () => {
   it('renders an empty list or object as (none)', async () => {
     expect(renderHuman({ a: [], b: {} })).toBe('a: (none)\nb: (none)\n');
   });
+
+  it('writes a string leaf that could break its line as a JSON string, and leaves every other leaf as it was (syzygy-mea.3 round-1 note 3)', () => {
+    expect(renderHuman({ a: 'plain text: with colons', n: 3 })).toBe('a: plain text: with colons\nn: 3\n');
+    expect(renderHuman({ path: 'docs/a\nnext: forged' })).toBe('path: "docs/a\\nnext: forged"\n');
+    expect(renderHuman({ p: 'a\rb' })).toBe('p: "a\\rb"\n');
+    expect(renderHuman({ p: 'a\u2028b\u0085c\u007fd' })).toBe('p: "a\\u2028b\\u0085c\\u007fd"\n');
+  });
 });
 
 describe('no route and no credential', () => {

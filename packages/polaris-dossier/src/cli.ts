@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { isArgvFault, readArgv } from './argv.js';
 import { issueBrief } from './brief.js';
-import { checkDraft, reviewVisibility } from './check.js';
+import { checkDraft } from './check.js';
 import { closeRun } from './close.js';
 import { createCredentialProbe, credentialListFromEnv } from './credential-probe.js';
 import { DECLARATIONS, RUN_DIRECTORY_CHOICES, allowExecution } from './execution-choice.js';
@@ -319,8 +319,8 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
       const draftFile = values.get('--draft');
       const result = await checkDraft(run!, draftFile === undefined ? {} : { draftFile }, ctx.deps('probe', 'openReader', 'loadScreen'));
       if (!result.ok) return ctx.refused(result.refusal);
-      const visibility = reviewVisibility(result.report.citedBlobs);
-      return ctx.report(visibility === null ? result.report : { ...result.report, reviewVisibility: visibility }, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);
+      // `reviewVisibility` and `screenCensus` are on the report already (`checkSubject`), never in the stored record.
+      return ctx.report(result.report, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);
     },
   },
   'session-prompt': {
@@ -379,9 +379,8 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
       const inventoryFile = values.get('--inventory');
       const result = await checkInventory(run!, inventoryFile === undefined ? {} : { inventoryFile }, ctx.deps('probe', 'openReader', 'loadScreen'));
       if (!result.ok) return ctx.refused(result.refusal);
-      // The same advice `check` gives the author: the inventory session is told which cited files the review will not see (syzygy-mea.3).
-      const visibility = reviewVisibility(result.report.citedBlobs);
-      return ctx.report(visibility === null ? result.report : { ...result.report, reviewVisibility: visibility }, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);
+      // The same advice `check` gives the author, on the report from `checkSubject`, as `await --submit` returns it too (syzygy-mea.3).
+      return ctx.report(result.report, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);
     },
   },
   'review-packet': {
@@ -482,6 +481,12 @@ function readBounded(file: string, limit: number): string | { readonly reason: s
   }
 }
 
+/** A string leaf that holds a character which could end or break its line (a C0 or C1 control, DEL, U+2028, U+2029) is written as a JSON
+ * string instead, so a value from the clone (a path a report names) stays on its own `key: value` line (syzygy-mea.3 round-1 note 3). */
+const LINE_BREAKING = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/u;
+export const humanLeaf = (value: string): string => (LINE_BREAKING.test(value)
+  ? JSON.stringify(value).replace(/[\u007f-\u009f\u2028\u2029]/gu, (char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, '0')}`) : value);
+
 /** One `key: value` line per leaf of the document, in document order, keys joined by dots. */
 export function renderHuman(document: object): string {
   const lines: string[] = [];
@@ -492,7 +497,7 @@ export function renderHuman(document: object): string {
       for (const [child, item] of entries) walk(item, key === '' ? child : `${key}.${child}`);
       return;
     }
-    lines.push(`${key}: ${String(value)}`);
+    lines.push(`${key}: ${typeof value === 'string' ? humanLeaf(value) : String(value)}`);
   };
   walk(document, '');
   return `${lines.join('\n')}\n`;

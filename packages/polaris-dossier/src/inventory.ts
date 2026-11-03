@@ -203,7 +203,7 @@ export function renderInventoryBrief(input: InventoryBriefInput): string {
     '',
     `${INVENTORY_QUOTATION_FORM} Only an \`inferred\` entry carries quotations. ${QUOTATION_RULE}`,
     '',
-    censusSection(input.census, 'inventory-check', 'entry'),
+    censusSection(input.census),
     '',
     '## Coverage',
     '',

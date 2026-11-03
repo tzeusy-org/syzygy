@@ -14,7 +14,7 @@ import { designVerdictSchemaDocument } from './draft-schema.js';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
 import { checkInventory, openRun } from './inventory.js';
-import { NO_RENDERER, redactionDetails, renderRun, type DossierRenderer, type DossierRendererInput, type RenderDeps } from './render.js';
+import { NO_RENDERER, redactedExtent, redactionDetails, renderRun, type DossierRenderer, type DossierRendererInput, type RenderDeps } from './render.js';
 import { buildStoredDesignPacket, designReviewOfRecord, reviewCheck, reviewPacket } from './review.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
@@ -857,5 +857,14 @@ describe('redactionDetails', () => {
     expect(redactionDetails(undefined)).toEqual([]);
     expect(redactionDetails({ redactionClass: 'redacted-span', withheldLines: 5, detectorIds: ['credential-assignment', 'credential-bearing-url'], withheldLineRanges: [[1, 3], [9, 9], [12, 13]] }))
       .toEqual(['detectors matched: credential-assignment, credential-bearing-url', 'withheld lines: 1\u20133, 9, 12\u201313']);
+  });
+});
+
+// syzygy-mea.3 round-1 note 6: a body redactBody keeps with every line withheld is not "partially" retained.
+describe('redactedExtent', () => {
+  it('says partially retained while some line is kept, and retained with every line withheld when none is', () => {
+    expect(redactedExtent({ withheld: 1, lines: 5 })).toBe('partially retained by screening as redacted-span: 1 of its 5 line(s) withheld');
+    expect(redactedExtent({ withheld: 4, lines: 5 })).toBe('partially retained by screening as redacted-span: 4 of its 5 line(s) withheld');
+    expect(redactedExtent({ withheld: 5, lines: 5 })).toBe('retained by screening as redacted-span with every one of its 5 line(s) withheld');
   });
 });
