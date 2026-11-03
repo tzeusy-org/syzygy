@@ -894,7 +894,7 @@ describe('round-3 review notes', () => {
   });
 });
 
-describe('every stem counts wherever it sits, save exact tooling citations in an allowlisted file (R-361-1)', () => {
+describe('every stem counts wherever it sits, in an allowlisted file too (R-361-1; syzygy-bpyt.1.24)', () => {
   const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
   const v2Text = readFileSync(path.join(repoRoot, EGRESS_V2_INSTANCE), 'utf8');
   const MODULE = '.syzygy/governance/contracts/rfcs/RFC-0005/consent-egress-secrets.md';
@@ -1039,24 +1039,26 @@ describe('every stem counts wherever it sits, save exact tooling citations in an
   });
 
   // The allowlist (mocked above, empty everywhere else in this file): an entry is a path under the decisions directory and the
-  // sha256 of exact bytes.
+  // sha256 of exact bytes. Since syzygy-bpyt.1.24 (owner answer A to consent-withdrawal-knobs, R-GP-IMPL-CONSENT-KNOBS-REFUSAL-1 F1)
+  // an allowlisted file is swept whole as well as with its citations set aside, and refuses on either: so an entry never removes a
+  // whole-text refusal. Before, these rows read `[]` once allowlisted (R-361-1); each now reads what the unallowlisted file reads.
   const allow = (rel: string, text: string): void => { ALLOWLIST.set(rel, { sha256: sha(text), reason: 'test' }); };
   afterEach(() => { ALLOWLIST.clear(); });
   const REL = 'OWNER-DIRECTION-SITTING-2026-10-06.md';
   const CITING = 'Run `scripts/build_public_egress_v2.py --check`, then record_public_repo_admission_acts.py; the brief is public-egress-v2/REVIEW-BRIEF.md.\n'
     + 'The class recorder is scripts/record_rfc5_project_documentation_act.py.\n';
-  it('a file at its allowlisted path with its allowlisted bytes has its exact tooling citations set aside, and only those', async () => {
+  it('a file at its allowlisted path with its allowlisted bytes still refuses every read its whole text refuses', async () => {
     expect(await allReads(full({ [NOTE]: CITING }))).toEqual(ACE);
     allow(REL, CITING);
-    expect(await allReads(full({ [NOTE]: CITING }))).toEqual([]);
+    expect(await allReads(full({ [NOTE]: CITING }))).toEqual(ACE);
     for (const [line, expected] of [
-      ['PUBLIC-EGRESS-anthropic is withdrawn.', AE], ['The public egress v2 consent ends.', AE], ['RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-03 is revoked.', ACE],
-      ['Run scripts/BUILD_PUBLIC_EGRESS_V2.py.', AE], ['Run tools/build_public_egress_v2.py.', AE], ['Run scripts/build_public_egress_v3.py.', AE],
-      ['Ran scripts/withdraw_public_obs_redis_2026_10_03.py.', AE], ['Run scripts/build_public_egress_openai.py.', AE],
-      [`See ${PKG}/public-repo-admission/PUBLIC-OBS-REDIS-2026-10-03-NOTES.md.`, AE], ['See PUBLIC-EGRESS-V2-MANIFEST.txt.', AE],
-      ['Every consent under public-repo-admission/ ends.', AE], [`See \`${EGRESS_V2_INSTANCE}\`.`, AE],
-      [`See ${PKG}/public-repo-admission/templates/instances/x.md.`, AE], [`See ${PKG}/public-repo-admission/Instances/x.md.`, AE],
-      [`See ${PKG}/public-repo-admission/instances.md.`, AE], [`See ${PKG}/public-repo-admission/instance/x.md.`, AE],
+      ['PUBLIC-EGRESS-anthropic is withdrawn.', ACE], ['The public egress v2 consent ends.', ACE], ['RFC5-PROJECT-DOCUMENTATION-AMEND-2026-10-03 is revoked.', ACE],
+      ['Run scripts/BUILD_PUBLIC_EGRESS_V2.py.', ACE], ['Run tools/build_public_egress_v2.py.', ACE], ['Run scripts/build_public_egress_v3.py.', ACE],
+      ['Ran scripts/withdraw_public_obs_redis_2026_10_03.py.', ACE], ['Run scripts/build_public_egress_openai.py.', ACE],
+      [`See ${PKG}/public-repo-admission/PUBLIC-OBS-REDIS-2026-10-03-NOTES.md.`, ACE], ['See PUBLIC-EGRESS-V2-MANIFEST.txt.', ACE],
+      ['Every consent under public-repo-admission/ ends.', ACE], [`See \`${EGRESS_V2_INSTANCE}\`.`, ACE],
+      [`See ${PKG}/public-repo-admission/templates/instances/x.md.`, ACE], [`See ${PKG}/public-repo-admission/Instances/x.md.`, ACE],
+      [`See ${PKG}/public-repo-admission/instances.md.`, ACE], [`See ${PKG}/public-repo-admission/instance/x.md.`, ACE],
     ] as Array<[string, string[]]>) {
       const text = `${CITING}${line}\n`;
       ALLOWLIST.clear(); allow(REL, text);
@@ -1077,10 +1079,10 @@ describe('every stem counts wherever it sits, save exact tooling citations in an
       expect(await allReads(full({ [NOTE]: CITING, [`${D}/${rel}`]: CITING })), `${rel} beside the allowlisted file`).toEqual(ACE);
     }
   });
-  it('an allowlisted file named for a stem still refuses: the allowlist sets aside citations in the text, never the name', async () => {
+  it('an allowlisted file named for a stem still refuses, by its name and by its whole text', async () => {
     const rel = 'PUBLIC-EGRESS-V2-NOTES.md';
     allow(rel, CITING);
-    expect(await allReads(full({ [`${D}/${rel}`]: CITING }))).toEqual(AE);
+    expect(await allReads(full({ [`${D}/${rel}`]: CITING }))).toEqual(ACE);
   });
 });
 
