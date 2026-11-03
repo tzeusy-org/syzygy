@@ -1,6 +1,6 @@
 {
  "subject": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
- "subjectSha256": "0b04861268e49f1ee809ba3c8816cfba2fffd83a8f5e88fa957a6d4c495f5243",
+ "subjectSha256": "68f757e1108eba31edab05e419478a8324d52ecfe9c5f3378c21b6550bd00a14",
  "predecessorSha256": "73c3c18032ce023bcc9b8f45ab36aab060629ec8299389726cbd87e804b28bcc",
  "predecessorCommit": "cbd8b708022504c54dc533b53863a95de9761898",
  "bead": "syzygy-bpyt.4.8",
@@ -25,7 +25,7 @@
   "distinctCalls": 244
  },
  "populationReplay": {
-  "ranOn": "subject bytes (after loadRecorderForms in a beforeAll), as a scratch integration test (not retained) calling each logged function with the logged arguments and comparing the JSON of the result with the logged output",
+  "ranOn": "subject bytes (loadRecorderForms awaited at the test file's top level), as a scratch integration test (not retained) calling each logged function with the logged arguments and comparing the JSON of the result with the logged output",
   "calls": 3612,
   "identical": 3612,
   "different": 0,
@@ -33,7 +33,7 @@
   "loggedOutputsDigestMethod": "sha256 over the concatenated JSON.stringify(out) of every log line, in log order"
  },
  "mutants": {
-  "commit": "09ee5075ae062c0c39dd24f5ba4a28fc148dea18",
+  "commit": "c00193e85918aa528601e6d21362bd9cee14d626",
   "mutants": [
    {
     "mutant": "M1 policy instant filled from date",
@@ -98,8 +98,8 @@
    {
     "mutant": "M7 loader never awaited",
     "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
-    "old": "beforeAll(loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS);",
-    "new": "void [loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS];",
+    "old": "await loadRecorderForms();",
+    "new": "void loadRecorderForms;",
     "test": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
     "exit": 1,
     "killed": true,
