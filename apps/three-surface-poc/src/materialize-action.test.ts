@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import { createDaemon, type RunningDaemon } from '@syzygy/http-host';
 import {
+  BUTLERS_POC_SEEDS,
   buildPocModel,
   readMaterializationRecordFile,
   type DispatchDisclosure,
@@ -24,6 +25,13 @@ import { TAILNET_MOUNT_PREFIX } from './tailnet.js';
 import { fetchWithHost } from './test-http-client.js';
 import { buildFixtureModel, fixtureRepoWithGit } from './test-model-fixture.js';
 import { renderTrajectoryPage } from './trajectory.js';
+
+/** Seeds naming a repository with no materialization support: the builder
+ * then serves no dispatch, the one state the action must refuse. */
+const UNSUPPORTED_REPOSITORY_SEEDS = {
+  ...BUTLERS_POC_SEEDS,
+  project: { ...BUTLERS_POC_SEEDS.project, repositoryId: 'repository:unsupported-poc' },
+};
 
 const cleanups: string[] = [];
 const running: RunningDaemon[] = [];
@@ -226,14 +234,17 @@ describe('renderMaterializePanel', () => {
     expect(html).toContain(`<form method="POST" action="${TAILNET_MOUNT_PREFIX}/trajectory/materialize">`);
   });
 
-  it('does not render a compiled materialization packet for an actual empty-seed model', () => {
+  it('does not render a compiled materialization packet for a model with no dispatch', () => {
     const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
     const model = buildPocModel({
+      seeds: UNSUPPORTED_REPOSITORY_SEEDS,
       repoRoot,
+      runWorkItemQuery: () => JSON.stringify([]),
       repositoryRevision: revision,
       observerRevision: revision,
       evaluation: { snapshot: 'empty-seed-materialization@rev', asOf: '2026-09-22T00:00:00Z' },
     });
+    expect(model.dispatch).toBeNull();
 
     const html = renderMaterializePanel(model);
     expect(html).toContain('data-unknown-disclosure="materialization"');
@@ -440,14 +451,17 @@ describe('materializeRoutes', () => {
     expect(readMaterializationRecordFile(dir)).toBeNull();
   });
 
-  it('fails closed without invoking Beads when the actual model has no seed-backed materialization graph', async () => {
+  it('fails closed without invoking Beads when the actual model has no dispatch', async () => {
     const { repoRoot, revision } = fixtureRepoWithGit(cleanups);
     const model = buildPocModel({
+      seeds: UNSUPPORTED_REPOSITORY_SEEDS,
       repoRoot,
+      runWorkItemQuery: () => JSON.stringify([]),
       repositoryRevision: revision,
       observerRevision: revision,
       evaluation: { snapshot: 'empty-seed-materialization@post', asOf: '2026-09-22T00:00:00Z' },
     });
+    expect(model.dispatch).toBeNull();
     let queryCalls = 0;
     let createCalls = 0;
     const baseUrl = await startDaemon({

@@ -1,0 +1,108 @@
+{
+ "bead": "syzygy-bpyt.7.1",
+ "acceptanceCriterion": 3,
+ "commit": "36dca045bb2f7b98b804cd578c18872b69539461",
+ "subjects": [
+  {
+   "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+   "sha256": "44f4ad77e62525595be5839883ac491d26bdd6859f353f91edc1d48903011ed2"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/walkthrough-readiness.ts",
+   "sha256": "4442d565502c604c61014055a0eabb71e7a2134dc48b1011d781c8732b6eeeb3"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/walkthrough-judgment.ts",
+   "sha256": "b6f6bf29b1d8aeb7657c65cdb80a8b14e22955fd78a983a6ed058cd5f95c2c38"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/acceptance/walkthrough-acceptance.ts",
+   "sha256": "c6960c019b9fe94124e87bb09cbe26d52990f034656b3f2486a52b1da7854883"
+  },
+  {
+   "path": "packages/three-surface-poc-core/src/model.ts",
+   "sha256": "f4791a12179830194c3f958b04dfa6945fb7713f85bd58fe88f0984727eafc72"
+  },
+  {
+   "path": "apps/three-surface-poc/src/routes.ts",
+   "sha256": "648a556a49f18a9f0f8345f916cbb7f2a73bdbfc8b700aba5de7a27029ab25e0"
+  },
+  {
+   "path": "docs/design/POLARIS-M10-MACHINE-CONTRACT-FUNNEL.md",
+   "sha256": "72d48f79ffe24bd0b76d95ffad2270b2118e3d2362ed367b021fb377f3c239e5"
+  },
+  {
+   "path": ".syzygy/governance/decisions/POLARIS-PURSUIT-OWNER-RULINGS-P68-P83-DECISION.md",
+   "sha256": "a59294d4a19eb9b5542fb2f13425521484bc3009a76ca991cfbd736266b71079"
+  }
+ ],
+ "walkthroughIndependence": {
+  "question": "walkthrough-readiness.ts imports RunRecordInput and parseRunRecord from walkthrough-judgment.ts; does that violate PWB-REQ-021 readiness independence from PWB-REQ-022?",
+  "clause": [
+   {
+    "locator": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md:2415-2420",
+    "quote": "- **Relation to PWB-REQ-022.** These readiness cases belong only to\n  PWB-REQ-021.\n  - They SHALL NOT be added to, substituted for or treated as invalid arms in\n    PWB-REQ-022's owner-act and record-validity population; a structurally\n    lawful run can be not ready, and a valid owner act can lawfully retain a\n    negative judgment about it."
+   },
+   {
+    "locator": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md:2510-2513",
+    "quote": "- **Readiness fields.** PWB-REQ-021's nine answer identities, answer\n  completeness, source resolution, Polaris-only traversal and\n  semantic-readiness result SHALL NOT be act-validity fields here and SHALL\n  NOT change this closed population."
+   }
+  ],
+  "code": [
+   {
+    "locator": "packages/three-surface-poc-core/src/walkthrough-readiness.ts:24-25",
+    "quote": "import type { RunRecordInput } from './walkthrough-judgment.js';\nimport { parseRunRecord } from './walkthrough-judgment.js';"
+   },
+   {
+    "locator": "packages/three-surface-poc-core/src/walkthrough-judgment.ts:387-396",
+    "quote": "export function parseRunRecord(text: string): ParsedRunRecord {\n  const head = headOf(text);\n  return {\n    identity: backtickedField(head, RUN_RECORD_LABELS.identity),\n    surfaceVersion: backtickedField(head, RUN_RECORD_LABELS.surfaceVersion),\n    evaluationIdentity: backtickedField(head, RUN_RECORD_LABELS.evaluationIdentity),\n    mode: backtickedField(head, RUN_RECORD_LABELS.mode),\n    traversedPaths: pathsField(text),\n  };\n}"
+   }
+  ],
+  "sweep": {
+   "predicate": "occurrences of the literal identifiers evaluateWalkthroughJudgment or WalkthroughJudgmentEvaluation in walkthrough-readiness.ts",
+   "denominator": "1 file, 399 lines",
+   "count": 0
+  },
+  "finding": "[Observed] readiness shares the run-record type and its field parser (a pure read of the record head and traversed paths) and never calls the PWB-REQ-022 evaluator nor reads its outcome. [Inferred] The clause forbids readiness cases entering, substituting for or arming the PWB-REQ-022 act-validity population; a shared parser of the same retained record does neither, so no gap is reported. The acceptance slice keeps the two evaluations side by side over the same loaded pair and composes neither into the other.",
+  "gap": false
+ },
+ "links": {
+  "question": "Is PocModel.links unused by apps, and does a spec require it?",
+  "code": [
+   {
+    "locator": "packages/three-surface-poc-core/src/model.ts:213-218",
+    "quote": "  readonly links?: readonly {\n    readonly path: string;\n    readonly method: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE';\n    readonly credentialClass: 'human-open' | 'machine-credentialed';\n    readonly self: boolean;\n  }[];"
+   },
+   {
+    "locator": "apps/three-surface-poc/src/routes.ts:237",
+    "quote": "    const projected = { ...servedModel(), links: linksFor(request) };"
+   },
+   {
+    "locator": "apps/three-surface-poc/src/routes.ts:259",
+    "quote": "      links: linksFor(request),"
+   }
+  ],
+  "design": {
+   "locator": "docs/design/POLARIS-M10-MACHINE-CONTRACT-FUNNEL.md:109",
+   "quote": "**Slice 1's `links` field lands on `PocModel`, not on a response wrapper.**"
+  },
+  "ownerRuling": {
+   "locator": ".syzygy/governance/decisions/POLARIS-PURSUIT-OWNER-RULINGS-P68-P83-DECISION.md:65",
+   "quote": "| **P-77** (M10) | **A** — Q1 a response-identity digest over the canonically serialized body with an enumerated 25-path exclusion set, an implementation of POC-REQ-004; Q2 compression needs a dated owner act on the ceiling reading before it ships; Q3 `machine-credentialed`; Q4 trace under the improvement-cycles direction's second limb per P-75 Q6; Q5 a sibling join key, never an anchor identity, behind M9; Q6 every new machine field added to the parity sweep as its own family with a declared empty human denominator. | The digest field takes the shared-model WIP-one slot **in turn after M8 slice 7**; the route table and conditional GET after it; the schema document additionally after P-72's delta; compression lands nowhere before its act; the join key behind M9's identity slices. The registry entry is edited on no arm. | `.10.1` (after `.8.1`), `.10.2`; blocked `.10.3` on gate `.22`, `.10.4` on gate `.27`, `.10.5` on `.9.2`. |"
+  },
+  "specSweep": {
+   "population": "175 tracked files under openspec/, .syzygy/governance/contracts/rfcs/ and .syzygy/governance/contracts/candidates/rfcs/",
+   "method1": {
+    "regex": "`links`|\"links\"|\\blinks\\s*(field|map|member)|\\bPocModel\\.links\\b|\\.links\\b",
+    "engine": "Python re, per line",
+    "hits": []
+   },
+   "method2": {
+    "command": "git grep -n -F '`links`' -- openspec .syzygy/governance/contracts/rfcs .syzygy/governance/contracts/candidates/rfcs",
+    "hits": []
+   }
+  },
+  "finding": "[Observed] the bead's premise does not hold: apps read links. routes.ts sets it on every /api/poc body (and the presentation envelope) at serve time, and it is in the served bytes. No requirement clause names the field in either sweep; it rests on the P-77 owner ruling and the M10 design (syzygy-dov.10.2). Dropping it would change the /api/poc wire format, which the owner direction puts out of scope, so it is kept unchanged.",
+  "kept": true
+ }
+}
