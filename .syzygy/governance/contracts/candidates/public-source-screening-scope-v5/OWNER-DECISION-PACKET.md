@@ -172,7 +172,7 @@ Each cost below is a synthetic fixture in the builder, scored per variant
     without C those would withhold it whole [Inferred].
   - The detector also withholds, whole, any code file with a line that opens
     with such a directive. Example: a test fixture writing
-    `requirepass <value>`. It matches none of Syzygy's own 8,402 text files.
+    `requirepass <value>`. At commit `d2b48c50` it matches none of Syzygy's own 8,405 text files.
     [Unknown] How many Redis files it matches.
 - **X (beyond your chosen scope):** three more files carry the documentation
   residuals, for 3 spans.
