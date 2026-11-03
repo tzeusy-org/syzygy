@@ -14,7 +14,7 @@ import { initRun, type InitResult } from './init.js';
 import { preflight } from './preflight.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { runStatus } from './status.js';
-import { GIT_ENV_NO_MAINTENANCE as GIT_ENV, git as gitIn, tempDir } from '@syzygy/test-kit';
+import { GIT_ENV_NO_MAINTENANCE as GIT_ENV, tempDir } from '@syzygy/test-kit';
 
 // syzygy-qkea.4 (S3): every refusal arm of REQ-polaris-generation-033's start gates, with independently prepared fixtures. The records
 // root is a temporary Syzygy checkout whose act records are rendered by the real recorders; the clone is a real Git repository built
@@ -23,6 +23,9 @@ import { GIT_ENV_NO_MAINTENANCE as GIT_ENV, git as gitIn, tempDir } from '@syzyg
 const sha = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
 const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
 const URL_ = 'https://github.com/redis/redis';
+/** The kit's `git` runs under plain GIT_ENV and would drop the no-maintenance keys, so these helpers keep their own env (syzygy-y733). */
+const gitIn = (cwd: string, ...args: string[]): string => execFileSync('git', ['-C', cwd, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
+
 const REAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 // After the sitting the real-tree preflight reads every act record and sweeps every decisions file (about 4.4 s alone), past Vitest's 5 s default under load; gate-acts.test.ts gives its real-tree tests the same budget (30d2c2c9).
 const TREE_TIMEOUT = 60_000;
@@ -229,6 +232,10 @@ describe('init: a run that passes every start gate', () => {
 });
 
 describe('init: the clone holds the consented commit alone (syzygy-qkea.24)', () => {
+  it('runs the fixture git helpers with automatic gc and maintenance off (syzygy-y733)', () => {
+    expect(gitIn(origin, 'config', '--get', 'gc.auto')).toBe('0');
+    expect(gitIn(origin, 'config', '--get', 'maintenance.auto')).toBe('false');
+  });
   const SHAPE = 'the clone must hold the consented commit alone, fetched into an empty repository (git init, git fetch --depth=1 <url> <commit>, git checkout --detach FETCH_HEAD)';
   const REMAKE = 'make it again in a new directory with git init --template= <dir> (an empty template, so no template or global init configuration adds anything), then the printed fetch and checkout';
   // A .git refusal (before any object is read) also says how to make the clone again; a store refusal does not.
