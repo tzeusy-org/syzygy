@@ -487,9 +487,11 @@ The one hundred and thirteen checks above are the same one hundred and thirteen 
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.
 **CG-26** compares the two command lists and fails on command-list divergence.
-[Observed 2026-10-21] Its count-sentence reader does not match the word form
-above 99, so it does not validate the two numbers in the sentence above;
-`syzygy-8tsz` tracks that separate enforcement gap. The independent
+*(Marked 2026-11-04: superseded. The 2026-10-21 text said "Its
+count-sentence reader does not match the word form above 99, so it does not
+validate the two numbers in the sentence above". PR #630 (`syzygy-8tsz`)
+merged; CG-26 now reads three-digit word counts such as "one hundred and
+thirteen".)* The independent
 physical-command, YAML/shell-command and sentence-number comparison for
 this revision is retained in `docs/evidence/p114-machine-ceiling-install-2026-10-21.md`
 and `docs/evidence/p114-machine-ceiling-battery-counts-2026-10-21.json`;
