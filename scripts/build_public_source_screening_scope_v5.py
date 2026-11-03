@@ -9,9 +9,7 @@ The subject is the policy AFTER version 4: the bytes of the version-4 manifest r
 2026-10-20). The builder takes the policy on disk when it hashes to that row, or recovers it by reversing this
 package's own patch when the disk is one of this package's rows (the state after a version-5 act).
 
-Six variants, one manifest row each. Every variant carries the tightenings (T); the loosenings are cumulative.
-The first four are the owner's chosen scope (B, C and D); the last two (P and X) go beyond it and are offered
-separately, at the lead's request of 2026-11-03 after the owner's metadata measurement of the Redis trial:
+Four variants, one manifest row each. Every variant carries the tightenings (T); the loosenings are cumulative:
 
 - `t`:   T only. `publicSourceScope.scopeDetectors` adds three detectors to this scope alone:
          `private-key-header` (any PEM or RFC 4716 PRIVATE KEY header, a PuTTY key file, a base64 PEM start),
@@ -24,15 +22,6 @@ separately, at the lead's request of 2026-11-03 after the owner's metadata measu
          one admitted commit of the 2026-10-14 trial, in project-documentation (a fourth path rule).
 - `bcd`: T, B, D, and C: `activeContent.projectDocumentationExemption` lifts the active-content scan from
          project-documentation bodies under the version-3 renderCondition.
-- `bcdp`:  beyond the owner's chosen scope. `bcd`, and P: the same ownerPlacements entry also places redis.conf,
-         and a fourth scope detector, `config-secret-directive` (a line opening with a Redis password directive or an
-         ACL `user ... >password` rule, commented or not), withholds those lines in project documentation and keeps
-         any other class's body whole.
-- `bcdpx`: `bcdp`, and X: the entry also places REDISCONTRIBUTIONS.txt and the two nested READMEs the trial cited
-         (modules/vector-sets/README.md and src/commands/README.md).
-
-The bytes of rows `bcd`, `bd`, `b` and `t` are those round 2 of the review cleared (`9daf9e04`); P and X are
-built so that adding them changes none of those four rows.
 
 Nothing outside `publicSourceScope` and `policyVersion` may change; the policy's own detectors, the base scope and
 every rule the variant does not name are byte-for-byte version 4.
@@ -73,9 +62,8 @@ SCOPE_KEY = v2.SCOPE_KEY
 PKG = pathlib.Path(".syzygy/governance/contracts/candidates/public-source-screening-scope-v5")
 MANIFEST = PKG / "PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt"
 V4_BASE_VARIANT = "span"
-VARIANTS = ("bcd", "bd", "b", "t", "bcdp", "bcdpx")
-HAS = {"bcd": set("bcd"), "bd": set("bd"), "b": set("b"), "t": set(), "bcdp": set("bcdp"), "bcdpx": set("bcdpx")}
-BEYOND_CHOSEN = ("bcdp", "bcdpx")
+VARIANTS = ("bcd", "bd", "b", "t")
+HAS = {"bcd": set("bcd"), "bd": set("bd"), "b": set("b"), "t": set()}
 
 # --- T: tightenings (every variant) -------------------------------------------------------------------------
 
@@ -179,40 +167,6 @@ OBSERVED_NEW = ("the policy admits no repository: contentClassification's ownerP
                 "never edits the policy, and a placement whose repository or commit no effective consent names places "
                 "nothing")
 
-# --- P and X: placements beyond the owner's chosen scope ----------------------------------------------------------
-
-#: A line that opens (after blanks and an optional comment mark) with a Redis password directive, or an ACL rule
-#: `user <name> ... >password`. Anchored at a line start by the lookbehind, so a directive named mid-line
-#: (`config set requirepass x` in a test) does not match; one blank run and one optional `#[ \t]*` keep it linear.
-CONFIG_SECRET_DIRECTIVE = (r"(?<![^\r\n])[ \t]*(?:#[ \t]*)?(?:(?:requirepass|masterauth|tls-key-file-pass|"
-                           r"tls-client-key-file-pass)[ \t]+|user[ \t][^\r\n]*?[ \t]>)[^ \t\r\n]+")
-P_DETECTOR = {"id": "config-secret-directive", "kind": "regular-expression", "pattern": CONFIG_SECRET_DIRECTIVE,
-              "flags": "gi"}
-P_CONSEQUENCE = (
-    ". config-secret-directive is paired with the redis.conf placement: [Inferred] a line opening with requirepass, "
-    "masterauth, tls-key-file-pass or tls-client-key-file-pass and a value, or an ACL rule user <name> ... "
-    ">password, commented or not, is withheld with its guard lines in project-documentation, as credential-bearing-url "
-    "is, and keeps a body of any other class whole; a password written any other way in such a file (a prose "
-    "comment, a rename-command target, a directive this pattern does not name) is not matched")
-P_PATHS = ["redis.conf"]
-X_PATHS = ["rediscontributions.txt", "modules/vector-sets/readme.md", "src/commands/readme.md"]
-
-
-def owner_placements(has: set) -> list[dict]:
-    """The one ownerPlacements entry: the owner's two paths, then P's and X's when the variant carries them."""
-    e = copy.deepcopy(OWNER_PLACEMENTS)
-    e[0]["paths"] += (P_PATHS if "p" in has else []) + (X_PATHS if "x" in has else [])
-    return e
-
-
-def scope_detectors_object(has: set) -> dict:
-    o = copy.deepcopy(SCOPE_DETECTORS_OBJECT)
-    if "p" in has:
-        o["detectors"].append(copy.deepcopy(P_DETECTOR))
-        o["consequence"] += P_CONSEQUENCE
-    return o
-
-
 # --- C: project-documentation active-content exemption -------------------------------------------------------
 
 DOC_EXEMPTION = {
@@ -287,7 +241,7 @@ def v5_scope(scope4: dict, variant: str) -> dict:
     s = copy.deepcopy(scope4)
     # T
     s["detectors"] = _replace_once(s["detectors"], DETECTORS_OLD, DETECTORS_NEW, "detectors")
-    s = _insert_after(s, "detectors", "scopeDetectors", scope_detectors_object(has))
+    s = _insert_after(s, "detectors", "scopeDetectors", copy.deepcopy(SCOPE_DETECTORS_OBJECT))
     s["secretRedaction"]["wholeArtifactDetectors"] = s["secretRedaction"]["wholeArtifactDetectors"] + list(NEW_WHOLE)
     cc = s["contentClassification"]
     if "b" in has:
@@ -305,7 +259,7 @@ def v5_scope(scope4: dict, variant: str) -> dict:
         r["pathRules"] = r["pathRules"] + [copy.deepcopy(PLACEMENT_RULE)]
         r["notMapped"] = _replace_once(_replace_once(r["notMapped"], NOT_MAPPED_OLD, NOT_MAPPED_NEW, "notMapped"),
                                        NOT_MAPPED_PROSE_OLD, NOT_MAPPED_PROSE_NEW, "notMapped")
-        r2 = _insert_after(r, "licenseTreeSuffixes", "ownerPlacements", owner_placements(has))
+        r2 = _insert_after(r, "licenseTreeSuffixes", "ownerPlacements", copy.deepcopy(OWNER_PLACEMENTS))
         cc["rules"][cc["rules"].index(r)] = r2
         s["observedRepositories"] = _replace_once(s["observedRepositories"], OBSERVED_OLD, OBSERVED_NEW,
                                                   "observedRepositories")
@@ -364,8 +318,7 @@ def manifest_text(proposeds: dict[str, str]) -> str:
     rows = "".join(f"{sha(proposeds[v])}  {POLICY.as_posix()}  [variant: {v}]\n" for v in VARIANTS)
     return ("# PUBLIC-SOURCE SCREENING SCOPE VERSION 5 MANIFEST\n"
             "# Candidate; this file and its rows bind nothing by themselves.\n"
-            "# 6 rows, one per variant (bcd, bd, b, t, bcdp, bcdpx); bcdp and bcdpx go beyond\n"
-            "# the owner's chosen scope (B, C and D). Each row hashes the PROPOSED bytes\n"
+            "# 4 rows, one per variant (bcd, bd, b, t). Each row hashes the PROPOSED bytes\n"
             "# (the version-4 policy, variant span, with that variant's\n"
             "# proposed/<name>.<variant>.patch applied). The owner picks at most one row;\n"
             "# that row is the argument of one superseding approve-policy act.\n"
@@ -535,18 +488,9 @@ CLASS_FIXTURES = [
     ("TLS.md", "repository:other", _C, {"*": NONE}),
     ("modules/MODULES.md", _R, _C, {"t": NONE, "b": NONE, "bd": PD, "bcd": PD}),
     ("modules/README.md", _R, _C, {"*": NONE}),
-    ("modules/vector-sets/README.md", _R, _OTHER_REDIS_COMMIT, {"*": NONE}),
     ("src/README.md", _R, _C, {"*": NONE}),
     ("AGENTS.md", _R, _C, {"*": NONE}),
-    ("redis.conf", _R, _C, {"*": NONE, "bcdp": PD}),
-    ("REDIS.CONF", _R, _C, {"*": NONE, "bcdp": PD}),
-    ("redis.conf", _R, _OTHER_REDIS_COMMIT, {"*": NONE}),
-    ("redis.conf", "repository:other", _C, {"*": NONE}),
-    ("sentinel.conf", _R, _C, {"*": NONE}),
-    ("REDISCONTRIBUTIONS.txt", _R, _C, {"*": NONE, "bcdpx": PD}),
-    ("modules/vector-sets/README.md", _R, _C, {"*": NONE, "bcdpx": PD}),
-    ("src/commands/README.md", _R, _C, {"*": NONE, "bcdpx": PD}),
-    ("src/commands.def", _R, _C, {"*": NONE}),
+    ("redis.conf", _R, _C, {"*": NONE}),
     ("LICENSE.txt", _R, _C, {"*": PD}),
     ("00-RELEASENOTES", _R, _C, {"*": PD}),
     ("src/server.c", _R, _C, {"*": CODE}),
@@ -604,13 +548,11 @@ COUNTEREXAMPLES = [
     ("TLS.md: key passphrase as a config directive", "TLS.md",
      f"# TLS\nSet the key passphrase:\n    tls-key-file-pass {_UNMATCHED}\nRestart the server.\n", 3,
      {"v4": ("excluded", "unknown-extraction-class"), "t": ("excluded", "unknown-extraction-class"),
-      "b": ("excluded", "unknown-extraction-class"), "bd": ("admitted",), "bcd": ("admitted",),
-      "bcdp": ("redacted", frozenset({2, 3, 4}))}),
+      "b": ("excluded", "unknown-extraction-class"), "bd": ("admitted",), "bcd": ("admitted",)}),
     ("TLS.md: requirepass directive", "TLS.md",
      "# TLS\nUse a password too:\n    requirepass " + "foo" + "bared99\n", 3,
      {"v4": ("excluded", "unknown-extraction-class"), "t": ("excluded", "unknown-extraction-class"),
-      "b": ("excluded", "unknown-extraction-class"), "bd": ("admitted",), "bcd": ("admitted",),
-      "bcdp": ("redacted", frozenset({2, 3}))}),
+      "b": ("excluded", "unknown-extraction-class"), "bd": ("admitted",), "bcd": ("admitted",)}),
     ("TLS.md: EC key in an example", "TLS.md",
      f"# TLS\nExample key:\n    {_EC_HEADER}\n    MHcCAQEEIBexample\n", 4,
      {"v4": ("excluded", "unknown-extraction-class"), "t": ("excluded", "unknown-extraction-class"),
@@ -676,51 +618,11 @@ COUNTEREXAMPLES = [
      "# TLS\n<table><tr><td>port</td></tr></table>\n", 2,
      {"v4": ("excluded", "unknown-extraction-class"), "t": ("excluded", "unknown-extraction-class"),
       "b": ("excluded", "unknown-extraction-class"), "bd": ("excluded", "active-content"), "bcd": ("admitted",)}),
-    # P: redis.conf, beyond the owner's chosen scope
-    ("redis.conf: commented requirepass placeholder", "redis.conf",
-     "# Redis configuration\n# Require clients to authenticate:\n# requirepass " + "foo" + "bared\nport 6379\n", 3,
-     {"*": ("excluded", "unknown-extraction-class"), "bcdp": ("redacted", frozenset({2, 3, 4}))}),
-    ("redis.conf: masterauth with a password", "redis.conf",
-     f"replicaof 10.0.0.1 6379\nmasterauth {_UNMATCHED}\nport 6379\n", 2,
-     {"*": ("excluded", "unknown-extraction-class"), "bcdp": ("redacted", frozenset({1, 2, 3}))}),
-    ("redis.conf: ACL user with a >password", "redis.conf",
-     f"# ACL\nuser worker on >{_UNMATCHED} ~jobs:* +@list\nport 6379\n", 2,
-     {"*": ("excluded", "unknown-extraction-class"), "bcdp": ("redacted", frozenset({1, 2, 3}))}),
-    ("redis.conf: tls-key-file-pass directive", "redis.conf",
-     f"# TLS\n# tls-key-file\n# tls-key-file-pass {_UNMATCHED}\n# end\n", 3,
-     {"*": ("excluded", "unknown-extraction-class"), "bcdp": ("redacted", frozenset({2, 3, 4}))}),
-    ("redis.conf: rename-command to a secret name (no detector)", "redis.conf",
-     f"# Hide CONFIG:\nrename-command CONFIG {_UNMATCHED}\n", 2,
-     {"*": ("excluded", "unknown-extraction-class"), "bcdp": ("admitted",)}),
-    ("redis.conf: password in a prose comment (no detector)", "redis.conf",
-     f"# Staging uses the password {_UNMATCHED} for now\nport 6379\n", 1,
-     {"*": ("excluded", "unknown-extraction-class"), "bcdp": ("admitted",)}),
-    ("redis.conf: angle-bracket placeholders (C admits them)", "redis.conf",
-     "# Replication\n# replicaof <masterip> <masterport>\nport 6379\n", 2,
-     {"*": ("excluded", "unknown-extraction-class"), "bcdp": ("admitted",)}),
-    ("tests/acl.tcl: a code line opening with requirepass", "tests/acl.tcl",
-     f"set conf {{\nrequirepass {_UNMATCHED}\n}}\n", 2,
-     {"*": ("admitted",), "bcdp": ("excluded", "secret-detector-match")}),
-    ("tests/auth.tcl: requirepass named mid-line (no detector)", "tests/auth.tcl",
-     f"r config set requirepass {_UNMATCHED}\n", 1,
-     {"*": ("admitted",)}),
-    # X: further placements
-    ("REDISCONTRIBUTIONS.txt: secret no detector matches", "REDISCONTRIBUTIONS.txt",
-     f"Contributor terms\nSECRET_KEY = \"{_UNMATCHED}\"\n", 2,
-     {"*": ("excluded", "unknown-extraction-class"), "bcdpx": ("admitted",)}),
-    ("src/commands/README.md: masterauth example", "src/commands/README.md",
-     f"# Commands\nintro\nmasterauth {_UNMATCHED}\nnext\nmore\n", 3,
-     {"*": ("excluded", "unknown-extraction-class"), "bcdpx": ("redacted", frozenset({2, 3, 4}))}),
 ]
 
 
 def _expected(table: dict, variant: str):
-    """The expected outcome: the variant's own entry; for a variant beyond the owner's chosen scope, else the nearest
-    narrower one (bcdpx falls back to bcdp, bcdp to bcd); else "*"."""
-    for v in {"bcdpx": ("bcdpx", "bcdp", "bcd"), "bcdp": ("bcdp", "bcd")}.get(variant, (variant,)):
-        if v in table:
-            return table[v]
-    return table.get("*")
+    return table.get(variant, table.get("*"))
 
 
 def semantic_findings(base_text: str, proposed_text: str, variant: str) -> list[str]:
@@ -744,7 +646,7 @@ def semantic_findings(base_text: str, proposed_text: str, variant: str) -> list[
         bad.append(f"scope keys changed are {sorted(moved)}, not {sorted(allowed)}")
     # T
     sd = s5.get("scopeDetectors", {})
-    if sd != scope_detectors_object(has):
+    if sd != SCOPE_DETECTORS_OBJECT:
         bad.append("scopeDetectors is not exactly the declared object")
     if s5.get("detectors") != s4["detectors"].replace(DETECTORS_OLD, DETECTORS_NEW, 1):
         bad.append("the scope detectors sentence does not add scopeDetectors")
@@ -761,10 +663,6 @@ def semantic_findings(base_text: str, proposed_text: str, variant: str) -> list[
         bad.append("wholeArtifactDetectors is not version 4's plus private-key-header and known-token-formats-extended")
     if "credential-url-any-scheme" in red.get("wholeArtifactDetectors", []):
         bad.append("credential-url-any-scheme keeps the body whole (declared line-redactable)")
-    if "config-secret-directive" in red.get("wholeArtifactDetectors", []):
-        bad.append("config-secret-directive keeps the body whole (declared line-redactable)")
-    if ("p" in has) != ("config-secret-directive" in ids):
-        bad.append("config-secret-directive is present exactly when the variant carries P: it is not")
     if red.get("redactedClasses") != ["project-documentation"]:
         bad.append("redaction reaches a class other than project-documentation")
     want_red = copy.deepcopy(red4)
@@ -797,13 +695,8 @@ def semantic_findings(base_text: str, proposed_text: str, variant: str) -> list[
     # D
     if "d" in has:
         r5 = doc_rule(s5)
-        if r5.get("ownerPlacements") != owner_placements(has):
+        if r5.get("ownerPlacements") != OWNER_PLACEMENTS:
             bad.append("ownerPlacements is not the declared Redis entry")
-        placed = {q for e in r5.get("ownerPlacements", []) for q in e.get("paths", [])}
-        if "p" not in has and placed & set(P_PATHS):
-            bad.append("redis.conf is placed in a variant without P (beyond the owner's chosen scope)")
-        if "x" not in has and placed & set(X_PATHS):
-            bad.append("an X path is placed in a variant without X (beyond the owner's chosen scope)")
         if [p for p in r5.get("pathRules", []) if p.get("id") == "owner-placement"] != [PLACEMENT_RULE]:
             bad.append("the owner-placement path rule is not exactly the declared one")
         for e in r5.get("ownerPlacements", []):
@@ -884,7 +777,7 @@ def check(root: pathlib.Path = ROOT) -> list[str]:
         findings.append("manifest differs from its regeneration")
     present = sorted(p.name for p in (root / PKG / "proposed").glob("*")) if (root / PKG / "proposed").is_dir() else []
     if present != sorted(patch_path(v).name for v in VARIANTS):
-        findings.append(f"proposed/ holds {present}, not exactly the declared patches")
+        findings.append(f"proposed/ holds {present}, not exactly the four declared patches")
     for md in sorted((root / PKG).glob("*.md")):
         if re.search(r"(?<![0-9a-fA-F])[0-9a-f]{64}(?![0-9a-fA-F])", md.read_text()):
             findings.append(f"{md.name}: carries a 64-hex token; the argument comes only from the manifest rows")
@@ -902,7 +795,7 @@ def write(root: pathlib.Path = ROOT) -> None:
 
 def score(root: pathlib.Path = ROOT) -> str:
     base, _ = base_bytes(root)
-    cols = [("v4", base)] + [(v, propose(base, v)) for v in ("t", "b", "bd", "bcd", "bcdp", "bcdpx")]
+    cols = [("v4", base)] + [(v, propose(base, v)) for v in ("t", "b", "bd", "bcd")]
     out = ["| Counterexample | " + " | ".join(c for c, _ in cols) + " |",
            "|---|" + "---|" * len(cols)]
     for name, path, body, marker, _t in COUNTEREXAMPLES:
@@ -920,7 +813,7 @@ def self_corpus(root: pathlib.Path = ROOT) -> str:
     version-4 detector matches. Prints paths and counts only, never matched text."""
     base, _ = base_bytes(root)
     old = json.loads(base)["detectors"]
-    new = SCOPE_DETECTORS + [P_DETECTOR]
+    new = SCOPE_DETECTORS
     names = subprocess.run(["git", "-C", str(root), "ls-files", "-z"], capture_output=True, check=True).stdout.split(b"\0")
     texts = 0
     hit = {d["id"]: [] for d in new}
@@ -1003,7 +896,7 @@ def selftest() -> int:
 
     def extra_patch(tmp):
         (tmp / PKG / "proposed" / "extra.patch").write_text("x\n")
-    caught("an undeclared patch refused", extra_patch, "not exactly the declared patches")
+    caught("an undeclared patch refused", extra_patch, "not exactly the four declared patches")
 
     def digest_in_md(tmp):
         (tmp / PKG / "SEMANTIC-DELTA.md").write_text("argument " + "a" * 64 + "\n")
@@ -1110,29 +1003,6 @@ def selftest() -> int:
         sem("a stale 'names no repository' sentence caught", "bd",
             lambda d: sc(d).__setitem__("observedRepositories", json.loads(base)[SCOPE_KEY]["observedRepositories"]),
             "still says the policy names no repository")
-        # P and X (beyond the owner's chosen scope)
-        sem("redis.conf placed in variant bcd caught", "bcd",
-            lambda d: doc_rule(sc(d))["ownerPlacements"][0]["paths"].append("redis.conf"), "variant without P")
-        sem("an X path placed in variant bcdp caught", "bcdp",
-            lambda d: doc_rule(sc(d))["ownerPlacements"][0]["paths"].append("src/commands/readme.md"), "variant without X")
-        sem("the directive detector in variant bcd caught", "bcd",
-            lambda d: sc(d)["scopeDetectors"]["detectors"].append(copy.deepcopy(P_DETECTOR)), "exactly when the variant carries P")
-        sem("a dropped directive detector caught (redis.conf requirepass reaches)", "bcdp",
-            lambda d: sc(d)["scopeDetectors"]["detectors"].pop(), "counterexample 'redis.conf: commented requirepass placeholder'")
-        sem("the directive detector made whole-artifact caught", "bcdp",
-            lambda d: red(d)["wholeArtifactDetectors"].append("config-secret-directive"), "declared line-redactable")
-        sem("an unanchored directive pattern caught (mid-line requirepass in code)", "bcdpx",
-            lambda d: sdet(d, "config-secret-directive").__setitem__("pattern", CONFIG_SECRET_DIRECTIVE.replace("(?<![^\\r\\n])", "", 1)),
-            "counterexample 'tests/auth.tcl: requirepass named mid-line")
-        sem("an uncommented-only directive pattern caught (commented placeholder reaches)", "bcdp",
-            lambda d: sdet(d, "config-secret-directive").__setitem__("pattern", CONFIG_SECRET_DIRECTIVE.replace("(?:#[ \\t]*)?", "", 1)),
-            "counterexample 'redis.conf: commented requirepass placeholder'")
-        sem("a directive pattern without the ACL form caught", "bcdp",
-            lambda d: sdet(d, "config-secret-directive").__setitem__("pattern", CONFIG_SECRET_DIRECTIVE.replace("|user[ \\t][^\\r\\n]*?[ \\t]>", "", 1)),
-            "counterexample 'redis.conf: ACL user with a >password'")
-        sem("redis.conf placed at another commit caught", "bcdp",
-            lambda d: doc_rule(sc(d))["ownerPlacements"][0].__setitem__("commits", [_OTHER_REDIS_COMMIT]),
-            "class fixture 'redis.conf' at repository:redis-redis@498ecd0d")
         # C
         sem("the documentation exemption reaching governance-text caught", "bcd",
             lambda d: sc(d)["activeContent"]["projectDocumentationExemption"].__setitem__("appliesTo", "a body this scope classifies project-documentation or governance-text"),
@@ -1172,14 +1042,6 @@ def selftest() -> int:
             _NO_DOC_EXEMPTION = False
         results.append(("without the exemption the hidden comment is excluded (mutant observed)",
                         got == ("excluded", "active-content")))
-        _NO_DOC_EXEMPTION = True
-        try:
-            ab = next(c for c in COUNTEREXAMPLES if c[0] == "redis.conf: angle-bracket placeholders (C admits them)")
-            got = screen(ab[1], ab[2], propose(base, "bcdp"), _R, _C)
-        finally:
-            _NO_DOC_EXEMPTION = False
-        results.append(("without C a placed redis.conf with angle-bracket placeholders is excluded (mutant observed)",
-                        got == ("excluded", "active-content")))
         try:
             has_active_content("a `b` c")
             results.append(("the active-content oracle refuses a body with a code context", False))
@@ -1211,7 +1073,7 @@ def main(argv: list[str]) -> int:
         return selftest()
     if mode == "--write":
         write(ROOT)
-        print(f"wrote the {len(VARIANTS)} patches and {MANIFEST.name}")
+        print(f"wrote the four patches and {MANIFEST.name}")
         return 0
     if mode == "--self-corpus":
         print(self_corpus(ROOT), end="")

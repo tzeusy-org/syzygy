@@ -3,12 +3,6 @@
 > **Candidate — binds nothing.** Drafted 2026-11-03. It names what an act over
 > one of this package's rows would break or require. The install is separate
 > work after the act and is not part of this package.
->
-> **Extended after round 2, 2026-11-03.** This ledger now also covers rows
-> `bcdp` and `bcdpx`, which go beyond the owner's chosen scope. It uses the
-> owner's metadata measurement
-> (`docs/evidence/redis-trial-metadata-2026-11-03.json`). It also repairs
-> round-2 note 3, about the D reader. These edits have not been reviewed.
 
 ## Method
 
@@ -145,16 +139,9 @@ start between the act and the install**.
 
 - `readProjectDocumentationRule` learns the fourth path rule and
   `ownerPlacements`. Like the rule's other lists, the listed paths are
-  compared as given against the folded path.
-  - The reader refuses an entry that could never match a folded path, that
-    is, one holding an A-Z letter.
-  - It must not reuse `unmatchable` (`/[A-Z/\\]/u` in
-    `public-source-classification.ts`) verbatim: its `/` clause is right for
-    single-segment lists but would refuse modules/modules.md (round 2,
-    note 3).
-  - A placed path is a whole repository path. It is refused when it is
-    empty, starts or ends with `/`, holds a backslash, or has an empty, `.` or `..`
-    segment, as the class oracle does.
+  compared as given against the folded path. The reader refuses an entry that
+  could never match a folded path (an A-Z letter), as `unmatchable` already
+  does for the other lists.
 - `publicSourceContentClass` and the screens' `contentClass(path)` take the
   repository identity and the admitted commit. Today they take a path alone,
   so the call sites in `review.ts`, `check.ts`, `render.ts` and the app's
@@ -180,59 +167,22 @@ start between the act and the install**.
   `render.ts` (lines 280, 388) and `close.ts` (line 123) keep screening
   agent-written prose whole-text through `screenBody`.
 
-### P and X (`bcdp`, `bcdpx`), beyond the owner's chosen scope
-
-- **The scope-detector reader** takes a fourth detector, whose pattern uses a
-  lookbehind.
-  - [Observed] `secret-redaction.ts:156` compiles each detector with
-    `new RegExp(detector.pattern, flags)` and a sticky twin, and runs the twin
-    at every offset. Lookbehind is ECMAScript 2018, so V8 supports it.
-  - The install pins with a test that the twin anchors at line starts. The
-    test covers LF, CRLF and a bare CR, and a directive named mid-line.
-  - The install also pins linear time on a long line of blanks and on a long
-    `user` line.
-- **The flags.** `gi` folds case, as the policy's other `i` detectors do: a
-  Redis directive name is case-insensitive.
-- **Placements.** `ownerPlacements[0].paths` grows, and D's reader carries it
-  unchanged. Class tests pin the following:
-  - `redis.conf` is placed at 8.10.2 only;
-  - `sentinel.conf` gets no class;
-  - in `bcdpx`, the three X paths are placed;
-  - src/commands.def gets no class.
-- **Line redaction** is version 4's: `config-secret-directive` is not in
-  `wholeArtifactDetectors`, so `readSecretRedaction` needs no change for it.
-
 ## Effect on the Redis run
 
 **[Inferred] What changes per file**, if no other screen step withholds it:
 
-| File (withheld spans at the trial) | `t` | `b` | `bd` | `bcd` | `bcdp` | `bcdpx` |
-|---|---|---|---|---|---|---|
-| `SECURITY.md` (10), `MANIFESTO` (32) | none | governance-text | governance-text | governance-text | governance-text | governance-text |
-| `TLS.md` (7), modules/MODULES.md (2) | none | none | project-documentation | project-documentation | project-documentation | project-documentation |
-| `00-RELEASENOTES` (9), `LICENSE.txt` (1) | none | none | none | active-content scan lifted | lifted | lifted |
-| `README.md` (41) | none | none | none | active-content scan lifted | lifted | lifted |
-| `redis.conf` (39) | none | none | none | none | project-documentation | project-documentation |
-| REDISCONTRIBUTIONS.txt, modules/vector-sets/README.md, src/commands/README.md (1 each) | none | none | none | none | none | project-documentation |
-| src/commands.def (1) | none | none | none | none | none | none |
-
-[Observed, `docs/evidence/redis-trial-metadata-2026-11-03.json`] The span
-counts come from the packet that fidelity verdict 3 names: 145 of 244 cited
-spans withheld. The upper bounds on spans that may return are:
-
-| `t` | `b` | `bd` | `bcd` | `bcdp` | `bcdpx` |
-|---|---|---|---|---|---|
-| 0 | 42 | 51 | 61 | 100 | 103 |
-
-The record derives these.
+| File | `t` | `b` | `bd` | `bcd` |
+|---|---|---|---|---|
+| `SECURITY.md`, `MANIFESTO` | none | governance-text | governance-text | governance-text |
+| `TLS.md`, modules/MODULES.md | none | none | project-documentation | project-documentation |
+| `00-RELEASENOTES`, `LICENSE.txt` | none | none | none | active-content scan lifted |
+| `README.md` | none | none | none | active-content scan lifted |
+| `redis.conf` | none | none | none | none |
 
 What stays Unknown:
 
-- [Unknown] How many of those spans actually return. Each body meets every
-  other screen step. The `README.md` 41 are version 4's question, not this
-  package's.
-- [Unknown] Which failing rows each variant resolves. The record names the
-  rows but not the files their spans sit on.
+- [Unknown] How many of the 89 and the 10 spans return. The bead records no
+  per-file split.
 - [Unknown] Whether the newly classed bodies hold a detector match or a key
   header.
 - [Unknown] How many Redis code-content files T newly excludes, for example
@@ -240,8 +190,8 @@ What stays Unknown:
 
 **What settles the Unknowns:**
 
-- the owner's metadata measurement (direction item 3), done 2026-11-03, for
-  the trial's per-file split;
+- the owner's metadata measurement (direction item 3), for the trial's
+  per-file split;
 - the next run's check records (`citedBlobs`), for each cited file's outcome
   under the installed version 5.
 

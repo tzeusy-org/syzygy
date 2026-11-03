@@ -14,20 +14,6 @@
 > manifest rows moved. Under the stopping rule agreed before round 1, round 2 is
 > the last: a notes-only round 2 clears these bytes, anything else goes to the
 > owner with no further cycle.
->
-> **Extended after round 2, 2026-11-03.** Round 2
-> (`docs/reviews/R-HA5B-SCREENING-SCOPE-V5-2-RAW.md`, `CONFIRM WITH
-> EXCEPTIONS`, line 5) cleared the bytes at `9daf9e04`. Later that day the
-> owner's metadata measurement of the trial landed
-> (`docs/evidence/redis-trial-metadata-2026-11-03.json`). It showed that
-> `redis.conf` is the largest withheld file that has no class. At the lead's
-> request, this delta now also describes two variants **beyond the owner's
-> chosen scope**: `bcdp` (P) and `bcdpx` (X). It uses the measured figures.
-> - The rows `bcd`, `bd`, `b` and `t` are unchanged byte for byte: their
->   patches and manifest rows are those round 2 cleared.
-> - This file, the packet, the ledger, the builder and the two new rows have
->   changed since `9daf9e04`. They are unreviewed and are not offered until a
->   review clears them.
 
 ## Class
 
@@ -46,8 +32,8 @@ spans: 41 for one README secret match, 89 because `SECURITY.md`, `MANIFESTO`,
 active content in `00-RELEASENOTES` and `LICENSE.txt`. Version 4 (variant
 `span`, performed 2026-10-20) addressed only the 41. [Inferred, from the bead's
 cause list and the version-4 policy] the 99 others sit on files version 4 still
-withholds. The per-file split of the 89 and the 10 was recorded nowhere
-[Unknown] until the owner's measurement below.
+withholds. The per-file split of the 89 and the 10 is recorded nowhere
+[Unknown].
 
 | Cause (bead) | Files | Spans | `t` | `b` | `bd` | `bcd` |
 |---|---|---|---|---|---|---|
@@ -60,47 +46,6 @@ withholds. The per-file split of the 89 and the 10 was recorded nowhere
 A class is necessary, not sufficient. [Unknown] whether any of these bodies
 also holds a detector match, a key header or (outside `bcd`) active content;
 every screen step still runs on each, and none was read.
-
-### Measured 2026-11-03
-
-[Observed, `docs/evidence/redis-trial-metadata-2026-11-03.json`] The owner
-ran a metadata-only script as `tze` (direction item 3) over the same run. It
-read the packet that fidelity verdict 3 names. The figures:
-
-- 244 cited spans; 145 withheld, on 12 files.
-- This differs from the bead's 140 of 233. The run holds three fidelity
-  packets, and which one the bead counted is not recorded [Unknown].
-- Every unresolved row cites at least one withheld span:
-  - inventory accuracy: 39 of the 40 failing entries cite only withheld
-    spans, and 1 cites some;
-  - block support: 55 of the 61 failing blocks cite only withheld spans, and
-    6 cite some.
-
-The figures below are computed in the record's `derived` field, never
-transcribed. "Spans on files given a path" is an upper bound: each body still
-meets every screen step, and a span that returns need not resolve its row.
-
-| Part | Files (withheld spans) | Outcome at the trial | Spans |
-|---|---|---|---|
-| B | `SECURITY.md` (10), `MANIFESTO` (32) | no class | 42 |
-| D | `TLS.md` (7), modules/MODULES.md (2) | no class | 9 |
-| C | `00-RELEASENOTES` (9), `LICENSE.txt` (1) | active content | 10 |
-| P (beyond the chosen scope) | `redis.conf` (39) | no class | 39 |
-| X (beyond the chosen scope) | REDISCONTRIBUTIONS.txt, modules/vector-sets/README.md, src/commands/README.md (1 each) | no class | 3 |
-| none | src/commands.def (1) | no class | 1 |
-| version 4 | `README.md` (41) | secret match under version 3 | Unknown under version 4 |
-
-| Variant | Spans on files given a path | Withheld spans left outside `README.md` |
-|---|---|---|
-| `t` | 0 | 104 |
-| `b` | 42 | 62 |
-| `bd` | 51 | 53 |
-| `bcd` | 61 | 43 (`redis.conf` 39, and four single spans) |
-| `bcdp` | 100 | 4 |
-| `bcdpx` | 103 | 1 (src/commands.def) |
-
-[Unknown] Which variant resolves which row. The record names each failing
-row, but not the files its spans sit on.
 
 ## Authority this rests on
 
@@ -157,11 +102,9 @@ patch. It fails if anything outside the values below changes.
 | `observedRepositories` | bd, bcd | "the policy names no repository" sentence replaced |
 | `activeContent.rule`, `codeContentExemption.rule`, new `projectDocumentationExemption` | bcd | C |
 | `inheritedRules`, `secretRedaction.unchanged` | bcd | name the new exemption |
-| `scopeDetectors.detectors`, `scopeDetectors.consequence` | bcdp, bcdpx | a fourth detector, `config-secret-directive`, and one appended consequence sentence |
-| `ownerPlacements[0].paths` | bcdp; bcdpx | appends redis.conf; and then the three X paths |
 
-`bcdp` and `bcdpx` carry every `bcd` change in the rows above. The exact bytes
-are in the six patches under `proposed/`; the text below is their reading.
+The exact bytes are in the four patches under `proposed/`; the text below is
+their reading.
 
 ### T — tightenings (every variant)
 
@@ -303,78 +246,6 @@ activeContent.projectDocumentationExemption:
 - Per-line active-content redaction stays declined, for version 4's reason: a
   code fence spans lines, so a per-line rule has no sound definition here.
 
-### P and X — beyond the owner's chosen scope (bcdp, bcdpx)
-
-The owner chose B, C and D. The lead asked for these two variants after the
-measurement above. They are offered separately, and the owner may ignore them
-without affecting the other four rows.
-
-```text
-P (bcdp, bcdpx):
-  ownerPlacements[0].paths: [tls.md, modules/modules.md, redis.conf]
-  scopeDetectors.detectors += {
-    id: config-secret-directive, kind: regular-expression, flags: gi,
-    pattern: (?<![^\r\n])[ \t]*(?:#[ \t]*)?(?:(?:requirepass|masterauth|
-             tls-key-file-pass|tls-client-key-file-pass)[ \t]+|
-             user[ \t][^\r\n]*?[ \t]>)[^ \t\r\n]+ }
-             (one line in the bytes; wrapped here)
-  not in wholeArtifactDetectors: in project-documentation the matched line
-  and its guard lines are withheld; in any other class the body is
-  withheld whole.
-
-X (bcdpx):
-  ownerPlacements[0].paths += [rediscontributions.txt,
-                               modules/vector-sets/readme.md,
-                               src/commands/readme.md]
-```
-
-- **Why P carries a detector.** The version-4 detectors do not match a Redis
-  directive written `key value`: `requirepass <value>` has no `:` or `=`, so
-  `credential-assignment` passes it. Version-4 span redaction therefore does
-  **not** withhold such a line in a project-documentation body.
-  - The builder's existing D counterexamples show this: `TLS.md` with
-    `requirepass` or `tls-key-file-pass` reaches the reviewer in `bd` and
-    `bcd`.
-  - So P pairs the placement with the format-key detector that the declined
-    table already said `redis.conf` would need first.
-  - The detector applies across the scope, so in `bcdp` and `bcdpx` those
-    `TLS.md` lines are withheld too.
-- **What the pattern matches.** A line that opens, after blanks and an
-  optional `#`, with one of four directives and a value, or with an ACL rule
-  `user <name> … >password`. Commented example lines count too.
-- **What the pattern does not match.** The lookbehind anchors it at a line
-  start, so a directive named mid-line, as in `config set requirepass x`,
-  does not match. That case is a counterexample: it stays a residual of every
-  version.
-- **Linear.** There is one blank run and one optional `#[ \t]*`, never two
-  adjacent stars (an earlier draft had them and was quadratic on a line of
-  blanks). Measured on lines of 40,000 to 80,000 characters: Python 0.007 to
-  0.018 s at every offset; node with the sticky every-offset loop
-  `secret-redaction.ts` uses, 2 ms.
-- **Why P sits only on top of C.** [Inferred, from general knowledge of the
-  file's conventions; no body read] The shipped `redis.conf` writes
-  placeholders in angle brackets (`<masterip>`, `<master-password>`). The
-  active-content scan reads those as HTML-like markup and would withhold the
-  file whole. The builder's oracle mutant confirms this for a synthetic body:
-  with C switched off, a placed `redis.conf` holding `<masterip>` is
-  `active-content`. So there is no `bdp` variant.
-- **Class.** RFC5-14's closed vocabulary has no configuration class.
-  - `project-documentation` is "a project's own prose that describes,
-    explains or accompanies the project for its readers … the declared policy
-    decides each file".
-  - The shipped `redis.conf` is a self-documenting example file, mostly
-    comments [Inferred].
-  - Placing it as documentation is the owner's declared placement, as D's are.
-  - Placing it as `code-content` instead would withhold it whole on any
-    detector match, as every code body is.
-- **Pinned like D.** The same repository and the same one commit apply.
-  `sentinel.conf`, and `redis.conf` at any other revision, get no class (class
-  fixtures).
-- **X.** These are the remaining three single-span files that a placement can
-  reach. Each is a README or text file that `notMapped` leaves out today.
-  src/commands.def (1 span) is not placed: it is a generated C table, not
-  prose.
-
 ## What it gives up — the security-posture cost
 
 Each row is a builder fixture in `COUNTEREXAMPLES`. `--score` prints the full
@@ -395,14 +266,6 @@ the review packet.
 | C | `README.md` with one HTML element, then `SECRET_KEY = "<value>"` | withheld (active) | **reaches** |
 | C | `README.md` with an HTML badge carrying a token on line 1 and an unmatched secret on line 3 | withheld (active) | lines 1–2 withheld; line 3 **reaches** |
 | D | `TLS.md` with `AUTH <password>` and `redis-cli -a <password>` | withheld (no class) | **reaches** |
-| P | `redis.conf` with `# requirepass <value>`, `masterauth <value>`, `user worker on ><password>` or `# tls-key-file-pass <value>` | withheld (no class) | the line and its guards withheld by `config-secret-directive`; the rest admitted |
-| P | `redis.conf` with `rename-command CONFIG <secret name>` | withheld (no class) | **reaches** (no detector) |
-| P | `redis.conf` with a password in a prose comment | withheld (no class) | **reaches** (no detector) |
-| P | `redis.conf` with `<masterip>`-style placeholders | withheld (no class) | admitted (C); without C it would be withheld whole (builder mutant) |
-| P (tightening) | a `.tcl` test whose line opens with `requirepass <value>` | admitted | withheld whole (code-content) |
-| P | a `.tcl` test with `config set requirepass <value>` mid-line | admitted, **reaches** | unchanged: **reaches** |
-| X | REDISCONTRIBUTIONS.txt with `SECRET_KEY = "<value>"` | withheld (no class) | **reaches** |
-| X | src/commands/README.md with `masterauth <value>` | withheld (no class) | lines withheld by `config-secret-directive` |
 
 - **B and D: a secret no detector matches.** Every class change admits bodies
   whose secrets the four detectors and T do not recognise. This is the same
@@ -426,22 +289,6 @@ the review packet.
   repository name out of the policy so that admitting or withdrawing a target
   never edits it. D keeps that for admission (a placement admits nothing) but
   not for placement. Each further owner placement is another policy act.
-- **P: the largest single file joins the documentation residuals.**
-  `redis.conf` holds the server's whole option set. Every secret shape
-  `config-secret-directive` does not name reaches the reviewer:
-  - a password in prose;
-  - a `rename-command` target used as a secret;
-  - a password option this pattern does not name, such as a module's own;
-  - a value split across an `include`.
-  The shipped file holds example values, not deployed ones [Inferred]. A
-  placement is pinned to the one admitted commit, so a later revision with
-  real values gets no class.
-- **P: the detector costs code bodies too.** In every class other than
-  project documentation, a matched line withholds the body whole. A test or
-  script whose line opens with `requirepass <value>` is withheld where
-  version 4 admitted it. [Observed, `--self-corpus`] It matches 0 of Syzygy's
-  own 8,405 tracked text files at `d2b48c50`. [Unknown] How many Redis files it matches.
-- **X: three more files join the documentation residuals**, for 3 spans.
 - **C: markup a human reader of the upstream page does not see now reaches
   the reviewer.** An HTML comment is invisible on a rendered GitHub page and
   was, until now, a reason to withhold the whole file. Under C it reaches the
@@ -476,9 +323,7 @@ the review packet.
 
 | Option | Decision | Reason |
 |---|---|---|
-| `redis.conf` in the owner's chosen scope | not in `bcd`, `bd`, `b` or `t` | Configuration, not prose (version-4 packet). Admitting `.conf` as code would need format-key detectors (`requirepass`, `masterauth`) first; a comment-only extractor would change "No extractor runs". Offered separately as P, which places the file as documentation **with** that detector, beyond the chosen scope |
-| src/commands.def | not offered | A generated C table, not prose; 1 span |
-| `bdp` (P without C) | not offered | [Inferred] angle-bracket placeholders would withhold `redis.conf` whole for active content |
+| `redis.conf` | not offered | Configuration, not prose (version-4 packet). Admitting `.conf` as code would need format-key detectors (`requirepass`, `masterauth`) first; a comment-only extractor would change "No extractor runs" |
 | Line redaction for governance-text | not offered | Conservative: a SECURITY.md with any match stays whole |
 | B for nested or `.github/` SECURITY files | not offered | Owner named root files only; docs/SECURITY.md is withheld by `docExcludedTokens` |
 | Tightenings in the policy's own `detectors` | not offered | Would change the Butlers base scope; needs its own measurement of the Butlers model |

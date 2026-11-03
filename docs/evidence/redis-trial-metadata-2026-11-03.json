@@ -329,30 +329,14 @@
         "outcomeAtTrial": [
           "active-content"
         ]
-      },
-      "P": {
-        "files": {
-          "redis.conf": 39
-        },
-        "spans": 39,
-        "outcomeAtTrial": [
-          "unknown-extraction-class"
-        ]
-      },
-      "X": {
-        "files": {
-          "REDISCONTRIBUTIONS.txt": 1,
-          "modules/vector-sets/README.md": 1,
-          "src/commands/README.md": 1
-        },
-        "spans": 3,
-        "outcomeAtTrial": [
-          "unknown-extraction-class"
-        ]
       }
     },
     "notGivenAPathByAnyVariant": {
-      "src/commands.def": 1
+      "REDISCONTRIBUTIONS.txt": 1,
+      "modules/vector-sets/README.md": 1,
+      "redis.conf": 39,
+      "src/commands.def": 1,
+      "src/commands/README.md": 1
     },
     "byVariant": {
       "t": {
@@ -370,8 +354,7 @@
           "redis.conf",
           "src/commands.def",
           "src/commands/README.md"
-        ],
-        "beyondOwnersChosenScope": false
+        ]
       },
       "b": {
         "spansOnFilesGivenAPath": 42,
@@ -386,8 +369,7 @@
           "redis.conf",
           "src/commands.def",
           "src/commands/README.md"
-        ],
-        "beyondOwnersChosenScope": false
+        ]
       },
       "bd": {
         "spansOnFilesGivenAPath": 51,
@@ -400,8 +382,7 @@
           "redis.conf",
           "src/commands.def",
           "src/commands/README.md"
-        ],
-        "beyondOwnersChosenScope": false
+        ]
       },
       "bcd": {
         "spansOnFilesGivenAPath": 61,
@@ -412,27 +393,7 @@
           "redis.conf",
           "src/commands.def",
           "src/commands/README.md"
-        ],
-        "beyondOwnersChosenScope": false
-      },
-      "bcdp": {
-        "spansOnFilesGivenAPath": 100,
-        "spansStillWithheldOutsideReadme": 4,
-        "filesStillWithheldOutsideReadme": [
-          "REDISCONTRIBUTIONS.txt",
-          "modules/vector-sets/README.md",
-          "src/commands.def",
-          "src/commands/README.md"
-        ],
-        "beyondOwnersChosenScope": true
-      },
-      "bcdpx": {
-        "spansOnFilesGivenAPath": 103,
-        "spansStillWithheldOutsideReadme": 1,
-        "filesStillWithheldOutsideReadme": [
-          "src/commands.def"
-        ],
-        "beyondOwnersChosenScope": true
+        ]
       }
     },
     "variantReading": "spansOnFilesGivenAPath is an upper bound on cited spans that may return: each body still meets every screen step, and a returned span need not resolve its row",
@@ -451,6 +412,7 @@
       },
       "rowsByVariant": "Unknown: the capture names each failing row's id but not which files its spans sit on, so no per-variant row recovery can be derived"
     },
-    "beadComparison": "Unknown cause: bead syzygy-olmr and the v5 package's round-2 text say 140 of 233 cited spans were withheld; this capture, over the packet verdict 3 names, has 145 of 244. The run holds three fidelity packets; which one the bead counted is not recorded"
+    "beadComparison": "Unknown cause: bead syzygy-olmr and the v5 package's round-2 text say 140 of 233 cited spans were withheld; this capture, over the packet verdict 3 names, has 145 of 244. The run holds three fidelity packets; which one the bead counted is not recorded",
+    "variantsNote": "the screening scope version 5 package's four variants (t, b, bd, bcd); a placement for redis.conf is a later follow-on, not part of that package"
   }
 }
