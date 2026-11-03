@@ -143,9 +143,11 @@ const SHA1_OBJECT_ID = /^[0-9a-f]{40}$/;
  * form was recorded as the path (syzygy-bpyt.6.1). The bytes are decoded as
  * strict UTF-8, so a path that is not valid UTF-8 makes the inventory
  * Unknown instead of a replacement-character path that can collide with
- * another. Submodule gitlink records are dropped first, before decoding and
- * before parsing, since their paths are never recorded. A record the shared
- * parser cannot read, or a listing that is not NUL-terminated, makes the
+ * another. A path that begins with `"` or holds a newline is recorded
+ * exactly as committed: under `-z` it is never a quoted form. Submodule
+ * gitlink records are dropped first, before decoding and before parsing,
+ * since their paths are never recorded. A record the shared parser cannot
+ * read, or a listing that is not NUL-terminated, makes the
  * whole inventory Unknown, never a skip.
  */
 export function observeCodeStructure(input: ObserveCodeStructureInput): CodeStructureResult {
@@ -173,7 +175,8 @@ export function observeCodeStructure(input: ObserveCodeStructureInput): CodeStru
   }
   // A submodule gitlink (mode 160000) is not a file of this revision and its path is never recorded, so its record is dropped before
   // parsing, whichever runner answered; the default runner already dropped it from git's bytes, before decoding.
-  const parsed = parseGitLsTree(raw.split('\0').filter((record) => !GITLINK_HEAD.test(record)).join('\0'));
+  // Under `-z` a path that begins with `"` or holds a newline is the committed name itself, so the parser takes it verbatim (syzygy-bpyt.6.7).
+  const parsed = parseGitLsTree(raw.split('\0').filter((record) => !GITLINK_HEAD.test(record)).join('\0'), { nulTerminated: true });
   if (parsed.kind === 'malformed') {
     return malformed;
   }

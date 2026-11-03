@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { observeCodeStructure } from './code-structure.js';
 
@@ -113,6 +113,49 @@ describe('code-structure observer', () => {
     expect(result.files.find((file) => file.path === 'dir \u00e9/x.ts')?.digest).toBe(`git-blob-sha1:${git(root, ['rev-parse', `${revision}:dir \u00e9/x.ts`])}`);
   });
 
+  describe('a committed path that begins with a quote or holds a newline (syzygy-bpyt.6.7)', () => {
+    // Real git, so the records are the ones `ls-tree -r -z -l` emits; built here, not at describe time (AGENTS.md).
+    const names = ['"lead-quote.md', '"vendor/a.ts', 'line\nbreak.md', 'dir\nname/"inner.py', 'trailing\n'];
+    let root = '';
+    let revision = '';
+    beforeAll(() => {
+      ({ root } = fixtureRepo('sentinel-quote-newline'));
+      for (const name of names) {
+        mkdirSync(dirname(join(root, name)), { recursive: true });
+        writeFileSync(join(root, name), 'x\n', 'utf8');
+      }
+      git(root, ['add', '-A']);
+      git(root, ['commit', '-qm', 'quote and newline paths']);
+      revision = git(root, ['rev-parse', 'HEAD']);
+      // fixtureRepo registered the directory for afterEach; keep it for the whole block and remove it in afterAll.
+      cleanups.splice(cleanups.indexOf(root), 1);
+    });
+    afterAll(() => rmSync(root, { recursive: true, force: true }));
+
+    it('records each such path exactly as committed in an Observed inventory', () => {
+      const result = observeCodeStructure({ repoRoot: root, revision, capturedAt: '2026-11-04T00:00:00Z' });
+      if (result.kind !== 'observed') throw new Error(`expected observed, got ${JSON.stringify(result)}`);
+      expect(result.files.map((file) => file.path)).toEqual([
+        '"lead-quote.md', '"vendor/a.ts', 'README.md', 'data.json', 'dir\nname/"inner.py', 'line\nbreak.md',
+        'src/app.ts', 'src/nested/lib.py', 'trailing\n',
+      ]);
+      for (const name of names) {
+        const entry = result.files.find((file) => file.path === name);
+        expect(entry?.digest, JSON.stringify(name)).toBe(`git-blob-sha1:${git(root, ['rev-parse', `${revision}:${name}`])}`);
+        expect(entry?.sizeBytes, JSON.stringify(name)).toBe(2);
+      }
+      expect(result.files.find((file) => file.path === '"vendor/a.ts')?.language).toBe('typescript');
+      expect(result.files.find((file) => file.path === 'line\nbreak.md')?.language).toBe('markdown');
+    });
+
+    it('still makes the inventory Unknown for the same listing in the newline format', () => {
+      const listing = execFileSync('git', ['-C', root, 'ls-tree', '-r', '-l', revision], { encoding: 'utf8' });
+      expect(listing).toContain('"\\"lead-quote.md"');
+      expect(observeCodeStructure({ repoRoot: root, revision, capturedAt: '2026-11-04T00:00:00Z', runGit: () => listing }))
+        .toEqual({ kind: 'unknown', reason: 'code-structure observation produced a malformed inventory entry' });
+    });
+  });
+
   it('asks git for NUL-terminated records and turns any record it cannot read into Unknown, never a skip', () => {
     const blob = (path: string, id = '1'.repeat(40), size = '12'): string => `100644 blob ${id} ${size}\t${path}\0`;
     const observe = (listing: string, calls: string[][] = []) => observeCodeStructure({
@@ -147,7 +190,11 @@ describe('code-structure observer', () => {
     expect(observe(`${blob('a.ts')}040000 tree ${'5'.repeat(40)}       -\tdir\0`)).toMatchObject({ kind: 'observed', files: [{ path: 'a.ts' }] });
     const unknown ={ kind: 'unknown', reason: 'code-structure observation produced a malformed inventory entry' };
     expect(observe(`${blob('a.ts')}not a tree record\0`)).toEqual(unknown);
-    expect(observe(`${blob('a.ts')}100644 blob ${'1'.repeat(40)} 12\t"\\303\\261.md"\0`)).toEqual(unknown);
+    // Under `-z` a record whose path begins with a quote is well formed: the path is the committed name, backslashes and all (syzygy-bpyt.6.7).
+    expect(observe(`${blob('a.ts')}100644 blob ${'1'.repeat(40)} 12\t"\\303\\261.md"\0`))
+      .toMatchObject({ kind: 'observed', files: [{ path: '"\\303\\261.md"' }, { path: 'a.ts' }] });
+    expect(observe(`${blob('a.ts')}100644 blob ${'1'.repeat(40)} 12\tline\nbreak.md\0`))
+      .toMatchObject({ kind: 'observed', files: [{ path: 'a.ts' }, { path: 'line\nbreak.md' }] });
     expect(observe(blob('a.ts', '4'.repeat(64)))).toEqual(unknown);
     expect(observe(blob('a.ts', '1'.repeat(40), '-'))).toEqual(unknown);
     // A listing in the newline format, or one whose last record lacks its NUL, is not what `-z` returns.
