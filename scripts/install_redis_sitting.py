@@ -1184,10 +1184,7 @@ def step_policy(root: pathlib.Path, write: bool) -> bool:
                 J.write(p, s)
             J.write(root / INPUTS_TS, repoint_gate((root / INPUTS_TS).read_text(), desired, gate_comment(acts)))
             t = (root / INPUTS_TEST).read_text()
-            # Version 5's owner words came at 06:17:55Z, so midnight of its date is before the act: from version 5 the
-            # test evaluates at the record's own instant.
-            at = final.instant if final.key == "v5" else f"{final.date}T00:00:00Z"
-            t = re.sub(r"const EVALUATION_INSTANT = '[^']+';", f"const EVALUATION_INSTANT = '{at}';", t)
+            t = re.sub(r"const EVALUATION_INSTANT = '[^']+';", f"const EVALUATION_INSTANT = '{evaluation_instant(final)}';", t)
             J.write(root / INPUTS_TEST, t)
     # the status battery and the hosted workflow carry the final recorder's lines
     check_cmd, selftest_cmd = (battery_lines_v4(final.text, final.arg, final.date, final.script) if final.key in ("v4", "v5")
@@ -1201,6 +1198,13 @@ def step_policy(root: pathlib.Path, write: bool) -> bool:
             J.write(root / STATUS, ns)
             J.write(root / WORKFLOW, nw)
     return changed
+
+
+def evaluation_instant(final: PolicyAct) -> str:
+    """The instant the read gate's test evaluates at. Version 5's owner words came at 06:17:55Z, so
+    midnight of its date is before the act: from version 5 the test evaluates at the record's own
+    instant; earlier versions at midnight of their date, as they were installed."""
+    return final.instant if final.key == "v5" else f"{final.date}T00:00:00Z"
 
 
 STEPS = (("registrations", step_registrations), ("rfc5", step_rfc5), ("policy", step_policy), ("profile", step_profile),
@@ -1585,9 +1589,15 @@ def policy_selftests() -> list[tuple[str, bool]]:
     ok.append(("gate comment: version 5 names version 4's date, the chosen variant and the registry sentence",
                gate_comment(acts_v5) == ("// The policy act is the 2026-11-03 public-source screening-scope version 5 act (variant bcd), superseding the\n"
                                          "// 2026-10-20 version-4 act. " + REGISTRY_CEILING_SENTENCE)))
+    ok.append(("evaluation instant: version 5 at its record's instant, version 4 at midnight of its date",
+               evaluation_instant(PolicyAct("v5", V5_ACT, "", "", "", "", "2026-11-03", "2026-11-03T06:58:26Z", V5_SCRIPT, V4_ACT, "")) == "2026-11-03T06:58:26Z"
+               and evaluation_instant(PolicyAct("v4", V4_ACT, "", "", "", "", "2026-10-20", "2026-10-20T10:00:00Z", V4_SCRIPT, V3_ACT, "")) == "2026-10-20T00:00:00Z"))
     # The live read gate follows the final act; the comment it carries is that act's, over the recorded dates.
     live5 = ROOT / V5_ACT
     if live5.is_file():
+        live_acts = policy_acts(ROOT)
+        ok.append(("evaluation instant: the live read-gate test evaluates at the final act's",
+                   f"const EVALUATION_INSTANT = '{evaluation_instant(live_acts[-1])}';" in (ROOT / INPUTS_TEST).read_text()))
         ok.append(("gate comment: version 5's, over the live record, is the live read gate's comment",
                    gate_comment(acts_v4 + [PolicyAct("v5", V5_ACT, live5.read_text(), "", "", "", "2026-11-03", "", V5_SCRIPT, V4_ACT, "")])
                    in (ROOT / INPUTS_TS).read_text()))

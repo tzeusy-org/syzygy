@@ -199,6 +199,17 @@ describe('withheldCensus under the screening scope version 5', () => {
       expect(withheldCensus(V5_ENTRIES, screenFor(subject), consented).unknownExtractionClass, JSON.stringify(subject)).toEqual(['TLS.md', 'modules/MODULES.md']);
     }
   });
+
+  it('loads the checkout\'s own screen for the placement subject when no loader is given', async () => {
+    const listing = () => ({ listTree: async () => V5_ENTRIES.map((e) => ({ ...e, id: 'x' })) }) as unknown as PinnedObjectReader;
+    const at = (commit: string) => loadCensus({ clonePath: '/nonexistent/clone', pinned: commit, consented: ['code-content', 'project-documentation', 'governance-text'],
+      recordsRoot: REAL_ROOT, now: Date.UTC(2026, 10, 3, 12, 0, 0), placement: { repository: 'repository:redis-redis', commit } }, { openReader: listing });
+    const trial = await at(TRIAL), other = await at('d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7');
+    if (!trial.ok || !other.ok) throw new Error('expected both censuses to load');
+    expect(trial.census.policy.policyVersion).toBe('1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd');
+    expect(trial.census.unknownExtractionClass).toEqual([]);
+    expect(other.census.unknownExtractionClass).toEqual(['TLS.md', 'modules/MODULES.md']);
+  });
 });
 
 describe('screenCensusReport (the author\'s census on check output)', () => {
