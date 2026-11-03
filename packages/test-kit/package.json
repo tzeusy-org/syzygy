@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Test support only: temp directories, git fixtures, blob ids and an HTML query helper. Never a production dependency; consumers list it under devDependencies.",
+  "description": "Test support only: temp directories, git fixtures, blob ids and an HTML query helper. Never a production dependency; consumers list it under devDependencies. It has no build: every consumer reads the source condition, and the dist targets exist only because the workspace-reach guard requires the dist-form entry beside it.",
   "exports": {
     ".": {
       "source": "./src/index.ts",

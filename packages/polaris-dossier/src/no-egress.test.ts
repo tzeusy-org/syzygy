@@ -142,6 +142,7 @@ describe('the S10 bundle takes each workspace package from the source its entry 
       '@syzygy/polaris-generation-core': 'packages/polaris-generation-core/src/index.ts',
       '@syzygy/polaris-generation-core/live': 'packages/polaris-generation-core/src/live.ts',
       '@syzygy/support': 'packages/support/src/index.ts',
+      '@syzygy/test-kit': 'packages/test-kit/src/index.ts',
       '@syzygy/three-surface-poc-core': 'packages/three-surface-poc-core/src/index.ts',
     });
   });
