@@ -665,6 +665,17 @@ describe('PWB-REQ-006 (amended) — classification charges one shared resource l
     expect(JSON.stringify(result)).not.toContain('SECRET-BODY');
   });
 
+  it('classifyPhaseASeed reports over-limit when the budget runs out at the first active-content pass, after all four detectors', () => {
+    const breach = { limit: 'maxParsePassesPerSource' as const, declared: 4, observed: 5, path: 'about/README.md' };
+    const charged: ParsePassIdentity[] = [];
+    const result = classifyPhaseASeed(detectors, '# root\n', (pass) => {
+      charged.push(pass);
+      return pass === 'markdown-code-context-mask' ? breach : undefined;
+    });
+    expect(result).toEqual({ kind: 'over-limit', breach });
+    expect(charged).toEqual(['secret-private-key-fragments', 'secret-known-token-formats', 'secret-credential-assignment', 'secret-credential-bearing-url', 'markdown-code-context-mask']);
+  });
+
   it('classifyPhaseASeed reports over-limit with the breach when a detector pass exceeds the budget', () => {
     const breach = { limit: 'maxParsePassesPerSource' as const, declared: 5, observed: 6, path: 'about/README.md' };
     let calls = 0;

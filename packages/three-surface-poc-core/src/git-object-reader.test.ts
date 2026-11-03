@@ -448,6 +448,19 @@ function readOne(text: string): ReturnType<ExactObjectReader['read']> {
   return createExactObjectReader({ runGit, tree: indexGitTree([entry]), resourceLimits: PWB_RESOURCE_LIMITS }).read('notes/line-ends.md');
 }
 
+// syzygy-bpyt.6.5: the validation pass is charged before the NUL and UTF-8 checks run, so a source with no budget left is over-limit
+// whatever its bytes are; a reader that validated first would call this body contains-nul.
+describe('the validation pass is charged before validation runs', () => {
+  it('maxParsePassesPerSource 0 leaves a NUL-bearing body over-limit, not contains-nul, with the bytes it took counted', () => {
+    const bytes = enc.encode('a\u0000b');
+    const oid = sha1Blob(bytes);
+    const entry: GitTreeEntry = { mode: '100644', type: 'blob', objectId: oid, sizeBytes: bytes.byteLength, path: 'notes/nul.md' };
+    const r = createExactObjectReader({ runGit: () => bytes, tree: indexGitTree([entry]), resourceLimits: { ...PWB_RESOURCE_LIMITS, maxParsePassesPerSource: 0 } });
+    expect(r.read('notes/nul.md').record).toEqual({ path: 'notes/nul.md', objectId: oid, bytes: 3, contentDigest: contentDigestOf(bytes), outcome: 'over-limit', detail: 'maxParsePassesPerSource' });
+    expect(r.breaches).toEqual([{ limit: 'maxParsePassesPerSource', declared: 0, observed: 1, path: 'notes/nul.md' }]);
+  });
+});
+
 // syzygy-bpyt.16 (ruled on syzygy-bpyt.1.14): the reader hands a blob's decoded text to the scan with its line ends as they are, and the
 // code-context mask ends a line at CRLF, CR and LF alike, so a CRLF or CR blob gets the outcome its LF form gets. The first text was
 // admitted under CRLF and CR before the fix (a backtick opener whose info text holds a backtick, hiding a script element as an inline
