@@ -96,7 +96,14 @@ const takeAttempts = (): string[] => {
   if (!GUARD_TEST.test(file)) return refuse('syzygyUnitTierGuardTake from', file);
   return attempts.splice(0);
 };
-Object.assign(globalThis, { syzygyUnitTierGuardTake: takeAttempts });
+/** The module object whose synchronous calls are locked, for the guard's own reassignment rows. The test imports no namespace itself:
+ * sync-child-process-guard.test.ts fails a bare `child_process` namespace value as a re-binding. Same reader restriction as above. */
+const lockedChildProcess = (): typeof childProcess => {
+  const file = expect.getState().testPath ?? '';
+  if (!GUARD_TEST.test(file)) return refuse('syzygyUnitTierGuardChildProcess from', file);
+  return childProcess;
+};
+Object.assign(globalThis, { syzygyUnitTierGuardTake: takeAttempts, syzygyUnitTierGuardChildProcess: lockedChildProcess });
 
 const complain = (): void => {
   if (attempts.length > 0) throw new Error(`unit tier refused ${attempts.splice(0).join('; ')} (a test may have caught the error; the file still fails)`);

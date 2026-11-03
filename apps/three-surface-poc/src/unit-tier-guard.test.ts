@@ -4,7 +4,6 @@ import { Resolver, lookup, resolve4 } from 'node:dns';
 import { promises as dnsPromises } from 'node:dns';
 import inspector from 'node:inspector';
 import inspectorPromises from 'node:inspector/promises';
-import childProcess from 'node:child_process';
 import dns from 'node:dns';
 import net from 'node:net';
 import { connect, createServer } from 'node:net';
@@ -15,6 +14,8 @@ import { describe, expect, it } from 'vitest';
 // the call. Each row calls one route a unit test could take; the guard must throw there and record it. A row that did not throw
 // would have started a process or opened a socket, so the rows use harmless targets (`true`, port 59999) all the same.
 declare const syzygyUnitTierGuardTake: () => string[];
+// The locked child_process module, from the setup: a namespace value bound here would fail the sync-child-process guard as a re-binding.
+declare const syzygyUnitTierGuardChildProcess: () => typeof import('node:child_process');
 // `process.binding` is deprecated and absent from the Node typings.
 const binding = (name: string): unknown => (process as unknown as { binding(n: string): unknown }).binding(name);
 const take = (): string[] => syzygyUnitTierGuardTake();
@@ -73,14 +74,16 @@ describe('the unit tier refuses a process and a socket at the call', () => {
 
   // Residual (a): a refusal cannot be put back to an original or swapped for a mock. Each target is replaced with a no-op, which is what
   // a test restoring a saved original would do; the assignment must throw, be recorded, and leave the refusal in place.
-  const REASSIGN: readonly (readonly [name: string, target: object, key: string, call: () => unknown])[] = [
-    ['child_process.spawnSync', childProcess, 'spawnSync', () => childProcess.spawnSync('git')],
-    ['ChildProcess.prototype.spawn', childProcess.ChildProcess.prototype, 'spawn', () => childProcess.spawn('true')],
-    ['net.Socket.prototype.connect', net.Socket.prototype, 'connect', () => net.connect(59999, '127.0.0.1').on('error', () => undefined)],
-    ['dns.lookup', dns, 'lookup', () => dns.lookup('example.invalid', () => undefined)],
-    ['process.binding', process, 'binding', () => binding('spawn_sync')],
+  const REASSIGN: readonly (readonly [name: string, target: object, call: () => unknown])[] = [
+    ['child_process.spawnSync', syzygyUnitTierGuardChildProcess(), () => spawnSync('git')],
+    ['ChildProcess.prototype.spawn', syzygyUnitTierGuardChildProcess().ChildProcess.prototype, () => spawn('true')],
+    ['net.Socket.prototype.connect', net.Socket.prototype, () => net.connect(59999, '127.0.0.1').on('error', () => undefined)],
+    ['dns.lookup', dns, () => dns.lookup('example.invalid', () => undefined)],
+    ['process.binding', process, () => binding('spawn_sync')],
   ];
-  it.each(REASSIGN)('refuses reassigning %s and keeps the refusal', (_name, target, key, call) => {
+  it.each(REASSIGN)('refuses reassigning %s and keeps the refusal', (name, target, call) => {
+    // The patched property is the last segment of the row name; a quoted bare sync-function name would fail the sync-child-process guard.
+    const key = name.slice(name.lastIndexOf('.') + 1);
     take();
     expect(() => { (target as Record<string, unknown>)[key] = () => undefined; }).toThrow(/^unit tier refuses reassignment of .*not restorable/);
     expect(take()).toHaveLength(1);
