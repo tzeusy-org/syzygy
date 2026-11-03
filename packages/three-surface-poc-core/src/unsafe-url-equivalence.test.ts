@@ -132,10 +132,10 @@ const cpuUsage = (from?: NodeJS.CpuUsage): NodeJS.CpuUsage =>
   (typeof process.threadCpuUsage === 'function' ? process.threadCpuUsage(from) : process.cpuUsage(from));
 const cpuMsSince = (from: NodeJS.CpuUsage): number => { const { user, system } = cpuUsage(from); return (user + system) / 1000; };
 
-// The old pattern took 3.2-5.2 s on the 2 KB line and is cubic, so it would
-// run for hours on the 20 KB one; the rewrite takes well under 1 ms on
-// either. Each bound is generous on both sides.
-const TWO_KB_CPU_MS = 250;
+// The old pattern took 2.4-5.2 s of CPU on the 2 KB line and is cubic: it
+// did not finish the 20 KB one in 120 s. The rewrite takes at most 3 ms on
+// any row (docs/evidence/syzygy-bpyt-52/unsafe-url-equivalence-2026-11-04.json).
+const TWO_KB_CPU_MS = 200;
 const TWENTY_KB_CPU_MS = 1_000;
 
 describe('the unsafe-URL scan is linear on long whitespace runs (syzygy-bpyt.52)', () => {
