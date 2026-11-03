@@ -4,7 +4,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DECISIONS_DIR, INSTANCES_DIR, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM, POLICY_PATH } from '@syzygy/polaris-generation-consent';
-import { renderDossierLocalAgentAct, renderLocalAgentSignoff, renderPolicyAct, renderRecorderAct } from '@syzygy/polaris-generation-consent/testing';
+import { loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderPolicyAct, renderRecorderAct } from '@syzygy/polaris-generation-consent/testing';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { runDossierCli } from './cli.js';
 import { createPackageGateSources, type ProjectInputSource, type ProviderStatementRecord, type ProviderStatementSource } from './gate-sources.js';
@@ -15,6 +15,9 @@ import { preflight } from './preflight.js';
 import { reverifyPinnedRevision } from './reverify.js';
 import { runStatus } from './status.js';
 import { GIT_ENV_NO_MAINTENANCE as GIT_ENV, tempDir } from '@syzygy/test-kit';
+
+// The recorder forms render once, before any other hook of this file (syzygy-bpyt.4.8).
+beforeAll(loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS);
 
 // syzygy-qkea.4 (S3): every refusal arm of REQ-polaris-generation-033's start gates, with independently prepared fixtures. The records
 // root is a temporary Syzygy checkout whose act records are rendered by the real recorders; the clone is a real Git repository built

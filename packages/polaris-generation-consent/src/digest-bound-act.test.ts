@@ -2,12 +2,15 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { describe, expect, it } from 'vitest';
-import { HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS, renderRecorderAct, renderRegistryAct } from './recorder-fixtures.testkit.js';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS, HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS, renderRecorderAct, renderRegistryAct } from './recorder-fixtures.testkit.js';
 import {
   DECISIONS_DIR, INSTANCES_DIR, REGISTRY_GIT_SOURCE_ACT_FORM, createAdmissionRecordsPort, createPackageAdmissionReader, readDigestBoundActState,
   type DigestBoundActForm, type PackageReaderFs,
 } from './package-reader.js';
+
+// The recorder forms render once, before any other hook of this file (syzygy-bpyt.4.8).
+beforeAll(loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS);
 
 // The `Upstream:` field of an observation record, the records port's `repositoryIdsFor`, and the RFC3-16(a) cross-check of one
 // digest-bound act (syzygy-qkea.4). Expected values are literals; act text comes from the real recorders.

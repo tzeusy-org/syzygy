@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
-  recorderRecordPaths, renderClassAct, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderPolicyAct, renderProviderV2Act,
+  loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS, recorderRecordPaths, renderClassAct, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderPolicyAct, renderProviderV2Act,
   renderRecorderAct, renderRegistryAct, type DossierLocalAgentActKey, type RecorderActKey,
 } from './recorder-fixtures.testkit.js';
 
@@ -13,6 +13,8 @@ import {
 // holds every form it fills equal, byte for byte, to the recorder's own render of the same values, made the way the testkit made
 // each render before: one `render_act` (or `render_record`) call with the values themselves. Each slot gets a value no other slot
 // shares, so a slot filled from the wrong value, or left unfilled, differs.
+beforeAll(loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS);
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 
 const DIRECT_PY = `import json, pathlib, sys
@@ -22,6 +24,7 @@ import record_public_source_screening_scope_act as p1, record_public_source_scre
 import record_public_source_screening_scope_v3_act as p3, record_public_source_screening_scope_v4_act as p4
 import record_public_source_screening_scope_v5_act as p5, record_dossier_local_agent_acts as dla
 import record_dossier_agent_provider_v2_act as pv2, record_public_admission_registry_entries_acts as reg, record_versioned_signoff as vs
+
 def render(c):
     f, a, d, i = c['form'], c.get('argument'), c.get('date'), c.get('instant')
     if f == 'recorder':

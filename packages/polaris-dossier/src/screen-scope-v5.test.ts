@@ -5,11 +5,14 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { POLICY_PATH } from '@syzygy/polaris-generation-consent';
-import { renderPolicyAct } from '@syzygy/polaris-generation-consent/testing';
+import { loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS, renderPolicyAct } from '@syzygy/polaris-generation-consent/testing';
 import { readGovernanceTextRule, readProjectDocumentationExemption, readProjectDocumentationRule, readScopeDetectors, readSecretRedaction } from '@syzygy/polaris-generation-core/live';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { unconsentedClass } from './class-gate.js';
 import { buildDossierScreen, loadDossierScreen, placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenLoad } from './screen.js';
+
+// The recorder forms render once, before any other hook of this file (syzygy-bpyt.4.8).
+beforeAll(loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS);
 
 // syzygy-mea.4 (P-116): the install of screening scope version 5, variant bcd (owner act of 2026-11-03,
 // decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md). Both screens, the dossier's and the any-repo reader's,
@@ -67,6 +70,7 @@ let F: Fixtures;
 beforeAll(async () => {
   const py = `import json, sys; sys.path.insert(0, 'scripts')
 import build_public_source_screening_scope_v5 as b, build_public_source_screening_scope_v4 as b4
+
 policy = open(str(b.ROOT / b.POLICY)).read()
 v4, mode = b.base_bytes()
 assert mode == 'performed-v5' and b.propose(v4, 'bcd') == policy

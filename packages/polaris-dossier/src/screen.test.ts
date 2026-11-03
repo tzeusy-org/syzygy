@@ -5,10 +5,13 @@ import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { DECISIONS_DIR, POLICY_PATH } from '@syzygy/polaris-generation-consent';
-import { renderClassAct, renderPolicyAct } from '@syzygy/polaris-generation-consent/testing';
+import { loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS, renderClassAct, renderPolicyAct } from '@syzygy/polaris-generation-consent/testing';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { buildDossierScreen, loadDossierScreen } from './screen.js';
 import { tempDir } from '@syzygy/test-kit';
+
+// The recorder forms render once, before any other hook of this file (syzygy-bpyt.4.8).
+beforeAll(loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS);
 
 // Asynchronous, so a slow command cannot starve the vitest worker's RPC (syzygy-w90k).
 const execFileAsync = promisify(execFile);

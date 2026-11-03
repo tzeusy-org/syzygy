@@ -1,7 +1,7 @@
 /** Test support. Owner-act text rendered by the real recorders (scripts/record_public_repo_admission_acts.py, the registry-entry recorder and
  * scripts/record_public_egress_v2_act.py), so a reader's expected forms are tested against what the writer writes.
  *
- * Each recorder renders once per process, when this module loads, through one asynchronous python3 run (syzygy-bpyt.4.8): it renders
+ * Each recorder renders once per process, in `loadRecorderForms`, through one asynchronous python3 run (syzygy-bpyt.4.8): it renders
  * every act form with a NUL-delimited slot (`\0argument\0`) for each value a caller supplies, and a render fills the slots. A render
  * therefore never blocks the vitest worker, and costs no child process. The recorders treat each slotted value as opaque text (they
  * interpolate it and branch on none); recorder-fixtures.testkit.test.ts holds a render made this way equal to the recorder's own
@@ -73,18 +73,35 @@ interface Rendered {
   readonly installed: string;
 }
 
-const RENDERED: Rendered = await (async () => {
-  try {
-    const { stdout } = await promisify(execFile)('python3', ['-c', RENDER_TEMPLATES_PY, JSON.stringify(RECORDER_KEYS), JSON.stringify(DOSSIER_LOCAL_AGENT_KEYS)], { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
-    return JSON.parse(stdout) as Rendered;
-  } catch (error) {
-    throw new Error(`recorder render failed: ${(error as { stderr?: string }).stderr ?? String(error)}`);
-  }
-})();
+let rendered: Rendered | undefined;
+let loading: Promise<void> | undefined;
+
+/** Render every form, once per process, through one asynchronous python3 run. Await it before the first render, in a file-level
+ * `beforeAll` registered ahead of any other hook: `beforeAll(loadRecorderForms, RECORDER_FORMS_TIMEOUT_MS)`. Loading this module
+ * starts no process, so an import of the consent package's ./testing entry stays hermetic. */
+export function loadRecorderForms(): Promise<void> {
+  loading ??= (async () => {
+    try {
+      const { stdout } = await promisify(execFile)('python3', ['-c', RENDER_TEMPLATES_PY, JSON.stringify(RECORDER_KEYS), JSON.stringify(DOSSIER_LOCAL_AGENT_KEYS)], { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+      rendered = JSON.parse(stdout) as Rendered;
+    } catch (error) {
+      loading = undefined;
+      throw new Error(`recorder render failed: ${(error as { stderr?: string }).stderr ?? String(error)}`);
+    }
+  })();
+  return loading;
+}
+/** The hook timeout for `loadRecorderForms`: one python3 run importing eleven recorders, on a host that may be heavily loaded. */
+export const RECORDER_FORMS_TIMEOUT_MS = 120_000;
+
+function forms(): Rendered {
+  if (rendered === undefined) throw new Error('recorder render failed: the forms are not loaded; await loadRecorderForms() in a beforeAll first');
+  return rendered;
+}
 
 /** The form `id` with each slot filled from `values`. A slot with no value, or a form the recorders did not render, throws. */
 function fill(id: string, values: Readonly<Record<string, string>>): string {
-  const template = RENDERED.templates[id];
+  const template = forms().templates[id];
   if (template === undefined) throw new Error(`recorder render failed: no form ${id}`);
   return template.replace(/\0(\w+)\0/g, (_, name: string) => {
     const value = values[name];
@@ -129,7 +146,7 @@ export function renderProviderV2Act(argument: string, date: string, instant: str
 export function renderLocalAgentSignoff(root: string, date: string, instant: string, verdict = 'CONFIRM', disposition: string | null = null): string {
   // The recorder writes `disposition or "none"`: an empty disposition would read as none there and as itself here.
   if (disposition === '') throw new Error('recorder render failed: an empty disposition renders as none');
-  const entry = path.join(root, RENDERED.installed);
+  const entry = path.join(root, forms().installed);
   let installed: Uint8Array | null = null;
   try {
     if (statSync(entry).isFile()) installed = readFileSync(entry);
@@ -141,7 +158,7 @@ export function renderLocalAgentSignoff(root: string, date: string, instant: str
 /** Where the recorders write each record, relative to the repository root: the five sitting acts (`Act.record`) and the v1.0
  * sign-off (`record_rel`). A reader keyed on another file name would read a recorded act as absent. */
 export function recorderRecordPaths(): { readonly acts: Readonly<Record<DossierLocalAgentActKey, string>>; readonly signoff: string } {
-  return { acts: { ...RENDERED.paths.acts }, signoff: RENDERED.paths.signoff };
+  return { acts: { ...forms().paths.acts }, signoff: forms().paths.signoff };
 }
 
 /** Alterations of an act record that leave every head field as it was (syzygy-bpyt.8.10): the first paragraph of its Effect (`What
