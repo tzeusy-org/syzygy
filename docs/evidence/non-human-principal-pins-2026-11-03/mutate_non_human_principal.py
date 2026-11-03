@@ -315,7 +315,7 @@ def selftest() -> int:
         f.write_text(good + '\n', encoding='utf-8')
         results.append({'predicate': 'require_restored', 'mutation': 'the file on disk gains a trailing newline', 'old': 'bytes as written', 'new': 'bytes plus one newline',
                         'unmutatedPasses': not refuses(lambda: require_restored('m', d, d)), 'mutatedRefused': refuses(lambda: require_restored('m', sha(f), d))})
-    record = {'subject': 'mutate_non_human_principal.py --selftest', 'harnessDigest': sha(Path(__file__).resolve()),
+    record = {'subject': 'mutate_non_human_principal.py --selftest', 'commit': git(Path(__file__).resolve().parent, 'rev-parse', 'HEAD'), 'harnessDigest': sha(Path(__file__).resolve()),
               'ruleArms': arms, 'cases': results, 'allRefused': all(r['unmutatedPasses'] and r['mutatedRefused'] for r in results)}
     print(json.dumps(record, indent=1))
     return 0 if record['allRefused'] else 1
