@@ -23,7 +23,7 @@ export interface SeedObservationContext {
   readonly materialization: MaterializationEpistemic;
 }
 
-export function fileProvenance(artifact: ObservedArtifact, repositoryRevision: string): PocProvenance {
+function fileProvenance(artifact: ObservedArtifact, repositoryRevision: string): PocProvenance {
   return {
     kind: 'repository-file',
     source: artifact.path,
@@ -57,7 +57,7 @@ const materialized = (context: SeedObservationContext): readonly PocProvenance[]
 const MISSING_TEST_ARTIFACT = 'No test artifact has been captured for this evaluation.';
 const MISSING_RUNTIME = 'No current runtime observation was supplied.';
 
-export const ENTITY_ROLES: Readonly<Record<PocSeedEntity['role'], EntityRole>> = {
+const ENTITY_ROLES: Readonly<Record<PocSeedEntity['role'], EntityRole>> = {
   project: {
     kind: 'project',
     epistemic: () => observed('Git reported the configured repository revision.'),
@@ -116,7 +116,7 @@ function materializationStatement(context: SeedObservationContext): PocEpistemic
   return observed(`The human-triggered materialization step ${verb} Beads item ${beadId}.`);
 }
 
-export const RELATIONSHIP_ROLES: Readonly<Record<PocSeedRelationship['role'], RelationshipRole>> = {
+const RELATIONSHIP_ROLES: Readonly<Record<PocSeedRelationship['role'], RelationshipRole>> = {
   'project-to-capability': {
     kind: 'contains',
     epistemic: () => observed('The selected requirement is present in the configured repository.'),
