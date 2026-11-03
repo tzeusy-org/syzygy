@@ -848,7 +848,7 @@ def policy_cg_v4_edits(text: str, v3_arg: str) -> str:
 
 
 #: The version-5 hunks, as the version-5 recorder change wrote them into check_governance.py
-#: (2026-11-03, `9637e95a`): the chain row (with its two comment lines), the version-4 manifest's
+#: (2026-11-03, `477087d8`): the chain row (with its two comment lines), the version-4 manifest's
 #: chosen row pinned as variant-row history, the version-4 manifest registration gated off, and
 #: the version-5 manifest heading exemption. Recognized by their exact text, as version 4's are.
 V5_CHAIN_ROW = ('    # The version-5 screening-scope act (P-116, variant bcd, 2026-11-03) supersedes the\n'
