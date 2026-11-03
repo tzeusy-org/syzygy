@@ -4,6 +4,8 @@ import { Resolver, lookup, resolve4 } from 'node:dns';
 import { promises as dnsPromises } from 'node:dns';
 import inspector from 'node:inspector';
 import inspectorPromises from 'node:inspector/promises';
+import dns from 'node:dns';
+import net from 'node:net';
 import { connect, createServer } from 'node:net';
 import { Worker } from 'node:worker_threads';
 import { describe, expect, it } from 'vitest';
@@ -12,6 +14,8 @@ import { describe, expect, it } from 'vitest';
 // the call. Each row calls one route a unit test could take; the guard must throw there and record it. A row that did not throw
 // would have started a process or opened a socket, so the rows use harmless targets (`true`, port 59999) all the same.
 declare const syzygyUnitTierGuardTake: () => string[];
+// The locked child_process module, from the setup: a namespace value bound here would fail the sync-child-process guard as a re-binding.
+declare const syzygyUnitTierGuardChildProcess: () => typeof import('node:child_process');
 // `process.binding` is deprecated and absent from the Node typings.
 const binding = (name: string): unknown => (process as unknown as { binding(n: string): unknown }).binding(name);
 const take = (): string[] => syzygyUnitTierGuardTake();
@@ -38,6 +42,11 @@ const ROUTES: readonly (readonly [name: string, call: () => unknown, refused: Re
   ['worker thread', () => new Worker('/nonexistent-worker.js'), /worker_threads\.Worker/],
   ['raw spawn_sync binding', () => binding('spawn_sync'), /process\.binding "spawn_sync"/],
   ['raw udp_wrap binding', () => binding('udp_wrap'), /process\.binding "udp_wrap"/],
+  ['raw inspector binding (debugger LISTEN)', () => binding('inspector'), /process\.binding "inspector"/],
+  ['raw tty_wrap binding', () => binding('tty_wrap'), /process\.binding "tty_wrap"/],
+  ['raw stream_wrap binding', () => binding('stream_wrap'), /process\.binding "stream_wrap"/],
+  ['raw js_stream binding', () => binding('js_stream'), /process\.binding "js_stream"/],
+  ['process.execve (replaces the image)', () => (process as unknown as { execve(f: string): unknown }).execve('/nonexistent-program'), /process\.execve "\/nonexistent-program"/],
   ['linked binding', () => (process as unknown as { _linkedBinding(n: string): unknown })._linkedBinding('x'), /process\._linkedBinding/],
 ];
 
@@ -60,6 +69,27 @@ describe('the unit tier refuses a process and a socket at the call', () => {
   it('leaves an attempt a test swallowed on record, for the afterEach hook to fail the file', () => {
     take();
     try { execFileSync('git', ['--version']); } catch { /* swallowed on purpose */ }
+    expect(take()).toHaveLength(1);
+  });
+
+  // Residual (a): a refusal cannot be put back to an original or swapped for a mock. Each target is replaced with a no-op, which is what
+  // a test restoring a saved original would do; the assignment must throw, be recorded, and leave the refusal in place.
+  const REASSIGN: readonly (readonly [name: string, target: object, call: () => unknown])[] = [
+    ['child_process.spawnSync', syzygyUnitTierGuardChildProcess(), () => spawnSync('git')],
+    ['ChildProcess.prototype.spawn', syzygyUnitTierGuardChildProcess().ChildProcess.prototype, () => spawn('true')],
+    ['net.Socket.prototype.connect', net.Socket.prototype, () => net.connect(59999, '127.0.0.1').on('error', () => undefined)],
+    ['dns.lookup', dns, () => dns.lookup('example.invalid', () => undefined)],
+    ['process.binding', process, () => binding('spawn_sync')],
+  ];
+  it.each(REASSIGN)('refuses reassigning %s and keeps the refusal', (name, target, call) => {
+    // The patched property is the last segment of the row name; a quoted bare sync-function name would fail the sync-child-process guard.
+    const key = name.slice(name.lastIndexOf('.') + 1);
+    take();
+    expect(() => { (target as Record<string, unknown>)[key] = () => undefined; }).toThrow(/^unit tier refuses reassignment of .*not restorable/);
+    expect(take()).toHaveLength(1);
+    expect(() => Object.defineProperty(target, key, { value: () => undefined })).toThrow(TypeError);
+    expect(() => Reflect.deleteProperty(target, key) || (() => { throw new Error('kept'); })()).toThrow('kept');
+    expect(call).toThrow(/^unit tier refuses /);
     expect(take()).toHaveLength(1);
   });
 });
