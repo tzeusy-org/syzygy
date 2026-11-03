@@ -169,8 +169,9 @@ const cpuUsage = (from?: NodeJS.CpuUsage): NodeJS.CpuUsage =>
   (typeof process.threadCpuUsage === 'function' ? process.threadCpuUsage(from) : process.cpuUsage(from));
 const cpuMsSince = (from: NodeJS.CpuUsage): number => { const { user, system } = cpuUsage(from); return (user + system) / 1000; };
 
-// The old pattern took about 0.4 s of CPU on 10,000 `](` and is quadratic:
-// about 40 s on 100,000. The rewrite takes a few milliseconds on any row
+// The old pattern took 0.27 s of thread CPU on 10,000 `](` and is
+// quadratic: 3.0 s on 30,000 and 28 s on 100,000. The rewrite takes at most
+// 7 ms on any row
 // (docs/evidence/syzygy-rmax/obfuscated-destination-equivalence-2026-11-04.json).
 const FLOOD_CPU_MS = 1_000;
 
