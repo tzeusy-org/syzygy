@@ -3,11 +3,14 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DECISIONS_DIR, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM, readDigestBoundActState, type DigestBoundActForm } from '@syzygy/polaris-generation-consent';
-import { HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS, recorderRecordPaths, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderProviderV2Act, type DossierLocalAgentActKey } from '@syzygy/polaris-generation-consent/testing';
+import { loadRecorderForms, HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS, recorderRecordPaths, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderProviderV2Act, type DossierLocalAgentActKey } from '@syzygy/polaris-generation-consent/testing';
 import { describe, expect, it } from 'vitest';
 import { preflight } from './preflight.js';
 import { D9_ACT_FORM, DRAWER_FORMS, PROVIDER_V2_FORM, RFC7_20_RULING_ACT_FORM, STATEMENT_FORMS, createPackageGateSources, providerStatementGate } from './gate-sources.js';
 import { tempDir } from '@syzygy/test-kit';
+
+// The recorder forms render once, before the file collects its tests: some tables render at collection (syzygy-bpyt.4.8).
+await loadRecorderForms();
 
 // syzygy-qkea.21: the gate sources read the local-agent sitting's acts (scripts/record_dossier_local_agent_acts.py) and the
 // version-tagged sign-off of the local-agent registry entry (scripts/record_versioned_signoff.py). Act text comes from the real

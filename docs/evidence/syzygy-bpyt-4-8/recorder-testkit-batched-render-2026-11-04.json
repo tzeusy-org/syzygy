@@ -1,0 +1,121 @@
+{
+ "subject": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+ "subjectSha256": "68f757e1108eba31edab05e419478a8324d52ecfe9c5f3378c21b6550bd00a14",
+ "predecessorSha256": "73c3c18032ce023bcc9b8f45ab36aab060629ec8299389726cbd87e804b28bcc",
+ "predecessorCommit": "cbd8b708022504c54dc533b53863a95de9761898",
+ "bead": "syzygy-bpyt.4.8",
+ "date": "2026-11-04",
+ "purpose": "The identical-output differential for the recorder testkit's batched render: every render the dossier and consent suites ask of the testkit, made by the predecessor (one synchronous python3 render_act per call) and by the subject (each form rendered once with NUL-delimited slots, then filled), compared byte for byte; and the rule-6 mutants of the permanent differential (recorder-fixtures.testkit.test.ts) and of the sync-child-process guard after its exemption for the subject was removed.",
+ "populationCapture": {
+  "command": "FIXTURE_LOG=<log> npx vitest run --project unit --project integration --project e2e packages/polaris-dossier packages/polaris-generation-consent",
+  "ranOn": "predecessor bytes, instrumented; instrumentation reverted after the run",
+  "instrumentation": "each exported render function renamed <name>__impl and re-exported as a wrapper appending {fn, args, out} as one JSON line to FIXTURE_LOG; for renderLocalAgentSignoff the wrapper also stored every file under its root (base64) so the replay rebuilds the root",
+  "suiteResult": "Test Files 42 passed (42); Tests 2067 passed | 1 skipped (2068)",
+  "calls": 3612,
+  "callsByFunction": {
+   "renderRecorderAct": 1902,
+   "renderPolicyAct": 801,
+   "renderDossierLocalAgentAct": 406,
+   "renderClassAct": 324,
+   "renderLocalAgentSignoff": 88,
+   "renderRegistryAct": 62,
+   "renderProviderV2Act": 28,
+   "recorderRecordPaths": 1
+  },
+  "distinctCalls": 244
+ },
+ "populationReplay": {
+  "ranOn": "subject bytes (loadRecorderForms awaited at the test file's top level), as a scratch integration test (not retained) calling each logged function with the logged arguments and comparing the JSON of the result with the logged output",
+  "calls": 3612,
+  "identical": 3612,
+  "different": 0,
+  "loggedOutputsSha256": "7a76251530de148d3b2ef50f64cebed84aa7c7661c04ca7a2373e67d48acc32a",
+  "loggedOutputsDigestMethod": "sha256 over the concatenated JSON.stringify(out) of every log line, in log order"
+ },
+ "mutants": {
+  "commit": "c00193e85918aa528601e6d21362bd9cee14d626",
+  "mutants": [
+   {
+    "mutant": "M1 policy instant filled from date",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "old": "fill(`policy:${version}`, { argument, date, instant, superseded: supersededArgument })",
+    "new": "fill(`policy:${version}`, { argument, date, instant: date, superseded: supersededArgument })",
+    "test": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
+    "exit": 1,
+    "killed": true,
+    "summary": "Tests  1 failed | 2 passed (3)"
+   },
+   {
+    "mutant": "M2 sign-off present/absent inverted",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "old": "installed === null ? 'absent' : 'present'",
+    "new": "installed === null ? 'present' : 'absent'",
+    "test": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
+    "exit": 1,
+    "killed": true,
+    "summary": "Tests  3 skipped (3)"
+   },
+   {
+    "mutant": "M3 sign-off digest of empty bytes",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "old": "sha: sha256(installed)",
+    "new": "sha: sha256('')",
+    "test": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
+    "exit": 1,
+    "killed": true,
+    "summary": "Tests  1 failed | 2 passed (3)"
+   },
+   {
+    "mutant": "M4 provider-v2 verdict not slotted",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "old": "'b'*64, 'c'*40, V, pv2.Selection",
+    "new": "'b'*64, 'c'*40, 'CONFIRM', pv2.Selection",
+    "test": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
+    "exit": 1,
+    "killed": true,
+    "summary": "Tests  1 failed | 2 passed (3)"
+   },
+   {
+    "mutant": "M5 sign-off disposition forms swapped",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "old": "disposition === null ? 'none' : 'named'",
+    "new": "disposition === null ? 'named' : 'none'",
+    "test": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
+    "exit": 1,
+    "killed": true,
+    "summary": "Tests  3 skipped (3)"
+   },
+   {
+    "mutant": "M6 recorder act argument slot dropped",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "old": "fill(`recorder:${key}`, { argument, date, instant })",
+    "new": "fill(`recorder:${key}`, { argument: '0'.repeat(64), date, instant })",
+    "test": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
+    "exit": 1,
+    "killed": true,
+    "summary": "Tests  1 failed | 2 passed (3)"
+   },
+   {
+    "mutant": "M7 loader never awaited",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
+    "old": "await loadRecorderForms();",
+    "new": "void loadRecorderForms;",
+    "test": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts",
+    "exit": 1,
+    "killed": true,
+    "summary": "Tests  3 skipped (3)"
+   },
+   {
+    "mutant": "G1 sync python3 spawn back in the testkit",
+    "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+    "old": "import { execFile } from 'node:child_process';",
+    "new": "import { execFile, spawnSync } from 'node:child_process';\nexport const probe = (): unknown => spawnSync('python3', ['-V']);",
+    "test": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
+    "exit": 1,
+    "killed": true,
+    "summary": "Tests  1 failed | 9 passed (10)"
+   }
+  ]
+ },
+ "mutantNotes": "M2, M5 and M7 kill in the beforeAll hook: the mutated form wants a slot the call does not supply (M2, M5), or no form is loaded (M7), so the render throws and the file fails with its 3 tests skipped (exit 1)."
+}
