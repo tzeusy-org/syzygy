@@ -65,7 +65,7 @@ function importsOf(file: string, text: string): { specifiers: string[]; unsuppor
         if (argument !== undefined && (ts.isStringLiteral(argument) || ts.isNoSubstitutionTemplateLiteral(argument))) specifiers.push(argument.text);
         else refuse(node, 'computed import()');
       } else {
-        let callee = node.expression;
+        let callee: ts.Expression = node.expression;
         while (ts.isParenthesizedExpression(callee)) callee = callee.expression;
         const name = ts.isIdentifier(callee) ? callee.text : ts.isPropertyAccessExpression(callee) ? callee.name.text
           : ts.isElementAccessExpression(callee) && ts.isStringLiteral(callee.argumentExpression) ? callee.argumentExpression.text : undefined;
