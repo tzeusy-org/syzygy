@@ -45,7 +45,7 @@ export function labelMarkup(value: string): boolean { return LABEL_MARKUP.test(v
 
 /** A quotation a short label may not carry: a quotation mark of any kind, or the quotation lead-in (R-MEA10-RICH-ELEMENTS-e06b-1 F2). A
  * label is never verified against a file, so a quotation in one would render as the agent's unverified copy. */
-const LABEL_QUOTATION = /["\u201C\u201D\u201E\u00AB\u00BB]|\bstates:/u;
+const LABEL_QUOTATION = /["\u201C\u201D\u201E\u00AB\u00BB]|\bstates:/iu;
 export function labelQuotation(value: string): boolean { return LABEL_QUOTATION.test(value); }
 
 export interface Derived {
@@ -98,7 +98,8 @@ type Block = SubjectBlock;
 export type Citation = { readonly at: string; readonly value: Readonly<Record<string, unknown>> };
 type BlobState =
   | { readonly state: 'absent' }
-  | { readonly state: 'excluded'; readonly outcome: ScreenExclusion }
+  /** `lines` only where Syzygy read the body before excluding it (content screening, not UTF-8): never a path-excluded body. */
+  | { readonly state: 'excluded'; readonly outcome: ScreenExclusion; readonly lines?: number }
   | { readonly state: 'admitted'; readonly entry: TreeEntry; readonly raw: string; readonly lines: number; tracked: TrackedText | null; readonly withheld?: readonly number[];
       readonly detectorIds?: readonly string[]; readonly retainedLines?: readonly string[]; readonly lineByteOffsets?: readonly number[]; readonly originalBytes?: number; readonly contentSha256?: string; readonly projection?: VerifiedRedactedBody;
       readonly activeContentAsBefore?: boolean };
@@ -220,10 +221,10 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
   for (const blob of read) {
     let raw: string;
-    try { raw = decoder.decode(blob.bytes); } catch { blobs.set(blob.path, { state: 'excluded', outcome: 'not-utf8-text' }); continue; }
+    try { raw = decoder.decode(blob.bytes); } catch { blobs.set(blob.path, { state: 'excluded', outcome: 'not-utf8-text', lines: lineCount(Buffer.from(blob.bytes).toString('latin1')) }); continue; }
     // A retained body (policy version 4) keeps only its retained text: a withheld line is never used to verify a quotation.
     const screened = inputs.screen.screenTargetBody(raw, blob.path);
-    blobs.set(blob.path, screened.kind === 'excluded' ? { state: 'excluded', outcome: screened.outcome }
+    blobs.set(blob.path, screened.kind === 'excluded' ? { state: 'excluded', outcome: screened.outcome, lines: lineCount(raw) }
       : screened.kind === 'redacted' ? { state: 'admitted', entry: blob, raw: retainedWithMarkers(screened.retainedLines, screened.withheld), lines: screened.retainedLines.length,
         tracked: null, withheld: screened.withheld, detectorIds: screened.detectorIds, retainedLines: screened.retainedLines, lineByteOffsets: screened.lineByteOffsets,
         originalBytes: screened.originalBytes, contentSha256: screened.contentSha256, projection: verifiedRedactedBody(raw, blob.id, blob.path, inputs.screen.screenTargetBody),
@@ -255,6 +256,12 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     // The limit holds whatever screening decides: only the exclusion itself is no finding (R-MEA10-RICH-ELEMENTS-e06b-1 F1).
     if (at.endsWith('.citation') && end - start + 1 > CODE_EXCERPT_MAX_LINES) {
       add({ kind: 'code-excerpt-too-long', at, ...about, detail: `a code excerpt names 1 to ${CODE_EXCERPT_MAX_LINES} lines; this one names ${end - start + 1}` });
+      continue;
+    }
+    // A code excerpt's range is checked against a body Syzygy read and then excluded, without naming its length; a path-excluded body is
+    // never read, so its range is not checked (R-MEA10-RICH-ELEMENTS-720d-2 F1).
+    if (state.state === 'excluded' && at.endsWith('.citation') && state.lines !== undefined && end > state.lines) {
+      add({ kind: 'range-beyond-blob', at: `${at}.endLine`, ...about, detail: `the range ends past the last line of ${pathLabel(cited)} at the pinned revision` });
       continue;
     }
     if (state.state !== 'admitted') continue;

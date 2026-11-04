@@ -288,6 +288,10 @@ describe('check: each rule refuses its own violation', () => {
       { kind: 'label-quotation', at: '$.sections[0].paragraphs[2].summary' }],
     ['a presentation element in a v2 draft', (d) => { d.sections[0].paragraphs.push({ kind: 'steps', id: 's1', items: [{ id: 's1a', label: 'non-normative', text: 'A.' }, { id: 's1b', label: 'non-normative', text: 'B.' }] }); },
       { kind: 'element-version', at: '$.sections[0].paragraphs[2]' }],
+    ['a code excerpt past the end of a file screening read and excluded', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', 'src/types.ts', 1, 3) }); },
+      { kind: 'range-beyond-blob', at: '$.sections[0].paragraphs[2].citation.endLine', citationId: 'c-x1' }],
+    ['a lead-in in capitals in a callout title', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'callout', id: 'k1', tone: 'note', title: 'THE README STATES: FAST', children: [{ id: 'k1a', label: 'non-normative', text: 'W.', children: [] }] }); },
+      { kind: 'label-quotation', at: '$.sections[0].paragraphs[2].title' }],
     ['a self-reported selection absent at the pinned revision', (d) => { d.discovery.deferred.push({ path: 'docs', reason: 'Later.' }); }, { kind: 'discovery-path-absent', at: '$.discovery.deferred[0].path' }],
   ])('reports %s', async (_name, change, expected) => {
     const run = await briefedRun();
@@ -295,6 +299,14 @@ describe('check: each rule refuses its own violation', () => {
     const result = report(await checkDraft(run, {}, deps()));
     expect(result.outcome).toBe('findings');
     expect(result.findings.filter((finding) => finding.kind !== 'schema').map(({ detail: _detail, ...rest }) => rest)).toEqual([expected]);
+  });
+
+  it('reports no range finding for an excerpt of a file screening read and excluded, within its lines, nor for a path-excluded file it never reads', async () => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', 'src/types.ts', 1, 2) }, { kind: 'code', id: 'x2', citation: cite('c-x2', '.env', 1, 5) }); }));
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result.findings).toEqual([]);
+    expect(result.outcome).toBe('passed');
   });
 
   it('passes plain labels, a snake_case name and a multiplication among them (syzygy-mea.10.5)', async () => {
