@@ -292,7 +292,7 @@ describe('check: each rule refuses its own violation', () => {
       { kind: 'element-version', at: '$.sections[0].paragraphs[2]' }],
     ['a code excerpt past the end of a file screening read and excluded', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', 'src/types.ts', 1, 3) }); },
       { kind: 'range-beyond-blob', at: '$.sections[0].paragraphs[2].citation.endLine', citationId: 'c-x1' }],
-    ...['\u201C', '\u201D', '\u201E', '\u00AB', '\u00BB'].map((mark): [string, (d: Draft) => void, Record<string, string>] => [
+    ...['\u201C', '\u201D', '\u201E', '\u00AB', '\u00BB'].map((mark): [string, (d: Draft) => void, { kind: string; at: string }] => [
       `an isolated non-straight quotation mark U+${mark.charCodeAt(0).toString(16)} in a label`,
       (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'details', id: 'x1', summary: `Read ${mark}this`, elements: [{ id: 'x1a', label: 'non-normative', text: 'W.', children: [] }] }); },
       { kind: 'label-quotation', at: '$.sections[0].paragraphs[2].summary' },
