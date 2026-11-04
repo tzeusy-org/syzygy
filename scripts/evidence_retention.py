@@ -849,6 +849,10 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                 ("directory", "scripts/consumer.py", "docs/evidence/nested/", "directory", "R1"),
                 ("digest", "scripts/consumer.py", digest(base_files[target]), "digest", "R1"),
                 ("glob", "docs/reviews/fixture-RAW.md", "docs/evidence/nested/*.json", "conservative-glob", "R1"),
+                ("evidence-relative-glob", "scripts/consumer.py", "nested/*.json", "conservative-glob", "R1"),
+                ("basename-glob", "scripts/consumer.py", "proo*.json", "conservative-glob", "R1"),
+                ("period-tail", "scripts/consumer.py", "docs/evidence/nested/proof.json.", "path-basename-or-stem", "R1"),
+                ("prefixed-suffix", "scripts/consumer.py", "wrapper/nested/proof.json", "path-basename-or-stem", "R1"),
                 ("governed", ".syzygy/fixture.md", target, "path-basename-or-stem", "R1"),
                 ("navigation-hold", "docs/navigation.md", target, "path-basename-or-stem", "hold")):
             changed = {**base_files, citer: text.encode()}
@@ -861,12 +865,31 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                           "observed": observed, "fixture_commit": checkpoint,
                           "control_pass": base_plan[0]["classification"] == "hold",
                           "restored_pass": make_plan(source_commit, base_rows, base_files) == base_plan})
+        # A valid filename ending in a period keeps both literal witness
+        # tokens. The independent oracle pins the original-token member even
+        # where period normalization and slash suffixes overlap on other paths.
+        dot_target = PREFIX + "nested/proof.json."
+        dot_files = {dot_target: b"terminal-dot fixture body\n"}
+        dot_rows = lines(make_census(dot_files))
+        dot_changed = {**dot_files, "scripts/dot-reader.py": dot_target.encode()}
+        dot_found = protection_witnesses(dot_changed, dot_rows)[dot_target]
+        dot_observed = [(w["kind"], w["form"], w["token"]) for w in dot_found]
+        dot_expected = [("code", "path-basename-or-stem", "docs/evidence/nested/proof.json."),
+                        ("code", "path-basename-or-stem", "proof.json.")]
+        cases.append({"predicate": "protection-witness-literal-terminal-period-token",
+                      "pass": dot_observed == dot_expected,
+                      "old": {p: b.decode() for p, b in dot_files.items()},
+                      "new": {"scripts/dot-reader.py": "docs/evidence/nested/proof.json."},
+                      "expected": dot_expected, "observed": dot_observed, "fixture_commit": checkpoint,
+                      "scope": "captured synthetic helper inputs, with a real owned census materialization"})
         raw_target = PREFIX + "fixture-RAW.md"
         # Witness exclusions and both wildcard forms are separate decisions;
         # another witness on the same row cannot stand in for the tested form.
         for name, citer, text, expected_form in (
                 ("question-glob", "scripts/consumer.py", "docs/evidence/nested/proof.?son", "conservative-glob"),
                 ("unscoped-glob", "scripts/consumer.py", "*/proof.json", None),
+                ("unscoped-question-glob", "scripts/consumer.py", "?ocs*/proof.json", None),
+                ("unscoped-bracket-glob", "scripts/consumer.py", "[d]ocs*/proof.json", None),
                 ("bracket-without-wildcard", "scripts/consumer.py", "docs/evidence/nested/proof[.]json", None),
                 ("administrative-exclusion", HOME + "INDEX.jsonl", target, None),
                 ("administrative-source-exclusion", HOME + "SOURCE.json", target, None),
