@@ -268,11 +268,6 @@
   ],
   "records": [
     {
-      "path": "docs/evidence/syzygy-bpyt-6-20/README.md",
-      "bytes": 7634,
-      "sha256": "0fa809a35ce4885534afd176e13c41cd80535475696556279de2b01cdf1da4b2"
-    },
-    {
       "path": "docs/evidence/syzygy-bpyt-6-20/baseline-manifest.json",
       "bytes": 5977,
       "sha256": "674e91a135548ce8f7648be5b9bc3975f259bd6bfb1b98d106f5f16c69df20b3"
