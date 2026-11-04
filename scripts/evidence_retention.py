@@ -438,7 +438,17 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         write(PREFIX + "review-RAW.md", "Synthetic reviewer corpus: docs/evidence/run-*.json\n")
         write("scripts/reader.py", "# A consumer pins docs/evidence/run-a.json\n")
         source_commit = commit(); home = root / HOME
-        prepare(root, source_commit, home); checkpoint = commit()
+        # Record valid preparation itself, so a mutant refusing this setup
+        # cannot masquerade as an empty test population.
+        preparation_case = {"predicate": "valid-preparation-bootstrap", "pass": False,
+                            "old": {"source_commit": source_commit, "evidence_files": 3},
+                            "new": "prepare the owned repository into its retention home",
+                            "expected": {"source_commit": source_commit, "evidence_files": 3},
+                            "fixture_commit": source_commit}
+        cases.append(preparation_case)
+        prepared = prepare(root, source_commit, home)
+        preparation_case["pass"] = prepared["source_commit"] == source_commit and prepared["evidence_files"] == 3
+        checkpoint = commit()
         def restore():
             git(root, "reset", "--hard", checkpoint)
             git(root, "clean", "-fdq")
