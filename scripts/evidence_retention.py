@@ -747,6 +747,8 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             cases.append({"predicate": "regular-entry-" + name, "pass": regular(entry) is expected,
                           "old": ["100644", "blob", blob_oid], "new": entry, "expected": expected,
                           "fixture_commit": checkpoint})
+            if name == "nonblob-with-regular-mode":
+                cases[-1]["scope"] = "regular-entry helper robustness; inconsistent mode/kind metadata is not a well-formed source-tree entry"
         # A three-field non-blob response is isolated at the batch helper's
         # explicit entry boundary; the source-tree reader filters such entries.
         probe("batch-nonblob-header", lambda: blobs(root, entries),
@@ -1025,13 +1027,17 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
               lambda: prepare(shallow, source_commit, shallow / HOME), "shallow-history",
               "full-history fixture root", "owned depth=1 fixture clone")
         # Inherited repository/configuration bindings cannot redirect a read.
+        # Query the injected key itself: core.bare does not change this
+        # fixture's --show-toplevel output, so it cannot witness isolation.
+        git(root, "config", "retention.fixture", "owned-baseline-value")
         for name, overrides, args, expected in (
                 ("directory", {"GIT_DIR": str(Path(temp) / "not-a-repository")}, ("rev-parse", "HEAD"), sibling),
                 ("worktree", {"GIT_WORK_TREE": str(Path(temp))}, ("rev-parse", "--show-toplevel"), str(root)),
                 ("index", {"GIT_INDEX_FILE": str(Path(temp) / "absent-index")},
                  ("ls-files", "--error-unmatch", PREFIX + "run-a.json"), PREFIX + "run-a.json"),
-                ("config", {"GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "core.bare", "GIT_CONFIG_VALUE_0": "true"},
-                 ("rev-parse", "--show-toplevel"), str(root))):
+                ("config", {"GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "retention.fixture",
+                            "GIT_CONFIG_VALUE_0": "owned-injected-value"},
+                 ("config", "--get", "retention.fixture"), "owned-baseline-value")):
             prior = {key: os.environ.get(key) for key in overrides}
             try:
                 os.environ.update(overrides); observed = git(root, *args).decode().strip()

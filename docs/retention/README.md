@@ -98,7 +98,7 @@ bounded expressions. The forbidden-character cases also name each materialized
 input's digest. Equivalent or dominated terms are explained separately, with
 joint mutations for mutually redundant constraints. They are not counted as
 reachable production kills. Malformed batch-output and inconsistent
-self-digest metadata cases explicitly isolate helper boundaries; they do not
+regular-entry or self-digest metadata cases explicitly isolate helper boundaries; they do not
 establish that those inputs can arise from a valid measured source.
 
 Negative source-path fixtures resolve inside their outer temporary fixture
