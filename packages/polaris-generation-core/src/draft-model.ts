@@ -39,9 +39,23 @@ export const fidelity = object({ inventoryCoverage, blockSupport,
   findings: list(object({ severity: { ...text, enum: ['blocking', 'advisory'] }, message: text, target: handle }), 0, 1000),
 });
 
+import type { LocalSegment } from './local-render.js';
+
 export interface DraftParagraph { id: string; text: string; sourceIds: string[] }
-/** A section or deep-dive block: a parent paragraph and its 0–12 leaf children. */
-export interface DraftBlock extends DraftParagraph { children: DraftParagraph[] }
+/** A section or deep-dive block: a parent paragraph and its 0–12 leaf children. An operator-agent draft's entry may instead be a v1.3
+ * rich element (`element`, syzygy-mea.10.5), whose own id the entry carries with empty text, no sources and no children; the provider
+ * pipeline never sets it. */
+export interface DraftBlock extends DraftParagraph { children: DraftParagraph[]; element?: DraftElement }
+/** A v1.3 rich element. Labels are presentation; every `DraftParagraph` inside is a claim, rendered as a block is. */
+export type DraftElement =
+  | { kind: 'table'; caption: string; columns: string[]; rowHeaders: boolean; rows: { id: string; cells: (DraftParagraph | null)[] }[] }
+  | { kind: 'callout'; tone: 'note' | 'tip' | 'caution' | 'important'; title: string; children: DraftBlock[] }
+  | { kind: 'steps'; items: DraftParagraph[] }
+  | { kind: 'definitions'; entries: { term: string; definition: DraftParagraph }[] }
+  | { kind: 'cards'; items: { label: string; body: DraftParagraph }[] }
+  | { kind: 'details'; summary: string; elements: DraftBlock[] }
+  /** Lines Syzygy read at the pinned revision, as quotation segments (one per source piece), or one withheld segment. */
+  | { kind: 'code'; language: string; path: string; startLine: number; endLine: number; parts: LocalSegment[] };
 export type DiagramKind = typeof DIAGRAM_KINDS[number];
 export type EpistemicMarking = 'observed' | 'inferred' | 'unknown';
 export interface DraftDiagramNode { id: string; label: string; sourceIds: string[]; epistemic: EpistemicMarking }
@@ -81,7 +95,8 @@ export function validateRequestedAssets(value: unknown): RequestedAsset[] {
   return structuredClone(assets);
 }
 
-/** Every block of a tree, parent first: children are blocks everywhere. */
+/** Every block of a tree, parent first: children are blocks everywhere. A provider draft never carries a rich element (its closed schema
+ * refuses `element`); an operator-agent draft's claims are walked by the dossier package's `contentClaims` instead. */
 export function treeBlocks(blocks: readonly DraftBlock[]): DraftParagraph[] {
   return blocks.flatMap(block => [block, ...block.children]);
 }
