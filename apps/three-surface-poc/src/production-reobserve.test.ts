@@ -1,9 +1,9 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { rmSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { describeReevaluation, evaluationClocks, evaluationIdentity, type PocEvaluationEvidence, type PocModel } from '@syzygy/three-surface-poc-core';
+import { tempDir } from '@syzygy/test-kit';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { createReobserveState } from './reobserve-state.js';
@@ -85,8 +85,7 @@ describe('production-owned capture-to-model re-observation seam', () => {
 
   it('keeps served bytes and asOf stable when the same capture is rebuilt across wall-clock instants', () => {
     const fixture = fixtureRepoWithGit(cleanups);
-    const stateDir = mkdtempSync(join(tmpdir(), 'syzygy-production-reobserve-state-'));
-    cleanups.push(stateDir);
+    const stateDir = tempDir('syzygy-production-reobserve-state-');
     const observed = capture(fixture.revision, '2026-08-30T12:00:00Z', 0);
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-09-22T00:00:00Z'));
@@ -100,8 +99,7 @@ describe('production-owned capture-to-model re-observation seam', () => {
 
   it('uses the production builder for an atomic successful swap with identity advancement and one in-flight observation', async () => {
     const fixture = fixtureRepoWithGit(cleanups);
-    const stateDir = mkdtempSync(join(tmpdir(), 'syzygy-production-reobserve-state-'));
-    cleanups.push(stateDir);
+    const stateDir = tempDir('syzygy-production-reobserve-state-');
     const initialCapture = capture(fixture.revision, '2026-08-30T12:00:00Z', 0);
     const nextCapture = capture(fixture.revision, '2026-09-23T00:00:00Z', 3, 'working-tree-b');
     const initialModel = build(fixture.repoRoot, stateDir, initialCapture);
@@ -133,8 +131,7 @@ describe('production-owned capture-to-model re-observation seam', () => {
 
   it('re-evaluates an unchanged repository twice: two distinct named identities, the first result unchanged (syzygy-u05.2)', async () => {
     const fixture = fixtureRepoWithGit(cleanups);
-    const stateDir = mkdtempSync(join(tmpdir(), 'syzygy-production-reobserve-state-'));
-    cleanups.push(stateDir);
+    const stateDir = tempDir('syzygy-production-reobserve-state-');
     const captures = [
       capture(fixture.revision, '2026-10-03T01:00:00Z', 0),
       capture(fixture.revision, '2026-10-03T02:00:00Z', 0),
@@ -161,8 +158,7 @@ describe('production-owned capture-to-model re-observation seam', () => {
 
   it('retains the prior production model and non-zero drift when the production build fails', async () => {
     const fixture = fixtureRepoWithGit(cleanups);
-    const stateDir = mkdtempSync(join(tmpdir(), 'syzygy-production-reobserve-state-'));
-    cleanups.push(stateDir);
+    const stateDir = tempDir('syzygy-production-reobserve-state-');
     const initialCapture = capture(fixture.revision, '2026-08-30T12:00:00Z', 7);
     const nextCapture = capture(fixture.revision, '2026-09-23T00:00:00Z', 0, 'working-tree-b');
     const initialModel = build(fixture.repoRoot, stateDir, initialCapture);

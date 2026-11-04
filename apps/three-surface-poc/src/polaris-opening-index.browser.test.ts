@@ -21,8 +21,7 @@
 //
 // The viewport each run used is published with its result. Without a
 // browser the suite is skipped, never passed.
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -32,6 +31,7 @@ import { findBrowserExecutable, launchBrowser, type Browser, type BrowserPage } 
 import { ACCESSIBILITY_VARIANTS, variantModel } from './polaris-accessibility-variants.js';
 import { OPENING_INDEX_PLACEHOLDER, substituteOpeningIndex } from './polaris-opening-index.js';
 import { renderPolarisPage } from './polaris.js';
+import { tempDir } from '@syzygy/test-kit';
 
 // ---------------------------------------------------------------------------
 // The requirement's table, and the published recognizer.
@@ -312,12 +312,11 @@ describe.skipIf(executable === undefined)('opening index in a real browser (PWB-
 
   beforeAll(async () => {
     browser = await launchBrowser(executable as string);
-    pages = mkdtempSync(join(tmpdir(), 'syzygy-poc-opening-index-'));
+    pages = tempDir('syzygy-poc-opening-index-');
   }, 60_000); // launches Chrome: under 0.6 s in 10 alone runs, but a full-suite run at load1 56-71 left up to 5.1 s of its file's time to its hooks (docs/evidence/syzygy-bpyt-4-31/full-runs.json)
 
   afterAll(async () => {
     await browser?.close();
-    if (pages !== undefined) rmSync(pages, { recursive: true, force: true });
     for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });
     process.stdout.write(`[P-98 opening index] ${JSON.stringify(reports)}\n`);
   });

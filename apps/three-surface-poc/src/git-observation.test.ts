@@ -1,18 +1,9 @@
 import { execFileSync } from 'node:child_process';
-import {
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  renameSync,
-  rmSync,
-  statSync,
-  writeFileSync,
-} from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { reach, readModule, WORKSPACE } from '../../../packages/polaris-generation-core/src/workspace-reach.testkit.js';
 import {
@@ -24,15 +15,9 @@ import {
   pocObserverInputsAreClean,
   resolvePwbRepositoryBinding,
 } from './git-observation.js';
+import { tempDir } from '@syzygy/test-kit';
 
-const cleanups: string[] = [];
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
-
-afterEach(() => {
-  for (const directory of cleanups.splice(0)) {
-    rmSync(directory, { recursive: true, force: true });
-  }
-});
 
 function git(root: string, args: readonly string[]): string {
   return execFileSync('git', ['-C', root, ...args], {
@@ -42,8 +27,7 @@ function git(root: string, args: readonly string[]): string {
 }
 
 function repositoryWithFile(relativePath: string): string {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-git-'));
-  cleanups.push(root);
+  const root = tempDir('syzygy-poc-git-');
   const absolutePath = join(root, relativePath);
   mkdirSync(dirname(absolutePath), { recursive: true });
   writeFileSync(absolutePath, 'export const value = 1;\n', 'utf8');
@@ -58,8 +42,7 @@ function repositoryWithFile(relativePath: string): string {
 }
 
 function repositoryWithFiles(files: Readonly<Record<string, string>>): string {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-git-'));
-  cleanups.push(root);
+  const root = tempDir('syzygy-poc-git-');
   for (const [relativePath, text] of Object.entries(files)) {
     mkdirSync(dirname(join(root, relativePath)), { recursive: true });
     writeFileSync(join(root, relativePath), text, 'utf8');

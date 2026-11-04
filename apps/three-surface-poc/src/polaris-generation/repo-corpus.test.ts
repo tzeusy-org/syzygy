@@ -1,12 +1,13 @@
 import { execFileSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 
-import { chmodSync, existsSync, mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { DOSSIER_READER_QUESTIONS, DOSSIER_REQUESTED_ASSETS, quotableGenerationSources, validateGenerationSources } from '@syzygy/polaris-generation-core';
+import { tempDir } from '@syzygy/test-kit';
 
 import { main } from './repo-corpus-main.js';
 import { isolatedGit } from './isolated-git.js';
@@ -16,15 +17,11 @@ const allow: CorpusAdmissionPort = { decide: async () => ({ allowed: true, permi
 const budget = { maxCalls: 7, maxInputBytes: 5_000_000, maxOutputBytes: 1_000_000, maxUsageUnits: 100, maxElapsedMs: 30_000, maxRepairCycles: 1, accountingPolicy: 'fixture-v1' };
 const configText = (extra: Record<string, unknown> = {}): string => JSON.stringify({ repositoryId: 'repository:fixture', revision: 'a'.repeat(40), readerQuestions: [{ id: 'what', topics: [], text: 'What is it?' }],
   requestedAssets: [{ id: 'overview', kind: 'section', required: true }], budget, ...extra });
-const cleanups: string[] = [];
-afterAll(() => rmSync(root, { recursive: true, force: true }));
-afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });
 
 let root = '', commit = '';
 const big = `${'int line_of_code = 42; /* padding */\n'.repeat(3000)}end\n`;
 beforeAll(() => {
-  root = mkdtempSync(join(tmpdir(), 'syzygy-repo-corpus-'));
-  // removed in afterAll
+  root = tempDir('syzygy-repo-corpus-');
   const run = (...args: string[]): string => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8' }).trim();
   run('init', '-q'); run('config', 'gc.auto', '0'); run('config', 'maintenance.auto', 'false'); run('config', 'user.email', 'f@example.invalid'); run('config', 'user.name', 'F');
   const files: Record<string, string | Buffer> = { 'src/a.c': 'int a(void) { return 1; }\n', 'src/big.c': big, 'docs/readme.md': '# Readme\n',
@@ -49,7 +46,7 @@ const expectAccounted = (corpus: Awaited<ReturnType<typeof readRepoCorpus>>): vo
 let hostile = '', hostileCommit = '', hostileTree = '', hostileTag = '';
 const sentinel = join(tmpdir(), `syzygy-fsmonitor-sentinel-${process.pid}`);
 beforeAll(() => {
-  hostile = mkdtempSync(join(tmpdir(), 'syzygy-repo-hostile-'));
+  hostile = tempDir('syzygy-repo-hostile-');
   const run = (...args: string[]): string => execFileSync('git', ['-C', hostile, ...args], { encoding: 'utf8' }).trim();
   run('init', '-q'); run('config', 'gc.auto', '0'); run('config', 'maintenance.auto', 'false'); run('config', 'user.email', 'f@example.invalid'); run('config', 'user.name', 'F');
   const files: Record<string, string | Buffer> = { 'bom.txt': Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), Buffer.from('hello\n')]), 'empty/__init__.py': '', 'we\\ird.txt': 'odd name\n', 'ok.md': '# ok\n' };
@@ -63,7 +60,7 @@ beforeAll(() => {
   writeFileSync(script, `#!/bin/sh\ntouch '${sentinel}'\n`); chmodSync(script, 0o755);
   run('config', 'core.fsmonitor', script); run('config', 'core.hooksPath', join(hostile, '.git', 'evil-hooks'));
 });
-afterAll(() => { rmSync(sentinel, { force: true }); rmSync(hostile, { recursive: true, force: true }); });
+afterAll(() => { rmSync(sentinel, { force: true }); });
 
 describe('hostile tree entries never fail the run', () => {
   const hcfg = (extra: Partial<Parameters<typeof readRepoCorpus>[1]> = {}) => ({ ...cfg({ exclude: [] }), revision: hostileCommit, ...extra });
@@ -244,8 +241,7 @@ describe('globs and config', () => {
 
 describe('cli', () => {
   it('exits 1 with the refusal under the default port and 0 with an allowing port', async () => {
-    const dir = mkdtempSync(join(tmpdir(), 'syzygy-repo-cli-'));
-    cleanups.push(dir);
+    const dir = tempDir('syzygy-repo-cli-');
     writeFileSync(join(dir, 'c.json'), configText({ revision: commit }));
     const err = vi.spyOn(process.stderr, 'write').mockReturnValue(true), out = vi.spyOn(process.stdout, 'write').mockReturnValue(true);
     try {
