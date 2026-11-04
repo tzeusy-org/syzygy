@@ -518,7 +518,7 @@ def selftest() -> int:
         results.append(("an illegible options line fails",
                         any("no legible" in f for f in signed_findings(root))))
         _record_v11(root)
-        (root / DECISIONS / f"{RECORD_STEM}-SIGNOFF-v1.3.md").write_text("Review: x\n")
+        (root / DECISIONS / f"{RECORD_STEM}-SIGNOFF-v1.4.md").write_text("Review: x\n")
         results.append(("a later version no builder knows fails",
                         any("has no builder" in f for f in signed_findings(root))))
 
