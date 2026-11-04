@@ -1,10 +1,13 @@
 > **Candidate — binds nothing.** Impact ledger for semantic delta
 > DOSSIER-LOCAL-AGENT-1.3 (`SEMANTIC-DELTA.md` in this directory), under
 > CC-IMPACT-1 to CC-IMPACT-6. Every figure below was computed by script on
-> branch `agent/syzygy-mea-10-3-v1-3` at
-> `1c3342717706872466a505bce60edb926935fe7a`, whose
+> branch `agent/syzygy-mea-10-3-v1-3`, whose
 > `openspec/changes/polaris-dossier-local-agent-mode/` bytes are v1.2 as on
-> `main`; the predicates are published so that a reader can re-run them.
+> `main`: the digests and counts over the round-1-repaired patches, the text
+> sweep and the recording rehearsal at
+> `1c3342717706872466a505bce60edb926935fe7a`, over the round-1 patches (the
+> repair added no phrase the sweep matches). The predicates are published so
+> that a reader can re-run them.
 
 # Impact ledger — Polaris dossier local-agent mode, version 1.3
 
@@ -16,8 +19,8 @@ three patches applied by `git apply` and `check_spec_reconciliation.py
 
 | File, under `openspec/changes/polaris-dossier-local-agent-mode/` | v1.2 | v1.3 (patches applied, regenerated) |
 |---|---|---|
-| `specs/polaris-generation/spec.md` | `d6bce6b3aca13098f8d7ca28cee6aed5475e7522b2305958580eb17c4ffc3ea2` | `51dafbaa9c51d083ed0f690d155f1d593dd04af3bf1885ecfd9a4d63f2e1a472` |
-| `design.md` | `4e04bd40453b4026deaddc60c4d1a3d98801bb84b0422cac8c168467c5568e53` | `8f75336db0edcb873272586f34d27a4c9f17bf13ce38c3c06216275e46292a0e` |
+| `specs/polaris-generation/spec.md` | `d6bce6b3aca13098f8d7ca28cee6aed5475e7522b2305958580eb17c4ffc3ea2` | `5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3` |
+| `design.md` | `4e04bd40453b4026deaddc60c4d1a3d98801bb84b0422cac8c168467c5568e53` | `d752d8f155a4837ecf4326690325f5f73ce91de49757c27e8bb5f0f72bdbafd0` |
 | `proposal.md` | `73ace9e28e0eae2496c1810fbd5cbb4c7f946b636b49b42418ce98cdbefd0be4` | `afe81684bcf421ac3e12d8d024aa64ad1c5fbd86b0689fa267954cc2469c10eb` |
 | `GOVERNING-DEPENDENCIES.md` (regenerated) | `b0da779018ed5f3d99f5decf63b4ecdc6c1704b4f96084547e4a01e740a4d73a` | `d5dd52515b5d7dae3ff9477c5e324fd5e42c0b713e8cbbc9f19a1b748e2df688` |
 | `tasks.md` | `6ccaa6893947aa9cbb7dbe7b3704b7084167aee4bc74d4bf251b66115edd60c6` | unchanged |
@@ -25,10 +28,10 @@ three patches applied by `git apply` and `check_spec_reconciliation.py
 The v1.3 spec digest is the reviewed subject: the sha256 of the installed
 spec with `proposed/spec.md.patch` applied, which a review raw's
 `Manifest SHA-256` line carries. The patches are under `proposed/`:
-`spec.md.patch` (71 lines), `design.md.patch` (65) and `proposal.md.patch`
+`spec.md.patch` (84 lines), `design.md.patch` (67) and `proposal.md.patch`
 (39). Each applies to the v1.2 bytes with `git apply`. The regeneration also
 rewrites `docs/evidence/spec-readability-reconciliation-2026-10-02/census.json`
-(the Polaris scenario total and REQ-polaris-generation-034's four new
+(the Polaris scenario total and REQ-polaris-generation-034's six new
 scenario names), and no other tracked file.
 
 ## Counts
@@ -39,11 +42,12 @@ Polaris composition:
 | Bytes | Requirements | Scenarios |
 |---|---|---|
 | v1.2 | 36 | 248 |
-| v1.3 | 36 | 252 |
+| v1.3 | 36 | 254 |
 
-The four scenarios v1.3 adds, all to REQ-polaris-generation-034, are "Claim
+The six scenarios v1.3 adds, all to REQ-polaris-generation-034, are "Claim
 inside a presentation element checked as a block", "Short label carries no
-claim", "Code excerpt rendered from Syzygy's read" and "Presentation element
+claim", "Code excerpt rendered from Syzygy's read", "Code excerpt over its
+limit", "Code excerpt of an excluded file" and "Presentation element
 rendered inert". No scenario is edited, removed or renamed. `openspec
 validate polaris-dossier-local-agent-mode --strict` reports the change valid
 on the applied bytes.
@@ -83,12 +87,13 @@ the v1.3 install.
 
 ## Checks on the applied bytes
 
-[Observed] A rehearsal of the recording in a throwaway clone of
-`1c334271` (`git clone --no-hardlinks`, under the session's scratch
-directory), with a synthetic CONFIRM raw whose head carries the digest above,
+[Observed] A rehearsal of the recording, over the round-1 patches (36
+requirements and 252 scenarios; the repair adds two scenarios and changes no
+step of the recording), in a throwaway clone of `1c334271` (`git clone --no-hardlinks`, under the session's scratch
+directory), with a synthetic CONFIRM raw whose head carried the round-1 subject's digest,
 applied the patches through `record_versioned_signoff.py --record
 polaris-dossier-local-agent-mode --version 1.3`. That moved the status figure
-to (36, 252), wrote the v1.3 record and aggregate block, and named four
+to (36, 252) for those bytes, wrote the v1.3 record and aggregate block, and named four
 records on the status page. After `--regenerate` and a commit:
 
 - `record_versioned_signoff.py --check polaris-dossier-local-agent-mode

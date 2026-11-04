@@ -1,5 +1,5 @@
 diff --git a/openspec/changes/polaris-dossier-local-agent-mode/design.md b/openspec/changes/polaris-dossier-local-agent-mode/design.md
-index 9a770695..80610f01 100644
+index 9a770695..0578381d 100644
 --- a/openspec/changes/polaris-dossier-local-agent-mode/design.md
 +++ b/openspec/changes/polaris-dossier-local-agent-mode/design.md
 @@ -1,9 +1,9 @@
@@ -15,7 +15,7 @@ index 9a770695..80610f01 100644
  > implementation. It contains no code. The command surface below is a design
  > for implementation after the owner's sign-off (direction item 5); the
  > requirements are the controlling text, and doctrine, accepted contracts,
-@@ -386,6 +386,47 @@ execution carries `basis: execution` and the identifiers of the executions
+@@ -386,6 +386,49 @@ execution carries `basis: execution` and the identifiers of the executions
  it rests on. Quotations keep the existing lead-in form (`QUOTE_LEAD_IN`),
  and each names its citation.
  
@@ -25,23 +25,25 @@ index 9a770695..80610f01 100644
 +`OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04`). They sit in the existing
 +`paragraphs` arrays of sections and deep dives, whose name stays. An entry
 +without `kind` is the existing block. An entry with `kind` is one of the
-+seven elements below. "Claim form" means the existing block's claim fields:
-+`id`, `label`, `basis` or `reason`, `text`, `citations` and `quotations`.
-+"Block" means the existing block, with its own `children`.
++seven elements below. "Claim form" means every field of the existing
++block except `children`: `id`, `label`, `basis` or `reason`, the execution
++identifiers of a claim resting on execution, `text`, `citations` and
++`quotations`. "Block" means the existing block, with its own `children`.
 +
 +| `kind` | Fields | Limits | Renders as |
 +|---|---|---|---|
-+| `table` | `id`, `caption`, `columns` (column labels), `rowHeaders` (boolean), `rows`, each `{id, cells}`; a cell is a claim form or `{kind: "empty"}` | 1 to 8 columns; 1 to 40 rows; each row has exactly one cell per column | a `table` with its `caption`; each column label is a header cell scoped to its column, and with `rowHeaders` each row's first cell is a header cell scoped to its row |
++| `table` | `id`, `caption`, `columns` (column labels), `rowHeaders` (boolean), `rows`, each `{id, cells}`; a cell is a claim form or `{kind: "empty"}`, which states nothing and renders the words "no entry" | 1 to 8 columns; 1 to 40 rows; each row has exactly one cell per column | a `table` with its `caption`; each column label is a header cell scoped to its column, and with `rowHeaders` each row's first cell is a header cell scoped to its row |
 +| `callout` | `id`, `tone` (`note`, `tip`, `caution` or `important`), `title`, `children` (blocks) | 1 to 12 children | an `aside` whose tone is written as a word beside the title, with its colour as a second cue only |
 +| `steps` | `id`, `items` (blocks without children) | 2 to 20 items | an `ol` |
 +| `definitions` | `id`, `entries`, each `{term, definition}`; the definition is a claim form | 1 to 40 entries | a `dl` |
-+| `cards` | `id`, `items`, each `{label, body}`; the body is a claim form | 2 to 6 items | a list of cards, each headed by its label |
++| `cards` | `id`, `items`, each `{label, body}`; the body is a claim form | 2 to 6 items | a list whose items are each headed by their label |
 +| `details` | `id`, `summary`, `elements` (blocks, or any element but `details`) | 1 to 30 elements | `details` with its `summary`, holding no fragment target |
 +| `code` | `id`, optional `language` (a short label), `citation` (`{id, path, startLine, endLine}`) | 1 to 60 lines | `pre` and `code`, the lines as Syzygy read them at the pinned revision, with their anchor |
 +
 +The short labels are `caption`, each column label, `title`, `term`, `label`,
 +`summary` and `language`. Each is plain text of at most 120 characters, never
-+a quotation, and carries no citation. Every claim form inside an element is
++a quotation, and carries no citation and no markup (no `<`, `&` or backtick
++character, and no Markdown link, image or paired emphasis mark). Every claim form inside an element is
 +checked as a claim block is: its label, its citations, its quotations and,
 +for `unknown`, its RFC2-24 reason. Each counts in the fidelity verdict's
 +`blockSupport` by its own `id`, and each renders with its marking. Element

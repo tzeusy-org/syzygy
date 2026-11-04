@@ -33,8 +33,8 @@ Three files move, by the patches under `proposed/`:
 `OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04`. `tasks.md` is unchanged.
 
 **Stable IDs affected:** REQ-polaris-generation-034, amended in place: one
-paragraph added to the requirement text, four scenarios added, and the case,
-the observable, the falsifier and the warrant block's `decisions` extended.
+paragraph added to the requirement text, six scenarios added, and the case,
+the observable, the oracle, the falsifier and the warrant block's `decisions` extended.
 No other requirement changes. No identifier is minted, retired, renamed or
 renumbered, and no requirement title changes.
 
@@ -72,9 +72,11 @@ At v1.2, REQ-polaris-generation-034:
 - renders a quotation from a blob that classification or screening excludes
   as Unknown with `excluded-content`, carrying none of its bytes;
 - renders through "the existing multi-page dossier renderer" and says
-  nothing of any presentation element. The design's draft schema,
-  `polaris-dossier-local-draft-v2`, has blocks with children and nothing else
-  in a section's `paragraphs`.
+  nothing of any presentation element. The design describes the draft
+  schema without naming a version; the implementation calls it
+  `polaris-dossier-local-draft-v2`, and it has blocks with children and
+  nothing else in a section's `paragraphs`. Version 1.3 names both versions
+  in the design for the first time.
 
 REQ-polaris-generation-035 requires the fidelity verdict to carry an entry
 for "every inventory entry and every claim block".
@@ -92,7 +94,13 @@ for "every inventory entry and every claim block".
    every rule of this requirement and of REQ-polaris-generation-035: it
    carries its own identity, label, citations and quotations; Syzygy checks
    it and reports its findings as for any claim block; the fidelity verdict
-   carries an entry for it; and it renders with its label's marking." So the
+   carries an entry for it; and it renders with its label's marking." A
+   table cell may instead be empty, and an empty cell is bounded so that it
+   cannot carry an unlabelled negative: it "states nothing, carries no label,
+   citation or quotation, and SHALL render with the visible words "no
+   entry", never as a blank a reader could take for a negative; an absence
+   or a negative the draft means to state SHALL be written as a claim in that
+   cell, Inferred with its citations or Unknown with its reason." So the
    labelling, citation and quotation rules, the RFC2-24 reasons, the
    execution marking and the fidelity verdict's `blockSupport` reach every
    claim, wherever it sits.
@@ -104,12 +112,15 @@ for "every inventory entry and every claim block".
    SHALL state no fact about the subject, carries no epistemic label of its
    own and SHALL NOT render as Observed." Syzygy checks what it can: "Syzygy
    SHALL report a finding for a short label longer than 120 characters or one
-   that carries a citation, a quotation or markup; that a label states no
+   that carries a citation, a quotation or markup (a `<`, `&` or backtick
+   character, or a Markdown link, image or paired emphasis mark); that a
+   label states no
    fact is the agent's report, open to the fidelity and rendered-design
    reviews."
 4. **A code excerpt is Syzygy's read, never the agent's text.** "A code
-   excerpt carries no text of the agent's: it names one citation of at most
-   60 lines, and Syzygy SHALL render those lines from the blob it read and
+   excerpt carries no text of the agent's: it SHALL name one citation of 1
+   to 60 lines, and Syzygy SHALL report a repair finding for one of more;
+   Syzygy SHALL render those lines from the blob it read and
    verified at the pinned revision, byte for byte, as a quotation Syzygy has
    verified, labelled Observed, with an anchor in the form above whose
    fragment is the lines' byte range". The citation rules and the excluded-blob
@@ -121,18 +132,21 @@ for "every inventory entry and every claim block".
 5. **Inert, semantic rendering.** "Syzygy SHALL render every element
    through the same renderer as inert static HTML, in the HTML element whose
    meaning matches it (a table whose header cells are scoped to their row or
-   column, an aside, an ordered list, a description list, a details element
-   with its summary, preformatted code), with no script and no change to the
+   column, an aside, an ordered list, a description list, a list whose items
+   are each headed by their label, a details element with its summary,
+   preformatted code), with no script and no change to the
    pages' content security policy; a callout's tone SHALL be stated in its
    words, never by colour alone; and no fragment target SHALL sit inside a
    collapsible section."
 6. **Nothing else is added.** "An element adds no read, no source and no
    label beyond those of the claims it carries and the excerpt Syzygy reads."
 
-Four scenarios carry these: "Claim inside a presentation element checked as
+Six scenarios carry these: "Claim inside a presentation element checked as
 a block", "Short label carries no claim", "Code excerpt rendered from
-Syzygy's read" and "Presentation element rendered inert". The falsifier
-gains one arm per item, and the case and the observable gain the elements.
+Syzygy's read", "Code excerpt over its limit", "Code excerpt of an excluded
+file" and "Presentation element rendered inert". The falsifier gains one arm
+per item and one for the empty cell, the case and the observable gain the
+elements, and the oracle says where each element's expected output is fixed.
 
 ### The element schema (design, `polaris-dossier-local-draft-v3`)
 
@@ -140,24 +154,25 @@ gains one arm per item, and the case and the observable gain the elements.
 the draft schema is `polaris-dossier-local-draft-v3`; Syzygy still accepts a
 `polaris-dossier-local-draft-v2` draft, which uses no element. Elements sit in
 the existing `paragraphs` arrays of sections and deep dives, whose name
-stays. An entry without `kind` is the existing block. "Claim form" means the
-existing block's claim fields: `id`, `label`, `basis` or `reason`, `text`,
-`citations` and `quotations`. "Block" is the existing block, with its own
-`children`.
+stays. An entry without `kind` is the existing block. "Claim form" means
+every field of the existing block except `children`: `id`, `label`, `basis`
+or `reason`, the execution identifiers of a claim resting on execution,
+`text`, `citations` and `quotations`. "Block" is the existing block, with
+its own `children`.
 
 | `kind` | Fields | Limits | Renders as |
 |---|---|---|---|
-| `table` | `id`, `caption`, `columns` (column labels), `rowHeaders` (boolean), `rows`, each `{id, cells}`; a cell is a claim form or `{kind: "empty"}` | 1 to 8 columns; 1 to 40 rows; each row has exactly one cell per column | a `table` with its `caption`; each column label is a header cell scoped to its column, and with `rowHeaders` each row's first cell is a header cell scoped to its row |
+| `table` | `id`, `caption`, `columns` (column labels), `rowHeaders` (boolean), `rows`, each `{id, cells}`; a cell is a claim form or `{kind: "empty"}`, which states nothing and renders the words "no entry" | 1 to 8 columns; 1 to 40 rows; each row has exactly one cell per column | a `table` with its `caption`; each column label is a header cell scoped to its column, and with `rowHeaders` each row's first cell is a header cell scoped to its row |
 | `callout` | `id`, `tone` (`note`, `tip`, `caution` or `important`), `title`, `children` (blocks) | 1 to 12 children | an `aside` whose tone is written as a word beside the title, with its colour as a second cue only |
 | `steps` | `id`, `items` (blocks without children) | 2 to 20 items | an `ol` |
 | `definitions` | `id`, `entries`, each `{term, definition}`; the definition is a claim form | 1 to 40 entries | a `dl` |
-| `cards` | `id`, `items`, each `{label, body}`; the body is a claim form | 2 to 6 items | a list of cards, each headed by its label |
+| `cards` | `id`, `items`, each `{label, body}`; the body is a claim form | 2 to 6 items | a list whose items are each headed by their label |
 | `details` | `id`, `summary`, `elements` (blocks, or any element but `details`) | 1 to 30 elements | `details` with its `summary`, holding no fragment target |
 | `code` | `id`, optional `language` (a short label), `citation` (`{id, path, startLine, endLine}`) | 1 to 60 lines | `pre` and `code`, the lines as Syzygy read them at the pinned revision, with their anchor |
 
 The short labels are `caption`, each column label, `title`, `term`, `label`,
 `summary` and `language`: plain text of at most 120 characters, never a
-quotation, with no citation. Each claim form inside an element counts in the
+quotation, with no citation and no markup. Each claim form inside an element counts in the
 fidelity verdict's `blockSupport` by its own `id`. A `code` element has no
 `blockSupport` entry of its own; its span is one of the cited spans the
 fidelity packet carries. Element, row and code-citation `id`s share the
@@ -211,7 +226,7 @@ elements".
 - [Observed, this session, over the v1.2 bytes on `main` with these patches
   applied] `openspec validate polaris-dossier-local-agent-mode --strict`
   reports the change valid; `scripts/count_polaris_effective_scenarios.py`
-  gives 36 requirements and 252 scenarios, against 36 and 248 at v1.2.
+  gives 36 requirements and 254 scenarios, against 36 and 248 at v1.2.
 - An implementation is being built in parallel under bead `syzygy-mea.10.5`;
   it is evidence that the text can be met once it lands, not a reading of it.
 
@@ -221,7 +236,7 @@ elements".
   claim block may stand.
 - **Short label**: an element's caption, column label, title, term, card
   label, summary or language; presentation, never a claim.
-- **Code excerpt**: an element that names one citation of at most 60 lines
+- **Code excerpt**: an element that names one citation of 1 to 60 lines
   and renders those lines from Syzygy's read.
 - Nothing retired.
 
@@ -229,7 +244,7 @@ elements".
 
 See `IMPACT-LEDGER.md`. In short: three files of one change move, one
 generated file and the census are regenerated, `PROJECT-STATUS.md`'s Polaris
-figure moves from 248 to 252 scenarios, one test pin moves, and the element
+figure moves from 248 to 254 scenarios, one test pin moves, and the element
 code becomes conformant only once these bytes are signed. **One install
 blocker:** the signed P115 sign-off (three-surface POC `governedBy`
 reference amendment) freezes the v1.2 dossier spec's digest as one of its
@@ -272,7 +287,9 @@ and the owner packet asks how to resolve it before the install.
 
 ## Review
 
-One fresh-context review round on the default model under `REVIEW-BRIEF.md`,
-and one more only if it returns REVISE or a blocking finding. Raws are stored
+Fresh-context review rounds on the default model under `REVIEW-BRIEF.md`, at
+most two. Round 1 (`docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-ffc2-1-RAW.md`)
+returned REVISE; its findings are repaired in these bytes, and
+`REVIEW-1-DISPOSITIONS.md` in this directory says how. Raws are stored
 verbatim under `docs/reviews/` as
 `R-DOSSIER-LOCAL-AGENT-V1-3-<sha4>-<n>-RAW.md`.

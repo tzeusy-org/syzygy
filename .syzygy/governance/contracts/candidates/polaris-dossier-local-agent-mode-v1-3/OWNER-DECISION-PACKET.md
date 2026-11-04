@@ -27,7 +27,9 @@ the rules that keep them honest. Nothing else changes.
   carries its own label (Inferred, Unknown or non-normative), its own
   citations and quotations, and is checked, reviewed and marked on the page
   exactly as a paragraph is. The fidelity reviewer gives each one its own
-  verdict entry.
+  verdict entry. A table cell may be left empty, but then it shows the
+  words "no entry" and says nothing: a "no" or "none known" has to be
+  written as a labelled claim.
 - **Headings carry no claims.** A table caption, a column heading, a callout
   title, a defined term, a card label, a collapsible section's summary and a
   code excerpt's language are short plain text (at most 120 characters) that
@@ -50,7 +52,10 @@ Not changed: what a claim is and how it is labelled, cited and quoted;
 screening; the review packet and the review rules; waiting sessions; the
 execution rule. The theme, diagrams, numbered citation markers, inline code
 and plainer prose you also asked for are implementation work under epic
-`syzygy-mea.10`: none of them changes a signed sentence as drafted.
+`syzygy-mea.10`. None of them changes a signed sentence as drafted here.
+Whether numbered markers or inline code do once they are built is Unknown:
+both touch how a claim and its source anchor are shown, and if one does, it
+comes back to you as a later version.
 
 ## One thing the install needs first
 
@@ -60,8 +65,9 @@ relied on, this one's v1.2 spec among them. Its check fails on any change to
 those bytes, with no allowance for a later signed version. Installing 1.3
 therefore makes P115 read as unsigned, and the governance battery fails
 (reconciliation R1 to R3 and CG-7h; `IMPACT-LEDGER.md`, "Install blocker",
-has the rehearsal). Signing 1.3 does not need this settled; installing it
-does.
+has the rehearsal). You can choose 1.3 before this is settled, but recording
+your sign-off is what installs the bytes, so the recording waits on question
+2.
 
 ## The questions
 
@@ -83,7 +89,7 @@ does.
 - **(b) Re-sign P115** as a new version over the v1.3 spec, after its own
   review, each time one of its eight inputs is amended.
 - **(c) Hold 1.3 uninstalled** until a broader rule for frozen inputs is
-  drafted.
+  drafted. Until then the element code stays off, as under 1(b).
 
 The tool that records 1.3 is ready on the same branch: a builder that
 applies these patches and its entry in the sign-off recorder. It changes no
