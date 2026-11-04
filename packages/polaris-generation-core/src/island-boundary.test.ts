@@ -110,8 +110,8 @@ describe('the live Node entries and the parked provider island', () => {
   it('resolves every workspace import both entries reach, dynamic ones included', () => {
     for (const entry of ENTRIES) {
       const { reachable, unresolved, unsupported } = reach(entry);
-      expect(unsupported, `${entry}: unsupported loader forms`).toEqual([]);
-      expect(unresolved, `${entry}: unresolved workspace imports`).toEqual([]);
+      expect(unsupported, `${entry}: unsupported loader forms\n${unsupported.join('\n')}`).toEqual([]);
+      expect(unresolved, `${entry}: unresolved workspace imports\n${unresolved.join('\n')}`).toEqual([]);
       if (entry === ENTRIES[0]) {
         expect(reachable).toContain('apps/three-surface-poc/src/polaris-generation/dossier-site.ts');
         expect(reachable).toContain('packages/polaris-generation-consent/src/in-force.ts');
@@ -122,7 +122,7 @@ describe('the live Node entries and the parked provider island', () => {
   it('reaches no island module from either live entry', () => {
     for (const entry of ENTRIES) {
       const { reachable, intoIsland } = reach(entry);
-      expect(intoIsland, `${entry}: paths into the parked island`).toEqual([]);
+      expect(intoIsland, `${entry}: first path into the parked island\n${intoIsland[0] ?? '(none)'}`).toEqual([]);
       expect(reachable, `${entry}: consent root must stay parked`).not.toContain('packages/polaris-generation-consent/src/index.ts');
       expect(reachable, `${entry}: consent ports must stay parked`).not.toContain('packages/polaris-generation-consent/src/consent-ports.ts');
       expect(reachable.filter(path => ISLAND.includes(path)), entry).toEqual([]);
