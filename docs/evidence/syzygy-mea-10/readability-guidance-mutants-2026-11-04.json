@@ -1,10 +1,10 @@
 {
  "subjects": {
-  "packages/polaris-dossier/src/design-review.ts": "54d27bdb7ec36e6ee7a28b095db887e1ef70ae4df976b5e80046f94537583548",
-  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "feacb2350202fe6805c432fce3f2735a47a74792cb1c2788fd5dc785a393d9db",
-  "packages/polaris-dossier/src/brief.ts": "4a49cc981c4a167ee6ab184c65ed1b7d10721a8e62a71ac1554acd59c8697bae"
+  "packages/polaris-dossier/src/brief.ts": "4a49cc981c4a167ee6ab184c65ed1b7d10721a8e62a71ac1554acd59c8697bae",
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "384b3eec0dd372d4127e13071a93bf4b28320b4f1f47624f881c994eebdbc805",
+  "packages/polaris-dossier/src/design-review.ts": "54d27bdb7ec36e6ee7a28b095db887e1ef70ae4df976b5e80046f94537583548"
  },
- "baseCommit": "9070f7a05ccc88f492a63f527ed0dd25ec0b9a2e",
+ "baseCommit": "003cff411b174e7f4900d2608db30662ed644ad9",
  "note": "each mutant applied to the subject bytes named by subjects (working tree on baseCommit, committed unchanged next), then restored",
  "tests": [
   "packages/polaris-dossier/src/render.test.ts",
