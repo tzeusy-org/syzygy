@@ -1,10 +1,10 @@
 {
  "subjects": {
-  "packages/polaris-dossier/src/brief.ts": "4a49cc981c4a167ee6ab184c65ed1b7d10721a8e62a71ac1554acd59c8697bae",
   "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "384b3eec0dd372d4127e13071a93bf4b28320b4f1f47624f881c994eebdbc805",
-  "packages/polaris-dossier/src/design-review.ts": "54d27bdb7ec36e6ee7a28b095db887e1ef70ae4df976b5e80046f94537583548"
+  "packages/polaris-dossier/src/design-review.ts": "4e29f9a58a16d5ab4ab854cd69729545a2e19e785d62a7f72f53985caa080a99",
+  "packages/polaris-dossier/src/brief.ts": "6476be8a4d1109c409cc9fbf9338996cb3ebe1674ba5d26046f86dbcfd20a0ab"
  },
- "baseCommit": "003cff411b174e7f4900d2608db30662ed644ad9",
+ "baseCommit": "cf84aea563a27d733adbcf9c86408f9776784691",
  "note": "each mutant applied to the subject bytes named by subjects (working tree on baseCommit, committed unchanged next), then restored",
  "tests": [
   "packages/polaris-dossier/src/render.test.ts",
@@ -38,6 +38,41 @@
    "file": "packages/polaris-dossier/src/brief.ts",
    "old": "give each item its own child block, which renders as a bulleted list.",
    "new": "list them.",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-twelve-dropped",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": " A block holds at most twelve children, so group a longer enumeration under several lead blocks.",
+   "new": "",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-sourced-why",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": ", as its sources state.",
+   "new": ".",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-sourced-example",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "a concrete example from the sources",
+   "new": "a concrete example",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-code-rule",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "they render as inline code.",
+   "new": "they look like code.",
+   "outcome": "killed"
+  },
+  {
+   "id": "d-advisory-acceptable",
+   "file": "packages/polaris-dossier/src/design-review.ts",
+   "old": " An advisory finding alone does not make a page deficient.",
+   "new": "",
    "outcome": "killed"
   },
   {

@@ -968,11 +968,11 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
     expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v1');
-    expect(READABILITY_GUIDANCE).toContain('Write for a software engineer new to this project and its domain, such as a recent graduate.');
+    expect(READABILITY_GUIDANCE).toContain('Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and why someone would use it, as its sources state. Define each term at its first use. Keep one idea to a sentence and prefer short sentences; give a concrete example from the sources before an abstraction.');
     expect(READABILITY_GUIDANCE).toContain('carries at least one diagram with that section\'s `sectionId`, and Syzygy draws it at the top of the section');
     expect(READABILITY_GUIDANCE).toContain('a `flow` for an end-to-end workflow or a user\'s path through the project, a `boundary` or `dependency` diagram for the architecture and how components talk to each other');
-    expect(READABILITY_GUIDANCE).toContain('An enumeration of three or more items is never a run-on sentence: write a short lead block and give each item its own child block, which renders as a bulleted list.');
+    expect(READABILITY_GUIDANCE).toContain('An enumeration of three or more items is never a run-on sentence: write a short lead block and give each item its own child block, which renders as a bulleted list. A block holds at most twelve children, so group a longer enumeration under several lead blocks.');
     expect(READABILITY_GUIDANCE).toContain('Put commands, identifiers, file names and configuration keys in backticks outside quotations; they render as inline code.');
-    expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, or a passage that needs prior knowledge of the project or its domain is a finding against that page');
+    expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
   });
 });
