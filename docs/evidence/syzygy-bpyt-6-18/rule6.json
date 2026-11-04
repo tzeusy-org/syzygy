@@ -1,0 +1,432 @@
+{
+  "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+  "mutants": [
+    {
+      "id": "missing-at-revision",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/content-classification.ts",
+      "subjectSha256": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+      "mutantSha256": "44f4259d2fb4f5b1282a5ddd4385cdc35f1add61fbdfd949f60254344cb348f7",
+      "old": "        case 'missing-at-revision':",
+      "new": "        case 'missing-at-revision': return unavailable(path, 'not-in-tree', UNREADABLE);",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/content-classification.test.ts",
+        "-t",
+        "step 2: every reader refusal",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt6-18-implementation-20261104/rule6-missing-at-revision.vitest.json"
+      ],
+      "exitCode": 1,
+      "log": "rule6-missing-at-revision.log",
+      "logSha256": "f7fe1a809e3755ca5926c7a3528aee132b99f23a32a70bc9c7b8850269d1f44f",
+      "executed": 1,
+      "failedTests": [
+        "PWB-REQ-003 \u2014 classifySource step by step step 2: every reader refusal maps to its fixed outcome"
+      ],
+      "passed": 0,
+      "failed": 1,
+      "failureMessages": [
+        "AssertionError: missing-at-revision: expected { \u2026(4) } to match object { outcome: 'unavailable', \u2026(1) }\n(5 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/chai/index.js:1686:25)\n    at /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/packages/three-surface-poc-core/src/content-classification.test.ts:400:30\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+      ]
+    },
+    {
+      "id": "denied-basename",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/content-classification.ts",
+      "subjectSha256": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+      "mutantSha256": "16016af22126cbf6c541d462b51dca57261d758c3f8fd1a355dfe0835e7aa3b7",
+      "old": "        case 'denied-basename':",
+      "new": "        case 'denied-basename': return unavailable(path, 'not-in-tree', UNREADABLE);",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/content-classification.test.ts",
+        "-t",
+        "step 2: every reader refusal",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt6-18-implementation-20261104/rule6-denied-basename.vitest.json"
+      ],
+      "exitCode": 1,
+      "log": "rule6-denied-basename.log",
+      "logSha256": "6168cda52001155f746d9a8133364b55c7d46088e6455cbec94a6933ef0d8fcb",
+      "executed": 1,
+      "failedTests": [
+        "PWB-REQ-003 \u2014 classifySource step by step step 2: every reader refusal maps to its fixed outcome"
+      ],
+      "passed": 0,
+      "failed": 1,
+      "failureMessages": [
+        "AssertionError: denied-basename: expected { \u2026(4) } to match object { outcome: 'excluded' }\n(6 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/chai/index.js:1686:25)\n    at /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/packages/three-surface-poc-core/src/content-classification.test.ts:400:30\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+      ]
+    },
+    {
+      "id": "denied-prefix",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/content-classification.ts",
+      "subjectSha256": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+      "mutantSha256": "4a104e9e74b843c648c9c6a3284be7c92f7525d6f7edeebe2614e10022d97d42",
+      "old": "        case 'denied-prefix':",
+      "new": "        case 'denied-prefix': return unavailable(path, 'not-in-tree', UNREADABLE);",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/content-classification.test.ts",
+        "-t",
+        "step 2: every reader refusal",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt6-18-implementation-20261104/rule6-denied-prefix.vitest.json"
+      ],
+      "exitCode": 1,
+      "log": "rule6-denied-prefix.log",
+      "logSha256": "4aed1f4ca27883be6024866114ae8095aa9bbdcc51ea6ac6a6dbd0d11a5ab968",
+      "executed": 1,
+      "failedTests": [
+        "PWB-REQ-003 \u2014 classifySource step by step step 2: every reader refusal maps to its fixed outcome"
+      ],
+      "passed": 0,
+      "failed": 1,
+      "failureMessages": [
+        "AssertionError: denied-basename: expected { \u2026(4) } to match object { outcome: 'excluded' }\n(6 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/chai/index.js:1686:25)\n    at /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/packages/three-surface-poc-core/src/content-classification.test.ts:400:30\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+      ]
+    },
+    {
+      "id": "denied-suffix",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/content-classification.ts",
+      "subjectSha256": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+      "mutantSha256": "c60a8e98ea7b17daf7d1ec9cbbba3dc087f1382a5728a41feb32a05767471382",
+      "old": "        case 'denied-suffix':",
+      "new": "        case 'denied-suffix': return unavailable(path, 'not-in-tree', UNREADABLE);",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/content-classification.test.ts",
+        "-t",
+        "step 2: every reader refusal",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt6-18-implementation-20261104/rule6-denied-suffix.vitest.json"
+      ],
+      "exitCode": 1,
+      "log": "rule6-denied-suffix.log",
+      "logSha256": "7ddc30fd007b7a06045f33cf33f3757f348457f407052300915bbe08ac65a948",
+      "executed": 1,
+      "failedTests": [
+        "PWB-REQ-003 \u2014 classifySource step by step step 2: every reader refusal maps to its fixed outcome"
+      ],
+      "passed": 0,
+      "failed": 1,
+      "failureMessages": [
+        "AssertionError: denied-basename: expected { \u2026(4) } to match object { outcome: 'excluded' }\n(6 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/chai/index.js:1686:25)\n    at /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/packages/three-surface-poc-core/src/content-classification.test.ts:400:30\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+      ]
+    },
+    {
+      "id": "not-a-regular-blob",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/content-classification.ts",
+      "subjectSha256": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+      "mutantSha256": "6fbd2ae2490044d7d24421d17f7c3908f266106b37361869e5b9b40b08a2597f",
+      "old": "        case 'not-a-regular-blob':",
+      "new": "        case 'not-a-regular-blob': return unavailable(path, 'not-in-tree', UNREADABLE);",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/content-classification.test.ts",
+        "-t",
+        "step 2: every reader refusal",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt6-18-implementation-20261104/rule6-not-a-regular-blob.vitest.json"
+      ],
+      "exitCode": 1,
+      "log": "rule6-not-a-regular-blob.log",
+      "logSha256": "2d05d325b8bc70e36195c35e0341c1260fae70340f9da7c600ac5938d6b770e0",
+      "executed": 1,
+      "failedTests": [
+        "PWB-REQ-003 \u2014 classifySource step by step step 2: every reader refusal maps to its fixed outcome"
+      ],
+      "passed": 0,
+      "failed": 1,
+      "failureMessages": [
+        "AssertionError: not-a-regular-blob: expected { \u2026(4) } to match object { outcome: 'unavailable', \u2026(1) }\n(5 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/chai/index.js:1686:25)\n    at /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/packages/three-surface-poc-core/src/content-classification.test.ts:400:30\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+      ]
+    },
+    {
+      "id": "not-in-tree",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/content-classification.ts",
+      "subjectSha256": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+      "mutantSha256": "f9d329537817297f55cc421b8c2100c54d9af72b8f7abda7aea27fcdecdcc02e",
+      "old": "        case 'not-in-tree':",
+      "new": "        case 'not-in-tree': return unavailable(path, 'not-a-regular-blob', UNREADABLE);",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/content-classification.test.ts",
+        "-t",
+        "step 2: every reader refusal",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt6-18-implementation-20261104/rule6-not-in-tree.vitest.json"
+      ],
+      "exitCode": 1,
+      "log": "rule6-not-in-tree.log",
+      "logSha256": "d9803e07c9198bd9540c3d1bab11a43670d45d1c9e44fca16a82c2240ea94048",
+      "executed": 1,
+      "failedTests": [
+        "PWB-REQ-003 \u2014 classifySource step by step step 2: every reader refusal maps to its fixed outcome"
+      ],
+      "passed": 0,
+      "failed": 1,
+      "failureMessages": [
+        "AssertionError: not-in-tree: expected { \u2026(4) } to match object { outcome: 'unavailable', \u2026(1) }\n(5 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/chai/index.js:1686:25)\n    at /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/packages/three-surface-poc-core/src/content-classification.test.ts:400:30\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+      ]
+    },
+    {
+      "id": "path-escapes-repository",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/content-classification.ts",
+      "subjectSha256": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+      "mutantSha256": "2b743d5d27f280c4a47d02e889a98d94e4b9ee7467c82a4ef64cc46345546b74",
+      "old": "        case 'path-escapes-repository':",
+      "new": "        case 'path-escapes-repository': return unavailable(path, 'not-in-tree', UNREADABLE);",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/content-classification.test.ts",
+        "-t",
+        "step 2: every reader refusal",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt6-18-implementation-20261104/rule6-path-escapes-repository.vitest.json"
+      ],
+      "exitCode": 1,
+      "log": "rule6-path-escapes-repository.log",
+      "logSha256": "f40edd803d2a3450c2850d83b7bf2f8608df92a8b9605116864565e85bb89687",
+      "executed": 1,
+      "failedTests": [
+        "PWB-REQ-003 \u2014 classifySource step by step step 2: every reader refusal maps to its fixed outcome"
+      ],
+      "passed": 0,
+      "failed": 1,
+      "failureMessages": [
+        "AssertionError: not-a-regular-blob: expected { \u2026(4) } to match object { outcome: 'unavailable', \u2026(1) }\n(5 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/chai/index.js:1686:25)\n    at /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/packages/three-surface-poc-core/src/content-classification.test.ts:400:30\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+      ]
+    },
+    {
+      "id": "path-not-normalized",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/content-classification.ts",
+      "subjectSha256": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+      "mutantSha256": "2e4bfcfd4eacfb7748945e3594491f408fa7b0ca7710954d19ebfcee796eb8e7",
+      "old": "        case 'path-not-normalized':",
+      "new": "        case 'path-not-normalized': return unavailable(path, 'not-in-tree', UNREADABLE);",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/content-classification.test.ts",
+        "-t",
+        "step 2: every reader refusal",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt6-18-implementation-20261104/rule6-path-not-normalized.vitest.json"
+      ],
+      "exitCode": 1,
+      "log": "rule6-path-not-normalized.log",
+      "logSha256": "eb5809d08c0f36148dbc646884dd17001fa69d3cb6d755361932ab1e84aad0f7",
+      "executed": 1,
+      "failedTests": [
+        "PWB-REQ-003 \u2014 classifySource step by step step 2: every reader refusal maps to its fixed outcome"
+      ],
+      "passed": 0,
+      "failed": 1,
+      "failureMessages": [
+        "AssertionError: not-a-regular-blob: expected { \u2026(4) } to match object { outcome: 'unavailable', \u2026(1) }\n(5 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/chai/index.js:1686:25)\n    at /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/packages/three-surface-poc-core/src/content-classification.test.ts:400:30\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+      ]
+    },
+    {
+      "id": "object-id-differs-from-tree",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/content-classification.ts",
+      "subjectSha256": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+      "mutantSha256": "79a2fad6e788ed326e91c5261426d57983414f221462d6de77cb693280e8a3cd",
+      "old": "        case 'object-id-differs-from-tree':",
+      "new": "        case 'object-id-differs-from-tree': return unavailable(path, 'not-in-tree', UNREADABLE);",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/content-classification.test.ts",
+        "-t",
+        "step 2: every reader refusal",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt6-18-implementation-20261104/rule6-object-id-differs-from-tree.vitest.json"
+      ],
+      "exitCode": 1,
+      "log": "rule6-object-id-differs-from-tree.log",
+      "logSha256": "2af4ad819c01e4befd5cfc5e6f610e9263668b1bee6ac6ef19dcf71828a81a7b",
+      "executed": 1,
+      "failedTests": [
+        "PWB-REQ-003 \u2014 classifySource step by step step 2: every reader refusal maps to its fixed outcome"
+      ],
+      "passed": 0,
+      "failed": 1,
+      "failureMessages": [
+        "AssertionError: object-id-differs-from-tree: expected { \u2026(4) } to match object { outcome: 'unavailable', \u2026(1) }\n(5 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/chai/index.js:1686:25)\n    at /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/packages/three-surface-poc-core/src/content-classification.test.ts:400:30\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+      ]
+    },
+    {
+      "id": "not-a-phase-a-seed-path",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/content-classification.ts",
+      "subjectSha256": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+      "mutantSha256": "c8d8aba18bbe9c5bbb4e8beece1b8ed80acb0c3a74b22e01192b6e4554db2834",
+      "old": "        case 'not-a-phase-a-seed-path':",
+      "new": "        case 'not-a-phase-a-seed-path': return unavailable(path, 'not-in-tree', UNREADABLE);",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/content-classification.test.ts",
+        "-t",
+        "step 2: every reader refusal",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt6-18-implementation-20261104/rule6-not-a-phase-a-seed-path.vitest.json"
+      ],
+      "exitCode": 1,
+      "log": "rule6-not-a-phase-a-seed-path.log",
+      "logSha256": "3a85a39603bdb3f06c6855bde946f777841edea371edb7bc3597090e04cd3e70",
+      "executed": 1,
+      "failedTests": [
+        "PWB-REQ-003 \u2014 classifySource step by step step 2: every reader refusal maps to its fixed outcome"
+      ],
+      "passed": 0,
+      "failed": 1,
+      "failureMessages": [
+        "AssertionError: not-a-phase-a-seed-path: expected { \u2026(4) } to match object { outcome: 'unavailable', \u2026(1) }\n(5 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/chai/index.js:1686:25)\n    at /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/packages/three-surface-poc-core/src/content-classification.test.ts:400:30\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+      ]
+    },
+    {
+      "id": "compatibility-default",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/content-classification.ts",
+      "subjectSha256": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+      "mutantSha256": "548a89339aa0ce762955cdad7b90c09072262e8874c999896fe0a2bba2d65060",
+      "old": "          const unreachable: never = reason;\n          return unavailable(path, 'not-a-regular-blob', UNREADABLE);",
+      "new": "          const unreachable: never = reason;\n          return unavailable(path, 'not-in-tree', UNREADABLE);",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/three-surface-poc-core/src/content-classification.test.ts",
+        "-t",
+        "step 2: every reader refusal",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt6-18-implementation-20261104/rule6-compatibility-default.vitest.json"
+      ],
+      "exitCode": 1,
+      "log": "rule6-compatibility-default.log",
+      "logSha256": "035d1cec25a189665d0759ba55b39177476a27c689c398fcd2858021b260663c",
+      "executed": 1,
+      "failedTests": [
+        "PWB-REQ-003 \u2014 classifySource step by step step 2: every reader refusal maps to its fixed outcome"
+      ],
+      "passed": 0,
+      "failed": 1,
+      "failureMessages": [
+        "AssertionError: expected { \u2026(4) } to match object { outcome: 'unavailable', \u2026(1) }\n(5 matching properties omitted from actual)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1155:10)\n    at Proxy.<anonymous> (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/chai/index.js:1686:25)\n    at /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/packages/three-surface-poc-core/src/content-classification.test.ts:414:69\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.18/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+      ]
+    },
+    {
+      "id": "detail-widening",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/git-object-reader.ts",
+      "subjectSha256": "f2708b64b1c954e82bb98ca0e0544f99117949022b6846473affeeb60c6db67e",
+      "mutantSha256": "418ec5ac2615390cef5e64560cab52248a5b65974732d7472e473aece3cfb236",
+      "old": "readonly detail: BlobReadRefusalReason | 'missing-at-revision'",
+      "new": "readonly detail: string",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exitCode": 2,
+      "log": "rule6-detail-widening.log",
+      "logSha256": "306c960816b0408c731e59cbcac320dbf7e2000f392bb448364e03405563a53b",
+      "compileNegativeExamples": 1,
+      "diagnostics": [
+        "packages/three-surface-poc-core/src/content-classification.ts(400,17): error TS2322: Type 'string' is not assignable to type 'never'.",
+        "packages/three-surface-poc-core/src/git-object-reader.test.ts(721,5): error TS2578: Unused '@ts-expect-error' directive."
+      ]
+    },
+    {
+      "id": "discriminant-widening",
+      "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+      "subjectPath": "packages/three-surface-poc-core/src/git-object-reader.ts",
+      "subjectSha256": "f2708b64b1c954e82bb98ca0e0544f99117949022b6846473affeeb60c6db67e",
+      "mutantSha256": "453e3b28a82b41bf8a358c8f0cebcdee30657854668cceb05b637dc987e0b416",
+      "old": "readonly outcome: 'refused'; readonly detail: BlobReadRefusalReason",
+      "new": "readonly outcome: ObjectReadOutcome; readonly detail: BlobReadRefusalReason",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exitCode": 2,
+      "log": "rule6-discriminant-widening.log",
+      "logSha256": "e2ffaeb39ffaebbd84e4e579621f4d7051d0f629c16343065e34c4738585063c",
+      "compileNegativeExamples": 1,
+      "diagnostics": [
+        "packages/three-surface-poc-core/src/content-classification.test.ts(387,8): error TS2322: Type 'string' is not assignable to type 'never'.",
+        "packages/three-surface-poc-core/src/content-classification.test.ts(388,8): error TS2322: Type 'string' is not assignable to type 'never'.",
+        "packages/three-surface-poc-core/src/content-classification.test.ts(389,8): error TS2322: Type 'string' is not assignable to type 'never'.",
+        "packages/three-surface-poc-core/src/content-classification.test.ts(390,8): error TS2322: Type 'string' is not assignable to type 'never'.",
+        "packages/three-surface-poc-core/src/content-classification.test.ts(391,8): error TS2322: Type 'string' is not assignable to type 'never'.",
+        "packages/three-surface-poc-core/src/content-classification.test.ts(392,8): error TS2322: Type 'string' is not assignable to type 'never'.",
+        "packages/three-surface-poc-core/src/content-classification.test.ts(393,8): error TS2322: Type 'string' is not assignable to type 'never'.",
+        "packages/three-surface-poc-core/src/content-classification.test.ts(394,8): error TS2322: Type 'string' is not assignable to type 'never'.",
+        "packages/three-surface-poc-core/src/content-classification.test.ts(395,8): error TS2322: Type 'string' is not assignable to type 'never'.",
+        "packages/three-surface-poc-core/src/content-classification.test.ts(396,8): error TS2322: Type 'string' is not assignable to type 'never'."
+      ]
+    }
+  ],
+  "restoredBaseline": {
+    "command": "npm run check",
+    "exitCode": 0,
+    "testFiles": 169,
+    "tests": 3772,
+    "outputSha256": "528388c00bd71d8610105c5c5b55862933d72100bb9cb8f5a601d54c08a62788",
+    "outputPath": "/home/orca/.tmp/syzygy-bpyt6-18-implementation-20261104/check-restored.log",
+    "sourceDigests": {
+      "packages/three-surface-poc-core/src/content-classification.ts": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+      "packages/three-surface-poc-core/src/git-object-reader.ts": "f2708b64b1c954e82bb98ca0e0544f99117949022b6846473affeeb60c6db67e"
+    }
+  }
+}

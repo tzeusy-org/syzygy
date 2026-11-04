@@ -1,0 +1,41 @@
+{
+  "subjectCommit": "940e61f3d1e86bd8276bfe8e9a831c831b1605de",
+  "scope": "tracked files under apps/, packages/, scripts/",
+  "denominator": 747,
+  "needle": "ObjectReadRecord",
+  "consumers": {
+    "packages/three-surface-poc-core/src/content-classification.test.ts": 10,
+    "packages/three-surface-poc-core/src/content-classification.ts": 6,
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts": 3,
+    "packages/three-surface-poc-core/src/git-object-reader.ts": 10,
+    "packages/three-surface-poc-core/src/project-shape-coverage.test.ts": 2
+  },
+  "secondMethod": "git grep -l ObjectReadRecord -- apps packages scripts",
+  "secondMethodPaths": [
+    "packages/three-surface-poc-core/src/content-classification.test.ts",
+    "packages/three-surface-poc-core/src/content-classification.ts",
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts",
+    "packages/three-surface-poc-core/src/git-object-reader.ts",
+    "packages/three-surface-poc-core/src/project-shape-coverage.test.ts"
+  ],
+  "barrelReexport": "packages/three-surface-poc-core/src/index.ts exports git-object-reader with export *",
+  "sourceDigests": {
+    "packages/three-surface-poc-core/src/content-classification.test.ts": "21289678b668b8cc95847c7b2a84adbbced08cc74364dddd7f6c6e4eaef890cc",
+    "packages/three-surface-poc-core/src/content-classification.ts": "9bf02a9189216706f286feb2945ac7e7ef044121ac13f7d59f7a5793dbbcfdb6",
+    "packages/three-surface-poc-core/src/git-object-reader.test.ts": "358f3d828842bbda73141cbb9a2df4745ab29978c2a4579100f2300e4647b403",
+    "packages/three-surface-poc-core/src/git-object-reader.ts": "f2708b64b1c954e82bb98ca0e0544f99117949022b6846473affeeb60c6db67e",
+    "packages/three-surface-poc-core/src/project-shape-coverage.test.ts": "0ff6574a7eadffceca4e85003bac492def54368f48e1c0e4ea2624e499628796"
+  },
+  "testDelta": {
+    "newRuntimeTests": 0,
+    "removedRuntimeTests": 0,
+    "compileNegativeExamplesAdded": 1,
+    "existingBehaviorCasesExtended": 1,
+    "focusedRuntimeTests": 165
+  },
+  "proposedReviewClasses": [
+    3,
+    4,
+    6
+  ]
+}
