@@ -1,0 +1,580 @@
+{
+  "record": "syzygy-bpyt.6.17 verbatim-route bounded-read differential and mutation record",
+  "date": "2026-11-04",
+  "base": "f5640845 (origin/main at dispatch)",
+  "subject": {
+    "path": "apps/three-surface-poc/src/verbatim-route.ts",
+    "old": {
+      "commit": "f5640845",
+      "digest": "sha256:e4d20442162dd42631a7ccd8016016a9f232fed8a5ef924ac08f899b389c6016"
+    },
+    "new": {
+      "digest": "sha256:5f007660acee4dfe17a99dc6517330a63f65dde110d3e30eb1bbdbb17a9bde94",
+      "note": "working tree on f5640845 before commit; the PR head carries these bytes"
+    },
+    "alsoChanged": {
+      "path": "packages/three-surface-poc-core/src/git-object-reader.ts",
+      "digest": "sha256:ddd0fd1f976adc5779b40b8f14f072fc429ac9ddf321fe0b1bb7ecb791119dee",
+      "change": "BlobReadPolicy.phase gains 'verbatim'"
+    }
+  },
+  "driver": {
+    "path": "docs/evidence/syzygy-bpyt-6-17/verbatim-differential-driver.ts.txt",
+    "digest": "sha256:30689b5fafd4504f8e30dc222a977cda03e441cc28afd27b19e41022a693ed90",
+    "howToRerun": "copy to apps/three-surface-poc/src/verbatim-route-olddiff.test.ts, write the f5640845 route to apps/three-surface-poc/src/verbatim-route-olddiff.ts, list the test in INTEGRATION_TESTS, run with DIFF_OUT=<file> npx vitest run --project integration <file>"
+  },
+  "comparison": "old route (f5640845) and new route over the same model, leaf and limits; real git (a temp sha1 repository holding the fixture blobs) through each side's production gitBlobReaderFor, or the named fake reader. Outcome compared as JSON: undefined; bytes (length and sha256, plus byte equality); refusal {refused, detail} exactly.",
+  "denominator": 21,
+  "byCategory": {
+    "within-bound": {
+      "cases": 12,
+      "differences": 0
+    },
+    "at-bound": {
+      "cases": 2,
+      "differences": 0
+    },
+    "over-bound": {
+      "cases": 5,
+      "differences": 1
+    },
+    "missing": {
+      "cases": 2,
+      "differences": 0
+    }
+  },
+  "differences": [
+    "over-bound-forged"
+  ],
+  "differenceExplained": {
+    "over-bound-forged": "fake reader: it serves bytes that do not hash to the object. Old read the whole body and checked the hash first (reference-unresolvable); new refuses on the declared size before reading (excluded-content, the over-envelope refusal). CORRECTED: the earlier sentence here, 'Real git cannot serve a blob that fails its own object id [Inferred], so no production input reaches this case', is false. [Observed] real git reaches the same case through refs/replace written into the observed repository after the evaluation and before the render (reviewer reproduction, docs/reviews/R-VERBATIM-BOUNDED-READ-RAW.md on origin/agent/syzygy-zfya (PR #730), reviewed commit 8575f494, finding E1 and section 2). See reviewerReproducedCases."
+  },
+  "stderrNote": "oldStderrWrites counts process.stderr.write calls; Node execFileSync without stdio writes the child stderr buffer even when empty, so old success cases count 1 empty write and missing-blob cases 1 git fatal line. New counts 0 in every case.",
+  "rows": [
+    {
+      "id": "within-bound-served",
+      "category": "within-bound",
+      "reader": "real-git",
+      "specBytes": 566,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "bytes",
+        "length": 566,
+        "sha256": "6a2970e4a4f4f9854ddcfda658d8bd0aa8e47d505918ee19ccc3a485bcda5476"
+      },
+      "new": {
+        "kind": "bytes",
+        "length": 566,
+        "sha256": "6a2970e4a4f4f9854ddcfda658d8bd0aa8e47d505918ee19ccc3a485bcda5476"
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 566,
+      "newBodyBytesBuffered": 566,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "within-bound-secret",
+      "category": "within-bound",
+      "reader": "real-git",
+      "specBytes": 622,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md matched the classification policy's known-token-formats detector (polaris-butlers-project-shape-secrets 1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd); nothing was rendered."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md matched the classification policy's known-token-formats detector (polaris-butlers-project-shape-secrets 1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd); nothing was rendered."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 622,
+      "newBodyBytesBuffered": 622,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "within-bound-active",
+      "category": "within-bound",
+      "reader": "real-git",
+      "specBytes": 593,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md carries active content (script-element); nothing was rendered."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md carries active content (script-element); nothing was rendered."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 593,
+      "newBodyBytesBuffered": 593,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "within-bound-inert-code",
+      "category": "within-bound",
+      "reader": "real-git",
+      "specBytes": 598,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "bytes",
+        "length": 598,
+        "sha256": "47f75feed7fa467636062ce61e4a7066611be04b0f7fef14e876529bc0886a44"
+      },
+      "new": {
+        "kind": "bytes",
+        "length": 598,
+        "sha256": "47f75feed7fa467636062ce61e4a7066611be04b0f7fef14e876529bc0886a44"
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 598,
+      "newBodyBytesBuffered": 598,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "within-bound-crlf-refused",
+      "category": "within-bound",
+      "reader": "real-git",
+      "specBytes": 632,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md carries active content (malformed-code-context); nothing was rendered."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md carries active content (malformed-code-context); nothing was rendered."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 632,
+      "newBodyBytesBuffered": 632,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "within-bound-cr-served",
+      "category": "within-bound",
+      "reader": "real-git",
+      "specBytes": 608,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "bytes",
+        "length": 608,
+        "sha256": "a6f80ab27b0e9eda0ede7e4977077f482f3fec9fc4bbb032e2f582680699a114"
+      },
+      "new": {
+        "kind": "bytes",
+        "length": 608,
+        "sha256": "a6f80ab27b0e9eda0ede7e4977077f482f3fec9fc4bbb032e2f582680699a114"
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 608,
+      "newBodyBytesBuffered": 608,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "within-bound-nul",
+      "category": "within-bound",
+      "reader": "real-git",
+      "specBytes": 567,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md is not text; nothing was rendered."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md is not text; nothing was rendered."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 567,
+      "newBodyBytesBuffered": 567,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "within-bound-empty",
+      "category": "within-bound",
+      "reader": "real-git",
+      "specBytes": 0,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "bytes",
+        "length": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "new": {
+        "kind": "bytes",
+        "length": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 0,
+      "newBodyBytesBuffered": 0,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "gate-other-revision",
+      "category": "within-bound",
+      "reader": "real-git",
+      "specBytes": 566,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "refusal",
+        "refused": "reference-unresolvable",
+        "detail": "openspec/specs/switchboard-identity/spec.md is bound to ffffffffffff but this evaluation observed 444444444444; nothing was read."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "reference-unresolvable",
+        "detail": "openspec/specs/switchboard-identity/spec.md is bound to ffffffffffff but this evaluation observed 444444444444; nothing was read."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 0,
+      "newBodyBytesBuffered": 0,
+      "oldStderrWrites": 0,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "gate-outside-population",
+      "category": "within-bound",
+      "reader": "real-git",
+      "specBytes": 566,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "refusal",
+        "refused": "unconsented-source-or-provider",
+        "detail": "openspec/specs/nowhere/spec.md is not a source of this evaluation's signed population; nothing was read."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "unconsented-source-or-provider",
+        "detail": "openspec/specs/nowhere/spec.md is not a source of this evaluation's signed population; nothing was read."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 0,
+      "newBodyBytesBuffered": 0,
+      "oldStderrWrites": 0,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "gate-non-baseline",
+      "category": "within-bound",
+      "reader": "real-git",
+      "specBytes": 566,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "refusal",
+        "refused": "unconsented-source-or-provider",
+        "detail": "about/README.md is not a baseline spec (root-index); the exact-requirement route applies to baseline specs only."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "unconsented-source-or-provider",
+        "detail": "about/README.md is not a baseline spec (root-index); the exact-requirement route applies to baseline specs only."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 0,
+      "newBodyBytesBuffered": 0,
+      "oldStderrWrites": 0,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "forged-within-bound",
+      "category": "within-bound",
+      "reader": "fake",
+      "specBytes": 566,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "refusal",
+        "refused": "reference-unresolvable",
+        "detail": "openspec/specs/switchboard-identity/spec.md: the bytes served do not hash to this evaluation's exact object; nothing was rendered."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "reference-unresolvable",
+        "detail": "openspec/specs/switchboard-identity/spec.md: the bytes served do not hash to this evaluation's exact object; nothing was rendered."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 567,
+      "newBodyBytesBuffered": 567,
+      "oldStderrWrites": 0,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "at-bound-served",
+      "category": "at-bound",
+      "reader": "real-git",
+      "specBytes": 566,
+      "maxBytesPerSource": 566,
+      "old": {
+        "kind": "bytes",
+        "length": 566,
+        "sha256": "6a2970e4a4f4f9854ddcfda658d8bd0aa8e47d505918ee19ccc3a485bcda5476"
+      },
+      "new": {
+        "kind": "bytes",
+        "length": 566,
+        "sha256": "6a2970e4a4f4f9854ddcfda658d8bd0aa8e47d505918ee19ccc3a485bcda5476"
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 566,
+      "newBodyBytesBuffered": 566,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "at-bound-secret",
+      "category": "at-bound",
+      "reader": "real-git",
+      "specBytes": 594,
+      "maxBytesPerSource": 594,
+      "old": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md matched the classification policy's known-token-formats detector (polaris-butlers-project-shape-secrets 1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd); nothing was rendered."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md matched the classification policy's known-token-formats detector (polaris-butlers-project-shape-secrets 1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd); nothing was rendered."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 594,
+      "newBodyBytesBuffered": 594,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "over-bound-by-one",
+      "category": "over-bound",
+      "reader": "real-git",
+      "specBytes": 566,
+      "maxBytesPerSource": 565,
+      "old": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md exceeds the per-source envelope (566 > 565 bytes); nothing was rendered."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md exceeds the per-source envelope (566 > 565 bytes); nothing was rendered."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 566,
+      "newBodyBytesBuffered": 0,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "over-bound-16",
+      "category": "over-bound",
+      "reader": "real-git",
+      "specBytes": 566,
+      "maxBytesPerSource": 16,
+      "old": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md exceeds the per-source envelope (566 > 16 bytes); nothing was rendered."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md exceeds the per-source envelope (566 > 16 bytes); nothing was rendered."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 566,
+      "newBodyBytesBuffered": 0,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "over-bound-secret",
+      "category": "over-bound",
+      "reader": "real-git",
+      "specBytes": 594,
+      "maxBytesPerSource": 16,
+      "old": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md exceeds the per-source envelope (594 > 16 bytes); nothing was rendered."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md exceeds the per-source envelope (594 > 16 bytes); nothing was rendered."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 594,
+      "newBodyBytesBuffered": 0,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "over-bound-default-2MiB",
+      "category": "over-bound",
+      "reader": "real-git",
+      "specBytes": 2097720,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md exceeds the per-source envelope (2097720 > 1048576 bytes); nothing was rendered."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md exceeds the per-source envelope (2097720 > 1048576 bytes); nothing was rendered."
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 2097720,
+      "newBodyBytesBuffered": 0,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "over-bound-forged",
+      "category": "over-bound",
+      "reader": "fake",
+      "specBytes": 566,
+      "maxBytesPerSource": 16,
+      "old": {
+        "kind": "refusal",
+        "refused": "reference-unresolvable",
+        "detail": "openspec/specs/switchboard-identity/spec.md: the bytes served do not hash to this evaluation's exact object; nothing was rendered."
+      },
+      "new": {
+        "kind": "refusal",
+        "refused": "excluded-content",
+        "detail": "openspec/specs/switchboard-identity/spec.md exceeds the per-source envelope (567 > 16 bytes); nothing was rendered."
+      },
+      "identical": false,
+      "oldBodyBytesBuffered": 567,
+      "newBodyBytesBuffered": 0,
+      "oldStderrWrites": 0,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "missing-blob",
+      "category": "missing",
+      "reader": "real-git",
+      "specBytes": 566,
+      "maxBytesPerSource": 1048576,
+      "old": {
+        "kind": "undefined"
+      },
+      "new": {
+        "kind": "undefined"
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 0,
+      "newBodyBytesBuffered": 0,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    },
+    {
+      "id": "missing-blob-at-bound",
+      "category": "missing",
+      "reader": "real-git",
+      "specBytes": 566,
+      "maxBytesPerSource": 566,
+      "old": {
+        "kind": "undefined"
+      },
+      "new": {
+        "kind": "undefined"
+      },
+      "identical": true,
+      "oldBodyBytesBuffered": 0,
+      "newBodyBytesBuffered": 0,
+      "oldStderrWrites": 1,
+      "newStderrWrites": 0
+    }
+  ],
+  "mutations": {
+    "test": "apps/three-surface-poc/src/verbatim-route.test.ts (integration tier)",
+    "ranAt": "working tree on f5640845, subject digest above",
+    "cases": [
+      {
+        "id": "M1-unbounded-read",
+        "old": "{ objectId, sizeBytes }, verbatimReadPolicy",
+        "new": "{ objectId }, verbatimReadPolicy",
+        "result": "killed (2 failed: size-only refusal; production runner envelope)"
+      },
+      {
+        "id": "M2-runner-maxbuffer",
+        "old": "maxBuffer: limits.maxBytesPerSource,",
+        "new": "maxBuffer: 64 * 1024 * 1024,",
+        "result": "killed (1 failed: production runner envelope)"
+      },
+      {
+        "id": "M3-default-stdio",
+        "old": ", stdio: ['ignore', 'pipe', 'pipe'] }",
+        "new": " }",
+        "result": "killed (1 failed: stderr capture)"
+      },
+      {
+        "id": "M4-inherit-stderr",
+        "old": ", stdio: ['ignore', 'pipe', 'pipe'] }",
+        "new": ", stdio: ['ignore', 'pipe', 'inherit'] }",
+        "result": "killed (1 failed: stderr capture)"
+      }
+    ]
+  },
+  "reviewerReproducedCases": {
+    "source": "docs/reviews/R-VERBATIM-BOUNDED-READ-RAW.md on origin/agent/syzygy-zfya (PR #730), reviewed commit 8575f494, finding E1 and section 2",
+    "status": "[Observed] by the reviewer, not by this record's driver; the driver and shim are retained outside the repo by the reviewer",
+    "precondition": "Real-git rows need a replace ref written into the observed repository after the evaluation and before the render ([Observed] the reviewer wrote it with git replace -f). At evaluation time the observer honours replace refs too, so the source would not be classified and an earlier gate refuses. Neither the route's runner nor git-observation.ts passes --no-replace-objects (pre-existing). Write access to the repository's refs is needed [Inferred].",
+    "bothSidesRenderNothing": true,
+    "newCodeRefusesBeforeReading": "New asks cat-file -s first and refuses on the declared size, moving 0 body bytes in each row; old buffered the body (old/new buffered bytes shown per row). Only the not-rendered reason word differs. What is served is unchanged; routed to the owner as E2 (GP-Q0).",
+    "rows": [
+      {
+        "id": "replace-blob-over",
+        "reader": "real git",
+        "oldReason": "reference-unresolvable",
+        "newReason": "excluded-content (envelope)",
+        "oldBufferedBytes": 587,
+        "newBufferedBytes": 0
+      },
+      {
+        "id": "replace-blob-over-default-3MiB",
+        "reader": "real git",
+        "oldReason": "reference-unresolvable",
+        "newReason": "excluded-content (envelope)",
+        "oldBufferedBytes": 3145728,
+        "newBufferedBytes": 0
+      },
+      {
+        "id": "nonblob-tree-over",
+        "reader": "real git (replace blob with tree)",
+        "oldReason": "source-uncaptured-or-unreachable (undefined)",
+        "newReason": "excluded-content (envelope)",
+        "oldBufferedBytes": 0,
+        "newBufferedBytes": 0
+      },
+      {
+        "id": "git-size-lie-streams-3MiB",
+        "reader": "fake git binary (PATH shim) that misreports size; no real git does this [Inferred]",
+        "oldReason": "reference-unresolvable",
+        "newReason": "source-uncaptured-or-unreachable (undefined)",
+        "oldBufferedBytes": 3145728,
+        "newBufferedBytes": 0
+      }
+    ]
+  }
+}

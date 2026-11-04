@@ -470,9 +470,12 @@ export type BlobScreen =
 // part of the policy because PWB-REQ-006 breach accounting depends on it:
 // phase A screens the seed with the secret detectors and then the
 // active-content scan before its link discovery; phase B scans active
-// content here and leaves the secret detectors to `classifySource`.
+// content here and leaves the secret detectors to `classifySource`. The
+// app's PWB-REQ-011 verbatim route (`verbatim-route.ts`) reads one admitted
+// baseline-spec body per render through the same door under its own policy:
+// the secret detectors, then the active-content scan (syzygy-bpyt.6.17).
 export interface BlobReadPolicy {
-  readonly phase: 'A' | 'B';
+  readonly phase: 'A' | 'B' | 'verbatim';
   // The refusals this phase's admission may return.
   readonly refusals: readonly BlobReadRefusalReason[];
   readonly screen: (text: string, charge: ParsePassCharge) => BlobScreen;

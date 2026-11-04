@@ -8,7 +8,6 @@
 //
 // Bead syzygy-1z3.24.5 (PWB-LIVE-06, PWB-LIVE-11, PWB-LIVE-13).
 
-import { createHash } from 'node:crypto';
 import { readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -32,6 +31,8 @@ import {
   PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC,
   REJECTING_AUTHORITY,
   SECRET_SENTINEL,
+  UNREADABLE_GIT,
+  forgedBlobGit,
   projectShapeFixtureGit,
 } from './test-project-shape-fixture.js';
 import { verbatimRouteReader } from './verbatim-route.js';
@@ -53,19 +54,7 @@ const TEXTS_WITH_SECRET_SPEC: Readonly<Record<string, string>> = {
   [PROJECT_SHAPE_FIXTURE_BASELINE_SPEC_PATH]: `${SPEC_TEXT}\nkey AKIA${'B'.repeat(16)} ${SECRET_SENTINEL}\n`,
 };
 
-function sha1Blob(bytes: Uint8Array): string {
-  return createHash('sha1').update(`blob ${bytes.byteLength}\0`).update(bytes).digest('hex');
-}
-
 /** A blob reader over the fixture texts: the exact bytes Git would serve. */
-function blobReaderFor(texts: Readonly<Record<string, string>>): (objectId: string) => Uint8Array | undefined {
-  const encoder = new TextEncoder();
-  const byOid = new Map(Object.values(texts).map((text) => {
-    const body = encoder.encode(text);
-    return [sha1Blob(body), body] as const;
-  }));
-  return (objectId) => byOid.get(objectId);
-}
 
 function observed(texts: Readonly<Record<string, string>> = PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC): { model: PocModel; shape: Observed; identity: string } {
   const model = buildFixtureModel(cleanups, { projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(texts) } });
@@ -88,7 +77,7 @@ async function startPoc(model: PocModel, limits = PWB_RESOURCE_LIMITS): Promise<
   const stateDir = tempDir('syzygy-poc-source-route-');
   const start = await createDaemon({
     stateDir: join(stateDir, 'state'),
-    routes: pocRoutes(() => model, limits, (m) => ({ verbatim: verbatimRouteReader(m, blobReaderFor(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC)) })),
+    routes: pocRoutes(() => model, limits, (m) => ({ verbatim: verbatimRouteReader(m, projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC)) })),
     port: 0,
   });
   if (!start.started) throw new Error(`daemon failed to start: ${start.failure.kind}`);
@@ -99,7 +88,7 @@ async function startPoc(model: PocModel, limits = PWB_RESOURCE_LIMITS): Promise<
 describe('Polaris exact-source route (PWB-REQ-011 as amended; RFC7-1, RFC7-13)', () => {
   it('renders each requirement block byte-for-byte from the digest-verified object, escaped, with the identity, the not-authority notice and a keyboard route back to the source row; never the purpose prose', () => {
     const { model, identity } = observed();
-    const reader = verbatimRouteReader(model, blobReaderFor(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC));
+    const reader = verbatimRouteReader(model, projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC));
     const html = renderPolarisSourcePage(model, identity, '', { verbatim: reader });
 
     expect(html).toMatch(/<h1[^>]*>Exact source text<\/h1>/);
@@ -124,7 +113,7 @@ describe('Polaris exact-source route (PWB-REQ-011 as amended; RFC7-1, RFC7-13)',
 
   it('is Unknown with a stated reason and no bytes for an identity outside the population, an empty identity, and an unobserved shape', () => {
     const { model, identity } = observed();
-    const reader = verbatimRouteReader(model, blobReaderFor(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC));
+    const reader = verbatimRouteReader(model, projectShapeFixtureGit(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC));
 
     const foreign = renderPolarisSourcePage(model, 'nobody@0000:openspec/specs/x.md#0000', '', { verbatim: reader });
     expect(foreign).toContain('data-verbatim="not-rendered"');
@@ -153,7 +142,7 @@ describe('Polaris exact-source route (PWB-REQ-011 as amended; RFC7-1, RFC7-13)',
 
   it('renders nothing when the served bytes do not hash to the exact object, when no reader exists, or when the policy excludes the body — the excluded token never reaches the page', () => {
     const { model, identity } = observed();
-    const forged = verbatimRouteReader(model, () => new TextEncoder().encode(`${SPEC_TEXT}\n<!-- tampered -->\n`));
+    const forged = verbatimRouteReader(model, forgedBlobGit(new TextEncoder().encode(`${SPEC_TEXT}\n<!-- tampered -->\n`)));
     const forgedPage = renderPolarisSourcePage(model, identity, '', { verbatim: forged });
     expect(forgedPage).toContain('data-unknown-reason="reference-unresolvable"');
     expect(forgedPage).toContain('do not hash to this evaluation');
@@ -167,7 +156,7 @@ describe('Polaris exact-source route (PWB-REQ-011 as amended; RFC7-1, RFC7-13)',
     expect(noReader).toContain('data-unknown-reason="unconsented-source-or-provider"');
     expect(noReader).not.toContain('data-verbatim-text');
     expect(resolveSourceRoute(model, identity, undefined)).toMatchObject({ kind: 'not-rendered', path: PROJECT_SHAPE_FIXTURE_BASELINE_SPEC_PATH, reason: 'unconsented-source-or-provider' });
-    const unreadable = renderPolarisSourcePage(model, identity, '', { verbatim: verbatimRouteReader(model, () => undefined) });
+    const unreadable = renderPolarisSourcePage(model, identity, '', { verbatim: verbatimRouteReader(model, UNREADABLE_GIT) });
     expect(unreadable).toContain('data-unknown-reason="source-uncaptured-or-unreachable"');
     expect(unreadable).not.toContain('data-verbatim-text');
 
@@ -175,7 +164,7 @@ describe('Polaris exact-source route (PWB-REQ-011 as amended; RFC7-1, RFC7-13)',
     // The baseline spec is admitted path-only at evaluation, so the token is
     // only met at render: the route's own whole-body policy pass must refuse.
     expect(exactSourceIdentities(secret.shape).has(secret.identity)).toBe(true);
-    const guarded = verbatimRouteReader(secret.model, blobReaderFor(TEXTS_WITH_SECRET_SPEC));
+    const guarded = verbatimRouteReader(secret.model, projectShapeFixtureGit(TEXTS_WITH_SECRET_SPEC));
     const secretPage = renderPolarisSourcePage(secret.model, secret.identity, '', { verbatim: guarded });
     expect(secretPage).toContain('data-verbatim="not-rendered"');
     expect(secretPage).toContain('data-unknown-reason="excluded-content"');

@@ -20,16 +20,26 @@
 // those unchanged checks on the bytes it reads before any of them may be
 // encoded. No new consent is granted here: the object is already a member of
 // the signed population under the one consented content class.
+//
+// The body is read through the core's one bounded read, `readBoundedBlob`,
+// under the route's own policy (syzygy-bpyt.6.17). Git is first asked the
+// object's size (`cat-file -s`), so a body over the per-source envelope is
+// refused before any of its bytes move; the production runner also holds
+// stdout to that envelope and captures Git's stderr, so neither an
+// over-envelope body nor a Git diagnostic reaches the daemon.
 import { execFileSync } from 'node:child_process';
 
 import {
   PWB_RESOURCE_LIMITS,
   PWB_SECRET_POLICY,
   compileDetectors,
+  createResourceLedger,
   deniedPathReason,
   detectSecrets,
-  gitBlobObjectId,
+  readBoundedBlob,
   scanActiveContent,
+  type BlobReadPolicy,
+  type GitRunner,
   type PocModel,
   type PwbResourceLimits,
   type SecretClassificationPolicy,
@@ -37,18 +47,53 @@ import {
 
 import type { VerbatimLeafReader, VerbatimRefusal } from './capability-detail.js';
 
-// Test seam: exported type the tests name; production code uses it only inside this file.
-/** Reads one blob by exact object id, or `undefined` when Git cannot. */
-export type GitBlobReader = (objectId: string) => Uint8Array | undefined;
+/**
+ * The route's Git runner: one command against `repoRoot`, stdout held to the
+ * per-source envelope (a longer output kills the read and throws) and stderr
+ * captured on the thrown error, never inherited by the daemon.
+ */
+export function gitBlobReaderFor(repoRoot: string, limits: PwbResourceLimits = PWB_RESOURCE_LIMITS): GitRunner {
+  return (args) =>
+    new Uint8Array(execFileSync('git', [...args], { cwd: repoRoot, maxBuffer: limits.maxBytesPerSource, stdio: ['ignore', 'pipe', 'pipe'] }));
+}
 
-export function gitBlobReaderFor(repoRoot: string): GitBlobReader {
-  return (objectId) => {
-    try {
-      return new Uint8Array(execFileSync('git', ['cat-file', 'blob', objectId], { cwd: repoRoot, maxBuffer: 64 * 1024 * 1024 }));
-    } catch {
-      return undefined;
-    }
+const OBJECT_SIZE = /^(0|[1-9][0-9]*)\n?$/;
+
+/** The object's size as Git declares it, or `undefined` when Git cannot say. */
+function declaredSize(runGit: GitRunner, objectId: string): number | undefined {
+  let output: Uint8Array;
+  try {
+    output = runGit(['cat-file', '-s', objectId]);
+  } catch {
+    return undefined;
+  }
+  const match = OBJECT_SIZE.exec(new TextDecoder().decode(output));
+  return match === null ? undefined : Number(match[1]);
+}
+
+// The route's screen: the pipeline's whole-body secret detectors, then its
+// active-content scan, both over the transient text and both uncharged.
+function verbatimReadPolicy(detectors: ReturnType<typeof compileDetectors>): BlobReadPolicy {
+  return {
+    phase: 'verbatim',
+    refusals: [],
+    screen: (text) => {
+      const detector = detectSecrets(detectors, text);
+      if (detector !== undefined) return { kind: 'excluded', reason: 'secret-matched', detail: detector };
+      const active = scanActiveContent(text);
+      if (active.length > 0) return { kind: 'excluded', reason: 'active-content', detail: String(active.length), activeContent: active };
+      return { kind: 'safe' };
+    },
+    trailingPasses: [],
   };
+}
+
+// The route is held to the per-source envelope alone, as it always was: the
+// evaluation's cumulative byte and parse-pass budgets belong to the
+// evaluation's own ledger, and applying them to a render-time read would
+// change what the route serves (GP-Q0).
+function verbatimLedgerLimits(limits: PwbResourceLimits): PwbResourceLimits {
+  return { ...limits, maxTotalBytes: Number.POSITIVE_INFINITY, maxParsePassesPerSource: Number.POSITIVE_INFINITY };
 }
 
 function refusal(refused: VerbatimRefusal['refused'], detail: string): VerbatimRefusal {
@@ -62,7 +107,7 @@ function refusal(refused: VerbatimRefusal['refused'], detail: string): VerbatimR
  */
 export function verbatimRouteReader(
   model: PocModel,
-  readBlob: GitBlobReader,
+  runGit: GitRunner,
   policy: SecretClassificationPolicy = PWB_SECRET_POLICY,
   limits: PwbResourceLimits = PWB_RESOURCE_LIMITS,
 ): VerbatimLeafReader | undefined {
@@ -98,36 +143,40 @@ export function verbatimRouteReader(
     if (denied !== undefined) {
       return refusal('excluded-content', `${leaf.path} is denied by the classification policy (${denied}); nothing was read.`);
     }
-    // 2. Exact object: the bytes Git serves must be that object.
-    const bytes = readBlob(source.anchor.objectId);
-    if (bytes === undefined) return undefined;
-    const format = source.anchor.objectId.length === 64 ? 'sha256' : 'sha1';
-    if (gitBlobObjectId(bytes, format) !== source.anchor.objectId) {
-      return refusal('reference-unresolvable', `${leaf.path}: the bytes served do not hash to this evaluation's exact object; nothing was rendered.`);
-    }
-    if (bytes.byteLength > limits.maxBytesPerSource) {
-      return refusal('excluded-content', `${leaf.path} exceeds the per-source envelope (${bytes.byteLength} > ${limits.maxBytesPerSource} bytes); nothing was rendered.`);
-    }
+    // 2. Exact object, read bounded: the declared size against the envelope
+    //    before any byte moves, one `cat-file blob`, and the bytes hashed to
+    //    this evaluation's exact object.
+    const objectId = source.anchor.objectId;
+    const sizeBytes = declaredSize(runGit, objectId);
+    if (sizeBytes === undefined) return undefined;
+    const objectFormat = objectId.length === 64 ? 'sha256' : 'sha1';
+    const ledger = createResourceLedger(verbatimLedgerLimits(limits));
+    const read = readBoundedBlob({ runGit, ledger, limits, path: leaf.path, objectFormat }, { objectId, sizeBytes }, verbatimReadPolicy(detectors));
     // 3. Whole-body secret and inert-content checks, the pipeline's own,
     //    over the transient text; the refusal names the detector or form,
     //    never the bytes.
-    if (bytes.includes(0)) return refusal('excluded-content', `${leaf.path} is not text; nothing was rendered.`);
-    let text: string;
-    try {
-      text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
-    } catch {
-      return refusal('excluded-content', `${leaf.path} is not UTF-8 text; nothing was rendered.`);
-    }
-    const detector = detectSecrets(detectors, text);
-    if (detector !== undefined) {
-      return refusal('excluded-content', `${leaf.path} matched the classification policy's ${detector} detector (${policy.policyId} ${policy.policyVersion}); nothing was rendered.`);
-    }
-    const active = scanActiveContent(text);
-    if (active.length > 0) {
-      const forms = [...new Set(active.map((finding) => finding.form))].join(', ');
-      return refusal('excluded-content', `${leaf.path} carries active content (${forms}); nothing was rendered.`);
+    switch (read.kind) {
+      case 'bytes':
+        break;
+      case 'git-read-failed':
+        return undefined;
+      case 'over-limit':
+        return refusal('excluded-content', `${leaf.path} exceeds the per-source envelope (${sizeBytes} > ${limits.maxBytesPerSource} bytes); nothing was rendered.`);
+      case 'object-id-mismatch':
+        return refusal('reference-unresolvable', `${leaf.path}: the bytes served do not hash to this evaluation's exact object; nothing was rendered.`);
+      case 'contains-nul':
+        return refusal('excluded-content', `${leaf.path} is not text; nothing was rendered.`);
+      case 'not-utf-8':
+        return refusal('excluded-content', `${leaf.path} is not UTF-8 text; nothing was rendered.`);
+      case 'excluded': {
+        if (read.reason === 'secret-matched') {
+          return refusal('excluded-content', `${leaf.path} matched the classification policy's ${read.detail} detector (${policy.policyId} ${policy.policyVersion}); nothing was rendered.`);
+        }
+        const forms = [...new Set((read.activeContent ?? []).map((finding) => finding.form))].join(', ');
+        return refusal('excluded-content', `${leaf.path} carries active content (${forms}); nothing was rendered.`);
+      }
     }
     // 4. Identity and requirement selection follow in `resolveVerbatim`.
-    return bytes;
+    return read.bytes;
   };
 }

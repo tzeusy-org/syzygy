@@ -1,0 +1,122 @@
+// TEMPORARY differential (syzygy-bpyt.6.17): old route (origin/main) against new, never committed.
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { afterAll, expect, it, vi } from 'vitest';
+
+import { PWB_RESOURCE_LIMITS, type GitRunner, type PocModel, type PwbResourceLimits } from '@syzygy/three-surface-poc-core';
+
+import type { VerbatimLeaf } from './capability-detail.js';
+import { buildFixtureModel } from './test-model-fixture.js';
+import { ADMITTING_AUTHORITY, PROJECT_SHAPE_FIXTURE_BASELINE_SPEC_PATH, PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC, SECRET_SENTINEL, forgedBlobGit, projectShapeFixtureGit } from './test-project-shape-fixture.js';
+import * as NEW from './verbatim-route.js';
+import * as OLD from './verbatim-route-olddiff.js';
+
+const cleanups: string[] = [];
+afterAll(() => { for (const d of cleanups.splice(0)) rmSync(d, { recursive: true, force: true }); });
+
+const SPEC = PROJECT_SHAPE_FIXTURE_BASELINE_SPEC_PATH;
+const BASE = PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC;
+const SPEC_TEXT = BASE[SPEC] as string;
+const enc = new TextEncoder();
+
+function observed(texts: Readonly<Record<string, string>>): PocModel {
+  return buildFixtureModel(cleanups, { projectShape: { authority: ADMITTING_AUTHORITY, runGit: projectShapeFixtureGit(texts) } });
+}
+function leafOf(model: PocModel, path = SPEC): VerbatimLeaf {
+  if (model.projectShape.kind !== 'observed') throw new Error(model.projectShape.kind);
+  const source = model.projectShape.sources.find((c) => c.path === path);
+  if (source === undefined) throw new Error(path);
+  return { path, revision: model.projectShape.identity.revision, identity: source.identity };
+}
+function repoWith(texts: Readonly<Record<string, string>>, omit: readonly string[] = []): string {
+  const root = mkdtempSync(join(tmpdir(), 'verbatim-diff-'));
+  cleanups.push(root);
+  execFileSync('git', ['init', '-q', root], { stdio: ['ignore', 'pipe', 'pipe'] });
+  for (const [path, text] of Object.entries(texts)) {
+    if (omit.includes(path)) continue;
+    const file = join(root, 'blob.tmp');
+    writeFileSync(file, text);
+    execFileSync('git', ['-C', root, 'hash-object', '-w', file], { stdio: ['ignore', 'pipe', 'pipe'] });
+  }
+  return root;
+}
+const outcome = (v: Uint8Array | { refused: string; detail: string } | undefined): unknown =>
+  v === undefined ? { kind: 'undefined' } : v instanceof Uint8Array ? { kind: 'bytes', length: v.byteLength, sha256: createHash('sha256').update(v).digest('hex') } : { kind: 'refusal', ...v };
+
+type Case = {
+  readonly id: string;
+  readonly category: string;
+  readonly texts: Readonly<Record<string, string>>;
+  readonly limits?: (len: number) => PwbResourceLimits;
+  readonly leaf?: (model: PocModel) => VerbatimLeaf;
+  readonly omit?: readonly string[];
+  // a fake reader instead of real git
+  readonly fake?: { old: (oid: string) => Uint8Array | undefined; new: GitRunner };
+};
+const variant = (text: string) => ({ ...BASE, [SPEC]: text });
+const lim = (n: number): ((len: number) => PwbResourceLimits) => () => ({ ...PWB_RESOURCE_LIMITS, maxBytesPerSource: n });
+const forged = enc.encode(`${SPEC_TEXT}\n`);
+const CASES: Case[] = [
+  { id: 'within-bound-served', category: 'within-bound', texts: BASE },
+  { id: 'within-bound-secret', category: 'within-bound', texts: variant(`${SPEC_TEXT}\ntoken AKIA${'A'.repeat(16)} ${SECRET_SENTINEL}\n`) },
+  { id: 'within-bound-active', category: 'within-bound', texts: variant(`${SPEC_TEXT}\n<script>alert(1)</script>\n`) },
+  { id: 'within-bound-inert-code', category: 'within-bound', texts: variant(`${SPEC_TEXT}\nSee \`<script>\` as a code span.\n`) },
+  { id: 'within-bound-crlf-refused', category: 'within-bound', texts: variant(`${SPEC_TEXT}\n\`\`\`a\`b\n<script>alert(1)</script>\n\`\`\`\n`.replace(/\r?\n/g, '\r\n')) },
+  { id: 'within-bound-cr-served', category: 'within-bound', texts: variant(`${SPEC_TEXT}\n~~~\n<script>alert(1)</script>\n~~~\nAfter.\n`.replace(/\r?\n/g, '\r')) },
+  { id: 'within-bound-nul', category: 'within-bound', texts: variant(`${SPEC_TEXT}\u0000`) },
+  { id: 'within-bound-empty', category: 'within-bound', texts: variant('') },
+  { id: 'gate-other-revision', category: 'within-bound', texts: BASE, leaf: (m) => ({ ...leafOf(m), revision: 'f'.repeat(40) }) },
+  { id: 'gate-outside-population', category: 'within-bound', texts: BASE, leaf: (m) => ({ ...leafOf(m), path: 'openspec/specs/nowhere/spec.md' }) },
+  { id: 'gate-non-baseline', category: 'within-bound', texts: BASE, leaf: (m) => leafOf(m, 'about/README.md') },
+  { id: 'forged-within-bound', category: 'within-bound', texts: BASE, fake: { old: () => forged, new: forgedBlobGit(forged) } },
+  { id: 'at-bound-served', category: 'at-bound', texts: BASE, limits: (len) => ({ ...PWB_RESOURCE_LIMITS, maxBytesPerSource: len }) },
+  { id: 'at-bound-secret', category: 'at-bound', texts: variant(`${SPEC_TEXT}\ntoken AKIA${'A'.repeat(16)}\n`), limits: (len) => ({ ...PWB_RESOURCE_LIMITS, maxBytesPerSource: len }) },
+  { id: 'over-bound-by-one', category: 'over-bound', texts: BASE, limits: (len) => ({ ...PWB_RESOURCE_LIMITS, maxBytesPerSource: len - 1 }) },
+  { id: 'over-bound-16', category: 'over-bound', texts: BASE, limits: lim(16) },
+  { id: 'over-bound-secret', category: 'over-bound', texts: variant(`${SPEC_TEXT}\ntoken AKIA${'A'.repeat(16)}\n`), limits: lim(16) },
+  { id: 'over-bound-default-2MiB', category: 'over-bound', texts: variant(`${SPEC_TEXT}\n${'x'.repeat(2 * 1024 * 1024)}\n`) },
+  { id: 'over-bound-forged', category: 'over-bound', texts: BASE, limits: lim(16), fake: { old: () => forged, new: forgedBlobGit(forged) } },
+  { id: 'missing-blob', category: 'missing', texts: BASE, omit: [SPEC] },
+  { id: 'missing-blob-at-bound', category: 'missing', texts: BASE, omit: [SPEC], limits: (len) => ({ ...PWB_RESOURCE_LIMITS, maxBytesPerSource: len }) },
+];
+
+it('differential', () => {
+  const rows: unknown[] = [];
+  const spy = vi.spyOn(process.stderr, 'write');
+  for (const c of CASES) {
+    const model = observed(c.texts);
+    const len = enc.encode(c.texts[SPEC] ?? '').byteLength;
+    const limits = c.limits?.(len) ?? PWB_RESOURCE_LIMITS;
+    const leaf = c.leaf?.(model) ?? leafOf(model);
+    let oldReader: (oid: string) => Uint8Array | undefined;
+    let newRunner: GitRunner;
+    if (c.fake !== undefined) {
+      oldReader = c.fake.old;
+      newRunner = c.fake.new;
+    } else {
+      const root = repoWith(c.texts, c.omit);
+      oldReader = OLD.gitBlobReaderFor(root);
+      newRunner = NEW.gitBlobReaderFor(root, limits);
+    }
+    let oldBodyBytes = 0;
+    let newBodyBytes = 0;
+    const oldCounted = (oid: string) => { const b = oldReader(oid); oldBodyBytes += b?.byteLength ?? 0; return b; };
+    const newCounted: GitRunner = (args) => { const b = newRunner(args); if (args[1] === 'blob') newBodyBytes += b.byteLength; return b; };
+    spy.mockClear();
+    const o = OLD.verbatimRouteReader(model, oldCounted, undefined, limits)!(leaf);
+    const oldStderr = spy.mock.calls.length;
+    spy.mockClear();
+    const n = NEW.verbatimRouteReader(model, newCounted, undefined, limits)!(leaf);
+    const newStderr = spy.mock.calls.length;
+    const oldOut = outcome(o as never);
+    const newOut = outcome(n as never);
+    const same = JSON.stringify(oldOut) === JSON.stringify(newOut) && (o instanceof Uint8Array ? Buffer.from(o).equals(Buffer.from(n as Uint8Array)) : true);
+    rows.push({ id: c.id, category: c.category, reader: c.fake === undefined ? 'real-git' : 'fake', specBytes: len, maxBytesPerSource: limits.maxBytesPerSource, old: oldOut, new: newOut, identical: same, oldBodyBytesBuffered: oldBodyBytes, newBodyBytesBuffered: newBodyBytes, oldStderrWrites: oldStderr, newStderrWrites: newStderr });
+  }
+  spy.mockRestore();
+  writeFileSync(process.env.DIFF_OUT ?? '/dev/null', `${JSON.stringify(rows, null, 2)}\n`);
+  expect(rows.length).toBe(CASES.length);
+}, 120_000);
