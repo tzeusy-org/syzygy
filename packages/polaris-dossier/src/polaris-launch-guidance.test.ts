@@ -113,6 +113,8 @@ describe('splitting a blocking fidelity verdict by who can repair it', () => {
   });
   it('gives a not-ready declaration with no failing row to the author', () => {
     expect(repairSides({})).toEqual({ author: true, inventory: [] });
+    // Rows that are not records (null, arrays, scalars) are no rows at all.
+    expect(repairSides({ findings: [null, [{ severity: 'blocking' }], 'blocking', 3] })).toEqual({ author: true, inventory: [] });
   });
   it('reads a verdict file, and an unreadable one as no rows', () => {
     const run = tempDir('polaris-launch-guidance-');
@@ -120,6 +122,10 @@ describe('splitting a blocking fidelity verdict by who can repair it', () => {
     fs.writeFileSync(path.join(run, 'reviews', 'fidelity-verdict-2.json'), JSON.stringify({ findings: [] }));
     expect(readVerdict(run, 'fidelity', 2)).toEqual({ findings: [] });
     expect(readVerdict(run, 'fidelity', 3)).toEqual({});
+    for (const [n, body] of [[4, '[{"findings":[]}]'], [5, 'null'], [6, '"text"']] as const) {
+      fs.writeFileSync(path.join(run, 'reviews', `fidelity-verdict-${n}.json`), body);
+      expect(readVerdict(run, 'fidelity', n)).toEqual({});
+    }
   });
   it('tells the inventory which entries, why, and how to resubmit', () => {
     expect(inventoryRepairMessage(1, [{ entryId: 'inv-2', reason: 'spans withheld' }])).toBe(
