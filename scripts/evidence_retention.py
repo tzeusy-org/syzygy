@@ -1697,6 +1697,28 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                       and additive["archive"] == 0 and additive["plan"] == {"R2": 2},
                       "old": "two frozen records with literal equal subject/kind/role and distinct UTC captures",
                       "new": transaction, "fixture_commit": containing})
+        # This population cap is independent: distinct unused glob keys can
+        # exceed it while the complete transaction still fits MAX_FILE and
+        # every schema, source binding and actual family remains valid.
+        oversized = load_json(encoded(transaction))
+        oversized["discharges"] += [{**transaction["discharges"][0], "token": "unused-" + str(i),
+                                      "reason": "Synthetic unused glob."} for i in range(100000)]
+        oversized_bytes = encoded(oversized)
+        original_files = source_files(root, containing); measured = lines(make_census(original_files))
+        original_plan = make_plan(containing, measured, original_files)
+        try:
+            transaction_plan(root, containing, measured, original_files, original_plan, oversized); reason = "unexpected-pass"
+        except Refusal as exc:
+            reason = str(exc)
+        restored = check(root, home) == additive
+        cases.append({"predicate": "transaction-discharge-resource-population", "pass":
+                      len(oversized["discharges"]) == 100001 and len(oversized_bytes) <= MAX_FILE
+                      and reason == "invalid-transaction-population" and restored,
+                      "old": transaction, "new": {"expression": "original discharge plus 100000 copies with token='unused-'+str(i), reason='Synthetic unused glob.'",
+                      "range": [0, 100000], "population": 100001, "encoded_bytes": len(oversized_bytes), "sha256": digest(oversized_bytes)},
+                      "refusal": reason, "expected_refusal": "invalid-transaction-population", "fixture_commit": containing,
+                      "control_pass": True, "restored_pass": restored})
+        del oversized, oversized_bytes
         index = lines((home / "INDEX.jsonl").read_bytes())
         # Select the older member by its literal identity, independently of row order.
         for row in index:
@@ -1746,6 +1768,7 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             (home / "SOURCE.json").write_bytes(encoded(source))
         variants = [
             ("transaction-version", lambda d: d.update(version=True), "invalid-transaction-schema"),
+            ("transaction-version-integer", lambda d: d.update(version=2), "invalid-transaction-schema"),
             ("transaction-source", lambda d: d.update(source_commit="0" * 40), "transaction-source-drift"),
             ("transaction-discharges-type", lambda d: d.update(discharges=None), "invalid-transaction-population"),
             ("transaction-families-type", lambda d: d.update(families=None), "invalid-transaction-population"),
@@ -1771,6 +1794,7 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             ("family-members-type", lambda d: d["families"][0].update(members=True), "family-members-required"),
             ("family-selector-type", lambda d: d["families"][0]["selectors"].update(capture=True), "invalid-family-selector"),
             ("family-selector-relative", lambda d: d["families"][0]["selectors"].update(capture="capturedAt"), "invalid-family-selector"),
+            ("family-selector-relative-resolves", lambda d: d["families"][0]["selectors"].update(capture="XcapturedAt"), "invalid-family-selector"),
             ("family-selector-overlong", lambda d: d["families"][0]["selectors"].update(capture="/" + "x" * 1024), "invalid-family-selector"),
             ("family-selector-through-scalar", lambda d: d["families"][0]["selectors"].update(capture="/subject/missing"), "family-selector-unavailable"),
             ("transaction-extra-field", lambda d: d.update(approved=True), "invalid-transaction-schema"),
@@ -1796,6 +1820,7 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             ("protection-wrong-pattern", lambda d: d["protection"]["rulesets"][0]["conditions"]["ref_name"].update(include=["refs/tags/unrelated/*"]), "archive-namespace-not-protected-without-bypass"),
             ("protection-no-deletion-rule", lambda d: d["protection"]["rulesets"][0].update(rules=[{"type": "update"}]), "archive-namespace-not-protected-without-bypass"),
             ("protection-rulesets-empty", lambda d: d["protection"].update(rulesets=[]), "protection-rulesets-required"),
+            ("protection-rulesets-over-limit", lambda d: d["protection"].update(rulesets=[d["protection"]["rulesets"][0]] * 101), "protection-rulesets-required"),
             ("protection-rulesets-type", lambda d: d["protection"].update(rulesets=True), "protection-rulesets-required"),
             ("protection-rule-type", lambda d: d["protection"].update(rulesets=[True]), "invalid-protection-ruleset"),
             ("protection-conditions-type", lambda d: d["protection"]["rulesets"][0].update(conditions=[]), "invalid-protection-rule-conditions"),
@@ -1855,6 +1880,48 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         source_negative("family-capture-non-date", lambda d: edit_capture("invalid"), "capture-instant-required")
         source_negative("family-capture-type", lambda d: edit_capture(True), "capture-instant-required")
         source_negative("family-capture-overlong", lambda d: edit_capture("x" * 65), "capture-instant-required")
+        source_negative("family-capture-overlong-parseable", lambda d: edit_capture("2026-01-01T00:00:00." + "1" * 60 + "Z"), "capture-instant-required")
+        def long_resolving_selector(doc):
+            key = "x" * 1024; doc["families"][0]["selectors"]["capture"] = "/" + key
+            for path in paths:
+                record = load_json((root / path).read_bytes()); record[key] = record["capturedAt"]
+                (root / path).write_bytes(encoded(record))
+        source_negative("family-selector-overlong-resolves", long_resolving_selector, "invalid-family-selector")
+        def source_positive(name, action, keeper, expected_utc=None):
+            tx_restore(); control = check(root, home) == final
+            git(root, "reset", "--hard", containing); git(root, "clean", "-fdq")
+            before = source_files(root, containing); doc = load_json(encoded(transaction)); action(doc)
+            changed = tx_commit(); doc["source_commit"] = changed; tx_input.write_bytes(encoded(doc))
+            local_witnesses = outer / (name + "-witnesses.jsonl")
+            prepare(root, changed, home, local_witnesses, transaction_path=tx_input); tx_commit()
+            checked = check(root, home); proposed = lines((home / "PLAN.jsonl").read_bytes())
+            valid = checked["live"] == 2 and checked["archive"] == 0 and checked["plan"] == {"R2": 2}
+            valid = valid and all(r["newest_keeper"] == keeper for r in proposed)
+            if expected_utc:
+                view = outer / (name + "-view"); adjudicate(root, home, local_witnesses, view)
+                members = {r["path"]: r for r in lines((view / "MOVE-TABLE.jsonl").read_bytes())}
+                valid = valid and all(members[p]["capture_instants"][0]["utc"] == value for p,value in expected_utc.items())
+                valid = valid and lines((view / "FAMILIES.jsonl").read_bytes())[0]["chronological_latest_candidate"] == keeper
+            after = source_files(root, changed)
+            edits = {p: {"old": before.get(p, b"").decode(), "new": after.get(p, b"").decode()}
+                     for p in sorted(set(before) | set(after)) if before.get(p) != after.get(p)}
+            tx_restore(); restored = check(root, home) == final
+            cases.append({"predicate": name, "pass": control and valid and restored, "old": containing,
+                          "new": {"source_commit": changed, "source_edits": edits, "transaction": doc,
+                                  "newest_keeper": keeper, "expected_utc": expected_utc},
+                          "fixture_commit": changed, "control_pass": control, "restored_pass": restored})
+        def escaped_selector(doc):
+            doc["families"][0]["selectors"]["capture"] = "/when~1instant~0"
+            for path in paths:
+                record = load_json((root / path).read_bytes()); record["when/instant~"] = record["capturedAt"]
+                (root / path).write_bytes(encoded(record))
+        source_positive("family-selector-escaped-key-segments", escaped_selector, paths[1])
+        def offset_order(doc):
+            for path, instant in zip(paths, ("2026-01-01T23:30:00-05:00", "2026-01-02T03:00:00Z")):
+                record = load_json((root / path).read_bytes()); record["capturedAt"] = instant
+                (root / path).write_bytes(encoded(record))
+        source_positive("family-offset-instants-use-UTC-order-and-report", offset_order, paths[0],
+                        {paths[0]: "2026-01-02T04:30:00+00:00", paths[1]: "2026-01-02T03:00:00+00:00"})
         def protected_source(doc):
             dest = root / ".syzygy/fixture.md"; dest.parent.mkdir()
             dest.write_text(digest((root / paths[0]).read_bytes()) + "\n")
@@ -1862,6 +1929,35 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         def raw_dependency(doc):
             (root / "review-RAW.md").write_text("Synthetic evidence dependency: " + paths[0] + "\n")
         source_negative("R1-cannot-enter-adjudicated-family", raw_dependency, "undischarged-R1-family-member")
+        def false_literal_glob_discharge(doc):
+            raw_dependency(doc); citer = "review-RAW.md"
+            for token in (paths[0], PurePosixPath(paths[0]).name):
+                doc["discharges"].append({"citer": citer, "sha256": digest((root / citer).read_bytes()),
+                                         "form": "conservative-glob", "token": token,
+                                         "reason": "Synthetic false glob assertion cannot clear a literal dependency."})
+        source_negative("glob-discharge-cannot-clear-literal-form", false_literal_glob_discharge, "undischarged-R1-family-member")
+        source_negative("glob-discharge-cannot-clear-another-citer", lambda d: (root / "review-RAW.md").write_text(
+                        "Synthetic independent raw query: docs/**\n"), "undischarged-R1-family-member")
+        def different_glob_scope(doc):
+            citer = "review-RAW.md"; (root / citer).write_text("Synthetic independent scopes: docs/** docs/evidence/capture-*.json\n")
+            doc["discharges"].append({"citer": citer, "sha256": digest((root / citer).read_bytes()),
+                                     "form": "conservative-glob", "token": "docs/**",
+                                     "reason": "Only this exact synthetic glob scope is discharged, not the other token."})
+        source_negative("glob-discharge-cannot-clear-another-token", different_glob_scope, "undischarged-R1-family-member")
+        def digest_dependency(doc):
+            # A docs digest isolates the digest arm from code/raw/governed
+            # kind protection, while the original glob remains discharged.
+            (root / "digest-claim.md").write_text(digest((root / paths[0]).read_bytes()) + "\n")
+        source_negative("R1-docs-digest-cannot-enter-adjudicated-family", digest_dependency, "undischarged-R1-family-member")
+        def identity_input(doc, field, value):
+            doc["families"][0][field] = value
+            for path in paths:
+                record = load_json((root / path).read_bytes()); record[field] = value
+                (root / path).write_bytes(encoded(record))
+        for field, value in (("subject", True), ("kind", ""), ("role", "r" * 4097)):
+            source_negative("coherent-record-and-family-invalid-" + field,
+                            lambda d, field=field, value=value: identity_input(d, field, value),
+                            "explicit-family-subject-kind-role-required")
         def renamed_member(doc, name):
             target = root / name; target.parent.mkdir(parents=True, exist_ok=True)
             (root / paths[0]).rename(target); doc["families"][0]["members"][0] = name
@@ -1869,6 +1965,15 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                         "unknown-duplicate-or-sidecar-family-member")
         source_negative("family-cross-index-groups", lambda d: renamed_member(d, PREFIX + "other.json"),
                         "family-crosses-measured-index-group")
+        source_negative("family-non-json-member", lambda d: renamed_member(d, PREFIX + "capture-2026-01-01.txt"),
+                        "unknown-duplicate-or-sidecar-family-member")
+        def add_candidate(name, value):
+            target = root / name; target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(encoded(value))
+        source_negative("family-unadjudicated-nested-sidecar", lambda d: add_candidate(PREFIX + "capture/sidecar.json", {}),
+                        "incomplete-or-ambiguous-family-domain")
+        source_negative("family-unadjudicated-non-json-domain", lambda d: add_candidate(PREFIX + "capture-2026-01-03.txt", {}),
+                        "incomplete-or-ambiguous-family-domain")
         def protected_nonmember(kind):
             tx_restore(); control = check(root, home) == final
             git(root, "reset", "--hard", containing); git(root, "clean", "-fdq")
@@ -1876,23 +1981,58 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             extra_body = encoded({"subject": "synthetic-subject", "kind": "measurement", "role": "baseline",
                                   "capturedAt": "2026-01-03T00:00:00Z"})
             (root / extra).write_bytes(extra_body)
-            citer = ".syzygy/held.md" if kind == "R0" else "held-RAW.md"
+            citer = ".syzygy/held.md" if kind == "R0" else "held.md" if kind == "R1-digest" else "held-RAW.md"
             (root / citer).parent.mkdir(exist_ok=True)
-            (root / citer).write_text(digest(extra_body) if kind == "R0" else extra)
+            (root / citer).write_text(digest(extra_body) if kind in ("R0", "R1-digest") else extra)
             changed = tx_commit(); doc = load_json(encoded(transaction)); doc["source_commit"] = changed
             tx_input.write_bytes(encoded(doc))
             destination = outer / ("protected-nonmember-" + kind)
             prepare(root, changed, destination, transaction_path=tx_input)
             proposal = {r["path"]: r for r in lines((destination / "PLAN.jsonl").read_bytes())}
-            valid = proposal[extra]["classification"] == kind and proposal[extra]["disposition"] == "keep"
+            expected = "R1" if kind == "R1-digest" else kind
+            valid = proposal[extra]["classification"] == expected and proposal[extra]["disposition"] == "keep"
             valid = valid and proposal[paths[0]]["disposition"] == "archive" and proposal[paths[1]]["disposition"] == "keep"
             tx_restore(); restored = check(root, home) == final
             cases.append({"predicate": "protected-" + kind + "-nonmember-is-kept-outside-R2-family", "pass": control and valid and restored,
                           "old": {"source_commit": containing, "members": paths}, "new": {"source_commit": changed,
-                          "protected_path": extra, "citer": citer, "citer_bytes": digest(extra_body) if kind == "R0" else extra},
+                          "protected_path": extra, "citer": citer, "citer_bytes": digest(extra_body) if kind in ("R0", "R1-digest") else extra},
                           "fixture_commit": changed, "control_pass": control, "restored_pass": restored})
         protected_nonmember("R0")
         protected_nonmember("R1")
+        protected_nonmember("R1-digest")
+        # The recurring family excludes actual protected records, other
+        # explicit roles, and other measured groups without losing them.
+        def excluded_nonmember(label, extra, record, expected):
+            tx_restore(); control = check(root, home) == final
+            git(root, "reset", "--hard", containing); git(root, "clean", "-fdq")
+            add_candidate(extra, record)
+            # A root non-Markdown file is a code citer. Put this literal
+            # example in docs so these controls isolate role/group exclusion
+            # without manufacturing a conservative R1 code witness.
+            (root / "docs").mkdir(exist_ok=True)
+            (root / "consumer.txt").rename(root / "docs/consumer.md")
+            changed = tx_commit(); doc = load_json(encoded(transaction)); doc["source_commit"] = changed
+            doc["discharges"][0]["citer"] = "docs/consumer.md"
+            tx_input.write_bytes(encoded(doc)); destination = outer / ("excluded-" + label)
+            prepare(root, changed, destination, transaction_path=tx_input)
+            proposal = {r["path"]: r for r in lines((destination / "PLAN.jsonl").read_bytes())}
+            valid = proposal[extra]["classification"] == expected and proposal[extra]["disposition"] != "archive"
+            valid = valid and proposal[paths[0]]["disposition"] == "archive" and proposal[paths[1]]["disposition"] == "keep"
+            tx_restore(); restored = check(root, home) == final
+            cases.append({"predicate": label, "pass": control and valid and restored,
+                          "old": {"source_commit": containing, "members": paths},
+                          "new": {"path": extra, "record": record, "expected_classification": expected,
+                                  "consumer_fixture_placement": {"old": "consumer.txt", "new": "docs/consumer.md",
+                                                                 "bytes": "The literal docs/** is an unrelated documentation example; this fixture reads no evidence paths.\n"}},
+                          "fixture_commit": changed, "control_pass": control, "restored_pass": restored})
+        excluded_nonmember("raw-nonmember-preserved-outside-recurring-family", PREFIX + "capture-2026-01-03-RAW.md",
+                           {"historical": "synthetic verbatim review"}, "R0")
+        for field in ("subject", "kind", "role"):
+            other = {"subject": "synthetic-subject", "kind": "measurement", "role": "baseline",
+                     "capturedAt": "2026-01-03T00:00:00Z"}
+            other[field] = "different " + field
+            excluded_nonmember("distinct-" + field + "-nonmember-is-held", PREFIX + "capture-2026-01-03.json", other, "hold")
+        excluded_nonmember("unrelated-index-group-remains-held", PREFIX + "unrelated.json", {}, "hold")
         # The GP-Q7 draft's lexical census is a separate, per-target proof.
         # Copy the real retained primary bytes as fixture input; no owner act
         # is invented or performed by this synthetic Git transaction.
@@ -1922,6 +2062,16 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                       "primary_fixture": {"origin": str(implementation / DRAFT_AUTHORITY), "sha256": digest(primary_bytes),
                                           "scope": "exact retained source input, no owner impersonation or act performance"}})
         frozen_inventory_files = source_files(root, inventory_source)
+        partial_discharge = load_json(encoded(doc)); partial_discharge["inventory_discharges"][0]["targets"] = [paths[0]]
+        try:
+            transaction_plan(root, inventory_source, lines(make_census(frozen_inventory_files)), frozen_inventory_files,
+                             make_plan(inventory_source, lines(make_census(frozen_inventory_files)), frozen_inventory_files), partial_discharge)
+            reason = "unexpected-pass"
+        except Refusal as exc:
+            reason = str(exc)
+        cases.append({"predicate": "inventory-discharge-cannot-clear-unlisted-family-member", "pass": reason == "R0-family-reclassification-forbidden",
+                      "old": doc, "new": partial_discharge, "refusal": reason,
+                      "expected_refusal": "R0-family-reclassification-forbidden", "fixture_commit": inventory_source})
         def inventory_failure(name, change, expected):
             proposals = load_json(encoded([item])); before = load_json(encoded(proposals)); change(proposals)
             control = inventory_discharges(root, frozen_inventory_files, [item]) == {(p, DRAFT_CENSUS) for p in paths}
@@ -2026,6 +2176,101 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                       "old": {"record": {"subject": "synthetic unreferenced singleton"}, "citers": []},
                       "new": {"classification": "hold", "reason": "singleton-without-affirmative-consumer-discharge"},
                       "fixture_commit": containing})
+    # Report-only adjudication still owes exact source/witness/consumer
+    # binding and owned output boundaries. Exercise those checks in this
+    # existing matrix; a report is never permission to move a body.
+    with tempfile.TemporaryDirectory(prefix="syzygy-retention-adjudication-") as temp:
+        outer = Path(temp); root = outer / "repo"; root.mkdir(); git(root, "init", "-q")
+        paths = {"frozen": PREFIX + "frozen.json", "relied": PREFIX + "relied.json",
+                 "literal": PREFIX + "literal.json", "glob": PREFIX + "glob-one.json",
+                 "raw": PREFIX + "review-RAW.md"}
+        for name, path in paths.items():
+            target = root / path; target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(encoded({"subject": "synthetic " + name}))
+        (root / "consumer.txt").write_text("Synthetic fixed source for report binding.\n")
+        (root / "note.md").write_text(paths["literal"] + "\nThis is a literal citation with no operative claim.\n")
+        (root / "reader.py").write_text("# Synthetic glob selection example: docs/evidence/glob-*.json\n")
+        git(root, "add", "--all"); git(root, "-c", "user.name=Retention Fixture", "-c", "user.email=fixture@example.invalid",
+                                             "commit", "-qm", "synthetic adjudication source")
+        containing = git(root, "rev-parse", "HEAD").decode().strip(); home = root / HOME
+        witnesses = outer / "witnesses.jsonl"; prepare(root, containing, home, witnesses)
+        operations = outer / "operations.json"
+        claims = {paths[key]: [{"classification": classification, "consumer": "consumer.txt",
+                               "consumer_sha256": digest((root / "consumer.txt").read_bytes()),
+                               "operation": "A synthetic report operation binds this exact source and record."}]
+                  for key, classification in (("frozen", "R0"), ("relied", "R1"))}
+        operations.write_bytes(encoded(claims))
+        baseline = {p: p.read_bytes() for p in [home / "SOURCE.json", home / "PLAN.jsonl", home / "CENSUS.jsonl", witnesses, operations]}
+        def restore_report_inputs():
+            for path, body in baseline.items():
+                if path.is_symlink(): path.unlink()
+                path.write_bytes(body)
+        def report(destination): return adjudicate(root, home, witnesses, destination, operations)
+        valid = report(outer / "valid")
+        members = {r["path"]: r for r in lines((outer / "valid/MOVE-TABLE.jsonl").read_bytes())}
+        cases.append({"predicate": "adjudication-preserves-operative-classes-and-explicit-held-reasons", "pass":
+                      valid["classifications"] == {"R0": 2, "R1": 1, "hold": 2}
+                      and members[paths["glob"]]["reason"] == "citation-present-actual-reliance-unknown-retain-in-place"
+                      and members[paths["literal"]]["reason"] == "citation-present-actual-reliance-unknown-retain-in-place",
+                      "old": claims, "new": {p: {"classification": r["classification"], "reason": r["reason"]} for p,r in members.items()},
+                      "fixture_commit": containing})
+        serial = [0]
+        def report_failure(name, change, expected):
+            restore_report_inputs(); serial[0] += 1
+            control = report(outer / ("control-" + str(serial[0]))) == valid
+            change(); changed = {str(p.relative_to(outer)): {"old": b.decode(), "new": p.read_text()}
+                                for p,b in baseline.items() if not p.is_symlink() and p.read_bytes() != b}
+            try:
+                report(outer / ("negative-" + str(serial[0]))); reason = "unexpected-pass"
+            except Exception as exc:
+                reason = str(exc) if isinstance(exc, (Refusal, OSError)) else type(exc).__name__ + ": " + str(exc)
+            restore_report_inputs(); restored = report(outer / ("restored-" + str(serial[0]))) == valid
+            cases.append({"predicate": name, "pass": control and restored and reason == expected,
+                          "old": {"source_commit": containing, "input_sha256": {str(p.relative_to(outer)): digest(b) for p,b in baseline.items()}},
+                          "new": changed, "refusal": reason, "expected_refusal": expected,
+                          "fixture_commit": containing, "control_pass": control, "restored_pass": restored})
+        def source_change(key):
+            source = load_json((home / "SOURCE.json").read_bytes()); source[key] = "0" * 64
+            (home / "SOURCE.json").write_bytes(encoded(source))
+        for key in ("snapshot_sha256", "plan_sha256", "source_tree_sha256"):
+            report_failure("adjudication-" + key, lambda key=key: source_change(key), "adjudication-frozen-input-drift")
+        def witness_change(change):
+            records = lines(witnesses.read_bytes()); change(records); witnesses.write_bytes(jsonl(records))
+        report_failure("adjudication-witness-unknown", lambda: witness_change(lambda r: r[0].update(path=PREFIX + "absent.json")), "adjudication-witness-drift")
+        report_failure("adjudication-witness-duplicate", lambda: witness_change(lambda r: r.append(r[0])), "adjudication-witness-drift")
+        report_failure("adjudication-witness-omission", lambda: witness_change(lambda r: r.pop()), "adjudication-witness-population-mismatch")
+        report_failure("adjudication-witness-byte-drift", lambda: witness_change(lambda r: r[0]["witnesses"].append({"new": "unbound"})), "adjudication-witness-drift")
+        def witness_count_drift():
+            proposed = lines((home / "PLAN.jsonl").read_bytes()); proposed[0]["witnesses"]["count"] += 1
+            data = jsonl(proposed); (home / "PLAN.jsonl").write_bytes(data)
+            source = load_json((home / "SOURCE.json").read_bytes()); source["plan_sha256"] = digest(data)
+            (home / "SOURCE.json").write_bytes(encoded(source))
+        report_failure("adjudication-witness-count", witness_count_drift, "adjudication-witness-drift")
+        def operation_change(change):
+            value = load_json(operations.read_bytes()); change(value); operations.write_bytes(encoded(value))
+        report_failure("adjudication-operation-unknown-target", lambda: operation_change(lambda v: v.update({PREFIX + "absent.json": v.pop(paths["frozen"])})), "operative-consumer-binding-drift")
+        for name, values in (("classification", {"classification": "R2"}), ("consumer", {"consumer": "absent.txt"}),
+                             ("consumer-digest", {"consumer_sha256": "0" * 64}), ("operation-type", {"operation": True}),
+                             ("operation-short", {"operation": "short"})):
+            report_failure("adjudication-" + name, lambda values=values: operation_change(lambda v: v[paths["frozen"]][0].update(values)), "operative-consumer-binding-drift")
+        restore_report_inputs()
+        for label, destination in (("wrong-local-directory", root / "other-output"), ("output-symlink", outer / "linked-output"),
+                                   ("artifact-symlink", outer / "linked-artifact")):
+            if label == "output-symlink":
+                real = outer / "link-target"; real.mkdir(); destination.symlink_to(real, target_is_directory=True)
+            if label == "artifact-symlink":
+                destination.mkdir(); (destination / "FAMILIES.jsonl").symlink_to(outer / "artifact-target")
+            try:
+                report(destination); reason = "unexpected-pass"
+            except Refusal as exc:
+                reason = str(exc)
+            expected = "generated-output-must-use-retention-home-or-external-directory" if label == "wrong-local-directory" else "output-artifact-symlink"
+            cases.append({"predicate": "adjudication-" + label, "pass": reason == expected,
+                          "old": "owned regular external output", "new": {"destination": str(destination.relative_to(outer)), "fixture": label},
+                          "refusal": reason, "expected_refusal": expected, "fixture_commit": containing})
+        inplace = report(home)
+        cases.append({"predicate": "adjudication-allows-exact-retention-home", "pass": inplace == valid,
+                      "old": "external output", "new": HOME, "fixture_commit": containing})
     for case in cases:
         case["input_record_sha256"] = digest(encoded({"old": case["old"], "new": case["new"]}))
     report = {"implementation_commit": implementation_commit, "implementation_sha256": implementation_sha256,
