@@ -68,7 +68,7 @@ function committedFixtureRepo(): FixtureRepo {
   const root = mkdtempSync(join(tmpdir(), ownedTemplatePrefix()));
   removeAtEndOfFile(root);
   const files: Readonly<Record<string, string>> = {
-    'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md':
+    'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md':
       '# design\nStatus: Approved for implementation\n',
     'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md':
       '# proposal\n- Sign-off: owner approved the design and end-to-end implementation on 2026-08-24.\n',

@@ -30,7 +30,7 @@ function butlersFixture(): string {
   const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-butlers-'));
   cleanups.push(root);
   const files: Readonly<Record<string, string>> = {
-    'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md':
+    'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md':
       '# WhatsApp identity design\nStatus: Approved for implementation\n',
     'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md':
       '# Repair WhatsApp identity reconciliation\n- Sign-off: owner approved the design and end-to-end implementation on 2026-08-24.\nowner-approved-intent-marker\n',
@@ -108,7 +108,7 @@ afterAll(() => {
 function committedButlersGitFixture(): ButlersGitFixture {
   const root = mkdtempSync(join(tmpdir(), 'syzygy-poc-butlers-git-template-'));
   const files: Readonly<Record<string, string>> = {
-    'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md':
+    'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md':
       '# WhatsApp identity design\nStatus: Approved for implementation\n',
     'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md':
       '# Repair WhatsApp identity reconciliation\n- Sign-off: owner approved the design and end-to-end implementation on 2026-08-24.\n',
@@ -242,7 +242,7 @@ describe('three-surface Butlers POC model', () => {
 
     const entities = byId(first.entities);
     expect(entities.get('capability:whatsapp-transport-identity')?.provenance.map((provenance) => provenance.source)).toEqual([
-      'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md',
+      'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md',
       'openspec/changes/repair-whatsapp-identity-reconciliation/specs/switchboard-identity/spec.md',
     ]);
     expect(entities.get('intent:req-switchboard-identity-001')?.epistemic.label).toBe(
@@ -253,7 +253,7 @@ describe('three-surface Butlers POC model', () => {
         .get('intent:req-switchboard-identity-001')
         ?.provenance.map((provenance) => provenance.source),
     ).toEqual([
-      'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md',
+      'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md',
       'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md',
       'openspec/changes/repair-whatsapp-identity-reconciliation/specs/switchboard-identity/spec.md',
     ]);
@@ -348,7 +348,7 @@ describe('three-surface Butlers POC model', () => {
       }
     }
     expect(Object.fromEntries([...digestsBySource].map(([source, digests]) => [source, [...digests]]))).toEqual({
-      'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md': ['sha256:2479e75d520a16460f9e3e1d01e16211d93d9e5d7f05a1f79792466bd7159c48'],
+      'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md': ['sha256:2479e75d520a16460f9e3e1d01e16211d93d9e5d7f05a1f79792466bd7159c48'],
       'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md': ['sha256:964230e52c4cba3cc029e7f984d5230a1c3502ad5ae5a421d7126e4ef3c7aaea'],
       'openspec/changes/repair-whatsapp-identity-reconciliation/specs/switchboard-identity/spec.md': ['sha256:6eb3621053cab988df848b46e269a9e6dbd7779703a19404d6eb5a8762dd8ce9'],
       'src/butlers/identity.py': ['sha256:c17f6c25cbb53eba69017e09605aa474a8ce296313d13aceee622e753d950981'],
@@ -676,7 +676,7 @@ describe('three-surface Butlers POC model', () => {
   it('fails closed when the selected intent no longer carries its approval contract', () => {
     const mutations = [
       {
-        path: 'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md',
+        path: 'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md',
         contents: '# WhatsApp identity design\nStatus: Draft\n',
       },
       {

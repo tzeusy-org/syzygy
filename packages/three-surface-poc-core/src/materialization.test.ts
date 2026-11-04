@@ -24,7 +24,7 @@ const NOW = '2026-08-30T12:00:00Z';
 const PACKET = buildMaterializationPacket({
   targetRepoRoot: '/repo/butlers',
   proposalPath: 'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md',
-  designPath: 'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md',
+  designPath: 'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md',
 });
 
 function recordIo(dir: string) {

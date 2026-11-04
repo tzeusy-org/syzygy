@@ -620,7 +620,7 @@ describe('main(argv, io): the POST /polaris/reobserve handlers main registers', 
     expect(evaluation).toMatch(new RegExp(`^repository:butlers-configured-poc@fixture\\|inputs:sha256:[0-9a-f]{64}-build-2${ID_TAIL}$`));
     expect(supersedes).toMatch(BASE_ID);
     expect(response.body).toContain('<h1>Re-observed</h1>');
-    expect(response.body).toContain('<li>Butlers HEAD: 1f892687d53c829f9c2a4ee99bccccb23d6158df (unchanged)</li>');
+    expect(response.body).toContain('<li>Butlers HEAD: 2ade4e966635973c82defd6bbeb21bfe6e69fdc3 (unchanged)</li>');
     expect(response.body).toContain('<li>Observed-project limb: 1 changed, 0 added since the superseded evaluation</li>');
     expect(response.body).toContain('<li>Observatory limb: 0 Syzygy commits since build observer-rev</li>');
     expect(response.body).toContain('<a href="/polaris">Back to Polaris</a>');

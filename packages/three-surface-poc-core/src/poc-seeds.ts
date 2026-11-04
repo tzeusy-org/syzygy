@@ -96,7 +96,7 @@ export const BUTLERS_POC_SEEDS: PocSeedInput = deepFreeze({
     provenanceSource: 'Butlers repository',
   },
   artifacts: {
-    design: 'docs/superpowers/specs/2026-08-24-whatsapp-identity-reconciliation-design.md',
+    design: 'docs/plans/2026-08-24-whatsapp-identity-reconciliation-design.md',
     proposal: 'openspec/changes/repair-whatsapp-identity-reconciliation/proposal.md',
     requirement:
       'openspec/changes/repair-whatsapp-identity-reconciliation/specs/switchboard-identity/spec.md',
