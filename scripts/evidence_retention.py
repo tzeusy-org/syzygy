@@ -589,7 +589,7 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                           ("jsonl-excessive-rows", b'{}\n' * (MAX_ROWS + 1))):
             probe(name, lambda: lines(b'{}\n'), lambda: lines(bad),
                   "invalid-line-size" if name == "jsonl-empty-line" else "empty-or-excessive-rows",
-                  "b'{}\\n'", "b'{}\\n\\n'" if name == "jsonl-empty-line" else f"b'{{}}\\n' * {MAX_ROWS + 1}")
+                  repr(b'{}\n'), repr(bad) if name == "jsonl-empty-line" else repr(b'{}\n') + f" * {MAX_ROWS + 1}")
         for name, bad in (("path-type", None), ("path-size", PREFIX + "a" * 4096)):
             probe(name, lambda: evidence_path(PREFIX + "run-a.json"), lambda: evidence_path(bad),
                   "invalid-path", repr(PREFIX + "run-a.json"), repr(bad))
@@ -668,7 +668,7 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                 census.build = original_build
         probe("census-omission-fault", lambda: prepare(root, source_commit, external), omitted_census_row,
               "independent-population-mismatch", "census.build(root)[0]",
-              "'\\n'.join(census.build(root)[0].splitlines()[:-1]) + '\\n'")
+              repr("\n") + ".join(census.build(root)[0].splitlines()[:-1]) + " + repr("\n"))
         # The extended witness/classification branches also protect retention.
         # Independently stated literal expectations pin each lexical witness;
         # the unchanged census differential remains a separate control.
