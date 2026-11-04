@@ -2,7 +2,7 @@
 
 ## Patterns
 
-- `R-FLAKY-EXJ7-.*-RAW\.md`
+- `R-FLAKY-EXJ7(-.*)?-RAW\.md`
 
 ## What was under review
 
