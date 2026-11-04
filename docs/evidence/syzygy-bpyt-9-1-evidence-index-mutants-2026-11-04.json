@@ -1,0 +1,200 @@
+{
+  "bead": "syzygy-bpyt.9.1",
+  "subject": "scripts/build_evidence_index.py",
+  "subjectSha256": "df9532ddd81855a58e000f6294e1cc4ebba3c2892d20b9c4df029e077b7a92b5",
+  "commit": "005c73adfc91adaaf7d6cec2e943d69447c11be0",
+  "command": "python3 <mutated copy> --selftest",
+  "unmutatedExitCode": 0,
+  "mutants": [
+    {
+      "mutant": "act-bound",
+      "old": "if \"governed\" in digest_kinds:",
+      "new": "if False:",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "act-bound: digest in a governed file"
+      ]
+    },
+    {
+      "mutant": "governed-citer",
+      "old": "for kind in (\"governed\", \"code\", \"raw\", \"docs\"):",
+      "new": "for kind in (\"code\", \"raw\", \"docs\"):",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "governed-citer: path in .syzygy/"
+      ]
+    },
+    {
+      "mutant": "code-reference",
+      "old": "for kind in (\"governed\", \"code\", \"raw\", \"docs\"):",
+      "new": "for kind in (\"governed\", \"raw\", \"docs\"):",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "code-reference: path in scripts/"
+      ]
+    },
+    {
+      "mutant": "raw-review-citer",
+      "old": "for kind in (\"governed\", \"code\", \"raw\", \"docs\"):",
+      "new": "for kind in (\"governed\", \"code\", \"docs\"):",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "raw-review-citer: basename in a -RAW.md",
+        "raw-review-citer: a -RAW.md under docs/evidence/ is a raw citer"
+      ]
+    },
+    {
+      "mutant": "docs-citer",
+      "old": "for kind in (\"governed\", \"code\", \"raw\", \"docs\"):",
+      "new": "for kind in (\"governed\", \"code\", \"raw\"):",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "docs-citer: basename in docs/README.md",
+        "wrapped code span joins across the line break"
+      ]
+    },
+    {
+      "mutant": "digest-cited",
+      "old": "if digest_kinds:\n        return \"digest-cited\"",
+      "new": "if False:\n        return \"digest-cited\"",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "digest-cited: uppercase digest in a sibling manifest",
+        "digest-cited: nested file named by basename and digest in a raw"
+      ]
+    },
+    {
+      "mutant": "evidence-only",
+      "old": "for kind in (\"evidence\", \"listing\"):",
+      "new": "for kind in (\"listing\",):",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "evidence-only: cited from inside docs/evidence/",
+        "evidence-only: a one-token file with no `/` is not a listing",
+        "same-directory relative path cites"
+      ]
+    },
+    {
+      "mutant": "listed-only",
+      "old": "for kind in (\"evidence\", \"listing\"):",
+      "new": "for kind in (\"evidence\",):",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "listed-only: named only in a path dump"
+      ]
+    },
+    {
+      "mutant": "none",
+      "old": "    return \"none\"\n\n\ndef build",
+      "new": "    return \"evidence-only\"\n\n\ndef build",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "none: no citer",
+        "stem without extension is not a citation",
+        "self-citation by path does not count",
+        "an index snapshot is not a citer",
+        "a removed citation changes the class"
+      ]
+    },
+    {
+      "mutant": "listing kind",
+      "old": "return \"listing\" if is_listing(text) else \"evidence\"",
+      "new": "return \"evidence\"",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "listed-only: named only in a path dump"
+      ]
+    },
+    {
+      "mutant": "listing needs a /",
+      "old": " and any(\"/\" in line for line in lines)",
+      "new": "",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "evidence-only: a one-token file with no `/` is not a listing"
+      ]
+    },
+    {
+      "mutant": "raw before evidence prefix",
+      "old": "if path.endswith(\"-RAW.md\"):",
+      "new": "if path.endswith(\"-RAW.md\") and not path.startswith(EVIDENCE_PREFIX):",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "raw-review-citer: a -RAW.md under docs/evidence/ is a raw citer"
+      ]
+    },
+    {
+      "mutant": "self-citation discard",
+      "old": "hit.discard(citer)",
+      "new": "pass",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "self-citation by path does not count"
+      ]
+    },
+    {
+      "mutant": "snapshot excluded as citer",
+      "old": "if is_snapshot(citer, text):\n            continue",
+      "new": "if False:\n            continue",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "an index snapshot is not a citer"
+      ]
+    },
+    {
+      "mutant": "version-tail loop",
+      "old": "stem = cut",
+      "new": "return cut",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "family: every trailing version token cut"
+      ]
+    },
+    {
+      "mutant": "mode filter",
+      "old": "if meta.split(\" \")[0] in (\"100644\", \"100755\"):",
+      "new": "if True:",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "a symlink is not a row",
+        "one row per tracked regular file under docs/evidence/"
+      ]
+    },
+    {
+      "mutant": "digest case fold",
+      "old": "by_digest.get(hexd.lower(), ())",
+      "new": "by_digest.get(hexd, ())",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "digest-cited: uppercase digest in a sibling manifest"
+      ]
+    },
+    {
+      "mutant": "wrapped-citation join",
+      "old": "found.add(tail.group(0) + head.group(0))",
+      "new": "pass",
+      "exitCode": 1,
+      "killed": true,
+      "failedCases": [
+        "wrapped code span joins across the line break"
+      ]
+    }
+  ]
+}

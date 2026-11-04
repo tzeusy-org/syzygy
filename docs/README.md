@@ -145,6 +145,26 @@ trusted-bootstrap impact ledger; two are cited by nothing.]
 Each file is one run's machine output at a named commit, kept because a claim
 elsewhere cites it. `PWB-IMPLEMENTATION-PLAN.md` is the route in for 25 of
 the 28; the three a reviewer produced route through `reviews/`.
+*Stale 2026-11-04 (`syzygy-bpyt.9.1`): "25 of the 28" counts the directory
+as swept 2026-09-06; it now holds thousands of files, most in per-review
+subdirectories. Route by the generated index below.*
+
+**The route in is the generated index**, printed on demand at the commit you
+are asking about and never committed:
+
+```sh
+python3 scripts/build_evidence_index.py --summary        # class totals
+python3 scripts/build_evidence_index.py --out <path>     # one JSON row per file
+```
+
+- One row per tracked file: path, sha256, family, the record's named subject,
+  commit and verdict where it carries them, and a reliance class.
+- The citer predicate and the nine classes are stated in the script's
+  docstring; the denominator is every tracked file under `docs/evidence/`.
+- A reliance class says who cites a file, never whether the file is still
+  needed (rule 5). Retention is a separate, owner-gated question
+  (`syzygy-bpyt.9.2`).
+- The index is a generated view, never authority.
 
 - A mutation-run record is valid **only for the commit it names** (`AGENTS.md`
   verification rule 7).
@@ -152,10 +172,15 @@ the 28; the three a reviewer produced route through `reviews/`.
   evidence.
 
 **This directory has no index of its own, and does not need one:
-`PWB-IMPLEMENTATION-PLAN.md` is the index.**
+`PWB-IMPLEMENTATION-PLAN.md` is the index.** *Stale 2026-11-04
+(`syzygy-bpyt.9.1`): the sentence above, kept as written, no longer holds;
+the generated index above is the index, and the plan routes only the files
+its tasks name.*
 
 - Every file here is cited, and 25 of the 28 are cited by that plan, at the
-  task whose evidence they are. The route in is the plan's task, never a
+  task whose evidence they are. *Stale 2026-11-04 (`syzygy-bpyt.9.1`):
+  "Every file here is cited" was true of the 28 swept 2026-09-06 and is not
+  true now; see the note under the observation below.* The route in is the plan's task, never a
   listing of this directory.
 - The three the plan does not name are the three a *reviewer* produced rather
   than a task (`…-gen2-reviewer.json`, `pwb-recon-gen1-reviewer-…`,
@@ -166,6 +191,14 @@ the 28; the three a reviewer produced route through `reviews/`.
   across every tracked `.md`, `.py`, `.ts`, `.json`, `.yml`, `.txt` and `.sh`
   outside this directory; 28 cited, 0 uncited, 25 cited by the plan,
   remainder enumerated above.]
+  - *Stale 2026-11-04 (`syzygy-bpyt.9.1`): the observation above, "28 files
+    … 28 cited, 0 uncited", stands for its 2026-09-06 population and
+    predicate only. The current figure is the generated index's `none`
+    class: files that no tracked file cites by path token (the docstring's
+    path predicate) or by full sha256, counting citers inside
+    `docs/evidence/` and path dumps. That predicate counts no stem and no
+    truncated digest, so its figure is not comparable with this one; a
+    file in `none` is uncited by that predicate, not proven unused.*
 
 **A JSON here does not say whether the work it evidences is finished.**
 

@@ -402,6 +402,11 @@ jobs:
       - name: check_docs_review_campaign_partition --selftest
         run: python3 scripts/check_docs_review_campaign_partition.py --selftest
 
+      # The evidence index is generated on demand and never committed, so
+      # only its builder's fixtures run here (syzygy-bpyt.9.1).
+      - name: build_evidence_index --selftest
+        run: python3 scripts/build_evidence_index.py --selftest
+
       # The checkers' own fixtures. A hosted run that exercises the checks
       # but never the checks' checks reports a denominator it does not have.
       # Every one is stdlib-only, which is why they can run here at all —
