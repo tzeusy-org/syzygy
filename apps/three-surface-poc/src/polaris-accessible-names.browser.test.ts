@@ -9,8 +9,7 @@
 // Expected values are hand-typed literals. Without a browser the browser
 // suites are skipped, never passed.
 import { createHash } from 'node:crypto';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -18,6 +17,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { createDaemon, type RunningDaemon } from '@syzygy/http-host';
 import { PWB_RESOURCE_LIMITS, type PocModel } from '@syzygy/three-surface-poc-core';
+import { tempDir } from '@syzygy/test-kit';
 
 import { findBrowserExecutable, launchBrowser, type Browser } from './cdp-browser.js';
 import {
@@ -183,20 +183,18 @@ describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a r
 
   beforeAll(async () => {
     browser = await launchBrowser(executable as string);
-    pages = mkdtempSync(join(tmpdir(), 'syzygy-poc-names-'));
+    pages = tempDir('syzygy-poc-names-');
   });
 
   afterAll(async () => {
     await browser?.close();
     for (const daemon of daemons.splice(0)) await daemon.close().catch(() => undefined);
-    if (pages !== undefined) rmSync(pages, { recursive: true, force: true });
     for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });
   });
 
   /** Serves `model` through the real routes on a private fixture daemon. */
   async function serve(model: PocModel, texts: Readonly<Record<string, string>>): Promise<{ readonly baseUrl: string; readonly token: string }> {
-    const stateDir = mkdtempSync(join(tmpdir(), 'syzygy-poc-names-daemon-'));
-    cleanups.push(stateDir);
+    const stateDir = tempDir('syzygy-poc-names-daemon-');
     const start = await createDaemon({
       stateDir: join(stateDir, 'state'),
       routes: pocRoutes(() => model, PWB_RESOURCE_LIMITS, (m) => ({ verbatim: verbatimRouteReader(m, blobReaderFor(texts)) })),

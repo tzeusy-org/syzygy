@@ -1,12 +1,11 @@
 import { rmSync, writeFileSync } from 'node:fs';
-import { mkdtempSync } from 'node:fs';
-import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { createDaemon, type RunningDaemon } from '@syzygy/http-host';
 import type { PocModel } from '@syzygy/three-surface-poc-core';
+import { tempDir } from '@syzygy/test-kit';
 
 import { TAILNET_HOST } from './browser-origin.js';
 import { findBrowserExecutable, launchBrowser, withBrowserPage, type Browser, type BrowserPage } from './cdp-browser.js';
@@ -33,12 +32,6 @@ afterEach(async () => {
     rmSync(directory, { recursive: true, force: true });
   }
 });
-
-function tempDir(prefix: string): string {
-  const directory = mkdtempSync(join(tmpdir(), prefix));
-  cleanups.push(directory);
-  return directory;
-}
 
 interface CrossLink {
   readonly href: string;
@@ -300,14 +293,12 @@ describe('surface routes', () => {
     beforeAll(async () => {
       if (browserExecutable === undefined) return;
       model = buildFixtureModel(localCleanups);
-      const stateDir = mkdtempSync(join(tmpdir(), 'syzygy-cross-links-state-'));
-      localCleanups.push(stateDir);
+      const stateDir = tempDir('syzygy-cross-links-state-');
       const start = await createDaemon({ stateDir: join(stateDir, 'state'), routes: pocRoutes(() => model), port: 0 });
       if (!start.started) throw new Error(`daemon failed to start: ${start.failure.kind}`);
       daemon = start.daemon;
       baseUrl = `http://${daemon.host}:${daemon.port}`;
-      directory = mkdtempSync(join(tmpdir(), 'syzygy-cross-links-pages-'));
-      localCleanups.push(directory);
+      directory = tempDir('syzygy-cross-links-pages-');
       browser = await launchBrowser(browserExecutable);
       page = await browser.newPage();
     }, 60_000); // a fixture model, a daemon and Chrome: at most 0.5 s in 5 alone runs, but hosted run 40428762919 spent at least 9.0 s in this beforeAll and the afterAll together (docs/evidence/syzygy-bpyt-4-31/ci-durations.json)

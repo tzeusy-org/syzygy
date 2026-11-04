@@ -1,9 +1,9 @@
 import { execFileSync } from 'node:child_process';
-import { chmodSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { chmodSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { DOSSIER_REQUESTED_ASSETS, quotableGenerationSources, runGenerationPipeline, type PipelineRequest, type PipelineResult, type ProviderDraft } from '@syzygy/polaris-generation-core';
+import { tempDir } from '@syzygy/test-kit';
 
 import { createDurableScriptedLifecycle } from './durable-lifecycle.js';
 import { main } from './dossier-main.js';
@@ -12,9 +12,7 @@ import { admissionRequirements, formatOutcome, gitLsRemote, gitMaterialize, noAd
 
 const SHA_A = 'a'.repeat(40), SHA_B = 'b'.repeat(40), SHA_C = 'c'.repeat(40);
 const LS = `${SHA_A}\tHEAD\n${SHA_A}\trefs/heads/unstable\n${SHA_B}\trefs/tags/8.0.0\n${SHA_C}\trefs/tags/8.0.0^{}\n${SHA_B}\trefs/tags/light\n`;
-const cleanups: string[] = [];
-afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });
-const scratch = (): string => { const dir = mkdtempSync(join(tmpdir(), 'syzygy-trigger-')); cleanups.push(dir); return dir; };
+const scratch = (): string => tempDir('syzygy-trigger-');
 /** The id the observation record carries; deliberately not the spelling the trigger derives from the URL. */
 const ids = async (): Promise<readonly string[]> => ['fixture-record-id'];
 const all: AdmissionRecordsPort = { source: 'fixture store', repositoryIdsFor: ids, check: async r => ({ satisfied: true, record: `fixture/${r.kind}` }) };
@@ -85,7 +83,7 @@ describe('trigger stops at the first unmet gate', () => {
 describe('with every record satisfied', () => {
   let repo = '', commit = '';
   beforeAll(() => {
-    repo = mkdtempSync(join(tmpdir(), 'syzygy-trigger-repo-'));
+    repo = tempDir('syzygy-trigger-repo-');
     const run = (...a: string[]): string => execFileSync('git', ['-C', repo, ...a], { encoding: 'utf8' }).trim();
     run('init', '-q'); run('config', 'gc.auto', '0'); run('config', 'maintenance.auto', 'false'); run('config', 'user.email', 'f@example.invalid'); run('config', 'user.name', 'F');
     for (const [p, body] of Object.entries({ 'README.md': '# Fixture\nIt does a thing.\n', 'src/core.c': 'int core(void) { return 1; }\n', 'bin/blob': 'x' })) {
@@ -93,7 +91,6 @@ describe('with every record satisfied', () => {
     }
     run('add', '-A'); run('commit', '-qm', 'fixture'); commit = run('rev-parse', 'HEAD');
   });
-  afterAll(() => rmSync(repo, { recursive: true, force: true }));
   const ls = () => `${commit}\tHEAD\n`;
   const draftFor = (request: PipelineRequest): ProviderDraft => {
     const [first, second] = quotableGenerationSources(request.sources);
@@ -315,7 +312,7 @@ describe('with every record satisfied', () => {
 
   describe('a poisoned caller environment', () => {
     it('reads the pinned fixture through the whole trigger while GIT_DIR and object variables point at another repository', async () => {
-      const other = mkdtempSync(join(tmpdir(), 'syzygy-trigger-other-')); cleanups.push(other);
+      const other = tempDir('syzygy-trigger-other-');
       execFileSync('git', ['-C', other, 'init', '-q']); execFileSync('git', ['-C', other, 'config', 'gc.auto', '0']); execFileSync('git', ['-C', other, 'config', 'maintenance.auto', 'false']); writeFileSync(join(other, 'OTHER.md'), 'OTHER REPO\n');
       execFileSync('git', ['-C', other, 'add', '-A']); execFileSync('git', ['-C', other, '-c', 'user.email=o@example.invalid', '-c', 'user.name=O', 'commit', '-qm', 'o']);
       const saved = { ...process.env };
@@ -359,13 +356,12 @@ describe('with every record satisfied', () => {
 describe('command', () => {
   let repo = '', commit = '';
   beforeAll(() => {
-    repo = mkdtempSync(join(tmpdir(), 'syzygy-trigger-cmd-'));
+    repo = tempDir('syzygy-trigger-cmd-');
     const run = (...a: string[]): string => execFileSync('git', ['-C', repo, ...a], { encoding: 'utf8' }).trim();
     run('init', '-q'); run('config', 'gc.auto', '0'); run('config', 'maintenance.auto', 'false'); run('config', 'user.email', 'f@example.invalid'); run('config', 'user.name', 'F');
     writeFileSync(join(repo, 'README.md'), '# Fixture\nIt does a thing.\n'); writeFileSync(join(repo, 'a.c'), 'int a;\n');
     run('add', '-A'); run('commit', '-qm', 'fixture'); commit = run('rev-parse', 'HEAD');
   });
-  afterAll(() => rmSync(repo, { recursive: true, force: true }));
   const finishedFor = (request: PipelineRequest): PipelineResult => {
     const [first] = quotableGenerationSources(request.sources);
     const p = { id: 'intro', text: 'Claim.', sourceIds: [first!.sourceId], children: [] };

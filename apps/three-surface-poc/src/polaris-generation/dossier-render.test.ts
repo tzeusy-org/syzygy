@@ -1,13 +1,13 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, symlinkSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, mkdirSync, readdirSync, readFileSync, symlinkSync } from 'node:fs';
 import { join } from 'node:path';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
   evaluateDossier, generationAnchorId, generationSourcesForBody, gitBlobObjectId, parseDossierManifest, scanDossierPage,
   type GenerationSource, type LocalRenderInput, type PipelineResult,
 } from '@syzygy/polaris-generation-core';
+import { tempDir } from '@syzygy/test-kit';
 import { renderDossier } from './dossier-render.js';
 import { sourceRoute } from './dossier-site.js';
 import { writeDossierRun } from './dossier-render-main.js';
@@ -22,8 +22,6 @@ beforeAll(async () => {
   run = { sources: synthetic.sources, result: synthetic.result };
 });
 
-const cleanups: string[] = [];
-afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });
 
 const CSP = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">`;
 const signal = new AbortController().signal;
@@ -277,8 +275,7 @@ describe('source routes', () => {
 
 describe('run directory', () => {
   it('writes every file into a new directory outside Git and refuses to reuse one', async () => {
-    const parent = mkdtempSync(join(tmpdir(), 'syzygy-dossier-run-'));
-    cleanups.push(parent);
+    const parent = tempDir('syzygy-dossier-run-');
     const { files } = renderDossier(run);
     const out = join(parent, 'garden');
     await writeDossierRun(out, files);
@@ -287,15 +284,13 @@ describe('run directory', () => {
   });
 
   it('refuses an existing empty run directory', async () => {
-    const parent = mkdtempSync(join(tmpdir(), 'syzygy-dossier-run-'));
-    cleanups.push(parent);
+    const parent = tempDir('syzygy-dossier-run-');
     await expect(writeDossierRun(parent, renderDossier(run).files)).rejects.toThrow();
     expect(existsSync(join(parent, 'index.html'))).toBe(false);
   });
 
   it('refuses a run directory whose parent is a symlink into a Git work tree, and writes nothing there', async () => {
-    const root = mkdtempSync(join(tmpdir(), 'syzygy-dossier-link-'));
-    cleanups.push(root);
+    const root = tempDir('syzygy-dossier-link-');
     const repo = join(root, 'repo');
     mkdirSync(repo);
     execFileSync('git', ['init', '-q', repo]);
@@ -308,8 +303,7 @@ describe('run directory', () => {
   });
 
   it('ignores the caller\'s GIT_* variables: GIT_DIR cannot make a work tree read as outside Git', async () => {
-    const repo = mkdtempSync(join(tmpdir(), 'syzygy-dossier-gitdir-'));
-    cleanups.push(repo);
+    const repo = tempDir('syzygy-dossier-gitdir-');
     execFileSync('git', ['init', '-q', repo]);
     const saved = process.env.GIT_DIR;
     process.env.GIT_DIR = join(repo, 'not-a-git-dir');
@@ -322,16 +316,14 @@ describe('run directory', () => {
   });
 
   it('refuses a parent inside a .git directory, where Git answers "false" rather than "not a git repository"', async () => {
-    const repo = mkdtempSync(join(tmpdir(), 'syzygy-dossier-dotgit-'));
-    cleanups.push(repo);
+    const repo = tempDir('syzygy-dossier-dotgit-');
     execFileSync('git', ['init', '-q', repo]);
     await expect(writeDossierRun(join(repo, '.git', 'run'), renderDossier(run).files)).rejects.toThrow('run-directory-inside-git-work-tree');
     expect(existsSync(join(repo, '.git', 'run'))).toBe(false);
   });
 
   it('writes through a symlinked parent outside Git to the real path, and returns that path', async () => {
-    const root = realpathSync(mkdtempSync(join(tmpdir(), 'syzygy-dossier-real-')));
-    cleanups.push(root);
+    const root = tempDir('syzygy-dossier-real-');
     mkdirSync(join(root, 'real'));
     symlinkSync(join(root, 'real'), join(root, 'link'));
     const written = await writeDossierRun(join(root, 'link', 'run'), renderDossier(run).files);
@@ -340,15 +332,13 @@ describe('run directory', () => {
   });
 
   it('refuses when Git cannot be run, rather than assuming no work tree', async () => {
-    const parent = mkdtempSync(join(tmpdir(), 'syzygy-dossier-nogit-'));
-    cleanups.push(parent);
+    const parent = tempDir('syzygy-dossier-nogit-');
     await expect(writeDossierRun(join(parent, 'run'), renderDossier(run).files, { PATH: '/nonexistent' })).rejects.toThrow('git-unavailable');
     expect(readdirSync(parent)).toEqual([]);
   });
 
   it('leaves no run directory and no staging directory when a write fails part-way', async () => {
-    const parent = mkdtempSync(join(tmpdir(), 'syzygy-dossier-partial-'));
-    cleanups.push(parent);
+    const parent = tempDir('syzygy-dossier-partial-');
     // A file and a directory of the same name: the second write fails after the first lands in staging.
     const files = new Map([['a.html', 'x'], ['a.html/b.html', 'y']]);
     await expect(writeDossierRun(join(parent, 'run'), files)).rejects.toThrow();
@@ -356,8 +346,7 @@ describe('run directory', () => {
   });
 
   it('refuses a run directory inside a Git work tree', async () => {
-    const parent = mkdtempSync(join(tmpdir(), 'syzygy-dossier-git-'));
-    cleanups.push(parent);
+    const parent = tempDir('syzygy-dossier-git-');
     execFileSync('git', ['init', '-q', parent]);
     await expect(writeDossierRun(join(parent, 'run'), renderDossier(run).files)).rejects.toThrow('run-directory-inside-git-work-tree');
     expect(existsSync(join(parent, 'run'))).toBe(false);
