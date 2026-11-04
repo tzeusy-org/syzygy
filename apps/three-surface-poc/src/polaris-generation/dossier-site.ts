@@ -330,7 +330,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const figures = draft.diagrams.map((d, i) => d.sectionId === section.id ? diagram(from, d, i) : '').join('');
     const dives = draft.deepDives.filter(dive => dive.sectionId === section.id).map(dive => dive.disposition.kind === 'produced'
       ? `<li><a href="${escape(deepPaths.get(dive.id)!)}">Explore: ${escape(dive.title)}</a></li>` : `<li>${notice(dive.id, dive.disposition)}</li>`).join('');
-    return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${section.paragraphs.map(b => block(from, b)).join('')}${figures}${dives ? `<ul class="deep-links">${dives}</ul>` : ''}</section>`;
+    // An operator-agent section leads with its diagrams (syzygy-mea.10.4); the provider mode's bytes are pinned, so its figures follow.
+    const body = section.paragraphs.map(b => block(from, b)).join('');
+    return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${local === undefined ? `${body}${figures}` : `${figures}${body}`}${dives ? `<ul class="deep-links">${dives}</ul>` : ''}</section>`;
   }).join('');
   // Claim ids are unique across the dossier, so each page's banner carries its own.
   const bannerFor = (claimId: string): string => stop === null ? '' : claim('aside', claimId, 'unknown',
