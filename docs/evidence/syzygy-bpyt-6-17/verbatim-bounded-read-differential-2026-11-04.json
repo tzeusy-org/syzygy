@@ -47,7 +47,7 @@
     "over-bound-forged"
   ],
   "differenceExplained": {
-    "over-bound-forged": "fake reader only: it serves bytes that do not hash to the object. Old read the whole body and checked the hash first (reference-unresolvable); new refuses on the declared size before reading (excluded-content, the over-envelope refusal). Real git cannot serve a blob that fails its own object id [Inferred], so no production input reaches this case."
+    "over-bound-forged": "fake reader: it serves bytes that do not hash to the object. Old read the whole body and checked the hash first (reference-unresolvable); new refuses on the declared size before reading (excluded-content, the over-envelope refusal). CORRECTED: the earlier sentence here, 'Real git cannot serve a blob that fails its own object id [Inferred], so no production input reaches this case', is false. [Observed] real git reaches the same case through refs/replace written into the observed repository after the evaluation and before the render (reviewer reproduction, docs/reviews/R-VERBATIM-BOUNDED-READ-RAW.md on origin/agent/syzygy-zfya (PR #730), reviewed commit 8575f494, finding E1 and section 2). See reviewerReproducedCases."
   },
   "stderrNote": "oldStderrWrites counts process.stderr.write calls; Node execFileSync without stdio writes the child stderr buffer even when empty, so old success cases count 1 empty write and missing-blob cases 1 git fatal line. New counts 0 in every case.",
   "rows": [
@@ -533,6 +533,47 @@
         "old": ", stdio: ['ignore', 'pipe', 'pipe'] }",
         "new": ", stdio: ['ignore', 'pipe', 'inherit'] }",
         "result": "killed (1 failed: stderr capture)"
+      }
+    ]
+  },
+  "reviewerReproducedCases": {
+    "source": "docs/reviews/R-VERBATIM-BOUNDED-READ-RAW.md on origin/agent/syzygy-zfya (PR #730), reviewed commit 8575f494, finding E1 and section 2",
+    "status": "[Observed] by the reviewer, not by this record's driver; the driver and shim are retained outside the repo by the reviewer",
+    "precondition": "Real-git rows need a replace ref written into the observed repository after the evaluation and before the render ([Observed] the reviewer wrote it with git replace -f). At evaluation time the observer honours replace refs too, so the source would not be classified and an earlier gate refuses. Neither the route's runner nor git-observation.ts passes --no-replace-objects (pre-existing). Write access to the repository's refs is needed [Inferred].",
+    "bothSidesRenderNothing": true,
+    "newCodeRefusesBeforeReading": "New asks cat-file -s first and refuses on the declared size, moving 0 body bytes in each row; old buffered the body (old/new buffered bytes shown per row). Only the not-rendered reason word differs. What is served is unchanged; routed to the owner as E2 (GP-Q0).",
+    "rows": [
+      {
+        "id": "replace-blob-over",
+        "reader": "real git",
+        "oldReason": "reference-unresolvable",
+        "newReason": "excluded-content (envelope)",
+        "oldBufferedBytes": 587,
+        "newBufferedBytes": 0
+      },
+      {
+        "id": "replace-blob-over-default-3MiB",
+        "reader": "real git",
+        "oldReason": "reference-unresolvable",
+        "newReason": "excluded-content (envelope)",
+        "oldBufferedBytes": 3145728,
+        "newBufferedBytes": 0
+      },
+      {
+        "id": "nonblob-tree-over",
+        "reader": "real git (replace blob with tree)",
+        "oldReason": "source-uncaptured-or-unreachable (undefined)",
+        "newReason": "excluded-content (envelope)",
+        "oldBufferedBytes": 0,
+        "newBufferedBytes": 0
+      },
+      {
+        "id": "git-size-lie-streams-3MiB",
+        "reader": "fake git binary (PATH shim) that misreports size; no real git does this [Inferred]",
+        "oldReason": "reference-unresolvable",
+        "newReason": "source-uncaptured-or-unreachable (undefined)",
+        "oldBufferedBytes": 3145728,
+        "newBufferedBytes": 0
       }
     ]
   }
