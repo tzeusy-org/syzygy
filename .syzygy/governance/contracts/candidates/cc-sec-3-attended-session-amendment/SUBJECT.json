@@ -1,0 +1,81 @@
+{
+  "schema": "cc-sec-3-amendment-subject/1",
+  "baselineCommit": "4aa2b7527f32e776142b02795adec7976d9c60f2",
+  "proposedPolicy": {
+    "path": ".syzygy/governance/policies/craft-and-care/security-and-secrets.md",
+    "sha256": "e7d389752004b21da047de8286d02d91eaa69a3eae4dd1223f344e5a96a8347e"
+  },
+  "governingInputs": [
+    {
+      "path": ".syzygy/governance/policies/craft-and-care/security-and-secrets.md",
+      "sha256": "f90ff5933fa461a4ab0b3de7876abe2aeb84eb6e6e2e6cb8a4e5176f9aa241f9"
+    },
+    {
+      "path": ".syzygy/governance/doctrine/security.md",
+      "sha256": "766c953d01d1a7bba3319b538a35851c88b9901d8fe79399af0f23ec3011bc00"
+    },
+    {
+      "path": ".syzygy/governance/doctrine/vision.md",
+      "sha256": "ff8410443dee3b53e4c8aad2e3b4072239e18ca9c16e3bef2518c8a44ae9ceeb"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md",
+      "sha256": "e00aee73c0c846e4995e54ebe40f370d36f007b483a854388d4d97da17721d5e"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-SIMPLIFICATION-2026-10-20.md",
+      "sha256": "fe613ae9b1ac9e300f5cba1ca1f06962b8fa4d2ef813f905c0107a307a3e94f1"
+    },
+    {
+      "path": ".syzygy/governance/decisions/DOCTRINE-AMENDMENT-LOG.md",
+      "sha256": "879999cf1557f3480764d452c786e10882e8031c5e86ff98c0ea4370cddb370b"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/DOCTRINE-AMENDMENT-D9-REVIEW-NOTES.md",
+      "sha256": "41501d004cfba719b032fb2f156bc9ed5d288c398e03c075d31d95663cd622bf"
+    },
+    {
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "sha256": "d6bce6b3aca13098f8d7ca28cee6aed5475e7522b2305958580eb17c4ffc3ea2"
+    },
+    {
+      "path": "docs/reviews/R-GP-IMPL-ADAPTER-CREDENTIALS-1-RAW.md",
+      "sha256": "2b4aff7b69d12c2dcf7381351a63aa655c85352c5c8d35ce73daaed21cf15811"
+    },
+    {
+      "path": "docs/evidence/adapter-credentials-round-1-dispositions-2026-10-22.md",
+      "sha256": "f26c5cc8904f33cbad08295859936470ab81d601a2201695fd330f0920b1a5a7"
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-rule.ts",
+      "sha256": "5a9163a936cd34256053e06c587a41a6ff211183f8ac702da49d64182ef30b08"
+    },
+    {
+      "path": "packages/polaris-dossier/src/credential-probe.ts",
+      "sha256": "a2bf0e1909fbab6d52d2d579d43995e3f177e1b49f744dc49affb41725faeafd"
+    },
+    {
+      "path": "packages/polaris-dossier/src/polaris.ts",
+      "sha256": "44573203c68e76cfbd4e66fb4fcf29d3eecc15878bcebbaec00242c28d2e000e"
+    },
+    {
+      "path": "packages/polaris-dossier/src/launched.ts",
+      "sha256": "42a2dafd2f3c855d4c9973349950818e4019d584b1a5303a89324282d2700217"
+    },
+    {
+      "path": "packages/polaris-dossier/src/cli.ts",
+      "sha256": "8def2d8d0dddb0de4d8a42f21cb36eea91bda1b0a36c8fcbdd0909e5bdd130c3"
+    },
+    {
+      "path": "packages/polaris-dossier/src/render.ts",
+      "sha256": "68be8e612816d6b102811d82b455a9a80114e3641a4758e512235332cc901716"
+    },
+    {
+      "path": "PROJECT-STATUS.md",
+      "sha256": "aa3cab6f8cd966c311e5c1bbc3817ed55604ebbcb53fd824ed2c5403d6321207"
+    }
+  ],
+  "pendingRegisterBeforeSha256": "26fb16fdd2c8bdc4fe54b030b44f9b5364fadaa9dcf444391bb851e3101def6c",
+  "pendingRegisterAfterSha256": "33b4fa61676b70a3550993fadda88b7fbbc579b0d139aa6d6ac5d76cef7c6704",
+  "manifestRule": "SHA256SUMS lists every package regular file except itself plus the pending register; paths are repository-relative, sorted by UTF-8 bytes. Hash SHA256SUMS independently in the external worker report. No act digest is minted."
+}
