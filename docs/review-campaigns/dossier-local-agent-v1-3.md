@@ -10,4 +10,4 @@ Candidate v1.3 amendment of `polaris-dossier-local-agent-mode`, package `contrac
 
 ## Last verdict of record, and where the findings landed
 
-Round 1 `REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-3-ffc2-1-RAW.md:4`) over `ffc2e0f`; every finding repaired, dispositions in `contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-1-DISPOSITIONS.md`
+Round 1 `REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-3-ffc2-1-RAW.md:4`) over `ffc2e0f`; every finding repaired, dispositions in `contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-1-DISPOSITIONS.md`; round 2 `CONFIRM WITH EXCEPTIONS` (`R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md:4`) over `92a6d2d`, fourteen notes only, which clears the bytes; notes in `contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md`. Not signed off
