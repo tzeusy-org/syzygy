@@ -718,6 +718,9 @@ describe('policy-bound constants are byte-equal to the act-bound artifacts', () 
   it('module surface: outcome vocabulary is closed and records never carry a text field', () => {
     const record: ObjectReadRecord = { path: 'x', outcome: 'read', bytes: 0 };
     expect(Object.keys(record)).toEqual(['path', 'outcome', 'bytes']);
+    // @ts-expect-error A refused record carries a closed reason, never arbitrary prose.
+    const forged: ObjectReadRecord = { path: 'x', outcome: 'refused', bytes: 0, detail: 'something-new' };
+    void forged;
   });
 });
 

@@ -340,8 +340,6 @@ function unclassifiable(
   );
 }
 
-const DENIED_PATH_REFUSALS = ['denied-basename', 'denied-prefix', 'denied-suffix'] as const;
-
 function sameAnchor(a: ManifestSource['anchor'], b: ManifestSource['anchor']): boolean {
   if (a.kind !== b.kind) return false;
   if (a.kind === 'blob' && b.kind === 'blob') return a.mode === b.mode && a.objectId === b.objectId;
@@ -380,15 +378,29 @@ export function classifySource(input: ClassifyInput, source: ManifestSource, rec
   switch (record.outcome) {
     case 'refused': {
       const reason = record.detail;
-      if (reason === 'missing-at-revision') return unavailable(path, 'missing-at-revision', UNREADABLE);
-      if (DENIED_PATH_REFUSALS.includes(reason as (typeof DENIED_PATH_REFUSALS)[number])) {
-        return excluded(policy, { redactionClass: policy.matchAction.redactionClass, repositoryRelativePath: path, exclusionReason: 'denied-path', detail: reason }, EXCLUDED);
+      switch (reason) {
+        case 'missing-at-revision':
+          return unavailable(path, 'missing-at-revision', UNREADABLE);
+        case 'denied-basename':
+        case 'denied-prefix':
+        case 'denied-suffix':
+          return excluded(policy, { redactionClass: policy.matchAction.redactionClass, repositoryRelativePath: path, exclusionReason: 'denied-path', detail: reason }, EXCLUDED);
+        case 'not-a-regular-blob':
+        case 'not-in-tree':
+        case 'path-escapes-repository':
+        case 'path-not-normalized':
+          return unavailable(path, reason, UNREADABLE);
+        case 'object-id-differs-from-tree':
+          return unavailable(path, 'object-id-mismatch', UNREADABLE);
+        case 'not-a-phase-a-seed-path':
+          return unavailable(path, 'not-a-regular-blob', UNREADABLE);
+        default: {
+          // Typed inputs exhaust the refusal set. Preserve the legacy result
+          // for untyped callers that forge an unknown detail at runtime.
+          const unreachable: never = reason;
+          return unavailable(path, 'not-a-regular-blob', UNREADABLE);
+        }
       }
-      if (reason === 'not-a-regular-blob' || reason === 'not-in-tree' || reason === 'path-escapes-repository' || reason === 'path-not-normalized') {
-        return unavailable(path, reason, UNREADABLE);
-      }
-      if (reason === 'object-id-differs-from-tree') return unavailable(path, 'object-id-mismatch', UNREADABLE);
-      return unavailable(path, 'not-a-regular-blob', UNREADABLE);
     }
     case 'over-limit':
       return unclassifiable(policy, record, 'resource-limit', record.detail, OVER_LIMIT);

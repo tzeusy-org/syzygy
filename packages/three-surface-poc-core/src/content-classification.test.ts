@@ -356,7 +356,7 @@ describe('PWB-REQ-003 — classifySource step by step', () => {
   const policy = PWB_SECRET_POLICY;
   const detectors = compileDetectors(policy);
   const input = { policy, detectors, manifest: { sources: POPULATION } };
-  const readRecord = (path: string): ObjectReadRecord => ({
+  const readRecord = (path: string): ObjectReadRecord & { readonly outcome: 'read' } => ({
     path,
     objectId: oidOf(path),
     outcome: 'read',
@@ -382,8 +382,8 @@ describe('PWB-REQ-003 — classifySource step by step', () => {
 
   it('step 2: every reader refusal maps to its fixed outcome', () => {
     const member = POPULATION.find((s) => s.path === 'about/heart-and-soul/principles.md') as ManifestSource;
-    const refused = (detail: string): ObjectReadRecord => ({ path: member.path, outcome: 'refused', bytes: 0, detail });
-    const table: readonly (readonly [string, Partial<ClassificationRecord>])[] = [
+    const refused = (detail: Extract<ObjectReadRecord, { outcome: 'refused' }>['detail']): ObjectReadRecord => ({ path: member.path, outcome: 'refused', bytes: 0, detail });
+    const table: readonly (readonly [Extract<ObjectReadRecord, { outcome: 'refused' }>['detail'], Partial<ClassificationRecord>])[] = [
       ['missing-at-revision', { outcome: 'unavailable', reason: 'missing-at-revision' }],
       ['denied-basename', { outcome: 'excluded' }],
       ['denied-prefix', { outcome: 'excluded' }],
@@ -393,7 +393,7 @@ describe('PWB-REQ-003 — classifySource step by step', () => {
       ['path-escapes-repository', { outcome: 'unavailable', reason: 'path-escapes-repository' }],
       ['path-not-normalized', { outcome: 'unavailable', reason: 'path-not-normalized' }],
       ['object-id-differs-from-tree', { outcome: 'unavailable', reason: 'object-id-mismatch' }],
-      ['something-new', { outcome: 'unavailable', reason: 'not-a-regular-blob' }],
+      ['not-a-phase-a-seed-path', { outcome: 'unavailable', reason: 'not-a-regular-blob' }],
     ];
     for (const [detail, expected] of table) {
       const record = classifySource(input, member, refused(detail), undefined).record;
@@ -409,20 +409,33 @@ describe('PWB-REQ-003 — classifySource step by step', () => {
         });
       }
     }
-    for (const outcome of ['git-read-failed', 'object-id-mismatch'] as const) {
-      const record = classifySource(input, member, { path: member.path, objectId: oidOf(member.path), outcome, bytes: 0 }, undefined).record;
+    // This negative fixture deliberately crosses the typed boundary.
+    const forged = { path: member.path, outcome: 'refused', bytes: 0, detail: 'something-new' } as unknown as ObjectReadRecord;
+    expect(classifySource(input, member, forged, undefined).record).toMatchObject({ outcome: 'unavailable', reason: 'not-a-regular-blob' });
+    for (const read of [
+      { path: member.path, objectId: oidOf(member.path), outcome: 'git-read-failed', bytes: 0, detail: 'fixture: Git diagnostic prose' },
+      { path: member.path, objectId: oidOf(member.path), outcome: 'object-id-mismatch', bytes: 0 },
+    ] as const satisfies readonly ObjectReadRecord[]) {
+      const { outcome } = read;
+      const record = classifySource(input, member, read, undefined).record;
       expect(record).toMatchObject({ outcome: 'unavailable', reason: outcome });
       expect(record.outcome === 'unavailable' && record.unknown.degradationState).toBe(outcome === 'git-read-failed' ? 'Observer failed' : 'Source unreachable');
     }
-    for (const [outcome, exclusionReason] of [
-      ['contains-nul', 'contains-nul'],
-      ['not-utf-8', 'not-utf-8'],
-      ['active-content', 'active-content'],
-      ['over-limit', 'resource-limit'],
-    ] as const) {
-      const record = classifySource(input, member, { ...readRecord(member.path), outcome, detail: 'maxTotalBytes', activeContent: [{ form: 'script-element', line: 1, column: 1 }] }, undefined).record;
-      expect(record).toMatchObject({ outcome: 'excluded', exclusion: { redactionClass: 'unclassifiable-excluded', exclusionReason } });
+    for (const [read, exclusionReason, detail] of [
+      [{ ...readRecord(member.path), outcome: 'contains-nul' }, 'contains-nul', undefined],
+      [{ ...readRecord(member.path), outcome: 'not-utf-8' }, 'not-utf-8', undefined],
+      [{ ...readRecord(member.path), outcome: 'active-content', activeContent: [{ form: 'script-element', line: 1, column: 1 }] }, 'active-content', '1'],
+      [{ ...readRecord(member.path), outcome: 'over-limit', detail: 'maxSources' }, 'resource-limit', 'maxSources'],
+      [{ ...readRecord(member.path), outcome: 'over-limit', detail: 'maxBytesPerSource' }, 'resource-limit', 'maxBytesPerSource'],
+      [{ ...readRecord(member.path), outcome: 'over-limit', detail: 'maxTotalBytes' }, 'resource-limit', 'maxTotalBytes'],
+      [{ ...readRecord(member.path), outcome: 'over-limit', detail: 'maxParsePassesPerSource' }, 'resource-limit', 'maxParsePassesPerSource'],
+    ] as const satisfies readonly (readonly [ObjectReadRecord, string, string | undefined])[]) {
+      const record = classifySource(input, member, read, undefined).record;
+      expect(record).toMatchObject({ outcome: 'excluded', exclusion: { redactionClass: 'unclassifiable-excluded', exclusionReason, ...(detail === undefined ? {} : { detail }) } });
+      if (record.outcome === 'excluded' && detail === undefined) expect(record.exclusion).not.toHaveProperty('detail');
     }
+    const notRead: ObjectReadRecord = { path: member.path, outcome: 'not-read', bytes: 0, detail: 'path-defined-identity' };
+    expect(classifySource(input, member, notRead, undefined).record).toMatchObject({ outcome: 'unavailable', reason: 'git-read-failed' });
     // A `read` record without a body or digest cannot be classified.
     expect(classifySource(input, member, readRecord(member.path), undefined).record).toMatchObject({ outcome: 'unavailable', reason: 'git-read-failed' });
     expect(classifySource(input, member, { ...readRecord(member.path), contentDigest: undefined }, 'x').record).toMatchObject({ outcome: 'unavailable', reason: 'git-read-failed' });

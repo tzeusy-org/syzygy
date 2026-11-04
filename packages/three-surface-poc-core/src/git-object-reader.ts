@@ -328,18 +328,25 @@ const OBJECT_READ_OUTCOMES = [
 ] as const;
 type ObjectReadOutcome = (typeof OBJECT_READ_OUTCOMES)[number];
 
-// Body-free. `detail` is always a closed reason or limit name, never bytes
-// of the source.
-export interface ObjectReadRecord {
+// Body-free metadata shared by every outcome; absent fields stay absent.
+interface ObjectReadMetadata {
   readonly path: string;
   readonly objectId?: string;
-  readonly outcome: ObjectReadOutcome;
   readonly bytes: number;
   // `sha256:<hex>` of the exact bytes Git returned (hash-not-body).
   readonly contentDigest?: string;
-  readonly detail?: string;
   readonly activeContent?: readonly ActiveContentFinding[];
 }
+
+// The outcome determines the detail domain. Only Git failures carry open
+// diagnostic prose; no detail carries bytes of the source.
+export type ObjectReadRecord = ObjectReadMetadata & (
+  | { readonly outcome: 'refused'; readonly detail: BlobReadRefusalReason | 'missing-at-revision' }
+  | { readonly outcome: 'over-limit'; readonly detail: keyof PwbResourceLimits }
+  | { readonly outcome: 'git-read-failed'; readonly detail: string }
+  | { readonly outcome: 'not-read'; readonly detail: 'path-defined-identity' }
+  | { readonly outcome: Exclude<ObjectReadOutcome, 'refused' | 'over-limit' | 'git-read-failed' | 'not-read'>; readonly detail?: never }
+);
 
 type ExactObjectRead =
   | { readonly kind: 'text'; readonly text: string; readonly record: ObjectReadRecord }
@@ -412,7 +419,7 @@ export function createExactObjectReader(input: ExactObjectReaderInput): ExactObj
     const objectFormat = objectId.length === 64 ? 'sha256' : 'sha1';
     const result = readBoundedBlob({ runGit: input.runGit, ledger, limits, path, objectFormat }, admission.entry, PHASE_B_READ_POLICY);
     // A record that took bytes names them by count and digest.
-    const takenRecord = (taken: BlobTaken, outcome: ObjectReadOutcome) => ({ path, objectId, bytes: taken.bytes, contentDigest: taken.contentDigest, outcome });
+    const takenRecord = <Outcome extends ObjectReadOutcome>(taken: BlobTaken, outcome: Outcome) => ({ path, objectId, bytes: taken.bytes, contentDigest: taken.contentDigest, outcome });
     switch (result.kind) {
       case 'bytes': {
         const record: ObjectReadRecord = takenRecord(result.taken, 'read');
