@@ -415,17 +415,33 @@ def addition_terminals(root, change):
     return addition_records(root, change)
 
 
-class SignoffEntriesRefused(Exception):
+class SignoffEntriesRefused(OSError):
     """A `SIGNOFF_RECORD_GLOB` entry cannot be read as UTF-8 text.
 
-    Its read raised (or, for a FIFO, blocked), so no predicate over the
+    The CLI raises it naming every such entry, so no predicate over the
     population is evaluated: every mode refuses with the entries named and
     exits 1. Never read as absent (syzygy-j5dg).
+
+    An in-process caller (`run`, `census`, `check_outcomes`, ...) never sees
+    it for an entry whose read raised: there the original `OSError` or
+    `UnicodeDecodeError` propagates unchanged, as before syzygy-j5dg, since
+    a consumer may admit exactly that error by class and `.filename`
+    (`prepare_three_surface_poc_governedby_reference_recording.py`'s
+    family selftest does). It sees it for a FIFO only, whose read blocked:
+    an `OSError` whose `.filename` is the entry's path, the shape of every
+    other entry's refusal.
     """
 
-    def __init__(self, findings):
+    def __init__(self, findings, filename=None):
         super().__init__("\n".join(findings))
         self.findings = findings
+        self.filename = filename
+
+
+#: True only while `main` runs a mode: `signoff_texts` then names every
+#: unreadable entry in one `SignoffEntriesRefused`; otherwise it raises the
+#: first entry's own read error, exactly as before syzygy-j5dg.
+_COLLECT_REFUSALS = False
 
 
 def entry_kind(path):
@@ -452,7 +468,7 @@ def entry_kind(path):
     return prefix + "nonregular entry"
 
 
-def signoff_texts(root):
+def signoff_texts(root, collect=None):
     """[(path, text)] of every `SIGNOFF_RECORD_GLOB` entry, or refuse.
 
     Each entry is read exactly as before syzygy-j5dg, by
@@ -462,11 +478,18 @@ def signoff_texts(root):
     is read with its newlines translated. Whether such links should be
     refused is the owner's question (syzygy-vgzf). Only a read that raised
     becomes a named refusal; the one entry never opened is a FIFO (by
-    `stat`, symlinks followed), whose read blocked. Every refused entry is
-    named, then `SignoffEntriesRefused` is raised.
+    `stat`, symlinks followed), whose read blocked.
+
+    `collect` (default: `_COLLECT_REFUSALS`, true only under `main`) names
+    every refused entry, then raises one `SignoffEntriesRefused`. Otherwise
+    the entries are read in the same sorted order as before and the first
+    read error propagates unchanged, so an in-process consumer sees the
+    class, message and `.filename` it saw then; a FIFO raises
+    `SignoffEntriesRefused`, an `OSError` carrying its path as `.filename`.
     """
+    collect = _COLLECT_REFUSALS if collect is None else collect
     base = root / DECISIONS
-    out, refused = [], []
+    out, refused = [], []  # refused: [(path, finding)]
     for path in sorted(base.glob(SIGNOFF_RECORD_GLOB)) if base.is_dir() else ():
         rel = path.relative_to(root).as_posix()
         try:
@@ -474,18 +497,26 @@ def signoff_texts(root):
         except OSError:
             fifo = False  # the read below raises the same error
         if fifo:
-            refused.append(f"`{rel}`: {entry_kind(path)}")
+            finding = f"`{rel}`: {entry_kind(path)}"
+            if not collect:
+                raise SignoffEntriesRefused([finding], filename=str(path))
+            refused.append((path, finding))
+            continue
+        if not collect:
+            # Exactly the read before syzygy-j5dg; its error propagates.
+            out.append((path, path.read_text(encoding="utf-8")))
             continue
         try:
             out.append((path, path.read_text(encoding="utf-8")))
         except OSError as exc:
-            refused.append(f"`{rel}`: " + (
+            refused.append((path, f"`{rel}`: " + (
                 f"unreadable regular file ({exc.strerror})" if path.is_file()
-                else entry_kind(path)))
+                else entry_kind(path))))
         except UnicodeDecodeError:
-            refused.append(f"`{rel}`: regular file that is not UTF-8")
+            refused.append((path, f"`{rel}`: regular file that is not UTF-8"))
     if refused:
-        raise SignoffEntriesRefused(refused)
+        raise SignoffEntriesRefused([f for _p, f in refused],
+                                    filename=str(refused[0][0]))
     return out
 
 
@@ -2617,38 +2648,46 @@ def _block_device():
 
 
 #: One sign-off glob entry per kind `signoff_texts` refuses (syzygy-j5dg):
-#: name -> (entry basename, setup(entry path, tree), refusal needle). The
-#: needle names the entry and its kind, so a refusal of another entry or
-#: kind does not count. Each but the FIFO raised in `read_text` before;
-#: the FIFO's read blocked.
+#: name -> (entry basename, setup(entry path, tree), refusal needle,
+#: library error class). The needle names the entry and its kind, so a
+#: refusal of another entry or kind does not count. The class is what an
+#: in-process caller sees: each but the FIFO is the exact class
+#: `read_text` raised before syzygy-j5dg (a literal, never derived from the
+#: code under test); the FIFO, whose read blocked, raises
+#: `SignoffEntriesRefused`, an `OSError` like the rest.
 ENTRY_KIND_CASES = {
     "signoff-entry-directory": (
-        "J5DG-DIR-SIGNOFF-v1.0.md", lambda e, t: e.mkdir(), "directory"),
+        "J5DG-DIR-SIGNOFF-v1.0.md", lambda e, t: e.mkdir(), "directory",
+        IsADirectoryError),
     "signoff-entry-fifo": (
-        "J5DG-FIFO-SIGNOFF-v1.0.md", lambda e, t: os.mkfifo(e), "FIFO"),
+        "J5DG-FIFO-SIGNOFF-v1.0.md", lambda e, t: os.mkfifo(e), "FIFO",
+        SignoffEntriesRefused),
     "signoff-entry-socket": (
         "J5DG-SOCKET-SIGNOFF-v1.0.md",
-        lambda e, t: os.mknod(e, stat.S_IFSOCK | 0o644), "socket"),
+        lambda e, t: os.mknod(e, stat.S_IFSOCK | 0o644), "socket", OSError),
     "signoff-entry-dangling-symlink": (
         "J5DG-DANGLING-SIGNOFF-v1.0.md",
-        lambda e, t: e.symlink_to("J5DG-ABSENT.md"), "dangling symlink"),
+        lambda e, t: e.symlink_to("J5DG-ABSENT.md"), "dangling symlink",
+        FileNotFoundError),
     "signoff-entry-symlink-loop": (
         "J5DG-LOOP-SIGNOFF-v1.0.md",
-        lambda e, t: e.symlink_to(e.name), "symlink loop"),
+        lambda e, t: e.symlink_to(e.name), "symlink loop", OSError),
     "signoff-entry-symlink-to-directory": (
         "J5DG-LINKDIR-SIGNOFF-v1.0.md",
-        lambda e, t: e.symlink_to(t / DECISIONS), "symlink to directory"),
+        lambda e, t: e.symlink_to(t / DECISIONS), "symlink to directory",
+        IsADirectoryError),
     "signoff-entry-symlink-to-block-device": (
         "J5DG-BLOCK-SIGNOFF-v1.0.md",
-        lambda e, t: e.symlink_to(_block_device()), "symlink to block device"),
+        lambda e, t: e.symlink_to(_block_device()), "symlink to block device",
+        PermissionError),
     "signoff-entry-unreadable": (
         "J5DG-UNREADABLE-SIGNOFF-v1.0.md",
         lambda e, t: (e.write_text("Package: none\n", encoding="utf-8"),
-                      e.chmod(0)), "unreadable regular file"),
+                      e.chmod(0)), "unreadable regular file", PermissionError),
     "signoff-entry-not-utf8": (
         "J5DG-BYTES-SIGNOFF-v1.0.md",
         lambda e, t: e.write_bytes(b"Package: \xff\n"),
-        "regular file that is not UTF-8"),
+        "regular file that is not UTF-8", UnicodeDecodeError),
 }
 #: The record a CRLF control rewrites: a signed Polaris addition, whose
 #: `Version:` line `VERSION_LINE` finds only after newline translation.
@@ -2700,10 +2739,40 @@ def _cli_exits(tree):
     return codes, before != after
 
 
+def _library_error(label, method, tree, path, cls):
+    """What a consumer sees from `method(tree)`, [] if it is `cls` exactly.
+
+    Written as a consumer is (`prepare_three_surface_poc_governedby_
+    reference_recording.py`'s family selftest): an `except OSError` admits
+    the error only when `.filename` is the fixture entry. A `cls` that is
+    not an `OSError` must escape that handler as the same class, as a
+    `UnicodeDecodeError` did before; a `ValueError` handler then sees it.
+    """
+    try:
+        try:
+            method(tree)
+        except OSError as reader_error:
+            if type(reader_error) is not cls:
+                return [f"{label}: {type(reader_error).__name__}, "
+                        f"not {cls.__name__}"]
+            if (reader_error.filename is None
+                    or Path(reader_error.filename) != path):
+                return [f"{label}: filename {reader_error.filename!r}"]
+            return []
+    except ValueError as value_error:
+        if type(value_error) is not cls:
+            return [f"{label}: {type(value_error).__name__}, "
+                    f"not {cls.__name__}"]
+        return []
+    return [f"{label}: not refused"]
+
+
 def _entry_kind_cases(tmp, base, witnesses, failures):
-    """Each kind must refuse in `run`, `census` and the CLI (exit 1, no
-    write); each control must pass exactly as it did before."""
-    for name, (entry, setup, kind) in ENTRY_KIND_CASES.items():
+    """Each kind must raise its own read error in-process (`run`,
+    `census`, `check_outcomes`, `check_census`), refuse by name when
+    collected, and refuse in the CLI (exit 1, no write); each control must
+    pass exactly as it did before."""
+    for name, (entry, setup, kind, cls) in ENTRY_KIND_CASES.items():
         if name.endswith("block-device") and _block_device() is None:
             print(f"SKIPPED  {name}: no unreadable block device under /dev")
             continue
@@ -2713,13 +2782,20 @@ def _entry_kind_cases(tmp, base, witnesses, failures):
         setup(path, tree)
         needle = f"`{DECISIONS}/{entry}`: {kind}"
         got = []
-        for method in (run, census):
-            try:
-                method(tree)
-                got.append(f"{method.__name__}: not refused")
-            except SignoffEntriesRefused as exc:
-                if not any(f.startswith(needle) for f in exc.findings):
-                    got.append(f"{method.__name__}: refused {exc.findings}")
+        for label, method in (("run", run), ("census", census),
+                              ("check_outcomes",
+                               lambda t: check_outcomes(t, Report())),
+                              ("check_census",
+                               lambda t: check_census(t, Report()))):
+            got += _library_error(label, method, tree, path, cls)
+        try:
+            signoff_texts(tree, collect=True)
+            got.append("collected: not refused")
+        except SignoffEntriesRefused as exc:
+            if not any(f.startswith(needle) for f in exc.findings):
+                got.append(f"collected: refused {exc.findings}")
+            if exc.filename is None or Path(exc.filename) != path:
+                got.append(f"collected: filename {exc.filename!r}")
         if name == "signoff-entry-directory":
             # The CLI's polarity, once: exit 1 with the refusal in every
             # mode, and `--regenerate` writes nothing.
@@ -2744,9 +2820,10 @@ def _entry_kind_cases(tmp, base, witnesses, failures):
         try:
             report = run(tree)
             census(tree)
+            signoff_texts(tree, collect=True)
             got = sorted(report.failed)
-        except SignoffEntriesRefused as exc:
-            got = [f"refused {exc.findings}"]
+        except (OSError, ValueError) as exc:
+            got = [f"raised {type(exc).__name__}: {exc}"]
         witnesses.append({"mutant": name, "path": "<scripted control>",
                           "old": "<no entry>", "new": "<control>",
                           "expected": "PASS", "failed": got,
@@ -2797,16 +2874,23 @@ def main(argv):
     mode.add_argument("--regenerate", action="store_true")
     parser.add_argument("--witnesses", help="selftest: write rule-6 JSON here")
     args = parser.parse_args(argv)
+    global _COLLECT_REFUSALS
+    saved = _COLLECT_REFUSALS
     try:
+        if args.selftest:
+            # Its fixtures drive the library path, which must raise each
+            # entry's own read error, so it never collects.
+            return selftest(args.witnesses)
+        _COLLECT_REFUSALS = True
         return _main(args)
     except SignoffEntriesRefused as exc:
         print("\n".join(refusal_lines(exc)), file=sys.stderr)
         return 1
+    finally:
+        _COLLECT_REFUSALS = saved
 
 
 def _main(args):
-    if args.selftest:
-        return selftest(args.witnesses)
     if args.census:
         pop, findings = census(ROOT)
         if findings:
