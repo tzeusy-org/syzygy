@@ -1,6 +1,6 @@
 # Polaris dossier local-agent mode
 
-> **Version 1.2.** Drafted 2026-10-05 under the owner direction
+> **Version 1.3.** Drafted 2026-10-05 under the owner direction
 > `POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05`
 > (`.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-DIRECTION.md`),
 > which authorizes drafting and review only, and relies on the owner's
@@ -17,8 +17,11 @@
 > D9 the same day, and version 1.1 on 2026-10-07; version 1.2 adds the
 > waiting sessions of the owner direction
 > `POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08`
-> (`.syzygy/governance/decisions/POLARIS-DOSSIER-WAITING-SESSIONS-DIRECTION.md`).
-> These bytes bind only by the owner's sign-off of version 1.2 (VIS-4). It grants no read, egress, write or execution beyond what
+> (`.syzygy/governance/decisions/POLARIS-DOSSIER-WAITING-SESSIONS-DIRECTION.md`),
+> signed off on 2026-10-14; version 1.3 adds the presentation elements of the
+> owner direction `OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04`
+> (`.syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04.md`).
+> These bytes bind only by the owner's sign-off of version 1.3 (VIS-4). It grants no read, egress, write or execution beyond what
 > its requirements state.
 
 **A Polaris dossier can be written by the operator's own Claude Code or Codex
@@ -165,6 +168,12 @@ through one reviewed CC-REV-2 delta.
   One review session may go on to review later revisions, and the review
   page discloses it. Syzygy and the authoring session still start, resume
   and signal no session.
+- **Presentation elements.** Since version 1.3 a draft may lay out its
+  argument with tables, callouts, numbered steps, definition lists, cards,
+  collapsible sections and code excerpts, rendered as inert static HTML. Every
+  claim an element holds is checked, reviewed and marked as any claim block
+  is; the short labels that head elements carry no claim; and a code excerpt
+  is the cited lines as Syzygy read them, never the agent's copy.
 - **What the agent ran is its report.** Commands the agent says it ran are
   recorded as its report, labelled Inferred; Syzygy cannot observe them.
 - **No new permission.** This is not permission to read, egress, write,
