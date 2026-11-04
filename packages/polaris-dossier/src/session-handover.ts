@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { sha256 } from '@syzygy/support';
+import { isRecord, sha256 } from '@syzygy/support';
 import { RECORDS_WITHIN_REACH, providerStatementGate, statementContentClasses, type GateSources } from './gate-sources.js';
 import {
   INVENTORY_BRIEF_FILE, LAUNCH_FORMS, buildInventoryBrief, errno, latestInventorySession, launchRecordName, logStep, openRun, promptRecordName,
@@ -483,7 +483,7 @@ async function deliverReview(
   const waiting = waitingReviewSession(run, kind);
   if (waiting === null) return refuse('session', `no ${kind} session is waiting`);
   const recorded = waiting.record['context'];
-  const tool = recorded !== null && typeof recorded === 'object' && !Array.isArray(recorded) ? (recorded as Record<string, unknown>)['agentTool'] : undefined;
+  const tool = isRecord(recorded) ? (recorded as Record<string, unknown>)['agentTool'] : undefined;
   if (typeof tool !== 'string' || !(AGENT_TOOLS as readonly string[]).includes(tool)) return refuse('context', `the prompt record of waiting ${kind} session ${waiting.session} names no agent tool`);
   const admitted = await sessionStatement(opened, tool, deps.sources, now);
   if ('refusal' in admitted) return refuse('statement', admitted.refusal.replace('so no session is handed over', 'so no packet is delivered'));

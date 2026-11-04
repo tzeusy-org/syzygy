@@ -12,6 +12,8 @@
 // `no-run-record` state is the expected pre-walk fact, not a defect. The
 // walkthrough preflight (the mechanical readiness of the surface) is.
 
+import { isRecord } from '@syzygy/support';
+
 export const FRESH_CHECKOUT_INVARIANTS = [
   'clone-head-matches-source',
   'install',
@@ -115,7 +117,7 @@ export function parseDaemonStderr(stderr: string): DaemonStderrLine[] {
   return lines.map((line) => {
     try {
       const value: unknown = JSON.parse(line);
-      return typeof value === 'object' && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
+      return isRecord(value) ? (value as Record<string, unknown>) : null;
     } catch {
       return null;
     }

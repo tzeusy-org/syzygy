@@ -3,7 +3,7 @@ import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { sha256 } from '@syzygy/support';
+import { isRecord, sha256 } from '@syzygy/support';
 import { isArgvFault, readArgv } from './argv.js';
 import { authorRule, awaitRule, startBroker, type Broker, type BrokerResponse } from './broker.js';
 import { cliGateSources, runDossierCli, STATE_ROOT_ENV, type CliPorts } from './cli.js';
@@ -452,7 +452,7 @@ const flatten = (value: unknown, max: number): string => {
 };
 
 export function repairSides(verdict: Readonly<Record<string, unknown>>): RepairSides {
-  const rows = (key: string): Record<string, unknown>[] => (Array.isArray(verdict[key]) ? (verdict[key] as unknown[]).filter((r): r is Record<string, unknown> => typeof r === 'object' && r !== null && !Array.isArray(r)) : []);
+  const rows = (key: string): Readonly<Record<string, unknown>>[] => (Array.isArray(verdict[key]) ? (verdict[key] as unknown[]).filter(isRecord) : []);
   const authorRows = rows('findings').filter((f) => f['severity'] === 'blocking').length
     + rows('inventoryCoverage').filter((r) => r['disposition'] !== 'represented' && r['disposition'] !== 'justified-omission').length
     + rows('blockSupport').filter((r) => r['verdict'] !== 'supported').length;
@@ -463,7 +463,7 @@ export function repairSides(verdict: Readonly<Record<string, unknown>>): RepairS
 
 /** The verdict file a review check validated, or an empty object when it cannot be read. */
 export function readVerdict(run: string, kind: 'fidelity' | 'design', n: number): Record<string, unknown> {
-  try { const doc: unknown = JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 'utf8')); return typeof doc === 'object' && doc !== null && !Array.isArray(doc) ? doc as Record<string, unknown> : {}; } catch { return {}; }
+  try { const doc: unknown = JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 'utf8')); return isRecord(doc) ? doc as Record<string, unknown> : {}; } catch { return {}; }
 }
 
 /** At most this many entries are listed in one inventory repair message; the rest are counted. */
