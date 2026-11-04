@@ -268,6 +268,12 @@ def add_date(path: str) -> str:
     return output[-1]
 
 
+def date_lookup(check: bool) -> Callable[[str], str]:
+    # --check never prints the add dates, and each costs a `git log --follow`
+    # (about 700 of them, minutes); only the table, JSON and plain modes need them.
+    return (lambda _path: CHECK_ONLY_DATE) if check else add_date
+
+
 def date_span(
     paths: Iterable[str], add_date_for_path: Callable[[str], str] = add_date
 ) -> str:
@@ -599,6 +605,24 @@ def selftest() -> None:
     assert "1 files, 1 assigned" in rendered
 
     fixtures += 1
+    assert date_lookup(True) is not add_date
+    assert date_lookup(True)("docs/reviews/R-EXAMPLE-RAW.md") == CHECK_ONLY_DATE
+    assert date_lookup(False) is add_date
+    # --check output is unchanged by the skip; --table keeps real dates.
+    for check, expect_date in ((True, CHECK_ONLY_DATE), (False, "2026-09-20")):
+        data = report(
+            ["docs/reviews/R-EXAMPLE-RAW.md"],
+            "2026-09-23",
+            campaigns=(parsed,),
+            add_date_for_path=(
+                date_lookup(True) if check else (lambda _path: "2026-09-20")
+            ),
+        )
+        assert data["campaigns"][0]["recorded"] == expect_date  # type: ignore[index]
+        assert (expect_date in render_table(data)) is True
+    assert CHECK_ONLY_DATE not in rendered
+
+    fixtures += 1
     try:
         validate_denominator_sets(["docs/reviews/A.md"], ["docs/reviews/B.md"])
     except PartitionError as error:
@@ -763,9 +787,7 @@ def main() -> int:
         assert_head_bound_inputs(args.check, root)
     campaigns = load_campaigns(root / CAMPAIGN_DIR)
     paths = tracked_regular_paths()
-    # --check never prints the add dates, and each costs a `git log --follow`
-    # (about 700 of them, minutes); only the table, JSON and plain modes need them.
-    date_for_path = (lambda _path: CHECK_ONLY_DATE) if args.check else add_date
+    date_for_path = date_lookup(bool(args.check))
     data = report(paths, head_commit_date(), campaigns, date_for_path)
     if args.check or args.second_method:
         second_method(paths)
