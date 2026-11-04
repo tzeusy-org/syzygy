@@ -65,7 +65,8 @@ function importsOf(file: string, text: string): { specifiers: string[]; unsuppor
         if (argument !== undefined && (ts.isStringLiteral(argument) || ts.isNoSubstitutionTemplateLiteral(argument))) specifiers.push(argument.text);
         else refuse(node, 'computed import()');
       } else {
-        const callee = node.expression;
+        let callee = node.expression;
+        while (ts.isParenthesizedExpression(callee)) callee = callee.expression;
         const name = ts.isIdentifier(callee) ? callee.text : ts.isPropertyAccessExpression(callee) ? callee.name.text
           : ts.isElementAccessExpression(callee) && ts.isStringLiteral(callee.argumentExpression) ? callee.argumentExpression.text : undefined;
         if (name === 'require' || (name !== undefined && createRequireNames.has(name))) refuse(node, 'require/createRequire call');
@@ -145,14 +146,14 @@ describe('the live Node entries and the parked provider island', () => {
   });
 
   it('refuses require calls and import-equals loaders', () => {
-    for (const call of ["require('island')", "module.require('island')", "module['require']('island')", "import island = require('island')"]) {
+    for (const call of ["require('island')", "(require)('island')", "module.require('island')", "module['require']('island')", "import island = require('island')"]) {
       expect(importsOf('fixture.ts', call).unsupported, call).toHaveLength(1);
     }
   });
 
   it('refuses createRequire calls, including imported aliases and module properties', () => {
     for (const text of [
-      'createRequire(import.meta.url)',
+      'createRequire(import.meta.url)', '(createRequire)(import.meta.url)',
       "import { createRequire as load } from 'node:module'; load(import.meta.url)",
       "import * as mod from 'node:module'; mod.createRequire(import.meta.url)",
     ]) expect(importsOf('fixture.ts', text).unsupported, text).toHaveLength(1);
