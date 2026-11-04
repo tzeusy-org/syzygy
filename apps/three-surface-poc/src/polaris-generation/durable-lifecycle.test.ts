@@ -1,16 +1,14 @@
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { runGenerationPipeline, type PipelineRequest } from '@syzygy/polaris-generation-core';
 
 import { createDurableScriptedLifecycle } from './durable-lifecycle.js';
 import { syntheticGenerationSource } from './synthetic-source.js';
 
-const cleanups: string[] = [];
-afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });
-const scratch = (): string => { const path = mkdtempSync(join(tmpdir(), 'syzygy-generator-lifecycle-')); cleanups.push(path); return path; };
+const scratch = (): string => tempDir('syzygy-generator-lifecycle-');
 const request = (): PipelineRequest => ({
   requestId: 'run-one', projectId: 'project-one', snapshotId: 'snapshot-one', startedAt: Date.now(),
   routes: { inventory: 'route-inventory', plan: 'route-plan', author: 'route-author', edit: 'route-edit', fidelity: 'route-fidelity', repair: 'route-repair' },

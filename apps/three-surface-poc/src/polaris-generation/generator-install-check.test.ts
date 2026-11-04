@@ -1,10 +1,10 @@
 import { execFile } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 // The install preflight of `poc:dossier` and `poc:generator-demo` (syzygy-bpyt.6.13, review
 // R-GP-IMPL-SUPPORT-LEAF-1 N5): a checkout that pulled a new workspace package without running
@@ -20,12 +20,9 @@ const ENTRIES = {
 } as const;
 type Entry = keyof typeof ENTRIES;
 
-const cleanups: string[] = [];
-afterEach(() => { for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true }); });
 
 function checkoutWith(entries: readonly Entry[]): string {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-install-check-'));
-  cleanups.push(root);
+  const root = tempDir('syzygy-install-check-');
   for (const entry of entries) {
     const path = join(root, ...ENTRIES[entry]);
     mkdirSync(entry === 'tsc' ? dirname(path) : path, { recursive: true });

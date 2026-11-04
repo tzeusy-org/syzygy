@@ -1,8 +1,8 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { generationAnchorId, gitBlobObjectId, type GenerationSource } from '@syzygy/polaris-generation-core';
 import { evaluateDossierDirectory, parseArgs } from './dossier-evaluation-main.js';
@@ -19,12 +19,9 @@ const INDEX = '<html><body><main data-reading-level="0"><section id="thesis" dat
 const DEEP = '<html><body><main data-reading-level="0"><section id="adapters" data-topics="mechanisms"><p data-claim-id="c2" data-epistemic="inferred">Adapters own transport.</p></section></main></body></html>';
 const QUESTIONS = JSON.stringify({ format: 'polaris-reader-questions-v1', questions: [{ id: 'q1', topics: ['core-ideas'], text: 'What is it?' }] });
 
-const cleanups: string[] = [];
-afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });
 
 function runDirectory(): { readonly root: string; readonly dossier: string; readonly sources: string; readonly questions: string } {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-dossier-eval-'));
-  cleanups.push(root);
+  const root = tempDir('syzygy-dossier-eval-');
   const dossier = join(root, 'run');
   mkdirSync(join(dossier, 'deep-dives'), { recursive: true });
   writeFileSync(join(dossier, 'dossier.json'), JSON.stringify({ format: 'polaris-dossier-v1', title: 'Synthetic', entryPage: 'index.html', pages: [{ path: 'index.html', depth: 0 }, { path: 'deep-dives/adapters.html', depth: 1 }] }));

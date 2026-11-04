@@ -9,11 +9,11 @@
 
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import {
   discloseAuthority,
@@ -34,19 +34,13 @@ import {
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 const EVALUATION_INSTANT = '2026-11-03T06:58:26Z';
 const CURRENT_COMMIT = 'f'.repeat(40);
-const cleanups: string[] = [];
-
-afterEach(() => {
-  for (const root of cleanups.splice(0)) rmSync(root, { recursive: true, force: true });
-});
 
 function git(root: string, args: readonly string[]): string {
   return execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
 }
 
 function realGovernanceFixture(): string {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-pwb-governance-'));
-  cleanups.push(root);
+  const root = tempDir('syzygy-pwb-governance-');
   git(root, ['init', '-q']);
   git(root, ['config', 'gc.auto', '0']);
   git(root, ['config', 'maintenance.auto', 'false']);

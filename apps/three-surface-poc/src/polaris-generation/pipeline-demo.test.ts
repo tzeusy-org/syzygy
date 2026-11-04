@@ -1,9 +1,9 @@
 import { execFile } from 'node:child_process';
-import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 import { runSyntheticProject, syntheticProjects } from './pipeline-demo.js';
 
 // Child processes run async (syzygy-w90k): a synchronous block over 60s
@@ -17,8 +17,6 @@ const run = promisify(execFile);
 // build:poc itself, so the onramp test does not build separately.
 const ONRAMP_STEP_TIMEOUT_MS = { clone: 30_000, refusedRun: 30_000, install: 120_000, documented: 270_000 };
 const ONRAMP_TEST_BUDGET_MS = Object.values(ONRAMP_STEP_TIMEOUT_MS).reduce((a, b) => a + b, 0);
-const cleanups: string[] = [];
-afterEach(() => { for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true }); });
 
 describe('concrete source-to-draft pipeline exercise', () => {
   it('runs the same engine and schemas over two synthetic domains with prose, diagrams and component depth', async () => {
@@ -52,8 +50,7 @@ describe('concrete source-to-draft pipeline exercise', () => {
     expect(JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8')).scripts['build:poc']).toContain('packages/polaris-generation-core');
     const commands = /```sh\n(npm ci)\n(npm run poc:generator-demo -- --out [^\n]+)\n```/.exec(readme);
     if (commands?.[1] === undefined || commands[2] === undefined) throw new Error('README install onramp missing');
-    const scratch = mkdtempSync(join(tmpdir(), 'syzygy-generator-onramp-'));
-    cleanups.push(scratch);
+    const scratch = tempDir('syzygy-generator-onramp-');
     const checkout = join(scratch, 'checkout');
     const output = join(scratch, 'outputs');
     await run('git', ['clone', '--quiet', '--local', '--no-hardlinks', process.cwd(), checkout], { timeout: ONRAMP_STEP_TIMEOUT_MS.clone });

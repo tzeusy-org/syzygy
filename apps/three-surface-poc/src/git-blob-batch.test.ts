@@ -5,12 +5,12 @@
 // return the same bytes and the same evaluation as single reads.
 
 import { execFile, execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { evaluateBodyReadAuthority } from '@syzygy/three-surface-poc-core';
 
@@ -30,8 +30,6 @@ const REAL_TREE_TIMEOUT_MS = 120_000;
 const bytes = (text: string): Uint8Array => new TextEncoder().encode(text);
 const text = (value: Uint8Array | Error | undefined): string =>
   value instanceof Uint8Array ? new TextDecoder().decode(value) : `error: ${value?.message ?? 'absent'}`;
-const cleanups: string[] = [];
-afterEach(() => { for (const root of cleanups.splice(0)) rmSync(root, { recursive: true, force: true }); });
 const OID_A = 'a'.repeat(40);
 const OID_B = 'b'.repeat(40);
 
@@ -254,8 +252,7 @@ describe('batched reads over the real tree (oracle: one git cat-file blob per ob
   }, REAL_TREE_TIMEOUT_MS);
 
   it('never requests a non-blob entry and refuses it as before', () => {
-    const root = mkdtempSync(join(tmpdir(), 'syzygy-svoj-gitlink-'));
-    cleanups.push(root);
+    const root = tempDir('syzygy-svoj-gitlink-');
     const run = (args: readonly string[]): string => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8' }).trim();
     run(['init', '-q']);
     run(['config', 'gc.auto', '0']);

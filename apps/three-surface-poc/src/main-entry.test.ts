@@ -1,8 +1,6 @@
-import { mkdtempSync, realpathSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
 
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 // syzygy-bpyt.5.9: `main.ts` is the one place that reads the real process
 // (argv, the three standard streams, cwd, the clock and the signal hook) and
@@ -24,10 +22,7 @@ const savedArgv = process.argv;
 const savedExitCode = process.exitCode;
 
 beforeAll(() => {
-  scratch = realpathSync(mkdtempSync(join(tmpdir(), 'poc-main-entry-test-')));
-});
-afterAll(() => {
-  rmSync(scratch, { recursive: true, force: true });
+  scratch = tempDir('poc-main-entry-test-');
 });
 afterEach(() => {
   vi.doUnmock('./poc-main.js');

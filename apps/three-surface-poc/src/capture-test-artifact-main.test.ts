@@ -1,10 +1,10 @@
 import { execFileSync } from 'node:child_process';
-import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { chmodSync, existsSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { MAX_JUNIT_ARTIFACT_BYTES, readBoundedRegularFile, readTestArtifactRecordFile } from '@syzygy/three-surface-poc-core';
 
@@ -36,12 +36,9 @@ const CORE_PATH = fileURLToPath(new URL('../../../packages/three-surface-poc-cor
 const PASSING_JUNIT = '<testsuites tests="1" failures="0" errors="0" skipped="0" time="0.1"><testsuite tests="1" failures="0" errors="0" skipped="0" /></testsuites>';
 const SCOPE = 'tests/test_a.py';
 
-const cleanups: string[] = [];
-afterEach(() => { for (const path of cleanups.splice(0)) rmSync(path, { recursive: true, force: true }); });
 
 function scratch(): string {
-  const dir = mkdtempSync(join(tmpdir(), 'syzygy-capture-cli-'));
-  cleanups.push(dir);
+  const dir = tempDir('syzygy-capture-cli-');
   return dir;
 }
 

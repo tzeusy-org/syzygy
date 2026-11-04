@@ -1,7 +1,7 @@
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 
 import { DEFAULT_DISCOVERY_BUDGET, gitBlobObjectId, generationSourcesForBody, validateGenerationSources, DEFERRED_BY_BUDGET, DOSSIER_DISCOVERY_BUDGET, discoverAndSelect, quotableGenerationSources } from '@syzygy/polaris-generation-core';
 
@@ -11,10 +11,9 @@ import { measureRedisShapedDiscovery } from './redis-shaped-measure.js';
 
 let scratch = '', run: Awaited<ReturnType<typeof measureRedisShapedDiscovery>>;
 beforeAll(async () => {
-  scratch = mkdtempSync(join(tmpdir(), 'syzygy-redis-shaped-test-'));
+  scratch = tempDir('syzygy-redis-shaped-test-');
   run = await measureRedisShapedDiscovery(join(scratch, 'repo'));
 }, 120_000);
-afterAll(() => rmSync(scratch, { recursive: true, force: true }));
 
 const VENDORED = /^(?:deps|vendor|third_party)\//u;
 
