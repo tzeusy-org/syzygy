@@ -18,7 +18,7 @@ people and agents doing the building.
 
 ## What is here
 
-Seven homes, each with a named reader and the question it answers. A plan
+Named homes, each with a reader and the question it answers. A plan
 here is never permission to do the work it describes.
 
 | Path | What it is | Reader, and the question it answers |
@@ -29,6 +29,7 @@ here is never permission to do the work it describes.
 | `reviews/` | The review corpus — raw reviewer output and its dispositions | A reviewer or repairer: "what did an independent reader find, and what happened to each finding?" |
 | `review-campaigns/` | One file per review campaign: its patterns over `reviews/` and its last verdict of record | The same reader: "which campaign does this raw belong to, and where did it end?" |
 | `evidence/` | Machine-produced run records (mutation sweeps, browser and fresh-checkout runs), as JSON | Anyone checking a claim: "what did that run actually output?" |
+| `retention/` | Frozen source census, conservative plan and live locators | A retention reviewer: "which exact bodies are represented, and which proofs remain unresolved?" |
 | `plans/` | Dated design notes for a single bead, written before the work | An implementer picking up that bead: "what shape was already decided, and by whom?" |
 | `superpowers/plans/`, `superpowers/specs/` | Spent plans and designs from an external-harness convention, kept as evidence | Someone auditing a past change: "what was the plan the work was actually done against?" |
 
@@ -159,11 +160,15 @@ python3 scripts/build_evidence_index.py --out <path>     # one JSON row per file
 
 - One row per tracked file: path, sha256, family, the record's named subject,
   commit and verdict where it carries them, and a reliance class.
-- The citer predicate and the nine classes are stated in the script's
+- The citer predicate and the ten classes are stated in the script's
   docstring; the denominator is every tracked file under `docs/evidence/`.
 - A reliance class says who cites a file, never whether the file is still
-  needed (rule 5). Retention is a separate, owner-gated question
-  (`syzygy-bpyt.9.2`).
+  needed (rule 5). "Retention is a separate, owner-gated question"
+  is superseded at this sentence (2026-11-04): GP-Q1 in
+  `.syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md`
+  selected the verified-index arm. Its execution conditions remain gates.
+  The additive [retention locator and conservative plan](retention/README.md)
+  keep original bodies in place; they do not complete `syzygy-bpyt.9.2`.
 - The index is a generated view, never authority.
 
 - A mutation-run record is valid **only for the commit it names** (`AGENTS.md`

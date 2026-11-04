@@ -407,6 +407,14 @@ jobs:
       - name: build_evidence_index --selftest
         run: python3 scripts/build_evidence_index.py --selftest
 
+      # Additive preparation verifies live locators from the frozen source
+      # population. Archive use stays refused pending the transaction gates.
+      - name: evidence_retention check
+        run: python3 scripts/evidence_retention.py check
+
+      - name: evidence_retention selftest
+        run: python3 scripts/evidence_retention.py selftest
+
       # The checkers' own fixtures. A hosted run that exercises the checks
       # but never the checks' checks reports a denominator it does not have.
       # Every one is stdlib-only, which is why they can run here at all —
