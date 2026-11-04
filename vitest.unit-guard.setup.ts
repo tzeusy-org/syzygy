@@ -15,6 +15,8 @@ import { afterAll, afterEach, expect } from 'vitest';
 // worker that reuses its process keeps one copy.
 const INSTALLED = Symbol.for('syzygy.unitTierGuard');
 const attempts: string[] = [];
+/** Every (target, key) `lock` installed, so the guard's own test can prove its table of locked sites is the whole population. */
+const sites: (readonly [object, string])[] = [];
 
 function refuse(what: string, command?: unknown): never {
   const named = typeof command === 'string' ? `${what} ${JSON.stringify(command.slice(0, 80))}` : what;
@@ -24,13 +26,20 @@ function refuse(what: string, command?: unknown): never {
 
 /** Replace `target[name]` with a refusing function the test cannot put back. The property becomes a non-configurable accessor whose
  * getter returns the refuser and whose setter is itself refused and recorded: a test that reassigns a route (to a mock, or to an
- * original it kept) throws there, and the file fails even where the test caught the throw. A route stays reachable only through a
+ * original it kept) by plain assignment or `Reflect.set` throws there, and the file fails even where the test caught the throw.
+ * `Object.defineProperty`, `Object.defineProperties` and `vi.spyOn` on a locked route also throw, but a native TypeError raised
+ * before any hook of ours runs, so it is NOT recorded (no cheap hook exists short of wrapping `Object.defineProperty` itself): a
+ * test that swallows that throw keeps its file green, though the refusal stays in place. `Reflect.defineProperty` returns false
+ * and throws nothing. The sibling exports that reach no original (`child_process.spawn`, `exec`, `execFile`, `fork`,
+ * `ChildProcess`, the prototype chain, `Object.freeze` of an export object) stay reassignable: locking them would refuse
+ * `vi.spyOn(cp, 'spawn')`, which unit tests may do, so they are a stated residual. A route stays reachable only through a
  * function the setup did not patch. Stated residuals (syzygy-e8lv), not refused because no cheap hook exists or the work is not a
  * process or a socket: `--expose-internals` (NODE_OPTIONS or execArgv) exposes `internalBinding` and the unpatched originals; a native
  * addon a test loads before the setup; `process.binding('fs_event_wrap')` and `fs` (local file work, allowed in the unit tier);
  * `process.kill` and signals to an existing pid; `node:wasi`, `node:quic` and other flag-gated experimental modules; a handle wrapped
  * on an inherited fd (`new net.Socket({ fd })`), which opens nothing new. */
 function lock(target: object, name: string, label: string, refuser: (...args: unknown[]) => never): void {
+  sites.push([target, name]);
   Object.defineProperty(target, name, {
     configurable: false,
     enumerable: true,
@@ -103,7 +112,13 @@ const lockedChildProcess = (): typeof childProcess => {
   if (!GUARD_TEST.test(file)) return refuse('syzygyUnitTierGuardChildProcess from', file);
   return childProcess;
 };
-Object.assign(globalThis, { syzygyUnitTierGuardTake: takeAttempts, syzygyUnitTierGuardChildProcess: lockedChildProcess });
+/** The locked (target, key) pairs; guarded like `takeAttempts`. */
+const lockedSites = (): readonly (readonly [object, string])[] => {
+  const file = expect.getState().testPath ?? '';
+  if (!GUARD_TEST.test(file)) return refuse('syzygyUnitTierGuardSites from', file);
+  return sites;
+};
+Object.assign(globalThis, { syzygyUnitTierGuardTake: takeAttempts, syzygyUnitTierGuardChildProcess: lockedChildProcess, syzygyUnitTierGuardSites: lockedSites });
 
 const complain = (): void => {
   if (attempts.length > 0) throw new Error(`unit tier refused ${attempts.splice(0).join('; ')} (a test may have caught the error; the file still fails)`);

@@ -7,7 +7,8 @@ import inspectorPromises from 'node:inspector/promises';
 import dns from 'node:dns';
 import net from 'node:net';
 import { connect, createServer } from 'node:net';
-import { Worker } from 'node:worker_threads';
+import dgram from 'node:dgram';
+import workerThreads, { Worker } from 'node:worker_threads';
 import { describe, expect, it } from 'vitest';
 
 // syzygy-bpyt.4.3: this file runs in the unit tier, whose setup (vitest.unit-guard.setup.ts) refuses a process and a socket at
@@ -16,6 +17,7 @@ import { describe, expect, it } from 'vitest';
 declare const syzygyUnitTierGuardTake: () => string[];
 // The locked child_process module, from the setup: a namespace value bound here would fail the sync-child-process guard as a re-binding.
 declare const syzygyUnitTierGuardChildProcess: () => typeof import('node:child_process');
+declare const syzygyUnitTierGuardSites: () => readonly (readonly [object, string])[];
 // `process.binding` is deprecated and absent from the Node typings.
 const binding = (name: string): unknown => (process as unknown as { binding(n: string): unknown }).binding(name);
 const take = (): string[] => syzygyUnitTierGuardTake();
@@ -91,5 +93,57 @@ describe('the unit tier refuses a process and a socket at the call', () => {
     expect(() => Reflect.deleteProperty(target, key) || (() => { throw new Error('kept'); })()).toThrow('kept');
     expect(call).toThrow(/^unit tier refuses /);
     expect(take()).toHaveLength(1);
+  });
+  // Every lock site, by explicit table: the lock is one helper, but a site written back to plain assignment (or left out) is a hole
+  // that only a row naming it can see. The cross-check below holds the table to the setup's own list of locked sites.
+  const dnsFamilies: readonly (readonly [string, object])[] = [
+    ['dns', dns], ['dns.promises', dns.promises], ['dns.Resolver.prototype', dns.Resolver.prototype], ['dns.promises.Resolver.prototype', dns.promises.Resolver.prototype],
+  ];
+  const resolving = (name: string): boolean => /^(resolve|reverse|lookup)/.test(name);
+  const childProcess = syzygyUnitTierGuardChildProcess();
+  const SITES: (readonly [object, string])[] = [
+    // Key names are composed, not quoted: a quoted bare sync-function name would fail the sync-child-process guard as a re-binding.
+    ...['spawn', 'exec', 'execFile'].map((k) => [childProcess, `${k}Sync`] as const),
+    [childProcess.ChildProcess.prototype, 'spawn'], [net.Socket.prototype, 'connect'], [net.Server.prototype, 'listen'],
+    ...['bind', 'connect', 'send'].map((k) => [dgram.Socket.prototype, k] as const),
+    ...dnsFamilies.flatMap(([, t]) => Object.getOwnPropertyNames(t).filter((k) => resolving(k) && typeof (t as Record<string, unknown>)[k] === 'function').map((k) => [t, k] as const)),
+    [inspector, 'open'], [inspectorPromises, 'open'], [workerThreads, 'Worker'],
+    [process, 'binding'], [process, '_linkedBinding'], [process, 'dlopen'],
+    ...(typeof (process as unknown as { execve?: unknown }).execve === 'function' ? [[process, 'execve'] as const] : []),
+  ];
+  it.each(SITES.map((site) => [`${(site[0] as { name?: string }).name ?? Object.prototype.toString.call(site[0])}.${site[1]}`, site[0], site[1]] as const))('refuses plain assignment to lock site %s and records it', (_name, target, key) => {
+    take();
+    expect(() => { (target as Record<string, unknown>)[key] = () => undefined; }).toThrow(/^unit tier refuses reassignment of .*not restorable/);
+    expect(take()).toHaveLength(1);
+  });
+  it('lists every site the setup locked and no other', () => {
+    const locked = syzygyUnitTierGuardSites();
+    const has = (list: readonly (readonly [object, string])[], site: readonly [object, string]): boolean => list.some(([t, k]) => t === site[0] && k === site[1]);
+    expect(SITES.filter((site) => !has(locked, site))).toEqual([]);
+    expect(locked.filter((site) => !has(SITES, site)).map(([, k]) => k)).toEqual([]);
+    expect(locked.length).toBe(SITES.length);
+    expect(SITES.length).toBeGreaterThan(40);
+  });
+
+  // Residuals, stated in the setup and pinned here so a change to them is seen (syzygy-93gz). defineProperty and spyOn throw a native
+  // TypeError that is not recorded; Reflect.defineProperty fails silently; the sibling exports stay reassignable.
+  it('keeps the refusal under defineProperty, spyOn and Reflect.defineProperty, none of which is recorded', async () => {
+    const { vi } = await import('vitest');
+    const key = `${'spawn'}Sync`;
+    take();
+    expect(() => Object.defineProperty(childProcess, key, { value: () => undefined })).toThrow(TypeError);
+    expect(() => vi.spyOn(childProcess, key as 'spawn')).toThrow(TypeError);
+    expect(Reflect.defineProperty(childProcess, key, { value: () => undefined })).toBe(false);
+    expect(take()).toEqual([]);
+    expect(() => childProcess.spawnSync('git')).toThrow(/^unit tier refuses /);
+    expect(take()).toHaveLength(1);
+  });
+  it('leaves the sibling exports reassignable, as stated', () => {
+    const original = childProcess.spawn;
+    try {
+      expect(() => { (childProcess as unknown as Record<string, unknown>).spawn = () => 'mock'; }).not.toThrow();
+    } finally { (childProcess as unknown as Record<string, unknown>).spawn = original; }
+    expect(childProcess.spawn).toBe(original);
+    expect(take()).toEqual([]);
   });
 });
