@@ -78,6 +78,10 @@ export interface SupervisorState {
   briefIssuedAt: number; deadlineSeconds: number;
   sessions: SessionPlan[];
   fidelityDeliveredFor: number[]; designDeliveredFor: number[]; notified: string[]; siteFor: Record<string, number>;
+  /** Fidelity packets delivered, as `<draft revision>/<inventory revision>` (absent in a state written before syzygy-1z8m.4). */
+  fidelityDeliveredPairs?: string[];
+  /** After a blocking fidelity verdict: the revisions each side asked to repair must exceed before the next delivery. */
+  pendingRepair?: PendingRepair;
   launches: { role: ViewRole; pid: number | null; at: string; argvSha256: string; viewSha256: string }[];
   stopped?: string; done?: string;
 }
@@ -435,6 +439,53 @@ function launchSession(options: Options, ports: CliPorts, state: SupervisorState
 /** The one line the running view gives the operator: this window is the run; the author's window is the only one that may ask. */
 export const OWNER_LINE = 'you       this is the only window you need; the author may ask you a question in its window (C-b n), and nothing else waits for you';
 
+/** The rows of a blocking fidelity verdict, split by who can repair them: the inventory session owns its entries' accuracy; the
+ * author owns everything else, and a not-ready declaration with no failing row (syzygy-1z8m.4). */
+export interface RepairSides { readonly author: boolean; readonly inventory: readonly { readonly entryId: string; readonly reason: string }[] }
+export interface PendingRepair { readonly draftAbove?: number; readonly inventoryAbove?: number }
+
+const flatten = (value: unknown, max: number): string => {
+  const one = String(value ?? '').replace(/\s+/gu, ' ').trim();
+  return one.length > max ? `${one.slice(0, max - 1)}…` : one;
+};
+
+export function repairSides(verdict: Readonly<Record<string, unknown>>): RepairSides {
+  const rows = (key: string): Record<string, unknown>[] => (Array.isArray(verdict[key]) ? (verdict[key] as unknown[]).filter((r): r is Record<string, unknown> => typeof r === 'object' && r !== null && !Array.isArray(r)) : []);
+  const authorRows = rows('findings').filter((f) => f['severity'] === 'blocking').length
+    + rows('inventoryCoverage').filter((r) => r['disposition'] !== 'represented' && r['disposition'] !== 'justified-omission').length
+    + rows('blockSupport').filter((r) => r['verdict'] !== 'supported').length;
+  const inventory = rows('inventoryAccuracy').filter((r) => r['accuracy'] !== 'accurate')
+    .map((r) => ({ entryId: flatten(r['entryId'], 80), reason: flatten(r['reason'], 300) }));
+  return { author: authorRows > 0 || inventory.length === 0, inventory };
+}
+
+/** The verdict file a review check validated, or an empty object when it cannot be read. */
+export function readVerdict(run: string, kind: 'fidelity' | 'design', n: number): Record<string, unknown> {
+  try { const doc: unknown = JSON.parse(fs.readFileSync(path.join(run, RUN_LAYOUT.reviews, `${kind}-verdict-${n}.json`), 'utf8')); return typeof doc === 'object' && doc !== null && !Array.isArray(doc) ? doc as Record<string, unknown> : {}; } catch { return {}; }
+}
+
+/** What Syzygy types into the inventory session when the fidelity review could not confirm some of its entries. */
+export function inventoryRepairMessage(inventoryRevision: number, entries: RepairSides['inventory']): string {
+  return `Syzygy: the fidelity review could not confirm ${entries.length} entr${entries.length === 1 ? 'y' : 'ies'} of your inventory revision ${inventoryRevision}: `
+    + entries.map((e) => `${e.entryId} (${e.reason})`).join('; ')
+    + '. Revise those entries: cite files the review can see (spans screening withheld cannot be confirmed), or remove an entry no such file supports. Then submit the revised inventory with the same syzygy dossier await --submit command; the revision counts against the run\'s repair-cycle limit.';
+}
+
+/** Whether the fidelity packet for this draft and inventory pair is due: not yet delivered, and every side asked to repair has moved. */
+export function fidelityDeliveryDue(passedDraft: number | null, inventoryRevision: number | null, pending: PendingRepair | undefined, delivered: readonly string[]): boolean {
+  if (passedDraft === null || inventoryRevision === null || delivered.includes(`${passedDraft}/${inventoryRevision}`)) return false;
+  if (pending?.draftAbove !== undefined && passedDraft <= pending.draftAbove) return false;
+  if (pending?.inventoryAbove !== undefined && inventoryRevision <= pending.inventoryAbove) return false;
+  return true;
+}
+
+/** Whether a blocking fidelity verdict ends the run: a side that must repair has no revision left under the limit. */
+export function fidelityRepairSpent(sides: RepairSides, draftRevision: number, inventoryRevision: number, maxRepairCycles: number): 'draft' | 'inventory' | null {
+  if (sides.author && draftRevision >= maxRepairCycles) return 'draft';
+  if (sides.inventory.length > 0 && inventoryRevision >= maxRepairCycles) return 'inventory';
+  return null;
+}
+
 /** How the spent repair revisions split between drafts check refused and drafts that passed, read from the check records. */
 export function cycleBreakdown(run: string): string {
   let refused = 0; let passed = 0;
@@ -532,7 +583,10 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
     };
     // A draft revision n is repair cycle n (check.ts); once the declared limit is reached, a not-ready verdict cannot be repaired.
     const repairsSpent = draft !== null && draft.n >= maxRepairCycles;
-    const fidelityState = verdictFor(fidelity, 'draftRevision', passedDraft);
+    const inventoryRevision = inventory.counts ? inventory.revision : null;
+    // A fidelity verdict is current only while both revisions its packet was built from are (syzygy-1z8m.4).
+    const fidelityState = fidelity !== null && (fidelity.doc['packet'] as Record<string, unknown> | undefined)?.['inventoryRevision'] !== inventoryRevision
+      ? 'none' : verdictFor(fidelity, 'draftRevision', passedDraft);
     const designState = verdictFor(design, 'site', site);
 
     // An inventory submitted before the author froze a draft is refused unchecked (no author session to compare against yet); once a
@@ -542,17 +596,32 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
       state.notified.push(`inventory-draft-${passedDraft}`); saveState(options.stateRoot, state);
       screen.event(`told the inventory session: draft revision ${passedDraft} is frozen`);
     }
-    if (passedDraft !== null && inventory.counts && !state.fidelityDeliveredFor.includes(passedDraft)) {
+    if (fidelityDeliveryDue(passedDraft, inventoryRevision, state.pendingRepair, state.fidelityDeliveredPairs ?? [])) {
+      const pair = `${passedDraft!}/${inventoryRevision!}`;
       const r = await step(['--json', 'session-prompt', run, 'review', '--kind', 'fidelity'], ports);
-      screen.event(r.exit === 0 ? `delivered the fidelity packet for draft revision ${passedDraft}` : `fidelity delivery refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`);
-      if (r.exit === 0 || giveUp(`fidelity-${passedDraft}`)) { state.fidelityDeliveredFor.push(passedDraft); saveState(options.stateRoot, state); }
+      screen.event(r.exit === 0 ? `delivered the fidelity packet for draft revision ${passedDraft!} and inventory revision ${inventoryRevision!}` : `fidelity delivery refused: ${r.doc ? String(r.doc['reason']) : r.stderr.trim()}`);
+      if (r.exit === 0 || giveUp(`fidelity-${pair}`)) {
+        (state.fidelityDeliveredPairs ??= []).push(pair); state.fidelityDeliveredFor.push(passedDraft!); delete state.pendingRepair; saveState(options.stateRoot, state);
+      }
     }
-    if (fidelityState === 'blocking' && repairsSpent) { phase = `blocked: fidelity verdict ${fidelity!.n} is not ready (${blockingWhy(run, 'fidelity', fidelity!.n)}) and all ${maxRepairCycles} repair cycles are spent${cycleBreakdown(run)}`; break; }
+    const sides = fidelityState === 'blocking' ? repairSides(readVerdict(run, 'fidelity', fidelity!.n)) : null;
+    const spentSide = sides !== null && draft !== null && inventoryRevision !== null ? fidelityRepairSpent(sides, draft.n, inventoryRevision, maxRepairCycles) : null;
+    if (spentSide !== null) {
+      phase = `blocked: fidelity verdict ${fidelity!.n} is not ready (${blockingWhy(run, 'fidelity', fidelity!.n)}) and all ${maxRepairCycles} repair cycles of the ${spentSide} are spent${spentSide === 'draft' ? cycleBreakdown(run) : ''}`;
+      break;
+    }
     if (designState === 'blocking' && repairsSpent) { phase = `blocked: design verdict ${design!.n} is not ready (${blockingWhy(run, 'design', design!.n)}) and all ${maxRepairCycles} repair cycles are spent${cycleBreakdown(run)}`; break; }
-    if (fidelityState === 'blocking' && !state.notified.includes(`fidelity-${fidelity!.n}`)) {
-      tellAuthor(state, `Syzygy: the fidelity review of draft revision ${passedDraft} is not ready (${blockingWhy(run, 'fidelity', fidelity!.n)}). Read ${run}/${RUN_LAYOUT.reviews}/fidelity-verdict-${fidelity!.n}.json, repair the draft in ${RUN_LAYOUT.drafts}/next.json, and run syzygy dossier check ${run} again.`);
+    if (sides !== null && !state.notified.includes(`fidelity-${fidelity!.n}`)) {
+      if (sides.author) {
+        tellAuthor(state, `Syzygy: the fidelity review of draft revision ${passedDraft} is not ready (${blockingWhy(run, 'fidelity', fidelity!.n)}). Read ${run}/${RUN_LAYOUT.reviews}/fidelity-verdict-${fidelity!.n}.json, repair the draft in ${RUN_LAYOUT.drafts}/next.json, and run syzygy dossier check ${run} again.${sides.inventory.length > 0 ? ' The inventory entries it could not confirm are the inventory session\'s to repair; Syzygy has told it.' : ''}`);
+        screen.event(`told the author: fidelity verdict ${fidelity!.n} blocks`);
+      }
+      if (sides.inventory.length > 0) {
+        tell(state, 'inventory', inventoryRepairMessage(inventoryRevision!, sides.inventory));
+        screen.event(`told the inventory session: ${sides.inventory.length} entr${sides.inventory.length === 1 ? 'y' : 'ies'} not confirmed by fidelity verdict ${fidelity!.n}`);
+      }
+      state.pendingRepair = { ...(sides.author ? { draftAbove: passedDraft! } : {}), ...(sides.inventory.length > 0 ? { inventoryAbove: inventoryRevision! } : {}) };
       state.notified.push(`fidelity-${fidelity!.n}`); saveState(options.stateRoot, state);
-      screen.event(`told the author: fidelity verdict ${fidelity!.n} blocks`);
     }
     if (fidelityState === 'ready' && passedDraft !== null && state.siteFor[String(passedDraft)] === undefined) {
       screen.event(`rendering draft revision ${passedDraft}`);
@@ -579,7 +648,8 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
       phase = `closed — dossier at ${run}/${RUN_LAYOUT.site}/${site}/`;
       break;
     }
-    phase = passedDraft === null ? 'drafting (author)' : !inventory.counts ? 'waiting for the inventory' : fidelityState === 'none' ? 'fidelity review' : fidelityState === 'blocking' ? 'author repairing after fidelity review'
+    const repairing = state.pendingRepair === undefined ? null : [state.pendingRepair.draftAbove !== undefined ? 'author' : null, state.pendingRepair.inventoryAbove !== undefined ? 'inventory' : null].filter((x) => x !== null).join(' and ');
+    phase = repairing !== null && repairing !== '' ? `${repairing} repairing after fidelity review` : passedDraft === null ? 'drafting (author)' : !inventory.counts ? 'waiting for the inventory' : fidelityState === 'none' ? 'fidelity review' : fidelityState === 'blocking' ? 'author repairing after fidelity review'
       : designState === 'none' ? 'rendered-design review' : 'author repairing after design review';
     const left = Math.max(0, deadline - Date.now());
     screen.draw([
