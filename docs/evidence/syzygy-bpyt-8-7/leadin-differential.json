@@ -1,0 +1,179 @@
+{
+ "passingRenderSpanNotVerifiedByCheck": 113,
+ "passingWithNoStraightQuote": 452,
+ "checkPassingTexts": 2375,
+ "checkPassingWithRenderDifference": 1693,
+ "texts": 89719,
+ "renderSpanNotACheckSpan": 681,
+ "leadInWithoutQuoteCountMismatch": 14594,
+ "examples": [
+  {
+   "kind": "no-quote-count",
+   "text": "The project states: x    x The project states:“The project states:The project states:",
+   "renderNoQuote": 4,
+   "checkNoQuote": 3
+  },
+  {
+   "kind": "no-quote-count",
+   "text": "The project states:“The project states: x ",
+   "renderNoQuote": 2,
+   "checkNoQuote": 1
+  },
+  {
+   "kind": "no-quote-count",
+   "text": "b ”The project states:“b “ ",
+   "renderNoQuote": 1,
+   "checkNoQuote": 0
+  },
+  {
+   "kind": "passing",
+   "text": " x aThe project states:“b ”  ",
+   "renderSpans": [],
+   "check": [
+    {
+     "inner": "b ",
+     "ok": true,
+     "terminated": true,
+     "end": 26
+    }
+   ],
+   "leadIns": [
+    {
+     "terminated": false,
+     "kind": "lead-in-without-quote"
+    }
+   ]
+  },
+  {
+   "kind": "passing",
+   "text": "b a\"The project states:\"",
+   "renderSpans": [],
+   "check": [
+    {
+     "inner": "The project states:",
+     "ok": true,
+     "terminated": true,
+     "end": 23
+    }
+   ],
+   "leadIns": [
+    {
+     "terminated": false,
+     "kind": "quotation-unterminated"
+    }
+   ]
+  },
+  {
+   "kind": "render-span-not-a-check-span",
+   "text": "The project states:”\"The project states:\"b \"a",
+   "render": {
+    "inner": "b ",
+    "open": 40,
+    "close": 43
+   },
+   "check": [
+    {
+     "inner": "The project states:\"b \"a",
+     "ok": false,
+     "terminated": false,
+     "end": 45
+    }
+   ]
+  },
+  {
+   "kind": "passing",
+   "text": "\"\"The project states:“ x  x  \" ",
+   "renderSpans": [],
+   "check": [
+    {
+     "inner": "\"The project states:“ x  x  ",
+     "ok": true,
+     "terminated": true,
+     "end": 29
+    }
+   ],
+   "leadIns": [
+    {
+     "terminated": false,
+     "kind": "lead-in-without-quote"
+    }
+   ]
+  },
+  {
+   "kind": "passing",
+   "text": "\" x \" “\"The project states:\" x ",
+   "renderSpans": [],
+   "check": [
+    {
+     "inner": " x \" “\"The project states:",
+     "ok": true,
+     "terminated": true,
+     "end": 27
+    }
+   ],
+   "leadIns": [
+    {
+     "terminated": false,
+     "kind": "quotation-unterminated"
+    }
+   ]
+  },
+  {
+   "kind": "extra",
+   "text": " \"“”The project states:\"\"",
+   "renderSpans": [
+    {
+     "inner": "",
+     "open": 23,
+     "close": 24
+    }
+   ],
+   "check": [
+    {
+     "inner": "“”The project states:\"",
+     "ok": true,
+     "terminated": true,
+     "end": 24
+    }
+   ]
+  },
+  {
+   "kind": "extra",
+   "text": " \"“”The project states:\"\"",
+   "renderSpans": [
+    {
+     "inner": "",
+     "open": 23,
+     "close": 24
+    }
+   ],
+   "check": [
+    {
+     "inner": "“”The project states:\"",
+     "ok": true,
+     "terminated": true,
+     "end": 24
+    }
+   ]
+  },
+  {
+   "kind": "extra",
+   "text": " \"“”The project states:\"\"",
+   "renderSpans": [
+    {
+     "inner": "",
+     "open": 23,
+     "close": 24
+    }
+   ],
+   "check": [
+    {
+     "inner": "“”The project states:\"",
+     "ok": true,
+     "terminated": true,
+     "end": 24
+    }
+   ]
+  }
+ ]
+}
