@@ -15,13 +15,13 @@ await loadRecorderForms();
 const ALLOWLIST = vi.hoisted(() => new Map<string, { readonly sha256: string; readonly reason: string }>());
 vi.mock('./citation-allowlist.js', () => ({ CITATION_ALLOWLIST: ALLOWLIST }));
 
-// Explicit timeouts (syzygy-bpyt.4.13): a test whose worst measured duration, alone or inside a full run under load, exceeded 2.5 s
-// carries one, that worst case x 3 rounded up to a whole 5 s. Most of those wait on recorder renders (one Python spawn each); the
-// port-and-chain agreement sweep is all reads. Every test's measurements are in docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json,
-// and scripts/size_vitest_test_timeouts.py --check confirms each timeout against the rule. They are sized for load1 up to about 127
-// on 12 cores, and ten of the sixteen from lower bounds: tests that timed out at that load. They are also sized for the whole file run
-// in order. The render cache moves each render's cost to whichever test needs it first, so a run filtered with -t, or shuffled, can
-// time out a test that carries no timeout.
+// Explicit timeouts: a test whose worst measured duration exceeded 2.5 s carries one, that worst case x 3 rounded up to a whole 5 s
+// (syzygy-bpyt.4.13; scripts/size_vitest_test_timeouts.py). Since syzygy-bpyt.4.8 renders every recorder form once, at the top of
+// this file, no test here waits on a Python spawn: the fifteen tests sized for their renders measured 52 ms at worst over five runs
+// at load1 up to 21 on 12 cores, and keep vitest's default (syzygy-nyir; docs/evidence/syzygy-nyir/timeout-sizing.json). The one
+// timeout left is the port-and-chain agreement sweep's, which is all reads and is syzygy-bpyt.4.23's. It keeps its 50 s from
+// docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json, where a run at load1 127 cut it at 16.5 s: the fresh runs alone give it 15 s,
+// so the sizing --check reports that one test, and no other.
 
 const REDIS_REV = '498ecd0d6d007db11ddb3aea9428552598a78622';
 const OTHER_REV = 'd2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7';
@@ -111,7 +111,7 @@ describe('package admission reader', () => {
     expect(records.find(r => r.class === 'egress')).toMatchObject({ admittedRepositories: ['psf-requests', 'redis-redis'], contentClasses: ['governance-text', 'code-structure'] });
     expect(obs.revisionLabels).toEqual(['8.10.2', '7.2.4']);
     expect(Object.isFrozen(obs) && Object.isFrozen(obs.admittedRevisions) && Object.isFrozen(obs.revisionLabels)).toBe(true);
-  }, 45_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
   it('returns nothing when no act record exists: a candidate instance binds nothing', async () => {
     const files = world();
     for (const key of Object.keys(files)) if (key.endsWith('-ACT.md')) delete files[key];
@@ -141,7 +141,7 @@ describe('package admission reader', () => {
       ['subject not a pair', (() => { const t = obsText({ subject: '(project:syzygy, repository:*)' }); return { [REDIS_PATH]: t, [act]: actText('consent-observation', REDIS_PATH, t) }; })()],
     ];
     for (const [name, over] of cases) await expect(reader(world(over)).read(), name).rejects.toBeInstanceOf(AdmissionRecordError);
-  }, 10_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
   it('refuses when the decisions directory cannot be listed', async () => {
     await expect(createPackageAdmissionReader({ root: '/missing', fs: memoryFs(world()) }).read()).rejects.toBeInstanceOf(AdmissionRecordError);
   });
@@ -289,7 +289,7 @@ describe('public-source policy act', () => {
     expect(await policyReader(policyWorld()).read()).toEqual([{ actIdentity: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-APPROVAL-2026-10-04', digest: sha(policyText()), inForceAt: AT, until: null }]);
     expect(await check(policyWorld(), AT)).toEqual({ satisfied: true, record: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-APPROVAL-2026-10-04' });
     expect(await check(policyWorld(), AT - 1)).toMatchObject({ satisfied: false });
-  }, 15_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
   it('uses the act instant when present', async () => {
     const files = policyWorld(policyText(), policyAct({ instant: '2026-10-04T09:30:00Z' }));
     expect(await check(files, Date.UTC(2026, 9, 4, 9, 30, 0))).toMatchObject({ satisfied: true });
@@ -357,7 +357,7 @@ describe('public-source policy act', () => {
   it('refuses the recorder\'s file when its act type, identity, title or provenance is not the recorder\'s form', async () => {
     for (const bad of [policyAct({ type: 'amend-policy' }), policyAct({ type: 'amend-policy', identity: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-APPROVAL-2026-10-04' }), policyAct({ identity: 'something-else' }), policyAct().replace('(public-source screening scope)', ''), policyAct().replace('owner-adopted (bootstrap, uncorrelated)', 'owner-adopted'), policyAct({ date: '2026-10-05' }).replace('2026-10-05', '2026-10-04')])
       await expect(policyReader(policyWorld(policyText(), bad)).read(), bad).rejects.toBeInstanceOf(AdmissionRecordError);
-  }, 15_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
   it('refuses a malformed recorded-at line in the policy act', async () => {
     for (const loose of ['  Recorded at (UTC): 2026-10-04T09:30:00Z', 'recorded at (utc): 2026-10-04T09:30:00Z']) {
       const act = policyAct().replace('Owner: Tzeusy', `${loose}\n\nOwner: Tzeusy`);
@@ -398,20 +398,20 @@ describe('egress version 2 record', () => {
     expect(v2.contentClasses).toContain('project-documentation');
     expect(egressVersions(records, AT)).toEqual(['0.2.0-candidate.1']);
     expect(await port(v2World(), AT).check(requirement('egress-consent'))).toEqual({ satisfied: true, record: 'PUBLIC-EGRESS-anthropic@0.2.0-candidate.1' });
-  }, 40_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
   it('leaves version 1 standing before the version 2 act takes effect, and with no version 1 act at all', async () => {
     expect(egressVersions(await reader(v2World()).read(), AT - 1)).toEqual(['0.1.0-candidate.7']);   // version 2 is not in force yet
     const later = v2World({ [V2_ACT]: actText('consent-egress', EGRESS_V2_INSTANCE, v2Text(), '2026-10-09') });
     expect(egressVersions(await reader(later).read(), AT)).toEqual(['0.1.0-candidate.7']);
     const only = v2World(); delete only[V1_ACT];
     expect(egressVersions(await reader(only).read(), AT)).toEqual(['0.2.0-candidate.1']);
-  }, 20_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
   it('refuses when version 2 did not take effect strictly after version 1: the same instant, or earlier', async () => {
     await expect(reader(v2World({ [V1_ACT]: actText('consent-egress', EGRESS_PATH, egressText(), '2026-10-04') })).read()).rejects.toBeInstanceOf(AdmissionRecordError);   // same instant
     await expect(reader(v2World({ [V1_ACT]: actText('consent-egress', EGRESS_PATH, egressText(), '2026-10-04', undefined, '2026-10-04T09:30:01Z') })).read()).rejects.toBeInstanceOf(AdmissionRecordError);   // version 1 a second later
     await expect(reader(v2World({ [V1_ACT]: actText('consent-egress', EGRESS_PATH, egressText(), '2026-10-05') })).read()).rejects.toBeInstanceOf(AdmissionRecordError);   // version 1 later
     expect((await reader(v2World({ [V1_ACT]: actText('consent-egress', EGRESS_PATH, egressText(), '2026-10-04', undefined, '2026-10-04T09:29:59Z') })).read()).length).toBe(3);   // one second earlier is enough
-  }, 45_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
   it('binds the exact bytes: an edited record is not in force', async () => {
     const edited = await reader(v2World({ [EGRESS_V2_INSTANCE]: `${v2Text()}\nedited\n` })).read();
     expect(edited.find(r => r.version === '0.2.0-candidate.1')!.inForceAt).toBeNull();
@@ -473,7 +473,7 @@ describe('egress version 2 record', () => {
       await expect(reader(noRecord).read(), 'no class act record').rejects.toBeInstanceOf(AdmissionRecordError);
       await expect(reader(noModule).read(), 'no installed module').rejects.toBeInstanceOf(AdmissionRecordError);
       expect((await reader(v2World({ [CLASS_ACT]: classAct({ date: '2026-10-04', instant: '2026-10-04T09:30:00Z' }) })).read()).length).toBe(3);   // the same instant as version 2 is allowed
-    }, 40_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+    });
     it('is found only at the top of the decisions directory: a copy in a subdirectory is not the recorder\'s file', async () => {
       const nested = v2World(); const moved = nested[CLASS_ACT]!; delete nested[CLASS_ACT]; nested[`${DECISIONS_DIR}/archive/RFC5-PROJECT-DOCUMENTATION-CLASS-AMENDMENT-ACT.md`] = moved;
       await expect(reader(nested).read()).rejects.toBeInstanceOf(AdmissionRecordError);
@@ -528,7 +528,7 @@ describe('egress version 2 record', () => {
       };
       expect((await reader(v2World(others)).read()).length).toBe(3);
       expect(await createPackagePolicyReader({ root: '/r', fs: memoryFs(v2World({ ...others, [POLICY_PATH]: policy })) }).read()).toHaveLength(1);   // only the version 2 act binds these bytes
-    }, 25_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+    });
     it('refuses when a subdirectory cannot be listed or the tree is too deep', async () => {
       const deep = `${DECISIONS_DIR}/${'d/'.repeat(8)}f.md`;
       await expect(reader(v2World({ [deep]: 'x' })).read()).rejects.toBeInstanceOf(AdmissionRecordError);
@@ -571,7 +571,7 @@ describe('screening scope version 2 policy act', () => {
     const f = files(p2, { [V1]: act(p1, 1, '2026-10-03'), [V2]: act(p2, 2) });
     expect(await policyReader(f).read()).toEqual([{ actIdentity: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-APPROVAL-2026-10-04', digest: sha(p2), inForceAt: AT, until: null }]);
     expect(await check(f, AT)).toEqual({ satisfied: true, record: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-APPROVAL-2026-10-04' });
-  }, 45_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
   it('counts the version 1 act while the policy still carries the version 1 bytes', async () => {
     const f = files(p1, { [V1]: act(p1, 1, '2026-10-03') });
     expect((await policyReader(f).read()).map(r => r.actIdentity)).toEqual([V1_ID]);
@@ -593,7 +593,7 @@ describe('screening scope version 2 policy act', () => {
     expect(await chainAt(f, AT)).toMatchObject({ state: 'ok', final: { identity: V1_ID } });
     expect(await check(f, Date.UTC(2027, 0, 2))).toMatchObject({ satisfied: false });
     expect(await chainAt(f, Date.UTC(2027, 0, 2))).toMatchObject({ state: 'refused' });
-  }, 20_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
   it('counts nothing for version 2 bytes with only the version 1 act, or for an edited policy under the version 2 act', async () => {
     expect(await policyReader(files(p2, { [V1]: act(p1, 1, '2026-10-03') })).read()).toEqual([]);
     expect(await policyReader(files(p2 + ' ', { [V1]: act(p1, 1, '2026-10-03'), [V2]: act(p2, 2) })).read()).toEqual([]);
@@ -611,7 +611,7 @@ describe('screening scope version 2 policy act', () => {
       await expect(policyReader(files(p1, { [V1]: act(p1, 1), [`${DECISIONS_DIR}/NOTES.md`]: text })).read(), line).rejects.toBeInstanceOf(AdmissionRecordError);
       await expect(policyReader(files(p1, { [V1]: act(p1, 1), [`${DECISIONS_DIR}/launch-gate/deep/NOTES.md`]: text })).read(), `sub: ${line}`).rejects.toBeInstanceOf(AdmissionRecordError);
     }
-  }, 15_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
 });
 
 // P-105 (owner act of 2026-10-08, syzygy-fxro): the third form. Version 3 supersedes version 2 as version 2 superseded version 1.
@@ -793,7 +793,7 @@ describe('strict act reads', () => {
       ['an unlisted record naming the policy', p1, { [POLICY_V1]: v1(), [`${DECISIONS_DIR}/sub/W.md`]: `Artifact identity: \`${POLICY_PATH}\`\n` }],
     ];
     for (const [name, policy, extra] of cases) expect(await chain(policy, extra), name).toMatchObject({ state: 'refused' });
-  }, 40_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
   it('policy reads count a head field only in prose: an HTML comment or fence hides nothing and adds nothing', async () => {
     for (const hidden of ['<!--\nAct type: `approve-policy`\n-->', '```\nRecorded at (UTC): 2026-10-03T00:00:01Z\n```', '```\nSupersession / revocation: forged\n```', 'Supersession / revocation: forged'])
       expect(await chain(p1, { [POLICY_V1]: `${v1()}\n${hidden}\n` }), hidden).toMatchObject({ state: 'refused' });
@@ -862,7 +862,7 @@ describe('round-3 review notes', () => {
     expect(await createPackagePolicyReader({ root: '/r', fs: memoryFs(files) }).read()).toHaveLength(1);
     for (const line of ['I retract the public source scope approval.', 'Withdrawn: PWB_SECRET_CLASSIFICATION_POLICY public­source­scope'])
       await expect(createPackagePolicyReader({ root: '/r', fs: memoryFs({ ...files, [`${DECISIONS_DIR}/OWNER-DIRECTION-X.md`]: `${line}\n` }) }).read(), line).rejects.toBeInstanceOf(AdmissionRecordError);
-  }, 15_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
   it('takes Scope repositories from the one list before the next heading of any level, and refuses a second list (N-3)', async () => {
     const admitted = async (t: string) => (await reader(egWith(t)).read()).find(r => r.class === 'egress')!.admittedRepositories;
     expect(await admitted(egressText().replace('repository:redis-redis)`', 'repository:redis-redis)`\n\n### Not admitted\n\n- `(project:syzygy, repository:elsewhere)`'))).toEqual(['psf-requests', 'redis-redis']);
@@ -887,7 +887,7 @@ describe('round-3 review notes', () => {
     const p1 = JSON.stringify({ publicSourceScope: {} }) + '\n';
     const g = seen({ ...world(), [POLICY_PATH]: p1, [`${DECISIONS_DIR}/${POLICY_ACT_FILE}`]: renderPolicyAct(sha(p1), '2027-01-01', '2027-01-01T09:30:00Z', 1) });
     expect(await readPolicyActChain({ root: '/r', fs: memoryFs(g), now: AT })).toMatchObject({ state: 'absent', why: expect.stringContaining('in force yet') });
-  }, 15_000); // sized from its worst measured run: docs/evidence/syzygy-bpyt-4-13/timeout-sizing.json
+  });
   it('refuses labels that differ only in case, in one table and across records (N-5)', async () => {
     await expect(reader(obsWith(obsText({ rows: `| \`v8.10.2\` | \`${REDIS_REV}\` |\n| \`V8.10.2\` | \`${OTHER_REV}\` |` }))).read()).rejects.toBeInstanceOf(AdmissionRecordError);
     const records = [['v1', REDIS_REV], ['V1', OTHER_REV]].map(([label, id], i) => ({ recordId: `R${i}`, version: '1', class: 'observation' as const, project: 'project:syzygy', repositoryId: 'redis-redis', providerId: null, upstream: null, digest: '1'.repeat(64), inForceAt: 1, withdrawnAt: null, supersedes: null, supersessionAt: null, admittedRevisions: [id!], revisionLabels: [label!], admittedRepositories: [], contentClasses: [] }));
