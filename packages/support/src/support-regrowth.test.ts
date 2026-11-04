@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { lstatSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
@@ -41,18 +41,26 @@ const identity = (site: Pick<Site, 'path' | 'symbol' | 'mechanism'>): string => 
 const errorCode = (error: unknown): string => (error as NodeJS.ErrnoException).code ?? 'invalid input';
 const extensionOf = (path: string): string => path.slice(path.lastIndexOf('.'));
 
-/** Read-only, sorted filesystem census; no Git, process, network or runtime source imports. */
+/** Read-only, sorted filesystem census; no Git, process, network or runtime source imports.
+ * Reject symbolic entries and non-directory roots without following targets. */
 function discover(root: string, problems: string[]): string[] {
   const files: string[] = [];
   const entriesAt = (path: string) => {
-    try { return readdirSync(join(root, path), { withFileTypes: true }).sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0); }
+    try {
+      if (!lstatSync(join(root, path)).isDirectory()) {
+        problems.push(`discovery ${path}: expected a regular directory`);
+        return [];
+      }
+      return readdirSync(join(root, path), { withFileTypes: true }).sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+    }
     catch (error) { problems.push(`discovery ${path}: ${errorCode(error)}`); return []; }
   };
   const walk = (directory: string): void => {
     for (const entry of entriesAt(directory)) {
       const path = `${directory}/${entry.name}`;
-      if (TEST_SUPPORT.test(`${path}${entry.isDirectory() ? '/' : ''}`)) continue;
-      if (entry.isDirectory()) walk(path);
+      if (TEST_SUPPORT.test(`${path}${entry.isDirectory() || entry.isSymbolicLink() ? '/' : ''}`)) continue;
+      if (entry.isSymbolicLink()) problems.push(`discovery ${path}: symbolic source entry`);
+      else if (entry.isDirectory()) walk(path);
       else if (EXTENSIONS.has(extensionOf(path))) {
         if (entry.isFile()) files.push(path);
         else problems.push(`discovery ${path}: expected a regular source file`);
@@ -60,11 +68,13 @@ function discover(root: string, problems: string[]): string[] {
     }
   };
   for (const parent of ROOTS) {
-    const workspaces = entriesAt(parent).filter((entry) => entry.isDirectory());
-    if (workspaces.length === 0) problems.push(`discovery ${parent}: no workspace directories`);
+    const workspaces = entriesAt(parent);
+    if (!workspaces.some((entry) => entry.isDirectory())) problems.push(`discovery ${parent}: no workspace directories`);
     for (const workspace of workspaces) {
       const directory = `${parent}/${workspace.name}/src`;
-      if (!TEST_SUPPORT.test(`${directory}/`)) walk(directory);
+      if (TEST_SUPPORT.test(`${directory}/`)) continue;
+      if (workspace.isSymbolicLink()) problems.push(`discovery ${parent}/${workspace.name}: symbolic workspace entry`);
+      else if (workspace.isDirectory()) walk(directory);
     }
   }
   if (files.length === 0) problems.push('discovery: no source modules');
