@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { check, checkShape, handle, list, object, one, refs, text } from './closed-schema.js';
+import { check, checkShape, handle, list, object, one, ref, refs, text, type SchemaWithDefs } from './closed-schema.js';
 import { disposition } from './draft-model.js';
 
 // The one closed-schema checker's hardening against untrusted values, in both of its forms (syzygy-bpyt.8.5): `check` throws
@@ -90,7 +90,7 @@ describe('closed-schema checker', () => {
   describe('a choice beside one undiscriminated form', () => {
     const plain = object({ id: handle, note: text });
     const boxed = object({ kind: one('box'), id: handle });
-    const choiceShape = { root: { oneOf: [{ $ref: '#/$defs/plain' }, { $ref: '#/$defs/boxed' }] }, defs: { plain, boxed } };
+    const choiceShape: SchemaWithDefs = { root: { oneOf: [ref('plain'), ref('boxed')] }, defs: { plain, boxed } };
     it('reports a plain value\'s own breach', () => {
       expect(checkShape(choiceShape, { id: 'a1' })).toEqual([{ path: '$.note', detail: 'is required' }]);
     });
@@ -101,7 +101,7 @@ describe('closed-schema checker', () => {
       expect(checkShape(choiceShape, { kind: 'box', id: 'a1', extra: 1 })).toEqual([{ path: '$.extra', detail: 'is not a field of this form' }]);
     });
     it('keeps the bare refusal when two forms are undiscriminated', () => {
-      const twin = { root: { oneOf: [{ $ref: '#/$defs/plain' }, { $ref: '#/$defs/plain' }, { $ref: '#/$defs/boxed' }] }, defs: { plain, boxed } };
+      const twin: SchemaWithDefs = { root: { oneOf: [ref('plain'), ref('plain'), ref('boxed')] }, defs: { plain, boxed } };
       expect(checkShape(twin, { id: 'a1' })).toEqual([{ path: '$', detail: 'matches none of the permitted forms (unnamed; unnamed; kind box)' }]);
     });
   });

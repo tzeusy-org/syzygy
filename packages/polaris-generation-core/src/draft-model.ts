@@ -91,22 +91,10 @@ export function validateRequestedAssets(value: unknown): RequestedAsset[] {
   return structuredClone(assets);
 }
 
-/** Every claim of a tree, parent first: children are blocks everywhere. A rich element's shell entry is no claim; the claims inside it are,
- * in document order (syzygy-mea.10.5), so every reader of a tree — handles, quote checks, review packets — sees them as blocks. */
+/** Every block of a tree, parent first: children are blocks everywhere. A provider draft never carries a rich element (its closed schema
+ * refuses `element`); an operator-agent draft's claims are walked by the dossier package's `contentClaims` instead. */
 export function treeBlocks(blocks: readonly DraftBlock[]): DraftParagraph[] {
-  return blocks.flatMap(block => block.element === undefined ? [block, ...block.children] : elementClaims(block.element));
-}
-
-/** The claims a rich element holds, in document order. */
-export function elementClaims(element: DraftElement): DraftParagraph[] {
-  switch (element.kind) {
-    case 'table': return element.rows.flatMap(row => row.cells.filter((cell): cell is DraftParagraph => cell !== null));
-    case 'callout': return treeBlocks(element.children);
-    case 'steps': return [...element.items];
-    case 'definitions': return element.entries.map(entry => entry.definition);
-    case 'cards': return element.items.map(item => item.body);
-    case 'details': return treeBlocks(element.elements);
-  }
+  return blocks.flatMap(block => [block, ...block.children]);
 }
 
 export function draftHandles(value: DossierDraft): { all: Set<string>; blocks: Set<string> } {

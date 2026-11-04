@@ -974,6 +974,8 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     expect(READABILITY_GUIDANCE).toContain('a `flow` for an end-to-end workflow or a user\'s path through the project, a `boundary` or `dependency` diagram for the architecture and how components talk to each other');
     expect(READABILITY_GUIDANCE).toContain('An enumeration of three or more items is never a run-on sentence: write a short lead block and give each item its own child block, which renders as a bulleted list. A block holds at most twelve children, so group a longer enumeration under several lead blocks.');
     expect(READABILITY_GUIDANCE).toContain('Put commands, identifiers, file names and configuration keys in backticks outside quotations; they render as inline code.');
+    expect(READABILITY_GUIDANCE).toContain('5. Elements. A section or deep dive entry may be a plain block or, in draft schema `polaris-dossier-local-draft-v3`, one of six presentation elements.');
+    expect(READABILITY_GUIDANCE).toContain('Captions, column names, titles, terms, labels and summaries are short plain labels, never claims or quotations; every cell, item, definition and body is a claim and follows every rule above.');
     expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
   });
 });
@@ -984,7 +986,7 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
     const doc = draft();
     doc.schemaVersion = 'polaris-dossier-local-draft-v3';
     doc.sections[0].paragraphs.push(
-      { kind: 'table', id: 't1', caption: 'Commands and what they do', columns: ['Command', 'Effect'], rowHeaders: true, rows: [
+      { kind: 'table', id: 't1', caption: 'Commands <b>and</b> what they do', columns: ['Command', 'Effect'], rowHeaders: true, rows: [
         { id: 't1r1', cells: [nn('t1c1', 'The `GET` command'), { id: 't1c2', label: 'inferred', basis: 'source', text: 'The project states: "Each command runs to completion before the next one starts."', citations: [cite('c-t1c2', 'src/kestrel.c', 2, 3)], quotations: ['c-t1c2'] }] },
         { id: 't1r2', cells: [nn('t1c3', 'The `SET` command'), { kind: 'empty' }] },
       ] },
@@ -1010,7 +1012,7 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
   });
 
   it('renders a table with a caption, column headers, row headers and an empty cell', () => {
-    expect(index).toContain('<div class="table-scroll" id="element-t1" data-element="table"><table><caption>Commands and what they do</caption><thead><tr><th scope="col">Command</th><th scope="col">Effect</th></tr></thead>');
+    expect(index).toContain('<div class="table-scroll" id="element-t1" data-element="table"><table><caption>Commands &lt;b&gt;and&lt;/b&gt; what they do</caption><thead><tr><th scope="col">Command</th><th scope="col">Effect</th></tr></thead>');
     expect(index).toContain('<th scope="row" class="non-normative" data-non-normative="t1c1">The <code>GET</code> command <span class="marking non-normative">[Non-normative]</span></th>');
     expect(index).toMatch(/<td[^>]*data-claim-id="t1c2"[^>]*>/u);
     expect(index).toContain('<td class="empty-cell"><span class="visually-hidden">empty</span></td>');
