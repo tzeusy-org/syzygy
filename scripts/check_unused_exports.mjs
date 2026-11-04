@@ -257,9 +257,12 @@ const FIXTURE_FILES = new Map([
     'export const seamWordOnly = 18;',
     '// test seam: lowercase',
     'export const seamLowercase = 19;',
+    '// Test setup helper, no marker phrase.',
+    'export const testWordNoSeam = 21;',
     'const listedOnListLocal = 20;',
     '// Test seam: leads the list.',
     'export { listedOnListLocal };',
+    'export const prefixProbe = 22;',
     '// Test seam: on the first overload only.',
     'function lo(a: string): void;',
     'function lo(a: number): void;',
@@ -305,8 +308,8 @@ const FIXTURE_FILES = new Map([
     '',
   ].join('\n')],
   ['pkg/src/a.test.ts', [
-    "import { testOnlyBare, testOnlySeam, testOnlySeamFn, listedLocal, listedSeamLocal, overloaded, internalAndTest, selfAndTest, plainCommentOnly, seamWordOnly, seamLowercase, listedOnListLocal, lo, aliasPublic } from './a.js';",
-    'void [testOnlyBare, testOnlySeam, testOnlySeamFn, listedLocal, listedSeamLocal, overloaded, internalAndTest, selfAndTest, plainCommentOnly, seamWordOnly, seamLowercase, listedOnListLocal, lo, aliasPublic];',
+    "import { testOnlyBare, testOnlySeam, testOnlySeamFn, listedLocal, listedSeamLocal, overloaded, internalAndTest, selfAndTest, plainCommentOnly, seamWordOnly, seamLowercase, testWordNoSeam, listedOnListLocal, lo, aliasPublic } from './a.js';",
+    'void [testOnlyBare, testOnlySeam, testOnlySeamFn, listedLocal, listedSeamLocal, overloaded, internalAndTest, selfAndTest, plainCommentOnly, seamWordOnly, seamLowercase, testWordNoSeam, listedOnListLocal, lo, aliasPublic];',
     'export const testFileExport = 1;',
     '',
   ].join('\n')],
@@ -331,10 +334,17 @@ const FIXTURE_FILES = new Map([
     "export { aliasSource as aliasOut } from './a.js';",
     "export { sameName } from './c.js';",
     "export * as nsAll from './ns.js';",
+    "export { dotJsThing } from './dot.js.js';",
+    "export { dashJsThing } from './dash-js';",
     '',
   ].join('\n')],
   ['pkg/src/star.ts', 'export const starMember = 1;\n'],
   ['pkg/src/ns.ts', 'export const nsMember = 1;\n'],
+  ['pkg/src/dot.js.ts', 'export const dotJsThing = 1;\n'],
+  ['pkg/src/decl.mts', 'export const mtsDeclThing = 1;\n'],
+  ['pkg/src/forbid.ts', 'export const forbidThing = 1;\n'],
+  ['mono/pkg/src/q.ts', "import { prefixProbe } from '../../../pkg/src/a.js';\nexport const prefixElsewhereThing = prefixProbe;\n"],
+  ['pkg/src/dash.ts', 'export const dashJsThing = 1;\n'],
   ['pkg/src/c.ts', 'export const sameName = 1;\nexport const importedThing = 2;\n'],
   ['pkg/src/starfile.ts', "export * from './a.js';\n"],
   ['pkg/src/reex.ts', "export { reexportedThing } from './a.js';\n"],
@@ -374,6 +384,7 @@ const FIXTURE_EXPECTED = {
   plainCommentOnly: ['test-only', true, false],
   seamWordOnly: ['test-only', true, false],
   seamLowercase: ['test-only', true, false],
+  testWordNoSeam: ['test-only', true, false],
   listedOnListLocal: ['test-only', false, false],
   lo: ['test-only', false, false],
   aliasPublic: ['test-only', false, false],
@@ -405,15 +416,19 @@ const FIXTURE_EXPECTED = {
   tCjs: ['test-only', true, false],
   wrapUsed: ['internal', false, false],
   wrapDecl: ['dead', true, false],
-  multiLine: ['dead', true, false, 74],
+  multiLine: ['dead', true, false, 77],
   starMember: ['dead', true, true],
   nsMember: ['dead', true, true],
+  dotJsThing: ['dead', true, true],
+  dashJsThing: ['dead', true, false],
+  forbidThing: ['dead', true, false],
+  prefixProbe: ['public', false, false],
   'sameName@pkg/src/c.ts': ['dead', true, true],
   otherUnitThing: ['dead', true, false],
 };
 // Names declared by files or statements the census must not audit.
-const FIXTURE_ABSENT = ['testFileExport', 'mjsDecl', 'dtsThing', 'subHolder', 'defaultFn', 'plainLocal', 'ambientLocal', 'strmod', 'inner'];
-const FIXTURE_CODE_FILES = 26;
+const FIXTURE_ABSENT = ['testFileExport', 'mjsDecl', 'dtsThing', 'subHolder', 'defaultFn', 'plainLocal', 'ambientLocal', 'strmod', 'inner', 'mtsDeclThing', 'prefixElsewhereThing'];
+const FIXTURE_CODE_FILES = 31;
 
 let failed = 0;
 let checks = 0;
@@ -445,7 +460,7 @@ function selftestFixtures() {
 }
 
 function selftestHelpers() {
-  const scannable = ['a.ts', 'x/b.mts', 'c.mjs', 'd.js', 'e.cjs', 'packages/p/docs/g.ts', 'xdocs/h.ts', 'node_modulesish/i.ts'];
+  const scannable = ['a.ts', 'x/b.mts', 'c.mjs', 'd.js', 'e.cjs', 'packages/p/docs/g.ts', 'xdocs/h.ts', 'docsite/e.ts', 'node_modulesish/i.ts'];
   const not = ['a.json', 'docs/a.ts', 'node_modules/x/y.js', 'a.tsx', 'a.md', 'a.ts.bak'];
   check(scannable.every(isScannable) && not.every((p) => !isScannable(p)), `isScannable: ${scannable.length} read, ${not.length} refused`);
 
@@ -527,6 +542,8 @@ const MUTANTS = [
   // the Test seam comment
   { id: 'seam-matches-any-only-word', old: 'const SEAM = /Test seam/;', new: 'const SEAM = /Test seam|only/;' },
   { id: 'seam-matches-bare-seam-word', old: 'const SEAM = /Test seam/;', new: 'const SEAM = /seam/;' },
+  { id: 'seam-matches-test-word-alone', old: 'const SEAM = /Test seam/;', new: 'const SEAM = /Test/;' },
+  { id: 'seam-matches-test-s-prefix', old: 'const SEAM = /Test seam/;', new: 'const SEAM = /Test s/;' },
   { id: 'seam-matches-lowercase', old: 'const SEAM = /Test seam/;', new: 'const SEAM = /test seam/i;' },
   { id: 'seam-read-from-statement-start-not-leading-trivia', old: 'statement.getFullStart()', new: 'statement.getStart()' },
   { id: 'jsdoc-comment-ignored', old: 'getLeadingCommentRanges(text, statement.getFullStart()) ?? []).some((r) => SEAM', new: 'getLeadingCommentRanges(text, statement.getFullStart()) ?? []).filter((r) => r.kind === ts.SyntaxKind.SingleLineCommentTrivia).some((r) => SEAM' },
@@ -552,6 +569,12 @@ const MUTANTS = [
   { id: 'scannable-keeps-node-modules', old: " && !path.startsWith('node_modules/')", new: '' },
   { id: 'scannable-docs-anywhere', old: "!path.startsWith('docs/')", new: "!path.includes('docs/')" },
   // declarers
+  { id: 'scannable-docs-prefix-truncated', old: "!path.startsWith('docs/') &&", new: "!path.startsWith('doc') &&" },
+  { id: 'scannable-docs-prefix-no-slash', old: "!path.startsWith('docs/') &&", new: "!path.startsWith('docs') &&" },
+  { id: 'declarer-prefix-matched-anywhere', old: '!file.startsWith(unit.prefix) ||', new: '!file.includes(unit.prefix) ||' },
+  { id: 'declarer-ts-suffix-without-dot', old: "!file.endsWith('.ts') ||", new: "!file.endsWith('ts') ||" },
+  { id: 'declarer-d-ts-suffix-without-dot', old: "file.endsWith('.d.ts') ||", new: "file.endsWith('d.ts') ||" },
+  { id: 'user-prefix-matched-anywhere', old: 'else if (other.startsWith(unit.prefix)) inside = true;', new: 'else if (other.includes(unit.prefix)) inside = true;' },
   { id: 'declarer-prefix-ignored', old: '!file.startsWith(unit.prefix) ||', new: 'false ||' },
   { id: 'declarer-non-ts-audited', old: "!file.endsWith('.ts') ||", new: 'false ||' },
   { id: 'declarer-d-ts-audited', old: "file.endsWith('.d.ts') ||", new: 'false ||' },
@@ -587,6 +610,8 @@ const MUTANTS = [
   { id: 'named-re-exports-not-published', old: 'for (const r of scan.reexportFrom) published.add(', new: 'for (const r of []) published.add(' },
   { id: 'star-re-exports-not-published', old: 'for (const spec of scan.starFrom) published.add(', new: 'for (const spec of []) published.add(' },
   { id: 'published-name-ignores-declaring-file', old: 'published.add(`${resolveSpec(path, r.spec)}\\0${r.imported}`)', new: 'published.add(`${path.replace(/[^/]*$/, "a.ts")}\\0${r.imported}`)' },
+  { id: 're-export-specifier-js-unanchored', old: ".replace(/\\.js$/, '.ts')", new: ".replace(/\\.js/, '.ts')" },
+  { id: 're-export-specifier-js-dot-any-char', old: ".replace(/\\.js$/, '.ts')", new: ".replace(/.js$/, '.ts')" },
   { id: 're-export-specifier-js-not-mapped-to-ts', old: ".replace(/\\.js$/, '.ts')", new: '' },
   { id: 're-export-specifier-not-relative-to-barrel', old: 'posix.join(posix.dirname(from), spec)', new: 'posix.join(spec)' },
   // discovery
