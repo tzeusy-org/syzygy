@@ -2517,7 +2517,11 @@ exclusion of the acts in force stands.
                         "disposition": disposition, "oldRecord": before_record, "newRecord": after_record,
                         "oldAggregate": before_aggregate, "newAggregate": after_aggregate,
                         "passed": before_record == after_record and before_aggregate == after_aggregate})
-        passed = (set(keys) == set(packages) - {KEY} == set(historical_packages) - {KEY}
+        # Packages the recorder gained after the frozen historical recorder:
+        # a closed list, so any other new package still fails the census.
+        later = {"polaris-dossier-local-agent-mode@1.3"}
+        passed = (set(keys) == set(historical_packages) - {KEY}
+                  and set(packages) - {KEY} == set(keys) | later
                   and len(controls) == 38 and all(row["passed"] for row in controls))
         expect("T17 all non-P115 full historical record and aggregate outputs", passed)
         print("P115-RENDER-EVIDENCE " + json.dumps({"case": "T17", "syntheticOnly": True,
