@@ -1,0 +1,28 @@
+{
+  "sourceSubjectCommit": "cb25772f98b763c81714da46580ff8921bed989e",
+  "baselineCommit": "f5487c186626513724e1eff28a2789a4d78c154c",
+  "modelHostCases": 18,
+  "routePairs": 72,
+  "humanRoutePairs": 54,
+  "machineRoutePairs": 18,
+  "differences": 0,
+  "rawBodiesCommitted": false,
+  "records": [
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/served-route-supplement.mjs",
+      "sha256": "384996b4ba55fd2b0ef67647834c4b0e6de773233c045bfca39ab5148cfdde9e"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/served-route-supplement.json",
+      "sha256": "e2bf5a6db985f34b1cb2c1a931694b3a095c64b0e7740575f7cc17c422de9789"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/served-route-source-manifest.json",
+      "sha256": "4039ff3fdc80e1ca6a4ab7204ca55e35d32ffd6f96a62dd958a590be3eb02bd1"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/predecessor-cb257-gates.json",
+      "sha256": "2b540d7c0ba1580b7d1a1f4db5b66ed19b42b660b03f4a69c42de304d6e987f5"
+    }
+  ]
+}

@@ -108,3 +108,27 @@ inventory alone is not a completion claim.
 [Unknown] The full gate and independent final-head review remain separate from source-subject differential results. Their exact final commit, outcomes and source merge hold are reconciled in the terminal worker report. A worker-captured record is a report fact; it is not an emitter-distinct certification.
 
 [Observed] Repaired source subject `1675b3967b36812ee05775a6f2bb31627f247f04`: 248 tests across ten targeted files passed, including the unchanged live-source security guard. The refreshed differential matched 69 transport and 93 caller cases. The 27 refreshed literal mutants were caught (eight factory predicates and nineteen caller predicates, including the retained environment adapter's freshness). The repaired census finds two direct app exceptions and four factory call sites across six files, with code-structure still delegating via the canonical runner; five option profiles use the factory. `evidence-index-repaired.json` binds the current records. The final clean-clone check and independent review remain separate gates.
+
+[Observed] Limitation of the original 93-case caller corpus: its six model cases
+compare direct-render human HTML, but their human route calls omit Host and
+therefore compare status-403 browser-origin refusals. Those original records
+remain unchanged; they do not establish successful human-route byte equality.
+
+[Observed] `served-route-supplement.mjs` closes that bounded gap on the same
+synthetic fixtures: 18 admitted/refused × text-corpus × request-header cases,
+72 successful status-200 route pairs (54 HTML and 18 machine), compared directly
+byte for byte and by response metadata. It covers loopback Host, matching
+loopback Origin and matching tailnet Origin. `served-route-supplement.json`
+records per-case outputs; `served-route-source-manifest.json` binds all 239
+old/new source rows, fixture inputs, exact baseline/source subject and bundle
+hashes; `served-route-evidence-index.json` binds these durable records and the
+portable harness. Raw body files remain in the external worker evidence
+directory named by the manifest, and the harness reproduces them. This is
+operator verification, with no product source or test-case delta. The original
+403 results are retained as refusal coverage.
+
+[Unknown] Publishing these additional evidence bytes creates a new review/gate
+subject. The passed cb25772f98b763c81714da46580ff8921bed989e full check remains
+evidence for that predecessor only. The new exact-head differential, checks,
+per-check output capture and independent review are reconciled in the terminal
+worker report; publication alone supplies none of those outcomes.

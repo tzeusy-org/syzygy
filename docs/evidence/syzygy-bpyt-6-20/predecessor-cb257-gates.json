@@ -1,0 +1,36 @@
+{
+  "subjectCommit": "cb25772f98b763c81714da46580ff8921bed989e",
+  "fullGate": {
+    "name": "check-all",
+    "command": [
+      "npm",
+      "run",
+      "check:all"
+    ],
+    "exitCode": 0,
+    "startedAt": "2026-11-04T17:29:42.698869+00:00",
+    "finishedAt": "2026-11-04T17:48:43.429269+00:00",
+    "head": "cb25772f98b763c81714da46580ff8921bed989e",
+    "log": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-full/check-all.log",
+    "sha256": "b6484264181d390a197031a13871876a8211fdda58a819b29ad8e5792027d791"
+  },
+  "fullGateTestDenominator": 6529,
+  "passedTests": 6526,
+  "declaredSkippedTests": 3,
+  "fullGateBatteryCommands": 117,
+  "fullGateBatteryFailures": 0,
+  "captureState": "interrupted-subject-updated",
+  "captureOnlyDenominator": 117,
+  "capturedBeforeInterruption": 115,
+  "captureResult": "partial; no completed capture-battery result",
+  "reason": "AC7 durable successful-route supplemental evidence was actually added to the assigned worktree; the predecessor remains a successful full gate but no longer the intended final code+evidence subject. Stop only own capture group per coordinator direction, leaving queued 9.6 baseline free. No observation timeout or code/infrastructure failure inferred.",
+  "ownProcessGroup": 996535,
+  "ownGroupGone": true,
+  "newLockHolder": [
+    "1041407 python3         /home/orca/.tmp/syzygy-full-suite-20261104.lock"
+  ],
+  "externalInterruptionReceipt": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-full/capture-interrupted-subject-updated.json",
+  "interruptionReceiptSha256": "b845d75e1de5b658e61bc134ebd3fb5c3ae0f25b738d98fc3a6e9a039bd3ec7d",
+  "externalObserverBinding": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-full/observer-binding.json",
+  "observerBindingSha256": "f7d38e93c6ed6dcd0a96c2a258aff4d1f15de2f22ce738d7540c05c9062b63cd"
+}
