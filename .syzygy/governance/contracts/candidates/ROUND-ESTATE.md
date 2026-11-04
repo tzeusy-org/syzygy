@@ -252,6 +252,15 @@ Two cautions on that figure, in both directions:
   reviewer file is stored verbatim precisely so that nobody has to cite it
   for it to remain evidence (CC-REV-6).
 
+[Observed; marked 2026-11-05] **The packet pointer in the preserved paragraph
+below is stale.** That packet held P-54…P-59 and P-66, ruled on 2026-09-07
+in [`DOCUMENTATION-ESTATE-OWNER-RULINGS-DECISION.md`](../../decisions/DOCUMENTATION-ESTATE-OWNER-RULINGS-DECISION.md);
+it never held the round-disposal question. GP-Q0 part 2 of the
+[2026-10-21 owner answers](../../decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md)
+keeps this estate in place and permits exclusion from agent routing only,
+never from citer, reliance or digest sweeps. The superseded pointer remains
+verbatim below as history:
+
 **Nothing here may be deleted or relocated by an agent.** These files sit in
 the governed plane; disposing of them is an owner decision, and the open
 question is queued in `decisions/DOCUMENTATION-ESTATE-DECISION-PACKET.md`.
