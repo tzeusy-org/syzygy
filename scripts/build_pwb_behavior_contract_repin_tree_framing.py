@@ -71,6 +71,9 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from build_pwb_behavior_contract_repin import (  # noqa: E402
     CONTRACT_ID, CONTRACT_KEYS, DECISIONS, EXACT_DIGEST_RE, PWB_SPEC, ROW,
     _contract, _count_contracts, _git_apply, sha256)
+# The act chains the first re-pin package already knows, reused rather than
+# copied: its later spec sign-offs and its later per-subject acts.
+import build_pwb_behavior_contract_repin as first_repin  # noqa: E402
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -88,11 +91,16 @@ SIGNING_TAG = "pwb-tree-framing-amendment-v1.0"
 SIGNED_BY = (f"version-tagged sign-off {SIGNING_TAG}, recorded at "
              f"{SIGNING_RECORD.as_posix()}")
 
-#: Version-tagged sign-offs performed after this package's acts that moved
-#: `spec.md` again, in act order: (sign-off record, its `spec.md` patch).
-#: Each opens a pin gap that checker R6 reports and only a later re-pin act
-#: closes; `spec_at_pin` replays the pinned bytes by reversing their patches.
-LATER_SPEC_SIGNOFFS: tuple[tuple[pathlib.Path, pathlib.Path], ...] = ()
+#: Version-tagged sign-offs performed after this package's signing sign-off
+#: that moved `spec.md` again, in act order: (sign-off record, its `spec.md`
+#: patch). Each opens a pin gap that checker R6 reports and only a later
+#: re-pin act closes; `spec_at_pin` replays the pinned bytes by reversing
+#: their patches. They are the first re-pin package's chain after
+#: `SIGNING_RECORD`, its first link.
+_SIGNING_AT = [record for record, _patch in first_repin.LATER_SPEC_SIGNOFFS].index(
+    SIGNING_RECORD)
+LATER_SPEC_SIGNOFFS: tuple[tuple[pathlib.Path, pathlib.Path], ...] = (
+    first_repin.LATER_SPEC_SIGNOFFS[_SIGNING_AT + 1:])
 
 
 @dataclass(frozen=True)
@@ -177,6 +185,16 @@ def spec_at_pin(root: pathlib.Path, later=None) -> bytes:
                          f"reversed hashes to {sha256(body)}, not the pinned "
                          f"row {want}")
     return body
+
+
+def subject_at_predecessor(root: pathlib.Path, subject: Subject) -> bytes:
+    """The subject as this package's predecessor act left it: the tree with
+    every act performed after it reversed, newest first, each from its own
+    exact digest (the policy screening-scope chain v1 onward, the registry
+    machine-ceiling act). The first re-pin package owns that chain
+    (`LATER_SUBJECT_ACTS`) and its reversal (`subject_at_act`), since its acts
+    are this package's predecessors; a move no later act explains is refused."""
+    return first_repin.subject_at_act(root, subject)
 
 
 def base_bytes(root: pathlib.Path, subject: Subject) -> bytes:
@@ -353,16 +371,20 @@ def _scratch(dest: pathlib.Path) -> None:
     The superseding records are not inputs, so once an act is performed the
     subject is replayed as the bytes the act in force bound (the tree with
     the patch reversed); `spec.md` is replayed as the pinned bytes with every
-    later signed patch reversed (`spec_at_pin`). The fixtures then mean the
-    same before and after this package's acts.
+    later signed patch reversed (`spec_at_pin`), and each subject as its
+    predecessor act left it, every later act reversed
+    (`subject_at_predecessor`). The fixtures then mean the same before and
+    after this package's acts and the later ones.
     """
     for rel in _inputs():
         (dest / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / rel, dest / rel)
     (dest / PWB_SPEC).write_bytes(spec_at_pin(ROOT))
     for subject in SUBJECTS:
+        body = subject_at_predecessor(ROOT, subject)
         if performed(ROOT, subject):
-            (dest / subject.path).write_bytes(base_bytes(ROOT, subject))
+            body = _apply(ROOT, subject, body, reverse=True)
+        (dest / subject.path).write_bytes(body)
 
 
 def _edit(rel: pathlib.Path, old: str, new: str):
@@ -592,6 +614,46 @@ def selftest() -> int:
                         replay_refused(lambda root: (root / later_record).unlink())))
         results.append(("replay fails: a later patch's added line corrupted",
                         replay_refused(_edit(later_patch, "(moved)\n", "(moved) x\n"))))
+
+        # The later-act chains, read from the real tree (read-only): each
+        # subject replays to its predecessor act's argument, and with any one
+        # link dropped the replay refuses or lands elsewhere; so does the
+        # `spec.md` replay with any one later sign-off dropped.
+        def replays_to_predecessor(subject, chain=None) -> bool:
+            kept = first_repin.LATER_SUBJECT_ACTS
+            if chain is not None:
+                first_repin.LATER_SUBJECT_ACTS = {**kept, subject.key: chain}
+            try:
+                return (sha256(subject_at_predecessor(ROOT, subject))
+                        == predecessor_digest(ROOT, subject))
+            except ValueError:
+                return False
+            finally:
+                first_repin.LATER_SUBJECT_ACTS = kept
+
+        for subject in SUBJECTS:
+            chain = first_repin.LATER_SUBJECT_ACTS.get(subject.key, ())
+            results.append((f"chain: {subject.key} replays through {len(chain)} later "
+                            "act(s) to its predecessor's argument",
+                            bool(chain) and replays_to_predecessor(subject)))
+            for at, (record, _patch) in enumerate(chain):
+                results.append((f"chain fails: {subject.key} without {record.name}",
+                                not replays_to_predecessor(
+                                    subject, chain[:at] + chain[at + 1:])))
+
+        def spec_replays(chain) -> bool:
+            try:
+                spec_at_pin(ROOT, chain)
+            except ValueError:
+                return False
+            return True
+
+        results.append((f"chain: spec.md replays through {len(LATER_SPEC_SIGNOFFS)} "
+                        "later sign-off(s) to the pinned row",
+                        bool(LATER_SPEC_SIGNOFFS) and spec_replays(LATER_SPEC_SIGNOFFS)))
+        for at, (record, _patch) in enumerate(LATER_SPEC_SIGNOFFS):
+            results.append((f"chain fails: spec.md without {record.name}", not spec_replays(
+                LATER_SPEC_SIGNOFFS[:at] + LATER_SPEC_SIGNOFFS[at + 1:])))
 
     failing = sum(0 if ok else 1 for _n, ok in results)
     for name, ok in results:
