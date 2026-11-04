@@ -1697,6 +1697,25 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                       and additive["archive"] == 0 and additive["plan"] == {"R2": 2},
                       "old": "two frozen records with literal equal subject/kind/role and distinct UTC captures",
                       "new": transaction, "fixture_commit": containing})
+        tx_output = home / "TRANSACTION.json"
+        saved_output = tx_output.read_bytes()
+        external_output = outer / "identical-output-transaction.json"
+        external_output.write_bytes(saved_output)
+        control = check(root, home) == additive
+        tx_output.unlink(); tx_output.symlink_to(external_output)
+        try:
+            prepare(root, containing, home, transaction_path=tx_input); output_reason = "unexpected-pass"
+        except Refusal as exc:
+            output_reason = str(exc)
+        finally:
+            tx_output.unlink(); tx_output.write_bytes(saved_output)
+        cases.append({"predicate": "transaction-output-symlink-is-not-input-symlink", "pass": control
+                      and output_reason == "output-artifact-symlink" and check(root, home) == additive,
+                      "old": {"output": "regular TRANSACTION.json", "sha256": digest(saved_output)},
+                      "new": {"output": "TRANSACTION.json -> owned external identical-byte copy",
+                              "input": "separate regular transaction.json; complete valid family unchanged"},
+                      "refusal": output_reason, "expected_refusal": "output-artifact-symlink",
+                      "fixture_commit": containing})
         # This population cap is independent: distinct unused glob keys can
         # exceed it while the complete transaction still fits MAX_FILE and
         # every schema, source binding and actual family remains valid.
@@ -2308,11 +2327,14 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             report_failure("adjudication-" + name, lambda values=values: operation_change(lambda v: v[paths["frozen"]][0].update(values)), "operative-consumer-binding-drift")
         restore_report_inputs()
         for label, destination in (("wrong-local-directory", root / "other-output"), ("output-symlink", outer / "linked-output"),
-                                   ("artifact-symlink", outer / "linked-artifact")):
+                                   ("artifact-symlink", outer / "linked-artifact"),
+                                   ("artifact-symlink-MOVE-TABLE.jsonl", outer / "linked-move-table"),
+                                   ("artifact-symlink-ADJUDICATION.json", outer / "linked-adjudication")):
             if label == "output-symlink":
                 real = outer / "link-target"; real.mkdir(); destination.symlink_to(real, target_is_directory=True)
-            if label == "artifact-symlink":
-                destination.mkdir(); (destination / "FAMILIES.jsonl").symlink_to(outer / "artifact-target")
+            if label.startswith("artifact-symlink"):
+                artifact = "FAMILIES.jsonl" if label == "artifact-symlink" else label.removeprefix("artifact-symlink-")
+                destination.mkdir(); (destination / artifact).symlink_to(outer / (label + "-target"))
             try:
                 report(destination); reason = "unexpected-pass"
             except Refusal as exc:
