@@ -252,6 +252,46 @@ describe('check: each rule refuses its own violation', () => {
     ['a quotation in a non-normative block', (d) => { kestrel(d).children[1].text = 'The project states: "Read on."'; }, { kind: 'quotation-in-unquotable-block', at: '$.sections[0].paragraphs[0].children[1]', blockId: 'p1b' }],
     ['a lead-in with no quotation', (d) => { d.introduction.text = 'The project states: nothing.'; d.introduction.quotations = []; }, { kind: 'lead-in-without-quote', at: '$.introduction.text', blockId: 'intro' }],
     ['a self-reported path absent at the pinned revision', (d) => { d.discovery.inspected.push('src/gone.c'); }, { kind: 'discovery-path-absent', at: '$.discovery.inspected[2]' }],
+    // syzygy-mea.10.5: a claim inside a rich element is checked as a block is, at its own path.
+    ['an altered quotation in a table cell', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'table', id: 't1', caption: 'C', columns: ['A', 'B'], rowHeaders: false, rows: [{ id: 'r1', cells: [{ kind: 'empty' }, { id: 'q1', label: 'inferred', basis: 'source', text: 'The project states: "Kestrel keeps every key on disk."', citations: [cite('c-q1', 'src/kestrel.c', 1, 1)], quotations: ['c-q1'] }] }] }); },
+      { kind: 'quotation-not-in-cited-file', at: '$.sections[0].paragraphs[2].rows[0].cells[1].text', blockId: 'q1', citationId: 'c-q1' }],
+    ['an altered quotation in a callout child', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'callout', id: 'k1', tone: 'note', title: 'T', children: [{ id: 'k1a', label: 'non-normative', text: 'Lead.', children: [{ id: 'q1', label: 'inferred', basis: 'source', text: 'The project states: "Kestrel keeps every key on disk."', citations: [cite('c-q1', 'src/kestrel.c', 1, 1)], quotations: ['c-q1'] }] }] }); },
+      { kind: 'quotation-not-in-cited-file', at: '$.sections[0].paragraphs[2].children[0].children[0].text', blockId: 'q1', citationId: 'c-q1' }],
+    ['an altered quotation in a step', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'steps', id: 's1', items: [{ id: 's1a', label: 'non-normative', text: 'First.' }, { id: 'q1', label: 'inferred', basis: 'source', text: 'The project states: "Kestrel keeps every key on disk."', citations: [cite('c-q1', 'src/kestrel.c', 1, 1)], quotations: ['c-q1'] }] }); },
+      { kind: 'quotation-not-in-cited-file', at: '$.sections[0].paragraphs[2].items[1].text', blockId: 'q1', citationId: 'c-q1' }],
+    ['an altered quotation in a definition', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'definitions', id: 'd1', entries: [{ term: 'Key', definition: { id: 'q1', label: 'inferred', basis: 'source', text: 'The project states: "Kestrel keeps every key on disk."', citations: [cite('c-q1', 'src/kestrel.c', 1, 1)], quotations: ['c-q1'] } }] }); },
+      { kind: 'quotation-not-in-cited-file', at: '$.sections[0].paragraphs[2].entries[0].definition.text', blockId: 'q1', citationId: 'c-q1' }],
+    ['an altered quotation in a card', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'cards', id: 'g1', items: [{ label: 'L', body: { id: 'g1a', label: 'non-normative', text: 'Words.' } }, { label: 'M', body: { id: 'q1', label: 'inferred', basis: 'source', text: 'The project states: "Kestrel keeps every key on disk."', citations: [cite('c-q1', 'src/kestrel.c', 1, 1)], quotations: ['c-q1'] } }] }); },
+      { kind: 'quotation-not-in-cited-file', at: '$.sections[0].paragraphs[2].items[1].body.text', blockId: 'q1', citationId: 'c-q1' }],
+    ['an altered quotation inside details', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'details', id: 'x1', summary: 'S', elements: [{ id: 'x1a', label: 'non-normative', text: 'Lead.', children: [{ id: 'q1', label: 'inferred', basis: 'source', text: 'The project states: "Kestrel keeps every key on disk."', citations: [cite('c-q1', 'src/kestrel.c', 1, 1)], quotations: ['c-q1'] }] }] }); },
+      { kind: 'quotation-not-in-cited-file', at: '$.sections[0].paragraphs[2].elements[0].children[0].text', blockId: 'q1', citationId: 'c-q1' }],
+    ['a code excerpt of more than 60 lines', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', 'src/kestrel.c', 1, 61) }); },
+      { kind: 'code-excerpt-too-long', at: '$.sections[0].paragraphs[2].citation', citationId: 'c-x1' }],
+    ['a code excerpt past the end of its file', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', 'src/kestrel.c', 1, 6) }); },
+      { kind: 'range-beyond-blob', at: '$.sections[0].paragraphs[2].citation.endLine', citationId: 'c-x1' }],
+    ['a code excerpt of a path absent at the pinned revision', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', 'src/missing.c', 1, 1) }); },
+      { kind: 'path-absent', at: '$.sections[0].paragraphs[2].citation.path', citationId: 'c-x1' }],
+    ['an angle bracket in a table caption', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'table', id: 't1', caption: 'a <b> c', columns: ['A'], rowHeaders: false, rows: [{ id: 'r1', cells: [{ kind: 'empty' }] }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].caption' }],
+    ['an ampersand in a column label', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'table', id: 't1', caption: 'C', columns: ['A &amp; B'], rowHeaders: false, rows: [{ id: 'r1', cells: [{ kind: 'empty' }] }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].columns[0]' }],
+    ['a backtick in a callout title', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'callout', id: 'k1', tone: 'note', title: 'Run `ls`', children: [{ id: 'k1a', label: 'non-normative', text: 'W.', children: [] }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].title' }],
+    ['a Markdown link in a term', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'definitions', id: 'd1', entries: [{ term: '[Key](https://x)', definition: { id: 'd1a', label: 'non-normative', text: 'W.' } }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].entries[0].term' }],
+    ['a Markdown image in a card label', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'cards', id: 'g1', items: [{ label: '![i](x.png)', body: { id: 'g1a', label: 'non-normative', text: 'W.' } }, { label: 'M', body: { id: 'g1b', label: 'non-normative', text: 'W.' } }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].items[0].label' }],
+    ['emphasis in a details summary', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'details', id: 'x1', summary: 'Read **this** first', elements: [{ id: 'x1a', label: 'non-normative', text: 'W.', children: [] }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].summary' }],
+    ['underscore emphasis in a language label', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', language: '_C_', citation: cite('c-x1', 'src/kestrel.c', 1, 1) }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].language' }],
+    ['a code excerpt of more than 60 lines of a file screening excludes', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', '.env', 1, 61) }); },
+      { kind: 'code-excerpt-too-long', at: '$.sections[0].paragraphs[2].citation', citationId: 'c-x1' }],
+    ['a quotation in a table caption', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'table', id: 't1', caption: 'The project states: \u201Cfast\u201D', columns: ['A'], rowHeaders: false, rows: [{ id: 'r1', cells: [{ kind: 'empty' }] }] }); },
+      { kind: 'label-quotation', at: '$.sections[0].paragraphs[2].caption' }],
+    ['straight quotation marks in a card label', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'cards', id: 'g1', items: [{ label: 'Say "fast"', body: { id: 'g1a', label: 'non-normative', text: 'W.' } }, { label: 'M', body: { id: 'g1b', label: 'non-normative', text: 'W.' } }] }); },
+      { kind: 'label-quotation', at: '$.sections[0].paragraphs[2].items[0].label' }],
+    ['a lead-in with no quotation marks in a details summary', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'details', id: 'x1', summary: 'The README states: it is fast', elements: [{ id: 'x1a', label: 'non-normative', text: 'W.', children: [] }] }); },
+      { kind: 'label-quotation', at: '$.sections[0].paragraphs[2].summary' }],
+    ['a presentation element in a v2 draft', (d) => { d.sections[0].paragraphs.push({ kind: 'steps', id: 's1', items: [{ id: 's1a', label: 'non-normative', text: 'A.' }, { id: 's1b', label: 'non-normative', text: 'B.' }] }); },
+      { kind: 'element-version', at: '$.sections[0].paragraphs[2]' }],
+    ['a code excerpt past the end of a file screening read and excluded', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', 'src/types.ts', 1, 3) }); },
+      { kind: 'range-beyond-blob', at: '$.sections[0].paragraphs[2].citation.endLine', citationId: 'c-x1' }],
+    ['a lead-in in capitals in a callout title', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'callout', id: 'k1', tone: 'note', title: 'THE README STATES: FAST', children: [{ id: 'k1a', label: 'non-normative', text: 'W.', children: [] }] }); },
+      { kind: 'label-quotation', at: '$.sections[0].paragraphs[2].title' }],
     ['a self-reported selection absent at the pinned revision', (d) => { d.discovery.deferred.push({ path: 'docs', reason: 'Later.' }); }, { kind: 'discovery-path-absent', at: '$.discovery.deferred[0].path' }],
   ])('reports %s', async (_name, change, expected) => {
     const run = await briefedRun();
@@ -259,6 +299,21 @@ describe('check: each rule refuses its own violation', () => {
     const result = report(await checkDraft(run, {}, deps()));
     expect(result.outcome).toBe('findings');
     expect(result.findings.filter((finding) => finding.kind !== 'schema').map(({ detail: _detail, ...rest }) => rest)).toEqual([expected]);
+  });
+
+  it('reports no range finding for an excerpt of a file screening read and excluded, within its lines, nor for a path-excluded file it never reads', async () => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', 'src/types.ts', 1, 2) }, { kind: 'code', id: 'x2', citation: cite('c-x2', '.env', 1, 5) }); }));
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result.findings).toEqual([]);
+    expect(result.outcome).toBe('passed');
+  });
+
+  it('passes plain labels, a snake_case name and a multiplication among them (syzygy-mea.10.5)', async () => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'table', id: 't1', caption: 'The max_memory option, 2 * 3 cells', columns: ['Name (short)', 'Effect: what, why?'], rowHeaders: true, rows: [{ id: 'r1', cells: [{ kind: 'empty' }, { kind: 'empty' }] }] }); }));
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result.findings.filter((finding) => finding.kind === 'label-markup')).toEqual([]);
   });
 
   it('reports a draft that is not JSON, and still freezes it as a revision', async () => {
