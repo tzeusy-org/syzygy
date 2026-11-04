@@ -1,9 +1,9 @@
 # Design: the operator-agent mode and the `syzygy dossier` commands
 
-> **Version 1.2.** Explains the requirements in
+> **Version 1.3.** Explains the requirements in
 > specs/polaris-generation/spec.md; version 1.0 was signed off by the owner
-> on 2026-10-06 and version 1.1 on 2026-10-07, and this text binds only by
-> the owner's sign-off of version 1.2. It is not an
+> on 2026-10-06, version 1.1 on 2026-10-07 and version 1.2 on 2026-10-14,
+> and this text binds only by the owner's sign-off of version 1.3. It is not an
 > implementation. It contains no code. The command surface below is a design
 > for implementation after the owner's sign-off (direction item 5); the
 > requirements are the controlling text, and doctrine, accepted contracts,
@@ -385,6 +385,49 @@ working directory and purpose). A claim the agent marks as resting on
 execution carries `basis: execution` and the identifiers of the executions
 it rests on. Quotations keep the existing lead-in form (`QUOTE_LEAD_IN`),
 and each names its citation.
+
+Since version 1.3 the schema is `polaris-dossier-local-draft-v3`, and Syzygy
+still accepts a `polaris-dossier-local-draft-v2` draft, which uses no
+element. Version 3 adds presentation elements (owner direction
+`OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04`). They sit in the existing
+`paragraphs` arrays of sections and deep dives, whose name stays. An entry
+without `kind` is the existing block. An entry with `kind` is one of the
+seven elements below. "Claim form" means every field of the existing
+block except `children`: `id`, `label`, `basis` or `reason`, the execution
+identifiers of a claim resting on execution, `text`, `citations` and
+`quotations`. "Block" means the existing block, with its own `children`.
+
+| `kind` | Fields | Limits | Renders as |
+|---|---|---|---|
+| `table` | `id`, `caption`, `columns` (column labels), `rowHeaders` (boolean), `rows`, each `{id, cells}`; a cell is a claim form or `{kind: "empty"}`, which states nothing and renders the words "no entry" | 1 to 8 columns; 1 to 40 rows; each row has exactly one cell per column | a `table` with its `caption`; each column label is a header cell scoped to its column, and with `rowHeaders` each row's first cell is a header cell scoped to its row |
+| `callout` | `id`, `tone` (`note`, `tip`, `caution` or `important`), `title`, `children` (blocks) | 1 to 12 children | an `aside` whose tone is written as a word beside the title, with its colour as a second cue only |
+| `steps` | `id`, `items` (blocks without children) | 2 to 20 items | an `ol` |
+| `definitions` | `id`, `entries`, each `{term, definition}`; the definition is a claim form | 1 to 40 entries | a `dl` |
+| `cards` | `id`, `items`, each `{label, body}`; the body is a claim form | 2 to 6 items | a list whose items are each headed by their label |
+| `details` | `id`, `summary`, `elements` (blocks, or any element but `details`) | 1 to 30 elements | `details` with its `summary`, holding no fragment target |
+| `code` | `id`, optional `language` (a short label), `citation` (`{id, path, startLine, endLine}`) | 1 to 60 lines | `pre` and `code`, the lines as Syzygy read them at the pinned revision, with their anchor |
+
+The short labels are `caption`, each column label, `title`, `term`, `label`,
+`summary` and `language`. Each is plain text of at most 120 characters, never
+a quotation, and carries no citation and no markup (no `<`, `&` or backtick
+character, and no Markdown link, image or paired emphasis mark). Every claim form inside an element is
+checked as a claim block is: its label, its citations, its quotations and,
+for `unknown`, its RFC2-24 reason. Each counts in the fidelity verdict's
+`blockSupport` by its own `id`, and each renders with its marking. Element
+`id`s, row `id`s and the code citation's `id` share the draft's one space of
+identities.
+
+A `code` element is not a claim: the agent supplies only the citation.
+Syzygy renders the cited lines from the blob it verified, as an Observed
+excerpt with the RFC7-10 anchor a verified quotation has. When the cited file
+is excluded by classification or withheld by screening, the excerpt renders
+Unknown with `excluded-content` in its place, as a quotation from that file
+would, and carries none of its bytes. A `code` element has no `blockSupport`
+entry of its own; its span is one of the cited spans the fidelity packet
+carries.
+
+Every element renders as inert static HTML. Pages carry no script, and their
+content security policy is unchanged. No meaning is carried by colour alone.
 
 ## What remains open in the implementation
 

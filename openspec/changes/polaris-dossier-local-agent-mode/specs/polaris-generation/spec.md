@@ -1,6 +1,6 @@
 # Polaris dossier local-agent mode
 
-Exact behavioral delta, version 1.2. Version 1.0 was signed off by the owner on 2026-10-06 (`.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.0.md`) and version 1.1 on 2026-10-07 (`.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.1.md`); these bytes bind only by the owner's sign-off of version 1.2. This change applies to the existing polaris-generation capability. It adds four requirements that define a second authoring mode, the operator-agent mode, beside the provider mode that the adopted requirements describe. It edits no byte of any predecessor requirement or scenario, in the base change or in the understanding amendment as amended by the tree-form adoption. For a run in the operator-agent mode it displaces or reads the predecessor text that each requirement below names, and only that text; for a run in the provider mode every predecessor requirement and scenario keeps its bytes and its meaning. The provider mode is parked by the owner direction of 2026-10-05, not withdrawn. Under the owner direction `POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05`, item 1, this change could not be signed off until the owner had adopted, by the owner's own act, an amendment to SEC-3 that permits the operator's agent session to build and run the observed project on the host. The owner adopted it on 2026-10-06 as doctrine amendment D9, on SEC-3 and the owner's attended agent session, with its credential condition (`.syzygy/governance/decisions/DOCTRINE-AMENDMENT-LOG.md`, row D9); this change cites it as D9.
+Exact behavioral delta, version 1.3. Version 1.0 was signed off by the owner on 2026-10-06 (`.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.0.md`), version 1.1 on 2026-10-07 (`.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.1.md`) and version 1.2 on 2026-10-14 (`.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md`); these bytes bind only by the owner's sign-off of version 1.3. This change applies to the existing polaris-generation capability. It adds four requirements that define a second authoring mode, the operator-agent mode, beside the provider mode that the adopted requirements describe. It edits no byte of any predecessor requirement or scenario, in the base change or in the understanding amendment as amended by the tree-form adoption. For a run in the operator-agent mode it displaces or reads the predecessor text that each requirement below names, and only that text; for a run in the provider mode every predecessor requirement and scenario keeps its bytes and its meaning. The provider mode is parked by the owner direction of 2026-10-05, not withdrawn. Under the owner direction `POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05`, item 1, this change could not be signed off until the owner had adopted, by the owner's own act, an amendment to SEC-3 that permits the operator's agent session to build and run the observed project on the host. The owner adopted it on 2026-10-06 as doctrine amendment D9, on SEC-3 and the owner's attended agent session, with its credential condition (`.syzygy/governance/decisions/DOCTRINE-AMENDMENT-LOG.md`, row D9); this change cites it as D9.
 
 ## ADDED Requirements
 
@@ -244,6 +244,8 @@ A blob that classification or screening excludes SHALL NOT be used to verify a q
 
 Syzygy SHALL render a checked draft through the existing multi-page dossier renderer. Every rendered quotation SHALL be the span Syzygy located, at render, in the blob it read and verified at the pinned revision, never the agent's copy of it and never a byte range taken on trust from a stored record. A source page SHALL be rendered only for a blob that Syzygy read and verified at the pinned revision and that screening admitted. Each anchor SHALL take RFC7-10's form: the target class is an evidence artifact identifier with integrity digest, whose identifier is the blob's object identifier as Syzygy recomputed it from the bytes it read, with its hash algorithm named, that algorithm being the one the consented revision's identifier is written in, serving as both the owning identifier and the integrity digest; the optional fragment is the byte range of the span; the target state is the pinned revision. The repository path is shown beside it as a label, never as its identity. Generated prose SHALL render in the editorial-draft state (RFC7-20), machine-marked with the operator-declared model identity and version as its inference provenance. Rendering obligations of REQ-polaris-generation-003, 004 and 012, and of REQ-polaris-generation-032 where it is adopted and applies, are unchanged.
 
+A draft MAY present its argument with presentation elements (owner direction `OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04`), standing where a claim block may stand: a table, a callout, an ordered list of steps, a list of definitions, a set of cards, a collapsible section and a code excerpt. Every claim an element carries (a table cell, a block inside a callout or a collapsible section, a step, a definition, a card's body) SHALL be a claim block for every rule of this requirement and of REQ-polaris-generation-035: it carries its own identity, label, citations and quotations; Syzygy checks it and reports its findings as for any claim block; the fidelity verdict carries an entry for it; and it renders with its label's marking. A table cell MAY instead be empty: an empty cell states nothing, carries no label, citation or quotation, and SHALL render with the visible words "no entry", never as a blank a reader could take for a negative; an absence or a negative the draft means to state SHALL be written as a claim in that cell, Inferred with its citations or Unknown with its reason. An element's short labels (a table caption, a column heading, a callout title, a defined term, a card label, a collapsible section's summary, a code excerpt's language) are presentation: each is plain text of at most 120 characters that names what it heads; it SHALL carry no citation and no quotation, SHALL state no fact about the subject, carries no epistemic label of its own and SHALL NOT render as Observed. Syzygy SHALL report a finding for a short label longer than 120 characters or one that carries a citation, a quotation or markup (a `<`, `&` or backtick character, or a Markdown link, image or paired emphasis mark); that a label states no fact is the agent's report, open to the fidelity and rendered-design reviews. A code excerpt carries no text of the agent's: it SHALL name one citation of 1 to 60 lines, and Syzygy SHALL report a repair finding for one of more; Syzygy SHALL render those lines from the blob it read and verified at the pinned revision, byte for byte, as a quotation Syzygy has verified, labelled Observed, with an anchor in the form above whose fragment is the lines' byte range; the citation rules and the rule for a blob that classification or screening excludes apply to it as to a quotation, so that for an excluded blob the excerpt SHALL render Unknown with `excluded-content` in its place, carrying none of the blob's bytes, and its exclusion is not a repair finding. Syzygy SHALL render every element through the same renderer as inert static HTML, in the HTML element whose meaning matches it (a table whose header cells are scoped to their row or column, an aside, an ordered list, a description list, a list whose items are each headed by their label, a details element with its summary, preformatted code), with no script and no change to the pages' content security policy; a callout's tone SHALL be stated in its words, never by colour alone; and no fragment target SHALL sit inside a collapsible section. An element adds no read, no source and no label beyond those of the claims it carries and the excerpt Syzygy reads.
+
 ID: REQ-polaris-generation-034
 Source: RFC7-2; governing warrants below.
 Scope: v1-mandatory
@@ -296,13 +298,49 @@ Scope: v1-mandatory
 - **THEN** the resubmission is a new revision whose check counts against the repair-cycle limit, and earlier check results and dependent reviews are retired
 - **AND** each finding, its repair and both revision identities remain traceable
 
+#### Scenario: Claim inside a presentation element checked as a block
+
+- **WHEN** a table cell, a block in a callout or a collapsible section, a step, a definition or a card's body is unlabelled, is Inferred without a citation, is Unknown without a reason from the closed list, or carries a quotation that fails
+- **THEN** Syzygy reports the finding for that claim by its own identity, as for any claim block
+- **AND** each claim that passes renders with its label's marking and has its own entry in the fidelity verdict
+
+#### Scenario: Short label carries no claim
+
+- **WHEN** an element's caption, column heading, title, term, card label, summary or language is longer than 120 characters, or carries a citation, a quotation or markup
+- **THEN** Syzygy reports a finding for that element's label
+- **AND** a label that passes renders as plain text with no label marking and no anchor
+
+#### Scenario: Code excerpt rendered from Syzygy's read
+
+- **WHEN** a draft carries a code excerpt whose citation names at most 60 lines of a blob that Syzygy read and verified at the pinned revision and screening admitted
+- **THEN** Syzygy renders those lines from its own read as an Observed quotation with an anchor whose target class is an evidence artifact identifier with integrity digest
+- **AND** no text the agent supplied appears in the excerpt, and a later change to the clone's working tree does not alter it
+
+#### Scenario: Code excerpt over its limit
+
+- **WHEN** a code excerpt's citation names more than 60 lines, or lines beyond the end of the blob
+- **THEN** Syzygy reports a repair finding for that excerpt's citation
+- **AND** the draft does not proceed to review until a resubmitted revision passes
+
+#### Scenario: Code excerpt of an excluded file
+
+- **WHEN** a code excerpt cites a blob that classification or screening excludes
+- **THEN** the excerpt renders Unknown with `excluded-content` in its place and carries none of the blob's bytes
+- **AND** its exclusion is not a repair finding
+
+#### Scenario: Presentation element rendered inert
+
+- **WHEN** a checked draft that uses presentation elements is rendered
+- **THEN** each element renders as the HTML element whose meaning matches it, with header cells scoped, no script and the content security policy unchanged
+- **AND** each callout states its tone in words, each empty table cell shows the words "no entry", and no fragment target lies inside a collapsible section
+
 Form: event-response.
 
-- **Case:** Submit controlled drafts against a fixture repository at a pinned commit, varying each quotation, citation, label, block kind, understanding item, execution marking and screening outcome independently, including exact, normalised, altered, elided, joined, out-of-range and excluded-file quotations, and altering recorded byte ranges between check and render.
-- **Observable:** The issued brief, the repair findings, the recorded byte ranges, the rendered quotations, anchors, understanding record and source pages, and the labels in human and machine output.
-- **Oracle:** Expected findings and byte ranges computed from the fixture blobs outside the checker, by an independent byte search over the fixture's own normalised text; expected labels, citation outcomes and Unknown reasons fixed in the fixture.
+- **Case:** Submit controlled drafts against a fixture repository at a pinned commit, varying each quotation, citation, label, block kind, understanding item, execution marking and screening outcome independently, including exact, normalised, altered, elided, joined, out-of-range and excluded-file quotations, and altering recorded byte ranges between check and render; and with presentation elements, varying each claim an element carries, each short label's length, citations and markup, and each code excerpt's line count and screening outcome.
+- **Observable:** The issued brief, the repair findings, the recorded byte ranges, the rendered quotations, anchors, understanding record and source pages, and the labels in human and machine output; the rendered elements, their HTML element names and header-cell scopes, the pages' scripts and content security policy, and the fidelity verdict's entries.
+- **Oracle:** Expected findings and byte ranges computed from the fixture blobs outside the checker, by an independent byte search over the fixture's own normalised text; expected labels, citation outcomes and Unknown reasons fixed in the fixture; and for presentation elements the expected HTML element names, header-cell scopes, empty-cell text, short-label findings and the absence of any script or content security policy change fixed in the fixture, with each code excerpt's expected bytes read from the fixture blob outside the renderer.
 - **Oracle independence:** The fixture's expected outcomes are written before the checker runs and are not derived from the checker's output.
-- **Falsifier:** An altered, elided, joined or out-of-range quotation passes; a rendered quotation comes from the agent's text, the working tree or an altered stored range; an anchor names a class other than an evidence artifact identifier with integrity digest, or an identifier Syzygy did not recompute; a source page appears for an excluded or unread blob; a finding carries excluded bytes; an agent-labelled Observed claim renders as Observed; a non-normative block carries an anchor; a draft without its understanding record passes; a stale check or review survives a resubmission.
+- **Falsifier:** An altered, elided, joined or out-of-range quotation passes; a rendered quotation comes from the agent's text, the working tree or an altered stored range; an anchor names a class other than an evidence artifact identifier with integrity digest, or an identifier Syzygy did not recompute; a source page appears for an excluded or unread blob; a finding carries excluded bytes; an agent-labelled Observed claim renders as Observed; a non-normative block carries an anchor; a draft without its understanding record passes; a stale check or review survives a resubmission; a claim inside an element escapes a check a claim block meets, lacks its label marking or its entry in the fidelity verdict; an empty table cell renders as a blank, or with a label marking or an anchor; a short label over 120 characters, or carrying a citation, a quotation or markup, passes, or renders with a label marking or an anchor; a code excerpt renders the agent's text, more than 60 lines, or any byte of an excluded blob; an element renders a script, changes the content security policy, states a callout's tone by colour alone, or holds a fragment target inside a collapsible section.
 
 ```yaml
 warrants:
@@ -310,7 +348,7 @@ warrants:
   doctrine: [SEC-3, SEC-5, VIS-1, VIS-2, VIS-3]
   contracts: [RFC2-24, RFC7-2, RFC7-9, RFC7-10, RFC7-19, RFC7-20]
   policies: [CC-SPEC-2, CC-SPEC-4]
-  decisions: [POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-2026-10-05]
+  decisions: [POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05, POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-2026-10-05, OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04]
   topology: []
   parent_requirements: [REQ-polaris-generation-002, REQ-polaris-generation-003, REQ-polaris-generation-004, REQ-polaris-generation-006, REQ-polaris-generation-012, REQ-polaris-generation-019, REQ-polaris-generation-025, REQ-polaris-generation-033]
 ```
