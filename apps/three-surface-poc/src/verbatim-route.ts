@@ -27,12 +27,11 @@
 // refused before any of its bytes move; the production runner also holds
 // stdout to that envelope and captures Git's stderr, so neither an
 // over-envelope body nor a Git diagnostic reaches the daemon.
-import { execFileSync } from 'node:child_process';
-
 import {
   PWB_RESOURCE_LIMITS,
   PWB_SECRET_POLICY,
   compileDetectors,
+  createGitRunner,
   createResourceLedger,
   deniedPathReason,
   detectSecrets,
@@ -53,8 +52,8 @@ import type { VerbatimLeafReader, VerbatimRefusal } from './capability-detail.js
  * captured on the thrown error, never inherited by the daemon.
  */
 export function gitBlobReaderFor(repoRoot: string, limits: PwbResourceLimits = PWB_RESOURCE_LIMITS): GitRunner {
-  return (args) =>
-    new Uint8Array(execFileSync('git', [...args], { cwd: repoRoot, maxBuffer: limits.maxBytesPerSource, stdio: ['ignore', 'pipe', 'pipe'] }));
+  const runGit = createGitRunner({ prefix: [], cwd: repoRoot, maxBuffer: limits.maxBytesPerSource, stdio: ['ignore', 'pipe', 'pipe'] });
+  return (args) => new Uint8Array(runGit(args));
 }
 
 const OBJECT_SIZE = /^(0|[1-9][0-9]*)\n?$/;

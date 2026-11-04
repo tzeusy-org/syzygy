@@ -3,7 +3,7 @@ import { mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'no
 import { dirname, join, posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { reach, readModule, WORKSPACE } from '../../../packages/polaris-generation-core/src/workspace-reach.testkit.js';
 import {
@@ -91,6 +91,26 @@ function pocStartInputs(): { readonly projects: readonly string[]; readonly exac
 }
 
 describe('read-only Git observation', () => {
+  it('refreshes inherited Git environment per call while overriding optional locks across roots', () => {
+    const one = repositoryWithFile('one.ts');
+    const two = repositoryWithFile('two.ts');
+    const oneRevision = git(one, ['rev-parse', 'HEAD']);
+    const twoRevision = git(two, ['rev-parse', 'HEAD']);
+    try {
+      vi.stubEnv('GIT_OPTIONAL_LOCKS', 'invalid-sentinel');
+      vi.stubEnv('GIT_DIR', join(two, '.git'));
+      expect(observeGitRepository(one).revision).toBe(twoRevision);
+      vi.stubEnv('GIT_DIR', join(one, '.git'));
+      const observed = observeGitRepository(one);
+      expect(observed.revision).toBe(oneRevision);
+      expect(observed.clean).toBe(true);
+      expect(observed.changedPaths).toEqual([]);
+      expect(resolvePwbRepositoryBinding(one, { approvedLocator: one }).kind).toBe('bound');
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
   it('binds only the approved resolved locator and its exact Git common directory', () => {
     const result = resolvePwbRepositoryBinding('/configured/butlers-link', {
       approvedLocator: '/approved/butlers',

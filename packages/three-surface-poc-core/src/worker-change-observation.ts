@@ -1,4 +1,4 @@
-import { execFileSync } from 'node:child_process';
+import { createGitRunner } from './git-runner.js';
 
 const WORKER_CHANGE_LIFECYCLE_STATES = ['planned', 'active', 'changed-or-merged'] as const;
 
@@ -63,11 +63,12 @@ interface ObserveWorkerChangeInput {
 }
 
 function defaultRunGit(repoRoot: string, args: readonly string[]): string {
-  return execFileSync('git', ['--no-optional-locks', '-C', repoRoot, ...args], {
+  return createGitRunner({
+    prefix: ['--no-optional-locks', '-C', repoRoot],
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024,
     stdio: ['ignore', 'pipe', 'pipe'],
-  });
+  })(args);
 }
 
 const FIELD_SEP = '\x1f';

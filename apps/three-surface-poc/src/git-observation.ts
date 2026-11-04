@@ -1,4 +1,4 @@
-import { execFileSync } from 'node:child_process';
+import { createGitRunner } from '@syzygy/three-surface-poc-core';
 import { realpathSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { sha256 } from '@syzygy/support';
@@ -26,11 +26,12 @@ export interface GitObservation {
 }
 
 function readGit(root: string, args: readonly string[]): string {
-  return execFileSync('git', ['--no-optional-locks', '-C', root, ...args], {
+  return createGitRunner({
+    prefix: ['--no-optional-locks', '-C', root],
     encoding: 'utf8',
-    env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' },
+    env: () => ({ ...process.env, GIT_OPTIONAL_LOCKS: '0' }),
     stdio: ['ignore', 'pipe', 'ignore'],
-  });
+  })(args);
 }
 
 export function resolvePwbRepositoryBinding(

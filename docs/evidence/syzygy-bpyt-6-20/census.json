@@ -1,0 +1,69 @@
+{
+  "sourceCommit": "f5487c186626513724e1eff28a2789a4d78c154c",
+  "method": "TypeScript call-expression walk, independently compared to lexical count over frozen files",
+  "fileDenominator": 6,
+  "profileDenominator": 7,
+  "adjacentExceptions": 1,
+  "originalFiveSeams": [
+    "worker-change-observation/defaultRunGit",
+    "governance-inputs/defaultRunGit",
+    "governance-inputs/defaultReadGitBlob",
+    "git-observation/readGit",
+    "code-structure/defaultRunGit"
+  ],
+  "baselineDirectCalls": 6,
+  "baselineSecondMethod": 6,
+  "currentDirectCalls": 0,
+  "currentFactoryCalls": 6,
+  "remainder": "code-structure delegates via existing gitRunnerFor; isolated batch retains its distinct protocol/security options; no repository-wide claim",
+  "rows": [
+    {
+      "path": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+      "baselineExecCalls": 1,
+      "currentExecCalls": 0,
+      "currentFactoryCalls": 1,
+      "baselineLexicalCallCount": 1,
+      "currentSha256": "707eeacd65c9b86a987cfa4519e03e64716b08f7fe9f9b4d7930cd1ec374b53d"
+    },
+    {
+      "path": "apps/three-surface-poc/src/governance-inputs.ts",
+      "baselineExecCalls": 2,
+      "currentExecCalls": 0,
+      "currentFactoryCalls": 2,
+      "baselineLexicalCallCount": 2,
+      "currentSha256": "492965ca0af3477062bf5bd6780bc259e1036a7e98991d73f4651d778c7c19a0"
+    },
+    {
+      "path": "apps/three-surface-poc/src/git-observation.ts",
+      "baselineExecCalls": 1,
+      "currentExecCalls": 0,
+      "currentFactoryCalls": 1,
+      "baselineLexicalCallCount": 1,
+      "currentSha256": "3f41b141d85422e14d60122cf06b53c7d66cf095c52b483b78fec5dbb7ccacd8"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/code-structure.ts",
+      "baselineExecCalls": 0,
+      "currentExecCalls": 0,
+      "currentFactoryCalls": 0,
+      "baselineLexicalCallCount": 0,
+      "currentSha256": "d91d5b4fda54cfdc79b2fb90261e96bdcb56bc4acd39dcd22cd7c506e6aabe97"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+      "baselineExecCalls": 1,
+      "currentExecCalls": 0,
+      "currentFactoryCalls": 1,
+      "baselineLexicalCallCount": 1,
+      "currentSha256": "fe9f87dd5374b5c5ad7b9cc92a52a8722665de017fd72bf13c2a308797fdf8e4"
+    },
+    {
+      "path": "apps/three-surface-poc/src/verbatim-route.ts",
+      "baselineExecCalls": 1,
+      "currentExecCalls": 0,
+      "currentFactoryCalls": 1,
+      "baselineLexicalCallCount": 1,
+      "currentSha256": "9c42c313b5c2ebc2934f180c5840af48cef6f4a994a57c494b551497f3572eb3"
+    }
+  ]
+}

@@ -86,6 +86,26 @@ describe('worker-change observer', () => {
     });
   });
 
+  it('keeps Node replacing decode for a non-UTF-8 commit subject and never verifies activity', () => {
+    const root = initRepo();
+    const parent = git(root, ['rev-parse', 'HEAD']);
+    writeSeam(root, 'x = 2\n');
+    git(root, ['add', '-A']);
+    const tree = git(root, ['write-tree']);
+    const commit = execFileSync('git', ['-C', root, '-c', 'i18n.commitEncoding=ISO-8859-1', 'commit-tree', tree, '-p', parent], {
+      input: Buffer.from('subject [bu-1] caf\xff\n', 'latin1'), encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'],
+    }).trim();
+    // Request raw log bytes: Git's configured output encoding otherwise repairs this fixture itself.
+    git(root, ['config', 'i18n.logOutputEncoding', 'ISO-8859-1']);
+    git(root, ['update-ref', 'refs/remotes/origin/main', commit]);
+    const result = observeWorkerChange({ repoRoot: root, beadId: 'bu-1', seam: { sourcePath: '.', testPath: '.' }, capturedAt: '2026-08-30T00:00:00Z' });
+    expect(result.kind).toBe('observed');
+    if (result.kind !== 'observed') throw new Error(result.reason);
+    expect(result.state).toBe('changed-or-merged');
+    expect(result.verification).toBe('not-verified');
+    expect(result.commit?.subject).toBe('subject [bu-1] caf\ufffd');
+  });
+
   it('renders planned when the Bead exists but no matching git activity is observed', () => {
     const root = initRepo();
     const result = observeWorkerChange({

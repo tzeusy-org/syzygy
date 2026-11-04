@@ -22,6 +22,7 @@ export * from './body-read-authority.js';
 export * from './authority-disclosure.js';
 export * from './project-shape-observer.js';
 export * from './git-tree.js';
+export { createGitRunner } from './git-runner.js';
 export * from './project-shape-manifest.js';
 export * from './pwb-types.js';
 export * from './project-shape-observation.js';
