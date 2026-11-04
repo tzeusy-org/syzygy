@@ -48,6 +48,9 @@ export interface QuoteBlock { readonly id: string; readonly text: string; readon
 
 const NAMED_ENTITIES: Readonly<Record<string, string>> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: '\u00a0' };
 
+/** Kept apart from dossier-page-scan.ts `decodeHtmlText` on purpose (syzygy-bpyt.8.41, GP-Q0): it normalises source and quotation text for
+ * quote location, so no digit cap (leading zeros still decode) and `&#0;` stays literal, keeping NUL out of a located quote.
+ * `entity-decoder-divergence.test.ts` pins where they differ. */
 function decodeEntity(whole: string, body: string): string {
   if (body[0] !== '#') return NAMED_ENTITIES[body] ?? whole;
   const code = body[1] === 'x' || body[1] === 'X' ? Number.parseInt(body.slice(2), 16) : Number.parseInt(body.slice(1), 10);
