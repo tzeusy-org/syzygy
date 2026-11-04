@@ -37,7 +37,7 @@ export interface ScannedClaim {
   readonly hasQuote: boolean;
   /** The claim element's text as a reader sees it (entities decoded, tags removed). */
   readonly text: string;
-  /** Source ids named by `Read source <id>` anchors inside the claim, in page order. */
+  /** Source ids named by `data-source-id` or `Read source <id>` anchors inside the claim, in page order. */
   readonly citedSourceIds: readonly string[];
 }
 export interface ScannedQuote { readonly sourceId: string | null; readonly start: string | null; readonly end: string | null; readonly text: string }
@@ -117,8 +117,9 @@ export function scanDossierPage(html: string): ScannedPage {
       claim = { id: claimId, epistemic: attrs.has('data-epistemic') ? attrs.get('data-epistemic')! : null, hasQuote: false, text: '', citedSourceIds: [] };
       claims.push(claim);
     }
-    const cited = name === 'a' ? /^Read source (.+)$/u.exec(attrs.get('aria-label') ?? '') : null;
-    if (cited !== null) for (const open of stack) if (open.claim !== null) open.claim.citedSourceIds.push(cited[1]!);
+    // A citation names its source by `data-source-id` (the dossier's numbered links) or by a `Read source <id>` label (the draft preview).
+    const cited = name !== 'a' ? null : attrs.get('data-source-id') ?? /^Read source (.+)$/u.exec(attrs.get('aria-label') ?? '')?.[1] ?? null;
+    if (cited !== null) for (const open of stack) if (open.claim !== null) open.claim.citedSourceIds.push(cited);
     let quote: { text: string } | null = null;
     if (attrs.has('data-quote-source') || attrs.has('data-quote-start') || attrs.has('data-quote-end')) {
       for (const open of stack) if (open.claim !== null) open.claim.hasQuote = true;

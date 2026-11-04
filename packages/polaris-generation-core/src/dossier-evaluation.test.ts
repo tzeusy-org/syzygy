@@ -357,4 +357,11 @@ describe('report subject (rule 11)', () => {
       { id: 'c2', epistemic: 'unknown', hasQuote: false, text: 'No links here. [g]', citedSourceIds: [] },
     ]);
   });
+  it('reads a numbered citation\'s source from data-source-id, before any Read source label (R-MEA10-RENDER-READABILITY-9070-1 P6)', () => {
+    const html = '<main><p data-claim-id="c1" data-epistemic="inferred">A claim. <a class="cite" href="x" data-source-id="src-a" aria-label="Source 1: README.md">[1]</a>'
+      + ' <a class="cite" href="y" data-source-id="src-b" aria-label="Read source src-z">[2]</a> <a href="z" aria-label="Read source src-c">[src-c]</a></p></main>';
+    expect(scanDossierPage(html).claims).toEqual([
+      { id: 'c1', epistemic: 'inferred', hasQuote: false, text: 'A claim. [1] [2] [src-c]', citedSourceIds: ['src-a', 'src-b', 'src-c'] },
+    ]);
+  });
 });
