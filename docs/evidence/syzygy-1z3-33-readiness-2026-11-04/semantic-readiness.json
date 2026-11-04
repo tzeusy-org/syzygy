@@ -1,0 +1,348 @@
+{
+  "kind": "PWB pre-invitation semantic-readiness evidence",
+  "task": "syzygy-1z3.33",
+  "composedOn": "2026-11-04",
+  "mechanicalReadiness": "NOT READY",
+  "ownerWalkthroughExecutionRecord": "not supplied by these agent-side probes",
+  "ownerJudgment": "not supplied; no met/not-met judgment inferred",
+  "ownerActValidity": "not evaluated by this record; preflight failure is not an act-validity case",
+  "scope": "Retained owner-run metadata and pinned Syzygy implementation only. No new observed-target body reads, capture reads, provider calls, target execution, consent changes or product fixes.",
+  "subjects": [
+    {
+      "record": "pwb-p4-5-fresh-checkout-demo-2026-11-04-1z3-33.json",
+      "sha256": "b2528f052b0f77421cd45ee26de1cbb4c36d610ba6aa6327abd1c3771838070f",
+      "bytes": 170431
+    },
+    {
+      "record": "polaris-keyboard-sweep-2026-11-04-1z3-33.json",
+      "sha256": "e2b593aaa3f4f77565c8ac0774de1a1386deb1fbeabae7d50c4566c0ee7ccf49",
+      "bytes": 2406
+    },
+    {
+      "record": "owner-run-20261104201253.log",
+      "sha256": "8b8f35b755b9e7110192b32510e4fe2a1d97bb799d7a7ba06b4b329e3de4a335",
+      "bytes": 2741
+    }
+  ],
+  "sourceSubjects": [
+    {
+      "path": "apps/three-surface-poc/src/walkthrough-preflight.ts",
+      "sha256": "6d8f7bb223778be22848b5662f5d4d91165eb4c0e4a63343ffed0dea46842056"
+    },
+    {
+      "path": "apps/three-surface-poc/src/fresh-checkout-demo-main.ts",
+      "sha256": "b59ed25c6faddc6753e6f5708b1243896f475b3105b0e7aeb9daab2b53b1a501"
+    },
+    {
+      "path": "apps/three-surface-poc/src/fresh-checkout-verdict.ts",
+      "sha256": "fe3ff0f187080d862b25d8a24cb0cd01be5ff8733a7f1e8755dba0e07abd0d08"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-manifest.ts",
+      "sha256": "c37a75add8ddb02350282f0e5b67641fbb6aba1da267ff90846f50463c477c24"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-extraction.ts",
+      "sha256": "eb2bea76eec75516210d19c1a91ab28ba952523d0a3add97fdebe6cd4a0b6ffe"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-coverage.ts",
+      "sha256": "365cd2067c6d77a144f107403fb794aa61bf4b568a9794def5edf6112ed4e7a0"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-model.ts",
+      "sha256": "0f6129a3dd59f6d59cc8f4e188a70f5f13554a7e1e5261fa5d6006cbd8c3a2e2"
+    }
+  ],
+  "pins": {
+    "syzygyHead": "99040a5ce7096b07a753a792ba530cf7260551a9",
+    "syzygyTree": "566126af5c3f09446b9b9664fc193ce1cd430117",
+    "surfaceTrees": {
+      "apps/three-surface-poc/src": "01906e526d8398a9908f35b15c16ffffc8ad29a7",
+      "packages/three-surface-poc-core/src": "64486223607249ddf69bfb87ac72e6e81596854d"
+    },
+    "butlersRevision": "9e28384a4e6ea8a2a2218a9472d450672fffd03f",
+    "surfaceVersion": "polaris@649194529c7f",
+    "walkthroughEvaluationIdentity": "pwb-eval-e2ffd1ff876c7cd29e6de929",
+    "inputsDigest": "074f778c64dfbd69da305ac1368955462bbc2d31c2ae578a557c083892eef214",
+    "ingress": {
+      "direct": "private loopback daemon, GET /polaris",
+      "tailnet": "same probe daemon with Host: tzeusy.parrot-hen.ts.net; a Host-header mount probe, not a remote tailnet connection"
+    }
+  },
+  "evaluationInstances": {
+    "sameCapturedEvaluation": false,
+    "keyboardSweep": {
+      "evaluationIdentity": "repository:butlers-configured-poc:9e28384a4e6ea8a2a2218a9472d450672fffd03f|working-tree:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855|observer:99040a5ce7096b07a753a792ba530cf7260551a9|inputs:sha256:074f778c64dfbd69da305ac1368955462bbc2d31c2ae578a557c083892eef214|observed:2026-11-04T12:13:04.918Z",
+      "capturedAt": "2026-11-04T12:18:19.184Z",
+      "pageSha256ByMount": {
+        "direct": "733832b9bb2a83d16f2c37197f7efe0afd99a4fd57d697a8df8faab8d1bab98e",
+        "tailnet": "317c55e5ff9b4ba9bec1f85a39f59d8da7ca800db464b04f869e461caf22640d"
+      }
+    },
+    "freshCheckoutDemo": {
+      "snapshot": "repository:butlers-configured-poc:9e28384a4e6ea8a2a2218a9472d450672fffd03f|working-tree:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855|observer:99040a5ce7096b07a753a792ba530cf7260551a9|inputs:sha256:074f778c64dfbd69da305ac1368955462bbc2d31c2ae578a557c083892eef214",
+      "asOf": "2026-11-04T12:20:16.007Z",
+      "capturedAt": "2026-11-04T12:20:50.433Z",
+      "polarisSha256": "d40afe1ac20cec5efb601f5d83d4393f3a88064d8e58cd302e7e82d021d932c9"
+    },
+    "interpretation": "Same pinned code, target revision, inputs digest and walkthrough binding; different observation instants and served-body hashes. Keyboard success does not establish keyboard results over the demo capture bytes."
+  },
+  "originComparison": {
+    "ref": "origin/main",
+    "observedCommit": "4aa2b7527f32e776142b02795adec7976d9c60f2",
+    "observedOn": "2026-11-04",
+    "sourceEqualsOrigin": false,
+    "changedSurfaceSourcePaths": [
+      "apps/three-surface-poc/src/main.test.ts",
+      "apps/three-surface-poc/src/polaris-accessible-names.browser.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "apps/three-surface-poc/src/polaris-source-route.test.ts",
+      "apps/three-surface-poc/src/test-project-shape-fixture.ts",
+      "apps/three-surface-poc/src/verbatim-route.test.ts",
+      "apps/three-surface-poc/src/verbatim-route.ts",
+      "apps/three-surface-poc/src/walkthrough-preflight.test.ts",
+      "packages/three-surface-poc-core/src/git-object-reader.ts"
+    ],
+    "currency": "Local ref as inspected during composition, not a live remote assertion. Retained probes do not validate later code."
+  },
+  "preflight": {
+    "ready": false,
+    "findings": [
+      {
+        "limb": "account-statement-unbacked",
+        "detail": "v1-scope: label Unknown, empty statement, no source anchor; v1-success: label Unknown, empty statement, no source anchor"
+      },
+      {
+        "limb": "population-empty",
+        "detail": "catalog-entry: 0 modeled"
+      },
+      {
+        "limb": "population-unreconciled",
+        "detail": "catalog-entry: denominator Unknown (excluded-content)"
+      }
+    ],
+    "observed": {
+      "accountStatementsBacked": 4,
+      "populations": {
+        "principle": {
+          "modeled": 7,
+          "denominator": 7,
+          "rows": 7
+        },
+        "success-criterion": {
+          "modeled": 16,
+          "denominator": 16,
+          "rows": 16
+        },
+        "catalog-entry": {
+          "modeled": 0,
+          "denominator": null,
+          "rows": 0
+        },
+        "topology-component": {
+          "modeled": 58,
+          "denominator": 58,
+          "rows": 58
+        }
+      },
+      "exactRequirement": {
+        "identity": "repository:butlers-configured-poc@9e28384a4e6ea8a2a2218a9472d450672fffd03f:openspec/specs/switchboard-identity/spec.md#c034dd87a3ab65d62c72f1bdf0a4d5fb3edf6c2a",
+        "requirements": 6
+      },
+      "unknownsVisible": 18,
+      "unknownsMachine": 18,
+      "sourceRoutesLinked": 205,
+      "fragmentLinks": 634,
+      "claimTuples": 616
+    }
+  },
+  "invitationChecks": {
+    "sixSourceBackedAnswers": {
+      "required": 6,
+      "backed": 4,
+      "met": false,
+      "unbackedKeys": [
+        "v1-scope",
+        "v1-success"
+      ]
+    },
+    "nonEmptyReconciledPopulations": {
+      "met": false,
+      "populations": {
+        "principle": {
+          "modeled": 7,
+          "denominator": 7,
+          "rows": 7
+        },
+        "success-criterion": {
+          "modeled": 16,
+          "denominator": 16,
+          "rows": 16
+        },
+        "catalog-entry": {
+          "modeled": 0,
+          "denominator": null,
+          "rows": 0
+        },
+        "topology-component": {
+          "modeled": 58,
+          "denominator": 58,
+          "rows": 58
+        }
+      }
+    },
+    "reachableVerbatimRequirement": {
+      "metInDemo": true,
+      "identity": "repository:butlers-configured-poc@9e28384a4e6ea8a2a2218a9472d450672fffd03f:openspec/specs/switchboard-identity/spec.md#c034dd87a3ab65d62c72f1bdf0a4d5fb3edf6c2a",
+      "requirements": 6
+    },
+    "legitimateVisibleUnknown": {
+      "metInDemo": true,
+      "visible": 18,
+      "machine": 18
+    },
+    "sourcePaths": {
+      "linkedInDemo": 205,
+      "unresolvedFindingReported": false
+    },
+    "keyboard": {
+      "metInSeparateSweep": true,
+      "mounts": [
+        {
+          "mount": "direct",
+          "measuredOn": {
+            "path": "/polaris",
+            "host": "127.0.0.1:43325",
+            "status": 200
+          },
+          "bytes": 1405107,
+          "sha256": "733832b9bb2a83d16f2c37197f7efe0afd99a4fd57d697a8df8faab8d1bab98e",
+          "population": 1117,
+          "reached": 1117,
+          "activations": 634,
+          "disclosures": {
+            "population": 51,
+            "opened": 50
+          },
+          "contrastMeasured": 13677,
+          "violations": 0,
+          "violationsByKind": {},
+          "firstViolations": []
+        },
+        {
+          "mount": "tailnet",
+          "measuredOn": {
+            "path": "/polaris",
+            "host": "tzeusy.parrot-hen.ts.net",
+            "status": 200
+          },
+          "bytes": 1411527,
+          "sha256": "317c55e5ff9b4ba9bec1f85a39f59d8da7ca800db464b04f869e461caf22640d",
+          "population": 1117,
+          "reached": 1117,
+          "activations": 634,
+          "disclosures": {
+            "population": 51,
+            "opened": 50
+          },
+          "contrastMeasured": 13677,
+          "violations": 0,
+          "violationsByKind": {},
+          "firstViolations": []
+        }
+      ],
+      "totals": {
+        "mounts": 2,
+        "violations": 0
+      }
+    },
+    "freshCloneDemo": {
+      "invariants": [
+        "clone-head-matches-source",
+        "install",
+        "build",
+        "test",
+        "machine-refused-without-credential",
+        "machine-served-with-credential",
+        "human-routes-served",
+        "source-route-served",
+        "tailnet-mount-served",
+        "presentation-served-with-credential",
+        "browser-origin-refused",
+        "butlers-revision-matches-model",
+        "shape-observed",
+        "authority-admits",
+        "parity",
+        "limit-breaches",
+        "preflight-ready",
+        "daemon-exit-clean",
+        "evidence-written"
+      ],
+      "healthy": false,
+      "failed": [
+        "preflight-ready"
+      ]
+    },
+    "independentExactHeadReview": "not supplied by these probes; coordinator must retain a separate independent review",
+    "repairConfirmation": "not established by this evidence; failed semantic readiness remains open",
+    "freezeAdministration": "not established by this run; owner direction controls timing and release conditions"
+  },
+  "processOutcomes": {
+    "source": "owner-run-20261104201253.log",
+    "wrapperExit": 0,
+    "keyboardSweepExit": 0,
+    "freshCheckoutDemoExit": 1,
+    "interpretation": "Wrapper captures each child failure and continues; its exit code is not readiness."
+  },
+  "diagnosis": {
+    "observed": {
+      "v1Source": {
+        "path": "about/heart-and-soul/v1.md",
+        "label": "Unknown",
+        "reason": "excluded-content"
+      },
+      "accountClass": {
+        "denominator": {
+          "kind": "unknown",
+          "reasons": [
+            "excluded-content"
+          ]
+        },
+        "modeled": 4,
+        "unknown": 0,
+        "contradicted": 0,
+        "sourcesWithUnknownDenominator": 1,
+        "label": "Unknown"
+      },
+      "catalogClass": {
+        "denominator": {
+          "kind": "unknown",
+          "reasons": [
+            "excluded-content"
+          ],
+          "unenumerated": {
+            "reason": "unenumerated-heading",
+            "headings": 1
+          }
+        },
+        "modeled": 0,
+        "unknown": 0,
+        "contradicted": 0,
+        "sourcesWithUnknownDenominator": 1,
+        "label": "Unknown"
+      }
+    },
+    "inferred": "The pinned manifest assigns both V1 account answers and catalog extraction to v1.md. Excluded-content or failed class extraction can yield Unknown coverage; the model emits missing account sections without statement or anchors, and preflight correctly rejects these plus the empty/unreconciled catalog.",
+    "unknown": "Exact exclusion trigger and failing-class details are not retained in this demo summary. excluded-content alone does not distinguish classification refusal from extraction failure; catalog also retains one unenumerated heading. No detector, source line, target-content repair or policy defect is asserted."
+  },
+  "remainingGates": [
+    "Determine the excluded V1 source/class outcome using a bounded authorized metadata-only diagnostic, without publishing body text or detector matches.",
+    "Any source, policy, registry, specification or product repair requires its existing or new applicable authority and independent confirmation; this evidence grants none.",
+    "At a chosen clean head, establish all six source-backed answers and non-empty reconciled principles, success, catalog and topology; rerun fresh-clone demo/preflight and keyboard/source checks with their exact bindings retained.",
+    "Retain independent exact-head live review and confirmation of in-scope repairs before inviting the owner.",
+    "Apply the owner-directed surface merge freeze when its window opens; keep it until owner judgment and cycle report are recorded.",
+    "Only after invitation gates hold may the owner perform the nine-prompt keyboard-only cold-open; retain execution, separate judgment and applicable act separately."
+  ],
+  "nextAction": "Prepare a narrowly scoped owner-run diagnostic that emits only the admitted v1 source classification outcome, class denominators and typed grammar-failure metadata after the existing authority gate. Review its authority and script before execution; do not inspect private retained captures or weaken exclusions. A repeat full readiness run alone cannot identify the missing cause."
+}
