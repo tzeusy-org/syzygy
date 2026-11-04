@@ -4,7 +4,7 @@ import { tempDir } from '@syzygy/test-kit';
 import { describe, expect, it } from 'vitest';
 import {
   AUTHOR_SELF_CHECK, DEFAULT_REPAIR_CYCLES, LAUNCHED_GUIDANCE, OWNER_LINE, POLARIS_USAGE, authorPrompt, cycleBreakdown, endScreen,
-  fidelityDeliveryDue, fidelityRepairSpent, inventoryRepairMessage, readVerdict, limitStop, refusedAtLimit, repairSides, sessionClaudeArgs,
+  fidelityDeliveryDue, fidelityRepairSpent, inventoryRepairMessage, readVerdict, latestChecks, limitStop, refusedAtLimit, repairSides, sessionClaudeArgs,
 } from './polaris.js';
 
 // syzygy-1z8m.1 and syzygy-1z8m.2: what the 2026-11-04 Redis run taught the launched run. Expected values are literals.
@@ -35,7 +35,7 @@ describe('the launched-run guidance of the waiting sessions', () => {
     expect(LAUNCHED_GUIDANCE.inventory).toContain('Each inventory revision after the first counts against the run\'s repair-cycle limit, so before every submission verify it yourself: every path it names exists in the clone at the pinned revision, and every quotation is copied character for character from the file it cites.');
     expect(LAUNCHED_GUIDANCE.inventory).toContain('If Syzygy refuses it because no draft revision is frozen yet, that is expected and nothing is wrong: wait, without asking the operator for anything.');
     expect(LAUNCHED_GUIDANCE.inventory).toContain('Syzygy types a message here when the authoring session freezes a draft; then resubmit with the same command.');
-    expect(LAUNCHED_GUIDANCE.inventory).toContain('When a passing result says to tell the operator and end the session, do neither. If a command reports that a file or digest does not match what Syzygy recorded, stop and state that here, in this session; repair any other refusal and try again.');
+    expect(LAUNCHED_GUIDANCE.inventory).toContain('When a passing result says to tell the operator and end the session, do neither. If a command reports that a file or digest does not match what Syzygy recorded, or that the run cannot go on (the pinned revision cannot be verified again, the run\'s deadline has passed, or the repair-cycle limit is spent), stop and state that here, in this session; repair any other refusal and try again.');
     expect(LAUNCHED_GUIDANCE.inventory).not.toContain('a launched run needs no such message');
     expect(LAUNCHED_GUIDANCE.inventory).toContain('After your inventory passes, do not end this session: stay idle, because Syzygy may later type a request to revise entries the fidelity review could not confirm.');
   });
@@ -189,5 +189,22 @@ describe('the loop\'s limit stop (syzygy-1z8m.5, R-PR718-LAUNCH-NOTES-3937-1 N1)
     expect(limitStop(refused(5), refused(5), 6, () => '')).toBe(null);
     expect(limitStop(passed(6), passed(6), 6, () => '')).toBe(null);
     expect(limitStop(null, null, 6, () => '')).toBe(null);
+  });
+});
+
+describe('the loop reads each side from its own check directory (syzygy-1z8m.6, R-PR718-LAUNCH-NOTES-A44D-2 P2)', () => {
+  it('takes the draft from checks/ and the inventory from inventory/checks/, newest revision each', () => {
+    const run = tempDir('polaris-launch-guidance-');
+    fs.mkdirSync(path.join(run, 'checks'));
+    fs.mkdirSync(path.join(run, 'inventory', 'checks'), { recursive: true });
+    fs.writeFileSync(path.join(run, 'checks', 'rev-5.json'), JSON.stringify({ outcome: 'passed' }));
+    fs.writeFileSync(path.join(run, 'checks', 'rev-6.json'), JSON.stringify({ outcome: 'findings' }));
+    fs.writeFileSync(path.join(run, 'inventory', 'checks', 'rev-2.json'), JSON.stringify({ outcome: 'passed' }));
+    const { draft, inventory } = latestChecks(run);
+    expect(draft).toEqual({ n: 6, doc: { outcome: 'findings' } });
+    expect(inventory).toEqual({ n: 2, doc: { outcome: 'passed' } });
+  });
+  it('gives null for a side with no check directory', () => {
+    expect(latestChecks(tempDir('polaris-launch-guidance-'))).toEqual({ draft: null, inventory: null });
   });
 });

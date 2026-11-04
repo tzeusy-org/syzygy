@@ -331,7 +331,7 @@ export const AUTHOR_SELF_CHECK = 'Each draft revision after the first counts aga
 
 /** Appended to a waiting session's system prompt in a launched run (claude --append-system-prompt; recorded in the launch argv). */
 export const LAUNCHED_GUIDANCE: Readonly<Record<'inventory' | 'fidelity' | 'design', string>> = {
-  inventory: 'This is a launched run: Syzygy, not the operator, coordinates every session. Each inventory revision after the first counts against the run\'s repair-cycle limit, so before every submission verify it yourself: every path it names exists in the clone at the pinned revision, and every quotation is copied character for character from the file it cites. Submit your inventory when it is ready. If Syzygy refuses it because no draft revision is frozen yet, that is expected and nothing is wrong: wait, without asking the operator for anything. Syzygy types a message here when the authoring session freezes a draft; then resubmit with the same command. After your inventory passes, do not end this session: stay idle, because Syzygy may later type a request to revise entries the fidelity review could not confirm. When a passing result says to tell the operator and end the session, do neither. If a command reports that a file or digest does not match what Syzygy recorded, stop and state that here, in this session; repair any other refusal and try again. Never ask the operator to run, start or tell anything.',
+  inventory: 'This is a launched run: Syzygy, not the operator, coordinates every session. Each inventory revision after the first counts against the run\'s repair-cycle limit, so before every submission verify it yourself: every path it names exists in the clone at the pinned revision, and every quotation is copied character for character from the file it cites. Submit your inventory when it is ready. If Syzygy refuses it because no draft revision is frozen yet, that is expected and nothing is wrong: wait, without asking the operator for anything. Syzygy types a message here when the authoring session freezes a draft; then resubmit with the same command. After your inventory passes, do not end this session: stay idle, because Syzygy may later type a request to revise entries the fidelity review could not confirm. When a passing result says to tell the operator and end the session, do neither. If a command reports that a file or digest does not match what Syzygy recorded, or that the run cannot go on (the pinned revision cannot be verified again, the run\'s deadline has passed, or the repair-cycle limit is spent), stop and state that here, in this session; repair any other refusal and try again. Never ask the operator to run, start or tell anything.',
   fidelity: 'This is a launched run: Syzygy, not the operator, coordinates every session and delivers each packet to your await command. Before you submit a verdict, check that every identifier it names appears in the packet and that its rows agree with the readiness it declares: a refused verdict costs a round trip. Never ask the operator to run, start or tell anything.',
   design: 'This is a launched run: Syzygy, not the operator, coordinates every session and delivers each packet to your await command. Before you submit a verdict, check that every identifier it names appears in the packet and that its rows agree with the readiness it declares: a refused verdict costs a round trip. Never ask the operator to run, start or tell anything.',
 };
@@ -534,6 +534,11 @@ export function endScreen(runId: string, run: string, phase: string, closed: boo
   ];
 }
 
+/** The latest check record of the draft and of the inventory in a run directory (either null when none was written). */
+export function latestChecks(run: string): { readonly draft: CheckRecord; readonly inventory: CheckRecord } {
+  return { draft: latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE), inventory: latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE) };
+}
+
 function latestRecord(dir: string, pattern: RegExp): { n: number; doc: Record<string, unknown> } | null {
   let names: string[];
   try { names = fs.readdirSync(dir); } catch { return null; }
@@ -594,8 +599,8 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
   for (;;) {
     const deadline = state.briefIssuedAt + state.deadlineSeconds * 1000;
     if (Date.now() >= deadline) { phase = 'deadline passed'; break; }
-    const draft = latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE);
-    const stop = limitStop(draft, latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE), maxRepairCycles, () => cycleBreakdown(run));
+    const { draft, inventory: inventoryCheck } = latestChecks(run);
+    const stop = limitStop(draft, inventoryCheck, maxRepairCycles, () => cycleBreakdown(run));
     if (stop !== null) { phase = stop; break; }
     const passedDraft = draft !== null && draft.doc['outcome'] === 'passed' ? draft.n : null;
     const inventory = await inventoryOfRecord(run, { sources: cliGateSources(ports), now: (ports.now ?? Date.now)() });
