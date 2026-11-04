@@ -36,8 +36,6 @@ interface TrajectoryProjectionObserved {
 export interface TrajectoryProjectionUnknown {
   readonly kind: 'unknown';
   readonly reason: string;
-  /** Independently observed work items, when available without a seed graph. */
-  readonly observedItemCount?: number;
 }
 
 export type TrajectoryProjection = TrajectoryProjectionObserved | TrajectoryProjectionUnknown;
