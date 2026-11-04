@@ -234,12 +234,8 @@ export function renderTrajectoryPage(model: PocModel, mountPrefix = '', status?:
   const workerChange = model.workerChange.kind === 'observed' ? model.workerChange : null;
   let body: string;
   if (trajectory.kind === 'unknown') {
-    const observedItemDenominator =
-      trajectory.observedItemCount === undefined
-        ? 'Unknown (work items were not independently observed)'
-        : String(trajectory.observedItemCount);
     const unknown = unknownSubject(model, 'region:work-items');
-    body = `<p class="unavailable-notice"${unknownMarker('region:work-items', unknown)}>Unknown — ${escapeHtml(trajectory.reason)}. ${unknownRoute(unknown)} This is a distinct state from an observed-empty board: no board is rendered because the seeded work-item graph is unavailable. Independently observed work-item denominator: ${escapeHtml(observedItemDenominator)}.</p>`;
+    body = `<p class="unavailable-notice"${unknownMarker('region:work-items', unknown)}>Unknown — ${escapeHtml(trajectory.reason)}. ${unknownRoute(unknown)} This is a distinct state from an observed-empty board: no board is rendered because the seeded work-item graph is unavailable. Independently observed work-item denominator: Unknown (work items were not independently observed).</p>`;
   } else {
     const byColumn = new Map<TrajectoryColumn, TrajectoryLaneItem[]>();
     for (const column of COLUMN_ORDER) {
