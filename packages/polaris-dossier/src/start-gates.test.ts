@@ -7,6 +7,7 @@ import { DECISIONS_DIR, INSTANCES_DIR, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM, POLI
 import { loadRecorderForms, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderPolicyAct, renderRecorderAct } from '@syzygy/polaris-generation-consent/testing';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { runDossierCli } from './cli.js';
+import { consentedClone, GIT_ENV as FIXTURE_GIT_ENV, makeClone } from './full-run.testkit.js';
 import { createPackageGateSources, type ProjectInputSource, type ProviderStatementRecord, type ProviderStatementSource } from './gate-sources.js';
 import { cloneGitDirShape, cloneStoreShape } from './clone-shape.js';
 import { openPinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
@@ -318,6 +319,8 @@ describe('init: the clone holds the consented commit alone (syzygy-qkea.24)', ()
       ['ORIG_HEAD', clone => fs.writeFileSync(dotGit(clone, 'ORIG_HEAD'), `${commits.A}\n`)],
       ['BISECT_EXPECTED_REV', clone => fs.writeFileSync(dotGit(clone, 'BISECT_EXPECTED_REV'), `${commits.B}\n`)],
       ['rebase-merge', clone => { fs.mkdirSync(dotGit(clone, 'rebase-merge')); fs.writeFileSync(dotGit(clone, 'rebase-merge', 'orig-head'), `${commits.B}\n`); }],
+      ['description.dpkg-new', clone => fs.writeFileSync(dotGit(clone, 'description.dpkg-new'), 'Unnamed repository\n')],
+      ['description.dpkg-tmp', clone => fs.writeFileSync(dotGit(clone, 'description.dpkg-tmp'), 'Unnamed repository\n')],
     ];
     for (const [name, make] of add) {
       const clone = cloneAt(commits.A);
@@ -529,6 +532,33 @@ describe('init: the clone holds the consented commit alone (syzygy-qkea.24)', ()
     const empty = cloneAt(commits.A, ['--template=']);
     expect(fs.readdirSync(dotGit(empty)).sort()).toEqual(['FETCH_HEAD', 'HEAD', 'config', 'index', 'logs', 'objects', 'refs', 'shallow']);
     expect((await init({ clone: empty })).result.ok).toBe(true);
+
+    // The fixture helpers own an empty template: a contaminated ambient one (a host git upgrade's description.dpkg-* leftovers) never reaches them (syzygy-157b).
+    const ambient = tempDir('dossier-ambient-template-');
+    const sentinels = ['description.dpkg-new', 'description.dpkg-tmp'];
+    for (const name of sentinels) fs.writeFileSync(path.join(ambient, name), 'dpkg\n');
+    const hadOwn = Object.prototype.hasOwnProperty.call(FIXTURE_GIT_ENV, 'GIT_TEMPLATE_DIR');
+    const previous = (FIXTURE_GIT_ENV as Record<string, string | undefined>).GIT_TEMPLATE_DIR;
+    (FIXTURE_GIT_ENV as Record<string, string | undefined>).GIT_TEMPLATE_DIR = ambient;
+    try {
+      const made = makeClone(tempDir('dossier-ambient-'));
+      const direct = consentedClone(path.join(path.dirname(made.clone), 'origin'), made.commit, path.join(tempDir('dossier-ambient-direct-'), 'redis'));
+      for (const repo of [path.join(path.dirname(made.clone), 'origin'), made.clone, direct]) {
+        for (const name of sentinels) expect(fs.existsSync(dotGit(repo, name))).toBe(false);
+      }
+      for (const repo of [made.clone, direct]) expect(cloneGitDirShape(dotGit(repo), made.commit)).toEqual({ ok: true });
+
+      // A real init failure (the destination is a regular file) propagates, and leaves no private template behind.
+      const parent = tempDir('dossier-ambient-fail-');
+      const destination = path.join(parent, 'redis');
+      fs.writeFileSync(destination, 'a regular file\n');
+      const before = fs.readdirSync(parent).sort();
+      expect(() => consentedClone(path.join(path.dirname(made.clone), 'origin'), made.commit, destination)).toThrow();
+      expect(fs.readdirSync(parent).sort()).toEqual(before);
+    } finally {
+      if (hadOwn) (FIXTURE_GIT_ENV as Record<string, string | undefined>).GIT_TEMPLATE_DIR = previous; else delete (FIXTURE_GIT_ENV as Record<string, string | undefined>).GIT_TEMPLATE_DIR;
+    }
+    expect(fs.readdirSync(ambient).sort()).toEqual(sentinels);
   });
 
   it('refuses an identifier in FETCH_HEAD or logs/HEAD in upper case or run on, even the pinned commit\'s', async () => {
