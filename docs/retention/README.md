@@ -49,9 +49,11 @@ than silently cleared. The source census predicate remains unchanged.
 
 [Unknown] The default conservative plan does not establish the eligible
 archive population or newest interchangeable family members. No family equivalence or recency is
-inferred from a filename, version suffix or commit timestamp. The selected
-move population in this preparation is empty; that is not a measurement of
-eligibility. No docs-navigation citation has been discharged or repaired.
+inferred from a filename, version suffix or commit timestamp. A compiled
+`TRANSACTION.json` can propose bounded R2 subfamilies; `ADJUDICATION.json`
+reports their selected archives separately from named unresolved holds.
+Those source-bound family and consumer judgments require independent review
+before removal. No docs-navigation citation has been discharged or repaired.
 The historical estimates in the bead are not current counts.
 
 Generate or verify the preparation:
