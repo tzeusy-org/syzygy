@@ -1,0 +1,663 @@
+{
+  "schema": "cc-sec-3-draft-impact-sweep/1",
+  "subjectCommit": "4aa2b7527f32e776142b02795adec7976d9c60f2",
+  "population": "git ls-files -z: tracked paths at baseline; scan each regular file as bytes, case-insensitive Python re; no target repository read",
+  "trackedPathCount": 8663,
+  "scannedRegularFileCount": 8663,
+  "patterns": {
+    "ccSecFamily": "CC-SEC-",
+    "policyBasename": "security-and-secrets",
+    "oldAbsolute": "no observed-project\\s+code executes, period",
+    "oldProfileTitle": "Observed code never executes outside an accepted profile"
+  },
+  "rows": [
+    {
+      "path": ".syzygy/governance/contracts/candidates/05-CONTRACT-INDEX.yaml",
+      "sha256": "3abd965ba12ddf853541a92c74fee8a390494019abd1a9150a8c3513a78b0e07",
+      "matches": [
+        "ccSecFamily",
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/DOCTRINE-AMENDMENT-D9-REVIEW-NOTES.md",
+      "sha256": "41501d004cfba719b032fb2f156bc9ed5d288c398e03c075d31d95663cd622bf",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/POLARIS-TRUSTED-BOOTSTRAP-OBSERVATION-SEMANTIC-DELTA.md",
+      "sha256": "1ed53443daf5c320f2cd5b9a440470497dca2fd8bf2c61620058c69353155f3a",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/TASK-ROUTER.md",
+      "sha256": "188e0a8ca2b0a872373f9f218bb2432c4595af4299deedc7792439af5579c5f6",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/doctrine-amendment-sec3-attended-agent-session-d9/IMPACT-LEDGER.md",
+      "sha256": "3d8beb50d1b2d9dbbd6aed74edff5dfa12ddd8c3f0f9d1f6177ac58d94f4c825",
+      "matches": [
+        "ccSecFamily",
+        "policyBasename",
+        "oldProfileTitle"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/doctrine-amendment-sec3-attended-agent-session-d9/OWNER-DECISION-PACKET.md",
+      "sha256": "e5fdc449e8631b5a05fbed28b23d18768117aa41b23fdc66376d46e20ef5df9e",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/doctrine-amendment-sec3-attended-agent-session-d9/REVIEW-BRIEF.md",
+      "sha256": "5be017f15503ed1ccf2255697e2d31ed6d08cbf7b6b90753ad3fb10240c1db0f",
+      "matches": [
+        "ccSecFamily",
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/doctrine-amendment-sec3-attended-agent-session-d9/ROUND-1-DISPOSITIONS.md",
+      "sha256": "3446c307635f2787eac61b2db59fae2d30f4251267c723a9eeea4e90050129a0",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/doctrine-amendment-sec3-attended-agent-session-d9/SEMANTIC-DELTA.md",
+      "sha256": "4b6c244084986e809a020b9af749d1e3767dae319be76a86293922f8604c4ce6",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/fixtures/context-selection-4-execution-profile.md",
+      "sha256": "c0c018e4c69546d9dcab15f596aad93af7522f3f64558dcddb49701b1fdcb855",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/fixtures/context-selection-9-evidence-adapter.md",
+      "sha256": "6061ea6ed8e1502dfa9c92067beb9bb6191f494cb54d402e66e2c71c218d8000",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/history/TASK-TO-CONTRACT-INDEX.md",
+      "sha256": "815a8ee59d2694772c3aee19a9a860ed818fe3d746af83f8fd72f481268c659d",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/pwb-tree-framing-amendment/proposed/GOVERNING-DEPENDENCIES.md.patch",
+      "sha256": "2ba4b639ff18f4477637e790c30eebb7ba3471d9637516d770b82edb6f21d586",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/reviews/rev10-digestibility-review.md",
+      "sha256": "0a2e6f04a25b2b8c84863978fc144059915e33f00c4dca723465d83c30d93a4d",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/reviews/rev10-portability-review.md",
+      "sha256": "6063bee9c6fc834a76834b8dbaec70083bde0ef76228cf6cd29b837b70ff3fb7",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/rfc5-project-documentation-class/reviews/R-RFC5-PROJECT-DOCUMENTATION-CLASS-1-RAW.md",
+      "sha256": "d8a4c9ae8eb041a050f356696481fad0cecb84b66abe0ee61789a0d637203a5d",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/round-2026-08/CONTEXT-COMPILER-FIXTURE-REPORT.md",
+      "sha256": "cb9cc80651879a93d74881fb717fb52e64bf350e0d6047ef0786d4680f195818",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/round-2026-08/reviews/RB-5-context-compiler-RAW.md",
+      "sha256": "e3ee4e4ee7eed33447414b0d0b4ffaa4eec88a75fd0c80e1ce92d2c13a63f97d",
+      "matches": [
+        "ccSecFamily",
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/round-2026-08/reviews/RB-7-evidence-security-RAW.md",
+      "sha256": "7866eb666365fd124d5872295bbfb686f87561ed16a025023624c0af5ebaf98b",
+      "matches": [
+        "ccSecFamily",
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/round-2026-08b/reviews/RC-12-budget-waiver-RAW.md",
+      "sha256": "d8c1a72b7edd0de140d9cbe2774bd56fb1bf96c7ca50ff94ff9f42937a1aa008",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/round-2026-08b/reviews/RC-5-rfc-openspec-boundary-RAW.md",
+      "sha256": "2e0c206edd2474bc91243cefa92c33f9bbe32b69180f2d08c891dba3c036a042",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/round-2026-08b/reviews/RC-6-context-compiler-RAW.md",
+      "sha256": "e67ed54817733ee9b74d7b15828d48bf5e77df0612fdc6992a4e19e0c86b6153",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/round-2026-08b/reviews/RC-8-evidence-security-RAW.md",
+      "sha256": "e0969095ec4e38d183fe65c42b7dbe4e6248cdfcd2b3063b5799974b842536a8",
+      "matches": [
+        "ccSecFamily",
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-5-context-selection-RAW.md",
+      "sha256": "41406182dc91fda51080916109e42090aaba9119a03769ab849e39ad4e58a8ed",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/round-2026-08d/reviews/RD-23-wave-c2-RAW.md",
+      "sha256": "3696117dfa599b8c622a3dab889f493716ea729dfe972d99c46a26bc48bc0ca3",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/scripts/build_task_router.py",
+      "sha256": "f1a663832c4823444226b285d8a1f2281452b778720b193efaac63de25b637cf",
+      "matches": [
+        "ccSecFamily",
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/decisions/CRAFT-TREE-RESTYLE.md",
+      "sha256": "1a81f163bd4aa40c0ee27d7d87812f5af76982d55796b106856e25ae683ced88",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/decisions/DECISION-HISTORY.md",
+      "sha256": "c68af626365baeff17efa3e880808d46c23eb7c8b97b6961e4ea66c19352c91d",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/decisions/DOCTRINE-AMENDMENT-LOG.md",
+      "sha256": "879999cf1557f3480764d452c786e10882e8031c5e86ff98c0ea4370cddb370b",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md",
+      "sha256": "e00aee73c0c846e4995e54ebe40f370d36f007b483a854388d4d97da17721d5e",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/decisions/README.md",
+      "sha256": "8a528fa5ed3ff9643b722e54b1078f98bd398301c61af2d28c725a0ef35cf739",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/policies/craft-and-care/INSTALL-RECORD.md",
+      "sha256": "40bb86ffa321afddfb8a962b6d7fccb0bae8c70b0e48ae02bd6f1ac72c1503b1",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/policies/craft-and-care/README.md",
+      "sha256": "2e04191e4be802f07bbfc013a801d056541ed3e96ba99fab6ec487a90d1a1e84",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/policies/craft-and-care/agent-provenance-and-execution-evidence.md",
+      "sha256": "0c256bc607b2272e827f79d07a5efb5c400737ef29d830b08cebc83bad768b52",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": ".syzygy/governance/policies/craft-and-care/security-and-secrets.md",
+      "sha256": "f90ff5933fa461a4ab0b3de7876abe2aeb84eb6e6e2e6cb8a4e5176f9aa241f9",
+      "matches": [
+        "ccSecFamily",
+        "oldAbsolute",
+        "oldProfileTitle"
+      ]
+    },
+    {
+      "path": "DIRECTIVE-REGISTER.md",
+      "sha256": "234f503abd8f47db9976a2fa62164f89fb7a8d1f446b85ee33ef87b962a0cf54",
+      "matches": [
+        "ccSecFamily",
+        "policyBasename",
+        "oldProfileTitle"
+      ]
+    },
+    {
+      "path": "docs/evidence/adapter-credentials-round-1-dispositions-2026-10-22.md",
+      "sha256": "f26c5cc8904f33cbad08295859936470ab81d601a2201695fd330f0920b1a5a7",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "docs/evidence/launch-gate-v2.5/canonical-battery.log",
+      "sha256": "4e6d35e495c36d78661fc6edef030d81f01ddd9fa0e999e4b36a556751f6eb9f",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/launch-gate-v2.5/post-install-battery.log",
+      "sha256": "1866aac7a78ca37c411b48aaf4fe55a3359782f4e5cc5db30e7b24f281f92ec3",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/poc-app-hygiene-round-2-dispositions-2026-10-22.md",
+      "sha256": "21977886d7a387425ba661604b688a7f7476d2444f9627ae75d3102e91442559",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-generator-adoption-clone-validation-2026-09-12.json",
+      "sha256": "8ddbf6f0eae44d27e22b0f7c956b22f3654948375c776361ebc81a9621e1a9d5",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-generator-approval-offer-2026-09-12.json",
+      "sha256": "48216b0607b1b82fa21f2c5f5a3499d604541b7a0a9bf93c9fd5f7c8deab29dd",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-generator-approval-tool-validation-2026-09-12.json",
+      "sha256": "75d2b670ea301c984720d8ea11aaa5ef3f7764942f372d9fcf99f100c90dce8b",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-generator-concrete-offer-validation-2026-09-12.json",
+      "sha256": "f0aea2fe989f45a9fb885abd1c17429423338b2fc4787069a147a3af5a0492ce",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-pipeline-synthetic-verification-2026-09-13.json",
+      "sha256": "4077d9cd1f6b7b0fab76172aee29f071a39ec73422f4b95b3fd55418638bfba6",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/polaris-understanding-adoption-clone-validation-2026-09-13.json",
+      "sha256": "55570d4e06a27a0ee540251a04c2d8d888d9d925319a8ce4a573f546ac0d521d",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-04.json",
+      "sha256": "b8fb1eb9dbffbb7109e3f3c18c8002743666ca005d043a6a08251d29978b47ea",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-05.json",
+      "sha256": "3cd95f7048ee3a00922ba1891695bac270ea0916e1005c5443fd168e7968445f",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-06-gen2-reviewer.json",
+      "sha256": "3fd46719ec7d02aea23e1e6be850717b9fa28864cee77d23c71325482658683a",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-06-gen2.json",
+      "sha256": "85db113b19855da581c349468c05e9d46931b457bf08f34da29764404f8d1373",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-06.json",
+      "sha256": "bbea4f375e21cb35be08ed16cf3b011ad497f8c6e7f697a548cd376a3a77f302",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-08-declared-homes.json",
+      "sha256": "b4d365e84209f2145943d1e62c387d19fd285c08a6f16c26a06982e6b482fb92",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-08.json",
+      "sha256": "279fa56bb804d04cf32e36db6936446f05afd1c716fbd5cf32b7774542c19062",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-09-confirmation.json",
+      "sha256": "59bc52fad2904933c86851a5652d52bd250fe907ecea6b89f45f5388270864ec",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-09-editorial-reviewed.json",
+      "sha256": "6dc5e7dc8eb16366b57a7f178a6c650a19913cc107e7cae1f4371d6d8c17344d",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-09-editorial.json",
+      "sha256": "3527ed5736b0d0e51357ea9d8dba18c29d58671484025bfcd2ffa6a17d0e0164",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-09-final.json",
+      "sha256": "3e1e6e16cae2fb8273d57b64fdab44c2f532ef95f0b67f599bb1df48a0d0fcd4",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-09-manifesto-catalog.json",
+      "sha256": "7d10a131521bb632990e6487e1a481ca11b32ae6fa94a39ff292ce25463c56cb",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-09-manifesto-complete.json",
+      "sha256": "311a0fb2db927e0a06acf440437bf9281369ea274ddb4e5dd79956454403547d",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-09-manifesto-final.json",
+      "sha256": "09906db4a113206d2f6677ad969f6ee0546d4fc578f4f046917be7ffe7689aba",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-09-manifesto.json",
+      "sha256": "2944d5020c9c5855f3d5193b05d98623a3b5ea01912fbb36dd00bc90e6117ad9",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-09-product-reading-final.json",
+      "sha256": "47c64059521894cf5389ed4c932aa6f57da25517eedf38310f09f0c6d2fabdba",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-09-product-reading.json",
+      "sha256": "080ae2fab70a4a0cf63fd7c63f1cc5868799e5d873ad400c529b1f36f37b17fd",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-09-readiness.json",
+      "sha256": "50ad5d629f43de6c6fa7ab39d74f2ae07b8bce5f31c31e6194d8391b4bf1cc27",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-10-guide-navigation.json",
+      "sha256": "d9c4b128006586adcd11e5ee3ec7cbc3831783421f9b30a35b202ad66cc9668c",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-10-reading-assets-final.json",
+      "sha256": "1236bcb4497df3a4253828553efb50871a3654c5dc6ba9d5b5d60cba891ec365",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-10-reading-assets-repaired.json",
+      "sha256": "a87a49d07c8c36c8f2d43fbdd7d82bf80ca632edbb87187cb248a186f0dd5283",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-10-reading-assets.json",
+      "sha256": "08aded98e096c73215cb7895f84826f2733b52d9283c8ff9d471a64ccf823c8d",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-10-visible-diagrams-final.json",
+      "sha256": "a0e6ac354ee2f95a7b465df6ffadfb73a6ed218ff37f53e690a9cb729b0fcda8",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-09-10-visible-diagrams.json",
+      "sha256": "45dc426cf9492d7473ac734e454935a13fd6589fe5eeb4d4046062c5036fa632",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-10-03-1z3-31.json",
+      "sha256": "1e82cee47fed8ae38a25cf798663ab932d54bf719e084c5642051d56eb3fab9c",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-10-03-roadmap.json",
+      "sha256": "24e22328e95bb6e47542be3bd57be8a2f8308f923380cfe5eec05b8727dd4611",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-10-03-walkthrough-ready.json",
+      "sha256": "9bbecd5a2805c5b4f36c708674e16b409a4a1c29f25891e529c8d0ac53ac2774",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/evidence/spread-loops-review-2026-10-28/r1/md-list.bin",
+      "sha256": "f2456a6b9c0ade9ccf5ab23363743591d29288ad601829c9742d9907e329d327",
+      "matches": [
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/review-campaigns/greenfield-parity-implementation.md",
+      "sha256": "4318262c34002a3506b0f1bb4fc1dfd3c05beb7e9381239f3cc3cb024d12ef50",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "docs/reviews/R-DOCTRINE-AMENDMENT-D9-1-RAW.md",
+      "sha256": "38d19f14476ffcfb375168e856c04f619610d1e0843a28e6450f880e216cc13c",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "docs/reviews/R-DOCTRINE-AMENDMENT-D9-2-RAW.md",
+      "sha256": "e106200b795482e74aac9fd84671964e7d2e360658e0e8c8ba02b3dc64f94e71",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "docs/reviews/R-DOCTRINE-AMENDMENT-D9-3-RAW.md",
+      "sha256": "e34126d27a7fe4d2ecdfa6b93dcd1775a7105cdbf9ba6ec50cc2cc92dcd42c12",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "docs/reviews/R-GP-IMPL-ADAPTER-CREDENTIALS-1-RAW.md",
+      "sha256": "2b4aff7b69d12c2dcf7381351a63aa655c85352c5c8d35ce73daaed21cf15811",
+      "matches": [
+        "ccSecFamily",
+        "policyBasename",
+        "oldAbsolute"
+      ]
+    },
+    {
+      "path": "docs/reviews/R-GREENFIELD-PARITY-PACKET-1-RAW.md",
+      "sha256": "534979794c5acc0f5fa4051ce80fba95f38f5a498fd0c3eed30cf6025aea1f1e",
+      "matches": [
+        "ccSecFamily",
+        "policyBasename",
+        "oldAbsolute"
+      ]
+    },
+    {
+      "path": "docs/reviews/R-GREENFIELD-PARITY-PACKET-2-RAW.md",
+      "sha256": "541d5ffd806e14ce00226865d9452a094f2af986ae012f023c7640709d6758d7",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "docs/reviews/R-GREENFIELD-PARITY-PACKET-3-RAW.md",
+      "sha256": "87ccc6408d74ad6c13f748903d62bf525c05bfcf936569d1c64776f6996dd559",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "docs/reviews/R-POLARIS-PROJECT-WIDE-SPEC-REVIEW-RAW.md",
+      "sha256": "b47fbb0eb73507d0f6a4d4cc50f72908c6330c8a82be689477ce1f59209587dc",
+      "matches": [
+        "ccSecFamily",
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/reviews/R-PWB-LIVE-EXACT-HEAD-ENGINEERING-RAW.md",
+      "sha256": "65e2e94825b0ec151b0c56457248abb862dd396038f7b2645188350202ba92ec",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "docs/reviews/R-TREE-STYLE-CRAFT-1-RAW.md",
+      "sha256": "ee2f3023dc8c39c7e9d8e3f2d5cab7ed0d228ccb36a17cd48cb28d83ee26d415",
+      "matches": [
+        "ccSecFamily",
+        "policyBasename"
+      ]
+    },
+    {
+      "path": "docs/reviews/R-TREE-STYLE-CRAFT-2-RAW.md",
+      "sha256": "178642e6f37e3e49ba5e5b4304f2f2d025b98ae1c3fa9d99b5e9297fcf369db7",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "openspec/changes/polaris-dossier-one-command-run/proposed/polaris-generation/spec.md",
+      "sha256": "9d984c99afc4f825ee5210875f016f807b965522badf68ee116a42aa724d1267",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "openspec/changes/polaris-project-wide-butlers-model/GOVERNING-DEPENDENCIES.md",
+      "sha256": "69915806cf79f2a220ae2f2d94b180664f12e96bd72206af71602622bef11c14",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "openspec/changes/polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md",
+      "sha256": "44f4ad77e62525595be5839883ac491d26bdd6859f353f91edc1d48903011ed2",
+      "matches": [
+        "ccSecFamily"
+      ]
+    },
+    {
+      "path": "packages/polaris-dossier/src/execution-rule.ts",
+      "sha256": "5a9163a936cd34256053e06c587a41a6ff211183f8ac702da49d64182ef30b08",
+      "matches": [
+        "ccSecFamily"
+      ]
+    }
+  ]
+}
