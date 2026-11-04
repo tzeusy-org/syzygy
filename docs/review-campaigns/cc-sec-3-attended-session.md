@@ -12,7 +12,7 @@
 
 ## Last verdict of record, and where the findings landed
 
-[Observed] Round 1, [R-CC-SEC-3-ATTENDED-SESSION-1-RAW.md](../reviews/R-CC-SEC-3-ATTENDED-SESSION-1-RAW.md), returns **CONFIRM WITH EXCEPTIONS**, notes only, no revise-level finding. The raw is preserved verbatim. This is draft acceptance at the pinned commit, not adoption, an offering, runtime credential verification or a later class-4 flip review.
+[Observed] Round 1, [R-CC-SEC-3-ATTENDED-SESSION-1-RAW.md](../reviews/R-CC-SEC-3-ATTENDED-SESSION-1-RAW.md), returns **CONFIRM WITH EXCEPTIONS** (`R-CC-SEC-3-ATTENDED-SESSION-1-RAW.md:3`), notes only, no revise-level finding. The raw is preserved verbatim. This is draft acceptance at the pinned commit, not adoption, an offering, runtime credential verification or a later class-4 flip review.
 
 | Note | Disposition retained outside the frozen subject |
 |---|---|
