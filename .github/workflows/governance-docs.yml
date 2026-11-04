@@ -391,6 +391,14 @@ jobs:
       - name: check_quotations --selftest
         run: python3 scripts/check_quotations.py --selftest
 
+      # docs/reviews/ is partitioned by docs/README.md's campaign table: every
+      # file in exactly one campaign, and the count line equal to the tree
+      # (syzygy-gkvu, syzygy-5pem). A raw whose basename matches no campaign
+      # pattern, or two, fails here instead of only in a local run. It reads
+      # the HEAD-bound tree, and takes a few minutes.
+      - name: check_docs_review_campaign_partition --check
+        run: python3 scripts/check_docs_review_campaign_partition.py --check
+
       # The checkers' own fixtures. A hosted run that exercises the checks
       # but never the checks' checks reports a denominator it does not have.
       # Every one is stdlib-only, which is why they can run here at all —
