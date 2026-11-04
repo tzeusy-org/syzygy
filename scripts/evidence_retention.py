@@ -435,6 +435,7 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             return git(root, "rev-parse", "HEAD").decode().strip()
         write(PREFIX + "run-a.json", '{"subject":"synthetic","captured_at":"2026-01-01T00:00:00Z"}\n')
         write(PREFIX + "run-b.json", '{"subject":"synthetic","captured_at":"2026-01-02T00:00:00Z"}\n')
+        (root / (PREFIX + "run-a.json")).chmod(0o755)
         write(PREFIX + "review-RAW.md", "Synthetic reviewer corpus: docs/evidence/run-*.json\n")
         write("scripts/reader.py", "# A consumer pins docs/evidence/run-a.json\n")
         source_commit = commit(); home = root / HOME
@@ -492,7 +493,13 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         def index_mutate(fn):
             rows = lines((home / "INDEX.jsonl").read_bytes()); fn(rows)
             (home / "INDEX.jsonl").write_bytes(jsonl(rows))
+        executable_mode = tree(root, checkpoint)[PREFIX + "run-a.json"][0]
+        executable_case = {"predicate": "executable-live-index-accepted", "pass": False,
+                      "old": {"mode": "100644"}, "new": {"path": PREFIX + "run-a.json", "mode": executable_mode},
+                      "expected": {"mode": "100755", "live": 3}, "fixture_commit": checkpoint}
+        cases.append(executable_case)
         baseline = check(root, home)
+        executable_case["pass"] = executable_mode == "100755" and baseline["live"] == 3
         planned = {r["path"]: r for r in lines((home / "PLAN.jsonl").read_bytes())}
         demand(planned[PREFIX + "run-b.json"]["classification"] == "R1" and any(
             w["form"] == "conservative-glob" for w in planned[PREFIX + "run-b.json"]["witnesses"]["examples"]),
@@ -601,10 +608,12 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             source_mutate("plan_sha256", digest(data)); source_mutate("evidence_files", 4)
         failure("census-denominator-independent-of-plan", aligned_plan_and_count_drift, "source-denominator-mismatch")
         failure("missing-local-retention-input", lambda: (home / "INDEX.jsonl").unlink(), "retention-input-not-regular-local-file")
-        def internal_input_symlink():
-            path = home / "INDEX.jsonl"; copy = root / "identical-index-copy.jsonl"
+        def internal_input_symlink(artifact):
+            path = home / artifact; copy = root / ("identical-copy-" + artifact)
             copy.write_bytes(path.read_bytes()); path.unlink(); path.symlink_to(copy)
-        failure("internal-identical-retention-input-symlink", internal_input_symlink, "retention-input-not-regular-local-file")
+        for artifact in ("SOURCE.json", "CENSUS.jsonl", "PLAN.jsonl", "INDEX.jsonl"):
+            failure("internal-identical-retention-input-symlink-" + artifact,
+                    lambda: internal_input_symlink(artifact), "retention-input-not-regular-local-file")
         def conflicted_index():
             path = PREFIX + "run-b.json"
             oid = git(root, "rev-parse", "HEAD:" + path).decode().strip()
@@ -642,7 +651,8 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             p = PREFIX + "new.json"; body = b'{}\n'; write(p, body); commit()
             index_mutate(lambda r: r.append({"version": 1, "kind": "live", "path": p,
                                             "sha256": digest(body), "family": family, "basis": basis}))
-        failure("new-file-unproved-R2", lambda: new_live(basis="R2"), "new-body-requires-conservative-live-row")
+        for basis in ("R0", "R1", "R2"):
+            failure("new-file-unproved-" + basis, lambda: new_live(basis=basis), "new-body-requires-conservative-live-row")
         failure("new-file-family-mismatch", lambda: new_live(family="wrong"), "new-body-family-mismatch")
         def missing_keeper():
             (root / (PREFIX + "run-b.json")).unlink(); commit()
@@ -667,7 +677,9 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             cases.append({"predicate": name, "pass": observed == expected, "expected": expected,
                           "observed": observed, "old": "small valid input", "new": fragment,
                           "fixture_commit": checkpoint})
-        for name, bad in (("json-nonfinite", b'NaN'), ("json-invalid-utf8", b'"\xff"'),
+        for name, bad in (("json-nonfinite", b'NaN'), ("json-positive-infinity", b'Infinity'),
+                          ("json-negative-infinity", b'-Infinity'), ("json-invalid-syntax", b'{'),
+                          ("json-invalid-utf8", b'"\xff"'),
                           ("json-recursion", b'[' * 100000 + b']' * 100000)):
             probe(name, lambda: load_json(b'{}'), lambda: load_json(bad),
                   "invalid-json", "b'{}'", "b'[' * 100000 + b']' * 100000" if name == "json-recursion" else repr(bad))
