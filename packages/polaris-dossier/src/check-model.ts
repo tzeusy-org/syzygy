@@ -26,7 +26,9 @@ export type CheckFindingKind =
   | 'path-absent' | 'range-invalid' | 'range-beyond-blob'
   | 'quotation-count' | 'quotation-citation' | 'quotation-in-unquotable-block' | 'lead-in-without-quote' | 'quotation-unterminated'
   | 'quotation-empty' | 'quotation-elided' | 'quotation-not-in-cited-file' | 'quotation-outside-range'
-  | 'discovery-path-absent' | 'adapter-credential-readable';
+  | 'discovery-path-absent' | 'adapter-credential-readable'
+  // v1.3 presentation elements (syzygy-mea.10.5).
+  | 'code-excerpt-too-long' | 'label-markup';
 
 /** A repair finding: the kind of failure, where to repair it (a JSON path into the draft), and the block and citation it concerns. It
  * never carries quoted text or any byte of a blob. */

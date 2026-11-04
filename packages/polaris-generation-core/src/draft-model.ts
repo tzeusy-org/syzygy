@@ -39,6 +39,8 @@ export const fidelity = object({ inventoryCoverage, blockSupport,
   findings: list(object({ severity: { ...text, enum: ['blocking', 'advisory'] }, message: text, target: handle }), 0, 1000),
 });
 
+import type { LocalSegment } from './local-render.js';
+
 export interface DraftParagraph { id: string; text: string; sourceIds: string[] }
 /** A section or deep-dive block: a parent paragraph and its 0–12 leaf children. An operator-agent draft's entry may instead be a v1.3
  * rich element (`element`, syzygy-mea.10.5), whose own id the entry carries with empty text, no sources and no children; the provider
@@ -51,7 +53,9 @@ export type DraftElement =
   | { kind: 'steps'; items: DraftParagraph[] }
   | { kind: 'definitions'; entries: { term: string; definition: DraftParagraph }[] }
   | { kind: 'cards'; items: { label: string; body: DraftParagraph }[] }
-  | { kind: 'details'; summary: string; elements: DraftBlock[] };
+  | { kind: 'details'; summary: string; elements: DraftBlock[] }
+  /** Lines Syzygy read at the pinned revision, as quotation segments (one per source piece), or one withheld segment. */
+  | { kind: 'code'; language: string; path: string; startLine: number; endLine: number; parts: LocalSegment[] };
 export type DiagramKind = typeof DIAGRAM_KINDS[number];
 export type EpistemicMarking = 'observed' | 'inferred' | 'unknown';
 export interface DraftDiagramNode { id: string; label: string; sourceIds: string[]; epistemic: EpistemicMarking }

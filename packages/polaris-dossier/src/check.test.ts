@@ -265,6 +265,19 @@ describe('check: each rule refuses its own violation', () => {
       { kind: 'quotation-not-in-cited-file', at: '$.sections[0].paragraphs[2].items[1].body.text', blockId: 'q1', citationId: 'c-q1' }],
     ['an altered quotation inside details', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'details', id: 'x1', summary: 'S', elements: [{ id: 'x1a', label: 'non-normative', text: 'Lead.', children: [{ id: 'q1', label: 'inferred', basis: 'source', text: 'The project states: "Kestrel keeps every key on disk."', citations: [cite('c-q1', 'src/kestrel.c', 1, 1)], quotations: ['c-q1'] }] }] }); },
       { kind: 'quotation-not-in-cited-file', at: '$.sections[0].paragraphs[2].elements[0].children[0].text', blockId: 'q1', citationId: 'c-q1' }],
+    ['a code excerpt of more than 60 lines', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', 'src/kestrel.c', 1, 61) }); },
+      { kind: 'code-excerpt-too-long', at: '$.sections[0].paragraphs[2].citation', citationId: 'c-x1' }],
+    ['a code excerpt past the end of its file', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', 'src/kestrel.c', 1, 6) }); },
+      { kind: 'range-beyond-blob', at: '$.sections[0].paragraphs[2].citation.endLine', citationId: 'c-x1' }],
+    ['a code excerpt of a path absent at the pinned revision', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', 'src/missing.c', 1, 1) }); },
+      { kind: 'path-absent', at: '$.sections[0].paragraphs[2].citation.path', citationId: 'c-x1' }],
+    ['an angle bracket in a table caption', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'table', id: 't1', caption: 'a <b> c', columns: ['A'], rowHeaders: false, rows: [{ id: 'r1', cells: [{ kind: 'empty' }] }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].caption' }],
+    ['an ampersand in a column label', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'table', id: 't1', caption: 'C', columns: ['A &amp; B'], rowHeaders: false, rows: [{ id: 'r1', cells: [{ kind: 'empty' }] }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].columns[0]' }],
+    ['a backtick in a callout title', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'callout', id: 'k1', tone: 'note', title: 'Run `ls`', children: [{ id: 'k1a', label: 'non-normative', text: 'W.', children: [] }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].title' }],
+    ['a Markdown link in a term', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'definitions', id: 'd1', entries: [{ term: '[Key](https://x)', definition: { id: 'd1a', label: 'non-normative', text: 'W.' } }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].entries[0].term' }],
+    ['a Markdown image in a card label', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'cards', id: 'g1', items: [{ label: '![i](x.png)', body: { id: 'g1a', label: 'non-normative', text: 'W.' } }, { label: 'M', body: { id: 'g1b', label: 'non-normative', text: 'W.' } }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].items[0].label' }],
+    ['emphasis in a details summary', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'details', id: 'x1', summary: 'Read **this** first', elements: [{ id: 'x1a', label: 'non-normative', text: 'W.', children: [] }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].summary' }],
+    ['underscore emphasis in a language label', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', language: '_C_', citation: cite('c-x1', 'src/kestrel.c', 1, 1) }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].language' }],
     ['a self-reported selection absent at the pinned revision', (d) => { d.discovery.deferred.push({ path: 'docs', reason: 'Later.' }); }, { kind: 'discovery-path-absent', at: '$.discovery.deferred[0].path' }],
   ])('reports %s', async (_name, change, expected) => {
     const run = await briefedRun();
@@ -272,6 +285,13 @@ describe('check: each rule refuses its own violation', () => {
     const result = report(await checkDraft(run, {}, deps()));
     expect(result.outcome).toBe('findings');
     expect(result.findings.filter((finding) => finding.kind !== 'schema').map(({ detail: _detail, ...rest }) => rest)).toEqual([expected]);
+  });
+
+  it('passes plain labels, a snake_case name and a multiplication among them (syzygy-mea.10.5)', async () => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'table', id: 't1', caption: 'The max_memory option, 2 * 3 cells', columns: ['Name (short)', 'Effect: what, why?'], rowHeaders: true, rows: [{ id: 'r1', cells: [{ kind: 'empty' }, { kind: 'empty' }] }] }); }));
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result.findings.filter((finding) => finding.kind === 'label-markup')).toEqual([]);
   });
 
   it('reports a draft that is not JSON, and still freezes it as a revision', async () => {

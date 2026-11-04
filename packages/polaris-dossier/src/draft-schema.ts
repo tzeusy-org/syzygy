@@ -118,8 +118,11 @@ const DEFS: Readonly<Record<string, DraftSchema>> = Object.freeze({
   definitions: object({ kind: one('definitions'), id: handle, entries: list(object({ term: presentationLabel, definition: ref('paragraph') }), 1, 40) }),
   cards: object({ kind: one('cards'), id: handle, items: list(object({ label: presentationLabel, body: ref('paragraph') }), 2, 6) }),
   details: object({ kind: one('details'), id: handle, summary: presentationLabel, elements: list(ref('detailContent'), 1, 30) }),
-  detailContent: { oneOf: [ref('block'), ref('table'), ref('callout'), ref('steps'), ref('definitions'), ref('cards')] },
-  content: { oneOf: [ref('block'), ref('table'), ref('callout'), ref('steps'), ref('definitions'), ref('cards'), ref('details')] },
+  // A code excerpt names one citation of 1 to 60 lines; Syzygy renders the lines from its own read, never from the draft. `language` is
+  // a presentation hint (v1.3 note 5): where it is absent the renderer derives one from the path.
+  code: object({ kind: one('code'), id: handle, language: presentationLabel, citation: ref('citation') }, ['language']),
+  detailContent: { oneOf: [ref('block'), ref('table'), ref('callout'), ref('steps'), ref('definitions'), ref('cards'), ref('code')] },
+  content: { oneOf: [ref('block'), ref('table'), ref('callout'), ref('steps'), ref('definitions'), ref('cards'), ref('code'), ref('details')] },
   disposition,
   understandingItem,
   pathReason,

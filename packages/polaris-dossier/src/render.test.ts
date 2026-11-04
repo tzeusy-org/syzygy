@@ -42,7 +42,11 @@ const KESTREL = [
 ].join('\n');
 const NOTES = 'Café notes.\nSnapshots are written periodically.\n';
 const SECRETS = 'Deploy notes.\n';
-const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', 'docs/deploy.md': SECRETS };
+/** Cited by a code excerpt: markup a page must show, never parse (v1.3 note 1). */
+const MARKUP = 'if (a < b && c > d) return;\n#define LT "&lt;"\n#define AMP &amp;\nint tail;\n';
+/** A raw tag is active content: screening withholds the file, so a cited `</pre>` never reaches a page. */
+const TAGGED = 'const end = "</pre>";\n';
+const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'src/markup.c': MARKUP, 'src/tagged.c': TAGGED, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', 'docs/deploy.md': SECRETS };
 const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));
 const policy = (extensions: string[]): Uint8Array => new TextEncoder().encode(JSON.stringify({
   policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
@@ -974,8 +978,10 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     expect(READABILITY_GUIDANCE).toContain('a `flow` for an end-to-end workflow or a user\'s path through the project, a `boundary` or `dependency` diagram for the architecture and how components talk to each other');
     expect(READABILITY_GUIDANCE).toContain('An enumeration of three or more items is never a run-on sentence: write a short lead block and give each item its own child block, which renders as a bulleted list. A block holds at most twelve children, so group a longer enumeration under several lead blocks.');
     expect(READABILITY_GUIDANCE).toContain('Put commands, identifiers, file names and configuration keys in backticks outside quotations; they render as inline code.');
-    expect(READABILITY_GUIDANCE).toContain('5. Elements. A section or deep dive entry may be a plain block or, in draft schema `polaris-dossier-local-draft-v3`, one of six presentation elements.');
-    expect(READABILITY_GUIDANCE).toContain('Captions, column names, titles, terms, labels and summaries are short plain labels, never claims or quotations; every cell, item, definition and body is a claim and follows every rule above.');
+    expect(READABILITY_GUIDANCE).toContain('and `code` to show 1 to 60 lines of a file: give only its `citation` (and, if you like, a `language`), never the lines, which Syzygy renders from its own read.');
+    expect(READABILITY_GUIDANCE).toContain('An empty table cell renders "no entry" and states nothing: write a negative or an absence as a claim.');
+    expect(READABILITY_GUIDANCE).toContain('5. Elements. A section or deep dive entry may be a plain block or, in draft schema `polaris-dossier-local-draft-v3`, one of seven presentation elements.');
+    expect(READABILITY_GUIDANCE).toContain('Captions, column names, titles, terms, labels, summaries and languages are short plain labels of at most 120 characters, never claims or quotations, with no markup (no angle bracket, ampersand, backtick, Markdown link or emphasis); every cell, item, definition and body is a claim and follows every rule above.');
     expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
   });
 });
@@ -986,7 +992,7 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
     const doc = draft();
     doc.schemaVersion = 'polaris-dossier-local-draft-v3';
     doc.sections[0].paragraphs.push(
-      { kind: 'table', id: 't1', caption: 'Commands <b>and</b> what they do', columns: ['Command', 'Effect'], rowHeaders: true, rows: [
+      { kind: 'table', id: 't1', caption: 'Commands "and" what they do', columns: ['Command', 'Effect'], rowHeaders: true, rows: [
         { id: 't1r1', cells: [nn('t1c1', 'The `GET` command'), { id: 't1c2', label: 'inferred', basis: 'source', text: 'The project states: "Each command runs to completion before the next one starts."', citations: [cite('c-t1c2', 'src/kestrel.c', 2, 3)], quotations: ['c-t1c2'] }] },
         { id: 't1r2', cells: [nn('t1c3', 'The `SET` command'), { kind: 'empty' }] },
       ] },
@@ -994,11 +1000,15 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
       { kind: 'steps', id: 's1', items: [nn('s1a', 'First step words.'), nn('s1b', 'Second step words.')] },
       { kind: 'definitions', id: 'd1', entries: [{ term: 'Keyspace', definition: nn('d1a', 'Definition words for keyspace.') }] },
       { kind: 'cards', id: 'g1', items: [{ label: 'Snapshot card', body: nn('g1a', 'Snapshot card words.') }, { label: 'Log card', body: { id: 'g1b', label: 'unknown', reason: 'missing-evidence', text: 'No source says how logs rotate.', citations: [] } }] },
-      { kind: 'details', id: 'x1', summary: 'More depth for later', elements: [{ kind: 'steps', id: 'x1s', items: [nn('x1a', 'Nested step one.'), nn('x1b', 'Nested step two.')] }] },
+      { kind: 'details', id: 'x1', summary: 'More depth for later', elements: [{ kind: 'steps', id: 'x1s', items: [nn('x1a', 'Nested step one.'), nn('x1b', 'Nested step two.')] },
+        { id: 'x1u', label: 'unknown', reason: 'missing-evidence', text: 'No source says how deep it goes.', citations: [], children: [] }] },
+      { kind: 'code', id: 'code1', citation: cite('c-code1', 'src/markup.c', 1, 3) },
+      { kind: 'code', id: 'code2', language: 'Dotenv', citation: cite('c-code2', '.env', 1, 1) },
+      { kind: 'code', id: 'code3', citation: cite('c-code3', 'src/tagged.c', 1, 1) },
     );
     return doc;
   };
-  const ELEMENT_CLAIMS = ['t1c1', 't1c2', 't1c3', 'k1a', 'k1b', 's1a', 's1b', 'd1a', 'g1a', 'g1b', 'x1a', 'x1b'];
+  const ELEMENT_CLAIMS = ['t1c1', 't1c2', 't1c3', 'k1a', 'k1b', 's1a', 's1b', 'd1a', 'g1a', 'g1b', 'x1a', 'x1b', 'x1u'];
   const support = ELEMENT_CLAIMS.map((blockId) => ({ blockId, verdict: blockId === 't1c2' ? 'anchor-does-not-support' : 'supported', spanIds: [], reason: 'Fits the packet.', quotations: [] }));
   let index = '';
   let machine: Doc = {};
@@ -1012,10 +1022,10 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
   });
 
   it('renders a table with a caption, column headers, row headers and an empty cell', () => {
-    expect(index).toContain('<div class="table-scroll" id="element-t1" data-element="table"><table><caption>Commands &lt;b&gt;and&lt;/b&gt; what they do</caption><thead><tr><th scope="col">Command</th><th scope="col">Effect</th></tr></thead>');
+    expect(index).toContain('<div class="table-scroll" id="element-t1" data-element="table"><table><caption>Commands &quot;and&quot; what they do</caption><thead><tr><th scope="col">Command</th><th scope="col">Effect</th></tr></thead>');
     expect(index).toContain('<th scope="row" class="non-normative" data-non-normative="t1c1">The <code>GET</code> command <span class="marking non-normative">[Non-normative]</span></th>');
     expect(index).toMatch(/<td[^>]*data-claim-id="t1c2"[^>]*>/u);
-    expect(index).toContain('<td class="empty-cell"><span class="visually-hidden">empty</span></td>');
+    expect(index).toContain('<td class="empty-cell">no entry</td>');
     expect(index).toContain('<code>GET</code>');
   });
 
@@ -1029,13 +1039,46 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
     expect(index).toMatch(/<ol class="steps" id="element-s1" data-element="steps"><li[^>]*data-non-normative="s1a"/u);
     expect(index).toMatch(/<dl class="definitions" id="element-d1" data-element="definitions"><dt>Keyspace<\/dt><dd[^>]*data-non-normative="d1a"/u);
     expect(index).toMatch(/<ul class="cards" id="element-g1" data-element="cards"><li class="card"><p class="card-label">Snapshot card<\/p><div[^>]*data-non-normative="g1a"/u);
-    expect(index).toMatch(/<details class="details" id="element-x1" data-element="details"><summary>More depth for later<\/summary><ol class="steps" id="element-x1s"/u);
+    expect(index).toMatch(/<details class="details" id="element-x1" data-element="details"><summary>More depth for later <span class="details-unknown">\(1 Unknown\)<\/span><\/summary><ol class="steps" id="element-x1s"/u);
   });
 
   it('marks every element claim and carries it into the machine view', () => {
     for (const id of ELEMENT_CLAIMS) expect(index, id).toMatch(new RegExp(`data-(?:claim-id|non-normative)="${id}"`, 'u'));
     const text = JSON.stringify(machine);
     for (const id of ELEMENT_CLAIMS) expect(text, id).toContain(`"${id}"`);
+  });
+
+  it('renders a code excerpt from Syzygy\'s read, entity-encoded, Observed, with its language from the path and its anchor', () => {
+    const lines = 'if (a < b && c > d) return;\n#define LT "&lt;"\n#define AMP &amp;\n';
+    const escaped = lines.replace(/&/gu, '&amp;').replace(/</gu, '&lt;').replace(/>/gu, '&gt;').replace(/"/gu, '&quot;');
+    const figure = index.slice(index.indexOf('<figure class="code-excerpt" id="element-code1"'));
+    expect(figure.indexOf('<figure')).toBe(0);
+    const body = figure.slice(0, figure.indexOf('</figure>'));
+    expect(body).toContain('data-claim-id="code1" data-epistemic="observed"');
+    expect(body).toContain('<span class="code-language">C</span> <span class="code-path">src/markup.c, lines 1–3</span>');
+    expect(body).toMatch(new RegExp(`<pre><code class="verified-quote" data-quote-source="[^"]+" data-quote-start="0" data-quote-end="${Buffer.byteLength(lines)}">${escaped.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&')}</code></pre>`, 'u'));
+    expect(body).not.toContain('a < b');
+    expect(body).not.toContain('"&lt;"');
+    expect(body).not.toContain('"</pre>');
+    expect(body).toMatch(/<span class="marking observed">\[Observed\]<\/span> <a class="anchor-link cite"[^>]*data-anchor-class="evidence-artifact-identifier-with-integrity-digest"[^>]*data-anchor-fragment="0-\d+"[^>]*>\[\d+\]<\/a>/u);
+    expect(body).not.toContain('int tail');
+  });
+
+  it('withholds a code excerpt of a file screening excludes, with none of its bytes', () => {
+    const figure = index.slice(index.indexOf('<figure class="code-excerpt" id="element-code2"'));
+    const body = figure.slice(0, figure.indexOf('</figure>'));
+    expect(body).toContain('data-claim-id="code2" data-epistemic="unknown"');
+    expect(body).toContain('<span class="code-language">Dotenv</span>');
+    expect(body).toContain('[code excerpt withheld: the file it cites is excluded by screening]');
+    expect(body).not.toContain('X=1');
+    expect(body).not.toContain('<pre>');
+  });
+
+  it('withholds a code excerpt whose cited lines carry a raw tag: screening holds the file as active content', () => {
+    const figure = index.slice(index.indexOf('<figure class="code-excerpt" id="element-code3"'));
+    const body = figure.slice(0, figure.indexOf('</figure>'));
+    expect(body).toContain('data-claim-id="code3" data-epistemic="unknown"');
+    expect(body).not.toContain('const end');
   });
 
   it('puts no fragment target that a link names inside a details element', () => {

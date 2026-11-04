@@ -131,7 +131,7 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   // v1.3 rich elements (syzygy-mea.10.5). Each tone names itself in visible text, so colour is never the only signal.
   + '.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}'
   + '.table-scroll{overflow-x:auto;margin:1.25rem 0}.table-scroll table{margin:0;min-width:60%}caption{caption-side:top;text-align:left;font-weight:600;padding:0 0 .4rem}'
-  + 'tbody tr:nth-child(even) td{background:var(--d-surface-2)}td.empty-cell{background:transparent}'
+  + 'tbody tr:nth-child(even) td{background:var(--d-surface-2)}'
   + '.callout{border:1px solid var(--line);border-left:4px solid var(--c);background:var(--t);border-radius:10px;padding:.75rem 1rem;margin:1.25rem 0}'
   + '.callout-note{--c:var(--proposed);--t:var(--d-info-tint)}.callout-tip{--c:var(--observed);--t:var(--d-ok-tint)}'
   + '.callout-caution{--c:var(--amber);--t:var(--d-warn-tint)}.callout-important{--c:var(--cyan);--t:var(--d-accent-tint)}'
@@ -144,7 +144,12 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + 'ul.cards{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.9rem;margin:1.25rem 0}'
   + 'li.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.85rem 1rem}.card-label{margin:0 0 .35rem;font-weight:600;color:var(--cyan)}'
   + 'details.details{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:1.25rem 0;background:var(--panel)}details.details>summary{cursor:pointer;font-weight:600}'
-  + 'details.details>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}';
+  + 'details.details>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}.details-unknown{color:var(--unknown);font-weight:600}'
+  + 'td.empty-cell,th.empty-cell{color:var(--muted);font-style:italic}'
+  + 'figure.code-excerpt pre{margin:.5rem 0;overflow-x:auto;background:var(--d-surface-2);border:1px solid var(--line);border-radius:8px;padding:.75rem 1rem}'
+  + 'figure.code-excerpt pre code{display:block;background:none;border:0;padding:0;font:.85rem/1.5 var(--font-mono);white-space:pre}'
+  + 'figure.code-excerpt figcaption{display:flex;gap:.6rem;flex-wrap:wrap}.code-language{color:var(--cyan);text-transform:uppercase;letter-spacing:.06em;font-size:.78em}.code-path{font:400 .85em var(--font-mono);color:var(--muted)}'
+  + '.code-anchor{margin:0;font-size:.9em}';
 
 /** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
 interface PageChrome { readonly notice: string; readonly disclosure: string; readonly mainAttributes: string; readonly region: string }
@@ -264,7 +269,14 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const redaction = sources.get(part.sourceId)?.redaction;
     const disclosure = redaction === undefined ? {} : { redaction: { redactionClass: redaction.redactionClass, withheldLines: redaction.withheldLines } };
     quotations.push({ page: from, blockId, sourceId: part.sourceId, start: part.start, end: part.end, anchor: part.anchor, ...disclosure });
-    return `<q class="verified-quote" data-quote-source="${escape(part.sourceId)}" data-quote-start="${part.start}" data-quote-end="${part.end}">${escape(part.text).replace(/\r/gu, '&#13;')}</q> ${marking('observed')} <a class="anchor-link cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(part.sourceId)}" aria-label="${escape(`${sourceLabel(from, part.sourceId)}, ${part.anchor.fragment === null ? 'whole file' : `bytes ${part.anchor.fragment.start}–${part.anchor.fragment.end}`}`)}"${anchorAttributes(part.anchor, escape)}>[${citeNumber(from, part.sourceId)}]</a>${redaction === undefined ? '' : ` <span class="redaction-note">[redacted-span: ${redaction.withheldLines} withheld line(s) in this file]</span>`}`;
+    return `<q class="verified-quote" data-quote-source="${escape(part.sourceId)}" data-quote-start="${part.start}" data-quote-end="${part.end}">${escape(part.text).replace(/\r/gu, '&#13;')}</q> ${marking('observed')} ${anchorLink(from, part)}`;
+  };
+  // The numbered anchor after a located quotation, with its redaction note.
+  const anchorLink = (from: string, part: Extract<LocalSegment, { kind: 'quotation' }>): string => {
+    const target = sourcePaths.get(part.sourceId);
+    if (target === undefined) throw new DossierRenderError('unquotable-source');
+    const redaction = sources.get(part.sourceId)?.redaction;
+    return `<a class="anchor-link cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(part.sourceId)}" aria-label="${escape(`${sourceLabel(from, part.sourceId)}, ${part.anchor.fragment === null ? 'whole file' : `bytes ${part.anchor.fragment.start}–${part.anchor.fragment.end}`}`)}"${anchorAttributes(part.anchor, escape)}>[${citeNumber(from, part.sourceId)}]</a>${redaction === undefined ? '' : ` <span class="redaction-note">[redacted-span: ${redaction.withheldLines} withheld line(s) in this file]</span>`}`;
   };
   const localParagraph = (from: string, p: DraftParagraph, tag: string): string => {
     const b = local!.blocks.get(p.id);
@@ -295,7 +307,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         const head = `<thead><tr>${e.columns.map(column => `<th scope="col">${escape(column)}</th>`).join('')}</tr></thead>`;
         const rows = e.rows.map(row => `<tr data-row-id="${escape(row.id)}">${row.cells.map((cell, c) => {
           const tag = e.rowHeaders && c === 0 ? 'th' : 'td';
-          const html = cell === null ? `<${tag} class="empty-cell"><span class="visually-hidden">empty</span></${tag}>` : paragraph(from, cell, tag);
+          const html = cell === null ? `<${tag} class="empty-cell">no entry</${tag}>` : paragraph(from, cell, tag);
           // A row header names its row: the scope goes on the opening tag only, which every form above begins with.
           return tag === 'th' ? `<th scope="row"${html.slice('<th'.length)}` : html;
         }).join('')}</tr>`).join('');
@@ -309,8 +321,30 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         return `<dl class="definitions"${attrs}>${e.entries.map(entry => `<dt>${escape(entry.term)}</dt>${paragraph(from, entry.definition, 'dd')}`).join('')}</dl>`;
       case 'cards':
         return `<ul class="cards"${attrs}>${e.items.map(item => `<li class="card"><p class="card-label">${escape(item.label)}</p>${paragraph(from, item.body, 'div')}</li>`).join('')}</ul>`;
-      case 'details':
-        return `<details class="details"${attrs}><summary>${escape(e.summary)}</summary>${e.elements.map(child => block(from, child)).join('')}</details>`;
+      case 'details': {
+        // A collapsed section never hides an Unknown silently (v1.3 note 2): its summary counts the Unknown claims inside it.
+        const before = pending.length;
+        const inner = e.elements.map(child => block(from, child)).join('');
+        const unknown = pending.slice(before).filter(entry => entry.epistemic === 'unknown').length;
+        const count = unknown === 0 ? '' : ` <span class="details-unknown">(${unknown} Unknown)</span>`;
+        return `<details class="details"${attrs}><summary>${escape(e.summary)}${count}</summary>${inner}</details>`;
+      }
+      case 'code': {
+        const caption = `<figcaption><span class="code-language">${escape(e.language)}</span> <span class="code-path">${escape(e.path)}, lines ${e.startLine}–${e.endLine}</span></figcaption>`;
+        const located = e.parts.filter((part): part is Extract<LocalSegment, { kind: 'quotation' }> => part.kind === 'quotation');
+        if (located.length !== e.parts.length) {
+          return claim('figure', id, 'unknown', `${caption}<p><span class="quote-withheld" data-unknown-reason="excluded-content">[code excerpt withheld: the file it cites is excluded by screening]</span> ${marking('unknown')}</p>`,
+            ` class="code-excerpt"${attrs} data-unknown-reason="excluded-content"`, 'excluded-content');
+        }
+        for (const part of located) {
+          const redaction = sources.get(part.sourceId)?.redaction;
+          quotations.push({ page: from, blockId: id, sourceId: part.sourceId, start: part.start, end: part.end, anchor: part.anchor,
+            ...(redaction === undefined ? {} : { redaction: { redactionClass: redaction.redactionClass, withheldLines: redaction.withheldLines } }) });
+        }
+        // Entity-encoded text, so a cited `<`, `&` or `</pre>` is shown, never parsed (v1.3 note 1).
+        const lines = located.map(part => `<code class="verified-quote" data-quote-source="${escape(part.sourceId)}" data-quote-start="${part.start}" data-quote-end="${part.end}">${escape(part.text).replace(/\r/gu, '&#13;')}</code>`).join('');
+        return claim('figure', id, 'observed', `${caption}<pre>${lines}</pre><p class="code-anchor">${marking('observed')} ${located.map(part => anchorLink(from, part)).join(' ')}</p>`, ` class="code-excerpt"${attrs}`);
+      }
     }
   };
   const block = (from: string, b: DraftBlock): string => {

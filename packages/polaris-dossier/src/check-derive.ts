@@ -11,6 +11,30 @@ import { type CheckFinding, type CitedBlob, type ExcludedQuotation, type Verifie
 
 /** What one derivation found. `admitted` holds the text of every cited blob this step read, re-hashed and screening admitted, by path:
  * the only bytes a render may quote or put on a source page. */
+/** The most lines a code excerpt may name (REQ-polaris-generation-034, v1.3). */
+export const CODE_EXCERPT_MAX_LINES = 60;
+
+/** Markup a short label may not carry (v1.3 "Short label carries no claim"): an angle bracket, an ampersand, a backtick, a Markdown link
+ * or image, or an emphasis mark at a word edge. A label renders as plain text, so any of these would show as written or mislead. */
+const LABEL_MARKUP = /[<>&`]|!?\[[^\]\n]*\]\(|(?:^|[\s(])(?:\*{1,2}|_{1,2})(?=\S)|(?<=\S)(?:\*{1,2}|_{1,2})(?:$|[\s).,;:!?])/u;
+
+/** Every short label of the draft's presentation elements, with its JSON path. */
+export function elementLabels(doc: Readonly<Record<string, unknown>>): { at: string; value: string }[] {
+  const out: { at: string; value: string }[] = [];
+  const keys: Readonly<Record<string, readonly string[]>> = { table: ['caption'], callout: ['title'], details: ['summary'], code: ['language'] };
+  walk(doc, '$', (value, at) => {
+    const kind = text(value['kind']);
+    if (kind === undefined) return;
+    for (const key of keys[kind] ?? []) if (typeof value[key] === 'string') out.push({ at: `${at}.${key}`, value: value[key] as string });
+    if (kind === 'table') list(value['columns']).forEach((column, i) => { if (typeof column === 'string') out.push({ at: `${at}.columns[${i}]`, value: column }); });
+    if (kind === 'definitions') list(value['entries']).forEach((entry, i) => { if (isRecord(entry) && typeof entry['term'] === 'string') out.push({ at: `${at}.entries[${i}].term`, value: entry['term'] }); });
+    if (kind === 'cards') list(value['items']).forEach((item, i) => { if (isRecord(item) && typeof item['label'] === 'string') out.push({ at: `${at}.items[${i}].label`, value: item['label'] }); });
+  });
+  return out;
+}
+
+export function labelMarkup(value: string): boolean { return LABEL_MARKUP.test(value); }
+
 export interface Derived {
   readonly findings: CheckFinding[];
   readonly quotations: VerifiedQuotation[];
@@ -92,6 +116,11 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
 
   rules.structural(doc, add);
   const executionIds = new Set(list(doc['executions']).flatMap((execution) => (isRecord(execution) && text(execution['id']) !== undefined ? [text(execution['id'])!] : [])));
+
+  // A presentation element's short labels are plain text that claims nothing: markup in one is a finding at its path.
+  for (const label of elementLabels(doc)) {
+    if (labelMarkup(label.value)) add({ kind: 'label-markup', at: label.at, detail: 'a short label is plain text: no angle bracket, ampersand, backtick, Markdown link or image, or emphasis mark' });
+  }
 
   // Labels, citations by block kind and the execution marking.
   const blocks = rules.blocks(doc);
@@ -206,6 +235,10 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     if (state.state === 'absent') { add({ kind: 'path-absent', at: `${at}.path`, ...about, detail: `${pathLabel(cited)} names no file at the pinned revision ${inputs.pinned}` }); continue; }
     if (start === undefined || end === undefined || start > end) { add({ kind: 'range-invalid', at, ...about, detail: 'a line range is two integers from 1, startLine not after endLine' }); continue; }
     if (state.state !== 'admitted') continue;
+    if (at.endsWith('.citation') && end - start + 1 > CODE_EXCERPT_MAX_LINES) {
+      add({ kind: 'code-excerpt-too-long', at, ...about, detail: `a code excerpt names 1 to ${CODE_EXCERPT_MAX_LINES} lines; this one names ${end - start + 1}` });
+      continue;
+    }
     if (end > state.lines) { add({ kind: 'range-beyond-blob', at: `${at}.endLine`, ...about, detail: `${pathLabel(cited)} has ${state.lines} line(s) at the pinned revision; the range ends at line ${end}` }); continue; }
     rangeOk.add(value);
   }
@@ -302,7 +335,7 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
       if (!isRecord(asset) || !isRecord(asset['disposition']) || asset['disposition']['kind'] !== 'produced') return;
       // Its parts are every identity inside it: blocks, children, rich elements and their rows and claims, nodes and edges; never a citation.
       const own = new Set<string>();
-      walk(asset, '$', (value, at) => { const id = text(value['id']); if (id !== undefined && !/\.(citations|evidence)\[/u.test(at)) own.add(id); });
+      walk(asset, '$', (value, at) => { const id = text(value['id']); if (id !== undefined && !/\.(?:citations|evidence)\[|\.citation$/u.test(at)) own.add(id); });
       list(asset['disposition']['assetIds']).forEach((assetId, k) => {
         if (typeof assetId === 'string' && !own.has(assetId)) add({ kind: 'unresolved-reference', at: `$.${part}[${i}].disposition.assetIds[${k}]`, detail: `${JSON.stringify(assetId)} is not this asset or a part of it` });
       });
@@ -374,13 +407,14 @@ export function collectBlocks(doc: Readonly<Record<string, unknown>>): Block[] {
   return out;
 }
 
-/** Every citation in the draft: each object in a `citations` or `evidence` list. */
+/** Every citation in the draft: each object in a `citations` or `evidence` list, and a code excerpt's one `citation`. */
 export function collectCitations(doc: Readonly<Record<string, unknown>>): Citation[] {
   const out: Citation[] = [];
   walk(doc, '$', (value, at) => {
     for (const key of ['citations', 'evidence'] as const) {
       list(value[key]).forEach((citation, i) => { if (isRecord(citation)) out.push({ at: `${at}.${key}[${i}]`, value: citation }); });
     }
+    if (value['kind'] === 'code' && isRecord(value['citation'])) out.push({ at: `${at}.citation`, value: value['citation'] });
   });
   return out;
 }
