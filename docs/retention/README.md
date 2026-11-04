@@ -89,6 +89,25 @@ explicitly labeled isolation case bypasses that earlier guard in a compiled
 copy. The production prefix input still refuses at canonicalization.
 These controls establish sensitivity; they grant no archive eligibility.
 
+The correction evidence inventories semantic properties and their input
+domains, including independent terms inside composite guards. A guard count
+alone does not establish that coverage. Each necessary property links its
+source fragment, fixture, literal expected outcome and original/mutant/restored
+matrix result. Input records carry a digest; repeated-byte inputs retain exact
+bounded expressions. The forbidden-character cases also name each materialized
+input's digest. Equivalent or dominated terms are explained separately, with
+joint mutations for mutually redundant constraints. They are not counted as
+reachable production kills. Malformed batch-output and inconsistent
+self-digest metadata cases explicitly isolate helper boundaries; they do not
+establish that those inputs can arise from a valid measured source.
+
+Negative source-path fixtures resolve inside their outer temporary fixture
+even when a path guard is weakened. Correction audits additionally set an
+owned temporary root and enforce their filesystem, symlink and Git-process
+boundaries. A containment refusal invalidates a mutation witness; it does not
+demonstrate a retention predicate failure. This audit instrumentation is
+external review evidence, not another CI gate.
+
 [Unknown] The complete transaction still needs affirmative family/reliance
 adjudication, explicit comparable capture/run instants, a freshly frozen
 source and consumer plan, independent review, effective origin protection
