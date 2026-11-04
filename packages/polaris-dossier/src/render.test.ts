@@ -940,6 +940,10 @@ describe('readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2)', () 
     expect(index).toContain('@media (prefers-color-scheme:light){:root{--void:#faf9f5;');
     expect(index).toContain('[data-epistemic="unknown"]{display:block;border-left:4px solid var(--unknown)');
     expect(index.indexOf(':root{--void:#262624')).toBeGreaterThan(index.indexOf('--void: #071012'));
+    // R-MEA10-RENDER-READABILITY-9070-1 P1-P3: tables take the theme's panel, light-variant amber and green meet AA, focus is its own colour.
+    expect(index).toContain('table{border-collapse:collapse;margin:1rem 0;background:var(--panel)}');
+    expect(index).toContain('--observed:#276b43;--amber:#8f5300;--unknown:#8f5300;--proposed:#3a64b8;--focus:#7a3fc8;');
+    expect(index).toContain('--proposed:#8fb0f0;--focus:#d0a8ff;');
   });
 
 });

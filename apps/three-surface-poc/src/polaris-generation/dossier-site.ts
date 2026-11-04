@@ -106,13 +106,14 @@ const DOSSIER_CSS = '.dossier-nav{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem}.
 
 /** The dossier's own theme, after the shared tokens so it wins on dossier pages only (syzygy-mea.10.1): the warm soft dark palette of the
  * th-projects questionnaire page by default on operator-agent runs only (the provider mode's bytes are pinned), its light palette under `prefers-color-scheme: light`, and tinted callout panels. Every
- * callout keeps its text label ([Inferred], [Unknown], …), so no meaning rests on colour alone. */
+ * callout keeps its text label ([Inferred], [Unknown], …), so no meaning rests on colour alone. Every text colour is at least 4.5:1 on every
+ * page and callout background in both variants, and the focus ring has its own colour, never a claim colour (S11-F2). */
 export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-raised:#2a2a28;--ink:#f0eee6;--muted:#a6a39a;--line:#3d3c39;'
-  + '--cyan:#e5937a;--observed:#6cc28f;--amber:#e0a64a;--unknown:#e0a64a;--proposed:#8fb0f0;--focus:#8fb0f0;'
+  + '--cyan:#e5937a;--observed:#6cc28f;--amber:#e0a64a;--unknown:#e0a64a;--proposed:#8fb0f0;--focus:#d0a8ff;'
   + '--d-accent-tint:#3a2c26;--d-ok-tint:#263229;--d-warn-tint:#352d22;--d-info-tint:#262d3d;--d-surface-2:#2a2a28;'
   + '--font-serif:"Iowan Old Style","Charter","Palatino Linotype","Book Antiqua",Georgia,serif;color-scheme:dark}'
   + '@media (prefers-color-scheme:light){:root{--void:#faf9f5;--panel:#ffffff;--panel-raised:#f3f1ea;--ink:#1f1e1d;--muted:#6b6a65;--line:#e6e3da;'
-  + '--cyan:#ad4f2c;--observed:#2f7d4f;--amber:#a35f00;--unknown:#a35f00;--proposed:#3a64b8;--focus:#3a64b8;'
+  + '--cyan:#ad4f2c;--observed:#276b43;--amber:#8f5300;--unknown:#8f5300;--proposed:#3a64b8;--focus:#7a3fc8;'
   + '--d-accent-tint:#fbf3ee;--d-ok-tint:#eef6f0;--d-warn-tint:#fbf3e4;--d-info-tint:#eef2fb;--d-surface-2:#f3f1ea;color-scheme:light}}'
   + 'body{background:var(--void);color:var(--ink)}'
   + 'main h1,main h2,main h3{letter-spacing:-.01em}main h2{border-bottom:1px solid var(--line);padding-bottom:.35rem;margin-top:2.5rem}'
@@ -126,7 +127,7 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + 'figure{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1rem;margin:1.5rem 0}figcaption{font-weight:600}'
   + 'q.verified-quote{background:var(--d-ok-tint);border-radius:4px;padding:0 .2em}'
   + 'blockquote.exact-source{background:var(--d-surface-2);border-left:4px solid var(--observed);border-radius:8px;padding:.75rem 1rem}'
-  + 'table{border-collapse:collapse;margin:1rem 0}th,td{border:1px solid var(--line);padding:.4rem .6rem;text-align:left;vertical-align:top}th{background:var(--panel-raised)}';
+  + 'table{border-collapse:collapse;margin:1rem 0;background:var(--panel)}th,td{border:1px solid var(--line);padding:.4rem .6rem;text-align:left;vertical-align:top}th{background:var(--panel-raised)}';
 
 /** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
 interface PageChrome { readonly notice: string; readonly disclosure: string; readonly mainAttributes: string; readonly region: string }
