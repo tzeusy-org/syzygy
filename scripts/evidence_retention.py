@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import fnmatch
 import hashlib
 import json
 import os
@@ -42,6 +43,8 @@ SOURCE_KEYS = {"version", "source_commit", "snapshot_sha256", "plan_sha256", "so
                "tracked_regular_files", "evidence_files", "families", "citation_classes",
                "citation_predicate", "extended_predicate", "administrative_exclusions"}
 ADMIN = {HOME + n for n in ("INDEX.jsonl", "PLAN.jsonl", "SOURCE.json", "CENSUS.jsonl")}
+CITATION_PREDICATE = "scripts/build_evidence_index.py: unchanged path/digest/directory predicate; citation is not reliance"
+EXTENDED_PREDICATE = "full path, slash suffixes, wrapped tokens, nested basename, stem and conservative fnmatch globs in every tracked regular citer; lexical absence never establishes R2"
 
 
 class Refusal(ValueError):
@@ -158,26 +161,39 @@ def make_census(files: dict[str, bytes]) -> bytes:
     # regular-file snapshot. No observed code or source-record instruction runs.
     with tempfile.TemporaryDirectory(prefix="syzygy-retention-census-") as temp:
         root = Path(temp)
-        git(root, "init", "-q")
+        git(root, "init", "-q", "--object-format=sha1")
+        index_info = []
         for p, body in files.items():
             demand(not PurePosixPath(p).is_absolute() and ".." not in PurePosixPath(p).parts,
                    "invalid-source-path")
             dest = root / p; dest.parent.mkdir(parents=True, exist_ok=True); dest.write_bytes(body)
-        git(root, "add", "--force", "--all")
+            oid = hashlib.sha1(b"blob " + str(len(body)).encode() + b"\0" + body).hexdigest()
+            index_info.append(("100644 " + oid + "\t" + p + "\0").encode())
+        # Only ls-files consumes this synthetic index; the census reads the
+        # materialized bytes. Plumbing avoids clean filters from .gitattributes.
+        result = subprocess.run(["git", "-C", str(root), "update-index", "--info-only", "-z", "--index-info"],
+                                input=b"".join(index_info), capture_output=True,
+                                env={k: v for k, v in os.environ.items() if not k.startswith("GIT_")})
+        demand(result.returncode == 0, "synthetic-index-unavailable")
         return census.build(root)[0].encode()
 
 
 def protection_witnesses(files: dict[str, bytes], rows: list[dict]) -> dict[str, list[dict]]:
     """Conservative witnesses, not an assertion that a citation is reliance.
 
-    Extend the census with nested basenames and stems (including glob prefixes)
-    in any tracked regular citer. Dynamic reads/preservation/equivalence cannot
+    Extend the census with nested basenames, stems and conservative fnmatch
+    glob witnesses with a literal prefix in any tracked regular citer.
+    Unscoped globs remain unresolved. A star can span a slash here:
+    this deliberately over-retains rather than claiming actual glob semantics.
+    Dynamic reads/preservation/equivalence cannot
     be disproved lexically; the plan holds their residual explicitly.
     """
     targets = {r["path"]: [] for r in rows}
     keys = collections.defaultdict(set)
     by_digest = collections.defaultdict(set)
     directories = collections.defaultdict(set)
+    glob_cache = {}
+    forms = {p: (p, p[len(PREFIX):], PurePosixPath(p).name) for p in targets}
     for row in rows:
         p = row["path"]
         if row["sha256"] != census.EMPTY_SHA256:
@@ -207,6 +223,18 @@ def protection_witnesses(files: dict[str, bytes], rows: list[dict]) -> dict[str,
             for target in by_digest.get(hexd.lower(), ()):
                 if target != citer:
                     hits.add((target, "digest", hexd.lower()))
+        patterns = {p.rstrip(".") for p in re.findall(r"[A-Za-z0-9_./*?\[\]-]+", text)
+                    if ("*" in p or "?" in p) and any(c.isalnum() for c in p)}
+        for pattern in sorted(patterns):
+            prefix = pattern.split("*", 1)[0].split("?", 1)[0].split("[", 1)[0]
+            if not any(c.isalnum() for c in prefix):
+                continue
+            if pattern not in glob_cache:
+                match = re.compile(fnmatch.translate(pattern)).fullmatch
+                glob_cache[pattern] = [p for p, names in forms.items() if any(match(name) for name in names)]
+            for target in glob_cache[pattern]:
+                if target != citer:
+                    hits.add((target, "conservative-glob", pattern))
         for target, form, token in sorted(hits):
             targets[target].append({"citer": citer, "kind": kind, "form": form, "token": token})
     return targets
@@ -244,6 +272,8 @@ def prepare(root: Path, commit: str, out: Path, witness_out: Path | None = None)
     destination = out.resolve()
     demand(not destination.is_relative_to(root.resolve()) or destination == (root / HOME).resolve(),
            "generated-output-must-use-retention-home-or-external-directory")
+    demand(not out.is_symlink() and not any((out / n).is_symlink() for n in
+           ("SOURCE.json", "CENSUS.jsonl", "PLAN.jsonl", "INDEX.jsonl")), "output-artifact-symlink")
     if witness_out:
         demand(not witness_out.resolve().is_relative_to(root.resolve()), "full-witness-output-must-be-external")
     if (out / "SOURCE.json").exists():
@@ -262,8 +292,8 @@ def prepare(root: Path, commit: str, out: Path, witness_out: Path | None = None)
               "tracked_regular_files": len(files), "evidence_files": len(rows),
               "families": len({r["family"] for r in rows}),
               "citation_classes": dict(sorted(collections.Counter(r["reliance"] for r in rows).items())),
-              "citation_predicate": "scripts/build_evidence_index.py: unchanged path/digest/directory predicate; citation is not reliance",
-              "extended_predicate": "full path, slash suffixes, wrapped tokens, nested basename and stem in every tracked regular citer; lexical absence never establishes R2",
+              "citation_predicate": CITATION_PREDICATE,
+              "extended_predicate": EXTENDED_PREDICATE,
               "administrative_exclusions": sorted(ADMIN)}
     index = [{"version": 1, "kind": "live", "path": r["path"], "sha256": r["sha256"],
               "family": r["index_family"], "basis": r["classification"]} for r in plan]
@@ -313,6 +343,10 @@ def validate_locator(root: Path, row: dict, current: dict) -> None:
 
 def check(root: Path, home: Path) -> dict:
     demand(git(root, "rev-parse", "--is-shallow-repository").strip() == b"false", "shallow-history")
+    for name in ("SOURCE.json", "CENSUS.jsonl", "PLAN.jsonl", "INDEX.jsonl"):
+        p = home / name
+        demand(not p.is_symlink() and p.is_file() and p.resolve().is_relative_to(root.resolve()),
+               "retention-input-not-regular-local-file")
     source = load_json((home / "SOURCE.json").read_bytes())
     demand(isinstance(source, dict) and set(source) == SOURCE_KEYS and source["version"] == 1
            and type(source["version"]) is int,
@@ -322,6 +356,8 @@ def check(root: Path, home: Path) -> dict:
     for key in ("tracked_regular_files", "evidence_files", "families"):
         demand(type(source[key]) is int and 0 <= source[key] <= MAX_ROWS, "invalid-source-count")
     demand(source["administrative_exclusions"] == sorted(ADMIN), "administrative-exclusion-drift")
+    demand(source["citation_predicate"] == CITATION_PREDICATE and source["extended_predicate"] == EXTENDED_PREDICATE,
+           "source-predicate-drift")
     demand(isinstance(source["citation_classes"], dict) and
            all(k in census.RELIANCE_CLASSES and type(v) is int and v >= 0 for k, v in source["citation_classes"].items()),
            "invalid-citation-class-counts")
@@ -396,7 +432,7 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             return git(root, "rev-parse", "HEAD").decode().strip()
         write(PREFIX + "run-a.json", '{"subject":"synthetic","captured_at":"2026-01-01T00:00:00Z"}\n')
         write(PREFIX + "run-b.json", '{"subject":"synthetic","captured_at":"2026-01-02T00:00:00Z"}\n')
-        write(PREFIX + "review-RAW.md", "Synthetic reviewer output.\n")
+        write(PREFIX + "review-RAW.md", "Synthetic reviewer corpus: docs/evidence/run-*.json\n")
         write("scripts/reader.py", "# A consumer pins docs/evidence/run-a.json\n")
         source_commit = commit(); home = root / HOME
         prepare(root, source_commit, home); checkpoint = commit()
@@ -425,6 +461,10 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             rows = lines((home / "INDEX.jsonl").read_bytes()); fn(rows)
             (home / "INDEX.jsonl").write_bytes(jsonl(rows))
         baseline = check(root, home)
+        planned = {r["path"]: r for r in lines((home / "PLAN.jsonl").read_bytes())}
+        demand(planned[PREFIX + "run-b.json"]["classification"] == "R1" and any(
+            w["form"] == "conservative-glob" for w in planned[PREFIX + "run-b.json"]["witnesses"]["examples"]),
+            "selftest-raw-glob-witness-missing")
         before = {p.name: p.read_bytes() for p in home.iterdir()}
         prepare(root, source_commit, home)
         cases.append({"predicate": "valid-live-retrieval-and-deterministic-replay", "pass": baseline["live"] == 3
@@ -474,7 +514,12 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         failure("source-digest-shape", lambda: source_mutate("plan_sha256", "bad"), "invalid-source-digest")
         failure("source-count-shape", lambda: source_mutate("families", True), "invalid-source-count")
         failure("source-exclusion-tamper", lambda: source_mutate("administrative_exclusions", []), "administrative-exclusion-drift")
+        failure("altered-prose-source-predicate", lambda: source_mutate("extended_predicate", "Everything is safe to move"), "source-predicate-drift")
         failure("source-citation-count-shape", lambda: source_mutate("citation_classes", {"unknown": 3}), "invalid-citation-class-counts")
+        def index_symlink():
+            original = home / "INDEX.jsonl"; external = Path(temp) / "external-index.jsonl"
+            external.write_bytes(original.read_bytes()); original.unlink(); original.symlink_to(external)
+        failure("index-symlink-refused", index_symlink, "retention-input-not-regular-local-file")
         failure("source-count-mismatch", lambda: source_mutate("families", 100), "source-population-count-mismatch")
         def remove_tracked():
             (root / (PREFIX + "run-b.json")).unlink(); commit()

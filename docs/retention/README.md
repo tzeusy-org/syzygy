@@ -40,7 +40,9 @@ adoption or actual reliance. A governed digest witness or verbatim raw
 preserves R0; code, governed, raw and digest witnesses preserve R1 while
 dependence is undischarged. Other files remain held because lexical absence
 does not establish R2. The extended sweep includes nested basenames, stems,
-wrapped tokens, full digests and directories. Dynamic readers, glob semantics,
+wrapped tokens, full digests, directories and conservative glob matches with a literal prefix. A
+star may span a slash in this extra sweep, deliberately over-retaining.
+Unscoped globs, dynamic readers, actual glob semantics,
 preservation language, sidecars and replay inputs remain unresolved rather
 than silently cleared. The source census predicate remains unchanged.
 
