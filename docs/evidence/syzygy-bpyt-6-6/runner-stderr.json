@@ -1,0 +1,18 @@
+{
+  "probe": "runner-stderr",
+  "object": "0000000000000000000000000000000000000000",
+  "rows": [
+    {
+      "runner": "apps/three-surface-poc/src/verbatim-route.ts gitBlobReaderFor",
+      "outcome": "undefined",
+      "childStderrBytes": 71,
+      "childStderrFirstLine": "fatal: git cat-file 0000000000000000000000000000000000000000: bad file"
+    },
+    {
+      "runner": "packages/three-surface-poc-core/src/project-shape-observation.ts gitRunnerFor",
+      "outcome": "threw",
+      "childStderrBytes": 0,
+      "childStderrFirstLine": ""
+    }
+  ]
+}
