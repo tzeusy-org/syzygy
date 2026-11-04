@@ -78,6 +78,17 @@ including the batch blob reader. Missing promisor objects remain
 missing. The selftest compares guarded refusal with an unsafe mutation
 control using only its own temporary local-file remote.
 
+The selftest receipt identifies the implementation commit and source digest,
+synthetic fixture commits, exact old/new fixture fragments, failed checks,
+and passing controls after restoration. Its matrix covers preparation output
+boundaries as well as locator verification. Repeated-byte inputs are recorded
+as exact Python expressions with literal lengths instead of large duplicated
+bodies. A census-omission control changes only a synthetic generator result.
+The final path-prefix length guard is dominated by canonicalization; its
+explicitly labeled isolation case bypasses that earlier guard in a compiled
+copy. The production prefix input still refuses at canonicalization.
+These controls establish sensitivity; they grant no archive eligibility.
+
 [Unknown] The complete transaction still needs affirmative family/reliance
 adjudication, explicit comparable capture/run instants, a freshly frozen
 source and consumer plan, independent review, effective origin protection

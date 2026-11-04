@@ -448,7 +448,8 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             result["fixture-git-index"] = git(root, "ls-files", "--stage").decode()
             return result
         def failure(name, action, expected):
-            restore(); old = state(); action(); new = state()
+            restore(); control = check(root, home)["live"] == 3
+            old = state(); action(); new = state()
             try:
                 check(root, home)
                 reason = "unexpected-pass"; ok = False
@@ -457,9 +458,26 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             restore()
             restored = check(root, home)["live"] == 3
             changed = sorted(p for p in set(old) | set(new) if old.get(p) != new.get(p))
-            cases.append({"predicate": name, "pass": ok and restored, "refusal": reason,
+            cases.append({"predicate": name, "pass": control and ok and restored, "refusal": reason,
                           "old": {p: old.get(p) for p in changed}, "new": {p: new.get(p) for p in changed},
-                          "fixture_commit": checkpoint, "restored_pass": restored})
+                          "fixture_commit": checkpoint, "control_pass": control, "restored_pass": restored})
+        def probe(name, good, bad, expected, old, new):
+            """Direct boundary inputs avoid storing huge repeated-byte fixtures.
+
+            old/new are exact Python fixture fragments, evaluated by the actions
+            beside them. Fault injection is limited to synthetic Git or census
+            output and is always restored before the passing control repeats.
+            """
+            good()
+            try:
+                bad(); reason = "unexpected-pass"
+            except (Refusal, OSError) as exc:
+                reason = str(exc)
+            good()
+            cases.append({"predicate": name, "pass": expected == reason,
+                          "refusal": reason, "old": old, "new": new,
+                          "control_pass": True, "restored_pass": True,
+                          "fixture_commit": checkpoint})
         def index_mutate(fn):
             rows = lines((home / "INDEX.jsonl").read_bytes()); fn(rows)
             (home / "INDEX.jsonl").write_bytes(jsonl(rows))
@@ -524,6 +542,24 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             external.write_bytes(original.read_bytes()); original.unlink(); original.symlink_to(external)
         failure("index-symlink-refused", index_symlink, "retention-input-not-regular-local-file")
         failure("source-count-mismatch", lambda: source_mutate("families", 100), "source-population-count-mismatch")
+        for key in ("snapshot_sha256", "source_tree_sha256"):
+            failure("source-digest-shape-" + key, lambda: source_mutate(key, "bad"), "invalid-source-digest")
+        for key in ("tracked_regular_files", "evidence_files"):
+            failure("source-count-shape-" + key, lambda: source_mutate(key, -1), "invalid-source-count")
+        failure("source-citation-predicate-drift", lambda: source_mutate("citation_predicate", "altered prose"), "source-predicate-drift")
+        failure("source-tracked-count-mismatch", lambda: source_mutate("tracked_regular_files", 100), "source-population-count-mismatch")
+        failure("source-class-count-mismatch", lambda: source_mutate("citation_classes", {}), "source-population-count-mismatch")
+        for name, changes, reason in (
+                ("missing-row-field", None, "unknown-schema-fields-or-version"),
+                ("numeric-version", {"version": 2}, "unknown-schema-fields-or-version"),
+                ("digest-type", {"sha256": 42}, "invalid-digest"),
+                ("family-empty", {"family": ""}, "invalid-family"),
+                ("family-size", {"family": "a" * 1025}, "invalid-family"),
+                ("basis-unknown", {"basis": "unexpected"}, "invalid-basis"),
+                ("existing-family-drift", {"family": "wrong"}, "plan-index-classification-drift")):
+            def mutate_row():
+                index_mutate(lambda rows: rows[0].pop("family") if changes is None else rows[0].update(changes))
+            failure(name, mutate_row, reason)
         def remove_tracked():
             (root / (PREFIX + "run-b.json")).unlink(); commit()
         failure("committed-body-removal", remove_tracked, "live-body-not-regular-blob")
@@ -536,17 +572,154 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                                             "sha256": digest(body), "family": family, "basis": basis}))
         failure("new-file-unproved-R2", lambda: new_live(basis="R2"), "new-body-requires-conservative-live-row")
         failure("new-file-family-mismatch", lambda: new_live(family="wrong"), "new-body-family-mismatch")
+        def missing_keeper():
+            (root / (PREFIX + "run-b.json")).unlink(); commit()
+            index_mutate(lambda rows: rows.remove(next(r for r in rows if r["path"] == PREFIX + "run-b.json")))
+        failure("source-body-and-locator-lost", missing_keeper, "missing-source-body-or-newest-keeper")
+        # These parser/path boundaries share refusal strings with other guards;
+        # each call site needs its own failing input, not a reason-only census.
+        for name, reader in (("json-total-size", load_json), ("jsonl-total-size", lines)):
+            probe(name, lambda: reader(b'{}'), lambda: reader(b' ' * (MAX_FILE + 1)),
+                  "input-too-large", "b'{}'", f"b' ' * {MAX_FILE + 1}")
+        for name, bad in (("json-nonfinite", b'NaN'), ("json-invalid-utf8", b'"\xff"'),
+                          ("json-recursion", b'[' * 100000 + b']' * 100000)):
+            probe(name, lambda: load_json(b'{}'), lambda: load_json(bad),
+                  "invalid-json", "b'{}'", "b'[' * 100000 + b']' * 100000" if name == "json-recursion" else repr(bad))
+        for name, bad in (("jsonl-empty-line", b'{}\n\n'),
+                          ("jsonl-excessive-rows", b'{}\n' * (MAX_ROWS + 1))):
+            probe(name, lambda: lines(b'{}\n'), lambda: lines(bad),
+                  "invalid-line-size" if name == "jsonl-empty-line" else "empty-or-excessive-rows",
+                  "b'{}\\n'", "b'{}\\n\\n'" if name == "jsonl-empty-line" else f"b'{{}}\\n' * {MAX_ROWS + 1}")
+        for name, bad in (("path-type", None), ("path-size", PREFIX + "a" * 4096)):
+            probe(name, lambda: evidence_path(PREFIX + "run-a.json"), lambda: evidence_path(bad),
+                  "invalid-path", repr(PREFIX + "run-a.json"), repr(bad))
+        probe("path-prefix-without-body", lambda: evidence_path(PREFIX + "run-a.json"),
+              lambda: evidence_path(PREFIX), "noncanonical-path", repr(PREFIX + "run-a.json"), repr(PREFIX))
+        # The final prefix-length guard is dominated by canonicalization:
+        # PREFIX ends in '/', which PurePosixPath removes. Isolate only that
+        # dominating guard in a compiled copy; production refusal stays intact.
+        import ast
+        module = ast.parse(Path(__file__).read_text())
+        path_function = next(n for n in module.body if isinstance(n, ast.FunctionDef) and n.name == "evidence_path")
+        canonical = next(n for n in ast.walk(path_function) if isinstance(n, ast.Call)
+                         and isinstance(n.func, ast.Name) and n.func.id == "demand"
+                         and isinstance(n.args[1], ast.Constant) and n.args[1].value == "noncanonical-path")
+        old_fragment = ast.get_source_segment(Path(__file__).read_text(), canonical)
+        canonical.args[0] = ast.Constant(value=True)
+        isolated = ast.fix_missing_locations(ast.Module(body=[path_function], type_ignores=[]))
+        namespace = dict(globals())
+        exec(compile(isolated, __file__, "exec"), namespace)
+        probe("dominated-prefix-length-guard-isolation", lambda: namespace["evidence_path"](PREFIX + "run-a.json"),
+              lambda: namespace["evidence_path"](PREFIX), "forbidden-path",
+              repr(PREFIX + "run-a.json"), repr(PREFIX))
+        cases[-1]["source_mutation"] = {"old": old_fragment, "new": 'demand(True, "noncanonical-path")'}
+        cases[-1]["scope"] = "isolated dominated guard only; production prefix input still refuses at canonicalization"
+        blob_oid = git(root, "rev-parse", source_commit + ":" + PREFIX + "run-a.json").decode().strip()
+        probe("object-is-commit-not-blob", lambda: tree(root, source_commit), lambda: tree(root, blob_oid),
+              "not-a-commit", source_commit, blob_oid)
+        entries = {PREFIX + "run-a.json": ("100644", "blob", blob_oid)}
+        probe("batch-process-failure", lambda: blobs(root, entries), lambda: blobs(Path(temp), entries),
+              "missing-source-blob", "blobs(fixture_git_root, entries)", "blobs(non_git_temporary_parent, entries)")
+        for name, bad in (("source-absolute-path", "/absolute.json"), ("source-parent-path", "../escape.json")):
+            probe(name, lambda: make_census({PREFIX + "safe.json": b'{}'}),
+                  lambda: make_census({bad: b'{}'}), "invalid-source-path",
+                  repr({PREFIX + "safe.json": b'{}'}), repr({bad: b'{}'}))
+        probe("synthetic-index-process-failure", lambda: make_census({PREFIX + "safe.json": b'{}'}),
+              lambda: make_census({".git/index": b'bad-index'}), "synthetic-index-unavailable",
+              repr({PREFIX + "safe.json": b'{}'}), repr({".git/index": b'bad-index'}))
+        probe("plan-output-home", lambda: prepare(root, source_commit, home),
+              lambda: prepare(root, source_commit, root / "arbitrary-output"),
+              "generated-output-must-use-retention-home-or-external-directory",
+              "root / HOME", "root / 'arbitrary-output'")
+        external = Path(temp) / "external-output"
+        probe("plan-external-output-control", lambda: prepare(root, source_commit, external),
+              lambda: prepare(root, source_commit, root / "arbitrary-output"),
+              "generated-output-must-use-retention-home-or-external-directory",
+              "temporary_parent / 'external-output'", "root / 'arbitrary-output'")
+        out_link = Path(temp) / "output-link"; out_link.symlink_to(external, target_is_directory=True)
+        probe("plan-output-directory-symlink", lambda: prepare(root, source_commit, external),
+              lambda: prepare(root, source_commit, out_link), "output-artifact-symlink",
+              "regular external-output directory", "output-link -> external-output")
+        for artifact in ("SOURCE.json", "CENSUS.jsonl", "PLAN.jsonl", "INDEX.jsonl"):
+            target = external / artifact; saved = target.read_bytes()
+            replacement = Path(temp) / (artifact + ".copy"); replacement.write_bytes(saved)
+            def bad_output():
+                target.unlink(); target.symlink_to(replacement)
+                try:
+                    prepare(root, source_commit, external)
+                finally:
+                    target.unlink(); target.write_bytes(saved)
+            probe("plan-output-symlink-" + artifact, lambda: prepare(root, source_commit, external),
+                  bad_output, "output-artifact-symlink", "regular " + artifact,
+                  artifact + " -> external identical-byte copy")
+        witness = Path(temp) / "witness.jsonl"
+        probe("full-witness-output-boundary", lambda: prepare(root, source_commit, external, witness),
+              lambda: prepare(root, source_commit, external, root / "witness.jsonl"),
+              "full-witness-output-must-be-external", "temporary_parent / 'witness.jsonl'", "root / 'witness.jsonl'")
+        def omitted_census_row():
+            original_build = census.build
+            def omit_last(census_root):
+                generated, metadata = original_build(census_root)
+                return "\n".join(generated.splitlines()[:-1]) + "\n", metadata
+            census.build = omit_last
+            try:
+                prepare(root, source_commit, external)
+            finally:
+                census.build = original_build
+        probe("census-omission-fault", lambda: prepare(root, source_commit, external), omitted_census_row,
+              "independent-population-mismatch", "census.build(root)[0]",
+              "'\\n'.join(census.build(root)[0].splitlines()[:-1]) + '\\n'")
+        # The extended witness/classification branches also protect retention.
+        # Independently stated literal expectations pin each lexical witness;
+        # the unchanged census differential remains a separate control.
+        target = PREFIX + "nested/proof.json"
+        base_files = {target: b'{"subject":"owned fixture"}\n'}
+        base_rows = lines(make_census(base_files))
+        base_plan = make_plan(source_commit, base_rows, base_files)
+        for name, citer, text, form, category in (
+                ("full-path", "scripts/consumer.py", target, "path-basename-or-stem", "R1"),
+                ("basename", "scripts/consumer.py", "proof.json", "path-basename-or-stem", "R1"),
+                ("stem", "scripts/consumer.py", "proof", "path-basename-or-stem", "R1"),
+                ("wrapped-path", "scripts/consumer.py", "`docs/evidence/\n nested/proof.json`", "path-basename-or-stem", "R1"),
+                ("directory", "scripts/consumer.py", "docs/evidence/nested/", "directory", "R1"),
+                ("digest", "scripts/consumer.py", digest(base_files[target]), "digest", "R1"),
+                ("glob", "docs/reviews/fixture-RAW.md", "docs/evidence/nested/*.json", "conservative-glob", "R1"),
+                ("governed", ".syzygy/fixture.md", target, "path-basename-or-stem", "R1"),
+                ("navigation-hold", "docs/navigation.md", target, "path-basename-or-stem", "hold")):
+            changed = {**base_files, citer: text.encode()}
+            observed = make_plan(source_commit, base_rows, changed)[0]
+            found = protection_witnesses(changed, base_rows)[target]
+            cases.append({"predicate": "protection-witness-" + name,
+                          "pass": observed["classification"] == category and any(w["form"] == form for w in found),
+                          "old": {"citer": None, "classification": "hold"},
+                          "new": {"citer": citer, "body": text, "expected_classification": category, "expected_form": form},
+                          "observed": observed, "fixture_commit": checkpoint,
+                          "control_pass": base_plan[0]["classification"] == "hold",
+                          "restored_pass": make_plan(source_commit, base_rows, base_files) == base_plan})
+        raw_target = PREFIX + "fixture-RAW.md"
+        for name, changed_row, expected in (
+                ("raw-lock", {**base_rows[0], "path": raw_target}, "R0"),
+                ("act-bound", {**base_rows[0], "reliance": "act-bound"}, "R0"),
+                ("census-code", {**base_rows[0], "reliance": "code-reference"}, "R1")):
+            changed_files = {changed_row["path"]: base_files[target]}
+            observed = make_plan(source_commit, [changed_row], changed_files)[0]
+            cases.append({"predicate": "plan-classification-" + name, "pass": observed["classification"] == expected,
+                          "old": base_rows[0], "new": changed_row, "expected": expected, "observed": observed,
+                          "fixture_commit": checkpoint, "control_pass": base_plan[0]["classification"] == "hold",
+                          "restored_pass": make_plan(source_commit, base_rows, base_files) == base_plan})
         restore(); new_live()
         cases.append({"predicate": "conservative-live-extension", "pass": check(root, home)["live"] == 4,
                       "old": "three live source bodies", "new": "one new indexed held body",
                       "fixture_commit": git(root, "rev-parse", "HEAD").decode().strip()})
         restore()
+        prepare(root, source_commit, home)
         try:
             prepare(root, checkpoint, home); reason = "unexpected-pass"
         except Refusal as exc:
             reason = str(exc)
         cases.append({"predicate": "concurrent-different-source-refused", "pass": "different-source-retires-plan" in reason,
-                      "old": source_commit, "new": checkpoint, "refusal": reason, "fixture_commit": checkpoint})
+                      "old": source_commit, "new": checkpoint, "refusal": reason, "fixture_commit": checkpoint,
+                      "control_pass": True, "restored_pass": prepare(root, source_commit, home)["source_commit"] == source_commit})
         restore()
         # Archive object checks are exercised without granting a move. A real
         # tag is created only in this disposable, synthetic repository.
@@ -558,6 +731,9 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         cases.append({"predicate": "valid-archive-object-retrieval", "pass": valid["commit"] == source_commit,
                       "fixture_commit": checkpoint, "old": row, "new": valid})
         for name, changes, expected in (
+                ("archive-tag-type", {"tag": None}, "invalid-archive-tag"),
+                ("archive-tag-namespace", {"tag": "other/2026-01"}, "invalid-archive-tag"),
+                ("archive-tag-month", {"tag": "evidence-archive/2026-13"}, "invalid-archive-tag"),
                 ("archive-full-commit", {"commit": source_commit[:7]}, "full-containing-commit-required"),
                 ("archive-absent-commit", {"commit": "0" * 40}, "git-object-or-history-unavailable"),
                 ("archive-digest", {"sha256": "0" * 64}, "archive-digest-mismatch"),
@@ -568,46 +744,59 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                 ("archive-R1-forbidden", {"basis": "R1"}, "forbidden-R0-R1-or-hold-move"),
                 ("archive-held-forbidden", {"basis": "hold"}, "forbidden-R0-R1-or-hold-move")):
             changed = {**row, **changes}
+            control = verify_archive_objects(root, row) == valid
+            try:
+                verify_archive_objects(root, changed); reason = "unexpected-pass"
+            except Refusal as exc:
+                reason = str(exc)
+            cases.append({"predicate": name, "pass": control and expected in reason, "refusal": reason,
+                          "old": row, "new": changed, "fixture_commit": checkpoint,
+                          "control_pass": control, "restored_pass": verify_archive_objects(root, row) == valid})
+        git(root, "tag", "evidence-archive/2026-03", source_commit)
+        for name, tag, expected in (("lightweight-tag", "evidence-archive/2026-03", "archive-tag-not-annotated"),):
+            changed = {**row, "tag": tag}
+            control = verify_archive_objects(root, row) == valid
             try:
                 verify_archive_objects(root, changed); reason = "unexpected-pass"
             except Refusal as exc:
                 reason = str(exc)
             cases.append({"predicate": name, "pass": expected in reason, "refusal": reason,
                           "old": row, "new": changed, "fixture_commit": checkpoint,
-                          "restored_pass": verify_archive_objects(root, row) == valid})
-        git(root, "tag", "evidence-archive/2026-03", source_commit)
-        for name, tag, expected in (("lightweight-tag", "evidence-archive/2026-03", "archive-tag-not-annotated"),):
-            changed = {**row, "tag": tag}
-            try:
-                verify_archive_objects(root, changed); reason = "unexpected-pass"
-            except Refusal as exc:
-                reason = str(exc)
-            cases.append({"predicate": name, "pass": expected in reason, "refusal": reason,
-                          "old": row, "new": changed, "fixture_commit": checkpoint})
+                          "control_pass": control, "restored_pass": verify_archive_objects(root, row) == valid})
         # A sibling commit contains the same bytes but the annotated tag cannot
         # reach it. A body digest alone never establishes containment/reachability.
         write("sibling.txt", "synthetic sibling\n"); sibling = commit()
         changed = {**row, "commit": sibling}
+        control = verify_archive_objects(root, row) == valid
         try:
             verify_archive_objects(root, changed); reason = "unexpected-pass"
         except Refusal as exc:
             reason = str(exc)
         cases.append({"predicate": "unreachable-pinned-commit", "pass": "archive-commit-unreachable-from-tag" in reason,
-                      "refusal": reason, "old": row, "new": changed, "fixture_commit": sibling})
+                      "refusal": reason, "old": row, "new": changed, "fixture_commit": sibling,
+                      "control_pass": control, "restored_pass": verify_archive_objects(root, row) == valid})
+        live_row = {k: v for k, v in row.items() if k in LIVE_KEYS}; live_row.update(kind="live", basis="R1")
+        validate_locator(root, live_row, tree(root, sibling))
         try:
             validate_locator(root, row, tree(root, sibling)); reason = "unexpected-pass"
         except Refusal as exc:
             reason = str(exc)
         cases.append({"predicate": "origin-protection-and-family-gate", "pass": "additive-only" in reason,
-                      "refusal": reason, "old": "bodies present", "new": row, "fixture_commit": sibling})
+                      "refusal": reason, "old": live_row, "new": row, "fixture_commit": sibling,
+                      "control_pass": True, "restored_pass": validate_locator(root, live_row, tree(root, sibling)) is None})
         shallow = Path(temp) / "shallow"
         git(Path(temp), "clone", "--quiet", "--depth=1", root.as_uri(), str(shallow))
+        control = check(root, home)["live"] == 3
         try:
             check(shallow, shallow / HOME); reason = "unexpected-pass"
         except Refusal as exc:
             reason = str(exc)
         cases.append({"predicate": "shallow-history", "pass": reason == "shallow-history", "refusal": reason,
-                      "old": "full-history", "new": "depth=1", "fixture_commit": sibling})
+                      "old": "full-history", "new": "depth=1", "fixture_commit": sibling,
+                      "control_pass": control, "restored_pass": check(root, home)["live"] == 3})
+        probe("plan-shallow-history", lambda: prepare(root, source_commit, home),
+              lambda: prepare(shallow, source_commit, shallow / HOME), "shallow-history",
+              "full-history fixture root", "owned depth=1 fixture clone")
         # A real promisor clone is required: a missing object in an ordinary
         # repo cannot demonstrate that Git's implicit fetch was prevented.
         origin = Path(temp) / "promisor-origin"; origin.mkdir(); git(origin, "init", "-q")
