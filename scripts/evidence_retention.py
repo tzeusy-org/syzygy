@@ -1719,6 +1719,16 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                       "refusal": reason, "expected_refusal": "invalid-transaction-population", "fixture_commit": containing,
                       "control_pass": True, "restored_pass": restored})
         del oversized, oversized_bytes
+        for key in ("discharges", "families"):
+            proposed = load_json(encoded(transaction)); proposed[key] = {}
+            if key == "discharges": proposed["families"] = []
+            try:
+                transaction_plan(root, containing, measured, original_files, original_plan, proposed); reason = "unexpected-pass"
+            except Refusal as exc:
+                reason = str(exc)
+            cases.append({"predicate": "transaction-empty-mapping-is-not-" + key, "pass": reason == "invalid-transaction-population",
+                          "old": transaction, "new": proposed, "refusal": reason,
+                          "expected_refusal": "invalid-transaction-population", "fixture_commit": containing})
         index = lines((home / "INDEX.jsonl").read_bytes())
         # Select the older member by its literal identity, independently of row order.
         for row in index:
@@ -1792,6 +1802,7 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             ("family-selectors-type", lambda d: d["families"][0].update(selectors=[]), "invalid-family-selectors"),
             ("family-members-empty", lambda d: d["families"][0].update(members=[]), "family-members-required"),
             ("family-members-type", lambda d: d["families"][0].update(members=True), "family-members-required"),
+            ("family-members-mapping", lambda d: d["families"][0].update(members={p: True for p in paths}), "family-members-required"),
             ("family-selector-type", lambda d: d["families"][0]["selectors"].update(capture=True), "invalid-family-selector"),
             ("family-selector-relative", lambda d: d["families"][0]["selectors"].update(capture="capturedAt"), "invalid-family-selector"),
             ("family-selector-relative-resolves", lambda d: d["families"][0]["selectors"].update(capture="XcapturedAt"), "invalid-family-selector"),
@@ -1963,6 +1974,8 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             (root / paths[0]).rename(target); doc["families"][0]["members"][0] = name
         source_negative("family-sidecar-member", lambda d: renamed_member(d, PREFIX + "nested/capture-2026-01-01.json"),
                         "unknown-duplicate-or-sidecar-family-member")
+        source_negative("family-nested-member-same-index-group", lambda d: renamed_member(d, PREFIX + "capture/member.json"),
+                        "unknown-duplicate-or-sidecar-family-member")
         source_negative("family-cross-index-groups", lambda d: renamed_member(d, PREFIX + "other.json"),
                         "family-crosses-measured-index-group")
         source_negative("family-non-json-member", lambda d: renamed_member(d, PREFIX + "capture-2026-01-01.txt"),
@@ -1974,6 +1987,11 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                         "incomplete-or-ambiguous-family-domain")
         source_negative("family-unadjudicated-non-json-domain", lambda d: add_candidate(PREFIX + "capture-2026-01-03.txt", {}),
                         "incomplete-or-ambiguous-family-domain")
+        for suffix in ("capture/sidecar.json", "capture-2026-01-03.txt"):
+            source_negative("family-sidecar-role-does-not-prove-independence-" + Path(suffix).suffix,
+                            lambda d, suffix=suffix: add_candidate(PREFIX + suffix,
+                            {"subject": "synthetic-subject", "kind": "measurement", "role": "sidecar",
+                             "capturedAt": "2026-01-03T00:00:00Z"}), "incomplete-or-ambiguous-family-domain")
         def protected_nonmember(kind):
             tx_restore(); control = check(root, home) == final
             git(root, "reset", "--hard", containing); git(root, "clean", "-fdq")
@@ -2098,12 +2116,13 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             ("inventory-reason-long", lambda p: p[0].update(reason="r" * 4097), "inventory-discharge-reason-required"),
             ("inventory-targets-empty", lambda p: p[0].update(targets=[]), "inventory-discharge-targets-required"),
             ("inventory-targets-type", lambda p: p[0].update(targets=True), "inventory-discharge-targets-required"),
+            ("inventory-targets-mapping", lambda p: p[0].update(targets={path: True for path in paths}), "inventory-discharge-targets-required"),
             ("inventory-target-unknown", lambda p: p[0].update(targets=[PREFIX + "missing.json"]), "inventory-discharge-unknown-or-duplicate-target"),
             ("inventory-target-duplicate", lambda p: p[0]["targets"].append(paths[0]), "inventory-discharge-unknown-or-duplicate-target"),
         ]
         for name, change, expected in inventory_variants:
             inventory_failure(name, change, expected)
-        for invalid in (None, True):
+        for invalid in (None, True, {}):
             try:
                 inventory_discharges(root, frozen_inventory_files, invalid); reason = "unexpected-pass"
             except Refusal as exc:
@@ -2137,6 +2156,40 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             d["rows"][0]["sha256"] = digest(f[paths[0]])
         inventory_source_failure("inventory-historical-body-mismatch", historical_body_mismatch, "inventory-discharge-historical-object-mismatch")
         inventory_source_failure("inventory-row-type", lambda f,d: d["rows"].__setitem__(0, True), "inventory-discharge-not-basename-only-row")
+        # A historical symlink can have exactly the later JSON blob's bytes.
+        # Its matching hash must not substitute for a regular historical blob.
+        historical_repo = outer / "inventory-historical-nonblob"; historical_repo.mkdir(); git(historical_repo, "init", "-q")
+        for path, body in frozen_inventory_files.items():
+            target = historical_repo / path; target.parent.mkdir(parents=True, exist_ok=True); target.write_bytes(body)
+        target = historical_repo / paths[0]; target.unlink(); target.symlink_to(frozen_inventory_files[paths[0]].decode())
+        def history_commit():
+            git(historical_repo, "add", "--all")
+            git(historical_repo, "-c", "user.name=Retention Fixture", "-c", "user.email=fixture@example.invalid",
+                "commit", "-qm", "synthetic historical object proof")
+            return git(historical_repo, "rev-parse", "HEAD").decode().strip()
+        nonblob_commit = history_commit(); target.unlink(); target.write_bytes(frozen_inventory_files[paths[0]])
+        negative_draft = load_json(encoded(draft)); negative_draft["subjectCommit"] = nonblob_commit
+        (historical_repo / DRAFT_CENSUS).write_bytes(encoded(negative_draft)); negative_source = history_commit()
+        positive_draft = load_json(encoded(draft)); positive_draft["subjectCommit"] = negative_source
+        (historical_repo / DRAFT_CENSUS).write_bytes(encoded(positive_draft)); positive_source = history_commit()
+        def historical_proposal(record):
+            proposed = load_json(encoded([item])); proposed[0]["sha256"] = digest(encoded(record)); return proposed
+        positive_files = source_files(historical_repo, positive_source); negative_files = source_files(historical_repo, negative_source)
+        control = inventory_discharges(historical_repo, positive_files, historical_proposal(positive_draft)) == {(p, DRAFT_CENSUS) for p in paths}
+        try:
+            inventory_discharges(historical_repo, negative_files, historical_proposal(negative_draft)); reason = "unexpected-pass"
+        except Refusal as exc:
+            reason = str(exc)
+        restored = inventory_discharges(historical_repo, positive_files, historical_proposal(positive_draft)) == {(p, DRAFT_CENSUS) for p in paths}
+        cases.append({"predicate": "inventory-identical-historical-symlink-is-not-a-regular-blob", "pass":
+                      control and restored and reason == "inventory-discharge-historical-object-mismatch",
+                      "old": {"source": positive_source, "census": positive_draft},
+                      "new": {"source": negative_source, "census": negative_draft, "historical_mode": "120000",
+                              "historical_commit": nonblob_commit, "symlink_literal": frozen_inventory_files[paths[0]].decode(),
+                              "same_blob_sha256": digest(frozen_inventory_files[paths[0]])},
+                      "refusal": reason, "expected_refusal": "inventory-discharge-historical-object-mismatch",
+                      "control_pass": control, "restored_pass": restored, "fixture_commit": negative_source,
+                      "scope": "Owned synthetic source and Git symlink literal only; no target traversal or owner act"})
         # Even this narrow census proof cannot clear a separate primary digest.
         protected_files = dict(frozen_inventory_files); protected_files[".syzygy/independent-act.md"] = digest(protected_files[paths[0]]).encode()
         protected_rows = lines(make_census(protected_files)); protected_plan = make_plan(inventory_source, protected_rows, protected_files)
