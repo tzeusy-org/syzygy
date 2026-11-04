@@ -1,0 +1,49 @@
+{
+  "recorded_at_utc": "2026-11-04T20:08:55.937468+00:00",
+  "subject_baseline_commit": "e30412efc94f4ee40d213f5df6ac8d1aac445119",
+  "remote_main": "e30412efc94f4ee40d213f5df6ac8d1aac445119",
+  "sources": [
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md",
+      "sha256": "96928fbd20bf8f89b90c6b5fc62b441c0112eac3cc4367015854c70290aed08d"
+    },
+    {
+      "path": ".syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md",
+      "sha256": "86138c764a53cce27a2bb668bd7eeeab436c05a045ff9db87a3ef7841013c222"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md",
+      "sha256": "bf256d224d3453a49377de6615bd3bb1d85da73720c391b136bd5edfd4a732c9"
+    }
+  ],
+  "pr740": {
+    "headRefOid": "063f42b69c3e39e31dfcf6832e419e6b6e403493",
+    "state": "OPEN",
+    "url": "https://github.com/tzeusy-org/syzygy/pull/740"
+  },
+  "retained_pr740_review": {
+    "reviewed_commit": "9a7a7b94",
+    "raw_at_head": "063f42b69c3e39e31dfcf6832e419e6b6e403493",
+    "url": "https://github.com/tzeusy-org/syzygy/blob/063f42b69c3e39e31dfcf6832e419e6b6e403493/docs/reviews/R-MEA10-RICH-ELEMENTS-9a7a-3-RAW.md",
+    "sha256": "fd0011fd4b8e49857012465284118a99faa29b57ee6a73b7978c95896e67ac6c",
+    "capture_matches_current_pr_file": true,
+    "disclosure": "Retained review subject is 9a7a7b94; no review of the later PR head is inferred."
+  },
+  "effective_composition": {
+    "method": "count_polaris_effective_scenarios.build_composition, independent regex/manual parsers",
+    "source_files": [
+      "openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md",
+      "openspec/changes/polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md",
+      "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "openspec/changes/polaris-non-governed-narrative-profile/specs/polaris-generation/spec.md"
+    ],
+    "current": {
+      "requirements": 36,
+      "scenarios": 254
+    },
+    "proposed": {
+      "requirements": 36,
+      "scenarios": 257
+    }
+  }
+}

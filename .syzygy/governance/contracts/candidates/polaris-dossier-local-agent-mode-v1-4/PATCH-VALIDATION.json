@@ -1,0 +1,160 @@
+{
+  "subject_baseline_commit": "e30412efc94f4ee40d213f5df6ac8d1aac445119",
+  "candidate_kind": "unadopted patch proposal",
+  "temporary_root": "/home/orca/.tmp/syzygy-mea10-6-v14-20261105/tmp",
+  "subjects": {
+    "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md": {
+      "current_sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3",
+      "proposed_sha256": "f468456c3029f7085096d930b4e905909be3f186e946795def687ee2e38422d2",
+      "patch_sha256": "1bcc97bff88e9274db73f7651f9cc20109ed5c4fd2d41eed36630a860584c930"
+    },
+    "openspec/changes/polaris-dossier-local-agent-mode/design.md": {
+      "current_sha256": "d752d8f155a4837ecf4326690325f5f73ce91de49757c27e8bb5f0f72bdbafd0",
+      "proposed_sha256": "657d257043459623addc23baedd24d261bd51e9114aa7fb6ddf1a97b6d902083",
+      "patch_sha256": "3758a882cc7813cfdbf90c511d394ad8cbce14d4ae882116387ccb8bd58efb67"
+    },
+    "openspec/changes/polaris-dossier-local-agent-mode/proposal.md": {
+      "current_sha256": "afe81684bcf421ac3e12d8d024aa64ad1c5fbd86b0689fa267954cc2469c10eb",
+      "proposed_sha256": "a4f273351b2a228c15e9210005423a76442303348f62e749b9cf3a7c13ff2eee",
+      "patch_sha256": "7432fddc1173f79819acae5a02618ba0a597e08b21707482a2375f71996c7724"
+    }
+  },
+  "checks": [
+    {
+      "predicate": "patch applies; independent parser agrees",
+      "subject": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "passed": true
+    },
+    {
+      "predicate": "patch applies; independent parser agrees",
+      "subject": "openspec/changes/polaris-dossier-local-agent-mode/design.md",
+      "passed": true
+    },
+    {
+      "predicate": "patch applies; independent parser agrees",
+      "subject": "openspec/changes/polaris-dossier-local-agent-mode/proposal.md",
+      "passed": true
+    },
+    {
+      "predicate": "IDs unchanged; only REQ034 body changes; scenario census agrees by two methods",
+      "passed": true,
+      "ids": [
+        "REQ-polaris-generation-033",
+        "REQ-polaris-generation-034",
+        "REQ-polaris-generation-035",
+        "REQ-polaris-generation-036"
+      ],
+      "before_scenarios": 14,
+      "after_scenarios": 17
+    },
+    {
+      "predicate": "reverse restores exact signed predecessor bytes",
+      "subject": "openspec/changes/polaris-dossier-local-agent-mode/proposal.md",
+      "passed": true
+    },
+    {
+      "predicate": "reverse restores exact signed predecessor bytes",
+      "subject": "openspec/changes/polaris-dossier-local-agent-mode/design.md",
+      "passed": true
+    },
+    {
+      "predicate": "reverse restores exact signed predecessor bytes",
+      "subject": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "passed": true
+    },
+    {
+      "predicate": "stale predecessor refused",
+      "passed": true,
+      "old": "Exact behavioral delta, version 1.3.",
+      "new": "STALE BASE: changed version.",
+      "exit": 1
+    },
+    {
+      "predicate": "missing patch refused",
+      "passed": true,
+      "exit": 128
+    },
+    {
+      "predicate": "baseline denominator agrees with git tree; fixed-string hit sets agree with git grep",
+      "passed": true,
+      "tracked_paths": 8699
+    },
+    {
+      "predicate": "predecessor package/records/raws/installed subjects unchanged by bytes and git diff",
+      "passed": true,
+      "files": 17
+    }
+  ],
+  "preserved_predecessors": [
+    {
+      "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/IMPACT-LEDGER.md",
+      "sha256": "100d1226a2e65b24d36098bf1353d083022938fe8b8d2245223c432f93446bac"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/OWNER-DECISION-PACKET.md",
+      "sha256": "402fa9b910b71ba29d1f5edd83899a0815e1d7de4b6bc37a9f3d14367f7d9e4f"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-1-DISPOSITIONS.md",
+      "sha256": "71e60706fa904628b00a742b026cfb16c0b0f80d55ce71186eb69c70a993f4ea"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-BRIEF.md",
+      "sha256": "adac93ca8dd857e1d8d8510aff5875d97f374d3ade8bc143373f46756e577b70"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md",
+      "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/design.md.patch",
+      "sha256": "7068535eced94a4b035e6efdba354ed0a92f0469265e95414421c711d7cb38c2"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/proposal.md.patch",
+      "sha256": "4560d8c5740de03c4a6777ab046d92202d07a118b016581e8e654f1369ba7da6"
+    },
+    {
+      "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/spec.md.patch",
+      "sha256": "92d7eca908b88e6bbc7627a92ee127c6334ec95d2e8a73c853e93feee0101e13"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.0.md",
+      "sha256": "b64225c5c490c754f74ab94fa2c94ed28137a7ad9903fc501925c99dc37f3739"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.1.md",
+      "sha256": "3d70b3402925239712053b8f9b8ded186e61ac169bba059e16801de5593072d9"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md",
+      "sha256": "c96d444db1e04ed3ca8e594c3242e571609f93c606ca9b9d4a30e749a28f569c"
+    },
+    {
+      "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md",
+      "sha256": "12b9cfeb6bec3ddc17dc07edd66e5f8411dd04838609dcb5621570bc4f2e03ef"
+    },
+    {
+      "path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md",
+      "sha256": "3f36de2f5b9f23362b89417d92a417b366f21bedbf1008b664385c8857f70ccd"
+    },
+    {
+      "path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-ffc2-1-RAW.md",
+      "sha256": "f32376410c1843abed94744a1a03210f2436af77e87e90499a61a51ebc87a1d0"
+    },
+    {
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3"
+    },
+    {
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/design.md",
+      "sha256": "d752d8f155a4837ecf4326690325f5f73ce91de49757c27e8bb5f0f72bdbafd0"
+    },
+    {
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/proposal.md",
+      "sha256": "afe81684bcf421ac3e12d8d024aa64ad1c5fbd86b0689fa267954cc2469c10eb"
+    }
+  ],
+  "v13_tag_object": "fdc1f0920fa601b085f88c973cf4e7f2b9d4d5c5",
+  "v13_tag_commit": "b9ce909055d90f8c57bfa62cb0b5533c4e094631"
+}

@@ -2519,7 +2519,7 @@ exclusion of the acts in force stands.
                         "passed": before_record == after_record and before_aggregate == after_aggregate})
         # Packages the recorder gained after the frozen historical recorder:
         # a closed list, so any other new package still fails the census.
-        later = {"polaris-dossier-local-agent-mode@1.3"}
+        later = {"polaris-dossier-local-agent-mode@1.3", "polaris-dossier-local-agent-mode@1.4"}
         passed = (set(keys) == set(historical_packages) - {KEY}
                   and set(packages) - {KEY} == set(keys) | later
                   and len(controls) == 38 and all(row["passed"] for row in controls))

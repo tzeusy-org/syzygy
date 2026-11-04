@@ -1,0 +1,39 @@
+--- a/openspec/changes/polaris-dossier-local-agent-mode/proposal.md
++++ b/openspec/changes/polaris-dossier-local-agent-mode/proposal.md
+@@ -21,7 +21,10 @@
+ > signed off on 2026-10-14; version 1.3 adds the presentation elements of the
+ > owner direction `OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04`
+ > (`.syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04.md`).
+-> These bytes bind only by the owner's sign-off of version 1.3 (VIS-4). It grants no read, egress, write or execution beyond what
++> Version 1.4 proposes the empty-cell marker "-", explicit unread-path
++> excerpt handling and the carried v1.3 review notes. Version 1.3 remains
++> the signed predecessor (`.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md`).
++> These bytes bind only by the owner's sign-off of version 1.4 (VIS-4). It grants no read, egress, write or execution beyond what
+ > its requirements state.
+ 
+ **A Polaris dossier can be written by the operator's own Claude Code or Codex
+@@ -172,8 +175,22 @@
+   argument with tables, callouts, numbered steps, definition lists, cards,
+   collapsible sections and code excerpts, rendered as inert static HTML. Every
+   claim an element holds is checked, reviewed and marked as any claim block
+-  is; the short labels that head elements carry no claim; and a code excerpt
+-  is the cited lines as Syzygy read them, never the agent's copy.
++  is; table cells are read with their headings. Empty cells show "-" and
++  state nothing, while an absence or negative remains a labelled claim.
++  Short labels, callout tone and step order carry no claim, which Syzygy
++  checks in part and the reviews judge. Short-label limits count Unicode
++  code points; collapsed summaries disclose their Unknown-claim count.
++  A code excerpt is escaped text from Syzygy's verified read, never the
++  agent's copy, with a path-derived language label when the agent gives
++  none and one can be determined; an agent value is only a presentation
++  hint. A path excluded before reading stays unread, with no excerpt
++  body-end check; missing paths, malformed/reversed ranges and citations
++  over 60 lines still fail. Bodies read and then excluded retain possible
++  range checks without disclosing bytes or length. Excluded or invalid-
++  UTF-8 excerpts render Unknown; any displayed submitted range is stated
++  as agent-supplied and unverified. Ordinary-block citation obligations
++  remain as written in REQ-polaris-generation-034. These changes retain
++  v2/v3 schema compatibility and await version 1.4 sign-off.
+ - **What the agent ran is its report.** Commands the agent says it ran are
+   recorded as its report, labelled Inferred; Syzygy cannot observe them.
+ - **No new permission.** This is not permission to read, egress, write,

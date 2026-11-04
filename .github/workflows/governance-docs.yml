@@ -269,6 +269,13 @@ jobs:
       - name: build_polaris_dossier_local_agent_mode_v1_3 --selftest
         run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_3.py --selftest
 
+      # Candidate verification only; a passing check does not select or install v1.4.
+      - name: build_polaris_dossier_local_agent_mode_v1_4 --check
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_4.py --check
+
+      - name: build_polaris_dossier_local_agent_mode_v1_4 --selftest
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_4.py --selftest
+
       - name: record_pwb_behavior_amendment_acts --check opening-band
         run: python3 scripts/record_pwb_behavior_amendment_acts.py --check opening-band 7f80cb05f644dd1e4f49e7b212d6972ee4754e40682450e59a6c3245546d5c46 --date 2026-10-01
 

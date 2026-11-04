@@ -1,0 +1,48 @@
+{
+  "subject_baseline_commit": "e30412efc94f4ee40d213f5df6ac8d1aac445119",
+  "subject_kind": "candidate version tooling; no actual recording/install",
+  "subjects": [
+    {
+      "path": "scripts/build_polaris_dossier_local_agent_mode_v1_3.py",
+      "sha256": "ce2f9ce89f7d07f9cb45df1f9d9bf59b52cfbc186de57ff334f3d6fc5114849e"
+    },
+    {
+      "path": "scripts/build_polaris_dossier_local_agent_mode_v1_4.py",
+      "sha256": "fd3b6adc7df9b6f308a4910a8c3262ad403711c24f0407ce53477856e72f5399"
+    },
+    {
+      "path": "scripts/record_versioned_signoff.py",
+      "sha256": "294cd139275e77952974d5db3114ff070e296dab6f413e1f1201974392e7c541"
+    },
+    {
+      "path": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+      "sha256": "1e92fdf6d99c49f02578d170c2c3e794e09d4ff1687d297e282a54fec44d077c"
+    }
+  ],
+  "scoped_checks": [
+    {
+      "name": "v13_builder",
+      "final_output": "26 fixtures, 0 failing",
+      "log_sha256": "c32d8d75ded1db302dfe1b7977be542afd6e3ef7862c7caca2b936648559b812"
+    },
+    {
+      "name": "v14_builder",
+      "final_output": "26 fixtures, 0 failing",
+      "log_sha256": "80ff7cd04b89b5d7401c639463961ba2696b479f9d6c45703b5db9a65caba231"
+    },
+    {
+      "name": "recorder",
+      "final_output": "171 fixtures, 0 failing",
+      "log_sha256": "6953d63ab086626921e74f3cd831150850fc7e04ddf67aa0489bd089c0758c9f"
+    },
+    {
+      "name": "P115 full recording preparation",
+      "final_output": "227 cases; 0 failed; scratch only",
+      "log_sha256": "e3a1f00f109648e1abc978758b38638d4bf6c8bc4cdfb0edd800c958b74cbcb7"
+    }
+  ],
+  "runtime_test_delta": 0,
+  "python_builder_fixtures_added": 26,
+  "existing_recorder_fixtures_added": 1,
+  "disclosure": "Full P115, mutation, clean-clone full-suite and owner selection/installation evidence remain separate; these scoped receipts do not prove adoption."
+}
