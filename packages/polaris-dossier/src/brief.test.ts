@@ -4,7 +4,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { DOSSIER_GUIDANCE, DOSSIER_GUIDANCE_VERSION, issueBrief, renderBrief } from './brief.js';
+import { DOSSIER_GUIDANCE, DOSSIER_GUIDANCE_VERSION, issueBrief, READABILITY_GUIDANCE, renderBrief } from './brief.js';
 import { runDossierCli } from './cli.js';
 import { readSec3 } from './doctrine-quote.js';
 import { decideExecutionRule, type ExecutionChoice } from './execution-rule.js';
@@ -164,6 +164,16 @@ describe('brief: issued', () => {
     const rule = await decideExecutionRule({ role: 'authoring', runDir: '/r', runId: RUN_ID, pinnedRevision: REV, operatorIsOwner: true, sec3: sec3.sec3, now: NOW, d9: async () => OK, launched: () => 'absent', permitting: { enabled: false } });
     const input = { runId: RUN_ID, subject: SUBJECT, declared: configOf(), issuedAt: NOW, schemaSha256: '0'.repeat(64), executionRule: rule, revisionLabel: '8.10.2' };
     expect(renderBrief(input)).toBe(renderBrief(structuredClone(input)));
+  });
+
+  it('carries the readability rules, after the profile guidance (syzygy-mea.10.4)', async () => {
+    const sec3 = readSec3(REAL_ROOT);
+    if (!sec3.ok) throw new Error(sec3.reason);
+    const rule = await decideExecutionRule({ role: 'authoring', runDir: '/r', runId: RUN_ID, pinnedRevision: REV, operatorIsOwner: true, sec3: sec3.sec3, now: NOW, d9: async () => OK, launched: () => 'absent', permitting: { enabled: false } });
+    const text = renderBrief({ runId: RUN_ID, subject: SUBJECT, declared: configOf(), issuedAt: NOW, schemaSha256: '0'.repeat(64), executionRule: rule, revisionLabel: '8.10.2' });
+    const heading = '## Readability (`polaris-dossier-readability-v1`)';
+    expect(text).toContain(`${heading}\n\nThese rules shape how the dossier reads; every claim, citation and quotation rule above still holds.\n\n${READABILITY_GUIDANCE}\n`);
+    expect(text.indexOf(heading)).toBeGreaterThan(text.indexOf(DOSSIER_GUIDANCE));
   });
 
   // syzygy-bpyt.8.1: the guidance is the brief's own text, no longer cut from the provider pipeline's author prompt at load. These are

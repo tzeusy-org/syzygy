@@ -5,7 +5,7 @@ import * as path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { evaluateDossier, excludedSourceId, parseDossierManifest, scanDossierPage } from '@syzygy/polaris-generation-core';
-import { issueBrief } from './brief.js';
+import { issueBrief, READABILITY_GUIDANCE, READABILITY_GUIDANCE_VERSION } from './brief.js';
 import { checkDraft, type CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
 import { designCriteria } from './design-review.js';
@@ -946,4 +946,33 @@ describe('readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2)', () 
     expect(index).toContain('--proposed:#8fb0f0;--focus:#d0a8ff;');
   });
 
+});
+
+describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () => {
+  it('draws a section\'s diagrams before its blocks on an operator-agent page', async () => {
+    const doc = draft();
+    (doc['diagrams'] as unknown[]).push({
+      id: 'd-core', title: 'How a command runs', sectionId: 'core-ideas', kind: 'flow', relationship: 'A client command reaches the server.',
+      nodes: [{ id: 'n-client', label: 'Client', epistemic: 'inferred', citations: [cite('c-n1', 'src/kestrel.c', 2, 3)] }, { id: 'n-server', label: 'Server', epistemic: 'inferred', citations: [cite('c-n2', 'src/kestrel.c', 2, 3)] }],
+      edges: [{ id: 'e-cmd', from: 'n-client', to: 'n-server', label: 'sends a command', epistemic: 'inferred', citations: [cite('c-e1', 'src/kestrel.c', 2, 3)] }],
+      disposition: { kind: 'produced', assetIds: ['d-core'] },
+    });
+    const run = await prepared(doc);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const index = readSite(result.report.site).get('index.html')!;
+    const section = index.slice(index.indexOf('<section id="section-core-ideas"'));
+    expect(section.indexOf('<figure>')).toBeGreaterThan(-1);
+    expect(section.indexOf('<figure>')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
+  });
+
+  it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
+    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v1');
+    expect(READABILITY_GUIDANCE).toContain('Write for a software engineer new to this project and its domain, such as a recent graduate.');
+    expect(READABILITY_GUIDANCE).toContain('carries at least one diagram with that section\'s `sectionId`, and Syzygy draws it at the top of the section');
+    expect(READABILITY_GUIDANCE).toContain('a `flow` for an end-to-end workflow or a user\'s path through the project, a `boundary` or `dependency` diagram for the architecture and how components talk to each other');
+    expect(READABILITY_GUIDANCE).toContain('An enumeration of three or more items is never a run-on sentence: write a short lead block and give each item its own child block, which renders as a bulleted list.');
+    expect(READABILITY_GUIDANCE).toContain('Put commands, identifiers, file names and configuration keys in backticks outside quotations; they render as inline code.');
+    expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, or a passage that needs prior knowledge of the project or its domain is a finding against that page');
+  });
 });

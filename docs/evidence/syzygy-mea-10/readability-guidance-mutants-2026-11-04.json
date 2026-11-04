@@ -1,0 +1,72 @@
+{
+ "subjects": {
+  "packages/polaris-dossier/src/design-review.ts": "54d27bdb7ec36e6ee7a28b095db887e1ef70ae4df976b5e80046f94537583548",
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "feacb2350202fe6805c432fce3f2735a47a74792cb1c2788fd5dc785a393d9db",
+  "packages/polaris-dossier/src/brief.ts": "4a49cc981c4a167ee6ab184c65ed1b7d10721a8e62a71ac1554acd59c8697bae"
+ },
+ "baseCommit": "9070f7a05ccc88f492a63f527ed0dd25ec0b9a2e",
+ "note": "each mutant applied to the subject bytes named by subjects (working tree on baseCommit, committed unchanged next), then restored",
+ "tests": [
+  "packages/polaris-dossier/src/render.test.ts",
+  "packages/polaris-dossier/src/brief.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts"
+ ],
+ "mutants": [
+  {
+   "id": "g-dropped-from-brief",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "    READABILITY_GUIDANCE,\n    '',\n  ].join",
+   "new": "    '',\n  ].join",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-reader-rule",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "'1. Reader. Write for a software engineer new to this project and its domain, such as a recent graduate.",
+   "new": "'1. Reader. Write for a reader.",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-diagram-rule",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "carries at least one diagram with that section\\'s `sectionId`",
+   "new": "may carry a diagram",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-list-rule",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "give each item its own child block, which renders as a bulleted list.",
+   "new": "list them.",
+   "outcome": "killed"
+  },
+  {
+   "id": "g-version",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "'polaris-dossier-readability-v1'",
+   "new": "'polaris-dossier-readability-v0'",
+   "outcome": "killed"
+  },
+  {
+   "id": "d-criterion-dropped",
+   "file": "packages/polaris-dossier/src/design-review.ts",
+   "old": "    'Judge too whether a software engineer new to the project could follow each page on one reading:",
+   "new": "    'Judge too whether each page reads well:",
+   "outcome": "killed"
+  },
+  {
+   "id": "r-figures-after",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "${local === undefined ? `${body}${figures}` : `${figures}${body}`}",
+   "new": "${body}${figures}",
+   "outcome": "killed"
+  },
+  {
+   "id": "r-figures-first-provider",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "${local === undefined ? `${body}${figures}` : `${figures}${body}`}",
+   "new": "${figures}${body}",
+   "outcome": "killed"
+  }
+ ]
+}

@@ -49,6 +49,16 @@ export const DOSSIER_GUIDANCE = `This run produces a dossier: an evidence-anchor
 
 Dossier draft: open with a two- or three-sentence introduction that says what the project is and how its central workflow runs, never a copy of the first section's block. Explain each term a newcomer may not know at its first use, in one clause its sources support. In the workflow section, give each hop its own child block, citing the source that shows the hand-off; draw the requested workflow diagram from those hops only, its labels taken from that text. In the mechanisms section and its deep dive, name identifiers verbatim in backticks and explain what each does. Write each stated advantage, comparison and trade-off as a quotation (rule 4); an inferred mechanism-level cost is its own block beginning Inferred:. Double quotes appear only around a verbatim span of a cited source after The project states:; identifiers, commands, configuration keys and values go in backticks, and there are no scare quotes. The trade-offs section is a requested section that gathers the costs, not the canned refusals section the instructions above rule out: beside any advantage a trade-off qualifies, keep a one-clause pointer to it. Where only one half of a trade-off is stated and no mechanism supports an inference, say the other half is not stated. Begin every inferential block Inferred: (rule 6), and no other. Record every reader question the sources leave open in unresolved.`;
 
+/** Readability rules for an operator-agent dossier (syzygy-mea.10.4, owner feedback on the Redis run-3 dossier), after the profile's
+ * guidance: they serve DESIGN-ACCEPTANCE's Concision, Composition and Terminology rows and change no claim, citation or quotation rule. */
+export const READABILITY_GUIDANCE_VERSION = 'polaris-dossier-readability-v1';
+export const READABILITY_GUIDANCE = [
+  '1. Reader. Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and why someone would use it. Define each term at its first use. Keep one idea to a sentence and prefer short sentences; give a concrete example before an abstraction. A sentence a newcomer would have to reread is too dense: split it.',
+  '2. Diagrams lead. Every section whose sources describe components, steps, states or hand-offs carries at least one diagram with that section\'s `sectionId`, and Syzygy draws it at the top of the section: a `flow` for an end-to-end workflow or a user\'s path through the project, a `boundary` or `dependency` diagram for the architecture and how components talk to each other, a `lifecycle` or `state-machine` for states. The section\'s blocks then explain the diagram. Prefer several small diagrams to one large one; keep node and edge labels to a few words.',
+  '3. Lists. An enumeration of three or more items is never a run-on sentence: write a short lead block and give each item its own child block, which renders as a bulleted list.',
+  '4. Code. Put commands, identifiers, file names and configuration keys in backticks outside quotations; they render as inline code.',
+].join('\n');
+
 /** What a quotation is and how Syzygy compares it, after the form; the authoring and inventory briefs state it alike. */
 export const QUOTATION_RULE = 'A quotation is one contiguous span of one cited file at the pinned revision, inside the cited line range, beginning and ending on word boundaries, without elision, joining or alteration. Syzygy compares it after this normalisation, applied to the quotation and the file alike: comment leaders at line starts and a closing comment marker at a line end are dropped; markdown links and images keep only their text; character entities are decoded; markdown backslash escapes are removed; backticks are dropped; paired emphasis marks at word edges are dropped; curly quotes are straightened; an ellipsis character becomes three full stops; and each whitespace run becomes one space. Nothing else is forgiven: an ellipsis the file does not carry at that spot is an elision and fails. A quotation from a file that classification or screening excludes is not verified or rendered, and its block renders Unknown (`excluded-content`). Syzygy renders every verified quotation from its own read of the file, never from your copy.';
 
@@ -146,6 +156,12 @@ export function renderBrief(input: BriefInput): string {
     'This guidance was written for Syzygy\'s provider pipeline. Where it and this brief differ, this brief governs, and the instructions above that it refers to are the pipeline\'s, which this brief replaces. In particular: a claim\'s label is its `label` field, so begin no text with `Inferred:`; cite with `{path, startLine, endLine}` citations, never source ids; the admitted sources are the files at the pinned revision; and what you may run is the execution rule above.',
     '',
     DOSSIER_GUIDANCE,
+    '',
+    `## Readability (\`${READABILITY_GUIDANCE_VERSION}\`)`,
+    '',
+    'These rules shape how the dossier reads; every claim, citation and quotation rule above still holds.',
+    '',
+    READABILITY_GUIDANCE,
     '',
   ].join('\n');
 }
