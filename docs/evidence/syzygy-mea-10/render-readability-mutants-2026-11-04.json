@@ -1,0 +1,85 @@
+{
+ "subject": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+ "subjectSha256": "d135fa8f810720c8b9f27d61b1a806e6a0ce845c35ef3be37610c29387711d8a",
+ "baseCommit": "08b22cf80f529fdf79b3ad4c8ed05fd534b6f78b",
+ "note": "each mutant applied to the subject bytes named by subjectSha256 (working tree on baseCommit, committed unchanged next), then restored",
+ "tests": [
+  "packages/polaris-dossier/src/render.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+  "apps/three-surface-poc/src/polaris-generation/dossier-quote-fidelity.test.ts"
+ ],
+ "mutants": [
+  {
+   "id": "number-not-reused",
+   "old": "    if (n === undefined) { n = onPage.size + 1; onPage.set(id, n); }",
+   "new": "    n = onPage.size + 1; onPage.set(id, n);",
+   "outcome": "killed"
+  },
+  {
+   "id": "number-global",
+   "old": "    let onPage = numbering.get(from);",
+   "new": "    let onPage = numbering.get('');",
+   "outcome": "killed"
+  },
+  {
+   "id": "cite-shows-id",
+   "old": "[${citeNumber(from, id)}]</a>${note}`;",
+   "new": "[${escape(id)}]</a>${note}`;",
+   "outcome": "killed"
+  },
+  {
+   "id": "cite-no-data-id",
+   "old": "<a class=\"cite\" href=\"${escape(href(from, target, 'exact-text'))}\" data-source-id=\"${escape(id)}\"",
+   "new": "<a class=\"cite\" href=\"${escape(href(from, target, 'exact-text'))}\"",
+   "outcome": "killed"
+  },
+  {
+   "id": "anchor-shows-digest",
+   "old": "${anchorAttributes(part.anchor, escape)}>[${citeNumber(from, part.sourceId)}]</a>",
+   "new": "${anchorAttributes(part.anchor, escape)}>[${escape(part.anchor.algorithm)}:${escape(part.anchor.identifier.slice(0, 12))}]</a>",
+   "outcome": "killed"
+  },
+  {
+   "id": "label-no-path",
+   "old": "`Source ${citeNumber(from, id)}: ${sources.get(id)!.path}`",
+   "new": "`Source ${citeNumber(from, id)}`",
+   "outcome": "killed"
+  },
+  {
+   "id": "prose-no-code",
+   "old": "escape(text).replace(/`([^`\\n]+)`/gu, '<code>$1</code>')",
+   "new": "escape(text)",
+   "outcome": "killed"
+  },
+  {
+   "id": "prose-greedy",
+   "old": "escape(text).replace(/`([^`\\n]+)`/gu, '<code>$1</code>')",
+   "new": "escape(text).replace(/`([^\\n]*)/gu, '<code>$1</code>')",
+   "outcome": "killed"
+  },
+  {
+   "id": "segment-escape",
+   "old": "    if (part.kind === 'prose') return prose(part.text);",
+   "new": "    if (part.kind === 'prose') return escape(part.text);",
+   "outcome": "killed"
+  },
+  {
+   "id": "theme-dropped",
+   "old": "`${LOCAL_CSS}${DOSSIER_THEME_CSS}`",
+   "new": "LOCAL_CSS",
+   "outcome": "killed"
+  },
+  {
+   "id": "theme-everywhere",
+   "old": "${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}`}",
+   "new": "${DOSSIER_THEME_CSS}${chrome === undefined ? '' : LOCAL_CSS}",
+   "outcome": "killed"
+  },
+  {
+   "id": "provider-numbered",
+   "old": "    if (local === undefined) return `<a href=",
+   "new": "    if (false) return `<a href=",
+   "outcome": "killed"
+  }
+ ]
+}

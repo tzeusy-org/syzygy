@@ -896,3 +896,50 @@ describe('redactedExtent', () => {
     expect(redactedExtent({ withheld: 5, lines: 5 })).toBe('retained by screening as redacted-span with every one of its 5 line(s) withheld');
   });
 });
+
+describe('readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2)', () => {
+  it('numbers each page\'s sources [1], [2] in first-cited order, keeping the identifier in data-source-id only', async () => {
+    const run = await prepared();
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const index = readSite(result.report.site).get('index.html')!;
+    const links = [...index.matchAll(/<a class="(?:anchor-link )?cite" href="[^"]*" data-source-id="(src-[0-9a-f]{24})" aria-label="([^"]*)"[^>]*>\[(\d+)\]<\/a>/gu)].map((m) => [m[1], m[2], m[3]]);
+    expect(links.length).toBeGreaterThan(1);
+    const numberOf = new Map<string, string>();
+    for (const [id, label, n] of links) {
+      if (!numberOf.has(id!)) numberOf.set(id!, String(numberOf.size + 1));
+      expect(n).toBe(numberOf.get(id!));
+      expect(label).toMatch(new RegExp(`^Source ${n}: (src/kestrel\\.c|docs/notes\\.txt)(, (whole file|bytes \\d+–\\d+))?$`, 'u'));
+    }
+    expect(numberOf.size).toBe(2);
+    // No identifier or digest is reading text: outside tags the page never shows `[src-` or a `[sha1:` anchor.
+    const text = index.replace(/<[^>]*>/gu, '');
+    expect(text).not.toMatch(/\[src-|\[sha1:|\[sha256:/u);
+    // The page scanner still reads the cited sources from the links.
+    const intro = scanDossierPage(index).claims.find((claim) => claim.id === 'intro')!;
+    expect(intro.citedSourceIds).toEqual([links[0]![0], links[0]![0]]);
+  });
+
+  it('draws complete backtick pairs in agent prose as inline code and leaves an unpaired backtick literal', async () => {
+    const doc = draft();
+    (doc['introduction'] as { text: string }).text = 'The project states: "Kestrel keeps every key in memory." Run `kestrel-cli PING` to try it; a lone ` stays.';
+    const run = await prepared(doc);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const index = readSite(result.report.site).get('index.html')!;
+    expect(index).toContain('Run <code>kestrel-cli PING</code> to try it; a lone ` stays.');
+    expect(index).toContain('>Kestrel keeps every key in memory.</q>');
+  });
+
+  it('carries the soft dark theme with a light variant and tinted callouts', async () => {
+    const run = await prepared();
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const index = readSite(result.report.site).get('index.html')!;
+    expect(index).toContain(':root{--void:#262624;--panel:#30302e;');
+    expect(index).toContain('@media (prefers-color-scheme:light){:root{--void:#faf9f5;');
+    expect(index).toContain('[data-epistemic="unknown"]{display:block;border-left:4px solid var(--unknown)');
+    expect(index.indexOf(':root{--void:#262624')).toBeGreaterThan(index.indexOf('--void: #071012'));
+  });
+
+});

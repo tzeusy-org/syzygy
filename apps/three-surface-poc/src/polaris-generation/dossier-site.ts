@@ -97,14 +97,43 @@ function href(from: string, to: string, fragment?: string): string {
   return `${up}${to}${fragment === undefined ? '' : `#${fragment}`}`;
 }
 
+/** Agent prose, escaped, with each complete single-line backtick pair drawn as inline code (SCHEMA-CONTRACT's content tree has inline
+ * code; DESIGN-ACCEPTANCE "Rendering" counts raw Markdown syntax as a failure). An unpaired backtick stays literal. Quotations and
+ * exact-source text never pass through here. */
+export const prose = (text: string): string => escape(text).replace(/`([^`\n]+)`/gu, '<code>$1</code>');
+
 const DOSSIER_CSS = '.dossier-nav{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem}.glossary dt{font-weight:600;margin-top:1rem}.glossary dd{margin:0 0 .5rem}.deep-links{font:.9rem var(--font-mono)}.source-path{font:400 1.4rem/1.4 var(--font-mono);overflow-wrap:anywhere;letter-spacing:0;max-width:none;width:auto}.source-anchor{font:.8rem/1.5 var(--font-mono);color:var(--muted);overflow-wrap:anywhere}';
+
+/** The dossier's own theme, after the shared tokens so it wins on dossier pages only (syzygy-mea.10.1): the warm soft dark palette of the
+ * th-projects questionnaire page by default on operator-agent runs only (the provider mode's bytes are pinned), its light palette under `prefers-color-scheme: light`, and tinted callout panels. Every
+ * callout keeps its text label ([Inferred], [Unknown], …), so no meaning rests on colour alone. */
+export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-raised:#2a2a28;--ink:#f0eee6;--muted:#a6a39a;--line:#3d3c39;'
+  + '--cyan:#e5937a;--observed:#6cc28f;--amber:#e0a64a;--unknown:#e0a64a;--proposed:#8fb0f0;--focus:#8fb0f0;'
+  + '--d-accent-tint:#3a2c26;--d-ok-tint:#263229;--d-warn-tint:#352d22;--d-info-tint:#262d3d;--d-surface-2:#2a2a28;'
+  + '--font-serif:"Iowan Old Style","Charter","Palatino Linotype","Book Antiqua",Georgia,serif;color-scheme:dark}'
+  + '@media (prefers-color-scheme:light){:root{--void:#faf9f5;--panel:#ffffff;--panel-raised:#f3f1ea;--ink:#1f1e1d;--muted:#6b6a65;--line:#e6e3da;'
+  + '--cyan:#ad4f2c;--observed:#2f7d4f;--amber:#a35f00;--unknown:#a35f00;--proposed:#3a64b8;--focus:#3a64b8;'
+  + '--d-accent-tint:#fbf3ee;--d-ok-tint:#eef6f0;--d-warn-tint:#fbf3e4;--d-info-tint:#eef2fb;--d-surface-2:#f3f1ea;color-scheme:light}}'
+  + 'body{background:var(--void);color:var(--ink)}'
+  + 'main h1,main h2,main h3{letter-spacing:-.01em}main h2{border-bottom:1px solid var(--line);padding-bottom:.35rem;margin-top:2.5rem}'
+  + 'code{font:.88em/1.4 var(--font-mono);background:var(--d-surface-2);border:1px solid var(--line);border-radius:6px;padding:.05em .35em}'
+  + 'a.cite{font:600 .78em var(--font-mono);text-decoration:none;vertical-align:super;line-height:0;padding:0 .1em}a.cite:hover{text-decoration:underline}'
+  + '.pipeline-notice,.run-disclosure,.review-status{background:var(--d-info-tint);border:1px solid color-mix(in srgb,var(--proposed) 35%,transparent);border-radius:12px;padding:.75rem 1rem}'
+  + '.unresolved-asset,.quote-withheld,.unknown-reason,[data-epistemic="unknown"]{background:var(--d-warn-tint);border-radius:8px}'
+  + '.unresolved-asset,[data-epistemic="unknown"]{display:block;border-left:4px solid var(--unknown);padding:.6rem .9rem;margin:1rem 0}'
+  + '.quote-withheld,.unknown-reason{padding:0 .3em}'
+  + '.deep-dive,.note,.group-note{background:var(--d-accent-tint);border-left:4px solid var(--cyan);border-radius:8px;padding:.75rem 1rem}'
+  + 'figure{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1rem;margin:1.5rem 0}figcaption{font-weight:600}'
+  + 'q.verified-quote{background:var(--d-ok-tint);border-radius:4px;padding:0 .2em}'
+  + 'blockquote.exact-source{background:var(--d-surface-2);border-left:4px solid var(--observed);border-radius:8px;padding:.75rem 1rem}'
+  + 'table{border-collapse:collapse;margin:1rem 0}th,td{border:1px solid var(--line);padding:.4rem .6rem;text-align:left;vertical-align:top}th{background:var(--panel-raised)}';
 
 /** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
 interface PageChrome { readonly notice: string; readonly disclosure: string; readonly mainAttributes: string; readonly region: string }
 
 function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome): string {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${DRAFT_PREVIEW_CSP_META}<title>${escape(title)}</title><style>${DESIGN_TOKENS_CSS}
-${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : LOCAL_CSS}
+${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}`}
 </style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure ?? ''}<div class="layout"><nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav><details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="Dossier">${nav}</nav></details><main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main></div></body></html>`;
 }
 
@@ -177,12 +206,26 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const quoteNote = (blockId: string): string => quoteFlags.has(blockId)
     ? ` <span class="quote-unverified">Quotation not verified against the cited sources (${escape([...quoteFlags.get(blockId)!].join(', '))}).</span>` : '';
   const marking = (m: EpistemicMarking): string => `<span class="marking ${m}">[${MARKING_LABEL[m]}]</span>`;
+  // Each page numbers its sources [1], [2], … in the order it first cites them; the identifier rides on `data-source-id` and the source
+  // page, never in the reading text (DESIGN-ACCEPTANCE "Depth and evidence": references must not dominate the narrative).
+  const numbering = new Map<string, Map<string, number>>();
+  const citeNumber = (from: string, id: string): number => {
+    let onPage = numbering.get(from);
+    if (onPage === undefined) { onPage = new Map(); numbering.set(from, onPage); }
+    let n = onPage.get(id);
+    if (n === undefined) { n = onPage.size + 1; onPage.set(id, n); }
+    return n;
+  };
+  const sourceLabel = (from: string, id: string): string => `Source ${citeNumber(from, id)}: ${sources.get(id)!.path}`;
   const refs = (from: string, ids: readonly string[]): string => `<span class="sources">${ids.map(id => {
     const source = sources.get(id);
     if (source === undefined) throw new DossierRenderError('unknown-source');
     const target = sourcePaths.get(id);
     if (target === undefined) throw new DossierRenderError('unquotable-source');
-    return `<a href="${escape(href(from, target, 'exact-text'))}" aria-label="Read source ${escape(id)}">[${escape(id)}]</a>${source.redaction === undefined ? '' : ` <span class="redaction-note">[redacted-span: ${source.redaction.withheldLines} withheld line(s) in this file]</span>`}`;
+    const note = source.redaction === undefined ? '' : ` <span class="redaction-note">[redacted-span: ${source.redaction.withheldLines} withheld line(s) in this file]</span>`;
+    // The provider mode's bytes are pinned (dossier-render-provider-golden.test.ts); only an operator-agent run numbers its sources.
+    if (local === undefined) return `<a href="${escape(href(from, target, 'exact-text'))}" aria-label="Read source ${escape(id)}">[${escape(id)}]</a>${note}`;
+    return `<a class="cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(id)}" aria-label="${escape(sourceLabel(from, id))}" title="${escape(source.path)}">[${citeNumber(from, id)}]</a>${note}`;
   }).join(' ')}</span>`;
   // Every claim a page carries, in the order it is built; `add` files them under that page for the machine view.
   const pending: { id: string; epistemic: EpistemicMarking; unknownReason: string | null }[] = [];
@@ -196,14 +239,14 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const nonNormative: { page: string; id: string }[] = [];
   const quotations: { page: string; blockId: string; sourceId: string; start: number; end: number; anchor: unknown; redaction?: { redactionClass: 'redacted-span'; withheldLines: number } }[] = [];
   const segment = (from: string, blockId: string, part: LocalSegment): string => {
-    if (part.kind === 'prose') return escape(part.text);
+    if (part.kind === 'prose') return prose(part.text);
     if (part.kind === 'withheld') return `<span class="quote-withheld" data-unknown-reason="${escape(part.reason)}">[quotation withheld: the file it cites is excluded by screening]</span>`;
     const target = sourcePaths.get(part.sourceId);
     if (target === undefined) throw new DossierRenderError('unquotable-source');
     const redaction = sources.get(part.sourceId)?.redaction;
     const disclosure = redaction === undefined ? {} : { redaction: { redactionClass: redaction.redactionClass, withheldLines: redaction.withheldLines } };
     quotations.push({ page: from, blockId, sourceId: part.sourceId, start: part.start, end: part.end, anchor: part.anchor, ...disclosure });
-    return `<q class="verified-quote" data-quote-source="${escape(part.sourceId)}" data-quote-start="${part.start}" data-quote-end="${part.end}">${escape(part.text).replace(/\r/gu, '&#13;')}</q> ${marking('observed')} <a class="anchor-link" href="${escape(href(from, target, 'exact-text'))}" aria-label="Read source ${escape(part.sourceId)}"${anchorAttributes(part.anchor, escape)}>[${escape(part.anchor.algorithm)}:${escape(part.anchor.identifier.slice(0, 12))} bytes ${part.anchor.fragment === null ? 'all' : `${part.anchor.fragment.start}–${part.anchor.fragment.end}`}]</a>${redaction === undefined ? '' : ` <span class="redaction-note">[redacted-span: ${redaction.withheldLines} withheld line(s) in this file]</span>`}`;
+    return `<q class="verified-quote" data-quote-source="${escape(part.sourceId)}" data-quote-start="${part.start}" data-quote-end="${part.end}">${escape(part.text).replace(/\r/gu, '&#13;')}</q> ${marking('observed')} <a class="anchor-link cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(part.sourceId)}" aria-label="${escape(`${sourceLabel(from, part.sourceId)}, ${part.anchor.fragment === null ? 'whole file' : `bytes ${part.anchor.fragment.start}–${part.anchor.fragment.end}`}`)}"${anchorAttributes(part.anchor, escape)}>[${citeNumber(from, part.sourceId)}]</a>${redaction === undefined ? '' : ` <span class="redaction-note">[redacted-span: ${redaction.withheldLines} withheld line(s) in this file]</span>`}`;
   };
   const localParagraph = (from: string, p: DraftParagraph, tag: string): string => {
     const b = local!.blocks.get(p.id);
@@ -222,7 +265,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     : claim(tag, p.id, label(p.id), `${escape(p.text)} ${marking(label(p.id))}${quoteNote(p.id)} ${refs(from, p.sourceIds)}`);
   // A labelled record on one of the run's own pages, or a glossary term.
   const item = (from: string, tag: string, entry: LocalPageItem): string => claim(tag, entry.id, entry.marking,
-    `${entry.title === null ? '' : `<strong>${escape(entry.title)}</strong>: `}${escape(entry.text)} ${marking(entry.marking)}${entry.unknownReason === null ? '' : ` <span class="unknown-reason">(${escape(entry.unknownReason)})</span>`}${entry.details.length === 0 ? '' : `<ul class="item-details">${entry.details.map(detail => `<li>${escape(detail)}</li>`).join('')}</ul>`} ${refs(from, entry.sourceIds)}`,
+    `${entry.title === null ? '' : `<strong>${escape(entry.title)}</strong>: `}${(local === undefined ? escape : prose)(entry.text)} ${marking(entry.marking)}${entry.unknownReason === null ? '' : ` <span class="unknown-reason">(${escape(entry.unknownReason)})</span>`}${entry.details.length === 0 ? '' : `<ul class="item-details">${entry.details.map(detail => `<li>${escape(detail)}</li>`).join('')}</ul>`} ${refs(from, entry.sourceIds)}`,
     entry.unknownReason === null ? '' : ` data-unknown-reason="${escape(entry.unknownReason)}"`, entry.unknownReason);
   const block = (from: string, b: DraftBlock): string => {
     const parent = paragraph(from, b, 'p');
