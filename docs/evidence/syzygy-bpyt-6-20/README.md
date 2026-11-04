@@ -98,3 +98,30 @@ judgment and the cycle report. Branch preparation and test evidence do not grant
 landing authority. The non-blocking owner notice is `cycle-notice.md`. Independent
 exact-head review and canonical full checks are separate recorded gates; this
 inventory alone is not a completion claim.
+
+[Observed] At source subject `6da656b508cef84b96674181f7b8df69c7c72354`, the stored
+old/new differential executed 69 transport cases and 93 caller cases. Exact
+comparison found no differences in those 162 declared cases. Caller records
+include the existing independent parity oracle's per-tuple and other family
+denominators, direct served responses and model/response identities. The explicit
+revocation and supersession fixtures assert that their intended lifecycle arm
+was reached. Expected loader and Git errors remain errors in the record.
+`evidence-index.json` identifies records, source/bundle manifests and attempted
+checks by digest. Earlier failed harness packaging/API attempts are retained in
+the worker artifact directory named in the terminal report.
+
+[Observed] The mutation record stores 27 literal-fragment changes at that same
+source subject; each was caught by the seven-row unit family or a selected
+old/new transport case. The harness checks for an executed failing test or a
+nonempty differential, so a setup/import error does not count as a kill. The nine
+factory mutations cover executable, argv, omission/cwd, encoding, buffer, stderr,
+env freshness, native return identity and unchanged thrown errors. The eighteen
+caller mutations cover the remaining moved per-caller choices, including fatal
+decode, the omitted governance buffers, raw fidelity, ambient env and lock
+override, the canonical bound and the verbatim envelope/cwd/stderr. Profile 5
+shares profile 6's transport and keeps its existing strict-adapter oracles.
+
+[Unknown] The full gate and the independent final-head review are separate from
+these source-subject results. Their exact final commit, outcomes and remaining
+source merge hold are reconciled in the terminal worker report. A worker-captured
+record is a report fact; it is not an emitter-distinct certification.

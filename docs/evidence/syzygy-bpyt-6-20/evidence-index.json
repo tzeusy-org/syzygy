@@ -1,0 +1,343 @@
+{
+  "subjectCommit": "6da656b508cef84b96674181f7b8df69c7c72354",
+  "baselineCommit": "f5487c186626513724e1eff28a2789a4d78c154c",
+  "node": "v24.6.0",
+  "transportCases": 69,
+  "callerCases": 93,
+  "differences": 0,
+  "mutants": {
+    "denominator": 27,
+    "executed": 27,
+    "killed": 27
+  },
+  "targeted": {
+    "files": 9,
+    "cases": 192,
+    "outcome": "pass",
+    "logSha256": "687af43a1cd83fdd3fc916ea5bfb3d88bee9cc6af628e1f6c342610c9c34b81c"
+  },
+  "expectedThrownCases": [
+    {
+      "case": "authority-consent-unreadable-faithful",
+      "outcome": {
+        "name": "Error",
+        "code": "EACCES",
+        "message": "EACCES"
+      }
+    },
+    {
+      "case": "authority-consent-unreadable-isolated",
+      "outcome": {
+        "name": "Error",
+        "code": "EACCES",
+        "message": "EACCES"
+      }
+    },
+    {
+      "case": "authority-consent-invalid-utf8-faithful",
+      "outcome": {
+        "name": "TypeError",
+        "code": "ERR_ENCODING_INVALID_ENCODED_DATA",
+        "message": "The encoded data was not valid for encoding utf-8"
+      }
+    },
+    {
+      "case": "authority-consent-invalid-utf8-isolated",
+      "outcome": {
+        "name": "TypeError",
+        "code": "ERR_ENCODING_INVALID_ENCODED_DATA",
+        "message": "The encoded data was not valid for encoding utf-8"
+      }
+    },
+    {
+      "case": "authority-policy-unreadable-faithful",
+      "outcome": {
+        "name": "Error",
+        "code": "EACCES",
+        "message": "EACCES"
+      }
+    },
+    {
+      "case": "authority-policy-unreadable-isolated",
+      "outcome": {
+        "name": "Error",
+        "code": "EACCES",
+        "message": "EACCES"
+      }
+    },
+    {
+      "case": "authority-policy-invalid-utf8-faithful",
+      "outcome": {
+        "name": "TypeError",
+        "code": "ERR_ENCODING_INVALID_ENCODED_DATA",
+        "message": "The encoded data was not valid for encoding utf-8"
+      }
+    },
+    {
+      "case": "authority-policy-invalid-utf8-isolated",
+      "outcome": {
+        "name": "TypeError",
+        "code": "ERR_ENCODING_INVALID_ENCODED_DATA",
+        "message": "The encoded data was not valid for encoding utf-8"
+      }
+    },
+    {
+      "case": "authority-registry-unreadable-faithful",
+      "outcome": {
+        "name": "Error",
+        "code": "EACCES",
+        "message": "EACCES"
+      }
+    },
+    {
+      "case": "authority-registry-unreadable-isolated",
+      "outcome": {
+        "name": "Error",
+        "code": "EACCES",
+        "message": "EACCES"
+      }
+    },
+    {
+      "case": "authority-registry-invalid-utf8-faithful",
+      "outcome": {
+        "name": "TypeError",
+        "code": "ERR_ENCODING_INVALID_ENCODED_DATA",
+        "message": "The encoded data was not valid for encoding utf-8"
+      }
+    },
+    {
+      "case": "authority-registry-invalid-utf8-isolated",
+      "outcome": {
+        "name": "TypeError",
+        "code": "ERR_ENCODING_INVALID_ENCODED_DATA",
+        "message": "The encoded data was not valid for encoding utf-8"
+      }
+    },
+    {
+      "case": "real-git-missing-ref-profile1",
+      "outcome": {
+        "name": "Error",
+        "status": 128,
+        "signal": null,
+        "message": "Command failed: git --no-optional-locks -C /tmp/syzygy-poc-surface-fixture-p494044-n4026531836-Cd0KjW rev-parse no-such-ref\nfatal: ambiguous argument 'no-such-ref': unknown revision or path not in the working tree.\nUse '--' to separate paths from revisions, like this:\n'git <command> [<revision>...] -- [<file>...]'\n",
+        "stdout": {
+          "type": "string",
+          "sha256": "87c16ae453d814436f9fef671338f04ea68ed1c732541fff288341b5b2ff60d2"
+        },
+        "stderr": {
+          "type": "string",
+          "sha256": "947bddca1cba79dd9942d151203deb9b147a593ebb1b0038391f76f18eda841b"
+        }
+      }
+    },
+    {
+      "case": "real-git-missing-ref-profile2",
+      "outcome": {
+        "name": "Error",
+        "status": 128,
+        "signal": null,
+        "message": "Command failed: git --no-optional-locks -C /tmp/syzygy-poc-surface-fixture-p494044-n4026531836-Cd0KjW rev-parse no-such-ref",
+        "stdout": {
+          "type": "Buffer",
+          "sha256": "87c16ae453d814436f9fef671338f04ea68ed1c732541fff288341b5b2ff60d2"
+        },
+        "stderr": null
+      }
+    },
+    {
+      "case": "real-git-missing-ref-profile4",
+      "outcome": {
+        "name": "Error",
+        "status": 128,
+        "signal": null,
+        "message": "Command failed: git --no-optional-locks -C /tmp/syzygy-poc-surface-fixture-p494044-n4026531836-Cd0KjW rev-parse no-such-ref",
+        "stdout": {
+          "type": "string",
+          "sha256": "87c16ae453d814436f9fef671338f04ea68ed1c732541fff288341b5b2ff60d2"
+        },
+        "stderr": null
+      }
+    },
+    {
+      "case": "real-git-missing-ref-profile6",
+      "outcome": {
+        "name": "Error",
+        "status": 128,
+        "signal": null,
+        "message": "Command failed: git --no-optional-locks -C /tmp/syzygy-poc-surface-fixture-p494044-n4026531836-Cd0KjW rev-parse no-such-ref",
+        "stdout": {
+          "type": "Buffer",
+          "sha256": "87c16ae453d814436f9fef671338f04ea68ed1c732541fff288341b5b2ff60d2"
+        },
+        "stderr": null
+      }
+    },
+    {
+      "case": "real-git-missing-ref-profile7",
+      "outcome": {
+        "name": "Error",
+        "status": 128,
+        "signal": null,
+        "message": "Command failed: git rev-parse no-such-ref\nfatal: ambiguous argument 'no-such-ref': unknown revision or path not in the working tree.\nUse '--' to separate paths from revisions, like this:\n'git <command> [<revision>...] -- [<file>...]'\n",
+        "stdout": {
+          "type": "Buffer",
+          "sha256": "87c16ae453d814436f9fef671338f04ea68ed1c732541fff288341b5b2ff60d2"
+        },
+        "stderr": {
+          "type": "Buffer",
+          "sha256": "947bddca1cba79dd9942d151203deb9b147a593ebb1b0038391f76f18eda841b"
+        }
+      }
+    },
+    {
+      "case": "real-git-missing-object-profile1",
+      "outcome": {
+        "name": "Error",
+        "status": 128,
+        "signal": null,
+        "message": "Command failed: git --no-optional-locks -C /tmp/syzygy-poc-surface-fixture-p494044-n4026531836-Cd0KjW cat-file blob no-such-object\nfatal: Not a valid object name no-such-object\n",
+        "stdout": {
+          "type": "string",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "type": "string",
+          "sha256": "02b4578263aefd921ce44888b6c0216759d13f6b7a398a180dca84432012d19b"
+        }
+      }
+    },
+    {
+      "case": "real-git-missing-object-profile2",
+      "outcome": {
+        "name": "Error",
+        "status": 128,
+        "signal": null,
+        "message": "Command failed: git --no-optional-locks -C /tmp/syzygy-poc-surface-fixture-p494044-n4026531836-Cd0KjW cat-file blob no-such-object",
+        "stdout": {
+          "type": "Buffer",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": null
+      }
+    },
+    {
+      "case": "real-git-missing-object-profile4",
+      "outcome": {
+        "name": "Error",
+        "status": 128,
+        "signal": null,
+        "message": "Command failed: git --no-optional-locks -C /tmp/syzygy-poc-surface-fixture-p494044-n4026531836-Cd0KjW cat-file blob no-such-object",
+        "stdout": {
+          "type": "string",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": null
+      }
+    },
+    {
+      "case": "real-git-missing-object-profile6",
+      "outcome": {
+        "name": "Error",
+        "status": 128,
+        "signal": null,
+        "message": "Command failed: git --no-optional-locks -C /tmp/syzygy-poc-surface-fixture-p494044-n4026531836-Cd0KjW cat-file blob no-such-object",
+        "stdout": {
+          "type": "Buffer",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": null
+      }
+    },
+    {
+      "case": "real-git-missing-object-profile7",
+      "outcome": {
+        "name": "Error",
+        "status": 128,
+        "signal": null,
+        "message": "Command failed: git cat-file blob no-such-object\nfatal: Not a valid object name no-such-object\n",
+        "stdout": {
+          "type": "Buffer",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "type": "Buffer",
+          "sha256": "02b4578263aefd921ce44888b6c0216759d13f6b7a398a180dca84432012d19b"
+        }
+      }
+    }
+  ],
+  "records": [
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/README.md",
+      "bytes": 7634,
+      "sha256": "0fa809a35ce4885534afd176e13c41cd80535475696556279de2b01cdf1da4b2"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/baseline-manifest.json",
+      "bytes": 5977,
+      "sha256": "674e91a135548ce8f7648be5b9bc3975f259bd6bfb1b98d106f5f16c69df20b3"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/bundle-source-manifest.json",
+      "bytes": 38591,
+      "sha256": "0f12dd211b1778dc6ed363f0f411b55421dafe08546615050282865eec5f892f"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/caller-differential.json",
+      "bytes": 1964353,
+      "sha256": "614f832b83314399772288fa921af51b98b3340e9108fbd952b8de8fba806ff5"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/census.json",
+      "bytes": 2641,
+      "sha256": "758adf35685bf55c0d10542250a4214e2ecb9b67b991ee029f4c4f8d0115e931"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/cycle-notice.md",
+      "bytes": 925,
+      "sha256": "f5e0e73070e889107c70a1ada5bc219c362315bd4819237ab3d50aba93e96042"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+      "bytes": 20025,
+      "sha256": "d73db28de2cbd3d300d88e34dbc59b08abef13b4110842e9a0632e44d2059940"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/mutants.json",
+      "bytes": 30131,
+      "sha256": "d9f1b3c0a977cae24a48e6f4d58ff503e2db6090998c920c20248d989e36a65e"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/mutate.py",
+      "bytes": 8122,
+      "sha256": "d61bfe3abe31635a9b03bb9268925a7b2f31f8f32ab552984b831c89f22f5f68"
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/transport-differential.json",
+      "bytes": 141519,
+      "sha256": "259c5729954035ce3ab729592b54c6c4b9ebc66be07eca081bcb0c53ddbcccbe"
+    }
+  ],
+  "preliminaryFailedAttempts": [
+    {
+      "log": "typecheck-first.log",
+      "sha256": "645fa2b95564f1fcee2ce821cbe2d42f21a226da4fe64b87d4f80c73af82bd07"
+    },
+    {
+      "log": "differential-first.log",
+      "sha256": "0c10912f5a00f76f41c833712b2a1edf8f21acffd686c4a2bcafb9a002a8c8f9"
+    },
+    {
+      "log": "differential-second.log",
+      "sha256": "b0072d4c42ae6ec2c9aaa888e4062b42bf24f1ecadd3f05fe083f22c45288556"
+    },
+    {
+      "log": "differential-third.log",
+      "sha256": "4e8471343757ec03581bd997c2612b8e992aef926ed4067910d046230887338c"
+    },
+    {
+      "log": "differential-fourth.log",
+      "sha256": "5073f73b2de4a32c6212c9a6d40edacaa99b7d0404e29524ec4ff1e4d188c329"
+    }
+  ]
+}
