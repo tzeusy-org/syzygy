@@ -10,4 +10,4 @@ PR #718 (`syzygy-1z8m.5`): the `syzygy polaris` launched-run prototype's follow-
 
 ## Last verdict of record, and where the findings landed
 
-First review of `39373a2e` is `CONFIRM WITH EXCEPTIONS` (`R-PR718-LAUNCH-NOTES-3937-1-RAW.md`, verdict line in its head), with no blocking finding. Its notes N1 (the loop's limit-stop call sites untested), N2 (the new inventory sentence also stopped repairable refusals) and N3 (one check record read twice) were repaired in the next commit: the stop moved into a pure, tested `limitStop`, the sentence was narrowed to file or digest mismatches, and the duplicate read was removed.
+First review of `39373a2e` is `CONFIRM WITH EXCEPTIONS` (`R-PR718-LAUNCH-NOTES-3937-1-RAW.md:2`), with no blocking finding. Its notes N1 (the loop's limit-stop call sites untested), N2 (the new inventory sentence also stopped repairable refusals) and N3 (one check record read twice) were repaired in the next commit: the stop moved into a pure, tested `limitStop`, the sentence was narrowed to file or digest mismatches, and the duplicate read was removed.
