@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { DOSSIER_USAGE } from './cli.js';
 
-/** The lint over the installed agent texts (syzygy-qkea.12; REQ-polaris-generation-033 and 035 at version 1.2; D9-N5, N1 and N6 as
+/** The lint over the installed agent texts (syzygy-qkea.12; REQ-polaris-generation-033 and 035 at version 1.3; D9-N5, N1 and N6 as
  * signed; R3-F9): the Claude Code skill and the Codex instructions. Neither grants execution: each defers every session to the
  * execution rule in the brief or packet it was given (the run's `brief.md` for the authoring session, per the v1.1 review notes' note 1)
  * and, absent it, says the observed project is not built or run outside an explicit, opt-in execution profile. `allow-execution`
@@ -192,11 +192,11 @@ describe('agent texts (S11)', () => {
     expect(SYNOPSES.get('review-check')!.options.get('--kind')).toEqual(['fidelity', 'design']);
   });
 
-  it('quotes D9-N5 and the never-run sentence from the v1.2 spec bytes', () => {
+  it('quotes D9-N5 and the never-run sentence from the v1.3 spec bytes', () => {
     const spec = fs.readFileSync(path.join(ROOT, SPEC), 'utf8');
     expect(spec.split(N5)).toHaveLength(2);
     expect(spec.split(NEVER_RUN)).toHaveLength(2);
-    expect(spec).toContain('Exact behavioral delta, version 1.2.');
+    expect(spec).toContain('Exact behavioral delta, version 1.3.');
   });
 
   for (const file of TEXTS) {

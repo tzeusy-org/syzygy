@@ -289,6 +289,17 @@ export const redactionDetails = (redaction: BlobRedaction | undefined): string[]
 ]);
 
 /** The adapter from the checked local draft to the renderer's operator-agent input. */
+/** A code excerpt's language where the draft names none (v1.3 note 5): read from the path's extension, never from the bytes. */
+const LANGUAGES: Readonly<Record<string, string>> = { c: 'C', h: 'C', cc: 'C++', cpp: 'C++', hpp: 'C++', rs: 'Rust', go: 'Go', py: 'Python', js: 'JavaScript', mjs: 'JavaScript',
+  ts: 'TypeScript', tsx: 'TypeScript', java: 'Java', rb: 'Ruby', lua: 'Lua', tcl: 'Tcl', sh: 'Shell', bash: 'Shell', md: 'Markdown', json: 'JSON', yml: 'YAML', yaml: 'YAML',
+  toml: 'TOML', conf: 'Configuration', txt: 'Text', sql: 'SQL', html: 'HTML', css: 'CSS' };
+export function languageOf(repositoryPath: string): string {
+  const base = repositoryPath.slice(repositoryPath.lastIndexOf('/') + 1);
+  if (base === 'Makefile' || base === 'makefile') return 'Makefile';
+  const dot = base.lastIndexOf('.');
+  return (dot > 0 ? LANGUAGES[base.slice(dot + 1).toLowerCase()] : undefined) ?? 'Source';
+}
+
 export function buildLocalInput(inputs: BuildInputs): Built {
   const { opened, doc, derived, review, design, ruling, screen, credential, algorithm } = inputs;
   const { run, runId, subject, declared } = opened;
@@ -421,6 +432,30 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     }
   }
 
+  // A code excerpt: the cited lines from Syzygy's own read, as one quotation per source piece they fall in, never the draft's text. A
+  // blob screening or the class gate withholds, or a range touching a withheld line, renders withheld with none of its bytes.
+  const excerpt = (repositoryPath: string, startLine: number, endLine: number): LocalSegment[] => {
+    const withheld: LocalSegment[] = [{ kind: 'withheld', reason: 'excluded-content' }];
+    const blob = admitted.get(repositoryPath);
+    if (blob === undefined || (blob.withheld !== undefined && blob.withheld.some((n) => n >= startLine && n <= endLine))) return withheld;
+    const start = blob.lineByteOffsets?.[startLine - 1] ?? byteOf(blob.raw, startLine);
+    const end = blob.lineByteOffsets === undefined ? byteOf(blob.raw, endLine + 1) : blob.lineByteOffsets[endLine] ?? blob.originalBytes!;
+    const parts: LocalSegment[] = [];
+    for (let at = start; at < end;) {
+      const piece = pieceAt(repositoryPath, at);
+      if (piece === undefined) return withheld;
+      const covering = piece.redaction === undefined ? [piece.segment?.start ?? 0, piece.segment?.end ?? Buffer.byteLength(blob.raw)]
+        : piece.spans.map((span) => generationSpanRange(piece, span)).find(([a, b]) => at >= a && at < b);
+      if (covering === undefined) return withheld;
+      const until = Math.min(end, covering[1]!);
+      const shown = generationSourceTextAt(piece, at, until);
+      if (shown === undefined) return withheld;
+      parts.push({ kind: 'quotation', sourceId: piece.sourceId, start: at, end: until, text: shown, anchor: anchorOf(piece, at, until) });
+      at = until;
+    }
+    return parts.length === 0 ? withheld : parts;
+  };
+
   // The draft in the renderer's shape. Only admitted sources are cited; a block whose every citation is excluded cites none.
   const plain = (id: string): string => {
     const block = blocks.get(id);
@@ -431,7 +466,32 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     const record = isRecord(value) ? value : {};
     return { id: text(record['id'])!, text: plain(text(record['id'])!), sourceIds: record['label'] === 'non-normative' ? [] : citedSources(record) };
   };
-  const tree = (values: unknown): DraftBlock[] => list(values).map((value) => ({ ...paragraph(value), children: list(isRecord(value) ? value['children'] : []).map(paragraph) }));
+  const label = (value: unknown): string => clean(text(value) ?? '');
+  const entry = (value: unknown): DraftBlock => {
+    const record = isRecord(value) ? value : {};
+    const kind = record['kind'];
+    if (kind === undefined) return { ...paragraph(value), children: list(record['children']).map(paragraph) };
+    const shell = { id: text(record['id'])!, text: '', sourceIds: [], children: [] };
+    const records = (key: string): Readonly<Record<string, unknown>>[] => list(record[key]).filter(isRecord);
+    switch (kind) {
+      case 'table': return { ...shell, element: { kind: 'table', caption: label(record['caption']), columns: list(record['columns']).map(label), rowHeaders: record['rowHeaders'] === true,
+        rows: records('rows').map((row) => ({ id: text(row['id'])!, cells: list(row['cells']).map((cell) => (isRecord(cell) && cell['kind'] === 'empty' ? null : paragraph(cell))) })) } };
+      case 'callout': return { ...shell, element: { kind: 'callout', tone: record['tone'] as 'note' | 'tip' | 'caution' | 'important', title: label(record['title']), children: list(record['children']).map(entry) } };
+      case 'steps': return { ...shell, element: { kind: 'steps', items: list(record['items']).map(paragraph) } };
+      case 'definitions': return { ...shell, element: { kind: 'definitions', entries: records('entries').map((item) => ({ term: label(item['term']), definition: paragraph(item['definition']) })) } };
+      case 'cards': return { ...shell, element: { kind: 'cards', items: records('items').map((item) => ({ label: label(item['label']), body: paragraph(item['body']) })) } };
+      case 'details': return { ...shell, element: { kind: 'details', summary: label(record['summary']), elements: list(record['elements']).map(entry) } };
+      case 'code': {
+        const cited = isRecord(record['citation']) ? record['citation'] : {};
+        const repositoryPath = text(cited['path'])!;
+        const startLine = cited['startLine'] as number, endLine = cited['endLine'] as number;
+        const language = text(record['language']) === undefined ? languageOf(repositoryPath) : label(record['language']);
+        return { ...shell, element: { kind: 'code', language, path: shownPath(repositoryPath), startLine, endLine, parts: excerpt(repositoryPath, startLine, endLine) } };
+      }
+      default: throw new Error(`render: unknown element kind ${JSON.stringify(kind)}`);
+    }
+  };
+  const tree = (values: unknown): DraftBlock[] => list(values).map(entry);
   const disposition = (value: unknown): DossierDraft['sections'][number]['disposition'] => {
     const record = isRecord(value) ? value : {};
     if (record['kind'] === 'produced') return { kind: 'produced', assetIds: list(record['assetIds']).filter((id): id is string => typeof id === 'string') };

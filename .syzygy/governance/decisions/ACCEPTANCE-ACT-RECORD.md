@@ -1742,3 +1742,21 @@ Effective status: this one record is **effective owner authority —
 owner-adopted (bootstrap, uncorrelated)** for its own role only. It grants no
 consent, read or egress, and the read gates are re-pointed by a separate change.
 <!-- PWB-POLICY-SCOPE-V5:END -->
+
+<!-- versioned-signoff:polaris-dossier-local-agent-mode:v1.3 -->
+## Versioned sign-off — polaris-dossier-local-agent-mode — v1.3 — recorded 2026-11-04
+
+The owner signed off version 1.3 by selecting an option in the
+Claude Code CLI (quoted in the dedicated record).
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Kind | specification delta |
+| Review outcome | `docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md`: `CONFIRM WITH EXCEPTIONS`; disposition: `.syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md` |
+| Recording | `.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md`; annotated tag `polaris-dossier-local-agent-mode-v1.3` on the commit carrying these records and the applied result |
+| Direction | `.syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md` |
+
+This sign-off authorizes no implementation, widens no consent, read, write or
+egress, and a later version of the package is signed separately.
+<!-- /versioned-signoff:polaris-dossier-local-agent-mode:v1.3 -->

@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 36,
-      "scenarios": 248,
+      "scenarios": 254,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1000,7 +1000,13 @@
             "Cited path absent at the pinned revision",
             "Quotation from an excluded file",
             "Agent labels its own claim Observed",
-            "Repair loop counted"
+            "Repair loop counted",
+            "Claim inside a presentation element checked as a block",
+            "Short label carries no claim",
+            "Code excerpt rendered from Syzygy's read",
+            "Code excerpt over its limit",
+            "Code excerpt of an excluded file",
+            "Presentation element rendered inert"
           ]
         },
         "REQ-polaris-generation-035": {

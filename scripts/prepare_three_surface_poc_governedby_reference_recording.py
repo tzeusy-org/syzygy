@@ -343,6 +343,68 @@ def governing_inputs(root: Path) -> tuple[tuple[str, str], ...]:
     return rows
 
 
+#: Governing inputs whose own sign-off chain can say which bytes are signed,
+#: and the builder module whose ``signed_findings()`` says it. Owner direction
+#: OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04, item 1: an input whose
+#: current bytes differ from the frozen digest passes only as a recorded,
+#: reviewed, signed later version of that input. Every other input, and every
+#: failure of the chain's own check, fails closed.
+LATER_SIGNED_INPUTS = {
+    "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md":
+        "build_polaris_dossier_local_agent_mode_v1_1",
+}
+#: Files the dossier chain's signed check reads, beyond the change directory.
+LATER_SIGNED_INPUT_GLOBS = (
+    ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v*.md",
+    ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-*/**/*",
+)
+
+
+def later_signed_input(root: Path, path: str, frozen: str) -> bool:
+    """Whether ``path``'s current bytes are a signed later version of the frozen ones.
+
+    True only when all hold: the input has a chain builder; the frozen digest
+    is the reviewed digest of a recorded version earlier than the latest one;
+    the current bytes hash to the latest record's reviewed digest; and the
+    chain's own signed check reports no finding. Any error is False.
+    """
+    name = LATER_SIGNED_INPUTS.get(path)
+    if name is None:
+        return False
+    try:
+        chain = importlib.import_module(name)
+        versions = chain.recorded_versions(root)
+
+        def reviewed(version):
+            return chain.review_digest(root, chain.DECISIONS
+                                       / f"{chain.RECORD_STEM}-SIGNOFF-v{version[0]}.{version[1]}.md")
+
+        if frozen not in {reviewed(v) for v in versions[:-1]}:
+            return False
+        if digest((root / path).read_bytes()) != reviewed(versions[-1]):
+            return False
+        return not chain.signed_findings(root)
+    except Exception:  # noqa: BLE001 - fail closed on any chain error
+        return False
+
+
+def later_signed_inputs(root: Path) -> set[str]:
+    """The files ``later_signed_input`` reads, for reconciliation's snapshots."""
+    paths: set[str] = set()
+    for pattern in LATER_SIGNED_INPUT_GLOBS:
+        for found in root.glob(pattern):
+            if found.is_file() and not found.is_symlink():
+                paths.add(found.relative_to(root).as_posix())
+    for rel in list(paths):
+        if "/decisions/" in rel:
+            values = re.findall(r"^Review: (.+)$", (root / rel).read_text(encoding="utf-8"), re.M)
+            for value in values[:1]:
+                review = Path(value.strip())
+                if not review.is_absolute() and ".." not in review.parts and (root / review).is_file():
+                    paths.add(review.as_posix())
+    return paths
+
+
 def governing_input_findings(root: Path, *, proposed_poc: bool = False) -> list[str]:
     """Current evidence only; a byte match never establishes owner authority.
 
@@ -366,7 +428,7 @@ def governing_input_findings(root: Path, *, proposed_poc: bool = False) -> list[
                     raise ValueError("parent is not a nonsymlink directory")
             if not stat.S_ISREG(target.lstat().st_mode):
                 raise ValueError("not a regular nonsymlink file")
-            if digest(target.read_bytes()) != sha:
+            if digest(target.read_bytes()) != sha and not later_signed_input(root, path, sha):
                 findings.append(f"current P115 governing input differs: {path}")
         except (OSError, ValueError) as error:
             findings.append(f"current P115 governing input unavailable: {path}: {error}")
@@ -482,6 +544,7 @@ def validation_inputs(root: Path) -> set[str]:
         raise ValueError("P115 validation snapshot refuses a nonregular reserved-family entry")
     paths = {(RECORD.parent / name).as_posix() for name in population["files"]}
     paths |= {path for path, _sha in governing_inputs(root)}
+    paths |= later_signed_inputs(root)
     paths |= set(core_paths(root)) | {RECORD.as_posix(), AGGREGATE.as_posix(),
         BASE_RECORD.as_posix(),
         ".syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md",
@@ -2454,7 +2517,11 @@ exclusion of the acts in force stands.
                         "disposition": disposition, "oldRecord": before_record, "newRecord": after_record,
                         "oldAggregate": before_aggregate, "newAggregate": after_aggregate,
                         "passed": before_record == after_record and before_aggregate == after_aggregate})
-        passed = (set(keys) == set(packages) - {KEY} == set(historical_packages) - {KEY}
+        # Packages the recorder gained after the frozen historical recorder:
+        # a closed list, so any other new package still fails the census.
+        later = {"polaris-dossier-local-agent-mode@1.3"}
+        passed = (set(keys) == set(historical_packages) - {KEY}
+                  and set(packages) - {KEY} == set(keys) | later
                   and len(controls) == 38 and all(row["passed"] for row in controls))
         expect("T17 all non-P115 full historical record and aggregate outputs", passed)
         print("P115-RENDER-EVIDENCE " + json.dumps({"case": "T17", "syntheticOnly": True,
@@ -2464,6 +2531,123 @@ exclusion of the acts in force stands.
             "controls": controls, "passed": passed}, sort_keys=True))
     finally:
         sys.modules.pop(old.__name__, None)
+
+
+def later_signed_selftest() -> list[tuple[str, bool]]:
+    """One fixture per predicate of ``later_signed_input``, over the dossier
+    builders' own fixture trees (v1.0 to v1.2 signed, v1.3 applied)."""
+    import build_polaris_dossier_local_agent_mode_v1_3 as v13
+    import build_polaris_dossier_local_agent_mode_v1_2 as v12
+    import build_polaris_dossier_local_agent_mode_v1_1 as v11
+    spec = v13.SPEC.as_posix()
+    results: list[tuple[str, bool]] = []
+
+    def tree(*, apply_v13=True, record_v13=True):
+        tmp = tempfile.TemporaryDirectory(prefix="p115-later-signed-")
+        root = Path(tmp.name)
+        with contextlib.redirect_stdout(io.StringIO()):
+            v13._fixture(root)
+            frozen = v11.review_digest(root, v12.V12_RECORD)
+            if apply_v13:
+                assert v13.apply(root) == 0
+            if record_v13:
+                v13._record_v13(root)
+        return tmp, root, frozen
+
+    tmp, root, frozen = tree()
+    with tmp:
+        results.append(("signed later version passes", later_signed_input(root, spec, frozen)))
+        results.append(("an input with no chain builder fails",
+                        not later_signed_input(root, "openspec/changes/other/specs/x/spec.md", frozen)))
+        results.append(("a frozen digest no earlier record reviewed fails",
+                        not later_signed_input(root, spec, "0" * 64)))
+        snapshot = later_signed_inputs(root)
+        results.append(("snapshot inputs name the records, their reviews and the packages",
+                        v13.V13_RECORD.as_posix() in snapshot and "docs/reviews/R-V13-RAW.md" in snapshot
+                        and (v13.PROPOSED / "spec.md.patch").as_posix() in snapshot))
+        body = (root / spec).read_bytes()
+        (root / spec).write_bytes(body + b"\nEdited after v1.3.\n")
+        results.append(("current bytes edited after the latest signed version fail",
+                        not later_signed_input(root, spec, frozen)))
+        (root / spec).write_bytes(body)
+        v13._record_v13(root, digest="f" * 64)
+        results.append(("a latest review digest that is not the current bytes fails",
+                        not later_signed_input(root, spec, frozen)))
+        v13._record_v13(root)
+        v12._record_v12(root, digest="e" * 64)
+        results.append(("the frozen digest no longer an earlier reviewed digest fails",
+                        not later_signed_input(root, spec, frozen)))
+        v12._record_v12(root, digest=frozen)
+        results.append(("restored: passes again", later_signed_input(root, spec, frozen)))
+        (root / v13.PROPOSED / "proposal.md.patch").unlink()
+        results.append(("the chain's own signed check failing fails",
+                        bool(v11.signed_findings(root)) and not later_signed_input(root, spec, frozen)))
+    tmp, root, frozen = tree(record_v13=False)
+    with tmp:
+        results.append(("later bytes with no later record fail", not later_signed_input(root, spec, frozen)))
+    tmp, root, frozen = tree(apply_v13=False, record_v13=False)
+    with tmp:
+        (root / v13.V13_RECORD).write_text("# v1.3\n\nReview: docs/reviews/R-V12-RAW.md\n")
+        results.append(("a later record whose review is the frozen one fails",
+                        not later_signed_input(root, spec, frozen)))
+
+    # Each predicate alone, against a stub chain whose own signed check passes.
+    import types
+    stub = types.ModuleType("p115_later_signed_stub")
+    stub.DECISIONS, stub.RECORD_STEM = Path("d"), "S"
+    state = {}
+    stub.recorded_versions = lambda root: state["versions"]
+    stub.review_digest = lambda root, record: state["digests"].get(record.name)
+    stub.signed_findings = lambda root: state.get("findings", [])
+    sys.modules[stub.__name__] = stub
+    saved = dict(LATER_SIGNED_INPUTS)
+    LATER_SIGNED_INPUTS["x/spec.md"] = stub.__name__
+    try:
+        with tempfile.TemporaryDirectory(prefix="p115-later-stub-") as temp:
+            root = Path(temp)
+            (root / "x").mkdir()
+            (root / "x/spec.md").write_bytes(b"later\n")
+            later, old = digest(b"later\n"), "a" * 64
+            def probe(versions, digests, findings=()):
+                state.update(versions=versions, digests=digests, findings=list(findings))
+                return later_signed_input(root, "x/spec.md", old)
+            two = [(1, 0), (1, 1)]
+            results.append(("stub: earlier frozen, latest current, chain clean passes",
+                            probe(two, {"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": later})))
+            results.append(("stub: frozen digest only on the latest record fails",
+                            not probe(two, {"S-SIGNOFF-v1.0.md": "b" * 64, "S-SIGNOFF-v1.1.md": old})))
+            results.append(("stub: a single recorded version fails",
+                            not probe([(1, 0)], {"S-SIGNOFF-v1.0.md": old})))
+            results.append(("stub: current bytes other than the latest reviewed fail",
+                            not probe(two, {"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": "c" * 64})))
+            results.append(("stub: a chain finding fails",
+                            not probe(two, {"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": later}, ["x"])))
+            stub.signed_findings = lambda root: (_ for _ in ()).throw(OSError("chain unreadable"))
+            results.append(("stub: a chain error fails closed",
+                            not probe(two, {"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": later})))
+            stub.signed_findings = lambda root: state.get("findings", [])
+            # Through governing_input_findings, the reader binding_findings uses.
+            saved_inputs = globals()["governing_inputs"]
+            globals()["governing_inputs"] = lambda root: (("x/spec.md", old),)
+            try:
+                state.update(versions=two, digests={"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": later},
+                             findings=[])
+                passes = governing_input_findings(root) == []
+                state["findings"] = ["x"]
+                fails = governing_input_findings(root) == ["current P115 governing input differs: x/spec.md"]
+            finally:
+                globals()["governing_inputs"] = saved_inputs
+            results.append(("governing_input_findings admits a signed later version", passes))
+            results.append(("governing_input_findings refuses it once the chain check fails", fails))
+    finally:
+        LATER_SIGNED_INPUTS.clear()
+        LATER_SIGNED_INPUTS.update(saved)
+        sys.modules.pop(stub.__name__, None)
+    # Reconciliation's snapshots must carry what the chain check reads.
+    chain_files = later_signed_inputs(ROOT)
+    results.append(("validation inputs carry the chain's records, reviews and packages",
+                    bool(chain_files) and chain_files <= validation_inputs(ROOT)))
+    return results
 
 
 def selftest(root: Path) -> int:
@@ -2485,6 +2669,12 @@ def selftest(root: Path) -> int:
         "build_three_surface_poc_vocabulary_epistemic_amendment.py",
     )
     if transaction_present(root):
+        later = later_signed_selftest()
+        for name, passed in later:
+            print(f"P115 later-signed selftest: {name}: {'ok' if passed else 'FAILED'}")
+        if not all(passed for _name, passed in later):
+            print(f"P115 later-signed selftest: {sum(not p for _n, p in later)} of {len(later)} failed")
+            return 1
         findings, state = check_state(root)
         if findings:
             print("P115 signed selftest REFUSED: " + " | ".join(findings))

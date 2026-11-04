@@ -52,8 +52,9 @@ authority and no model yet called on the current path.
     [dossier local-agent addition](openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.1.md);
-    [v1.2 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md)), and
-    36 requirements and 248 scenarios in the effective composition with it.
+    [v1.2 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md);
+    [v1.3 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md)), and
+    36 requirements and 254 scenarios in the effective composition with it.
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
     design carry present-tense status since the 2026-09-29
     [readability successor](.syzygy/governance/decisions/POLARIS-UNDERSTANDING-READABILITY-SUCCESSOR-ACT.md).
@@ -408,6 +409,7 @@ python3 scripts/record_versioned_signoff.py --check cap1-trusted-bootstrap-conse
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.0   # dossier local-agent sign-off, v1.0 2026-10-06: record, aggregate block and applied tree
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.1   # dossier local-agent sign-off, v1.1 2026-10-07: record, options, aggregate block and applied tree
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.2   # dossier local-agent sign-off, v1.2 2026-10-14 (waiting sessions): record, aggregate block and applied tree
+python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.3   # dossier local-agent sign-off, v1.3 2026-11-04 (presentation elements): record, aggregate block and applied tree
 # Lane B and its RFC-0007 successor are declined (decisions/POLARIS-LANE-B-DECLINED-AND-TARGET-REVISED-DIRECTION.md); their checks left the battery.
 python3 scripts/record_pwb_behavior_amendment_acts.py --check render-mode 527be5ac3732619608355ae9658c92cee45341e831521bc526398481dd915785 --date 2026-10-02   # render-mode act, performed 2026-10-02: record, aggregate block and applied tree
 python3 scripts/record_pwb_behavior_amendment_acts.py --check machine-view acabc7915e4461186b5878ce40cc0c62ed7cf91eadd7eead1cb179c80f672e72 --date 2026-10-02   # machine-view act, performed 2026-10-02: record, aggregate block and applied tree
@@ -428,6 +430,8 @@ python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --check   # dossi
 python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --selftest   # dossier v1.1 builder fixtures, including the signed-bytes check
 python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --check   # dossier v1.2 package: absent, unapplied or applied over the signed v1.1 bytes, and signed or not
 python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --selftest   # dossier v1.2 builder fixtures, including the signed-bytes check
+python3 scripts/build_polaris_dossier_local_agent_mode_v1_3.py --check   # dossier v1.3 package: absent, unapplied or applied over the signed v1.2 bytes, and signed or not
+python3 scripts/build_polaris_dossier_local_agent_mode_v1_3.py --selftest   # dossier v1.3 builder fixtures, including the signed-bytes check
 python3 scripts/record_pwb_behavior_amendment_acts.py --check opening-band 7f80cb05f644dd1e4f49e7b212d6972ee4754e40682450e59a6c3245546d5c46 --date 2026-10-01   # opening-band act, performed 2026-10-01: record, aggregate block and applied subjects regenerate exactly
 python3 scripts/build_pwb_registry_currency_briefing_amendment.py --check   # registry amendment, performed 2026-09-30, superseded 2026-10-02: the re-pinned subject reverses to its proposed bytes
 python3 scripts/build_pwb_registry_currency_briefing_amendment.py --selftest
@@ -487,7 +491,11 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
+<<<<<<< HEAD
 The one hundred and eighteen checks above are the same one hundred and eighteen the hosted workflow runs
+=======
+The one hundred and nineteen checks above are the same one hundred and nineteen the hosted workflow runs
+>>>>>>> 1cac7e344f193f5691dfd4ab2671de230d284faf
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.
