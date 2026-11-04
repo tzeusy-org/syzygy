@@ -374,17 +374,14 @@ def later_signed_input(root: Path, path: str, frozen: str) -> bool:
     try:
         chain = importlib.import_module(name)
         versions = chain.recorded_versions(root)
-        if len(versions) < 2:
-            return False
 
-        def record(version):
-            return chain.DECISIONS / f"{chain.RECORD_STEM}-SIGNOFF-v{version[0]}.{version[1]}.md"
+        def reviewed(version):
+            return chain.review_digest(root, chain.DECISIONS
+                                       / f"{chain.RECORD_STEM}-SIGNOFF-v{version[0]}.{version[1]}.md")
 
-        if not any(chain.review_digest(root, record(v)) == frozen for v in versions[:-1]):
+        if frozen not in {reviewed(v) for v in versions[:-1]}:
             return False
-        if chain.review_digest(root, record(versions[-1])) in (None, frozen):
-            return False
-        if digest((root / path).read_bytes()) != chain.review_digest(root, record(versions[-1])):
+        if digest((root / path).read_bytes()) != reviewed(versions[-1]):
             return False
         return not chain.signed_findings(root)
     except Exception:  # noqa: BLE001 - fail closed on any chain error
@@ -2586,11 +2583,66 @@ def later_signed_selftest() -> list[tuple[str, bool]]:
         results.append(("later bytes with no later record fail", not later_signed_input(root, spec, frozen)))
     tmp, root, frozen = tree(apply_v13=False, record_v13=False)
     with tmp:
-        results.append(("the frozen bytes themselves are not a later version",
-                        not later_signed_input(root, spec, frozen)))
         (root / v13.V13_RECORD).write_text("# v1.3\n\nReview: docs/reviews/R-V12-RAW.md\n")
         results.append(("a later record whose review is the frozen one fails",
                         not later_signed_input(root, spec, frozen)))
+
+    # Each predicate alone, against a stub chain whose own signed check passes.
+    import types
+    stub = types.ModuleType("p115_later_signed_stub")
+    stub.DECISIONS, stub.RECORD_STEM = Path("d"), "S"
+    state = {}
+    stub.recorded_versions = lambda root: state["versions"]
+    stub.review_digest = lambda root, record: state["digests"].get(record.name)
+    stub.signed_findings = lambda root: state.get("findings", [])
+    sys.modules[stub.__name__] = stub
+    saved = dict(LATER_SIGNED_INPUTS)
+    LATER_SIGNED_INPUTS["x/spec.md"] = stub.__name__
+    try:
+        with tempfile.TemporaryDirectory(prefix="p115-later-stub-") as temp:
+            root = Path(temp)
+            (root / "x").mkdir()
+            (root / "x/spec.md").write_bytes(b"later\n")
+            later, old = digest(b"later\n"), "a" * 64
+            def probe(versions, digests, findings=()):
+                state.update(versions=versions, digests=digests, findings=list(findings))
+                return later_signed_input(root, "x/spec.md", old)
+            two = [(1, 0), (1, 1)]
+            results.append(("stub: earlier frozen, latest current, chain clean passes",
+                            probe(two, {"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": later})))
+            results.append(("stub: frozen digest only on the latest record fails",
+                            not probe(two, {"S-SIGNOFF-v1.0.md": "b" * 64, "S-SIGNOFF-v1.1.md": old})))
+            results.append(("stub: a single recorded version fails",
+                            not probe([(1, 0)], {"S-SIGNOFF-v1.0.md": old})))
+            results.append(("stub: current bytes other than the latest reviewed fail",
+                            not probe(two, {"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": "c" * 64})))
+            results.append(("stub: a chain finding fails",
+                            not probe(two, {"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": later}, ["x"])))
+            stub.signed_findings = lambda root: (_ for _ in ()).throw(OSError("chain unreadable"))
+            results.append(("stub: a chain error fails closed",
+                            not probe(two, {"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": later})))
+            stub.signed_findings = lambda root: state.get("findings", [])
+            # Through governing_input_findings, the reader binding_findings uses.
+            saved_inputs = globals()["governing_inputs"]
+            globals()["governing_inputs"] = lambda root: (("x/spec.md", old),)
+            try:
+                state.update(versions=two, digests={"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": later},
+                             findings=[])
+                passes = governing_input_findings(root) == []
+                state["findings"] = ["x"]
+                fails = governing_input_findings(root) == ["current P115 governing input differs: x/spec.md"]
+            finally:
+                globals()["governing_inputs"] = saved_inputs
+            results.append(("governing_input_findings admits a signed later version", passes))
+            results.append(("governing_input_findings refuses it once the chain check fails", fails))
+    finally:
+        LATER_SIGNED_INPUTS.clear()
+        LATER_SIGNED_INPUTS.update(saved)
+        sys.modules.pop(stub.__name__, None)
+    # Reconciliation's snapshots must carry what the chain check reads.
+    chain_files = later_signed_inputs(ROOT)
+    results.append(("validation inputs carry the chain's records, reviews and packages",
+                    bool(chain_files) and chain_files <= validation_inputs(ROOT)))
     return results
 
 
