@@ -491,11 +491,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-<<<<<<< HEAD
-The one hundred and eighteen checks above are the same one hundred and eighteen the hosted workflow runs
-=======
-The one hundred and nineteen checks above are the same one hundred and nineteen the hosted workflow runs
->>>>>>> 1cac7e344f193f5691dfd4ab2671de230d284faf
+The one hundred and twenty-one checks above are the same one hundred and twenty-one the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.
