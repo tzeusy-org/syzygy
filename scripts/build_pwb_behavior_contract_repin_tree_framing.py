@@ -57,6 +57,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import difflib
 import io
 import json
 import pathlib
@@ -187,14 +188,47 @@ def spec_at_pin(root: pathlib.Path, later=None) -> bytes:
     return body
 
 
+def _chain_inputs(root: pathlib.Path) -> list[pathlib.Path]:
+    """Every file the later-act and later-sign-off replays read: each performed
+    record and its (variant-resolved) patch, and the machine-ceiling manifest."""
+    paths = {first_repin.MACHINE_CEILING_MANIFEST}
+    for chain in first_repin.LATER_SUBJECT_ACTS.values():
+        for record, patch in chain:
+            if (root / record).is_file():
+                paths |= {record, first_repin._later_patch(root, record, patch)}
+    for record, patch in LATER_SPEC_SIGNOFFS:
+        if (root / record).is_file():
+            paths |= {record, patch}
+    return sorted(paths, key=lambda p: p.as_posix())
+
+
 def subject_at_predecessor(root: pathlib.Path, subject: Subject) -> bytes:
     """The subject as this package's predecessor act left it: the tree with
     every act performed after it reversed, newest first, each from its own
-    exact digest (the policy screening-scope chain v1 onward, the registry
-    machine-ceiling act). The first re-pin package owns that chain
-    (`LATER_SUBJECT_ACTS`) and its reversal (`subject_at_act`), since its acts
-    are this package's predecessors; a move no later act explains is refused."""
-    return first_repin.subject_at_act(root, subject)
+    exact digest.
+
+    Newest first means this package's own act before the later ones: every
+    act in the first re-pin package's `LATER_SUBJECT_ACTS` (the policy
+    screening-scope chain v1 to v5, last recorded 2026-11-03; the registry
+    machine-ceiling act, 2026-10-20) is already performed and this package's
+    is not, so once performed its patch is the newest and is reversed from
+    the live bytes first. `first_repin.subject_at_act` then reverses the
+    later chain over a view of the tree holding those bytes; it owns that
+    chain and its reversal, since its acts are this package's predecessors.
+    A move no act explains is refused. An act performed after this package's
+    would need its own link here."""
+    if not performed(root, subject):
+        return first_repin.subject_at_act(root, subject)
+    body = _apply(root, subject, read(root, subject.path), reverse=True)
+    with tempfile.TemporaryDirectory() as tmp:
+        view = pathlib.Path(tmp)
+        for rel in _chain_inputs(root):
+            if (root / rel).is_file():
+                (view / rel).parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(root / rel, view / rel)
+        (view / subject.path).parent.mkdir(parents=True, exist_ok=True)
+        (view / subject.path).write_bytes(body)
+        return first_repin.subject_at_act(view, subject)
 
 
 def base_bytes(root: pathlib.Path, subject: Subject) -> bytes:
@@ -365,26 +399,23 @@ def _inputs() -> list[pathlib.Path]:
     return sorted(paths, key=lambda p: p.as_posix())
 
 
-def _scratch(dest: pathlib.Path) -> None:
-    """Copy every input into `dest` in the pre-act state.
+def _scratch(dest: pathlib.Path, source: pathlib.Path = ROOT) -> None:
+    """Copy every input from `source` into `dest` in the pre-act state.
 
-    The superseding records are not inputs, so once an act is performed the
-    subject is replayed as the bytes the act in force bound (the tree with
-    the patch reversed); `spec.md` is replayed as the pinned bytes with every
-    later signed patch reversed (`spec_at_pin`), and each subject as its
-    predecessor act left it, every later act reversed
-    (`subject_at_predecessor`). The fixtures then mean the same before and
-    after this package's acts and the later ones.
+    Neither the superseding records nor the later acts are inputs, so
+    `spec.md` is replayed as the pinned bytes with every later signed patch
+    reversed (`spec_at_pin`), and each subject as its predecessor act left
+    it: this package's patch reversed first if its act is performed, then
+    every later act, newest first (`subject_at_predecessor`). The fixtures
+    then mean the same before and after this package's acts and the later
+    ones.
     """
     for rel in _inputs():
         (dest / rel).parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / rel, dest / rel)
-    (dest / PWB_SPEC).write_bytes(spec_at_pin(ROOT))
+        shutil.copyfile(source / rel, dest / rel)
+    (dest / PWB_SPEC).write_bytes(spec_at_pin(source))
     for subject in SUBJECTS:
-        body = subject_at_predecessor(ROOT, subject)
-        if performed(ROOT, subject):
-            body = _apply(ROOT, subject, body, reverse=True)
-        (dest / subject.path).write_bytes(body)
+        (dest / subject.path).write_bytes(subject_at_predecessor(source, subject))
 
 
 def _edit(rel: pathlib.Path, old: str, new: str):
@@ -618,14 +649,44 @@ def selftest() -> int:
         # The later-act chains, read from the real tree (read-only): each
         # subject replays to its predecessor act's argument, and with any one
         # link dropped the replay refuses or lands elsewhere; so does the
-        # `spec.md` replay with any one later sign-off dropped.
+        # `spec.md` replay with any one later sign-off dropped. Expected
+        # digests, chain lengths and link order are literals, computed once by
+        # script (2026-11-04) from the act records, never read back from them.
+        expected_digest = {
+            "registry": "ad9cd6769bffbb1a3ef94625c73226dec133fb7c9f1e0bc40186b09b15e165fa",
+            "policy": "66cd41ee626efb11d666d19c0cd42c6d001ec4482837b71475c42f661f1d936c",
+        }
+        expected_spec_row = "d0ac6ba20501798e715aae42e16fbc7555fc8d4d60f9f16e01f376fb75349c4a"
+        # Act order: the policy chain by each record's `Recorded at (UTC)`
+        # line; the `spec.md` chain by each record's first-add commit
+        # (2026-10-14 15:44 and 17:47, 2026-10-15 16:09 and 16:54, +08:00),
+        # since its patches commute and only this literal pins their order.
+        expected_chain = {
+            "registry": ("PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md",),
+            "policy": tuple(
+                f"PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE{v}-ACT.md"
+                for v in ("", "-V2", "-V3", "-V4", "-V5")),
+        }
+        expected_spec_chain = (
+            "PWB-ANCHOR-RESOLUTION-AMENDMENT-SIGNOFF-v1.0.md",
+            "PWB-CLASS-GRANULAR-EXTRACTION-AMENDMENT-SIGNOFF-v1.0.md",
+            "PWB-ACCESSIBLE-NAME-AMENDMENT-SIGNOFF-v1.0.md",
+            "PWB-OPENING-INDEX-AMENDMENT-SIGNOFF-v1.0.md",
+        )
+        table_before = first_repin.LATER_SUBJECT_ACTS
+        results.append(("chain: the predecessor records carry the literal digests",
+                        {s.key: predecessor_digest(ROOT, s) for s in SUBJECTS}
+                        == expected_digest))
+        results.append(("chain: the signing manifest's spec.md row is the literal digest",
+                        signed_spec_digest(ROOT) == expected_spec_row))
+
         def replays_to_predecessor(subject, chain=None) -> bool:
             kept = first_repin.LATER_SUBJECT_ACTS
             if chain is not None:
                 first_repin.LATER_SUBJECT_ACTS = {**kept, subject.key: chain}
             try:
                 return (sha256(subject_at_predecessor(ROOT, subject))
-                        == predecessor_digest(ROOT, subject))
+                        == expected_digest[subject.key])
             except ValueError:
                 return False
             finally:
@@ -633,27 +694,88 @@ def selftest() -> int:
 
         for subject in SUBJECTS:
             chain = first_repin.LATER_SUBJECT_ACTS.get(subject.key, ())
-            results.append((f"chain: {subject.key} replays through {len(chain)} later "
-                            "act(s) to its predecessor's argument",
-                            bool(chain) and replays_to_predecessor(subject)))
+            want = expected_chain[subject.key]
+            results.append((f"chain: {subject.key} is the {len(want)} later act(s) "
+                            "in act order",
+                            tuple(record.name for record, _p in chain) == want))
+            results.append((f"chain: {subject.key} replays through its later act(s) "
+                            "to its predecessor's argument",
+                            replays_to_predecessor(subject)))
             for at, (record, _patch) in enumerate(chain):
                 results.append((f"chain fails: {subject.key} without {record.name}",
                                 not replays_to_predecessor(
                                     subject, chain[:at] + chain[at + 1:])))
+        # Every dropped-link replay above swaps the table and must put the
+        # same object back: a leak would hand a short chain to whatever runs
+        # next.
+        results.append(("chain: every dropped-link replay restores the act table",
+                        first_repin.LATER_SUBJECT_ACTS is table_before
+                        and {k: tuple(r.name for r, _p in v)
+                             for k, v in first_repin.LATER_SUBJECT_ACTS.items()}
+                        == expected_chain))
 
         def spec_replays(chain) -> bool:
             try:
-                spec_at_pin(ROOT, chain)
+                return sha256(spec_at_pin(ROOT, chain)) == expected_spec_row
             except ValueError:
                 return False
-            return True
 
-        results.append((f"chain: spec.md replays through {len(LATER_SPEC_SIGNOFFS)} "
-                        "later sign-off(s) to the pinned row",
-                        bool(LATER_SPEC_SIGNOFFS) and spec_replays(LATER_SPEC_SIGNOFFS)))
+        results.append((f"chain: spec.md is the {len(expected_spec_chain)} later "
+                        "sign-offs in act order",
+                        tuple(record.name for record, _p in LATER_SPEC_SIGNOFFS)
+                        == expected_spec_chain))
+        results.append(("chain: spec.md replays through its later sign-offs to the "
+                        "pinned row", spec_replays(LATER_SPEC_SIGNOFFS)))
         for at, (record, _patch) in enumerate(LATER_SPEC_SIGNOFFS):
             results.append((f"chain fails: spec.md without {record.name}", not spec_replays(
                 LATER_SPEC_SIGNOFFS[:at] + LATER_SPEC_SIGNOFFS[at + 1:])))
+
+        # Post-act scratch: a source tree in which this package's acts are
+        # performed after every later act, so each subject is the real tree
+        # with a further patch on top. The package's real patches were drafted
+        # over the predecessor bytes and do not apply there (the package is
+        # stale), so a synthetic stand-in patch plays this package's patch.
+        # `_scratch` must reverse it first, then the later chain, and land on
+        # the predecessor's literal digest; the other order refuses.
+        source = pathlib.Path(tmp) / "performed-source"
+        for rel in {*_inputs(), *_chain_inputs(ROOT)}:
+            (source / rel).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / rel, source / rel)
+        stand_in = {"registry": ('"schemaVersion": 1', '"schemaVersion": 2'),
+                    "policy": ('"policyVersion"', '"policyVersion" ')}
+        for subject in SUBJECTS:
+            live = read(ROOT, subject.path).decode()
+            old, new = stand_in[subject.key]
+            if old not in live:
+                raise AssertionError(f"stand-in target absent in {subject.path}: {old}")
+            moved = live.replace(old, new, 1)
+            name = subject.path.as_posix()
+            (source / patch_path(subject)).write_text("".join(difflib.unified_diff(
+                live.splitlines(keepends=True), moved.splitlines(keepends=True),
+                f"a/{name}", f"b/{name}")))
+            (source / subject.path).write_text(moved)
+            add_record(subject)(source)
+        try:
+            performed_scratch = pathlib.Path(tmp) / "performed-scratch"
+            _scratch(performed_scratch, source)
+            got = {s.key: sha256(read(performed_scratch, s.path)) for s in SUBJECTS}
+        except ValueError as error:
+            got = {"error": str(error)}
+        results.append(("post-act scratch: own patch reversed before the later acts "
+                        "lands on each predecessor's argument", got == expected_digest))
+        if got != expected_digest:
+            print(f"  (post-act scratch: got {got})")
+        # The same digest is reached from the real tree, so prove the replay
+        # read the performed source: with the stand-in's added line corrupted,
+        # this package's patch no longer reverses and the scratch refuses.
+        _edit(patch_path(registry), '"schemaVersion": 2', '"schemaVersion": 3')(source)
+        try:
+            _scratch(pathlib.Path(tmp) / "performed-scratch-corrupt", source)
+            refused = False
+        except ValueError:
+            refused = True
+        results.append(("post-act scratch fails: this package's patch does not "
+                        "reverse over the performed subject", refused))
 
     failing = sum(0 if ok else 1 for _n, ok in results)
     for name, ok in results:
