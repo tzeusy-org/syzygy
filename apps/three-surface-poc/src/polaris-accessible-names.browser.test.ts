@@ -8,7 +8,6 @@
 // the machine answer (`GET /api/poc`), never from the rendered links.
 // Expected values are hand-typed literals. Without a browser the browser
 // suites are skipped, never passed.
-import { createHash } from 'node:crypto';
 import { readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -162,19 +161,6 @@ describe('PWB-REQ-016 whole-surface page list (pure)', () => {
 
 const executable = findBrowserExecutable();
 
-function sha1Blob(bytes: Uint8Array): string {
-  return createHash('sha1').update(`blob ${bytes.byteLength}\0`).update(bytes).digest('hex');
-}
-
-function blobReaderFor(texts: Readonly<Record<string, string>>): (objectId: string) => Uint8Array | undefined {
-  const encoder = new TextEncoder();
-  const byOid = new Map(Object.values(texts).map((text) => {
-    const body = encoder.encode(text);
-    return [sha1Blob(body), body] as const;
-  }));
-  return (objectId) => byOid.get(objectId);
-}
-
 describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a real browser', () => {
   let browser: Browser;
   let pages: string;
@@ -197,7 +183,7 @@ describe.skipIf(executable === undefined)('PWB-REQ-016 names and headings in a r
     const stateDir = tempDir('syzygy-poc-names-daemon-');
     const start = await createDaemon({
       stateDir: join(stateDir, 'state'),
-      routes: pocRoutes(() => model, PWB_RESOURCE_LIMITS, (m) => ({ verbatim: verbatimRouteReader(m, blobReaderFor(texts)) })),
+      routes: pocRoutes(() => model, PWB_RESOURCE_LIMITS, (m) => ({ verbatim: verbatimRouteReader(m, projectShapeFixtureGit(texts)) })),
       port: 0,
     });
     if (!start.started) throw new Error(`daemon failed to start: ${start.failure.kind}`);

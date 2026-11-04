@@ -29,8 +29,8 @@ import { ADMITTING_AUTHORITY, PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC, pr
 
 // The one collaborator `main` reaches by import rather than through its deps
 // is the Polaris blob reader; this records the root it is built for and the
-// objects it is asked for, and reads nothing unless a test sets `serve`, which
-// answers by exact object id (and `afterEach` clears it).
+// objects whose bodies it is asked for, and reads nothing unless a test sets
+// `serve`, which answers by exact object id (and `afterEach` clears it).
 const blobReader = vi.hoisted(() => ({
   roots: [] as string[],
   objectIds: [] as string[],
@@ -40,7 +40,15 @@ vi.mock('./verbatim-route.js', async (importOriginal) => ({
   ...(await importOriginal<typeof import('./verbatim-route.js')>()),
   gitBlobReaderFor: (root: string) => {
     blobReader.roots.push(root);
-    return (objectId: string) => { blobReader.objectIds.push(objectId); return blobReader.serve(objectId); };
+    // A Git runner: `cat-file -s` and `cat-file blob` by exact object id, recording each body read.
+    return (args: readonly string[]) => {
+      const objectId = args[2] ?? '';
+      const body = args[0] === 'cat-file' ? blobReader.serve(objectId) : undefined;
+      if (body === undefined) throw new Error(`fixture: git cannot serve ${args.join(' ')}`);
+      if (args[1] === '-s') return new TextEncoder().encode(`${body.byteLength}\n`);
+      blobReader.objectIds.push(objectId);
+      return body;
+    };
   },
 }));
 

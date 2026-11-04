@@ -4,11 +4,14 @@
 // route serves the selected requirement blocks while the machine channel
 // never carries them. The selection grammar is checked against the live
 // Butlers baseline-spec heading shape restated here by hand.
-import { rmSync } from 'node:fs';
-import { afterEach, describe, expect, it } from 'vitest';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { Route, RouteContext, RouteResponse } from '@syzygy/http-host';
-import { PWB_RESOURCE_LIMITS, type PocModel } from '@syzygy/three-surface-poc-core';
+import { PWB_RESOURCE_LIMITS, type GitRunner, type PocModel } from '@syzygy/three-surface-poc-core';
 
 import { selectRequirementSections, type VerbatimLeaf, type VerbatimRefusal } from './capability-detail.js';
 import { renderPolarisPage } from './polaris.js';
@@ -22,9 +25,11 @@ import {
   PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC,
   REJECTING_AUTHORITY,
   SECRET_SENTINEL,
+  UNREADABLE_GIT,
+  forgedBlobGit,
   projectShapeFixtureGit,
 } from './test-project-shape-fixture.js';
-import { verbatimRouteReader, type GitBlobReader } from './verbatim-route.js';
+import { gitBlobReaderFor, verbatimRouteReader } from './verbatim-route.js';
 
 const cleanups: string[] = [];
 afterEach(() => {
@@ -47,19 +52,19 @@ function leafOf(model: PocModel, path = SPEC): VerbatimLeaf {
   if (model.projectShape.kind !== 'observed') throw new Error(model.projectShape.kind);
   return { path, revision: model.projectShape.identity.revision, identity: sourceOf(model, path).identity };
 }
-/** A blob reader over the fixture git runner, counting reads. */
-function blobReader(texts = PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC): { read: GitBlobReader; reads: string[] } {
+/** The fixture git runner, recording every command and, in `reads`, each
+ * object whose body was read. */
+function blobReader(texts = PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC): { read: GitRunner; reads: string[]; calls: string[][] } {
   const git = projectShapeFixtureGit(texts);
   const reads: string[] = [];
+  const calls: string[][] = [];
   return {
     reads,
-    read: (objectId) => {
-      reads.push(objectId);
-      try {
-        return git(['cat-file', 'blob', objectId]);
-      } catch {
-        return undefined;
-      }
+    calls,
+    read: (args) => {
+      calls.push([...args]);
+      if (args[0] === 'cat-file' && args[1] === 'blob') reads.push(args[2] ?? '');
+      return git(args);
     },
   };
 }
@@ -188,7 +193,7 @@ describe('verbatim route gates', () => {
   it('refuses bytes that do not hash to the exact object, a body over the per-source envelope, and non-text bytes', () => {
     const model = observed();
     const leaf = leafOf(model);
-    const forged = verbatimRouteReader(model, () => new TextEncoder().encode(`${SPEC_TEXT}\n`));
+    const forged = verbatimRouteReader(model, forgedBlobGit(new TextEncoder().encode(`${SPEC_TEXT}\n`)));
     if (forged === undefined) throw new Error('no route');
     expect(refusalOf(forged(leaf)).refused).toBe('reference-unresolvable');
     const tooLarge = verbatimRouteReader(model, blobReader().read, undefined, { ...PWB_RESOURCE_LIMITS, maxBytesPerSource: 16 });
@@ -222,9 +227,97 @@ describe('verbatim route gates', () => {
 
   it('returns undefined (Unknown, unreachable) when Git cannot serve the object', () => {
     const model = observed();
-    const route = verbatimRouteReader(model, () => undefined);
+    const route = verbatimRouteReader(model, UNREADABLE_GIT);
     if (route === undefined) throw new Error('no route');
     expect(route(leafOf(model))).toBeUndefined();
+  });
+});
+
+// syzygy-bpyt.6.17: the route reads through the core's bounded read. The size is checked before the body moves, the production
+// runner holds stdout to the envelope, and Git's stderr is captured rather than reaching the daemon's.
+describe('bounded read (syzygy-bpyt.6.17)', () => {
+  const SPEC_BYTES = new TextEncoder().encode(SPEC_TEXT).byteLength;
+  const withEnvelope = (maxBytesPerSource: number) => ({ ...PWB_RESOURCE_LIMITS, maxBytesPerSource });
+  const objectIdOf = (model: PocModel): string => {
+    const anchor = sourceOf(model, SPEC).anchor;
+    if (anchor.kind !== 'blob') throw new Error(anchor.kind);
+    return anchor.objectId;
+  };
+  /** A real repository holding the fixture texts' blobs, minus `omit`. */
+  function repositoryWith(texts: Readonly<Record<string, string>>, omit: readonly string[] = []): string {
+    const root = mkdtempSync(join(tmpdir(), 'verbatim-route-'));
+    cleanups.push(root);
+    execFileSync('git', ['init', '-q', root], { stdio: ['ignore', 'pipe', 'pipe'] });
+    for (const [path, text] of Object.entries(texts)) {
+      if (omit.includes(path)) continue;
+      const file = join(root, 'blob.tmp');
+      writeFileSync(file, text);
+      execFileSync('git', ['-C', root, 'hash-object', '-w', file], { stdio: ['ignore', 'pipe', 'pipe'] });
+    }
+    return root;
+  }
+
+  it('refuses a body over the per-source envelope having asked Git only its size, never its body', () => {
+    const model = observed();
+    const { read, reads, calls } = blobReader();
+    const route = verbatimRouteReader(model, read, undefined, withEnvelope(SPEC_BYTES - 1));
+    if (route === undefined) throw new Error('no route');
+    const refused = refusalOf(route(leafOf(model)));
+    expect(refused).toEqual({ refused: 'excluded-content', detail: `${SPEC} exceeds the per-source envelope (${SPEC_BYTES} > ${SPEC_BYTES - 1} bytes); nothing was rendered.` });
+    expect(calls).toEqual([['cat-file', '-s', objectIdOf(model)]]);
+    expect(reads).toEqual([]);
+  });
+
+  it('serves a body exactly at the envelope, reading it once', () => {
+    const model = observed();
+    const { read, reads } = blobReader();
+    const route = verbatimRouteReader(model, read, undefined, withEnvelope(SPEC_BYTES));
+    if (route === undefined) throw new Error('no route');
+    expect(new TextDecoder().decode(route(leafOf(model)) as Uint8Array)).toBe(SPEC_TEXT);
+    expect(reads).toEqual([objectIdOf(model)]);
+  });
+
+  it('the production runner holds Git’s stdout to the envelope: one byte over and the read itself fails', () => {
+    const model = observed();
+    const root = repositoryWith(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC);
+    const objectId = objectIdOf(model);
+    expect(gitBlobReaderFor(root, withEnvelope(SPEC_BYTES))(['cat-file', 'blob', objectId]).byteLength).toBe(SPEC_BYTES);
+    expect(() => gitBlobReaderFor(root, withEnvelope(SPEC_BYTES - 1))(['cat-file', 'blob', objectId])).toThrow();
+    // Through the route, against real Git: at the envelope served, past it refused, a missing object Unknown.
+    const at = verbatimRouteReader(model, gitBlobReaderFor(root, withEnvelope(SPEC_BYTES)), undefined, withEnvelope(SPEC_BYTES));
+    expect(at?.(leafOf(model))).toBeInstanceOf(Uint8Array);
+    const over = verbatimRouteReader(model, gitBlobReaderFor(root, withEnvelope(SPEC_BYTES - 1)), undefined, withEnvelope(SPEC_BYTES - 1));
+    expect(refusalOf(over?.(leafOf(model))).refused).toBe('excluded-content');
+    const empty = repositoryWith(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC, [SPEC]);
+    expect(verbatimRouteReader(model, gitBlobReaderFor(empty))?.(leafOf(model))).toBeUndefined();
+  });
+
+  it('captures Git’s stderr on the failure and writes none of it to the daemon’s stderr', () => {
+    const model = observed();
+    const root = repositoryWith(PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC, [SPEC]);
+    const objectId = objectIdOf(model);
+    const written: string[] = [];
+    const spy = vi.spyOn(process.stderr, 'write').mockImplementation((chunk: string | Uint8Array) => {
+      written.push(typeof chunk === 'string' ? chunk : Buffer.from(chunk).toString('utf8'));
+      return true;
+    });
+    let failure: unknown;
+    let routed: unknown;
+    try {
+      try {
+        gitBlobReaderFor(root)(['cat-file', 'blob', objectId]);
+      } catch (error) {
+        failure = error;
+      }
+      routed = verbatimRouteReader(model, gitBlobReaderFor(root))?.(leafOf(model));
+    } finally {
+      spy.mockRestore();
+    }
+    // Captured: Git's diagnostic rides on the thrown error.
+    expect(String((failure as { stderr?: Buffer } | undefined)?.stderr ?? '')).toMatch(/fatal|not a valid object/);
+    expect(routed).toBeUndefined();
+    // Not inherited: nothing non-empty reached process stderr.
+    expect(written.filter((chunk) => chunk !== '')).toEqual([]);
   });
 });
 
