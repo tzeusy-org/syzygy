@@ -667,6 +667,11 @@ const NON_HUMAN_OWNERS: readonly [string, string][] = [
   ['model/v2', 'role prefix model with a slash'],
   ['daemon nightly', 'role prefix daemon, whitespace'],
   ['daemon-7', 'role prefix daemon, hyphen'],
+  // Known false positive, kept fail-closed under the 1.10 decision record
+  // (greenfield-parity owner packet, decision a1; syzygy-bpyt.6.12): a human
+  // name that contains the word claude is refused, because \bclaude\b cannot
+  // tell it from the model. No owner ruled this row.
+  ['Jean-Claude Martin', 'KNOWN FALSE POSITIVE, human name with the word claude, fail-closed (1.10)'],
 ];
 
 describe('PWB-REQ-005 owner-non-human: one rule shared with the judgment evaluator', () => {
