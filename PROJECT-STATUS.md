@@ -467,7 +467,8 @@ python3 scripts/build_directive_register.py --check     # every identifier -> it
 python3 scripts/build_directive_register.py --selftest
 python3 scripts/check_quotations.py     # a quotation beside a path:line locator was said by that file (RD-6, syzygy-0wf)
 python3 scripts/check_quotations.py --selftest
-python3 scripts/check_docs_review_campaign_partition.py --check   # every docs/reviews/ file in exactly one docs/README.md campaign; slow (minutes)
+python3 scripts/check_docs_review_campaign_partition.py --check   # every docs/reviews/ file in exactly one docs/review-campaigns/ fragment
+python3 scripts/check_docs_review_campaign_partition.py --selftest
 DR=.syzygy/governance/contracts/candidates/round-2026-08f/fixtures/DRY-RUN-ADMINISTRATION.json
 python3 scripts/validate_launch_administration.py $DR
 python3 scripts/render_launch_administration.py $DR --check
@@ -483,7 +484,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and fourteen checks above are the same one hundred and fourteen the hosted workflow runs
+The one hundred and fifteen checks above are the same one hundred and fifteen the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.
