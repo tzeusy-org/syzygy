@@ -258,8 +258,10 @@ async function drainPrivateFixtureProcesses(options: {
   readonly signal?: (pid: number, signal: NodeJS.Signals) => void;
   readonly sleep?: () => Promise<void>;
   readonly timeoutMs?: number;
+  readonly readProvenance?: (pid: number) => ProcessProvenance | undefined;
 } = {}): Promise<void> {
   const scan = options.scan ?? (() => exactPrivateFixtureProcesses());
+  const readProvenance = options.readProvenance ?? readProcessProvenance;
   const readIdentity = options.readIdentity ?? readProcessIdentity;
   const signal = options.signal ?? ((pid, value) => process.kill(pid, value));
   const sleep = options.sleep ?? (() => new Promise(resolveWait => setTimeout(resolveWait, 25)));
@@ -268,7 +270,15 @@ async function drainPrivateFixtureProcesses(options: {
   while (true) {
     try {
       const remaining = scan();
-      if (remaining.length === 0) return;
+      // An empty scan is not an exit (syzygy-exj7). A process in the kernel's
+      // exit path reads as gone to the scan once its cwd link is released, then
+      // as live and unreadable once its command line empties, and only then
+      // becomes a zombie. Return only when every process this drain saw and
+      // every registered PID is a zombie or absent, the two states that never
+      // revert, so the strict observation after the drain cannot see one mid-exit.
+      if (remaining.length === 0) {
+        if ([...new Set([...pids, ...seen.keys()])].every(pid => readProvenance(pid) === undefined)) return;
+      }
       for (const candidate of remaining) {
         const previous = seen.get(candidate.pid);
         if (previous !== undefined && !sameProcessIdentity(previous, candidate)) {
@@ -480,6 +490,38 @@ describe('one-listener POC restart on private fixture sockets', { timeout: TEST_
     });
     expect(outOfScope).toEqual([]);
     expect(identityReads).toBe(0);
+  });
+
+  it('waits for a process that left the scan mid-exit to become a zombie or vanish before draining (syzygy-exj7)', async () => {
+    const uid = ownerUid;
+    if (uid === undefined) throw new Error('process UID is unavailable');
+    // The kernel exit path, as /proc showed it: the scan matches the process,
+    // then its cwd link is gone (the identity reads as absent), while its
+    // provenance still says live for two reads before the zombie.
+    const exiting: ProcessIdentity = {
+      pid: 4244, uid, started: 'exiting-generation',
+      argv: [process.execPath, fixture, '--repo', '/tmp/private-repo', '--state-dir', '/tmp/private-state', '--port', '4244'],
+      cwd: process.cwd(),
+    };
+    let scans = 0;
+    let provenanceReads = 0;
+    let signals = 0;
+    await drainPrivateFixtureProcesses({
+      scan: () => (++scans === 1 ? [exiting] : []),
+      readIdentity: () => undefined,
+      readProvenance: pid => {
+        provenanceReads += 1;
+        return provenanceReads <= 2
+          ? { pid, uid, started: 'exiting-generation', state: 'R', ppid: process.pid, processGroup: pid, session: pid }
+          : undefined;
+      },
+      signal: () => { signals += 1; },
+      sleep: async () => {},
+      timeoutMs: LIVENESS_MS,
+    });
+    expect(provenanceReads).toBe(3);
+    expect(scans).toBe(4);
+    expect(signals).toBe(0);
   });
 
   it('refuses PID reuse before signaling a changed process generation', async () => {
