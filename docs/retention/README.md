@@ -101,6 +101,16 @@ reachable production kills. Malformed batch-output and inconsistent
 regular-entry or self-digest metadata cases explicitly isolate helper boundaries; they do not
 establish that those inputs can arise from a valid measured source.
 
+The finite citation-class admission controls use independently stated source
+fixtures for every documented class. Each prepares a real synthetic Git source,
+commits its generated artifacts and checks them, with literal expected counts
+and classifications. A present class with count zero passes shape validation
+but must fail regenerated-population equality; that is separate from invalid
+labels, types or negative counts. The finite audit also names each required
+schema key and its narrowing control. Numeric and string properties are bounded
+by the declared ranges, boundary mutations and lexical alternatives; this is
+not a claim to exhaust every possible value or mutation.
+
 Negative source-path fixtures resolve inside their outer temporary fixture
 even when a path guard is weakened. Correction audits additionally set an
 owned temporary root and enforce their filesystem, symlink and Git-process

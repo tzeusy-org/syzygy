@@ -964,6 +964,85 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                       "old": source_commit, "new": checkpoint, "refusal": reason, "fixture_commit": checkpoint,
                       "control_pass": True, "restored_pass": prepare(root, source_commit, home)["source_commit"] == source_commit})
         restore()
+        # Each admitted citation class needs a coherent generated SOURCE,
+        # rather than a fabricated label that a later equality check refuses.
+        # The literals below follow the census's documented first-match rules;
+        # expected counts/classifications never come from RELIANCE_CLASSES or
+        # from the checker under test. Extra evidence citers are counted too.
+        class_target = "docs/evidence/finite/proof.json"
+        class_body = b'{"subject":"finite citation fixture"}\n'
+        for label, citer, text, counts, category in (
+                ("act-bound", ".syzygy/fixture.md", hashlib.sha256(class_body).hexdigest(), {"act-bound": 1}, "R0"),
+                ("governed-citer", ".syzygy/fixture.md", class_target, {"governed-citer": 1}, "R1"),
+                ("code-reference", "scripts/fixture.py", class_target, {"code-reference": 1}, "R1"),
+                ("raw-review-citer", "docs/reviews/fixture-RAW.md", class_target, {"raw-review-citer": 1}, "R1"),
+                ("docs-citer", "docs/navigation.md", class_target, {"docs-citer": 1}, "hold"),
+                ("digest-cited", "docs/navigation.md", hashlib.sha256(class_body).hexdigest(), {"digest-cited": 1}, "R1"),
+                ("evidence-only", "docs/evidence/citer.md", "See " + class_target,
+                 {"evidence-only": 1, "none": 1}, "hold"),
+                ("listed-only", "docs/evidence/paths.txt", class_target,
+                 {"listed-only": 1, "none": 1}, "hold"),
+                ("directory-named", "docs/navigation.md", "docs/evidence/finite/",
+                 {"directory-named": 1}, "hold"),
+                ("none", None, None, {"none": 1}, "hold")):
+            class_root = Path(temp) / ("class-" + label); class_root.mkdir()
+            git(class_root, "init", "-q")
+            fixture = {class_target: class_body}
+            if citer is not None:
+                fixture[citer] = (text + "\n").encode()
+            for path, body in fixture.items():
+                destination = class_root / path
+                destination.parent.mkdir(parents=True, exist_ok=True); destination.write_bytes(body)
+            def class_commit():
+                git(class_root, "add", "--all")
+                git(class_root, "-c", "user.name=Retention Fixture", "-c", "user.email=fixture@example.invalid",
+                    "commit", "-qm", "synthetic citation class")
+                return git(class_root, "rev-parse", "HEAD").decode().strip()
+            class_source = class_commit(); class_home = class_root / "docs/retention"
+            prepare(class_root, class_source, class_home); class_checkpoint = class_commit()
+            artifacts = {name: (class_home / name).read_text() for name in
+                         ("SOURCE.json", "CENSUS.jsonl", "PLAN.jsonl", "INDEX.jsonl")}
+            class_case = {"predicate": "citation-class-positive-" + label, "pass": False,
+                          "old": {path: body.decode() for path, body in fixture.items()}, "new": artifacts,
+                          "expected": {"citation_classes": counts, "target_reliance": label,
+                                       "target_classification": category, "live": sum(counts.values())},
+                          "fixture_commit": class_checkpoint, "source_commit": class_source,
+                          "scope": "coherent real Git source through prepare, committed outputs and check"}
+            cases.append(class_case)
+            try:
+                class_result = check(class_root, class_home)
+                class_rows = lines((class_home / "CENSUS.jsonl").read_bytes())
+                class_plan = lines((class_home / "PLAN.jsonl").read_bytes())
+                class_document = load_json((class_home / "SOURCE.json").read_bytes())
+                class_case["pass"] = (class_document["citation_classes"] == counts
+                    and next(r["reliance"] for r in class_rows if r["path"] == class_target) == label
+                    and next(r["classification"] for r in class_plan if r["path"] == class_target) == category
+                    and class_result["live"] == sum(counts.values()) and class_result["archive"] == 0)
+                class_case["observed"] = class_result
+            except Refusal as exc:
+                class_case["refusal"] = str(exc)
+            # Zero passes the count-shape guard but cannot equal a generated
+            # Counter for a present class. Keep that later refusal distinct
+            # from invalid-label/type/negative-count refusal cases above.
+            document = load_json(artifacts["SOURCE.json"].encode())
+            document["citation_classes"][label] = 0
+            (class_home / "SOURCE.json").write_bytes(encoded(document))
+            try:
+                check(class_root, class_home); zero_reason = "unexpected-pass"
+            except Refusal as exc:
+                zero_reason = str(exc)
+            finally:
+                (class_home / "SOURCE.json").write_text(artifacts["SOURCE.json"])
+            try:
+                restored_class = check(class_root, class_home)["live"] == sum(counts.values())
+            except Refusal:
+                restored_class = False
+            cases.append({"predicate": "citation-class-zero-" + label,
+                          "pass": class_case["pass"] and restored_class and zero_reason == "source-population-count-mismatch",
+                          "old": artifacts["SOURCE.json"], "new": encoded(document).decode(),
+                          "expected_refusal": "source-population-count-mismatch", "refusal": zero_reason,
+                          "fixture_commit": class_checkpoint, "source_commit": class_source,
+                          "control_pass": class_case["pass"], "restored_pass": restored_class})
         # Archive object checks are exercised without granting a move. A real
         # tag is created only in this disposable, synthetic repository.
         git(root, "-c", "user.name=Retention Fixture", "-c", "user.email=fixture@example.invalid",
