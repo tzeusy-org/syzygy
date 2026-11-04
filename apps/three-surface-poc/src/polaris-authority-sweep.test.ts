@@ -192,6 +192,9 @@ describe('Zero downstream citations of Polaris as authority (PWB-REQ-014)', () =
     }
   });
 
+  // Reads every swept file in five trees (5,848 files, 139 MB at 92eafd01): 0.56 s alone, up to 8.0 s over 30 runs under 36 CPU
+  // hogs at load 44-63 (docs/evidence/syzygy-exj7/flaky-under-load-2026-11-04.json). Reading is half the cost and the population is
+  // the sweep's subject, so the 5 s default gives way, sized by scripts/size_vitest_test_timeouts.py's rule (8,029 ms x 3, to 5 s).
   it('no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface', () => {
     const roots = ['.syzygy/governance', 'openspec', 'packages', 'apps', 'docs'];
     const isSwept = (path: string): boolean => /\.(md|json|ya?ml|ts)$/.test(path);
@@ -215,5 +218,5 @@ describe('Zero downstream citations of Polaris as authority (PWB-REQ-014)', () =
       });
     }
     expect(hits).toEqual([]);
-  });
+  }, 25_000);
 });
