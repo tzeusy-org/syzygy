@@ -7,7 +7,7 @@
  * interpolate it and branch on none); recorder-fixtures.testkit.test.ts holds a render made this way equal to the recorder's own
  * render of the same values, per form. */
 import { execFile } from 'node:child_process';
-import { readFileSync, statSync } from 'node:fs';
+import { readFileSync, statSync, type Stats } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
@@ -18,6 +18,8 @@ export type DossierLocalAgentActKey = 'redis-no-evidence-drawer' | 'redis-agent-
 const RECORDER_KEYS: readonly RecorderActKey[] = ['requests-observation', 'redis-observation', 'egress-anthropic', 'egress-anthropic-v2'];
 const DOSSIER_LOCAL_AGENT_KEYS: readonly DossierLocalAgentActKey[] = ['redis-no-evidence-drawer', 'redis-agent-anthropic', 'redis-agent-openai', 'd9-in-force', 'rfc7-20-reading-in-force'];
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
+/** The stat errors pathlib's `is_file()` reads as no file before Python 3.14 (`pathlib._ignore_error`); it raises every other one. */
+const PATHLIB_NO_FILE: ReadonlySet<string> = new Set(['ENOENT', 'ENOTDIR', 'EBADF', 'ELOOP']);
 
 /** The python3 program that renders every form, each with a slot per caller-supplied value, as one JSON object. The arguments of
  * each `render_act` call are the ones the per-call renders passed before syzygy-bpyt.4.8, with each interpolated value a slot. The
@@ -101,11 +103,20 @@ function forms(): Rendered {
 function fill(id: string, values: Readonly<Record<string, string>>): string {
   const template = forms().templates[id];
   if (template === undefined) throw new Error(`recorder render failed: no form ${id}`);
-  return template.replace(/\0(\w+)\0/g, (_, name: string) => {
+  return fillSlots(id, template, values);
+}
+
+/** `template` with each `\0name\0` slot filled from `values`. A slot with no value throws, and so does a NUL the fill leaves: a slot a
+ * recorder altered (cut to `argument[:12]`, say) no longer matches the slot pattern, and would otherwise reach the output as raw NUL
+ * bytes (syzygy-nyir). Exported for recorder-fixtures.testkit.test.ts. */
+export function fillSlots(id: string, template: string, values: Readonly<Record<string, string>>): string {
+  const filled = template.replace(/\0(\w+)\0/g, (_, name: string) => {
     const value = values[name];
     if (value === undefined) throw new Error(`recorder render failed: form ${id} has no value for slot ${name}`);
     return value;
   });
+  if (filled.includes('\0')) throw new Error(`recorder render failed: form ${id} keeps a NUL no slot matched; a recorder altered a slot`);
+  return filled;
 }
 
 /** The act record the recorder renders for `key`, with the given argument digest, date and `Recorded at (UTC)` instant. */
@@ -145,10 +156,17 @@ export function renderLocalAgentSignoff(root: string, date: string, instant: str
   // The recorder writes `disposition or "none"`: an empty disposition would read as none there and as itself here.
   if (disposition === '') throw new Error('recorder render failed: an empty disposition renders as none');
   const entry = path.join(root, forms().installed);
-  let installed: Uint8Array | null = null;
+  // The recorder writes `digest(path.read_bytes()) if path.is_file() else "absent"`. A stat error pathlib reads as no file is absent
+  // here too; any other stat error, and any read error (an unreadable entry, EACCES), throws as the recorder raises (syzygy-nyir).
+  // Python 3.14's is_file() reads every stat error as no file, so under it an entry beneath an unsearchable directory renders absent
+  // there and throws here; Python 3.12 (ubuntu-24.04's python3) raises PermissionError for it, as this throws.
+  let stat: Stats | undefined;
   try {
-    if (statSync(entry).isFile()) installed = readFileSync(entry);
-  } catch { /* no entry file: the recorder writes absent */ }
+    stat = statSync(entry);
+  } catch (error) {
+    if (!PATHLIB_NO_FILE.has((error as NodeJS.ErrnoException).code ?? '')) throw error;
+  }
+  const installed = stat?.isFile() === true ? readFileSync(entry) : null;
   const id = `signoff:${installed === null ? 'absent' : 'present'}:${disposition === null ? 'none' : 'named'}`;
   return fill(id, { date, instant, verdict, ...(disposition === null ? {} : { disposition }), ...(installed === null ? {} : { sha: sha256(installed) }) });
 }

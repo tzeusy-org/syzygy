@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
-  loadRecorderForms, recorderRecordPaths, renderClassAct, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderPolicyAct, renderProviderV2Act,
+  fillSlots, loadRecorderForms, recorderRecordPaths, renderClassAct, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderPolicyAct, renderProviderV2Act,
   renderRecorderAct, renderRegistryAct, type DossierLocalAgentActKey, type RecorderActKey,
 } from './recorder-fixtures.testkit.js';
 
@@ -52,7 +52,11 @@ def render(c):
         pkg = vs.real_packages()['public-git-source-acquisition-local-agent']
         return {'acts': {k: x.record.as_posix() for k, x in dla.ACT_BY_KEY.items()}, 'signoff': vs.record_rel(pkg, '1.0').as_posix()}
     raise ValueError(f)
-sys.stdout.write(json.dumps([render(c) for c in json.load(sys.stdin)]))`;
+def outcome(c):
+    if not c.get('raises'): return render(c)
+    try: return render(c)
+    except Exception as e: return {'raised': type(e).__name__}
+sys.stdout.write(json.dumps([outcome(c) for c in json.load(sys.stdin)]))`;
 
 /** The recorder's own render of each call, in one python3 run. */
 async function direct(calls: readonly Record<string, unknown>[]): Promise<unknown[]> {
@@ -83,6 +87,11 @@ let present = '';
 let absent = '';
 let cases: Case[] = [];
 let expected: unknown[] = [];
+// Sign-off roots the recorder reads as no file or cannot read (syzygy-nyir N1), with the recorder's outcome over each: its render,
+// or the exception it raised.
+let edges: { readonly name: string; readonly root: string; readonly unreadable: boolean }[] = [];
+let edgeExpected: unknown[] = [];
+let edgeDirs: string[] = [];
 
 beforeAll(async () => {
   present = fs.mkdtempSync(path.join(os.tmpdir(), 'recorder-kit-present-'));
@@ -110,11 +119,38 @@ beforeAll(async () => {
     }))),
     { name: 'record paths', call: { form: 'paths' }, kit: () => recorderRecordPaths() },
   ];
-  expected = await direct(cases.map(({ call }) => call));
+  // An entry the process cannot read (mode 000), a directory where the entry should be, and a regular file where one of its parent
+  // directories should be (ENOTDIR). A process that reads past mode 000 (root) reads the first as present, so that case records it.
+  const edge = (name: string, build: (entryPath: string) => void) => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'recorder-kit-edge-'));
+    edgeDirs.push(root);
+    build(path.join(root, installedPath()));
+    return { name, root };
+  };
+  const noperm = edge('unreadable entry', (entryPath) => {
+    fs.mkdirSync(path.dirname(entryPath), { recursive: true });
+    fs.writeFileSync(entryPath, ENTRY_BYTES);
+    fs.chmodSync(entryPath, 0o000);
+  });
+  let unreadable = false;
+  try { fs.accessSync(path.join(noperm.root, installedPath()), fs.constants.R_OK); } catch { unreadable = true; }
+  edges = [
+    { ...noperm, unreadable },
+    { ...edge('directory at the entry', (entryPath) => { fs.mkdirSync(entryPath, { recursive: true }); }), unreadable: false },
+    { ...edge('file at a parent directory', (entryPath) => {
+      fs.mkdirSync(path.dirname(path.dirname(entryPath)), { recursive: true });
+      fs.writeFileSync(path.dirname(entryPath), 'not a directory\n');
+    }), unreadable: false },
+  ];
+  [expected, edgeExpected] = await Promise.all([
+    direct(cases.map(({ call }) => call)),
+    direct(edges.map(({ root }) => ({ form: 'signoff', root, verdict: 'CONFIRM', disposition: null, date: DATE, instant: INSTANT, raises: true }))),
+  ]);
 }, 120_000);
 
 afterAll(() => {
-  for (const dir of [present, absent]) if (dir !== '') fs.rmSync(dir, { recursive: true, force: true });
+  if (edges[0] !== undefined) fs.chmodSync(path.join(edges[0].root, installedPath()), 0o600);
+  for (const dir of [present, absent, ...edgeDirs]) if (dir !== '') fs.rmSync(dir, { recursive: true, force: true });
 });
 
 /** The installed entry's path, read from the sign-off the testkit renders: the record names it on its `Installed entry:` line. */
@@ -139,5 +175,29 @@ describe('recorder testkit renders', () => {
 
   it('refuse an empty disposition, which the recorder would write as none', () => {
     expect(() => renderLocalAgentSignoff(present, DATE, INSTANT, 'CONFIRM', '')).toThrow(/empty disposition/);
+  });
+
+  it('throw over an entry the recorder cannot read, and write absent where it reads no file', () => {
+    // The kit's errno, named as the Python exception the recorder raises for it.
+    const PYTHON_ERROR: Readonly<Record<string, string>> = { EACCES: 'PermissionError' };
+    const kit = edges.map(({ root }): unknown => {
+      try {
+        return renderLocalAgentSignoff(root, DATE, INSTANT);
+      } catch (error) {
+        const code = (error as NodeJS.ErrnoException).code ?? String(error);
+        return { raised: PYTHON_ERROR[code] ?? code };
+      }
+    });
+    expect(kit).toEqual(edgeExpected);
+    expect(edges.map(({ name }) => name)).toEqual(['unreadable entry', 'directory at the entry', 'file at a parent directory']);
+    expect(kit.slice(1).every((got) => typeof got === 'string' && got.includes('Installed entry SHA-256: absent'))).toBe(true);
+    // Run as a user mode 000 does not stop, the first case reads present on both sides; the check above still holds them equal.
+    if (edges[0]!.unreadable) expect(edgeExpected[0]).toEqual({ raised: 'PermissionError' });
+  });
+
+  it('throw when a fill leaves a NUL no slot matched', () => {
+    expect(fillSlots('probe', 'a \0argument\0 b', { argument: 'x' })).toBe('a x b');
+    expect(() => fillSlots('probe', 'a \0argument\0[:12] \0argu', { argument: 'x' })).toThrow(/keeps a NUL no slot matched/);
+    expect(() => fillSlots('probe', 'a \0argument\0', {})).toThrow(/no value for slot argument/);
   });
 });
