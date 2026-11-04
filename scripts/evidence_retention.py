@@ -335,6 +335,57 @@ def protected_namespace(receipt: object, tag: str) -> None:
            "archive-namespace-not-protected-without-bypass")
 
 
+
+# This one draft census is scoped by GP-Q7, not an adopted act or manifest.
+# A reviewed discharge is per target and still proves its historical blob.
+DRAFT_CENSUS = ".syzygy/governance/contracts/candidates/cc-sec-3-attended-session-amendment/IMPACT-SWEEP.json"
+DRAFT_AUTHORITY = ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md"
+
+
+def inventory_discharges(root: Path, files: dict[str, bytes], proposals: object) -> set[tuple[str, str]]:
+    """Admit only reviewed non-operative rows of the identified GP-Q7 draft.
+
+    This is no general candidate-directory exemption. Actual primary/raw/code
+    dependencies remain protected. The exact primary source, census bytes,
+    row, target and historical containing blob are checked independently.
+    The primary owner-act reconciliation and fresh review remain operator gates.
+    """
+    demand(isinstance(proposals, list) and len(proposals) <= MAX_ROWS,
+           "invalid-inventory-discharge-population")
+    cleared = set()
+    for item in proposals:
+        demand(isinstance(item, dict) and set(item) == {"citer", "sha256", "targets", "reason", "authority"},
+               "invalid-inventory-discharge-schema")
+        demand(item["citer"] == DRAFT_CENSUS and DRAFT_CENSUS in files and
+               digest(files[DRAFT_CENSUS]) == item["sha256"], "inventory-discharge-source-drift")
+        authority = item["authority"]
+        demand(isinstance(authority, dict) and set(authority) == {"path", "sha256", "clause"} and
+               authority["path"] == DRAFT_AUTHORITY and authority["clause"] == "GP-Q7" and
+               DRAFT_AUTHORITY in files and digest(files[DRAFT_AUTHORITY]) == authority["sha256"],
+               "inventory-discharge-primary-binding-drift")
+        demand(isinstance(item["reason"], str) and 20 <= len(item["reason"]) <= 4096,
+               "inventory-discharge-reason-required")
+        record = load_json(files[DRAFT_CENSUS])
+        demand(isinstance(record, dict) and record.get("schema") == "cc-sec-3-draft-impact-sweep/1" and
+               isinstance(record.get("subjectCommit"), str) and COMMIT.fullmatch(record["subjectCommit"]) is not None and
+               isinstance(record.get("rows"), list), "inventory-discharge-not-identified-historical-census")
+        targets = item["targets"]
+        demand(isinstance(targets, list) and 0 < len(targets) <= MAX_ROWS, "inventory-discharge-targets-required")
+        historical = tree(root, record["subjectCommit"])
+        for target in targets:
+            evidence_path(target)
+            demand(target in files and (target, DRAFT_CENSUS) not in cleared,
+                   "inventory-discharge-unknown-or-duplicate-target")
+            rows = [row for row in record["rows"] if isinstance(row, dict) and row.get("path") == target]
+            demand(len(rows) == 1 and rows[0].get("sha256") == digest(files[target]) and
+                   rows[0].get("matches") == ["policyBasename"], "inventory-discharge-not-basename-only-row")
+            demand(regular(historical.get(target)) and
+                   digest(git(root, "cat-file", "blob", historical[target][2])) == rows[0]["sha256"],
+                   "inventory-discharge-historical-object-mismatch")
+            cleared.add((target, DRAFT_CENSUS))
+    return cleared
+
+
 def transaction_plan(root: Path, commit: str, rows: list[dict], files: dict[str, bytes],
                      plan: list[dict], transaction: object) -> list[dict]:
     """Compile explicitly adjudicated, source-bound families into the move plan.
@@ -344,8 +395,9 @@ def transaction_plan(root: Path, commit: str, rows: list[dict], files: dict[str,
     Unknown roles, dates without instants, sidecars and unreviewed witnesses
     cannot be admitted to an archive family.
     """
-    demand(isinstance(transaction, dict) and set(transaction) ==
-           {"version", "source_commit", "discharges", "families", "protection"} and
+    demand(isinstance(transaction, dict) and set(transaction) in (
+           {"version", "source_commit", "discharges", "families", "protection"},
+           {"version", "source_commit", "discharges", "families", "protection", "inventory_discharges"}) and
            type(transaction["version"]) is int and transaction["version"] == 1,
            "invalid-transaction-schema")
     demand(transaction["source_commit"] == commit, "transaction-source-drift")
@@ -368,6 +420,11 @@ def transaction_plan(root: Path, commit: str, rows: list[dict], files: dict[str,
         discharges.add(key)
     witnesses = protection_witnesses(files, rows)
     by_path = {r["path"]: r for r in plan}
+    inventory_cleared = inventory_discharges(root, files, transaction.get("inventory_discharges", []))
+    def protected_R0(path):
+        return path.endswith("-RAW.md") or by_path[path]["classification"] == "R0" and any(
+            w["kind"] == "governed" and w["form"] == "digest" and (path, w["citer"]) not in inventory_cleared
+            for w in witnesses[path])
     admitted = set(); families = set()
     for family in transaction["families"]:
         demand(isinstance(family, dict) and set(family) ==
@@ -389,10 +446,11 @@ def transaction_plan(root: Path, commit: str, rows: list[dict], files: dict[str,
             demand(path in by_path and path not in admitted and path.count("/") == 2 and path.endswith(".json"),
                    "unknown-duplicate-or-sidecar-family-member")
             old = by_path[path]
-            demand(old["classification"] != "R0", "R0-family-reclassification-forbidden")
+            demand(not protected_R0(path), "R0-family-reclassification-forbidden")
             residual = [w for w in witnesses[path] if
                         (w["kind"] in ("governed", "code", "raw") or w["form"] == "digest") and
-                        (w["citer"], w["form"], w["token"]) not in discharges]
+                        (w["citer"], w["form"], w["token"]) not in discharges and
+                        (path, w["citer"]) not in inventory_cleared]
             demand(not residual, "undischarged-R1-family-member")
             record = load_json(files[path])
             demand(all(selected(record, selectors[k]) == family[k] for k in ("subject", "kind", "role")),
@@ -408,8 +466,9 @@ def transaction_plan(root: Path, commit: str, rows: list[dict], files: dict[str,
                 continue
             residual = [w for w in witnesses[candidate] if
                         (w["kind"] in ("governed", "code", "raw") or w["form"] == "digest") and
-                        (w["citer"], w["form"], w["token"]) not in discharges]
-            if old["classification"] == "R0" or residual:
+                        (w["citer"], w["form"], w["token"]) not in discharges and
+                        (candidate, w["citer"]) not in inventory_cleared]
+            if protected_R0(candidate) or residual:
                 continue
             demand(candidate.count("/") == 2 and candidate.endswith(".json"),
                    "incomplete-or-ambiguous-family-domain")
@@ -545,7 +604,9 @@ def adjudicate(root: Path, frozen: Path, witnesses_path: Path, out: Path, operat
                           (PREFIX + "*", PREFIX + "**", PREFIX + "*.json"))]
             operative = operations.get(path, [])
             residual = [w for w in found if w["form"] != "conservative-glob" and w["kind"] != "listing"]
-            if path.endswith("-RAW.md") or any(c["classification"] == "R0" for c in operative):
+            if prior[path]["classification"] == "R2":
+                classification, reason = "R2", prior[path]["reason"]
+            elif path.endswith("-RAW.md") or any(c["classification"] == "R0" for c in operative):
                 classification, reason = "R0", "verbatim-raw-preservation-or-identified-checker-input"
             elif operative:
                 classification, reason = "R1", "identified-operative-consumer-or-parameter-evidence"
@@ -560,8 +621,9 @@ def adjudicate(root: Path, frozen: Path, witnesses_path: Path, out: Path, operat
             metadata = {k: record[k] for k in ("subject", "subjects", "kind", "role", "record", "schema", "slice")
                         if k in record}
             item = {"path": path, "sha256": by_path[path]["sha256"], "source_commit": source["source_commit"],
-                    "index_family": family, "family_role_identity": family + "::" + path[len(PREFIX):],
-                    "classification": classification, "disposition": "hold" if classification == "hold" else "keep",
+                    "index_family": family, "family_role_identity": prior[path]["equivalence_family"] or family + "::" + path[len(PREFIX):],
+                    "classification": classification, "disposition": prior[path]["disposition"] if classification == "R2" else
+                    "hold" if classification == "hold" else "keep",
                     "reason": reason, "record_metadata": metadata, "capture_instants": captures,
                     "protected_witness_count": len(protected), "protected_witness_sha256": digest(jsonl(protected)),
                     "protected_witness_examples": [anchor(w) for w in protected[:5]], "operative_consumers": operative,
@@ -577,12 +639,15 @@ def adjudicate(root: Path, frozen: Path, witnesses_path: Path, out: Path, operat
                        "chronological_latest_candidate": newest,
                        "equivalence": "unproved" if len(members) > 1 else "singleton",
                        "role_adjudication": "identified consumers preserved; citation-only and incomparable roles remain Unknown/hold",
-                       "archive_selection": [], "scope": "inferred offering; actual transaction requires verified selectors"})
+                       "archive_selection": [m["path"] for m in members if m["disposition"] == "archive"],
+                       "adjudicated_subfamilies": sorted({prior[m["path"]]["equivalence_family"] for m in members
+                                                         if m["classification"] == "R2"}),
+                       "scope": "inferred offering; admitted R2 subfamilies are source-bound by the compiled transaction"})
     summary = {"version": 1, "epistemic": "Inferred", "source_commit": source["source_commit"],
                "source_tree_sha256": source["source_tree_sha256"], "evidence_files": len(table), "families": len(ledger),
                "classifications": dict(sorted(collections.Counter(r["classification"] for r in table).items())),
                "dispositions": dict(sorted(collections.Counter(r["disposition"] for r in table).items())),
-               "selected_archives": 0, "docs_navigation_repairs": 0,
+               "selected_archives": sum(r["disposition"] == "archive" for r in table), "docs_navigation_repairs": 0,
                "scope": "complete population offering with named holds; not a claim of zero eligible archives",
                "table_sha256": digest(jsonl(table)), "families_sha256": digest(jsonl(ledger)),
                "witness_file_sha256": digest(witnesses_path.read_bytes())}
@@ -1828,6 +1893,110 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                           "fixture_commit": changed, "control_pass": control, "restored_pass": restored})
         protected_nonmember("R0")
         protected_nonmember("R1")
+        # The GP-Q7 draft's lexical census is a separate, per-target proof.
+        # Copy the real retained primary bytes as fixture input; no owner act
+        # is invented or performed by this synthetic Git transaction.
+        tx_restore(); git(root, "reset", "--hard", containing); git(root, "clean", "-fdq")
+        primary_bytes = (implementation / DRAFT_AUTHORITY).read_bytes()
+        primary = root / DRAFT_AUTHORITY; primary.parent.mkdir(parents=True, exist_ok=True); primary.write_bytes(primary_bytes)
+        draft = {"schema": "cc-sec-3-draft-impact-sweep/1", "subjectCommit": containing,
+                 "rows": [{"path": path, "sha256": digest((root / path).read_bytes()),
+                           "matches": ["policyBasename"]} for path in paths]}
+        census_path = root / DRAFT_CENSUS; census_path.parent.mkdir(parents=True, exist_ok=True)
+        census_path.write_bytes(encoded(draft)); inventory_source = tx_commit()
+        item = {"citer": DRAFT_CENSUS, "sha256": digest(encoded(draft)), "targets": paths,
+                "reason": "The identified GP-Q7 draft row is a historical lexical policy-basename inventory, not a body-retention act or operative dependency.",
+                "authority": {"path": DRAFT_AUTHORITY, "sha256": digest(primary_bytes), "clause": "GP-Q7"}}
+        doc = load_json(encoded(transaction)); doc["source_commit"] = inventory_source
+        doc["inventory_discharges"] = [item]; tx_input.write_bytes(encoded(doc))
+        inventory_witnesses = outer / "inventory-witnesses.jsonl"
+        prepare(root, inventory_source, home, witness_out=inventory_witnesses, transaction_path=tx_input); tx_commit()
+        permitted = check(root, home)
+        offered = adjudicate(root, home, inventory_witnesses, outer / "inventory-view")
+        cases.append({"predicate": "adjudication-reports-compiled-R2-subfamily-and-nonempty-selection", "pass":
+                      offered["classifications"] == {"R2": 2} and offered["selected_archives"] == 1,
+                      "old": "conservative lexical R0 census classifications", "new": offered, "fixture_commit": inventory_source})
+        cases.append({"predicate": "source-bound-draft-inventory-is-not-an-R0-act", "pass":
+                      permitted["live"] == 2 and permitted["plan"] == {"R2": 2},
+                      "old": draft, "new": doc, "fixture_commit": inventory_source,
+                      "primary_fixture": {"origin": str(implementation / DRAFT_AUTHORITY), "sha256": digest(primary_bytes),
+                                          "scope": "exact retained source input, no owner impersonation or act performance"}})
+        frozen_inventory_files = source_files(root, inventory_source)
+        def inventory_failure(name, change, expected):
+            proposals = load_json(encoded([item])); before = load_json(encoded(proposals)); change(proposals)
+            control = inventory_discharges(root, frozen_inventory_files, [item]) == {(p, DRAFT_CENSUS) for p in paths}
+            try:
+                inventory_discharges(root, frozen_inventory_files, proposals); reason = "unexpected-pass"
+            except (Refusal, OSError) as exc:
+                reason = str(exc)
+            restored = inventory_discharges(root, frozen_inventory_files, [item]) == {(p, DRAFT_CENSUS) for p in paths}
+            cases.append({"predicate": name, "pass": control and restored and reason == expected,
+                          "old": before, "new": proposals, "refusal": reason, "expected_refusal": expected,
+                          "control_pass": control, "restored_pass": restored, "fixture_commit": inventory_source})
+        inventory_variants = [
+            ("inventory-item-type", lambda p: p.__setitem__(0, True), "invalid-inventory-discharge-schema"),
+            ("inventory-primary-type", lambda p: p[0].update(authority=True), "inventory-discharge-primary-binding-drift"),
+            ("inventory-item-schema", lambda p: p[0].update(approved=True), "invalid-inventory-discharge-schema"),
+            ("inventory-citer-scope", lambda p: p[0].update(citer=".syzygy/other.json"), "inventory-discharge-source-drift"),
+            ("inventory-citer-digest", lambda p: p[0].update(sha256="0" * 64), "inventory-discharge-source-drift"),
+            ("inventory-primary-schema", lambda p: p[0]["authority"].update(approved=True), "inventory-discharge-primary-binding-drift"),
+            ("inventory-primary-path", lambda p: p[0]["authority"].update(path=".syzygy/other.md"), "inventory-discharge-primary-binding-drift"),
+            ("inventory-primary-clause", lambda p: p[0]["authority"].update(clause="GP-Q1"), "inventory-discharge-primary-binding-drift"),
+            ("inventory-primary-digest", lambda p: p[0]["authority"].update(sha256="0" * 64), "inventory-discharge-primary-binding-drift"),
+            ("inventory-reason-short", lambda p: p[0].update(reason="short"), "inventory-discharge-reason-required"),
+            ("inventory-reason-type", lambda p: p[0].update(reason=True), "inventory-discharge-reason-required"),
+            ("inventory-reason-long", lambda p: p[0].update(reason="r" * 4097), "inventory-discharge-reason-required"),
+            ("inventory-targets-empty", lambda p: p[0].update(targets=[]), "inventory-discharge-targets-required"),
+            ("inventory-targets-type", lambda p: p[0].update(targets=True), "inventory-discharge-targets-required"),
+            ("inventory-target-unknown", lambda p: p[0].update(targets=[PREFIX + "missing.json"]), "inventory-discharge-unknown-or-duplicate-target"),
+            ("inventory-target-duplicate", lambda p: p[0]["targets"].append(paths[0]), "inventory-discharge-unknown-or-duplicate-target"),
+        ]
+        for name, change, expected in inventory_variants:
+            inventory_failure(name, change, expected)
+        for invalid in (None, True):
+            try:
+                inventory_discharges(root, frozen_inventory_files, invalid); reason = "unexpected-pass"
+            except Refusal as exc:
+                reason = str(exc)
+            cases.append({"predicate": "inventory-population-type-" + type(invalid).__name__,
+                          "pass": reason == "invalid-inventory-discharge-population", "old": [item], "new": invalid,
+                          "refusal": reason, "fixture_commit": inventory_source})
+        def inventory_source_failure(name, alter, expected):
+            changed = dict(frozen_inventory_files); original_draft = load_json(encoded(draft)); alter(changed, original_draft)
+            changed[DRAFT_CENSUS] = encoded(original_draft)
+            proposal = load_json(encoded([item])); proposal[0]["sha256"] = digest(changed[DRAFT_CENSUS])
+            try:
+                inventory_discharges(root, changed, proposal); reason = "unexpected-pass"
+            except (Refusal, OSError) as exc:
+                reason = str(exc)
+            restored = inventory_discharges(root, frozen_inventory_files, [item]) == {(p, DRAFT_CENSUS) for p in paths}
+            cases.append({"predicate": name, "pass": restored and reason == expected, "old": draft,
+                          "new": original_draft, "source_changes": {p: {"old": frozen_inventory_files.get(p, b"").decode(),
+                          "new": b.decode()} for p,b in changed.items() if b != frozen_inventory_files.get(p)},
+                          "refusal": reason, "expected_refusal": expected,
+                          "control_pass": True, "restored_pass": restored, "fixture_commit": inventory_source})
+        inventory_source_failure("inventory-schema-kind", lambda f,d: d.update(schema="signed-manifest/1"), "inventory-discharge-not-identified-historical-census")
+        inventory_source_failure("inventory-subject-commit", lambda f,d: d.update(subjectCommit="short"), "inventory-discharge-not-identified-historical-census")
+        inventory_source_failure("inventory-row-population", lambda f,d: d.update(rows=None), "inventory-discharge-not-identified-historical-census")
+        inventory_source_failure("inventory-row-digest", lambda f,d: d["rows"][0].update(sha256="0" * 64), "inventory-discharge-not-basename-only-row")
+        inventory_source_failure("inventory-row-operation", lambda f,d: d["rows"][0].update(matches=["ccSecFamily"]), "inventory-discharge-not-basename-only-row")
+        inventory_source_failure("inventory-row-duplicate", lambda f,d: d["rows"].append(d["rows"][0]), "inventory-discharge-not-basename-only-row")
+        inventory_source_failure("inventory-body-drift", lambda f,d: f.update({paths[0]: b"changed"}), "inventory-discharge-not-basename-only-row")
+        def historical_body_mismatch(f, d):
+            f[paths[0]] = b"changed synthetic historical input"
+            d["rows"][0]["sha256"] = digest(f[paths[0]])
+        inventory_source_failure("inventory-historical-body-mismatch", historical_body_mismatch, "inventory-discharge-historical-object-mismatch")
+        inventory_source_failure("inventory-row-type", lambda f,d: d["rows"].__setitem__(0, True), "inventory-discharge-not-basename-only-row")
+        # Even this narrow census proof cannot clear a separate primary digest.
+        protected_files = dict(frozen_inventory_files); protected_files[".syzygy/independent-act.md"] = digest(protected_files[paths[0]]).encode()
+        protected_rows = lines(make_census(protected_files)); protected_plan = make_plan(inventory_source, protected_rows, protected_files)
+        try:
+            transaction_plan(root, inventory_source, protected_rows, protected_files, protected_plan, doc); refusal = "unexpected-pass"
+        except Refusal as exc:
+            refusal = str(exc)
+        cases.append({"predicate": "inventory-discharge-cannot-clear-another-R0-edge", "pass": refusal == "R0-family-reclassification-forbidden",
+                      "old": "only source-bound draft census", "new": {"additional_citer": ".syzygy/independent-act.md",
+                      "bytes": digest(protected_files[paths[0]])}, "refusal": refusal, "fixture_commit": inventory_source})
         # Rollback is a new ordinary commit: the archive row and protected tag
         # remain, while restored bytes are represented by a live locator.
         tx_restore()

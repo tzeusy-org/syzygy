@@ -130,8 +130,9 @@ chronological candidate is not a declaration of interchangeability; singletons
 stay held until consumer review establishes their classification. Full witness output remains
 external because it can be much larger than the retained locator.
 
-A transaction is version 1 JSON with exactly `version`, `source_commit`,
-`discharges`, `families` and `protection`. Each family supplies a unique `id`,
+A transaction is version 1 JSON with `version`, `source_commit`,
+`discharges`, `families` and `protection`, and optionally
+`inventory_discharges`. No other fields are admitted. Each family supplies a unique `id`,
 explicit same `subject`, `kind` and `role`, literal JSON-pointer `selectors`
 for those values and a zoned capture instant, and its complete `members`.
 The checker reads these selectors only as data from the frozen blobs. It
@@ -140,7 +141,22 @@ sidecars, replay bundles and ambiguous members remain held. The newest member
 stays live. Missing same-role members, equal instants, R0 membership or an
 undischarged protected witness refuse the proposal. Discharges can clear only
 source-digest-bound lexical glob false positives, with a reason; a literal
-path or digest dependence cannot be cleared through this interface.
+path or digest dependence cannot be cleared through the glob interface.
+
+There is one separately bounded inventory discharge: the historical
+`cc-sec-3-attended-session-amendment/IMPACT-SWEEP.json` lexical census under
+GP-Q7. That primary clause authorizes drafting and expressly withholds
+sign-off; a candidate banner supplies no authority. Each proposal binds the
+exact census and GP-Q7 source hashes, a reason, and explicit target paths.
+The checker requires the identified draft schema, one `policyBasename`-only
+row per target, the exact target hash, and the same regular blob at the
+census's full historical commit. It can then clear only this census's
+witnesses for those targets. A separate primary digest, raw preservation or
+code/raw literal dependency still refuses admission. No other candidate
+inventory is exempted. Fresh owner-act reconciliation and independent review
+must confirm that these remain non-operative lexical rows; a later adoption
+or consumer change retires the offering. This proof is not blanket archival
+permission.
 
 `protection` contains `repository`, `observed_at` and full `rulesets` from
 an authenticated origin readback. The current implementation admits a positive
