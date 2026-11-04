@@ -36,11 +36,13 @@ never retained in evidence; synthetic sentinels alone are logged by the harness.
 | 1 | core worker-change-observation `defaultRunGit` → factory | `--no-optional-locks -C root`; cwd omitted | Node `utf8`, string with replacement decoding | 67,108,864 | ignore/pipe/pipe | omitted, inherited |
 | 2 | app governance-inputs `defaultRunGit` → factory, then fatal TextDecoder | same prefix; cwd omitted | native Buffer then strict UTF-8 text | omitted | ignore/pipe/ignore | omitted, inherited |
 | 3 | app governance-inputs `defaultReadGitBlob` → factory | same prefix, then `cat-file blob object`; cwd omitted | raw Uint8Array | omitted | ignore/pipe/ignore | omitted, inherited |
-| 4 | app git-observation `readGit` → factory | same prefix; cwd omitted | Node `utf8`, replacement string | omitted | ignore/pipe/ignore | per-invocation `{...process.env, GIT_OPTIONAL_LOCKS:'0'}` |
+| 4, exception | app git-observation `readGit`, retained direct adapter | same prefix; cwd omitted | Node `utf8`, replacement string | omitted | ignore/pipe/ignore | per-invocation `{...process.env, GIT_OPTIONAL_LOCKS:'0'}` |
 | 5 | core code-structure `defaultRunGit` → `gitRunnerFor` → factory | same prefix; cwd omitted | raw view; gitlinks removed before strict decoder | 268,435,456 via row 6 | ignore/pipe/ignore | omitted, inherited |
 | 6 | core project-shape-observation `gitRunnerFor` → factory | same prefix; cwd omitted | raw Uint8Array | 268,435,456 | ignore/pipe/ignore | omitted, inherited |
-| 7 | app verbatim-route `gitBlobReaderFor` → factory | empty prefix, original args only; cwd=root | raw Uint8Array | `limits.maxBytesPerSource` | ignore/pipe/pipe | omitted, inherited |
+| 7, exception | app verbatim-route `gitBlobReaderFor`, retained direct adapter | empty prefix, original args only; cwd=root | raw Uint8Array | `limits.maxBytesPerSource` | ignore/pipe/pipe | omitted, inherited |
 | 8, exception | app governance-inputs `batchReaderFor` → git-blob-batch → isolatedGit | isolated config/no-replace flags, `-C root`; cwd omitted | raw batch framing | 512,000,000 | pipe/pipe/ignore | isolated allowlist, constructed per call |
+
+[Observed] Rows 4 and 7 retain local one-line reasons: the unchanged core live-verification source guard permits only literal `encoding`, `maxBuffer` and `stdio` keys throughout its import closure. It forbids `env` and `cwd`, including unused branches. Therefore those exact app-only profiles stay outside that closure. The factory spells four literal branches to retain raw/text mode and omitted/explicit buffer options without weakening the checker. Their integration suites and every differential profile remain in scope.
 
 [Observed] Row 8 retains a local one-line rationale. Its config flags, allowlisted
 environment, stdin payload and batch protocol differ from these single-command
@@ -86,9 +88,9 @@ The same root/time/revision is used on both sides. The named Node runtime and
 harness digest are part of each record. Failure attempts are retained, not retried
 until green without an identified correction.
 
-[Observed] Tests: +10 collected cases, ~3 existing suites extended, -0 removed:
-seven table rows in one new unit family and one focused integration case in each
-of the three existing caller suites. The added table covers transport behavior
+[Observed] Tests: +8 collected cases, ~3 existing suites extended, -0 removed:
+five executable factory rows in one new unit family (the complete table also retains the two direct-exception profiles) and one focused integration case in each
+of the three existing caller suites. The departure from the earlier seven-row estimate follows the existing source guard: the two retained adapters stay exercised by their existing integration oracles, without duplicate unit simulations. The added table covers transport behavior
 that had no shared boundary before; the three cases protect decoder/env/selection
 semantics while retaining the existing lifecycle, authority and observation
 oracles. No test tier is changed; the new file is hermetic unit by default.
@@ -99,29 +101,8 @@ landing authority. The non-blocking owner notice is `cycle-notice.md`. Independe
 exact-head review and canonical full checks are separate recorded gates; this
 inventory alone is not a completion claim.
 
-[Observed] At source subject `6da656b508cef84b96674181f7b8df69c7c72354`, the stored
-old/new differential executed 69 transport cases and 93 caller cases. Exact
-comparison found no differences in those 162 declared cases. Caller records
-include the existing independent parity oracle's per-tuple and other family
-denominators, direct served responses and model/response identities. The explicit
-revocation and supersession fixtures assert that their intended lifecycle arm
-was reached. Expected loader and Git errors remain errors in the record.
-`evidence-index.json` identifies records, source/bundle manifests and attempted
-checks by digest. Earlier failed harness packaging/API attempts are retained in
-the worker artifact directory named in the terminal report.
+[Observed] The original source-subject records at `6da656b508cef84b96674181f7b8df69c7c72354` remain verbatim as prior evidence. The first clean-clone full check at `e6dc955da03af3b42fff2e622f6c09df13442b8b` failed the unchanged live-source guard because the initial factory used dynamic/spread options. One of 3,779 unit tests failed. This is directly attributable to this change. The old-head battery was interrupted after the source repair became necessary; its partial output, interruption record and cleanup proof remain in the external worker artifact directory. It is not a successful battery result.
 
-[Observed] The mutation record stores 27 literal-fragment changes at that same
-source subject; each was caught by the seven-row unit family or a selected
-old/new transport case. The harness checks for an executed failing test or a
-nonempty differential, so a setup/import error does not count as a kill. The nine
-factory mutations cover executable, argv, omission/cwd, encoding, buffer, stderr,
-env freshness, native return identity and unchanged thrown errors. The eighteen
-caller mutations cover the remaining moved per-caller choices, including fatal
-decode, the omitted governance buffers, raw fidelity, ambient env and lock
-override, the canonical bound and the verbatim envelope/cwd/stderr. Profile 5
-shares profile 6's transport and keeps its existing strict-adapter oracles.
+[Observed] The repaired placement retains the complete original outcome: no option, decoding, error, gate, envelope or ordering change is introduced. The core factory supports the five compatible profiles; rows 4, 7 and 8 have explicit load-bearing exception reasons. The full seven-profile differential, altered-record corpus, per-tuple parity oracle, predicate mutations and final gates are refreshed at the repaired source. The `*-repaired.json` records and repaired evidence index are current; earlier unsuffixed records describe the predecessor subject only.
 
-[Unknown] The full gate and the independent final-head review are separate from
-these source-subject results. Their exact final commit, outcomes and remaining
-source merge hold are reconciled in the terminal worker report. A worker-captured
-record is a report fact; it is not an emitter-distinct certification.
+[Unknown] The full gate and independent final-head review remain separate from source-subject differential results. Their exact final commit, outcomes and source merge hold are reconciled in the terminal worker report. A worker-captured record is a report fact; it is not an emitter-distinct certification.

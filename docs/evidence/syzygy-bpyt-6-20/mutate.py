@@ -19,13 +19,12 @@ verbatim = 'apps/three-surface-poc/src/verbatim-route.ts'
 mutants = [
  ('factory-executable', factory, "execFileSync('git', argv", "execFileSync('wrong-git', argv", None, None),
  ('factory-argv-order', factory, 'const argv = [...prefix, ...args];', 'const argv = [...args, ...prefix];', None, None),
- ('factory-cwd-omission', factory, 'const executionOptions = { ...options,', "const executionOptions = { cwd: '/unexpected', ...options,", None, None),
- ('factory-encoding', factory, '{ ...executionOptions, encoding }', '{ ...executionOptions }', None, None),
- ('factory-buffer-omission', factory, 'const executionOptions = { ...options,', 'const executionOptions = { maxBuffer: 1, ...options,', None, None),
- ('factory-stderr', factory, 'stdio: [...options.stdio]', "stdio: ['ignore', 'pipe', 'ignore']", None, None),
- ('factory-env-freshness', factory, '  return (args: readonly string[]) => {', '  const capturedEnvironment = env?.();\n  return (args: readonly string[]) => {', None, None),
- ('factory-raw-type', factory, "return execFileSync('git', argv, executionOptions);", "return new Uint8Array(execFileSync('git', argv, executionOptions));", None, None),
- ('factory-error-identity', factory, "if (encoding === 'utf8') return execFileSync('git', argv, { ...executionOptions, encoding });", "if (encoding === 'utf8') { try { return execFileSync('git', argv, { ...executionOptions, encoding }); } catch (e) { throw new Error(String(e)); } }", None, None),
+ ('factory-cwd-omission', factory, "{ stdio: [...stdio] }", "{ cwd: '/unexpected', stdio: [...stdio] }", None, None),
+ ('factory-encoding', factory, '{ encoding, maxBuffer, stdio: [...stdio] }', '{ maxBuffer, stdio: [...stdio] }', None, None),
+ ('factory-buffer-omission', factory, '{ stdio: [...stdio] }', '{ maxBuffer: 1, stdio: [...stdio] }', None, None),
+ ('factory-stderr', factory, 'stdio: [...stdio]', "stdio: ['ignore', 'pipe', 'ignore']", None, None),
+ ('factory-raw-type', factory, "return execFileSync('git', argv, { stdio: [...stdio] });", "return new Uint8Array(execFileSync('git', argv, { stdio: [...stdio] }));", None, None),
+ ('factory-error-identity', factory, "return execFileSync('git', argv, { encoding, maxBuffer, stdio: [...stdio] });", "try { return execFileSync('git', argv, { encoding, maxBuffer, stdio: [...stdio] }); } catch (e) { throw new Error(String(e)); }", None, None),
  ('worker-text-mode', worker, "    encoding: 'utf8',\n", '', 1, 'invalid-utf8'),
  ('worker-buffer', worker, 'maxBuffer: 64 * 1024 * 1024', 'maxBuffer: 63 * 1024 * 1024', 1, 'stdout-bound0'),
  ('worker-stderr', worker, "stdio: ['ignore', 'pipe', 'pipe']", "stdio: ['ignore', 'pipe', 'ignore']", 1, 'nonzero-both-streams'),
@@ -34,14 +33,15 @@ mutants = [
  ('governance-text-stderr', governance, "    stdio: ['ignore', 'pipe', 'ignore'],\n  })(args);", "    stdio: ['ignore', 'pipe', 'pipe'],\n  })(args);", 2, 'nonzero-both-streams'),
  ('governance-raw-default-buffer', governance, "    stdio: ['ignore', 'pipe', 'ignore'],\n  })(['cat-file', 'blob', object]));", "    maxBuffer: 2 * 1024 * 1024,\n    stdio: ['ignore', 'pipe', 'ignore'],\n  })(['cat-file', 'blob', object]));", 3, 'stdout-bound1'),
  ('governance-raw-fidelity', governance, "})(['cat-file', 'blob', object]));", "})(['cat-file', 'blob', object]).subarray(1));", 3, 'valid-utf8-bom-nul'),
- ('repository-optional-locks', observation, "env: () => ({ ...process.env, GIT_OPTIONAL_LOCKS: '0' })", 'env: () => ({ ...process.env })', 4, 'valid-utf8-bom-nul'),
- ('repository-inherited-env', observation, "env: () => ({ ...process.env, GIT_OPTIONAL_LOCKS: '0' })", "env: () => ({ GIT_OPTIONAL_LOCKS: '0' })", 4, 'valid-utf8-bom-nul'),
+ ('repository-optional-locks', observation, "env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' }", 'env: { ...process.env }', 4, 'valid-utf8-bom-nul'),
+ ('repository-inherited-env', observation, "env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' }", "env: { GIT_OPTIONAL_LOCKS: '0' }", 4, 'valid-utf8-bom-nul'),
+ ('repository-env-freshness', observation, 'function readGit(root: string, args: readonly string[]): string {', 'const staleGitEnvironment = { ...process.env };\nfunction readGit(root: string, args: readonly string[]): string {', 'integration', 'refreshes inherited'),
  ('repository-cwd-omission', observation, "    encoding: 'utf8',", "    cwd: root,\n    encoding: 'utf8',", 4, 'valid-utf8-bom-nul'),
  ('repository-text-mode', observation, "    encoding: 'utf8',\n", '', 4, 'nonzero-both-streams'),
  ('canonical-buffer', canonical, 'maxBuffer: 256 * 1024 * 1024', 'maxBuffer: 255 * 1024 * 1024', 6, 'stdout-bound0'),
  ('canonical-argv', canonical, "prefix: ['--no-optional-locks', '-C', repoRoot]", "prefix: ['-C', repoRoot]", 6, 'valid-utf8-bom-nul'),
  ('canonical-stderr', canonical, "    stdio: ['ignore', 'pipe', 'ignore'],\n  });", "    stdio: ['ignore', 'pipe', 'pipe'],\n  });", 6, 'nonzero-both-streams'),
- ('verbatim-cwd', verbatim, 'prefix: [], cwd: repoRoot,', 'prefix: [],', 7, 'valid-utf8-bom-nul'),
+ ('verbatim-cwd', verbatim, 'cwd: repoRoot, ', '', 7, 'valid-utf8-bom-nul'),
  ('verbatim-envelope', verbatim, 'maxBuffer: limits.maxBytesPerSource', 'maxBuffer: 1048576', 7, 'narrow-envelope1'),
  ('verbatim-stderr', verbatim, "stdio: ['ignore', 'pipe', 'pipe']", "stdio: ['ignore', 'pipe', 'ignore']", 7, 'nonzero-both-streams'),
 ]
@@ -51,18 +51,20 @@ for mid, path, old, new, profile, case in mutants:
     original = target.read_text()
     count = original.count(old)
     # The executable has two branches; both must still invoke git. Other mutations are single-site.
-    expected_count = 2 if mid == 'factory-executable' else 1
+    expected_count = 4 if mid in ['factory-executable', 'factory-stderr'] else 1
     if count != expected_count:
         raise RuntimeError(f'{mid}: literal count {count}, expected {expected_count}')
     changed = original.replace(old, new)
-    if mid == 'factory-env-freshness':
-        changed = changed.replace('{ env: env() }', '{ env: capturedEnvironment }')
-        old = original[original.index('  return (args: readonly string[]) => {'):original.index("    if (encoding === 'utf8')")]
-        new = changed[changed.index('  const capturedEnvironment'):changed.index("    if (encoding === 'utf8')")]
+    if mid == 'repository-env-freshness':
+        changed = changed.replace("env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' }", "env: { ...staleGitEnvironment, GIT_OPTIONAL_LOCKS: '0' }")
+        old = original[original.index('function readGit('):original.index('export function resolvePwbRepositoryBinding')]
+        new = changed[changed.index('const staleGitEnvironment'):changed.index('export function resolvePwbRepositoryBinding')]
     log = out/f'{mid}.log'
     env = dict(os.environ)
     if profile is None:
         command = ['npm', 'exec', 'vitest', 'run', '--', '--project', 'unit', 'packages/three-surface-poc-core/src/git-runner.test.ts']
+    elif profile == 'integration':
+        command = ['npm', 'exec', 'vitest', 'run', '--', '--project', 'integration', 'apps/three-surface-poc/src/git-observation.test.ts', '-t', case]
     else:
         command = ['node', 'docs/evidence/syzygy-bpyt-6-20/differential.mjs', str(out/mid), subject]
         env.update(G5_PROFILES=str(profile), G5_CASE_FILTER=case, G5_SKIP_CALLERS='1')
@@ -73,10 +75,10 @@ for mid, path, old, new, profile, case in mutants:
     finally:
         target.write_text(original)
     text = log.read_text()
-    if profile is None:
+    if profile is None or profile == 'integration':
         failed = re.search(r'Tests\s+(\d+) failed', text)
         killed = result.returncode != 0 and failed is not None
-        denominator = 7
+        denominator = 5 if profile is None else 1
         reason = f'{failed.group(1)} failed tests' if failed else 'no executed failing test recorded'
     else:
         receipt = out/mid/'transport-differential.json'

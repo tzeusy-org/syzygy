@@ -2,11 +2,8 @@ import { execFileSync } from 'node:child_process';
 
 interface GitTransportOptions {
   readonly prefix: readonly string[];
-  readonly cwd?: string;
   readonly maxBuffer?: number;
   readonly stdio: readonly ['ignore', 'pipe', 'ignore' | 'pipe'];
-  /** Evaluated for every invocation; omission leaves Node's inherited environment intact. */
-  readonly env?: () => NodeJS.ProcessEnv;
 }
 
 interface GitTextOptions extends GitTransportOptions {
@@ -23,11 +20,16 @@ interface GitByteOptions extends GitTransportOptions {
 export function createGitRunner(profile: GitTextOptions): (args: readonly string[]) => string;
 export function createGitRunner(profile: GitByteOptions): (args: readonly string[]) => Buffer;
 export function createGitRunner(profile: GitTextOptions | GitByteOptions): (args: readonly string[]) => string | Buffer {
-  const { prefix, env, encoding, ...options } = profile;
+  const { prefix, encoding, maxBuffer, stdio } = profile;
   return (args: readonly string[]) => {
     const argv = [...prefix, ...args];
-    const executionOptions = { ...options, stdio: [...options.stdio], ...(env === undefined ? {} : { env: env() }) };
-    if (encoding === 'utf8') return execFileSync('git', argv, { ...executionOptions, encoding });
-    return execFileSync('git', argv, executionOptions);
+    // The live-observer source guard requires literal, inspectable option keys.
+    // Separate branches preserve omission as well as Node's native error payloads.
+    if (encoding === 'utf8') {
+      if (maxBuffer === undefined) return execFileSync('git', argv, { encoding, stdio: [...stdio] });
+      return execFileSync('git', argv, { encoding, maxBuffer, stdio: [...stdio] });
+    }
+    if (maxBuffer === undefined) return execFileSync('git', argv, { stdio: [...stdio] });
+    return execFileSync('git', argv, { maxBuffer, stdio: [...stdio] });
   };
 }
