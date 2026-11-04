@@ -556,7 +556,7 @@ def adjudicate(root: Path, frozen: Path, witnesses_path: Path, out: Path, operat
             elif len(paths) > 1:
                 classification, reason = "hold", "no-proven-same-role-comparable-capture-domain"
             else:
-                classification, reason = "R2", "sole-measured-family-member-kept; consumer-catalog-review-required"
+                classification, reason = "hold", "singleton-without-affirmative-consumer-discharge"
             metadata = {k: record[k] for k in ("subject", "subjects", "kind", "role", "record", "schema", "slice")
                         if k in record}
             item = {"path": path, "sha256": by_path[path]["sha256"], "source_commit": source["source_commit"],
@@ -1804,6 +1804,30 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                         "unknown-duplicate-or-sidecar-family-member")
         source_negative("family-cross-index-groups", lambda d: renamed_member(d, PREFIX + "other.json"),
                         "family-crosses-measured-index-group")
+        def protected_nonmember(kind):
+            tx_restore(); control = check(root, home) == final
+            git(root, "reset", "--hard", containing); git(root, "clean", "-fdq")
+            extra = PREFIX + "capture-2026-01-03.json"
+            extra_body = encoded({"subject": "synthetic-subject", "kind": "measurement", "role": "baseline",
+                                  "capturedAt": "2026-01-03T00:00:00Z"})
+            (root / extra).write_bytes(extra_body)
+            citer = ".syzygy/held.md" if kind == "R0" else "held-RAW.md"
+            (root / citer).parent.mkdir(exist_ok=True)
+            (root / citer).write_text(digest(extra_body) if kind == "R0" else extra)
+            changed = tx_commit(); doc = load_json(encoded(transaction)); doc["source_commit"] = changed
+            tx_input.write_bytes(encoded(doc))
+            destination = outer / ("protected-nonmember-" + kind)
+            prepare(root, changed, destination, transaction_path=tx_input)
+            proposal = {r["path"]: r for r in lines((destination / "PLAN.jsonl").read_bytes())}
+            valid = proposal[extra]["classification"] == kind and proposal[extra]["disposition"] == "keep"
+            valid = valid and proposal[paths[0]]["disposition"] == "archive" and proposal[paths[1]]["disposition"] == "keep"
+            tx_restore(); restored = check(root, home) == final
+            cases.append({"predicate": "protected-" + kind + "-nonmember-is-kept-outside-R2-family", "pass": control and valid and restored,
+                          "old": {"source_commit": containing, "members": paths}, "new": {"source_commit": changed,
+                          "protected_path": extra, "citer": citer, "citer_bytes": digest(extra_body) if kind == "R0" else extra},
+                          "fixture_commit": changed, "control_pass": control, "restored_pass": restored})
+        protected_nonmember("R0")
+        protected_nonmember("R1")
         # Rollback is a new ordinary commit: the archive row and protected tag
         # remain, while restored bytes are represented by a live locator.
         tx_restore()
@@ -1818,6 +1842,21 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         cases.append({"predicate": "ordinary-body-restoring-rollback-with-tag-retained", "pass": rolled_back["live"] == 2
                       and rolled_back["archive"] == 0 and git(root, "rev-parse", "refs/tags/" + tag + "^{commit}").decode().strip() == containing,
                       "old": completed, "new": rollback, "fixture_commit": rollback})
+    with tempfile.TemporaryDirectory(prefix="syzygy-retention-singleton-") as temp:
+        outer = Path(temp); root = outer / "repo"; root.mkdir(); git(root, "init", "-q")
+        path = PREFIX + "singleton.json"; (root / path).parent.mkdir(parents=True)
+        (root / path).write_bytes(encoded({"subject": "synthetic unreferenced singleton"}))
+        git(root, "add", "--all")
+        git(root, "-c", "user.name=Retention Fixture", "-c", "user.email=fixture@example.invalid",
+            "commit", "-qm", "synthetic singleton")
+        containing = git(root, "rev-parse", "HEAD").decode().strip()
+        witnesses = outer / "witnesses.jsonl"; prepared = prepare(root, containing, root / HOME, witnesses)
+        view = adjudicate(root, root / HOME, witnesses, outer / "view")
+        cases.append({"predicate": "lexical-absence-never-promotes-singleton-to-R2", "pass":
+                      prepared["evidence_files"] == 1 and view["classifications"] == {"hold": 1},
+                      "old": {"record": {"subject": "synthetic unreferenced singleton"}, "citers": []},
+                      "new": {"classification": "hold", "reason": "singleton-without-affirmative-consumer-discharge"},
+                      "fixture_commit": containing})
     for case in cases:
         case["input_record_sha256"] = digest(encoded({"old": case["old"], "new": case["new"]}))
     report = {"implementation_commit": implementation_commit, "implementation_sha256": implementation_sha256,

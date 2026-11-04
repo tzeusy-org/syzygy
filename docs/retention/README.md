@@ -126,8 +126,8 @@ The `adjudicate` report enumerates every frozen body and measured family,
 with subject metadata, explicit capture instants, source-bound operative
 consumers and unresolved citation witnesses. Its output is an inferred review
 offering. A path or digest mention alone establishes no reliance. Its
-chronological candidate is not a declaration of interchangeability; singleton
-R2 candidates still require consumer review. Full witness output remains
+chronological candidate is not a declaration of interchangeability; singletons
+stay held until consumer review establishes their classification. Full witness output remains
 external because it can be much larger than the retained locator.
 
 A transaction is version 1 JSON with exactly `version`, `source_commit`,
