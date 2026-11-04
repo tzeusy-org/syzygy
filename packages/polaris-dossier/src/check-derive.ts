@@ -11,6 +11,43 @@ import { type CheckFinding, type CitedBlob, type ExcludedQuotation, type Verifie
 
 /** What one derivation found. `admitted` holds the text of every cited blob this step read, re-hashed and screening admitted, by path:
  * the only bytes a render may quote or put on a source page. */
+/** The most lines a code excerpt may name (REQ-polaris-generation-034, v1.3). */
+export const CODE_EXCERPT_MAX_LINES = 60;
+
+/** Markup a short label may not carry (v1.3 "Short label carries no claim"): an angle bracket, an ampersand, a backtick, a Markdown link
+ * or image, or an emphasis mark at a word edge. A label renders as plain text, so any of these would show as written or mislead. */
+const LABEL_MARKUP = /[<>&`]|!?\[[^\]\n]*\]\(|(?:^|[\s(])(?:\*{1,2}|_{1,2})(?=\S)|(?<=\S)(?:\*{1,2}|_{1,2})(?:$|[\s).,;:!?])/u;
+
+/** The JSON path of every presentation element in the draft. */
+const ELEMENT_KINDS = new Set(['table', 'callout', 'steps', 'definitions', 'cards', 'details', 'code']);
+function elementEntries(doc: Readonly<Record<string, unknown>>): string[] {
+  const out: string[] = [];
+  walk(doc, '$', (value, at) => { if (ELEMENT_KINDS.has(text(value['kind']) ?? '') && /\.(?:paragraphs|elements|children)\[\d+\]$/u.test(at)) out.push(at); });
+  return out;
+}
+
+/** Every short label of the draft's presentation elements, with its JSON path. */
+export function elementLabels(doc: Readonly<Record<string, unknown>>): { at: string; value: string }[] {
+  const out: { at: string; value: string }[] = [];
+  const keys: Readonly<Record<string, readonly string[]>> = { table: ['caption'], callout: ['title'], details: ['summary'], code: ['language'] };
+  walk(doc, '$', (value, at) => {
+    const kind = text(value['kind']);
+    if (kind === undefined) return;
+    for (const key of keys[kind] ?? []) if (typeof value[key] === 'string') out.push({ at: `${at}.${key}`, value: value[key] as string });
+    if (kind === 'table') list(value['columns']).forEach((column, i) => { if (typeof column === 'string') out.push({ at: `${at}.columns[${i}]`, value: column }); });
+    if (kind === 'definitions') list(value['entries']).forEach((entry, i) => { if (isRecord(entry) && typeof entry['term'] === 'string') out.push({ at: `${at}.entries[${i}].term`, value: entry['term'] }); });
+    if (kind === 'cards') list(value['items']).forEach((item, i) => { if (isRecord(item) && typeof item['label'] === 'string') out.push({ at: `${at}.items[${i}].label`, value: item['label'] }); });
+  });
+  return out;
+}
+
+export function labelMarkup(value: string): boolean { return LABEL_MARKUP.test(value); }
+
+/** A quotation a short label may not carry: a quotation mark of any kind, or the quotation lead-in (R-MEA10-RICH-ELEMENTS-e06b-1 F2). A
+ * label is never verified against a file, so a quotation in one would render as the agent's unverified copy. */
+const LABEL_QUOTATION = /["\u201C\u201D\u201E\u00AB\u00BB]|\bstates:/iu;
+export function labelQuotation(value: string): boolean { return LABEL_QUOTATION.test(value); }
+
 export interface Derived {
   readonly findings: CheckFinding[];
   readonly quotations: VerifiedQuotation[];
@@ -61,7 +98,8 @@ type Block = SubjectBlock;
 export type Citation = { readonly at: string; readonly value: Readonly<Record<string, unknown>> };
 type BlobState =
   | { readonly state: 'absent' }
-  | { readonly state: 'excluded'; readonly outcome: ScreenExclusion }
+  /** `lines` only where Syzygy read the body before excluding it (content screening, not UTF-8): never a path-excluded body. */
+  | { readonly state: 'excluded'; readonly outcome: ScreenExclusion; readonly lines?: number }
   | { readonly state: 'admitted'; readonly entry: TreeEntry; readonly raw: string; readonly lines: number; tracked: TrackedText | null; readonly withheld?: readonly number[];
       readonly detectorIds?: readonly string[]; readonly retainedLines?: readonly string[]; readonly lineByteOffsets?: readonly number[]; readonly originalBytes?: number; readonly contentSha256?: string; readonly projection?: VerifiedRedactedBody;
       readonly activeContentAsBefore?: boolean };
@@ -92,6 +130,16 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
 
   rules.structural(doc, add);
   const executionIds = new Set(list(doc['executions']).flatMap((execution) => (isRecord(execution) && text(execution['id']) !== undefined ? [text(execution['id'])!] : [])));
+
+  // A presentation element's short labels are plain text that claims nothing: markup in one is a finding at its path.
+  for (const label of elementLabels(doc)) {
+    if (labelQuotation(label.value)) add({ kind: 'label-quotation', at: label.at, detail: 'a short label carries no quotation: no quotation mark and no lead-in; quote in a claim block, where Syzygy verifies it' });
+    else if (labelMarkup(label.value)) add({ kind: 'label-markup', at: label.at, detail: 'a short label is plain text: no angle bracket (< or >), ampersand, backtick, Markdown link or image, or * or _ at a word edge' });
+  }
+  // A v2 draft predates the elements: it uses none (design, v1.3 migration).
+  if (doc['schemaVersion'] === 'polaris-dossier-local-draft-v2') {
+    for (const label of elementEntries(doc)) add({ kind: 'element-version', at: label, detail: 'a presentation element needs draft schema polaris-dossier-local-draft-v3' });
+  }
 
   // Labels, citations by block kind and the execution marking.
   const blocks = rules.blocks(doc);
@@ -173,10 +221,10 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
   for (const blob of read) {
     let raw: string;
-    try { raw = decoder.decode(blob.bytes); } catch { blobs.set(blob.path, { state: 'excluded', outcome: 'not-utf8-text' }); continue; }
+    try { raw = decoder.decode(blob.bytes); } catch { blobs.set(blob.path, { state: 'excluded', outcome: 'not-utf8-text', lines: lineCount(Buffer.from(blob.bytes).toString('latin1')) }); continue; }
     // A retained body (policy version 4) keeps only its retained text: a withheld line is never used to verify a quotation.
     const screened = inputs.screen.screenTargetBody(raw, blob.path);
-    blobs.set(blob.path, screened.kind === 'excluded' ? { state: 'excluded', outcome: screened.outcome }
+    blobs.set(blob.path, screened.kind === 'excluded' ? { state: 'excluded', outcome: screened.outcome, lines: lineCount(raw) }
       : screened.kind === 'redacted' ? { state: 'admitted', entry: blob, raw: retainedWithMarkers(screened.retainedLines, screened.withheld), lines: screened.retainedLines.length,
         tracked: null, withheld: screened.withheld, detectorIds: screened.detectorIds, retainedLines: screened.retainedLines, lineByteOffsets: screened.lineByteOffsets,
         originalBytes: screened.originalBytes, contentSha256: screened.contentSha256, projection: verifiedRedactedBody(raw, blob.id, blob.path, inputs.screen.screenTargetBody),
@@ -205,6 +253,17 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     const state = blobs.get(cited)!;
     if (state.state === 'absent') { add({ kind: 'path-absent', at: `${at}.path`, ...about, detail: `${pathLabel(cited)} names no file at the pinned revision ${inputs.pinned}` }); continue; }
     if (start === undefined || end === undefined || start > end) { add({ kind: 'range-invalid', at, ...about, detail: 'a line range is two integers from 1, startLine not after endLine' }); continue; }
+    // The limit holds whatever screening decides: only the exclusion itself is no finding (R-MEA10-RICH-ELEMENTS-e06b-1 F1).
+    if (at.endsWith('.citation') && end - start + 1 > CODE_EXCERPT_MAX_LINES) {
+      add({ kind: 'code-excerpt-too-long', at, ...about, detail: `a code excerpt names 1 to ${CODE_EXCERPT_MAX_LINES} lines; this one names ${end - start + 1}` });
+      continue;
+    }
+    // A code excerpt's range is checked against a body Syzygy read and then excluded, without naming its length; a path-excluded body is
+    // never read, so its range is not checked (R-MEA10-RICH-ELEMENTS-720d-2 F1).
+    if (state.state === 'excluded' && at.endsWith('.citation') && state.lines !== undefined && end > state.lines) {
+      add({ kind: 'range-beyond-blob', at: `${at}.endLine`, ...about, detail: `the range ends past the last line of ${pathLabel(cited)} at the pinned revision` });
+      continue;
+    }
     if (state.state !== 'admitted') continue;
     if (end > state.lines) { add({ kind: 'range-beyond-blob', at: `${at}.endLine`, ...about, detail: `${pathLabel(cited)} has ${state.lines} line(s) at the pinned revision; the range ends at line ${end}` }); continue; }
     rangeOk.add(value);
@@ -300,8 +359,9 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
   for (const part of ['sections', 'diagrams', 'deepDives'] as const) {
     list(doc[part]).forEach((asset, i) => {
       if (!isRecord(asset) || !isRecord(asset['disposition']) || asset['disposition']['kind'] !== 'produced') return;
-      const paragraphs = list(asset['paragraphs']);
-      const own = new Set([...idsOf([asset]), ...idsOf(paragraphs), ...paragraphs.flatMap((p) => (isRecord(p) ? idsOf(p['children']) : [])), ...idsOf(asset['nodes']), ...idsOf(asset['edges'])]);
+      // Its parts are every identity inside it: blocks, children, rich elements and their rows and claims, nodes and edges; never a citation.
+      const own = new Set<string>();
+      walk(asset, '$', (value, at) => { const id = text(value['id']); if (id !== undefined && !/\.(?:citations|evidence)\[|\.citation$/u.test(at)) own.add(id); });
       list(asset['disposition']['assetIds']).forEach((assetId, k) => {
         if (typeof assetId === 'string' && !own.has(assetId)) add({ kind: 'unresolved-reference', at: `$.${part}[${i}].disposition.assetIds[${k}]`, detail: `${JSON.stringify(assetId)} is not this asset or a part of it` });
       });
@@ -330,7 +390,31 @@ function walk(value: unknown, at: string, visit: (value: Readonly<Record<string,
   for (const [key, child] of Object.entries(value)) walk(child, `${at}.${key}`, visit);
 }
 
-/** The claim blocks (introduction, section and deep-dive paragraphs and their children) and the understanding record's items. */
+/** Every claim form in one entry of a section's or deep dive's `paragraphs`, with its JSON path: a block and its children, or each
+ * text-bearing cell or item of a v1.3 rich element (syzygy-mea.10.5). An element's labels are presentation and are no claim. */
+export function contentClaims(at: string, entry: unknown, visit: (at: string, value: Readonly<Record<string, unknown>>) => void): void {
+  if (!isRecord(entry)) return;
+  const each = (key: string, inner: (item: Readonly<Record<string, unknown>>, at: string) => void): void =>
+    list(entry[key]).forEach((item, k) => { if (isRecord(item)) inner(item, `${at}.${key}[${k}]`); });
+  switch (entry['kind']) {
+    case undefined:
+      visit(at, entry);
+      each('children', (child, childAt) => visit(childAt, child));
+      return;
+    case 'table':
+      each('rows', (row, rowAt) => list(row['cells']).forEach((cell, c) => { if (isRecord(cell) && cell['kind'] !== 'empty') visit(`${rowAt}.cells[${c}]`, cell); }));
+      return;
+    case 'callout': each('children', (child, childAt) => contentClaims(childAt, child, visit)); return;
+    case 'steps': each('items', (item, itemAt) => visit(itemAt, item)); return;
+    case 'definitions': each('entries', (item, itemAt) => { if (isRecord(item['definition'])) visit(`${itemAt}.definition`, item['definition']); }); return;
+    case 'cards': each('items', (item, itemAt) => { if (isRecord(item['body'])) visit(`${itemAt}.body`, item['body']); }); return;
+    case 'details': each('elements', (item, itemAt) => contentClaims(itemAt, item, visit)); return;
+    default: return;
+  }
+}
+
+/** The claim blocks (introduction, section and deep-dive paragraphs and their children, and the claim forms of rich elements) and the
+ * understanding record's items. */
 export function collectBlocks(doc: Readonly<Record<string, unknown>>): Block[] {
   const out: Block[] = [];
   const claim = (at: string, value: Readonly<Record<string, unknown>>): Block =>
@@ -339,12 +423,7 @@ export function collectBlocks(doc: Readonly<Record<string, unknown>>): Block[] {
   for (const part of ['sections', 'deepDives'] as const) {
     list(doc[part]).forEach((container, i) => {
       if (!isRecord(container)) return;
-      list(container['paragraphs']).forEach((paragraph, j) => {
-        if (!isRecord(paragraph)) return;
-        const at = `$.${part}[${i}].paragraphs[${j}]`;
-        out.push(claim(at, paragraph));
-        list(paragraph['children']).forEach((child, k) => { if (isRecord(child)) out.push(claim(`${at}.children[${k}]`, child)); });
-      });
+      list(container['paragraphs']).forEach((entry, j) => contentClaims(`$.${part}[${i}].paragraphs[${j}]`, entry, (at, value) => out.push(claim(at, value))));
     });
   }
   const understanding = isRecord(doc['understanding']) ? doc['understanding'] : {};
@@ -354,13 +433,14 @@ export function collectBlocks(doc: Readonly<Record<string, unknown>>): Block[] {
   return out;
 }
 
-/** Every citation in the draft: each object in a `citations` or `evidence` list. */
+/** Every citation in the draft: each object in a `citations` or `evidence` list, and a code excerpt's one `citation`. */
 export function collectCitations(doc: Readonly<Record<string, unknown>>): Citation[] {
   const out: Citation[] = [];
   walk(doc, '$', (value, at) => {
     for (const key of ['citations', 'evidence'] as const) {
       list(value[key]).forEach((citation, i) => { if (isRecord(citation)) out.push({ at: `${at}.${key}[${i}]`, value: citation }); });
     }
+    if (value['kind'] === 'code' && isRecord(value['citation'])) out.push({ at: `${at}.citation`, value: value['citation'] });
   });
   return out;
 }

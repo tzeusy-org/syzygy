@@ -18,7 +18,13 @@ import { EXECUTION_SCOPES } from './execution-flags.js';
  * revision, and the execution marking against the executions list are `check`'s, over the frozen revision. */
 
 /** v2: an execution's `workingDirectory` is optional and it may state its `scope` (v1.1, N6). */
-export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v2';
+export const LOCAL_DRAFT_SCHEMA_VERSION_V2 = 'polaris-dossier-local-draft-v2';
+/** v3: a section's or deep dive's `paragraphs` may also hold the rich elements of v1.3 (tables, callouts, steps, definitions, cards and
+ * collapsible details; syzygy-mea.10.5). A v2 draft still checks: v3 only adds forms. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v3';
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION] as const);
+/** The tones a callout takes; each renders with its visible name. */
+export const CALLOUT_TONES = Object.freeze(['note', 'tip', 'caution', 'important'] as const);
 
 /** The understanding record's items, in REQ-polaris-generation-002's order. */
 export const UNDERSTANDING_ITEMS = Object.freeze([
@@ -55,6 +61,8 @@ const repoPath: DraftSchema = { type: 'string', minLength: 1, maxLength: 1024, p
 const line: DraftSchema = { type: 'integer', minimum: 1, maximum: 10_000_000 };
 const citations = (minItems: number): DraftSchema => list(ref('citation'), minItems, 50);
 const reason = ref('unknownReason');
+/** A short presentation label: a caption, column, title, term, card label or summary. */
+const presentationLabel: DraftSchema = { type: 'string', minLength: 1, maxLength: 120 };
 
 /** The one form a quotation takes, stated in a brief and in its schema's `quotations` description alike. `check` and `inventory-check`
  * count only this form; quoted text without the lead-in is the agent's prose. */
@@ -101,6 +109,20 @@ const DEFS: Readonly<Record<string, DraftSchema>> = Object.freeze({
   unknownReason: choice(UNKNOWN_REASONS),
   paragraph: claimForms({}),
   block: claimForms({ children: list(ref('paragraph'), 0, 12) }),
+  // v1.3 rich elements. Their labels (caption, columns, title, term, label, summary) are presentation, never a claim or a quotation;
+  // every text-bearing cell or item is a claim form, checked, reviewed and rendered as a block is.
+  table: object({ kind: one('table'), id: handle, caption: presentationLabel, columns: list(presentationLabel, 1, 8), rowHeaders: { type: 'boolean' },
+    rows: list(object({ id: handle, cells: list({ oneOf: [ref('paragraph'), object({ kind: one('empty') })] }, 1, 8) }), 1, 40) }),
+  callout: object({ kind: one('callout'), id: handle, tone: choice(CALLOUT_TONES), title: presentationLabel, children: list(ref('block'), 1, 12) }),
+  steps: object({ kind: one('steps'), id: handle, items: list(ref('paragraph'), 2, 20) }),
+  definitions: object({ kind: one('definitions'), id: handle, entries: list(object({ term: presentationLabel, definition: ref('paragraph') }), 1, 40) }),
+  cards: object({ kind: one('cards'), id: handle, items: list(object({ label: presentationLabel, body: ref('paragraph') }), 2, 6) }),
+  details: object({ kind: one('details'), id: handle, summary: presentationLabel, elements: list(ref('detailContent'), 1, 30) }),
+  // A code excerpt names one citation of 1 to 60 lines; Syzygy renders the lines from its own read, never from the draft. `language` is
+  // a presentation hint (v1.3 note 5): where it is absent the renderer derives one from the path.
+  code: object({ kind: one('code'), id: handle, language: presentationLabel, citation: ref('citation') }, ['language']),
+  detailContent: { oneOf: [ref('block'), ref('table'), ref('callout'), ref('steps'), ref('definitions'), ref('cards'), ref('code')] },
+  content: { oneOf: [ref('block'), ref('table'), ref('callout'), ref('steps'), ref('definitions'), ref('cards'), ref('code'), ref('details')] },
   disposition,
   understandingItem,
   pathReason,
@@ -117,20 +139,20 @@ export function localDraftSchema(parameters: DraftSchemaParameters): DraftSchema
   requirePinnedRevision(parameters.pinnedRevision);
   if (!Number.isSafeInteger(parameters.maxQuestions) || parameters.maxQuestions < 0) throw new Error('draft-schema: the question limit is not a nonnegative integer');
   return { defs: DEFS, root: object({
-    schemaVersion: one(LOCAL_DRAFT_SCHEMA_VERSION),
+    schemaVersion: choice(LOCAL_DRAFT_SCHEMA_VERSIONS),
     pinnedRevision: one(parameters.pinnedRevision),
     sessionId,
     title: text,
     introduction: ref('paragraph'),
     understanding: object(Object.fromEntries(UNDERSTANDING_ITEMS.map((item) => [item, list(ref('understandingItem'), 1, 100)]))),
-    sections: list(object({ id: handle, title: text, paragraphs: list(ref('block'), 1, 30), disposition: ref('disposition') }), 1, 30),
+    sections: list(object({ id: handle, title: text, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 1, 30),
     diagrams: list(object({
       id: handle, title: text, sectionId: handle, kind: choice(DIAGRAM_KINDS), relationship: text,
       nodes: list(object({ id: handle, label: text, epistemic, citations: citations(1) }), 1, 40),
       edges: list(object({ id: handle, from: handle, to: handle, label: text, epistemic, citations: citations(1) }), 1, 80),
       disposition: ref('disposition'),
     }), 0, 20),
-    deepDives: list(object({ id: handle, title: text, sectionId: handle, paragraphs: list(ref('block'), 1, 30), disposition: ref('disposition') }), 0, 30),
+    deepDives: list(object({ id: handle, title: text, sectionId: handle, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 0, 30),
     unresolved: list(object({ id: handle, question: text, reason: text, citations: citations(0) }), 0, 100),
     discovery: object({
       inspected: list(repoPath, 0, 10_000),
