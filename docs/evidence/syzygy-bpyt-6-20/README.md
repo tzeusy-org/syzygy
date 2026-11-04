@@ -7,7 +7,7 @@
 the retained string seam. The G2 dependency is closed `.6.17`, PR #729; its bound,
 size-before-body ordering and captured-stderr behavior remain the oracle.
 
-[Observed] The frozen source is named in `baseline-manifest.json`. The bounded
+[Observed] The frozen source is named in `baseline-manifest.json`. The bounded baseline
 census is six production files with six direct `execFileSync('git', …)` calls,
 plus code-structure's already shared adapter: seven profiles, five original
 logical G5 seams. This is not an inventory of other Git commands in the repository.
@@ -106,3 +106,5 @@ inventory alone is not a completion claim.
 [Observed] The repaired placement retains the complete original outcome: no option, decoding, error, gate, envelope or ordering change is introduced. The core factory supports the five compatible profiles; rows 4, 7 and 8 have explicit load-bearing exception reasons. The full seven-profile differential, altered-record corpus, per-tuple parity oracle, predicate mutations and final gates are refreshed at the repaired source. The `*-repaired.json` records and repaired evidence index are current; earlier unsuffixed records describe the predecessor subject only.
 
 [Unknown] The full gate and independent final-head review remain separate from source-subject differential results. Their exact final commit, outcomes and source merge hold are reconciled in the terminal worker report. A worker-captured record is a report fact; it is not an emitter-distinct certification.
+
+[Observed] Repaired source subject `1675b3967b36812ee05775a6f2bb31627f247f04`: 248 tests across ten targeted files passed, including the unchanged live-source security guard. The refreshed differential matched 69 transport and 93 caller cases. The 27 refreshed literal mutants were caught (eight factory predicates and nineteen caller predicates, including the retained environment adapter's freshness). The repaired census finds two direct app exceptions and four factory call sites across six files, with code-structure still delegating via the canonical runner; five option profiles use the factory. `evidence-index-repaired.json` binds the current records. The final clean-clone check and independent review remain separate gates.

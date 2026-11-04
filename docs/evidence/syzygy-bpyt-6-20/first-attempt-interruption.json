@@ -1,0 +1,172 @@
+{
+  "subjectCommit": "e6dc955da03af3b42fff2e622f6c09df13442b8b",
+  "reason": "source repair required after attributable factory/source-guard failure; old subject obsolete",
+  "time": "2026-11-04T17:22:43.919519+00:00",
+  "roots": [
+    {
+      "pid": 523443,
+      "ppid": 523441,
+      "pgid": 523441,
+      "args": "python3 /home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/run-full.py"
+    }
+  ],
+  "terminatedDescendants": [
+    {
+      "pid": 540144,
+      "ppid": 523443,
+      "pgid": 523441,
+      "args": "npm run check:battery"
+    }
+  ],
+  "identifiedDescendants": [
+    {
+      "pid": 540144,
+      "ppid": 523443,
+      "pgid": 523441,
+      "args": "npm run check:battery"
+    },
+    {
+      "pid": 540343,
+      "ppid": 540144,
+      "pgid": 523441,
+      "args": "sh -c python3 scripts/run_status_battery.py"
+    },
+    {
+      "pid": 540344,
+      "ppid": 540343,
+      "pgid": 523441,
+      "args": "python3 scripts/run_status_battery.py"
+    },
+    {
+      "pid": 540353,
+      "ppid": 540344,
+      "pgid": 523441,
+      "args": "/bin/sh -c python3 scripts/check_governance.py"
+    },
+    {
+      "pid": 540357,
+      "ppid": 540353,
+      "pgid": 523441,
+      "args": "python3 scripts/check_governance.py"
+    },
+    {
+      "pid": 581543,
+      "ppid": 540344,
+      "pgid": 523441,
+      "args": "/bin/sh -c python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --selftest   # P-115 recording, successor and unresolved-impact refusal fixtures"
+    },
+    {
+      "pid": 581546,
+      "ppid": 581543,
+      "pgid": 523441,
+      "args": "python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --selftest"
+    },
+    {
+      "pid": 583558,
+      "ppid": 581546,
+      "pgid": 523441,
+      "args": "/usr/bin/python3 -B /tmp/p115-signed-selftest-blj9gust/tree/scripts/prepare_three_surface_poc_governedby_reference_recording.py --selftest"
+    },
+    {
+      "pid": 629374,
+      "ppid": 540344,
+      "pgid": 523441,
+      "args": "/bin/sh -c python3 scripts/check_spec_reconciliation.py --selftest"
+    },
+    {
+      "pid": 629375,
+      "ppid": 629374,
+      "pgid": 523441,
+      "args": "python3 scripts/check_spec_reconciliation.py --selftest"
+    },
+    {
+      "pid": 657782,
+      "ppid": 540344,
+      "pgid": 523441,
+      "args": "/bin/sh -c python3 scripts/check_quotations.py     # a quotation beside a path:line locator was said by that file (RD-6, syzygy-0wf)"
+    },
+    {
+      "pid": 657785,
+      "ppid": 657782,
+      "pgid": 523441,
+      "args": "python3 scripts/check_quotations.py"
+    }
+  ],
+  "cleanupTerminatedDescendants": [
+    {
+      "pid": 657785,
+      "ppid": 657782,
+      "pgid": 523441,
+      "stat": "D",
+      "args": "python3 scripts/check_quotations.py"
+    },
+    {
+      "pid": 657782,
+      "ppid": 540344,
+      "pgid": 523441,
+      "stat": "S",
+      "args": "/bin/sh -c python3 scripts/check_quotations.py     # a quotation beside a path:line locator was said by that file (RD-6, syzygy-0wf)"
+    },
+    {
+      "pid": 629375,
+      "ppid": 629374,
+      "pgid": 523441,
+      "stat": "S",
+      "args": "python3 scripts/check_spec_reconciliation.py --selftest"
+    },
+    {
+      "pid": 629374,
+      "ppid": 540344,
+      "pgid": 523441,
+      "stat": "S",
+      "args": "/bin/sh -c python3 scripts/check_spec_reconciliation.py --selftest"
+    },
+    {
+      "pid": 583558,
+      "ppid": 581546,
+      "pgid": 523441,
+      "stat": "R",
+      "args": "/usr/bin/python3 -B /tmp/p115-signed-selftest-blj9gust/tree/scripts/prepare_three_surface_poc_governedby_reference_recording.py --selftest"
+    },
+    {
+      "pid": 581546,
+      "ppid": 581543,
+      "pgid": 523441,
+      "stat": "S",
+      "args": "python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --selftest"
+    },
+    {
+      "pid": 581543,
+      "ppid": 540344,
+      "pgid": 523441,
+      "stat": "S",
+      "args": "/bin/sh -c python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --selftest   # P-115 recording, successor and unresolved-impact refusal fixtures"
+    },
+    {
+      "pid": 540357,
+      "ppid": 540353,
+      "pgid": 523441,
+      "stat": "D",
+      "args": "python3 scripts/check_governance.py"
+    },
+    {
+      "pid": 540353,
+      "ppid": 540344,
+      "pgid": 523441,
+      "stat": "S",
+      "args": "/bin/sh -c python3 scripts/check_governance.py"
+    },
+    {
+      "pid": 540344,
+      "ppid": 1,
+      "pgid": 523441,
+      "stat": "Sl",
+      "args": "python3 scripts/run_status_battery.py"
+    }
+  ],
+  "remainingLiveIdentifiedDescendants": [],
+  "recorderStillLive": [],
+  "lockProbeExit": 0,
+  "remainingProcessesWithOldCloneCwd": [],
+  "lockCleanupProbeExit": 0
+}
