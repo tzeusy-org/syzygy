@@ -8,7 +8,10 @@ const VOID = new Set('area base br col embed hr img input link meta source track
 const RAW_TEXT = new Set(['script', 'style', 'textarea', 'title']);
 const NAMED_ENTITIES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
 
-/** Decodes the entities a renderer's `escape` emits plus numeric references; any other named entity stays literal. */
+/** Decodes the entities a renderer's `escape` emits plus numeric references; any other named entity stays literal.
+ * Kept apart from quote-fidelity.ts `decodeEntity` on purpose (syzygy-bpyt.8.41, GP-Q0): this one reads a page as a reader sees it, so it caps
+ * digits at 7 decimal or 6 hex and decodes `&#0;`; that one normalises quotation text and caps nothing and keeps `&#0;` literal.
+ * `entity-decoder-divergence.test.ts` pins where they differ. */
 export function decodeHtmlText(text: string): string {
   return text.replace(/&(?:#(\d{1,7})|#[xX]([0-9a-fA-F]{1,6})|([A-Za-z]+));/gu, (match, decimal: string | undefined, hex: string | undefined, name: string | undefined) => {
     if (name !== undefined) return NAMED_ENTITIES[name] ?? match;
