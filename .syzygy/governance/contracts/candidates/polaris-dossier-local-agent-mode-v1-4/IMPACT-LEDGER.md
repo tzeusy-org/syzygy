@@ -114,7 +114,12 @@ historical-formatter package census gains that registered version; its
 formatter and signed-input semantics remain unchanged. The canonical
 status battery and hosted workflow both gain the v1.4 check/selftest.
 `TOOLING-VALIDATION.json` records the exact source digests and scoped
-verification; no record, tag or installed subject is created by this wiring.
+verification; `TOOLING-MUTANTS.json` retains four killed mutations, each
+with its source commit, subject digest, exact old/new fragment and observed
+failure output. The predicates are the new signed-layer digest, predecessor
+peeling, actual recorder callback routing and the P115 version census. No
+broader `.10.9` finding is claimed repaired. No record, tag or installed
+subject is created by this wiring.
 
 [Inferred] Test growth is 26 version-specific Python builder fixtures and
 one behavioral registration fixture within the existing recorder selftest;

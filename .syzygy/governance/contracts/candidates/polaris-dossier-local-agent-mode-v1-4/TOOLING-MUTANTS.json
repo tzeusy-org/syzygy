@@ -1,0 +1,96 @@
+{
+  "source_commit": "4fed85517d64779a5f3047ee15cb5ae5b3dfc3e0",
+  "temporary_root": "/home/orca/.tmp/syzygy-mea10-6-v14-20261105/tmp",
+  "scope": "New v1.4 signed-layer, predecessor delegation, real registration callback and P115 registration census only; no broader .10.9 predicate is claimed.",
+  "mutants": [
+    {
+      "id": "M1",
+      "source_commit": "4fed85517d64779a5f3047ee15cb5ae5b3dfc3e0",
+      "path": "scripts/build_polaris_dossier_local_agent_mode_v1_4.py",
+      "subject_sha256": "fd3b6adc7df9b6f308a4910a8c3262ad403711c24f0407ce53477856e72f5399",
+      "old": "if reviewed is None or sha((root / SPEC).read_bytes()) != reviewed:",
+      "new": "if False:",
+      "mutant_sha256": "27769c3a75e33b805d58a0c35ae35ac6602d84a3d8dca81ed7e6e63e0192b733",
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_4.py",
+        "--selftest"
+      ],
+      "exit_code": 1,
+      "outcome": "killed",
+      "log_sha256": "906efa28be8d56e9865574960877f1096f0e29adabfd3c2b61535798e3d1a59b",
+      "failure_lines": [
+        "FAIL a v1.4 review digest that is not the spec fails",
+        "26 fixtures, 1 failing"
+      ]
+    },
+    {
+      "id": "M2",
+      "source_commit": "4fed85517d64779a5f3047ee15cb5ae5b3dfc3e0",
+      "path": "scripts/build_polaris_dossier_local_agent_mode_v1_3.py",
+      "subject_sha256": "ce2f9ce89f7d07f9cb45df1f9d9bf59b52cfbc186de57ff334f3d6fc5114849e",
+      "old": "return v14.backward(root)",
+      "new": "return None",
+      "mutant_sha256": "0366c7d7e4b1e12ff9a5fbe4c0d2404a8e2c039959946a29a3b5911546a529bc",
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_4.py",
+        "--selftest"
+      ],
+      "exit_code": 1,
+      "outcome": "killed",
+      "log_sha256": "d13ebd08a3c86bdbd6cd5f9b337e2d1ae6279be55eb8b9db1b08bdf302ed56f2",
+      "failure_lines": [
+        "FAIL apply returns 0",
+        "FAIL applied package verifies",
+        "FAIL applied: the v1.3 and v1.1 builders read their own layers",
+        "FAIL applied without a v1.4 record: the battery fails",
+        "FAIL applied with a v1.4 record: signed",
+        "FAIL v1.4 recorded over a v1.3 layer that is not the signed v1.3: fails",
+        "FAIL restored: signed",
+        "26 fixtures, 7 failing"
+      ]
+    },
+    {
+      "id": "M3",
+      "source_commit": "4fed85517d64779a5f3047ee15cb5ae5b3dfc3e0",
+      "path": "scripts/record_versioned_signoff.py",
+      "subject_sha256": "294cd139275e77952974d5db3114ff070e296dab6f413e1f1201974392e7c541",
+      "old": "dossier14 = lambda: _module(\"build_polaris_dossier_local_agent_mode_v1_4\")",
+      "new": "dossier14 = lambda: _module(\"build_polaris_dossier_local_agent_mode_v1_3\")",
+      "mutant_sha256": "2dd1855a234e24014f1c7a7e32c2c7d97e1b70a513971523409713f7130cbba7",
+      "command": [
+        "python3",
+        "scripts/record_versioned_signoff.py",
+        "--selftest"
+      ],
+      "exit_code": 1,
+      "outcome": "killed",
+      "log_sha256": "e4aeb31deb9649031bd61272155d527760de62da4679437f192f0a4431100e5b",
+      "failure_lines": [
+        "FAIL the real v1.4 entry extends the existing no-option spec-binding route",
+        "171 fixtures, 1 failing"
+      ]
+    },
+    {
+      "id": "M4",
+      "source_commit": "4fed85517d64779a5f3047ee15cb5ae5b3dfc3e0",
+      "path": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+      "subject_sha256": "1e92fdf6d99c49f02578d170c2c3e794e09d4ff1687d297e282a54fec44d077c",
+      "old": "later = {\"polaris-dossier-local-agent-mode@1.3\", \"polaris-dossier-local-agent-mode@1.4\"}",
+      "new": "later = {\"polaris-dossier-local-agent-mode@1.3\"}",
+      "mutant_sha256": "d74cbdf4ac99c4e68a511bdf72a4bc65212571a5026501df7d4763b5625d8600",
+      "command": [
+        "python3",
+        "-c",
+        "import pathlib,sys; sys.path.insert(0,str(pathlib.Path.cwd()/'scripts')); import prepare_three_surface_poc_governedby_reference_recording as m; results=[]; m.recording_render_selftest(pathlib.Path.cwd(),lambda name,passed: results.append((name,passed))); print(results); sys.exit(0 if all(passed for _,passed in results) else 1)"
+      ],
+      "exit_code": 1,
+      "outcome": "killed",
+      "log_sha256": "f6cc0a49e561ea14b0551995436a18e3a70a319ed11835350c00f5bd012824d4",
+      "failure_lines": [
+        "[('T16 exact neutral P115 aggregate', True), ('T18 exact P115 application provenance record', True), ('T17 all non-P115 full historical record and aggregate outputs', False)]"
+      ]
+    }
+  ]
+}

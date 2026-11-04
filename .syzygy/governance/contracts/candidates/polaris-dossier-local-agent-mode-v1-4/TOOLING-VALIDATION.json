@@ -44,5 +44,29 @@
   "runtime_test_delta": 0,
   "python_builder_fixtures_added": 26,
   "existing_recorder_fixtures_added": 1,
-  "disclosure": "Full P115, mutation, clean-clone full-suite and owner selection/installation evidence remain separate; these scoped receipts do not prove adoption."
+  "disclosure": "Full P115, mutation, clean-clone full-suite and owner selection/installation evidence remain separate; these scoped receipts do not prove adoption.",
+  "mutation_evidence": "TOOLING-MUTANTS.json",
+  "mutation_subject_commit": "4fed85517d64779a5f3047ee15cb5ae5b3dfc3e0",
+  "mutation_outcomes": [
+    {
+      "id": "M1",
+      "exit_code": 1,
+      "outcome": "killed"
+    },
+    {
+      "id": "M2",
+      "exit_code": 1,
+      "outcome": "killed"
+    },
+    {
+      "id": "M3",
+      "exit_code": 1,
+      "outcome": "killed"
+    },
+    {
+      "id": "M4",
+      "exit_code": 1,
+      "outcome": "killed"
+    }
+  ]
 }
