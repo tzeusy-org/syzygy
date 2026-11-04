@@ -278,6 +278,16 @@ describe('check: each rule refuses its own violation', () => {
     ['a Markdown image in a card label', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'cards', id: 'g1', items: [{ label: '![i](x.png)', body: { id: 'g1a', label: 'non-normative', text: 'W.' } }, { label: 'M', body: { id: 'g1b', label: 'non-normative', text: 'W.' } }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].items[0].label' }],
     ['emphasis in a details summary', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'details', id: 'x1', summary: 'Read **this** first', elements: [{ id: 'x1a', label: 'non-normative', text: 'W.', children: [] }] }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].summary' }],
     ['underscore emphasis in a language label', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', language: '_C_', citation: cite('c-x1', 'src/kestrel.c', 1, 1) }); }, { kind: 'label-markup', at: '$.sections[0].paragraphs[2].language' }],
+    ['a code excerpt of more than 60 lines of a file screening excludes', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', '.env', 1, 61) }); },
+      { kind: 'code-excerpt-too-long', at: '$.sections[0].paragraphs[2].citation', citationId: 'c-x1' }],
+    ['a quotation in a table caption', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'table', id: 't1', caption: 'The project states: \u201Cfast\u201D', columns: ['A'], rowHeaders: false, rows: [{ id: 'r1', cells: [{ kind: 'empty' }] }] }); },
+      { kind: 'label-quotation', at: '$.sections[0].paragraphs[2].caption' }],
+    ['straight quotation marks in a card label', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'cards', id: 'g1', items: [{ label: 'Say "fast"', body: { id: 'g1a', label: 'non-normative', text: 'W.' } }, { label: 'M', body: { id: 'g1b', label: 'non-normative', text: 'W.' } }] }); },
+      { kind: 'label-quotation', at: '$.sections[0].paragraphs[2].items[0].label' }],
+    ['a lead-in with no quotation marks in a details summary', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'details', id: 'x1', summary: 'The README states: it is fast', elements: [{ id: 'x1a', label: 'non-normative', text: 'W.', children: [] }] }); },
+      { kind: 'label-quotation', at: '$.sections[0].paragraphs[2].summary' }],
+    ['a presentation element in a v2 draft', (d) => { d.sections[0].paragraphs.push({ kind: 'steps', id: 's1', items: [{ id: 's1a', label: 'non-normative', text: 'A.' }, { id: 's1b', label: 'non-normative', text: 'B.' }] }); },
+      { kind: 'element-version', at: '$.sections[0].paragraphs[2]' }],
     ['a self-reported selection absent at the pinned revision', (d) => { d.discovery.deferred.push({ path: 'docs', reason: 'Later.' }); }, { kind: 'discovery-path-absent', at: '$.discovery.deferred[0].path' }],
   ])('reports %s', async (_name, change, expected) => {
     const run = await briefedRun();

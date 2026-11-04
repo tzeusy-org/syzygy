@@ -981,7 +981,7 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     expect(READABILITY_GUIDANCE).toContain('and `code` to show 1 to 60 lines of a file: give only its `citation` (and, if you like, a `language`), never the lines, which Syzygy renders from its own read.');
     expect(READABILITY_GUIDANCE).toContain('An empty table cell renders "no entry" and states nothing: write a negative or an absence as a claim.');
     expect(READABILITY_GUIDANCE).toContain('5. Elements. A section or deep dive entry may be a plain block or, in draft schema `polaris-dossier-local-draft-v3`, one of seven presentation elements.');
-    expect(READABILITY_GUIDANCE).toContain('Captions, column names, titles, terms, labels, summaries and languages are short plain labels of at most 120 characters, never claims or quotations, with no markup (no angle bracket, ampersand, backtick, Markdown link or emphasis); every cell, item, definition and body is a claim and follows every rule above.');
+    expect(READABILITY_GUIDANCE).toContain('Captions, column names, titles, terms, labels, summaries and languages are short plain labels of at most 120 characters, never claims or quotations, with no quotation mark and no markup (no angle bracket, ampersand, backtick, Markdown link, or * or _ at a word edge); quote only in a claim, where Syzygy verifies it; every cell, item, definition and body is a claim and follows every rule above.');
     expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
   });
 });
@@ -992,7 +992,7 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
     const doc = draft();
     doc.schemaVersion = 'polaris-dossier-local-draft-v3';
     doc.sections[0].paragraphs.push(
-      { kind: 'table', id: 't1', caption: 'Commands "and" what they do', columns: ['Command', 'Effect'], rowHeaders: true, rows: [
+      { kind: 'table', id: 't1', caption: 'The server\'s commands and what they do', columns: ['Command', 'Effect'], rowHeaders: true, rows: [
         { id: 't1r1', cells: [nn('t1c1', 'The `GET` command'), { id: 't1c2', label: 'inferred', basis: 'source', text: 'The project states: "Each command runs to completion before the next one starts."', citations: [cite('c-t1c2', 'src/kestrel.c', 2, 3)], quotations: ['c-t1c2'] }] },
         { id: 't1r2', cells: [nn('t1c3', 'The `SET` command'), { kind: 'empty' }] },
       ] },
@@ -1013,17 +1013,19 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
   const support = ELEMENT_CLAIMS.map((blockId) => ({ blockId, verdict: blockId === 't1c2' ? 'anchor-does-not-support' : 'supported', spanIds: [], reason: 'Fits the packet.', quotations: [] }));
   let index = '';
   let machine: Doc = {};
+  let pages = new Map<string, string>();
   beforeAll(async () => {
     const run = await prepared(elementDraft(), true, support);
     const result = await renderRun(run, renderDeps());
     if (!result.ok) throw new Error(result.refusal.reason);
     const site = readSite(result.report.site);
+    pages = site;
     index = site.get('index.html')!;
     machine = JSON.parse(site.get('machine.json') ?? '{}');
   });
 
   it('renders a table with a caption, column headers, row headers and an empty cell', () => {
-    expect(index).toContain('<div class="table-scroll" id="element-t1" data-element="table"><table><caption>Commands &quot;and&quot; what they do</caption><thead><tr><th scope="col">Command</th><th scope="col">Effect</th></tr></thead>');
+    expect(index).toContain('<div class="table-scroll" id="element-t1" data-element="table"><table><caption>The server&#39;s commands and what they do</caption><thead><tr><th scope="col">Command</th><th scope="col">Effect</th></tr></thead>');
     expect(index).toContain('<th scope="row" class="non-normative" data-non-normative="t1c1">The <code>GET</code> command <span class="marking non-normative">[Non-normative]</span></th>');
     expect(index).toMatch(/<td[^>]*data-claim-id="t1c2"[^>]*>/u);
     expect(index).toContain('<td class="empty-cell">no entry</td>');
@@ -1082,9 +1084,21 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
     expect(body).not.toContain('const end');
   });
 
-  it('puts no fragment target that a link names inside a details element', () => {
-    const details = index.slice(index.indexOf('<details class="details"'), index.indexOf('</details>', index.indexOf('<details class="details"')));
-    const targets = [...index.matchAll(/href="#([^"]+)"/gu)].map((m) => m[1]);
-    for (const target of targets) expect(details, target).not.toContain(`id="${target}"`);
+  it('puts no fragment target that any page links to inside any details element', () => {
+    const targets = new Set([...pages.values()].flatMap((html) => [...html.matchAll(/href="[^"#]*#([^"]+)"/gu)].map((m) => m[1]!)));
+    const opened = [...index.matchAll(/<details class="details"/gu)].map((m) => m.index!);
+    expect(opened.length).toBeGreaterThan(0);
+    for (const at of opened) {
+      const details = index.slice(at, index.indexOf('</details>', at));
+      for (const target of targets) expect(details, target).not.toContain(`id="${target}"`);
+    }
+  });
+
+  it('adds no script and keeps the content security policy', () => {
+    for (const [file, html] of pages) {
+      if (!file.endsWith('.html')) continue;
+      expect(html, file).not.toMatch(/<script\b/iu);
+      expect(html, file).toContain(`<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">`);
+    }
   });
 });

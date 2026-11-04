@@ -28,7 +28,7 @@ export type CheckFindingKind =
   | 'quotation-empty' | 'quotation-elided' | 'quotation-not-in-cited-file' | 'quotation-outside-range'
   | 'discovery-path-absent' | 'adapter-credential-readable'
   // v1.3 presentation elements (syzygy-mea.10.5).
-  | 'code-excerpt-too-long' | 'label-markup';
+  | 'code-excerpt-too-long' | 'label-markup' | 'label-quotation' | 'element-version';
 
 /** A repair finding: the kind of failure, where to repair it (a JSON path into the draft), and the block and citation it concerns. It
  * never carries quoted text or any byte of a blob. */

@@ -18,6 +18,14 @@ export const CODE_EXCERPT_MAX_LINES = 60;
  * or image, or an emphasis mark at a word edge. A label renders as plain text, so any of these would show as written or mislead. */
 const LABEL_MARKUP = /[<>&`]|!?\[[^\]\n]*\]\(|(?:^|[\s(])(?:\*{1,2}|_{1,2})(?=\S)|(?<=\S)(?:\*{1,2}|_{1,2})(?:$|[\s).,;:!?])/u;
 
+/** The JSON path of every presentation element in the draft. */
+const ELEMENT_KINDS = new Set(['table', 'callout', 'steps', 'definitions', 'cards', 'details', 'code']);
+function elementEntries(doc: Readonly<Record<string, unknown>>): string[] {
+  const out: string[] = [];
+  walk(doc, '$', (value, at) => { if (ELEMENT_KINDS.has(text(value['kind']) ?? '') && /\.(?:paragraphs|elements|children)\[\d+\]$/u.test(at)) out.push(at); });
+  return out;
+}
+
 /** Every short label of the draft's presentation elements, with its JSON path. */
 export function elementLabels(doc: Readonly<Record<string, unknown>>): { at: string; value: string }[] {
   const out: { at: string; value: string }[] = [];
@@ -34,6 +42,11 @@ export function elementLabels(doc: Readonly<Record<string, unknown>>): { at: str
 }
 
 export function labelMarkup(value: string): boolean { return LABEL_MARKUP.test(value); }
+
+/** A quotation a short label may not carry: a quotation mark of any kind, or the quotation lead-in (R-MEA10-RICH-ELEMENTS-e06b-1 F2). A
+ * label is never verified against a file, so a quotation in one would render as the agent's unverified copy. */
+const LABEL_QUOTATION = /["\u201C\u201D\u201E\u00AB\u00BB]|\bstates:/u;
+export function labelQuotation(value: string): boolean { return LABEL_QUOTATION.test(value); }
 
 export interface Derived {
   readonly findings: CheckFinding[];
@@ -119,7 +132,12 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
 
   // A presentation element's short labels are plain text that claims nothing: markup in one is a finding at its path.
   for (const label of elementLabels(doc)) {
-    if (labelMarkup(label.value)) add({ kind: 'label-markup', at: label.at, detail: 'a short label is plain text: no angle bracket, ampersand, backtick, Markdown link or image, or emphasis mark' });
+    if (labelQuotation(label.value)) add({ kind: 'label-quotation', at: label.at, detail: 'a short label carries no quotation: no quotation mark and no lead-in; quote in a claim block, where Syzygy verifies it' });
+    else if (labelMarkup(label.value)) add({ kind: 'label-markup', at: label.at, detail: 'a short label is plain text: no angle bracket (< or >), ampersand, backtick, Markdown link or image, or * or _ at a word edge' });
+  }
+  // A v2 draft predates the elements: it uses none (design, v1.3 migration).
+  if (doc['schemaVersion'] === 'polaris-dossier-local-draft-v2') {
+    for (const label of elementEntries(doc)) add({ kind: 'element-version', at: label, detail: 'a presentation element needs draft schema polaris-dossier-local-draft-v3' });
   }
 
   // Labels, citations by block kind and the execution marking.
@@ -234,11 +252,12 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     const state = blobs.get(cited)!;
     if (state.state === 'absent') { add({ kind: 'path-absent', at: `${at}.path`, ...about, detail: `${pathLabel(cited)} names no file at the pinned revision ${inputs.pinned}` }); continue; }
     if (start === undefined || end === undefined || start > end) { add({ kind: 'range-invalid', at, ...about, detail: 'a line range is two integers from 1, startLine not after endLine' }); continue; }
-    if (state.state !== 'admitted') continue;
+    // The limit holds whatever screening decides: only the exclusion itself is no finding (R-MEA10-RICH-ELEMENTS-e06b-1 F1).
     if (at.endsWith('.citation') && end - start + 1 > CODE_EXCERPT_MAX_LINES) {
       add({ kind: 'code-excerpt-too-long', at, ...about, detail: `a code excerpt names 1 to ${CODE_EXCERPT_MAX_LINES} lines; this one names ${end - start + 1}` });
       continue;
     }
+    if (state.state !== 'admitted') continue;
     if (end > state.lines) { add({ kind: 'range-beyond-blob', at: `${at}.endLine`, ...about, detail: `${pathLabel(cited)} has ${state.lines} line(s) at the pinned revision; the range ends at line ${end}` }); continue; }
     rangeOk.add(value);
   }
