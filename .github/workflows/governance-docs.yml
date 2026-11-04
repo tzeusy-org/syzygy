@@ -391,6 +391,17 @@ jobs:
       - name: check_quotations --selftest
         run: python3 scripts/check_quotations.py --selftest
 
+      # docs/reviews/ is partitioned by the fragments under
+      # docs/review-campaigns/: every file in exactly one campaign (syzygy-gkvu,
+      # syzygy-5pem). A raw whose basename matches no campaign pattern, or two,
+      # fails here instead of only in a local run. --check reads the HEAD-bound
+      # tree and its fragments; it prints no dates.
+      - name: check_docs_review_campaign_partition --check
+        run: python3 scripts/check_docs_review_campaign_partition.py --check
+
+      - name: check_docs_review_campaign_partition --selftest
+        run: python3 scripts/check_docs_review_campaign_partition.py --selftest
+
       # The checkers' own fixtures. A hosted run that exercises the checks
       # but never the checks' checks reports a denominator it does not have.
       # Every one is stdlib-only, which is why they can run here at all —

@@ -246,6 +246,9 @@ def partition(
     return result
 
 
+CHECK_ONLY_DATE = "unused under --check"
+
+
 def add_date(path: str) -> str:
     output = (
         git(
@@ -760,7 +763,10 @@ def main() -> int:
         assert_head_bound_inputs(args.check, root)
     campaigns = load_campaigns(root / CAMPAIGN_DIR)
     paths = tracked_regular_paths()
-    data = report(paths, head_commit_date(), campaigns)
+    # --check never prints the add dates, and each costs a `git log --follow`
+    # (about 700 of them, minutes); only the table, JSON and plain modes need them.
+    date_for_path = (lambda _path: CHECK_ONLY_DATE) if args.check else add_date
+    data = report(paths, head_commit_date(), campaigns, date_for_path)
     if args.check or args.second_method:
         second_method(paths)
     if args.check:
