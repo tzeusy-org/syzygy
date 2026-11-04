@@ -7,7 +7,7 @@ import { DECISIONS_DIR, INSTANCES_DIR, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM, POLI
 import { loadRecorderForms, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderPolicyAct, renderRecorderAct } from '@syzygy/polaris-generation-consent/testing';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { runDossierCli } from './cli.js';
-import { consentedClone, GIT_ENV as FIXTURE_GIT_ENV, makeClone } from './full-run.testkit.js';
+import { consentedClone, GIT_ENV as FIXTURE_GIT_ENV, gitInitFromEmptyTemplate, makeClone } from './full-run.testkit.js';
 import { createPackageGateSources, type ProjectInputSource, type ProviderStatementRecord, type ProviderStatementSource } from './gate-sources.js';
 import { cloneGitDirShape, cloneStoreShape } from './clone-shape.js';
 import { openPinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
@@ -559,6 +559,47 @@ describe('init: the clone holds the consented commit alone (syzygy-qkea.24)', ()
       if (hadOwn) (FIXTURE_GIT_ENV as Record<string, string | undefined>).GIT_TEMPLATE_DIR = previous; else delete (FIXTURE_GIT_ENV as Record<string, string | undefined>).GIT_TEMPLATE_DIR;
     }
     expect(fs.readdirSync(ambient).sort()).toEqual(sentinels);
+  });
+
+  it('the fixture helpers ignore an ambient init.templateDir config too', () => {
+    const sentinels = ['description.dpkg-new', 'description.dpkg-tmp'];
+    // The `init.templateDir` config channel (here through the fixture env's global config file) never reaches the helpers either.
+    const configured = tempDir('dossier-config-template-');
+    for (const name of sentinels) fs.writeFileSync(path.join(configured, name), 'dpkg\n');
+    const globalConfig = path.join(tempDir('dossier-config-global-'), 'gitconfig');
+    fs.writeFileSync(globalConfig, `[init]\n\ttemplateDir = ${configured}\n`);
+    const env = FIXTURE_GIT_ENV as Record<string, string | undefined>;
+    const priorGlobal = env.GIT_CONFIG_GLOBAL;
+    env.GIT_CONFIG_GLOBAL = globalConfig;
+    try {
+      const viaConfig = makeClone(tempDir('dossier-config-'));
+      for (const repo of [path.join(path.dirname(viaConfig.clone), 'origin'), viaConfig.clone]) {
+        for (const name of sentinels) expect(fs.existsSync(dotGit(repo, name))).toBe(false);
+      }
+    } finally {
+      env.GIT_CONFIG_GLOBAL = priorGlobal;
+    }
+    expect(fs.readdirSync(configured).sort()).toEqual(sentinels);
+  });
+
+  it('the scale-measure script inits its origin through the owned-template helper, never a bare git init', () => {
+    const source = fs.readFileSync(path.join(REAL_ROOT, 'scripts', 'dossier_scale_measure.mjs'), 'utf8');
+    expect(source).toContain("kit.gitInitFromEmptyTemplate(origin, ['-b', 'main'])");
+    expect(source).not.toMatch(/'init', '-q'/);
+  });
+
+  it('the owned-template init runs under the fixture env, not the ambient process env', () => {
+    // `init.defaultBranch` set only in the fixture env's config channel is honoured iff the helper passes that env to git.
+    const env = FIXTURE_GIT_ENV as Record<string, string | undefined>;
+    const priorKeys = { count: env.GIT_CONFIG_COUNT, key: env.GIT_CONFIG_KEY_2, value: env.GIT_CONFIG_VALUE_2 };
+    env.GIT_CONFIG_COUNT = '3'; env.GIT_CONFIG_KEY_2 = 'init.defaultBranch'; env.GIT_CONFIG_VALUE_2 = 'fixture-env-branch';
+    try {
+      const repo = path.join(tempDir('dossier-env-pin-'), 'repo');
+      gitInitFromEmptyTemplate(repo, []);
+      expect(fs.readFileSync(path.join(repo, '.git', 'HEAD'), 'utf8')).toBe('ref: refs/heads/fixture-env-branch\n');
+    } finally {
+      env.GIT_CONFIG_COUNT = priorKeys.count; env.GIT_CONFIG_KEY_2 = priorKeys.key; env.GIT_CONFIG_VALUE_2 = priorKeys.value;
+    }
   });
 
   it('refuses an identifier in FETCH_HEAD or logs/HEAD in upper case or run on, even the pinned commit\'s', async () => {

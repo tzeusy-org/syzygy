@@ -82,7 +82,7 @@ const origin = path.join(work, 'origin');
 const files = plan();
 fs.mkdirSync(origin);
 for (const [p, text] of files) { fs.mkdirSync(path.dirname(path.join(origin, p)), { recursive: true }); fs.writeFileSync(path.join(origin, p), text); }
-git(origin, 'init', '-q', '-b', 'main');
+kit.gitInitFromEmptyTemplate(origin, ['-b', 'main']);
 git(origin, 'add', '-A');
 git(origin, '-c', 'user.name=t', '-c', 'user.email=t@example.invalid', 'commit', '-q', '-m', 'synthetic redis-scale fixture');
 const commit = git(origin, 'rev-parse', 'HEAD');

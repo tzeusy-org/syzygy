@@ -40,7 +40,7 @@ const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'docs/notes.tx
  * fails. Without `--template`, git copies its default or ambient template (`GIT_TEMPLATE_DIR`, `init.templateDir`, the host's share
  * directory) into `.git`, and a concurrent host git upgrade leaves `description.dpkg-new` and `description.dpkg-tmp` there, which the
  * strict clone-shape guard rightly refuses (syzygy-157b). The explicit option overrides every ambient source without touching it. */
-function gitInitFromEmptyTemplate(dir: string, args: readonly string[]): void {
+export function gitInitFromEmptyTemplate(dir: string, args: readonly string[]): void {
   const parent = path.dirname(dir);
   fs.mkdirSync(parent, { recursive: true });
   const template = fs.mkdtempSync(path.join(parent, '.git-empty-template-'));
