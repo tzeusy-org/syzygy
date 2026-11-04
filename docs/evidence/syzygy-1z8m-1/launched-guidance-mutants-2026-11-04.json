@@ -1,0 +1,62 @@
+{
+ "subject": "packages/polaris-dossier/src/polaris.ts",
+ "baseCommit": "e3ef7a6b7b741cd7ab2cf25f0821d2d7a12461a4",
+ "note": "mutants applied to the uncommitted working tree on top of baseCommit",
+ "test": "packages/polaris-dossier/src/polaris-launch-guidance.test.ts",
+ "mutants": [
+  {
+   "id": "default-3",
+   "old": "export const DEFAULT_REPAIR_CYCLES = 6;",
+   "new": "export const DEFAULT_REPAIR_CYCLES = 3;",
+   "outcome": "killed"
+  },
+  {
+   "id": "usage-3",
+   "old": "--repair-cycles <n>      default 6",
+   "new": "--repair-cycles <n>      default 3",
+   "outcome": "killed"
+  },
+  {
+   "id": "no-self-check",
+   "old": "until it passes. ${AUTHOR_SELF_CHECK}",
+   "new": "until it passes.",
+   "outcome": "killed"
+  },
+  {
+   "id": "no-append",
+   "old": "'--strict-mcp-config', '--append-system-prompt', LAUNCHED_GUIDANCE[plan.role]]",
+   "new": "'--strict-mcp-config']",
+   "outcome": "killed"
+  },
+  {
+   "id": "count-rev0",
+   "old": "if (m === null || Number(m[1]) === 0) continue;",
+   "new": "if (m === null) continue;",
+   "outcome": "killed"
+  },
+  {
+   "id": "unreadable-passed",
+   "old": "if (outcome === 'passed') passed += 1; else refused += 1;",
+   "new": "if (outcome !== 'findings') passed += 1; else refused += 1;",
+   "outcome": "killed"
+  },
+  {
+   "id": "close-line-always",
+   "old": "...(closed ? [] : [",
+   "new": "...(false ? [] : [",
+   "outcome": "killed"
+  },
+  {
+   "id": "inventory-self-check-dropped",
+   "old": " Each inventory revision after the first counts against the run\\'s repair-cycle limit, so before every submission verify it yourself: every path it names exists in the clone at the pinned revision, and every quotation is copied character for character from the file it cites.",
+   "new": "",
+   "outcome": "killed"
+  },
+  {
+   "id": "operator-sentence-dropped",
+   "old": " Address the operator only with the clarification questions the brief allows; never ask the operator to run, start or tell anything.",
+   "new": "",
+   "outcome": "killed"
+  }
+ ]
+}
