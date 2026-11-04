@@ -431,7 +431,25 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     const record = isRecord(value) ? value : {};
     return { id: text(record['id'])!, text: plain(text(record['id'])!), sourceIds: record['label'] === 'non-normative' ? [] : citedSources(record) };
   };
-  const tree = (values: unknown): DraftBlock[] => list(values).map((value) => ({ ...paragraph(value), children: list(isRecord(value) ? value['children'] : []).map(paragraph) }));
+  const label = (value: unknown): string => clean(text(value) ?? '');
+  const entry = (value: unknown): DraftBlock => {
+    const record = isRecord(value) ? value : {};
+    const kind = record['kind'];
+    if (kind === undefined) return { ...paragraph(value), children: list(record['children']).map(paragraph) };
+    const shell = { id: text(record['id'])!, text: '', sourceIds: [], children: [] };
+    const records = (key: string): Readonly<Record<string, unknown>>[] => list(record[key]).filter(isRecord);
+    switch (kind) {
+      case 'table': return { ...shell, element: { kind: 'table', caption: label(record['caption']), columns: list(record['columns']).map(label), rowHeaders: record['rowHeaders'] === true,
+        rows: records('rows').map((row) => ({ id: text(row['id'])!, cells: list(row['cells']).map((cell) => (isRecord(cell) && cell['kind'] === 'empty' ? null : paragraph(cell))) })) } };
+      case 'callout': return { ...shell, element: { kind: 'callout', tone: record['tone'] as 'note' | 'tip' | 'caution' | 'important', title: label(record['title']), children: list(record['children']).map(entry) } };
+      case 'steps': return { ...shell, element: { kind: 'steps', items: list(record['items']).map(paragraph) } };
+      case 'definitions': return { ...shell, element: { kind: 'definitions', entries: records('entries').map((item) => ({ term: label(item['term']), definition: paragraph(item['definition']) })) } };
+      case 'cards': return { ...shell, element: { kind: 'cards', items: records('items').map((item) => ({ label: label(item['label']), body: paragraph(item['body']) })) } };
+      case 'details': return { ...shell, element: { kind: 'details', summary: label(record['summary']), elements: list(record['elements']).map(entry) } };
+      default: throw new Error(`render: unknown element kind ${JSON.stringify(kind)}`);
+    }
+  };
+  const tree = (values: unknown): DraftBlock[] => list(values).map(entry);
   const disposition = (value: unknown): DossierDraft['sections'][number]['disposition'] => {
     const record = isRecord(value) ? value : {};
     if (record['kind'] === 'produced') return { kind: 'produced', assetIds: list(record['assetIds']).filter((id): id is string => typeof id === 'string') };

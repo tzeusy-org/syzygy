@@ -40,8 +40,18 @@ export const fidelity = object({ inventoryCoverage, blockSupport,
 });
 
 export interface DraftParagraph { id: string; text: string; sourceIds: string[] }
-/** A section or deep-dive block: a parent paragraph and its 0–12 leaf children. */
-export interface DraftBlock extends DraftParagraph { children: DraftParagraph[] }
+/** A section or deep-dive block: a parent paragraph and its 0–12 leaf children. An operator-agent draft's entry may instead be a v1.3
+ * rich element (`element`, syzygy-mea.10.5), whose own id the entry carries with empty text, no sources and no children; the provider
+ * pipeline never sets it. */
+export interface DraftBlock extends DraftParagraph { children: DraftParagraph[]; element?: DraftElement }
+/** A v1.3 rich element. Labels are presentation; every `DraftParagraph` inside is a claim, rendered as a block is. */
+export type DraftElement =
+  | { kind: 'table'; caption: string; columns: string[]; rowHeaders: boolean; rows: { id: string; cells: (DraftParagraph | null)[] }[] }
+  | { kind: 'callout'; tone: 'note' | 'tip' | 'caution' | 'important'; title: string; children: DraftBlock[] }
+  | { kind: 'steps'; items: DraftParagraph[] }
+  | { kind: 'definitions'; entries: { term: string; definition: DraftParagraph }[] }
+  | { kind: 'cards'; items: { label: string; body: DraftParagraph }[] }
+  | { kind: 'details'; summary: string; elements: DraftBlock[] };
 export type DiagramKind = typeof DIAGRAM_KINDS[number];
 export type EpistemicMarking = 'observed' | 'inferred' | 'unknown';
 export interface DraftDiagramNode { id: string; label: string; sourceIds: string[]; epistemic: EpistemicMarking }
@@ -81,9 +91,22 @@ export function validateRequestedAssets(value: unknown): RequestedAsset[] {
   return structuredClone(assets);
 }
 
-/** Every block of a tree, parent first: children are blocks everywhere. */
+/** Every claim of a tree, parent first: children are blocks everywhere. A rich element's shell entry is no claim; the claims inside it are,
+ * in document order (syzygy-mea.10.5), so every reader of a tree — handles, quote checks, review packets — sees them as blocks. */
 export function treeBlocks(blocks: readonly DraftBlock[]): DraftParagraph[] {
-  return blocks.flatMap(block => [block, ...block.children]);
+  return blocks.flatMap(block => block.element === undefined ? [block, ...block.children] : elementClaims(block.element));
+}
+
+/** The claims a rich element holds, in document order. */
+export function elementClaims(element: DraftElement): DraftParagraph[] {
+  switch (element.kind) {
+    case 'table': return element.rows.flatMap(row => row.cells.filter((cell): cell is DraftParagraph => cell !== null));
+    case 'callout': return treeBlocks(element.children);
+    case 'steps': return [...element.items];
+    case 'definitions': return element.entries.map(entry => entry.definition);
+    case 'cards': return element.items.map(item => item.body);
+    case 'details': return treeBlocks(element.elements);
+  }
 }
 
 export function draftHandles(value: DossierDraft): { all: Set<string>; blocks: Set<string> } {

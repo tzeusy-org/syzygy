@@ -172,7 +172,7 @@ const verdict = (packetSha256: string): Doc => ({
 });
 
 /** A briefed run with a passed draft revision; with `reviewed`, an inventory of record and a counted fidelity review. */
-async function prepared(doc: Doc = draft(), reviewed = true): Promise<string> {
+async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: readonly Doc[] = []): Promise<string> {
   const clone = path.join(tempDir('dossier-render-clone-'), 'kestrel');
   execFileSync('git', ['clone', '-q', '--no-hardlinks', origin, clone], { env: GIT_ENV });
   const run = path.join(tempDir('dossier-render-state-'), RUN_ID);
@@ -206,6 +206,7 @@ async function prepared(doc: Doc = draft(), reviewed = true): Promise<string> {
   v.inventoryAccuracy[1].spanIds = spans.filter((span) => span.path === 'docs/notes.txt').map((span) => span.id);
   v.blockSupport[0].spanIds = v.inventoryAccuracy[0].spanIds;
   v.blockSupport[4].spanIds = v.inventoryAccuracy[1].spanIds;
+  v.blockSupport.push(...extraSupport);
   fs.writeFileSync(path.join(review.report.directory, 'verdict.json'), JSON.stringify(v, null, 2));
   const validated = await reviewCheck(run, {}, { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN });
   if (!validated.ok || validated.report.outcome !== 'validated') throw new Error(`fixture verdict: ${JSON.stringify(validated.ok ? validated.report.problems : validated.refusal)}`);
@@ -967,12 +968,77 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
   });
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
-    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v1');
-    expect(READABILITY_GUIDANCE).toContain('Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and why someone would use it, as its sources state. Define each term at its first use. Keep one idea to a sentence and prefer short sentences; give a concrete example from the sources before an abstraction.');
+    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v2');
+    expect(READABILITY_GUIDANCE).toContain('Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and what it is for, as its sources state; a stated advantage is still a quotation (rule 4 of the dossier guidance). Define each term at its first use. Keep one idea to a sentence and prefer short sentences; give a concrete example from the sources before an abstraction.');
     expect(READABILITY_GUIDANCE).toContain('carries at least one diagram with that section\'s `sectionId`, and Syzygy draws it at the top of the section');
     expect(READABILITY_GUIDANCE).toContain('a `flow` for an end-to-end workflow or a user\'s path through the project, a `boundary` or `dependency` diagram for the architecture and how components talk to each other');
     expect(READABILITY_GUIDANCE).toContain('An enumeration of three or more items is never a run-on sentence: write a short lead block and give each item its own child block, which renders as a bulleted list. A block holds at most twelve children, so group a longer enumeration under several lead blocks.');
     expect(READABILITY_GUIDANCE).toContain('Put commands, identifiers, file names and configuration keys in backticks outside quotations; they render as inline code.');
     expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
+  });
+});
+
+describe('rich presentation elements (syzygy-mea.10.5)', () => {
+  const nn = (id: string, text: string) => ({ id, label: 'non-normative', text });
+  const elementDraft = (): Doc => {
+    const doc = draft();
+    doc.schemaVersion = 'polaris-dossier-local-draft-v3';
+    doc.sections[0].paragraphs.push(
+      { kind: 'table', id: 't1', caption: 'Commands and what they do', columns: ['Command', 'Effect'], rowHeaders: true, rows: [
+        { id: 't1r1', cells: [nn('t1c1', 'The `GET` command'), { id: 't1c2', label: 'inferred', basis: 'source', text: 'The project states: "Each command runs to completion before the next one starts."', citations: [cite('c-t1c2', 'src/kestrel.c', 2, 3)], quotations: ['c-t1c2'] }] },
+        { id: 't1r2', cells: [nn('t1c3', 'The `SET` command'), { kind: 'empty' }] },
+      ] },
+      { kind: 'callout', id: 'k1', tone: 'caution', title: 'Mind the memory', children: [{ ...nn('k1a', 'Callout body words.'), children: [nn('k1b', 'Callout child words.')] }] },
+      { kind: 'steps', id: 's1', items: [nn('s1a', 'First step words.'), nn('s1b', 'Second step words.')] },
+      { kind: 'definitions', id: 'd1', entries: [{ term: 'Keyspace', definition: nn('d1a', 'Definition words for keyspace.') }] },
+      { kind: 'cards', id: 'g1', items: [{ label: 'Snapshot card', body: nn('g1a', 'Snapshot card words.') }, { label: 'Log card', body: { id: 'g1b', label: 'unknown', reason: 'missing-evidence', text: 'No source says how logs rotate.', citations: [] } }] },
+      { kind: 'details', id: 'x1', summary: 'More depth for later', elements: [{ kind: 'steps', id: 'x1s', items: [nn('x1a', 'Nested step one.'), nn('x1b', 'Nested step two.')] }] },
+    );
+    return doc;
+  };
+  const ELEMENT_CLAIMS = ['t1c1', 't1c2', 't1c3', 'k1a', 'k1b', 's1a', 's1b', 'd1a', 'g1a', 'g1b', 'x1a', 'x1b'];
+  const support = ELEMENT_CLAIMS.map((blockId) => ({ blockId, verdict: blockId === 't1c2' ? 'anchor-does-not-support' : 'supported', spanIds: [], reason: 'Fits the packet.', quotations: [] }));
+  let index = '';
+  let machine: Doc = {};
+  beforeAll(async () => {
+    const run = await prepared(elementDraft(), true, support);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const site = readSite(result.report.site);
+    index = site.get('index.html')!;
+    machine = JSON.parse(site.get('machine.json') ?? '{}');
+  });
+
+  it('renders a table with a caption, column headers, row headers and an empty cell', () => {
+    expect(index).toContain('<div class="table-scroll" id="element-t1" data-element="table"><table><caption>Commands and what they do</caption><thead><tr><th scope="col">Command</th><th scope="col">Effect</th></tr></thead>');
+    expect(index).toContain('<th scope="row" class="non-normative" data-non-normative="t1c1">The <code>GET</code> command <span class="marking non-normative">[Non-normative]</span></th>');
+    expect(index).toMatch(/<td[^>]*data-claim-id="t1c2"[^>]*>/u);
+    expect(index).toContain('<td class="empty-cell"><span class="visually-hidden">empty</span></td>');
+    expect(index).toContain('<code>GET</code>');
+  });
+
+  it('numbers a cell\'s citation as any block\'s', () => {
+    const cell = index.slice(index.indexOf('data-claim-id="t1c2"'));
+    expect(cell.slice(0, cell.indexOf('</td>'))).toMatch(/class="cite"[^>]*>\[\d+\]<\/a>/u);
+  });
+
+  it('renders a callout with its visible tone, steps, definitions, cards and details', () => {
+    expect(index).toContain('<aside class="callout callout-caution" id="element-k1" data-element="callout" aria-label="Caution: Mind the memory"><p class="callout-title"><span class="callout-tone">Caution</span> Mind the memory</p>');
+    expect(index).toMatch(/<ol class="steps" id="element-s1" data-element="steps"><li[^>]*data-non-normative="s1a"/u);
+    expect(index).toMatch(/<dl class="definitions" id="element-d1" data-element="definitions"><dt>Keyspace<\/dt><dd[^>]*data-non-normative="d1a"/u);
+    expect(index).toMatch(/<ul class="cards" id="element-g1" data-element="cards"><li class="card"><p class="card-label">Snapshot card<\/p><div[^>]*data-non-normative="g1a"/u);
+    expect(index).toMatch(/<details class="details" id="element-x1" data-element="details"><summary>More depth for later<\/summary><ol class="steps" id="element-x1s"/u);
+  });
+
+  it('marks every element claim and carries it into the machine view', () => {
+    for (const id of ELEMENT_CLAIMS) expect(index, id).toMatch(new RegExp(`data-(?:claim-id|non-normative)="${id}"`, 'u'));
+    const text = JSON.stringify(machine);
+    for (const id of ELEMENT_CLAIMS) expect(text, id).toContain(`"${id}"`);
+  });
+
+  it('puts no fragment target that a link names inside a details element', () => {
+    const details = index.slice(index.indexOf('<details class="details"'), index.indexOf('</details>', index.indexOf('<details class="details"')));
+    const targets = [...index.matchAll(/href="#([^"]+)"/gu)].map((m) => m[1]);
+    for (const target of targets) expect(details, target).not.toContain(`id="${target}"`);
   });
 });

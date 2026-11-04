@@ -3,7 +3,7 @@ import { DESIGN_TOKENS_CSS } from '../design-tokens.js';
 import {
   DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
   generationSpanRange, validateGenerationSources,
-  type DossierDraft, type DossierManifest, type DraftBlock, type DraftDiagram, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
+  type DossierDraft, type DossierManifest, type DraftBlock, type DraftDiagram, type DraftElement, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
   type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
@@ -127,7 +127,24 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + 'figure{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1rem;margin:1.5rem 0}figcaption{font-weight:600}'
   + 'q.verified-quote{background:var(--d-ok-tint);border-radius:4px;padding:0 .2em}'
   + 'blockquote.exact-source{background:var(--d-surface-2);border-left:4px solid var(--observed);border-radius:8px;padding:.75rem 1rem}'
-  + 'table{border-collapse:collapse;margin:1rem 0;background:var(--panel)}th,td{border:1px solid var(--line);padding:.4rem .6rem;text-align:left;vertical-align:top}th{background:var(--panel-raised)}';
+  + 'table{border-collapse:collapse;margin:1rem 0;background:var(--panel)}th,td{border:1px solid var(--line);padding:.4rem .6rem;text-align:left;vertical-align:top}th{background:var(--panel-raised)}'
+  // v1.3 rich elements (syzygy-mea.10.5). Each tone names itself in visible text, so colour is never the only signal.
+  + '.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}'
+  + '.table-scroll{overflow-x:auto;margin:1.25rem 0}.table-scroll table{margin:0;min-width:60%}caption{caption-side:top;text-align:left;font-weight:600;padding:0 0 .4rem}'
+  + 'tbody tr:nth-child(even) td{background:var(--d-surface-2)}td.empty-cell{background:transparent}'
+  + '.callout{border:1px solid var(--line);border-left:4px solid var(--c);background:var(--t);border-radius:10px;padding:.75rem 1rem;margin:1.25rem 0}'
+  + '.callout-note{--c:var(--proposed);--t:var(--d-info-tint)}.callout-tip{--c:var(--observed);--t:var(--d-ok-tint)}'
+  + '.callout-caution{--c:var(--amber);--t:var(--d-warn-tint)}.callout-important{--c:var(--cyan);--t:var(--d-accent-tint)}'
+  + '.callout-title{margin:0 0 .4rem;font-weight:600}.callout-tone{color:var(--c);text-transform:uppercase;letter-spacing:.06em;font-size:.78em;margin-right:.35em}'
+  + 'ol.steps{counter-reset:step;list-style:none;padding:0;margin:1.25rem 0}ol.steps>li{counter-increment:step;position:relative;padding:.1rem 0 .9rem 2.6rem;border-left:2px solid var(--line);margin-left:.9rem}'
+  + 'ol.steps>li::before{content:counter(step);position:absolute;left:-.95rem;top:0;width:1.8rem;height:1.8rem;border-radius:50%;background:var(--panel-raised);border:1px solid var(--cyan);color:var(--ink);font:600 .85rem/1.8rem var(--font-mono);text-align:center}'
+  + 'ol.steps>li:last-child{border-left-color:transparent}'
+  + 'dl.definitions{display:grid;grid-template-columns:minmax(8rem,max-content) 1fr;gap:.5rem 1.25rem;margin:1.25rem 0}dl.definitions dt{font-weight:600}dl.definitions dd{margin:0}'
+  + '@media (max-width:40rem){dl.definitions{grid-template-columns:1fr}dl.definitions dd{margin:0 0 .5rem}}'
+  + 'ul.cards{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.9rem;margin:1.25rem 0}'
+  + 'li.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.85rem 1rem}.card-label{margin:0 0 .35rem;font-weight:600;color:var(--cyan)}'
+  + 'details.details{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:1.25rem 0;background:var(--panel)}details.details>summary{cursor:pointer;font-weight:600}'
+  + 'details.details>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}';
 
 /** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
 interface PageChrome { readonly notice: string; readonly disclosure: string; readonly mainAttributes: string; readonly region: string }
@@ -268,7 +285,39 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const item = (from: string, tag: string, entry: LocalPageItem): string => claim(tag, entry.id, entry.marking,
     `${entry.title === null ? '' : `<strong>${escape(entry.title)}</strong>: `}${(local === undefined ? escape : prose)(entry.text)} ${marking(entry.marking)}${entry.unknownReason === null ? '' : ` <span class="unknown-reason">(${escape(entry.unknownReason)})</span>`}${entry.details.length === 0 ? '' : `<ul class="item-details">${entry.details.map(detail => `<li>${escape(detail)}</li>`).join('')}</ul>`} ${refs(from, entry.sourceIds)}`,
     entry.unknownReason === null ? '' : ` data-unknown-reason="${escape(entry.unknownReason)}"`, entry.unknownReason);
+  // A v1.3 rich element (operator-agent drafts only, syzygy-mea.10.5): semantic, inert HTML. Its labels are escaped presentation; every
+  // claim inside renders through `paragraph`, so it carries its marking, reason and numbered sources as any block does.
+  const TONE_NAME: Readonly<Record<string, string>> = { note: 'Note', tip: 'Tip', caution: 'Caution', important: 'Important' };
+  const element = (from: string, id: string, e: DraftElement): string => {
+    const attrs = ` id="element-${escape(id)}" data-element="${e.kind}"`;
+    switch (e.kind) {
+      case 'table': {
+        const head = `<thead><tr>${e.columns.map(column => `<th scope="col">${escape(column)}</th>`).join('')}</tr></thead>`;
+        const rows = e.rows.map(row => `<tr data-row-id="${escape(row.id)}">${row.cells.map((cell, c) => {
+          const tag = e.rowHeaders && c === 0 ? 'th' : 'td';
+          const html = cell === null ? `<${tag} class="empty-cell"><span class="visually-hidden">empty</span></${tag}>` : paragraph(from, cell, tag);
+          // A row header names its row: the scope goes on the opening tag only, which every form above begins with.
+          return tag === 'th' ? `<th scope="row"${html.slice('<th'.length)}` : html;
+        }).join('')}</tr>`).join('');
+        return `<div class="table-scroll"${attrs}><table><caption>${escape(e.caption)}</caption>${head}<tbody>${rows}</tbody></table></div>`;
+      }
+      case 'callout':
+        return `<aside class="callout callout-${e.tone}"${attrs} aria-label="${escape(`${TONE_NAME[e.tone]}: ${e.title}`)}"><p class="callout-title"><span class="callout-tone">${TONE_NAME[e.tone]}</span> ${escape(e.title)}</p>${e.children.map(child => block(from, child)).join('')}</aside>`;
+      case 'steps':
+        return `<ol class="steps"${attrs}>${e.items.map(item => paragraph(from, item, 'li')).join('')}</ol>`;
+      case 'definitions':
+        return `<dl class="definitions"${attrs}>${e.entries.map(entry => `<dt>${escape(entry.term)}</dt>${paragraph(from, entry.definition, 'dd')}`).join('')}</dl>`;
+      case 'cards':
+        return `<ul class="cards"${attrs}>${e.items.map(item => `<li class="card"><p class="card-label">${escape(item.label)}</p>${paragraph(from, item.body, 'div')}</li>`).join('')}</ul>`;
+      case 'details':
+        return `<details class="details"${attrs}><summary>${escape(e.summary)}</summary>${e.elements.map(child => block(from, child)).join('')}</details>`;
+    }
+  };
   const block = (from: string, b: DraftBlock): string => {
+    if (b.element !== undefined) {
+      if (local === undefined) throw new DossierRenderError('not-renderable');
+      return element(from, b.id, b.element);
+    }
     const parent = paragraph(from, b, 'p');
     return b.children.length === 0 ? parent : `${parent}<ul class="block-children">${b.children.map(child => paragraph(from, child, 'li')).join('')}</ul>`;
   };

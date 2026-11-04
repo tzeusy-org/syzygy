@@ -300,8 +300,9 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
   for (const part of ['sections', 'diagrams', 'deepDives'] as const) {
     list(doc[part]).forEach((asset, i) => {
       if (!isRecord(asset) || !isRecord(asset['disposition']) || asset['disposition']['kind'] !== 'produced') return;
-      const paragraphs = list(asset['paragraphs']);
-      const own = new Set([...idsOf([asset]), ...idsOf(paragraphs), ...paragraphs.flatMap((p) => (isRecord(p) ? idsOf(p['children']) : [])), ...idsOf(asset['nodes']), ...idsOf(asset['edges'])]);
+      // Its parts are every identity inside it: blocks, children, rich elements and their rows and claims, nodes and edges; never a citation.
+      const own = new Set<string>();
+      walk(asset, '$', (value, at) => { const id = text(value['id']); if (id !== undefined && !/\.(citations|evidence)\[/u.test(at)) own.add(id); });
       list(asset['disposition']['assetIds']).forEach((assetId, k) => {
         if (typeof assetId === 'string' && !own.has(assetId)) add({ kind: 'unresolved-reference', at: `$.${part}[${i}].disposition.assetIds[${k}]`, detail: `${JSON.stringify(assetId)} is not this asset or a part of it` });
       });
@@ -330,7 +331,31 @@ function walk(value: unknown, at: string, visit: (value: Readonly<Record<string,
   for (const [key, child] of Object.entries(value)) walk(child, `${at}.${key}`, visit);
 }
 
-/** The claim blocks (introduction, section and deep-dive paragraphs and their children) and the understanding record's items. */
+/** Every claim form in one entry of a section's or deep dive's `paragraphs`, with its JSON path: a block and its children, or each
+ * text-bearing cell or item of a v1.3 rich element (syzygy-mea.10.5). An element's labels are presentation and are no claim. */
+export function contentClaims(at: string, entry: unknown, visit: (at: string, value: Readonly<Record<string, unknown>>) => void): void {
+  if (!isRecord(entry)) return;
+  const each = (key: string, inner: (item: Readonly<Record<string, unknown>>, at: string) => void): void =>
+    list(entry[key]).forEach((item, k) => { if (isRecord(item)) inner(item, `${at}.${key}[${k}]`); });
+  switch (entry['kind']) {
+    case undefined:
+      visit(at, entry);
+      each('children', (child, childAt) => visit(childAt, child));
+      return;
+    case 'table':
+      each('rows', (row, rowAt) => list(row['cells']).forEach((cell, c) => { if (isRecord(cell) && cell['kind'] !== 'empty') visit(`${rowAt}.cells[${c}]`, cell); }));
+      return;
+    case 'callout': each('children', (child, childAt) => contentClaims(childAt, child, visit)); return;
+    case 'steps': each('items', (item, itemAt) => visit(itemAt, item)); return;
+    case 'definitions': each('entries', (item, itemAt) => { if (isRecord(item['definition'])) visit(`${itemAt}.definition`, item['definition']); }); return;
+    case 'cards': each('items', (item, itemAt) => { if (isRecord(item['body'])) visit(`${itemAt}.body`, item['body']); }); return;
+    case 'details': each('elements', (item, itemAt) => contentClaims(itemAt, item, visit)); return;
+    default: return;
+  }
+}
+
+/** The claim blocks (introduction, section and deep-dive paragraphs and their children, and the claim forms of rich elements) and the
+ * understanding record's items. */
 export function collectBlocks(doc: Readonly<Record<string, unknown>>): Block[] {
   const out: Block[] = [];
   const claim = (at: string, value: Readonly<Record<string, unknown>>): Block =>
@@ -339,12 +364,7 @@ export function collectBlocks(doc: Readonly<Record<string, unknown>>): Block[] {
   for (const part of ['sections', 'deepDives'] as const) {
     list(doc[part]).forEach((container, i) => {
       if (!isRecord(container)) return;
-      list(container['paragraphs']).forEach((paragraph, j) => {
-        if (!isRecord(paragraph)) return;
-        const at = `$.${part}[${i}].paragraphs[${j}]`;
-        out.push(claim(at, paragraph));
-        list(paragraph['children']).forEach((child, k) => { if (isRecord(child)) out.push(claim(`${at}.children[${k}]`, child)); });
-      });
+      list(container['paragraphs']).forEach((entry, j) => contentClaims(`$.${part}[${i}].paragraphs[${j}]`, entry, (at, value) => out.push(claim(at, value))));
     });
   }
   const understanding = isRecord(doc['understanding']) ? doc['understanding'] : {};

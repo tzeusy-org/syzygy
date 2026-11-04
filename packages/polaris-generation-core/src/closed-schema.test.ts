@@ -85,5 +85,24 @@ describe('closed-schema checker', () => {
   it('freezes the shared string parts', () => {
     expect([Object.isFrozen(text), Object.isFrozen(handle)]).toEqual([true, true]);
   });
-});
 
+  // syzygy-mea.10.5: a value naming no form beside one undiscriminated form reports against it; forms reached by $ref are named.
+  describe('a choice beside one undiscriminated form', () => {
+    const plain = object({ id: handle, note: text });
+    const boxed = object({ kind: one('box'), id: handle });
+    const choiceShape = { root: { oneOf: [{ $ref: '#/$defs/plain' }, { $ref: '#/$defs/boxed' }] }, defs: { plain, boxed } };
+    it('reports a plain value\'s own breach', () => {
+      expect(checkShape(choiceShape, { id: 'a1' })).toEqual([{ path: '$.note', detail: 'is required' }]);
+    });
+    it('names every form, resolving references, when the value carries another form\'s key', () => {
+      expect(checkShape(choiceShape, { kind: 'crate', id: 'a1' })).toEqual([{ path: '$', detail: 'matches none of the permitted forms (unnamed; kind box)' }]);
+    });
+    it('reports a named form\'s breach', () => {
+      expect(checkShape(choiceShape, { kind: 'box', id: 'a1', extra: 1 })).toEqual([{ path: '$.extra', detail: 'is not a field of this form' }]);
+    });
+    it('keeps the bare refusal when two forms are undiscriminated', () => {
+      const twin = { root: { oneOf: [{ $ref: '#/$defs/plain' }, { $ref: '#/$defs/plain' }, { $ref: '#/$defs/boxed' }] }, defs: { plain, boxed } };
+      expect(checkShape(twin, { id: 'a1' })).toEqual([{ path: '$', detail: 'matches none of the permitted forms (unnamed; unnamed; kind box)' }]);
+    });
+  });
+});
