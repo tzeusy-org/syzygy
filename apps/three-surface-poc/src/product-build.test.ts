@@ -1,11 +1,11 @@
 import { execFile, execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { promisify } from 'node:util';
+import { tempDir } from '@syzygy/test-kit';
 import ts from 'typescript';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import { ROOT, readModule, resolve } from '../../../packages/polaris-generation-core/src/workspace-reach.testkit.js';
 
@@ -55,8 +55,6 @@ const projectsOf = (script: string | undefined): string[] | undefined =>
   new RegExp(`^${CLEAN_BUILD} ((?:(?:apps|packages)/[\\w.-]+ ?)+)$`, 'u').exec(script ?? '')?.[1]?.trim().split(' ');
 // Child processes run async (syzygy-w90k): a synchronous block over 60s starves vitest's worker RPC.
 const run = promisify(execFile);
-const cleanups: string[] = [];
-afterEach(() => { for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true }); });
 
 const importsOf = (from: string): string[] => ts.preProcessFile(readModule(from), true, true).importedFiles.map(({ fileName }) => fileName);
 // The modules a project's build emits: every source file of the project's own src/ in the program TypeScript builds from its
@@ -114,8 +112,7 @@ describe('the product build', () => {
 // One-file projects in a scratch tree: d referencing b, b referencing a, and c, which none names; and tools/x, a project outside
 // apps/* and packages/*. The script runs from the scratch root.
 function scratchTree(): string {
-  const root = mkdtempSync(join(tmpdir(), 'syzygy-clean-build-'));
-  cleanups.push(root);
+  const root = tempDir('syzygy-clean-build-');
   const project = (dir: string, references: readonly string[]): void => {
     const name = dir.slice(dir.lastIndexOf('/') + 1);
     mkdirSync(join(root, dir, 'src'), { recursive: true });
@@ -183,8 +180,7 @@ describe('the clean build', () => {
     ['reaches a tsconfig.json that is not plain JSON', ['packages/d'], (root) => writeFileSync(join(root, 'packages/a/tsconfig.json'), `// a comment\n${readFileSync(join(root, 'packages/a/tsconfig.json'), 'utf8')}`),
       'packages/a/tsconfig.json: not plain JSON'],
     ['names a project whose directory resolves outside the checkout', ['packages/e'], (root) => {
-      const outside = mkdtempSync(join(tmpdir(), 'syzygy-clean-build-outside-'));
-      cleanups.push(outside);
+      const outside = tempDir('syzygy-clean-build-outside-');
       plant(outside, 'tsconfig.json', readFileSync(join(root, 'packages/c/tsconfig.json'), 'utf8'));
       plant(outside, 'dist/e.js', 'kept\n');
       symlinkSync(outside, join(root, 'packages/e'));
