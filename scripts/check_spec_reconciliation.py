@@ -2764,6 +2764,9 @@ def _library_error(label, method, tree, path, cls):
             return [f"{label}: {type(value_error).__name__}, "
                     f"not {cls.__name__}"]
         return []
+    except Exception as other:  # escapes both handlers: F5's failure mode
+        return [f"{label}: {type(other).__name__} escaped except OSError, "
+                f"not {cls.__name__}"]
     return [f"{label}: not refused"]
 
 
