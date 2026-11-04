@@ -72,6 +72,12 @@ record's commit as its containing commit. The additive checker deliberately
 refuses archive use: it does not turn a local protection boolean or a
 citation census into a move authorization.
 
+Git must support `--no-lazy-fetch`; an unsupported option fails closed.
+Object reads and ancestry checks use that option and `GIT_NO_LAZY_FETCH=1`,
+including the batch blob reader. Missing promisor objects remain
+missing. The selftest compares guarded refusal with an unsafe mutation
+control using only its own temporary local-file remote.
+
 [Unknown] The complete transaction still needs affirmative family/reliance
 adjudication, explicit comparable capture/run instants, a freshly frozen
 source and consumer plan, independent review, effective origin protection

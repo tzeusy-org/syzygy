@@ -56,9 +56,18 @@ def demand(ok: bool, reason: str) -> None:
         raise Refusal(reason)
 
 
-def git(root: Path, *args: str, accept: tuple[int, ...] = (0,)) -> bytes:
+def git_process(root: Path, *args: str, input: bytes | None = None) -> subprocess.CompletedProcess:
+    # The command-line option fails closed on Git versions that lack it.
+    # An environment-only flag could be silently ignored by an older Git.
     env = {k: v for k, v in os.environ.items() if not k.startswith("GIT_")}
-    done = subprocess.run(["git", "-C", str(root), *args], env=env, capture_output=True)
+    env["GIT_NO_LAZY_FETCH"] = "1"
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    return subprocess.run(["git", "--no-lazy-fetch", "-C", str(root), *args],
+                          env=env, input=input, capture_output=True)
+
+
+def git(root: Path, *args: str, accept: tuple[int, ...] = (0,)) -> bytes:
+    done = git_process(root, *args)
     demand(done.returncode in accept, "git-object-or-history-unavailable: " + args[0])
     return done.stdout
 
@@ -131,9 +140,7 @@ def regular(meta: tuple[str, str, str] | None) -> bool:
 def blobs(root: Path, entries: dict[str, tuple[str, str, str]]) -> dict[str, bytes]:
     paths = [p for p, meta in entries.items() if regular(meta)]
     request = "".join(entries[p][2] + "\n" for p in paths).encode()
-    output = subprocess.run(["git", "-C", str(root), "cat-file", "--batch"], input=request,
-                            capture_output=True,
-                            env={k: v for k, v in os.environ.items() if not k.startswith("GIT_")})
+    output = git_process(root, "cat-file", "--batch", input=request)
     demand(output.returncode == 0, "missing-source-blob")
     result = {}
     cursor = 0
@@ -171,9 +178,7 @@ def make_census(files: dict[str, bytes]) -> bytes:
             index_info.append(("100644 " + oid + "\t" + p + "\0").encode())
         # Only ls-files consumes this synthetic index; the census reads the
         # materialized bytes. Plumbing avoids clean filters from .gitattributes.
-        result = subprocess.run(["git", "-C", str(root), "update-index", "--info-only", "-z", "--index-info"],
-                                input=b"".join(index_info), capture_output=True,
-                                env={k: v for k, v in os.environ.items() if not k.startswith("GIT_")})
+        result = git_process(root, "update-index", "--info-only", "-z", "--index-info", input=b"".join(index_info))
         demand(result.returncode == 0, "synthetic-index-unavailable")
         return census.build(root)[0].encode()
 
@@ -314,9 +319,7 @@ def verify_archive_objects(root: Path, row: dict) -> dict:
     ref = "refs/tags/" + row["tag"]
     demand(git(root, "cat-file", "-t", ref).strip() == b"tag", "archive-tag-not-annotated")
     peeled = git(root, "rev-parse", ref + "^{commit}").decode().strip()
-    ancestry = subprocess.run(["git", "-C", str(root), "merge-base", "--is-ancestor", row["commit"], peeled],
-                              capture_output=True,
-                              env={k: v for k, v in os.environ.items() if not k.startswith("GIT_")})
+    ancestry = git_process(root, "merge-base", "--is-ancestor", row["commit"], peeled)
     demand(ancestry.returncode == 0, "archive-commit-unreachable-from-tag")
     return {"commit": row["commit"], "path": p, "sha256": row["sha256"], "tag": row["tag"],
             "tag_object": git(root, "rev-parse", ref).decode().strip(), "peeled_commit": peeled}
@@ -605,6 +608,58 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             reason = str(exc)
         cases.append({"predicate": "shallow-history", "pass": reason == "shallow-history", "refusal": reason,
                       "old": "full-history", "new": "depth=1", "fixture_commit": sibling})
+        # A real promisor clone is required: a missing object in an ordinary
+        # repo cannot demonstrate that Git's implicit fetch was prevented.
+        origin = Path(temp) / "promisor-origin"; origin.mkdir(); git(origin, "init", "-q")
+        body = b"synthetic missing promisor body\n"
+        (origin / "body.txt").write_bytes(body); git(origin, "add", "body.txt")
+        git(origin, "-c", "user.name=Retention Fixture", "-c", "user.email=fixture@example.invalid",
+            "commit", "-qm", "synthetic promisor control")
+        git(origin, "config", "uploadpack.allowFilter", "true")
+        promisor_commit = git(origin, "rev-parse", "HEAD").decode().strip()
+        oid = git(origin, "rev-parse", "HEAD:body.txt").decode().strip()
+        def partial(name):
+            repo = Path(temp) / name
+            git(Path(temp), "clone", "--quiet", "--no-checkout", "--filter=blob:none", origin.as_uri(), str(repo))
+            return repo
+        def missing(repo):
+            return [line for line in git(repo, "rev-list", "--objects", "--missing=print", "HEAD").decode().splitlines()
+                    if line.startswith("?")]
+        def guarded_read(repo, batch):
+            before = missing(repo)
+            try:
+                if batch:
+                    blobs(repo, {"body.txt": ("100644", "blob", oid)})
+                else:
+                    git(repo, "cat-file", "blob", oid)
+                refused = False
+            except Refusal:
+                refused = True
+            after = missing(repo)
+            return {"refused": refused, "missing_before": before, "missing_after": after,
+                    "pass": refused and before == after == ["?" + oid]}
+        for batch in (False, True):
+            label = "batch" if batch else "single"
+            protected = guarded_read(partial("promisor-guarded-" + label), batch)
+            mutant_repo = partial("promisor-mutant-" + label)
+            mutant_before = missing(mutant_repo)
+            # Positive mutation control intentionally omits both safeguards.
+            # Its transport is restricted to the owned local-file fixture.
+            command = ["git", "-c", "protocol.allow=never", "-c", "protocol.file.allow=always", "-C", str(mutant_repo), "cat-file"]
+            command += ["--batch"] if batch else ["blob", oid]
+            old = subprocess.run(command, input=(oid + "\n").encode() if batch else None, capture_output=True,
+                                 env={k: v for k, v in os.environ.items() if not k.startswith("GIT_")})
+            mutant_after = missing(mutant_repo)
+            fetched = mutant_before == ["?" + oid] and old.returncode == 0 and body in old.stdout and mutant_after == []
+            restored = guarded_read(partial("promisor-restored-" + label), batch)
+            cases.append({"predicate": "promisor-no-lazy-fetch-" + label,
+                          "pass": protected["pass"] and fetched and restored["pass"], "fixture_commit": promisor_commit,
+                          "old": {"argv": command, "fragment": "no --no-lazy-fetch; inherited GIT_* removed", "missing_blob": oid},
+                          "new": {"fragment": "git --no-lazy-fetch; GIT_NO_LAZY_FETCH=1", "missing_blob": oid},
+                          "unsafe_mutant_materialized_blob": fetched, "guarded_refusal_kept_blob_missing": protected,
+                          "restored_refusal_kept_blob_missing": restored,
+                          "mutant_missing_before": mutant_before, "mutant_missing_after": mutant_after,
+                          "scope": "owned local-file Git remote only; no network/provider/observed repository"})
     report = {"implementation_commit": implementation_commit, "implementation_sha256": implementation_sha256,
               "cases": cases, "passed": sum(c["pass"] for c in cases), "total": len(cases),
               "scope": "synthetic repositories only; no real tags, moves, remotes or settings changed"}
