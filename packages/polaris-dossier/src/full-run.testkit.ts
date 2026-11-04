@@ -36,11 +36,26 @@ const KESTREL = [
 ].join('\n');
 const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'docs/notes.txt': 'Snapshots are written periodically.\n', 'README.md': '# Kestrel\n' };
 
+/** `git init -q [...args] <dir>` from a fresh, empty template directory the helper owns, removed after the init whether it succeeds or
+ * fails. Without `--template`, git copies its default or ambient template (`GIT_TEMPLATE_DIR`, `init.templateDir`, the host's share
+ * directory) into `.git`, and a concurrent host git upgrade leaves `description.dpkg-new` and `description.dpkg-tmp` there, which the
+ * strict clone-shape guard rightly refuses (syzygy-157b). The explicit option overrides every ambient source without touching it. */
+function gitInitFromEmptyTemplate(dir: string, args: readonly string[]): void {
+  const parent = path.dirname(dir);
+  fs.mkdirSync(parent, { recursive: true });
+  const template = fs.mkdtempSync(path.join(parent, '.git-empty-template-'));
+  try {
+    execFileSync('git', ['init', '-q', `--template=${template}`, ...args, dir], { env: GIT_ENV });
+  } finally {
+    fs.rmSync(template, { recursive: true, force: true });
+  }
+}
+
 /** A clone made as the consent states and preflight prints: `commit` fetched alone, shallow, into a new empty repository at `clone`,
  * HEAD detached at it. `origin` must allow fetching any commit by identifier (set here). */
 export function consentedClone(origin: string, commit: string, clone: string): string {
   execFileSync('git', ['-C', origin, 'config', 'uploadpack.allowAnySHA1InWant', 'true'], { env: GIT_ENV });
-  execFileSync('git', ['init', '-q', clone], { env: GIT_ENV });
+  gitInitFromEmptyTemplate(clone, []);
   execFileSync('git', ['-C', clone, 'fetch', '-q', '--depth=1', `file://${origin}`, commit], { env: GIT_ENV });
   execFileSync('git', ['-C', clone, 'checkout', '-q', '--detach', 'FETCH_HEAD'], { env: GIT_ENV });
   return clone;
@@ -51,7 +66,7 @@ export function makeClone(dir: string): { readonly clone: string; readonly commi
   const origin = path.join(dir, 'origin');
   fs.mkdirSync(origin, { recursive: true });
   const git = (...args: string[]): string => execFileSync('git', ['-C', origin, ...args], { encoding: 'utf8', env: GIT_ENV }).trim();
-  git('init', '-q', '-b', 'main');
+  gitInitFromEmptyTemplate(origin, ['-b', 'main']);
   for (const [file, body] of Object.entries(FILES)) {
     fs.mkdirSync(path.dirname(path.join(origin, file)), { recursive: true });
     fs.writeFileSync(path.join(origin, file), body);
