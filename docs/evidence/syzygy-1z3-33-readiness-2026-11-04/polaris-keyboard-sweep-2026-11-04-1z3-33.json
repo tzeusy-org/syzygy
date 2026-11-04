@@ -1,0 +1,66 @@
+{
+  "task": "syzygy-1z3.33",
+  "requirement": [
+    "PWB-REQ-016"
+  ],
+  "butlersRevision": "9e28384a4e6ea8a2a2218a9472d450672fffd03f",
+  "evaluationIdentity": "repository:butlers-configured-poc:9e28384a4e6ea8a2a2218a9472d450672fffd03f|working-tree:sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855|observer:99040a5ce7096b07a753a792ba530cf7260551a9|inputs:sha256:074f778c64dfbd69da305ac1368955462bbc2d31c2ae578a557c083892eef214|observed:2026-11-04T12:13:04.918Z",
+  "walkthroughEvaluationIdentity": "pwb-eval-e2ffd1ff876c7cd29e6de929",
+  "evaluationReadFrom": "each swept page: the currency probe's pinned revision, the footer's snapshot and as-of instant, and the walkthrough readiness section's expected evaluation identity, equal on every mount (keyboard-sweep-record.ts)",
+  "capturedAt": "2026-11-04T12:18:19.184Z",
+  "syzygyHead": "99040a5ce7096b07a753a792ba530cf7260551a9",
+  "surfaceVersion": "polaris@649194529c7f",
+  "browser": {
+    "executable": "/usr/bin/google-chrome",
+    "version": "Chrome/120.0.6099.224"
+  },
+  "method": "checkPolarisAccessibility over each served body, retained in a private temporary directory and opened as a file URL; fragment activations stay in-document, so the served bytes are the whole input",
+  "mounts": [
+    {
+      "mount": "direct",
+      "measuredOn": {
+        "path": "/polaris",
+        "host": "127.0.0.1:43325",
+        "status": 200
+      },
+      "bytes": 1405107,
+      "sha256": "733832b9bb2a83d16f2c37197f7efe0afd99a4fd57d697a8df8faab8d1bab98e",
+      "population": 1117,
+      "reached": 1117,
+      "activations": 634,
+      "disclosures": {
+        "population": 51,
+        "opened": 50
+      },
+      "contrastMeasured": 13677,
+      "violations": 0,
+      "violationsByKind": {},
+      "firstViolations": []
+    },
+    {
+      "mount": "tailnet",
+      "measuredOn": {
+        "path": "/polaris",
+        "host": "tzeusy.parrot-hen.ts.net",
+        "status": 200
+      },
+      "bytes": 1411527,
+      "sha256": "317c55e5ff9b4ba9bec1f85a39f59d8da7ca800db464b04f869e461caf22640d",
+      "population": 1117,
+      "reached": 1117,
+      "activations": 634,
+      "disclosures": {
+        "population": 51,
+        "opened": 50
+      },
+      "contrastMeasured": 13677,
+      "violations": 0,
+      "violationsByKind": {},
+      "firstViolations": []
+    }
+  ],
+  "totals": {
+    "mounts": 2,
+    "violations": 0
+  }
+}

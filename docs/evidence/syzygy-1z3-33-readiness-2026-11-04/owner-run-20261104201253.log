@@ -1,0 +1,39 @@
+== user-run pwb-walkthrough-readiness-20261104 run=20261104201253 as=tze invoked_by=tze host=Tzeusy start=2026-11-04T20:12:53+08:00
+RESULT butlers_revision=9e28384a4e6ea8a2a2218a9472d450672fffd03f
+RESULT butlers_dirty_paths=0
+
+added 118 packages in 1s
+RESULT clone_dirty_paths=0
+Syzygy Three-Surface POC: http://127.0.0.1:43325/
+Observed repository: /home/tze/GitHub/butlers
+Observed revision: 9e28384a4e6ea8a2a2218a9472d450672fffd03f
+Walkthrough surface version: polaris@649194529c7f
+Walkthrough evaluation identity: pwb-eval-e2ffd1ff876c7cd29e6de929
+Machine endpoint: http://127.0.0.1:43325/api/poc
+direct: focusables 1117/1117, activations 634, violations 0 {}
+tailnet: focusables 1117/1117, activations 634, violations 0 {}
+wrote /home/orca/.tmp/pwb-walkthrough-readiness-20261104/artifacts/20261104201253/polaris-keyboard-sweep-2026-11-04-1z3-33.json: 0 violations across 2 mounts
+RESULT sweep_exit=0
+
+> poc:fresh-checkout-demo
+> npm run build:poc --silent && node apps/three-surface-poc/dist/fresh-checkout-demo-main.js --repo /home/tze/GitHub/butlers --date 2026-11-04-1z3-33
+
+clone 99040a5ce709 (1s), 18 signing tags
+npm ci exit 0 (0.8s)
+npm run build exit 0 (6.8s)
+vitest exit 0 (101.9s): {"name":"vitest tests","tests":"6464","failures":"0","errors":"0","time":"392.936039897"}
+daemon at http://127.0.0.1:44435, observed Butlers revision 9e28384a4e6ea8a2a2218a9472d450672fffd03f
+walkthrough binding polaris@649194529c7f / pwb-eval-e2ffd1ff876c7cd29e6de929
+probes: tailnet mount 200 (links prefixed, 3 disclosures); presentation 401/200 polaris-presentation; foreign origin 403 browser-origin-refused
+parity: 616 tuples over 613 human ids vs 613 machine ids; mismatching 0; absent 0/0
+source routes: 205 identities; 194 rendered
+browser check: 0 violations across 6 variants at 99040a5ce709 (29.5s)
+preflight not ready: account-statement-unbacked, population-empty, population-unreconciled
+daemon stopped (0); project shape observed
+wrote /home/orca/.tmp/pwb-walkthrough-readiness-20261104/artifacts/20261104201253/work/docs/evidence/pwb-p4-5-fresh-checkout-demo-2026-11-04-1z3-33.json; artifacts retained in /home/tze/.local/state/syzygy/pwb-p4-5-fresh-checkout-demo-2026-11-04-1z3-33
+unhealthy: preflight-ready
+RESULT demo_exit=1
+e2b593aaa3f4f77565c8ac0774de1a1386deb1fbeabae7d50c4566c0ee7ccf49  /home/orca/.tmp/pwb-walkthrough-readiness-20261104/artifacts/20261104201253/polaris-keyboard-sweep-2026-11-04-1z3-33.json
+b2528f052b0f77421cd45ee26de1cbb4c36d610ba6aa6327abd1c3771838070f  /home/orca/.tmp/pwb-walkthrough-readiness-20261104/artifacts/20261104201253/pwb-p4-5-fresh-checkout-demo-2026-11-04-1z3-33.json
+RESULT head=99040a5ce7096b07a753a792ba530cf7260551a9 sweep_exit=0 demo_exit=1
+== end=2026-11-04T20:20:50+08:00 exit=0
