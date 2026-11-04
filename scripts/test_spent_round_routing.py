@@ -71,7 +71,7 @@ class RoutingTests(unittest.TestCase):
         self.assertIn(f"`{path}`", self.rendered([path], explicit_history=True))
 
     def test_missing_empty_and_malformed_table_refuse_rendering(self):
-        fixtures = ["", HEADER, HEADER.replace("| Round |", "| Wrong |") + row(self.round),
+        fixtures = ["", "## The eleven rounds\n\nNo table.\n", HEADER, HEADER.replace("| Round |", "| Wrong |") + row(self.round),
                     HEADER.replace("|---|", "|bad|", 1) + row(self.round),
                     HEADER + row("../round-2026-08f"),
                     HEADER + row(self.round).replace("`", "", 1),
