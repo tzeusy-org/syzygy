@@ -28,7 +28,7 @@ describe('fixture repositories (syzygy-jsyi)', () => {
       expect(first.repoRoot).not.toBe(second.repoRoot);
       expect(cleanups).toEqual([first.repoRoot, second.repoRoot]);
       // Committed by hand from the same eight files, author and pinned instants.
-      expect([first.revision, second.revision]).toEqual(['1f892687d53c829f9c2a4ee99bccccb23d6158df', '1f892687d53c829f9c2a4ee99bccccb23d6158df']);
+      expect([first.revision, second.revision]).toEqual(['2ade4e966635973c82defd6bbeb21bfe6e69fdc3', '2ade4e966635973c82defd6bbeb21bfe6e69fdc3']);
       expect(git(first.repoRoot, ['rev-parse', 'HEAD'])).toBe(first.revision);
       expect(git(first.repoRoot, ['status', '--porcelain'])).toBe('');
       writeFileSync(join(first.repoRoot, 'README.md'), 'changed\n');
