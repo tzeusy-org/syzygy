@@ -1,7 +1,8 @@
 # Impact ledger — Polaris dossier local-agent mode, version 1.4
 
 > **Candidate — binds nothing.** [Observed] Baseline is commit
-> `e30412efc94f4ee40d213f5df6ac8d1aac445119`, the merged PR734/v1.3 layer.
+> `31ccc7e3a5a383c6fba3907466f9e769a6db8aa7`, the signed v1.3 layer plus
+> PR742's routing-only changes, incorporated before the first full gate.
 > [Inferred] Proposed outcomes below require fresh review, the owner's actual
 > version selection and recording; this is not an installation report.
 
@@ -27,15 +28,16 @@ by drafting these patches.
 
 ## Dependency sweep and its limits
 
-[Observed] `DEPENDENCY-SWEEP.json` scans 8,699 tracked baseline paths from
+[Observed] `DEPENDENCY-SWEEP.json` scans 8,701 tracked baseline paths from
 `git ls-tree -rz` at the baseline commit; validation compares that set to
-`git ls-files -z` before staging this candidate. Bytes come from `git archive`
+`git ls-files -z`, excluding the explicitly enumerated new candidate files
+and successor builder. Bytes come from `git archive`
 of that baseline, so working-tree tooling edits cannot contaminate the sweep.
 It searches each UTF-8-decodable file, including text files
 containing NUL fixture data. The eleven non-UTF-8 paths are named in its
 `population.skipped` field: four PNGs and seven compressed trace files.
 They are the explicit remainder, not silently counted as text examined.
-This candidate's untracked files are excluded from the baseline population.
+This candidate's own added files are excluded from the baseline population.
 
 [Observed] Exact case-sensitive predicates, the REQ run-form regex and every
 matching file/line/hash are stored in the JSON. The run regex admits slash,

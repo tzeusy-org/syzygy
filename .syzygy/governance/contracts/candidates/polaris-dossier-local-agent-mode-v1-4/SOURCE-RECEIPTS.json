@@ -1,7 +1,13 @@
 {
-  "recorded_at_utc": "2026-11-04T20:08:55.937468+00:00",
-  "subject_baseline_commit": "e30412efc94f4ee40d213f5df6ac8d1aac445119",
-  "remote_main": "e30412efc94f4ee40d213f5df6ac8d1aac445119",
+  "recorded_at_utc": "2026-11-04T20:27:10.186328+00:00",
+  "subject_baseline_commit": "31ccc7e3a5a383c6fba3907466f9e769a6db8aa7",
+  "authoring_commit_before_receipt": "3fcc954865dfd05365feabba9e97fe3c6b11086f",
+  "remote_main": "31ccc7e3a5a383c6fba3907466f9e769a6db8aa7",
+  "base_update": {
+    "previous_source_baseline": "e30412efc94f4ee40d213f5df6ac8d1aac445119",
+    "incorporated_main": "31ccc7e3a5a383c6fba3907466f9e769a6db8aa7",
+    "reason": "PR742 routing-only changes; incorporated before the first committed clean-clone full gate. No new normative act or held app/core path change."
+  },
   "sources": [
     {
       "path": ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md",

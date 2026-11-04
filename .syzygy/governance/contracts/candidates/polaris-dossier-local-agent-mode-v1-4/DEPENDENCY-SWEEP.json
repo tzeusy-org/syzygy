@@ -1,8 +1,8 @@
 {
-  "subject_commit": "e30412efc94f4ee40d213f5df6ac8d1aac445119",
+  "subject_commit": "31ccc7e3a5a383c6fba3907466f9e769a6db8aa7",
   "population": {
-    "tracked_paths": 8699,
-    "text_files": 8688,
+    "tracked_paths": 8701,
+    "text_files": 8690,
     "skipped": [
       {
         "path": "docs/evidence/orrery-height-repaired-narrow-2026-09-09.png",
@@ -63,3098 +63,369 @@
   "scope": "tracked files at the baseline commit; candidate untracked files excluded",
   "hits": {
     "empty_cell": [
-      {
-        "path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md",
-        "lines": [
-          92,
-          96,
-          97
-        ],
-        "sha256": "bf256d224d3453a49377de6615bd3bb1d85da73720c391b136bd5edfd4a732c9"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/REDIS-LOCAL-AGENT-SITTING-BRIEF.md",
-        "lines": [
-          274
-        ],
-        "sha256": "75b703d49c5f83a777ac940de2c9f1e1b279488bf130ec0290ea81adec330f4b"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/ROUND-1-DISPOSITIONS.md",
-        "lines": [
-          23
-        ],
-        "sha256": "d020c42b02fe4f53022d66fc9dd7ed27f43241ac00512e46ef8987080d10c887"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/history/RFC-0007-history.md",
-        "lines": [
-          57
-        ],
-        "sha256": "c328b6157dc8d3cd8d04b0c9b572b12e180c323a3f924b34ab834a35b17f7b02"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/history/rev9-rfcs/RFC-0007-polaris-intent-surface.md",
-        "lines": [
-          180
-        ],
-        "sha256": "2b94c3b77ba98e9c0503278eb4f0a9cc1360bb9c5d4cfd1604650e62f48b0d11"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/OWNER-DECISION-PACKET.md",
-        "lines": [
-          31
-        ],
-        "sha256": "402fa9b910b71ba29d1f5edd83899a0815e1d7de4b6bc37a9f3d14367f7d9e4f"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-1-DISPOSITIONS.md",
-        "lines": [
-          13
-        ],
-        "sha256": "71e60706fa904628b00a742b026cfb16c0b0f80d55ce71186eb69c70a993f4ea"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md",
-        "lines": [
-          165
-        ],
-        "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/design.md.patch",
-        "lines": [
-          35
-        ],
-        "sha256": "7068535eced94a4b035e6efdba354ed0a92f0469265e95414421c711d7cb38c2"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/spec.md.patch",
-        "lines": [
-          17,
-          60
-        ],
-        "sha256": "92d7eca908b88e6bbc7627a92ee127c6334ec95d2e8a73c853e93feee0101e13"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md",
-        "lines": [
-          108,
-          112,
-          142,
-          394,
-          1693
-        ],
-        "sha256": "4ab5e5b68406c55df8168f76c3e77bd6966c847e4ec01d503174196adc3767c5"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/public-egress-v2/instances/egress-anthropic/EGRESS-CONSENT-ANTHROPIC.md",
-        "lines": [
-          144
-        ],
-        "sha256": "2a97b98f0e707b39ee06bdc8f9e0d1f8cd351bddd2a09312c9c4a7302b2bbf3e"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/public-egress-v2/reviews/R-EGRESS-V2-1-RAW.md",
-        "lines": [
-          69,
-          87
-        ],
-        "sha256": "a0ed3b26844ddfede556a65acfa3f7e6ade117dd585f6b090a9b115cbc1b13b0"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/public-egress-v2/reviews/R-EGRESS-V2-2-RAW.md",
-        "lines": [
-          27,
-          61
-        ],
-        "sha256": "c8245e6e93f1e914784a56aabfc44ea9e93a326ad0ab77daac488d70bcc2020d"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/public-egress-v2/templates/EGRESS-CONSENT-TEMPLATE-V2.md",
-        "lines": [
-          98
-        ],
-        "sha256": "788412eea6ced6de3664e5e942469dc9f1c820d7c75dbbc2e7148a7d0cba94d3"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/pwb-m2-slice5-implementation-continuation/OWNER-DECISION-PACKET.md",
-        "lines": [
-          658
-        ],
-        "sha256": "1449eadca4f5eca3b6dd731de4f01c0d373193d83a77446e5ea72389ad013c97"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/pwb-machine-view-amendment/OWNER-DECISION-PACKET.md",
-        "lines": [
-          187
-        ],
-        "sha256": "622a9e262519afbbd25e0821f80f4277f7211f80e6ee6c91d470233f1223c30b"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/pwb-opening-band-scenario/ROUND-11-DISPOSITIONS.md",
-        "lines": [
-          41
-        ],
-        "sha256": "0cc80226fb28bc49e836dff03d9bdb4c73884be2c8d7ae0a123f2c43e4221fea"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/rfcs/RFC-0007/rendering-and-surface.md",
-        "lines": [
-          435
-        ],
-        "sha256": "d4ab9646269e4f22274f46ecc9687ac321572372d62a0f30a96a66e306edb9fa"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08/TERM-MIGRATION-REPORT.md",
-        "lines": [
-          547
-        ],
-        "sha256": "67b63d32828f77ad41680001a1005776c851486f4ad3b892a77943a57c4bc3b1"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08/reviews/RB-2-vision-doctrine-RAW.md",
-        "lines": [
-          247
-        ],
-        "sha256": "f06f9b736563b4680bd9c381c94fc7181e5b947bc9b57ca0800e51fe0fc0f7c5"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08c/FINAL-EXACT-MANIFEST-REVIEW.md",
-        "lines": [
-          156
-        ],
-        "sha256": "fb39f3809e4d289be518611a0b833d932b636ab01062e4be03d7854f49ceeb89"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08c/HUMAN-CLARITY-CLOSURE-REPORT.md",
-        "lines": [
-          143
-        ],
-        "sha256": "70350b247548d852776866b12c8848d5d0fc9ec80f8361a720f155dbf14131d4"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08c/OWNER-DECISION-PACKETS.md",
-        "lines": [
-          196
-        ],
-        "sha256": "9b3c78c46415f41dfbf91ffb7e66e0441da985a8db79a1e24d2082074ee9fb61"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08c/PUBLIC-VOCABULARY-COMPREHENSION-REPORT.md",
-        "lines": [
-          83,
-          185
-        ],
-        "sha256": "83b9236a52cb738c7e11238c9bf1f82685fdc072bbc947b7a0bb3bbd817d03e1"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08c/TERM-REGISTRY-SEMANTIC-DELTA.md",
-        "lines": [
-          136,
-          261
-        ],
-        "sha256": "18b40186fceaf618a9555dda7d2749d7023e875b5ea56322def507ebdeab591d"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-1b-mission-safety-confirming-RAW.md",
-        "lines": [
-          851
-        ],
-        "sha256": "7560e3ba4f2997db1c19654c417884130b5eca5f212cca267698d3be7cd8bc71"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-2-human-clarity-RAW.md",
-        "lines": [
-          735
-        ],
-        "sha256": "34466be571335c81facc9b4fc92ab5f0d210b74e3b0f03ba9aa753aff3b09722"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-3-vocabulary-RAW.md",
-        "lines": [
-          145,
-          243,
-          645,
-          647
-        ],
-        "sha256": "248a0212aff214b05fcb3407dd1518e10b95662d5853cb5918cf40d364819beb"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08d/reviews/LAUNCH-GATE-ADMINISTRATION-2026-08-09-RAW.md",
-        "lines": [
-          69
-        ],
-        "sha256": "23167ec9be1d614fb133c9edaa81412eae5b11ba265b01a97e421eef61c62ff8"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08d/reviews/RD-10-human-view-RAW.md",
-        "lines": [
-          209
-        ],
-        "sha256": "2e5a9e4412214ecfa957bd03e18f6389d062db2c0a609ea8a966eaf5da5c14b9"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08d/reviews/RD-16-vocabulary-RAW.md",
-        "lines": [
-          112,
-          187,
-          193,
-          197
-        ],
-        "sha256": "ce29a10b1caf485207f34e160811182524b5a32b043865639af5345edb1366e9"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08d/reviews/RD-17-validation-RAW.md",
-        "lines": [
-          286
-        ],
-        "sha256": "0c0d0756b78d602c5e56c9112bcd67d2a44f293d2322dbc0ee57a4492ada89f8"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08e/VALIDATOR-AUTHORITY-INVENTORY.md",
-        "lines": [
-          33
-        ],
-        "sha256": "4ebc6edf7a761b1d047e54b57ab989860564a08e4e170bbadcea58cd02cf7f23"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08g/reviews/RD-60-capability-1-outline-exercise-RAW.md",
-        "lines": [
-          94
-        ],
-        "sha256": "fb9be462b1e78b80ea929af116db9e580953dfd689aac4fc6e3489503634ba94"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/three-surface-poc-block-provenance-amendment/SEMANTIC-DELTA.md",
-        "lines": [
-          163,
-          168
-        ],
-        "sha256": "835a3236fc7a2e4df5c690032cad474278192cfae284950021fa921852d8dab6"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/IMPACT-SWEEP.json",
-        "lines": [
-          3159,
-          3160,
-          3202,
-          3212,
-          3242,
-          4021
-        ],
-        "sha256": "3a63fa30119d009965e40e48d18b7cadeb9baa24622f2bd7188c9bb38c0fc9ed"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/REQUIREMENT-CONSUMPTION.json",
-        "lines": [
-          2895,
-          2896,
-          2932,
-          2942,
-          2967,
-          3666
-        ],
-        "sha256": "535de5057966801c5e8cc7e1f3258d033b387054d14a920a78b453ff04698b06"
-      },
-      {
-        "path": ".syzygy/governance/contracts/rfcs/RFC-0007/rendering-and-surface.md",
-        "lines": [
-          435
-        ],
-        "sha256": "d4ab9646269e4f22274f46ecc9687ac321572372d62a0f30a96a66e306edb9fa"
-      },
-      {
-        "path": ".syzygy/governance/decisions/DECISION-HISTORY.md",
-        "lines": [
-          354
-        ],
-        "sha256": "c68af626365baeff17efa3e880808d46c23eb7c8b97b6961e4ea66c19352c91d"
-      },
-      {
-        "path": ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md",
-        "lines": [
-          46
-        ],
-        "sha256": "96928fbd20bf8f89b90c6b5fc62b441c0112eac3cc4367015854c70290aed08d"
-      },
-      {
-        "path": ".syzygy/governance/decisions/POLARIS-RETAINED-EVALUATIONS-RETENTION-POSTURE-DECISION-PACKET.md",
-        "lines": [
-          596
-        ],
-        "sha256": "0000bd5067caf293de2f0769ac1a60dbf3d212dc6547af377aac1629e550f4f0"
-      },
-      {
-        "path": ".syzygy/governance/decisions/TERM-REGISTRY-DRAFTING-VOCABULARY-DECISION.md",
-        "lines": [
-          18
-        ],
-        "sha256": "e544809f61e7e8d1e63e7e46c62633f42e76166f888fa91a10d00a5e4fdc2a1b"
-      },
-      {
-        "path": "apps/three-surface-poc/src/sync-child-process-guard.test.ts",
-        "lines": [
-          32
-        ],
-        "sha256": "f2e61965aae0bffd05bb4d16c3767b0666bac33bf5a631394aa3ab8b7df1b63c"
-      },
-      {
-        "path": "docs/evidence/non-human-principal-pins-2026-10-22/mutate_non_human_principal.py",
-        "lines": [
-          102
-        ],
-        "sha256": "b9b1e0aa7d47abe2bc2dc957d0a258b3aa50ad027250bd5ddd92e409a3e3923e"
-      },
-      {
-        "path": "docs/evidence/non-human-principal-pins-2026-11-03/mutate_non_human_principal.py",
-        "lines": [
-          112
-        ],
-        "sha256": "6d7ab39a9ac1ceeb74e66a2031848b3269e3194e5c7f36aed8a3868d3da20f92"
-      },
-      {
-        "path": "docs/evidence/object-iso-helpers-review-2026-10-28/r1/dossier.diff",
-        "lines": [
-          180
-        ],
-        "sha256": "f93515f4d6a41d8be21f059da7be4c461908fd82537e4c89ef6daa2d5539eeb6"
-      },
-      {
-        "path": "docs/evidence/polaris-generator-rfc7-coverage-2026-09-12.json",
-        "lines": [
-          4870,
-          4958
-        ],
-        "sha256": "1b3d1fee14aad9f4377715b553442326f28da787fc06727f4b4c53236d6cfd71"
-      },
-      {
-        "path": "docs/evidence/polaris-generator-rfc7-coverage-v2-2026-09-12.json",
-        "lines": [
-          6371,
-          6480
-        ],
-        "sha256": "cd82ee82556b1cb8085da616890c02d445111d315bc7e8a03d3e0be2f9ef922a"
-      },
-      {
-        "path": "docs/evidence/polaris-generator-rfc7-coverage-v3-2026-09-12.json",
-        "lines": [
-          6618,
-          6730
-        ],
-        "sha256": "78fc3c9e5513824089abfe7cd18ee461c892658cbf53a719b69adb71b9ca8301"
-      },
-      {
-        "path": "docs/evidence/polaris-generator-rfc7-coverage-v4-2026-09-12.json",
-        "lines": [
-          6699,
-          6811
-        ],
-        "sha256": "697bd83ed17c952b4890302e8d4654125a198a8199c67944b665019b8765fb69"
-      },
-      {
-        "path": "docs/evidence/polaris-generator-rfc7-coverage-v5-2026-09-12.json",
-        "lines": [
-          6699,
-          6811
-        ],
-        "sha256": "88cc5a9bee299cfaa7b332e672e7b050e84c72853bacaf003dae94a0b001707c"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-2026-10-23/assemble_census.py",
-        "lines": [
-          885
-        ],
-        "sha256": "aed1a2e07aa14d10ef00eceaeeefbe45cf7804889b1dddbf0c0be5dc626658d0"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-2026-10-23/census-2026-10-24.json",
-        "lines": [
-          6750
-        ],
-        "sha256": "8bb12c8a5adb7522ba15293b9df16fc3ea4e39cbb2928661e386c974904f3002"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-m1.json",
-        "lines": [
-          6488
-        ],
-        "sha256": "e2e7787c2b5b88d1a8ff39cdcb59cad5b0c16c0e8cfe5d2abc4a5f6777b3ab42"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-m3.json",
-        "lines": [
-          6488
-        ],
-        "sha256": "c812be7e15c4839c627603fe3d3a6a4100e01bd2bfcebfff0dce08e6a353a7f1"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-rerun.json",
-        "lines": [
-          6488
-        ],
-        "sha256": "ca3d308e2bdf7159ca38b94b7d2049d1918c4d75d27a2cf08042fd8fbbf67533"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/census-rerun.json",
-        "lines": [
-          6574
-        ],
-        "sha256": "b1e0099f80cbc950e7eff1a6f9c64d30c6bb128ca1efce76e849d50138d36a22"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/guards-verbatim.out",
-        "lines": [
-          14
-        ],
-        "sha256": "f722a525f1c67246f057283317e1460da2e780041c72a32f4c6c9a4b67fc2d1d"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/pr-body.txt",
-        "lines": [
-          44
-        ],
-        "sha256": "f2e0edda085d98b536ec8fdfc503930b4dc96b633c61914b7a1c5bec89c1599d"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-3/census-rerun.json",
-        "lines": [
-          6750
-        ],
-        "sha256": "8bb12c8a5adb7522ba15293b9df16fc3ea4e39cbb2928661e386c974904f3002"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-3/pr-body.txt",
-        "lines": [
-          53
-        ],
-        "sha256": "956d64d920fe7bcfda772474e1fd3ec79e87b9e7daf1c64c9cf34e6c69926ed5"
-      },
-      {
-        "path": "docs/evidence/syzygy-bpyt-49/record.py",
-        "lines": [
-          138
-        ],
-        "sha256": "fe1b8c236c22cf6dc756fe76de17d0087b708fdca3d270968cf1a5e02758a19e"
-      },
-      {
-        "path": "docs/evidence/syzygy-bpyt-49/site-drop.json",
-        "lines": [
-          55
-        ],
-        "sha256": "6ad7173b2593531dccc5b24b0dbbf05ef2049c556f2a6f75a3b197440dd08cc1"
-      },
-      {
-        "path": "docs/evidence/syzygy-bpyt-6-14/tools/residuals.py",
-        "lines": [
-          12
-        ],
-        "sha256": "0c7ad076ada88542680ded562fab3ed5aa1626c4d4c0b330901e4c1168d7f984"
-      },
-      {
-        "path": "docs/evidence/syzygy-bpyt-6-3/dc3-support-module-differential-2026-10-25.json",
-        "lines": [
-          1079
-        ],
-        "sha256": "12912c4591500bb16c0eecf0ee1bb4427d74838a59791b1886739d270a48c0a6"
-      },
-      {
-        "path": "docs/evidence/syzygy-nyir/measurement.json",
-        "lines": [
-          185
-        ],
-        "sha256": "f95c3b2c1047e31dd28c5eef8f64ec1c464cd178b84c77b872d08faee9f932d0"
-      },
-      {
-        "path": "docs/pursuits/2026-09-22-vision-pursuit-data.json",
-        "lines": [
-          7160
-        ],
-        "sha256": "16d28e385a8c365cc0d20e7569cda807b4b1aa7e8c19919eadd9adc3dcfca989"
-      },
-      {
-        "path": "docs/pursuits/2026-09-22-vision-pursuit-harvest.json",
-        "lines": [
-          6455
-        ],
-        "sha256": "79268ec6191edba38a0fc9dff3638adb8ca3a5a1d7fab7c5d89e00cbec06951d"
-      },
-      {
-        "path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md",
-        "lines": [
-          172,
-          175,
-          179
-        ],
-        "sha256": "3f36de2f5b9f23362b89417d92a417b366f21bedbf1008b664385c8857f70ccd"
-      },
-      {
-        "path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-ffc2-1-RAW.md",
-        "lines": [
-          36
-        ],
-        "sha256": "f32376410c1843abed94744a1a03210f2436af77e87e90499a61a51ebc87a1d0"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-QUOTED-PATHS-2-RAW.md",
-        "lines": [
-          35
-        ],
-        "sha256": "74aa38c3bfadff19a1cb31b80cd17e5751574cf3f706b94ffd2ba036a1fc5f96"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-FIXTURE-PID-SWEEP-3-RAW.md",
-        "lines": [
-          140
-        ],
-        "sha256": "ce2ec214240c71c4b8d64aed4f9af93ebce426eddb2f9c2c4defd0f0a090b449"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-GUARD-PINS-NOTES-1-RAW.md",
-        "lines": [
-          177,
-          550
-        ],
-        "sha256": "e7fbde38d0f23c4adc788e60ef6756734b2544d17001ee0a3760a8f99db08546"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-GUARD-PINS-NOTES-2-RAW.md",
-        "lines": [
-          17
-        ],
-        "sha256": "58610fe6644c0f24c284679ca5a713582f0f7dc7d99fec39c5fc54d5cb00e6b9"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-SCRATCH-PREFIX-CENSUS-1-RAW.md",
-        "lines": [
-          227
-        ],
-        "sha256": "851f18003dd67916843ab7fc5217140922c8eeeca292314d989eee9bdc8d77d3"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-SOURCE-RESOLUTION-3-RAW.md",
-        "lines": [
-          107
-        ],
-        "sha256": "f3eb9974ed5ee2cfdd00664be7477ebc1681fb46c5e5e1989c4a1d8671057e46"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md",
-        "lines": [
-          395
-        ],
-        "sha256": "215723bc3f6c26277a38722e293d3861491772f3027c0cf5c4ae6bf66da89fcb"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-GUARDS-1-RAW.md",
-        "lines": [
-          276,
-          385,
-          397
-        ],
-        "sha256": "bf317e35fd05a21b6c1b9a22911f22fdcd0545c9a2b61187a31bcfa16b4d98c4"
-      },
-      {
-        "path": "docs/reviews/R-POC-CYCLE-3-REVIEW.md",
-        "lines": [
-          173
-        ],
-        "sha256": "3d957ce244b0499ed41344a05abee2238b22f128bb845e2958a2a5a386dd3345"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-M4-OWNER-LOOP-FUNNEL-RAW.md",
-        "lines": [
-          540
-        ],
-        "sha256": "6983034196c706c213e2a939e0ca7dfe4c3f75f958378403fbd115112c2966ec"
-      },
-      {
-        "path": "docs/reviews/R-PWB-MACHINE-VIEW-DELTA-CONFIRMATION-2-RAW.md",
-        "lines": [
-          122
-        ],
-        "sha256": "dfdfff42db81b9b476582745fe0a412ef19b879ee70e504a9839dd47f6b76f31"
-      },
-      {
-        "path": "docs/reviews/R-PWB-MACHINE-VIEW-DELTA-CONFIRMATION-3-RAW.md",
-        "lines": [
-          231
-        ],
-        "sha256": "50762003b9a30265e82037a32e18f47bd1dcbb6d9accecfe25d543a722e4ad80"
-      },
-      {
-        "path": "docs/reviews/V-GP-B2-2-RAW.md",
-        "lines": [
-          148
-        ],
-        "sha256": "8e15819a3b797c3e84f3d2cc4878256a0eed813b4145c5443ad7467981f4eb59"
-      },
-      {
-        "path": "docs/reviews/VET-GP-FOLLOWUPS-2-RAW.md",
-        "lines": [
-          240
-        ],
-        "sha256": "91a9683c0b45d3aa45694ab2445867e0ce3c085324a98c3e7571796050849203"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-local-agent-mode/design.md",
-        "lines": [
-          402
-        ],
-        "sha256": "d752d8f155a4837ecf4326690325f5f73ce91de49757c27e8bb5f0f72bdbafd0"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
-        "lines": [
-          247,
-          335
-        ],
-        "sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3"
-      },
-      {
-        "path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md",
-        "lines": [
-          1655
-        ],
-        "sha256": "65b66c913cd2650881a9df8cb34a3c63b3f518041e83f45d2451980d9f1d0448"
-      },
-      {
-        "path": "packages/polaris-dossier/src/check-derive.ts",
-        "lines": [
-          314
-        ],
-        "sha256": "073de17b4af091ae9f9eb7774c3f4ff5e76fdc258aeefd66d39a40f0ee846aca"
-      },
-      {
-        "path": "packages/polaris-dossier/src/execution-rule.ts",
-        "lines": [
-          139
-        ],
-        "sha256": "5a9163a936cd34256053e06c587a41a6ff211183f8ac702da49d64182ef30b08"
-      },
-      {
-        "path": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
-        "lines": [
-          153
-        ],
-        "sha256": "a3b72034358d446a93c53a0fba19cc2214a91eab31d5a423aa73d5b55fe6273c"
-      },
-      {
-        "path": "packages/three-surface-poc-core/src/code-structure.ts",
-        "lines": [
-          67
-        ],
-        "sha256": "ed623b7076f232447c7073e0595bc080a66c4ed7fda38313b552f75b3233a43c"
-      },
-      {
-        "path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts",
-        "lines": [
-          819
-        ],
-        "sha256": "9c94dca387d1afe6c3b83ca4187b917f5156b17b4b7e416c7cd80597eef7b5dd"
-      },
-      {
-        "path": "scripts/build_three_surface_poc_block_provenance_amendment.py",
-        "lines": [
-          7
-        ],
-        "sha256": "be19c80493dd80c7da01d7825f3fbd5b6b9f4b5cd11d5d12854526ea27f3fd49"
-      },
-      {
-        "path": "scripts/check_governance.py",
-        "lines": [
-          130,
-          7834,
-          11267
-        ],
-        "sha256": "f41043d7416050a875db82fe1b1ab06ae8ad6d299a24b4281898cea598a5afee"
-      },
-      {
-        "path": "scripts/record_versioned_signoff.py",
-        "lines": [
-          3159
-        ],
-        "sha256": "487f4ca24b515686222f395671fb183d93cf08b978d4bf47475169cbd64668f1"
-      }
+      {"path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md", "lines": [92, 96, 97], "sha256": "bf256d224d3453a49377de6615bd3bb1d85da73720c391b136bd5edfd4a732c9"},
+      {"path": ".syzygy/governance/contracts/candidates/REDIS-LOCAL-AGENT-SITTING-BRIEF.md", "lines": [274], "sha256": "75b703d49c5f83a777ac940de2c9f1e1b279488bf130ec0290ea81adec330f4b"},
+      {"path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/ROUND-1-DISPOSITIONS.md", "lines": [23], "sha256": "d020c42b02fe4f53022d66fc9dd7ed27f43241ac00512e46ef8987080d10c887"},
+      {"path": ".syzygy/governance/contracts/candidates/history/RFC-0007-history.md", "lines": [57], "sha256": "c328b6157dc8d3cd8d04b0c9b572b12e180c323a3f924b34ab834a35b17f7b02"},
+      {"path": ".syzygy/governance/contracts/candidates/history/rev9-rfcs/RFC-0007-polaris-intent-surface.md", "lines": [180], "sha256": "2b94c3b77ba98e9c0503278eb4f0a9cc1360bb9c5d4cfd1604650e62f48b0d11"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/OWNER-DECISION-PACKET.md", "lines": [31], "sha256": "402fa9b910b71ba29d1f5edd83899a0815e1d7de4b6bc37a9f3d14367f7d9e4f"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-1-DISPOSITIONS.md", "lines": [13], "sha256": "71e60706fa904628b00a742b026cfb16c0b0f80d55ce71186eb69c70a993f4ea"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md", "lines": [165], "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/design.md.patch", "lines": [35], "sha256": "7068535eced94a4b035e6efdba354ed0a92f0469265e95414421c711d7cb38c2"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/spec.md.patch", "lines": [17, 60], "sha256": "92d7eca908b88e6bbc7627a92ee127c6334ec95d2e8a73c853e93feee0101e13"},
+      {"path": ".syzygy/governance/contracts/candidates/policy-candidates/TERM-REGISTRY.md", "lines": [108, 112, 142, 394, 1693], "sha256": "4ab5e5b68406c55df8168f76c3e77bd6966c847e4ec01d503174196adc3767c5"},
+      {"path": ".syzygy/governance/contracts/candidates/public-egress-v2/instances/egress-anthropic/EGRESS-CONSENT-ANTHROPIC.md", "lines": [144], "sha256": "2a97b98f0e707b39ee06bdc8f9e0d1f8cd351bddd2a09312c9c4a7302b2bbf3e"},
+      {"path": ".syzygy/governance/contracts/candidates/public-egress-v2/reviews/R-EGRESS-V2-1-RAW.md", "lines": [69, 87], "sha256": "a0ed3b26844ddfede556a65acfa3f7e6ade117dd585f6b090a9b115cbc1b13b0"},
+      {"path": ".syzygy/governance/contracts/candidates/public-egress-v2/reviews/R-EGRESS-V2-2-RAW.md", "lines": [27, 61], "sha256": "c8245e6e93f1e914784a56aabfc44ea9e93a326ad0ab77daac488d70bcc2020d"},
+      {"path": ".syzygy/governance/contracts/candidates/public-egress-v2/templates/EGRESS-CONSENT-TEMPLATE-V2.md", "lines": [98], "sha256": "788412eea6ced6de3664e5e942469dc9f1c820d7c75dbbc2e7148a7d0cba94d3"},
+      {"path": ".syzygy/governance/contracts/candidates/pwb-m2-slice5-implementation-continuation/OWNER-DECISION-PACKET.md", "lines": [658], "sha256": "1449eadca4f5eca3b6dd731de4f01c0d373193d83a77446e5ea72389ad013c97"},
+      {"path": ".syzygy/governance/contracts/candidates/pwb-machine-view-amendment/OWNER-DECISION-PACKET.md", "lines": [187], "sha256": "622a9e262519afbbd25e0821f80f4277f7211f80e6ee6c91d470233f1223c30b"},
+      {"path": ".syzygy/governance/contracts/candidates/pwb-opening-band-scenario/ROUND-11-DISPOSITIONS.md", "lines": [41], "sha256": "0cc80226fb28bc49e836dff03d9bdb4c73884be2c8d7ae0a123f2c43e4221fea"},
+      {"path": ".syzygy/governance/contracts/candidates/rfcs/RFC-0007/rendering-and-surface.md", "lines": [435], "sha256": "d4ab9646269e4f22274f46ecc9687ac321572372d62a0f30a96a66e306edb9fa"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08/TERM-MIGRATION-REPORT.md", "lines": [547], "sha256": "67b63d32828f77ad41680001a1005776c851486f4ad3b892a77943a57c4bc3b1"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08/reviews/RB-2-vision-doctrine-RAW.md", "lines": [247], "sha256": "f06f9b736563b4680bd9c381c94fc7181e5b947bc9b57ca0800e51fe0fc0f7c5"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08c/FINAL-EXACT-MANIFEST-REVIEW.md", "lines": [156], "sha256": "fb39f3809e4d289be518611a0b833d932b636ab01062e4be03d7854f49ceeb89"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08c/HUMAN-CLARITY-CLOSURE-REPORT.md", "lines": [143], "sha256": "70350b247548d852776866b12c8848d5d0fc9ec80f8361a720f155dbf14131d4"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08c/OWNER-DECISION-PACKETS.md", "lines": [196], "sha256": "9b3c78c46415f41dfbf91ffb7e66e0441da985a8db79a1e24d2082074ee9fb61"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08c/PUBLIC-VOCABULARY-COMPREHENSION-REPORT.md", "lines": [83, 185], "sha256": "83b9236a52cb738c7e11238c9bf1f82685fdc072bbc947b7a0bb3bbd817d03e1"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08c/TERM-REGISTRY-SEMANTIC-DELTA.md", "lines": [136, 261], "sha256": "18b40186fceaf618a9555dda7d2749d7023e875b5ea56322def507ebdeab591d"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-1b-mission-safety-confirming-RAW.md", "lines": [851], "sha256": "7560e3ba4f2997db1c19654c417884130b5eca5f212cca267698d3be7cd8bc71"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-2-human-clarity-RAW.md", "lines": [735], "sha256": "34466be571335c81facc9b4fc92ab5f0d210b74e3b0f03ba9aa753aff3b09722"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08c/reviews/RD-3-vocabulary-RAW.md", "lines": [145, 243, 645, 647], "sha256": "248a0212aff214b05fcb3407dd1518e10b95662d5853cb5918cf40d364819beb"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08d/reviews/LAUNCH-GATE-ADMINISTRATION-2026-08-09-RAW.md", "lines": [69], "sha256": "23167ec9be1d614fb133c9edaa81412eae5b11ba265b01a97e421eef61c62ff8"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08d/reviews/RD-10-human-view-RAW.md", "lines": [209], "sha256": "2e5a9e4412214ecfa957bd03e18f6389d062db2c0a609ea8a966eaf5da5c14b9"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08d/reviews/RD-16-vocabulary-RAW.md", "lines": [112, 187, 193, 197], "sha256": "ce29a10b1caf485207f34e160811182524b5a32b043865639af5345edb1366e9"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08d/reviews/RD-17-validation-RAW.md", "lines": [286], "sha256": "0c0d0756b78d602c5e56c9112bcd67d2a44f293d2322dbc0ee57a4492ada89f8"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08e/VALIDATOR-AUTHORITY-INVENTORY.md", "lines": [33], "sha256": "4ebc6edf7a761b1d047e54b57ab989860564a08e4e170bbadcea58cd02cf7f23"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08g/reviews/RD-60-capability-1-outline-exercise-RAW.md", "lines": [94], "sha256": "fb9be462b1e78b80ea929af116db9e580953dfd689aac4fc6e3489503634ba94"},
+      {"path": ".syzygy/governance/contracts/candidates/three-surface-poc-block-provenance-amendment/SEMANTIC-DELTA.md", "lines": [163, 168], "sha256": "835a3236fc7a2e4df5c690032cad474278192cfae284950021fa921852d8dab6"},
+      {"path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/IMPACT-SWEEP.json", "lines": [3159, 3160, 3202, 3212, 3242, 4021], "sha256": "3a63fa30119d009965e40e48d18b7cadeb9baa24622f2bd7188c9bb38c0fc9ed"},
+      {"path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/REQUIREMENT-CONSUMPTION.json", "lines": [2895, 2896, 2932, 2942, 2967, 3666], "sha256": "535de5057966801c5e8cc7e1f3258d033b387054d14a920a78b453ff04698b06"},
+      {"path": ".syzygy/governance/contracts/rfcs/RFC-0007/rendering-and-surface.md", "lines": [435], "sha256": "d4ab9646269e4f22274f46ecc9687ac321572372d62a0f30a96a66e306edb9fa"},
+      {"path": ".syzygy/governance/decisions/DECISION-HISTORY.md", "lines": [354], "sha256": "c68af626365baeff17efa3e880808d46c23eb7c8b97b6961e4ea66c19352c91d"},
+      {"path": ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md", "lines": [46], "sha256": "96928fbd20bf8f89b90c6b5fc62b441c0112eac3cc4367015854c70290aed08d"},
+      {"path": ".syzygy/governance/decisions/POLARIS-RETAINED-EVALUATIONS-RETENTION-POSTURE-DECISION-PACKET.md", "lines": [596], "sha256": "0000bd5067caf293de2f0769ac1a60dbf3d212dc6547af377aac1629e550f4f0"},
+      {"path": ".syzygy/governance/decisions/TERM-REGISTRY-DRAFTING-VOCABULARY-DECISION.md", "lines": [18], "sha256": "e544809f61e7e8d1e63e7e46c62633f42e76166f888fa91a10d00a5e4fdc2a1b"},
+      {"path": "apps/three-surface-poc/src/sync-child-process-guard.test.ts", "lines": [32], "sha256": "f2e61965aae0bffd05bb4d16c3767b0666bac33bf5a631394aa3ab8b7df1b63c"},
+      {"path": "docs/evidence/non-human-principal-pins-2026-10-22/mutate_non_human_principal.py", "lines": [102], "sha256": "b9b1e0aa7d47abe2bc2dc957d0a258b3aa50ad027250bd5ddd92e409a3e3923e"},
+      {"path": "docs/evidence/non-human-principal-pins-2026-11-03/mutate_non_human_principal.py", "lines": [112], "sha256": "6d7ab39a9ac1ceeb74e66a2031848b3269e3194e5c7f36aed8a3868d3da20f92"},
+      {"path": "docs/evidence/object-iso-helpers-review-2026-10-28/r1/dossier.diff", "lines": [180], "sha256": "f93515f4d6a41d8be21f059da7be4c461908fd82537e4c89ef6daa2d5539eeb6"},
+      {"path": "docs/evidence/polaris-generator-rfc7-coverage-2026-09-12.json", "lines": [4870, 4958], "sha256": "1b3d1fee14aad9f4377715b553442326f28da787fc06727f4b4c53236d6cfd71"},
+      {"path": "docs/evidence/polaris-generator-rfc7-coverage-v2-2026-09-12.json", "lines": [6371, 6480], "sha256": "cd82ee82556b1cb8085da616890c02d445111d315bc7e8a03d3e0be2f9ef922a"},
+      {"path": "docs/evidence/polaris-generator-rfc7-coverage-v3-2026-09-12.json", "lines": [6618, 6730], "sha256": "78fc3c9e5513824089abfe7cd18ee461c892658cbf53a719b69adb71b9ca8301"},
+      {"path": "docs/evidence/polaris-generator-rfc7-coverage-v4-2026-09-12.json", "lines": [6699, 6811], "sha256": "697bd83ed17c952b4890302e8d4654125a198a8199c67944b665019b8765fb69"},
+      {"path": "docs/evidence/polaris-generator-rfc7-coverage-v5-2026-09-12.json", "lines": [6699, 6811], "sha256": "88cc5a9bee299cfaa7b332e672e7b050e84c72853bacaf003dae94a0b001707c"},
+      {"path": "docs/evidence/scratch-prefix-census-2026-10-23/assemble_census.py", "lines": [885], "sha256": "aed1a2e07aa14d10ef00eceaeeefbe45cf7804889b1dddbf0c0be5dc626658d0"},
+      {"path": "docs/evidence/scratch-prefix-census-2026-10-23/census-2026-10-24.json", "lines": [6750], "sha256": "8bb12c8a5adb7522ba15293b9df16fc3ea4e39cbb2928661e386c974904f3002"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-m1.json", "lines": [6488], "sha256": "e2e7787c2b5b88d1a8ff39cdcb59cad5b0c16c0e8cfe5d2abc4a5f6777b3ab42"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-m3.json", "lines": [6488], "sha256": "c812be7e15c4839c627603fe3d3a6a4100e01bd2bfcebfff0dce08e6a353a7f1"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-rerun.json", "lines": [6488], "sha256": "ca3d308e2bdf7159ca38b94b7d2049d1918c4d75d27a2cf08042fd8fbbf67533"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/census-rerun.json", "lines": [6574], "sha256": "b1e0099f80cbc950e7eff1a6f9c64d30c6bb128ca1efce76e849d50138d36a22"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/guards-verbatim.out", "lines": [14], "sha256": "f722a525f1c67246f057283317e1460da2e780041c72a32f4c6c9a4b67fc2d1d"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/pr-body.txt", "lines": [44], "sha256": "f2e0edda085d98b536ec8fdfc503930b4dc96b633c61914b7a1c5bec89c1599d"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-3/census-rerun.json", "lines": [6750], "sha256": "8bb12c8a5adb7522ba15293b9df16fc3ea4e39cbb2928661e386c974904f3002"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-3/pr-body.txt", "lines": [53], "sha256": "956d64d920fe7bcfda772474e1fd3ec79e87b9e7daf1c64c9cf34e6c69926ed5"},
+      {"path": "docs/evidence/syzygy-bpyt-49/record.py", "lines": [138], "sha256": "fe1b8c236c22cf6dc756fe76de17d0087b708fdca3d270968cf1a5e02758a19e"},
+      {"path": "docs/evidence/syzygy-bpyt-49/site-drop.json", "lines": [55], "sha256": "6ad7173b2593531dccc5b24b0dbbf05ef2049c556f2a6f75a3b197440dd08cc1"},
+      {"path": "docs/evidence/syzygy-bpyt-6-14/tools/residuals.py", "lines": [12], "sha256": "0c7ad076ada88542680ded562fab3ed5aa1626c4d4c0b330901e4c1168d7f984"},
+      {"path": "docs/evidence/syzygy-bpyt-6-3/dc3-support-module-differential-2026-10-25.json", "lines": [1079], "sha256": "12912c4591500bb16c0eecf0ee1bb4427d74838a59791b1886739d270a48c0a6"},
+      {"path": "docs/evidence/syzygy-nyir/measurement.json", "lines": [185], "sha256": "f95c3b2c1047e31dd28c5eef8f64ec1c464cd178b84c77b872d08faee9f932d0"},
+      {"path": "docs/pursuits/2026-09-22-vision-pursuit-data.json", "lines": [7160], "sha256": "16d28e385a8c365cc0d20e7569cda807b4b1aa7e8c19919eadd9adc3dcfca989"},
+      {"path": "docs/pursuits/2026-09-22-vision-pursuit-harvest.json", "lines": [6455], "sha256": "79268ec6191edba38a0fc9dff3638adb8ca3a5a1d7fab7c5d89e00cbec06951d"},
+      {"path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md", "lines": [172, 175, 179], "sha256": "3f36de2f5b9f23362b89417d92a417b366f21bedbf1008b664385c8857f70ccd"},
+      {"path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-ffc2-1-RAW.md", "lines": [36], "sha256": "f32376410c1843abed94744a1a03210f2436af77e87e90499a61a51ebc87a1d0"},
+      {"path": "docs/reviews/R-GP-IMPL-CODE-STRUCTURE-QUOTED-PATHS-2-RAW.md", "lines": [35], "sha256": "74aa38c3bfadff19a1cb31b80cd17e5751574cf3f706b94ffd2ba036a1fc5f96"},
+      {"path": "docs/reviews/R-GP-IMPL-FIXTURE-PID-SWEEP-3-RAW.md", "lines": [140], "sha256": "ce2ec214240c71c4b8d64aed4f9af93ebce426eddb2f9c2c4defd0f0a090b449"},
+      {"path": "docs/reviews/R-GP-IMPL-GUARD-PINS-NOTES-1-RAW.md", "lines": [177, 550], "sha256": "e7fbde38d0f23c4adc788e60ef6756734b2544d17001ee0a3760a8f99db08546"},
+      {"path": "docs/reviews/R-GP-IMPL-GUARD-PINS-NOTES-2-RAW.md", "lines": [17], "sha256": "58610fe6644c0f24c284679ca5a713582f0f7dc7d99fec39c5fc54d5cb00e6b9"},
+      {"path": "docs/reviews/R-GP-IMPL-SCRATCH-PREFIX-CENSUS-1-RAW.md", "lines": [227], "sha256": "851f18003dd67916843ab7fc5217140922c8eeeca292314d989eee9bdc8d77d3"},
+      {"path": "docs/reviews/R-GP-IMPL-SOURCE-RESOLUTION-3-RAW.md", "lines": [107], "sha256": "f3eb9974ed5ee2cfdd00664be7477ebc1681fb46c5e5e1989c4a1d8671057e46"},
+      {"path": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-1-RAW.md", "lines": [395], "sha256": "215723bc3f6c26277a38722e293d3861491772f3027c0cf5c4ae6bf66da89fcb"},
+      {"path": "docs/reviews/R-GP-IMPL-SUPPORT-LEAF-GUARDS-1-RAW.md", "lines": [276, 385, 397], "sha256": "bf317e35fd05a21b6c1b9a22911f22fdcd0545c9a2b61187a31bcfa16b4d98c4"},
+      {"path": "docs/reviews/R-POC-CYCLE-3-REVIEW.md", "lines": [173], "sha256": "3d957ce244b0499ed41344a05abee2238b22f128bb845e2958a2a5a386dd3345"},
+      {"path": "docs/reviews/R-POLARIS-M4-OWNER-LOOP-FUNNEL-RAW.md", "lines": [540], "sha256": "6983034196c706c213e2a939e0ca7dfe4c3f75f958378403fbd115112c2966ec"},
+      {"path": "docs/reviews/R-PWB-MACHINE-VIEW-DELTA-CONFIRMATION-2-RAW.md", "lines": [122], "sha256": "dfdfff42db81b9b476582745fe0a412ef19b879ee70e504a9839dd47f6b76f31"},
+      {"path": "docs/reviews/R-PWB-MACHINE-VIEW-DELTA-CONFIRMATION-3-RAW.md", "lines": [231], "sha256": "50762003b9a30265e82037a32e18f47bd1dcbb6d9accecfe25d543a722e4ad80"},
+      {"path": "docs/reviews/V-GP-B2-2-RAW.md", "lines": [148], "sha256": "8e15819a3b797c3e84f3d2cc4878256a0eed813b4145c5443ad7467981f4eb59"},
+      {"path": "docs/reviews/VET-GP-FOLLOWUPS-2-RAW.md", "lines": [240], "sha256": "91a9683c0b45d3aa45694ab2445867e0ce3c085324a98c3e7571796050849203"},
+      {"path": "openspec/changes/polaris-dossier-local-agent-mode/design.md", "lines": [402], "sha256": "d752d8f155a4837ecf4326690325f5f73ce91de49757c27e8bb5f0f72bdbafd0"},
+      {"path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md", "lines": [247, 335], "sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3"},
+      {"path": "openspec/changes/project-registration-and-honest-shape-visibility/specs/project-registration-and-honest-shape-visibility/spec.md", "lines": [1655], "sha256": "65b66c913cd2650881a9df8cb34a3c63b3f518041e83f45d2451980d9f1d0448"},
+      {"path": "packages/polaris-dossier/src/check-derive.ts", "lines": [314], "sha256": "073de17b4af091ae9f9eb7774c3f4ff5e76fdc258aeefd66d39a40f0ee846aca"},
+      {"path": "packages/polaris-dossier/src/execution-rule.ts", "lines": [139], "sha256": "5a9163a936cd34256053e06c587a41a6ff211183f8ac702da49d64182ef30b08"},
+      {"path": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts", "lines": [153], "sha256": "a3b72034358d446a93c53a0fba19cc2214a91eab31d5a423aa73d5b55fe6273c"},
+      {"path": "packages/three-surface-poc-core/src/code-structure.ts", "lines": [67], "sha256": "ed623b7076f232447c7073e0595bc080a66c4ed7fda38313b552f75b3233a43c"},
+      {"path": "packages/three-surface-poc-core/src/project-shape-observation.test.ts", "lines": [819], "sha256": "9c94dca387d1afe6c3b83ca4187b917f5156b17b4b7e416c7cd80597eef7b5dd"},
+      {"path": "scripts/build_three_surface_poc_block_provenance_amendment.py", "lines": [7], "sha256": "be19c80493dd80c7da01d7825f3fbd5b6b9f4b5cd11d5d12854526ea27f3fd49"},
+      {"path": "scripts/check_governance.py", "lines": [130, 7834, 11267], "sha256": "f41043d7416050a875db82fe1b1ab06ae8ad6d299a24b4281898cea598a5afee"},
+      {"path": "scripts/record_versioned_signoff.py", "lines": [3159], "sha256": "487f4ca24b515686222f395671fb183d93cf08b978d4bf47475169cbd64668f1"}
     ],
     "length_unit": [
-      {
-        "path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md",
-        "lines": [
-          78
-        ],
-        "sha256": "bf256d224d3453a49377de6615bd3bb1d85da73720c391b136bd5edfd4a732c9"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/OWNER-DECISION-PACKET.md",
-        "lines": [
-          35
-        ],
-        "sha256": "402fa9b910b71ba29d1f5edd83899a0815e1d7de4b6bc37a9f3d14367f7d9e4f"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md",
-        "lines": [
-          110,
-          114,
-          174
-        ],
-        "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/design.md.patch",
-        "lines": [
-          44
-        ],
-        "sha256": "7068535eced94a4b035e6efdba354ed0a92f0469265e95414421c711d7cb38c2"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/spec.md.patch",
-        "lines": [
-          17,
-          34,
-          72
-        ],
-        "sha256": "92d7eca908b88e6bbc7627a92ee127c6334ec95d2e8a73c853e93feee0101e13"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/round-2026-08e/reviews/RD-38-instrument-v110-RAW.md",
-        "lines": [
-          163
-        ],
-        "sha256": "29b102000d2936a4d46345b3ac4f0429a1ea31043d91151f26a909bb52e99a3c"
-      },
-      {
-        "path": "docs/design/POLARIS-M4-OWNER-LOOP-FUNNEL.md",
-        "lines": [
-          172
-        ],
-        "sha256": "7c6b848c2e85c6d7f9e0fe9ee7d4c05fca045ffd395978b699c6cd96da071e50"
-      },
-      {
-        "path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md",
-        "lines": [
-          139
-        ],
-        "sha256": "3f36de2f5b9f23362b89417d92a417b366f21bedbf1008b664385c8857f70ccd"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-POC-ENTRY-REOBSERVE-1-RAW.md",
-        "lines": [
-          68
-        ],
-        "sha256": "1312bdc985f2de247b52924ed71a93cc0ebef0b422cbc268fc1f3ef46798dbd4"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-M4-OWNER-LOOP-FUNNEL-3-RAW.md",
-        "lines": [
-          375
-        ],
-        "sha256": "ebce963f86f302940cc78f98dbe91325ae5c7b0ffa88e423b1fe05669035ccfe"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-local-agent-mode/design.md",
-        "lines": [
-          411
-        ],
-        "sha256": "d752d8f155a4837ecf4326690325f5f73ce91de49757c27e8bb5f0f72bdbafd0"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
-        "lines": [
-          247,
-          309,
-          343
-        ],
-        "sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3"
-      }
+      {"path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md", "lines": [78], "sha256": "bf256d224d3453a49377de6615bd3bb1d85da73720c391b136bd5edfd4a732c9"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/OWNER-DECISION-PACKET.md", "lines": [35], "sha256": "402fa9b910b71ba29d1f5edd83899a0815e1d7de4b6bc37a9f3d14367f7d9e4f"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md", "lines": [110, 114, 174], "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/design.md.patch", "lines": [44], "sha256": "7068535eced94a4b035e6efdba354ed0a92f0469265e95414421c711d7cb38c2"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/spec.md.patch", "lines": [17, 34, 72], "sha256": "92d7eca908b88e6bbc7627a92ee127c6334ec95d2e8a73c853e93feee0101e13"},
+      {"path": ".syzygy/governance/contracts/candidates/round-2026-08e/reviews/RD-38-instrument-v110-RAW.md", "lines": [163], "sha256": "29b102000d2936a4d46345b3ac4f0429a1ea31043d91151f26a909bb52e99a3c"},
+      {"path": "docs/design/POLARIS-M4-OWNER-LOOP-FUNNEL.md", "lines": [172], "sha256": "7c6b848c2e85c6d7f9e0fe9ee7d4c05fca045ffd395978b699c6cd96da071e50"},
+      {"path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md", "lines": [139], "sha256": "3f36de2f5b9f23362b89417d92a417b366f21bedbf1008b664385c8857f70ccd"},
+      {"path": "docs/reviews/R-GP-IMPL-POC-ENTRY-REOBSERVE-1-RAW.md", "lines": [68], "sha256": "1312bdc985f2de247b52924ed71a93cc0ebef0b422cbc268fc1f3ef46798dbd4"},
+      {"path": "docs/reviews/R-POLARIS-M4-OWNER-LOOP-FUNNEL-3-RAW.md", "lines": [375], "sha256": "ebce963f86f302940cc78f98dbe91325ae5c7b0ffa88e423b1fe05669035ccfe"},
+      {"path": "openspec/changes/polaris-dossier-local-agent-mode/design.md", "lines": [411], "sha256": "d752d8f155a4837ecf4326690325f5f73ce91de49757c27e8bb5f0f72bdbafd0"},
+      {"path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md", "lines": [247, 309, 343], "sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3"}
     ],
     "range_scenario": [
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-1-DISPOSITIONS.md",
-        "lines": [
-          19
-        ],
-        "sha256": "71e60706fa904628b00a742b026cfb16c0b0f80d55ce71186eb69c70a993f4ea"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md",
-        "lines": [
-          146
-        ],
-        "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/spec.md.patch",
-        "lines": [
-          44
-        ],
-        "sha256": "92d7eca908b88e6bbc7627a92ee127c6334ec95d2e8a73c853e93feee0101e13"
-      },
-      {
-        "path": "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
-        "lines": [
-          1007
-        ],
-        "sha256": "638b9786239a069a9d6583683142a8e28f16b1b3846e250eee830e0c1964d74a"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
-        "lines": [
-          319
-        ],
-        "sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3"
-      }
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-1-DISPOSITIONS.md", "lines": [19], "sha256": "71e60706fa904628b00a742b026cfb16c0b0f80d55ce71186eb69c70a993f4ea"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md", "lines": [146], "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/spec.md.patch", "lines": [44], "sha256": "92d7eca908b88e6bbc7627a92ee127c6334ec95d2e8a73c853e93feee0101e13"},
+      {"path": "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json", "lines": [1007], "sha256": "638b9786239a069a9d6583683142a8e28f16b1b3846e250eee830e0c1964d74a"},
+      {"path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md", "lines": [319], "sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3"}
     ],
     "draft_schemas": [
-      {
-        "path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md",
-        "lines": [
-          101
-        ],
-        "sha256": "bf256d224d3453a49377de6615bd3bb1d85da73720c391b136bd5edfd4a732c9"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/IMPACT-LEDGER.md",
-        "lines": [
-          124
-        ],
-        "sha256": "100d1226a2e65b24d36098bf1353d083022938fe8b8d2245223c432f93446bac"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-1-DISPOSITIONS.md",
-        "lines": [
-          20
-        ],
-        "sha256": "71e60706fa904628b00a742b026cfb16c0b0f80d55ce71186eb69c70a993f4ea"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md",
-        "lines": [
-          77,
-          151,
-          154,
-          155,
-          282
-        ],
-        "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/design.md.patch",
-        "lines": [
-          22,
-          23
-        ],
-        "sha256": "7068535eced94a4b035e6efdba354ed0a92f0469265e95414421c711d7cb38c2"
-      },
-      {
-        "path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md",
-        "lines": [
-          195
-        ],
-        "sha256": "3f36de2f5b9f23362b89417d92a417b366f21bedbf1008b664385c8857f70ccd"
-      },
-      {
-        "path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-ffc2-1-RAW.md",
-        "lines": [
-          120,
-          123,
-          130
-        ],
-        "sha256": "f32376410c1843abed94744a1a03210f2436af77e87e90499a61a51ebc87a1d0"
-      },
-      {
-        "path": "docs/reviews/R-REDIS-SITTING-INSTALLER-PINS-1-RAW.md",
-        "lines": [
-          137
-        ],
-        "sha256": "9e9f580a6ad5b8fa20387a74f0c0dd5b8c7f5e15c0539c4ed1e8a8e7c34cb482"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-local-agent-mode/design.md",
-        "lines": [
-          389,
-          390
-        ],
-        "sha256": "d752d8f155a4837ecf4326690325f5f73ce91de49757c27e8bb5f0f72bdbafd0"
-      },
-      {
-        "path": "packages/polaris-dossier/src/brief.test.ts",
-        "lines": [
-          80,
-          86,
-          100
-        ],
-        "sha256": "f671c2ac1b26aadf8895f6d8145eac8574f9d901764645b50a78f95a565e390c"
-      },
-      {
-        "path": "packages/polaris-dossier/src/check.test.ts",
-        "lines": [
-          135
-        ],
-        "sha256": "f4b419938d7ecded5a26a324ebb6bef68b40fadf2d841506a6b1789965842870"
-      },
-      {
-        "path": "packages/polaris-dossier/src/draft-schema.test.ts",
-        "lines": [
-          16,
-          57,
-          99
-        ],
-        "sha256": "0491cc8ed2419a630e319bd23e3ca8b4236eaaf8f2868cecad3d07ba58e665be"
-      },
-      {
-        "path": "packages/polaris-dossier/src/draft-schema.ts",
-        "lines": [
-          21
-        ],
-        "sha256": "3684d3e940ed20c69d7d01fcf0e0f19a0466b8a8ed07ccea028e6956f04ae8e0"
-      },
-      {
-        "path": "packages/polaris-dossier/src/full-run.testkit.ts",
-        "lines": [
-          106
-        ],
-        "sha256": "a1f496069e7efdb3f0e091a22a03e16e571d2c1ba5d1743603fe0773e59bdf1e"
-      },
-      {
-        "path": "packages/polaris-dossier/src/render.test.ts",
-        "lines": [
-          116
-        ],
-        "sha256": "d310cc59f69fd906bf122152dda553a7e42baac779a008006b603fa133366e8d"
-      },
-      {
-        "path": "packages/polaris-dossier/src/review.test.ts",
-        "lines": [
-          117
-        ],
-        "sha256": "052e01c81f5d5370a31ebffde7e00ebf50dcf6048913b88249d1cc5a2e210b98"
-      }
+      {"path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md", "lines": [101], "sha256": "bf256d224d3453a49377de6615bd3bb1d85da73720c391b136bd5edfd4a732c9"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/IMPACT-LEDGER.md", "lines": [124], "sha256": "100d1226a2e65b24d36098bf1353d083022938fe8b8d2245223c432f93446bac"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-1-DISPOSITIONS.md", "lines": [20], "sha256": "71e60706fa904628b00a742b026cfb16c0b0f80d55ce71186eb69c70a993f4ea"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md", "lines": [77, 151, 154, 155, 282], "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/design.md.patch", "lines": [22, 23], "sha256": "7068535eced94a4b035e6efdba354ed0a92f0469265e95414421c711d7cb38c2"},
+      {"path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md", "lines": [195], "sha256": "3f36de2f5b9f23362b89417d92a417b366f21bedbf1008b664385c8857f70ccd"},
+      {"path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-ffc2-1-RAW.md", "lines": [120, 123, 130], "sha256": "f32376410c1843abed94744a1a03210f2436af77e87e90499a61a51ebc87a1d0"},
+      {"path": "docs/reviews/R-REDIS-SITTING-INSTALLER-PINS-1-RAW.md", "lines": [137], "sha256": "9e9f580a6ad5b8fa20387a74f0c0dd5b8c7f5e15c0539c4ed1e8a8e7c34cb482"},
+      {"path": "openspec/changes/polaris-dossier-local-agent-mode/design.md", "lines": [389, 390], "sha256": "d752d8f155a4837ecf4326690325f5f73ce91de49757c27e8bb5f0f72bdbafd0"},
+      {"path": "packages/polaris-dossier/src/brief.test.ts", "lines": [80, 86, 100], "sha256": "f671c2ac1b26aadf8895f6d8145eac8574f9d901764645b50a78f95a565e390c"},
+      {"path": "packages/polaris-dossier/src/check.test.ts", "lines": [135], "sha256": "f4b419938d7ecded5a26a324ebb6bef68b40fadf2d841506a6b1789965842870"},
+      {"path": "packages/polaris-dossier/src/draft-schema.test.ts", "lines": [16, 57, 99], "sha256": "0491cc8ed2419a630e319bd23e3ca8b4236eaaf8f2868cecad3d07ba58e665be"},
+      {"path": "packages/polaris-dossier/src/draft-schema.ts", "lines": [21], "sha256": "3684d3e940ed20c69d7d01fcf0e0f19a0466b8a8ed07ccea028e6956f04ae8e0"},
+      {"path": "packages/polaris-dossier/src/full-run.testkit.ts", "lines": [106], "sha256": "a1f496069e7efdb3f0e091a22a03e16e571d2c1ba5d1743603fe0773e59bdf1e"},
+      {"path": "packages/polaris-dossier/src/render.test.ts", "lines": [116], "sha256": "d310cc59f69fd906bf122152dda553a7e42baac779a008006b603fa133366e8d"},
+      {"path": "packages/polaris-dossier/src/review.test.ts", "lines": [117], "sha256": "052e01c81f5d5370a31ebffde7e00ebf50dcf6048913b88249d1cc5a2e210b98"}
     ],
     "version_chain": [
-      {
-        "path": ".github/workflows/governance-docs.yml",
-        "lines": [
-          183,
-          184,
-          186,
-          187,
-          189,
-          190,
-          192,
-          193,
-          242,
-          243,
-          245,
-          246,
-          250,
-          251,
-          253,
-          254,
-          258,
-          259,
-          261,
-          262,
-          266,
-          267,
-          269,
-          270
-        ],
-        "sha256": "9878eac894b3737536ae8c4501856dda84f1d4d2fc20a2305bc220929ba7ef01"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-REVIEW-NOTES.md",
-        "lines": [
-          4,
-          18,
-          20,
-          70,
-          80,
-          138,
-          144,
-          167
-        ],
-        "sha256": "4abd47604180ee9e6de617d250b64b1ca45fc5e21d07d45c0db317f930221095"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-ROUTE-EDITS.txt",
-        "lines": [
-          1,
-          20,
-          66,
-          70,
-          76,
-          83,
-          84,
-          107
-        ],
-        "sha256": "853a4bc564fca03c977467cf6b6e969de1658b6c1af0aa20daa7d6b55a41fae8"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-REVIEW-NOTES.md",
-        "lines": [
-          5,
-          20,
-          69
-        ],
-        "sha256": "a1a230b56ccee7705929420389663b5c30d4cf5dc536ee4c302cf763395b9401"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-SIGNOFF-ROUTE-EDITS.txt",
-        "lines": [
-          1,
-          13,
-          21,
-          33,
-          37,
-          40,
-          43,
-          46,
-          50,
-          51,
-          67
-        ],
-        "sha256": "4603f74778898f32c4c921780e37adea7bffb5e4f4ec13517291ff97e15f1d25"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md",
-        "lines": [
-          5,
-          19
-        ],
-        "sha256": "bf256d224d3453a49377de6615bd3bb1d85da73720c391b136bd5edfd4a732c9"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/REDIS-LOCAL-AGENT-SITTING-BRIEF.md",
-        "lines": [
-          79,
-          496
-        ],
-        "sha256": "75b703d49c5f83a777ac940de2c9f1e1b279488bf130ec0290ea81adec330f4b"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/cc-sec-3-attended-session-amendment/REVIEW-BRIEF.md",
-        "lines": [
-          28
-        ],
-        "sha256": "fbc14a9426feb0a86c2371aaedf383bf41e2a3271f6105718d5fd682343beb73"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/cc-sec-3-attended-session-amendment/SUBJECT.json",
-        "lines": [
-          38
-        ],
-        "sha256": "b1e187041daaa658a2e399f23c1d0b57c4b0d92d50a2902ab6c872e8fcd7257d"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/doctrine-amendment-sec3-attended-agent-session-d9/IMPACT-LEDGER.md",
-        "lines": [
-          187
-        ],
-        "sha256": "3d8beb50d1b2d9dbbd6aed74edff5dfa12ddd8c3f0f9d1f6177ac58d94f4c825"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/dossier-handoff-options/CLAUSES.md",
-        "lines": [
-          16,
-          22,
-          65
-        ],
-        "sha256": "759ae4eb87b89f8cd5205dc981e7bde0fbabba704fedcc20f8f6adf248b7b2f5"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/REVIEW-BRIEF.md",
-        "lines": [
-          69
-        ],
-        "sha256": "668f9fb1012c7aa59dd21dc2ea1469e1fef6421adaff36b3abd2a737c7e7fcf2"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/reviews/R-DOSSIER-LOCAL-AGENT-SITTING-2-RAW.md",
-        "lines": [
-          50,
-          87
-        ],
-        "sha256": "56aa2ca191682e11de7a918000b5529fd05133f0bd5b24c2b6d7cb3735df408d"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/dossier-local-cli-subprocess-runner/REVIEW-BRIEF.md",
-        "lines": [
-          33
-        ],
-        "sha256": "bb73af9d655b8233e73a136915a8c69ff00689d96be2853892c8d7922521e369"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/dossier-local-cli-subprocess-runner/SEMANTIC-DELTA.md",
-        "lines": [
-          78,
-          279
-        ],
-        "sha256": "478c86d5bc474d806019c943de751968fe0765683f65640e843436dc1f0cd73d"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/IMPACT-LEDGER.md",
-        "lines": [
-          13,
-          47,
-          94,
-          97,
-          119,
-          120
-        ],
-        "sha256": "047bcf70f958df1e0a5daa53763ba0b30079c28ac47deea7f971bbbe0cc514f3"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/REVIEW-BRIEF.md",
-        "lines": [
-          22,
-          31,
-          138
-        ],
-        "sha256": "011822d781a4fd976f30a291a404e854cd3a2677b1a6afb9e94bd3a0ceabe1a7"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/SEMANTIC-DELTA.md",
-        "lines": [
-          4,
-          19,
-          20,
-          271
-        ],
-        "sha256": "e01dc9aab22121a83008ebd8d6f916f8c4fe402f2d6d013473dce51913789bea"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/proposed/design.md.patch",
-        "lines": [
-          1,
-          3,
-          4
-        ],
-        "sha256": "e35b3a2efe4a05aea1e64812e69aa1d4fe522c635ecbf212ed258608172722c1"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/proposed/proposal.md.patch",
-        "lines": [
-          1,
-          3,
-          4
-        ],
-        "sha256": "9bf7dbd97bfc994036c252f1c67f70f107300194e653ae6e1ef61b1bb9dfdf4b"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/proposed/spec.md.n6-optional.patch",
-        "lines": [
-          1,
-          3,
-          4
-        ],
-        "sha256": "ab0e091f74929ddc37b5e7d3bc246281b159173611812f2006cb1a7165858cd1"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/proposed/spec.md.patch",
-        "lines": [
-          1,
-          3,
-          4
-        ],
-        "sha256": "0a302ecc93f70abff92d5afc71f2ed1075c0e9ef1eeb66a7d7b83d8259e0926a"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/IMPACT-LEDGER.md",
-        "lines": [
-          6,
-          17,
-          45,
-          112,
-          113
-        ],
-        "sha256": "aab6bbf86e236b323b1d1cc138f2c98cba3ea99b9335680e3f7615edba5f8ba0"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/REVIEW-BRIEF.md",
-        "lines": [
-          23,
-          30,
-          62,
-          63,
-          137
-        ],
-        "sha256": "7813ae17df6ef62d769df033b12e1525246eb2d0509f2a1970501e9dd8b51154"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/SEMANTIC-DELTA.md",
-        "lines": [
-          4,
-          18,
-          19,
-          197,
-          229,
-          232,
-          240
-        ],
-        "sha256": "9b0e1870415ce0da6a8a87ce441aae905ff3891cdb9138d214d6325b785f2a8b"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/proposed/design.md.patch",
-        "lines": [
-          1,
-          3,
-          4
-        ],
-        "sha256": "3abdec69074cfa55febd4134cee9badcbc89455d298227b8bf815fd2c7ab4bb5"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/proposed/proposal.md.patch",
-        "lines": [
-          1,
-          3,
-          4
-        ],
-        "sha256": "ab8e657f65cdb5ad94d7af7327dfff24b65bbfd4cee7f2b9b36969a276099a98"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/proposed/spec.md.patch",
-        "lines": [
-          1,
-          3,
-          4
-        ],
-        "sha256": "601cbeada570ae8c9c62f76d8d7319ae866f2b34f5f0d3c1973b7ceeb94e816e"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/IMPACT-LEDGER.md",
-        "lines": [
-          5,
-          20,
-          52,
-          68,
-          95,
-          99,
-          145,
-          147
-        ],
-        "sha256": "100d1226a2e65b24d36098bf1353d083022938fe8b8d2245223c432f93446bac"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-BRIEF.md",
-        "lines": [
-          21,
-          28,
-          56,
-          57,
-          58,
-          124,
-          126
-        ],
-        "sha256": "adac93ca8dd857e1d8d8510aff5875d97f374d3ade8bc143373f46756e577b70"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md",
-        "lines": [
-          4,
-          20,
-          21,
-          227,
-          262,
-          265,
-          274
-        ],
-        "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/design.md.patch",
-        "lines": [
-          1,
-          3,
-          4
-        ],
-        "sha256": "7068535eced94a4b035e6efdba354ed0a92f0469265e95414421c711d7cb38c2"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/proposal.md.patch",
-        "lines": [
-          1,
-          3,
-          4
-        ],
-        "sha256": "4560d8c5740de03c4a6777ab046d92202d07a118b016581e8e654f1369ba7da6"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/spec.md.patch",
-        "lines": [
-          1,
-          3,
-          4
-        ],
-        "sha256": "92d7eca908b88e6bbc7627a92ee127c6334ec95d2e8a73c853e93feee0101e13"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode/OWNER-DECISION-PACKET.md",
-        "lines": [
-          114,
-          145
-        ],
-        "sha256": "bc8fb7db67f935f5640385af17f0461252490a76e819c400310a4783a91ccd80"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode/REVIEW-BRIEF.md",
-        "lines": [
-          19,
-          22
-        ],
-        "sha256": "acb8af4f34056f8aaf77e458b7fcb54332861be90b3545ec349c349a6500dae7"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode/SEMANTIC-DELTA.md",
-        "lines": [
-          7
-        ],
-        "sha256": "70df027e7eabbcbef6de78f9660c8a3882d930b42c5107ce77fcc0ed3ec58b9e"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
-        "lines": [
-          53
-        ],
-        "sha256": "917aecc766f01133d5a29c1ee8b3e575332ad48d04308a1b62c68217e48d254b"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/public-source-screening-scope-v3/IMPACT-LEDGER.md",
-        "lines": [
-          123
-        ],
-        "sha256": "cc6e5a1e85c497b6e46bdcb7359bee40b1e3d59d2f25c732e0e45f44bef035e9"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/public-source-screening-scope-v3/SEMANTIC-DELTA.md",
-        "lines": [
-          217,
-          226
-        ],
-        "sha256": "8ab4d325d8738043ec7430b6fde769d656fd39329963be4a050f70ba83ace51d"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/public-source-screening-scope-v4/REVIEW-BRIEF.md",
-        "lines": [
-          24
-        ],
-        "sha256": "815ed7ef3b85a6da9ccf9bbbb34e8bba38c6993f3b6aacc59abfb19cb8357e75"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/public-source-screening-scope-v5/SEMANTIC-DELTA.md",
-        "lines": [
-          77
-        ],
-        "sha256": "f1ba4daf91cd66bdbe2e95de8d578d8400c7d5c1aa0613d447bced8df5fc1cd3"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/IMPACT-SWEEP.json",
-        "lines": [
-          33,
-          43,
-          137,
-          144,
-          178,
-          185,
-          219,
-          226,
-          258,
-          265
-        ],
-        "sha256": "3a63fa30119d009965e40e48d18b7cadeb9baa24622f2bd7188c9bb38c0fc9ed"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/REQUIREMENT-CONSUMPTION.json",
-        "lines": [
-          34,
-          211,
-          212,
-          247,
-          248,
-          283,
-          284,
-          319,
-          320
-        ],
-        "sha256": "535de5057966801c5e8cc7e1f3258d033b387054d14a920a78b453ff04698b06"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/evidence/source-return/EVIDENCE-EXCERPT-MAP.json",
-        "lines": [
-          39,
-          55,
-          71,
-          87
-        ],
-        "sha256": "4e9fefbcb8e4c6b4c5897ebb544be6302b8a0754f4ba3fd262d10dd1d419a861"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/evidence/source-return/SOURCE-BINDINGS.json",
-        "lines": [
-          22
-        ],
-        "sha256": "68392a146377ed3cf0eb7b037da1790b98d760bca0d8c695e768875830293e59"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/evidence/source-return/SOURCE-DECISION-RECONCILIATION-CURATED.md",
-        "lines": [
-          28
-        ],
-        "sha256": "47201aaaafa808945dd03352a11c263de108f535dcb79ed6d176003ff382c6bb"
-      },
-      {
-        "path": ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",
-        "lines": [
-          1175,
-          1176,
-          1186,
-          1191,
-          1193,
-          1194,
-          1204,
-          1209,
-          1485,
-          1486,
-          1496,
-          1501,
-          1746,
-          1747,
-          1757,
-          1762
-        ],
-        "sha256": "cc8c6a8f6bde4adba6832975ce136a5c0b0783b054e3eaf968d7f3b1d54d3d39"
-      },
-      {
-        "path": ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md",
-        "lines": [
-          27
-        ],
-        "sha256": "96928fbd20bf8f89b90c6b5fc62b441c0112eac3cc4367015854c70290aed08d"
-      },
-      {
-        "path": ".syzygy/governance/decisions/PENDING-OWNER-DECISIONS.md",
-        "lines": [
-          1055
-        ],
-        "sha256": "33b4fa61676b70a3550993fadda88b7fbbc579b0d139aa6d6ac5d76cef7c6704"
-      },
-      {
-        "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.0.md",
-        "lines": [
-          7,
-          11,
-          15,
-          29,
-          36
-        ],
-        "sha256": "b64225c5c490c754f74ab94fa2c94ed28137a7ad9903fc501925c99dc37f3739"
-      },
-      {
-        "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.1.md",
-        "lines": [
-          7,
-          11,
-          31,
-          38
-        ],
-        "sha256": "3d70b3402925239712053b8f9b8ded186e61ac169bba059e16801de5593072d9"
-      },
-      {
-        "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md",
-        "lines": [
-          7,
-          11,
-          29,
-          36
-        ],
-        "sha256": "c96d444db1e04ed3ca8e594c3242e571609f93c606ca9b9d4a30e749a28f569c"
-      },
-      {
-        "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md",
-        "lines": [
-          7,
-          11,
-          29,
-          36
-        ],
-        "sha256": "12b9cfeb6bec3ddc17dc07edd66e5f8411dd04838609dcb5621570bc4f2e03ef"
-      },
-      {
-        "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-SCOPE-REVIEW-SIGNOFF-DIRECTION.md",
-        "lines": [
-          18,
-          42,
-          62
-        ],
-        "sha256": "2e01b12660961fc5bc715cb620887d01607269fa6d4ab079841218961fdbcd13"
-      },
-      {
-        "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-WAITING-SESSIONS-DIRECTION.md",
-        "lines": [
-          85
-        ],
-        "sha256": "a209325dac89eaacd13f6e0ecd07e4d501e9b5a869aa20664a760c7a13073d87"
-      },
-      {
-        "path": ".syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
-        "lines": [
-          53
-        ],
-        "sha256": "917aecc766f01133d5a29c1ee8b3e575332ad48d04308a1b62c68217e48d254b"
-      },
-      {
-        "path": "PROJECT-STATUS.md",
-        "lines": [
-          52,
-          409,
-          410,
-          411,
-          412,
-          427,
-          428,
-          429,
-          430,
-          431,
-          432,
-          433,
-          434
-        ],
-        "sha256": "27fda231f67dcbad861db47be828910819ecc1dddd54d5848c52167e789fb3a5"
-      },
-      {
-        "path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
-        "lines": [
-          179
-        ],
-        "sha256": "b889f04f6e558cd1bcef060e9a7bd91f1cb00e789619f75257c3b6d7a4d19688"
-      },
-      {
-        "path": "docs/evidence/chrome-singleton-review-2026-10-25/r2/results/battery.log",
-        "lines": [
-          41,
-          42,
-          43,
-          54,
-          55,
-          56,
-          57,
-          58,
-          59
-        ],
-        "sha256": "20603f032b9a8c3f67faed2895631ad932457d404ca6bf826b46d3abbb46fe01"
-      },
-      {
-        "path": "docs/evidence/dossier-blockers-install-clone-battery-f7d1ea7f-2026-10-08.log",
-        "lines": [
-          108,
-          109,
-          111,
-          112,
-          152,
-          155,
-          159,
-          162
-        ],
-        "sha256": "aa2529bfac31a2c609f5b6b535f094a6d03394dbefafe0f4e5ea3fc17aa714ad"
-      },
-      {
-        "path": "docs/evidence/host-pins-review-2026-10-27/battery.json",
-        "lines": [
-          248,
-          251,
-          254,
-          257,
-          260,
-          263,
-          326,
-          332,
-          338,
-          344,
-          350,
-          356
-        ],
-        "sha256": "6c11c2e174effc5df58f58175a0816774629b46304e6ea8093563d9c37fcbaa0"
-      },
-      {
-        "path": "docs/evidence/host-pins-review-2026-10-27/battery.log",
-        "lines": [
-          41,
-          42,
-          43,
-          54,
-          55,
-          56,
-          57,
-          58,
-          59
-        ],
-        "sha256": "2de93f56ca3296d8b3daa9b94e807cac9856fcf16dccfa301ce8e4a95be851da"
-      },
-      {
-        "path": "docs/evidence/host-tidy-review-2026-10-27/battery-head.json",
-        "lines": [
-          209,
-          214,
-          219,
-          274,
-          279,
-          284,
-          289,
-          294,
-          299
-        ],
-        "sha256": "81a5f6a0a1cbf58dcdf69807327c10fd4fef7f08dc6c7d6038d33ea703a09aa8"
-      },
-      {
-        "path": "docs/evidence/object-iso-helpers-review-2026-10-28/r1/dossier.diff",
-        "lines": [
-          1057
-        ],
-        "sha256": "f93515f4d6a41d8be21f059da7be4c461908fd82537e4c89ef6daa2d5539eeb6"
-      },
-      {
-        "path": "docs/evidence/p115-implementation-authorization-2026-10-28/CONSUMER-CENSUS.json",
-        "lines": [
-          2647,
-          2652,
-          2657
-        ],
-        "sha256": "27e7d0d53724a8f3fd75bfb463bed2dcd07efcaf876fb4b1d1b59066cb93184b"
-      },
-      {
-        "path": "docs/evidence/p115-implementation-authorization-2026-10-28/CURRENT-SOURCE-REFRESH.json",
-        "lines": [
-          3209,
-          3212,
-          3215,
-          3218,
-          3221,
-          3224
-        ],
-        "sha256": "2d137eb6a585f388f2ee2e5aa751f0a09624b27c6d4c75b862900f2f96af5c8e"
-      },
-      {
-        "path": "docs/evidence/p115-implementation-authorization-2026-10-28/MANIFEST.json",
-        "lines": [
-          4382,
-          4389,
-          4396
-        ],
-        "sha256": "2a4b38fbae2034e83141425454fcce0a8c0f33c20e3c5e8cb47eddaa22e2ee3a"
-      },
-      {
-        "path": "docs/evidence/p115-implementation-authorization-2026-10-28/SOURCE-BINDINGS.json",
-        "lines": [
-          5407,
-          5408,
-          5417,
-          5418,
-          5427,
-          5428
-        ],
-        "sha256": "b70186b299d60e53367aa984a18c53bd75eaf7fd664ab895249e2feda215d626"
-      },
-      {
-        "path": "docs/evidence/package-reader-timeouts-review-2026-10-25/r2/battery.json",
-        "lines": [
-          247,
-          250,
-          253,
-          256,
-          259,
-          262,
-          325,
-          331,
-          337,
-          343,
-          349,
-          355
-        ],
-        "sha256": "4349d3c737814e5dfe37f3df832317f5fd04869ff655fb3ee50b370f0a7f9e54"
-      },
-      {
-        "path": "docs/evidence/package-reader-timeouts-review-2026-10-25/r2/battery.log",
-        "lines": [
-          41,
-          42,
-          43,
-          54,
-          55,
-          56,
-          57,
-          58,
-          59
-        ],
-        "sha256": "653918c9cbe4eb7549f1116647d68f57452ff232fe74817cd05e10cd3e22ff37"
-      },
-      {
-        "path": "docs/evidence/package-reader-timeouts-review-2026-10-25/r3/battery.json",
-        "lines": [
-          251,
-          254,
-          257,
-          260,
-          263,
-          266,
-          329,
-          335,
-          341,
-          347,
-          353,
-          359
-        ],
-        "sha256": "b830a4403f78040d24fd4469260766df616ae6298c007d164448e4d0308b949b"
-      },
-      {
-        "path": "docs/evidence/package-reader-timeouts-review-2026-10-25/r3/battery.log",
-        "lines": [
-          41,
-          42,
-          43,
-          54,
-          55,
-          56,
-          57,
-          58,
-          59
-        ],
-        "sha256": "f60bd9bab0f9dbf565abb5100ce35f4d9e775a81d27edc9b574e8eb153c3d092"
-      },
-      {
-        "path": "docs/evidence/package-reader-timeouts-review-2026-10-25/r4/battery.json",
-        "lines": [
-          251,
-          254,
-          257,
-          260,
-          263,
-          266,
-          329,
-          335,
-          341,
-          347,
-          353,
-          359
-        ],
-        "sha256": "13696d3fa7823fdac3edd510e026767bdac1ff9beff661476a087acd467586cf"
-      },
-      {
-        "path": "docs/evidence/package-reader-timeouts-review-2026-10-25/r4/battery.log",
-        "lines": [
-          41,
-          42,
-          43,
-          54,
-          55,
-          56,
-          57,
-          58,
-          59
-        ],
-        "sha256": "be7c6c8551b12323d88c8a2cf51d34c1a900c0bd9b677cf6a0e4b729cfa62323"
-      },
-      {
-        "path": "docs/evidence/polaris-dossier-s11-mutants-2026-10-07.json",
-        "lines": [
-          23
-        ],
-        "sha256": "6fc5a908d7590d81190002297144b8d96fff11315a365f7b969a313f988fc5b1"
-      },
-      {
-        "path": "docs/evidence/polaris-dossier-waiting-sessions-mutants-2026-10-09.json",
-        "lines": [
-          2,
-          1258,
-          1262,
-          1271,
-          1279,
-          1298,
-          1317,
-          1338,
-          1357,
-          1376,
-          1395,
-          1414,
-          1433,
-          1453,
-          1472,
-          1491,
-          1510,
-          1530,
-          1554,
-          1579,
-          1600,
-          1628,
-          1651,
-          1696,
-          1697
-        ],
-        "sha256": "47b7fd6c13fe1ad237aab7d5f41c97b22b97b91d09bee2477b4b09aaba2adddf"
-      },
-      {
-        "path": "docs/evidence/redis-screening-v4-remeasure-2026-10-21.json",
-        "lines": [
-          165,
-          166
-        ],
-        "sha256": "1432bca9df640e7f304dfb05baf9263e2e6bbf6b779942127afd7ed4bd5467d7"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-2026-10-23/census-2026-10-24.json",
-        "lines": [
-          5994,
-          5998,
-          6002
-        ],
-        "sha256": "8bb12c8a5adb7522ba15293b9df16fc3ea4e39cbb2928661e386c974904f3002"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-2026-10-23/static-sites-2026-10-24.json",
-        "lines": [
-          2531,
-          2624,
-          2654
-        ],
-        "sha256": "f5ad2571ddf5b9caab1aafb5c9de3a70d94fdf6a9992af2faa789672b24a2a69"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-m1.json",
-        "lines": [
-          5951,
-          5954,
-          5957
-        ],
-        "sha256": "e2e7787c2b5b88d1a8ff39cdcb59cad5b0c16c0e8cfe5d2abc4a5f6777b3ab42"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-m3.json",
-        "lines": [
-          5951,
-          5954,
-          5957
-        ],
-        "sha256": "c812be7e15c4839c627603fe3d3a6a4100e01bd2bfcebfff0dce08e6a353a7f1"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-rerun.json",
-        "lines": [
-          5951,
-          5954,
-          5957
-        ],
-        "sha256": "ca3d308e2bdf7159ca38b94b7d2049d1918c4d75d27a2cf08042fd8fbbf67533"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/creator-sweep.json",
-        "lines": [
-          119,
-          3509,
-          3563,
-          3581
-        ],
-        "sha256": "d1703bccdd14d4150406c98ac54db5cf3621c1610fbf5be6c1d5d1dd1998eaa4"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/static-rerun.json",
-        "lines": [
-          2529,
-          2622,
-          2652
-        ],
-        "sha256": "09dfb9d602d15f149c2f8ef0acf6c8fd0c2036c0f0351d543f1f9c805b245d7a"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/census-rerun.json",
-        "lines": [
-          5994,
-          5998,
-          6002
-        ],
-        "sha256": "b1e0099f80cbc950e7eff1a6f9c64d30c6bb128ca1efce76e849d50138d36a22"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/static-rerun.json",
-        "lines": [
-          2531,
-          2624,
-          2654
-        ],
-        "sha256": "f5ad2571ddf5b9caab1aafb5c9de3a70d94fdf6a9992af2faa789672b24a2a69"
-      },
-      {
-        "path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-3/census-rerun.json",
-        "lines": [
-          5994,
-          5998,
-          6002
-        ],
-        "sha256": "8bb12c8a5adb7522ba15293b9df16fc3ea4e39cbb2928661e386c974904f3002"
-      },
-      {
-        "path": "docs/evidence/source-resolution-review-2026-10-28/r1/doc-sweep-head.json",
-        "lines": [
-          75
-        ],
-        "sha256": "20c726ff87f37eb3389265615363f2f6501513438c30f6fc1df606d207a9d344"
-      },
-      {
-        "path": "docs/evidence/spec-readability-reconciliation-2026-10-02/README.md",
-        "lines": [
-          365,
-          390
-        ],
-        "sha256": "ffb1459a931bec24f746c07d5416a51996da4de4ceef1f23addf1a3e66d80b1b"
-      },
-      {
-        "path": "docs/evidence/spread-loops-review-2026-10-28/r1/md-list.bin",
-        "lines": [
-          1
-        ],
-        "sha256": "f2456a6b9c0ade9ccf5ab23363743591d29288ad601829c9742d9907e329d327"
-      },
-      {
-        "path": "docs/evidence/support-leaf-followups-review-2026-10-28/r1/battery-head.json",
-        "lines": [
-          254,
-          257,
-          260,
-          263,
-          266,
-          269,
-          350,
-          356,
-          362,
-          368,
-          374,
-          380
-        ],
-        "sha256": "8d1932e090dc62cd5b996219bb2a8fa2ac9b73b8bd1bff7d86614c430316e52c"
-      },
-      {
-        "path": "docs/evidence/support-leaf-followups-review-2026-10-28/r1/battery-head.log",
-        "lines": [
-          42,
-          43,
-          44,
-          58,
-          59,
-          60,
-          61,
-          62,
-          63
-        ],
-        "sha256": "624fa0256a9f27b0c4673a1780d04d52d26fb36b4568ddf2d4439a1f5c1dc48c"
-      },
-      {
-        "path": "docs/evidence/support-leaf-followups-review-2026-10-28/r2/battery-combined.json",
-        "lines": [
-          227,
-          232,
-          237,
-          307,
-          312,
-          317,
-          322,
-          327,
-          332
-        ],
-        "sha256": "36c0c24a116781570c5b343d8ec3dece2a40446d64425e97d1680d0d1a9669ab"
-      },
-      {
-        "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
-        "lines": [
-          963
-        ],
-        "sha256": "f65ae511b9ef558cf6ef8bbb69e8da52868fedb3ee8f03e720894c0784bfa85f"
-      },
-      {
-        "path": "docs/evidence/syzygy-bpyt-8-7/tools/waitprobe.mjs",
-        "lines": [
-          6
-        ],
-        "sha256": "e1ce1e996e1500e5899d67c59e3c15c784747cf2255eaed2462213be6f0d6112"
-      },
-      {
-        "path": "docs/plans/2026-10-21-greenfield-parity-audit.md",
-        "lines": [
-          599,
-          608,
-          624
-        ],
-        "sha256": "ddfc405f1fc65c3f85455d3f56403ec2785a9b209f7f1bbb13eca64b1e36d439"
-      },
-      {
-        "path": "docs/review-campaigns/dossier-local-agent-v1-3.md",
-        "lines": [
-          9,
-          13
-        ],
-        "sha256": "233d69816e494d6823e9313a370f7a09a19c4f236b8689fedb9c54fee5e4eb5c"
-      },
-      {
-        "path": "docs/review-campaigns/pr408-waiting-sessions.md",
-        "lines": [
-          10
-        ],
-        "sha256": "c3a3b4bd8d81ad66796bf7f3a20655df34dc60a713a134778fe35b3e9c99df06"
-      },
-      {
-        "path": "docs/reviews/R-ARBITRARY-PUBLIC-REPO-1-RAW.md",
-        "lines": [
-          189
-        ],
-        "sha256": "cfe6d5bb5c7bc1f8ba31552b39f94d14c29eb90a2aa740fb6a35cf2fd00382d3"
-      },
-      {
-        "path": "docs/reviews/R-ARBITRARY-PUBLIC-REPO-3-RAW.md",
-        "lines": [
-          181
-        ],
-        "sha256": "3a65a99bbcbf83418bc64de9ccde6f92d9fbd54d5cb3437ff1249927c7505b94"
-      },
-      {
-        "path": "docs/reviews/R-DOCTRINE-AMENDMENT-D9-2-RAW.md",
-        "lines": [
-          11
-        ],
-        "sha256": "e106200b795482e74aac9fd84671964e7d2e360658e0e8c8ba02b3dc64f94e71"
-      },
-      {
-        "path": "docs/reviews/R-DOCTRINE-AMENDMENT-D9-3-RAW.md",
-        "lines": [
-          11
-        ],
-        "sha256": "e34126d27a7fe4d2ecdfa6b93dcd1775a7105cdbf9ba6ec50cc2cc92dcd42c12"
-      },
-      {
-        "path": "docs/reviews/R-DOSSIER-CLI-SUBPROCESS-5-RAW.md",
-        "lines": [
-          21
-        ],
-        "sha256": "373f638cca01dc329f425894d21e3f7a0ec0dc99c0e3c91810b01b36779e7e3c"
-      },
-      {
-        "path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md",
-        "lines": [
-          1,
-          11,
-          211,
-          350
-        ],
-        "sha256": "3f36de2f5b9f23362b89417d92a417b366f21bedbf1008b664385c8857f70ccd"
-      },
-      {
-        "path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-ffc2-1-RAW.md",
-        "lines": [
-          1,
-          8,
-          231,
-          234
-        ],
-        "sha256": "f32376410c1843abed94744a1a03210f2436af77e87e90499a61a51ebc87a1d0"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-ADAPTER-CREDENTIALS-1-RAW.md",
-        "lines": [
-          48
-        ],
-        "sha256": "2b4aff7b69d12c2dcf7381351a63aa655c85352c5c8d35ce73daaed21cf15811"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-DOSSIER-CLI-TABLE-1-RAW.md",
-        "lines": [
-          399
-        ],
-        "sha256": "8cd7974bd7e502e89ec2912a220cec44a54fea2db074accb448a9c4986bcdd69"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-LAUNCHED-MARKER-1-RAW.md",
-        "lines": [
-          42
-        ],
-        "sha256": "1d8ea7c8b28762be27dc28b14eb49876db6efca5aee19972b6d64958a3099360"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-LAUNCHED-MARKER-2-RAW.md",
-        "lines": [
-          52
-        ],
-        "sha256": "60cca1fb732077d4eff792c5eab3620c7bee055d397167106ec4e71d3fbf544a"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-OBJECT-ISO-HELPERS-1-RAW.md",
-        "lines": [
-          76
-        ],
-        "sha256": "157563c5e445b201d56c49ead8685d4dd0fbec3c2a80a1b215e358f5fcff56df"
-      },
-      {
-        "path": "docs/reviews/R-GREENFIELD-PARITY-PACKET-1-RAW.md",
-        "lines": [
-          318
-        ],
-        "sha256": "534979794c5acc0f5fa4051ce80fba95f38f5a498fd0c3eed30cf6025aea1f1e"
-      },
-      {
-        "path": "docs/reviews/R-GREENFIELD-PARITY-PACKET-2-RAW.md",
-        "lines": [
-          123
-        ],
-        "sha256": "541d5ffd806e14ce00226865d9452a094f2af986ae012f023c7640709d6758d7"
-      },
-      {
-        "path": "docs/reviews/R-MEA10-RENDER-READABILITY-9070-1-RAW.md",
-        "lines": [
-          27
-        ],
-        "sha256": "de46836da604403f3f3d2ec286d99b49b9c02dc8ba32acdae81c1f6ea682713b"
-      },
-      {
-        "path": "docs/reviews/R-OLMR-SCREENING-SCOPE-V4-4-RAW.md",
-        "lines": [
-          254
-        ],
-        "sha256": "a2dc6f152b41493289c54d284822d32e7db6dfc7526e37bd4c7c0099792b245a"
-      },
-      {
-        "path": "docs/reviews/R-P115-LATER-SIGNED-6678-1-RAW.md",
-        "lines": [
-          24,
-          66,
-          84,
-          89
-        ],
-        "sha256": "9104aa1627efe3aef4c2e568bfe78520f8a53e9c93615fba6b55d402de78e74e"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-CLONE-SHAPE-1-RAW.md",
-        "lines": [
-          27,
-          250
-        ],
-        "sha256": "30973b46f55fdb7cf060ff1ae64a97932ebca5cafc358dc9c045ab1cf8e07947"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-GATE-SOURCES-1-RAW.md",
-        "lines": [
-          11
-        ],
-        "sha256": "babe4dc2420030fdba107d217a8975072808b8f6babc7b156425a8ab9b28305d"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-GATE-SOURCES-2-RAW.md",
-        "lines": [
-          12
-        ],
-        "sha256": "d3c7872bb44f8c828c74ec843fd2c55f1daa1f7f321f51e7f62ba3391966badb"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-GATE-SOURCES-3-RAW.md",
-        "lines": [
-          22,
-          23
-        ],
-        "sha256": "336541e4ce1fd67c6c233b741c6da4781aa58b3dd2f11b4a1980da3e9b749114"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-1-RAW.md",
-        "lines": [
-          12,
-          19
-        ],
-        "sha256": "53169274417f53cd51a75abf47ffdedfeb567197bcb45b15fc682d7a28f1d27c"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-2-RAW.md",
-        "lines": [
-          16
-        ],
-        "sha256": "c2bf634b70e0ce4b9241fe62bfaafba90bf9333edca281056c49bb8d74736dc4"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-3-RAW.md",
-        "lines": [
-          23
-        ],
-        "sha256": "f312392b4dde6157319d6dddccc8b3f399c37d2aec9208c9eb96abe4aa961718"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-1-RAW.md",
-        "lines": [
-          10,
-          59,
-          142
-        ],
-        "sha256": "0da4bc64834cd08840581f6190103edbb7a5f2a23d47e82397e2668152338beb"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-2-RAW.md",
-        "lines": [
-          11,
-          68
-        ],
-        "sha256": "b50bd68bcf168d0f7f641bdf25cf739199547ff6ed56767452187cba1db53bff"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-ONE-COMMAND-RUN-1-RAW.md",
-        "lines": [
-          24
-        ],
-        "sha256": "3e4ce4baf261c30d548f056107233cbc83c91da00a64f2f4246b4d398e4867ed"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-S2-READER-1-RAW.md",
-        "lines": [
-          6
-        ],
-        "sha256": "c41646bfcfd6eeaeb2b61e3bf042f18937a5bbd676d3d3da6b31a19a315f9c09"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-S2-READER-2-RAW.md",
-        "lines": [
-          6
-        ],
-        "sha256": "28c66ffb3fc8f1571aa131d494eead4dc911b72c47819db10ae2f416204e05e8"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-S2-READER-3-RAW.md",
-        "lines": [
-          11
-        ],
-        "sha256": "5b64d5ea6ec03e73f4442df2fc59760045503bfa978e7696658ab8b7b6323823"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-S3-GATES-2-RAW.md",
-        "lines": [
-          5
-        ],
-        "sha256": "aca4eef6c071033115cef88cf63e4a283393b4ebcaf4af0667dee028ee422f64"
-      },
-      {
-        "path": "docs/reviews/R-PR404-DOSSIER-BLOCKERS-1-RAW.md",
-        "lines": [
-          142
-        ],
-        "sha256": "f18c64d7658e32d2693f389b3114684ff152fc7c6b447e0f24e8ca2948f032da"
-      },
-      {
-        "path": "docs/reviews/R-PR404-DOSSIER-BLOCKERS-2-RAW.md",
-        "lines": [
-          41
-        ],
-        "sha256": "820920fec5a3ad16c99a974f3a1ef3d50b807514110f6797e7c34781466967a8"
-      },
-      {
-        "path": "docs/reviews/R-PR406-SESSION-TOOL-STATEMENT-1-RAW.md",
-        "lines": [
-          67
-        ],
-        "sha256": "67d666e39800c831a5fd1886954034c4745b6e075c3e8d712816bc79209727ce"
-      },
-      {
-        "path": "docs/reviews/R-PR408-V12-INSTALL-1-NOTES.md",
-        "lines": [
-          32,
-          69
-        ],
-        "sha256": "e8ec2084ed00f6ac063f472e0570b95956a77693d054011e538617e299abdfd3"
-      },
-      {
-        "path": "docs/reviews/R-PR408-V12-INSTALL-1-RAW.md",
-        "lines": [
-          23,
-          69,
-          108
-        ],
-        "sha256": "3c7857c0da03afeafc234420495d941934ff0da306c27aa356a61d901ea2ce6e"
-      },
-      {
-        "path": "docs/reviews/R-PR408-V12-INSTALL-2-RAW.md",
-        "lines": [
-          27,
-          73,
-          127,
-          131
-        ],
-        "sha256": "55b5f944e729db90200a5faa8599169c7df71dd1a6d3cc46441430b80ffecae8"
-      },
-      {
-        "path": "docs/reviews/R-PR408-WAITING-SESSIONS-1-RAW.md",
-        "lines": [
-          48
-        ],
-        "sha256": "828780a90be1d34a322677f8c1c96da7463184f3f92adddb8a4e4ae839988325"
-      },
-      {
-        "path": "docs/reviews/R-PR408-WAITING-SESSIONS-2-RAW.md",
-        "lines": [
-          54,
-          107
-        ],
-        "sha256": "992fb1739349a37e15b8d48cae3600436b68a872ef140b3ac19e5ba70d3cc970"
-      },
-      {
-        "path": "docs/reviews/R-PR408-WAITING-SESSIONS-3-RAW.md",
-        "lines": [
-          51,
-          53,
-          60
-        ],
-        "sha256": "6feacf4caadd6ce22285315b453dff287df5317b9e71512a1c24facbbf078874"
-      },
-      {
-        "path": "docs/reviews/R-PR408-WAITING-SESSIONS-4-NOTES.md",
-        "lines": [
-          5,
-          20
-        ],
-        "sha256": "8b78949de0b9b991818382d6a6ff3529a655e044a68daddf729e758c95b5c6fd"
-      },
-      {
-        "path": "docs/reviews/R-PR408-WAITING-SESSIONS-4-RAW.md",
-        "lines": [
-          6,
-          7,
-          24,
-          25,
-          166,
-          174
-        ],
-        "sha256": "f8bd091150e38e18cb7a5fadf056fa270289af65f7fc4799fbbe5e27c1393e74"
-      },
-      {
-        "path": "docs/reviews/R-PR491-REDIS-REMEASURE-1-RAW.md",
-        "lines": [
-          24
-        ],
-        "sha256": "e98246f88d595cd023423c7de8e63b680e3e03bf839ce9b4ed80cb50ab1b9fee"
-      },
-      {
-        "path": "docs/reviews/R-PR605-WAIT-MODE-FOLLOWUPS-1-RAW.md",
-        "lines": [
-          13
-        ],
-        "sha256": "c1fb70180653d81a070d3c7e03b8098a5cc6d3cd8407c1fa76662b25705bdef7"
-      },
-      {
-        "path": "docs/reviews/R-REDIS-LOCAL-AGENT-SITTING-BRIEF-1-RAW.md",
-        "lines": [
-          53
-        ],
-        "sha256": "fadd8cdf40e8af518c7c2f67da91c14f068497901b88b7dd4559bfda18a36fb8"
-      },
-      {
-        "path": "docs/reviews/VET-OWNER-QUESTIONNAIRE-2026-11-03-1A-RAW.md",
-        "lines": [
-          50
-        ],
-        "sha256": "99eb6c85b5c47c8f72aaa22009fe3ce1c6dcc9248d1de207b8949a49d229a11a"
-      },
-      {
-        "path": "openspec/README.md",
-        "lines": [
-          41
-        ],
-        "sha256": "0714c05f31d1c28873489d3bea35b734455eb692a9b38aef6eaf1a8b9b0cd8db"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/design.md",
-        "lines": [
-          31
-        ],
-        "sha256": "451a46fe2e59974f66e4b27e4823f2446a0f78cbbf464633e0f44c8507e8dd51"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/proposal.md",
-        "lines": [
-          133
-        ],
-        "sha256": "0d3394bbf1829afdf0dfb29b1d81f6feda7fc65b0d4fc78599d826c375b63946"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-local-agent-mode/tasks.md",
-        "lines": [
-          10,
-          33
-        ],
-        "sha256": "6ccaa6893947aa9cbb7dbe7b3704b7084167aee4bc74d4bf251b66115edd60c6"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-one-command-run/OWNER-PACKET.md",
-        "lines": [
-          75
-        ],
-        "sha256": "30f3f31d00235e6cf1e097cba685ebc474a37aba83cf95e808cb74a3270959b9"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-one-command-run/REVIEW-BRIEF-ROUND-3.md",
-        "lines": [
-          43
-        ],
-        "sha256": "196e088d178c0642a64141169ad0f8e8de55a0f008831cd05f647791526c9bc1"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-one-command-run/proposal.md",
-        "lines": [
-          208,
-          210
-        ],
-        "sha256": "0229c37dcce10d1ef078198661d4d5f5e862e447a27856eaf6bf3a496f073ddd"
-      },
-      {
-        "path": "packages/polaris-dossier/src/agent-texts.test.ts",
-        "lines": [
-          126
-        ],
-        "sha256": "ee90c9895b30705982b2a3be81d4da7a8b65a251ccf97dc5e2c74312d12c244c"
-      },
-      {
-        "path": "packages/polaris-dossier/src/waiting-sessions.test.ts",
-        "lines": [
-          137,
-          149,
-          155,
-          187,
-          199,
-          201,
-          215,
-          217,
-          219,
-          221,
-          224,
-          244,
-          245,
-          248
-        ],
-        "sha256": "8e2c8e94141516ae2b8ee7a6ddd3a113a15a219b267a8e1fffffb7a7d13f3836"
-      },
-      {
-        "path": "packages/polaris-dossier/src/waiting-sessions.ts",
-        "lines": [
-          22,
-          43,
-          71
-        ],
-        "sha256": "0942e229e2412e9eadd2d51ca87ebd04e539db10b292a1b7958d27cf39f019cb"
-      },
-      {
-        "path": "scripts/build_polaris_dossier_local_agent_mode.py",
-        "lines": [
-          5,
-          11,
-          67,
-          69,
-          71,
-          274
-        ],
-        "sha256": "c0fbf722c27160cee4eee71a7144837c1986fed0b93c48af7625c4d5266eb301"
-      },
-      {
-        "path": "scripts/build_polaris_dossier_local_agent_mode_v1_1.py",
-        "lines": [
-          5,
-          6,
-          12,
-          35,
-          44,
-          69,
-          75,
-          162,
-          325
-        ],
-        "sha256": "640960259064420ecc78dd8939ac16f95ecc4a149db2e5615f5dce3b63ced80e"
-      },
-      {
-        "path": "scripts/build_polaris_dossier_local_agent_mode_v1_2.py",
-        "lines": [
-          5,
-          7,
-          11,
-          33,
-          42,
-          66,
-          67,
-          73,
-          107,
-          235
-        ],
-        "sha256": "88f3801d0a74e2092aee25efaed8c52ed0ac9d295d726fe641e4ee7b0581e187"
-      },
-      {
-        "path": "scripts/build_polaris_dossier_local_agent_mode_v1_3.py",
-        "lines": [
-          5,
-          8,
-          12,
-          37,
-          60,
-          61,
-          62,
-          68
-        ],
-        "sha256": "950f571181358af12124db456ea003e5cafc9316d338eee2ced588bd4f504b0f"
-      },
-      {
-        "path": "scripts/check_governance.py",
-        "lines": [
-          683
-        ],
-        "sha256": "f41043d7416050a875db82fe1b1ab06ae8ad6d299a24b4281898cea598a5afee"
-      },
-      {
-        "path": "scripts/install_redis_local_agent_sitting.py",
-        "lines": [
-          340,
-          408,
-          410,
-          456,
-          467
-        ],
-        "sha256": "1db21e7fb43368fa0f83aecb8772aebff43899741a520f360585026b0778e0ee"
-      },
-      {
-        "path": "scripts/install_redis_sitting.py",
-        "lines": [
-          617,
-          1696
-        ],
-        "sha256": "8b524c56029eed07fd7a8f8da7b4e5c6fdf9abc43247d070f7f1910a8bba53c3"
-      },
-      {
-        "path": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
-        "lines": [
-          353,
-          354,
-          359,
-          2166,
-          2498,
-          2499,
-          2500,
-          2522,
-          2539,
-          2540,
-          2541
-        ],
-        "sha256": "d74cbdf4ac99c4e68a511bdf72a4bc65212571a5026501df7d4763b5625d8600"
-      },
-      {
-        "path": "scripts/record_versioned_signoff.py",
-        "lines": [
-          1131,
-          1133,
-          1134,
-          1135,
-          1466,
-          1467,
-          1470,
-          1475,
-          1476,
-          1498,
-          1499,
-          1502,
-          1507,
-          1508,
-          1517,
-          1518,
-          1521,
-          1526,
-          1527,
-          1533,
-          1534,
-          1537,
-          1542,
-          1543,
-          2988,
-          2991,
-          2999,
-          3000,
-          3001,
-          3002,
-          3003,
-          3004,
-          3011,
-          3012,
-          3020,
-          3021
-        ],
-        "sha256": "487f4ca24b515686222f395671fb183d93cf08b978d4bf47475169cbd64668f1"
-      },
-      {
-        "path": "scripts/redis_screening_remeasure.mjs",
-        "lines": [
-          13,
-          180,
-          181
-        ],
-        "sha256": "715eb93b56368956ab389a8e191bb376f0f1c31e27ac422326e6ba0151245332"
-      }
+      {"path": ".github/workflows/governance-docs.yml", "lines": [183, 184, 186, 187, 189, 190, 192, 193, 242, 243, 245, 246, 250, 251, 253, 254, 258, 259, 261, 262, 266, 267, 269, 270], "sha256": "9878eac894b3737536ae8c4501856dda84f1d4d2fc20a2305bc220929ba7ef01"},
+      {"path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-REVIEW-NOTES.md", "lines": [4, 18, 20, 70, 80, 138, 144, 167], "sha256": "4abd47604180ee9e6de617d250b64b1ca45fc5e21d07d45c0db317f930221095"},
+      {"path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-ROUTE-EDITS.txt", "lines": [1, 20, 66, 70, 76, 83, 84, 107], "sha256": "853a4bc564fca03c977467cf6b6e969de1658b6c1af0aa20daa7d6b55a41fae8"},
+      {"path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-REVIEW-NOTES.md", "lines": [5, 20, 69], "sha256": "a1a230b56ccee7705929420389663b5c30d4cf5dc536ee4c302cf763395b9401"},
+      {"path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-SIGNOFF-ROUTE-EDITS.txt", "lines": [1, 13, 21, 33, 37, 40, 43, 46, 50, 51, 67], "sha256": "4603f74778898f32c4c921780e37adea7bffb5e4f4ec13517291ff97e15f1d25"},
+      {"path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md", "lines": [5, 19], "sha256": "bf256d224d3453a49377de6615bd3bb1d85da73720c391b136bd5edfd4a732c9"},
+      {"path": ".syzygy/governance/contracts/candidates/REDIS-LOCAL-AGENT-SITTING-BRIEF.md", "lines": [79, 496], "sha256": "75b703d49c5f83a777ac940de2c9f1e1b279488bf130ec0290ea81adec330f4b"},
+      {"path": ".syzygy/governance/contracts/candidates/cc-sec-3-attended-session-amendment/REVIEW-BRIEF.md", "lines": [28], "sha256": "fbc14a9426feb0a86c2371aaedf383bf41e2a3271f6105718d5fd682343beb73"},
+      {"path": ".syzygy/governance/contracts/candidates/cc-sec-3-attended-session-amendment/SUBJECT.json", "lines": [38], "sha256": "b1e187041daaa658a2e399f23c1d0b57c4b0d92d50a2902ab6c872e8fcd7257d"},
+      {"path": ".syzygy/governance/contracts/candidates/doctrine-amendment-sec3-attended-agent-session-d9/IMPACT-LEDGER.md", "lines": [187], "sha256": "3d8beb50d1b2d9dbbd6aed74edff5dfa12ddd8c3f0f9d1f6177ac58d94f4c825"},
+      {"path": ".syzygy/governance/contracts/candidates/dossier-handoff-options/CLAUSES.md", "lines": [16, 22, 65], "sha256": "759ae4eb87b89f8cd5205dc981e7bde0fbabba704fedcc20f8f6adf248b7b2f5"},
+      {"path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/REVIEW-BRIEF.md", "lines": [69], "sha256": "668f9fb1012c7aa59dd21dc2ea1469e1fef6421adaff36b3abd2a737c7e7fcf2"},
+      {"path": ".syzygy/governance/contracts/candidates/dossier-local-agent-acts/reviews/R-DOSSIER-LOCAL-AGENT-SITTING-2-RAW.md", "lines": [50, 87], "sha256": "56aa2ca191682e11de7a918000b5529fd05133f0bd5b24c2b6d7cb3735df408d"},
+      {"path": ".syzygy/governance/contracts/candidates/dossier-local-cli-subprocess-runner/REVIEW-BRIEF.md", "lines": [33], "sha256": "bb73af9d655b8233e73a136915a8c69ff00689d96be2853892c8d7922521e369"},
+      {"path": ".syzygy/governance/contracts/candidates/dossier-local-cli-subprocess-runner/SEMANTIC-DELTA.md", "lines": [78, 279], "sha256": "478c86d5bc474d806019c943de751968fe0765683f65640e843436dc1f0cd73d"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/IMPACT-LEDGER.md", "lines": [13, 47, 94, 97, 119, 120], "sha256": "047bcf70f958df1e0a5daa53763ba0b30079c28ac47deea7f971bbbe0cc514f3"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/REVIEW-BRIEF.md", "lines": [22, 31, 138], "sha256": "011822d781a4fd976f30a291a404e854cd3a2677b1a6afb9e94bd3a0ceabe1a7"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/SEMANTIC-DELTA.md", "lines": [4, 19, 20, 271], "sha256": "e01dc9aab22121a83008ebd8d6f916f8c4fe402f2d6d013473dce51913789bea"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/proposed/design.md.patch", "lines": [1, 3, 4], "sha256": "e35b3a2efe4a05aea1e64812e69aa1d4fe522c635ecbf212ed258608172722c1"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/proposed/proposal.md.patch", "lines": [1, 3, 4], "sha256": "9bf7dbd97bfc994036c252f1c67f70f107300194e653ae6e1ef61b1bb9dfdf4b"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/proposed/spec.md.n6-optional.patch", "lines": [1, 3, 4], "sha256": "ab0e091f74929ddc37b5e7d3bc246281b159173611812f2006cb1a7165858cd1"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/proposed/spec.md.patch", "lines": [1, 3, 4], "sha256": "0a302ecc93f70abff92d5afc71f2ed1075c0e9ef1eeb66a7d7b83d8259e0926a"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/IMPACT-LEDGER.md", "lines": [6, 17, 45, 112, 113], "sha256": "aab6bbf86e236b323b1d1cc138f2c98cba3ea99b9335680e3f7615edba5f8ba0"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/REVIEW-BRIEF.md", "lines": [23, 30, 62, 63, 137], "sha256": "7813ae17df6ef62d769df033b12e1525246eb2d0509f2a1970501e9dd8b51154"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/SEMANTIC-DELTA.md", "lines": [4, 18, 19, 197, 229, 232, 240], "sha256": "9b0e1870415ce0da6a8a87ce441aae905ff3891cdb9138d214d6325b785f2a8b"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/proposed/design.md.patch", "lines": [1, 3, 4], "sha256": "3abdec69074cfa55febd4134cee9badcbc89455d298227b8bf815fd2c7ab4bb5"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/proposed/proposal.md.patch", "lines": [1, 3, 4], "sha256": "ab8e657f65cdb5ad94d7af7327dfff24b65bbfd4cee7f2b9b36969a276099a98"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/proposed/spec.md.patch", "lines": [1, 3, 4], "sha256": "601cbeada570ae8c9c62f76d8d7319ae866f2b34f5f0d3c1973b7ceeb94e816e"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/IMPACT-LEDGER.md", "lines": [5, 20, 52, 68, 95, 99, 145, 147], "sha256": "100d1226a2e65b24d36098bf1353d083022938fe8b8d2245223c432f93446bac"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-BRIEF.md", "lines": [21, 28, 56, 57, 58, 124, 126], "sha256": "adac93ca8dd857e1d8d8510aff5875d97f374d3ade8bc143373f46756e577b70"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md", "lines": [4, 20, 21, 227, 262, 265, 274], "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/design.md.patch", "lines": [1, 3, 4], "sha256": "7068535eced94a4b035e6efdba354ed0a92f0469265e95414421c711d7cb38c2"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/proposal.md.patch", "lines": [1, 3, 4], "sha256": "4560d8c5740de03c4a6777ab046d92202d07a118b016581e8e654f1369ba7da6"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/spec.md.patch", "lines": [1, 3, 4], "sha256": "92d7eca908b88e6bbc7627a92ee127c6334ec95d2e8a73c853e93feee0101e13"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode/OWNER-DECISION-PACKET.md", "lines": [114, 145], "sha256": "bc8fb7db67f935f5640385af17f0461252490a76e819c400310a4783a91ccd80"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode/REVIEW-BRIEF.md", "lines": [19, 22], "sha256": "acb8af4f34056f8aaf77e458b7fcb54332861be90b3545ec349c349a6500dae7"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode/SEMANTIC-DELTA.md", "lines": [7], "sha256": "70df027e7eabbcbef6de78f9660c8a3882d930b42c5107ce77fcc0ed3ec58b9e"},
+      {"path": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json", "lines": [53], "sha256": "917aecc766f01133d5a29c1ee8b3e575332ad48d04308a1b62c68217e48d254b"},
+      {"path": ".syzygy/governance/contracts/candidates/public-source-screening-scope-v3/IMPACT-LEDGER.md", "lines": [123], "sha256": "cc6e5a1e85c497b6e46bdcb7359bee40b1e3d59d2f25c732e0e45f44bef035e9"},
+      {"path": ".syzygy/governance/contracts/candidates/public-source-screening-scope-v3/SEMANTIC-DELTA.md", "lines": [217, 226], "sha256": "8ab4d325d8738043ec7430b6fde769d656fd39329963be4a050f70ba83ace51d"},
+      {"path": ".syzygy/governance/contracts/candidates/public-source-screening-scope-v4/REVIEW-BRIEF.md", "lines": [24], "sha256": "815ed7ef3b85a6da9ccf9bbbb34e8bba38c6993f3b6aacc59abfb19cb8357e75"},
+      {"path": ".syzygy/governance/contracts/candidates/public-source-screening-scope-v5/SEMANTIC-DELTA.md", "lines": [77], "sha256": "f1ba4daf91cd66bdbe2e95de8d578d8400c7d5c1aa0613d447bced8df5fc1cd3"},
+      {"path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/IMPACT-SWEEP.json", "lines": [33, 43, 137, 144, 178, 185, 219, 226, 258, 265], "sha256": "3a63fa30119d009965e40e48d18b7cadeb9baa24622f2bd7188c9bb38c0fc9ed"},
+      {"path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/REQUIREMENT-CONSUMPTION.json", "lines": [34, 211, 212, 247, 248, 283, 284, 319, 320], "sha256": "535de5057966801c5e8cc7e1f3258d033b387054d14a920a78b453ff04698b06"},
+      {"path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/evidence/source-return/EVIDENCE-EXCERPT-MAP.json", "lines": [39, 55, 71, 87], "sha256": "4e9fefbcb8e4c6b4c5897ebb544be6302b8a0754f4ba3fd262d10dd1d419a861"},
+      {"path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/evidence/source-return/SOURCE-BINDINGS.json", "lines": [22], "sha256": "68392a146377ed3cf0eb7b037da1790b98d760bca0d8c695e768875830293e59"},
+      {"path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/evidence/source-return/SOURCE-DECISION-RECONCILIATION-CURATED.md", "lines": [28], "sha256": "47201aaaafa808945dd03352a11c263de108f535dcb79ed6d176003ff382c6bb"},
+      {"path": ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md", "lines": [1175, 1176, 1186, 1191, 1193, 1194, 1204, 1209, 1485, 1486, 1496, 1501, 1746, 1747, 1757, 1762], "sha256": "cc8c6a8f6bde4adba6832975ce136a5c0b0783b054e3eaf968d7f3b1d54d3d39"},
+      {"path": ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md", "lines": [27], "sha256": "96928fbd20bf8f89b90c6b5fc62b441c0112eac3cc4367015854c70290aed08d"},
+      {"path": ".syzygy/governance/decisions/PENDING-OWNER-DECISIONS.md", "lines": [1055], "sha256": "33b4fa61676b70a3550993fadda88b7fbbc579b0d139aa6d6ac5d76cef7c6704"},
+      {"path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.0.md", "lines": [7, 11, 15, 29, 36], "sha256": "b64225c5c490c754f74ab94fa2c94ed28137a7ad9903fc501925c99dc37f3739"},
+      {"path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.1.md", "lines": [7, 11, 31, 38], "sha256": "3d70b3402925239712053b8f9b8ded186e61ac169bba059e16801de5593072d9"},
+      {"path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md", "lines": [7, 11, 29, 36], "sha256": "c96d444db1e04ed3ca8e594c3242e571609f93c606ca9b9d4a30e749a28f569c"},
+      {"path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md", "lines": [7, 11, 29, 36], "sha256": "12b9cfeb6bec3ddc17dc07edd66e5f8411dd04838609dcb5621570bc4f2e03ef"},
+      {"path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-SCOPE-REVIEW-SIGNOFF-DIRECTION.md", "lines": [18, 42, 62], "sha256": "2e01b12660961fc5bc715cb620887d01607269fa6d4ab079841218961fdbcd13"},
+      {"path": ".syzygy/governance/decisions/POLARIS-DOSSIER-WAITING-SESSIONS-DIRECTION.md", "lines": [85], "sha256": "a209325dac89eaacd13f6e0ecd07e4d501e9b5a869aa20664a760c7a13073d87"},
+      {"path": ".syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json", "lines": [53], "sha256": "917aecc766f01133d5a29c1ee8b3e575332ad48d04308a1b62c68217e48d254b"},
+      {"path": "PROJECT-STATUS.md", "lines": [52, 409, 410, 411, 412, 427, 428, 429, 430, 431, 432, 433, 434], "sha256": "27fda231f67dcbad861db47be828910819ecc1dddd54d5848c52167e789fb3a5"},
+      {"path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts", "lines": [179], "sha256": "b889f04f6e558cd1bcef060e9a7bd91f1cb00e789619f75257c3b6d7a4d19688"},
+      {"path": "docs/evidence/chrome-singleton-review-2026-10-25/r2/results/battery.log", "lines": [41, 42, 43, 54, 55, 56, 57, 58, 59], "sha256": "20603f032b9a8c3f67faed2895631ad932457d404ca6bf826b46d3abbb46fe01"},
+      {"path": "docs/evidence/dossier-blockers-install-clone-battery-f7d1ea7f-2026-10-08.log", "lines": [108, 109, 111, 112, 152, 155, 159, 162], "sha256": "aa2529bfac31a2c609f5b6b535f094a6d03394dbefafe0f4e5ea3fc17aa714ad"},
+      {"path": "docs/evidence/host-pins-review-2026-10-27/battery.json", "lines": [248, 251, 254, 257, 260, 263, 326, 332, 338, 344, 350, 356], "sha256": "6c11c2e174effc5df58f58175a0816774629b46304e6ea8093563d9c37fcbaa0"},
+      {"path": "docs/evidence/host-pins-review-2026-10-27/battery.log", "lines": [41, 42, 43, 54, 55, 56, 57, 58, 59], "sha256": "2de93f56ca3296d8b3daa9b94e807cac9856fcf16dccfa301ce8e4a95be851da"},
+      {"path": "docs/evidence/host-tidy-review-2026-10-27/battery-head.json", "lines": [209, 214, 219, 274, 279, 284, 289, 294, 299], "sha256": "81a5f6a0a1cbf58dcdf69807327c10fd4fef7f08dc6c7d6038d33ea703a09aa8"},
+      {"path": "docs/evidence/object-iso-helpers-review-2026-10-28/r1/dossier.diff", "lines": [1057], "sha256": "f93515f4d6a41d8be21f059da7be4c461908fd82537e4c89ef6daa2d5539eeb6"},
+      {"path": "docs/evidence/p115-implementation-authorization-2026-10-28/CONSUMER-CENSUS.json", "lines": [2647, 2652, 2657], "sha256": "27e7d0d53724a8f3fd75bfb463bed2dcd07efcaf876fb4b1d1b59066cb93184b"},
+      {"path": "docs/evidence/p115-implementation-authorization-2026-10-28/CURRENT-SOURCE-REFRESH.json", "lines": [3209, 3212, 3215, 3218, 3221, 3224], "sha256": "2d137eb6a585f388f2ee2e5aa751f0a09624b27c6d4c75b862900f2f96af5c8e"},
+      {"path": "docs/evidence/p115-implementation-authorization-2026-10-28/MANIFEST.json", "lines": [4382, 4389, 4396], "sha256": "2a4b38fbae2034e83141425454fcce0a8c0f33c20e3c5e8cb47eddaa22e2ee3a"},
+      {"path": "docs/evidence/p115-implementation-authorization-2026-10-28/SOURCE-BINDINGS.json", "lines": [5407, 5408, 5417, 5418, 5427, 5428], "sha256": "b70186b299d60e53367aa984a18c53bd75eaf7fd664ab895249e2feda215d626"},
+      {"path": "docs/evidence/package-reader-timeouts-review-2026-10-25/r2/battery.json", "lines": [247, 250, 253, 256, 259, 262, 325, 331, 337, 343, 349, 355], "sha256": "4349d3c737814e5dfe37f3df832317f5fd04869ff655fb3ee50b370f0a7f9e54"},
+      {"path": "docs/evidence/package-reader-timeouts-review-2026-10-25/r2/battery.log", "lines": [41, 42, 43, 54, 55, 56, 57, 58, 59], "sha256": "653918c9cbe4eb7549f1116647d68f57452ff232fe74817cd05e10cd3e22ff37"},
+      {"path": "docs/evidence/package-reader-timeouts-review-2026-10-25/r3/battery.json", "lines": [251, 254, 257, 260, 263, 266, 329, 335, 341, 347, 353, 359], "sha256": "b830a4403f78040d24fd4469260766df616ae6298c007d164448e4d0308b949b"},
+      {"path": "docs/evidence/package-reader-timeouts-review-2026-10-25/r3/battery.log", "lines": [41, 42, 43, 54, 55, 56, 57, 58, 59], "sha256": "f60bd9bab0f9dbf565abb5100ce35f4d9e775a81d27edc9b574e8eb153c3d092"},
+      {"path": "docs/evidence/package-reader-timeouts-review-2026-10-25/r4/battery.json", "lines": [251, 254, 257, 260, 263, 266, 329, 335, 341, 347, 353, 359], "sha256": "13696d3fa7823fdac3edd510e026767bdac1ff9beff661476a087acd467586cf"},
+      {"path": "docs/evidence/package-reader-timeouts-review-2026-10-25/r4/battery.log", "lines": [41, 42, 43, 54, 55, 56, 57, 58, 59], "sha256": "be7c6c8551b12323d88c8a2cf51d34c1a900c0bd9b677cf6a0e4b729cfa62323"},
+      {"path": "docs/evidence/polaris-dossier-s11-mutants-2026-10-07.json", "lines": [23], "sha256": "6fc5a908d7590d81190002297144b8d96fff11315a365f7b969a313f988fc5b1"},
+      {"path": "docs/evidence/polaris-dossier-waiting-sessions-mutants-2026-10-09.json", "lines": [2, 1258, 1262, 1271, 1279, 1298, 1317, 1338, 1357, 1376, 1395, 1414, 1433, 1453, 1472, 1491, 1510, 1530, 1554, 1579, 1600, 1628, 1651, 1696, 1697], "sha256": "47b7fd6c13fe1ad237aab7d5f41c97b22b97b91d09bee2477b4b09aaba2adddf"},
+      {"path": "docs/evidence/redis-screening-v4-remeasure-2026-10-21.json", "lines": [165, 166], "sha256": "1432bca9df640e7f304dfb05baf9263e2e6bbf6b779942127afd7ed4bd5467d7"},
+      {"path": "docs/evidence/scratch-prefix-census-2026-10-23/census-2026-10-24.json", "lines": [5994, 5998, 6002], "sha256": "8bb12c8a5adb7522ba15293b9df16fc3ea4e39cbb2928661e386c974904f3002"},
+      {"path": "docs/evidence/scratch-prefix-census-2026-10-23/static-sites-2026-10-24.json", "lines": [2531, 2624, 2654], "sha256": "f5ad2571ddf5b9caab1aafb5c9de3a70d94fdf6a9992af2faa789672b24a2a69"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-m1.json", "lines": [5951, 5954, 5957], "sha256": "e2e7787c2b5b88d1a8ff39cdcb59cad5b0c16c0e8cfe5d2abc4a5f6777b3ab42"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-m3.json", "lines": [5951, 5954, 5957], "sha256": "c812be7e15c4839c627603fe3d3a6a4100e01bd2bfcebfff0dce08e6a353a7f1"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/census-rerun.json", "lines": [5951, 5954, 5957], "sha256": "ca3d308e2bdf7159ca38b94b7d2049d1918c4d75d27a2cf08042fd8fbbf67533"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/creator-sweep.json", "lines": [119, 3509, 3563, 3581], "sha256": "d1703bccdd14d4150406c98ac54db5cf3621c1610fbf5be6c1d5d1dd1998eaa4"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-1/static-rerun.json", "lines": [2529, 2622, 2652], "sha256": "09dfb9d602d15f149c2f8ef0acf6c8fd0c2036c0f0351d543f1f9c805b245d7a"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/census-rerun.json", "lines": [5994, 5998, 6002], "sha256": "b1e0099f80cbc950e7eff1a6f9c64d30c6bb128ca1efce76e849d50138d36a22"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-2/static-rerun.json", "lines": [2531, 2624, 2654], "sha256": "f5ad2571ddf5b9caab1aafb5c9de3a70d94fdf6a9992af2faa789672b24a2a69"},
+      {"path": "docs/evidence/scratch-prefix-census-review-2026-10-27/round-3/census-rerun.json", "lines": [5994, 5998, 6002], "sha256": "8bb12c8a5adb7522ba15293b9df16fc3ea4e39cbb2928661e386c974904f3002"},
+      {"path": "docs/evidence/source-resolution-review-2026-10-28/r1/doc-sweep-head.json", "lines": [75], "sha256": "20c726ff87f37eb3389265615363f2f6501513438c30f6fc1df606d207a9d344"},
+      {"path": "docs/evidence/spec-readability-reconciliation-2026-10-02/README.md", "lines": [365, 390], "sha256": "ffb1459a931bec24f746c07d5416a51996da4de4ceef1f23addf1a3e66d80b1b"},
+      {"path": "docs/evidence/spread-loops-review-2026-10-28/r1/md-list.bin", "lines": [1], "sha256": "f2456a6b9c0ade9ccf5ab23363743591d29288ad601829c9742d9907e329d327"},
+      {"path": "docs/evidence/support-leaf-followups-review-2026-10-28/r1/battery-head.json", "lines": [254, 257, 260, 263, 266, 269, 350, 356, 362, 368, 374, 380], "sha256": "8d1932e090dc62cd5b996219bb2a8fa2ac9b73b8bd1bff7d86614c430316e52c"},
+      {"path": "docs/evidence/support-leaf-followups-review-2026-10-28/r1/battery-head.log", "lines": [42, 43, 44, 58, 59, 60, 61, 62, 63], "sha256": "624fa0256a9f27b0c4673a1780d04d52d26fb36b4568ddf2d4439a1f5c1dc48c"},
+      {"path": "docs/evidence/support-leaf-followups-review-2026-10-28/r2/battery-combined.json", "lines": [227, 232, 237, 307, 312, 317, 322, 327, 332], "sha256": "36c0c24a116781570c5b343d8ec3dece2a40446d64425e97d1680d0d1a9669ab"},
+      {"path": "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff", "lines": [963], "sha256": "f65ae511b9ef558cf6ef8bbb69e8da52868fedb3ee8f03e720894c0784bfa85f"},
+      {"path": "docs/evidence/syzygy-bpyt-8-7/tools/waitprobe.mjs", "lines": [6], "sha256": "e1ce1e996e1500e5899d67c59e3c15c784747cf2255eaed2462213be6f0d6112"},
+      {"path": "docs/plans/2026-10-21-greenfield-parity-audit.md", "lines": [599, 608, 624], "sha256": "ddfc405f1fc65c3f85455d3f56403ec2785a9b209f7f1bbb13eca64b1e36d439"},
+      {"path": "docs/review-campaigns/dossier-local-agent-v1-3.md", "lines": [9, 13], "sha256": "233d69816e494d6823e9313a370f7a09a19c4f236b8689fedb9c54fee5e4eb5c"},
+      {"path": "docs/review-campaigns/pr408-waiting-sessions.md", "lines": [10], "sha256": "c3a3b4bd8d81ad66796bf7f3a20655df34dc60a713a134778fe35b3e9c99df06"},
+      {"path": "docs/reviews/R-ARBITRARY-PUBLIC-REPO-1-RAW.md", "lines": [189], "sha256": "cfe6d5bb5c7bc1f8ba31552b39f94d14c29eb90a2aa740fb6a35cf2fd00382d3"},
+      {"path": "docs/reviews/R-ARBITRARY-PUBLIC-REPO-3-RAW.md", "lines": [181], "sha256": "3a65a99bbcbf83418bc64de9ccde6f92d9fbd54d5cb3437ff1249927c7505b94"},
+      {"path": "docs/reviews/R-DOCTRINE-AMENDMENT-D9-2-RAW.md", "lines": [11], "sha256": "e106200b795482e74aac9fd84671964e7d2e360658e0e8c8ba02b3dc64f94e71"},
+      {"path": "docs/reviews/R-DOCTRINE-AMENDMENT-D9-3-RAW.md", "lines": [11], "sha256": "e34126d27a7fe4d2ecdfa6b93dcd1775a7105cdbf9ba6ec50cc2cc92dcd42c12"},
+      {"path": "docs/reviews/R-DOSSIER-CLI-SUBPROCESS-5-RAW.md", "lines": [21], "sha256": "373f638cca01dc329f425894d21e3f7a0ec0dc99c0e3c91810b01b36779e7e3c"},
+      {"path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md", "lines": [1, 11, 211, 350], "sha256": "3f36de2f5b9f23362b89417d92a417b366f21bedbf1008b664385c8857f70ccd"},
+      {"path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-ffc2-1-RAW.md", "lines": [1, 8, 231, 234], "sha256": "f32376410c1843abed94744a1a03210f2436af77e87e90499a61a51ebc87a1d0"},
+      {"path": "docs/reviews/R-GP-IMPL-ADAPTER-CREDENTIALS-1-RAW.md", "lines": [48], "sha256": "2b4aff7b69d12c2dcf7381351a63aa655c85352c5c8d35ce73daaed21cf15811"},
+      {"path": "docs/reviews/R-GP-IMPL-DOSSIER-CLI-TABLE-1-RAW.md", "lines": [399], "sha256": "8cd7974bd7e502e89ec2912a220cec44a54fea2db074accb448a9c4986bcdd69"},
+      {"path": "docs/reviews/R-GP-IMPL-LAUNCHED-MARKER-1-RAW.md", "lines": [42], "sha256": "1d8ea7c8b28762be27dc28b14eb49876db6efca5aee19972b6d64958a3099360"},
+      {"path": "docs/reviews/R-GP-IMPL-LAUNCHED-MARKER-2-RAW.md", "lines": [52], "sha256": "60cca1fb732077d4eff792c5eab3620c7bee055d397167106ec4e71d3fbf544a"},
+      {"path": "docs/reviews/R-GP-IMPL-OBJECT-ISO-HELPERS-1-RAW.md", "lines": [76], "sha256": "157563c5e445b201d56c49ead8685d4dd0fbec3c2a80a1b215e358f5fcff56df"},
+      {"path": "docs/reviews/R-GREENFIELD-PARITY-PACKET-1-RAW.md", "lines": [318], "sha256": "534979794c5acc0f5fa4051ce80fba95f38f5a498fd0c3eed30cf6025aea1f1e"},
+      {"path": "docs/reviews/R-GREENFIELD-PARITY-PACKET-2-RAW.md", "lines": [123], "sha256": "541d5ffd806e14ce00226865d9452a094f2af986ae012f023c7640709d6758d7"},
+      {"path": "docs/reviews/R-MEA10-RENDER-READABILITY-9070-1-RAW.md", "lines": [27], "sha256": "de46836da604403f3f3d2ec286d99b49b9c02dc8ba32acdae81c1f6ea682713b"},
+      {"path": "docs/reviews/R-OLMR-SCREENING-SCOPE-V4-4-RAW.md", "lines": [254], "sha256": "a2dc6f152b41493289c54d284822d32e7db6dfc7526e37bd4c7c0099792b245a"},
+      {"path": "docs/reviews/R-P115-LATER-SIGNED-6678-1-RAW.md", "lines": [24, 66, 84, 89], "sha256": "9104aa1627efe3aef4c2e568bfe78520f8a53e9c93615fba6b55d402de78e74e"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-CLONE-SHAPE-1-RAW.md", "lines": [27, 250], "sha256": "30973b46f55fdb7cf060ff1ae64a97932ebca5cafc358dc9c045ab1cf8e07947"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-GATE-SOURCES-1-RAW.md", "lines": [11], "sha256": "babe4dc2420030fdba107d217a8975072808b8f6babc7b156425a8ab9b28305d"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-GATE-SOURCES-2-RAW.md", "lines": [12], "sha256": "d3c7872bb44f8c828c74ec843fd2c55f1daa1f7f321f51e7f62ba3391966badb"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-GATE-SOURCES-3-RAW.md", "lines": [22, 23], "sha256": "336541e4ce1fd67c6c233b741c6da4781aa58b3dd2f11b4a1980da3e9b749114"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-1-RAW.md", "lines": [12, 19], "sha256": "53169274417f53cd51a75abf47ffdedfeb567197bcb45b15fc682d7a28f1d27c"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-2-RAW.md", "lines": [16], "sha256": "c2bf634b70e0ce4b9241fe62bfaafba90bf9333edca281056c49bb8d74736dc4"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-3-RAW.md", "lines": [23], "sha256": "f312392b4dde6157319d6dddccc8b3f399c37d2aec9208c9eb96abe4aa961718"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-1-RAW.md", "lines": [10, 59, 142], "sha256": "0da4bc64834cd08840581f6190103edbb7a5f2a23d47e82397e2668152338beb"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-2-RAW.md", "lines": [11, 68], "sha256": "b50bd68bcf168d0f7f641bdf25cf739199547ff6ed56767452187cba1db53bff"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-ONE-COMMAND-RUN-1-RAW.md", "lines": [24], "sha256": "3e4ce4baf261c30d548f056107233cbc83c91da00a64f2f4246b4d398e4867ed"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-S2-READER-1-RAW.md", "lines": [6], "sha256": "c41646bfcfd6eeaeb2b61e3bf042f18937a5bbd676d3d3da6b31a19a315f9c09"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-S2-READER-2-RAW.md", "lines": [6], "sha256": "28c66ffb3fc8f1571aa131d494eead4dc911b72c47819db10ae2f416204e05e8"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-S2-READER-3-RAW.md", "lines": [11], "sha256": "5b64d5ea6ec03e73f4442df2fc59760045503bfa978e7696658ab8b7b6323823"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-S3-GATES-2-RAW.md", "lines": [5], "sha256": "aca4eef6c071033115cef88cf63e4a283393b4ebcaf4af0667dee028ee422f64"},
+      {"path": "docs/reviews/R-PR404-DOSSIER-BLOCKERS-1-RAW.md", "lines": [142], "sha256": "f18c64d7658e32d2693f389b3114684ff152fc7c6b447e0f24e8ca2948f032da"},
+      {"path": "docs/reviews/R-PR404-DOSSIER-BLOCKERS-2-RAW.md", "lines": [41], "sha256": "820920fec5a3ad16c99a974f3a1ef3d50b807514110f6797e7c34781466967a8"},
+      {"path": "docs/reviews/R-PR406-SESSION-TOOL-STATEMENT-1-RAW.md", "lines": [67], "sha256": "67d666e39800c831a5fd1886954034c4745b6e075c3e8d712816bc79209727ce"},
+      {"path": "docs/reviews/R-PR408-V12-INSTALL-1-NOTES.md", "lines": [32, 69], "sha256": "e8ec2084ed00f6ac063f472e0570b95956a77693d054011e538617e299abdfd3"},
+      {"path": "docs/reviews/R-PR408-V12-INSTALL-1-RAW.md", "lines": [23, 69, 108], "sha256": "3c7857c0da03afeafc234420495d941934ff0da306c27aa356a61d901ea2ce6e"},
+      {"path": "docs/reviews/R-PR408-V12-INSTALL-2-RAW.md", "lines": [27, 73, 127, 131], "sha256": "55b5f944e729db90200a5faa8599169c7df71dd1a6d3cc46441430b80ffecae8"},
+      {"path": "docs/reviews/R-PR408-WAITING-SESSIONS-1-RAW.md", "lines": [48], "sha256": "828780a90be1d34a322677f8c1c96da7463184f3f92adddb8a4e4ae839988325"},
+      {"path": "docs/reviews/R-PR408-WAITING-SESSIONS-2-RAW.md", "lines": [54, 107], "sha256": "992fb1739349a37e15b8d48cae3600436b68a872ef140b3ac19e5ba70d3cc970"},
+      {"path": "docs/reviews/R-PR408-WAITING-SESSIONS-3-RAW.md", "lines": [51, 53, 60], "sha256": "6feacf4caadd6ce22285315b453dff287df5317b9e71512a1c24facbbf078874"},
+      {"path": "docs/reviews/R-PR408-WAITING-SESSIONS-4-NOTES.md", "lines": [5, 20], "sha256": "8b78949de0b9b991818382d6a6ff3529a655e044a68daddf729e758c95b5c6fd"},
+      {"path": "docs/reviews/R-PR408-WAITING-SESSIONS-4-RAW.md", "lines": [6, 7, 24, 25, 166, 174], "sha256": "f8bd091150e38e18cb7a5fadf056fa270289af65f7fc4799fbbe5e27c1393e74"},
+      {"path": "docs/reviews/R-PR491-REDIS-REMEASURE-1-RAW.md", "lines": [24], "sha256": "e98246f88d595cd023423c7de8e63b680e3e03bf839ce9b4ed80cb50ab1b9fee"},
+      {"path": "docs/reviews/R-PR605-WAIT-MODE-FOLLOWUPS-1-RAW.md", "lines": [13], "sha256": "c1fb70180653d81a070d3c7e03b8098a5cc6d3cd8407c1fa76662b25705bdef7"},
+      {"path": "docs/reviews/R-REDIS-LOCAL-AGENT-SITTING-BRIEF-1-RAW.md", "lines": [53], "sha256": "fadd8cdf40e8af518c7c2f67da91c14f068497901b88b7dd4559bfda18a36fb8"},
+      {"path": "docs/reviews/VET-OWNER-QUESTIONNAIRE-2026-11-03-1A-RAW.md", "lines": [50], "sha256": "99eb6c85b5c47c8f72aaa22009fe3ce1c6dcc9248d1de207b8949a49d229a11a"},
+      {"path": "openspec/README.md", "lines": [41], "sha256": "0714c05f31d1c28873489d3bea35b734455eb692a9b38aef6eaf1a8b9b0cd8db"},
+      {"path": "openspec/changes/polaris-dossier-arbitrary-public-repo/design.md", "lines": [31], "sha256": "451a46fe2e59974f66e4b27e4823f2446a0f78cbbf464633e0f44c8507e8dd51"},
+      {"path": "openspec/changes/polaris-dossier-arbitrary-public-repo/proposal.md", "lines": [133], "sha256": "0d3394bbf1829afdf0dfb29b1d81f6feda7fc65b0d4fc78599d826c375b63946"},
+      {"path": "openspec/changes/polaris-dossier-local-agent-mode/tasks.md", "lines": [10, 33], "sha256": "6ccaa6893947aa9cbb7dbe7b3704b7084167aee4bc74d4bf251b66115edd60c6"},
+      {"path": "openspec/changes/polaris-dossier-one-command-run/OWNER-PACKET.md", "lines": [75], "sha256": "30f3f31d00235e6cf1e097cba685ebc474a37aba83cf95e808cb74a3270959b9"},
+      {"path": "openspec/changes/polaris-dossier-one-command-run/REVIEW-BRIEF-ROUND-3.md", "lines": [43], "sha256": "196e088d178c0642a64141169ad0f8e8de55a0f008831cd05f647791526c9bc1"},
+      {"path": "openspec/changes/polaris-dossier-one-command-run/proposal.md", "lines": [208, 210], "sha256": "0229c37dcce10d1ef078198661d4d5f5e862e447a27856eaf6bf3a496f073ddd"},
+      {"path": "packages/polaris-dossier/src/agent-texts.test.ts", "lines": [126], "sha256": "ee90c9895b30705982b2a3be81d4da7a8b65a251ccf97dc5e2c74312d12c244c"},
+      {"path": "packages/polaris-dossier/src/waiting-sessions.test.ts", "lines": [137, 149, 155, 187, 199, 201, 215, 217, 219, 221, 224, 244, 245, 248], "sha256": "8e2c8e94141516ae2b8ee7a6ddd3a113a15a219b267a8e1fffffb7a7d13f3836"},
+      {"path": "packages/polaris-dossier/src/waiting-sessions.ts", "lines": [22, 43, 71], "sha256": "0942e229e2412e9eadd2d51ca87ebd04e539db10b292a1b7958d27cf39f019cb"},
+      {"path": "scripts/build_polaris_dossier_local_agent_mode.py", "lines": [5, 11, 67, 69, 71, 274], "sha256": "c0fbf722c27160cee4eee71a7144837c1986fed0b93c48af7625c4d5266eb301"},
+      {"path": "scripts/build_polaris_dossier_local_agent_mode_v1_1.py", "lines": [5, 6, 12, 35, 44, 69, 75, 162, 325], "sha256": "640960259064420ecc78dd8939ac16f95ecc4a149db2e5615f5dce3b63ced80e"},
+      {"path": "scripts/build_polaris_dossier_local_agent_mode_v1_2.py", "lines": [5, 7, 11, 33, 42, 66, 67, 73, 107, 235], "sha256": "88f3801d0a74e2092aee25efaed8c52ed0ac9d295d726fe641e4ee7b0581e187"},
+      {"path": "scripts/build_polaris_dossier_local_agent_mode_v1_3.py", "lines": [5, 8, 12, 37, 60, 61, 62, 68], "sha256": "950f571181358af12124db456ea003e5cafc9316d338eee2ced588bd4f504b0f"},
+      {"path": "scripts/check_governance.py", "lines": [683], "sha256": "f41043d7416050a875db82fe1b1ab06ae8ad6d299a24b4281898cea598a5afee"},
+      {"path": "scripts/install_redis_local_agent_sitting.py", "lines": [340, 408, 410, 456, 467], "sha256": "1db21e7fb43368fa0f83aecb8772aebff43899741a520f360585026b0778e0ee"},
+      {"path": "scripts/install_redis_sitting.py", "lines": [617, 1696], "sha256": "8b524c56029eed07fd7a8f8da7b4e5c6fdf9abc43247d070f7f1910a8bba53c3"},
+      {"path": "scripts/prepare_three_surface_poc_governedby_reference_recording.py", "lines": [353, 354, 359, 2166, 2498, 2499, 2500, 2522, 2539, 2540, 2541], "sha256": "d74cbdf4ac99c4e68a511bdf72a4bc65212571a5026501df7d4763b5625d8600"},
+      {"path": "scripts/record_versioned_signoff.py", "lines": [1131, 1133, 1134, 1135, 1466, 1467, 1470, 1475, 1476, 1498, 1499, 1502, 1507, 1508, 1517, 1518, 1521, 1526, 1527, 1533, 1534, 1537, 1542, 1543, 2988, 2991, 2999, 3000, 3001, 3002, 3003, 3004, 3011, 3012, 3020, 3021], "sha256": "487f4ca24b515686222f395671fb183d93cf08b978d4bf47475169cbd64668f1"},
+      {"path": "scripts/redis_screening_remeasure.mjs", "lines": [13, 180, 181], "sha256": "715eb93b56368956ab389a8e191bb376f0f1c31e27ac422326e6ba0151245332"}
     ],
     "later_signed_inputs": [
-      {
-        "path": ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md",
-        "lines": [
-          7
-        ],
-        "sha256": "96928fbd20bf8f89b90c6b5fc62b441c0112eac3cc4367015854c70290aed08d"
-      },
-      {
-        "path": ".syzygy/governance/decisions/README.md",
-        "lines": [
-          186
-        ],
-        "sha256": "a729d8d298bedba75cb94effe84d7afd126c81c939780564ecd7eb927378fd44"
-      },
-      {
-        "path": "docs/evidence/syzygy-mea-10-3/p115-later-signed-mutants-2026-11-04.json",
-        "lines": [
-          2,
-          20,
-          52,
-          59,
-          73
-        ],
-        "sha256": "31429820b49b41a19b9f64c47a7f24d4ee440845967dea030647319883737e0c"
-      },
-      {
-        "path": "docs/review-campaigns/p115-later-signed-inputs.md",
-        "lines": [
-          9
-        ],
-        "sha256": "2fa314e91bc8632d8d4b0674dc07a6bc76bc1c0a187ec4ef37b0dd514993eb9e"
-      },
-      {
-        "path": "docs/reviews/R-P115-LATER-SIGNED-6678-1-RAW.md",
-        "lines": [
-          3,
-          35,
-          59,
-          78,
-          93,
-          94,
-          98,
-          100,
-          113,
-          117,
-          159,
-          178
-        ],
-        "sha256": "9104aa1627efe3aef4c2e568bfe78520f8a53e9c93615fba6b55d402de78e74e"
-      },
-      {
-        "path": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
-        "lines": [
-          348,
-          363,
-          391,
-          392,
-          431,
-          547,
-          2537,
-          2559,
-          2561,
-          2563,
-          2564,
-          2571,
-          2575,
-          2579,
-          2581,
-          2584,
-          2587,
-          2592,
-          2613,
-          2647
-        ],
-        "sha256": "d74cbdf4ac99c4e68a511bdf72a4bc65212571a5026501df7d4763b5625d8600"
-      }
+      {"path": ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md", "lines": [7], "sha256": "96928fbd20bf8f89b90c6b5fc62b441c0112eac3cc4367015854c70290aed08d"},
+      {"path": ".syzygy/governance/decisions/README.md", "lines": [186], "sha256": "a729d8d298bedba75cb94effe84d7afd126c81c939780564ecd7eb927378fd44"},
+      {"path": "docs/evidence/syzygy-mea-10-3/p115-later-signed-mutants-2026-11-04.json", "lines": [2, 20, 52, 59, 73], "sha256": "31429820b49b41a19b9f64c47a7f24d4ee440845967dea030647319883737e0c"},
+      {"path": "docs/review-campaigns/p115-later-signed-inputs.md", "lines": [9], "sha256": "2fa314e91bc8632d8d4b0674dc07a6bc76bc1c0a187ec4ef37b0dd514993eb9e"},
+      {"path": "docs/reviews/R-P115-LATER-SIGNED-6678-1-RAW.md", "lines": [3, 35, 59, 78, 93, 94, 98, 100, 113, 117, 159, 178], "sha256": "9104aa1627efe3aef4c2e568bfe78520f8a53e9c93615fba6b55d402de78e74e"},
+      {"path": "scripts/prepare_three_surface_poc_governedby_reference_recording.py", "lines": [348, 363, 391, 392, 431, 547, 2537, 2559, 2561, 2563, 2564, 2571, 2575, 2579, 2581, 2584, 2587, 2592, 2613, 2647], "sha256": "d74cbdf4ac99c4e68a511bdf72a4bc65212571a5026501df7d4763b5625d8600"}
     ],
     "req034_runs": [
-      {
-        "path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-ROUTE-EDITS.txt",
-        "lines": [
-          119
-        ],
-        "sha256": "853a4bc564fca03c977467cf6b6e969de1658b6c1af0aa20daa7d6b55a41fae8"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-SIGNOFF-ROUTE-EDITS.txt",
-        "lines": [
-          71
-        ],
-        "sha256": "4603f74778898f32c4c921780e37adea7bffb5e4f4ec13517291ff97e15f1d25"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md",
-        "lines": [
-          116
-        ],
-        "sha256": "bf256d224d3453a49377de6615bd3bb1d85da73720c391b136bd5edfd4a732c9"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/dossier-handoff-options/CLAUSES.md",
-        "lines": [
-          81
-        ],
-        "sha256": "759ae4eb87b89f8cd5205dc981e7bde0fbabba704fedcc20f8f6adf248b7b2f5"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/dossier-local-cli-subprocess-runner/SEMANTIC-DELTA.md",
-        "lines": [
-          79,
-          278
-        ],
-        "sha256": "478c86d5bc474d806019c943de751968fe0765683f65640e843436dc1f0cd73d"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/IMPACT-LEDGER.md",
-        "lines": [
-          70,
-          73
-        ],
-        "sha256": "047bcf70f958df1e0a5daa53763ba0b30079c28ac47deea7f971bbbe0cc514f3"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/SEMANTIC-DELTA.md",
-        "lines": [
-          35
-        ],
-        "sha256": "e01dc9aab22121a83008ebd8d6f916f8c4fe402f2d6d013473dce51913789bea"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/proposed/spec.md.patch",
-        "lines": [
-          40
-        ],
-        "sha256": "0a302ecc93f70abff92d5afc71f2ed1075c0e9ef1eeb66a7d7b83d8259e0926a"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/IMPACT-LEDGER.md",
-        "lines": [
-          120
-        ],
-        "sha256": "aab6bbf86e236b323b1d1cc138f2c98cba3ea99b9335680e3f7615edba5f8ba0"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/SEMANTIC-DELTA.md",
-        "lines": [
-          178
-        ],
-        "sha256": "9b0e1870415ce0da6a8a87ce441aae905ff3891cdb9138d214d6325b785f2a8b"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/proposed/spec.md.patch",
-        "lines": [
-          17,
-          70
-        ],
-        "sha256": "601cbeada570ae8c9c62f76d8d7319ae866f2b34f5f0d3c1973b7ceeb94e816e"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/IMPACT-LEDGER.md",
-        "lines": [
-          34,
-          47,
-          163
-        ],
-        "sha256": "100d1226a2e65b24d36098bf1353d083022938fe8b8d2245223c432f93446bac"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-BRIEF.md",
-        "lines": [
-          42
-        ],
-        "sha256": "adac93ca8dd857e1d8d8510aff5875d97f374d3ade8bc143373f46756e577b70"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md",
-        "lines": [
-          35,
-          63
-        ],
-        "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/spec.md.patch",
-        "lines": [
-          19
-        ],
-        "sha256": "92d7eca908b88e6bbc7627a92ee127c6334ec95d2e8a73c853e93feee0101e13"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode/SEMANTIC-DELTA.md",
-        "lines": [
-          8,
-          232,
-          234,
-          255,
-          257
-        ],
-        "sha256": "70df027e7eabbcbef6de78f9660c8a3882d930b42c5107ce77fcc0ed3ec58b9e"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
-        "lines": [
-          53
-        ],
-        "sha256": "917aecc766f01133d5a29c1ee8b3e575332ad48d04308a1b62c68217e48d254b"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/IMPACT-SWEEP.json",
-        "lines": [
-          186,
-          251
-        ],
-        "sha256": "3a63fa30119d009965e40e48d18b7cadeb9baa24622f2bd7188c9bb38c0fc9ed"
-      },
-      {
-        "path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/REQUIREMENT-CONSUMPTION.json",
-        "lines": [
-          251,
-          312
-        ],
-        "sha256": "535de5057966801c5e8cc7e1f3258d033b387054d14a920a78b453ff04698b06"
-      },
-      {
-        "path": ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md",
-        "lines": [
-          75
-        ],
-        "sha256": "96928fbd20bf8f89b90c6b5fc62b441c0112eac3cc4367015854c70290aed08d"
-      },
-      {
-        "path": ".syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
-        "lines": [
-          53
-        ],
-        "sha256": "917aecc766f01133d5a29c1ee8b3e575332ad48d04308a1b62c68217e48d254b"
-      },
-      {
-        "path": "docs/evidence/polaris-dossier-s9a-render-mutants-2026-10-07.json",
-        "lines": [
-          2
-        ],
-        "sha256": "163dd6c25ba3f0e3dead82d4cee0bb99c8c3701ec20ddfdc06816550ec4be3fb"
-      },
-      {
-        "path": "docs/evidence/spec-readability-reconciliation-2026-10-02/README.md",
-        "lines": [
-          377,
-          394
-        ],
-        "sha256": "ffb1459a931bec24f746c07d5416a51996da4de4ceef1f23addf1a3e66d80b1b"
-      },
-      {
-        "path": "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json",
-        "lines": [
-          993
-        ],
-        "sha256": "638b9786239a069a9d6583683142a8e28f16b1b3846e250eee830e0c1964d74a"
-      },
-      {
-        "path": "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff",
-        "lines": [
-          750
-        ],
-        "sha256": "f65ae511b9ef558cf6ef8bbb69e8da52868fedb3ee8f03e720894c0784bfa85f"
-      },
-      {
-        "path": "docs/evidence/syzygy-mea-3-session-visibility-mutation-2026-11-03.json",
-        "lines": [
-          4
-        ],
-        "sha256": "f91854b176e0981d49226f6a3fb3d274e6d2e51a65729b0cadb3f185b85ad436"
-      },
-      {
-        "path": "docs/reviews/R-ARBITRARY-PUBLIC-REPO-2-RAW.md",
-        "lines": [
-          202
-        ],
-        "sha256": "89b76a0d9bcee66eff0cc812039ca9d999c93dd0023a1fa35ea1105903a4fcd3"
-      },
-      {
-        "path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md",
-        "lines": [
-          232
-        ],
-        "sha256": "3f36de2f5b9f23362b89417d92a417b366f21bedbf1008b664385c8857f70ccd"
-      },
-      {
-        "path": "docs/reviews/R-GP-IMPL-DOSSIER-CLI-TABLE-1-RAW.md",
-        "lines": [
-          398
-        ],
-        "sha256": "8cd7974bd7e502e89ec2912a220cec44a54fea2db074accb448a9c4986bcdd69"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-1-RAW.md",
-        "lines": [
-          53
-        ],
-        "sha256": "0da4bc64834cd08840581f6190103edbb7a5f2a23d47e82397e2668152338beb"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-2-RAW.md",
-        "lines": [
-          66
-        ],
-        "sha256": "b50bd68bcf168d0f7f641bdf25cf739199547ff6ed56767452187cba1db53bff"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-ONE-COMMAND-RUN-1-RAW.md",
-        "lines": [
-          54
-        ],
-        "sha256": "3e4ce4baf261c30d548f056107233cbc83c91da00a64f2f4246b4d398e4867ed"
-      },
-      {
-        "path": "docs/reviews/R-POLARIS-DOSSIER-ONE-COMMAND-RUN-2-RAW.md",
-        "lines": [
-          52,
-          158
-        ],
-        "sha256": "f119ee0497edc517bcdacb6b70725fa22657ffa65d0d0dd52dca25bb1654200d"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/GOVERNING-DEPENDENCIES.md",
-        "lines": [
-          33
-        ],
-        "sha256": "433315cfdfffda251a56d10404fd049e724069ab73a794bbb68ec9090a260cdb"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/proposal.md",
-        "lines": [
-          50
-        ],
-        "sha256": "0d3394bbf1829afdf0dfb29b1d81f6feda7fc65b0d4fc78599d826c375b63946"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-arbitrary-public-repo/proposed/polaris-generation/spec.md",
-        "lines": [
-          3,
-          184,
-          186,
-          192,
-          274,
-          327
-        ],
-        "sha256": "e297197cef6c7f1a070d35cba7829f116b83bc1994459b3af77e4489e4c7f1ef"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-local-agent-mode/GOVERNING-DEPENDENCIES.md",
-        "lines": [
-          33
-        ],
-        "sha256": "d5dd52515b5d7dae3ff9477c5e324fd5e42c0b713e8cbbc9f19a1b748e2df688"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
-        "lines": [
-          29,
-          249,
-          358,
-          360,
-          364,
-          454
-        ],
-        "sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3"
-      },
-      {
-        "path": "openspec/changes/polaris-dossier-one-command-run/proposed/polaris-generation/spec.md",
-        "lines": [
-          3,
-          9,
-          13,
-          23,
-          58
-        ],
-        "sha256": "9d984c99afc4f825ee5210875f016f807b965522badf68ee116a42aa724d1267"
-      },
-      {
-        "path": "packages/polaris-dossier/src/brief.test.ts",
-        "lines": [
-          19
-        ],
-        "sha256": "f671c2ac1b26aadf8895f6d8145eac8574f9d901764645b50a78f95a565e390c"
-      },
-      {
-        "path": "packages/polaris-dossier/src/brief.ts",
-        "lines": [
-          18
-        ],
-        "sha256": "6476be8a4d1109c409cc9fbf9338996cb3ebe1674ba5d26046f86dbcfd20a0ab"
-      },
-      {
-        "path": "packages/polaris-dossier/src/census.ts",
-        "lines": [
-          22,
-          191
-        ],
-        "sha256": "e8af9bd3368ee029c0787285f3da66f7ee588e850030a340f12e332891fda3df"
-      },
-      {
-        "path": "packages/polaris-dossier/src/check.test.ts",
-        "lines": [
-          16
-        ],
-        "sha256": "f4b419938d7ecded5a26a324ebb6bef68b40fadf2d841506a6b1789965842870"
-      },
-      {
-        "path": "packages/polaris-dossier/src/check.ts",
-        "lines": [
-          23
-        ],
-        "sha256": "ac8befcb989d01d5cf4858b4188eac67bd3da9c5d909bdd51d19c58c0f5e06d9"
-      },
-      {
-        "path": "packages/polaris-dossier/src/doctrine-quote.ts",
-        "lines": [
-          5
-        ],
-        "sha256": "37986e0c3e4a39cd75026a2155799f9198aded1a895042b940a1e9f4e3de2f3c"
-      },
-      {
-        "path": "packages/polaris-dossier/src/draft-schema.ts",
-        "lines": [
-          7
-        ],
-        "sha256": "3684d3e940ed20c69d7d01fcf0e0f19a0466b8a8ed07ccea028e6956f04ae8e0"
-      },
-      {
-        "path": "packages/polaris-dossier/src/polaris.ts",
-        "lines": [
-          59
-        ],
-        "sha256": "44573203c68e76cfbd4e66fb4fcf29d3eecc15878bcebbaec00242c28d2e000e"
-      },
-      {
-        "path": "packages/polaris-dossier/src/render.test.ts",
-        "lines": [
-          24
-        ],
-        "sha256": "d310cc59f69fd906bf122152dda553a7e42baac779a008006b603fa133366e8d"
-      },
-      {
-        "path": "packages/polaris-dossier/src/render.ts",
-        "lines": [
-          29
-        ],
-        "sha256": "68be8e612816d6b102811d82b455a9a80114e3641a4758e512235332cc901716"
-      },
-      {
-        "path": "packages/polaris-generation-core/src/local-render.ts",
-        "lines": [
-          5
-        ],
-        "sha256": "f08119b4053d297062f78942742b7bbd3681fccaf02f3158cad9f643710a4b6f"
-      },
-      {
-        "path": "packages/polaris-generation-core/src/quote-locate.ts",
-        "lines": [
-          3
-        ],
-        "sha256": "d08ea4f434b6e613eaf45b9a048fb0e0abc9395aa543693dfcc6f527d3d623d1"
-      }
+      {"path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-ROUTE-EDITS.txt", "lines": [119], "sha256": "853a4bc564fca03c977467cf6b6e969de1658b6c1af0aa20daa7d6b55a41fae8"},
+      {"path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-SIGNOFF-ROUTE-EDITS.txt", "lines": [71], "sha256": "4603f74778898f32c4c921780e37adea7bffb5e4f4ec13517291ff97e15f1d25"},
+      {"path": ".syzygy/governance/contracts/candidates/POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-3-REVIEW-NOTES.md", "lines": [116], "sha256": "bf256d224d3453a49377de6615bd3bb1d85da73720c391b136bd5edfd4a732c9"},
+      {"path": ".syzygy/governance/contracts/candidates/dossier-handoff-options/CLAUSES.md", "lines": [81], "sha256": "759ae4eb87b89f8cd5205dc981e7bde0fbabba704fedcc20f8f6adf248b7b2f5"},
+      {"path": ".syzygy/governance/contracts/candidates/dossier-local-cli-subprocess-runner/SEMANTIC-DELTA.md", "lines": [79, 278], "sha256": "478c86d5bc474d806019c943de751968fe0765683f65640e843436dc1f0cd73d"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/IMPACT-LEDGER.md", "lines": [70, 73], "sha256": "047bcf70f958df1e0a5daa53763ba0b30079c28ac47deea7f971bbbe0cc514f3"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/SEMANTIC-DELTA.md", "lines": [35], "sha256": "e01dc9aab22121a83008ebd8d6f916f8c4fe402f2d6d013473dce51913789bea"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-1/proposed/spec.md.patch", "lines": [40], "sha256": "0a302ecc93f70abff92d5afc71f2ed1075c0e9ef1eeb66a7d7b83d8259e0926a"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/IMPACT-LEDGER.md", "lines": [120], "sha256": "aab6bbf86e236b323b1d1cc138f2c98cba3ea99b9335680e3f7615edba5f8ba0"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/SEMANTIC-DELTA.md", "lines": [178], "sha256": "9b0e1870415ce0da6a8a87ce441aae905ff3891cdb9138d214d6325b785f2a8b"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-2/proposed/spec.md.patch", "lines": [17, 70], "sha256": "601cbeada570ae8c9c62f76d8d7319ae866f2b34f5f0d3c1973b7ceeb94e816e"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/IMPACT-LEDGER.md", "lines": [34, 47, 163], "sha256": "100d1226a2e65b24d36098bf1353d083022938fe8b8d2245223c432f93446bac"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/REVIEW-BRIEF.md", "lines": [42], "sha256": "adac93ca8dd857e1d8d8510aff5875d97f374d3ade8bc143373f46756e577b70"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/SEMANTIC-DELTA.md", "lines": [35, 63], "sha256": "8371c96a2082394da26f4d1165fd19c33c2c630e55923e446e1805648878c292"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/spec.md.patch", "lines": [19], "sha256": "92d7eca908b88e6bbc7627a92ee127c6334ec95d2e8a73c853e93feee0101e13"},
+      {"path": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode/SEMANTIC-DELTA.md", "lines": [8, 232, 234, 255, 257], "sha256": "70df027e7eabbcbef6de78f9660c8a3882d930b42c5107ce77fcc0ed3ec58b9e"},
+      {"path": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json", "lines": [53], "sha256": "917aecc766f01133d5a29c1ee8b3e575332ad48d04308a1b62c68217e48d254b"},
+      {"path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/IMPACT-SWEEP.json", "lines": [186, 251], "sha256": "3a63fa30119d009965e40e48d18b7cadeb9baa24622f2bd7188c9bb38c0fc9ed"},
+      {"path": ".syzygy/governance/contracts/candidates/three-surface-poc-governedby-reference-amendment/REQUIREMENT-CONSUMPTION.json", "lines": [251, 312], "sha256": "535de5057966801c5e8cc7e1f3258d033b387054d14a920a78b453ff04698b06"},
+      {"path": ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md", "lines": [75], "sha256": "96928fbd20bf8f89b90c6b5fc62b441c0112eac3cc4367015854c70290aed08d"},
+      {"path": ".syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json", "lines": [53], "sha256": "917aecc766f01133d5a29c1ee8b3e575332ad48d04308a1b62c68217e48d254b"},
+      {"path": "docs/evidence/polaris-dossier-s9a-render-mutants-2026-10-07.json", "lines": [2], "sha256": "163dd6c25ba3f0e3dead82d4cee0bb99c8c3701ec20ddfdc06816550ec4be3fb"},
+      {"path": "docs/evidence/spec-readability-reconciliation-2026-10-02/README.md", "lines": [377, 394], "sha256": "ffb1459a931bec24f746c07d5416a51996da4de4ceef1f23addf1a3e66d80b1b"},
+      {"path": "docs/evidence/spec-readability-reconciliation-2026-10-02/census.json", "lines": [993], "sha256": "638b9786239a069a9d6583683142a8e28f16b1b3846e250eee830e0c1964d74a"},
+      {"path": "docs/evidence/support-leaf-review-2026-10-27/round-1/code.diff", "lines": [750], "sha256": "f65ae511b9ef558cf6ef8bbb69e8da52868fedb3ee8f03e720894c0784bfa85f"},
+      {"path": "docs/evidence/syzygy-mea-3-session-visibility-mutation-2026-11-03.json", "lines": [4], "sha256": "f91854b176e0981d49226f6a3fb3d274e6d2e51a65729b0cadb3f185b85ad436"},
+      {"path": "docs/reviews/R-ARBITRARY-PUBLIC-REPO-2-RAW.md", "lines": [202], "sha256": "89b76a0d9bcee66eff0cc812039ca9d999c93dd0023a1fa35ea1105903a4fcd3"},
+      {"path": "docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-3-92a6-2-RAW.md", "lines": [232], "sha256": "3f36de2f5b9f23362b89417d92a417b366f21bedbf1008b664385c8857f70ccd"},
+      {"path": "docs/reviews/R-GP-IMPL-DOSSIER-CLI-TABLE-1-RAW.md", "lines": [398], "sha256": "8cd7974bd7e502e89ec2912a220cec44a54fea2db074accb448a9c4986bcdd69"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-1-RAW.md", "lines": [53], "sha256": "0da4bc64834cd08840581f6190103edbb7a5f2a23d47e82397e2668152338beb"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-LOCAL-AGENT-MODE-V1-1-2-RAW.md", "lines": [66], "sha256": "b50bd68bcf168d0f7f641bdf25cf739199547ff6ed56767452187cba1db53bff"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-ONE-COMMAND-RUN-1-RAW.md", "lines": [54], "sha256": "3e4ce4baf261c30d548f056107233cbc83c91da00a64f2f4246b4d398e4867ed"},
+      {"path": "docs/reviews/R-POLARIS-DOSSIER-ONE-COMMAND-RUN-2-RAW.md", "lines": [52, 158], "sha256": "f119ee0497edc517bcdacb6b70725fa22657ffa65d0d0dd52dca25bb1654200d"},
+      {"path": "openspec/changes/polaris-dossier-arbitrary-public-repo/GOVERNING-DEPENDENCIES.md", "lines": [33], "sha256": "433315cfdfffda251a56d10404fd049e724069ab73a794bbb68ec9090a260cdb"},
+      {"path": "openspec/changes/polaris-dossier-arbitrary-public-repo/proposal.md", "lines": [50], "sha256": "0d3394bbf1829afdf0dfb29b1d81f6feda7fc65b0d4fc78599d826c375b63946"},
+      {"path": "openspec/changes/polaris-dossier-arbitrary-public-repo/proposed/polaris-generation/spec.md", "lines": [3, 184, 186, 192, 274, 327], "sha256": "e297197cef6c7f1a070d35cba7829f116b83bc1994459b3af77e4489e4c7f1ef"},
+      {"path": "openspec/changes/polaris-dossier-local-agent-mode/GOVERNING-DEPENDENCIES.md", "lines": [33], "sha256": "d5dd52515b5d7dae3ff9477c5e324fd5e42c0b713e8cbbc9f19a1b748e2df688"},
+      {"path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md", "lines": [29, 249, 358, 360, 364, 454], "sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3"},
+      {"path": "openspec/changes/polaris-dossier-one-command-run/proposed/polaris-generation/spec.md", "lines": [3, 9, 13, 23, 58], "sha256": "9d984c99afc4f825ee5210875f016f807b965522badf68ee116a42aa724d1267"},
+      {"path": "packages/polaris-dossier/src/brief.test.ts", "lines": [19], "sha256": "f671c2ac1b26aadf8895f6d8145eac8574f9d901764645b50a78f95a565e390c"},
+      {"path": "packages/polaris-dossier/src/brief.ts", "lines": [18], "sha256": "6476be8a4d1109c409cc9fbf9338996cb3ebe1674ba5d26046f86dbcfd20a0ab"},
+      {"path": "packages/polaris-dossier/src/census.ts", "lines": [22, 191], "sha256": "e8af9bd3368ee029c0787285f3da66f7ee588e850030a340f12e332891fda3df"},
+      {"path": "packages/polaris-dossier/src/check.test.ts", "lines": [16], "sha256": "f4b419938d7ecded5a26a324ebb6bef68b40fadf2d841506a6b1789965842870"},
+      {"path": "packages/polaris-dossier/src/check.ts", "lines": [23], "sha256": "ac8befcb989d01d5cf4858b4188eac67bd3da9c5d909bdd51d19c58c0f5e06d9"},
+      {"path": "packages/polaris-dossier/src/doctrine-quote.ts", "lines": [5], "sha256": "37986e0c3e4a39cd75026a2155799f9198aded1a895042b940a1e9f4e3de2f3c"},
+      {"path": "packages/polaris-dossier/src/draft-schema.ts", "lines": [7], "sha256": "3684d3e940ed20c69d7d01fcf0e0f19a0466b8a8ed07ccea028e6956f04ae8e0"},
+      {"path": "packages/polaris-dossier/src/polaris.ts", "lines": [59], "sha256": "44573203c68e76cfbd4e66fb4fcf29d3eecc15878bcebbaec00242c28d2e000e"},
+      {"path": "packages/polaris-dossier/src/render.test.ts", "lines": [24], "sha256": "d310cc59f69fd906bf122152dda553a7e42baac779a008006b603fa133366e8d"},
+      {"path": "packages/polaris-dossier/src/render.ts", "lines": [29], "sha256": "68be8e612816d6b102811d82b455a9a80114e3641a4758e512235332cc901716"},
+      {"path": "packages/polaris-generation-core/src/local-render.ts", "lines": [5], "sha256": "f08119b4053d297062f78942742b7bbd3681fccaf02f3158cad9f643710a4b6f"},
+      {"path": "packages/polaris-generation-core/src/quote-locate.ts", "lines": [3], "sha256": "d08ea4f434b6e613eaf45b9a048fb0e0abc9395aa543693dfcc6f527d3d623d1"}
     ]
   }
 }

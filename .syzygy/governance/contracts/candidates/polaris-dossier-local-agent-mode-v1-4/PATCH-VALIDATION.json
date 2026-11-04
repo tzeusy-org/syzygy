@@ -1,5 +1,5 @@
 {
-  "subject_baseline_commit": "e30412efc94f4ee40d213f5df6ac8d1aac445119",
+  "subject_baseline_commit": "31ccc7e3a5a383c6fba3907466f9e769a6db8aa7",
   "candidate_kind": "unadopted patch proposal",
   "temporary_root": "/home/orca/.tmp/syzygy-mea10-6-v14-20261105/tmp",
   "subjects": {
@@ -77,7 +77,22 @@
     {
       "predicate": "baseline denominator agrees with git tree; fixed-string hit sets agree with git grep",
       "passed": true,
-      "tracked_paths": 8699
+      "baseline_tracked_paths": 8701,
+      "excluded_owned_additions": [
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/DEPENDENCY-SWEEP.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/IMPACT-LEDGER.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/OWNER-DECISION-PACKET.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/PATCH-VALIDATION.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/REVIEW-BRIEF.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/SEMANTIC-DELTA.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/SOURCE-RECEIPTS.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/TOOLING-VALIDATION.json",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/V1-3-NOTE-DISPOSITIONS.md",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/design.md.patch",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/proposal.md.patch",
+        ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-4/proposed/spec.md.patch",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_4.py"
+      ]
     },
     {
       "predicate": "predecessor package/records/raws/installed subjects unchanged by bytes and git diff",
