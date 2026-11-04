@@ -147,6 +147,15 @@ tag `…-vNone`; and the expected totals' skip of an unsigned addition and the
 two block parsers' agreement on what an addition adds are each redundant
 with the composition's own findings, kept as a second statement.
 
+Every mode reads the whole `*-SIGNOFF-v*.md` population of `decisions/`
+first, by pathlib semantics (a symlink to a regular file is read through, as
+the recorder reads it). An entry that is not a regular file (a directory, a
+FIFO, a socket, a device, a dangling or looping symlink, a symlink to any of
+these) or that cannot be read as UTF-8 is never read as absent: the mode
+prints `REFUSED R1` naming each entry and its kind, evaluates no predicate,
+and exits 1 (`syzygy-j5dg`; before, the read raised an unhandled `OSError`,
+also exit 1). `--selftest` pins one fixture per kind and a symlink control.
+
 A Polaris addition's recording commit runs one command after the recorder
 has applied the package through its builder:
 
@@ -170,11 +179,14 @@ Usage:
   python3 scripts/check_spec_reconciliation.py --selftest [--witnesses FILE]
 """
 import argparse
+import errno
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -399,12 +411,82 @@ def addition_terminals(root, change):
     return addition_records(root, change)
 
 
+class SignoffEntriesRefused(Exception):
+    """A `SIGNOFF_RECORD_GLOB` entry is not a readable UTF-8 regular file.
+
+    The population is unreadable, so no predicate over it is evaluated: every
+    mode refuses with the entries named (exit 1, the polarity the unhandled
+    `OSError` had). Never read as absent (syzygy-j5dg).
+    """
+
+    def __init__(self, findings):
+        super().__init__("\n".join(findings))
+        self.findings = findings
+
+
+def entry_kind(path):
+    """What a non-file glob entry is, by `lstat` and then `stat`."""
+    try:
+        mode = path.lstat().st_mode
+    except OSError as exc:
+        return f"entry that cannot be examined ({exc.strerror})"
+    prefix = ""
+    if stat.S_ISLNK(mode):
+        prefix = "symlink to "
+        try:
+            mode = path.stat().st_mode
+        except OSError as exc:
+            return ("symlink loop" if exc.errno == errno.ELOOP
+                    else f"dangling symlink ({exc.strerror})")
+    for test, name in ((stat.S_ISDIR, "directory"), (stat.S_ISFIFO, "FIFO"),
+                       (stat.S_ISSOCK, "socket"),
+                       (stat.S_ISCHR, "character device"),
+                       (stat.S_ISBLK, "block device"),
+                       (stat.S_ISREG, "regular file")):
+        if test(mode):
+            return prefix + name
+    return prefix + "nonregular entry"
+
+
+def signoff_texts(root):
+    """[(path, text)] of every `SIGNOFF_RECORD_GLOB` entry, or refuse.
+
+    Pathlib semantics, as `record_versioned_signoff.py` reads its records:
+    `is_file()` decides, so a symlink to a regular file is read through, and
+    a read error is never absence. Every refused entry is named, then
+    `SignoffEntriesRefused` is raised; a FIFO is never opened.
+    """
+    base = root / DECISIONS
+    out, refused = [], []
+    for path in sorted(base.glob(SIGNOFF_RECORD_GLOB)) if base.is_dir() else ():
+        rel = path.relative_to(root).as_posix()
+        if not path.is_file():
+            refused.append(f"`{rel}`: {entry_kind(path)}")
+            continue
+        try:
+            out.append((path, path.read_bytes().decode("utf-8")))
+        except OSError as exc:
+            refused.append(f"`{rel}`: unreadable regular file ({exc.strerror})")
+        except UnicodeDecodeError:
+            refused.append(f"`{rel}`: regular file that is not UTF-8")
+    if refused:
+        raise SignoffEntriesRefused(refused)
+    return out
+
+
+def refusal_lines(exc):
+    """The structured refusal every mode prints for `SignoffEntriesRefused`."""
+    return ([f"REFUSED R1  sign-off record population — {len(exc.findings)} "
+             f"`{DECISIONS}/{SIGNOFF_RECORD_GLOB}` entries are not readable "
+             "UTF-8 regular files; no predicate was evaluated"]
+            + [f"        {f}" for f in exc.findings]
+            + ["REFUSED — the sign-off record population is unreadable"])
+
+
 def addition_records(root, change):
     """[(record path, text, version)] of each versioned sign-off of `change`."""
     out = []
-    base = root / DECISIONS
-    for path in sorted(base.glob(SIGNOFF_RECORD_GLOB)) if base.is_dir() else ():
-        text = path.read_text(encoding="utf-8")
+    for path, text in signoff_texts(root):
         if f"Package: {change}" in text.splitlines():
             versions = VERSION_LINE.findall(text)
             out.append((path.relative_to(root).as_posix(), text,
@@ -2451,6 +2533,7 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
         if not caught:
             failures.append(f"{name}: expected {expect} to fail, got "
                             f"{sorted(got.failed) or 'nothing'}")
+    _entry_kind_cases(tmp, base, witnesses, failures)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.
@@ -2505,6 +2588,84 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
     return 0
 
 
+#: One sign-off glob entry per kind `signoff_texts` refuses (syzygy-j5dg):
+#: name -> (entry basename, setup(entry path, tree), refusal needle). The
+#: needle names the entry and its kind, so a refusal of another entry or
+#: kind does not count.
+ENTRY_KIND_CASES = {
+    "signoff-entry-directory": (
+        "J5DG-DIR-SIGNOFF-v1.0.md", lambda e, t: e.mkdir(), "directory"),
+    "signoff-entry-fifo": (
+        "J5DG-FIFO-SIGNOFF-v1.0.md", lambda e, t: os.mkfifo(e), "FIFO"),
+    "signoff-entry-dangling-symlink": (
+        "J5DG-DANGLING-SIGNOFF-v1.0.md",
+        lambda e, t: e.symlink_to("J5DG-ABSENT.md"), "dangling symlink"),
+    "signoff-entry-symlink-loop": (
+        "J5DG-LOOP-SIGNOFF-v1.0.md",
+        lambda e, t: e.symlink_to(e.name), "symlink loop"),
+    "signoff-entry-symlink-to-directory": (
+        "J5DG-LINKDIR-SIGNOFF-v1.0.md",
+        lambda e, t: e.symlink_to(t / DECISIONS), "symlink to directory"),
+    "signoff-entry-symlink-to-device": (
+        "J5DG-DEVICE-SIGNOFF-v1.0.md",
+        lambda e, t: e.symlink_to("/dev/null"),
+        "symlink to character device"),
+    "signoff-entry-unreadable": (
+        "J5DG-UNREADABLE-SIGNOFF-v1.0.md",
+        lambda e, t: (e.write_text("Package: none\n", encoding="utf-8"),
+                      e.chmod(0)), "unreadable regular file"),
+    "signoff-entry-not-utf8": (
+        "J5DG-BYTES-SIGNOFF-v1.0.md",
+        lambda e, t: e.write_bytes(b"Package: \xff\n"),
+        "regular file that is not UTF-8"),
+}
+#: The control: a symlink to a regular file is read through (pathlib, as the
+#: recorder reads it), so a tree carrying one still passes. Its target names
+#: no package, so it adds no record.
+ENTRY_SYMLINK_CONTROL = "J5DG-LINKFILE-SIGNOFF-v1.0.md"
+
+
+def _entry_kind_cases(tmp, base, witnesses, failures):
+    """Each kind must refuse in `run` and `census`; the control must pass."""
+    for name, (entry, setup, kind) in ENTRY_KIND_CASES.items():
+        tree = Path(tmp) / name
+        shutil.copytree(base, tree)
+        path = tree / DECISIONS / entry
+        setup(path, tree)
+        needle = f"`{DECISIONS}/{entry}`: {kind}"
+        got = []
+        for method in (run, census):
+            try:
+                method(tree)
+                got.append(f"{method.__name__}: not refused")
+            except SignoffEntriesRefused as exc:
+                if not any(f.startswith(needle) for f in exc.findings):
+                    got.append(f"{method.__name__}: refused {exc.findings}")
+        if path.is_file():
+            path.chmod(0o644)
+        witnesses.append({"mutant": name, "path": f"{DECISIONS}/{entry}",
+                          "old": "<no entry>", "new": f"<{kind}>",
+                          "expected": f"REFUSED:{kind}", "failed": got,
+                          "outcome": "SURVIVED" if got else "killed"})
+        if got:
+            failures.append(f"{name}: expected REFUSED {needle}; {got}")
+    tree = Path(tmp) / "signoff-entry-symlink-control"
+    shutil.copytree(base, tree)
+    target = tree / "J5DG-CONTROL-TARGET.txt"
+    target.write_text("A regular file that names no package.\n",
+                      encoding="utf-8")
+    (tree / DECISIONS / ENTRY_SYMLINK_CONTROL).symlink_to(target)
+    try:
+        report = run(tree)
+        census(tree)
+        got = sorted(report.failed)
+    except SignoffEntriesRefused as exc:
+        got = [f"refused {exc.findings}"]
+    if got:
+        failures.append(f"signoff-entry-symlink-control: a symlink to a "
+                        f"regular file must pass; {got}")
+
+
 def _fragment(before, after):
     """The smallest differing window, for re-runnable witnesses."""
     i = 0
@@ -2547,6 +2708,16 @@ def main(argv):
     mode.add_argument("--regenerate", action="store_true")
     parser.add_argument("--witnesses", help="selftest: write rule-6 JSON here")
     args = parser.parse_args(argv)
+    if args.selftest:
+        return selftest(args.witnesses)
+    try:
+        return _main(args)
+    except SignoffEntriesRefused as exc:
+        print("\n".join(refusal_lines(exc)), file=sys.stderr)
+        return 1
+
+
+def _main(args):
     if args.census:
         pop, findings = census(ROOT)
         if findings:
@@ -2554,8 +2725,6 @@ def main(argv):
             return 1
         sys.stdout.write(census_json(pop))
         return 0
-    if args.selftest:
-        return selftest(args.witnesses)
     if args.regenerate:
         for rel in regenerate(ROOT):
             print(f"wrote {rel}")
