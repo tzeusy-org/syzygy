@@ -6,7 +6,8 @@ This tool never moves a body, creates a tag, fetches an object, or changes origi
 `plan --source FULL_COMMIT --out DIRECTORY` freezes the existing on-demand
 census and a conservative keep/hold plan. `check` verifies the committed
 locator representation. `selftest` exercises the same checker in real temporary
-Git repositories. All original bodies remain in this additive preparation.
+Git repositories. Archive admission requires an explicit source-bound transaction;
+the default plan remains additive and conservative.
 
 The census's `commit` is record metadata. Only `source_commit` below is a
 verified containing commit. Census citation classes are not reliance verdicts.
@@ -17,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import datetime
 import fnmatch
 import hashlib
 import json
@@ -42,7 +44,8 @@ ARCHIVE_KEYS = LIVE_KEYS | {"commit", "tag"}
 SOURCE_KEYS = {"version", "source_commit", "snapshot_sha256", "plan_sha256", "source_tree_sha256",
                "tracked_regular_files", "evidence_files", "families", "citation_classes",
                "citation_predicate", "extended_predicate", "administrative_exclusions"}
-ADMIN = {HOME + n for n in ("INDEX.jsonl", "PLAN.jsonl", "SOURCE.json", "CENSUS.jsonl")}
+ADMIN = {HOME + n for n in ("INDEX.jsonl", "PLAN.jsonl", "SOURCE.json", "CENSUS.jsonl", "TRANSACTION.json",
+                       "MOVE-TABLE.jsonl", "FAMILIES.jsonl", "ADJUDICATION.json")}
 CITATION_PREDICATE = "scripts/build_evidence_index.py: unchanged path/digest/directory predicate; citation is not reliance"
 EXTENDED_PREDICATE = "full path, slash suffixes, wrapped tokens, nested basename, stem and conservative fnmatch globs in every tracked regular citer; lexical absence never establishes R2"
 
@@ -272,13 +275,164 @@ def make_plan(commit: str, rows: list[dict], files: dict[str, bytes], witness_ou
     return result
 
 
-def prepare(root: Path, commit: str, out: Path, witness_out: Path | None = None) -> dict:
+
+def selected(record: object, pointer: object) -> object:
+    """Select data only; a pointer never becomes a filesystem path or code."""
+    demand(isinstance(pointer, str) and pointer.startswith("/") and len(pointer) <= 1024,
+           "invalid-family-selector")
+    value = record
+    for part in pointer[1:].split("/"):
+        part = part.replace("~1", "/").replace("~0", "~")
+        demand(isinstance(value, dict) and part in value, "family-selector-unavailable")
+        value = value[part]
+    return value
+
+
+def capture_instant(value: object) -> datetime.datetime:
+    demand(isinstance(value, str) and len(value) <= 64, "capture-instant-required")
+    try:
+        instant = datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise Refusal("capture-instant-required") from exc
+    demand(instant.tzinfo is not None and instant.utcoffset() is not None,
+           "capture-timezone-required")
+    return instant.astimezone(datetime.timezone.utc)
+
+
+def protected_namespace(receipt: object, tag: str) -> None:
+    """Validate the retained API readback, not a caller-supplied protection flag.
+
+    The operator obtains and rechecks this readback on origin before removal.
+    Offline CI establishes the receipt's exact restrictions and object pins;
+    it cannot establish a remote service's current state.
+    """
+    demand(isinstance(receipt, dict) and set(receipt) == {"repository", "observed_at", "rulesets"},
+           "invalid-protection-receipt")
+    demand(receipt["repository"] == "tzeusy-org/syzygy", "wrong-protection-repository")
+    demand(capture_instant(receipt["observed_at"]) <= datetime.datetime.now(datetime.timezone.utc),
+           "future-protection-receipt")
+    demand(isinstance(receipt["rulesets"], list) and 0 < len(receipt["rulesets"]) <= 100,
+           "protection-rulesets-required")
+    required = "refs/tags/evidence-archive/*"
+    effective = []
+    for rule in receipt["rulesets"]:
+        demand(isinstance(rule, dict), "invalid-protection-ruleset")
+        demand(type(rule.get("id")) is int and rule["id"] > 0 and
+               rule.get("source") == receipt["repository"] and rule.get("source_type") == "Repository",
+               "unbound-protection-ruleset-source")
+        demand(isinstance(rule.get("conditions"), dict) and
+               isinstance(rule["conditions"].get("ref_name"), dict) and
+               isinstance(rule.get("rules"), list), "invalid-protection-rule-conditions")
+        conditions = rule["conditions"]["ref_name"]
+        if rule.get("target") != "tag" or rule.get("enforcement") != "active":
+            continue
+        if conditions.get("include") != [required] or conditions.get("exclude") != []:
+            continue
+        restrictions = {r.get("type") for r in rule.get("rules", []) if isinstance(r, dict)}
+        if {"update", "deletion"} <= restrictions and rule.get("bypass_actors") == []:
+            effective.append(rule)
+    demand(bool(effective) and fnmatch.fnmatchcase("refs/tags/" + tag, required),
+           "archive-namespace-not-protected-without-bypass")
+
+
+def transaction_plan(root: Path, commit: str, rows: list[dict], files: dict[str, bytes],
+                     plan: list[dict], transaction: object) -> list[dict]:
+    """Compile explicitly adjudicated, source-bound families into the move plan.
+
+    This is reviewed operator input under GP-Q1, never text interpreted from an
+    evidence record. Every record selector is checked against frozen bytes.
+    Unknown roles, dates without instants, sidecars and unreviewed witnesses
+    cannot be admitted to an archive family.
+    """
+    demand(isinstance(transaction, dict) and set(transaction) ==
+           {"version", "source_commit", "discharges", "families", "protection"} and
+           type(transaction["version"]) is int and transaction["version"] == 1,
+           "invalid-transaction-schema")
+    demand(transaction["source_commit"] == commit, "transaction-source-drift")
+    demand(isinstance(transaction["discharges"], list) and isinstance(transaction["families"], list)
+           and len(transaction["discharges"]) <= MAX_ROWS and len(transaction["families"]) <= MAX_ROWS,
+           "invalid-transaction-population")
+    discharges = set()
+    for item in transaction["discharges"]:
+        demand(isinstance(item, dict) and set(item) == {"citer", "sha256", "form", "token", "reason"},
+               "invalid-witness-discharge")
+        citer = item["citer"]
+        demand(isinstance(citer, str) and citer in files and digest(files[citer]) == item["sha256"],
+               "discharged-consumer-drift")
+        demand(isinstance(item["reason"], str) and 20 <= len(item["reason"]) <= 4096,
+               "witness-discharge-reason-required")
+        demand(item["form"] == "conservative-glob" and isinstance(item["token"], str),
+               "only-lexical-glob-false-positives-may-be-discharged")
+        key = citer, item["form"], item["token"]
+        demand(key not in discharges, "duplicate-witness-discharge")
+        discharges.add(key)
+    witnesses = protection_witnesses(files, rows)
+    by_path = {r["path"]: r for r in plan}
+    admitted = set(); families = set()
+    for family in transaction["families"]:
+        demand(isinstance(family, dict) and set(family) ==
+               {"id", "subject", "kind", "role", "selectors", "members"}, "invalid-adjudicated-family")
+        identity = family["id"]
+        demand(isinstance(identity, str) and 0 < len(identity) <= 1024 and identity not in families,
+               "duplicate-or-invalid-adjudicated-family")
+        families.add(identity)
+        demand(all(isinstance(family[k], str) and 0 < len(family[k]) <= 4096
+                   for k in ("subject", "kind", "role")), "explicit-family-subject-kind-role-required")
+        selectors = family["selectors"]
+        demand(isinstance(selectors, dict) and set(selectors) == {"subject", "kind", "role", "capture"},
+               "invalid-family-selectors")
+        members = family["members"]
+        demand(isinstance(members, list) and 0 < len(members) <= MAX_ROWS, "family-members-required")
+        captures = []
+        for path in members:
+            evidence_path(path)
+            demand(path in by_path and path not in admitted and path.count("/") == 2 and path.endswith(".json"),
+                   "unknown-duplicate-or-sidecar-family-member")
+            old = by_path[path]
+            demand(old["classification"] != "R0", "R0-family-reclassification-forbidden")
+            residual = [w for w in witnesses[path] if
+                        (w["kind"] in ("governed", "code", "raw") or w["form"] == "digest") and
+                        (w["citer"], w["form"], w["token"]) not in discharges]
+            demand(not residual, "undischarged-R1-family-member")
+            record = load_json(files[path])
+            demand(all(selected(record, selectors[k]) == family[k] for k in ("subject", "kind", "role")),
+                   "family-subject-kind-role-mismatch")
+            captured = selected(record, selectors["capture"])
+            captures.append((capture_instant(captured), path, captured))
+            admitted.add(path)
+        demand(len({t for t, _, _ in captures}) == len(captures), "incomparable-family-capture-instants")
+        index_families = {by_path[path]["index_family"] for path in members}
+        demand(len(index_families) == 1, "family-crosses-measured-index-group")
+        for candidate, old in by_path.items():
+            if candidate in members or old["index_family"] not in index_families:
+                continue
+            residual = [w for w in witnesses[candidate] if
+                        (w["kind"] in ("governed", "code", "raw") or w["form"] == "digest") and
+                        (w["citer"], w["form"], w["token"]) not in discharges]
+            if old["classification"] == "R0" or residual:
+                continue
+            demand(candidate.count("/") == 2 and candidate.endswith(".json"),
+                   "incomplete-or-ambiguous-family-domain")
+            other = load_json(files[candidate])
+            demand(not all(selected(other, selectors[k]) == family[k] for k in ("subject", "kind", "role")),
+                   "incomplete-adjudicated-family")
+        newest = max(captures)[1]
+        for _, path, captured in captures:
+            by_path[path] = {**by_path[path], "equivalence_family": identity, "classification": "R2",
+                             "disposition": "keep" if path == newest else "archive",
+                             "reason": "verified-newest-family-keeper" if path == newest else "verified-older-family-member",
+                             "capture_instant": captured, "newest_keeper": newest}
+    transaction_sha256 = digest(encoded(transaction))
+    return [{**by_path[r["path"]], "transaction_sha256": transaction_sha256} for r in plan]
+
+def prepare(root: Path, commit: str, out: Path, witness_out: Path | None = None,
+            transaction_path: Path | None = None) -> dict:
     demand(git(root, "rev-parse", "--is-shallow-repository").strip() == b"false", "shallow-history")
     destination = out.resolve()
     demand(not destination.is_relative_to(root.resolve()) or destination == (root / HOME).resolve(),
            "generated-output-must-use-retention-home-or-external-directory")
     demand(not out.is_symlink() and not any((out / n).is_symlink() for n in
-           ("SOURCE.json", "CENSUS.jsonl", "PLAN.jsonl", "INDEX.jsonl")), "output-artifact-symlink")
+           ("SOURCE.json", "CENSUS.jsonl", "PLAN.jsonl", "INDEX.jsonl", "TRANSACTION.json")), "output-artifact-symlink")
     if witness_out:
         demand(not witness_out.resolve().is_relative_to(root.resolve()), "full-witness-output-must-be-external")
     if (out / "SOURCE.json").exists():
@@ -291,6 +445,11 @@ def prepare(root: Path, commit: str, out: Path, witness_out: Path | None = None)
     expected = sorted(p for p in files if p.startswith(PREFIX))
     demand([r["path"] for r in rows] == expected, "independent-population-mismatch")
     plan = make_plan(commit, rows, files, witness_out)
+    transaction = None
+    if transaction_path is not None:
+        demand(not transaction_path.is_symlink() and transaction_path.is_file(), "transaction-not-regular-local-file")
+        transaction = load_json(transaction_path.read_bytes())
+        plan = transaction_plan(root, commit, rows, files, plan, transaction)
     plan_data = jsonl(plan)
     source = {"version": 1, "source_commit": commit, "snapshot_sha256": digest(snapshot),
               "plan_sha256": digest(plan_data), "source_tree_sha256": source_tree_digest(files),
@@ -301,13 +460,141 @@ def prepare(root: Path, commit: str, out: Path, witness_out: Path | None = None)
               "extended_predicate": EXTENDED_PREDICATE,
               "administrative_exclusions": sorted(ADMIN)}
     index = [{"version": 1, "kind": "live", "path": r["path"], "sha256": r["sha256"],
-              "family": r["index_family"], "basis": r["classification"]} for r in plan]
+              "family": r["equivalence_family"] if r["classification"] == "R2" else r["index_family"],
+              "basis": r["classification"]} for r in plan]
     out.mkdir(parents=True, exist_ok=True)
+    demand(transaction is not None or not (out / "TRANSACTION.json").exists(), "transaction-replay-requires-explicit-input")
+    if transaction is not None:
+        (out / "TRANSACTION.json").write_bytes(encoded(transaction))
     for name, data in (("CENSUS.jsonl", snapshot), ("PLAN.jsonl", plan_data),
                        ("SOURCE.json", encoded(source)), ("INDEX.jsonl", jsonl(index))):
         (out / name).write_bytes(data)
     return source
 
+
+
+def adjudicate(root: Path, frozen: Path, witnesses_path: Path, out: Path, operations_path: Path | None = None) -> dict:
+    """Render the whole frozen estate, including explicit held remainders.
+
+    The result is an inferred review offering, not input to check() or a move
+    command. Actual R2 admission still requires transaction_plan()'s source-
+    bound selectors, complete comparable family and discharged consumers.
+    """
+    source = load_json((frozen / "SOURCE.json").read_bytes())
+    original = source_files(root, source["source_commit"])
+    snapshot = (frozen / "CENSUS.jsonl").read_bytes()
+    frozen_plan = (frozen / "PLAN.jsonl").read_bytes()
+    demand(digest(snapshot) == source["snapshot_sha256"] and digest(frozen_plan) == source["plan_sha256"]
+           and source_tree_digest(original) == source["source_tree_sha256"], "adjudication-frozen-input-drift")
+    rows = lines(snapshot); by_path = {r["path"]: r for r in rows}
+    prior = {r["path"]: r for r in lines(frozen_plan)}
+    grouped = collections.defaultdict(list)
+    for row in rows:
+        grouped[row["family"]].append(row["path"])
+    witness_records = {}
+    with witnesses_path.open("rb") as stream:
+        for line in stream:
+            row = load_json(line)
+            p = row["path"]; found = row["witnesses"]
+            demand(p in prior and p not in witness_records and
+                   digest(jsonl(found)) == prior[p]["witnesses"]["sha256"] and
+                   len(found) == prior[p]["witnesses"]["count"], "adjudication-witness-drift")
+            witness_records[p] = found
+    demand(set(witness_records) == set(by_path), "adjudication-witness-population-mismatch")
+    operations = load_json(operations_path.read_bytes()) if operations_path else {}
+    for target, claims in operations.items():
+        for claim in claims:
+            demand(target in by_path and claim["classification"] in ("R0", "R1") and
+                   claim["consumer"] in original and digest(original[claim["consumer"]]) == claim["consumer_sha256"]
+                   and isinstance(claim["operation"], str) and len(claim["operation"]) >= 20,
+                   "operative-consumer-binding-drift")
+    text_cache = {}
+    def anchor(witness):
+        citer = witness["citer"]
+        if citer not in text_cache:
+            text_cache[citer] = original[citer].decode("utf-8", "replace"), digest(original[citer])
+        text, sha256 = text_cache[citer]
+        offset = text.find(witness["token"])
+        return {**witness, "citer_sha256": sha256,
+                "token_first_line": text[:offset].count("\n") + 1 if offset >= 0 else None,
+                "locator_form": "literal" if offset >= 0 else "wrapped-or-transformed-token"}
+    table = []; ledger = []
+    time_keys = ("capturedAt", "captured_at", "ranAt", "generatedAt", "recordedAt", "capturedAtUtc")
+    for family, paths in sorted(grouped.items()):
+        members = []
+        for path in paths:
+            body = original[path]
+            try:
+                record = json.loads(body)
+            except (ValueError, UnicodeError):
+                record = {}
+            if not isinstance(record, dict):
+                record = {}
+            captures = []
+            for key in time_keys:
+                try:
+                    instant = capture_instant(record.get(key))
+                except Refusal:
+                    continue
+                captures.append({"selector": "/" + key, "literal": record[key], "utc": instant.isoformat()})
+            found = witness_records[path]
+            protected = [w for w in found if w["form"] == "digest" or
+                         w["kind"] in ("governed", "code", "raw") and
+                         (w["form"] != "conservative-glob" or
+                          w["token"].startswith(PREFIX) and w["token"] not in
+                          (PREFIX + "*", PREFIX + "**", PREFIX + "*.json"))]
+            operative = operations.get(path, [])
+            residual = [w for w in found if w["form"] != "conservative-glob" and w["kind"] != "listing"]
+            if path.endswith("-RAW.md") or any(c["classification"] == "R0" for c in operative):
+                classification, reason = "R0", "verbatim-raw-preservation-or-identified-checker-input"
+            elif operative:
+                classification, reason = "R1", "identified-operative-consumer-or-parameter-evidence"
+            elif protected or residual:
+                classification, reason = "hold", "citation-present-actual-reliance-unknown-retain-in-place"
+            elif path.count("/") > 2:
+                classification, reason = "hold", "bundle-sidecar-or-replay-role-not-proven-independent"
+            elif len(paths) > 1:
+                classification, reason = "hold", "no-proven-same-role-comparable-capture-domain"
+            else:
+                classification, reason = "R2", "sole-measured-family-member-kept; consumer-catalog-review-required"
+            metadata = {k: record[k] for k in ("subject", "subjects", "kind", "role", "record", "schema", "slice")
+                        if k in record}
+            item = {"path": path, "sha256": by_path[path]["sha256"], "source_commit": source["source_commit"],
+                    "index_family": family, "family_role_identity": family + "::" + path[len(PREFIX):],
+                    "classification": classification, "disposition": "hold" if classification == "hold" else "keep",
+                    "reason": reason, "record_metadata": metadata, "capture_instants": captures,
+                    "protected_witness_count": len(protected), "protected_witness_sha256": digest(jsonl(protected)),
+                    "protected_witness_examples": [anchor(w) for w in protected[:5]], "operative_consumers": operative,
+                    "reliance_epistemic": "Inferred" if operative else "Unknown",
+                    "all_witness_sha256": prior[path]["witnesses"]["sha256"],
+                    "record_named_commit": by_path[path]["commit"], "docs_navigation_repair": False}
+            table.append(item); members.append(item)
+        capture_population = [m for m in members if len(m["capture_instants"]) == 1]
+        newest = max(capture_population, key=lambda m: m["capture_instants"][0]["utc"])["path"] if len(capture_population) == len(members) else None
+        ledger.append({"index_family": family, "member_count": len(members),
+                       "classification_counts": dict(sorted(collections.Counter(m["classification"] for m in members).items())),
+                       "members": [m["path"] for m in members], "members_with_one_explicit_instant": len(capture_population),
+                       "chronological_latest_candidate": newest,
+                       "equivalence": "unproved" if len(members) > 1 else "singleton",
+                       "role_adjudication": "identified consumers preserved; citation-only and incomparable roles remain Unknown/hold",
+                       "archive_selection": [], "scope": "inferred offering; actual transaction requires verified selectors"})
+    summary = {"version": 1, "epistemic": "Inferred", "source_commit": source["source_commit"],
+               "source_tree_sha256": source["source_tree_sha256"], "evidence_files": len(table), "families": len(ledger),
+               "classifications": dict(sorted(collections.Counter(r["classification"] for r in table).items())),
+               "dispositions": dict(sorted(collections.Counter(r["disposition"] for r in table).items())),
+               "selected_archives": 0, "docs_navigation_repairs": 0,
+               "scope": "complete population offering with named holds; not a claim of zero eligible archives",
+               "table_sha256": digest(jsonl(table)), "families_sha256": digest(jsonl(ledger)),
+               "witness_file_sha256": digest(witnesses_path.read_bytes())}
+    destination = out.resolve()
+    demand(not destination.is_relative_to(root.resolve()) or destination == (root / HOME).resolve(),
+           "generated-output-must-use-retention-home-or-external-directory")
+    demand(not out.is_symlink() and not any((out / name).is_symlink() for name in
+           ("MOVE-TABLE.jsonl", "FAMILIES.jsonl", "ADJUDICATION.json")), "output-artifact-symlink")
+    out.mkdir(parents=True, exist_ok=True)
+    for name, data in (("MOVE-TABLE.jsonl", jsonl(table)), ("FAMILIES.jsonl", jsonl(ledger)), ("ADJUDICATION.json", encoded(summary))):
+        (out / name).write_bytes(data)
+    return summary
 
 def verify_archive_objects(root: Path, row: dict) -> dict:
     p = evidence_path(row["path"])
@@ -325,7 +612,7 @@ def verify_archive_objects(root: Path, row: dict) -> dict:
             "tag_object": git(root, "rev-parse", ref).decode().strip(), "peeled_commit": peeled}
 
 
-def validate_locator(root: Path, row: dict, current: dict) -> None:
+def validate_locator(root: Path, row: dict, current: dict, transaction: dict | None = None) -> None:
     keys = ARCHIVE_KEYS if row.get("kind") == "archive" else LIVE_KEYS
     demand(set(row) == keys and row.get("version") == 1 and type(row["version"]) is int,
            "unknown-schema-fields-or-version")
@@ -339,9 +626,10 @@ def validate_locator(root: Path, row: dict, current: dict) -> None:
         demand(digest(git(root, "cat-file", "blob", current[p][2])) == row["sha256"], "live-digest-mismatch")
         return
     verify_archive_objects(root, row)
-    # Local rows cannot establish remote protection. The transaction's future
-    # protection receipt is deliberately not implemented as a trusted boolean.
-    raise Refusal("origin-protection-and-reviewed-family-proof-required-additive-only")
+    # A structured frozen API receipt establishes the reviewed restrictions;
+    # the operator must separately recheck their current state on origin.
+    demand(transaction is not None, "origin-protection-and-reviewed-family-proof-required-additive-only")
+    protected_namespace(transaction["protection"], row["tag"])
 
 
 def check(root: Path, home: Path) -> dict:
@@ -378,6 +666,12 @@ def check(root: Path, home: Path) -> dict:
            source["citation_classes"] == dict(collections.Counter(r["reliance"] for r in census_rows)),
            "source-population-count-mismatch")
     expected_plan = make_plan(source["source_commit"], census_rows, original)
+    transaction_path = home / "TRANSACTION.json"
+    transaction = None
+    if transaction_path.exists() or transaction_path.is_symlink():
+        demand(not transaction_path.is_symlink() and transaction_path.is_file(), "transaction-not-regular-local-file")
+        transaction = load_json(transaction_path.read_bytes())
+        expected_plan = transaction_plan(root, source["source_commit"], census_rows, original, expected_plan, transaction)
     demand(plan_data == jsonl(expected_plan), "unreviewed-plan-or-classification-change")
     plan_by_path = {r["path"]: r for r in plan}
     head = git(root, "rev-parse", "HEAD").decode().strip()
@@ -399,7 +693,7 @@ def check(root: Path, home: Path) -> dict:
     for row in rows:
         p = evidence_path(row.get("path"))
         demand(p not in seen, "duplicate-or-conflicting-identity"); seen.add(p)
-        validate_locator(root, row, current)
+        validate_locator(root, row, current, transaction)
         if row["kind"] == "live":
             demand(actual.get(p) == row["sha256"], "live-worktree-drift")
             live.add(p)
@@ -407,15 +701,28 @@ def check(root: Path, home: Path) -> dict:
             archived.add(p)
         if p in plan_by_path:
             old = plan_by_path[p]
-            demand(row["family"] == old["index_family"] and row["basis"] == old["classification"],
-                   "plan-index-classification-drift")
+            demand(row["family"] == (old["equivalence_family"] if old["classification"] == "R2" else old["index_family"])
+                   and row["basis"] == old["classification"], "plan-index-classification-drift")
+            if row["kind"] == "archive":
+                demand(old["disposition"] == "archive" and row["commit"] == source["source_commit"]
+                       and row["sha256"] == old["sha256"], "archive-not-frozen-removal")
         else:
             demand(row["kind"] == "live" and row["basis"] == "hold", "new-body-requires-conservative-live-row")
             demand(row["family"] == census.family_of(p), "new-body-family-mismatch")
     demand(live == set(actual), "unindexed-current-evidence")
+    if transaction is not None:
+        for old in plan:
+            if old["classification"] == "R2":
+                demand(old["newest_keeper"] in live, "missing-newest-family-keeper")
+            if old["disposition"] != "archive":
+                demand(old["path"] in live, "forbidden-R0-R1-or-held-removal")
     demand(set(plan_by_path) <= live | archived, "missing-source-body-or-newest-keeper")
+    if transaction is not None:
+        expected_preserved = {p: digest(b) for p, b in original.items() if p not in ADMIN and p not in archived}
+        current_preserved = {p: digest(b) for p, b in source_files(root, head).items() if p not in ADMIN and p not in archived}
+        demand(expected_preserved == current_preserved, "transaction-source-or-consumer-drift")
     return {"head": head, "source_commit": source["source_commit"], "live": len(live), "archive": len(archived),
-            "plan": dict(collections.Counter(r["classification"] for r in plan)), "phase": "additive-only"}
+            "plan": dict(collections.Counter(r["classification"] for r in plan)), "phase": "verified-transaction" if transaction else "additive-only"}
 
 
 def selftest(implementation: Path, receipt: Path | None) -> int:
@@ -437,7 +744,7 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         write(PREFIX + "run-b.json", '{"subject":"synthetic","captured_at":"2026-01-02T00:00:00Z"}\n')
         (root / (PREFIX + "run-a.json")).chmod(0o755)
         write(PREFIX + "review-RAW.md", "Synthetic reviewer corpus: docs/evidence/run-*.json\n")
-        write("scripts/reader.py", "# A consumer pins docs/evidence/run-a.json\n")
+        write("scripts/reader.py", "from pathlib import Path\nPath('docs/evidence/run-a.json').read_bytes()\n")
         source_commit = commit(); home = root / HOME
         # Record valid preparation itself, so a mutant refusing this setup
         # cannot masquerade as an empty test population.
@@ -509,6 +816,69 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         cases.append({"predicate": "valid-live-retrieval-and-deterministic-replay", "pass": baseline["live"] == 3
                       and before == {p.name: p.read_bytes() for p in home.iterdir()} and check(root, home) == baseline,
                       "fixture_commit": checkpoint, "old": "first frozen plan", "new": "identical replay"})
+        complete_witnesses = protection_witnesses(source_files(root, source_commit), lines((home / "CENSUS.jsonl").read_bytes()))
+        witness_input = Path(temp) / "witnesses.jsonl"
+        witness_input.write_bytes(jsonl([{"path": p, "witnesses": w} for p, w in sorted(complete_witnesses.items())]))
+        witness_bytes = witness_input.read_bytes()
+        view_out = Path(temp) / "adjudicated"
+        view = adjudicate(root, home, witness_input, view_out)
+        cases.append({"predicate": "complete-adjudication-view-preserves-unknown-citations", "pass":
+                      view["evidence_files"] == 3 and view["families"] == 3 and view["classifications"] == {"R0": 1, "hold": 2},
+                      "old": "three measured source records", "new": view, "fixture_commit": checkpoint})
+        expected_admin = ["docs/retention/ADJUDICATION.json", "docs/retention/CENSUS.jsonl",
+            "docs/retention/FAMILIES.jsonl", "docs/retention/INDEX.jsonl", "docs/retention/MOVE-TABLE.jsonl",
+            "docs/retention/PLAN.jsonl", "docs/retention/SOURCE.json", "docs/retention/TRANSACTION.json"]
+        cases.append({"predicate": "finite-administrative-exclusion-domain", "pass": prepared["administrative_exclusions"] == expected_admin,
+                      "old": "the eight literal retention artifacts", "new": prepared["administrative_exclusions"], "fixture_commit": checkpoint})
+        def good_view():
+            value = adjudicate(root, home, witness_input, view_out)
+            demand(value["evidence_files"] == 3 and value["classifications"] == {"R0": 1, "hold": 2}, "adjudication-control-failed")
+        def bad_frozen_view():
+            saved = (home / "SOURCE.json").read_bytes()
+            try:
+                doc = load_json(saved); doc["plan_sha256"] = "0" * 64
+                (home / "SOURCE.json").write_bytes(encoded(doc)); adjudicate(root, home, witness_input, view_out)
+            finally:
+                (home / "SOURCE.json").write_bytes(saved)
+        probe("adjudication-frozen-binding", good_view, bad_frozen_view, "adjudication-frozen-input-drift",
+              "SOURCE.plan_sha256 equals the frozen plan digest", "SOURCE.plan_sha256 = '0' * 64")
+        def bad_witness_view(omit):
+            try:
+                ws = lines(witness_bytes)
+                if omit:
+                    ws.pop()
+                else:
+                    ws[0]["witnesses"].append({"citer": "unmeasured", "kind": "code", "form": "digest", "token": "x"})
+                witness_input.write_bytes(jsonl(ws)); adjudicate(root, home, witness_input, view_out)
+            finally:
+                witness_input.write_bytes(witness_bytes)
+        probe("adjudication-witness-integrity", good_view, lambda: bad_witness_view(False), "adjudication-witness-drift",
+              "full source-bound witness records", "append an unmeasured witness")
+        probe("adjudication-witness-complete-population", good_view, lambda: bad_witness_view(True), "adjudication-witness-population-mismatch",
+              "one witness record per measured body", "omit the final witness record")
+        probe("adjudication-output-boundary", good_view,
+              lambda: adjudicate(root, home, witness_input, root / ".syzygy/output"),
+              "generated-output-must-use-retention-home-or-external-directory", "owned external output", "governed-plane output")
+        view_link = Path(temp) / "view-link"; view_link.symlink_to(view_out)
+        probe("adjudication-output-symlink", good_view, lambda: adjudicate(root, home, witness_input, view_link),
+              "output-artifact-symlink", "owned regular output directory", "owned symlink to that directory")
+        ops_input = Path(temp) / "operations.json"
+        operations = {PREFIX + "run-a.json": [{"classification": "R1", "consumer": "scripts/reader.py",
+            "consumer_sha256": digest(source_files(root, source_commit)["scripts/reader.py"]),
+            "operation": "Read the synthetic run-a body using pathlib.Path.read_bytes.", "anchors": [1, 2]}]}
+        ops_input.write_bytes(encoded(operations))
+        operative_view = adjudicate(root, home, witness_input, view_out, ops_input)
+        cases.append({"predicate": "operative-consumer-bound-adjudication", "pass": operative_view["classifications"] == {"R0": 1, "R1": 1, "hold": 1},
+                      "old": view, "new": operative_view, "fixture_commit": checkpoint})
+        def bad_operations():
+            changed = load_json(encoded(operations)); changed[PREFIX + "run-a.json"][0]["consumer_sha256"] = "0" * 64
+            ops_input.write_bytes(encoded(changed))
+            try:
+                adjudicate(root, home, witness_input, view_out, ops_input)
+            finally:
+                ops_input.write_bytes(encoded(operations))
+        probe("operative-consumer-source-binding", good_view, bad_operations, "operative-consumer-binding-drift",
+              "consumer digest matches the measured source", "consumer digest = '0' * 64")
         failure("unindexed-new-file", lambda: (write(PREFIX + "new.json", "{}\n"), commit()), "unindexed-current-evidence")
         failure("dirty-live-digest", lambda: write(PREFIX + "run-b.json", "changed prose\n"), "live-worktree-drift")
         failure("missing-live-body", lambda: (root / (PREFIX + "run-b.json")).unlink(), "missing-or-symlink-live-body")
@@ -1221,6 +1591,233 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                           "restored_refusal_kept_blob_missing": restored,
                           "mutant_missing_before": mutant_before, "mutant_missing_after": mutant_after,
                           "scope": "owned local-file Git remote only; no network/provider/observed repository"})
+    # Exercise the final transaction through the same public check, with real
+    # commits, a real annotated tag, actual removals and ordinary restoration.
+    with tempfile.TemporaryDirectory(prefix="syzygy-retention-transaction-") as temp:
+        outer = Path(temp); root = outer / "repo"; root.mkdir(); git(root, "init", "-q")
+        home = root / HOME
+        paths = [PREFIX + "capture-2026-01-01.json", PREFIX + "capture-2026-01-02.json"]
+        for i, path in enumerate(paths):
+            target = root / path; target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(encoded({"subject": "synthetic-subject", "kind": "measurement", "role": "baseline",
+                                       "capturedAt": f"2026-01-0{i + 1}T00:00:00Z"}))
+        def tx_commit():
+            git(root, "add", "--force", "--all")
+            git(root, "-c", "user.name=Retention Fixture", "-c", "user.email=fixture@example.invalid",
+                "commit", "-qm", "synthetic transaction fixture")
+            return git(root, "rev-parse", "HEAD").decode().strip()
+        body_commit = tx_commit()
+        (root / "consumer.txt").write_text("The literal docs/** is an unrelated documentation example; this fixture reads no evidence paths.\n")
+        containing = tx_commit()
+        tag = "evidence-archive/2026-01"
+        git(root, "-c", "user.name=Retention Fixture", "-c", "user.email=fixture@example.invalid",
+            "tag", "-a", tag, containing, "-m", "Synthetic protected archive")
+        protection = {"repository": "tzeusy-org/syzygy", "observed_at": "2026-01-01T00:00:00Z", "rulesets": [
+            {"id": 1, "source": "tzeusy-org/syzygy", "source_type": "Repository", "target": "tag", "enforcement": "active",
+             "conditions": {"ref_name": {"include": ["refs/tags/evidence-archive/*"], "exclude": []}},
+             "bypass_actors": [], "rules": [{"type": "update"}, {"type": "deletion"}]}]}
+        family = {"id": "synthetic-measurement-baseline", "subject": "synthetic-subject", "kind": "measurement",
+                  "role": "baseline", "members": paths,
+                  "selectors": {"subject": "/subject", "kind": "/kind", "role": "/role", "capture": "/capturedAt"}}
+        transaction = {"version": 1, "source_commit": containing, "discharges": [],
+                       "families": [family], "protection": protection}
+        transaction["discharges"] = [{"citer": "consumer.txt", "sha256": digest((root / "consumer.txt").read_bytes()),
+            "form": "conservative-glob", "token": "docs/**",
+            "reason": "The synthetic consumer text is a literal unrelated example, not an evidence reader."}]
+        tx_input = outer / "transaction.json"; tx_input.write_bytes(encoded(transaction))
+        prepare(root, containing, home, transaction_path=tx_input)
+        tx_commit()
+        additive = check(root, home)
+        cases.append({"predicate": "valid-adjudicated-additive-live-family", "pass": additive["live"] == 2
+                      and additive["archive"] == 0 and additive["plan"] == {"R2": 2},
+                      "old": "two frozen records with literal equal subject/kind/role and distinct UTC captures",
+                      "new": transaction, "fixture_commit": containing})
+        index = lines((home / "INDEX.jsonl").read_bytes())
+        # Select the older member by its literal identity, independently of row order.
+        for row in index:
+            if row["path"] == paths[0]:
+                row.update(kind="archive", commit=containing, tag=tag)
+        (home / "INDEX.jsonl").write_bytes(jsonl(index)); (root / paths[0]).unlink()
+        completed = tx_commit(); final = check(root, home)
+        cases.append({"predicate": "valid-complete-archive-through-public-check", "pass": final["live"] == 1
+                      and final["archive"] == 1 and final["phase"] == "verified-transaction",
+                      "old": "both source bodies present", "new": {"archived": paths[0], "keeper": paths[1],
+                      "containing_commit": containing, "tag": tag}, "fixture_commit": completed})
+        def tx_restore():
+            git(root, "reset", "--hard", completed); git(root, "clean", "-fdq")
+        def tx_failure(name, mutate, expected):
+            tx_restore(); control = check(root, home) == final
+            old = {"transaction": (home / "TRANSACTION.json").read_text(),
+                   "consumer.txt": (root / "consumer.txt").read_text(),
+                   "INDEX.jsonl": (home / "INDEX.jsonl").read_text(),
+                   "SOURCE.json": (home / "SOURCE.json").read_text(),
+                   "PLAN.jsonl": (home / "PLAN.jsonl").read_text()}
+            mutate()
+            try:
+                check(root, home); reason = "unexpected-pass"
+            except (Refusal, OSError) as exc:
+                reason = str(exc)
+            new = {"transaction": (home / "TRANSACTION.json").read_text(),
+                   "consumer.txt": (root / "consumer.txt").read_text(),
+                   "INDEX.jsonl": (home / "INDEX.jsonl").read_text(),
+                   "SOURCE.json": (home / "SOURCE.json").read_text(),
+                   "PLAN.jsonl": (home / "PLAN.jsonl").read_text()}
+            tx_restore(); restored = check(root, home) == final
+            cases.append({"predicate": name, "pass": control and restored and reason == expected,
+                          "old": old, "new": new, "refusal": reason, "expected_refusal": expected,
+                          "control_pass": control, "restored_pass": restored, "fixture_commit": completed})
+        def tx_change(change):
+            doc = load_json((home / "TRANSACTION.json").read_bytes()); change(doc)
+            (home / "TRANSACTION.json").write_bytes(encoded(doc))
+            # Mutate the whole coherent proposed transaction so each semantic
+            # boundary is reached. A separate case leaves this binding stale.
+            proposed_plan = lines((home / "PLAN.jsonl").read_bytes())
+            for row in proposed_plan:
+                row["transaction_sha256"] = digest(encoded(doc))
+            proposed_bytes = jsonl(proposed_plan)
+            (home / "PLAN.jsonl").write_bytes(proposed_bytes)
+            source = load_json((home / "SOURCE.json").read_bytes())
+            source["plan_sha256"] = digest(proposed_bytes)
+            (home / "SOURCE.json").write_bytes(encoded(source))
+        variants = [
+            ("transaction-version", lambda d: d.update(version=True), "invalid-transaction-schema"),
+            ("transaction-source", lambda d: d.update(source_commit="0" * 40), "transaction-source-drift"),
+            ("transaction-discharges-type", lambda d: d.update(discharges=None), "invalid-transaction-population"),
+            ("transaction-families-type", lambda d: d.update(families=None), "invalid-transaction-population"),
+            ("discharge-schema", lambda d: d["discharges"][0].update(approved=True), "invalid-witness-discharge"),
+            ("discharge-consumer-digest", lambda d: d["discharges"][0].update(sha256="0" * 64), "discharged-consumer-drift"),
+            ("discharge-missing-consumer", lambda d: d["discharges"][0].update(citer="absent.txt"), "discharged-consumer-drift"),
+            ("discharge-short-reason", lambda d: d["discharges"][0].update(reason="short"), "witness-discharge-reason-required"),
+            ("discharge-long-reason", lambda d: d["discharges"][0].update(reason="r" * 4097), "witness-discharge-reason-required"),
+            ("discharge-reason-type", lambda d: d["discharges"][0].update(reason=True), "witness-discharge-reason-required"),
+            ("discharge-literal-edge", lambda d: d["discharges"][0].update(form="digest"), "only-lexical-glob-false-positives-may-be-discharged"),
+            ("discharge-token-type", lambda d: d["discharges"][0].update(token=True), "only-lexical-glob-false-positives-may-be-discharged"),
+            ("discharge-duplicate", lambda d: d["discharges"].append(dict(d["discharges"][0])), "duplicate-witness-discharge"),
+            ("family-schema", lambda d: d["families"][0].update(approved=True), "invalid-adjudicated-family"),
+            ("family-blank-id", lambda d: d["families"][0].update(id=""), "duplicate-or-invalid-adjudicated-family"),
+            ("family-overlong-id", lambda d: d["families"][0].update(id="i" * 1025), "duplicate-or-invalid-adjudicated-family"),
+            ("family-id-type", lambda d: d["families"][0].update(id=True), "duplicate-or-invalid-adjudicated-family"),
+            ("family-subject-type", lambda d: d["families"][0].update(subject=True), "explicit-family-subject-kind-role-required"),
+            ("family-kind-blank", lambda d: d["families"][0].update(kind=""), "explicit-family-subject-kind-role-required"),
+            ("family-role-overlong", lambda d: d["families"][0].update(role="r" * 4097), "explicit-family-subject-kind-role-required"),
+            ("family-selectors-schema", lambda d: d["families"][0]["selectors"].update(extra="/subject"), "invalid-family-selectors"),
+            ("family-selectors-type", lambda d: d["families"][0].update(selectors=[]), "invalid-family-selectors"),
+            ("family-members-empty", lambda d: d["families"][0].update(members=[]), "family-members-required"),
+            ("family-members-type", lambda d: d["families"][0].update(members=True), "family-members-required"),
+            ("family-selector-type", lambda d: d["families"][0]["selectors"].update(capture=True), "invalid-family-selector"),
+            ("family-selector-relative", lambda d: d["families"][0]["selectors"].update(capture="capturedAt"), "invalid-family-selector"),
+            ("family-selector-overlong", lambda d: d["families"][0]["selectors"].update(capture="/" + "x" * 1024), "invalid-family-selector"),
+            ("family-selector-through-scalar", lambda d: d["families"][0]["selectors"].update(capture="/subject/missing"), "family-selector-unavailable"),
+            ("transaction-extra-field", lambda d: d.update(approved=True), "invalid-transaction-schema"),
+            ("family-subject", lambda d: d["families"][0].update(subject="different"), "family-subject-kind-role-mismatch"),
+            ("family-kind", lambda d: d["families"][0].update(kind="different"), "family-subject-kind-role-mismatch"),
+            ("family-role", lambda d: d["families"][0].update(role="different"), "family-subject-kind-role-mismatch"),
+            ("family-capture-selector", lambda d: d["families"][0]["selectors"].update(capture="/missing"), "family-selector-unavailable"),
+            ("family-member-omitted", lambda d: d["families"][0].update(members=[paths[0]]), "incomplete-adjudicated-family"),
+            ("family-member-duplicate", lambda d: d["families"][0]["members"].append(paths[0]), "unknown-duplicate-or-sidecar-family-member"),
+            ("family-duplicate", lambda d: d["families"].append(d["families"][0]), "duplicate-or-invalid-adjudicated-family"),
+            ("family-member-unknown", lambda d: d["families"][0]["members"].append(PREFIX + "absent.json"), "unknown-duplicate-or-sidecar-family-member"),
+            ("protection-id-type", lambda d: d["protection"]["rulesets"][0].update(id=True), "unbound-protection-ruleset-source"),
+            ("protection-id-nonpositive", lambda d: d["protection"]["rulesets"][0].update(id=0), "unbound-protection-ruleset-source"),
+            ("protection-source", lambda d: d["protection"]["rulesets"][0].update(source="other/repository"), "unbound-protection-ruleset-source"),
+            ("protection-source-type", lambda d: d["protection"]["rulesets"][0].update(source_type="Organization"), "unbound-protection-ruleset-source"),
+            ("protection-wrong-repository", lambda d: d["protection"].update(repository="other/repository"), "wrong-protection-repository"),
+            ("protection-flag-insufficient", lambda d: d.update(protection={"protected": True}), "invalid-protection-receipt"),
+            ("protection-future", lambda d: d["protection"].update(observed_at="9999-01-01T00:00:00Z"), "future-protection-receipt"),
+            ("protection-unenforced", lambda d: d["protection"]["rulesets"][0].update(enforcement="evaluate"), "archive-namespace-not-protected-without-bypass"),
+            ("protection-branch-rule", lambda d: d["protection"]["rulesets"][0].update(target="branch"), "archive-namespace-not-protected-without-bypass"),
+            ("protection-bypass", lambda d: d["protection"]["rulesets"][0].update(bypass_actors=[{"actor_type": "RepositoryRole", "bypass_mode": "always", "actor_id": 5}]), "archive-namespace-not-protected-without-bypass"),
+            ("protection-exclusion", lambda d: d["protection"]["rulesets"][0]["conditions"]["ref_name"].update(exclude=["refs/tags/evidence-archive/2026-01"]), "archive-namespace-not-protected-without-bypass"),
+            ("protection-wrong-pattern", lambda d: d["protection"]["rulesets"][0]["conditions"]["ref_name"].update(include=["refs/tags/unrelated/*"]), "archive-namespace-not-protected-without-bypass"),
+            ("protection-no-deletion-rule", lambda d: d["protection"]["rulesets"][0].update(rules=[{"type": "update"}]), "archive-namespace-not-protected-without-bypass"),
+            ("protection-rulesets-empty", lambda d: d["protection"].update(rulesets=[]), "protection-rulesets-required"),
+            ("protection-rulesets-type", lambda d: d["protection"].update(rulesets=True), "protection-rulesets-required"),
+            ("protection-rule-type", lambda d: d["protection"].update(rulesets=[True]), "invalid-protection-ruleset"),
+            ("protection-conditions-type", lambda d: d["protection"]["rulesets"][0].update(conditions=[]), "invalid-protection-rule-conditions"),
+            ("protection-ref-condition-type", lambda d: d["protection"]["rulesets"][0]["conditions"].update(ref_name=[]), "invalid-protection-rule-conditions"),
+            ("protection-rule-list-type", lambda d: d["protection"]["rulesets"][0].update(rules=True), "invalid-protection-rule-conditions"),
+            ("protection-no-update-rule", lambda d: d["protection"]["rulesets"][0].update(rules=[{"type": "deletion"}]), "archive-namespace-not-protected-without-bypass"),
+        ]
+        for name, mutate, expected in variants:
+            tx_failure(name, lambda mutate=mutate: tx_change(mutate), expected)
+        def unbound_transaction():
+            doc = load_json((home / "TRANSACTION.json").read_bytes())
+            doc["protection"]["observed_at"] = "2026-01-02T00:00:00Z"
+            (home / "TRANSACTION.json").write_bytes(encoded(doc))
+        tx_failure("transaction-full-byte-binding", unbound_transaction, "unreviewed-plan-or-classification-change")
+        def alter_consumer():
+            (root / "consumer.txt").write_text("Different consumer bytes.\n"); tx_commit()
+        tx_failure("transaction-consumer-drift", alter_consumer, "transaction-source-or-consumer-drift")
+        def change_index(change):
+            index = lines((home / "INDEX.jsonl").read_bytes()); change(index)
+            (home / "INDEX.jsonl").write_bytes(jsonl(index))
+        def remove_keeper():
+            (root / paths[1]).unlink()
+            change_index(lambda rs: rs.pop(next(i for i, r in enumerate(rs) if r["path"] == paths[1])))
+            tx_commit()
+        tx_failure("transaction-newest-keeper-loss", remove_keeper, "missing-newest-family-keeper")
+        def archive_keeper():
+            change_index(lambda rs: next(r for r in rs if r["path"] == paths[1]).update(kind="archive", commit=containing, tag=tag))
+            (root / paths[1]).unlink(); tx_commit()
+        tx_failure("transaction-keeper-cannot-be-archived", archive_keeper, "archive-not-frozen-removal")
+        tx_failure("archive-containing-commit-is-frozen-source", lambda: change_index(
+            lambda rs: next(r for r in rs if r["kind"] == "archive").update(commit=body_commit)), "archive-not-frozen-removal")
+        def source_negative(name, action, expected):
+            tx_restore(); control = check(root, home) == final
+            git(root, "reset", "--hard", containing); git(root, "clean", "-fdq")
+            before = source_files(root, containing)
+            doc = load_json(encoded(transaction)); action(doc)
+            changed = tx_commit(); doc["source_commit"] = changed
+            after = source_files(root, changed)
+            tx_input.write_bytes(encoded(doc))
+            try:
+                prepare(root, changed, outer / ("negative-" + name), transaction_path=tx_input)
+                reason = "unexpected-pass"
+            except (Refusal, OSError) as exc:
+                reason = str(exc)
+            changes = sorted(p for p in set(before) | set(after) if before.get(p) != after.get(p))
+            tx_restore(); restored = check(root, home) == final
+            cases.append({"predicate": name, "pass": control and restored and reason == expected,
+                          "old": {p: before.get(p, b"").decode() for p in changes},
+                          "new": {p: after.get(p, b"").decode() for p in changes},
+                          "transaction": doc, "fixture_commit": changed, "refusal": reason,
+                          "expected_refusal": expected, "control_pass": control, "restored_pass": restored})
+        def edit_capture(value):
+            record = load_json((root / paths[0]).read_bytes()); record["capturedAt"] = value
+            (root / paths[0]).write_bytes(encoded(record))
+        source_negative("family-equal-capture-instants", lambda d: edit_capture("2026-01-02T00:00:00Z"), "incomparable-family-capture-instants")
+        source_negative("family-capture-without-zone", lambda d: edit_capture("2026-01-01T00:00:00"), "capture-timezone-required")
+        source_negative("family-capture-non-date", lambda d: edit_capture("invalid"), "capture-instant-required")
+        source_negative("family-capture-type", lambda d: edit_capture(True), "capture-instant-required")
+        source_negative("family-capture-overlong", lambda d: edit_capture("x" * 65), "capture-instant-required")
+        def protected_source(doc):
+            dest = root / ".syzygy/fixture.md"; dest.parent.mkdir()
+            dest.write_text(digest((root / paths[0]).read_bytes()) + "\n")
+        source_negative("R0-cannot-enter-adjudicated-family", protected_source, "R0-family-reclassification-forbidden")
+        def raw_dependency(doc):
+            (root / "review-RAW.md").write_text("Synthetic evidence dependency: " + paths[0] + "\n")
+        source_negative("R1-cannot-enter-adjudicated-family", raw_dependency, "undischarged-R1-family-member")
+        def renamed_member(doc, name):
+            target = root / name; target.parent.mkdir(parents=True, exist_ok=True)
+            (root / paths[0]).rename(target); doc["families"][0]["members"][0] = name
+        source_negative("family-sidecar-member", lambda d: renamed_member(d, PREFIX + "nested/capture-2026-01-01.json"),
+                        "unknown-duplicate-or-sidecar-family-member")
+        source_negative("family-cross-index-groups", lambda d: renamed_member(d, PREFIX + "other.json"),
+                        "family-crosses-measured-index-group")
+        # Rollback is a new ordinary commit: the archive row and protected tag
+        # remain, while restored bytes are represented by a live locator.
+        tx_restore()
+        source_bytes = git(root, "show", containing + ":" + paths[0])
+        (root / paths[0]).write_bytes(source_bytes)
+        restored_index = lines((home / "INDEX.jsonl").read_bytes())
+        for row in restored_index:
+            if row["path"] == paths[0]:
+                row.pop("commit"); row.pop("tag"); row["kind"] = "live"
+        (home / "INDEX.jsonl").write_bytes(jsonl(restored_index)); rollback = tx_commit()
+        rolled_back = check(root, home)
+        cases.append({"predicate": "ordinary-body-restoring-rollback-with-tag-retained", "pass": rolled_back["live"] == 2
+                      and rolled_back["archive"] == 0 and git(root, "rev-parse", "refs/tags/" + tag + "^{commit}").decode().strip() == containing,
+                      "old": completed, "new": rollback, "fixture_commit": rollback})
     for case in cases:
         case["input_record_sha256"] = digest(encoded({"old": case["old"], "new": case["new"]}))
     report = {"implementation_commit": implementation_commit, "implementation_sha256": implementation_sha256,
@@ -1238,14 +1835,22 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="mode", required=True)
     plan = sub.add_parser("plan"); plan.add_argument("--source", required=True); plan.add_argument("--out", required=True)
+    plan.add_argument("--transaction", help="reviewed source-bound family adjudication; plan mode still moves nothing")
     plan.add_argument("--witness-out", help="optional full witness sweep; keep this large replay output outside the repository")
+    judgment = sub.add_parser("adjudicate"); judgment.add_argument("--frozen", required=True)
+    judgment.add_argument("--witnesses", required=True); judgment.add_argument("--out", required=True)
+    judgment.add_argument("--operations", help="source-bound operative consumer adjudications; citations alone stay Unknown")
     verify = sub.add_parser("check"); verify.add_argument("--home", default=HOME)
     test = sub.add_parser("selftest"); test.add_argument("--receipt")
     args = parser.parse_args()
     try:
         root = Path(git(Path.cwd(), "rev-parse", "--show-toplevel").decode().strip())
         if args.mode == "plan":
-            print(json.dumps(prepare(root, args.source, Path(args.out), Path(args.witness_out) if args.witness_out else None), sort_keys=True))
+            print(json.dumps(prepare(root, args.source, Path(args.out), Path(args.witness_out) if args.witness_out else None,
+                                     Path(args.transaction) if args.transaction else None), sort_keys=True))
+        elif args.mode == "adjudicate":
+            print(json.dumps(adjudicate(root, Path(args.frozen), Path(args.witnesses), Path(args.out),
+                                        Path(args.operations) if args.operations else None), sort_keys=True))
         elif args.mode == "check":
             print(json.dumps(check(root, root / args.home), sort_keys=True))
         else:

@@ -1,7 +1,8 @@
-# Evidence retention preparation
+# Evidence retention and verified locators
 
-[Observed] This is the additive prerequisite of `syzygy-bpyt.9.2`: original
-evidence bodies remain in place. The owner selected the verified-index arm
+[Observed] This is the checker and transaction preparation for
+`syzygy-bpyt.9.2`. Original evidence bodies remain in place until the separate
+protection, tag, review and hosted-CI prerequisites are met. The owner selected the verified-index arm
 in GP-Q1 of
 `.syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md`.
 That record owns the four execution conditions and the R0/R1 prohibition.
@@ -46,8 +47,8 @@ Unscoped globs, dynamic readers, actual glob semantics,
 preservation language, sidecars and replay inputs remain unresolved rather
 than silently cleared. The source census predicate remains unchanged.
 
-[Unknown] The eligible archive population and newest interchangeable family
-members have not been established. No family equivalence or recency is
+[Unknown] The default conservative plan does not establish the eligible
+archive population or newest interchangeable family members. No family equivalence or recency is
 inferred from a filename, version suffix or commit timestamp. The selected
 move population in this preparation is empty; that is not a measurement of
 eligibility. No docs-navigation citation has been discharged or repaired.
@@ -57,6 +58,8 @@ Generate or verify the preparation:
 
 ```sh
 python3 scripts/evidence_retention.py plan --source <full-containing-commit> --out <directory> --witness-out <external-sweep.jsonl>
+python3 scripts/evidence_retention.py adjudicate --frozen <directory> --witnesses <external-sweep.jsonl> --operations <reviewed-consumer-operations.json> --out <external-adjudication-directory>
+python3 scripts/evidence_retention.py plan --source <full-containing-commit> --transaction <reviewed-transaction.json> --out <directory>
 python3 scripts/evidence_retention.py check
 python3 scripts/evidence_retention.py selftest --receipt <external-matrix.json>
 ```
@@ -68,9 +71,10 @@ containing `commit` and annotated monthly `tag`. Object validation resolves
 literal paths with `ls-tree -z`, reads regular blobs with `cat-file`, hashes
 their bytes, checks the annotated tag, and checks ancestor reachability.
 It never executes a record, automatically fetches a revision, or trusts a
-record's commit as its containing commit. The additive checker deliberately
-refuses archive use: it does not turn a local protection boolean or a
-citation census into a move authorization.
+record's commit as its containing commit. Without a transaction, the checker refuses archive use. With one, it
+recompiles the exact reviewed families and verifies the resulting archive
+identities. A successful check verifies the representation; it does not itself
+authorize removal or establish the current state of a remote service.
 
 Git must support `--no-lazy-fetch`; an unsupported option fails closed.
 Object reads and ancestry checks use that option and `GIT_NO_LAZY_FETCH=1`,
@@ -118,12 +122,51 @@ boundaries. A containment refusal invalidates a mutation witness; it does not
 demonstrate a retention predicate failure. This audit instrumentation is
 external review evidence, not another CI gate.
 
-[Unknown] The complete transaction still needs affirmative family/reliance
-adjudication, explicit comparable capture/run instants, a freshly frozen
-source and consumer plan, independent review, effective origin protection
-readback, a protected annotated tag verified on origin, and hosted CI on
-both the additive and removal heads. The final checker must validate that
-reviewed archive plan and protection receipt before removal. R0/R1 paths,
+The `adjudicate` report enumerates every frozen body and measured family,
+with subject metadata, explicit capture instants, source-bound operative
+consumers and unresolved citation witnesses. Its output is an inferred review
+offering. A path or digest mention alone establishes no reliance. Its
+chronological candidate is not a declaration of interchangeability; singleton
+R2 candidates still require consumer review. Full witness output remains
+external because it can be much larger than the retained locator.
+
+A transaction is version 1 JSON with exactly `version`, `source_commit`,
+`discharges`, `families` and `protection`. Each family supplies a unique `id`,
+explicit same `subject`, `kind` and `role`, literal JSON-pointer `selectors`
+for those values and a zoned capture instant, and its complete `members`.
+The checker reads these selectors only as data from the frozen blobs. It
+admits top-level JSON records whose role and comparable instants are proved;
+sidecars, replay bundles and ambiguous members remain held. The newest member
+stays live. Missing same-role members, equal instants, R0 membership or an
+undischarged protected witness refuse the proposal. Discharges can clear only
+source-digest-bound lexical glob false positives, with a reason; a literal
+path or digest dependence cannot be cleared through this interface.
+
+`protection` contains `repository`, `observed_at` and full `rulesets` from
+an authenticated origin readback. The current implementation admits a positive
+repository ruleset id with the exact repository/source identity, active tag
+enforcement, the exact `refs/tags/evidence-archive/*` include, no excludes,
+update and deletion restrictions, and no bypass actors. Future-dated receipts
+refuse. This finite supported shape deliberately holds broader, inherited or
+exception-bearing arrangements for review. The receipt is bound into every
+compiled plan row; changing any transaction byte retires that plan. Offline
+CI validates the retained restrictions and Git objects. The operator must
+re-read origin immediately before removal; no local receipt proves that the
+remote setting is still in force.
+
+The checker rejects source or consumer changes between the frozen containing
+commit and a transactional head, except for the enumerated administrative
+artifacts and exact archived bodies. Plan generation moves nothing. Obtain
+hosted CI while bodies remain, establish and recheck effective origin
+protection, push and read back the annotated tag without force, recheck all
+bindings, then commit only the exact removals and locator changes together.
+Final hosted CI checks that head. Any conflicting tag halts. The script never
+changes remote settings, creates tags or removes bodies.
+
+[Unknown] A complete real transaction additionally needs its reviewed
+family/reliance adjudication, effective protection and origin tag readbacks,
+additive and final hosted CI, and the final clean-clone battery. These are
+execution obligations, not outcomes inferred from a synthetic passing test. R0/R1 paths,
 raws, replay inputs and every digest-bound byte stay in place. The existing
 raw-review fresh-checkout-demo glob remains unchanged.
 
