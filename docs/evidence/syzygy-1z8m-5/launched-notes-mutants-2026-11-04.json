@@ -1,7 +1,7 @@
 {
  "subject": "packages/polaris-dossier/src/polaris.ts",
- "subjectSha256": "0bee5a0ffb1dae24a6f2382b5ab84311c06792fea601dff8f619e17b29cf8608",
- "baseCommit": "b1278aea59f1adeec30f35e619c616a34313f6c1",
+ "subjectSha256": "f9b3a54bce6a6599f486fb0ed351429d5a2dbbea090cd675b49bea479f7de34c",
+ "baseCommit": "39373a2ec290acc07e48d252732f549135b22f1c",
  "note": "every mutant applied to the subject bytes named by subjectSha256 (the working tree on top of baseCommit, committed unchanged in the next commit), then restored",
  "test": "packages/polaris-dossier/src/polaris-launch-guidance.test.ts",
  "mutants": [
@@ -145,7 +145,7 @@
   },
   {
    "id": "g1-sentence-dropped",
-   "old": " When a passing result says to tell the operator and end the session, do neither. If a command refuses for any other reason, such as a digest that does not match, stop and state the refusal here, in this session.",
+   "old": " When a passing result says to tell the operator and end the session, do neither. If a command reports that a file or digest does not match what Syzygy recorded, stop and state that here, in this session; repair any other refusal and try again.",
    "new": "",
    "outcome": "killed"
   },
@@ -177,6 +177,18 @@
    "id": "f7-off-by-one",
    "old": "return latest !== null && latest.doc['outcome'] !== 'passed' && latest.n >= maxRepairCycles;",
    "new": "return latest !== null && latest.doc['outcome'] !== 'passed' && latest.n > maxRepairCycles;",
+   "outcome": "killed"
+  },
+  {
+   "id": "n1-inventory-stop-dropped",
+   "old": "  if (refusedAtLimit(inventory, maxRepairCycles)) return `blocked: inventory",
+   "new": "  if (false && refusedAtLimit(inventory, maxRepairCycles)) return `blocked: inventory",
+   "outcome": "killed"
+  },
+  {
+   "id": "n1-draft-stop-dropped",
+   "old": "  if (refusedAtLimit(draft, maxRepairCycles)) return `blocked: draft",
+   "new": "  if (false && refusedAtLimit(draft, maxRepairCycles)) return `blocked: draft",
    "outcome": "killed"
   },
   {

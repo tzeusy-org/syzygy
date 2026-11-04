@@ -331,7 +331,7 @@ export const AUTHOR_SELF_CHECK = 'Each draft revision after the first counts aga
 
 /** Appended to a waiting session's system prompt in a launched run (claude --append-system-prompt; recorded in the launch argv). */
 export const LAUNCHED_GUIDANCE: Readonly<Record<'inventory' | 'fidelity' | 'design', string>> = {
-  inventory: 'This is a launched run: Syzygy, not the operator, coordinates every session. Each inventory revision after the first counts against the run\'s repair-cycle limit, so before every submission verify it yourself: every path it names exists in the clone at the pinned revision, and every quotation is copied character for character from the file it cites. Submit your inventory when it is ready. If Syzygy refuses it because no draft revision is frozen yet, that is expected and nothing is wrong: wait, without asking the operator for anything. Syzygy types a message here when the authoring session freezes a draft; then resubmit with the same command. After your inventory passes, do not end this session: stay idle, because Syzygy may later type a request to revise entries the fidelity review could not confirm. When a passing result says to tell the operator and end the session, do neither. If a command refuses for any other reason, such as a digest that does not match, stop and state the refusal here, in this session. Never ask the operator to run, start or tell anything.',
+  inventory: 'This is a launched run: Syzygy, not the operator, coordinates every session. Each inventory revision after the first counts against the run\'s repair-cycle limit, so before every submission verify it yourself: every path it names exists in the clone at the pinned revision, and every quotation is copied character for character from the file it cites. Submit your inventory when it is ready. If Syzygy refuses it because no draft revision is frozen yet, that is expected and nothing is wrong: wait, without asking the operator for anything. Syzygy types a message here when the authoring session freezes a draft; then resubmit with the same command. After your inventory passes, do not end this session: stay idle, because Syzygy may later type a request to revise entries the fidelity review could not confirm. When a passing result says to tell the operator and end the session, do neither. If a command reports that a file or digest does not match what Syzygy recorded, stop and state that here, in this session; repair any other refusal and try again. Never ask the operator to run, start or tell anything.',
   fidelity: 'This is a launched run: Syzygy, not the operator, coordinates every session and delivers each packet to your await command. Before you submit a verdict, check that every identifier it names appears in the packet and that its rows agree with the readiness it declares: a refused verdict costs a round trip. Never ask the operator to run, start or tell anything.',
   design: 'This is a launched run: Syzygy, not the operator, coordinates every session and delivers each packet to your await command. Before you submit a verdict, check that every identifier it names appears in the packet and that its rows agree with the readiness it declares: a refused verdict costs a round trip. Never ask the operator to run, start or tell anything.',
 };
@@ -502,6 +502,15 @@ export function refusedAtLimit(latest: { readonly n: number; readonly doc: Recor
   return latest !== null && latest.doc['outcome'] !== 'passed' && latest.n >= maxRepairCycles;
 }
 
+type CheckRecord = { readonly n: number; readonly doc: Record<string, unknown> } | null;
+
+/** The blocked phase when the latest draft or inventory revision was refused at the limit, else null (the loop's first test). */
+export function limitStop(draft: CheckRecord, inventory: CheckRecord, maxRepairCycles: number, breakdown: () => string): string | null {
+  if (refusedAtLimit(draft, maxRepairCycles)) return `blocked: draft revision ${draft!.n} was refused by check and all ${maxRepairCycles} repair cycles of the draft are spent${breakdown()}`;
+  if (refusedAtLimit(inventory, maxRepairCycles)) return `blocked: inventory revision ${inventory!.n} was refused by check and all ${maxRepairCycles} repair cycles of the inventory are spent`;
+  return null;
+}
+
 /** How the spent repair revisions split between drafts check refused and drafts that passed, read from the check records. */
 export function cycleBreakdown(run: string): string {
   let refused = 0; let passed = 0;
@@ -585,11 +594,9 @@ async function loop(options: Options, ports: CliPorts, state: SupervisorState, s
   for (;;) {
     const deadline = state.briefIssuedAt + state.deadlineSeconds * 1000;
     if (Date.now() >= deadline) { phase = 'deadline passed'; break; }
-    const lastDraft = latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE);
-    if (refusedAtLimit(lastDraft, maxRepairCycles)) { phase = `blocked: draft revision ${lastDraft!.n} was refused by check and all ${maxRepairCycles} repair cycles of the draft are spent${cycleBreakdown(run)}`; break; }
-    const lastInventory = latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE);
-    if (refusedAtLimit(lastInventory, maxRepairCycles)) { phase = `blocked: inventory revision ${lastInventory!.n} was refused by check and all ${maxRepairCycles} repair cycles of the inventory are spent`; break; }
     const draft = latestRecord(path.join(run, RUN_LAYOUT.checks), REVISION_FILE);
+    const stop = limitStop(draft, latestRecord(path.join(run, INVENTORY_CHECKS), REVISION_FILE), maxRepairCycles, () => cycleBreakdown(run));
+    if (stop !== null) { phase = stop; break; }
     const passedDraft = draft !== null && draft.doc['outcome'] === 'passed' ? draft.n : null;
     const inventory = await inventoryOfRecord(run, { sources: cliGateSources(ports), now: (ports.now ?? Date.now)() });
     const fidelity = latestRecord(path.join(run, REVIEW_CHECKS), /^fidelity-verdict-(\d+)\.json$/);
