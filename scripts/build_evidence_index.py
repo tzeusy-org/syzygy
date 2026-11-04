@@ -62,7 +62,18 @@ top-level evidence file is cited by its basename anywhere.
 *Digest citation.* C digest-cites P when P's current sha256 appears in C as
 a 64-hex token (either case, not adjoining another hex digit). A truncated
 prefix (`0758cdcc…`) is not a digest citation. No file can hold its own
-digest, so self-exclusion needs no rule here; it does for a path.
+digest, so self-exclusion needs no rule here; it does for a path. A digest
+binds bytes, not a path: identical files share one digest, so a citation of it
+names every copy. The one exception is the digest of the empty input
+(EMPTY_SHA256): zero bytes bind nothing, and forty unrelated records quote it
+by chance, so it is never a digest citation of any file.
+
+*Directory citation.* A token (or `/`-suffix of one, with trailing `.` and `/`
+removed) that equals a directory below `docs/evidence/` (evidence-relative,
+repo-relative, or resolved against the citer's directory) names every file
+under that directory, unless the citer sits under that directory itself. It
+is weaker than a path citation: it says "this review's evidence lives under
+`<dir>/`", not which file is relied on.
 
 Not a citation, by this predicate: a stem without its extension, a path
 assembled at run time (f-strings, `join`), a glob, a `../` path not resolving
@@ -100,7 +111,13 @@ Reliance classes, first match wins
                      and a sibling's path names only a location.
 - `evidence-only`    path-cited by an `evidence` citer, and by nothing above.
 - `listed-only`      path-cited only by `listing` citers.
-- `none`             neither path-cited nor digest-cited by any citer.
+- `directory-named`  a containing directory is cited by a file outside it, and
+                     nothing above applies. Checked before `none`, so `none`
+                     means no citation of the file, its digest or its
+                     directory. Chosen over a docstring exclusion because a
+                     reader of the rows sees the class; a prose exclusion hid
+                     140 of the former 263 `none` rows from `.9.2`.
+- `none`             no path, digest or directory citation by any citer.
 
 A class says who cites a file, never whether the file is still needed
 (AGENTS.md rule 5).
@@ -138,6 +155,7 @@ RELIANCE_CLASSES = (
     "digest-cited",
     "evidence-only",
     "listed-only",
+    "directory-named",
     "none",
 )
 ROW_KEYS = frozenset(("path", "sha256", "family", "subject", "commit", "verdict", "reliance"))
@@ -160,6 +178,7 @@ TOKEN = re.compile(r"[A-Za-z0-9_./-]+")
 TAIL = re.compile(r"[A-Za-z0-9_./-]+$")
 HEAD = re.compile(r"^[A-Za-z0-9_./-]+")
 BARE_LINE = re.compile(r"^\s*[A-Za-z0-9_./-]+\s*$")
+EMPTY_SHA256 = hashlib.sha256(b"").hexdigest()
 HEX64 = re.compile(r"(?<![0-9a-fA-F])[0-9a-fA-F]{64}(?![0-9a-fA-F])")
 COMMIT_HEX = re.compile(r"[0-9a-f]{7,40}")
 DATE_TOKEN = re.compile(r"-\d{4}-\d{2}-\d{2}")
@@ -219,6 +238,11 @@ def candidate_keys(token: str, citer_dir: str) -> Iterable[str]:
                 yield EVIDENCE_PREFIX + s
         if citer_dir:
             yield posixpath.normpath(posixpath.join(citer_dir, form))
+
+
+def directory_keys(token: str, citer_dir: str) -> Iterable[str]:
+    """Repo paths the token may name as a directory (trailing `.` and `/` cut)."""
+    return candidate_keys(token.rstrip("./"), citer_dir)
 
 
 def is_listing(text: str) -> bool:
@@ -301,7 +325,7 @@ def record_fields(path: str, data: bytes) -> tuple[str | None, str | None, str |
     return subject, commit, verdict
 
 
-def classify(path_kinds: set[str], digest_kinds: set[str]) -> str:
+def classify(path_kinds: set[str], digest_kinds: set[str], dir_named: bool = False) -> str:
     if "governed" in digest_kinds:
         return "act-bound"
     for kind in ("governed", "code", "raw", "docs"):
@@ -312,7 +336,7 @@ def classify(path_kinds: set[str], digest_kinds: set[str]) -> str:
     for kind in ("evidence", "listing"):
         if kind in path_kinds:
             return PATH_CLASS[kind]
-    return "none"
+    return "directory-named" if dir_named else "none"
 
 
 def build(root: Path) -> tuple[str, collections.Counter]:
@@ -326,6 +350,13 @@ def build(root: Path) -> tuple[str, collections.Counter]:
         by_digest[d].append(p)
     path_kinds: dict[str, set[str]] = {p: set() for p in evidence}
     digest_kinds: dict[str, set[str]] = {p: set() for p in evidence}
+    ev_dirs = {posixpath.dirname(p) for p in evidence}
+    for d in list(ev_dirs):
+        while len(d) > len(EVIDENCE_PREFIX):
+            ev_dirs.add(d)
+            d = posixpath.dirname(d)
+    ev_dirs = {d for d in ev_dirs if len(d) > len(EVIDENCE_PREFIX)}
+    named_dirs: set[str] = set()
     for citer in files:
         data = blobs.get(citer)
         if data is None:
@@ -341,16 +372,23 @@ def build(root: Path) -> tuple[str, collections.Counter]:
                 if key in ev_set:
                     hit.add(key)
         hit.discard(citer)
+        for token in tokens_of(text):
+            for key in directory_keys(token, citer_dir):
+                if key in ev_dirs and not citer.startswith(key + "/"):
+                    named_dirs.add(key)
         for target in hit:
             path_kinds[target].add(kind)
         for hexd in set(HEX64.findall(text)):
+            if hexd.lower() == EMPTY_SHA256:
+                continue
             for target in by_digest.get(hexd.lower(), ()):
                 digest_kinds[target].add(kind)
     rows = []
     totals: collections.Counter = collections.Counter()
     for p in evidence:
         subject, commit, verdict = record_fields(p, blobs[p])
-        reliance = classify(path_kinds[p], digest_kinds[p])
+        dir_named = any(posixpath.dirname(p) == d or posixpath.dirname(p).startswith(d + "/") for d in named_dirs)
+        reliance = classify(path_kinds[p], digest_kinds[p], dir_named)
         totals[reliance] += 1
         rows.append(json.dumps({
             "path": p,
@@ -401,6 +439,8 @@ def selftest() -> int:
     dig_digest = hashlib.sha256(dig_body.encode()).hexdigest()
     nested_body = "nested, named by digest only\n"
     nested_digest = hashlib.sha256(nested_body.encode()).hexdigest()
+    dual_body = '{"kind": "path-cited and digest-cited"}\n'
+    dual_digest = hashlib.sha256(dual_body.encode()).hexdigest()
     snapshot_row = json.dumps({k: None for k in ROW_KEYS} | {"path": E + "snapped-2026-01-01.json"})
     files = {
         E + "bound-2026-01-01.json": bound_body,
@@ -431,6 +471,24 @@ def selftest() -> int:
         "docs/reviews/R-1-RAW.md": f"Anchor: raw-2026-01-01.json:3\n| `nested.json` | `{nested_digest}` |\n",
         "docs/README.md": "See doc-2026-01-01.json. And `docs/evidence/wrapped-2026-01-01.\njson` here. And stem-only-2026-01-01 only.\n",
         "docs/retention/SNAPSHOT.jsonl": snapshot_row + "\n",
+        E + "dual-2026-01-01.json": dual_body,
+        E + "other/KEPT2.sha256": f"{dual_digest}  dual-2026-01-01.json\n",
+        E + "mixed-target-2026-01-01.json": "{}\n",
+        E + "other/mixed.txt": "docs/evidence/mixed-target-2026-01-01.json\nsome prose on a second line\n",
+        E + "spec-target-2026-01-01.json": "{}\n",
+        "openspec/changes/x/spec.md": "cites spec-target-2026-01-01.json\n",
+        E + "subj-obj-2026-01-01.json": '{"subject": {"path": "a/b.ts"}}\n',
+        E + "subj-bad-2026-01-01.json": '{"subject": {"path": 3}}\n',
+        E + "commits-2026-01-01.json": '{"commit": "NOTHEX", "head": "def5678", "headCommit": "1234abc"}\n',
+        E + "empty-a-2026-01-01.json": "",
+        E + "empty-b-2026-01-01.json": "",
+        "docs/EMPTY.md": f"the empty input digest {EMPTY_SHA256}\n",
+        E + "dirfam/r1/inside.json": "x\n",
+        E + "dirfam/r1/other.json": "y\n",
+        E + "dirfam/top.json": "z\n",
+        "docs/NOTES.md": "see the runs under `dirfam/r1/` only\n",
+        E + "dirself/a.json": "x\n",
+        E + "dirself/NOTE.txt": "this is the dirself/ run\n",
     }
     links = {E + "link-2026-01-01.json": "code-2026-01-01.json"}
     cases: list[tuple[str, bool]] = []
@@ -469,7 +527,23 @@ def selftest() -> int:
         m = rows[E + "fam/README.md"]
         cases.append(("markdown fields: subject, commit, verdict",
                       (m["subject"], m["commit"], m["verdict"]) == ("the fam run", "1234567abc", "CONFIRM")))
-        cases.append(("one row per tracked regular file under docs/evidence/", len(rows) == 23))
+        cases.append(("digest-cited outranks evidence-only: path-cited by a sibling and digest-cited",
+                      rel("dual-2026-01-01.json") == "digest-cited"))
+        cases.append(("a listing needs every line bare: a path line beside prose is an evidence citer",
+                      rel("mixed-target-2026-01-01.json") == "evidence-only"))
+        cases.append(("openspec/ is a governed citer", rel("spec-target-2026-01-01.json") == "governed-citer"))
+        cases.append(("json subject object: its string path", rows[E + "subj-obj-2026-01-01.json"]["subject"] == "a/b.ts"))
+        cases.append(("json subject object: a non-string path is null", rows[E + "subj-bad-2026-01-01.json"]["subject"] is None))
+        cases.append(("json commit: first valid key in COMMIT_KEYS order wins",
+                      rows[E + "commits-2026-01-01.json"]["commit"] == "def5678"))
+        cases.append(("the empty-input digest cites no file", rel("empty-a-2026-01-01.json") == "none"
+                      and rel("empty-b-2026-01-01.json") == "none"))
+        cases.append(("directory-named: a directory cited from outside covers its subtree",
+                      rel("dirfam/r1/inside.json") == "directory-named" and rel("dirfam/r1/other.json") == "directory-named"))
+        cases.append(("directory-named: a sibling above the cited directory stays none", rel("dirfam/top.json") == "none"))
+        cases.append(("directory-named: a citer inside the directory does not count",
+                      rel("dirself/a.json") == "none" and rel("dirself/NOTE.txt") == "none"))
+        cases.append(("one row per tracked regular file under docs/evidence/", len(rows) == 38))
         first, _ = build(root)
         cases.append(("byte-stable on re-run", build(root)[0] == first))
         (root / "docs/README.md").write_text("nothing here\n", encoding="utf-8")
