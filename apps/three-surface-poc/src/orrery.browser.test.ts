@@ -1,9 +1,10 @@
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+
+import { tempDir } from '@syzygy/test-kit';
 
 import { findBrowserExecutable, launchBrowser, type Browser } from './cdp-browser.js';
 import { renderOrreryPage } from './orrery.js';
@@ -30,8 +31,7 @@ describe.skipIf(executable === undefined)('Orrery rendered geometry', () => {
   it('preserves district size differences and readable labels (C3-3, POC-REQ-050)', async () => {
     const model = buildFixtureModel(cleanups);
     if (model.orrery.kind !== 'observed') throw new Error('fixture must contain observed structure');
-    const directory = mkdtempSync(join(tmpdir(), 'syzygy-orrery-geometry-'));
-    cleanups.push(directory);
+    const directory = tempDir('syzygy-orrery-geometry-');
     const file = join(directory, 'orrery.html');
     const page = await browser.newPage();
     try {

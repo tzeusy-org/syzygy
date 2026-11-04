@@ -1,10 +1,10 @@
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { createDaemon, type RunningDaemon } from '@syzygy/http-host';
+import { tempDir } from '@syzygy/test-kit';
 import type { PocModel } from '@syzygy/three-surface-poc-core';
 
 import { TAILNET_HOST } from './browser-origin.js';
@@ -60,20 +60,12 @@ const SLOTS = {
 /** The two tokens' computed colours (--ink #dfe9e7, --muted #8ca3a4). */
 const RGB = { '--ink': 'rgb(223, 233, 231)', '--muted': 'rgb(140, 163, 164)' } as const;
 
-const cleanups: string[] = [];
 const running: RunningDaemon[] = [];
 const browserExecutable = findBrowserExecutable();
 
 afterEach(async () => {
   for (const daemon of running.splice(0)) await daemon.close().catch(() => undefined);
-  for (const directory of cleanups.splice(0)) rmSync(directory, { recursive: true, force: true });
 });
-
-function tempDir(prefix: string): string {
-  const directory = mkdtempSync(join(tmpdir(), prefix));
-  cleanups.push(directory);
-  return directory;
-}
 
 function attribute(tag: string, name: string): string | undefined {
   return new RegExp(`\\s${name}="([^"]*)"`).exec(tag)?.[1];

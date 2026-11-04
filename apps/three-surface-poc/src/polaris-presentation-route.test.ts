@@ -6,12 +6,12 @@
 //
 // Bead syzygy-1z3.24.5 (PWB-LIVE-13).
 
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { createDaemon, type RunningDaemon } from '@syzygy/http-host';
+import { tempDir } from '@syzygy/test-kit';
 import { PWB_RESOURCE_LIMITS, type PocModel } from '@syzygy/three-surface-poc-core';
 
 import { POLARIS_HUMAN_PATH, renderPolarisPresentation } from './polaris.js';
@@ -30,8 +30,7 @@ afterEach(async () => {
 });
 
 async function startPoc(model: PocModel, limits = PWB_RESOURCE_LIMITS): Promise<{ readonly baseUrl: string; readonly token: string }> {
-  const stateDir = mkdtempSync(join(tmpdir(), 'syzygy-poc-presentation-'));
-  cleanups.push(stateDir);
+  const stateDir = tempDir('syzygy-poc-presentation-');
   const start = await createDaemon({ stateDir: join(stateDir, 'state'), routes: pocRoutes(() => model, limits), port: 0 });
   if (!start.started) throw new Error(`daemon failed to start: ${start.failure.kind}`);
   running.push(start.daemon);

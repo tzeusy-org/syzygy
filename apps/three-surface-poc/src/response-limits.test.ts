@@ -3,11 +3,11 @@
 // (registry amendment act, 2026-09-05) under PWB-REQ-006 as amended.
 // A breach serves only a bounded typed failure; never a truncated page.
 
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import { tempDir } from '@syzygy/test-kit';
 import { createDaemon, type RouteContext, type RouteResponse } from '@syzygy/http-host';
 import { PWB_RESOURCE_LIMITS, describeReevaluation, type PocModel, type PwbResourceLimits, type Reevaluation } from '@syzygy/three-surface-poc-core';
 
@@ -58,9 +58,8 @@ function failureOf(body: string): ResponseLimitFailure {
 
 describe('boundedResponse — the ceiling is measured on the final encoded body', () => {
   it('logs a single safe response-limit outcome per real-socket human and machine 503', async () => {
-    const scratch = mkdtempSync(join(tmpdir(), 'syzygy-poc-limit-socket-'));
+    const scratch = tempDir('syzygy-poc-limit-socket-');
     const stateDir = join(scratch, 'state');
-    cleanups.push(scratch);
     const recorder = new ServedResponseRecorder();
     const limits = { ...PWB_RESOURCE_LIMITS, maxHumanResponseBytes: 0, maxMachineResponseBytes: 0 };
     const started = await createDaemon({ stateDir, routes: pocRoutes(() => model, limits, undefined, recorder), port: 0 });
