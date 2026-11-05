@@ -173,6 +173,9 @@ try:
     if mode != 'startup':
         assert len(helpers) == 1, 'expected exactly one live owned network helper'
         send(helpers[0], signal.SIGSTOP)
+        report['before'] = census()
+        assert helpers[0]['pid'] in {r['pid'] for r in report['before']['proc']}, 'proc census missed the stopped owned helper'
+        assert helpers[0]['pid'] in {int(r.split()[0]) for r in report['before']['psFamily']}, 'ps census missed the stopped owned helper'
     report['milestone'] = {'helpers': helpers, 'family': rows}
     permitted_reaps = {worker.pid, *(r['pid'] for r in rows if r['ppid'] == worker.pid)}
     if mode == 'startup':
