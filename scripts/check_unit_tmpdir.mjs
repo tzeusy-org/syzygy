@@ -322,8 +322,9 @@ async function selftest() {
     await caseRun('outside sibling and link target survive', async () => {
       const target = join(control.path, 'outside'); fs.mkdirSync(target); fs.writeFileSync(join(target, 'decoy'), 'untouched');
       const r = await fixture(`fs.symlinkSync(${JSON.stringify(target)},join(root,'outside-link'));`); leak(r, ['outside-link']);
+      assert.deepEqual(r.census.entries, [{ path: 'outside-link', type: 'link', exempt: false }]); assert.deepEqual(r.census.errors, []);
       assert.equal(fs.readFileSync(join(target, 'decoy'), 'utf8'), 'untouched');
-      assert.throws(() => verifyRoot({ path: target }), /unowned-root/);
+      assert.throws(() => verifyRoot({ path: target, identity: identity(fs.lstatSync(target)), parent: dirname(target) }), /unowned-root/);
     });
     await caseRun('read identity and cleanup refusal stay failed with named remainders', async () => {
       const r = await fixture("fs.mkdirSync(join(root,'unreadable'),0o000);");
@@ -344,6 +345,9 @@ async function selftest() {
       }
       const missing = await fixture('process.exit(0);'); assert.equal(missing.ok, false); assert(missing.denominator.problems.includes('missing-or-ambiguous-report')); clean(missing);
       const empty = await fixture('', { expected: [] }); assert.equal(empty.ok, false); assert(empty.denominator.problems.includes('empty-or-duplicate-expected')); clean(empty);
+      parameters++;
+      const narrowed = await ownedRun({ mode: 'selftest-cli-refusal', args: [HERE, '--project', 'integration'], quiet: true });
+      assert.equal(narrowed.ok, false); assert.equal(narrowed.child.code, 1); assert.match(narrowed.child.text, /usage:/); clean(narrowed);
     });
     print('tmpdir-selftest', { cases, parameters, status: 'pass' });
   } finally { verifyRoot(control); fs.rmSync(control.path, { recursive: true }); }

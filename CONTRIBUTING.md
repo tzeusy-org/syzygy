@@ -110,7 +110,7 @@ root.
 | Command | What it runs | Needs |
 |---|---|---|
 | `npm test` | one complete **unit** run in a fresh private TMPDIR, with a post-run leak check | node, Linux `/proc` |
-| `npm run check` | `npm run typecheck`, then `npm test` | node only |
+| `npm run check` | `npm run typecheck`, then `npm test` | node, Linux `/proc` |
 | `npm run test:integration` | bounded TMPDIR-driver selftests, then the **integration** tier | git, python3, Linux `/proc` |
 | `npm run test:e2e` | the **e2e** tier, then the system tests (`npm run test:system`, which builds first) | Chrome or Chromium, strace, git, npm |
 | `npm run check:all` | `check`, `test:tiers`, `test:integration`, `test:e2e`, then the governance battery (`npm run check:battery`) | all of the above |
