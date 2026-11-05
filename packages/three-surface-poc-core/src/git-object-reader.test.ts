@@ -590,7 +590,7 @@ describe('reported positions in CRLF and bare-CR texts', () => {
         ['x' + end + '[x](&#106;avascript:example)', [{ form: 'obfuscated-link-destination', line: 2, column: 3 }]],
       ] as const),
     ] as const;
-    for (const [raw, findings] of [...rows, ...rows.toReversed(), ...rows]) {
+    for (const [raw, findings] of [...rows, ...[...rows].reverse(), ...rows]) {
       const charged: string[] = [];
       expect(scanActiveContent(raw), JSON.stringify(raw)).toEqual(findings);
       expect(scanActiveContentCharged(raw, (pass) => { charged.push(pass); return undefined; })).toEqual({ kind: 'scanned', findings });
