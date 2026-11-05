@@ -348,7 +348,7 @@ finally:
  sibling.terminate();sibling.wait()
 `;
       const pinned = await fixture(`const {execFileSync}=await import('node:child_process');execFileSync('/usr/bin/python3',['-c',${JSON.stringify(pinning)}],{stdio:'pipe'});`);
-      assert.equal(pinned.ok, true, 'identity refusal and stale pidfd must preserve the unrelated sibling'); clean(pinned);
+      assert.equal(pinned.ok, true, `identity refusal and stale pidfd must preserve the unrelated sibling: ${pinned.child.text}`); clean(pinned);
     });
     await caseRun('outside sibling and link target survive', async () => {
       const target = join(control.path, 'outside'); fs.mkdirSync(target); fs.writeFileSync(join(target, 'decoy'), 'untouched');
