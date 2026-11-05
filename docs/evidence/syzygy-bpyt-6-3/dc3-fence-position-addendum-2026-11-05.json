@@ -1,7 +1,7 @@
 {
   "epistemic": "Observed measurements; independent review, final verification and landing are separate held gates",
   "date": "2026-11-05",
-  "source_commit": "7deeb7f38c034ea225262956944b535f6b490131",
+  "source_commit": "0a88af0495d9c66e79ee881f346b992c51c2b656",
   "base_commit": "a5afce5c623f6a2d704d3b203e7f0db646d6ffd9",
   "outcomes": [
     "syzygy-bpyt.1.20",
@@ -42,16 +42,19 @@
   },
   "tests": {
     "delta": "+0 ~15 -0 executable cases across12existing declarations",
-    "added_expect_call_sites": 29,
+    "added_expect_call_sites": 34,
     "targeted_unit": "397 passed in6files",
     "targeted_integration": "194 passed in3files",
-    "preliminary_check": "3793 unit tests passed after test target fix; its overlap with a short mutation makes it informational only; final exact-commit clean-clone checkall required"
+    "preliminary_check": "3793 unit tests passed after test target fix; its overlap with a short mutation makes it informational only; final exact-commit clean-clone checkall required",
+    "unicode_indent_run_matrix_rows": 180,
+    "unicode_closer_control_rows": 36,
+    "precursor_checkall": "6e65af210c974458c5d6a23a8a5be7099c78ad26 passed every tier and120/120 canonical battery commands; explicit planned boundary matrix added afterward; finalhead cleanclonecheckall remains required"
   },
   "mutants": {
-    "executed": 17,
-    "effective": 14,
+    "executed": 18,
+    "effective": 15,
     "survived_or_insufficient_selection": 3,
-    "details": "MUTATION-DISPOSITIONS.json retains every fragment/result; two malformed-helper runtime failures are effective despite initial driver AssertionError-only undercount. M10/M12 narrow controls and M14 wrong selection are retained survivors; stronger relevant controls fail. One unmatched-fragment installer refusal ran no test and is never a kill."
+    "details": "MUTATION-DISPOSITIONS-FINAL.json retains18executions:15intended semantic failures including3existing masked/malformed helper failures, plus3retained survivors/insufficient selections; unmatched-fragment installer refusal ran no test, never a kill."
   },
   "preserved_residuals": [
     "extractor and index readers retain LF-only line models and the bare-CR extractor residual",
@@ -160,6 +163,26 @@
     {
       "name": "AUTHOR-ATTEMPTS-THROUGH-DIFFERENTIAL.jsonl",
       "sha256": "61387a768a297c6c75c0bd19dcb056f1f86e7bc9313ac0c2bc5984f85567b1ed"
+    },
+    {
+      "name": "TEST-DELTA-FINAL.json",
+      "sha256": "6987995fb07756beeea699aa3101d7dce1e02046bc8a4496f129254d1c0b29fe"
+    },
+    {
+      "name": "MUTATION-DISPOSITIONS-FINAL.json",
+      "sha256": "47d2946723404bf0d5381a0ec5e668638e1d678b424fb7f3c83fce9e42c80de0"
+    },
+    {
+      "name": "MUTATION-FINAL-MATRIX.json",
+      "sha256": "6a9343990dec2e2e17e9e783de3f6bbf32eee844a70a67b8c51c3ccba3107b74"
+    },
+    {
+      "name": "logs/unicode-boundary-matrix.log",
+      "sha256": "2a0a0402095d13773fccf3dc392a6512a722bc0462ed9b931e584f15360a93d8"
+    },
+    {
+      "name": "logs/final-exact-commit-checkall.log",
+      "sha256": "738c087f071adb06d70a5993d3704b3390d83bf17c7e4aaf7f2012857174500d"
     }
   ]
 }
