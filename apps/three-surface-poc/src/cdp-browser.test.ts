@@ -38,6 +38,17 @@ describe('disposable browser shutdown', () => {
     });
     expect(requestedTimeout).toBe(5);
     expect(events).toEqual(['protocol-close-requested', 'socket-closed', 'SIGKILL', 'profile-removed']);
+    events.length = 0;
+    signalCode = null;
+    await closeDisposableBrowser(connection, child, '/tmp/private-browser-profile', privateGroup, {
+      removeProfile: () => { events.push('profile-removed'); }, closeGraceMs: 5, groupProcesses: () => [],
+      stopChild: () => {
+        events.push('guardian-stop-requested');
+        queueMicrotask(() => { signalCode = 'SIGTERM'; onExit?.(); });
+      },
+      verifyChildCleanup: async () => { events.push('guardian-reaped'); },
+    });
+    expect(events).toEqual(['protocol-close-requested', 'socket-closed', 'guardian-stop-requested', 'guardian-reaped', 'profile-removed']);
   });
 
   it('lets an acknowledged close exit before removing the profile without a hard kill', async () => {
@@ -126,6 +137,12 @@ describe('disposable browser shutdown', () => {
       groupProcesses: () => { throw new Error('cannot verify private browser process identity'); },
       removeProfile: () => { events.push('wrong-removal'); },
     })).rejects.toThrow('cannot verify private browser process identity');
+    expect(events).not.toContain('wrong-removal');
+    await expect(closeDisposableBrowser(connection, exited, '/tmp/private-browser-profile', privateGroup, {
+      groupProcesses: () => [],
+      verifyChildCleanup: async () => { throw new Error('guardian cleanup was not acknowledged'); },
+      removeProfile: () => { events.push('wrong-removal'); },
+    })).rejects.toThrow('guardian cleanup was not acknowledged');
     expect(events).not.toContain('wrong-removal');
   });
 

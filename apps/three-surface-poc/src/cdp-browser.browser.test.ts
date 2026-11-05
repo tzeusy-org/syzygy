@@ -13,9 +13,13 @@
 // leading dot) and removes it only on a clean exit, so a killed leader left one in TMPDIR
 // on every such run. The helper reads that directory from the profile's link while Chrome
 // runs and removes it with the profile.
-import { existsSync, readdirSync, readFileSync, readlinkSync } from 'node:fs';
+import { spawn } from 'node:child_process';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, readlinkSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { build } from 'esbuild';
 
 import { describe, expect, it } from 'vitest';
 
@@ -60,6 +64,45 @@ function alive(pid: number): boolean {
 }
 
 describe.skipIf(executable === undefined || process.platform !== 'linux')('disposable Chrome teardown in a real browser', () => {
+  it.each(['SIGTERM', 'SIGKILL'] as const)('reaps the browser family after its worker dies by %s', async (signal) => {
+    const directory = mkdtempSync(join(tmpdir(), 'syzygy-poc-parent-death-'));
+    try {
+      const module = join(directory, 'browser.mjs');
+      const source = new URL('./cdp-browser.ts', import.meta.url);
+      await build({ entryPoints: [fileURLToPath(source)], outfile: module, bundle: true, platform: 'node', format: 'esm',
+        define: { 'import.meta.url': JSON.stringify(source.href) } });
+      const worker = join(directory, 'worker.mjs');
+      writeFileSync(worker, `import { launchBrowser } from ${JSON.stringify(module)};\n` +
+        `const browser = await launchBrowser(${JSON.stringify(executable)});\n` +
+        `const page = await browser.newPage(); await page.navigate('data:text/html,<p>parent lifetime</p>');\n` +
+        `process.stdout.write('ready\\n'); setInterval(() => {}, 1000);\n`);
+      const child = spawn('python3', [fileURLToPath(new URL('./test-fixtures/browser-parent-death.py', import.meta.url)), signal, worker, process.execPath],
+        { stdio: ['ignore', 'pipe', 'pipe'] });
+      let output = '';
+      let errors = '';
+      child.stdout.on('data', (chunk: Buffer) => { output += chunk.toString('utf8'); });
+      child.stderr.on('data', (chunk: Buffer) => { errors += chunk.toString('utf8'); });
+      const code = await new Promise<number | null>((resolve, reject) => {
+        child.once('error', reject);
+        child.once('exit', resolve);
+      });
+      expect(code, errors).toBe(0);
+      const report = JSON.parse(output) as {
+        milestone: { helpers: unknown[] }; decoySurvived: boolean;
+        after: { procFamilyDenominator: number; proc: unknown[]; psFamily: unknown[] };
+        afterRecovery: { proc: unknown[] };
+      };
+      expect(report.milestone.helpers).toHaveLength(1);
+      expect(report.decoySurvived).toBe(true);
+      expect(report.after.procFamilyDenominator).toBe(0);
+      expect(report.after.proc).toEqual([]);
+      expect(report.after.psFamily).toEqual([]);
+      expect(report.afterRecovery.proc).toEqual([]);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  }, 60_000);
+
   it('closes and drains even when a helper cannot exit on its own', async () => {
     const browser = await launchBrowser(executable as string);
     let frozen: number[] = [];
