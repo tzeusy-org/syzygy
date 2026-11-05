@@ -18,6 +18,14 @@ one file's bytes; the recorder freezes the repaired bytes, and this paragraph
 is the disclosure. Notes 2 to 4 are not repaired in the reviewed files, so
 that no further edit outruns the review; each is carried as stated.
 
+**The recorder cannot bind this review.** [Observed] The raw tags finding 1
+`(note; must be fixed before landing)`. The shared review parser
+(`record_versioned_signoff.review_findings`) accepts a note qualifier only
+from its listed clauses and refuses this one as ambiguous, and a raw is never
+edited (CC-REV-6). So the version-6 recorder stays unfrozen. Whether to run a
+narrow confirmation of the repaired bytes (a fourth round, past the agreed
+stopping rule) or take another route is the lead's and the owner's call.
+
 ## 1 — The round-2 repair made `check_governance.py` fail (CG-1a) (note)
 
 Repaired as the raw proposed: the displayed pattern breaks between `[#!]`
