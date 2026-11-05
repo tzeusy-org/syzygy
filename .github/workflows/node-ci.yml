@@ -5,7 +5,7 @@
 # typechecks, runs the unit/conformance tier, then the integration and
 # e2e tiers in parallel (the e2e tier includes the system-test suite,
 # which spawns the real daemon and drives it over HTTP — the epic's
-# fresh-clone demonstration, automated on every push). The tiers are
+# fresh-clone demonstration, automated on every pull request and merge-queue run). The tiers are
 # defined in vitest.tiers.ts and documented in CONTRIBUTING.md.
 #
 # Required check: the branch protection and the merge queue require a
@@ -30,17 +30,18 @@
 name: node-ci
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
   merge_group:
     types: [checks_requested]
 
 # Supersede stale pull_request runs (a newer head cancels the older one). The group is per workflow and per PR, and
-# only pull_request events cancel: push and merge_group runs fall back to a
-# per-run group (run_id), so they are never cancelled, nor can a newer main push
-# displace an older one still pending (the default behaviour of a shared group).
+# only pull_request events cancel: merge_group runs fall back to a per-run
+# group (run_id), so they are never cancelled.
+#
+# No push trigger (syzygy-j5m0): main moves only through the merge queue, whose
+# merge_group run already tested the exact tree that lands, so a push run on
+# main re-ran the same tree a third time.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}

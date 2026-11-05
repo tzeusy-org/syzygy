@@ -14,20 +14,26 @@
 # battery `PROJECT-STATUS.md` publishes, so that "hosted CI is green" and
 # "the battery is clean" are the same claim rather than two claims a reader
 # conflates. When a check is added there, add it here.
+#
+# The steps run in three parallel jobs: `governance` holds every check but the
+# two slowest selftests, which have a job each. The aggregate `checks` job is
+# the required check. Time-to-green target: 7 minutes (CONTRIBUTING.md,
+# "CI time budget").
 name: governance-docs
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
   merge_group:
     types: [checks_requested]
 
 # Supersede stale pull_request runs (a newer head cancels the older one). The group is per workflow and per PR, and
-# only pull_request events cancel: push and merge_group runs fall back to a
-# per-run group (run_id), so they are never cancelled, nor can a newer main push
-# displace an older one still pending (the default behaviour of a shared group).
+# only pull_request events cancel: merge_group runs fall back to a per-run
+# group (run_id), so they are never cancelled.
+#
+# No push trigger (syzygy-j5m0): main moves only through the merge queue, whose
+# merge_group run already tested the exact tree that lands, so a push run on
+# main re-ran the same tree a third time.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -36,8 +42,11 @@ permissions:
   contents: read
 
 jobs:
-  checks:
+  # Every check but the two slowest selftests, in step order.
+  governance:
+    name: checks (governance)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -203,9 +212,6 @@ jobs:
 
       - name: prepare_three_surface_poc_governedby_reference_recording --check
         run: python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --check
-
-      - name: prepare_three_surface_poc_governedby_reference_recording --selftest
-        run: python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --selftest
 
       - name: build_three_surface_poc_vocabulary_epistemic_amendment --selftest
         run: python3 scripts/build_three_surface_poc_vocabulary_epistemic_amendment.py --selftest
@@ -376,9 +382,6 @@ jobs:
       - name: check_spec_reconciliation --check
         run: python3 scripts/check_spec_reconciliation.py --check
 
-      - name: check_spec_reconciliation --selftest
-        run: python3 scripts/check_spec_reconciliation.py --selftest
-
       - name: build_three_surface_poc_spec_dependencies --check
         run: python3 scripts/build_three_surface_poc_spec_dependencies.py --check
 
@@ -476,3 +479,64 @@ jobs:
 
       - name: rfc5 --selftest
         run: python3 scripts/record_rfc5_project_documentation_act.py --selftest
+
+  # The two slowest selftests run beside the governance job, each on its own
+  # runner, so the wall clock is the longest job rather than the sum
+  # (syzygy-j5m0). Their steps are unchanged; CG-26 compares run lines, not
+  # jobs.
+  reconciliation-selftest:
+    name: checks (reconciliation selftest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history, as in the governance job: the selftests clone the
+          # checkout and resolve recorded commits.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: check_spec_reconciliation --selftest
+        run: python3 scripts/check_spec_reconciliation.py --selftest
+
+  p115-selftest:
+    name: checks (P115 recording selftest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history, as in the governance job: the selftests clone the
+          # checkout and resolve recorded commits.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: prepare_three_surface_poc_governedby_reference_recording --selftest
+        run: python3 scripts/prepare_three_surface_poc_governedby_reference_recording.py --selftest
+
+  # The one required check. Branch protection and the merge queue require a
+  # check named `checks`; this job reports it and passes only when every job
+  # above succeeded. `if: always()` makes a failed, skipped or cancelled job
+  # fail it instead of leaving it unreported. Never give another job the name
+  # `checks`.
+  checks:
+    runs-on: ubuntu-latest
+    needs: [governance, reconciliation-selftest, p115-selftest]
+    if: ${{ always() }}
+    steps:
+      - name: every job passed
+        env:
+          GOVERNANCE: ${{ needs.governance.result }}
+          RECONCILIATION: ${{ needs.reconciliation-selftest.result }}
+          P115: ${{ needs.p115-selftest.result }}
+        run: |
+          echo "governance=${GOVERNANCE} reconciliation=${RECONCILIATION} p115=${P115}"
+          test "${GOVERNANCE}" = success
+          test "${RECONCILIATION}" = success
+          test "${P115}" = success

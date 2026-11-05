@@ -14,6 +14,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -688,7 +689,11 @@ def recording_failure_selftest(root: Path, expect) -> None:
             "Synthetic recording failure fixtures; no owner action")
         _current, proposed = load_frozen(template).collect()
         proposed = {Path(p): body for p, body in proposed.items()}
-        for name in cases:
+        # Cases report into `found`, which each forked case sends back.
+        outer_expect, found = expect, []
+        def expect(case_name, passed):
+            found.append((case_name, passed))
+        def one_case(name):
             tree = Path(temp) / name
             if name.startswith("linked-worktree-"):
                 git(template, "-c", "core.hooksPath=/dev/null", "worktree", "add", "--quiet",
@@ -1521,6 +1526,11 @@ def recording_failure_selftest(root: Path, expect) -> None:
             if name == "R6-15":
                 output.close()
             shutil.rmtree(tree)
+        # Each case clones its own tree from the template, so the cases run in
+        # forked workers; their cases and logs come back in case order.
+        for case_results in fork_map([lambda name=name: one_case(name) for name in cases], found):
+            for case_name, passed in case_results:
+                outer_expect(case_name, passed)
 
 
 def recovery_native_selftest(root: Path, expect) -> None:
@@ -2650,6 +2660,76 @@ def later_signed_selftest() -> list[tuple[str, bool]]:
     return results
 
 
+def _selftest_workers() -> int:
+    raw = os.environ.get("SELFTEST_WORKERS", "")
+    if raw.isdigit() and int(raw) > 0:
+        return int(raw)
+    return max(1, min(os.cpu_count() or 1, 8))
+
+
+def fork_map(tasks, cases: list) -> list:
+    """Run zero-argument tasks in forked children; return each one's cases, in order.
+
+    A task reports through `expect`, which appends to `cases`; each child starts
+    from an empty list and sends back what it appended. Its stdout and stderr
+    are replayed in task order after all finish, so the log reads as a serial
+    run's (syzygy-j5m0). Plain os.fork rather than a Pool, so a task may fork
+    its own cases. SELFTEST_WORKERS=1, or no fork, runs the tasks in-process.
+    """
+    if cases:
+        raise ValueError("forked tasks must start from an empty case list")
+    workers = _selftest_workers()
+    if workers == 1 or not hasattr(os, "fork"):
+        found = []
+        for task in tasks:
+            task()
+            found.append(list(cases))
+            del cases[:]
+        return found
+    with tempfile.TemporaryDirectory(prefix="p115-selftest-fork-") as temp:
+        running, results = {}, [None] * len(tasks)
+        def reap():
+            pid, status = os.wait()
+            index = running.pop(pid)
+            log = Path(temp, f"{index}.log").read_bytes()
+            result = Path(temp, f"{index}.json")
+            if status != 0 or not result.exists():
+                os.write(2, log)
+                raise RuntimeError(f"selftest task {index} failed in its worker (status {status})")
+            results[index] = (json.loads(result.read_text()), log)
+        for index, task in enumerate(tasks):
+            while len(running) >= workers:
+                reap()
+            sys.stdout.flush(); sys.stderr.flush()
+            pid = os.fork()
+            if pid == 0:  # child: never returns into the caller
+                code = 1
+                try:
+                    fd = os.open(Path(temp, f"{index}.log"), os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+                    os.dup2(fd, 1); os.dup2(fd, 2); os.close(fd)
+                    task()
+                    sys.stdout.flush(); sys.stderr.flush()
+                    Path(temp, f"{index}.json").write_text(json.dumps(cases))
+                    code = 0
+                except BaseException:
+                    import traceback
+                    traceback.print_exc()
+                finally:
+                    try:
+                        sys.stdout.flush(); sys.stderr.flush()
+                    finally:
+                        os._exit(code)
+            running[pid] = index
+        while running:
+            reap()
+    out = []
+    for found, log in results:
+        sys.stdout.flush()
+        os.write(1, log)
+        out.append([(name, passed) for name, passed in found])
+    return out
+
+
 def selftest(root: Path) -> int:
     """Only owned temporary fixture subjects/records are ever written."""
     global CORE_COMMIT
@@ -2726,227 +2806,231 @@ def selftest(root: Path) -> int:
             return not report.failed()
         finally:
             governance.ROOT = saved
-    with tempfile.TemporaryDirectory(prefix="p115-recording-selftest-") as temp:
-        tree = Path(temp) / "tree"
-        subprocess.run(["git", "clone", "--quiet", "--no-hardlinks", "--no-checkout",
-                        str(root), str(tree)], check=True, capture_output=True)
-        git(tree, "checkout", "--quiet", "--detach", CORE_COMMIT)
-        # Exercise current preparation/reader bytes in the frozen core tree.
-        for name in current_tools:
-            shutil.copyfile(root / "scripts" / name, tree / "scripts" / name)
-        expect("candidate checks real BASE subjects", candidate_findings(tree) == [])
-        expect("no record supplies no signed successor", not is_signed(tree))
-        expect("preview never invents a review/owner answer", not preview(tree)["recordingReady"])
-        expect("recording gate follows frozen impact disposition",
-               bool(recording_findings(tree)) == bool(consumption_unknowns(tree)))
-        expect("candidate does not add a reconciliation successor",
-               not any(later.get("package") == KEY for later in
-                       reconciliation.successors_for(tree, next(c for c in reconciliation.CHILDREN if c["key"] == "poc"))))
-        # The frozen core census predates the CAP1 consent overlay's
-        # composition (syzygy-5oqc, CAP1 42 / 47 -> 42 / 57). Only that family
-        # may differ from the current checker's regeneration; every other
-        # family's frozen bytes must still match before it is regenerated.
-        population, report = census_report(tree)
-        frozen = json.loads((tree / reconciliation.CENSUS).read_text())["families"]
-        current = json.loads(reconciliation.census_json(population))["families"]
-        expect("baseline census differs from the frozen core in CAP1 alone",
-               {k for k in current if current[k] != frozen.get(k)} <= {"CAP1"}
-               and set(current) == set(frozen)
-               and report.findings.get("R3", []) in (
-                   [], [f"`{reconciliation.CENSUS}` differs from regeneration "
-                        "(a name or scenario title moved)"]))
-        (tree / reconciliation.CENSUS).write_text(reconciliation.census_json(population))
-        expect("candidate reconciliation and baseline census pass",
-               not outcomes(tree).failed and not census_report(tree)[1].failed)
-        expect("candidate bootstrap history passes", bootstrap_ok(tree))
-        pkg = recorder.real_packages()[KEY]
-        expect("manifest-backed POC registration", pkg.subject == MANIFEST and not pkg.package_digest
-               and pkg.extension == recorder.POC_EXTENSION_REL and pkg.installed is None)
-        before = {rel: (tree / rel).read_bytes() for rel in SUBJECTS}
-        earlier = readability.installed_bytes_at(tree)
-        raw = "docs/reviews/R-P115-SELFTEST-RAW.md"
-        (tree / raw).write_text(f"# Synthetic review — {KEY}\nReviewed commit: {CORE_COMMIT}\n"
-                               f"Manifest SHA-256: {MANIFEST_SHA256}\nVerdict: CONFIRM\n\n"
-                               "## Findings\n\nNo findings. Synthetic fixture only; no owner action.\n")
-        ready = preview(tree, raw)
-        expect("preview checks a synthetic raw without collecting authority",
-               ready["reviewReady"] and ready["recordingReady"] == (consumption_unknowns(tree) == 0)
-               and ready["ownerSelection"] == "not collected by this tool")
-        confirm_raw = (tree / raw).read_bytes()
-        notes = confirm_raw.replace(b"Verdict: CONFIRM\n", b"Verdict: CONFIRM WITH EXCEPTIONS\n")
-        notes = notes.replace(b"No findings.", "**Finding 1 — fixture note** (note)\n".encode())
-        (tree / raw).write_bytes(notes)
-        expect("notes-only raw needs a matching disposition", preview(tree, raw)["reviewError"] is not None)
-        disposition = (CANDIDATE / "ROUND-999-DISPOSITIONS.md").as_posix()
-        (tree / disposition).write_text(f"Reviewed record: {raw}\n\n**Finding 1 — fixture note**\nRetained.\n")
-        expect("notes-only raw with matching sibling disposition parses",
-               preview(tree, raw, disposition)["reviewReady"])
-        (tree / disposition).unlink()
-        (tree / raw).write_bytes(confirm_raw)
-        # The actual P115 apply/record path admits only a clean checkout.
-        git(tree, "add", "--all")
-        git(tree, "-c", "user.name=P115 synthetic fixture", "-c", "user.email=fixture@invalid",
-            "-c", "core.hooksPath=/dev/null", "commit", "--quiet", "-m",
-            "Synthetic P115 preparation fixture; no owner action")
-        _current, proposed = load_frozen(tree).collect()
-        reference = recorder._module(Path(__file__).stem)
-        bad_patch = tree / CANDIDATE / "proposed/spec.md.patch"
-        saved_patch = bad_patch.read_bytes()
-        from unittest import mock
-        native_run = recorder.subprocess.run
-        def corrupt_at_preflight(argv, *args, **kwargs):
-            if argv[:2] == ["git", "apply"] and "--check" in argv:
-                # The real strict gate already passed; only own captured
-                # private bytes mutate at this native preflight boundary.
-                Path(argv[-1]).write_text("--- a/p115-no-such-subject\n+++ b/p115-no-such-subject\n"
-                                         "@@ -1 +1 @@\n-missing\n+bad\n")
-            return native_run(argv, *args, **kwargs)
-        capture = io.StringIO()
-        with mock.patch.object(recorder.subprocess, "run", corrupt_at_preflight), contextlib.redirect_stdout(capture):
-            bad_code = pkg.apply(tree)
-        expect("one bad-patch preflight leaves all six subjects unchanged",
-               bad_code != 0 and "P115 preflight refused:" in capture.getvalue()
-               and {rel: (tree / rel).read_bytes() for rel in SUBJECTS} == before)
-        with contextlib.redirect_stdout(io.StringIO()):
-            applied = pkg.apply(tree)
-        expect("P115-only five-patch batch installs exact synthetic subjects",
-               applied == 0 and applied_rows_match(tree)
-               and all((tree / rel).read_bytes() == body for rel, body in proposed.items()))
-        expect("unsigned installed proposal is refused", bool(check_state(tree)[0]) and not is_signed(tree))
-        expect("unsigned proposed census and bootstrap remain failures",
-               "R3" in census_report(tree)[1].failed and not bootstrap_ok(tree))
-        quote = "Synthetic fixture selection; no owner action"
-        record = recorder.render_record(pkg, VERSION, "2026-10-21", quote, raw,
-                                         CORE_COMMIT, "CONFIRM", None)
-        aggregate = (tree / AGGREGATE).read_text()
-        block = recorder.render_aggregate(pkg, VERSION, "2026-10-21", raw, "CONFIRM", None)
-        (tree / RECORD).write_text(record)
-        (tree / AGGREGATE).write_text(aggregate.rstrip("\n") + "\n\n" + block)
-        expect("exact signed synthetic transaction recognized", is_signed(tree))
-        expect("earlier readability rows reconstruct exactly", readability.installed_bytes_at(tree) == earlier)
-        p108 = recorder.real_packages()["three-surface-poc-vocabulary-epistemic-amendment"]
-        expect("earlier recorder rows accept only signed successor", p108.applied(tree))
-        expect("signed six-row reconciliation chain reverses exactly", not outcomes(tree).failed)
-        population, report = census_report(tree)
-        expect("signed census requires regeneration", "R3" in report.failed)
-        (tree / reconciliation.CENSUS).write_text(reconciliation.census_json(population))
-        expect("signed census admits exactly 26 requirements and 34 scenarios",
-               not census_report(tree)[1].failed
-               and len(population["POC"]) == 26
-               and sum(len(row["scenarios"]) for row in population["POC"].values()) == 34
-               and len(population["POC"]["POC-REQ-014"]["scenarios"]) == 8)
-        expect("signed bootstrap current rows are recognized", bootstrap_ok(tree))
-        route_report = reconciliation.Report()
-        reconciliation.check_routes(tree, population, route_report)
-        expect("signed route activation requires root-owned terminal entries",
-               any(RECORD.name in finding for finding in route_report.findings.get("R5", ())))
-        snapshot = Path(temp) / "snapshot"
-        reconciliation.scratch(tree, snapshot)
-        expect("read-only snapshot retains signed proof and exact chain",
-               is_signed(snapshot) and not outcomes(snapshot).failed)
-        # One predicate per mutation, restoring exact bytes after each case.
-        unresolved = json.loads((tree / CANDIDATE / "REQUIREMENT-CONSUMPTION.json").read_text())
-        unresolved["entries"][0]["classification"] = "undecidable"
-        mutations = [
-            ("record-only is partial", AGGREGATE, aggregate.encode()),
-            ("aggregate-only is partial", RECORD, None),
-            ("duplicate aggregate block", AGGREGATE, (aggregate + block + block).encode()),
-            ("wrong recorded version", RECORD, record.replace("Version: 1.0", "Version: 2.0").encode()),
-            ("wrong review binding", Path(raw), (tree / raw).read_bytes().replace(MANIFEST_SHA256.encode(), b"0" * 64)),
-            ("wrong reviewed core", Path(raw), (tree / raw).read_bytes().replace(CORE_COMMIT.encode(), BASE.encode())),
-            ("escaping review path", RECORD, record.replace(f"Review: {raw}", "Review: ../outside-RAW.md").encode()),
-            ("missing review", Path(raw), None),
-            ("wrong manifest hash", MANIFEST, (tree / MANIFEST).read_bytes() + b"\n"),
-            ("current subject drift", SUBJECTS[-1], (tree / SUBJECTS[-1]).read_bytes() + b"\n"),
-            ("rollback to predecessor is refused", SUBJECTS[-1], before[SUBJECTS[-1]]),
-            ("wrong patch bytes", CANDIDATE / "proposed/spec.md.patch",
-             (tree / CANDIDATE / "proposed/spec.md.patch").read_bytes() + b"\n"),
-            ("unresolved consumption entry", CANDIDATE / "REQUIREMENT-CONSUMPTION.json",
-             json.dumps(unresolved).encode()),
-        ]
-        for name, path, changed in mutations:
-            target = tree / path
-            saved = target.read_bytes()
-            if changed is None:
-                target.unlink()
-            else:
-                target.write_bytes(changed)
-            expect(name, not is_signed(tree))
-            mutation_receipt(tree, name, {path: saved}, {path: changed}, "signed recognition refuses exact mutation")
-            if name == "unresolved consumption entry":
-                expect("unresolved consumption trips its own signed predicate",
-                       "signed recognition remains gated by 1 undecidable requirement-consumption entries"
-                       in signed_findings(tree))
-            if name == "record-only is partial":
-                expect("partial transaction cannot explain predecessor rows",
-                       not p108.applied(tree) and not bootstrap_ok(tree)
-                       and "R1" in outcomes(tree).failed)
-            target.write_bytes(saved)
-        end = recorder.block_markers(pkg, VERSION)[1]
-        signed_aggregate = (tree / AGGREGATE).read_bytes()
-        chain_mutations = [
-            ("P115 block before all predecessors", {AGGREGATE: (block + aggregate).encode()}),
-            ("P115 backdated before predecessors", {
-                RECORD: record.replace("Date: 2026-10-21", "Date: 2026-01-01").encode(),
-                AGGREGATE: signed_aggregate.replace(b"recorded 2026-10-21", b"recorded 2026-01-01")}),
-            ("P115 duplicate closing delimiter", {AGGREGATE: signed_aggregate + end.encode() + b"\n"}),
-            ("P115 orphan closing is present", {RECORD: None, AGGREGATE: aggregate.encode() + end.encode() + b"\n"}),
-            ("P115 invalid calendar date", {
-                RECORD: record.replace("Date: 2026-10-21", "Date: 2026-02-30").encode(),
-                AGGREGATE: signed_aggregate.replace(b"recorded 2026-10-21", b"recorded 2026-02-30")}),
-        ]
-        predecessor = recorder.real_packages()[PREDECESSORS[-1]]
-        pred_start, pred_end = recorder.block_markers(predecessor, VERSION)
-        # Preserve the predecessor start position but break its complete block.
-        chain_mutations.append(("P115 nested inside predecessor block", {AGGREGATE:
-            (aggregate.replace(pred_end, block + pred_end)).encode()}))
-        chain_mutations.append(("predecessor orphan closing delimiter", {AGGREGATE:
-            signed_aggregate + pred_end.encode() + b"\n"}))
-        pred_record = recorder.record_rel(predecessor, VERSION)
-        chain_mutations.append(("predecessor duplicate date", {pred_record:
-            (tree / pred_record).read_bytes() + b"\nDate: 2026-10-15\n"}))
-        predecessor_fields = recorder.parse_record((tree / pred_record).read_text())
-        predecessor_block = recorder.render_aggregate(predecessor, VERSION,
-            predecessor_fields["Date"], predecessor_fields["Review"], predecessor_fields["Review verdict"],
-            None if predecessor_fields["Disposition"] == "none" else predecessor_fields["Disposition"])
-        chain_mutations.append(("predecessor block in fenced example", {AGGREGATE:
-            signed_aggregate.replace(predecessor_block.encode(),
-                ("```text\n" + predecessor_block + "```\n").encode())}))
-        for name, changes in chain_mutations:
-            saved = {path: (tree / path).read_bytes() for path in changes}
-            for path, body in changes.items():
-                (tree / path).unlink() if body is None else (tree / path).write_bytes(body)
-            findings = signed_findings(tree)
-            expect(name, transaction_present(tree) and not is_signed(tree) and bool(findings)
-                   and (name != "predecessor block in fenced example"
-                        or any("operative standalone line" in finding for finding in findings)))
-            mutation_receipt(tree, name, saved, changes, "leaf complete-chain dates/order/unique balanced delimiters")
-            for path, body in saved.items():
-                (tree / path).write_bytes(body)
-        expect("mutations restore the signed fixture", is_signed(tree))
-        binding_failure_selftest(root, tree, expect)
-        family_failure_selftest(root, tree, expect, before, earlier)
-        governing_source_selftest(root, tree, expect, before)
-        findings, output = historical_run(tree, "--selftest")
-        expect("signed replay runs frozen selftest, not current subjects", not findings and "Preparation selftest:" in output)
-        # Probe the actual signed/replay path with unavailable frozen objects.
-        saved_commit = CORE_COMMIT
-        try:
-            CORE_COMMIT = "0" * 40
-            expect("missing frozen history refuses signed recognition", not is_signed(tree))
+    def core_phase(root, expect):
+        global CORE_COMMIT
+        with tempfile.TemporaryDirectory(prefix="p115-recording-selftest-") as temp:
+            tree = Path(temp) / "tree"
+            subprocess.run(["git", "clone", "--quiet", "--no-hardlinks", "--no-checkout",
+                            str(root), str(tree)], check=True, capture_output=True)
+            git(tree, "checkout", "--quiet", "--detach", CORE_COMMIT)
+            # Exercise current preparation/reader bytes in the frozen core tree.
+            for name in current_tools:
+                shutil.copyfile(root / "scripts" / name, tree / "scripts" / name)
+            expect("candidate checks real BASE subjects", candidate_findings(tree) == [])
+            expect("no record supplies no signed successor", not is_signed(tree))
+            expect("preview never invents a review/owner answer", not preview(tree)["recordingReady"])
+            expect("recording gate follows frozen impact disposition",
+                   bool(recording_findings(tree)) == bool(consumption_unknowns(tree)))
+            expect("candidate does not add a reconciliation successor",
+                   not any(later.get("package") == KEY for later in
+                           reconciliation.successors_for(tree, next(c for c in reconciliation.CHILDREN if c["key"] == "poc"))))
+            # The frozen core census predates the CAP1 consent overlay's
+            # composition (syzygy-5oqc, CAP1 42 / 47 -> 42 / 57). Only that family
+            # may differ from the current checker's regeneration; every other
+            # family's frozen bytes must still match before it is regenerated.
+            population, report = census_report(tree)
+            frozen = json.loads((tree / reconciliation.CENSUS).read_text())["families"]
+            current = json.loads(reconciliation.census_json(population))["families"]
+            expect("baseline census differs from the frozen core in CAP1 alone",
+                   {k for k in current if current[k] != frozen.get(k)} <= {"CAP1"}
+                   and set(current) == set(frozen)
+                   and report.findings.get("R3", []) in (
+                       [], [f"`{reconciliation.CENSUS}` differs from regeneration "
+                            "(a name or scenario title moved)"]))
+            (tree / reconciliation.CENSUS).write_text(reconciliation.census_json(population))
+            expect("candidate reconciliation and baseline census pass",
+                   not outcomes(tree).failed and not census_report(tree)[1].failed)
+            expect("candidate bootstrap history passes", bootstrap_ok(tree))
+            pkg = recorder.real_packages()[KEY]
+            expect("manifest-backed POC registration", pkg.subject == MANIFEST and not pkg.package_digest
+                   and pkg.extension == recorder.POC_EXTENSION_REL and pkg.installed is None)
+            before = {rel: (tree / rel).read_bytes() for rel in SUBJECTS}
+            earlier = readability.installed_bytes_at(tree)
+            raw = "docs/reviews/R-P115-SELFTEST-RAW.md"
+            (tree / raw).write_text(f"# Synthetic review — {KEY}\nReviewed commit: {CORE_COMMIT}\n"
+                                   f"Manifest SHA-256: {MANIFEST_SHA256}\nVerdict: CONFIRM\n\n"
+                                   "## Findings\n\nNo findings. Synthetic fixture only; no owner action.\n")
+            ready = preview(tree, raw)
+            expect("preview checks a synthetic raw without collecting authority",
+                   ready["reviewReady"] and ready["recordingReady"] == (consumption_unknowns(tree) == 0)
+                   and ready["ownerSelection"] == "not collected by this tool")
+            confirm_raw = (tree / raw).read_bytes()
+            notes = confirm_raw.replace(b"Verdict: CONFIRM\n", b"Verdict: CONFIRM WITH EXCEPTIONS\n")
+            notes = notes.replace(b"No findings.", "**Finding 1 — fixture note** (note)\n".encode())
+            (tree / raw).write_bytes(notes)
+            expect("notes-only raw needs a matching disposition", preview(tree, raw)["reviewError"] is not None)
+            disposition = (CANDIDATE / "ROUND-999-DISPOSITIONS.md").as_posix()
+            (tree / disposition).write_text(f"Reviewed record: {raw}\n\n**Finding 1 — fixture note**\nRetained.\n")
+            expect("notes-only raw with matching sibling disposition parses",
+                   preview(tree, raw, disposition)["reviewReady"])
+            (tree / disposition).unlink()
+            (tree / raw).write_bytes(confirm_raw)
+            # The actual P115 apply/record path admits only a clean checkout.
+            git(tree, "add", "--all")
+            git(tree, "-c", "user.name=P115 synthetic fixture", "-c", "user.email=fixture@invalid",
+                "-c", "core.hooksPath=/dev/null", "commit", "--quiet", "-m",
+                "Synthetic P115 preparation fixture; no owner action")
+            _current, proposed = load_frozen(tree).collect()
+            reference = recorder._module(Path(__file__).stem)
+            bad_patch = tree / CANDIDATE / "proposed/spec.md.patch"
+            saved_patch = bad_patch.read_bytes()
+            from unittest import mock
+            native_run = recorder.subprocess.run
+            def corrupt_at_preflight(argv, *args, **kwargs):
+                if argv[:2] == ["git", "apply"] and "--check" in argv:
+                    # The real strict gate already passed; only own captured
+                    # private bytes mutate at this native preflight boundary.
+                    Path(argv[-1]).write_text("--- a/p115-no-such-subject\n+++ b/p115-no-such-subject\n"
+                                             "@@ -1 +1 @@\n-missing\n+bad\n")
+                return native_run(argv, *args, **kwargs)
+            capture = io.StringIO()
+            with mock.patch.object(recorder.subprocess, "run", corrupt_at_preflight), contextlib.redirect_stdout(capture):
+                bad_code = pkg.apply(tree)
+            expect("one bad-patch preflight leaves all six subjects unchanged",
+                   bad_code != 0 and "P115 preflight refused:" in capture.getvalue()
+                   and {rel: (tree / rel).read_bytes() for rel in SUBJECTS} == before)
+            with contextlib.redirect_stdout(io.StringIO()):
+                applied = pkg.apply(tree)
+            expect("P115-only five-patch batch installs exact synthetic subjects",
+                   applied == 0 and applied_rows_match(tree)
+                   and all((tree / rel).read_bytes() == body for rel, body in proposed.items()))
+            expect("unsigned installed proposal is refused", bool(check_state(tree)[0]) and not is_signed(tree))
+            expect("unsigned proposed census and bootstrap remain failures",
+                   "R3" in census_report(tree)[1].failed and not bootstrap_ok(tree))
+            quote = "Synthetic fixture selection; no owner action"
+            record = recorder.render_record(pkg, VERSION, "2026-10-21", quote, raw,
+                                             CORE_COMMIT, "CONFIRM", None)
+            aggregate = (tree / AGGREGATE).read_text()
+            block = recorder.render_aggregate(pkg, VERSION, "2026-10-21", raw, "CONFIRM", None)
+            (tree / RECORD).write_text(record)
+            (tree / AGGREGATE).write_text(aggregate.rstrip("\n") + "\n\n" + block)
+            expect("exact signed synthetic transaction recognized", is_signed(tree))
+            expect("earlier readability rows reconstruct exactly", readability.installed_bytes_at(tree) == earlier)
+            p108 = recorder.real_packages()["three-surface-poc-vocabulary-epistemic-amendment"]
+            expect("earlier recorder rows accept only signed successor", p108.applied(tree))
+            expect("signed six-row reconciliation chain reverses exactly", not outcomes(tree).failed)
+            population, report = census_report(tree)
+            expect("signed census requires regeneration", "R3" in report.failed)
+            (tree / reconciliation.CENSUS).write_text(reconciliation.census_json(population))
+            expect("signed census admits exactly 26 requirements and 34 scenarios",
+                   not census_report(tree)[1].failed
+                   and len(population["POC"]) == 26
+                   and sum(len(row["scenarios"]) for row in population["POC"].values()) == 34
+                   and len(population["POC"]["POC-REQ-014"]["scenarios"]) == 8)
+            expect("signed bootstrap current rows are recognized", bootstrap_ok(tree))
+            route_report = reconciliation.Report()
+            reconciliation.check_routes(tree, population, route_report)
+            expect("signed route activation requires root-owned terminal entries",
+                   any(RECORD.name in finding for finding in route_report.findings.get("R5", ())))
+            snapshot = Path(temp) / "snapshot"
+            reconciliation.scratch(tree, snapshot)
+            expect("read-only snapshot retains signed proof and exact chain",
+                   is_signed(snapshot) and not outcomes(snapshot).failed)
+            # One predicate per mutation, restoring exact bytes after each case.
+            unresolved = json.loads((tree / CANDIDATE / "REQUIREMENT-CONSUMPTION.json").read_text())
+            unresolved["entries"][0]["classification"] = "undecidable"
+            mutations = [
+                ("record-only is partial", AGGREGATE, aggregate.encode()),
+                ("aggregate-only is partial", RECORD, None),
+                ("duplicate aggregate block", AGGREGATE, (aggregate + block + block).encode()),
+                ("wrong recorded version", RECORD, record.replace("Version: 1.0", "Version: 2.0").encode()),
+                ("wrong review binding", Path(raw), (tree / raw).read_bytes().replace(MANIFEST_SHA256.encode(), b"0" * 64)),
+                ("wrong reviewed core", Path(raw), (tree / raw).read_bytes().replace(CORE_COMMIT.encode(), BASE.encode())),
+                ("escaping review path", RECORD, record.replace(f"Review: {raw}", "Review: ../outside-RAW.md").encode()),
+                ("missing review", Path(raw), None),
+                ("wrong manifest hash", MANIFEST, (tree / MANIFEST).read_bytes() + b"\n"),
+                ("current subject drift", SUBJECTS[-1], (tree / SUBJECTS[-1]).read_bytes() + b"\n"),
+                ("rollback to predecessor is refused", SUBJECTS[-1], before[SUBJECTS[-1]]),
+                ("wrong patch bytes", CANDIDATE / "proposed/spec.md.patch",
+                 (tree / CANDIDATE / "proposed/spec.md.patch").read_bytes() + b"\n"),
+                ("unresolved consumption entry", CANDIDATE / "REQUIREMENT-CONSUMPTION.json",
+                 json.dumps(unresolved).encode()),
+            ]
+            for name, path, changed in mutations:
+                target = tree / path
+                saved = target.read_bytes()
+                if changed is None:
+                    target.unlink()
+                else:
+                    target.write_bytes(changed)
+                expect(name, not is_signed(tree))
+                mutation_receipt(tree, name, {path: saved}, {path: changed}, "signed recognition refuses exact mutation")
+                if name == "unresolved consumption entry":
+                    expect("unresolved consumption trips its own signed predicate",
+                           "signed recognition remains gated by 1 undecidable requirement-consumption entries"
+                           in signed_findings(tree))
+                if name == "record-only is partial":
+                    expect("partial transaction cannot explain predecessor rows",
+                           not p108.applied(tree) and not bootstrap_ok(tree)
+                           and "R1" in outcomes(tree).failed)
+                target.write_bytes(saved)
+            end = recorder.block_markers(pkg, VERSION)[1]
+            signed_aggregate = (tree / AGGREGATE).read_bytes()
+            chain_mutations = [
+                ("P115 block before all predecessors", {AGGREGATE: (block + aggregate).encode()}),
+                ("P115 backdated before predecessors", {
+                    RECORD: record.replace("Date: 2026-10-21", "Date: 2026-01-01").encode(),
+                    AGGREGATE: signed_aggregate.replace(b"recorded 2026-10-21", b"recorded 2026-01-01")}),
+                ("P115 duplicate closing delimiter", {AGGREGATE: signed_aggregate + end.encode() + b"\n"}),
+                ("P115 orphan closing is present", {RECORD: None, AGGREGATE: aggregate.encode() + end.encode() + b"\n"}),
+                ("P115 invalid calendar date", {
+                    RECORD: record.replace("Date: 2026-10-21", "Date: 2026-02-30").encode(),
+                    AGGREGATE: signed_aggregate.replace(b"recorded 2026-10-21", b"recorded 2026-02-30")}),
+            ]
+            predecessor = recorder.real_packages()[PREDECESSORS[-1]]
+            pred_start, pred_end = recorder.block_markers(predecessor, VERSION)
+            # Preserve the predecessor start position but break its complete block.
+            chain_mutations.append(("P115 nested inside predecessor block", {AGGREGATE:
+                (aggregate.replace(pred_end, block + pred_end)).encode()}))
+            chain_mutations.append(("predecessor orphan closing delimiter", {AGGREGATE:
+                signed_aggregate + pred_end.encode() + b"\n"}))
+            pred_record = recorder.record_rel(predecessor, VERSION)
+            chain_mutations.append(("predecessor duplicate date", {pred_record:
+                (tree / pred_record).read_bytes() + b"\nDate: 2026-10-15\n"}))
+            predecessor_fields = recorder.parse_record((tree / pred_record).read_text())
+            predecessor_block = recorder.render_aggregate(predecessor, VERSION,
+                predecessor_fields["Date"], predecessor_fields["Review"], predecessor_fields["Review verdict"],
+                None if predecessor_fields["Disposition"] == "none" else predecessor_fields["Disposition"])
+            chain_mutations.append(("predecessor block in fenced example", {AGGREGATE:
+                signed_aggregate.replace(predecessor_block.encode(),
+                    ("```text\n" + predecessor_block + "```\n").encode())}))
+            for name, changes in chain_mutations:
+                saved = {path: (tree / path).read_bytes() for path in changes}
+                for path, body in changes.items():
+                    (tree / path).unlink() if body is None else (tree / path).write_bytes(body)
+                findings = signed_findings(tree)
+                expect(name, transaction_present(tree) and not is_signed(tree) and bool(findings)
+                       and (name != "predecessor block in fenced example"
+                            or any("operative standalone line" in finding for finding in findings)))
+                mutation_receipt(tree, name, saved, changes, "leaf complete-chain dates/order/unique balanced delimiters")
+                for path, body in saved.items():
+                    (tree / path).write_bytes(body)
+            expect("mutations restore the signed fixture", is_signed(tree))
+            binding_failure_selftest(root, tree, expect)
+            family_failure_selftest(root, tree, expect, before, earlier)
+            governing_source_selftest(root, tree, expect, before)
+            findings, output = historical_run(tree, "--selftest")
+            expect("signed replay runs frozen selftest, not current subjects", not findings and "Preparation selftest:" in output)
+            # Probe the actual signed/replay path with unavailable frozen objects.
+            saved_commit = CORE_COMMIT
             try:
-                historical_run(tree, "--check")
-            except subprocess.CalledProcessError:
-                expect("missing frozen history refuses replay", True)
-            else:
-                expect("missing frozen history refuses replay", False)
-        finally:
-            CORE_COMMIT = saved_commit
-    marker_context_selftest(root, expect)
-    recording_failure_selftest(root, expect)
-    recording_render_selftest(root, expect)
-    recovery_native_selftest(root, expect)
-    process_diagnostic_selftest(root, expect)
+                CORE_COMMIT = "0" * 40
+                expect("missing frozen history refuses signed recognition", not is_signed(tree))
+                try:
+                    historical_run(tree, "--check")
+                except subprocess.CalledProcessError:
+                    expect("missing frozen history refuses replay", True)
+                else:
+                    expect("missing frozen history refuses replay", False)
+            finally:
+                CORE_COMMIT = saved_commit
+    # The six phases build their own scratch clones and share nothing but the
+    # read-only checkout, so they run in forked workers (fork_map).
+    phases = (core_phase, marker_context_selftest, recording_failure_selftest,
+              recording_render_selftest, recovery_native_selftest,
+              process_diagnostic_selftest)
+    for phase_cases in fork_map([lambda phase=phase: phase(root, expect) for phase in phases], cases):
+        cases.extend(phase_cases)
     for name, passed in cases:
         print(f"P115 selftest: {name}: {'ok' if passed else 'FAILED'}")
     failed = sum(not passed for _name, passed in cases)
