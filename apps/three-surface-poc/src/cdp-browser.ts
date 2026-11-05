@@ -630,6 +630,9 @@ export async function launchBrowser(executable: string): Promise<Browser> {
   try { versionInfo = await connection.send<{ readonly product: string }>('Browser.getVersion'); }
   catch (error) { await closeDisposableBrowser(connection, child, profile, group, cleanup); throw error; }
   let closing: Promise<void> | undefined;
+  const dispose = (): Promise<void> => {
+    return closeDisposableBrowser(connection, child, profile, group, cleanup);
+  };
   return {
     executable,
     version: versionInfo.product,
@@ -645,12 +648,15 @@ export async function launchBrowser(executable: string): Promise<Browser> {
       await connection.send('Emulation.setFocusEmulationEnabled', { enabled: true }, sessionId);
       return new CdpPage(connection, sessionId, targetId);
     },
-    close(): Promise<void> {
-      if (!guarded) return closeDisposableBrowser(connection, child, profile, group, cleanup);
+    async close(): Promise<void> {
+      if (!guarded) {
+        await dispose();
+        return;
+      }
       // The profile and process identities have been relinquished after a
       // completed close. Repeating it must not adopt a replacement at either
       // identity, nor turn a failed cleanup into an implicit retry.
-      return closing ??= closeDisposableBrowser(connection, child, profile, group, cleanup);
+      await (closing ??= dispose());
     },
   };
 }
