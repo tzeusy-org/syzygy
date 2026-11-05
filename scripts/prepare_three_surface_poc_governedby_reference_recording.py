@@ -2810,7 +2810,7 @@ def selftest(root: Path) -> int:
         "record_pwb_behavior_amendment_acts.py", "check_spec_reconciliation.py",
         "check_governance.py", "build_three_surface_poc_readability_successor.py",
         "build_three_surface_poc_vocabulary_epistemic_amendment.py",
-    )
+    ) + tuple(name + ".py" for name in LATER_SIGNED_INPUT_BUILDERS)
     if transaction_present(root):
         later = later_signed_selftest()
         for name, passed in later:
