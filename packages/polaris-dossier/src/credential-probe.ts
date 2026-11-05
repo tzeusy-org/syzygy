@@ -121,8 +121,8 @@ export interface AdapterCredentialDeclaration {
 
 /** The typed adapters configured in this repository that declare a credential, each with the paths it declares. The probe refuses
  * when any declared path is missing from `CONFIGURED_ADAPTER_CREDENTIALS`, so that hand-kept list cannot fall silently behind an
- * adapter (owner direction GP-Q7, 2026-10-21). A sweep on 2026-10-22 found none: neither adapter-registry entry declares a credential,
- * and no implementation source in `packages/` or `apps/` holds a typed-adapter credential path. */
+ * adapter (owner direction GP-Q7, 2026-10-21). The 2026-10-22 sweep classifies polaris.ts's Claude Code login copy as the session's
+ * own login, not a typed-adapter credential [Inferred]; the owner ruling is pending in syzygy-bpyt.1.6. */
 export const CONFIGURED_ADAPTER_DECLARATIONS: readonly AdapterCredentialDeclaration[] = Object.freeze([]);
 
 export const NO_ADAPTER_CREDENTIAL_DECLARED = 'no adapter credential declared; list operator-declared, Inferred';
