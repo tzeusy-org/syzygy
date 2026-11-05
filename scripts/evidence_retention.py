@@ -2484,7 +2484,7 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             ("interior-lowercase", "\u2026-bodya-inner.json", PREFIX + "prefix-bodya-inner.json"),
             ("interior-digit", "\u2026-body0-inner.json", PREFIX + "prefix-body0-inner.json"),
             ("interior-underscore", "\u2026-body_inner.json", PREFIX + "prefix-body_inner.json"),
-            ("interior-period", "\u2026-body.inner.json", PREFIX + "prefix-body.inner.json"),
+            ("interior-period", "\u2026-body.inner/path.json", PREFIX + "prefix-body.inner/path.json"),
             ("interior-slash", "\u2026-body/inner.json", PREFIX + "prefix-body/inner.json"),
             ("extension-uppercase", "\u2026-body.JsOn", PREFIX + "prefix-body.JsOn"),
             ("extension-digit", "\u2026-body.j0son", PREFIX + "prefix-body.j0son"),
