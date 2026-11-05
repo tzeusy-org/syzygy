@@ -1,0 +1,598 @@
+{
+  "format": "syzygy-mea-10-8-review-notes-verification/1",
+  "captured_at": "2026-11-05T05:43:37.115256+00:00",
+  "capture": {
+    "emitter": "implementation worker",
+    "authority": "emitter-captured report facts only; no independent review, owner judgment, adoption or merge clearance"
+  },
+  "source_authority": {
+    "head": "9a5e846cb2556d9caa33771070088f33429f3107",
+    "sources": [
+      {
+        "path": "docs/reviews/R-MEA10-RICH-ELEMENTS-9a7a-3-RAW.md",
+        "sha256": "fd0011fd4b8e49857012465284118a99faa29b57ee6a73b7978c95896e67ac6c",
+        "blob": "7e1d1dbe1715c704e68918bb067a3fdf684f0b67"
+      },
+      {
+        "path": "docs/reviews/R-MEA10-RICH-ELEMENTS-720d-2-RAW.md",
+        "sha256": "3f0efc085def279eff865bd68315c9a73be21798b9fd90163995bcf96e72e156",
+        "blob": "d4e19354637502352eecef0e6170070f1fc6a30e"
+      },
+      {
+        "path": ".syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04.md",
+        "sha256": "5feab8de6b2bb33860c0e068bbad2ff2546789297cf8628fc3da2a3994a159fd",
+        "blob": "6153cceb6f5f966c4be5974d605a26bda42318b2"
+      },
+      {
+        "path": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md",
+        "sha256": "12b9cfeb6bec3ddc17dc07edd66e5f8411dd04838609dcb5621570bc4f2e03ef",
+        "blob": "8aa9b1cf998d9e8a07c53f8cc64fe118702e15fc"
+      },
+      {
+        "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+        "sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3",
+        "blob": "40f9a0bf769ef777e0450cef10034b08fab7b350"
+      },
+      {
+        "path": ".syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md",
+        "sha256": "b7cd6c1bdb099cdf5447f2228652654013b045aa22b7f7760138a2361fa8412b",
+        "blob": "c60c84c762c29831625d01c58a1f644fcee1f3ef"
+      }
+    ],
+    "assessment": "REQ034/035 adopted presentation and completeness behavior; transient causes require no new closed reason, persisted field or acceptance. v1.4 remains candidate; no marker/range changes. Nov3 item4 merge hold persists."
+  },
+  "implementation": {
+    "commit": "a49509d6e9a13425760d41da1897ebb130b280ad",
+    "subjects": [
+      {
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+        "sha256": "d638de61a84c8c7bab65199ae18f4d6a5e01b8cc8bc8d7cc968c9acd45bd357f",
+        "bytes": 53012,
+        "blob": "a49ff3263d05af51177b1df50fe888daf4412fc3"
+      },
+      {
+        "path": "packages/polaris-dossier/src/render.ts",
+        "sha256": "80606cb953d0c0af5b8a4424eaa56aca99f3bdc50e9b94f6c6a70f822be0ed01",
+        "bytes": 60877,
+        "blob": "cd8efde13b9a56e436fecd9794afd25415ef80c1"
+      },
+      {
+        "path": "packages/polaris-dossier/src/render.test.ts",
+        "sha256": "0eff798f7429e8ea01b65c9294d92293240edca08759c3461a7a809b88a4e922",
+        "bytes": 101250,
+        "blob": "9346d9122147a37aefd5099c9cca8420f0e2c87a"
+      },
+      {
+        "path": "packages/polaris-dossier/src/review.test.ts",
+        "sha256": "81e17d99e203c81cf0c6214b63af1787c4d39071a3b2acff44156a9ccbded790",
+        "bytes": 72601,
+        "blob": "2a9636cae9437007ad2ac544f8a51cf26370be02"
+      },
+      {
+        "path": "packages/polaris-generation-core/src/local-render.ts",
+        "sha256": "c8443ff9b179c7362f1208308c1f4183bcf93677372da8fdbdeb5ae534992a2d",
+        "bytes": 7084,
+        "blob": "d643d6a15194714147efcb264b53d5382034d1f4"
+      },
+      {
+        "path": "packages/polaris-generation-core/src/closed-schema.test.ts",
+        "sha256": "36a199bcdefe7d28a6f4a7df241d697609ab98e191ce1879a28dd8aef7044829",
+        "bytes": 8546,
+        "blob": "f9d30fadc6f0ff3c769dd53aa2cb874812f6dfdb"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+        "sha256": "ed4578ea5b1c804a7bf4e4b1700eb30e009fcc3b280312bd1c248739fded4104",
+        "bytes": 2763,
+        "blob": "f3b4e5a6972b114c0cb8f1ab5d90e9f698c5fe05"
+      },
+      {
+        "path": "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.json",
+        "sha256": "b646604530a8b945f34493b76140d9c906b085caccdca3af6a8684fdb8ed3b6f",
+        "bytes": 12951,
+        "blob": "0fbc1f3b67c4ddaa848c815d4fd8eebf852cbb62"
+      }
+    ]
+  },
+  "clean_clone_control": {
+    "label": "committed-targeted",
+    "cwd": "/home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutants",
+    "command": [
+      "npx",
+      "vitest",
+      "run",
+      "packages/polaris-dossier/src/render.test.ts",
+      "packages/polaris-dossier/src/review.test.ts",
+      "packages/polaris-generation-core/src/closed-schema.test.ts",
+      "apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts",
+      "--reporter=dot"
+    ],
+    "started_at": "2026-11-05T05:40:11.074774+00:00",
+    "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+    "commit": "a49509d6e9a13425760d41da1897ebb130b280ad",
+    "tree": "1f0b8b74c5c7d2367030494389809288cbb98408",
+    "status": "",
+    "exit_code": 0,
+    "seconds": 19.675420633982867,
+    "stdout_file": "/home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/committed-targeted.log",
+    "stdout_sha256": "96ec0fe8d94c44fcb311e8a653b99f6c419dfd125192c2a2e4c2ca8878b43f39",
+    "finished_at": "2026-11-05T05:40:30.789695+00:00",
+    "stdout": "\n RUN  v3.2.7 /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutants\n\n\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\n\n Test Files  4 passed (4)\n      Tests  147 passed (147)\n   Start at  13:40:12\n   Duration  18.00s (transform 2.56s, setup 90ms, collect 4.76s, tests 26.64s, environment 1ms, prepare 275ms)\n\n"
+  },
+  "mutations": [
+    {
+      "id": "path-cause",
+      "source_commit": "a49509d6e9a13425760d41da1897ebb130b280ad",
+      "source": "packages/polaris-dossier/src/render.ts",
+      "source_sha256": "80606cb953d0c0af5b8a4424eaa56aca99f3bdc50e9b94f6c6a70f822be0ed01",
+      "test": "packages/polaris-dossier/src/render.test.ts",
+      "test_sha256": "0eff798f7429e8ea01b65c9294d92293240edca08759c3461a7a809b88a4e922",
+      "changes": [
+        {
+          "old": "withCause(cited.read ? 'content-screening' : 'path-screening')",
+          "new": "withCause('content-screening')"
+        }
+      ],
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "withholds a code excerpt of a file screening excludes",
+        "--reporter=dot"
+      ],
+      "started_at": "2026-11-05T05:41:45.418972+00:00",
+      "mutated_source_sha256": "0ac19952dd3c1fd9bf3fa46665821ef32b8d5a3b458cf43bb58ade91226469ab",
+      "exit_code": 1,
+      "seconds": 3.302353270002641,
+      "stdout_file": "retained verbatim in this row; original capture /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutant-path-cause.log",
+      "stdout_sha256": "6b27a02c85aa58a7bf184b7567916048c8a296a33c4a0afc57cfad4f6046c696",
+      "summary": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 64 skipped (65)"
+      ],
+      "outcome": "killed",
+      "stdout": "\n RUN  v3.2.7 /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutants\n\n--------------------------------------------------------x--------\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/render.test.ts > rich presentation elements (syzygy-mea.10.5) > withholds a code excerpt of a file screening excludes, with none of its bytes\nAssertionError: expected '<figure class=\"code-excerpt\" id=\"elem\u2026' to contain '[code excerpt withheld: the cited pat\u2026'\n\nExpected: \u001b[32m\"[code excerpt withheld: the cited \u001b[7mpath\u001b[27m is excluded by \u001b[7mscreening]\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m<figure class=\"code-excerpt\" id=\"element-code2\" data-element=\"code\" data-unknown-reason=\"excluded-content\" data-claim-id=\"code2\" data-epistemic=\"unknown\"><figcaption><span class=\"code-language\">Dotenv</span> <span class=\"code-path\">.env, lines 1\u20131</span></figcaption><p><span class=\"quote-withheld\" data-unknown-reason=\"excluded-content\">\u001b[27m[code excerpt withheld: the cited \u001b[7mfile\u001b[27m is excluded by \u001b[7mcontent screening]</span> <span class=\"marking unknown\">[Unknown]</span></p>\u001b[27m\"\u001b[39m\n\n \u276f packages/polaris-dossier/src/render.test.ts:1085:18\n    1083|     expect(body).toContain('data-claim-id=\"code2\" data-epistemic=\"unkn\u2026\n    1084|     expect(body).toContain('<span class=\"code-language\">Dotenv</span>'\u2026\n    1085|     expect(body).toContain('[code excerpt withheld: the cited path is \u2026\n       |                  ^\n    1086|     expect(body).not.toContain('X=1');\n    1087|     expect(body).not.toContain('<pre>');\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 64 skipped (65)\n   Start at  13:41:46\n   Duration  2.34s (transform 1.14s, setup 10ms, collect 1.46s, tests 503ms, environment 0ms, prepare 62ms)\n\n"
+    },
+    {
+      "id": "content-cause",
+      "source_commit": "a49509d6e9a13425760d41da1897ebb130b280ad",
+      "source": "packages/polaris-dossier/src/render.ts",
+      "source_sha256": "80606cb953d0c0af5b8a4424eaa56aca99f3bdc50e9b94f6c6a70f822be0ed01",
+      "test": "packages/polaris-dossier/src/render.test.ts",
+      "test_sha256": "0eff798f7429e8ea01b65c9294d92293240edca08759c3461a7a809b88a4e922",
+      "changes": [
+        {
+          "old": "withCause(cited.read ? 'content-screening' : 'path-screening')",
+          "new": "withCause('path-screening')"
+        }
+      ],
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "withholds a code excerpt whose cited lines carry a raw tag",
+        "--reporter=dot"
+      ],
+      "started_at": "2026-11-05T05:41:48.722406+00:00",
+      "mutated_source_sha256": "88c3564e8ea0d24e3e89d2780d36267535c9c9564146e606ca300c76e38af700",
+      "exit_code": 1,
+      "seconds": 3.235976543975994,
+      "stdout_file": "retained verbatim in this row; original capture /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutant-content-cause.log",
+      "stdout_sha256": "5d10ecd1b8c322f9de8565a27b51c7fb3a6e12bc839f7d28b1dfb957fddf5074",
+      "summary": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 64 skipped (65)"
+      ],
+      "outcome": "killed",
+      "stdout": "\n RUN  v3.2.7 /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutants\n\n---------------------------------------------------------x-------\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/render.test.ts > rich presentation elements (syzygy-mea.10.5) > withholds a code excerpt whose cited lines carry a raw tag: screening holds the file as active content\nAssertionError: expected '<figure class=\"code-excerpt\" id=\"elem\u2026' to contain '[code excerpt withheld: the cited fil\u2026'\n\nExpected: \u001b[32m\"[code excerpt withheld: the cited \u001b[7mfile\u001b[27m is excluded by \u001b[7mcontent \u001b[27mscreening]\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m<figure class=\"code-excerpt\" id=\"element-code3\" data-element=\"code\" data-unknown-reason=\"excluded-content\" data-claim-id=\"code3\" data-epistemic=\"unknown\"><figcaption><span class=\"code-language\">C</span> <span class=\"code-path\">src/tagged.c, lines 1\u20131</span></figcaption><p><span class=\"quote-withheld\" data-unknown-reason=\"excluded-content\">\u001b[27m[code excerpt withheld: the cited \u001b[7mpath\u001b[27m is excluded by screening]\u001b[7m</span> <span class=\"marking unknown\">[Unknown]</span></p>\u001b[27m\"\u001b[39m\n\n \u276f packages/polaris-dossier/src/render.test.ts:1094:18\n    1092|     const body = figure.slice(0, figure.indexOf('</figure>'));\n    1093|     expect(body).toContain('data-claim-id=\"code3\" data-epistemic=\"unkn\u2026\n    1094|     expect(body).toContain('[code excerpt withheld: the cited file is \u2026\n       |                  ^\n    1095|     expect(body).toContain('data-unknown-reason=\"excluded-content\"');\n    1096|     expect(body).not.toContain('const end');\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 64 skipped (65)\n   Start at  13:41:49\n   Duration  2.24s (transform 1.07s, setup 10ms, collect 1.39s, tests 484ms, environment 0ms, prepare 60ms)\n\n"
+    },
+    {
+      "id": "utf8-cause",
+      "source_commit": "a49509d6e9a13425760d41da1897ebb130b280ad",
+      "source": "packages/polaris-dossier/src/render.ts",
+      "source_sha256": "80606cb953d0c0af5b8a4424eaa56aca99f3bdc50e9b94f6c6a70f822be0ed01",
+      "test": "packages/polaris-dossier/src/render.test.ts",
+      "test_sha256": "0eff798f7429e8ea01b65c9294d92293240edca08759c3461a7a809b88a4e922",
+      "changes": [
+        {
+          "old": "return withCause('invalid-utf8')",
+          "new": "return withCause('content-screening')"
+        }
+      ],
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "withholds an invalid-UTF-8 excerpt",
+        "--reporter=dot"
+      ],
+      "started_at": "2026-11-05T05:41:51.959222+00:00",
+      "mutated_source_sha256": "c4b5410d0d07e68eb956550aa67b96ae545df9c2a9a414c0986985e9de88a1f5",
+      "exit_code": 1,
+      "seconds": 3.4886657830211334,
+      "stdout_file": "retained verbatim in this row; original capture /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutant-utf8-cause.log",
+      "stdout_sha256": "83b7e38b3e9737a47ab2547c50232d6912c8d2a7bbf91e805fc12a270c0670e6",
+      "summary": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 64 skipped (65)"
+      ],
+      "outcome": "killed",
+      "stdout": "\n RUN  v3.2.7 /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutants\n\n-----------------------------------------------------------x-----\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/render.test.ts > rich presentation elements (syzygy-mea.10.5) > withholds an invalid-UTF-8 excerpt for its established cause without reporting a body length\nAssertionError: expected '<figure class=\"code-excerpt\" id=\"elem\u2026' to contain '[code excerpt withheld: the cited fil\u2026'\n\nExpected: \u001b[32m\"[code excerpt withheld: the cited file is not valid UTF-8 text]\"\u001b[39m\nReceived: \u001b[31m\"<figure class=\"code-excerpt\" id=\"element-probe-code\" data-element=\"code\" data-unknown-reason=\"excluded-content\" data-claim-id=\"probe-code\" data-epistemic=\"unknown\"><figcaption><span class=\"code-language\">C</span> <span class=\"code-path\">src/binary.c, lines 1\u20131</span></figcaption><p><span class=\"quote-withheld\" data-unknown-reason=\"excluded-content\">[code excerpt withheld: the cited file is excluded by content screening]</span> <span class=\"marking unknown\">[Unknown]</span></p></figure>\"\u001b[39m\n\n \u276f withheldFigure packages/polaris-dossier/src/render.test.ts:1115:20\n    1113|     expect(figure).toContain('data-claim-id=\"probe-code\" data-epistemi\u2026\n    1114|     expect(figure).toContain('data-unknown-reason=\"excluded-content\"');\n    1115|     expect(figure).toContain(`[code excerpt withheld: ${wording}]`);\n       |                    ^\n    1116|     expect(figure).not.toContain('<pre>');\n    1117|     expect(figure).not.toContain('class=\"verified-quote\"');\n \u276f packages/polaris-dossier/src/render.test.ts:1147:5\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 64 skipped (65)\n   Start at  13:41:52\n   Duration  2.52s (transform 1.17s, setup 9ms, collect 1.47s, tests 664ms, environment 0ms, prepare 52ms)\n\n"
+    },
+    {
+      "id": "redacted-cause",
+      "source_commit": "a49509d6e9a13425760d41da1897ebb130b280ad",
+      "source": "packages/polaris-dossier/src/render.ts",
+      "source_sha256": "80606cb953d0c0af5b8a4424eaa56aca99f3bdc50e9b94f6c6a70f822be0ed01",
+      "test": "packages/polaris-dossier/src/render.test.ts",
+      "test_sha256": "0eff798f7429e8ea01b65c9294d92293240edca08759c3461a7a809b88a4e922",
+      "changes": [
+        {
+          "old": "return withCause('redacted-line')",
+          "new": "return withCause('content-screening')"
+        }
+      ],
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "withholds an excerpt touching a redacted line",
+        "--reporter=dot"
+      ],
+      "started_at": "2026-11-05T05:41:55.448938+00:00",
+      "mutated_source_sha256": "319d0e4a9f88635e7aa35a5e66ddbd6a8e78530c3487578c62b70d632ca60e80",
+      "exit_code": 1,
+      "seconds": 3.5962643870152533,
+      "stdout_file": "retained verbatim in this row; original capture /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutant-redacted-cause.log",
+      "stdout_sha256": "4794a079087ba4cbccf4ad7fb1bc9bfb3deb569a80684ddd8bc3cb74b05f1219",
+      "summary": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 64 skipped (65)"
+      ],
+      "outcome": "killed",
+      "stdout": "\n RUN  v3.2.7 /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutants\n\n------------------------------------------------------------x----\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/render.test.ts > rich presentation elements (syzygy-mea.10.5) > withholds an excerpt touching a redacted line without blaming the whole file or showing that line\nAssertionError: expected '<figure class=\"code-excerpt\" id=\"elem\u2026' to contain '[code excerpt withheld: the cited ran\u2026'\n\nExpected: \u001b[32m\"\u001b[7m[\u001b[27mcode\u001b[7m \u001b[27mexcerpt\u001b[7m withheld: the cited range touches a withheld line]\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m<figure class=\"\u001b[27mcode\u001b[7m-\u001b[27mexcerpt\u001b[7m\" id=\"element-probe-code\" data-element=\"code\" data-unknown-reason=\"excluded-content\" data-claim-id=\"probe-code\" data-epistemic=\"unknown\"><figcaption><span class=\"code-language\">C</span> <span class=\"code-path\">src/kestrel.c, lines 4\u20134</span></figcaption><p><span class=\"quote-withheld\" data-unknown-reason=\"excluded-content\">[code excerpt withheld: the cited file is excluded by content screening]</span> <span class=\"marking unknown\">[Unknown]</span></p></figure>\u001b[27m\"\u001b[39m\n\n \u276f withheldFigure packages/polaris-dossier/src/render.test.ts:1115:20\n    1113|     expect(figure).toContain('data-claim-id=\"probe-code\" data-epistemi\u2026\n    1114|     expect(figure).toContain('data-unknown-reason=\"excluded-content\"');\n    1115|     expect(figure).toContain(`[code excerpt withheld: ${wording}]`);\n       |                    ^\n    1116|     expect(figure).not.toContain('<pre>');\n    1117|     expect(figure).not.toContain('class=\"verified-quote\"');\n \u276f packages/polaris-dossier/src/render.test.ts:1158:5\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 64 skipped (65)\n   Start at  13:41:56\n   Duration  2.46s (transform 1.14s, setup 10ms, collect 1.45s, tests 590ms, environment 0ms, prepare 60ms)\n\n"
+    },
+    {
+      "id": "class-cause",
+      "source_commit": "a49509d6e9a13425760d41da1897ebb130b280ad",
+      "source": "packages/polaris-dossier/src/render.ts",
+      "source_sha256": "80606cb953d0c0af5b8a4424eaa56aca99f3bdc50e9b94f6c6a70f822be0ed01",
+      "test": "packages/polaris-dossier/src/render.test.ts",
+      "test_sha256": "0eff798f7429e8ea01b65c9294d92293240edca08759c3461a7a809b88a4e922",
+      "changes": [
+        {
+          "old": "return withCause('content-class')",
+          "new": "return withCause('content-screening')"
+        }
+      ],
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "names the content-class gate",
+        "--reporter=dot"
+      ],
+      "started_at": "2026-11-05T05:41:59.046102+00:00",
+      "mutated_source_sha256": "d16cead2eb0f04143385a51ac2ce826f4705db86e95e897cef0438bf010afb91",
+      "exit_code": 1,
+      "seconds": 3.297815464960877,
+      "stdout_file": "retained verbatim in this row; original capture /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutant-class-cause.log",
+      "stdout_sha256": "b8198e9e1f55bfae11a3fc9a59163693229507f2c27ef16feec03f2161dc9983",
+      "summary": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 64 skipped (65)"
+      ],
+      "outcome": "killed",
+      "stdout": "\n RUN  v3.2.7 /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutants\n\n-------------------------------------------------------------x---\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/render.test.ts > rich presentation elements (syzygy-mea.10.5) > names the content-class gate for an excerpt screening admitted but the run cannot carry\nAssertionError: expected '<figure class=\"code-excerpt\" id=\"elem\u2026' to contain '[code excerpt withheld: the cited fil\u2026'\n\nExpected: \u001b[32m\"\u001b[7m[\u001b[27mcode\u001b[7m \u001b[27mexcerpt\u001b[7m withheld: the cited file&#39;s content class is not consented for this run]\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m<figure class=\"\u001b[27mcode\u001b[7m-\u001b[27mexcerpt\u001b[7m\" id=\"element-probe-code\" data-element=\"code\" data-unknown-reason=\"excluded-content\" data-claim-id=\"probe-code\" data-epistemic=\"unknown\"><figcaption><span class=\"code-language\">Text</span> <span class=\"code-path\">docs/notes.txt, lines 2\u20132</span></figcaption><p><span class=\"quote-withheld\" data-unknown-reason=\"excluded-content\">[code excerpt withheld: the cited file is excluded by content screening]</span> <span class=\"marking unknown\">[Unknown]</span></p></figure>\u001b[27m\"\u001b[39m\n\n \u276f withheldFigure packages/polaris-dossier/src/render.test.ts:1115:20\n    1113|     expect(figure).toContain('data-claim-id=\"probe-code\" data-epistemi\u2026\n    1114|     expect(figure).toContain('data-unknown-reason=\"excluded-content\"');\n    1115|     expect(figure).toContain(`[code excerpt withheld: ${wording}]`);\n       |                    ^\n    1116|     expect(figure).not.toContain('<pre>');\n    1117|     expect(figure).not.toContain('class=\"verified-quote\"');\n \u276f packages/polaris-dossier/src/render.test.ts:1168:5\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 64 skipped (65)\n   Start at  13:41:59\n   Duration  2.35s (transform 1.10s, setup 9ms, collect 1.42s, tests 564ms, environment 0ms, prepare 55ms)\n\n"
+    },
+    {
+      "id": "unavailable-cause",
+      "source_commit": "a49509d6e9a13425760d41da1897ebb130b280ad",
+      "source": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "source_sha256": "d638de61a84c8c7bab65199ae18f4d6a5e01b8cc8bc8d7cc968c9acd45bd357f",
+      "test": "packages/polaris-dossier/src/render.test.ts",
+      "test_sha256": "0eff798f7429e8ea01b65c9294d92293240edca08759c3461a7a809b88a4e922",
+      "changes": [
+        {
+          "old": ": 'a verified excerpt is unavailable';",
+          "new": ": 'the cited file is excluded by content screening';"
+        }
+      ],
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "keeps a source-piece lookup miss generic",
+        "--reporter=dot"
+      ],
+      "started_at": "2026-11-05T05:42:02.344827+00:00",
+      "mutated_source_sha256": "4cfa2c0d97035bf47ed69d7babb1905a0d25e33019e4139b13a7189d03dd1af3",
+      "exit_code": 1,
+      "seconds": 3.426527088973671,
+      "stdout_file": "retained verbatim in this row; original capture /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutant-unavailable-cause.log",
+      "stdout_sha256": "e367a191b991456659bd6dc27404761fed54f4c5f1dbf23adcb5eca0258432fe",
+      "summary": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 64 skipped (65)"
+      ],
+      "outcome": "killed",
+      "stdout": "\n RUN  v3.2.7 /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutants\n\n--------------------------------------------------------------x--\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/render.test.ts > rich presentation elements (syzygy-mea.10.5) > keeps a source-piece lookup miss generic instead of asserting a screening cause\nAssertionError: expected '<figure class=\"code-excerpt\" id=\"elem\u2026' to contain '[code excerpt withheld: a verified ex\u2026'\n\nExpected: \u001b[32m\"\u001b[7m[\u001b[27mcode\u001b[7m \u001b[27mexcerpt\u001b[7m withheld: a verified excerpt is unavailable]\u001b[27m\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m<figure class=\"\u001b[27mcode\u001b[7m-\u001b[27mexcerpt\u001b[7m\" id=\"element-probe-code\" data-element=\"code\" data-unknown-reason=\"excluded-content\" data-claim-id=\"probe-code\" data-epistemic=\"unknown\"><figcaption><span class=\"code-language\">C</span> <span class=\"code-path\">src/pieces.c, lines 1\u20131</span></figcaption><p><span class=\"quote-withheld\" data-unknown-reason=\"excluded-content\">[code excerpt withheld: the cited file is excluded by content screening]</span> <span class=\"marking unknown\">[Unknown]</span></p></figure>\u001b[27m\"\u001b[39m\n\n \u276f withheldFigure packages/polaris-dossier/src/render.test.ts:1115:20\n    1113|     expect(figure).toContain('data-claim-id=\"probe-code\" data-epistemi\u2026\n    1114|     expect(figure).toContain('data-unknown-reason=\"excluded-content\"');\n    1115|     expect(figure).toContain(`[code excerpt withheld: ${wording}]`);\n       |                    ^\n    1116|     expect(figure).not.toContain('<pre>');\n    1117|     expect(figure).not.toContain('class=\"verified-quote\"');\n \u276f packages/polaris-dossier/src/render.test.ts:1194:5\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 64 skipped (65)\n   Start at  13:42:03\n   Duration  2.47s (transform 1.14s, setup 9ms, collect 1.48s, tests 585ms, environment 0ms, prepare 64ms)\n\n"
+    },
+    {
+      "id": "working-tree-read",
+      "source_commit": "a49509d6e9a13425760d41da1897ebb130b280ad",
+      "source": "packages/polaris-dossier/src/render.ts",
+      "source_sha256": "80606cb953d0c0af5b8a4424eaa56aca99f3bdc50e9b94f6c6a70f822be0ed01",
+      "test": "packages/polaris-dossier/src/render.test.ts",
+      "test_sha256": "0eff798f7429e8ea01b65c9294d92293240edca08759c3461a7a809b88a4e922",
+      "changes": [
+        {
+          "old": "      const shown = generationSourceTextAt(piece, at, until);",
+          "new": "      const shown = fs.readFileSync(path.join(subject.clone.path, repositoryPath), 'utf8').slice(at, until);"
+        }
+      ],
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "keeps the checked excerpt",
+        "--reporter=dot"
+      ],
+      "started_at": "2026-11-05T05:42:05.772821+00:00",
+      "mutated_source_sha256": "54c9b6e745a2ad438aeadf62635a3e316c2d01c5cbd95d42767d7321507d3176",
+      "exit_code": 1,
+      "seconds": 3.323188176029362,
+      "stdout_file": "retained verbatim in this row; original capture /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutant-working-tree-read.log",
+      "stdout_sha256": "44d05c41f27237ab22ce80974e18dde3764665d7bf400a2789aaf9ff0625c35c",
+      "summary": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 64 skipped (65)"
+      ],
+      "outcome": "killed",
+      "stdout": "\n RUN  v3.2.7 /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutants\n\n----------------------------------------------------------x------\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/render.test.ts > rich presentation elements (syzygy-mea.10.5) > keeps the checked excerpt and RFC7-10 anchor pinned after the fixture working tree changes\nAssertionError: expected '<figure class=\"code-excerpt\" id=\"elem\u2026' to contain '>if (a &lt; b &amp;&amp; c &gt; d) re\u2026'\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[32m- >if (a &lt; b &amp;&amp; c &gt; d) return;\u001b[39m\n\u001b[32m- #define LT &quot;&amp;lt;&quot;\u001b[39m\n\u001b[32m- #define AMP &amp;amp;\u001b[39m\n\u001b[32m- \u001b[7m</cod\u001b[27me>\u001b[39m\n\u001b[31m+ <figure class=\"code-excerpt\" id=\"element-probe-code\" data-element=\"code\" data-claim-id=\"probe-code\" data-epistemic=\"observed\"><figcaption><span class=\"code-language\">C</span> <span class=\"code-path\">src/markup.c, lines 1\u20133</span></figcaption><pre><code class=\"verified-quote\" data-quote-source=\"src-f5f28f292f96f1917f2df973\" data-quote-start=\"0\" data-quote-end=\"64\">WORKTREE-DRIFT-SENTINEL\u001b[39m\n\u001b[31m+ \u001b[7m</code></pre><p class=\"code-anchor\"><span class=\"marking observed\">[Observed]</span> <a class=\"anchor-link cite\" href=\"sources/06e6891aab863bf230002336.html#exact-text\" data-source-id=\"src-f5f28f292f96f1917f2df973\" aria-label=\"Source 3: src/markup.c, bytes 0\u201364\" data-anchor-class=\"evidence-artifact-identifier-with-integrity-digest\" data-anchor-identifier=\"cfdd1d071c728597e3ae1de82a1b368190d862d9\" data-anchor-algorithm=\"sha1\" data-anchor-fragment=\"0-64\" data-anchor-target-state=\"9e92e9d2cf4e45f963b5be51cb9d9f6848a35f32\">[3]</a></p></figur\u001b[27me>\u001b[39m\n\n \u276f packages/polaris-dossier/src/render.test.ts:1131:18\n    1129|     expect(execFileSync('git', ['-C', clone, 'show', `${commit}:src/ma\u2026\n    1130|     expect(fs.readFileSync(path.join(clone, 'src/markup.c'), 'utf8')).\u2026\n    1131|     expect(body).toContain('>if (a &lt; b &amp;&amp; c &gt; d) return;\u2026\n       |                  ^\n    1132|     expect(body).toContain('data-epistemic=\"observed\"');\n    1133|     expect(body).toContain('data-anchor-class=\"evidence-artifact-ident\u2026\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 64 skipped (65)\n   Start at  13:42:06\n   Duration  2.38s (transform 1.13s, setup 11ms, collect 1.44s, tests 569ms, environment 0ms, prepare 57ms)\n\n"
+    },
+    {
+      "id": "excerpt-anchor",
+      "source_commit": "a49509d6e9a13425760d41da1897ebb130b280ad",
+      "source": "packages/polaris-dossier/src/render.ts",
+      "source_sha256": "80606cb953d0c0af5b8a4424eaa56aca99f3bdc50e9b94f6c6a70f822be0ed01",
+      "test": "packages/polaris-dossier/src/render.test.ts",
+      "test_sha256": "0eff798f7429e8ea01b65c9294d92293240edca08759c3461a7a809b88a4e922",
+      "changes": [
+        {
+          "old": "anchor: anchorOf(piece, at, until)",
+          "new": "anchor: anchorOf(piece, at, until + 1)"
+        }
+      ],
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "keeps the checked excerpt",
+        "--reporter=dot"
+      ],
+      "started_at": "2026-11-05T05:42:09.097194+00:00",
+      "mutated_source_sha256": "b65d1da8aed8667381b46a313ff0f57f29da15fbae51837a513ac03da91f63c8",
+      "exit_code": 1,
+      "seconds": 3.497329007019289,
+      "stdout_file": "retained verbatim in this row; original capture /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutant-excerpt-anchor.log",
+      "stdout_sha256": "9062ee4484c3d82cab5f30b7a4e287c6ba986526f440663af0dc70160fbb1a1d",
+      "summary": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 64 skipped (65)"
+      ],
+      "outcome": "killed",
+      "stdout": "\n RUN  v3.2.7 /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutants\n\n----------------------------------------------------------x------\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/render.test.ts > rich presentation elements (syzygy-mea.10.5) > keeps the checked excerpt and RFC7-10 anchor pinned after the fixture working tree changes\nAssertionError: expected '<figure class=\"code-excerpt\" id=\"elem\u2026' to contain 'data-anchor-fragment=\"0-64\"'\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[32m- data-anchor-fragment=\"0-64\"\u001b[39m\n\u001b[31m+ <figure class=\"code-excerpt\" id=\"element-probe-code\" data-element=\"code\" data-claim-id=\"probe-code\" data-epistemic=\"observed\"><figcaption><span class=\"code-language\">C</span> <span class=\"code-path\">src/markup.c, lines 1\u20133</span></figcaption><pre><code class=\"verified-quote\" data-quote-source=\"src-f5f28f292f96f1917f2df973\" data-quote-start=\"0\" data-quote-end=\"64\">if (a &lt; b &amp;&amp; c &gt; d) return;\u001b[39m\n\u001b[31m+ #define LT &quot;&amp;lt;&quot;\u001b[39m\n\u001b[31m+ #define AMP &amp;amp;\u001b[39m\n\u001b[31m+ </code></pre><p class=\"code-anchor\"><span class=\"marking observed\">[Observed]</span> <a class=\"anchor-link cite\" href=\"sources/06e6891aab863bf230002336.html#exact-text\" data-source-id=\"src-f5f28f292f96f1917f2df973\" aria-label=\"Source 3: src/markup.c, bytes 0\u201365\" data-anchor-class=\"evidence-artifact-identifier-with-integrity-digest\" data-anchor-identifier=\"cfdd1d071c728597e3ae1de82a1b368190d862d9\" data-anchor-algorithm=\"sha1\" data-anchor-fragment=\"0-65\" data-anchor-target-state=\"9e92e9d2cf4e45f963b5be51cb9d9f6848a35f32\">[3]</a></p></figure>\u001b[39m\n\n \u276f packages/polaris-dossier/src/render.test.ts:1136:18\n    1134|     expect(body).toContain(`data-anchor-identifier=\"${objectIds['src/m\u2026\n    1135|     expect(body).toContain('data-anchor-algorithm=\"sha1\"');\n    1136|     expect(body).toContain(`data-anchor-fragment=\"0-${Buffer.byteLengt\u2026\n       |                  ^\n    1137|     expect(body).toContain(`data-anchor-target-state=\"${commit}\"`);\n    1138|     expect(body).not.toContain('WORKTREE-DRIFT-SENTINEL');\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 64 skipped (65)\n   Start at  13:42:09\n   Duration  2.48s (transform 1.16s, setup 9ms, collect 1.50s, tests 566ms, environment 0ms, prepare 56ms)\n\n"
+    },
+    {
+      "id": "element-support",
+      "source_commit": "a49509d6e9a13425760d41da1897ebb130b280ad",
+      "source": "packages/polaris-dossier/src/check-derive.ts",
+      "source_sha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15",
+      "test": "packages/polaris-dossier/src/review.test.ts",
+      "test_sha256": "81e17d99e203c81cf0c6214b63af1787c4d39071a3b2acff44156a9ccbded790",
+      "changes": [
+        {
+          "old": "    case 'table':\n      each('rows'",
+          "new": "    case 'table': return;\n      each('rows'"
+        }
+      ],
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/review.test.ts",
+        "-t",
+        "refuses a missing element claim support row",
+        "--reporter=dot"
+      ],
+      "started_at": "2026-11-05T05:42:12.595445+00:00",
+      "mutated_source_sha256": "4b932a8fdef95e56c1de5b4c444ed2be41057d903473b6bb8a65ba71d345198f",
+      "exit_code": 1,
+      "seconds": 3.0065902269561775,
+      "stdout_file": "retained verbatim in this row; original capture /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutant-element-support.log",
+      "stdout_sha256": "76841d6f7294b79141711d4430736cf5ee320cb7b6d71f3e882c4e3f449d9cab",
+      "summary": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 65 skipped (66)"
+      ],
+      "outcome": "killed",
+      "stdout": "\n RUN  v3.2.7 /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutants\n\n------------------------------x-----------------------------------\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/review.test.ts > review-check > refuses a missing element claim support row, and counts the restored control without an excerpt row\nAssertionError: []: expected 'validated' to be 'refused' // Object.is equality\n\nExpected: \u001b[32m\"\u001b[7mrefus\u001b[27med\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mvalidat\u001b[27med\"\u001b[39m\n\n \u276f packages/polaris-dossier/src/review.test.ts:522:77\n    520|       const result = await reviewCheck(run, {}, deps());\n    521|       if (!result.ok) throw new Error(result.refusal.reason);\n    522|       expect(result.report.outcome, JSON.stringify(result.report.probl\u2026\n       |                                                                             ^\n    523|       const stored = JSON.parse(fs.readFileSync(path.join(run, 'review\u2026\n    524|       expect(stored.outcome).toBe(missing ? 'refused' : 'validated');\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 65 skipped (66)\n   Start at  13:42:13\n   Duration  1.97s (transform 933ms, setup 10ms, collect 1.27s, tests 299ms, environment 0ms, prepare 66ms)\n\n"
+    },
+    {
+      "id": "deep-fragment",
+      "source_commit": "a49509d6e9a13425760d41da1897ebb130b280ad",
+      "source": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "source_sha256": "d638de61a84c8c7bab65199ae18f4d6a5e01b8cc8bc8d7cc968c9acd45bd357f",
+      "test": "packages/polaris-dossier/src/render.test.ts",
+      "test_sha256": "0eff798f7429e8ea01b65c9294d92293240edca08759c3461a7a809b88a4e922",
+      "changes": [
+        {
+          "old": "<main id=\"content\" data-page=",
+          "new": "<main${path.startsWith('deep-dives/') ? '' : ' id=\"content\"'} data-page="
+        },
+        {
+          "old": "${count}</summary>${inner}",
+          "new": "${count}</summary>${from.startsWith('deep-dives/') ? '<span id=\"content\"></span>' : ''}${inner}"
+        }
+      ],
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "packages/polaris-dossier/src/render.test.ts",
+        "-t",
+        "puts no fragment target",
+        "--reporter=dot"
+      ],
+      "started_at": "2026-11-05T05:42:15.603299+00:00",
+      "mutated_source_sha256": "409e79ef64ff34111e6110ed73aa5a87a7e5be862d6386b2218ff4af8a2c6b14",
+      "exit_code": 1,
+      "seconds": 3.313141197024379,
+      "stdout_file": "retained verbatim in this row; original capture /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutant-deep-fragment.log",
+      "stdout_sha256": "542a9e4c772abccd47c41b55b85e186e26b13da352dc2e20e741bbc36f54c990",
+      "summary": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 64 skipped (65)"
+      ],
+      "outcome": "killed",
+      "stdout": "\n RUN  v3.2.7 /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/mutants\n\n---------------------------------------------------------------x-\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/render.test.ts > rich presentation elements (syzygy-mea.10.5) > puts no fragment target that any page links to inside any details element\nAssertionError: expected [ Array(1) ] to deeply equal []\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[32m- []\u001b[39m\n\u001b[31m+ [\u001b[39m\n\u001b[31m+   \"deep-dives/server-detail.html#content\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n \u276f packages/polaris-dossier/src/render.test.ts:1233:31\n    1231|     expect(dives).toHaveLength(1);\n    1232|     expect(dives[0]![1]).toContain('<details class=\"details\" id=\"eleme\u2026\n    1233|     expect(violations(pages)).toEqual([]);\n       |                               ^\n    1234|     // Controls distinguish a destination's target from an equal, unli\u2026\n    1235|     const controls = new Map([\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 64 skipped (65)\n   Start at  13:42:16\n   Duration  2.34s (transform 1.14s, setup 11ms, collect 1.46s, tests 506ms, environment 0ms, prepare 52ms)\n\n"
+    }
+  ],
+  "mutation_denominator": {
+    "expected_ids": [
+      "path-cause",
+      "content-cause",
+      "utf8-cause",
+      "redacted-cause",
+      "class-cause",
+      "unavailable-cause",
+      "working-tree-read",
+      "excerpt-anchor",
+      "element-support",
+      "deep-fragment"
+    ],
+    "executed": 10,
+    "killed": 10,
+    "second_method": "Every retained output was read: exactly one executed selected case failed for the intended assertion, with 64 or 65 other cases skipped; no collection failure counted. Restored source hashes match each original source digest, and git diff of the scratch clone is empty."
+  },
+  "early_attempts": [
+    {
+      "file": "typecheck-1.log",
+      "sha256": "3aa7ecaa8e9c6ecf2bb4a0ac1b3e603b185f679dbdffd4be7b2d5db579ddecb4",
+      "outcome": "failed",
+      "disposition": "New fixture code used an out-of-scope lines variable after extracting the existing redaction fixture, and omitted localDraftSchema.maxQuestions. Corrected to the fixture literal offset and the required schema parameter.",
+      "stdout": "\n> typecheck\n> tsc -p tsconfig.json\n\npackages/polaris-dossier/src/render.test.ts(489,73): error TS2304: Cannot find name 'lines'.\npackages/polaris-generation-core/src/closed-schema.test.ts(102,38): error TS2345: Argument of type '{ pinnedRevision: string; }' is not assignable to parameter of type 'DraftSchemaParameters'.\n  Property 'maxQuestions' is missing in type '{ pinnedRevision: string; }' but required in type 'DraftSchemaParameters'.\n",
+      "source_state": "Precommit worktree iteration; historical run HEAD 9a5e846cb2556d9caa33771070088f33429f3107 with uncommitted changes. These captures are not exact committed-head gate evidence."
+    },
+    {
+      "file": "targeted-1.log",
+      "sha256": "0d16ef08a2486c452d7a7d1aeaf33dfb41ae936ce246ddbc1fdfb63fa8fead46",
+      "outcome": "failed",
+      "disposition": "Two new fixture assertions/inputs were wrong: the HTML attributes are data-anchor-identifier and data-anchor-target-state, and the restored supported inferred table-cell row needs a source span. No production failure is attributed to infrastructure.",
+      "stdout": "\n RUN  v3.2.7 /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-mea.10.8\n\n \u2713 |unit| packages/polaris-generation-core/src/closed-schema.test.ts (15 tests) 61ms\n \u2713 |unit| apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts (1 test) 335ms\n   \u2713 provider-mode render output is unchanged by the operator-agent inputs > renders every fixture run to the captured bytes, file by file  334ms\n \u276f |integration| packages/polaris-dossier/src/render.test.ts (65 tests | 1 failed) 39832ms\n   \u2713 render > refuses with no renderer wired, before it opens the run, and writes nothing 169ms\n   \u2713 render > renders every quotation as the bytes Syzygy located in the blob it read now, with an RFC7-10 anchor  1185ms\n   \u2713 render > labels blocks by the agent's label, the counted review and screening, and keeps the pages and machine view in parity per tuple  922ms\n   \u2713 render > carries the run disclosure on every page and in the machine view, and one review-status region per page holding no claim  1212ms\n   \u2713 render > withholds the draft layer as Unknown while the RFC7-20 ruling is not in force, keeping sources, disclosure and discovery  1354ms\n   \u2713 render > withholds a quotation from a file screening excludes and renders its block Unknown, with no source page for that file 248ms\n   \u2713 render > screens at render with the policy in force now, not the one the check applied 296ms\n   \u2713 render > withholds a project-documentation quotation and source page under a non-governed run, which relies on no statement, naming the class  459ms\n   \u2713 render > withholds a project-documentation quotation and source page under a statement that does not list project-documentation, naming the class 231ms\n   \u2713 render > quotes a project-documentation body once the statement the run relies on lists the class  420ms\n   \u2713 render > refuses when an object at the pinned revision can no longer be read, and writes nothing 229ms\n   \u2713 render > renders an exempt body only through a renderer that declares the page-sink contract and pages that carry the CSP  557ms\n   \u2713 render > draws retained spans with original coordinates and markers while withholding only the removed line 273ms\n   \u2713 render > rescans a redacted exempt body over its complete body where the page sink is unconfirmed, and states no withheld text  408ms\n   \u2713 render > loads the screen for the run's repository and pinned commit 287ms\n   \u2713 render > refuses when the stored passed draft revision is altered, after the deadline, and when the output lacks the disclosure 268ms\n   \u2713 render > writes each render into a new numbered site directory and never over an earlier one 178ms\n   \u2713 render > discloses the consent record and label the live consent gives the pinned revision at this render 171ms\n   \u2713 render > refuses before it renders when the consent stops naming the pinned revision, with the step guard's codes, and writes no site (syzygy-qkea.23) 79ms\n   \u2713 render > refuses before it renders when the project input now records a drawer, with the step guard's codes, and writes no site (syzygy-qkea.23) 120ms\n   \u2713 render > lists the pinned tree with the object reader the CLI is given 96ms\n   \u2713 render > is the `render` command of the CLI, which refuses when the composition root injects no renderer 232ms\n   \u2713 rendered-design review (S9b) > builds the design packet from the latest site, outside the review-status region, byte for byte, and names its digest at render  1140ms\n   \u2713 rendered-design review (S9b) > hands a design review session the packet under the sessions root with its own prompt  746ms\n   \u2713 rendered-design review (S9b) > keeps a counted design review through a render that changes only the review-status region  1201ms\n   \u2713 rendered-design review (S9b) > retires a counted design review when a render changes anything outside the region  1384ms\n   \u2713 rendered-design review (S9b) > refuses a render whose statement of the design review leaks outside the region, and writes no site  1338ms\n   \u2713 rendered-design review (S9b) > counts a validated design verdict only once its launch form is recorded  1473ms\n   \u2713 rendered-design review (S9b) > states a counted review that declares the pages not ready beside its blocking finding  1230ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with a page without a row, which never counts  1261ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with a row for a page the packet does not hold, which never counts  1050ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with two rows for one page, which never counts  1002ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with a finding on a file the packet does not hold, which never counts  1083ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with a stale packet digest, which never counts  954ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with the authoring session's identifier, which never counts  965ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with a quotation in a reason, which never counts  599ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with readiness beside a blocking finding, which never counts  1329ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with readiness beside a deficient page, which never counts  1479ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with a fidelity verdict's shape, which never counts  1541ms\n   \u2713 rendered-design review (S9b) > records a validated design verdict, with what it observed and what stays Inferred, and a stored site altered since is a stale packet  1646ms\n   \u2713 rendered-design review (S9b) > refuses a design packet from a site holding anything but the renderer's files, and an unknown kind  493ms\n   \u2713 rendered-design review (S9b) > names an excluded cited file alike in two renders of the same subject  323ms\n   \u2713 rendered-design review (S9b) > keys an excluded cited file by the run, the pinned revision and its path alone, never its body or object 113ms\n   \u2713 rendered-design review (S9b) > drives the design review through the CLI  767ms\n   \u2713 redactionDetails > names the matched detectors and the withheld ranges, a single line as one number and a run with an en dash 3ms\n   \u2713 redactedExtent > says partially retained while some line is kept, and retained with every line withheld when none is 0ms\n   \u2713 readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) > numbers each page's sources [1], [2] in first-cited order, keeping the identifier in data-source-id only  870ms\n   \u2713 readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) > draws complete backtick pairs in agent prose as inline code and leaves an unpaired backtick literal  987ms\n   \u2713 readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) > carries the soft dark theme with a light variant and tinted callouts  946ms\n   \u2713 readability guidance and diagram-led sections (syzygy-mea.10.4) > draws a section's diagrams before its blocks on an operator-agent page  1117ms\n   \u2713 readability guidance and diagram-led sections (syzygy-mea.10.4) > puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria 2ms\n   \u2713 rich presentation elements (syzygy-mea.10.5) > renders a table with a caption, column headers, row headers and an empty cell 1ms\n   \u2713 rich presentation elements (syzygy-mea.10.5) > numbers a cell's citation as any block's 0ms\n   \u2713 rich presentation elements (syzygy-mea.10.5) > renders a callout with its visible tone, steps, definitions, cards and details 0ms\n   \u2713 rich presentation elements (syzygy-mea.10.5) > marks every element claim and carries it into the machine view 2ms\n   \u2713 rich presentation elements (syzygy-mea.10.5) > renders a code excerpt from Syzygy's read, entity-encoded, Observed, with its language from the path and its anchor 1ms\n   \u2713 rich presentation elements (syzygy-mea.10.5) > withholds a code excerpt of a file screening excludes, with none of its bytes 0ms\n   \u2713 rich presentation elements (syzygy-mea.10.5) > withholds a code excerpt whose cited lines carry a raw tag: screening holds the file as active content 0ms\n   \u00d7 rich presentation elements (syzygy-mea.10.5) > keeps the checked excerpt and RFC7-10 anchor pinned after the fixture working tree changes 319ms\n     \u2192 expected '<figure class=\"code-excerpt\" id=\"elem\u2026' to contain 'data-anchor-id=\"cfdd1d071c728597e3ae1\u2026'\n   \u2713 rich presentation elements (syzygy-mea.10.5) > withholds an invalid-UTF-8 excerpt for its established cause without reporting a body length 143ms\n   \u2713 rich presentation elements (syzygy-mea.10.5) > withholds an excerpt touching a redacted line without blaming the whole file or showing that line  347ms\n   \u2713 rich presentation elements (syzygy-mea.10.5) > names the content-class gate for an excerpt screening admitted but the run cannot carry 190ms\n   \u2713 rich presentation elements (syzygy-mea.10.5) > keeps a source-piece lookup miss generic instead of asserting a screening cause 182ms\n   \u2713 rich presentation elements (syzygy-mea.10.5) > puts no fragment target that any page links to inside any details element 18ms\n   \u2713 rich presentation elements (syzygy-mea.10.5) > adds no script and keeps the content security policy 1ms\n \u276f |integration| packages/polaris-dossier/src/review.test.ts (66 tests | 1 failed) 69694ms\n   \u2713 review-packet --kind fidelity > emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name  998ms\n   \u2713 review-packet --kind fidelity > loads the screen for repository:<id> at the pinned commit  1029ms\n   \u2713 review-packet --kind fidelity > carries no authoring exchange, read account or excluded byte  1066ms\n   \u2713 review-packet --kind fidelity > holds no discovery, transcript or exchange field at any depth  1091ms\n   \u2713 review-packet --kind fidelity > refuses the rendered-design review before any site is rendered  1235ms\n   \u2713 review-packet --kind fidelity > refuses before the inventory counts  771ms\n   \u2713 review-packet --kind fidelity > refuses when the latest draft revision has findings  1013ms\n   \u2713 review-packet --kind fidelity > refuses when the frozen draft changed after its check  565ms\n   \u2713 session-prompt review --kind fidelity > copies the packet and its digest into a session directory under the sessions root, and prints the interactive command  623ms\n   \u2713 session-prompt review --kind fidelity > refuses {\"role\":\"review\",\"kind\":\"design\"}  888ms\n   \u2713 session-prompt review --kind fidelity > refuses {\"role\":\"review\"}  1173ms\n   \u2713 session-prompt review --kind fidelity > refuses {\"role\":\"review\",\"kind\":\"other\"}  799ms\n   \u2713 review-check > validates a complete, consistent verdict bound to the rebuilt packet and records it; it counts once its launch form is recorded  770ms\n   \u2713 review-check > records and refuses a verdict that names a stale packet digest  997ms\n   \u2713 review-check > records and refuses a verdict that declares the authoring session  964ms\n   \u2713 review-check > records and refuses a verdict that declares the inventory session  850ms\n   \u2713 review-check > records and refuses a verdict that omits an inventory entry from coverage  595ms\n   \u2713 review-check > records and refuses a verdict that omits the accuracy of an inventory entry  842ms\n   \u2713 review-check > records and refuses a verdict that omits a claim block  828ms\n   \u2713 review-check > records and refuses a verdict that relies on a quotation that does not verify  700ms\n   \u2713 review-check > records and refuses a verdict that quotes the excluded span  981ms\n   \u2713 review-check > records and refuses a verdict that names a span the packet lacks  933ms\n   \u2713 review-check > records and refuses a verdict that declares readiness beside a blocking finding  755ms\n   \u2713 review-check > records and refuses a verdict that declares readiness beside an unsupported entry  753ms\n   \u2713 review-check > records and refuses a verdict that declares readiness beside an unsupported block  670ms\n   \u2713 review-check > records and refuses a verdict that declares readiness beside an entry not accurate  801ms\n   \u2713 review-check > records and refuses a verdict that represents an entry by no block  647ms\n   \u2713 review-check > records and refuses a verdict that repeats a coverage row  704ms\n   \u2713 review-check > records and refuses a verdict that quotes in a reason without naming the span  985ms\n   \u2713 review-check > records and refuses a verdict that carries a field outside the schema  1043ms\n   \u00d7 review-check > refuses a missing element claim support row, and counts the restored control without an excerpt row 1874ms\n     \u2192 expected 'refused' to be 'validated' // Object.is equality\n   \u2713 review-check > records an inventory omission as blocking: the verdict validates, and the draft does not become ready  563ms\n   \u2713 review-check > retires a counted verdict when the draft is revised, the stored frozen draft is altered or the frozen verdict changes  2799ms\n   \u2713 review-check > validates a ready verdict with no blocking row  597ms\n   \u2713 review-check > does not count a verdict whose launch record is altered to another form, role or prompt  2810ms\n   \u2713 review-check > stops counting a declared launch once the run's launched marker is present but unreadable (syzygy-bpyt.8.8)  743ms\n   \u2713 review-check > refuses before any review session is handed over, and after the deadline  872ms\n   \u2713 review-check > observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred  1393ms\n   \u2713 review-check > observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf  910ms\n   \u2713 the step guard runs before every review step (syzygy-qkea.23) > refuses review-packet, review-check and the review hand-over when the consent stops naming the pinned revision, with the guard's codes  753ms\n   \u2713 the step guard runs before every review step (syzygy-qkea.23) > refuses review-packet, review-check and the review hand-over when the project input now records a drawer, with the guard's codes  899ms\n   \u2713 the step guard runs before every review step (syzygy-qkea.23) > lists the pinned tree with the object reader it is given, on review-packet and review-check  780ms\n   \u2713 the content-class gate on the fidelity packet > withholds a project-documentation span under a non-governed run, which relies on no statement, naming the class  666ms\n   \u2713 the content-class gate on the fidelity packet > withholds a project-documentation span under a statement that lists code-content and not project-documentation, naming the class  918ms\n   \u2713 the content-class gate on the fidelity packet > admits the span with its text once the statement lists project-documentation  943ms\n   \u2713 the content-class gate on the fidelity packet > gates every class by the statement: one that lists only project-documentation withholds the code-content spans  614ms\n   \u2713 the fidelity packet over a body retained as redacted-span > carries a span that includes no withheld line, with the body's redaction count beside it  814ms\n   \u2713 the fidelity packet over a body retained as redacted-span > withholds a span that includes a withheld line whole, carrying no byte of it  526ms\n   \u2713 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when no statement names codex, and writes nothing  1879ms\n   \u2713 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when two in-force statements name codex, and writes nothing  2257ms\n   \u2713 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement is withdrawn, and writes nothing  2029ms\n   \u2713 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement takes effect after now, and writes nothing  2402ms\n   \u2713 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement names another provider, and writes nothing  2825ms\n   \u2713 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement lists only code-content, and writes nothing  2171ms\n   \u2713 session-prompt --tool and the session pair's statement > hands a codex session over when an in-force codex statement lists every class the run's lists  994ms\n   \u2713 session-prompt --tool and the session pair's statement > hands a codex session over when the run is non-governed and relies on no statement  2604ms\n   \u2713 session-prompt --tool and the session pair's statement > hands the declared tool's session over with no codex statement at all  646ms\n   \u2713 session-prompt --tool and the session pair's statement > cites the codex statement in the inventory prompt record, and stops counting the inventory once that statement is withdrawn  784ms\n   \u2713 session-prompt --tool and the session pair's statement > cites the codex statement in the review prompt record, and stops counting the verdict once that statement is withdrawn  1004ms\n   \u2713 session-prompt --tool and the session pair's statement > does not count work whose cited statement a successor replaced or whose classes narrowed; a record from before citations counts on the re-check, its citation Unknown  933ms\n   \u2713 session-prompt --tool and the session pair's statement > does not count work whose prompt record cites its statement for another agent tool  556ms\n   \u2713 session-prompt --tool and the session pair's statement > does not count work whose prompt record cites its statement for another provider  546ms\n   \u2713 session-prompt --tool and the session pair's statement > does not count work once the run's own statement is withdrawn, though the session pair's cited statement still governs  578ms\n   \u2713 session-prompt --tool and the session pair's statement > names the caller's consequence in every refusal kind, and leaves the counting texts as they were without one  630ms\n   \u2713 the CLI > builds a packet and checks a verdict through syzygy dossier, exiting 1 on a refused verdict  570ms\n   \u2713 fidelity criteria for presentation elements (syzygy-mea.10.5) > asks for a support entry for every claim an element carries, judged under a cell's headings 0ms\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 2 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/render.test.ts > rich presentation elements (syzygy-mea.10.5) > keeps the checked excerpt and RFC7-10 anchor pinned after the fixture working tree changes\nAssertionError: expected '<figure class=\"code-excerpt\" id=\"elem\u2026' to contain 'data-anchor-id=\"cfdd1d071c728597e3ae1\u2026'\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[32m- data-anchor-id=\"cfdd1d071c728597e3ae1de82a1b368190d862d9\"\u001b[39m\n\u001b[31m+ <figure class=\"code-excerpt\" id=\"element-probe-code\" data-element=\"code\" data-claim-id=\"probe-code\" data-epistemic=\"observed\"><figcaption><span class=\"code-language\">C</span> <span class=\"code-path\">src/markup.c, lines 1\u20133</span></figcaption><pre><code class=\"verified-quote\" data-quote-source=\"src-f5f28f292f96f1917f2df973\" data-quote-start=\"0\" data-quote-end=\"64\">if (a &lt; b &amp;&amp; c &gt; d) return;\u001b[39m\n\u001b[31m+ #define LT &quot;&amp;lt;&quot;\u001b[39m\n\u001b[31m+ #define AMP &amp;amp;\u001b[39m\n\u001b[31m+ \u001b[7m</code></pre><p class=\"code-anchor\"><span class=\"marking observed\">[Observed]</span> <a class=\"anchor-link cite\" href=\"sources/06e6891aab863bf230002336.html#exact-text\" data-source-id=\"src-f5f28f292f96f1917f2df973\" aria-label=\"Source 3: src/markup.c, bytes 0\u201364\" data-anchor-class=\"evidence-artifact-identifier-with-integrity-digest\" \u001b[27mdata-anchor-id\u001b[7mentifier\u001b[27m=\"cfdd1d071c728597e3ae1de82a1b368190d862d9\"\u001b[7m data-anchor-algorithm=\"sha1\" data-anchor-fragment=\"0-64\" data-anchor-target-state=\"9e92e9d2cf4e45f963b5be51cb9d9f6848a35f32\">[3]</a></p></figure>\u001b[27m\u001b[39m\n\n \u276f packages/polaris-dossier/src/render.test.ts:1134:18\n    1132|     expect(body).toContain('data-epistemic=\"observed\"');\n    1133|     expect(body).toContain('data-anchor-class=\"evidence-artifact-ident\u2026\n    1134|     expect(body).toContain(`data-anchor-id=\"${objectIds['src/markup.c'\u2026\n       |                  ^\n    1135|     expect(body).toContain('data-anchor-algorithm=\"sha1\"');\n    1136|     expect(body).toContain(`data-anchor-fragment=\"0-${Buffer.byteLengt\u2026\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/2]\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/review.test.ts > review-check > refuses a missing element claim support row, and counts the restored control without an excerpt row\nAssertionError: expected 'refused' to be 'validated' // Object.is equality\n\nExpected: \u001b[32m\"\u001b[7mvalidat\u001b[27med\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mrefus\u001b[27med\"\u001b[39m\n\n \u276f packages/polaris-dossier/src/review.test.ts:522:37\n    520|       const result = await reviewCheck(run, {}, deps());\n    521|       if (!result.ok) throw new Error(result.refusal.reason);\n    522|       expect(result.report.outcome).toBe(missing ? 'refused' : 'valida\u2026\n       |                                     ^\n    523|       const stored = JSON.parse(fs.readFileSync(path.join(run, 'review\u2026\n    524|       expect(stored.outcome).toBe(missing ? 'refused' : 'validated');\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[2/2]\u23af\n\n\n Test Files  2 failed | 2 passed (4)\n      Tests  2 failed | 145 passed (147)\n   Start at  13:33:01\n   Duration  76.58s (transform 7.00s, setup 174ms, collect 14.96s, tests 109.92s, environment 1ms, prepare 1.05s)\n\n",
+      "source_state": "Precommit worktree iteration; historical run HEAD 9a5e846cb2556d9caa33771070088f33429f3107 with uncommitted changes. These captures are not exact committed-head gate evidence."
+    },
+    {
+      "file": "failure-subset-2.log",
+      "sha256": "6f3b9bffe58d8a1e8034be1f0193029c6131e3c2a6987d9c170f3993b19c1ecd",
+      "outcome": "failed",
+      "disposition": "The corrected anchor assertion passes; the restored supported inferred cell still has spanIds: [], so reviewCheck correctly refuses missing-support-source. The control was corrected to name its literal fixture span-3.",
+      "stdout": "\n RUN  v3.2.7 /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-mea.10.8\n\n \u2713 |integration| packages/polaris-dossier/src/render.test.ts (65 tests | 64 skipped) 1132ms\n \u276f |integration| packages/polaris-dossier/src/review.test.ts (66 tests | 1 failed | 65 skipped) 1232ms\n   \u2193 review-packet --kind fidelity > emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name\n   \u2193 review-packet --kind fidelity > loads the screen for repository:<id> at the pinned commit\n   \u2193 review-packet --kind fidelity > carries no authoring exchange, read account or excluded byte\n   \u2193 review-packet --kind fidelity > holds no discovery, transcript or exchange field at any depth\n   \u2193 review-packet --kind fidelity > refuses the rendered-design review before any site is rendered\n   \u2193 review-packet --kind fidelity > refuses before the inventory counts\n   \u2193 review-packet --kind fidelity > refuses when the latest draft revision has findings\n   \u2193 review-packet --kind fidelity > refuses when the frozen draft changed after its check\n   \u2193 session-prompt review --kind fidelity > copies the packet and its digest into a session directory under the sessions root, and prints the interactive command\n   \u2193 session-prompt review --kind fidelity > refuses {\"role\":\"review\",\"kind\":\"design\"}\n   \u2193 session-prompt review --kind fidelity > refuses {\"role\":\"review\"}\n   \u2193 session-prompt review --kind fidelity > refuses {\"role\":\"review\",\"kind\":\"other\"}\n   \u2193 review-check > validates a complete, consistent verdict bound to the rebuilt packet and records it; it counts once its launch form is recorded\n   \u2193 review-check > records and refuses a verdict that names a stale packet digest\n   \u2193 review-check > records and refuses a verdict that declares the authoring session\n   \u2193 review-check > records and refuses a verdict that declares the inventory session\n   \u2193 review-check > records and refuses a verdict that omits an inventory entry from coverage\n   \u2193 review-check > records and refuses a verdict that omits the accuracy of an inventory entry\n   \u2193 review-check > records and refuses a verdict that omits a claim block\n   \u2193 review-check > records and refuses a verdict that relies on a quotation that does not verify\n   \u2193 review-check > records and refuses a verdict that quotes the excluded span\n   \u2193 review-check > records and refuses a verdict that names a span the packet lacks\n   \u2193 review-check > records and refuses a verdict that declares readiness beside a blocking finding\n   \u2193 review-check > records and refuses a verdict that declares readiness beside an unsupported entry\n   \u2193 review-check > records and refuses a verdict that declares readiness beside an unsupported block\n   \u2193 review-check > records and refuses a verdict that declares readiness beside an entry not accurate\n   \u2193 review-check > records and refuses a verdict that represents an entry by no block\n   \u2193 review-check > records and refuses a verdict that repeats a coverage row\n   \u2193 review-check > records and refuses a verdict that quotes in a reason without naming the span\n   \u2193 review-check > records and refuses a verdict that carries a field outside the schema\n   \u00d7 review-check > refuses a missing element claim support row, and counts the restored control without an excerpt row 1138ms\n     \u2192 [{\"kind\":\"inconsistent\",\"at\":\"$\",\"detail\":\"the verdict is inconsistent: missing-support-source (a represented entry names a block, a supported inferred block names a span)\"}]: expected 'refused' to be 'validated' // Object.is equality\n   \u2193 review-check > records an inventory omission as blocking: the verdict validates, and the draft does not become ready\n   \u2193 review-check > retires a counted verdict when the draft is revised, the stored frozen draft is altered or the frozen verdict changes\n   \u2193 review-check > validates a ready verdict with no blocking row\n   \u2193 review-check > does not count a verdict whose launch record is altered to another form, role or prompt\n   \u2193 review-check > stops counting a declared launch once the run's launched marker is present but unreadable (syzygy-bpyt.8.8)\n   \u2193 review-check > refuses before any review session is handed over, and after the deadline\n   \u2193 review-check > observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred\n   \u2193 review-check > observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf\n   \u2193 the step guard runs before every review step (syzygy-qkea.23) > refuses review-packet, review-check and the review hand-over when the consent stops naming the pinned revision, with the guard's codes\n   \u2193 the step guard runs before every review step (syzygy-qkea.23) > refuses review-packet, review-check and the review hand-over when the project input now records a drawer, with the guard's codes\n   \u2193 the step guard runs before every review step (syzygy-qkea.23) > lists the pinned tree with the object reader it is given, on review-packet and review-check\n   \u2193 the content-class gate on the fidelity packet > withholds a project-documentation span under a non-governed run, which relies on no statement, naming the class\n   \u2193 the content-class gate on the fidelity packet > withholds a project-documentation span under a statement that lists code-content and not project-documentation, naming the class\n   \u2193 the content-class gate on the fidelity packet > admits the span with its text once the statement lists project-documentation\n   \u2193 the content-class gate on the fidelity packet > gates every class by the statement: one that lists only project-documentation withholds the code-content spans\n   \u2193 the fidelity packet over a body retained as redacted-span > carries a span that includes no withheld line, with the body's redaction count beside it\n   \u2193 the fidelity packet over a body retained as redacted-span > withholds a span that includes a withheld line whole, carrying no byte of it\n   \u2193 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when no statement names codex, and writes nothing\n   \u2193 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when two in-force statements name codex, and writes nothing\n   \u2193 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement is withdrawn, and writes nothing\n   \u2193 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement takes effect after now, and writes nothing\n   \u2193 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement names another provider, and writes nothing\n   \u2193 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement lists only code-content, and writes nothing\n   \u2193 session-prompt --tool and the session pair's statement > hands a codex session over when an in-force codex statement lists every class the run's lists\n   \u2193 session-prompt --tool and the session pair's statement > hands a codex session over when the run is non-governed and relies on no statement\n   \u2193 session-prompt --tool and the session pair's statement > hands the declared tool's session over with no codex statement at all\n   \u2193 session-prompt --tool and the session pair's statement > cites the codex statement in the inventory prompt record, and stops counting the inventory once that statement is withdrawn\n   \u2193 session-prompt --tool and the session pair's statement > cites the codex statement in the review prompt record, and stops counting the verdict once that statement is withdrawn\n   \u2193 session-prompt --tool and the session pair's statement > does not count work whose cited statement a successor replaced or whose classes narrowed; a record from before citations counts on the re-check, its citation Unknown\n   \u2193 session-prompt --tool and the session pair's statement > does not count work whose prompt record cites its statement for another agent tool\n   \u2193 session-prompt --tool and the session pair's statement > does not count work whose prompt record cites its statement for another provider\n   \u2193 session-prompt --tool and the session pair's statement > does not count work once the run's own statement is withdrawn, though the session pair's cited statement still governs\n   \u2193 session-prompt --tool and the session pair's statement > names the caller's consequence in every refusal kind, and leaves the counting texts as they were without one\n   \u2193 the CLI > builds a packet and checks a verdict through syzygy dossier, exiting 1 on a refused verdict\n   \u2193 fidelity criteria for presentation elements (syzygy-mea.10.5) > asks for a support entry for every claim an element carries, judged under a cell's headings\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| packages/polaris-dossier/src/review.test.ts > review-check > refuses a missing element claim support row, and counts the restored control without an excerpt row\nAssertionError: [{\"kind\":\"inconsistent\",\"at\":\"$\",\"detail\":\"the verdict is inconsistent: missing-support-source (a represented entry names a block, a supported inferred block names a span)\"}]: expected 'refused' to be 'validated' // Object.is equality\n\nExpected: \u001b[32m\"\u001b[7mvalidat\u001b[27med\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7mrefus\u001b[27med\"\u001b[39m\n\n \u276f packages/polaris-dossier/src/review.test.ts:522:77\n    520|       const result = await reviewCheck(run, {}, deps());\n    521|       if (!result.ok) throw new Error(result.refusal.reason);\n    522|       expect(result.report.outcome, JSON.stringify(result.report.probl\u2026\n       |                                                                             ^\n    523|       const stored = JSON.parse(fs.readFileSync(path.join(run, 'review\u2026\n    524|       expect(stored.outcome).toBe(missing ? 'refused' : 'validated');\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed | 1 passed (2)\n      Tests  1 failed | 1 passed | 129 skipped (131)\n   Start at  13:35:18\n   Duration  4.56s (transform 2.65s, setup 108ms, collect 5.43s, tests 2.36s, environment 1ms, prepare 216ms)\n\n",
+      "source_state": "Precommit worktree iteration; historical run HEAD 9a5e846cb2556d9caa33771070088f33429f3107 with uncommitted changes. These captures are not exact committed-head gate evidence."
+    },
+    {
+      "file": "failure-subset-3.log",
+      "sha256": "dbb29a8bd5424015bd8f37a47a6a65c403b751a0dd461fa3752511c12b22d4a6",
+      "outcome": "passed-scoped",
+      "disposition": "After correcting the supported cell input, its refusal/restored-control case passes; this is one case, not a full-tier result.",
+      "stdout": "\n RUN  v3.2.7 /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-mea.10.8\n\n \u2713 |integration| packages/polaris-dossier/src/review.test.ts (66 tests | 65 skipped) 2338ms\n   \u2713 review-check > refuses a missing element claim support row, and counts the restored control without an excerpt row  2204ms\n\n Test Files  1 passed (1)\n      Tests  1 passed | 65 skipped (66)\n   Start at  13:36:19\n   Duration  5.46s (transform 1.84s, setup 18ms, collect 2.54s, tests 2.34s, environment 0ms, prepare 91ms)\n\n",
+      "source_state": "Precommit worktree iteration; historical run HEAD 9a5e846cb2556d9caa33771070088f33429f3107 with uncommitted changes. These captures are not exact committed-head gate evidence."
+    },
+    {
+      "file": "typecheck-2.log",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696",
+      "outcome": "passed",
+      "disposition": "The two compile fixture defects are corrected; final committed-head typecheck remains a separate required gate.",
+      "stdout": "\n> typecheck\n> tsc -p tsconfig.json\n\n",
+      "source_state": "Precommit worktree iteration; historical run HEAD 9a5e846cb2556d9caa33771070088f33429f3107 with uncommitted changes. These captures are not exact committed-head gate evidence."
+    },
+    {
+      "file": "targeted-2.log",
+      "sha256": "10b1258f40773f6142553ae3b63715ee04bc48ad7afa5fcd60d5855d01b9119b",
+      "outcome": "passed-scoped",
+      "disposition": "The corrected four-file command reports 147 passing cases; the clean committed-clone control is retained separately.",
+      "stdout": "\n RUN  v3.2.7 /home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-mea.10.8\n\n \u2713 |unit| packages/polaris-generation-core/src/closed-schema.test.ts (15 tests) 25ms\n \u2713 |unit| apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts (1 test) 261ms\n \u2713 |integration| packages/polaris-dossier/src/render.test.ts (65 tests) 32453ms\n   \u2713 render > renders every quotation as the bytes Syzygy located in the blob it read now, with an RFC7-10 anchor  808ms\n   \u2713 render > labels blocks by the agent's label, the counted review and screening, and keeps the pages and machine view in parity per tuple  872ms\n   \u2713 render > carries the run disclosure on every page and in the machine view, and one review-status region per page holding no claim  1020ms\n   \u2713 render > withholds the draft layer as Unknown while the RFC7-20 ruling is not in force, keeping sources, disclosure and discovery  771ms\n   \u2713 render > renders an exempt body only through a renderer that declares the page-sink contract and pages that carry the CSP  524ms\n   \u2713 render > rescans a redacted exempt body over its complete body where the page sink is unconfirmed, and states no withheld text  349ms\n   \u2713 render > writes each render into a new numbered site directory and never over an earlier one  359ms\n   \u2713 render > discloses the consent record and label the live consent gives the pinned revision at this render  306ms\n   \u2713 rendered-design review (S9b) > builds the design packet from the latest site, outside the review-status region, byte for byte, and names its digest at render  738ms\n   \u2713 rendered-design review (S9b) > hands a design review session the packet under the sessions root with its own prompt  808ms\n   \u2713 rendered-design review (S9b) > keeps a counted design review through a render that changes only the review-status region  1340ms\n   \u2713 rendered-design review (S9b) > retires a counted design review when a render changes anything outside the region  1531ms\n   \u2713 rendered-design review (S9b) > refuses a render whose statement of the design review leaks outside the region, and writes no site  1284ms\n   \u2713 rendered-design review (S9b) > counts a validated design verdict only once its launch form is recorded  1068ms\n   \u2713 rendered-design review (S9b) > states a counted review that declares the pages not ready beside its blocking finding  1049ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with a page without a row, which never counts  857ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with a row for a page the packet does not hold, which never counts  894ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with two rows for one page, which never counts  706ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with a finding on a file the packet does not hold, which never counts  736ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with a stale packet digest, which never counts  975ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with the authoring session's identifier, which never counts  809ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with a quotation in a reason, which never counts  756ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with readiness beside a blocking finding, which never counts  887ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with readiness beside a deficient page, which never counts  906ms\n   \u2713 rendered-design review (S9b) > records and refuses a design verdict with a fidelity verdict's shape, which never counts  875ms\n   \u2713 rendered-design review (S9b) > records a validated design verdict, with what it observed and what stays Inferred, and a stored site altered since is a stale packet  825ms\n   \u2713 rendered-design review (S9b) > refuses a design packet from a site holding anything but the renderer's files, and an unknown kind  1008ms\n   \u2713 rendered-design review (S9b) > drives the design review through the CLI  843ms\n   \u2713 readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) > numbers each page's sources [1], [2] in first-cited order, keeping the identifier in data-source-id only  774ms\n   \u2713 readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) > draws complete backtick pairs in agent prose as inline code and leaves an unpaired backtick literal  773ms\n   \u2713 readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2) > carries the soft dark theme with a light variant and tinted callouts  661ms\n   \u2713 readability guidance and diagram-led sections (syzygy-mea.10.4) > draws a section's diagrams before its blocks on an operator-agent page  828ms\n \u2713 |integration| packages/polaris-dossier/src/review.test.ts (66 tests) 53670ms\n   \u2713 review-packet --kind fidelity > emits the packet byte for byte as assembled independently, with its digest beside it and in its directory name  576ms\n   \u2713 review-packet --kind fidelity > loads the screen for repository:<id> at the pinned commit  767ms\n   \u2713 review-packet --kind fidelity > carries no authoring exchange, read account or excluded byte  646ms\n   \u2713 review-packet --kind fidelity > holds no discovery, transcript or exchange field at any depth  654ms\n   \u2713 review-packet --kind fidelity > refuses the rendered-design review before any site is rendered  547ms\n   \u2713 review-packet --kind fidelity > refuses before the inventory counts  619ms\n   \u2713 review-packet --kind fidelity > refuses when the latest draft revision has findings  720ms\n   \u2713 review-packet --kind fidelity > refuses when the frozen draft changed after its check  414ms\n   \u2713 session-prompt review --kind fidelity > copies the packet and its digest into a session directory under the sessions root, and prints the interactive command  560ms\n   \u2713 session-prompt review --kind fidelity > refuses {\"role\":\"review\",\"kind\":\"design\"}  546ms\n   \u2713 session-prompt review --kind fidelity > refuses {\"role\":\"review\"}  604ms\n   \u2713 session-prompt review --kind fidelity > refuses {\"role\":\"review\",\"kind\":\"other\"}  598ms\n   \u2713 review-check > validates a complete, consistent verdict bound to the rebuilt packet and records it; it counts once its launch form is recorded  627ms\n   \u2713 review-check > records and refuses a verdict that names a stale packet digest  537ms\n   \u2713 review-check > records and refuses a verdict that declares the authoring session  606ms\n   \u2713 review-check > records and refuses a verdict that declares the inventory session  937ms\n   \u2713 review-check > records and refuses a verdict that omits an inventory entry from coverage  781ms\n   \u2713 review-check > records and refuses a verdict that omits the accuracy of an inventory entry  835ms\n   \u2713 review-check > records and refuses a verdict that omits a claim block  852ms\n   \u2713 review-check > records and refuses a verdict that relies on a quotation that does not verify  723ms\n   \u2713 review-check > records and refuses a verdict that quotes the excluded span  586ms\n   \u2713 review-check > records and refuses a verdict that names a span the packet lacks  818ms\n   \u2713 review-check > records and refuses a verdict that declares readiness beside a blocking finding  893ms\n   \u2713 review-check > records and refuses a verdict that declares readiness beside an unsupported entry  560ms\n   \u2713 review-check > records and refuses a verdict that declares readiness beside an unsupported block  538ms\n   \u2713 review-check > records and refuses a verdict that declares readiness beside an entry not accurate  671ms\n   \u2713 review-check > records and refuses a verdict that represents an entry by no block  487ms\n   \u2713 review-check > records and refuses a verdict that repeats a coverage row  539ms\n   \u2713 review-check > records and refuses a verdict that quotes in a reason without naming the span  584ms\n   \u2713 review-check > records and refuses a verdict that carries a field outside the schema  774ms\n   \u2713 review-check > refuses a missing element claim support row, and counts the restored control without an excerpt row  1394ms\n   \u2713 review-check > records an inventory omission as blocking: the verdict validates, and the draft does not become ready  607ms\n   \u2713 review-check > retires a counted verdict when the draft is revised, the stored frozen draft is altered or the frozen verdict changes  1909ms\n   \u2713 review-check > validates a ready verdict with no blocking row  569ms\n   \u2713 review-check > does not count a verdict whose launch record is altered to another form, role or prompt  2983ms\n   \u2713 review-check > stops counting a declared launch once the run's launched marker is present but unreadable (syzygy-bpyt.8.8)  548ms\n   \u2713 review-check > refuses before any review session is handed over, and after the deadline  531ms\n   \u2713 review-check > observes only the packet, its digest and that the verdict names it: the reviewer's reading, independence, completeness, identifiers and launch form stay Inferred  730ms\n   \u2713 review-check > observes only the packet and its digest under a TMPDIR whose path holds a verdict leaf  750ms\n   \u2713 the step guard runs before every review step (syzygy-qkea.23) > refuses review-packet, review-check and the review hand-over when the consent stops naming the pinned revision, with the guard's codes  495ms\n   \u2713 the step guard runs before every review step (syzygy-qkea.23) > refuses review-packet, review-check and the review hand-over when the project input now records a drawer, with the guard's codes  668ms\n   \u2713 the step guard runs before every review step (syzygy-qkea.23) > lists the pinned tree with the object reader it is given, on review-packet and review-check  565ms\n   \u2713 the content-class gate on the fidelity packet > withholds a project-documentation span under a non-governed run, which relies on no statement, naming the class  564ms\n   \u2713 the content-class gate on the fidelity packet > withholds a project-documentation span under a statement that lists code-content and not project-documentation, naming the class  650ms\n   \u2713 the content-class gate on the fidelity packet > admits the span with its text once the statement lists project-documentation  565ms\n   \u2713 the content-class gate on the fidelity packet > gates every class by the statement: one that lists only project-documentation withholds the code-content spans  528ms\n   \u2713 the fidelity packet over a body retained as redacted-span > carries a span that includes no withheld line, with the body's redaction count beside it  683ms\n   \u2713 the fidelity packet over a body retained as redacted-span > withholds a span that includes a withheld line whole, carrying no byte of it  599ms\n   \u2713 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when no statement names codex, and writes nothing  1487ms\n   \u2713 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when two in-force statements name codex, and writes nothing  1530ms\n   \u2713 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement is withdrawn, and writes nothing  1633ms\n   \u2713 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement takes effect after now, and writes nothing  1849ms\n   \u2713 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement names another provider, and writes nothing  1494ms\n   \u2713 session-prompt --tool and the session pair's statement > refuses a fidelity, a design and an inventory session when the codex statement lists only code-content, and writes nothing  1744ms\n   \u2713 session-prompt --tool and the session pair's statement > hands a codex session over when an in-force codex statement lists every class the run's lists  1191ms\n   \u2713 session-prompt --tool and the session pair's statement > hands a codex session over when the run is non-governed and relies on no statement  1044ms\n   \u2713 session-prompt --tool and the session pair's statement > hands the declared tool's session over with no codex statement at all  485ms\n   \u2713 session-prompt --tool and the session pair's statement > cites the codex statement in the inventory prompt record, and stops counting the inventory once that statement is withdrawn  432ms\n   \u2713 session-prompt --tool and the session pair's statement > cites the codex statement in the review prompt record, and stops counting the verdict once that statement is withdrawn  630ms\n   \u2713 session-prompt --tool and the session pair's statement > does not count work whose cited statement a successor replaced or whose classes narrowed; a record from before citations counts on the re-check, its citation Unknown  593ms\n   \u2713 session-prompt --tool and the session pair's statement > does not count work whose prompt record cites its statement for another agent tool  644ms\n   \u2713 session-prompt --tool and the session pair's statement > does not count work whose prompt record cites its statement for another provider  758ms\n   \u2713 session-prompt --tool and the session pair's statement > does not count work once the run's own statement is withdrawn, though the session pair's cited statement still governs  744ms\n   \u2713 session-prompt --tool and the session pair's statement > names the caller's consequence in every refusal kind, and leaves the counting texts as they were without one  897ms\n   \u2713 the CLI > builds a packet and checks a verdict through syzygy dossier, exiting 1 on a refused verdict  1031ms\n\n Test Files  4 passed (4)\n      Tests  147 passed (147)\n   Start at  13:36:59\n   Duration  57.20s (transform 3.99s, setup 405ms, collect 7.79s, tests 86.41s, environment 1ms, prepare 360ms)\n\n",
+      "source_state": "Precommit worktree iteration; historical run HEAD 9a5e846cb2556d9caa33771070088f33429f3107 with uncommitted changes. These captures are not exact committed-head gate evidence."
+    },
+    {
+      "file": "npm-ci-worktree.log",
+      "sha256": "d52243d839a4f6dfae2cd5b5a41f9d3398d3b8db04236143569aa6e56dcd4382",
+      "outcome": "install-failed",
+      "disposition": "Offline public dependency cache was empty; npm reported ENOTCACHED. No test ran.",
+      "stdout": "npm error code ENOTCACHED\nnpm error request to https://registry.npmjs.org/yaml/-/yaml-2.9.0.tgz failed: cache mode is 'only-if-cached' but no cached response is available.\nnpm error A complete log of this run can be found in: /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/npm-cache/_logs/2026-11-05T05_25_56_631Z-debug-0.log\n",
+      "source_state": "Precommit worktree iteration; historical run HEAD 9a5e846cb2556d9caa33771070088f33429f3107 with uncommitted changes. These captures are not exact committed-head gate evidence."
+    },
+    {
+      "file": "npm-ci-worktree-network.log",
+      "sha256": "2d3ac8c7c177e55d313fa54bfe967b69755275808ae312c85d919724027821b1",
+      "outcome": "install-failed",
+      "disposition": "The private install namespace could not resolve registry.npmjs.org (EAI_AGAIN in the retained owned npm debug log); a copied controlled public cache later completed npm ci offline. No test ran.",
+      "stdout": "npm error Exit handler never called!\nnpm error This is an error with npm itself. Please report this error at:\nnpm error   <https://github.com/npm/cli/issues>\nnpm error A complete log of this run can be found in: /home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/npm-cache/_logs/2026-11-05T05_26_06_272Z-debug-0.log\n",
+      "source_state": "Precommit worktree iteration; historical run HEAD 9a5e846cb2556d9caa33771070088f33429f3107 with uncommitted changes. These captures are not exact committed-head gate evidence."
+    },
+    {
+      "file": "npm-ci-worktree-cache.log",
+      "sha256": "c745bcaa8bcbb45dfc4d60c1fc850fae07f08f3b51320d33e0e2138857a84a35",
+      "outcome": "install-completed",
+      "disposition": "npm ci --ignore-scripts completed offline from the copied controlled public cache in the assigned worktree before NodeNext verification.",
+      "stdout": "\nadded 118 packages in 703ms\n",
+      "source_state": "Precommit worktree iteration; historical run HEAD 9a5e846cb2556d9caa33771070088f33429f3107 with uncommitted changes. These captures are not exact committed-head gate evidence."
+    }
+  ],
+  "setup_preflight": {
+    "outcome": "failed before npm or test launch",
+    "cause": "The first clone-install metadata read was issued while git clone was still running and could not resolve clone HEAD. The clone then completed; metadata was verified before the actual install. No gate was executed by that preflight.",
+    "retention": "Original tool output remains in the worker transcript; this is a report, not a captured gate artifact."
+  },
+  "test_delta": {
+    "added": 6,
+    "extended": 5,
+    "removed": 0,
+    "reason": "Distinct absent behaviors from carried round-2 notes; existing path/content, fragment and shared-schema cases extended, existing redaction fixture reused."
+  },
+  "boundaries": {
+    "closed_reason": "excluded-content",
+    "new_persisted_schema_fields": false,
+    "new_range_semantics": false,
+    "version_1_4": "candidate only, unchanged by this follow-up",
+    "merge_hold": "Nov-3 item 4 owner walkthrough judgment and cycle report; not cleared here",
+    "final_required_gates": "Separate clean final-commit check/check:all and required hosted node/governance jobs, recorded outside the commit they test."
+  },
+  "isolation_adapter": {
+    "path": "/home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/isolated.py",
+    "sha256": "1ec3814e7026d9cb8229cd2306e6868ed6001b626c5d31443bbcf8fc247ec1d0",
+    "namespace": "bwrap clearenv, unshare-pid/net, private HOME/cache/temp; owned tmp bind at /tmp; read-only system libraries/Chrome/fonts",
+    "python_tempfile": "wrapper pins tempfile.tempdir to OWN/tmp; children select /tmp from TMPDIR/TMP/TEMP mapped to that same owned directory"
+  },
+  "rerun_material": {
+    "mutation_driver": "#!/usr/bin/python3\nimport datetime,hashlib,json,subprocess,time,re\nfrom pathlib import Path\nOWN=Path('/home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105'); ROOT=OWN/'mutants'\nrender='packages/polaris-dossier/src/render.ts'; site='apps/three-surface-poc/src/polaris-generation/dossier-site.ts'; review='packages/polaris-dossier/src/check-derive.ts'\nrtest='packages/polaris-dossier/src/render.test.ts'; vtest='packages/polaris-dossier/src/review.test.ts'\nmutations=[\n ('path-cause',render,[(\"withCause(cited.read ? 'content-screening' : 'path-screening')\",\"withCause('content-screening')\")],rtest,'withholds a code excerpt of a file screening excludes'),\n ('content-cause',render,[(\"withCause(cited.read ? 'content-screening' : 'path-screening')\",\"withCause('path-screening')\")],rtest,'withholds a code excerpt whose cited lines carry a raw tag'),\n ('utf8-cause',render,[(\"return withCause('invalid-utf8')\",\"return withCause('content-screening')\")],rtest,'withholds an invalid-UTF-8 excerpt'),\n ('redacted-cause',render,[(\"return withCause('redacted-line')\",\"return withCause('content-screening')\")],rtest,'withholds an excerpt touching a redacted line'),\n ('class-cause',render,[(\"return withCause('content-class')\",\"return withCause('content-screening')\")],rtest,'names the content-class gate'),\n ('unavailable-cause',site,[(\": 'a verified excerpt is unavailable';\",\": 'the cited file is excluded by content screening';\")],rtest,'keeps a source-piece lookup miss generic'),\n ('working-tree-read',render,[(\"      const shown = generationSourceTextAt(piece, at, until);\",\"      const shown = fs.readFileSync(path.join(subject.clone.path, repositoryPath), 'utf8').slice(at, until);\")],rtest,'keeps the checked excerpt'),\n ('excerpt-anchor',render,[(\"anchor: anchorOf(piece, at, until)\",\"anchor: anchorOf(piece, at, until + 1)\")],rtest,'keeps the checked excerpt'),\n ('element-support',review,[(\"    case 'table':\\n      each('rows'\",\"    case 'table': return;\\n      each('rows'\")],vtest,'refuses a missing element claim support row'),\n ('deep-fragment',site,[(\"<main id=\\\"content\\\" data-page=\",\"<main${path.startsWith('deep-dives/') ? '' : ' id=\\\"content\\\"'} data-page=\"),(\"${count}</summary>${inner}\",\"${count}</summary>${from.startsWith('deep-dives/') ? '<span id=\\\"content\\\"></span>' : ''}${inner}\")],rtest,'puts no fragment target'),\n]\nhead=subprocess.check_output(['git','-C',str(ROOT),'rev-parse','HEAD'],text=True).strip()\nresults=[]\nfor identifier,file,changes,test,selector in mutations:\n target=ROOT/file;original=target.read_bytes(); content=original.decode()\n for old,new in changes:\n  assert content.count(old)==1,(identifier,old,content.count(old))\n  content=content.replace(old,new,1)\n command=['npx','vitest','run',test,'-t',selector,'--reporter=dot']\n log=OWN/('mutant-'+identifier+'.log')\n row={'id':identifier,'source_commit':head,'source':file,'source_sha256':hashlib.sha256(original).hexdigest(),'test':test,'test_sha256':hashlib.sha256((ROOT/test).read_bytes()).hexdigest(),'changes':[{'old':old,'new':new} for old,new in changes],'command':command,'started_at':datetime.datetime.now(datetime.timezone.utc).isoformat()}\n try:\n  target.write_text(content);row['mutated_source_sha256']=hashlib.sha256(target.read_bytes()).hexdigest();start=time.monotonic()\n  with log.open('wb') as stream:r=subprocess.run(['python3',str(OWN/'isolated.py'),str(ROOT),*command],stdout=stream,stderr=subprocess.STDOUT)\n  text=log.read_text();clean=re.sub(r'\\x1b\\[[0-9;]*m','',text)\n  row.update(exit_code=r.returncode,seconds=time.monotonic()-start,stdout_file=str(log),stdout_sha256=hashlib.sha256(log.read_bytes()).hexdigest(),summary=[l.strip() for l in clean.splitlines() if l.strip().startswith(('Test Files','Tests '))])\n  # A collection or bootstrap failure is never a killed mutant. Exactly the selected behavior must execute and fail.\n  row['outcome']='killed' if r.returncode==1 and re.search(r'Tests\\s+1 failed\\b',clean) and ' FAIL ' in clean else 'unresolved'\n finally:target.write_bytes(original)\n results.append(row);(OWN/'mutations.json').write_text(json.dumps({'subject_commit':head,'capture':'worker-emitter report fact; no independent verdict','mutations':results},indent=2)+'\\n')\n print(json.dumps({'id':identifier,'outcome':row.get('outcome'),'summary':row.get('summary')}),flush=True)\n if row.get('outcome')!='killed':raise SystemExit('Mutation outcome requires diagnosis; no retry or pass claim.')\nassert subprocess.check_output(['git','-C',str(ROOT),'status','--porcelain'],text=True)==''\n",
+    "driver_sha256": "a9928ad8b7adbc67e2eccec4eaaacad14e93e2edeb5fb79f8bd1e668a57d719e"
+  }
+}
