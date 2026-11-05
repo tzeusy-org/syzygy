@@ -1,0 +1,485 @@
+{
+  "kind": "development-verification-targeted-evidence",
+  "epistemicLabel": "Observed as captured run reports; independent exact-head confirmation remains required",
+  "issue": "syzygy-bpyt.4.17",
+  "baseline": "5110a4901e2bff68864adbc57233e0c774b3fb27",
+  "implementationSubject": "4316dd0f1bb4002302f50196b34550a8ac553128",
+  "at": "2026-11-05T19:37:34.551566+00:00",
+  "authorityIdentifiers": [
+    "GP-Q0 Part 1",
+    "VIS-2",
+    "VIS-4",
+    "SEC-3",
+    "CC-TEST-1",
+    "CC-TEST-2",
+    "CC-TEST-4",
+    "CC-REV-1",
+    "CC-BAR-5"
+  ],
+  "recordedFinding": "docs/reviews/R-GP-IMPL-OUTSIDE-RAW-CLEANUP-1-RAW.md N4",
+  "productChanges": "none; development wrapper, test commands, ordinary contributor guidance and this evidence only",
+  "initialReviewClasses": "none, provisional; author cannot decide finally",
+  "riskFloors": [
+    "truth",
+    "evidence",
+    "inference",
+    "write",
+    "sign-off",
+    "security",
+    "identity"
+  ],
+  "testDelta": {
+    "vitest": {
+      "+": 0,
+      "~": 0,
+      "-": 0
+    },
+    "driver": {
+      "+": 10,
+      "~": 0,
+      "-": 0
+    },
+    "driverParameters": "computed by the final selftest run, not a pinned pass predicate"
+  },
+  "samePostRunOracle": [
+    {
+      "commit": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "driverSha256": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+      "oracleBeforeSelftestSha256": "56299adb4a1651fc8d8b390619e5b22b5d45ff3f4ac27daa8e277f966692e8d6"
+    },
+    {
+      "commit": "4316dd0f1bb4002302f50196b34550a8ac553128",
+      "driverSha256": "ffc142a847c505c123501bb0bf7b51721b9a7ff29c8153c66e59df3b80d700a1",
+      "oracleBeforeSelftestSha256": "56299adb4a1651fc8d8b390619e5b22b5d45ff3f4ac27daa8e277f966692e8d6"
+    }
+  ],
+  "proofs": [
+    {
+      "mode": "historical",
+      "subject": "a04069678c02881cd41a25b850e14f79d581c083",
+      "inputs": {
+        "package-lock.json": "6bf73d4ecb4520c0d54ed68ec8048236c498671b8fe8d739a005beafe4b2a308",
+        "vitest.config.ts": "ffb1627f3de8a1fa4ac64bf651eb8274a99a422949f3c7cbb326db1202add11f",
+        "packages/polaris-dossier/src/waiting-sessions.test.ts": "914d929d72fcc57c1d6b2db7701dab500829026c5f04a628a3c8274e0fcd86c6"
+      },
+      "command": [
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt4-17-full-outcome-20261105/historical-witness.mjs"
+      ],
+      "rawLog": "/home/orca/.tmp/syzygy-bpyt4-17-full-outcome-20261105/logs/historical-exact-witness.log",
+      "rawSha256": "221458f9b0bb82a08bf3d063bdabd93e399a0cf239b850e881bf8b90cb7f4cd2",
+      "childExit": 0,
+      "counts": {
+        "passed": 116,
+        "failed": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "oraclePassed": false,
+      "leftovers": [
+        {
+          "path": "dossier-signoff-SVoO0K-outside-RAW.md",
+          "type": "file",
+          "exempt": false
+        }
+      ],
+      "cleanupCompleted": true,
+      "denominatorProblems": []
+    },
+    {
+      "mode": "current-clean",
+      "subject": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "inputs": {
+        "scripts/check_unit_tmpdir.mjs": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+        "package-lock.json": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd",
+        "vitest.config.ts": "3b677756d41400ea04e50816c4b834d07a96593bef097b67c7d1934d5ca9de22",
+        "vitest.tiers.ts": "6a765ae94c98c412ee78ec08cc4aee39da22313c4cb3b120cd81e99fd9b92a85",
+        "packages/polaris-dossier/src/waiting-sessions.test.ts": "71a57daaa4d43df1742ce9dcdf0cc32d7a950c535593c58b01f48dc626a0b005"
+      },
+      "command": [
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt4-17-full-outcome-20261105/current-witness.mjs",
+        "clean"
+      ],
+      "rawLog": "/home/orca/.tmp/syzygy-bpyt4-17-full-outcome-20261105/logs/current-clean.log",
+      "rawSha256": "7333442562142062f020eeda2ec9c8de2b19743bab9da09486f76c5d3edd06b6",
+      "childExit": 0,
+      "counts": {
+        "passed": 125,
+        "failed": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "oraclePassed": true,
+      "leftovers": [],
+      "cleanupCompleted": true,
+      "denominatorProblems": []
+    },
+    {
+      "mode": "current-T-drop",
+      "subject": "3fcafa4b798695c0ab5ce5591be2238b7d401e84",
+      "inputs": {
+        "scripts/check_unit_tmpdir.mjs": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+        "package-lock.json": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd",
+        "vitest.config.ts": "3b677756d41400ea04e50816c4b834d07a96593bef097b67c7d1934d5ca9de22",
+        "vitest.tiers.ts": "6a765ae94c98c412ee78ec08cc4aee39da22313c4cb3b120cd81e99fd9b92a85",
+        "packages/polaris-dossier/src/waiting-sessions.test.ts": "e930a8c7039e731d1e34d0e33ecd554cc514b5052c21bc21cae40cc783e569b9"
+      },
+      "command": [
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt4-17-full-outcome-20261105/current-witness.mjs",
+        "T-drop"
+      ],
+      "rawLog": "/home/orca/.tmp/syzygy-bpyt4-17-full-outcome-20261105/logs/current-T-drop.log",
+      "rawSha256": "5b31a9b54fb421161d4fb1f74fda36bde64f5235b123413cb997f79a662b9366",
+      "childExit": 0,
+      "counts": {
+        "passed": 125,
+        "failed": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "oraclePassed": false,
+      "leftovers": [
+        {
+          "path": "dossier-signoff-leLvMu-outside-RAW.md",
+          "type": "file",
+          "exempt": false
+        }
+      ],
+      "cleanupCompleted": true,
+      "denominatorProblems": []
+    }
+  ],
+  "mutants": [
+    {
+      "name": "current-T-drop",
+      "base": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "commit": "3fcafa4b798695c0ab5ce5591be2238b7d401e84",
+      "path": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "old": "    ['the record names a review outside the records root (mutant: drop the review-path check)', (root, decisions) => {\n      const digest = createHash('sha256').update(fs.readFileSync(path.join(root, SPEC_REL))).digest('hex');\n      // The raw lies beside the records root, outside the temp directory the test removes. Keep it until the gate is asked, then\n      // remove it in afterEach: removing it earlier would hide a gate that wrongly honours the outside review.\n      const outside = path.join(path.dirname(root), `${path.basename(root)}-outside-RAW.md`);\n      cleanups.push(() => fs.rmSync(outside, { force: true }));",
+      "new": "    ['the record names a review outside the records root (mutant: drop the review-path check)', (root, decisions) => {\n      const digest = createHash('sha256').update(fs.readFileSync(path.join(root, SPEC_REL))).digest('hex');\n      // The raw lies beside the records root, outside the temp directory the test removes. Keep it until the gate is asked, then\n      // remove it in afterEach: removing it earlier would hide a gate that wrongly honours the outside review.\n      const outside = path.join(path.dirname(root), `${path.basename(root)}-outside-RAW.md`);\n      // T-drop: omit only this original row's afterEach cleanup.",
+      "occurrences": 1,
+      "beforeSha256": "71a57daaa4d43df1742ce9dcdf0cc32d7a950c535593c58b01f48dc626a0b005",
+      "afterSha256": "e930a8c7039e731d1e34d0e33ecd554cc514b5052c21bc21cae40cc783e569b9",
+      "harnessExit": 0
+    },
+    {
+      "name": "no-leftover-failure",
+      "base": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "commit": "143dd4f1575b12148f9dbf0560e44936f0e73f3f",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "leftovers: entries.filter((e) => !e.exempt)",
+      "new": "leftovers: []",
+      "occurrences": 1,
+      "beforeSha256": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+      "afterSha256": "e3f54feacc29752bdc4f9b2de0a2dbf005809e2cc090655bdf45498f075227b1",
+      "harnessExit": 1,
+      "lastPassedCase": "exact real cache-only success",
+      "killed": true,
+      "observerCleanup": [],
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    },
+    {
+      "name": "cache-prefix",
+      "base": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "commit": "63a0f8b224011cdae8430e410066f994f7519833",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "rel === 'node-compile-cache' && type === 'directory'",
+      "new": "rel.startsWith('node-compile-cache') && type === 'directory'",
+      "occurrences": 1,
+      "beforeSha256": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+      "afterSha256": "034e3a278bc2f8c29dfab8fc69a2f34d109cba828e407049427f66399ebb6fbd",
+      "harnessExit": 1,
+      "lastPassedCase": "ordinary nested hidden and escaped leaks",
+      "killed": true,
+      "observerCleanup": [],
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    },
+    {
+      "name": "cache-any-type",
+      "base": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "commit": "519de21651bdb6f998d7892678129279b1965c81",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "rel === 'node-compile-cache' && type === 'directory'",
+      "new": "rel === 'node-compile-cache'",
+      "occurrences": 1,
+      "beforeSha256": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+      "afterSha256": "ae8392a2e36b51ead9b161022a8c6687671c2789eada625a9cc8bc36d864fe07",
+      "harnessExit": 1,
+      "lastPassedCase": "ordinary nested hidden and escaped leaks",
+      "killed": true,
+      "observerCleanup": [],
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    },
+    {
+      "name": "ignore-nonzero-child",
+      "base": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "commit": "655863e764d80ecf4ed1b01171d9924b90aa06c8",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "child !== null && child.code === 0 && !child.signal",
+      "new": "child !== null && !child.signal",
+      "occurrences": 1,
+      "beforeSha256": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+      "afterSha256": "6139b0b45ff5525c9e9c8b099e9a58e5e841d36b4a55a2c7ca3a3bbd7f459aa8",
+      "harnessExit": 1,
+      "lastPassedCase": "cache exact-name prefix type and link distinctions",
+      "killed": true,
+      "observerCleanup": [],
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    },
+    {
+      "name": "discard-read-error",
+      "base": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "commit": "c98303f491b1b136615a08f3b2d0a1856139e973",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "errors.push({ path: prefix || '.', error: e.code ?? e.message }); return;",
+      "new": "return;",
+      "occurrences": 1,
+      "beforeSha256": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+      "afterSha256": "2197afa605a33268a158303cb5980229e922a587e5824847a0db3de65a2f1e31",
+      "harnessExit": 1,
+      "lastPassedCase": "outside sibling and link target survive",
+      "killed": true,
+      "observerCleanup": [
+        {
+          "path": "/home/orca/.tmp/syzygy-bpyt4-17-full-outcome-20261105/tmp/ut-dAsdWI",
+          "identity": "2066:3801382:996",
+          "action": "removed-check-created-remainder",
+          "absent": true
+        }
+      ],
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:"
+    },
+    {
+      "name": "adopt-replaced-inode",
+      "base": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "commit": "6a318bf1d1948e90281419a2ca5d8a99bad1d059",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "identity(s) !== owner.identity ||",
+      "new": "false ||",
+      "occurrences": 1,
+      "beforeSha256": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+      "afterSha256": "ffdc9bf00ccbc88141a0f9730479f0fabbe27fbad56da08b1a6be2ff9d452ad5",
+      "harnessExit": 1,
+      "lastPassedCase": "outside sibling and link target survive",
+      "killed": true,
+      "observerCleanup": [
+        {
+          "path": "/home/orca/.tmp/syzygy-bpyt4-17-full-outcome-20261105/tmp/ut-8ApgSP.moved",
+          "identity": "2066:3801382:996",
+          "action": "removed-check-created-remainder",
+          "absent": true
+        }
+      ],
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    },
+    {
+      "name": "omit-owned-removal",
+      "base": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "commit": "42a5d87b31200508ce7c63a3da094f239421140d",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "fs.rmSync(owner.path, { recursive: true }); // rm unlinks symlinks; all verified owned writers have finished.",
+      "new": "void 0; // mutant omits owned-root removal.",
+      "occurrences": 1,
+      "beforeSha256": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+      "afterSha256": "c3f32239af3219099dc6b2825590a15516b4ca2a965b94a1a8cb67cc6efaf694",
+      "harnessExit": 1,
+      "lastPassedCase": null,
+      "killed": true,
+      "observerCleanup": [
+        {
+          "path": "/home/orca/.tmp/syzygy-bpyt4-17-full-outcome-20261105/tmp/ut-pnHAo2",
+          "identity": "2066:3801108:996",
+          "action": "removed-check-created-remainder",
+          "absent": true
+        }
+      ],
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    },
+    {
+      "name": "claim-cleanup-after-refusal",
+      "base": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "commit": "519d667c2ce5b873ea3aa44996b29174012c2d40",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "} catch (e) { result.errors.push(`cleanup: ${e.code ?? e.message}`); }",
+      "new": "} catch (e) { result.cleanup = true; result.errors.push(`cleanup: ${e.code ?? e.message}`); }",
+      "occurrences": 1,
+      "beforeSha256": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+      "afterSha256": "ad192c1f188b1309636af84d7a5aab7ba1c0b257a968da7fc3c7390c0c9f92d6",
+      "harnessExit": 1,
+      "lastPassedCase": "outside sibling and link target survive",
+      "killed": true,
+      "observerCleanup": [
+        {
+          "path": "/home/orca/.tmp/syzygy-bpyt4-17-full-outcome-20261105/tmp/ut-dc7HLk",
+          "identity": "2066:3801382:996",
+          "action": "removed-check-created-remainder",
+          "absent": true
+        }
+      ],
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    },
+    {
+      "name": "ignore-denominator",
+      "base": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "commit": "f72e9c32722e765e5169663847b3258b5d52472d",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "(result.denominator === null || result.denominator.problems.length === 0)",
+      "new": "true",
+      "occurrences": 1,
+      "beforeSha256": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+      "afterSha256": "5ac3193b8a457247161bc6de5f89c7177e6e74a23a73e451baf8c6aa3b1fd26c",
+      "harnessExit": 1,
+      "lastPassedCase": "read identity and cleanup refusal stay failed with named remainders",
+      "killed": true,
+      "observerCleanup": [],
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:"
+    },
+    {
+      "name": "ignore-owned-writers",
+      "base": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "commit": "171b8d938ba05acce5f269bb775a03160ef99d97",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "return found;",
+      "new": "return [];",
+      "occurrences": 1,
+      "beforeSha256": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+      "afterSha256": "2d97724177706c14baf0d75199840755b9ed598ea47494288274df2fbf7332ff",
+      "harnessExit": 1,
+      "lastPassedCase": "actual Vitest timeout after write still censuses and cleans",
+      "killed": false,
+      "observerCleanup": [],
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "disposition": "invalid: too broad, disabled interruption signalling; exact owned synthetic child externally terminated, never counted as intended kill",
+      "intervention": "INVALID-LIFETIME-MUTANT-INTERVENTION.json"
+    },
+    {
+      "name": "skip-post-close-writers",
+      "base": "4a9a56ff64f7373cda9f0781791b045669994ee3",
+      "commit": "a1adafba850bc7d9cfd26a20e4ec38bd14f4530f",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "let remaining = child.pid ? writers(child.pid) : [];",
+      "new": "let remaining = []; // mutant skips the post-close writer check only",
+      "occurrences": 1,
+      "beforeSha256": "90893ad8aed5a090c134e3de6e511460072ad9277f06884ef2774b6d7503ace8",
+      "afterSha256": "4330f0f8d9d76cc1cb1e2ee89f0be56988b4e5df973519db160433b9cfe4880a",
+      "harnessExit": 1,
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "lastPassedCase": "actual Vitest timeout after write still censuses and cleans",
+      "killed": true
+    },
+    {
+      "name": "follow-leftover-link",
+      "base": "4316dd0f1bb4002302f50196b34550a8ac553128",
+      "commit": "50f604aa0667a009aeaab153482d8e57f2fe6683",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "const s = fs.lstatSync(path); // Never follow a leftover link, including a cache-named link.",
+      "new": "const s = fs.statSync(path); // mutant follows leftover links.",
+      "occurrences": 1,
+      "beforeSha256": "ffc142a847c505c123501bb0bf7b51721b9a7ff29c8153c66e59df3b80d700a1",
+      "afterSha256": "dd3c93ff5f55252846ab53600b49b84b82932b686375962e6ef6253b4909b89c",
+      "harnessExit": 1,
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "lastPassedCase": "ordinary nested hidden and escaped leaks",
+      "killed": true
+    },
+    {
+      "name": "adopt-forged-owner",
+      "base": "4316dd0f1bb4002302f50196b34550a8ac553128",
+      "commit": "ffebfb83dd9ab02496d9d868e0d6b27e86d6150b",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "if (!owners.has(owner)) throw new Error('unowned-root');",
+      "new": "if (false) throw new Error('unowned-root');",
+      "occurrences": 1,
+      "beforeSha256": "ffc142a847c505c123501bb0bf7b51721b9a7ff29c8153c66e59df3b80d700a1",
+      "afterSha256": "325a65e0f569685849e817b658400bf2b7a18b2db30fba8468c9989ff492e456",
+      "harnessExit": 1,
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Missing expected exception.",
+      "lastPassedCase": "spawn failure and bounded interruption",
+      "killed": true
+    },
+    {
+      "name": "accept-narrowing-cli",
+      "base": "4316dd0f1bb4002302f50196b34550a8ac553128",
+      "commit": "c9023207c1602a471fd7d91f53aeaac95e8c4329",
+      "path": "scripts/check_unit_tmpdir.mjs",
+      "old": "else throw new Error('usage: node scripts/check_unit_tmpdir.mjs [--selftest]; focused runs use Vitest directly');",
+      "new": "else process.exitCode = 0; // mutant accepts a narrowed selection without running it",
+      "occurrences": 1,
+      "beforeSha256": "ffc142a847c505c123501bb0bf7b51721b9a7ff29c8153c66e59df3b80d700a1",
+      "afterSha256": "9b5012b9529374a29135d15756469a88103ec256f1e00736853474813ce0e8b8",
+      "harnessExit": 1,
+      "firstSelftestError": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:",
+      "lastPassedCase": "read identity and cleanup refusal stay failed with named remainders",
+      "killed": true
+    }
+  ],
+  "gateScope": "The guarded default covers the full current unit selection. Historical waiting-sessions and current T-drop are separate diagnostic integration witnesses. No integration/e2e cleanliness claim.",
+  "retainedArtifacts": "/home/orca/.tmp/syzygy-bpyt4-17-full-outcome-20261105",
+  "remaining": [
+    "whole current unit run in the final clean-clone check:all",
+    "final native PROJECT-STATUS battery",
+    "exact-head independent review and class/floor confirmation",
+    "exact-tree hosted node/governance and later merge-group checks before authorized landing"
+  ],
+  "retention": "Raw outputs, command receipts, fragments, mutant commits and a Git bundle remain in the owned evidence directory; final handoff adds a digest manifest.",
+  "predicateMutationAttempts": 14,
+  "intendedPredicateKills": 13,
+  "invalidMutationAttempts": [
+    "ignore-owned-writers"
+  ],
+  "invalidMutationDisposition": "The broad ignore-owned-writers mutation also disabled the interruption stop path. Its exact still-owned synthetic child was terminated after stable identity verification; this attempt is excluded from intended kills. The narrower skip-post-close-writers mutant then failed its intended assertion.",
+  "preparationAttempts": [
+    {
+      "file": "PREPARATION-ATTEMPT-1.json",
+      "disposition": "Cache seeding lacked current lockfile tarballs; the premature offline install failed. Only validated public lockfile tarballs were fetched and verified before successful offline installation; no preflight ran before install completion."
+    },
+    {
+      "file": "CI-MATRIX-PREPARATION-ATTEMPT.json",
+      "disposition": "Initial local shell omitted runner fail-fast behavior; the corrected exact aggregate-step shell was checked over the full 125-state matrix."
+    }
+  ],
+  "hostedCommandGraph": {
+    "path": ".github/workflows/node-ci.yml",
+    "sha256": "cfb833bc06c4881fe28a33aa272c4cb1faa0e378ed45b1c7a983382ed7f5608f",
+    "mutation": "none",
+    "aggregateStateCombinations": 125,
+    "passingCombination": [
+      "success",
+      "success",
+      "success"
+    ]
+  },
+  "historicalFileWitness": {
+    "subject": "a04069678c02881cd41a25b850e14f79d581c083",
+    "gitBlob": "1b8191eba508a688325cc02043f51cc0bf20dfe5",
+    "fullSha256": "914d929d72fcc57c1d6b2db7701dab500829026c5f04a628a3c8274e0fcd86c6",
+    "oldFragment": "    ['the record names a review outside the records root (mutant: drop the review-path check)', (root, decisions) => {\n      const digest = createHash('sha256').update(fs.readFileSync(path.join(root, SPEC_REL))).digest('hex');\n      fs.writeFileSync(path.join(path.dirname(root), `${path.basename(root)}-outside-RAW.md`), reviewHead(digest));\n      const file = path.join(decisions, 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md');\n      fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('Review: docs/reviews/FIXTURE-v1.2-RAW.md', `Review: ../${path.basename(root)}-outside-RAW.md`));\n    }],",
+    "newFragment": "    ['the record names a review outside the records root (mutant: drop the review-path check)', (root, decisions) => {\n      const digest = createHash('sha256').update(fs.readFileSync(path.join(root, SPEC_REL))).digest('hex');\n      fs.writeFileSync(path.join(path.dirname(root), `${path.basename(root)}-outside-RAW.md`), reviewHead(digest));\n      const file = path.join(decisions, 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md');\n      fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('Review: docs/reviews/FIXTURE-v1.2-RAW.md', `Review: ../${path.basename(root)}-outside-RAW.md`));\n    }],",
+    "exactOccurrenceCount": 1,
+    "mutation": "none; the complete exact pre-fix historical file is the negative control, retained unchanged",
+    "namedAssertion": "the v1.2 gate > opens on no record when the record names a review outside the records root (mutant: drop the review-path check)",
+    "firstChildError": null,
+    "firstOracleError": "one dossier-signoff-*-outside-RAW.md file remained after 116 passing assertions",
+    "reachability": "git merge-base --is-ancestor of the current implementation head succeeded; native git-show | sha256sum matched Python hashing"
+  },
+  "toolchains": {
+    "historical": {
+      "node": "v24.6.0",
+      "vitest": "3.2.7",
+      "typescript": "5.9.3",
+      "workspaces": 10,
+      "lockSha256": "6bf73d4ecb4520c0d54ed68ec8048236c498671b8fe8d739a005beafe4b2a308",
+      "configSha256": "ffb1627f3de8a1fa4ac64bf651eb8274a99a422949f3c7cbb326db1202add11f"
+    },
+    "subject": {
+      "node": "v24.6.0",
+      "vitest": "3.2.7",
+      "typescript": "5.9.3",
+      "workspaces": 13,
+      "lockSha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd",
+      "configSha256": "3b677756d41400ea04e50816c4b834d07a96593bef097b67c7d1934d5ca9de22"
+    }
+  }
+}
