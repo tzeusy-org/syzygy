@@ -3,16 +3,42 @@ import * as path from 'node:path';
 import { tempDir } from '@syzygy/test-kit';
 import { describe, expect, it } from 'vitest';
 import {
-  AUTHOR_SELF_CHECK, DEFAULT_REPAIR_CYCLES, LAUNCHED_GUIDANCE, OWNER_LINE, POLARIS_USAGE, authorPrompt, cycleBreakdown, endScreen,
+  AUTHOR_SELF_CHECK, DEFAULT_REPAIR_CYCLES, LAUNCHED_GUIDANCE, RUN_LIMITS, isoSeconds, limitFault, limitsAnswer, limitsQuestion, OWNER_LINE, POLARIS_USAGE, authorPrompt, cycleBreakdown, endScreen,
   fidelityDeliveryDue, fidelityRepairSpent, inventoryRepairMessage, readVerdict, latestChecks, limitStop, refusedAtLimit, repairSides, sessionClaudeArgs,
 } from './polaris.js';
 
 // syzygy-1z8m.1 and syzygy-1z8m.2: what the 2026-11-04 Redis run taught the launched run. Expected values are literals.
 
-describe('the repair-cycle default of a launched run', () => {
-  it('is six, in the usage text and in the parsed default', () => {
+describe('the run limits of a launched run (syzygy-1z8m.7)', () => {
+  it('have no default: the usage says so, and the one question suggests values only for the operator to declare', () => {
     expect(DEFAULT_REPAIR_CYCLES).toBe(6);
-    expect(POLARIS_USAGE).toContain('  --repair-cycles <n>      default 6      --questions <n>  default 3\n');
+    expect(POLARIS_USAGE).not.toContain('default 6');
+    expect(POLARIS_USAGE).toContain('Run limits have no default: any not given is asked in one question before\n');
+    expect(RUN_LIMITS.map((l) => l.flag)).toEqual(['--deadline', '--repair-cycles', '--questions', '--token-budget', '--turn-budget']);
+    expect(limitsQuestion(['--repair-cycles', '--deadline'])).toBe('Run limits not given: --deadline --repair-cycles.\nPress Enter to declare the suggested values [PT24H 6], or type yours in that order, separated by spaces: ');
+  });
+  it('turn an empty answer into the suggested values and a typed answer into those values, as explicit options', () => {
+    expect(limitsAnswer(['--deadline', '--repair-cycles', '--questions', '--token-budget', '--turn-budget'], '')).toEqual(
+      ['--deadline', 'PT24H', '--repair-cycles', '6', '--questions', '3', '--token-budget', '30000000', '--turn-budget', '1000']);
+    expect(limitsAnswer(['--repair-cycles', '--questions'], '  8   0 ')).toEqual(['--repair-cycles', '8', '--questions', '0']);
+  });
+  it('refuse a wrong count, a non-number, a zero budget and an invalid or zero deadline', () => {
+    expect(limitsAnswer(['--repair-cycles', '--questions'], '8')).toBe('give 2 value(s), one for each of --repair-cycles --questions');
+    expect(limitsAnswer(['--repair-cycles'], 'six')).toBe('--repair-cycles takes a whole number');
+    expect(limitsAnswer(['--token-budget'], '0')).toBe('--token-budget must be positive');
+    expect(limitsAnswer(['--turn-budget'], '0')).toBe('--turn-budget must be positive');
+    expect(limitsAnswer(['--deadline'], '24h')).toBe('--deadline takes a positive ISO 8601 duration such as PT24H');
+    expect(limitFault('--deadline', 'PT0S')).toBe('--deadline takes a positive ISO 8601 duration such as PT24H');
+    expect(limitFault('--deadline', 'P')).toBe('--deadline takes a positive ISO 8601 duration such as PT24H');
+    expect(limitFault('--deadline', 'P1DT')).toBe('--deadline takes a positive ISO 8601 duration such as PT24H');
+    expect(limitFault('--questions', '0')).toBeNull();
+    expect(limitFault('--repair-cycles', '0')).toBeNull();
+  });
+  it('measure a deadline in seconds, never falling back to a day', () => {
+    expect(isoSeconds('PT24H')).toBe(86400);
+    expect(isoSeconds('P1DT2H3M4S')).toBe(93784);
+    expect(isoSeconds('PT90M')).toBe(5400);
+    expect(isoSeconds('bogus')).toBeNull();
   });
 });
 
