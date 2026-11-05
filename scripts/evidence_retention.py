@@ -1708,6 +1708,34 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
                       and additive["archive"] == 0 and additive["plan"] == {"R2": 2},
                       "old": "two frozen records with literal equal subject/kind/role and distinct UTC captures",
                       "new": transaction, "fixture_commit": containing})
+        replay_artifacts = {name: (home / name).read_bytes() for name in
+                            ("SOURCE.json", "CENSUS.jsonl", "PLAN.jsonl", "INDEX.jsonl", "TRANSACTION.json")}
+        prepare(root, containing, home, transaction_path=tx_input)
+        replayed = {name: (home / name).read_bytes() for name in replay_artifacts}
+        cases.append({"predicate": "explicit-identical-transaction-plan-replay", "pass":
+                      replay_artifacts == replayed and check(root, home) == additive,
+                      "old": {name: digest(data) for name, data in replay_artifacts.items()},
+                      "new": {name: digest(data) for name, data in replayed.items()},
+                      "fixture_commit": containing, "control_pass": True, "restored_pass": check(root, home) == additive})
+        for invalid_kind in ("symlink", "directory", "missing"):
+            invalid_input = outer / ("transaction-input-" + invalid_kind)
+            if invalid_kind == "symlink":
+                invalid_input.symlink_to(tx_input)
+            elif invalid_kind == "directory":
+                invalid_input.mkdir()
+            control = check(root, home) == additive
+            try:
+                prepare(root, containing, outer / ("input-refusal-" + invalid_kind), transaction_path=invalid_input)
+                reason = "unexpected-pass"
+            except (Refusal, OSError) as exc:
+                reason = str(exc)
+            restored = check(root, home) == additive
+            cases.append({"predicate": "transaction-plan-input-" + invalid_kind, "pass":
+                          control and restored and reason == "transaction-not-regular-local-file",
+                          "old": {"input": "regular source-bound transaction.json", "sha256": digest(tx_input.read_bytes())},
+                          "new": {"input_kind": invalid_kind, "symlink_target": "owned identical regular transaction.json" if invalid_kind == "symlink" else None},
+                          "refusal": reason, "expected_refusal": "transaction-not-regular-local-file",
+                          "fixture_commit": containing, "control_pass": control, "restored_pass": restored})
         tx_output = home / "TRANSACTION.json"
         saved_output = tx_output.read_bytes()
         external_output = outer / "identical-output-transaction.json"
@@ -2131,6 +2159,25 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         cases.append({"predicate": "inventory-discharge-cannot-clear-unlisted-family-member", "pass": reason == "R0-family-reclassification-forbidden",
                       "old": doc, "new": partial_discharge, "refusal": reason,
                       "expected_refusal": "R0-family-reclassification-forbidden", "fixture_commit": inventory_source})
+        omitted_inventory_member = load_json(encoded(doc))
+        omitted_inventory_member["families"][0]["members"] = [paths[1]]
+        inventory_rows = lines(make_census(frozen_inventory_files))
+        inventory_plan = make_plan(inventory_source, inventory_rows, frozen_inventory_files)
+        inventory_control = transaction_plan(root, inventory_source, inventory_rows, frozen_inventory_files,
+                                             inventory_plan, doc)
+        try:
+            transaction_plan(root, inventory_source, inventory_rows, frozen_inventory_files,
+                             inventory_plan, omitted_inventory_member)
+            reason = "unexpected-pass"
+        except Refusal as exc:
+            reason = str(exc)
+        inventory_restored = transaction_plan(root, inventory_source, inventory_rows, frozen_inventory_files,
+                                              inventory_plan, doc)
+        cases.append({"predicate": "inventory-cleared-comparable-nonmember-cannot-be-omitted", "pass":
+                      reason == "incomplete-adjudicated-family" and inventory_control == inventory_restored,
+                      "old": doc, "new": omitted_inventory_member, "refusal": reason,
+                      "expected_refusal": "incomplete-adjudicated-family", "fixture_commit": inventory_source,
+                      "control_pass": True, "restored_pass": inventory_control == inventory_restored})
         def inventory_failure(name, change, expected):
             proposals = load_json(encoded([item])); before = load_json(encoded(proposals)); change(proposals)
             control = inventory_discharges(root, frozen_inventory_files, [item]) == {(p, DRAFT_CENSUS) for p in paths}
@@ -2334,6 +2381,14 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         report_failure("adjudication-witness-duplicate", lambda: witness_change(lambda r: r.append(r[0])), "adjudication-witness-drift")
         report_failure("adjudication-witness-omission", lambda: witness_change(lambda r: r.pop()), "adjudication-witness-population-mismatch")
         report_failure("adjudication-witness-byte-drift", lambda: witness_change(lambda r: r[0]["witnesses"].append({"new": "unbound"})), "adjudication-witness-drift")
+        def witness_same_count_drift():
+            records = lines(witnesses.read_bytes())
+            literal_record = next(row for row in records if row["path"] == paths["literal"])
+            assert literal_record["witnesses"], "Owned literal witness fixture must be nonempty"
+            literal_record["witnesses"][0]["token"] = "synthetic altered comparison operand"
+            witnesses.write_bytes(jsonl(records))
+        report_failure("adjudication-witness-content-drift-with-same-count", witness_same_count_drift,
+                       "adjudication-witness-drift")
         def witness_count_drift():
             proposed = lines((home / "PLAN.jsonl").read_bytes()); proposed[0]["witnesses"]["count"] += 1
             data = jsonl(proposed); (home / "PLAN.jsonl").write_bytes(data)
