@@ -141,6 +141,32 @@ root.
   `governance-docs.yml`, whose battery `check:battery` reads from
   `PROJECT-STATUS.md` ("How to verify this page") and never copies.
 
+### CI time budget
+
+Hosted CI must be green within **7 minutes** of a push to a pull request, and
+the merge queue within the same budget for each tree it tests (`syzygy-j5m0`).
+The clock is the slowest job of a workflow, not the sum of its steps.
+
+- **Where checks run.** Both workflows run on `pull_request` and
+  `merge_group` only. There is no `push` run on `main`: `main` moves only
+  through the merge queue, which already tested the exact tree that lands.
+- **How each workflow stays inside it.** `node-ci.yml` runs its integration
+  and e2e tiers in parallel after the unit job. `governance-docs.yml` runs
+  the governance battery in one job and its two slowest selftests
+  (`check_spec_reconciliation --selftest`,
+  `prepare_three_surface_poc_governedby_reference_recording --selftest`) in
+  a job each; the aggregate job `checks` is the required check. Both of
+  those selftests run their independent cases in forked workers and report
+  in case order (`SELFTEST_WORKERS` overrides the worker count; `1` runs
+  them serially).
+- **A check that would break the budget** gets its own job, or its cases run
+  in parallel, before it lands. It is never dropped from the pull-request run
+  or moved to a schedule without an owner decision, and a selftest that
+  mutates governed inputs is never path-filtered.
+- **Measure, then place.** Step durations come from the run's job record
+  (`gh api repos/<owner>/<repo>/actions/jobs/<id>`); cite them when moving a
+  check between jobs.
+
 ## Public-clone validation is part of done
 
 Any governance change must leave a fresh `git clone` able to reconstruct the
