@@ -22,7 +22,8 @@ sys.path.insert(0, 'scripts')
 import record_public_repo_admission_acts as adm, record_public_egress_v2_act as eg2, record_rfc5_project_documentation_act as cls
 import record_public_source_screening_scope_act as p1, record_public_source_screening_scope_v2_act as p2
 import record_public_source_screening_scope_v3_act as p3, record_public_source_screening_scope_v4_act as p4
-import record_public_source_screening_scope_v5_act as p5, record_dossier_local_agent_acts as dla
+import record_public_source_screening_scope_v5_act as p5, record_public_source_screening_scope_v6_act as p6
+import record_dossier_local_agent_acts as dla
 import record_dossier_agent_provider_v2_act as pv2, record_public_admission_registry_entries_acts as reg, record_versioned_signoff as vs
 
 def render(c):
@@ -36,7 +37,8 @@ def render(c):
         if v == 2: return p2.render_act(p2.ACT, a, 'none', d, 'b'*64, 'c'*40, 'CONFIRM', p2.Selection('opening', 'label', 'description'), 'f'*64, i, s, '2026-10-03', '1.2.0-public-source-candidate.2')
         if v == 3: return p3.render_act(p3.ACT, a, 'all', d, 'b'*64, 'c'*40, 'CONFIRM', p3.Selection('opening', 'label', 'description', p3.PACKET_WORDS[0]), 'f'*40, i, s, '2026-10-07', '1.4.0-public-source-candidate.1.none.code-all', 25)
         if v == 4: return p4.render_act(p4.ACT, a, 'span', d, 'b'*64, 'c'*40, 'CONFIRM', p4.OWNER_WORDS[0], 'f'*40, i, s, '2026-10-08', '1.5.0-public-source-candidate.1.none.code-all.redact-span', 'The effect paragraph.')
-        return p5.render_act(p5.ACT, a, 'bcd', d, 'b'*64, 'c'*40, 'CONFIRM', p5.OWNER_WORDS[0], i, 'f'*40, i, s, '2026-10-20', '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd', 'The effect paragraph.')
+        if v == 5: return p5.render_act(p5.ACT, a, 'bcd', d, 'b'*64, 'c'*40, 'CONFIRM', p5.OWNER_WORDS[0], i, 'f'*40, i, s, '2026-10-20', '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd', 'The effect paragraph.')
+        return p6.render_act(p6.ACT, a, d, 'b'*64, 'c'*40, 'CONFIRM', p6.OWNER_WORDS[0], i, 'f'*40, i, s, '2026-11-03', '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p', 'The effect paragraph.')
     if f == 'class':
         return cls.render_act(a, d, 'b'*64, 'c'*40, 'CONFIRM', cls.Selection('opening', 'label', 'description'), 'f'*64, i)
     if f == 'dossier-local-agent':
@@ -102,7 +104,7 @@ beforeAll(async () => {
   const values = { argument: A, date: DATE, instant: INSTANT };
   cases = [
     ...RECORDER_KEYS.map((key) => ({ name: `recorder ${key}`, call: { form: 'recorder', key, ...values }, kit: () => renderRecorderAct(key, A, DATE, INSTANT) })),
-    ...([1, 2, 3, 4, 5] as const).map((version) => ({
+    ...([1, 2, 3, 4, 5, 6] as const).map((version) => ({
       name: `policy version ${version}`, call: { form: 'policy', version, superseded: SUPERSEDED, ...values }, kit: () => renderPolicyAct(A, DATE, INSTANT, version, SUPERSEDED),
     })),
     { name: 'policy version 1, default superseded', call: { form: 'policy', version: 1, superseded: '1'.repeat(64), ...values }, kit: () => renderPolicyAct(A, DATE, INSTANT) },
@@ -162,7 +164,7 @@ function installedPath(): string {
 
 describe('recorder testkit renders', () => {
   it('fill every form exactly as the recorder renders the same values', () => {
-    expect(cases.length).toBe(4 + 5 + 1 + 1 + 5 + 2 + 1 + 4 + 1);
+    expect(cases.length).toBe(4 + 6 + 1 + 1 + 5 + 2 + 1 + 4 + 1);
     expect(cases.map(({ name, kit }) => [name, kit()])).toEqual(cases.map(({ name }, index) => [name, expected[index]]));
   });
 

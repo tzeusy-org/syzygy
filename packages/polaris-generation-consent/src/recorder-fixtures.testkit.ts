@@ -29,7 +29,8 @@ sys.path.insert(0, 'scripts')
 import record_public_repo_admission_acts as adm, record_public_egress_v2_act as eg2, record_rfc5_project_documentation_act as cls
 import record_public_source_screening_scope_act as p1, record_public_source_screening_scope_v2_act as p2
 import record_public_source_screening_scope_v3_act as p3, record_public_source_screening_scope_v4_act as p4
-import record_public_source_screening_scope_v5_act as p5, record_dossier_local_agent_acts as dla
+import record_public_source_screening_scope_v5_act as p5, record_public_source_screening_scope_v6_act as p6
+import record_dossier_local_agent_acts as dla
 import record_dossier_agent_provider_v2_act as pv2, record_public_admission_registry_entries_acts as reg, record_versioned_signoff as vs
 recorder_keys, dossier_keys = json.loads(sys.argv[1]), json.loads(sys.argv[2])
 S = lambda name: '\\0' + name + '\\0'
@@ -48,6 +49,8 @@ m = p4
 t['policy:4'] = m.render_act(m.ACT, A, 'span', D, 'b'*64, 'c'*40, 'CONFIRM', m.OWNER_WORDS[0], 'f'*40, I, SUP, '2026-10-08', '1.5.0-public-source-candidate.1.none.code-all.redact-span', 'The effect paragraph.')
 m = p5
 t['policy:5'] = m.render_act(m.ACT, A, 'bcd', D, 'b'*64, 'c'*40, 'CONFIRM', m.OWNER_WORDS[0], I, 'f'*40, I, SUP, '2026-10-20', '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd', 'The effect paragraph.')
+m = p6
+t['policy:6'] = m.render_act(m.ACT, A, D, 'b'*64, 'c'*40, 'CONFIRM', m.OWNER_WORDS[0], I, 'f'*40, I, SUP, '2026-11-03', '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p', 'The effect paragraph.')
 t['class'] = cls.render_act(A, D, 'b'*64, 'c'*40, 'CONFIRM', cls.Selection('opening', 'label', 'description'), 'f'*64, I)
 for key in dossier_keys:
     t['dossier-local-agent:' + key] = dla.render_act(dla.ACT_BY_KEY[key], A, D, 'b'*64, 'c'*40, 'CONFIRM', dla.Selection('opening', 'label', 'description'), 'f'*40, I)
@@ -127,9 +130,10 @@ export function renderRecorderAct(key: RecorderActKey, argument: string, date: s
 /** The public-source screening-scope policy act as scripts/record_public_source_screening_scope_act.py (version 1),
  * scripts/record_public_source_screening_scope_v2_act.py (version 2), scripts/record_public_source_screening_scope_v3_act.py
  * (version 3, variant `all`, superseding a version-2 act of 2026-10-07) or scripts/record_public_source_screening_scope_v4_act.py
- * (version 4, variant `span`, superseding a version-3 act of 2026-10-08) or scripts/record_public_source_screening_scope_v5_act.py
- * (version 5, variant `bcd`, superseding a version-4 act of 2026-10-20) renders it. Version 1 names its own superseded digest. */
-export function renderPolicyAct(argument: string, date: string, instant: string, version: 1 | 2 | 3 | 4 | 5 = 1, supersededArgument = '1'.repeat(64)): string {
+ * (version 4, variant `span`, superseding a version-3 act of 2026-10-08), scripts/record_public_source_screening_scope_v5_act.py
+ * (version 5, variant `bcd`, superseding a version-4 act of 2026-10-20) or scripts/record_public_source_screening_scope_v6_act.py
+ * (version 6, variant `p`, superseding a version-5 act of 2026-11-03) renders it. Version 1 names its own superseded digest. */
+export function renderPolicyAct(argument: string, date: string, instant: string, version: 1 | 2 | 3 | 4 | 5 | 6 = 1, supersededArgument = '1'.repeat(64)): string {
   return fill(`policy:${version}`, { argument, date, instant, superseded: supersededArgument });
 }
 
