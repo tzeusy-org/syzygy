@@ -412,12 +412,21 @@ describe('the v1.2 gate', () => {
     }],
     ['the record names a review outside the records root (mutant: drop the review-path check)', (root, decisions) => {
       const digest = createHash('sha256').update(fs.readFileSync(path.join(root, SPEC_REL))).digest('hex');
-      // The raw lies beside the records root, outside the temp directory the test removes, so the test removes it itself.
+      // The raw lies beside the records root, outside the temp directory the test removes. Keep it until the gate is asked, then
+      // remove it in afterEach: removing it earlier would hide a gate that wrongly honours the outside review.
       const outside = path.join(path.dirname(root), `${path.basename(root)}-outside-RAW.md`);
       cleanups.push(() => fs.rmSync(outside, { force: true }));
       fs.writeFileSync(outside, reviewHead(digest));
       const file = path.join(decisions, 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md');
       fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('Review: docs/reviews/FIXTURE-v1.2-RAW.md', `Review: ../${path.basename(root)}-outside-RAW.md`));
+    }],
+    ['the record names a review that leaves the records root after its first segment (mutant: check only the first segment)', (root, decisions) => {
+      const digest = createHash('sha256').update(fs.readFileSync(path.join(root, SPEC_REL))).digest('hex');
+      const outside = path.join(path.dirname(root), `${path.basename(root)}-outside-RAW.md`);
+      cleanups.push(() => fs.rmSync(outside, { force: true }));
+      fs.writeFileSync(outside, reviewHead(digest));
+      const file = path.join(decisions, 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md');
+      fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('Review: docs/reviews/FIXTURE-v1.2-RAW.md', `Review: docs/../../${path.basename(root)}-outside-RAW.md`));
     }],
   ])('opens on no record when %s', (_name, mutate) => {
     const root = tempDir('dossier-signoff-');
