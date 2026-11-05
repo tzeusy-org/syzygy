@@ -1,0 +1,689 @@
+{
+  "schema": "syzygy-r7-gen1-review-disposition-v1",
+  "audit_key": "greenfield:reconciliation:R7",
+  "generation": 1,
+  "hard_generation_limit": 3,
+  "created_at": "2026-11-05T04:56:33.582444+00:00",
+  "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+  "predecessor_report_head": "3b4a65d5b6c36cf5256d23eea925787d09e96559",
+  "correction_scope": "Whole original OG1..5/all28-M7-child/six-AC outcome correction at existing draft PR751; ordinary report/evidence only. Product/test/governed bytes unchanged.",
+  "status": "coverage-gaps-remain",
+  "prior_review_verdict_exact": "REVISE",
+  "correction_review_state": "Awaiting fresh independent exact-resulting-head review; author disposition does not overwrite prior REVISE.",
+  "risk_tier": "high",
+  "review_confirmed_cc_rev_1_classes": [
+    1,
+    3,
+    4
+  ],
+  "review_confirmed_cc_bar_5_floors": [
+    2,
+    3,
+    5,
+    6
+  ],
+  "floor_weakening_authorized": false,
+  "review_input_bindings": [
+    {
+      "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/review-inputs/REVIEW.json",
+      "bytes": 38090,
+      "sha256": "2971e9b3fec474de6f59735b8700583cc1be84a2e384c190ba8ecfde2d0b6f71"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/review-inputs/R-GP-M7-R7-GEN1-PR751-1-RAW.md",
+      "bytes": 16162,
+      "sha256": "0061d42d3e76d2ae2dc1bf72421b3c6c4e9a1cf0da5d78d2ddc23428a397d846"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/review-inputs/HASH-MANIFEST.json",
+      "bytes": 15341,
+      "sha256": "3f22d2e5ad17ec1e57cf2f80499b5ce8346474489347b77ae47abf3d6c78e0e6"
+    }
+  ],
+  "review_binding_verification": {
+    "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/REVIEW-BINDINGS-VERIFIED.json",
+    "bytes": 356,
+    "sha256": "70b555df855248cf258f6dd28b8d83eb37277644d707ba62a7322bac9a1f5241"
+  },
+  "original_frozen_report": {
+    "path": "docs/evidence/syzygy-bpyt-1-7/reconciliation-gen1.json",
+    "sha256": "ed1c4c7f162900f4049f14f3c8d1a4d0973389e1b67fa461f4901616f18d51e5",
+    "semantic_status": "Original as-of machine record retained unchanged; this disposition overlays the review-discovered instrument gap and later authority facts."
+  },
+  "findings": [
+    {
+      "id": "R7-G1-REVIEW-1",
+      "author_disposition": "corrected-in-report-awaiting-review",
+      "change": "SEC-3 default plus already-adopted attended-session instruction exception distinguished from the installed CC-SEC-3 absolute blocker. Candidate remains unadopted, production execution flag false; policy adoption, implementation, fresh independent review and per-run gates remain; no actual daemon execution.",
+      "primary_clauses": [
+        {
+          "path": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.1.7/.syzygy/governance/doctrine/security.md",
+          "bytes": 7338,
+          "sha256": "766c953d01d1a7bba3319b538a35851c88b9901d8fe79399af0f23ec3011bc00"
+        },
+        {
+          "path": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.1.7/.syzygy/governance/policies/craft-and-care/security-and-secrets.md",
+          "bytes": 7263,
+          "sha256": "f90ff5933fa461a4ab0b3de7876abe2aeb84eb6e6e2e6cb8a4e5176f9aa241f9"
+        }
+      ]
+    },
+    {
+      "id": "R7-G1-REVIEW-2",
+      "author_disposition": "counterexample-and-deduped-repair-proposal-recorded-awaiting-review",
+      "change": "Original name-grammar mutant raw/count preserved; its error is FileNotFoundError from path resolution, not an isolated strict-grammar assertion. Reviewer exact-source slash-only mutant survives nine tests and accepts an existing malformed directory that baseline refuses. Future repair extends the existing malformed-table species; no product/test repair in this PR.",
+      "original_name_mutant": {
+        "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+        "path": "scripts/spent_round_routing.py",
+        "old": "ROUND_NAME.fullmatch(name)",
+        "new": "True",
+        "exit_code": 1,
+        "raw": {
+          "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/ORIGINAL-NAME-GRAMMAR-RAW.md",
+          "bytes": 2036,
+          "sha256": "e08568d07a0e65e08bc1fb967e6cf66f1ee0449cf5e3941ed65ceb50494b6c5c"
+        },
+        "limitation": "../round-2026-08f resolves to a nonexistent path and raises FileNotFoundError; not proof that strict fullmatch is protected."
+      },
+      "replay": {
+        "subject": "3b4a65d5b6c36cf5256d23eea925787d09e96559",
+        "sourceSubject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+        "path": "scripts/spent_round_routing.py",
+        "sourceSha256": "a9e3eba602fb1ebd5ef20d59bc53744c29725497d43ceba1a60fc43b326d14d9",
+        "old": "ROUND_NAME.fullmatch(name)",
+        "new": "\"/\" not in name",
+        "productFilesEdited": false,
+        "testsRun": 9,
+        "failures": 0,
+        "errors": 0,
+        "mutantSurvived": true,
+        "fixture": {
+          "directoryExists": true,
+          "name": "not-a-round",
+          "baseline": "ValueError: ROUND-ESTATE round name malformed: '`not-a-round`'",
+          "mutant": [
+            "not-a-round"
+          ]
+        }
+      },
+      "replay_binding": {
+        "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/replay-output/ROUTING-REPLAY.json",
+        "bytes": 628,
+        "sha256": "c3868b2c26acdf7a1df87c29f2403c435a1c86254d077e46263cb58b513d992c"
+      },
+      "raw_binding": {
+        "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/replay-output/ROUTING-REPLAY-RAW.md",
+        "bytes": 1518,
+        "sha256": "b0a2ea234c1c11a198bacd9cdd1ebc09352dcc5a7f4fe40ff928c2a23f71f00d"
+      },
+      "boundary": {
+        "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/REPLAY-BOUNDARY.json",
+        "bytes": 1998,
+        "sha256": "0710aab9aad059b689a72e897d5f65dd64ec89b9309ee04448e1469d6c9162ca"
+      }
+    }
+  ],
+  "original_six_acceptance": [
+    {
+      "number": 1,
+      "verdict": "partial",
+      "evidence": "28/28 M7 child findings mapped, plus required cross-epic follow-ups; resolved items read at source subject; remaining implementations/gates explicit."
+    },
+    {
+      "number": 2,
+      "verdict": "partial",
+      "evidence": "8726 tracked blobs/two independent lists; 32 literal whole-tree searches confirmed by git grep; all matching code paths enumerated. Universal loader closure falsified; no claim that finite syntax scans cover every possible JavaScript loader."
+    },
+    {
+      "number": 3,
+      "verdict": "partial",
+      "evidence": "Guard roots/regex/globs read, 12 controlled source mutants and63 fixture rows retained. Dynamic-destructured loader survives actual existing guard. No duplicate gate proposed; extend 8.40. Review adds a slash-only round-name mutant surviving all nine unchanged routing tests, while baseline rejects the existing malformed directory; current grammar is correct, regression protection remains partial. Extend the existing malformed-table test in a separate P3 proposal."
+    },
+    {
+      "number": 4,
+      "verdict": "met-with-reported-candidates",
+      "evidence": "Original 21-component OG1..5/M7 delta and 18 existing-scope packets remain. Explicit review disposition adds the deduped round-name repair candidate with its Audit-key; original loader attaches OPEN8.40. No zero-gap/convergence verdict or automatic materialization."
+    },
+    {
+      "number": 5,
+      "verdict": "met",
+      "evidence": "Propose generation2 only after relevant merged remediation/owner outcomes; preserve hard gen3 limit and dedupe this ledger. No next-generation dispatch or creation performed."
+    },
+    {
+      "number": 6,
+      "verdict": "coordinator-only-pending",
+      "evidence": "Coordinator must cite this summary and audited subject in eventual close reason after actual reviewed/merged outcome; worker does not close."
+    }
+  ],
+  "child_checklist": [
+    {
+      "id": "syzygy-bpyt.1.1",
+      "classification": "resolved",
+      "evidence": [
+        ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md:44"
+      ],
+      "verdict": "Answered packet, four retained raw reviews and performed owner direction; no still-pending Q0/Q1/Q7 is inferred.",
+      "remaining": [],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.2",
+      "classification": "resolved",
+      "evidence": [
+        ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md:74"
+      ],
+      "verdict": "Actual selected choices constrain the code audit; a declined simplification is not an implementation gap.",
+      "remaining": [],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.3",
+      "classification": "resolved",
+      "evidence": [
+        "scripts/spent_round_routing.py:34",
+        ".syzygy/governance/contracts/candidates/scripts/build_task_router.py:619",
+        "PRESERVATION.json"
+      ],
+      "verdict": "Declined estate move; 272 original round/history/superpowers paths byte-identical; 30 mirror pairs and both committed reports preserved. Routing-only omission implemented by 9.6.",
+      "remaining": [],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.4",
+      "classification": "resolved",
+      "evidence": [
+        "POPULATION-v2.json",
+        "docs/plans/2026-10-21-greenfield-parity-audit.md:241"
+      ],
+      "verdict": "Owner retained the ten governed Python scripts as a self-rooted/bound-ledger remainder. Exact governed-code population is ten; moving them would violate the chosen target.",
+      "remaining": [],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.5",
+      "classification": "resolved",
+      "evidence": [
+        "packages/polaris-dossier/src/gate-sources.ts:96",
+        "packages/polaris-dossier/src/gate-acts.test.ts:602"
+      ],
+      "verdict": "Owner retained byte-exact two-copy sitting template plus real-recorder oracle. 8.4 preserves that boundary; gate-acts altered-prose cases refuse drift. Do not replace this with field-only acceptance.",
+      "remaining": [
+        "syzygy-bpyt.1.8",
+        "syzygy-bpyt.1.24"
+      ],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.6",
+      "classification": "resolved",
+      "evidence": [
+        "docs/reviews/R-CC-SEC-3-ATTENDED-SESSION-1-RAW.md",
+        "docs/review-campaigns/cc-sec-3-attended-session.md",
+        "PRESERVATION.json",
+        "packages/polaris-dossier/src/execution-rule.ts:17"
+      ],
+      "verdict": "Candidate drafting delivered via PR736; independent review retained via PR738, exact verdict CONFIRM WITH EXCEPTIONS. Eight candidate files equal reviewed 1c9acf2e54d4fd385f3098750f3e260c983c7f71. P117 is a draft offering; no adoption, flag flip or per-run permission.",
+      "remaining": [
+        "syzygy-bpyt.8.15",
+        "syzygy-bpyt.8.11"
+      ],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.7",
+      "classification": "partial",
+      "evidence": [
+        "README.md",
+        "reconciliation-gen1.json"
+      ],
+      "verdict": "Whole original R7/gen1 audit delivered; coverage gaps remain. Coordinator closure is forbidden until the required merged/reviewed outcome, and no next generation starts here.",
+      "remaining": [],
+      "canonical_status": "in_progress",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.8",
+      "classification": "missing",
+      "evidence": [
+        "packages/polaris-dossier/src/gate-sources.ts:305",
+        "packages/polaris-generation-consent/src/package-reader.ts:705"
+      ],
+      "verdict": "Field-parsed successor recognition remains a separate pending acceptance choice; preserve current exact reader and old output until lawful resolution.",
+      "remaining": [
+        "syzygy-bpyt.1.24"
+      ],
+      "canonical_status": "open",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.9",
+      "classification": "resolved",
+      "evidence": [
+        "packages/three-surface-poc-core/src/owner-act-drafter.ts:23",
+        "packages/three-surface-poc-core/src/owner-act-drafter.ts:81"
+      ],
+      "verdict": "Coordinator keep disposition, not owner adoption: pure unused-by-product drafter remains, with no persistence or command. Authorizing-act question for any command is still 1.13.",
+      "remaining": [
+        "syzygy-bpyt.1.13"
+      ],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.10",
+      "classification": "resolved",
+      "evidence": [
+        "packages/three-surface-poc-core/src/act-fields.ts:31",
+        "packages/three-surface-poc-core/src/body-read-authority.test.ts:670"
+      ],
+      "verdict": "Coordinator status-quo disposition, not owner ruling. One shared non-human-principal rule retains two arms and the known human-name false positive. Current test explicitly says no owner ruled that row.",
+      "remaining": [],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.11",
+      "classification": "resolved",
+      "evidence": [
+        "apps/three-surface-poc/src/routes.ts",
+        "packages/three-surface-poc-core/src/model.ts"
+      ],
+      "verdict": "Coordinator kept the routes after endpoint-removal byte-identity premise failed; do not delete or invent an owner endorsement. Defaults/Unknown wire work remains under 1.25/1.28.",
+      "remaining": [
+        "syzygy-bpyt.1.25",
+        "syzygy-bpyt.1.28"
+      ],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.12",
+      "classification": "partial",
+      "evidence": [
+        "packages/polaris-generation-consent/src/package-reader.ts:644",
+        "packages/polaris-generation-consent/src/act-families.test.ts:145",
+        ".syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md:157"
+      ],
+      "verdict": "Owner selected align knobs toward refusal; implementation is not complete. Quoted policy withdrawal/default differences are pinned status quo, not discharged by tests.",
+      "remaining": [
+        "syzygy-bpyt.1.24"
+      ],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.13",
+      "classification": "missing",
+      "evidence": [
+        "packages/three-surface-poc-core/src/owner-act-drafter.ts:81"
+      ],
+      "verdict": "Operator command must first name an actual authorizing act. Existing open owner-gated item retained; audit does not add a command or ask again.",
+      "remaining": [],
+      "canonical_status": "open",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.14",
+      "classification": "resolved",
+      "evidence": [
+        "packages/three-surface-poc-core/src/markdown-code-context.ts:121",
+        "apps/three-surface-poc/src/fence-rules.test.ts:272"
+      ],
+      "verdict": "Owner CRLF/bare-CR gate ruling implemented by 16: recognizer retains line terminators and active-content gate follows it. Extractor bare-CR line model remains explicitly separate.",
+      "remaining": [],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.15",
+      "classification": "resolved",
+      "evidence": [
+        "packages/three-surface-poc-core/src/project-shape-extraction.ts:210",
+        "packages/three-surface-poc-core/src/project-shape-manifest.ts:200",
+        "apps/three-surface-poc/src/fence-rules.test.ts:302"
+      ],
+      "verdict": "Owner Q2 C implemented by 55: extractor and link/root-index readers use profile recognizer; only link reader masks spans. Consent outsideFences and renderer remain intentionally separate; stray-backtick link loss is selected residual, not a new fix.",
+      "remaining": [],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.16",
+      "classification": "resolved",
+      "evidence": [
+        "apps/three-surface-poc/src/git-observation.ts:176",
+        "apps/three-surface-poc/src/git-observation.test.ts:170"
+      ],
+      "verdict": "Owner Q3 B implemented by 56: eight compiled/loaded projects plus four root build inputs protected; derived start/build census is tested. Restart identity remains separate 57.",
+      "remaining": [
+        "syzygy-bpyt.57"
+      ],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.17",
+      "classification": "missing",
+      "evidence": [
+        "packages/polaris-generation-core/src/workspace-reach.testkit.ts:45",
+        ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-FOLLOWUPS-2026-10-28.md"
+      ],
+      "verdict": "Q4 A requests scoped/exact-caret-tilde workspace precondition. Current helper still assumes its narrower universe; 58 remains open. Do not normalize bare/unscoped members silently.",
+      "remaining": [
+        "syzygy-bpyt.58"
+      ],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.18",
+      "classification": "resolved",
+      "evidence": [
+        "packages/three-surface-poc-core/src/markdown-code-context.ts",
+        "packages/three-surface-poc-core/src/project-shape-extraction.ts"
+      ],
+      "verdict": "PR555 implements the two loop replacements for long fences/lists. The remainder spread census is separately owned by 54/74/77; no global new cleanup inferred.",
+      "remaining": [],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.19",
+      "classification": "missing",
+      "evidence": [
+        "packages/three-surface-poc-core/src/markdown-code-context.ts:70",
+        "runtime-probes.json"
+      ],
+      "verdict": "Owner Q7 A pending implementation 60: dot without s still allows U+2028/U+2029 malformed-info bypass. Synthetic U+2028 active-content signal remains hidden.",
+      "remaining": [
+        "syzygy-bpyt.60"
+      ],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.20",
+      "classification": "missing",
+      "evidence": [
+        "packages/three-surface-poc-core/src/git-object-reader.ts:250"
+      ],
+      "verdict": "Finding positions count LF only while profile recognizes bare CR. Existing 1.20 covers output-position correction alongside 60; no new questionnaire or duplicate parser.",
+      "remaining": [
+        "syzygy-bpyt.60"
+      ],
+      "canonical_status": "open",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.21",
+      "classification": "missing",
+      "evidence": [
+        "packages/three-surface-poc-core/src/act-fields.ts:39",
+        "runtime-probes.json"
+      ],
+      "verdict": "Owner Q6 A pending implementation 59. Feb29/30/31 and Apr31 in 2026 all return true through Date.parse normalization.",
+      "remaining": [
+        "syzygy-bpyt.59"
+      ],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.22",
+      "classification": "missing",
+      "evidence": [
+        "packages/three-surface-poc-core/src/markdown-code-context.ts:70",
+        "runtime-probes.json"
+      ],
+      "verdict": "Same malformed info-string U+2028/U+2029 gap already answered by Q7 A; attach to 60, not a new owner question.",
+      "remaining": [
+        "syzygy-bpyt.60"
+      ],
+      "canonical_status": "open",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.23",
+      "classification": "partial",
+      "evidence": [
+        "packages/three-surface-poc-core/src/work-items.ts:126",
+        "packages/three-surface-poc-core/src/code-structure.ts:78",
+        ".syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md:193"
+      ],
+      "verdict": "Owner chose structured closedReason for the named nine prose-only Unknown fields. Existing 1.25 implementation remains open; this is not permission to choose semantics for additional fields.",
+      "remaining": [
+        "syzygy-bpyt.1.25",
+        "syzygy-bpyt.1.28"
+      ],
+      "canonical_status": "closed",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.24",
+      "classification": "missing",
+      "evidence": [
+        "packages/polaris-generation-consent/src/package-reader.ts:644",
+        "packages/polaris-generation-consent/src/act-families.test.ts:181"
+      ],
+      "verdict": "Existing blocked alignment implementation carries Nov3 A and stop conditions. Family differences remain present; exact actual decisions/verdict moves require the existing gate, not an audit fix.",
+      "remaining": [
+        "syzygy-bpyt.1.8"
+      ],
+      "canonical_status": "blocked",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.25",
+      "classification": "missing",
+      "evidence": [
+        "packages/three-surface-poc-core/src/work-items.ts:126",
+        "packages/three-surface-poc-core/src/code-structure.ts:78"
+      ],
+      "verdict": "Existing nine-field structured-Unknown implementation after 1poh; current wire still has prose-only Unknown arms.",
+      "remaining": [],
+      "canonical_status": "open",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.26",
+      "classification": "deviates",
+      "evidence": [
+        "packages/polaris-dossier/src/waiting-sessions.ts:77",
+        "packages/polaris-dossier/src/waiting-sessions.ts:124",
+        "packages/polaris-generation-consent/src/package-reader.ts:878",
+        "runtime-probes.json"
+      ],
+      "verdict": "On the actual current v1.3 subject, changing Date to 2099-01-01 still yields signed; wrong Version refuses. Date ordering is absent from wait signoff but enforced by package reader. Existing owner-gated 1.26 retained; no duplicate.",
+      "remaining": [],
+      "canonical_status": "open",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "later_authority_note": "Actual owner A at 2026-11-05T04:14:46.587872+00:00 selects UTC-day bounded followthrough after direction record/ownership. Separate implementation is in progress. Do not ask again, reshape the already-shaped item, or sign v1.4. Frozen d7 finding remains historical; later code is not audited here."
+    },
+    {
+      "id": "syzygy-bpyt.1.27",
+      "classification": "deviates",
+      "evidence": [
+        "packages/polaris-generation-core/src/quote-locate.ts:134",
+        "packages/polaris-generation-core/src/quote-fidelity.ts:175",
+        "runtime-probes.json"
+      ],
+      "verdict": "Current synthetic curly lead-in is one checked quotation with zero findings but renderer has no span and says lead-in-without-quote. Existing decision covers disagreement; prior 1693/2375 is historical, not a fresh count.",
+      "remaining": [],
+      "canonical_status": "open",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    },
+    {
+      "id": "syzygy-bpyt.1.28",
+      "classification": "missing",
+      "evidence": [
+        "apps/three-surface-poc/src/routes.ts:157",
+        "packages/three-surface-poc-core/src/reevaluation.ts",
+        "packages/three-surface-poc-core/src/resource-headroom.ts:35",
+        "packages/three-surface-poc-core/src/resource-ledger.ts:85"
+      ],
+      "verdict": "Existing owner decision covers response population, observedProject limb, cost, and limit-observation Unknowns outside the nine. Do not extend the Nov3 nine-field answer to these four.",
+      "remaining": [],
+      "canonical_status": "open",
+      "as_of_source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8"
+    }
+  ],
+  "component_delta": {
+    "rows": 21,
+    "counts": {
+      "parity": 5,
+      "justified": 8,
+      "gap": 8,
+      "residue": 0
+    },
+    "assessment": "Original finite component partition retained; not convergence, source-line completeness or a new product delta. Routing counterexample annotates instrument protection."
+  },
+  "existing_scope_followups": {
+    "count": 18,
+    "ids": [
+      "syzygy-bpyt.8.40",
+      "syzygy-bpyt.1.26",
+      "syzygy-bpyt.1.27",
+      "syzygy-bpyt.1.24",
+      "syzygy-bpyt.1.8",
+      "syzygy-bpyt.1.13",
+      "syzygy-bpyt.1.20",
+      "syzygy-bpyt.1.22",
+      "syzygy-bpyt.1.25",
+      "syzygy-bpyt.1.28",
+      "syzygy-bpyt.50",
+      "syzygy-bpyt.57",
+      "syzygy-bpyt.58",
+      "syzygy-bpyt.59",
+      "syzygy-bpyt.60",
+      "syzygy-bpyt.8.11",
+      "syzygy-bpyt.8.15",
+      "syzygy-bpyt.6.16"
+    ],
+    "frozen_packets": {
+      "path": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/FOLLOW-UPS-FINAL.json",
+      "bytes": 23978,
+      "sha256": "2cab162e4d51542b0709415ecd91cb9a8389952ceee0118dfbee08d40a8c5eb4"
+    },
+    "disposition": "Keep all18 deduped existing-scope proposals. No blind application, duplicate creation, lifecycle mutation or reshaping; 1.26 already shaped by root and actual A now selects UTC-day bounded followthrough. OPEN8.40 retains loader extension; CLOSED8.23 remains closed."
+  },
+  "additional_followup_candidates": [
+    {
+      "title": "Pin strict ROUND-ESTATE round-name grammar with an existing malformed directory",
+      "type": "task",
+      "priority": 3,
+      "audit_key": "greenfield:reconciliation:R7:round-name-grammar",
+      "proposed_parent": "syzygy-bpyt.9",
+      "related_closed_source": "syzygy-bpyt.9.6",
+      "depends_on": "syzygy-bpyt.9.6",
+      "dependency_meaning": "completed source implementation reference; do not reopen",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "review_subject": "3b4a65d5b6c36cf5256d23eea925787d09e96559",
+      "description": "The current routing parser is correct, but its existing nine-test species accepts a slash-only grammar mutant. The original grammar-removal falsifier fails through FileNotFoundError, so it does not establish strict-name assertion coverage. Bound proof and replay tool are retained with this review.",
+      "design": "Extend test_missing_empty_and_malformed_table_refuse_rendering in scripts/test_spent_round_routing.py with malformed names whose directories exist under the owned fixture root. Keep the current generated membership, strict literal grammar, containment, explicit-history bypass and routing-only semantics. Do not add a second predicate, fixed round list, parser, guard or test species; do not change reliance/citer/digest scans.",
+      "acceptance_criteria": [
+        "The actual baseline parser refuses a syntactically malformed round name even when its candidate directory exists.",
+        "The exact old/new source mutant ROUND_NAME.fullmatch(name) -> \"/\" not in name fails the extended existing test through its intended refusal assertion, rather than an incidental path error.",
+        "The existing routing tests and the existing router selftest pass at one owned clean subject with fixture roots confined to OWN; report actual test delta and retained raw evidence.",
+        "No governed bytes, source9.6 lifecycle, unrelated gate species, default-load/reliance boundary, or owner authority changes."
+      ],
+      "expected_test_delta": "+0 ~1 -0 (extend the existing malformed-table test; actual implementation reports its measured delta)",
+      "dedupe": {
+        "snapshot": {
+          "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/CANONICAL-FULL-QUEUE-RAW.json",
+          "bytes": 4074582,
+          "sha256": "31dcc8ee451ca27a280079e9ab5be1266e12f5452113a0859d0acee68e00e708"
+        },
+        "at": "2026-11-05T04:55:34.577088+00:00",
+        "denominator": 1170,
+        "methods": "Full-JSON regex with IGNORECASE|DOTALL, independent normalized-literal sweep, bounded continuation/range sweep. Exact predicates and matching records retained in ROUTING-DEDUPE.json. No matching open scoped repair located within these declared forms; no unbounded semantic-absence claim.",
+        "record": {
+          "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/ROUTING-DEDUPE.json",
+          "bytes": 99950,
+          "sha256": "45288e65b0876ecdfeb2801fc2ea9f3951aeefb02eb767ed7feeb3276ef57e8a"
+        },
+        "closed_items_kept_closed": [
+          "syzygy-bpyt.9.6",
+          "syzygy-fso2",
+          "syzygy-bpyt.8.23"
+        ],
+        "open_9_5": "Separate M6 documentation/evidence reconciliation."
+      },
+      "created": false,
+      "implementation_authorized_by_review": false,
+      "report_link": "docs/evidence/syzygy-bpyt-1-7/review-disposition-gen1.json",
+      "replay": {
+        "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/replay-output/ROUTING-REPLAY.json",
+        "bytes": 628,
+        "sha256": "c3868b2c26acdf7a1df87c29f2403c435a1c86254d077e46263cb58b513d992c"
+      },
+      "replay_raw": {
+        "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/replay-output/ROUTING-REPLAY-RAW.md",
+        "bytes": 1518,
+        "sha256": "b0a2ea234c1c11a198bacd9cdd1ebc09352dcc5a7f4fe40ff928c2a23f71f00d"
+      },
+      "replay_tool": {
+        "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/replay-routing-falsifier.py",
+        "bytes": 2802,
+        "sha256": "39bf675dd8471764b49a50720f7e045e561c319ad488f7d9d71671a04a1e5334"
+      },
+      "gate_species": "Existing scripts/test_spent_round_routing.py::RoutingTests.test_missing_empty_and_malformed_table_refuse_rendering; extend existing cases, no new test/guard/parser species.",
+      "root_materialization_only": true
+    }
+  ],
+  "provenance_notes": {
+    "canonical": "All120 commands/variables match actual PROJECT-STATUS parser at report3b; all120 retained raw/output/hash/exit0 bindings validated. This is aggregate consistency evidence, not whole-code convergence.",
+    "important_nonproof_rows": {
+      "88": "No fixture: already applied, fixtures need unapplied package; nothing run.",
+      "99": "Retains R6 pinsUnknown.",
+      "100": "102 reconciliation mutants killed, unrelated to proving every R7 predicate.",
+      "104": "Bounded quotation populations/exclusions/historicals; not new full semantics."
+    },
+    "scoped": "Retained emitter-captured report3b records report typecheck and11files620tests passing; these are report facts, not independently captured gate artifacts (CC-TEST-2). Implementation bytes unchanged from d7 across741protected paths; not a meaningful product before/after behavioral differential by itself.",
+    "provenance": "Initial inherited temporary routing/scoped outputs and failed raw probes are retained. Same nine routing-mutant and620-test populations corrected under explicit author OWN; no broader retry or failed-raw laundering claimed.",
+    "instrument_limits": "63synthetic fixtures and12exact old/new source mutants are finite. Marker/probe fixtures do not establish actual OS credential isolation, owner attendance, per-run permission or execution clearance. Grammar mutant FileNotFoundError limit is addressed by finding2."
+  },
+  "later_truth": {
+    "main_drift": "Later main differs on5of741protected source paths plus workflow changes. Exact d7 source audit/report3b verification is distinct from later main and hosted integration tree; no wholesale9a audit claimed.",
+    "owner_1_26": {
+      "raw_copy": "LATER-OWNER-ANSWER-RAW.json",
+      "sha256": "833cf71bb2f955834c4f521b87b3fac3f85ea58fdd81169557a3ed63c79e482b",
+      "meaning": "Actual A authorizes UTC-day bounded followthrough after direction record and ownership; it does not repair frozen source, change the old evidence inputs, authorize other owner gates, or reshape1.26.",
+      "staleness_assessment": "No sentence-staleness finding solely from this later answer: the original report explicitly names d7/as-of inputs. Later current authority must be disclosed alongside unchanged old code."
+    }
+  },
+  "later_owner_answer_binding": {
+    "path": "/home/orca/.tmp/syzygy-pr751-full-m7-gen1-correction-20261105/review-inputs/LATER-OWNER-ANSWER-RAW.json",
+    "bytes": 820,
+    "sha256": "833cf71bb2f955834c4f521b87b3fac3f85ea58fdd81169557a3ed63c79e482b"
+  },
+  "required_gates": {
+    "node_and_checks": "Current active ruleset26342156 requires aggregate node and checks; prior hosted successes cover integration ebb0085abfebc3433710378402020abbd46e12b9 (report3b into main9a), not the future corrected tree. New actual checks must be observed after push.",
+    "local_scope": "Report correction and replay only; no duplicate full gate for unchanged source. New final-head governance battery in an owned full-history clean clone; hosted broad Node checks remain required.",
+    "independence": "Prior author local/scoped captures are report facts; independent review probes are bounded characterizations. Neither is a blanket independent reproduction of every audit/gate.",
+    "unchanged_holds": "CC-SEC-3 policy adoption/implementation/fresh review/per-run; source13/14/15 and pending v1.4 questions; standing Nov3/source514 item6/POC owner judgment/cycle and archive four conditions remain. No new observed-repo reads/provider/egress/retention/runtime permission."
+  },
+  "closure_and_next_generation": {
+    "coverage_gaps_remain": true,
+    "original_convergence_close_authorized": false,
+    "report_merge_is_not_original_outcome_closure": true,
+    "next_generation_auto_authorized": false,
+    "hard_max_generations": 3,
+    "generation2_candidate": "Only after relevant merged remediation/owner outcomes and coordinator reconciliation at a fresh merged source; must preserve original full scope and dedupe ledger.",
+    "root_owns_all_external_actions": true
+  },
+  "test_delta": "Tests: +0 ~0 -0 (no shipped test species or product test modified)",
+  "actions": {
+    "new_beads": 0,
+    "reopened_beads": 0,
+    "owner_questions": 0,
+    "product_edits": false,
+    "governed_edits": false,
+    "observed_repository_execution": false
+  }
+}
