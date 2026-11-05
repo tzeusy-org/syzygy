@@ -258,9 +258,9 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
       add({ kind: 'code-excerpt-too-long', at, ...about, detail: `a code excerpt names 1 to ${CODE_EXCERPT_MAX_LINES} lines; this one names ${end - start + 1}` });
       continue;
     }
-    // A code excerpt's range is checked against a body Syzygy read and then excluded, without naming its length; a path-excluded body is
+    // Every citation's range is checked against a body Syzygy read and then excluded, without naming its length; a path-excluded body is
     // never read, so its range is not checked (R-MEA10-RICH-ELEMENTS-720d-2 F1).
-    if (state.state === 'excluded' && at.endsWith('.citation') && state.lines !== undefined && end > state.lines) {
+    if (state.state === 'excluded' && state.lines !== undefined && end > state.lines) {
       add({ kind: 'range-beyond-blob', at: `${at}.endLine`, ...about, detail: `the range ends past the last line of ${pathLabel(cited)} at the pinned revision` });
       continue;
     }
