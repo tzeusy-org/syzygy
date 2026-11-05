@@ -9,8 +9,8 @@
     "apps/*"
   ],
   "scripts": {
-    "test": "vitest run --project unit",
-    "test:integration": "vitest run --project integration",
+    "test": "node scripts/check_unit_tmpdir.mjs",
+    "test:integration": "node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration",
     "test:e2e": "vitest run --project e2e && npm run test:system",
     "test:live": "vitest run --project live",
     "test:tiers": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_test_tiers.mjs",
