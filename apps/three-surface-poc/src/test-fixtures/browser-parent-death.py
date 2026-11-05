@@ -8,6 +8,8 @@ import signal
 import subprocess
 import sys
 import time
+import runpy
+from unittest.mock import patch
 
 assert ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0) == 0
 ROOT = os.getpid()
@@ -73,11 +75,41 @@ def census():
             'psFamily': [line.strip() for line in lines if int(line.split()[0]) in ids]}
 
 
-mode, worker_path, node = sys.argv[1:]
+mode, worker_path, node, guardian_path = sys.argv[1:]
 assert mode in ('SIGTERM', 'SIGKILL')
+# Exercise unsafe identity inputs at the guardian's syscall boundary. No
+# real process is signalled by these controls; the real lifetime case below
+# supplies the independent process/census evidence.
+guardian = runpy.run_path(guardian_path)
+stop = guardian['stop']
+ports = stop.__globals__
+row = (999999999, 'original-start', 123, 'S', UID, NAMESPACE)
+refusals = []
+for label, current, members in [
+    ('start-reused', (row[0], 'reused-start', *row[2:]), {row[0]: row}),
+    ('other-uid', (*row[:4], UID + 1, NAMESPACE), {row[0]: row}),
+    ('other-namespace', (*row[:5], 'pid:[other]'), {row[0]: row}),
+    ('outside-family', row, {}),
+]:
+    with patch.dict(ports, {'identity': lambda _pid: current, 'descendants': lambda: members}), \
+            patch('os.pidfd_open', return_value=12345), patch('os.close'), \
+            patch('signal.pidfd_send_signal', side_effect=AssertionError('unsafe identity was signalled')), \
+            patch('os.kill', side_effect=AssertionError('PID-addressed signal bypassed stable handle')):
+        try:
+            stop(row, signal.SIGKILL)
+        except RuntimeError:
+            refusals.append(label)
+        else:
+            raise AssertionError(f'{label} did not refuse signalling')
+with patch.dict(ports, {'identity': lambda _pid: row, 'descendants': lambda: {row[0]: row}}), \
+        patch('os.pidfd_open', return_value=12345), patch('os.close'), \
+        patch('signal.pidfd_send_signal') as sent, \
+        patch('os.kill', side_effect=AssertionError('PID-addressed signal bypassed stable handle')):
+    stop(row, signal.SIGKILL)
+    sent.assert_called_once_with(12345, signal.SIGKILL)
 decoy = subprocess.Popen(['sleep', '3600'], start_new_session=True)
 worker = subprocess.Popen([node, worker_path], stdout=subprocess.PIPE, start_new_session=True)
-report = {'mode': mode, 'worker': identity(worker.pid), 'decoy': identity(decoy.pid), 'reaped': []}
+report = {'mode': mode, 'worker': identity(worker.pid), 'decoy': identity(decoy.pid), 'reaped': [], 'refusals': refusals}
 try:
     assert select.select([worker.stdout], [], [], 30)[0], 'worker did not reach browser milestone'
     assert worker.stdout.readline() == b'ready\n', 'worker failed before browser milestone'
@@ -94,6 +126,7 @@ try:
     assert len(helpers) == 1, 'expected exactly one live owned network helper'
     send(helpers[0], signal.SIGSTOP)
     report['milestone'] = {'helpers': helpers, 'family': rows}
+    permitted_reaps = {worker.pid, *(r['pid'] for r in rows if r['ppid'] == worker.pid)}
     send(report['worker'], getattr(signal, mode))
     deadline = time.monotonic() + 5
     while time.monotonic() < deadline:
@@ -102,6 +135,10 @@ try:
             break
         time.sleep(.025)
     report['after'] = census()
+    # A guardian must reap its own escaped Chrome children. An init-style
+    # observer may reap the killed worker and the now-orphaned guardian,
+    # but must not hide a missing subreaper by reaping Chrome's helpers.
+    report['unexpectedReaps'] = [r for r in report['reaped'] if r['pid'] not in permitted_reaps]
     report['decoySurvived'] = decoy.poll() is None
 finally:
     # A failing old-code/mutant control must not leak a stopped Chrome. This

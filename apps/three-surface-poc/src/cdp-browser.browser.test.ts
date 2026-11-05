@@ -76,7 +76,8 @@ describe.skipIf(executable === undefined || process.platform !== 'linux')('dispo
         `const browser = await launchBrowser(${JSON.stringify(executable)});\n` +
         `const page = await browser.newPage(); await page.navigate('data:text/html,<p>parent lifetime</p>');\n` +
         `process.stdout.write('ready\\n'); setInterval(() => {}, 1000);\n`);
-      const child = spawn('python3', [fileURLToPath(new URL('./test-fixtures/browser-parent-death.py', import.meta.url)), signal, worker, process.execPath],
+      const child = spawn('python3', [fileURLToPath(new URL('./test-fixtures/browser-parent-death.py', import.meta.url)), signal, worker, process.execPath,
+        fileURLToPath(new URL('../../../scripts/poc_browser_lifetime.py', import.meta.url))],
         { stdio: ['ignore', 'pipe', 'pipe'] });
       let output = '';
       let errors = '';
@@ -91,9 +92,12 @@ describe.skipIf(executable === undefined || process.platform !== 'linux')('dispo
         milestone: { helpers: unknown[] }; decoySurvived: boolean;
         after: { procFamilyDenominator: number; proc: unknown[]; psFamily: unknown[] };
         afterRecovery: { proc: unknown[] };
+        unexpectedReaps: unknown[]; refusals: string[];
       };
       expect(report.milestone.helpers).toHaveLength(1);
       expect(report.decoySurvived).toBe(true);
+      expect(report.refusals).toEqual(['start-reused', 'other-uid', 'other-namespace', 'outside-family']);
+      expect(report.unexpectedReaps).toEqual([]);
       expect(report.after.procFamilyDenominator).toBe(0);
       expect(report.after.proc).toEqual([]);
       expect(report.after.psFamily).toEqual([]);
