@@ -108,6 +108,7 @@ def supervise(argv):
         fd = os.pidfd_open(os.getpid())
         signal.pidfd_send_signal(fd, 0)
         os.close(fd)
+        signal.signal(signal.SIGCHLD, signal.SIG_DFL)
         signal.signal(signal.SIGTERM, request)
         signal.signal(signal.SIGINT, request)
         launcher_done = False
