@@ -1,0 +1,192 @@
+{
+  "subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+  "rows": [
+    {
+      "id": "routing-duplicate",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "path": "scripts/spent_round_routing.py",
+      "old": "if name in rounds:",
+      "new": "if False:",
+      "command": [
+        "python3",
+        "scripts/test_spent_round_routing.py"
+      ],
+      "exitCode": 1,
+      "expectedExit": 1,
+      "log": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/routing-duplicate-RAW.log",
+      "sha256": "6e2f24f908dc5723cb7b82bcd94350dcbca194a946cf5dec230dfb5e15abcd98"
+    },
+    {
+      "id": "routing-header",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "path": "scripts/spent_round_routing.py",
+      "old": "if rows[0] !=",
+      "new": "if False and rows[0] !=",
+      "command": [
+        "python3",
+        "scripts/test_spent_round_routing.py"
+      ],
+      "exitCode": 1,
+      "expectedExit": 1,
+      "log": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/routing-header-RAW.log",
+      "sha256": "14a33deb3c83a6e4ecd3d7accd043045101c7d302720b2787037994c40efa109"
+    },
+    {
+      "id": "routing-directory",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "path": "scripts/spent_round_routing.py",
+      "old": "if not directory.is_dir():",
+      "new": "if False:",
+      "command": [
+        "python3",
+        "scripts/test_spent_round_routing.py"
+      ],
+      "exitCode": 1,
+      "expectedExit": 1,
+      "log": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/routing-directory-RAW.log",
+      "sha256": "f9d7729dc91282fbba02e9390f20a49304496a3e7d5e85f61d1321d37b6c5a9e"
+    },
+    {
+      "id": "routing-containment",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "path": "scripts/spent_round_routing.py",
+      "old": "if not resolved.is_relative_to(root):",
+      "new": "if False:",
+      "command": [
+        "python3",
+        "scripts/test_spent_round_routing.py"
+      ],
+      "exitCode": 1,
+      "expectedExit": 1,
+      "log": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/routing-containment-RAW.log",
+      "sha256": "ab4cf5016d622519cefcb1e2ba49a04499376da2d4aba79c815748c3eda3f7dc"
+    },
+    {
+      "id": "routing-lexical",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "path": "scripts/spent_round_routing.py",
+      "old": "if \"\\\\\" in path or \"\\0\" in path or any(p in (\"\", \".\", \"..\") for p in parts):",
+      "new": "if False:",
+      "command": [
+        "python3",
+        "scripts/test_spent_round_routing.py"
+      ],
+      "exitCode": 1,
+      "expectedExit": 1,
+      "log": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/routing-lexical-RAW.log",
+      "sha256": "78451ceb0455fa761d0a9b6106b9451a073dfb343168a8c9e753d33e7fdd4bfb"
+    },
+    {
+      "id": "routing-explicit-history",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "path": "scripts/spent_round_routing.py",
+      "old": "if explicit_history or not is_spent_round(path, rounds)",
+      "new": "if not is_spent_round(path, rounds)",
+      "command": [
+        "python3",
+        "scripts/test_spent_round_routing.py"
+      ],
+      "exitCode": 1,
+      "expectedExit": 1,
+      "log": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/routing-explicit-history-RAW.log",
+      "sha256": "e05caeac3794177d36ae93ac03aeecd453ef0c7d03e6c31d72146fe3ff52e69c"
+    },
+    {
+      "id": "routing-membership",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "path": "scripts/spent_round_routing.py",
+      "old": "parts[len(prefix)] in rounds",
+      "new": "False",
+      "command": [
+        "python3",
+        "scripts/test_spent_round_routing.py"
+      ],
+      "exitCode": 1,
+      "expectedExit": 1,
+      "log": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/routing-membership-RAW.log",
+      "sha256": "47076883084d419b11f282a0ad61f8c134060a1392b3105d9213ca7152a89e60"
+    },
+    {
+      "id": "routing-prefix",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "path": "scripts/spent_round_routing.py",
+      "old": "parts[:len(prefix)] == prefix",
+      "new": "True",
+      "command": [
+        "python3",
+        "scripts/test_spent_round_routing.py"
+      ],
+      "exitCode": 1,
+      "expectedExit": 1,
+      "log": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/routing-prefix-RAW.log",
+      "sha256": "da5ddd4eed05cf4b3485df19852190d1e266e7be8c56cd0f9ef52b2477283305"
+    },
+    {
+      "id": "routing-name-grammar",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "path": "scripts/spent_round_routing.py",
+      "old": "ROUND_NAME.fullmatch(name)",
+      "new": "True",
+      "command": [
+        "python3",
+        "scripts/test_spent_round_routing.py"
+      ],
+      "exitCode": 1,
+      "expectedExit": 1,
+      "log": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/routing-name-grammar-RAW.log",
+      "sha256": "e08568d07a0e65e08bc1fb967e6cf66f1ee0449cf5e3941ed65ceb50494b6c5c"
+    },
+    {
+      "id": "island-static-control",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "path": "apps/syzygy/src/main.ts",
+      "old": "",
+      "new": "\nimport { createRequire as auditMake } from \"node:module\"; const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+      "command": [
+        "node_modules/.bin/vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "exitCode": 1,
+      "expectedExit": 1,
+      "log": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/island-static-control-RAW.log",
+      "sha256": "f41d6a52b830e10c8e96bd3e3ef59eb4695e7a246559755287baaabdaec8bc0b"
+    },
+    {
+      "id": "island-dynamic-destructure",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "path": "apps/syzygy/src/main.ts",
+      "old": "",
+      "new": "\nconst { createRequire: auditMake } = await import(\"node:module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+      "command": [
+        "node_modules/.bin/vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/island-boundary.test.ts"
+      ],
+      "exitCode": 0,
+      "expectedExit": 0,
+      "log": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/island-dynamic-destructure-RAW.log",
+      "sha256": "6d6c655acc52a78d313239341ee87861ae333783e41da0e48739408847f976d6"
+    },
+    {
+      "id": "mirror-byte-drift",
+      "sourceCommit": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "path": ".syzygy/governance/contracts/candidates/rfcs/RFC-0008/state-vocabulary-and-cost.md",
+      "old": "",
+      "new": "\n",
+      "command": [
+        "python3",
+        "scripts/check_governance.py"
+      ],
+      "exitCode": 1,
+      "expectedExit": 1,
+      "log": "/home/orca/.tmp/syzygy-m7-gen1-full-audit-20261105/mirror-byte-drift-RAW.log",
+      "sha256": "e9f5dba1efaeeb42725e7a2297907a72fea09bc4a1ece214cc62fe40b76d72d8",
+      "operation": "append to candidate twin only"
+    }
+  ]
+}
