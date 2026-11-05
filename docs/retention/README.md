@@ -41,11 +41,17 @@ adoption or actual reliance. A governed digest witness or verbatim raw
 preserves R0; code, governed, raw and digest witnesses preserve R1 while
 dependence is undischarged. Other files remain held because lexical absence
 does not establish R2. The extended sweep includes nested basenames, stems,
-wrapped tokens, full digests, directories and conservative glob matches with a literal prefix. A
+wrapped tokens, abbreviated filename suffixes, full digests, directories and conservative glob matches with a literal prefix. A
 star may span a slash in this extra sweep, deliberately over-retaining.
 Unscoped globs, dynamic readers, actual glob semantics,
 preservation language, sidecars and replay inputs remain unresolved rather
 than silently cleared. The source census predicate remains unchanged.
+
+The extra suffix discovery recognizes an ASCII filename suffix after a
+literal Unicode ellipsis or three ASCII periods, including trailing prose
+periods. Every matching body is protected when the citer is governed, code
+or a raw review; an ambiguous suffix never chooses one body. This bounded
+grammar is not an absence proof for other abbreviated or assembled references.
 
 [Unknown] The default conservative plan does not establish the eligible
 archive population or newest interchangeable family members. No family equivalence or recency is

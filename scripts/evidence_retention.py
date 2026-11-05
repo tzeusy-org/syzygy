@@ -47,7 +47,7 @@ SOURCE_KEYS = {"version", "source_commit", "snapshot_sha256", "plan_sha256", "so
 ADMIN = {HOME + n for n in ("INDEX.jsonl", "PLAN.jsonl", "SOURCE.json", "CENSUS.jsonl", "TRANSACTION.json",
                        "MOVE-TABLE.jsonl", "FAMILIES.jsonl", "ADJUDICATION.json")}
 CITATION_PREDICATE = "scripts/build_evidence_index.py: unchanged path/digest/directory predicate; citation is not reliance"
-EXTENDED_PREDICATE = "full path, slash suffixes, wrapped tokens, nested basename, stem and conservative fnmatch globs in every tracked regular citer; lexical absence never establishes R2"
+EXTENDED_PREDICATE = "full path, slash suffixes, wrapped tokens, abbreviated filename suffixes, nested basename, stem and conservative fnmatch globs in every tracked regular citer; lexical absence never establishes R2"
 
 
 class Refusal(ValueError):
@@ -201,6 +201,7 @@ def protection_witnesses(files: dict[str, bytes], rows: list[dict]) -> dict[str,
     by_digest = collections.defaultdict(set)
     directories = collections.defaultdict(set)
     glob_cache = {}
+    abbreviation_cache = {}
     forms = {p: (p, p[len(PREFIX):], PurePosixPath(p).name) for p in targets}
     for row in rows:
         p = row["path"]
@@ -231,6 +232,16 @@ def protection_witnesses(files: dict[str, bytes], rows: list[dict]) -> dict[str,
             for target in by_digest.get(hexd.lower(), ()):
                 if target != citer:
                     hits.add((target, "digest", hexd.lower()))
+        # A raw may abbreviate a comparison operand as `…-date-role.json`.
+        # Preserve every matching suffix, including ambiguous matches. This
+        # ASCII filename grammar is discovery, never an absence proof.
+        for suffix in re.findall(r"(?:\u2026|\.{3})([-A-Za-z0-9_./]*\.[A-Za-z0-9_.-]+)", text):
+            suffix = suffix.rstrip(".")
+            if suffix not in abbreviation_cache:
+                abbreviation_cache[suffix] = [p for p in targets if p.endswith(suffix)]
+            for target in abbreviation_cache[suffix]:
+                if target != citer:
+                    hits.add((target, "abbreviated-path-suffix", suffix))
         patterns = {p.rstrip(".") for p in re.findall(r"[A-Za-z0-9_./*?\[\]-]+", text)
                     if ("*" in p or "?" in p) and any(c.isalnum() for c in p)}
         for pattern in sorted(patterns):
@@ -1959,6 +1970,10 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         def raw_dependency(doc):
             (root / "review-RAW.md").write_text("Synthetic evidence dependency: " + paths[0] + "\n")
         source_negative("R1-cannot-enter-adjudicated-family", raw_dependency, "undischarged-R1-family-member")
+        def abbreviated_raw_dependency(doc):
+            (root / "review-RAW.md").write_text("Comparison operand: \u2026-2026-01-01.json\n")
+        source_negative("abbreviated-raw-comparison-cannot-enter-family", abbreviated_raw_dependency,
+                        "undischarged-R1-family-member")
         def false_literal_glob_discharge(doc):
             raw_dependency(doc); citer = "review-RAW.md"
             for token in (paths[0], PurePosixPath(paths[0]).name):
@@ -2346,6 +2361,43 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         inplace = report(home)
         cases.append({"predicate": "adjudication-allows-exact-retention-home", "pass": inplace == valid,
                       "old": "external output", "new": HOME, "fixture_commit": containing})
+    with tempfile.TemporaryDirectory(prefix="syzygy-retention-abbreviations-") as temp:
+        root = Path(temp); git(root, "init", "-q")
+        a = PREFIX + "capture-a-tail.json"; b = PREFIX + "capture-b-tail.json"
+        unrelated = PREFIX + "capture-unrelated.json"
+        raw = "docs/reviews/comparison-RAW.md"
+        fixture = {p: encoded({"subject": "synthetic-" + str(i)}) for i, p in enumerate((a, b, unrelated))}
+        inputs = (("unicode", "Comparison: `\u2026-tail.json`", {a, b}),
+                  ("ascii", "Comparison: `...-tail.json`", {a, b}),
+                  ("trailing-period", "Comparison: ...-tail.json.", {a, b}),
+                  ("ellipsis-required", "Comparison: -tail.json", set()))
+        for name, text, expected in inputs:
+            files = {**fixture, raw: (text + "\n").encode()}
+            for path, body in files.items():
+                target = root / path; target.parent.mkdir(parents=True, exist_ok=True); target.write_bytes(body)
+            git(root, "add", "--all")
+            git(root, "-c", "user.name=Retention Fixture", "-c", "user.email=fixture@example.invalid",
+                "commit", "-qm", "synthetic abbreviated reference " + name)
+            at = git(root, "rev-parse", "HEAD").decode().strip()
+            rows = lines(make_census(files)); found = protection_witnesses(files, rows)
+            protected = {p for p, ws in found.items() if any(w["form"] == "abbreviated-path-suffix" and w["citer"] == raw for w in ws)}
+            cases.append({"predicate": "abbreviated-suffix-" + name, "pass": protected == expected,
+                          "old": {"evidence_bytes": {p: v.decode() for p, v in fixture.items()}},
+                          "new": {"consumer": raw, "consumer_bytes": text + "\n"},
+                          "expected_paths": sorted(expected), "observed_paths": sorted(protected), "fixture_commit": at})
+        files = {**fixture, a: encoded({"literal": "...-tail.json"})}
+        (root / raw).unlink()
+        for path, body in files.items(): (root / path).write_bytes(body)
+        git(root, "add", "--all")
+        git(root, "-c", "user.name=Retention Fixture", "-c", "user.email=fixture@example.invalid",
+            "commit", "-qm", "synthetic abbreviated self reference")
+        at = git(root, "rev-parse", "HEAD").decode().strip()
+        found = protection_witnesses(files, lines(make_census(files)))
+        protected = {p for p, ws in found.items() if any(w["form"] == "abbreviated-path-suffix" and w["citer"] == a for w in ws)}
+        cases.append({"predicate": "abbreviated-suffix-self-is-not-a-consumer", "pass": protected == {b},
+                      "old": {"evidence_bytes": {p: v.decode() for p, v in fixture.items()}},
+                      "new": {"consumer": a, "consumer_bytes": files[a].decode()},
+                      "expected_paths": [b], "observed_paths": sorted(protected), "fixture_commit": at})
     for case in cases:
         case["input_record_sha256"] = digest(encoded({"old": case["old"], "new": case["new"]}))
     report = {"implementation_commit": implementation_commit, "implementation_sha256": implementation_sha256,
