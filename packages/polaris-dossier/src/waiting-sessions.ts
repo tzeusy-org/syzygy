@@ -37,7 +37,7 @@ import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
  * recorded in the run directory; `continuationOf` reads those records, and the declared session identifiers of earlier verdicts, so the
  * review page can disclose a continuing reviewer. Every record lies within the agent sessions' write reach, so all of it is Inferred.
  *
- * Gated: until the owner signs off version 1.2 of the specification, `waitModeSigned` is false and every wait-mode step refuses. */
+ * Gated by a matching sign-off at or after v1.2 and its effective UTC day (OWNER-DIRECTION-POLARIS-WAIT-MODE-UTC-DAY-2026-11-05). */
 
 export const WAIT_MODE_DIRECTION = 'POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08';
 export const WAIT_MODE_SPEC = 'polaris-dossier-local-agent-mode v1.2';
@@ -71,15 +71,15 @@ const DELIVERY_JSON_LIMITS = Object.freeze({ maxBytes: 65_536, maxNodes: 256, ma
 const SIGNOFF_PACKAGE = 'polaris-dossier-local-agent-mode';
 const AGGREGATE = 'ACCEPTANCE-ACT-RECORD.md';
 
-/** Whether a sign-off record of `version` is one `record_versioned_signoff.py` wrote: its head as the recorder renders it (title, package,
- * version, tag, a reviewed commit and a confirming verdict), and exactly one marked block for the version in the aggregate record, as
- * the recorder's `--check` requires. A file that only carries the name opens nothing. */
-export function signoffRecordHolds(decisions: string, name: string, version: string): boolean {
+/** Read a trusted-checkout record whose structural subset holds: the first twelve nonblank lines carry the recorder's title, package,
+ * version, tag, reviewed commit and confirming verdict; the aggregate has exactly one marked block. This is not full-template or
+ * owner-act provenance verification. Effective-day eligibility is evaluated separately, after matching the applied subject. */
+function readSignoffRecord(decisions: string, name: string, version: string): string | undefined {
   let text: string, aggregate: string;
   try {
     text = fs.readFileSync(path.join(decisions, name), 'utf8');
     aggregate = fs.readFileSync(path.join(decisions, AGGREGATE), 'utf8');
-  } catch { return false; }
+  } catch { return undefined; }
   const head = text.split('\n').filter((line) => line.trim() !== '').slice(0, 12);
   const field = (key: string): string | undefined => head.find((line) => line.startsWith(`${key}: `))?.slice(key.length + 2);
   const headHolds = head[0] === `# Polaris dossier local-agent mode — version-tagged sign-off v${version}`
@@ -87,7 +87,11 @@ export function signoffRecordHolds(decisions: string, name: string, version: str
     && /^[0-9a-f]{40}$/u.test(field('Reviewed commit') ?? '') && (field('Review verdict') === 'CONFIRM' || field('Review verdict') === 'CONFIRM WITH EXCEPTIONS');
   const start = `<!-- versioned-signoff:${SIGNOFF_PACKAGE}:v${version} -->`, end = `<!-- /versioned-signoff:${SIGNOFF_PACKAGE}:v${version} -->`;
   const blockHolds = aggregate.split(start).length === 2 && aggregate.split(end).length === 2 && aggregate.indexOf(start) < aggregate.indexOf(end);
-  return headHolds && blockHolds;
+  return headHolds && blockHolds ? text : undefined;
+}
+
+export function signoffRecordHolds(decisions: string, name: string, version: string): boolean {
+  return readSignoffRecord(decisions, name, version) !== undefined;
 }
 
 const INSTALLED_SPEC = path.join('openspec', 'changes', SIGNOFF_PACKAGE, 'specs', 'polaris-generation', 'spec.md');
@@ -113,33 +117,53 @@ export function appliedSubjectHolds(recordsRoot: string, recordFile: string, ver
   return digests.length === 1 && sha256(spec) === digests[0] && spec.toString('utf8').includes(`Exact behavioral delta, version ${version}.`);
 }
 
-/** Where the v1.2 gate stands: `signed` (a sign-off record of a version at or after 1.2 holds, over a tree that carries its applied
- * subject), `drifted` (such a record holds, but no record's applied subject does: the installed spec or the review it names no longer
- * agrees with it), or `unsigned` (no record at or after 1.2 holds). Only `signed` opens the gate; `drifted` is a reason, not a mode. */
-export type WaitModeStatus = 'signed' | 'drifted' | 'unsigned';
+/** A matching applied subject may still lack effective-day authorization. These temporal states never assert installed-byte drift. */
+export type WaitModeStatus = 'signed' | 'drifted' | 'unsigned' | 'future' | 'missing-date' | 'invalid-date' | 'invalid-evaluation';
 
-/** The gate's state over the records root: a sign-off record for a version at or after 1.2 in the records root's decisions that
- * `signoffRecordHolds`, over a tree that carries its applied subject (`appliedSubjectHolds`). The record lies in the Syzygy checkout, not
- * the run's state directory. */
-export function waitModeStatus(recordsRoot: string): WaitModeStatus {
+/** The local-agent recorder has a Date-only dialect, distinct from registry Recorded-at instants. The owner direction
+ * OWNER-DIRECTION-POLARIS-WAIT-MODE-UTC-DAY-2026-11-05 makes it an effective UTC day, not an exact signing instant. */
+function signoffDateStatus(text: string, utcDay: number): 'signed' | 'future' | 'missing-date' | 'invalid-date' {
+  const lines = text.split('\n').filter((line) => line.trim() !== '');
+  const dates = lines.filter((line) => line.startsWith('Date:'));
+  if (dates.length === 0) return 'missing-date';
+  if (dates.length !== 1 || lines[1] !== dates[0]) return 'invalid-date';
+  const match = /^Date: ([0-9]{4}-[0-9]{2}-[0-9]{2})$/u.exec(dates[0]!);
+  if (match === null) return 'invalid-date';
+  const day = Date.parse(`${match[1]}T00:00:00Z`);
+  if (!Number.isFinite(day) || new Date(day).toISOString().slice(0, 10) !== match[1]) return 'invalid-date';
+  return day / 86_400_000 > utcDay ? 'future' : 'signed';
+}
+
+/** One entry evaluation over a trusted checkout, using one captured instant for every candidate. Reads of the record, aggregate,
+ * review and specification are not an atomic snapshot. A matching in-force candidate wins regardless of directory order; otherwise
+ * matching temporal refusals take precedence (future, invalid, missing), then an unmatched recorded subject, then absence. */
+export function waitModeStatus(recordsRoot: string, now = Date.now()): WaitModeStatus {
+  if (!Number.isFinite(now) || !Number.isFinite(new Date(now).getTime())) return 'invalid-evaluation';
+  const utcDay = Math.floor(now / 86_400_000);
   const decisions = path.join(recordsRoot, DECISIONS);
   let names: string[];
   try { names = fs.readdirSync(decisions); } catch { return 'unsigned'; }
   let recorded = false;
+  const temporal = new Set<WaitModeStatus>();
   for (const name of names) {
     const match = SIGNOFF_RECORD.exec(name);
     if (match === null || !(Number(match[1]) > 1 || (Number(match[1]) === 1 && Number(match[2]) >= 2))) continue;
     const version = `${match[1]}.${match[2]}`;
-    if (!signoffRecordHolds(decisions, name, version)) continue;
-    if (appliedSubjectHolds(recordsRoot, path.join(decisions, name), version)) return 'signed';
+    const text = readSignoffRecord(decisions, name, version);
+    if (text === undefined) continue;
     recorded = true;
+    if (!appliedSubjectHolds(recordsRoot, path.join(decisions, name), version)) continue;
+    const status = signoffDateStatus(text, utcDay);
+    if (status === 'signed') return 'signed';
+    temporal.add(status);
   }
+  for (const status of ['future', 'invalid-date', 'missing-date'] as const) if (temporal.has(status)) return status;
   return recorded ? 'drifted' : 'unsigned';
 }
 
-/** Whether the owner has signed off a version of the local-agent mode at or after 1.2; see `waitModeStatus`. */
-export function waitModeSignedIn(recordsRoot: string): boolean {
-  return waitModeStatus(recordsRoot) === 'signed';
+/** Whether a matching eligible local-agent sign-off is in force for this operation's UTC day; see `waitModeStatus`. */
+export function waitModeSignedIn(recordsRoot: string, now = Date.now()): boolean {
+  return waitModeStatus(recordsRoot, now) === 'signed';
 }
 
 /** A session directory that passed the link checks, with its real path, or why it may not be written into. */
@@ -185,10 +209,18 @@ export const WAIT_MODE_DRIFTED = `wait mode is specified only by ${WAIT_MODE_SPE
 
 /** The reason a wait-mode step refuses, or null when the gate is open. An injected `signed` (a test's, or a caller's) can say only open or
  * closed, so its closed state keeps the unsigned reason. */
-export function waitModeRefusal(recordsRoot: string, signed?: () => boolean): string | null {
+export function waitModeRefusal(recordsRoot: string, signed?: () => boolean, now = Date.now()): string | null {
   if (signed !== undefined) return signed() ? null : WAIT_MODE_UNSIGNED;
-  const status = waitModeStatus(recordsRoot);
-  return status === 'signed' ? null : status === 'drifted' ? WAIT_MODE_DRIFTED : WAIT_MODE_UNSIGNED;
+  const status = waitModeStatus(recordsRoot, now);
+  switch (status) {
+    case 'signed': return null;
+    case 'drifted': return WAIT_MODE_DRIFTED;
+    case 'unsigned': return WAIT_MODE_UNSIGNED;
+    case 'future': return "wait mode cannot be authorized by the matching local-agent sign-off because its Date is later than this operation's UTC day; it is not in force yet for wait mode; hand each session over with session-prompt as signed in v1.1";
+    case 'missing-date': return 'wait mode cannot be authorized by the local-agent sign-off because its recorder-position Date is missing; hand each session over with session-prompt as signed in v1.1';
+    case 'invalid-date': return 'wait mode cannot be authorized by the local-agent sign-off because its Date is duplicate, misplaced, malformed or not a real calendar day; hand each session over with session-prompt as signed in v1.1';
+    case 'invalid-evaluation': return 'wait mode cannot be evaluated because this operation has no finite, representable evaluation instant; hand each session over with session-prompt as signed in v1.1';
+  }
 }
 
 /** The prompt record of a waiting session: written by `session-prompt <run> all`. */
@@ -444,7 +476,7 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   const startedAt = deps.now();
   const refuse = (stage: string, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]): AwaitResult =>
     ({ ok: false, refusal: { command: 'await', outcome: 'refused', stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: AWAIT_DISCLOSURES } });
-  const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned);
+  const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned, startedAt);
   if (gateRefusal !== null) return refuse('unsigned', gateRefusal);
 
   // The directory: absolute, normalised, ending in one slash, so the printed permission rule's prefix names exactly this session.
