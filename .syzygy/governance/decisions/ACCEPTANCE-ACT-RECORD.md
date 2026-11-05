@@ -1760,3 +1760,32 @@ Claude Code CLI (quoted in the dedicated record).
 This sign-off authorizes no implementation, widens no consent, read, write or
 egress, and a later version of the package is signed separately.
 <!-- /versioned-signoff:polaris-dossier-local-agent-mode:v1.3 -->
+
+<!-- PWB-POLICY-SCOPE-V6:BEGIN -->
+## Public-source screening scope version 6 act — approve-policy — performed 2026-11-05
+
+**Phrase the act takes (given 2026-11-05 by the owner's words, not typed as a
+phrase; see the dedicated record):**
+
+```text
+APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY: c44058c02c244e8460c1e33ab01f0343ed0612043d7bf53e0d36410c9f9ebfa2
+```
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Act type / artifact | `approve-policy` / `.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json` |
+| Argument | SHA-256 of the artifact itself: the one row (variant `p`) of the package manifest, recomputed at recording |
+| Provenance state | `owner-adopted (bootstrap, uncorrelated)` — a state-(1) human act, owner-trusted and never independently verified |
+| A1 audit-record identity | explicitly absent, satisfying RFC3-16(b) item 9 for state (1) |
+| Frozen subject | `b64c6769fd2fa928ae946dc27cdb729267f153fb` |
+| Manifest | `.syzygy/governance/contracts/candidates/public-source-screening-scope-v6/PUBLIC-SOURCE-SCREENING-SCOPE-V6-MANIFEST.txt`, SHA-256 `76b2b6b0ac9eb185d8816e6014f86bc8a66c13501a8727a83fa6f8b8c1a18986` |
+| Review outcome | `docs/reviews/R-SCREENING-SCOPE-V6-b64c-4-RAW.md`: `CONFIRM WITH EXCEPTIONS`, its head bound to the manifest file |
+| Owner's words given (UTC) | `2026-11-05T09:43:08Z` |
+| Recorded at (UTC) | `2026-11-05T09:43:08Z` |
+| Recording | `.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md`; annotated tag `pwb-approve-policy-public-source-scope-v6-signed-2026-11-05` on the commit carrying these records |
+
+Effective status: this one record is **effective owner authority —
+owner-adopted (bootstrap, uncorrelated)** for its own role only. It grants no
+consent, read or egress, and the read gates are re-pointed by a separate change.
+<!-- PWB-POLICY-SCOPE-V6:END -->

@@ -172,9 +172,9 @@ describe('loadCensus', () => {
   });
 });
 
-// syzygy-mea.4: the census under the live version-5 policy (governance-text and the owner placements), with the RFC5-14 class act in
-// force, as `loadCensus` builds it for the run's subject.
-describe('withheldCensus under the screening scope version 5', () => {
+// syzygy-mea.4: the census under the live policy (governance-text and the owner placements), with the RFC5-14 class act in force, as
+// `loadCensus` builds it for the run's subject. syzygy-n5jm: under version 6 (variant p) the placement list adds redis.conf.
+describe('withheldCensus under the screening scope version 6', () => {
   const LIVE_BYTES = fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'));
   const TRIAL = '498ecd0d6d007db11ddb3aea9428552598a78622';
   const screenFor = (subject: { repository: string; commit: string } | null) => {
@@ -182,33 +182,33 @@ describe('withheldCensus under the screening scope version 5', () => {
     if (!built.ok) throw new Error(built.why);
     return built.screen;
   };
-  const V5_ENTRIES = [blob('SECURITY.md'), blob('MANIFESTO'), blob('TLS.md'), blob('modules/MODULES.md'), blob('README.md'), blob('src/server.c')];
+  const V6_ENTRIES = [blob('SECURITY.md'), blob('MANIFESTO'), blob('TLS.md'), blob('modules/MODULES.md'), blob('README.md'), blob('redis.conf'), blob('src/server.c')];
 
   it('lists a governance-text path as class-not-consented when the statement does not list governance-text', () => {
-    const census = withheldCensus(V5_ENTRIES, screenFor({ repository: 'repository:redis-redis', commit: TRIAL }), ['code-content', 'project-documentation']);
+    const census = withheldCensus(V6_ENTRIES, screenFor({ repository: 'repository:redis-redis', commit: TRIAL }), ['code-content', 'project-documentation']);
     expect(census.classNotConsented).toEqual([{ path: 'MANIFESTO', missingClass: 'governance-text' }, { path: 'SECURITY.md', missingClass: 'governance-text' }]);
     expect(census.unknownExtractionClass).toEqual([]);
-    const listed = withheldCensus(V5_ENTRIES, screenFor({ repository: 'repository:redis-redis', commit: TRIAL }), ['code-content', 'project-documentation', 'governance-text']);
+    const listed = withheldCensus(V6_ENTRIES, screenFor({ repository: 'repository:redis-redis', commit: TRIAL }), ['code-content', 'project-documentation', 'governance-text']);
     expect(listed.classNotConsented).toEqual([]);
   });
 
   it('admits the placed paths at the trial commit of repository:redis-redis and lists them as unknown-extraction-class elsewhere', () => {
     const consented = ['code-content', 'project-documentation', 'governance-text'];
-    expect(withheldCensus(V5_ENTRIES, screenFor({ repository: 'repository:redis-redis', commit: TRIAL }), consented).unknownExtractionClass).toEqual([]);
+    expect(withheldCensus(V6_ENTRIES, screenFor({ repository: 'repository:redis-redis', commit: TRIAL }), consented).unknownExtractionClass).toEqual([]);
     for (const subject of [{ repository: 'repository:redis-redis', commit: 'd2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7' }, { repository: 'repository:other', commit: TRIAL }, null]) {
-      expect(withheldCensus(V5_ENTRIES, screenFor(subject), consented).unknownExtractionClass, JSON.stringify(subject)).toEqual(['TLS.md', 'modules/MODULES.md']);
+      expect(withheldCensus(V6_ENTRIES, screenFor(subject), consented).unknownExtractionClass, JSON.stringify(subject)).toEqual(['TLS.md', 'modules/MODULES.md', 'redis.conf']);
     }
   });
 
   it('loads the checkout\'s own screen for the placement subject when no loader is given', async () => {
-    const listing = () => ({ listTree: async () => V5_ENTRIES.map((e) => ({ ...e, id: 'x' })) }) as unknown as PinnedObjectReader;
+    const listing = () => ({ listTree: async () => V6_ENTRIES.map((e) => ({ ...e, id: 'x' })) }) as unknown as PinnedObjectReader;
     const at = (commit: string) => loadCensus({ clonePath: '/nonexistent/clone', pinned: commit, consented: ['code-content', 'project-documentation', 'governance-text'],
-      recordsRoot: REAL_ROOT, now: Date.UTC(2026, 10, 3, 12, 0, 0), placement: { repository: 'repository:redis-redis', commit } }, { openReader: listing });
+      recordsRoot: REAL_ROOT, now: Date.UTC(2026, 10, 5, 12, 0, 0), placement: { repository: 'repository:redis-redis', commit } }, { openReader: listing });
     const trial = await at(TRIAL), other = await at('d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7');
     if (!trial.ok || !other.ok) throw new Error('expected both censuses to load');
-    expect(trial.census.policy.policyVersion).toBe('1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd');
+    expect(trial.census.policy.policyVersion).toBe('1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p');
     expect(trial.census.unknownExtractionClass).toEqual([]);
-    expect(other.census.unknownExtractionClass).toEqual(['TLS.md', 'modules/MODULES.md']);
+    expect(other.census.unknownExtractionClass).toEqual(['TLS.md', 'modules/MODULES.md', 'redis.conf']);
   });
 });
 

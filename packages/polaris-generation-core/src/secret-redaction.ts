@@ -28,7 +28,7 @@ import type { PublicSourceContentClass } from './public-source-classification.js
  * Resource bounds: the ordinary first-match scan decides clean bodies and classes that cannot redact before any every-offset work.
  * Whole-artifact checks also precede that work. The overlapping scan stops at `MAX_MATCHES` or when summed match lengths exceed eight
  * times the body length; a breach excludes whole. This bounds repeated successful scans of long suffixes, rather than just their count.
- * The pinned credential-bearing URL pattern uses exact linear recognition, including failed searches and retained-text re-screening; other declared regexes have no nested ambiguous quantifier. The length limit still bounds overlapping successful suffix matches. Not repaired here (the policy's own residuals):
+ * The pinned credential-bearing URL pattern uses exact linear recognition, including failed searches and retained-text re-screening; other declared regexes have no nested ambiguous quantifier (version 6's `config-secret-directive` included: each `#` iteration consumes a `#`, and `secret-redaction.test.ts` bounds it over long blank, `#` and ACL lines). The length limit still bounds overlapping successful suffix matches. Not repaired here (the policy's own residuals):
  * a secret no detector matches, beyond the guard lines or continuing past
  * them, is admitted; the whole body's digest and object id stay recorded and can check a guess at a short withheld line. */
 
@@ -103,10 +103,13 @@ export function readSecretRedaction(scope: unknown, detectorIds: readonly string
  * scope only, so the public-source screens run them wherever they run the policy's (paths, bodies, the every-offset scan, retained text
  * and agent text), and the Butlers base screen never reads them. The `rule` and `consequence` texts are pinned; each detector is read as
  * the policy's are (`id`, `kind` and `pattern` with `flags`, or `values`), and an id the policy's detectors or another scope detector
- * already uses refuses. The patterns are compiled by the screens with the policy's own compiler, which refuses one that does not compile. */
+ * already uses refuses. The patterns are compiled by the screens with the policy's own compiler, which refuses one that does not compile.
+ * `consequence` is version 6's text (approved 2026-11-05, variant `p`): version 5's with the config-secret-directive clause appended; the
+ * `rule` text is version 5's, unchanged. Version 5's consequence no longer reads, so the version-5 bytes refuse, as every superseded
+ * scope-detector text does. */
 const SCOPE_DETECTOR_TEXTS = {
   rule: '6503580ee657dac1536178c1b90f25c62b10a97211a2e883071c7538a0d257c5',
-  consequence: '3e4ba41de90a1d7bbeb937c461361bcdfc37ffd6253015639894d46412ce7f1f',
+  consequence: '04aa0cd069c69ba9997f3ff9f55762c78db9c8aa36051325a5009b708e6dafc9',
 } as const;
 const SCOPE_DETECTOR_KEYS = ['rule', 'detectors', 'consequence'] as const;
 /** `detectors` is empty when the scope declares none (versions 1 to 4). */

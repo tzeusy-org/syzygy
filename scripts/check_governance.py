@@ -1898,6 +1898,12 @@ PWB_EFFECT_AMENDMENT_ACTS = (
      f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md",
      f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md",
      "319e404ee413220550d65644f6c93db096ed1cda431760baec70a1e190adb0bd"),
+    # The version-6 screening-scope act (syzygy-mcs4, variant p, 2026-11-05) supersedes the
+    # version-5 act for the policy subject.
+    (PWB_EFFECT_ACTS[1][0], PWB_EFFECT_ACTS[1][1],
+     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md",
+     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md",
+     "e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b"),
     # P-114's one registry row supersedes act B; all old copies stay history.
     (PWB_EFFECT_ACTS[2][0], PWB_EFFECT_ACTS[2][1],
      f"{DECISIONS}/PWB-OBSERVER-REGISTRY-BEHAVIOR-CONTRACT-REPIN-ACT.md",
@@ -1947,6 +1953,10 @@ PWB_EFFECT_AMENDMENT_OFFERINGS = {
     # The version-4 screening-scope act was offered the same way (variant row of its manifest).
     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md": {
         f"{CANDIDATES}/public-source-screening-scope-v4/PUBLIC-SOURCE-SCREENING-SCOPE-V4-MANIFEST.txt": "variant-row",
+    },
+    # The version-5 screening-scope act was offered the same way (variant row of its manifest).
+    f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md": {
+        f"{CANDIDATES}/public-source-screening-scope-v5/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt": "variant-row",
     },
 }
 PWB_STATE1_SUBJECTS = tuple(sorted((
@@ -4054,6 +4064,7 @@ BARE_DIGEST_HEADING_MANIFEST_EXEMPTIONS = {
     (PUBLIC_SOURCE_SCOPE_V3_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V3_MANIFEST,
     (f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md", "manifest"): f"{CANDIDATES}/public-source-screening-scope-v4/PUBLIC-SOURCE-SCREENING-SCOPE-V4-MANIFEST.txt",
     (f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md", "manifest"): f"{CANDIDATES}/public-source-screening-scope-v5/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt",
+    (PUBLIC_SOURCE_SCOPE_V6_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V6_MANIFEST,
 }
 
 

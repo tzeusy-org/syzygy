@@ -1,0 +1,694 @@
+{
+ "bead": "syzygy-n5jm",
+ "subject": "the screening scope v6 install (owner act PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-APPROVAL-2026-11-05, variant p): read gate and act chain, screens, installer and re-pin builder",
+ "date": "2026-11-05",
+ "commit": "4c243a11dbdff45b91cd826cb1024e2b3c97b1df",
+ "runner": "each mutant replaces its one exact old fragment with new in the working tree, runs the named tests, and restores the file (the tree is asserted clean before and after). vitest run <tests> (both tiers), killed when the run exits non-zero with at least one failed test or suite load failure, or times out at 1200 s; a script mutant runs the named command, killed when it exits non-zero (failedTests counts its FAIL lines; suiteLoadFailures is 1 when it stopped on a traceback)",
+ "subjects": {
+  "apps/three-surface-poc/src/governance-inputs.ts": "aea6c29f69a153bb0e6a42cfaa1e827d15e6ac0cab60cf7532968378107fc85f",
+  "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts": "5c5e7addc4f349ece1ef5f550ed70a65c78b5dfde1d6fd33ee24b8c2089c9df4",
+  "packages/polaris-dossier/src/screen.ts": "aa3c2f9b8e0c9ab3ebd46c302b9b79d0ed0887b4d985fb730881f8ac9bf01ce3",
+  "packages/polaris-generation-consent/src/package-reader.ts": "e8bcdfa1670842dc9e80e4435d1be8d83fca3a0fce6c73760c3d82913acd875b",
+  "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts": "93a20e225ddecf6310f51811ad749daab10921a54cca752c834015b412f59eeb",
+  "packages/polaris-generation-core/src/public-source-classification.ts": "af0515077b6234ba6dbdbca76c198cae500ba8ab1c4bea692f0bf8b3896644af",
+  "packages/polaris-generation-core/src/secret-redaction.ts": "6aba0786ad977294329c65dc2623a34959b1400b07623578895cefb6e95221e8",
+  "packages/three-surface-poc-core/src/git-object-reader.ts": "df9b6ab0e29f0a33e5ea594a879cc3819eda17a4e46dff98843f0ee082c950a8",
+  "scripts/build_pwb_behavior_contract_repin.py": "7ef7d6dbdba5538f78a6b226b774a3a2c53de3ca348bcb8c8714db5d2a077f92",
+  "scripts/install_redis_sitting.py": "ffe567dc4f9de7ab98eb547a22df2e20525be9282633b0a3587e264c5fd95f34"
+ },
+ "mutants": [
+  {
+   "id": "chain-v6-file",
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "old": "file: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md'",
+   "new": "file: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.txt'",
+   "tests": [
+    "packages/polaris-generation-consent/src/package-reader.test.ts",
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 4,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "the real checkout after the version-6 act loads the version-6 policy in both loaders",
+    "the real checkout after the version-6 act refuses the checkout's bytes before the version-6 act's instant",
+    "screening scope version 6 policy act puts version 6 in force from its instant over versions 5 to 1, in both views"
+   ],
+   "seconds": 7
+  },
+  {
+   "id": "chain-v6-identity",
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "old": "`PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-APPROVAL-${date}`",
+   "new": "`PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-APPROVAL-${date}`",
+   "tests": [
+    "packages/polaris-generation-consent/src/package-reader.test.ts",
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 5,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "the real checkout after the version-6 act loads the version-6 policy in both loaders",
+    "the real checkout after the version-6 act refuses the checkout's bytes before the version-6 act's instant",
+    "screening scope version 6 policy act puts version 6 in force from its instant over versions 5 to 1, in both views"
+   ],
+   "seconds": 7
+  },
+  {
+   "id": "chain-v6-title",
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "old": "(public-source screening scope, version 6)'",
+   "new": "(public-source screening scope, version 5)'",
+   "tests": [
+    "packages/polaris-generation-consent/src/package-reader.test.ts",
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 5,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "the real checkout after the version-6 act loads the version-6 policy in both loaders",
+    "the real checkout after the version-6 act refuses the checkout's bytes before the version-6 act's instant",
+    "screening scope version 6 policy act puts version 6 in force from its instant over versions 5 to 1, in both views"
+   ],
+   "seconds": 7
+  },
+  {
+   "id": "chain-v6-member",
+   "file": "packages/polaris-generation-consent/src/package-reader.ts",
+   "old": "v6: acts[5] ?? null",
+   "new": "v6: acts[4] ?? null",
+   "tests": [
+    "packages/polaris-generation-consent/src/package-reader.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "screening scope version 6 policy act puts version 6 in force from its instant over versions 5 to 1, in both views"
+   ],
+   "seconds": 7
+  },
+  {
+   "id": "testkit-v6-superseded-date",
+   "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+   "old": "SUP, '2026-11-03', '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p'",
+   "new": "SUP, '2026-11-02', '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p'",
+   "tests": [
+    "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "recorder testkit renders fill every form exactly as the recorder renders the same values"
+   ],
+   "seconds": 1
+  },
+  {
+   "id": "testkit-v6-words-at",
+   "file": "packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts",
+   "old": "m.OWNER_WORDS[0], I, 'f'*40, I, SUP, '2026-11-03'",
+   "new": "m.OWNER_WORDS[0], D, 'f'*40, I, SUP, '2026-11-03'",
+   "tests": [
+    "packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "recorder testkit renders fill every form exactly as the recorder renders the same values"
+   ],
+   "seconds": 1
+  },
+  {
+   "id": "gate-record",
+   "file": "apps/three-surface-poc/src/governance-inputs.ts",
+   "old": "policy: '.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md'",
+   "new": "policy: '.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md'",
+   "tests": [
+    "apps/three-surface-poc/src/governance-inputs.test.ts",
+    "apps/three-surface-poc/src/real-tree.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 16,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "loadBodyReadAuthorityInputs (hermetic) loads the three artifacts and act records and resolves every recording tag",
+    "loadBodyReadAuthorityInputs (hermetic) the actual paired registry record selects state (1), while negated or quoted trailers refuse",
+    "loadBodyReadAuthorityInputs (hermetic) detects a later amendment-form record that supersedes an act by its record path"
+   ],
+   "seconds": 4
+  },
+  {
+   "id": "gate-superseded",
+   "file": "apps/three-surface-poc/src/governance-inputs.ts",
+   "old": "policy: '.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md'",
+   "new": "policy: '.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md'",
+   "tests": [
+    "apps/three-surface-poc/src/governance-inputs.test.ts",
+    "apps/three-surface-poc/src/real-tree.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 13,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "loadBodyReadAuthorityInputs (hermetic) loads the three artifacts and act records and resolves every recording tag",
+    "loadBodyReadAuthorityInputs (hermetic) the actual paired registry record selects state (1), while negated or quoted trailers refuse",
+    "loadBodyReadAuthorityInputs (hermetic) detects a later amendment-form record that supersedes an act by its record path"
+   ],
+   "seconds": 4
+  },
+  {
+   "id": "gate-version",
+   "file": "apps/three-surface-poc/src/governance-inputs.ts",
+   "old": "policyVersion: '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p'",
+   "new": "policyVersion: '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd'",
+   "tests": [
+    "apps/three-surface-poc/src/governance-inputs.test.ts",
+    "apps/three-surface-poc/src/real-tree.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 10,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "loadBodyReadAuthorityInputs (hermetic) loads the three artifacts and act records and resolves every recording tag",
+    "loadBodyReadAuthorityInputs (hermetic) the actual paired registry record selects state (1), while negated or quoted trailers refuse",
+    "loadBodyReadAuthorityInputs (hermetic) the gate admits the current exact acts and refuses when either act names another digest"
+   ],
+   "seconds": 3
+  },
+  {
+   "id": "gate-identity",
+   "file": "apps/three-surface-poc/src/governance-inputs.ts",
+   "old": "'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-APPROVAL-2026-11-05'",
+   "new": "'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-APPROVAL-2026-11-04'",
+   "tests": [
+    "apps/three-surface-poc/src/governance-inputs.test.ts",
+    "apps/three-surface-poc/src/real-tree.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 12,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "loadBodyReadAuthorityInputs (hermetic) loads the three artifacts and act records and resolves every recording tag",
+    "loadBodyReadAuthorityInputs (hermetic) the actual paired registry record selects state (1), while negated or quoted trailers refuse",
+    "loadBodyReadAuthorityInputs (hermetic) detects a later amendment-form record that supersedes an act by its record path"
+   ],
+   "seconds": 3
+  },
+  {
+   "id": "gate-tag",
+   "file": "apps/three-surface-poc/src/governance-inputs.ts",
+   "old": "'pwb-approve-policy-public-source-scope-v6-signed-2026-11-05'",
+   "new": "'pwb-approve-policy-public-source-scope-v5-signed-2026-11-03'",
+   "tests": [
+    "apps/three-surface-poc/src/governance-inputs.test.ts",
+    "apps/three-surface-poc/src/real-tree.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 12,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "loadBodyReadAuthorityInputs (hermetic) loads the three artifacts and act records and resolves every recording tag",
+    "loadBodyReadAuthorityInputs (hermetic) classifies a missing act record with an existing tag as git-ref-only",
+    "loadBodyReadAuthorityInputs (hermetic) the actual paired registry record selects state (1), while negated or quoted trailers refuse"
+   ],
+   "seconds": 3
+  },
+  {
+   "id": "gate-anchor",
+   "file": "apps/three-surface-poc/src/governance-inputs.ts",
+   "old": "scopeAnchors: ['polaris-butlers-project-shape-secrets', '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p'",
+   "new": "scopeAnchors: ['polaris-butlers-project-shape-secrets', '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd'",
+   "tests": [
+    "apps/three-surface-poc/src/governance-inputs.test.ts",
+    "apps/three-surface-poc/src/real-tree.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 13,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "loadBodyReadAuthorityInputs (hermetic) loads the three artifacts and act records and resolves every recording tag",
+    "loadBodyReadAuthorityInputs (hermetic) the actual paired registry record selects state (1), while negated or quoted trailers refuse",
+    "loadBodyReadAuthorityInputs (hermetic) detects a later amendment-form record that supersedes an act by its record path"
+   ],
+   "seconds": 3
+  },
+  {
+   "id": "core-policy-version",
+   "file": "packages/three-surface-poc-core/src/git-object-reader.ts",
+   "old": "policyVersion: '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p'",
+   "new": "policyVersion: '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd'",
+   "tests": [
+    "packages/three-surface-poc-core/src/content-classification.test.ts",
+    "packages/three-surface-poc-core/src/project-shape-model.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 7,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "PWB-REQ-003 \u2014 the population survives every fault returns exactly one result per manifest source, in manifest order, with the hand-typed outcome",
+    "PWB-REQ-003 \u2014 the population survives every fault counts add up to the source denominator and the redaction classes are the two emitted ones",
+    "PWB-REQ-003 \u2014 classifySource step by step step 2: every reader refusal maps to its fixed outcome"
+   ],
+   "seconds": 3
+  },
+  {
+   "id": "scope-consequence-v5",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "old": "consequence: '04aa0cd069c69ba9997f3ff9f55762c78db9c8aa36051325a5009b708e6dafc9'",
+   "new": "consequence: '3e4ba41de90a1d7bbeb937c461361bcdfc37ffd6253015639894d46412ce7f1f'",
+   "tests": [
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+    "packages/polaris-dossier/src/census.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 31,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "withheldCensus under the screening scope version 6 lists a governance-text path as class-not-consented when the statement does not list governance-text",
+    "withheldCensus under the screening scope version 6 admits the placed paths at the trial commit of repository:redis-redis and lists them as unknown-extraction-class elsewhere",
+    "withheldCensus under the screening scope version 6 loads the checkout's own screen for the placement subject when no loader is given"
+   ],
+   "seconds": 4
+  },
+  {
+   "id": "scope-consequence-one-char",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "old": "consequence: '04aa0cd069c69ba9997f3ff9f55762c78db9c8aa36051325a5009b708e6dafc9'",
+   "new": "consequence: '04aa0cd069c69ba9997f3ff9f55762c78db9c8aa36051325a5009b708e6dafc8'",
+   "tests": [
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 27,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "screening scope version 6: the builder fixtures through both screens classifies every class fixture at its own repository and commit as the builder states for p, in both screens",
+    "screening scope version 6: the builder fixtures through both screens screens every counterexample at its own repository and commit as the builder states for p, in both screens",
+    "screening scope version 6: the builder fixtures through both screens numbers the withheld lines the same under CRLF and bare CR line ends, in both screens and the oracle"
+   ],
+   "seconds": 3
+  },
+  {
+   "id": "scope-detector-list-truncated",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "old": "  return { ok: true, detectors: Object.freeze(out) };\n}",
+   "new": "  return { ok: true, detectors: Object.freeze(out.slice(0, 3)) };\n}",
+   "tests": [
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+    "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 8,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "screening scope version 5: the builder fixtures through both screens screens every counterexample at the trial commit as the builder states for bcd, with version 6's declared changes, in both screens",
+    "T: the scope detectors declares four scope detectors in both screens under the live bytes, and none under the version-4 bytes",
+    "the scope detectors reader reads the live detectors: version 5's three, then version 6's config-secret-directive"
+   ],
+   "seconds": 4
+  },
+  {
+   "id": "every-offset-drops-i",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "old": "const flags = detector.flags.replace(/[gy]/gu, '');",
+   "new": "const flags = detector.flags.replace(/[gyi]/gu, '');",
+   "tests": [
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 2,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "screening scope version 6: the builder fixtures through both screens screens every counterexample at its own repository and commit as the builder states for p, in both screens",
+    "screening scope version 6: the builder fixtures through both screens numbers the withheld lines the same under CRLF and bare CR line ends, in both screens and the oracle"
+   ],
+   "seconds": 3
+  },
+  {
+   "id": "every-offset-not-sticky",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "old": "sticky = new RegExp(detector.pattern, `${flags}y`);",
+   "new": "sticky = new RegExp(detector.pattern, `${flags}g`);",
+   "tests": [
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 17,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "screening scope version 6: the builder fixtures through both screens screens every counterexample at its own repository and commit as the builder states for p, in both screens",
+    "screening scope version 6: the builder fixtures through both screens numbers the withheld lines the same under CRLF and bare CR line ends, in both screens and the oracle",
+    "secretRedaction (policy version 4): the builder fixtures through the TypeScript reading bounds failed URL searches in the overlap scan and retained-text first search without invoking the quadratic expression"
+   ],
+   "seconds": 325
+  },
+  {
+   "id": "every-offset-quadratic",
+   "file": "packages/polaris-generation-core/src/secret-redaction.ts",
+   "old": "          sticky.lastIndex = at;\n",
+   "new": "          search.exec(text.slice(at));\n          sticky.lastIndex = at;\n",
+   "tests": [
+    "packages/polaris-generation-core/src/secret-redaction.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 14,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "secretRedaction (policy version 4): the builder fixtures through the TypeScript reading bounds failed URL searches in the overlap scan and retained-text first search without invoking the quadratic expression",
+    "config-secret-directive (policy version 6): linear every-offset scanning scans a long blanks line from every offset within the bound",
+    "config-secret-directive (policy version 6): linear every-offset scanning scans a long hashes line from every offset within the bound"
+   ],
+   "seconds": 564
+  },
+  {
+   "id": "dossier-scope-detectors-dropped",
+   "file": "packages/polaris-dossier/src/screen.ts",
+   "old": "...doc['detectors'] as unknown[], ...scopeRead.detectors]",
+   "new": "...doc['detectors'] as unknown[], ...scopeRead.detectors.slice(0, 3)]",
+   "tests": [
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 3,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "screening scope version 6: the builder fixtures through both screens screens every counterexample at its own repository and commit as the builder states for p, in both screens",
+    "screening scope version 6: the builder fixtures through both screens numbers the withheld lines the same under CRLF and bare CR line ends, in both screens and the oracle",
+    "P: the config-secret-directive scope detector refuses agent text quoting a line that opens with a password directive, and passes one that names it mid-line"
+   ],
+   "seconds": 4
+  },
+  {
+   "id": "app-scope-detectors-dropped",
+   "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+   "old": "[...doc.detectors as unknown[], ...scopeDetectors]",
+   "new": "[...doc.detectors as unknown[], ...scopeDetectors.slice(0, 3)]",
+   "tests": [
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 3,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "screening scope version 6: the builder fixtures through both screens screens every counterexample at its own repository and commit as the builder states for p, in both screens",
+    "screening scope version 6: the builder fixtures through both screens numbers the withheld lines the same under CRLF and bare CR line ends, in both screens and the oracle",
+    "P: the config-secret-directive scope detector refuses agent text quoting a line that opens with a password directive, and passes one that names it mid-line"
+   ],
+   "seconds": 3
+  },
+  {
+   "id": "placement-first-two-paths",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "entry.paths.includes(folded)",
+   "new": "entry.paths.slice(0, 2).includes(folded)",
+   "tests": [
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts",
+    "packages/polaris-dossier/src/screen-scope-v5.test.ts",
+    "packages/polaris-dossier/src/census.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 10,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "withheldCensus under the screening scope version 6 lists a governance-text path as class-not-consented when the statement does not list governance-text",
+    "withheldCensus under the screening scope version 6 admits the placed paths at the trial commit of repository:redis-redis and lists them as unknown-extraction-class elsewhere",
+    "withheldCensus under the screening scope version 6 loads the checkout's own screen for the placement subject when no loader is given"
+   ],
+   "seconds": 4
+  },
+  {
+   "id": "placement-any-commit",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "entry.repository === subject.repository && entry.commits.includes(subject.commit)",
+   "new": "entry.repository === subject.repository",
+   "tests": [
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 6,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "screening scope version 6: the builder fixtures through both screens classifies every class fixture at its own repository and commit as the builder states for p, in both screens",
+    "screening scope version 6: the builder fixtures through both screens screens every counterexample at its own repository and commit as the builder states for p, in both screens",
+    "screening scope version 6: the builder fixtures through both screens numbers the withheld lines the same under CRLF and bare CR line ends, in both screens and the oracle"
+   ],
+   "seconds": 3
+  },
+  {
+   "id": "placement-reader-first-two",
+   "file": "packages/polaris-generation-core/src/public-source-classification.ts",
+   "old": "paths: Object.freeze([...paths]) }));",
+   "new": "paths: Object.freeze([...paths].slice(0, 2)) }));",
+   "tests": [
+    "packages/polaris-generation-core/src/public-source-classification.test.ts",
+    "packages/polaris-dossier/src/screen-scope-v6.test.ts"
+   ],
+   "killed": true,
+   "failedTests": 8,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "the live rule reads, with exactly the parameters the policy lists",
+    "screening scope version 6: the builder fixtures through both screens classifies every class fixture at its own repository and commit as the builder states for p, in both screens",
+    "screening scope version 6: the builder fixtures through both screens screens every counterexample at its own repository and commit as the builder states for p, in both screens"
+   ],
+   "seconds": 4
+  },
+  {
+   "id": "i-v6-act-dropped",
+   "file": "scripts/install_redis_sitting.py",
+   "old": "                                           (\"v6\", V6_ACT, V6_SCRIPT, V6_MANIFEST, 6)):",
+   "new": "                                           ):",
+   "tests": [
+    "python3 scripts/install_redis_sitting.py --selftest"
+   ],
+   "killed": true,
+   "failedTests": 0,
+   "suiteLoadFailures": 1,
+   "firstFailures": [
+    "Refusal: the policy on disk does not hash to the final policy act's argument (v5); the acts and the policy disagree"
+   ],
+   "seconds": 0
+  },
+  {
+   "id": "i-v6-edits-not-called",
+   "file": "scripts/install_redis_sitting.py",
+   "old": "    if final.key == \"v6\":\n        new_text = policy_cg_v6_edits(new_text, acts[4].arg)",
+   "new": "    if False:\n        new_text = policy_cg_v6_edits(new_text, acts[4].arg)",
+   "tests": [
+    "python3 scripts/install_redis_sitting.py --selftest"
+   ],
+   "killed": true,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "FAIL step policy: over the live inputs it has nothing to do, and with the version-6 hunks undone it would install them"
+   ],
+   "seconds": 1
+  },
+  {
+   "id": "i-v6-gate-precondition-dropped",
+   "file": "scripts/install_redis_sitting.py",
+   "old": "    once(text, V5_MANIFEST_GATE, \"version-5 manifest registration gated on the version-6 act\")\n",
+   "new": "",
+   "tests": [
+    "python3 scripts/install_redis_sitting.py --selftest"
+   ],
+   "killed": true,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "FAIL chain edits: version 6 without the version-5 manifest gate is refused"
+   ],
+   "seconds": 1
+  },
+  {
+   "id": "i-v6-partial-accepted",
+   "file": "scripts/install_redis_sitting.py",
+   "old": "        raise Refusal(f\"check_governance.py carries part of the version-6 install only ({present})\")",
+   "new": "        return text",
+   "tests": [
+    "python3 scripts/install_redis_sitting.py --selftest"
+   ],
+   "killed": true,
+   "failedTests": 3,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "FAIL chain edits: a partial version-6 install (hunk 2 missing) is refused",
+    "FAIL chain edits: a partial version-6 install (hunk 3 missing) is refused",
+    "FAIL chain edits: a partial version-6 install (the chain row alone) is refused"
+   ],
+   "seconds": 0
+  },
+  {
+   "id": "i-v6-wrong-arg-accepted",
+   "file": "scripts/install_redis_sitting.py",
+   "old": "            raise Refusal(\"the version-6 chain row quotes another argument than the version-5 act's\")",
+   "new": "            pass",
+   "tests": [
+    "python3 scripts/install_redis_sitting.py --selftest"
+   ],
+   "killed": true,
+   "failedTests": 1,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "FAIL chain edits: an installed version-6 row quoting another argument is refused"
+   ],
+   "seconds": 1
+  },
+  {
+   "id": "i-v6-chain-row-comment",
+   "file": "scripts/install_redis_sitting.py",
+   "old": "'    # The version-6 screening-scope act (syzygy-mcs4, variant p, 2026-11-05) supersedes the\\n'",
+   "new": "'    # The version-6 screening-scope act (syzygy-mcs4, variant p, 2026-11-06) supersedes the\\n'",
+   "tests": [
+    "python3 scripts/install_redis_sitting.py --selftest"
+   ],
+   "killed": true,
+   "failedTests": 2,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "FAIL chain edits: version 5 reproduces the live install byte for byte and is idempotent on it",
+    "FAIL chain edits: version 4 reproduces the live install byte for byte and is idempotent on it"
+   ],
+   "seconds": 0
+  },
+  {
+   "id": "i-v6-exemption-text",
+   "file": "scripts/install_redis_sitting.py",
+   "old": "V6_EXEMPTION = '    (PUBLIC_SOURCE_SCOPE_V6_ACT, \"manifest\"): PUBLIC_SOURCE_SCOPE_V6_MANIFEST,\\n'",
+   "new": "V6_EXEMPTION = '    (PUBLIC_SOURCE_SCOPE_V6_ACT, \"manifest\"): PUBLIC_SOURCE_SCOPE_V5_MANIFEST,\\n'",
+   "tests": [
+    "python3 scripts/install_redis_sitting.py --selftest"
+   ],
+   "killed": true,
+   "failedTests": 2,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "FAIL chain edits: version 6 reproduces the live install byte for byte and is idempotent on it",
+    "FAIL chain edits: the version 1 to 4 edits apply and are valid Python"
+   ],
+   "seconds": 1
+  },
+  {
+   "id": "i-v6-gate-comment",
+   "file": "scripts/install_redis_sitting.py",
+   "old": "public-source screening-scope version 6 act{variant}",
+   "new": "public-source screening-scope version 5 act{variant}",
+   "tests": [
+    "python3 scripts/install_redis_sitting.py --selftest"
+   ],
+   "killed": true,
+   "failedTests": 2,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "FAIL gate comment: version 6 names version 5's date, the chosen variant and the registry sentence",
+    "FAIL gate comment: version 6's, over the live records, is the live read gate's comment"
+   ],
+   "seconds": 1
+  },
+  {
+   "id": "i-v6-evaluation-midnight",
+   "file": "scripts/install_redis_sitting.py",
+   "old": "return final.instant if final.key in (\"v5\", \"v6\") else",
+   "new": "return final.instant if final.key in (\"v5\",) else",
+   "tests": [
+    "python3 scripts/install_redis_sitting.py --selftest"
+   ],
+   "killed": true,
+   "failedTests": 2,
+   "suiteLoadFailures": 0,
+   "firstFailures": [
+    "FAIL evaluation instant: version 6 at its record's instant",
+    "FAIL evaluation instant: the live read-gate test evaluates at the final act's"
+   ],
+   "seconds": 0
+  },
+  {
+   "id": "i-v6-battery-words-dropped",
+   "file": "scripts/install_redis_sitting.py",
+   "old": "if final.key in (\"v4\", \"v5\", \"v6\")\n            else battery_lines(",
+   "new": "if final.key in (\"v4\", \"v5\")\n            else battery_lines(",
+   "tests": [
+    "python3 scripts/install_redis_sitting.py --selftest"
+   ],
+   "killed": true,
+   "failedTests": 0,
+   "suiteLoadFailures": 1,
+   "firstFailures": [
+    "Refusal: question opening: expected exactly one match of 'that opened \"(.+?)\" by selecting', found 0"
+   ],
+   "seconds": 0
+  },
+  {
+   "id": "i-v6-script-unregistered",
+   "file": "scripts/install_redis_sitting.py",
+   "old": "SCOPE_SCRIPTS = (V1_SCRIPT, V2_SCRIPT, V3_SCRIPT, V4_SCRIPT, V5_SCRIPT, V6_SCRIPT)",
+   "new": "SCOPE_SCRIPTS = (V1_SCRIPT, V2_SCRIPT, V3_SCRIPT, V4_SCRIPT, V5_SCRIPT)",
+   "tests": [
+    "python3 scripts/install_redis_sitting.py --selftest"
+   ],
+   "killed": true,
+   "failedTests": 0,
+   "suiteLoadFailures": 1,
+   "firstFailures": [
+    "ValueError: tuple.index(x): x not in tuple"
+   ],
+   "seconds": 0
+  },
+  {
+   "id": "r-v6-entry-dropped",
+   "file": "scripts/build_pwb_behavior_contract_repin.py",
+   "old": "        (DECISIONS / \"PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md\",\n         pathlib.Path(\".syzygy/governance/contracts/candidates/public-source-screening-scope-v6/\"\n                      \"proposed/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json.\"\n                      \"{variant}.patch\")),\n",
+   "new": "",
+   "tests": [
+    "python3 scripts/build_pwb_behavior_contract_repin.py --selftest",
+    "python3 scripts/build_pwb_behavior_contract_repin.py --check"
+   ],
+   "killed": true,
+   "failedTests": 0,
+   "suiteLoadFailures": 1,
+   "firstFailures": [
+    "ValueError: policy: the subject with the later patches reversed so far hashes to c44058c02c244e8460c1e33ab01f0343ed0612043d7bf53e0d36410c9f9ebfa2, not the argument e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b of .syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md",
+    "  policy: the subject with the later patches reversed so far hashes to c44058c02c244e8460c1e33ab01f0343ed0612043d7bf53e0d36410c9f9ebfa2, not the argument e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b of .syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md"
+   ],
+   "seconds": 0
+  },
+  {
+   "id": "r-v6-patch-dir",
+   "file": "scripts/build_pwb_behavior_contract_repin.py",
+   "old": "candidates/public-source-screening-scope-v6/\"",
+   "new": "candidates/public-source-screening-scope-v5/\"",
+   "tests": [
+    "python3 scripts/build_pwb_behavior_contract_repin.py --selftest",
+    "python3 scripts/build_pwb_behavior_contract_repin.py --check"
+   ],
+   "killed": true,
+   "failedTests": 0,
+   "suiteLoadFailures": 1,
+   "firstFailures": [
+    "ValueError: missing patch: .syzygy/governance/contracts/candidates/public-source-screening-scope-v5/proposed/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json.p.patch",
+    "  missing patch: .syzygy/governance/contracts/candidates/public-source-screening-scope-v5/proposed/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json.p.patch"
+   ],
+   "seconds": 0
+  }
+ ],
+ "summary": {
+  "mutants": 37,
+  "killed": 37
+ },
+ "earlierRuns": [
+  {
+   "commit": "05cf9c6f7c8266a46bf5cf748daa3d5688348738",
+   "note": "37 mutants, 36 killed. Survivor: i-v6-edits-not-called (deleting step_policy's policy_cg_v6_edits call held every installer predicate); answered by 4c243a11, whose selftest runs step_policy over the live inputs."
+  }
+ ],
+ "notCovered": [
+  "The linear-time bound tests (secret-redaction.test.ts, screen-scope-v6.test.ts) are killed by a matcher mutant (every-offset-quadratic), not by a non-linear pattern: the pattern is act-bound policy bytes and is not edited here; the v6 builder selftest holds the two-star pattern mutant."
+ ]
+}
