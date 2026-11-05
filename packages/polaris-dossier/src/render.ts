@@ -435,25 +435,33 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   // A code excerpt: the cited lines from Syzygy's own read, as one quotation per source piece they fall in, never the draft's text. A
   // blob screening or the class gate withholds, or a range touching a withheld line, renders withheld with none of its bytes.
   const excerpt = (repositoryPath: string, startLine: number, endLine: number): LocalSegment[] => {
-    const withheld: LocalSegment[] = [{ kind: 'withheld', reason: 'excluded-content' }];
+    const unavailable: LocalSegment[] = [{ kind: 'withheld', reason: 'excluded-content' }];
+    const withCause = (cause: NonNullable<Extract<LocalSegment, { kind: 'withheld' }>['cause']>): LocalSegment[] => [{ kind: 'withheld', reason: 'excluded-content', cause }];
     const blob = admitted.get(repositoryPath);
-    if (blob === undefined || (blob.withheld !== undefined && blob.withheld.some((n) => n >= startLine && n <= endLine))) return withheld;
+    if (blob === undefined) {
+      if (withheldClass.has(repositoryPath)) return withCause('content-class');
+      const cited = derived.citedBlobs.find((entry) => entry.path === repositoryPath);
+      if (cited?.outcome === 'not-utf8-text') return withCause('invalid-utf8');
+      if (cited !== undefined && cited.outcome !== 'admitted') return withCause(cited.read ? 'content-screening' : 'path-screening');
+      return unavailable;
+    }
+    if (blob.withheld?.some((n) => n >= startLine && n <= endLine)) return withCause('redacted-line');
     const start = blob.lineByteOffsets?.[startLine - 1] ?? byteOf(blob.raw, startLine);
     const end = blob.lineByteOffsets === undefined ? byteOf(blob.raw, endLine + 1) : blob.lineByteOffsets[endLine] ?? blob.originalBytes!;
     const parts: LocalSegment[] = [];
     for (let at = start; at < end;) {
       const piece = pieceAt(repositoryPath, at);
-      if (piece === undefined) return withheld;
+      if (piece === undefined) return unavailable;
       const covering = piece.redaction === undefined ? [piece.segment?.start ?? 0, piece.segment?.end ?? Buffer.byteLength(blob.raw)]
         : piece.spans.map((span) => generationSpanRange(piece, span)).find(([a, b]) => at >= a && at < b);
-      if (covering === undefined) return withheld;
+      if (covering === undefined) return unavailable;
       const until = Math.min(end, covering[1]!);
       const shown = generationSourceTextAt(piece, at, until);
-      if (shown === undefined) return withheld;
+      if (shown === undefined) return unavailable;
       parts.push({ kind: 'quotation', sourceId: piece.sourceId, start: at, end: until, text: shown, anchor: anchorOf(piece, at, until) });
       at = until;
     }
-    return parts.length === 0 ? withheld : parts;
+    return parts.length === 0 ? unavailable : parts;
   };
 
   // The draft in the renderer's shape. Only admitted sources are cited; a block whose every citation is excluded cites none.

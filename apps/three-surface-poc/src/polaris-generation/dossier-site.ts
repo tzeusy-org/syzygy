@@ -333,7 +333,15 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         const caption = `<figcaption><span class="code-language">${escape(e.language)}</span> <span class="code-path">${escape(e.path)}, lines ${e.startLine}–${e.endLine}</span></figcaption>`;
         const located = e.parts.filter((part): part is Extract<LocalSegment, { kind: 'quotation' }> => part.kind === 'quotation');
         if (located.length !== e.parts.length) {
-          return claim('figure', id, 'unknown', `${caption}<p><span class="quote-withheld" data-unknown-reason="excluded-content">[code excerpt withheld: the file it cites is excluded by screening]</span> ${marking('unknown')}</p>`,
+          const cause = e.parts.find((part) => part.kind === 'withheld');
+          const why = cause?.kind !== 'withheld' ? 'a verified excerpt is unavailable'
+            : cause.cause === 'path-screening' ? 'the cited path is excluded by screening'
+              : cause.cause === 'content-screening' ? 'the cited file is excluded by content screening'
+                : cause.cause === 'invalid-utf8' ? 'the cited file is not valid UTF-8 text'
+                  : cause.cause === 'redacted-line' ? 'the cited range touches a withheld line'
+                    : cause.cause === 'content-class' ? "the cited file's content class is not consented for this run"
+                      : 'a verified excerpt is unavailable';
+          return claim('figure', id, 'unknown', `${caption}<p><span class="quote-withheld" data-unknown-reason="excluded-content">[code excerpt withheld: ${escape(why)}]</span> ${marking('unknown')}</p>`,
             ` class="code-excerpt"${attrs} data-unknown-reason="excluded-content"`, 'excluded-content');
         }
         for (const part of located) {

@@ -47,8 +47,9 @@ export type LocalSegment =
   /** A quotation Syzygy located at this render in a blob it read and verified: Syzygy's own bytes, never the agent's copy. `sourceId`
    * names the source (or piece) the span starts in; `start` and `end` are UTF-8 byte offsets into the whole blob. */
   | { readonly kind: 'quotation'; readonly sourceId: string; readonly start: number; readonly end: number; readonly text: string; readonly anchor: EvidenceAnchor }
-  /** A quotation from a blob screening excluded: not verified, and none of its text is shown. */
-  | { readonly kind: 'withheld'; readonly reason: 'excluded-content' };
+  /** No verified excerpt bytes are shown. `cause` is transient presentation metadata, never a new closed Unknown reason or a
+   * persisted schema field. Its absence establishes no cause. */
+  | { readonly kind: 'withheld'; readonly reason: 'excluded-content'; readonly cause?: 'path-screening' | 'content-screening' | 'invalid-utf8' | 'redacted-line' | 'content-class' };
 
 /** One claim block of the draft as it renders: its marking, decided by the caller, and its text as segments. */
 export interface LocalBlock {

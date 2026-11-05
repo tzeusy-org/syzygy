@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { check, checkShape, handle, list, object, one, ref, refs, text, type SchemaWithDefs } from './closed-schema.js';
-import { disposition } from './draft-model.js';
+import { checkDraftShape, localDraftSchema } from '../../polaris-dossier/src/draft-schema.js';
+import { disposition, validateDraftRecord } from './draft-model.js';
 
 // The one closed-schema checker's hardening against untrusted values, in both of its forms (syzygy-bpyt.8.5): `check` throws
 // the first breach's code, `checkShape` lists breaches by path. Expected codes and messages are literals.
@@ -96,6 +97,22 @@ describe('closed-schema checker', () => {
     });
     it('names every form, resolving references, when the value carries another form\'s key', () => {
       expect(checkShape(choiceShape, { kind: 'crate', id: 'a1' })).toEqual([{ path: '$', detail: 'matches none of the permitted forms (unnamed; kind box)' }]);
+      // The shared diagnostic now lists the actual local and provider forms too. The provider's throwing caller still refuses with
+      // its existing code; the rendered-output golden cannot establish either caller's diagnostic behavior.
+      const local = localDraftSchema({ pinnedRevision: 'a'.repeat(40), maxQuestions: 1 });
+      const invalid = { kind: 'crate', assetIds: ['core-ideas'] };
+      const detail = 'matches none of the permitted forms (kind produced; kind omitted; kind unresolved)';
+      expect(checkDraftShape({ root: ref('disposition'), defs: local.defs }, invalid)).toEqual([{ path: '$', detail }]);
+      expect(checkShape({ root: disposition, defs: {} }, invalid)).toEqual([{ path: '$', detail }]);
+      const provider = { title: 'Server', introduction: { id: 'intro', text: 'Introduction.', sourceIds: ['s1'] },
+        sections: [{ id: 'core-ideas', title: 'Core ideas', paragraphs: [{ id: 'p1', text: 'A command.', sourceIds: ['s1'], children: [] }], disposition: invalid }],
+        diagrams: [], deepDives: [], unresolved: [] };
+      expect(thrown(() => validateDraftRecord(provider))).toBe('Error: invalid-disposition');
+      const accepted = { kind: 'produced', assetIds: ['core-ideas'] };
+      expect(checkDraftShape({ root: ref('disposition'), defs: local.defs }, accepted)).toEqual([]);
+      expect(checkShape({ root: disposition, defs: {} }, accepted)).toEqual([]);
+      provider.sections[0]!.disposition = accepted;
+      expect(validateDraftRecord(provider)).toEqual(provider);
     });
     it('reports a named form\'s breach', () => {
       expect(checkShape(choiceShape, { kind: 'box', id: 'a1', extra: 1 })).toEqual([{ path: '$.extra', detail: 'is not a field of this form' }]);

@@ -497,6 +497,44 @@ describe('review-check', () => {
     expect(await reviewOfRecord(await opened(run), deps())).toEqual({ counts: false, why: 'fidelity verdict 0 failed validation' });
   });
 
+  it('refuses a missing element claim support row, and counts the restored control without an excerpt row', async () => {
+    for (const missing of [true, false]) {
+      const run = await prepared();
+      const doc = draft();
+      doc.schemaVersion = 'polaris-dossier-local-draft-v3';
+      doc.sections[0].paragraphs.push(
+        { kind: 'table', id: 'review-table', caption: 'Server', columns: ['Role'], rowHeaders: false, rows: [{ id: 'review-row', cells: [
+          { id: 'element-cell', label: 'inferred', basis: 'source', text: 'The server holds keys in memory.', citations: [cite('c-element', 'src/kestrel.c', 1, 1)], quotations: [] },
+        ] }] },
+        { kind: 'code', id: 'review-code', citation: cite('c-review-code', 'src/kestrel.c', 4, 4) },
+      );
+      await submitDraft(run, doc);
+      const digest = await packetOf(run);
+      const dir = await reviewSessionOf(run);
+      const v = verdict(digest);
+      const row = { blockId: 'element-cell', verdict: 'supported', spanIds: ['span-3'], reason: 'The cited source supports this cell.', quotations: [] };
+      v.blockSupport.push(row);
+      if (missing) v.blockSupport.splice(v.blockSupport.indexOf(row), 1);
+      expect(v.blockSupport.some((entry: Doc) => entry.blockId === 'review-code')).toBe(false);
+      writeVerdict(dir, v);
+      const result = await reviewCheck(run, {}, deps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      expect(result.report.outcome, JSON.stringify(result.report.problems)).toBe(missing ? 'refused' : 'validated');
+      const stored = JSON.parse(fs.readFileSync(path.join(run, 'reviews', 'checks', 'fidelity-verdict-0.json'), 'utf8'));
+      expect(stored.outcome).toBe(missing ? 'refused' : 'validated');
+      await launchForm(run, { role: 'review', form: 'terminal' }, { sources: sources(), now: () => LATER });
+      const counted = await reviewOfRecord(await opened(run), deps());
+      if (missing) {
+        expect(result.report.problems.map((problem) => problem.kind)).toContain('support-incomplete');
+        expect(result.report.counts).toBe('never: the verdict failed validation');
+        expect(counted).toEqual({ counts: false, why: 'fidelity verdict 0 failed validation' });
+      } else {
+        expect(result.report.problems).toEqual([]);
+        expect(counted).toMatchObject({ counts: true, packetSha256: digest });
+      }
+    }
+  });
+
   it('records an inventory omission as blocking: the verdict validates, and the draft does not become ready', async () => {
     const run = await prepared();
     const dir = await reviewSessionOf(run);

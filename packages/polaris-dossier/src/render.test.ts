@@ -6,14 +6,14 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { evaluateDossier, excludedSourceId, parseDossierManifest, scanDossierPage } from '@syzygy/polaris-generation-core';
 import { issueBrief, READABILITY_GUIDANCE, READABILITY_GUIDANCE_VERSION } from './brief.js';
-import { checkDraft, type CheckDeps } from './check.js';
+import { checkDraft, deriveFindings, draftRules, type CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
 import { designCriteria } from './design-review.js';
 import { designVerdictSchemaDocument } from './draft-schema.js';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
 import { checkInventory, openRun } from './inventory.js';
-import { NO_RENDERER, redactedExtent, redactionDetails, renderRun, type DossierRenderer, type DossierRendererInput, type RenderDeps } from './render.js';
+import { buildLocalInput, NO_RENDERER, redactedExtent, redactionDetails, renderRun, type DossierRenderer, type DossierRendererInput, type RenderDeps } from './render.js';
 import { buildStoredDesignPacket, designReviewOfRecord, reviewCheck, reviewPacket } from './review.js';
 import { parseRunConfig } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
@@ -46,13 +46,18 @@ const SECRETS = 'Deploy notes.\n';
 const MARKUP = 'if (a < b && c > d) return;\n#define LT "&lt;"\n#define AMP &amp;\nint tail;\n';
 /** A raw tag is active content: screening withholds the file, so a cited `</pre>` never reaches a page. */
 const TAGGED = 'const end = "</pre>";\n';
-const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'src/markup.c': MARKUP, 'src/tagged.c': TAGGED, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', 'docs/deploy.md': SECRETS };
+const FILES: Record<string, string | Uint8Array> = { 'src/kestrel.c': KESTREL, 'src/markup.c': MARKUP, 'src/tagged.c': TAGGED, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', 'docs/deploy.md': SECRETS, 'src/binary.c': Uint8Array.from([0xff, 0x0a]), 'src/pieces.c': 'x'.repeat(100_001) + '\n' };
 const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));
 const policy = (extensions: string[]): Uint8Array => new TextEncoder().encode(JSON.stringify({
   policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
   publicSourceScope: { contentClassification: { rules: [{ class: 'code-content', sourceExtensions: extensions }] } },
 }));
 const SCREEN = buildDossierScreen(policy(['.c', '.txt']));
+const DOC_SCREEN = buildDossierScreen(new TextEncoder().encode(JSON.stringify({
+    policyId: 'fixture-public-source', policyVersion: '2', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
+    publicSourceScope: { contentClassification: LIVE_POLICY.publicSourceScope.contentClassification },
+  })), true);
+
 
 let origin: string, commit: string;
 const objectIds: Record<string, string> = {};
@@ -73,6 +78,18 @@ beforeAll(async () => {
   commit = git('rev-parse', 'HEAD');
   for (const file of Object.keys(FILES)) objectIds[file] = git('rev-parse', `${commit}:${file}`);
 });
+
+/** The screen port's existing redaction fixture: the fourth line is withheld, preserving original coordinates. */
+function redactingFourthLine() {
+  if (!SCREEN.ok) throw new Error(SCREEN.why);
+  const base = SCREEN.screen;
+  const lines = KESTREL.match(/[^\n]*\n|[^\n]+$/gu)!;
+  const retainedLines = lines.map((line, i) => i === 3 ? '\n' : line);
+  const lineByteOffsets: number[] = []; let offset = 0;
+  for (const line of lines) { lineByteOffsets.push(offset); offset += Buffer.byteLength(line); }
+  const retained = retainedLines.join('');
+  return { ok: true as const, screen: { ...base, screenTargetBody: (body: string, repositoryPath: string) => (repositoryPath === 'src/kestrel.c' ? { kind: 'redacted' as const, retained, retainedLines, lineByteOffsets, originalBytes: offset, contentSha256: createHash('sha256').update(KESTREL).digest('hex'), withheld: [4], detectorIds: ['credential-assignment'] } : base.screenTargetBody(body, repositoryPath)) } };
+}
 
 // R-PR403-SCREEN-DOCS-1 finding 1: with `statementClasses` set the subject is governed and relies on one in-force per-project statement
 // listing those classes; every other test runs with it null, a non-governed subject, as before.
@@ -381,10 +398,6 @@ describe('render', () => {
 
   // R-PR403-SCREEN-DOCS-1 finding 1: the design packet carries these pages to a review session, so a body screening admits as
   // project-documentation is quoted and given a source page only when the statement the run relies on lists the class.
-  const DOC_SCREEN = buildDossierScreen(new TextEncoder().encode(JSON.stringify({
-    policyId: 'fixture-public-source', policyVersion: '2', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
-    publicSourceScope: { contentClassification: LIVE_POLICY.publicSourceScope.contentClassification },
-  })), true);
   it.each<[string, readonly string[] | null, string]>([
     ['a non-governed run, which relies on no statement', null, 'withheld from every agent-bound artifact: the run relies on no per-project statement, so no consent record lists project-documentation'],
     ['a statement that does not list project-documentation', ['code-content'], 'withheld from every agent-bound artifact: the per-project statement the run relies on does not list project-documentation'],
@@ -456,14 +469,7 @@ describe('render', () => {
 
   it('draws retained spans with original coordinates and markers while withholding only the removed line', async () => {
     const run = await prepared(draft(), false);
-    if (!SCREEN.ok) throw new Error(SCREEN.why);
-    const base = SCREEN.screen;
-    const lines = KESTREL.match(/[^\n]*\n|[^\n]+$/gu)!;
-    const retainedLines = lines.map((line, i) => i === 3 ? '\n' : line);
-    const lineByteOffsets: number[] = []; let offset = 0;
-    for (const line of lines) { lineByteOffsets.push(offset); offset += Buffer.byteLength(line); }
-    const retained = retainedLines.join('');
-    const redacting = { ok: true as const, screen: { ...base, screenTargetBody: (body: string, repositoryPath: string) => (repositoryPath === 'src/kestrel.c' ? { kind: 'redacted' as const, retained, retainedLines, lineByteOffsets, originalBytes: offset, contentSha256: createHash('sha256').update(KESTREL).digest('hex'), withheld: [4], detectorIds: ['credential-assignment'] } : base.screenTargetBody(body, repositoryPath)) } };
+    const redacting = redactingFourthLine();
     const result = await renderRun(run, renderDeps({ loadScreen: async () => redacting }));
     if (!result.ok) throw new Error(result.refusal.reason);
     const pages = [...readSite(result.report.site).values()].join('\n');
@@ -480,7 +486,7 @@ describe('render', () => {
     expect(pages).not.toContain('not retained');
     expect(pages).not.toContain('body-not-retained-for-generation');
     const sourcePage = [...readSite(result.report.site).entries()].find(([file, page]) => file.startsWith('sources/') && page.includes('Kestrel keeps every key'))![1];
-    expect(sourcePage).toContain(`data-quote-start="${Buffer.byteLength(lines.slice(0, 4).join(''))}"`);
+    expect(sourcePage).toContain(`data-quote-start="${Buffer.byteLength(KESTREL.slice(0, KESTREL.indexOf('// Café')))}"`);
     expect(sourcePage.match(/class="redaction-note"/gu)).toHaveLength(1);
   });
 
@@ -1007,6 +1013,10 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
       { kind: 'code', id: 'code2', language: 'Dotenv', citation: cite('c-code2', '.env', 1, 1) },
       { kind: 'code', id: 'code3', citation: cite('c-code3', 'src/tagged.c', 1, 1) },
     );
+    doc.deepDives.push({ id: 'server-detail', title: 'Server detail', sectionId: 'core-ideas',
+      paragraphs: [{ kind: 'details', id: 'dive-details', summary: 'Optional source lines', elements: [
+        { kind: 'code', id: 'dive-code', citation: cite('c-dive-code', 'src/kestrel.c', 4, 4) },
+      ] }], disposition: { kind: 'produced', assetIds: ['server-detail'] } });
     return doc;
   };
   const ELEMENT_CLAIMS = ['t1c1', 't1c2', 't1c3', 'k1a', 'k1b', 's1a', 's1b', 'd1a', 'g1a', 'g1b', 'x1a', 'x1b', 'x1u'];
@@ -1072,7 +1082,7 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
     const body = figure.slice(0, figure.indexOf('</figure>'));
     expect(body).toContain('data-claim-id="code2" data-epistemic="unknown"');
     expect(body).toContain('<span class="code-language">Dotenv</span>');
-    expect(body).toContain('[code excerpt withheld: the file it cites is excluded by screening]');
+    expect(body).toContain('[code excerpt withheld: the cited path is excluded by screening]');
     expect(body).not.toContain('X=1');
     expect(body).not.toContain('<pre>');
   });
@@ -1081,17 +1091,154 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
     const figure = index.slice(index.indexOf('<figure class="code-excerpt" id="element-code3"'));
     const body = figure.slice(0, figure.indexOf('</figure>'));
     expect(body).toContain('data-claim-id="code3" data-epistemic="unknown"');
+    expect(body).toContain('[code excerpt withheld: the cited file is excluded by content screening]');
+    expect(body).toContain('data-unknown-reason="excluded-content"');
     expect(body).not.toContain('const end');
+    expect(body).not.toContain('<pre>');
+  });
+
+  const codeDraft = (repositoryPath: string, first = 1, last = first): Doc => {
+    const doc = draft();
+    doc.schemaVersion = 'polaris-dossier-local-draft-v3';
+    doc.sections[0].paragraphs.push({ kind: 'code', id: 'probe-code', citation: cite('c-probe-code', repositoryPath, first, last) });
+    return doc;
+  };
+  const codeFigure = (html: string, id = 'probe-code'): string => {
+    const at = html.indexOf(`<figure class="code-excerpt" id="element-${id}"`);
+    expect(at, id).toBeGreaterThan(-1);
+    return html.slice(at, html.indexOf('</figure>', at) + '</figure>'.length);
+  };
+  const withheldFigure = (html: string, wording: string): void => {
+    const figure = codeFigure(html);
+    expect(figure).toContain('data-claim-id="probe-code" data-epistemic="unknown"');
+    expect(figure).toContain('data-unknown-reason="excluded-content"');
+    expect(figure).toContain(`[code excerpt withheld: ${wording}]`);
+    expect(figure).not.toContain('<pre>');
+    expect(figure).not.toContain('class="verified-quote"');
+    expect(figure).not.toContain('data-anchor-class=');
+  };
+
+  it('keeps the checked excerpt and RFC7-10 anchor pinned after the fixture working tree changes', async () => {
+    const run = await prepared(codeDraft('src/markup.c', 1, 3), false);
+    const clone = JSON.parse(fs.readFileSync(path.join(run, 'run.json'), 'utf8')).subject.clone.path as string;
+    fs.writeFileSync(path.join(clone, 'src/markup.c'), 'WORKTREE-DRIFT-SENTINEL\n');
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const body = codeFigure(readSite(result.report.site).get('index.html')!);
+    const pinnedText = 'if (a < b && c > d) return;\n#define LT "&lt;"\n#define AMP &amp;\n';
+    expect(execFileSync('git', ['-C', clone, 'show', `${commit}:src/markup.c`], { env: GIT_ENV, encoding: 'utf8' })).toBe(MARKUP);
+    expect(fs.readFileSync(path.join(clone, 'src/markup.c'), 'utf8')).toBe('WORKTREE-DRIFT-SENTINEL\n');
+    expect(body).toContain('>if (a &lt; b &amp;&amp; c &gt; d) return;\n#define LT &quot;&amp;lt;&quot;\n#define AMP &amp;amp;\n</code>');
+    expect(body).toContain('data-epistemic="observed"');
+    expect(body).toContain('data-anchor-class="evidence-artifact-identifier-with-integrity-digest"');
+    expect(body).toContain(`data-anchor-identifier="${objectIds['src/markup.c']}"`);
+    expect(body).toContain('data-anchor-algorithm="sha1"');
+    expect(body).toContain(`data-anchor-fragment="0-${Buffer.byteLength(pinnedText)}"`);
+    expect(body).toContain(`data-anchor-target-state="${commit}"`);
+    expect(body).not.toContain('WORKTREE-DRIFT-SENTINEL');
+    expect(body).not.toContain('int tail');
+  });
+
+  it('withholds an invalid-UTF-8 excerpt for its established cause without reporting a body length', async () => {
+    const run = await prepared(codeDraft('src/binary.c'), false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const html = readSite(result.report.site).get('index.html')!;
+    withheldFigure(html, 'the cited file is not valid UTF-8 text');
+    expect(codeFigure(html)).not.toContain('excluded by screening');
+    expect(codeFigure(html)).not.toContain('byte(s)');
+    expect(codeFigure(html)).not.toContain('\ufffd');
+  });
+
+  it('withholds an excerpt touching a redacted line without blaming the whole file or showing that line', async () => {
+    const run = await prepared(codeDraft('src/kestrel.c', 4), false);
+    const result = await renderRun(run, renderDeps({ loadScreen: async () => redactingFourthLine() }));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const html = readSite(result.report.site).get('index.html')!;
+    withheldFigure(html, 'the cited range touches a withheld line');
+    expect(codeFigure(html)).not.toContain('excluded by screening');
+    expect([...readSite(result.report.site).values()].join('\n')).not.toContain('int main(void) { return 0; }');
+  });
+
+  it('names the content-class gate for an excerpt screening admitted but the run cannot carry', async () => {
+    const run = await prepared(codeDraft('docs/notes.txt', 2), false);
+    const result = await renderRun(run, renderDeps({ loadScreen: async () => DOC_SCREEN }));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const html = readSite(result.report.site).get('index.html')!;
+    withheldFigure(html, 'the cited file&#39;s content class is not consented for this run');
+    expect(codeFigure(html)).not.toContain('screening');
+    expect([...readSite(result.report.site).values()].join('\n')).not.toContain('Snapshots are written periodically.');
+  });
+
+  it('keeps a source-piece lookup miss generic instead of asserting a screening cause', async () => {
+    const doc = codeDraft('src/pieces.c');
+    const run = await prepared(doc, false);
+    const opened = await openRun(run, sources(), LATER, 'test');
+    if (!opened.ok) throw new Error(opened.reason);
+    if (!SCREEN.ok) throw new Error(SCREEN.why);
+    const reader = openPinnedObjectReader({ gitDir: path.join(opened.subject.clone.path, '.git'), revision: commit });
+    const derived = await deriveFindings(doc, { pinned: commit, screen: SCREEN.screen, reader }, draftRules(commit, 1));
+    expect(derived.findings).toEqual([]);
+    const inputs = { opened, doc, derived, review: { counts: false as const, why: 'no fidelity review' },
+      ruling: await sources().rfc720Ruling(), screen: SCREEN.screen, credential: { required: false as const, why: 'fixture has no execution' }, algorithm: reader.algorithm };
+    const control = buildLocalInput(inputs);
+    if (!control.ok) throw new Error(control.reason);
+    expect(codeFigure(renderLocalDossier({ local: control.local, sources: control.sources }).files.get('index.html')!)).toContain('data-epistemic="observed"');
+    // Exercise the pure bridge's defensive failure arm: the byte requested is beyond every real, pinned source piece. This is not
+    // an admitted draft or a new range rule; a valid derivation supplies consistent offsets. No product checker is mocked.
+    const admitted = new Map(derived.admitted);
+    admitted.set('src/pieces.c', { ...admitted.get('src/pieces.c')!, lineByteOffsets: [200_002, 200_003], originalBytes: 100_002 });
+    const unavailable = buildLocalInput({ ...inputs, derived: { ...derived, admitted } });
+    if (!unavailable.ok) throw new Error(unavailable.reason);
+    const html = renderLocalDossier({ local: unavailable.local, sources: unavailable.sources }).files.get('index.html')!;
+    withheldFigure(html, 'a verified excerpt is unavailable');
+    expect(codeFigure(html)).not.toContain('screening');
+    expect(codeFigure(html)).not.toContain('x'.repeat(20));
   });
 
   it('puts no fragment target that any page links to inside any details element', () => {
-    const targets = new Set([...pages.values()].flatMap((html) => [...html.matchAll(/href="[^"#]*#([^"]+)"/gu)].map((m) => m[1]!)));
-    const opened = [...index.matchAll(/<details class="details"/gu)].map((m) => m.index!);
-    expect(opened.length).toBeGreaterThan(0);
-    for (const at of opened) {
-      const details = index.slice(at, index.indexOf('</details>', at));
-      for (const target of targets) expect(details, target).not.toContain(`id="${target}"`);
-    }
+    const violations = (site: ReadonlyMap<string, string>): string[] => {
+      const targets = new Map<string, Set<string>>();
+      for (const [file, html] of site) {
+        if (!file.endsWith('.html')) continue;
+        for (const [, link] of html.matchAll(/href="([^"]+)"/gu)) {
+          const target = new URL(link!, `https://fixture.invalid/${file}`);
+          if (target.origin !== 'https://fixture.invalid' || target.hash === '') continue;
+          const destination = target.pathname.slice(1);
+          const ids = targets.get(destination) ?? new Set<string>();
+          ids.add(decodeURIComponent(target.hash.slice(1)));
+          targets.set(destination, ids);
+        }
+      }
+      const found: string[] = [];
+      for (const [file, html] of site) {
+        if (!file.endsWith('.html')) continue;
+        let depth = 0;
+        for (const [tag] of html.matchAll(/<[^>]+>/gu)) {
+          if (/^<details\b/u.test(tag)) depth++;
+          if (depth > 0) {
+            for (const [, id] of tag.matchAll(/\sid="([^"]+)"/gu)) {
+              if (targets.get(file)?.has(id!)) found.push(`${file}#${id}`);
+            }
+          }
+          if (/^<\/details\s*>/u.test(tag)) depth--;
+        }
+        expect(depth, file).toBe(0);
+      }
+      return found;
+    };
+    const dives = [...pages].filter(([file, html]) => file !== 'index.html' && html.includes('id="element-dive-details"'));
+    expect(dives).toHaveLength(1);
+    expect(dives[0]![1]).toContain('<details class="details" id="element-dive-details"');
+    expect(violations(pages)).toEqual([]);
+    // Controls distinguish a destination's target from an equal, unlinked id on another page, including nested details.
+    const controls = new Map([
+      ['index.html', '<a href="#local">Here</a><a href="deep/detail.html#there">There</a><p id="local"></p><details><summary>Optional</summary><i id="there"></i></details>'],
+      ['deep/detail.html', '<a href="../index.html#local">Back</a><p id="there"></p><details><summary>Outer</summary><details><summary>Inner</summary><i id="unlinked"></i></details></details>'],
+    ]);
+    expect(violations(controls)).toEqual([]);
+    controls.set('deep/detail.html', controls.get('deep/detail.html')!.replace('<i id="unlinked">', '<i id="there">'));
+    expect(violations(controls)).toEqual(['deep/detail.html#there']);
   });
 
   it('adds no script and keeps the content security policy', () => {
