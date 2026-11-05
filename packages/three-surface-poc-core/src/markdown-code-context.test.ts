@@ -40,6 +40,22 @@ describe('closed-pwb-code-context-v1 — fenced code blocks', () => {
       for (const end of ['\n', '\r\n', '\r']) {
         for (const final of ['', end]) {
           expect(masked(`~~~${separator}a\`b${end}<x>${end}~~~${final}`)).toBe(`       ${end}   ${end}   ${final}`);
+          // Clause-authored boundary table: indentation 0..4 and runs 2..4.
+          // Empty mask cells mean ordinary text, which must remain untouched.
+          for (const [indent, run, open, close, fences] of [
+            ['', '~~', '', '', 0], ['', '~~~', '    ', '   ', 1], ['', '~~~~', '     ', '    ', 1],
+            [' ', '~~', '', '', 0], [' ', '~~~', '     ', '    ', 1], [' ', '~~~~', '      ', '     ', 1],
+            ['  ', '~~', '', '', 0], ['  ', '~~~', '      ', '     ', 1], ['  ', '~~~~', '       ', '      ', 1],
+            ['   ', '~~', '', '', 0], ['   ', '~~~', '       ', '      ', 1], ['   ', '~~~~', '        ', '       ', 1],
+            ['    ', '~~', '', '', 0], ['    ', '~~~', '', '', 0], ['    ', '~~~~', '', '', 0],
+          ] as const) {
+            const text = indent + run + separator + end + '<x>' + end + indent + run + final;
+            expect(maskMarkdownCodeContexts(text)).toEqual({ kind: 'masked', masked: fences === 1 ? open + end + '   ' + end + close + final : text, fences, spans: 0 });
+            expect(recognizeCodeContexts(text)).toMatchObject({ fences, spans: 0 });
+          }
+          expect(malformed('~~~' + separator + end + '<x>' + end + '~~' + final)).toEqual({ reason: 'unclosed-fence', line: 1 });
+          expect(malformed('~~~~' + separator + end + '<x>' + end + '~~~' + final)).toEqual({ reason: 'unclosed-fence', line: 1 });
+          expect(masked('~~~' + separator + end + '<x>' + end + '~~~~' + final)).toBe('    ' + end + '   ' + end + '    ' + final);
         }
       }
     }
