@@ -2710,7 +2710,7 @@ def later_signed_selftest() -> list[tuple[str, bool]]:
                     if edited:
                         (subject / rel).write_bytes(original + b"\nUnreviewed fixture edit.\n")
                     else:
-                        (subject / rel).unlink()
+                        (subject / rel).unlink(missing_ok=True)
                 expected = [f"current P115 governing input differs: {spec}"]
                 negatives.append(not later_signed_input(root, spec, frozen)
                                  and not later_signed_input(snapshot, spec, frozen)
