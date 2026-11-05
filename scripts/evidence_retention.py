@@ -235,7 +235,7 @@ def protection_witnesses(files: dict[str, bytes], rows: list[dict]) -> dict[str,
         # A raw may abbreviate a comparison operand as `…-date-role.json`.
         # Preserve every matching suffix, including ambiguous matches. This
         # ASCII filename grammar is discovery, never an absence proof.
-        for suffix in re.findall(r"(?:\u2026|\.{3})([-A-Za-z0-9_./]*\.[A-Za-z0-9_.-]+)", text):
+        for suffix in re.findall(r"(?:\u2026|\.{3})([-A-Za-z0-9_/][-A-Za-z0-9_./]*\.[A-Za-z0-9_.-]+)", text):
             suffix = suffix.rstrip(".")
             if suffix not in abbreviation_cache:
                 abbreviation_cache[suffix] = [p for p in targets if p.endswith(suffix)]
@@ -2462,7 +2462,8 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         inputs = (("unicode", "Comparison: `\u2026-tail.json`", {a, b}),
                   ("ascii", "Comparison: `...-tail.json`", {a, b}),
                   ("trailing-period", "Comparison: ...-tail.json.", {a, b}),
-                  ("ellipsis-required", "Comparison: -tail.json", set()))
+                  ("ellipsis-required", "Comparison: -tail.json", set()),
+                  ("bare-extension-is-not-filename-suffix", "Fragments: M1-\u2026.json and M2-\u2026.json", set()))
         for name, text, expected in inputs:
             files = {**fixture, raw: (text + "\n").encode()}
             for path, body in files.items():

@@ -49,7 +49,9 @@ than silently cleared. The source census predicate remains unchanged.
 
 The extra suffix discovery recognizes an ASCII filename suffix after a
 literal Unicode ellipsis or three ASCII periods, including trailing prose
-periods. Every matching body is protected when the citer is governed, code
+periods. A suffix needs filename content before its extension; a middle
+ellipsis such as `M1-….json` does not name every JSON body. Such abbreviated
+patterns still need source-level consumer adjudication. Every matching body is protected when the citer is governed, code
 or a raw review; an ambiguous suffix never chooses one body. This bounded
 grammar is not an absence proof for other abbreviated or assembled references.
 
