@@ -10,4 +10,4 @@ Independent adversarial vets of a local owner-decision questionnaire drafted ove
 
 ## Last verdict of record, and where the findings landed
 
-Round 4: `syzygy-mcs4` "**Scope verdict:** Pass." and "**Recommendation verdict:** Pass." (`VET-OWNER-QUESTIONNAIRE-2026-11-05-4-RAW.md:21-22`), and the same for `syzygy-mea.9` (`:40-41`). Round 3: `syzygy-zwja.1` passes both verdicts (`VET-OWNER-QUESTIONNAIRE-2026-11-05-3-RAW.md:96-97`). Every material finding of rounds 1 to 3 landed in the packet before the owner answered; the round-2 finding of a silent repair-cycle default was filed as `syzygy-1z8m.7`.
+Round 4: `syzygy-mcs4` "**Scope verdict:** Pass." and "**Recommendation verdict:** Pass." (`VET-OWNER-QUESTIONNAIRE-2026-11-05-4-RAW.md:21` and `VET-OWNER-QUESTIONNAIRE-2026-11-05-4-RAW.md:22`), and the same for `syzygy-mea.9` (`:40-41`). Round 3: `syzygy-zwja.1` passes both verdicts (`VET-OWNER-QUESTIONNAIRE-2026-11-05-3-RAW.md:96` and `VET-OWNER-QUESTIONNAIRE-2026-11-05-3-RAW.md:97`). Every material finding of rounds 1 to 3 landed in the packet before the owner answered; the round-2 finding of a silent repair-cycle default was filed as `syzygy-1z8m.7`.
