@@ -359,6 +359,13 @@ LATER_SIGNED_INPUT_GLOBS = (
     ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v*.md",
     ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-*/**/*",
 )
+# Only the implemented layers of the supported chain; unknown later versions
+# still fail the chain's signed check rather than gaining snapshot support.
+LATER_SIGNED_INPUT_BUILDERS = (
+    "build_polaris_dossier_local_agent_mode_v1_1",
+    "build_polaris_dossier_local_agent_mode_v1_2",
+    "build_polaris_dossier_local_agent_mode_v1_3",
+)
 
 
 def later_signed_input(root: Path, path: str, frozen: str) -> bool:
@@ -392,6 +399,8 @@ def later_signed_input(root: Path, path: str, frozen: str) -> bool:
 def later_signed_inputs(root: Path) -> set[str]:
     """The files ``later_signed_input`` reads, for reconciliation's snapshots."""
     paths: set[str] = set()
+    for name in LATER_SIGNED_INPUT_BUILDERS:
+        paths.update(target.as_posix() for target in importlib.import_module(name).TARGETS)
     for pattern in LATER_SIGNED_INPUT_GLOBS:
         for found in root.glob(pattern):
             if found.is_file() and not found.is_symlink():
@@ -2530,8 +2539,19 @@ exclusion of the acts in force stands.
         # Packages the recorder gained after the frozen historical recorder:
         # a closed list, so any other new package still fails the census.
         later = {"polaris-dossier-local-agent-mode@1.3"}
-        passed = (set(keys) == set(historical_packages) - {KEY}
-                  and set(packages) - {KEY} == set(keys) | later
+        def closed_census(current_packages, prior_packages):
+            return (set(keys) == set(prior_packages) - {KEY}
+                    and set(current_packages) - {KEY} == set(keys) | later)
+
+        unexpected = "synthetic-unlisted-package@9.9"
+        required = keys[0]
+        expect("T17 census rejects an unlisted package in either population",
+               not closed_census(set(packages) | {unexpected}, historical_packages)
+               and not closed_census(packages, set(historical_packages) | {unexpected}))
+        expect("T17 census rejects a missing required package in either population",
+               not closed_census(set(packages) - {required}, historical_packages)
+               and not closed_census(packages, set(historical_packages) - {required}))
+        passed = (closed_census(packages, historical_packages)
                   and len(controls) == 38 and all(row["passed"] for row in controls))
         expect("T17 all non-P115 full historical record and aggregate outputs", passed)
         print("P115-RENDER-EVIDENCE " + json.dumps({"case": "T17", "syntheticOnly": True,
@@ -2653,10 +2673,53 @@ def later_signed_selftest() -> list[tuple[str, bool]]:
         LATER_SIGNED_INPUTS.clear()
         LATER_SIGNED_INPUTS.update(saved)
         sys.modules.pop(stub.__name__, None)
-    # Reconciliation's snapshots must carry what the chain check reads.
-    chain_files = later_signed_inputs(ROOT)
-    results.append(("validation inputs carry the chain's records, reviews and packages",
-                    bool(chain_files) and chain_files <= validation_inputs(ROOT)))
+    # Copy only the declared validation inputs: no .git and no independent
+    # tracked-openspec population may rescue an incomplete chain snapshot.
+    from unittest import mock
+    tmp, root, frozen = tree()
+    # Bind this synthetic chain's earlier digest, rather than the real dossier
+    # digest in P115's frozen source-return record. The other seven rows stay
+    # literal frozen inputs; both source and snapshot use the same rows.
+    inputs = tuple((rel, frozen if rel == spec else sha) for rel, sha in governing_inputs(ROOT))
+    with tmp, tempfile.TemporaryDirectory(prefix="p115-later-snapshot-") as temp, \
+            mock.patch.dict(globals(), governing_inputs=lambda source: inputs):
+        snapshot = Path(temp)
+        for rel in validation_inputs(ROOT):
+            target = root / rel
+            if not target.exists():
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(ROOT / rel, target)
+        # The other seven inputs retain their frozen bytes in this synthetic
+        # source fixture; the dossier alone exercises the later-signed branch.
+        for rel, _sha in governing_inputs(root):
+            if rel != spec:
+                (root / rel).write_bytes(git(ROOT, "show", f"{BASE}:{rel}"))
+        for rel in validation_inputs(root):
+            target = snapshot / rel
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(root / rel, target)
+        positive = (not (snapshot / ".git").exists()
+                    and later_signed_input(root, spec, frozen)
+                    and later_signed_input(snapshot, spec, frozen)
+                    and governing_input_findings(root) == governing_input_findings(snapshot) == [])
+        negatives = []
+        for rel in (v13.CHANGE / "design.md", v13.CHANGE / "proposal.md"):
+            for edited in (False, True):
+                original = (root / rel).read_bytes()
+                for subject in (root, snapshot):
+                    if edited:
+                        (subject / rel).write_bytes(original + b"\nUnreviewed fixture edit.\n")
+                    else:
+                        (subject / rel).unlink(missing_ok=True)
+                expected = [f"current P115 governing input differs: {spec}"]
+                negatives.append(not later_signed_input(root, spec, frozen)
+                                 and not later_signed_input(snapshot, spec, frozen)
+                                 and governing_input_findings(root)
+                                 == governing_input_findings(snapshot) == expected)
+                for subject in (root, snapshot):
+                    (subject / rel).write_bytes(original)
+        results.append(("validation-only Git-free snapshot preserves signed and missing/edited target results",
+                        positive and len(negatives) == 4 and all(negatives)))
     return results
 
 
@@ -2747,7 +2810,7 @@ def selftest(root: Path) -> int:
         "record_pwb_behavior_amendment_acts.py", "check_spec_reconciliation.py",
         "check_governance.py", "build_three_surface_poc_readability_successor.py",
         "build_three_surface_poc_vocabulary_epistemic_amendment.py",
-    )
+    ) + tuple(name + ".py" for name in LATER_SIGNED_INPUT_BUILDERS)
     if transaction_present(root):
         later = later_signed_selftest()
         for name, passed in later:

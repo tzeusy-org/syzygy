@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-Round 1 `CONFIRM WITH EXCEPTIONS` (`R-P115-LATER-SIGNED-6678-1-RAW.md:4`) over `66787eb`, five notes only, none blocking; the notes stand in the raw and are open, not repaired
+Round 1 `CONFIRM WITH EXCEPTIONS` (`R-P115-LATER-SIGNED-6678-1-RAW.md:4`) over `66787eb`, five notes only, none blocking; the original notes remain in the raw. [Observed] As of 2026-11-05, the earlier statement "the notes stand in the raw and are open, not repaired" is superseded by the five-row disposition in `docs/evidence/syzygy-mea-10-9/DISPOSITION.md`: the snapshot, subject binding and T17 corrections have captured evidence; the post-record acceptance-strengthening and original Q&A fidelity outcomes remain explicitly open. The historical absent-record/battery-line concerns are reconciled against the landed v1.3 record and current canonical battery. This is no new review verdict or owner disposition
