@@ -1,0 +1,36 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject
+
+ ❯ |unit| packages/polaris-generation-core/src/island-boundary.test.ts (9 tests | 1 failed) 1744ms
+   ✓ the live Node entries and the parked provider island > lists twenty-four island modules, each a file in the tree 3ms
+   × the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder 12ms
+     → production-source enumeration must not be empty: expected 0 to be greater than 0
+   ✓ the live Node entries and the parked provider island > resolves every workspace import both entries reach, dynamic ones included  898ms
+   ✓ the live Node entries and the parked provider island > reaches no island module from either live entry  663ms
+   ✓ the live Node entries and the parked provider island > reaches the island from the consent package root, which neither live entry imports 161ms
+   ✓ the live Node entries and the parked provider island > refuses computed import arguments, including template expressions 1ms
+   ✓ the live Node entries and the parked provider island > refuses require calls and import-equals loaders 1ms
+   ✓ the live Node entries and the parked provider island > refuses createRequire calls, including imported aliases and module properties 2ms
+   ✓ the live Node entries and the parked provider island > follows a no-substitution template and the existing static, type and literal dynamic forms 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-generation-core/src/island-boundary.test.ts > the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder
+AssertionError: production-source enumeration must not be empty: expected 0 to be greater than 0
+ ❯ packages/polaris-generation-core/src/island-boundary.test.ts:187:82
+    185|       if (!allowed.has(module) && result.intoIsland.length > 0) violat…
+    186|     }
+    187|     expect(population.length, 'production-source enumeration must not …
+       |                                                                                  ^
+    188|     expect([...new Set(unsupported)], `${population.length} production…
+    189|     expect([...new Set(unresolved)], `${population.length} production …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  16:14:39
+   Duration  2.71s (transform 90ms, setup 30ms, collect 510ms, tests 1.74s, environment 0ms, prepare 60ms)
+
+JSON report written to /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-population-nonempty.vitest.json

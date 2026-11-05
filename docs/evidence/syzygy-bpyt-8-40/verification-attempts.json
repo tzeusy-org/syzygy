@@ -1,0 +1,208 @@
+{
+  "epistemic": "Author-emitter attempt record; not independently qualified gate evidence.",
+  "private_namespace": {
+    "adapter": {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/isolated.py",
+      "sha256": "1bfb6ff6699be4b81bbb1993188007643dd378b779f6e8eb250583619bbf7ac2",
+      "bytes": 2045
+    },
+    "preflight": {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/PREFLIGHT.json",
+      "sha256": "4a4dd4e1bc451eff60811ce1686bb5ce174022b117abbaa55712b8d7c6f3dd4d",
+      "bytes": 4420
+    },
+    "lock_tarballs": {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/LOCK-TARBALLS.json",
+      "sha256": "931885417b2aef08f5210ca25042b2eb930ec90e5cd9f2a1290ef316d4355291",
+      "bytes": 30802
+    },
+    "verified_downloads": {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/DOWNLOADED-TARBALLS.json",
+      "sha256": "e03397528692730b2fad9859c9f98bd557f6fa02a520e6e4bd7232af527eac0f",
+      "bytes": 41576
+    },
+    "log": "DNS-free bwrap private PID+network, clearenv, only NEWOWN writable plus exact readonly runtime/font mounts. /tmp binds NEWOWN/tmp and Python tempfile.tempdir is /tmp, with samefile assertion. No host /tmp or project checkout mounted."
+  },
+  "install_attempts": [
+    "Initial offline npm ci used --ignore-scripts, was not taken as the complete install gate.",
+    "A complete npm ci --offline --no-audit --no-fund ran successfully before preflight/NodeNext; 118 installed packages, including the current 13 workspace links."
+  ],
+  "failures": [
+    {
+      "id": "preflight-1",
+      "kind": "author setup assertion failure",
+      "observed": "Author asserted 12 workspace links; current lock install has 13. All actual link targets resolve inside the private subject.",
+      "failing_source": {
+        "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/preflight-attempt1.py",
+        "sha256": "05ac357232aa38d2c9d2330a4eb5d74116fcce32e76af7fb42414f9c47b04894",
+        "bytes": 1342
+      },
+      "raw": {
+        "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/preflight-attempt1.log",
+        "sha256": "bfd10aabf4cf708ab9760cd8d3c46d73cbb623302a5c41e92b4f75deb604d097",
+        "bytes": 252
+      },
+      "raw_capture_note": "Exact exception excerpt transcribed from tool output; source and actual link observation retained separately.",
+      "inputs": {
+        "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/PREFLIGHT-LINKS.json",
+        "sha256": "cf1e377e7b4e7aa2d5e51ae63b4958302a7df1966d24dd24a04e9940070f66ed",
+        "bytes": 2319
+      },
+      "correction": "Derive expected link names/count from current app/package manifests. Corrected preflight runs before subsequent corpus and final gates.",
+      "subsequent_run": "The initial shell continued into old-baseline after the assertion failure. That run remains an attempted baseline and is not the qualified preflight-gated baseline; corpus-baseline-old is the later proper baseline.",
+      "independent_qualification": "REQUIRED; author diagnosis only."
+    },
+    {
+      "id": "corpus-recorder-1",
+      "kind": "author recording-adapter assertion failure after intended mutant failure",
+      "observed": "The disconnected unresolved importer failed the real new closure assertion, with 9 actual tests and one intended failure. Vitest JSON failureMessages omit Received diff; the exact importer exists in retained default-reporter raw. Adapter demanded the token from JSON alone and stopped.",
+      "failing_source": {
+        "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/corpus-attempt1.py",
+        "sha256": "68390cf691ee152b8730dbdcf7bb06dd69a488297dd6874ead440eda35f5142e",
+        "bytes": 6552
+      },
+      "raw": {
+        "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-driver-attempt1.log",
+        "sha256": "4c2e592d924c8e0fa566a7efc433edab5068ef7b4a2010f7baf5e1d8636ebe5a",
+        "bytes": 1427
+      },
+      "guard_raw": {
+        "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unresolved-new.log",
+        "sha256": "544ef34684a70cea92407360bdba183fc6ed6d9f6663b65ffff78c6de1c67e69",
+        "bytes": 3087
+      },
+      "guard_json": {
+        "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unresolved-new.vitest.json",
+        "sha256": "e26778ae5b877a855b2550f2d7b6e0fcf40b3ff40ea4349faf33006c96e43107",
+        "bytes": 5600
+      },
+      "correction": "Inspect named assertion JSON plus full default-reporter raw; resume unexecuted cases, reusing existing byte-captured results without rerunning passed cases. Original/restored source subject is unchanged.",
+      "independent_qualification": "REQUIRED; author diagnosis only."
+    }
+  ],
+  "preserved_setup_logs": [
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/download.log",
+      "sha256": "9ab4e19d862c17a940089f69845f238a9ea5414f1ab181509ec1f1966349c58e",
+      "bytes": 54
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/cache-seed.log",
+      "sha256": "17c852abda969a6821a96fc09b5ad16f9b8d50f91820fbe0197bab484ce0f73d",
+      "bytes": 16
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/npm-ci-initial.log",
+      "sha256": "4d5d6399d523fd94a6fb3a6070047ea69cf2bf6dfd4479a2bdacf52ea23e580f",
+      "bytes": 29
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/npm-ci-complete.log",
+      "sha256": "0c33929e361c4c351767b32712d2eb562bc813d8b4354c44134682f0835c1b59",
+      "bytes": 29
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/preflight-corrected.log",
+      "sha256": "23846c49118cc0a29aee0746c560ffa69bf10419fb7ded04a05bfb52cac5bd4a",
+      "bytes": 4100
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-driver-attempt1.log",
+      "sha256": "4c2e592d924c8e0fa566a7efc433edab5068ef7b4a2010f7baf5e1d8636ebe5a",
+      "bytes": 1427
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-driver-resume.log",
+      "sha256": "5dc3994fa5fda26850549f8fb1912f62d4ed411f7014638c20476506e1a9ba98",
+      "bytes": 3204
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-driver.log",
+      "sha256": "01979155a81644e308f538f8c625894f60dc5a92d3afbe4776c1a29f33f39b83",
+      "bytes": 922
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/census.log",
+      "sha256": "5329c66f5ae4892bffd86a4b2c0dd93c98bf3a7846b7db0f3bd85aa0f8ae74a7",
+      "bytes": 9924
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/second-method.log",
+      "sha256": "08945f5223d0e30aa9cbea8ad9d890d3e299c62c32f41dfaea6827b53b7543fa",
+      "bytes": 2702
+    }
+  ],
+  "development_attempts": [
+    {
+      "id": "old-baseline",
+      "at": "2026-11-05T08:01:59.612442+00:00",
+      "cwd": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject",
+      "command": [
+        "npx",
+        "--offline",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/old-baseline.vitest.json"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 2.848877935030032,
+      "log": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/old-baseline.log",
+      "log_sha256": "8eaeda052ff4cf1622e78b6b3cf84caf018a2e2568756c221413c71a4468c2a3",
+      "subject": "27389f6c1ff81bf04bea69bc6d7eb97694592f85",
+      "dirty": "",
+      "capture": "author emitter; independent capture/re-execution remains a root gate"
+    },
+    {
+      "id": "new-focused-development",
+      "at": "2026-11-05T08:03:16.708640+00:00",
+      "cwd": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject",
+      "command": [
+        "npx",
+        "--offline",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "packages/polaris-dossier/src/subpath-imports.test.ts",
+        "--reporter=default",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/new-focused-development.vitest.json"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 4.939365668979008,
+      "log": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/new-focused-development.log",
+      "log_sha256": "6520a2a0c457eeb4017a01e1af9b675c3da5da4b5ae5426b441a9d37fd0c050b",
+      "subject": "27389f6c1ff81bf04bea69bc6d7eb97694592f85",
+      "dirty": " M packages/polaris-generation-core/src/island-boundary.test.ts\n",
+      "capture": "author emitter; independent capture/re-execution remains a root gate"
+    },
+    {
+      "id": "check-development",
+      "at": "2026-11-05T08:05:32.232152+00:00",
+      "cwd": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject",
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 42.644842509995215,
+      "log": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/check-development.log",
+      "log_sha256": "86570ee34631e91b881b0bf8ee893ef2421a48137bc921d3830d6e968444405d",
+      "subject": "27389f6c1ff81bf04bea69bc6d7eb97694592f85",
+      "dirty": " M packages/polaris-generation-core/src/island-boundary.test.ts\n",
+      "capture": "author emitter; independent capture/re-execution remains a root gate"
+    }
+  ],
+  "source_subject_note": "Development selection/check ran the final guard bytes in the owned subject before the code commit; exact source hashes are cross-bound by the later committed 38-case corpus and six predicate mutants. Final clean-clone exact-head checkall remains separately retained in the terminal OWN packet.",
+  "all_raw_record_hashes": "mutation-records.json + terminal HASH-MANIFEST.json",
+  "no_timeout_reduction": true,
+  "no_failed_gate_erasure": true
+}

@@ -1,0 +1,14 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject
+
+ ✓ |unit| packages/polaris-generation-core/src/island-boundary.test.ts (9 tests) 3332ms
+   ✓ the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder  1854ms
+   ✓ the live Node entries and the parked provider island > resolves every workspace import both entries reach, dynamic ones included  652ms
+   ✓ the live Node entries and the parked provider island > reaches no island module from either live entry  659ms
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  16:13:40
+   Duration  4.21s (transform 76ms, setup 33ms, collect 478ms, tests 3.33s, environment 0ms, prepare 68ms)
+
+JSON report written to /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-1-new.vitest.json

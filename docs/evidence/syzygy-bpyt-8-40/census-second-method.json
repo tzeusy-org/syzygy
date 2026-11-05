@@ -1,0 +1,60 @@
+{
+  "schema": "island-census-independent-filename-and-graph-check/1",
+  "subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+  "census_sha256": "40a67088d9d16614738bf92f943595249eca8d8d776ca90590dae8d1b2e02aa3",
+  "filename_method": "git ls-tree -rz HEAD, independent Python regex over tracked paths; guard uses readdirSync",
+  "population_predicate": "^(?:apps|packages)/[^/]+/src/.*\\.[cm]?[jt]s$",
+  "exception_predicate": "\\.(?:test|testkit)\\.[cm]?[jt]s$|\\.d\\.[cm]?ts$",
+  "tracked_source_population": 571,
+  "production_population": 280,
+  "excluded_test_testkit_declaration_population": 291,
+  "regular_source_modes": [
+    "100644"
+  ],
+  "all_tracked_script_paths": 149,
+  "JS_TS_scripts": 24,
+  "other_workspace_test_support_config_paths": [
+    "packages/cap1-daemon/test-support/consent-acts.ts",
+    "packages/cap1-system/vitest.config.ts",
+    "packages/polaris-dossier/test-support/no-egress-driver.ts"
+  ],
+  "source_hash_comparisons": 598,
+  "hash_mismatches": [],
+  "graph_method": "Independent Python BFS over emitted direct AST edges; shares AST extraction/resolver input, not an independent parser/Node oracle",
+  "nonisland_production_origins": 256,
+  "ingress_paths": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts",
+      "packages/polaris-generation-core/src/index.ts",
+      "packages/polaris-generation-core/src/admitted-input.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/run-key.ts": [
+      "apps/three-surface-poc/src/polaris-generation/run-key.ts",
+      "packages/polaris-generation-core/src/index.ts",
+      "packages/polaris-generation-core/src/admitted-input.ts"
+    ],
+    "apps/three-surface-poc/src/polaris-generation/synthetic-source.ts": [
+      "apps/three-surface-poc/src/polaris-generation/synthetic-source.ts",
+      "packages/polaris-generation-core/src/index.ts",
+      "packages/polaris-generation-core/src/admitted-input.ts"
+    ],
+    "packages/polaris-generation-consent/src/consent-ports.ts": [
+      "packages/polaris-generation-consent/src/consent-ports.ts",
+      "packages/polaris-generation-core/src/index.ts",
+      "packages/polaris-generation-core/src/admitted-input.ts"
+    ],
+    "packages/polaris-generation-consent/src/index.ts": [
+      "packages/polaris-generation-consent/src/index.ts",
+      "packages/polaris-generation-consent/src/consent-ports.ts",
+      "packages/polaris-generation-core/src/index.ts",
+      "packages/polaris-generation-core/src/admitted-input.ts"
+    ],
+    "packages/polaris-generation-core/src/index.ts": [
+      "packages/polaris-generation-core/src/index.ts",
+      "packages/polaris-generation-core/src/admitted-input.ts"
+    ]
+  },
+  "nonexception_ingress_origins": [],
+  "guard_vs_BFS_mismatches": [],
+  "deletability": "Not established; exceptions and live-used helpers remain. No deletion authorized."
+}

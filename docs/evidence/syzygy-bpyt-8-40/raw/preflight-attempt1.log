@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/preflight.py", line 8, in <module>
+    assert len(links)==12 and all(Path(x['target']).is_relative_to(cwd) for x in links)
+AssertionError

@@ -1,0 +1,57 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject
+
+ ❯ |unit| packages/polaris-generation-core/src/island-boundary.test.ts (8 tests | 1 failed) 1425ms
+   ✓ the live Node entries and the parked provider island > lists twenty island modules, each a file in the tree 3ms
+   ✓ the live Node entries and the parked provider island > resolves every workspace import both entries reach, dynamic ones included  682ms
+   × the live Node entries and the parked provider island > reaches no island module from either live entry 609ms
+     → apps/syzygy/src/main.ts: first path into the parked island
+apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts): expected [ …(12) ] to deeply equal []
+   ✓ the live Node entries and the parked provider island > reaches the island from the consent package root, which neither live entry imports 125ms
+   ✓ the live Node entries and the parked provider island > refuses computed import arguments, including template expressions 2ms
+   ✓ the live Node entries and the parked provider island > refuses require calls and import-equals loaders 1ms
+   ✓ the live Node entries and the parked provider island > refuses createRequire calls, including imported aliases and module properties 1ms
+   ✓ the live Node entries and the parked provider island > follows a no-substitution template and the existing static, type and literal dynamic forms 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-generation-core/src/island-boundary.test.ts > the live Node entries and the parked provider island > reaches no island module from either live entry
+AssertionError: apps/syzygy/src/main.ts: first path into the parked island
+apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts): expected [ …(12) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts)",[39m
+[31m+   "apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts) -> apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./admitted-input.js (packages/polaris-generation-core/src/admitted-input.ts)",[39m
+[31m+   "apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts) -> apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./discovery-provider.js (packages/polaris-generation-core/src/discovery-provider.ts)",[39m
+[31m+   "apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts) -> apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./pipeline.js (packages/polaris-generation-core/src/pipeline.ts)",[39m
+[31m+   "apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts) -> apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./provider-draft.js (packages/polaris-generation-core/src/provider-draft.ts)",[39m
+[31m+   "apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts) -> apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./provider-draft.js (packages/polaris-generation-core/src/provider-draft.ts)",[39m
+[31m+   "apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts) -> apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./rendered-design.js (packages/polaris-generation-core/src/rendered-design.ts)",[39m
+[31m+   "apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts) -> apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./rendered-design.js (packages/polaris-generation-core/src/rendered-design.ts)",[39m
+[31m+   "apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts) -> apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./excerpt.js (packages/polaris-generation-core/src/excerpt.ts)",[39m
+[31m+   "apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts) -> apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./excerpt.js (packages/polaris-generation-core/src/excerpt.ts)",[39m
+[31m+   "apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts) -> apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./discovery.js (packages/polaris-generation-core/src/discovery.ts)",[39m
+[31m+   "apps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts) -> apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./discovery.js (packages/polaris-generation-core/src/discovery.ts)",[39m
+[31m+ ][39m
+
+ ❯ packages/polaris-generation-core/src/island-boundary.test.ts:125:103
+    123|     for (const entry of ENTRIES) {
+    124|       const { reachable, intoIsland } = reach(entry);
+    125|       expect(intoIsland, `${entry}: first path into the parked island\…
+       |                                                                                                       ^
+    126|       expect(reachable, `${entry}: consent root must stay parked`).not…
+    127|       expect(reachable, `${entry}: consent ports must stay parked`).no…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  16:09:06
+   Duration  2.26s (transform 71ms, setup 26ms, collect 482ms, tests 1.42s, environment 0ms, prepare 56ms)
+
+JSON report written to /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-live-to-dossier-trigger-old.vitest.json
