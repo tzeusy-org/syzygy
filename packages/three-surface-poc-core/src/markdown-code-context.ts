@@ -67,7 +67,7 @@ export type CodeContextMask =
       readonly line: number;
     };
 
-const FENCE_OPENER = /^ {0,3}(`{3,}|~{3,})(.*)$/; // the PWB-REQ-006 profile, the one fence rule of the profile, the extractor and both index readers; the consent reader and the Polaris renderer keep their own: docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-addendum-2026-10-29.json
+const FENCE_OPENER = /^ {0,3}(`{3,}|~{3,})(.*)$/s; // GP-B2 Q7: U+2028/U+2029 are info content on an already CRLF/CR/LF-split line. The consent reader and Polaris renderer keep their own rules: docs/evidence/syzygy-bpyt-6-3/dc3-fence-rules-addendum-2026-10-29.json
 
 function fenceCloser(line: string, char: string, length: number): boolean {
   const match = /^ {0,3}(`{3,}|~{3,}) *$/.exec(line);

@@ -626,6 +626,15 @@ describe('index link grammar — the profile\'s fences and spans', () => {
   it('a line inside a fence is dropped whole, in CRLF text too', () => {
     expect(indexLinkTargets(['[a](a.md)', B, '[b](b.md)', B, '[c](c.md)', ''].join('\r\n'))).toEqual(['a.md', 'c.md']);
     expect(indexLinkTargets(['see `', '[a](a.md)', '` end', '[b](b.md)', ''].join('\r\n'))).toEqual(['b.md']);
+    for (const separator of ['\u2028', '\u2029']) {
+      for (const end of ['\n', '\r\n', '\r']) {
+        for (const delimiter of ['```', '~~~']) {
+          expect(indexLinkTargets(['[a](a.md)', delimiter + separator, '[b](b.md)', delimiter, '[c](c.md)', ''].join(end))).toEqual(['a.md', 'c.md']);
+        }
+        // Blanking preserves the gap; deleting the span would manufacture a joined target.
+        expect(indexLinkTargets('[fake]`' + separator + '`(joined.md)' + end + '[outside](outside.md)')).toEqual(['outside.md']);
+      }
+    }
   });
 
   // RESIDUAL, named by the owner's Q2 answer C: two stray single backticks around a list of links make those links code, and the links drop
@@ -646,6 +655,14 @@ describe('index link grammar — the profile\'s fences and spans', () => {
     // A fenced line is dropped whole, so a fence between the delimiter and a row does not end the table, in CRLF text too.
     const split = [table[0], table[1], B, 'x', B, table[2], ''];
     for (const end of ['\n', '\r\n']) expect([...rootIndexPillarRoots(split.join(end))], JSON.stringify(end)).toEqual([['heart-and-soul', ['about/heart-and-soul']]]);
+    for (const separator of ['\u2028', '\u2029']) {
+      for (const end of ['\n', '\r\n']) {
+        for (const delimiter of ['```', '~~~']) {
+          expect([...rootIndexPillarRoots([delimiter + separator, ...table, delimiter].join(end))]).toEqual([]);
+          expect([...rootIndexPillarRoots([delimiter + separator, ...table, delimiter, ...table].join(end))]).toEqual([['heart-and-soul', ['about/heart-and-soul']]]);
+        }
+      }
+    }
   });
 
   it('phase A: a pillar link hidden by a code span names no pillar, and the pillar index is never read', () => {
@@ -659,6 +676,23 @@ describe('index link grammar — the profile\'s fences and spans', () => {
       expect(asked.map((seed) => seed.path)).toEqual([ROOT, `${LL}/README.md`, `${SS}/README.md`, `${LA}/README.md`, `${CC}/README.md`]);
     }
     expect(derive({}).asked.map((seed) => seed.path)).toEqual(EXPECTED_PHASE_A_READS);
+    for (const separator of ['\u2028', '\u2029']) {
+      for (const delimiter of ['```', '~~~']) {
+        const hidden = [delimiter + separator, '[Heart and Soul](heart-and-soul/)', delimiter].join('\n');
+        const rootText = base.replace('Read [Heart and Soul](heart-and-soul/) first, then ', hidden + '\n');
+        const { manifest, asked } = derive({ rootText });
+        expect(asked.map((seed) => seed.path)).toEqual([ROOT, `${LL}/README.md`, `${SS}/README.md`, `${LA}/README.md`, `${CC}/README.md`]);
+        expect(manifest.phaseAReads).toEqual([ROOT, `${LL}/README.md`, `${SS}/README.md`, `${LA}/README.md`, `${CC}/README.md`]);
+        expect(manifest.sources.filter((source) => source.pillar === 'heart-and-soul')).toEqual([]);
+        expect(manifest.sources.map((source) => source.path)).toEqual([
+          'about/README.md', 'about/craft-and-care/README.md', 'about/craft-and-care/policies/link', 'about/craft-and-care/policies/testing.md',
+          'about/lay-and-land/README.md', 'about/lay-and-land/components.md', 'about/legends-and-lore/README.md',
+          'about/legends-and-lore/rfcs/0001-example.md', 'about/spec-and-spine/README.md',
+          'openspec/specs/alpha/spec.md', 'openspec/specs/beta/spec.md', 'roster/atlas/MANIFESTO.md', 'roster/atlas/butler.toml', 'roster/bravo/butler.toml',
+        ]);
+        expect(derive({ rootText: rootText + '\n[Heart and Soul](heart-and-soul/)\n' }).asked.map((seed) => seed.path)).toEqual(EXPECTED_PHASE_A_READS);
+      }
+    }
   });
 });
 

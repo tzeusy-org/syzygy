@@ -36,10 +36,24 @@ describe('closed-pwb-code-context-v1 — fenced code blocks', () => {
 
   it('tildes fence too, and a tilde opener info string may contain a backtick', () => {
     expect(masked('~~~ a`b\n<x>\n~~~')).toBe('       \n   \n   ');
+    for (const separator of ['\u2028', '\u2029']) {
+      for (const end of ['\n', '\r\n', '\r']) {
+        for (const final of ['', end]) {
+          expect(masked(`~~~${separator}a\`b${end}<x>${end}~~~${final}`)).toBe(`       ${end}   ${end}   ${final}`);
+        }
+      }
+    }
   });
 
   it('a backtick opener info string with a backtick is malformed', () => {
     expect(malformed('```js `x`\n<x>\n```')).toEqual({ reason: 'backtick-fence-with-backtick-in-info-string', line: 1 });
+    for (const separator of ['\u2028', '\u2029']) {
+      for (const end of ['\n', '\r\n', '\r']) {
+        for (const final of ['', end]) {
+          expect(malformed('```' + separator + 'a`b' + end + '<x>' + end + '```' + final)).toEqual({ reason: 'backtick-fence-with-backtick-in-info-string', line: 1 });
+        }
+      }
+    }
   });
 
   it('a closer must repeat the opener character at least the opener length, then spaces only', () => {
@@ -170,7 +184,10 @@ describe('closed-pwb-code-context-v1 — CRLF, CR and LF each end one line', () 
   // Only CR and LF end a line, which leaves every LF reading as it was (syzygy-bpyt.1.14): U+2028, U+2029 and U+0085 are line
   // content, blanked inside a span like any other character. A line end widened to them would keep them in the mask.
   it('U+2028, U+2029 and U+0085 are line content, not line ends', () => {
-    for (const separator of ['\u2028', '\u2029', '\u0085']) expect(masked(`a \`b${separator}c\` d`), JSON.stringify(separator)).toBe('a       d');
+    for (const separator of ['\u2028', '\u2029', '\u0085', '\v', '\f']) {
+      expect(masked(`a \`b${separator}c\` d`), JSON.stringify(separator)).toBe('a       d');
+      expect(masked('```' + separator + '\n<x>\n```')).toBe('    \n   \n   ');
+    }
   });
 
   // The same three at a fence position: a closer followed by a separator is a closer followed by text, so the fence stays unclosed.
@@ -287,6 +304,16 @@ describe('recognizeCodeContexts — the ranges the mask is built from', () => {
     expect(ranges('before\n```html\n<div>\n```\nafter')).toEqual({ fences: [[7, 24]], spans: [] });
     expect(recognizeCodeContexts('before\n```html\n<div>\n```\nafter')).toMatchObject({ fences: 1, spans: 0 });
     expect(recognizeCodeContexts('before\n```html\n<div>\n```\nafter').malformed).toBeUndefined();
+    for (const separator of ['\u2028', '\u2029']) {
+      for (const [end, start, finish] of [['\n', 7, 21], ['\r\n', 8, 24], ['\r', 7, 21]] as const) {
+        for (const final of ['', end]) {
+          const text = 'before' + end + '```' + separator + end + '<div>' + end + '```' + final;
+          expect(recognizeCodeContexts(text)).toEqual({ fenceRanges: [[start, finish]], spanRanges: [], fences: 1, spans: 0 });
+          expect(masked(text)).toBe('before' + end + '    ' + end + '     ' + end + '   ' + final);
+          expect(masked(text)).toHaveLength(text.length);
+        }
+      }
+    }
   });
 
   it('a CRLF or a bare CR ends a line and stays inside the range between lines', () => {

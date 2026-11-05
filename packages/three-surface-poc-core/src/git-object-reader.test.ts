@@ -29,6 +29,7 @@ import {
   evaluateLimit,
   readManifestSources,
   scanActiveContent,
+  scanActiveContentCharged,
   type ExactObjectReader,
   type ObjectReadRecord,
 } from './git-object-reader.js';
@@ -408,6 +409,8 @@ describe('active content is rejected and never reaches a sink', () => {
   it('the same sentinel outside the context still excludes, at its raw position', () => {
     const text = '```\n<div>\n```\nafter `<br>` and <SCRIPT>';
     expect(scanActiveContent(text)).toEqual([{ form: 'script-element', line: 4, column: 18 }]);
+    expect(scanActiveContent('~~~\r<div>\r\n~~~\né\u{1f600} <script>')).toEqual([{ form: 'script-element', line: 4, column: 5 }]);
+    expect(scanActiveContent('é\u{1f600} `<br>` <SCRIPT>')).toEqual([{ form: 'script-element', line: 1, column: 12 }]);
   });
 
   it('indented code and HTML code elements are not inert contexts', () => {
@@ -516,8 +519,10 @@ describe('a 200,000-line closed fence under the read limit (GP-B2 Q1)', () => {
     const result = readOne(text);
     expect(result.kind).toBe('unavailable');
     expect(result.record.outcome).toBe('active-content');
-    // Forms only: positionOf counts LF, so a bare-CR text reports line 1 (the GAP below).
-    expect(result.record.activeContent?.map((finding) => finding.form)).toEqual(['script-element', 'script-element']);
+    expect(result.record.activeContent).toEqual([
+      { form: 'script-element', line: 200003, column: 1 },
+      { form: 'script-element', line: 200003, column: 17 },
+    ]);
     expect(JSON.stringify(result)).not.toContain('alert(1)');
   });
 
@@ -553,17 +558,59 @@ describe('a malformed code context is excluded whole, and the recognizer\'s reco
   });
 });
 
-// GAP, for the line-model follow-up of syzygy-bpyt.16: positionOf counts LF only, so a CRLF text reports its LF form's positions and
-// a bare-CR text reports line 1 with the offset as column, while a malformed finding takes the mask's line, which counts every line end.
+// GP-B2 former Q8 (agent work, syzygy-bpyt.1.20): every finding follows the mask's CRLF/CR/LF line rule; columns retain raw UTF-16 units.
 describe('reported positions in CRLF and bare-CR texts', () => {
-  it('CRLF as LF; a bare CR counted by the malformed line only', () => {
+  it('CRLF, CR and LF positions, charges and repeated calls follow the mask line rule', () => {
     expect(scanActiveContent('a\r\n<script>x</script>')).toEqual([{ form: 'script-element', line: 2, column: 1 }, { form: 'script-element', line: 2, column: 10 }]);
-    expect(scanActiveContent('a\r<script>x</script>')).toEqual([{ form: 'script-element', line: 1, column: 3 }, { form: 'script-element', line: 1, column: 12 }]);
+    expect(scanActiveContent('a\r<script>x</script>')).toEqual([{ form: 'script-element', line: 2, column: 1 }, { form: 'script-element', line: 2, column: 10 }]);
     expect(scanActiveContent('a\rb\r`x')).toEqual([{ form: 'malformed-code-context', line: 3, column: 1, context: 'unclosed-inline-span' }]);
+    // Literal per-input oracles; A/B/A and reverse order use independent callbacks.
+    const rows = [
+      ['', []], ['benign\r\nwords\r\n', []],
+      ['a\n<script>x</script>', [{ form: 'script-element', line: 2, column: 1 }, { form: 'script-element', line: 2, column: 10 }]],
+      ['\r\n\r\n<div>', [{ form: 'html-tag', line: 3, column: 1 }]],
+      ['\n\r<div>', [{ form: 'html-tag', line: 3, column: 1 }]],
+      ['\r\r\n<div>', [{ form: 'html-tag', line: 3, column: 1 }]],
+      ['x\r\n\ry\n  <svg>\r', [{ form: 'svg-element', line: 4, column: 3 }]],
+      ['x\r<!-- example -->', [{ form: 'html-comment-or-declaration', line: 2, column: 1 }]],
+      ['x\r <img onclick="example">', [{ form: 'event-handler-attribute', line: 2, column: 2 }, { form: 'html-tag', line: 2, column: 2 }]],
+      ['x\r[x](javascript:example)', [{ form: 'unsafe-url-scheme', line: 2, column: 3 }]],
+      ['x\r[x](&#106;avascript:example)', [{ form: 'obfuscated-link-destination', line: 2, column: 3 }]],
+      ['a\rb\r`x', [{ form: 'malformed-code-context', line: 3, column: 1, context: 'unclosed-inline-span' }]],
+      ['<div>\r<svg>\r<script>x</script>', [
+        { form: 'html-tag', line: 1, column: 1 }, { form: 'svg-element', line: 2, column: 1 },
+        { form: 'script-element', line: 3, column: 1 }, { form: 'script-element', line: 3, column: 10 },
+      ]],
+      ...['\n', '\r\n', '\r'].flatMap((end) => [
+        ['x' + end + '<div>', [{ form: 'html-tag', line: 2, column: 1 }]],
+        ['x' + end + '<svg>', [{ form: 'svg-element', line: 2, column: 1 }]],
+        ['x' + end + '<!-- example -->', [{ form: 'html-comment-or-declaration', line: 2, column: 1 }]],
+        ['x' + end + '<img onclick="example">', [{ form: 'event-handler-attribute', line: 2, column: 1 }, { form: 'html-tag', line: 2, column: 1 }]],
+        ['x' + end + '[x](javascript:example)', [{ form: 'unsafe-url-scheme', line: 2, column: 3 }]],
+        ['x' + end + '[x](&#106;avascript:example)', [{ form: 'obfuscated-link-destination', line: 2, column: 3 }]],
+      ] as const),
+    ] as const;
+    for (const [raw, findings] of [...rows, ...rows.toReversed(), ...rows]) {
+      const charged: string[] = [];
+      expect(scanActiveContent(raw), JSON.stringify(raw)).toEqual(findings);
+      expect(scanActiveContentCharged(raw, (pass) => { charged.push(pass); return undefined; })).toEqual({ kind: 'scanned', findings });
+      expect(charged).toEqual(raw === 'a\rb\r`x'
+        ? ['markdown-code-context-mask']
+        : ['markdown-code-context-mask', 'active-html-svg-script-handler', 'unsafe-url-positions']);
+    }
   });
 
   it('U+2028 is line content: an LF text reports its finding on line 1', () => {
-    expect(scanActiveContent('a\u2028<script>x</script>')).toEqual([{ form: 'script-element', line: 1, column: 3 }, { form: 'script-element', line: 1, column: 12 }]);
+    for (const separator of ['\u2028', '\u2029', '\u0085', '\v', '\f']) {
+      expect(scanActiveContent(`a${separator}<script>x</script>`)).toEqual([{ form: 'script-element', line: 1, column: 3 }, { form: 'script-element', line: 1, column: 12 }]);
+    }
+    // The three PR #544 N3 probes, for each Q7 separator (the control has none).
+    for (const separator of ['\u2028', '\u2029']) {
+      expect(scanActiveContent('```' + separator + '<script>x</script>```')).toEqual([{ form: 'malformed-code-context', line: 1, column: 1, context: 'backtick-fence-with-backtick-in-info-string' }]);
+      expect(scanActiveContent('```<script>x</script>```')).toEqual([{ form: 'malformed-code-context', line: 1, column: 1, context: 'backtick-fence-with-backtick-in-info-string' }]);
+      expect(scanActiveContent('~~~' + separator + '\n<script>x</script>\n~~~')).toEqual([]);
+      expect(scanActiveContent('```' + separator + '\n<script>x</script>\n```')).toEqual([]);
+    }
   });
 });
 
