@@ -322,10 +322,17 @@ m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 sibling=subprocess.Popen(['/usr/bin/sleep','10'])
 try:
  original=m.identity
- with patch.object(m,'identity',lambda pid:{**original(pid),'parent':-1}):
-  try: m.pin_child(sibling.pid)
-  except RuntimeError as e: assert str(e)=='writer-identity-refused'
-  else: raise AssertionError('foreign parent identity accepted')
+ for field in ['parent','uid','start']:
+  calls=[0]
+  def forged(pid):
+   calls[0]+=1
+   value=original(pid)
+   if field!='start' or calls[0]>1: value[field]=-1
+   return value
+  with patch.object(m,'identity',forged):
+   try: m.pin_child(sibling.pid)
+   except RuntimeError as e: assert str(e)=='writer-identity-refused'
+   else: raise AssertionError(f'{field} identity accepted')
  assert sibling.poll() is None,'refused identity must not signal sibling'
  child=subprocess.Popen(['/usr/bin/sleep','10'])
  fd,record=m.pin_child(child.pid)
