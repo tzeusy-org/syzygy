@@ -1054,6 +1054,11 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             source_mutate("plan_sha256", digest(data)); source_mutate("evidence_files", 4)
         failure("census-denominator-independent-of-plan", aligned_plan_and_count_drift, "source-denominator-mismatch")
         failure("missing-local-retention-input", lambda: (home / "INDEX.jsonl").unlink(), "retention-input-not-regular-local-file")
+        failure("dangling-transaction-input-is-not-absence",
+                lambda: (home / "TRANSACTION.json").symlink_to(Path(temp) / "missing-owned-transaction.json"),
+                "transaction-not-regular-local-file")
+        cases[-1]["old"] = {"TRANSACTION.json": "absent in valid additive-only representation"}
+        cases[-1]["new"] = {"TRANSACTION.json": "symlink to missing-owned-transaction.json under the owned fixture namespace"}
         def internal_input_symlink(artifact):
             path = home / artifact; copy = root / ("identical-copy-" + artifact)
             copy.write_bytes(path.read_bytes()); path.unlink(); path.symlink_to(copy)
