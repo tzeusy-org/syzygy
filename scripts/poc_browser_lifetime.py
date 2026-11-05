@@ -27,8 +27,13 @@ def identity(pid):
     try:
         text = (directory / 'stat').read_text()
         fields = text[text.rfind(')') + 2:].split()
+        owner = directory.stat().st_uid
+        # Namespace links for another UID may be unreadable on a normal
+        # host. Retain its parent metadata so a foreign-UID descendant is
+        # refused, while unrelated processes require no namespace access.
+        namespace = os.readlink(directory / 'ns/pid') if owner == UID else None
         return (pid, fields[19], int(fields[1]), fields[0],
-                directory.stat().st_uid, os.readlink(directory / 'ns/pid'))
+                owner, namespace)
     except (FileNotFoundError, ProcessLookupError):
         return None
 

@@ -9,6 +9,7 @@ import subprocess
 import sys
 import time
 import runpy
+from types import SimpleNamespace
 from unittest.mock import patch
 
 assert ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0) == 0
@@ -22,9 +23,10 @@ def identity(pid):
     try:
         text = (p / 'stat').read_text()
         f = text[text.rfind(')') + 2:].split()
+        owner = p.stat().st_uid
         return {'pid': pid, 'start': f[19], 'ppid': int(f[1]), 'pgid': int(f[2]),
-                'sid': int(f[3]), 'state': f[0], 'uid': p.stat().st_uid,
-                'namespace': os.readlink(p / 'ns/pid')}
+                'sid': int(f[3]), 'state': f[0], 'uid': owner,
+                'namespace': os.readlink(p / 'ns/pid') if owner == UID else None}
     except (FileNotFoundError, ProcessLookupError):
         return None
 
@@ -94,6 +96,12 @@ guardian = runpy.run_path(guardian_path)
 with patch.object(Path, 'read_text', side_effect=ProcessLookupError('process exited during read')):
     assert identity(999999999) is None
     assert guardian['identity'](999999999) is None
+foreign_fields = ['S', '123'] + ['0'] * 17 + ['foreign-start']
+with patch.object(Path, 'read_text', return_value='999999999 (foreign) ' + ' '.join(foreign_fields)), \
+        patch.object(Path, 'stat', return_value=SimpleNamespace(st_uid=UID + 1)), \
+        patch('os.readlink', side_effect=AssertionError('foreign UID namespace was inspected')):
+    assert guardian['identity'](999999999)[4:] == (UID + 1, None)
+    assert identity(999999999)['namespace'] is None
 stop = guardian['stop']
 ports = stop.__globals__
 row = (999999999, 'original-start', 123, 'S', UID, NAMESPACE)
@@ -130,7 +138,6 @@ with patch('os.pidfd_open', side_effect=ProcessLookupError('already reaped')), \
     stop(row, signal.SIGKILL)
     sent.assert_not_called()
 # The deadline refuses rather than acknowledging an unverified family.
-from types import SimpleNamespace
 ticks = iter([0, 0])
 clock = SimpleNamespace(monotonic=lambda: next(ticks, 4), sleep=lambda _seconds: None)
 drain = guardian['drain']
