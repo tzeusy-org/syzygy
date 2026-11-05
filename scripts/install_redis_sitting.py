@@ -1613,6 +1613,18 @@ def policy_selftests() -> list[tuple[str, bool]]:
                        pre6 != live and policy_cg_v6_edits(pre6, v5_live_arg) == live
                        and policy_cg_v6_edits(live, v5_live_arg) == live))
             base5 = pre6
+            # step_policy itself must carry the version-6 edit: over a copy of the live inputs it is the step that would
+            # put the hunks back into a check_governance.py that lacks them, and it finds nothing to do on the live file.
+            with tempfile.TemporaryDirectory() as t:
+                scratch = pathlib.Path(t)
+                shutil.copytree(ROOT / DECISIONS, scratch / DECISIONS)
+                for rel in (CG, POLICY_JSON, STATUS, WORKFLOW, *PIN_FILES):
+                    (scratch / rel).parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(ROOT / rel, scratch / rel)
+                live_clean = not step_policy(scratch, write=False)
+                (scratch / CG).write_text(pre6)
+                ok.append(("step policy: over the live inputs it has nothing to do, and with the version-6 hunks undone it would install them",
+                           live_clean and step_policy(scratch, write=False)))
         base4 = base5
         if V5_CHAIN_ROW in base5:
             pre5 = (base5.replace(f'{V5_CHAIN_ROW}     "{v4_live_arg}"),\n', "", 1).replace(V5_OFFERING, "", 1)
