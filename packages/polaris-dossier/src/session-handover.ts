@@ -393,7 +393,7 @@ export async function startSessions(runDir: string, request: Omit<SessionPromptR
   const now = deps.now();
   const refuse = (stage: string, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]) =>
     ({ ok: false as const, refusal: { command: 'session-prompt' as const, outcome: 'refused' as const, stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: START_DISCLOSURES } });
-  const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned, now);
+  const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned, now ?? NaN);
   if (gateRefusal !== null) return refuse('unsigned', gateRefusal);
   const opened = await openRun(runDir, deps.sources, now, 'no session is started', deps.openReader ? { openReader: deps.openReader } : {});
   if (!opened.ok) return refuse(opened.stage, opened.reason, opened.reasons, opened.refusals);
@@ -473,7 +473,7 @@ async function deliverReview(
   const now = deps.now();
   const refuse = (stage: string, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]) =>
     ({ ok: false as const, refusal: { command: 'session-prompt' as const, outcome: 'refused' as const, stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: DELIVERY_DISCLOSURES } });
-  const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned, now);
+  const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned, now ?? NaN);
   if (gateRefusal !== null) return refuse('unsigned', gateRefusal);
   if (request.tool !== undefined || request.toolVersion !== undefined || request.model !== undefined) {
     return refuse('context', `a ${kind} session is waiting, and its tool, version and model were declared when it was started; deliver without --tool, --tool-version or --model, or add --fresh to hand the packet to a new session`);

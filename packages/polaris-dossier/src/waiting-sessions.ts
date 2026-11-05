@@ -208,7 +208,8 @@ export const WAIT_MODE_UNSIGNED = `wait mode is specified only by ${WAIT_MODE_SP
 export const WAIT_MODE_DRIFTED = `wait mode is specified only by ${WAIT_MODE_SPEC}; a sign-off record for it exists, but the signed subject it names is not what is installed (the installed specification does not hash to the digest in the review the record names, or that review or the specification's version head is missing or disagrees); hand each session over with session-prompt as signed in v1.1, and tell the owner`;
 
 /** The reason a wait-mode step refuses, or null when the gate is open. An injected `signed` (a test's, or a caller's) can say only open or
- * closed, so its closed state keeps the unsigned reason. */
+ * closed, so its closed state keeps the unsigned reason. Operation callers pass NaN for a missing captured clock rather than invoking
+ * this helper's convenience default. */
 export function waitModeRefusal(recordsRoot: string, signed?: () => boolean, now = Date.now()): string | null {
   if (signed !== undefined) return signed() ? null : WAIT_MODE_UNSIGNED;
   const status = waitModeStatus(recordsRoot, now);
@@ -476,7 +477,7 @@ export async function awaitSession(directoryArg: string, request: AwaitRequest, 
   const startedAt = deps.now();
   const refuse = (stage: string, reason: string, reasons?: readonly string[], refusals?: readonly ReverifyRefusal[]): AwaitResult =>
     ({ ok: false, refusal: { command: 'await', outcome: 'refused', stage, reason, ...(reasons ? { reasons } : {}), ...(refusals ? { refusals } : {}), disclosures: AWAIT_DISCLOSURES } });
-  const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned, startedAt);
+  const gateRefusal = waitModeRefusal(deps.sources.recordsRoot, deps.waitModeSigned, startedAt ?? NaN);
   if (gateRefusal !== null) return refuse('unsigned', gateRefusal);
 
   // The directory: absolute, normalised, ending in one slash, so the printed permission rule's prefix names exactly this session.

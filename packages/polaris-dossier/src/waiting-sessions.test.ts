@@ -169,13 +169,15 @@ describe('the v1.2 gate', () => {
       ['await', `${h.sessions}/session-1/`, '--submit', 'inventory.json', '--stdin'],
       ['session-prompt', h.run, 'all'],
     ];
-    for (const [date, expected] of [
-      ['Date: 2099-01-01', FUTURE_DATE_REASON], ['', MISSING_DATE_REASON],
-      ['Date: 2026-02-30', INVALID_DATE_REASON],
-      ['Date: 2026-10-07', INVALID_EVALUATION_REASON],
-    ]) {
-      fs.writeFileSync(record, current.replace('Date: 2026-10-07', date!));
-      h.clock.now = expected === INVALID_EVALUATION_REASON ? NaN : LATER;
+    for (const [date, expected, evaluatedAt] of [
+      ['Date: 2099-01-01', FUTURE_DATE_REASON, LATER], ['', MISSING_DATE_REASON, LATER],
+      ['Date: 2026-02-30', INVALID_DATE_REASON, LATER],
+      ['Date: 2026-10-07', INVALID_EVALUATION_REASON, NaN],
+      ['Date: 2026-10-07', INVALID_EVALUATION_REASON, undefined as unknown as number],
+      ['Date: 2026-10-07', INVALID_EVALUATION_REASON, null as unknown as number],
+    ] as const) {
+      fs.writeFileSync(record, current.replace('Date: 2026-10-07', date));
+      h.clock.now = evaluatedAt;
       const before = treeOf(path.dirname(h.run)), authority = treeOf(root), reads = h.world.stdinReads;
       for (const argv of flows) {
         const nowReads = h.world.nowReads;
