@@ -109,9 +109,9 @@ root.
 
 | Command | What it runs | Needs |
 |---|---|---|
-| `npm test` | one complete **unit** run in a fresh private TMPDIR, with a post-run leak check | node, Linux `/proc` |
-| `npm run check` | `npm run typecheck`, then `npm test` | node, Linux `/proc` |
-| `npm run test:integration` | bounded TMPDIR-driver selftests, then the **integration** tier | git, python3, Linux `/proc` |
+| `npm test` | one complete **unit** run in a fresh private TMPDIR, with a post-run leak check | node, python3 with pidfd support, Linux `/proc` |
+| `npm run check` | `npm run typecheck`, then `npm test` | node, python3 with pidfd support, Linux `/proc` |
+| `npm run test:integration` | bounded TMPDIR-driver selftests, then the **integration** tier | git, python3 with pidfd support, Linux `/proc` |
 | `npm run test:e2e` | the **e2e** tier, then the system tests (`npm run test:system`, which builds first) | Chrome or Chromium, strace, git, npm |
 | `npm run check:all` | `check`, `test:tiers`, `test:integration`, `test:e2e`, then the governance battery (`npm run check:battery`) | all of the above |
 | `npm run test:live` | the **live** tier: operator-run, skips unless `SYZYGY_POC_BUTLERS_REPO` names a real repository | a Butlers checkout |
@@ -123,7 +123,10 @@ root.
   needs one belongs in a higher tier.
 - **Run cleanup.** `npm test` prints the unit project, selected files and contributing
   workspaces, reconciles discovery and executed-file reports, and lists escaped
-  leftover names/types before removing only its own TMPDIR. Only an exact real
+  leftover names/types before removing only its own TMPDIR. A private Linux
+  subreaper waits for kernel-confirmed descendant completion, including children
+  that change process group or session; signals use verified child pidfds. Missing
+  lifetime proof refuses census/removal and leaves a named failed remainder. Only an exact real
   `node-compile-cache` directory is exempt. A failed child, incomplete denominator,
   scan error or incomplete cleanup fails the check even when no leak remains.
   Driver controls run separately under `test:integration`; this is a unit-run

@@ -58,39 +58,6 @@ function census(owner) {
   return { entries, leftovers: entries.filter((e) => !e.exempt), errors };
 }
 
-// Linux's private session identifies writers even after the launcher exits. No process-name matching or group signalling.
-function processIdentity(pid) {
-  try {
-    const s = fs.readFileSync(`/proc/${pid}/stat`, 'utf8');
-    const fields = s.slice(s.lastIndexOf(')') + 2).split(' ');
-    return { pid, state: fields[0], group: Number(fields[2]), session: Number(fields[3]),
-      start: fields[19], uid: fs.statSync(`/proc/${pid}`).uid };
-  } catch (e) { if (e.code === 'ENOENT' || e.code === 'ESRCH') return null; throw e; }
-}
-
-function writers(pid) {
-  const found = [];
-  for (const name of fs.readdirSync('/proc')) {
-    if (!/^\d+$/.test(name)) continue;
-    const p = processIdentity(Number(name));
-    if (p?.group === pid && p.session === pid && p.state !== 'Z' && p.state !== 'X') {
-      if (p.uid !== process.getuid()) throw new Error('writer-identity-refused');
-      found.push(p);
-    }
-  }
-  return found;
-}
-
-function stopWriters(pid, signal) {
-  for (const p of writers(pid)) {
-    const now = processIdentity(p.pid);
-    if (now === null) continue;
-    if (identityProcess(now) !== identityProcess(p)) throw new Error('writer-identity-changed');
-    try { process.kill(p.pid, signal); } catch (e) { if (e.code !== 'ESRCH') throw e; }
-  }
-}
-const identityProcess = (p) => `${p.pid}:${p.start}:${p.group}:${p.session}:${p.uid}`;
-
 async function childRun(command, args, cwd, owner, options) {
   const reports = [];
   let text = '';
@@ -99,7 +66,7 @@ async function childRun(command, args, cwd, owner, options) {
   let interrupted = null;
   let signalError = null;
   let launchError = null;
-  let escalation;
+  let lifetimeText = '';
   let child;
   const receive = (bytes) => {
     if (!options.quiet) process.stdout.write(bytes);
@@ -114,41 +81,39 @@ async function childRun(command, args, cwd, owner, options) {
   };
   const stop = (signal) => {
     interrupted = signal;
-    try { if (child?.pid) stopWriters(child.pid, signal); }
-    catch (e) { signalError = e.message; }
-    escalation ??= setTimeout(() => {
-      try { if (child?.pid) stopWriters(child.pid, 'SIGKILL'); }
-      catch (e) { signalError = e.message; }
-    }, 2000);
+    // The direct supervisor owns its descendants; it pins their signals with
+    // pidfds. If it dies without proof, ownedRun refuses census and cleanup.
+    if (child && child.exitCode === null && child.signalCode === null) child.kill(signal);
   };
   const term = () => stop('SIGTERM');
   const interrupt = () => stop('SIGINT');
   process.on('SIGTERM', term); process.on('SIGINT', interrupt);
   let outcome;
   try {
-    child = spawn(command, args, { cwd, detached: true, env: { ...process.env,
+    child = spawn('/usr/bin/python3', [join(dirname(HERE), 'check_unit_tmpdir_child.py'), command, ...args], { cwd, detached: true, env: { ...process.env,
       TMPDIR: owner.path, TMP: owner.path, TEMP: owner.path, TMPPREFIX: owner.path },
-    stdio: ['ignore', 'pipe', 'pipe'] });
+    stdio: ['ignore', 'pipe', 'pipe', 'pipe'] });
+    child.stdio[3].on('data', (bytes) => { lifetimeText += bytes.toString(); });
     child.stdout.on('data', receive); child.stderr.on('data', receive);
+    const proofDone = new Promise((finish) => child.stdio[3].once('close', finish));
+    const closed = new Promise((finish) => child.once('close', finish));
     const done = new Promise((finish) => {
-      child.once('error', (e) => { launchError = e.code ?? e.message; });
-      child.once('close', (code, signal) => finish({ code, signal }));
+      child.once('error', (e) => { launchError = e.code ?? e.message; finish({ code: null, signal: null }); });
+      child.once('exit', (code, signal) => finish({ code, signal }));
     });
     options.onSpawn?.(child, owner);
     outcome = await done;
-    // A successful launcher must not leave a detached worker writing after census.
-    let remaining = child.pid ? writers(child.pid) : [];
-    if (remaining.length) {
-      signalError ??= 'owned-writers-remained';
-      stopWriters(child.pid, 'SIGTERM');
-      for (let i = 0; i < 100 && remaining.length; i++) { await pause(20); remaining = writers(child.pid); }
-      if (remaining.length) {
-        stopWriters(child.pid, 'SIGKILL');
-        for (let i = 0; i < 100 && remaining.length; i++) { await pause(20); remaining = writers(child.pid); }
-      }
-    }
-    return { ...outcome, launchError, interrupted, signalError, writers: remaining, outputOverflow, reports, text };
-  } finally { clearTimeout(escalation); process.off('SIGTERM', term); process.off('SIGINT', interrupt); }
+    await proofDone; // Only the supervisor inherits the proof pipe.
+    let proof;
+    try { proof = JSON.parse(lifetimeText); }
+    catch { proof = { code: null, signal: null, signalError: 'missing-writer-lifetime-proof', writers: [] }; }
+    const valid = proof.lifetime?.method === 'linux-subreaper-pidfd' && proof.lifetime.complete === true &&
+      Array.isArray(proof.writers) && proof.writers.length === 0 && outcome.code === 0 && !outcome.signal && !launchError;
+    if (valid) await closed; // All verified writers exited: drain the real reports.
+    else { child.stdout.destroy(); child.stderr.destroy(); } // Unknown writers may retain stdout forever.
+    return { ...proof, supervisorOutcome: outcome, interrupted: interrupted ?? proof.interrupted,
+      signalError: signalError ?? proof.signalError, lifetimeVerified: valid, outputOverflow, reports, text };
+  } finally { process.off('SIGTERM', term); process.off('SIGINT', interrupt); }
 }
 
 function denominator(expected, reports) {
@@ -180,7 +145,7 @@ async function ownedRun({ command = process.execPath, args, cwd = ROOT, expected
   let safe = true;
   try {
     result.child = await childRun(command, args, cwd, owner, options);
-    if (result.child.writers.length) { safe = false; result.errors.push('owned-writers-still-live'); }
+    if (!result.child.lifetimeVerified) { safe = false; result.errors.push('owned-writer-lifetime-unknown'); }
   } catch (e) { safe = false; result.errors.push(`child-lifetime-unknown: ${e.message}`); }
   try {
     if (!safe) throw new Error('census-refused-live-or-unknown-writers');
@@ -316,8 +281,67 @@ async function selftest() {
       assert.equal(failed.ok, false); assert.equal(failed.child.launchError, 'ENOENT'); clean(failed);
       const interrupted = await fixture("fs.writeFileSync(join(root,'interrupt-leak'),'x');setTimeout(()=>process.kill(process.ppid,'SIGTERM'),10);setInterval(()=>{},1000);");
       assert.equal(interrupted.child.signal, 'SIGTERM'); assert.equal(interrupted.child.interrupted, 'SIGTERM'); leak(interrupted, ['interrupt-leak']);
-      const orphan = await fixture("fs.writeFileSync(join(root,'worker-leak'),'x');const {spawn}=await import('node:child_process');spawn(process.execPath,['-e','setInterval(()=>{},1000)'],{stdio:'ignore'}).unref();");
-      assert.equal(orphan.child.signalError, 'owned-writers-remained'); assert.deepEqual(orphan.child.writers, []); leak(orphan, ['worker-leak']);
+      for (const transition of ['unchanged', 'setpgrp', 'setsid']) {
+        const ready = join(control.path, `writer-${transition}.json`);
+        const release = join(control.path, `release-${transition}`);
+        const worker = `import os,time,json,pathlib,sys
+root,ready,release=map(pathlib.Path,sys.argv[1:])
+${transition === 'unchanged' ? '' : `os.${transition}()`}
+ready.write_text(json.dumps({'pid':os.getpid(),'start':pathlib.Path('/proc/self/stat').read_text().rsplit(')',1)[1].split()[19],'uid':os.getuid(),'group':os.getpgrp(),'session':os.getsid(0)}))
+deadline=time.monotonic()+10
+while not release.exists() and time.monotonic()<deadline: time.sleep(.01)
+if release.exists():
+ root.mkdir(exist_ok=True)
+ (root/'late-writer-leak').write_text('late')
+`;
+        const r = await fixture(`fs.writeFileSync(join(root,'worker-leak'),'x');const {spawn}=await import('node:child_process');spawn('/usr/bin/python3',['-c',${JSON.stringify(worker)},root,${JSON.stringify(ready)},${JSON.stringify(release)}],{stdio:'ignore'}).unref();while(!fs.existsSync(${JSON.stringify(ready)}))await new Promise(r=>setTimeout(r,10));`);
+        assert.equal(r.child.signalError, 'owned-writers-remained');
+        assert.equal(r.child.lifetimeVerified, true);
+        assert.deepEqual(r.child.writers, []);
+        const writer = JSON.parse(fs.readFileSync(ready, 'utf8'));
+        assert.equal(fs.existsSync(`/proc/${writer.pid}`), false, `${transition} writer must be reaped before census`);
+        assert(r.child.lifetime.signals.some((p) => p.pid === writer.pid && p.start === writer.start && p.uid === writer.uid), 'termination must target the recorded writer identity');
+        if (transition === 'setpgrp') { assert.equal(writer.group, writer.pid); assert.notEqual(writer.group, writer.session); }
+        if (transition === 'setsid') assert.equal(writer.session, writer.pid);
+        leak(r, ['worker-leak']);
+        fs.writeFileSync(release, 'go');
+        await pause(30);
+        assert.equal(fs.existsSync(r.root), false, `${transition} writer must not recreate the root after return`);
+      }
+      const unknown = await fixture("process.kill(process.ppid,'SIGKILL');");
+      assert.equal(unknown.ok, false); assert.equal(unknown.cleanup, false); assert.equal(unknown.census, null);
+      assert.equal(unknown.child.lifetimeVerified, false); assert(unknown.errors.includes('owned-writer-lifetime-unknown'));
+      assert.equal(unknown.child.supervisorOutcome.signal, 'SIGKILL');
+      // This no-fork fixture exits after killing its supervisor. The fixture
+      // controller owns recovery, never the driver's refused cleanup proof.
+      assert.equal(fs.existsSync(unknown.root), true); fs.rmdirSync(unknown.root);
+      const pinning = `import importlib.util,os,pathlib,signal,subprocess
+from unittest.mock import patch
+spec=importlib.util.spec_from_file_location('supervisor',${JSON.stringify(join(dirname(HERE), 'check_unit_tmpdir_child.py'))})
+m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+sibling=subprocess.Popen(['/usr/bin/sleep','10'])
+try:
+ original=m.identity
+ with patch.object(m,'identity',lambda pid:{**original(pid),'parent':-1}):
+  try: m.pin_child(sibling.pid)
+  except RuntimeError as e: assert str(e)=='writer-identity-refused'
+  else: raise AssertionError('foreign parent identity accepted')
+ assert sibling.poll() is None,'refused identity must not signal sibling'
+ child=subprocess.Popen(['/usr/bin/sleep','10'])
+ fd,record=m.pin_child(child.pid)
+ child.terminate();child.wait()
+ try:
+  try: signal.pidfd_send_signal(fd,signal.SIGKILL)
+  except ProcessLookupError: pass
+  else: raise AssertionError('exited pidfd accepted signal')
+  assert sibling.poll() is None,'stale pidfd must not signal unrelated sibling'
+ finally: os.close(fd)
+ print('verified identity refusal and stale pidfd sibling survival')
+finally:
+ sibling.terminate();sibling.wait()
+`;
+      const pinned = await fixture(`const {execFileSync}=await import('node:child_process');execFileSync('/usr/bin/python3',['-c',${JSON.stringify(pinning)}],{stdio:'pipe'});`);
+      assert.equal(pinned.ok, true, 'identity refusal and stale pidfd must preserve the unrelated sibling'); clean(pinned);
     });
     await caseRun('outside sibling and link target survive', async () => {
       const target = join(control.path, 'outside'); fs.mkdirSync(target); fs.writeFileSync(join(target, 'decoy'), 'untouched');
