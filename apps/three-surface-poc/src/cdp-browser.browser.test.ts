@@ -65,7 +65,21 @@ function alive(pid: number): boolean {
 
 async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Promise<void> {
     const directory = mkdtempSync(join(tmpdir(), 'syzygy-poc-parent-death-'));
+    // A privately launched sibling, outside both scanner families, reproduces
+    // shared hosts where same-UID namespace links may still deny access.
+    const deniedSibling = spawn('python3', ['-c',
+      "import ctypes,sys; assert ctypes.CDLL(None).prctl(4,0,0,0,0)==0; print('ready',flush=True); sys.stdin.read()"],
+      { stdio: ['pipe', 'pipe', 'pipe'] });
+    const siblingExit = new Promise<number | null>((resolve, reject) => {
+      deniedSibling.once('error', reject);
+      deniedSibling.once('exit', resolve);
+    });
     try {
+      await new Promise<void>((resolve, reject) => {
+        deniedSibling.stdout.once('data', (chunk: Buffer) => chunk.toString('utf8') === 'ready\n' ? resolve() : reject(new Error('denied sibling failed its milestone')));
+        deniedSibling.once('error', reject);
+        deniedSibling.once('exit', () => reject(new Error('denied sibling exited before its milestone')));
+      });
       const module = join(directory, 'browser.mjs');
       const source = new URL('./cdp-browser.ts', import.meta.url);
       await build({ entryPoints: [fileURLToPath(source)], outfile: module, bundle: true, platform: 'node', format: 'esm',
@@ -91,7 +105,7 @@ async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Pro
         `process.stdout.write('ready\\n'); setInterval(() => {}, 1000);\n`;
       writeFileSync(worker, `import { launchBrowser } from ${JSON.stringify(module)};\n` + body);
       const child = spawn('python3', [fileURLToPath(new URL('./test-fixtures/browser-parent-death.py', import.meta.url)), mode, worker, process.execPath,
-        fileURLToPath(new URL('../../../scripts/poc_browser_lifetime.py', import.meta.url))],
+        fileURLToPath(new URL('../../../scripts/poc_browser_lifetime.py', import.meta.url)), String(deniedSibling.pid)],
         { stdio: ['ignore', 'pipe', 'pipe'] });
       let output = '';
       let errors = '';
@@ -107,7 +121,12 @@ async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Pro
         after: { procFamilyDenominator: number; proc: unknown[]; psFamily: unknown[] };
         afterRecovery: { proc: unknown[] };
         unexpectedReaps: unknown[]; refusals: string[];
+        deniedSibling: { uid: number; namespaceDenied: boolean }; ownedUnreadableRefusals: string[]; scanRefusals: string[];
       };
+      expect(report.deniedSibling.uid).toBe(process.getuid?.());
+      expect(report.deniedSibling.namespaceDenied).toBe(true);
+      expect(report.scanRefusals).toEqual(['guardian-scan-reused', 'observer-scan-reused']);
+      expect(report.ownedUnreadableRefusals).toEqual(['guardian-scan', 'observer-scan', 'guardian-signal']);
       expect(report.milestone.helpers).toHaveLength(mode === 'startup' ? 0 : 1);
       expect(report.decoySurvived).toBe(true);
       expect(report.refusals).toEqual(['start-reused', 'other-uid', 'other-namespace', 'outside-family']);
@@ -117,6 +136,8 @@ async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Pro
       expect(report.after.psFamily).toEqual([]);
       expect(report.afterRecovery.proc).toEqual([]);
     } finally {
+      deniedSibling.stdin.end();
+      expect(await siblingExit).toBe(0);
       rmSync(directory, { recursive: true, force: true });
     }
 }

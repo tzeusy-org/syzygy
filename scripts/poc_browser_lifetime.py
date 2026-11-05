@@ -22,7 +22,7 @@ UID = os.getuid()
 NAMESPACE = os.readlink('/proc/self/ns/pid')
 
 
-def identity(pid):
+def identity(pid, *, with_namespace=True):
     directory = Path('/proc', str(pid))
     try:
         text = (directory / 'stat').read_text()
@@ -31,7 +31,7 @@ def identity(pid):
         # Namespace links for another UID may be unreadable on a normal
         # host. Retain its parent metadata so a foreign-UID descendant is
         # refused, while unrelated processes require no namespace access.
-        namespace = os.readlink(directory / 'ns/pid') if owner == UID else None
+        namespace = os.readlink(directory / 'ns/pid') if with_namespace and owner == UID else None
         return (pid, fields[19], int(fields[1]), fields[0],
                 owner, namespace)
     except (FileNotFoundError, ProcessLookupError):
@@ -43,15 +43,27 @@ def descendants():
     rows = {}
     for directory in Path('/proc').iterdir():
         if directory.name.isdigit():
-            row = identity(int(directory.name))
+            row = identity(int(directory.name), with_namespace=False)
             if row is not None:
                 rows[row[0]] = row
-    owned = {ROOT: identity(ROOT)}
+    owned = {ROOT: identity(ROOT, with_namespace=False)}
     while True:
         added = {pid: row for pid, row in rows.items()
                  if row[2] in owned and pid not in owned}
         if not added:
-            return {pid: row for pid, row in owned.items() if pid != ROOT}
+            # Namespace links can be denied even for an unrelated same-UID
+            # process. Establish lineage first; an unreadable owned identity
+            # still raises, so it cannot become an empty-family success.
+            verified = {}
+            for pid, row in owned.items():
+                if pid == ROOT:
+                    continue
+                current = identity(pid)
+                if current is not None:
+                    if current[:2] != row[:2]:
+                        raise RuntimeError('private Chrome descendant identity changed during scan')
+                    verified[pid] = current
+            return verified
         owned.update(added)
 
 

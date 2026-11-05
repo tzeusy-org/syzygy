@@ -18,7 +18,7 @@ UID = os.getuid()
 NAMESPACE = os.readlink('/proc/self/ns/pid')
 
 
-def identity(pid):
+def identity(pid, *, with_namespace=True):
     p = Path('/proc', str(pid))
     try:
         text = (p / 'stat').read_text()
@@ -26,18 +26,26 @@ def identity(pid):
         owner = p.stat().st_uid
         return {'pid': pid, 'start': f[19], 'ppid': int(f[1]), 'pgid': int(f[2]),
                 'sid': int(f[3]), 'state': f[0], 'uid': owner,
-                'namespace': os.readlink(p / 'ns/pid') if owner == UID else None}
+                'namespace': os.readlink(p / 'ns/pid') if with_namespace and owner == UID else None}
     except (FileNotFoundError, ProcessLookupError):
         return None
 
 
 def family():
-    rows = [identity(int(p.name)) for p in Path('/proc').iterdir() if p.name.isdigit()]
-    found = {ROOT: identity(ROOT)}
+    rows = [identity(int(p.name), with_namespace=False) for p in Path('/proc').iterdir() if p.name.isdigit()]
+    found = {ROOT: identity(ROOT, with_namespace=False)}
     while True:
         added = {r['pid']: r for r in rows if r and r['ppid'] in found and r['pid'] not in found}
         if not added:
-            return [r for pid, r in found.items() if pid not in (ROOT, decoy.pid)]
+            verified = []
+            for pid, row in found.items():
+                if pid in (ROOT, decoy.pid):
+                    continue
+                current = identity(pid)
+                if current is not None:
+                    assert current['start'] == row['start'], 'owned identity changed during scan'
+                    verified.append(current)
+            return verified
         found.update(added)
 
 
@@ -87,7 +95,7 @@ def census():
             'psFamily': [line.strip() for line in lines if int(line.split()[0]) in ids]}
 
 
-mode, worker_path, node, guardian_path = sys.argv[1:]
+mode, worker_path, node, guardian_path, denied_sibling_pid = sys.argv[1:]
 assert mode in ('SIGTERM', 'SIGKILL', 'startup')
 # Exercise unsafe identity inputs at the guardian's syscall boundary. No
 # real process is signalled by these controls; the real lifetime case below
@@ -161,9 +169,73 @@ with patch.dict(drain.__globals__, {'time': SimpleNamespace(monotonic=lambda: 0,
                 'stop': lambda member, sig: signals.append((member, sig))}):
     drain(None)
 assert len(scans) == 4 and signals == [(row, signal.SIGTERM)], 'a late descendant escaped the empty-scan check'
+decoy = SimpleNamespace(pid=-1)
+# The real nondumpable sibling belongs to our Node parent, never this family.
+denied_sibling = identity(int(denied_sibling_pid), with_namespace=False)
+assert denied_sibling and denied_sibling['uid'] == UID and denied_sibling['ppid'] == os.getppid()
+try:
+    identity(denied_sibling['pid'])
+except PermissionError:
+    denied_sibling['namespaceDenied'] = True
+else:
+    raise AssertionError('sibling namespace denial control was vacuous')
+# Distinct owned-unreadable controls must refuse rather than disappear from
+# either scanner or pass the guardian's last identity check before signalling.
+unreadable = subprocess.Popen([sys.executable, '-c',
+    "import ctypes,sys; assert ctypes.CDLL(None).prctl(4,0,0,0,0)==0; print('ready',flush=True); sys.stdin.read()"],
+    stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+owned_unreadable_refusals = []
+try:
+    assert unreadable.stdout.readline() == b'ready\n'
+    owned_row = guardian['identity'](unreadable.pid, with_namespace=False)
+    for label, operation in [
+        ('guardian-scan', guardian['descendants']),
+        ('observer-scan', family),
+        ('guardian-signal', lambda: guardian['stop'](owned_row[:5] + (NAMESPACE,), signal.SIGKILL)),
+    ]:
+        with patch('signal.pidfd_send_signal', side_effect=AssertionError('unreadable owned process was signalled')):
+            try:
+                operation()
+            except PermissionError:
+                owned_unreadable_refusals.append(label)
+            else:
+                raise AssertionError(f'{label} silently accepted an unreadable owned identity')
+finally:
+    unreadable.stdin.close()
+    assert unreadable.wait(timeout=5) == 0
+# A PID reused between the lineage snapshot and namespace verification is a
+# refusal, while a genuinely disappeared candidate has no live target.
+scan_refusals = []
+for label, scanner, reader, root_row, child_row in [
+    ('guardian-scan-reused', guardian['descendants'], 'identity',
+     (ROOT, 'root', 0, 'S', UID, None), (999999999, 'original', ROOT, 'S', UID, None)),
+    ('observer-scan-reused', family, 'identity',
+     {'pid': ROOT, 'start': 'root', 'ppid': 0}, {'pid': 999999999, 'start': 'original', 'ppid': ROOT}),
+]:
+    def scanned(pid, *, with_namespace=True):
+        if pid == ROOT:
+            return root_row
+        if not with_namespace:
+            return child_row
+        return ((child_row[0], 'reused', *child_row[2:]) if isinstance(child_row, tuple)
+                else child_row | {'start': 'reused'})
+    with patch.dict(scanner.__globals__, {reader: scanned}), \
+            patch.object(Path, 'iterdir', return_value=iter([Path('/proc/999999999')])):
+        try:
+            scanner()
+        except (RuntimeError, AssertionError):
+            scan_refusals.append(label)
+        else:
+            raise AssertionError(f'{label} accepted a reused owned PID')
+    def disappeared(pid, *, with_namespace=True):
+        return root_row if pid == ROOT else (None if with_namespace else child_row)
+    with patch.dict(scanner.__globals__, {reader: disappeared}), \
+            patch.object(Path, 'iterdir', return_value=iter([Path('/proc/999999999')])):
+        assert not scanner(), 'a disappeared candidate remained in the family'
 decoy = subprocess.Popen(['sleep', '3600'], start_new_session=True)
 worker = subprocess.Popen([node, worker_path], stdout=subprocess.PIPE, start_new_session=True)
-report = {'mode': mode, 'worker': identity(worker.pid), 'decoy': identity(decoy.pid), 'reaped': [], 'refusals': refusals}
+report = {'mode': mode, 'worker': identity(worker.pid), 'decoy': identity(decoy.pid), 'reaped': [], 'refusals': refusals,
+          'deniedSibling': denied_sibling, 'ownedUnreadableRefusals': owned_unreadable_refusals, 'scanRefusals': scan_refusals}
 try:
     assert select.select([worker.stdout], [], [], 30)[0], 'worker did not reach browser milestone'
     assert worker.stdout.readline() == b'ready\n', 'worker failed before browser milestone'
