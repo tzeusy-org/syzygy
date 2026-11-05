@@ -29,11 +29,17 @@ Version 6 does two things together:
 - **It withholds the password lines in it.** A new detector finds lines that
   start with `requirepass`, `masterauth`, `tls-key-file-pass` or
   `tls-client-key-file-pass` followed by a value, or an ACL rule
-  `user <name> … >password` (or a hashed password), whether commented out
-  (once or more), quoted or separated by unusual blanks. Those lines and the
-  line on each side are blanked. Quotations that touch a blanked line are
-  withheld whole; the others reach the reviewer, unless some other screen
-  step withholds the file (whether one does is Unknown).
+  `user <name> …` that sets or removes a password (`>password`,
+  `<password`) or a password hash, whether commented out (once or more),
+  quoted or separated by unusual blanks. Those lines and the line on each
+  side are blanked. Quotations that touch a blanked line are withheld whole;
+  the others reach the reviewer, unless some other screen step withholds the
+  file (whether one does is Unknown).
+- **The detector is wider than the draft your answer described.** That
+  draft caught one optional comment mark, unquoted names and `>password`
+  only. Two review rounds found password lines written in those other ways
+  that it let through, so it now catches them too. Wider means more
+  withheld, never less.
 
 Nothing else in the policy changes.
 
@@ -47,25 +53,28 @@ row. A recorder takes that row as the act's argument (phrase
 `APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY`, as for versions 2–5).
 It supersedes the version-5 act.
 
-Recommended: sign. It is what you asked for, and the costs below are the ones
-the answer you picked described, plus two the review found.
+Recommended: sign. It is what you asked for. The costs below are the ones
+the answer you picked described, plus three uncaught cases (5 to 7) and the
+ordinary-text cost, which drafting and review found.
 
 ## What it costs
 
 Each cost is a synthetic example in the builder, scored before and after.
 
-- **Passwords written another way in `redis.conf` reach the reviewer.** Six
-  named cases the detector does not catch:
+- **Passwords written another way in `redis.conf` reach the reviewer.**
+  Seven named cases the detector does not catch:
   1. a password named in the middle of a line (`… CONFIG SET requirepass x`);
   2. a `rename-command` target used as a secret;
   3. a password in a prose comment;
   4. a module's own password option;
   5. any other password directive it does not name (for example Sentinel's
      `auth-pass`);
-  6. a value on a line after its directive.
+  6. a value on a line after its directive;
+  7. a directive name or ACL operator spelled with an escape or an inner
+     quote (`require"pass"`).
   The questionnaire's list had five. It named "a value split across an
   `include`", which is not a leak here: the included file is not placed, so it
-  stays withheld. Cases 5 and 6 are new.
+  stays withheld. Cases 5, 6 and 7 are new.
   The shipped file holds example values, not real ones [Inferred], and the
   pin to one revision means a later revision gets no class.
 - **More is withheld elsewhere.** The detector runs on every Redis file:
@@ -74,8 +83,8 @@ Each cost is a synthetic example in the builder, scored before and after.
   - Lines written that way in `TLS.md` or a README are now withheld, where
     version 5 let them through. This closes a gap version 5 named.
   - Ordinary text can trip the ACL part: a README line such as
-    `User input >5MB is rejected.` is blanked, and a test file with a line
-    `user input >5 …` is withheld whole.
+    `User input >5MB is rejected.` (or the same with `<`) is blanked, and a
+    test file with a line `user input >5 …` is withheld whole.
 - **Unknown until measured:** how many of `redis.conf`'s lines the detector
   blanks, so how many of run 3's 34 quotations would come back, and how many
   code files it withholds. It needs the files' text, which no agent reads. A

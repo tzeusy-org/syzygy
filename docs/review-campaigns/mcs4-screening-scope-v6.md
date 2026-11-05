@@ -11,3 +11,5 @@ Candidate policy successor `contracts/candidates/public-source-screening-scope-v
 ## Last verdict of record, and where the findings landed
 
 Round 1 `REVISE` (`R-SCREENING-SCOPE-V6-a56f-1-RAW.md:4`) over `a56fec5c`: three revise findings (shapes the consequence clause claims still passed the draft pattern; the install ledger omitted the policy's later-acts chain and the battery-red window; the measurement script printed a false reach count) and six notes; all nine repaired once (`ROUND-1-DISPOSITIONS.md` beside the package). Stopping rule agreed before round 1: at most three rounds
+
+Round 2 `REVISE` (`R-SCREENING-SCOPE-V6-dfd1-2-RAW.md:4`) over `dfd18902`: three revise findings (a quoted `user`, `<password` and `!` hash still passed, and escaped spellings were unnamed; the ledger omitted the version-5 builder's `base_bytes` refusal and its five test call sites; the package still called the widened pattern byte-identical to the draft and the packet did not say it was wider) and two notes; all five repaired once (`ROUND-2-DISPOSITIONS.md` beside the package)

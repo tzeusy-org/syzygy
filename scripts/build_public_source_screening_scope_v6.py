@@ -13,15 +13,18 @@ One variant, `p`, one manifest row. It changes two things inside `publicSourceSc
 
 - the one `ownerPlacements` entry (repository:redis-redis, the one admitted commit of the 2026-10-14 trial,
   labelled 8.10.2) also places `redis.conf` in project-documentation;
-- `scopeDetectors` gains a fourth detector, `config-secret-directive`: a line that opens, after blanks and an
-  optional comment mark, with a Redis password directive (`requirepass`, `masterauth`, `tls-key-file-pass`,
-  `tls-client-key-file-pass`) and a value, or with an ACL rule `user <name> ... >password`. It is not in
+- `scopeDetectors` gains a fourth detector, `config-secret-directive`: a line that opens, after blanks and any
+  number of comment marks, with a Redis password directive (`requirepass`, `masterauth`, `tls-key-file-pass`,
+  `tls-client-key-file-pass`), quoted or not, and a value, or with an ACL rule `user <name> ...` (the word `user`
+  quoted or not) carrying a `>password`, a `<password` or a `#`/`!` 64-hex password hash. It is not in
   `wholeArtifactDetectors`, so in project-documentation the matched line and its guard lines are withheld and in any
   other class the body is withheld whole; its consequence sentence is appended to the scope detectors' one.
 
 Nothing else may change: the policy's own detectors, every other scope key and every rule version 5 set are
-byte-for-byte version 5. The draft this follows is variant `bcdp` of the reverted version-5 extension (`d2b48c50`,
-`8c1832ca`, reverted by `cc875a96`, never reviewed); variant X (three more files) is not carried.
+byte-for-byte version 5. The placement is carried from variant `bcdp` of the reverted version-5 extension
+(`d2b48c50`, `8c1832ca`, reverted by `cc875a96`, never reviewed); its detector pattern and consequence clause were
+carried from that draft and then widened in review rounds 1 and 2, so neither is byte-identical to it. Variant X
+(three more files) is not carried.
 
   --write             regenerate the patch and the manifest
   --check             verify the package against the policy on disk
@@ -66,24 +69,28 @@ VARIANTS = ("p",)
 # --- P: redis.conf placement and its paired detector -----------------------------------------------------------
 
 #: A line that opens (after blanks and any number of `#` comment marks) with a Redis password directive, quoted or
-#: not, or an ACL rule `user <name> ... >password` (or a `#<64 hex>` password hash), the `>` or `#` after a blank or a
-#: quote. Anchored at a line start by the lookbehind, so a directive named mid-line (`config set requirepass x` in a
+#: not, or an ACL rule `user <name> ...` (`user` quoted or not) with a `>password` or `<password`, or a `#` or `!`
+#: followed by a 64-hex password hash, the operator after a blank or a quote. Anchored at a line start by the lookbehind, so a directive named mid-line (`config set requirepass x` in a
 #: test) does not match. Blanks are the four ASCII separators Redis's argument splitter honours that are not line ends
 #: (space, tab, vertical tab, form feed); each `#` iteration consumes a `#`, so the prefix is unambiguous and the match
-#: linear. Round 1 (finding 1) widened the draft's one optional `#`, unquoted names, `[ \t]` blanks and `>`-only ACL arm.
+#: linear. Round 1 (finding 1) widened the draft's one optional `#`, unquoted names, `[ \t]` blanks and `>`-only ACL arm;
+#: round 2 (finding 1) added a quoted `user`, the `<password` operator and the `!<64 hex>` hash form. A name or
+#: operator spelled with an escape or an inner quote (`require"pass"`, `"\x72equirepass"`, `"\x3e..."`) is a residual.
 CONFIG_SECRET_DIRECTIVE = (r"(?<![^\r\n])[ \t\v\f]*(?:#[ \t\v\f]*)*(?:[\"']?(?:requirepass|masterauth|"
-                           r"tls-key-file-pass|tls-client-key-file-pass)[\"']?[ \t\v\f]+|user[ \t\v\f][^\r\n]*?"
-                           r"[ \t\v\f\"'](?:>|#(?=[0-9a-fA-F]{64})))[^ \t\v\f\r\n]+")
+                           r"tls-key-file-pass|tls-client-key-file-pass)[\"']?[ \t\v\f]+|[\"']?user[\"']?[ \t\v\f]"
+                           r"[^\r\n]*?[ \t\v\f\"'](?:[<>]|[#!](?=[0-9a-fA-F]{64})))[^ \t\v\f\r\n]+")
 P_DETECTOR = {"id": "config-secret-directive", "kind": "regular-expression", "pattern": CONFIG_SECRET_DIRECTIVE,
               "flags": "gi"}
 P_CONSEQUENCE = (
     ". config-secret-directive is paired with the redis.conf placement: [Inferred] a line opening, after blanks and any "
     "number of # comment marks, with requirepass, masterauth, tls-key-file-pass or tls-client-key-file-pass (quoted or "
-    "not) and a value, or with an ACL rule user <name> ... >password or #<64-hex password hash>, is withheld with its "
-    "guard lines in project-documentation, as credential-bearing-url is, and withholds a body of any other class whole; "
-    "a password written any other way in such a file (named mid-line, in a prose comment, as a rename-command target, "
-    "as a module's own option, under a directive this pattern does not name, or on a following line) is not matched, and "
-    "a prose or code line that opens with the word user and later has a blank and > is matched")
+    "not) and a value, or with an ACL rule user <name> (user quoted or not) carrying >password, <password, or # or ! "
+    "with a 64-hex password hash, is withheld with its guard lines in project-documentation, as credential-bearing-url "
+    "is, and withholds a body of any other class whole; a password written any other way in such a file (named "
+    "mid-line, in a prose comment, as a rename-command target, as a module's own option, under a directive this pattern "
+    "does not name, on a following line, or with a name or operator spelled through an escape or an inner quote) is not "
+    "matched, and "
+    "a prose or code line that opens with the word user and later has a blank and > or < is matched")
 P_PATHS = ["redis.conf"]
 
 
@@ -264,6 +271,22 @@ COUNTEREXAMPLES = [
     ("redis.conf: ACL '#' comment that is not a hash", _RC,
      "# ACL\nuser alice on #note ~*\nport 6379\n", 2,
      {"v5": ("excluded", "unknown-extraction-class"), "p": ("admitted",)}),
+    # round 2, finding 1: further shapes the clause names
+    ("redis.conf: ACL rule with a double-quoted user", _RC,
+     f"# ACL\n\"user\" alice on >{_UNMATCHED} ~*\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    ("redis.conf: ACL rule with a single-quoted user", _RC,
+     f"# ACL\n'user' alice on >{_UNMATCHED} ~*\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    ("redis.conf: ACL <password removal", _RC,
+     f"# ACL\nuser alice on <{_UNMATCHED} ~*\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    ("redis.conf: ACL !hash removal", _RC,
+     "# ACL\nuser alice on !" + "9f" * 32 + " ~*\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    ("redis.conf: ACL '!' that is not a hash", _RC,
+     "# ACL\nuser alice on !note ~*\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("admitted",)}),
     ("redis.conf: angle-bracket placeholders (C admits them; the masterauth line is withheld)", _RC,
      "# Replication\n# replicaof <masterip> <masterport>\n# masterauth <master-password>\nport 6379\n", 2,
      {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({2, 3, 4}))}),
@@ -288,6 +311,15 @@ COUNTEREXAMPLES = [
      {"v5": ("excluded", "unknown-extraction-class"), "p": ("admitted",)}),
     ("residual 6, redis.conf: a value on the line after its directive", _RC,
      f"requirepass\n\n\n{_UNMATCHED}\n", 4,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("admitted",)}),
+    ("residual 7a, redis.conf: a directive name split by an inner quote", _RC,
+     f"require\"pass\" {_UNMATCHED}\nport 6379\n", 1,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("admitted",)}),
+    ("residual 7b, redis.conf: a directive name spelled with a hex escape", _RC,
+     f"\"\\x72equirepass\" {_UNMATCHED}\nport 6379\n", 1,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("admitted",)}),
+    ("residual 7c, redis.conf: an ACL operator spelled with a hex escape", _RC,
+     f"user alice on \"\\x3e{_UNMATCHED}\" ~*\nport 6379\n", 1,
      {"v5": ("excluded", "unknown-extraction-class"), "p": ("admitted",)}),
     ("not a residual, redis.conf: include names another file, which stays unclassified", _RC,
      "# Secrets live elsewhere:\ninclude /etc/redis/secrets.conf\nport 6379\n", 2,
@@ -438,7 +470,9 @@ def linear_time_findings(pattern: str = CONFIG_SECRET_DIRECTIVE, limit_s: float 
     for label, line in (("blanks", " " * 40000), ("hashes", "#" * 40000), ("hash-blank", "# " * 20000),
                         ("acl", "user " + "a " * 20000), ("tabs", "\t" * 40000), ("vertical-tabs", "\v" * 40000),
                         ("hash-vt", "#\v" * 20000), ("quotes", "\"" * 40000), ("acl-hashes", "user " + " #" * 20000),
-                        ("acl-quotes", "user " + " \"" * 20000), ("acl-near-hash", "user " + (" #" + "a" * 63) * 600)):
+                        ("acl-quotes", "user " + " \"" * 20000), ("acl-near-hash", "user " + (" #" + "a" * 63) * 600),
+                        ("quoted-acl-bangs", "\"user\" " + " !" * 20000),
+                        ("quoted-acl-near-bang", "'user' " + (" !" + "a" * 63) * 600)):
         t0 = time.perf_counter()
         for i in range(0, len(line), 1):
             rx.match(line, i)
@@ -446,7 +480,7 @@ def linear_time_findings(pattern: str = CONFIG_SECRET_DIRECTIVE, limit_s: float 
             bad.append(f"python every-offset match on a 40,000-character {label} line exceeds {limit_s * 4} s")
     js = ("const p=process.argv[1];const s=new RegExp(p,'iy');const lines=[' '.repeat(80000),'#'.repeat(80000),"
           "'# '.repeat(40000),'user '+'a '.repeat(40000),'\\t'.repeat(80000),'\\v'.repeat(80000),'#\\v'.repeat(40000),'\"'.repeat(80000),"
-          "'user '+' #'.repeat(40000),'user '+' \"'.repeat(40000),'user '+(' #'+'a'.repeat(63)).repeat(1200)];for(const l of lines){const t=Date.now();"
+          "'user '+' #'.repeat(40000),'user '+' \"'.repeat(40000),'user '+(' #'+'a'.repeat(63)).repeat(1200),'\"user\" '+' !'.repeat(40000),\"'user' \"+(' !'+'a'.repeat(63)).repeat(1200)];for(const l of lines){const t=Date.now();"
           "for(let i=0;i<l.length;i++){s.lastIndex=i;s.exec(l);}if(Date.now()-t>" + str(int(limit_s * 1000)) + ")"
           "{console.log('slow');process.exit(1);}}console.log('ok');")
     try:
@@ -677,23 +711,35 @@ def selftest() -> int:
         sem("an unquoted-name pattern caught (a quoted directive name reaches)",
             lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("[\\\"']?(?:requirepass", "(?:requirepass", 1)),
             "counterexample 'redis.conf: quoted directive name'")
-        sem("a pattern blind to the hashed ACL password caught",
-            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("(?:>|#(?=[0-9a-fA-F]{64}))", ">", 1)),
+        sem("a pattern blind to the #-hashed ACL password caught",
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("[#!](?=[0-9a-fA-F]{64})", "!(?=[0-9a-fA-F]{64})", 1)),
             "counterexample 'redis.conf: ACL hashed password'")
+        sem("a pattern blind to the !-hash removal caught",
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("[#!](?=[0-9a-fA-F]{64})", "#(?=[0-9a-fA-F]{64})", 1)),
+            "counterexample 'redis.conf: ACL !hash removal'")
+        sem("a pattern blind to the <password removal caught",
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("(?:[<>]|", "(?:>|", 1)),
+            "counterexample 'redis.conf: ACL <password removal'")
         sem("a hash arm that takes any '#' caught (an ACL comment is withheld)",
-            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("#(?=[0-9a-fA-F]{64})", "#", 1)),
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("[#!](?=[0-9a-fA-F]{64})", "(?:#|!(?=[0-9a-fA-F]{64}))", 1)),
             "counterexample \"redis.conf: ACL '#' comment that is not a hash\"")
+        sem("a hash arm that takes any '!' caught (an ACL '!' word is withheld)",
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("[#!](?=[0-9a-fA-F]{64})", "(?:#(?=[0-9a-fA-F]{64})|!)", 1)),
+            "counterexample \"redis.conf: ACL '!' that is not a hash\"")
         sem("a quote-blind ACL arm caught",
-            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("[ \\t\\v\\f\\\"'](?:>", "[ \\t\\v\\f](?:>", 1)),
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("[ \\t\\v\\f\\\"'](?:[<>]", "[ \\t\\v\\f](?:[<>]", 1)),
             "counterexample 'redis.conf: ACL password as a double-quoted argument'")
+        sem("an unquoted-user ACL arm caught (a quoted user reaches)",
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("|[\\\"']?user[\\\"']?", "|user", 1)),
+            "counterexample 'redis.conf: ACL rule with a double-quoted user'")
         sem("a tab-and-space-only blank class caught (a vertical-tab separator reaches)",
-            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("[\\\"']?[ \\t\\v\\f]+|user", "[\\\"']?[ \\t]+|user", 1)),
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("pass)[\\\"']?[ \\t\\v\\f]+|", "pass)[\\\"']?[ \\t]+|", 1)),
             "counterexample 'redis.conf: vertical-tab separator'")
         sem("an uncommented-only pattern caught (commented placeholder reaches)",
             lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("(?:#[ \\t\\v\\f]*)*", "", 1)),
             "counterexample 'redis.conf: commented requirepass placeholder'")
         sem("a pattern without the ACL form caught",
-            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("|user[ \\t\\v\\f][^\\r\\n]*?[ \\t\\v\\f\\\"'](?:>|#(?=[0-9a-fA-F]{64}))", "", 1)),
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("|[\\\"']?user[\\\"']?[ \\t\\v\\f][^\\r\\n]*?[ \\t\\v\\f\\\"'](?:[<>]|[#!](?=[0-9a-fA-F]{64}))", "", 1)),
             "counterexample 'redis.conf: ACL user with a >password'")
         sem("a pattern without masterauth caught",
             lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("masterauth|", "", 1)),
@@ -765,7 +811,7 @@ def selftest() -> int:
     results.append(("the detector stays linear in Python and node", linear_time_findings() == []))
     results.append(("JavaScript and Python find the same spans over every fixture", js_agreement_findings() == []))
     results.append(("a dialect split is caught (mutant observed: \\s in place of [ \\t])",
-                     js_agreement_findings(CONFIG_SECRET_DIRECTIVE.replace("[ \\t\\v\\f]+|user", "\\s+|user", 1)) != []))
+                     js_agreement_findings(CONFIG_SECRET_DIRECTIVE.replace("[ \\t\\v\\f]+|[\\\"']?user", "\\s+|[\\\"']?user", 1)) != []))
     quad = r"(?<![^\r\n])[ \t]*[ \t]*(?:#[ \t]*)?(?:requirepass[ \t]+)[^ \t\r\n]+x"
     results.append(("a two-star pattern is caught as non-linear (mutant observed)",
                      linear_time_findings(quad, 0.05) != []))

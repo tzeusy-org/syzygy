@@ -20,8 +20,10 @@
   package's patch must give that row.
 - **Source of the change:** variant P of the reverted version-5 extension
   (`d2b48c50`, `8c1832ca` on `agent/screening-redis-conf-followup`, reverted by
-  `cc875a96`, never reviewed). Its pattern and consequence sentence are carried
-  byte for byte. Variant X (three more placed files) is not carried.
+  `cc875a96`, never reviewed). The placement is carried unchanged. The
+  detector's pattern and consequence clause were carried from P and then
+  widened in review rounds 1 and 2 (below), so neither is byte-identical to
+  the draft's. Variant X (three more placed files) is not carried.
 - **Act:** one `approve-policy` act over the one manifest row, phrase label
   `APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY` (as for versions
   2–5), superseding the version-5 act.
@@ -49,8 +51,8 @@ publicSourceScope.scopeDetectors.detectors += {
   pattern: (?<![^\r\n])[ \t\v\f]*(?:#[ \t\v\f]*)*
            (?:[\"']?(?:requirepass|masterauth|tls-key-file-pass|
            tls-client-key-file-pass)[\"']?[ \t\v\f]+|
-           user[ \t\v\f][^\r\n]*?[ \t\v\f\"']
-           (?:>|#(?=[0-9a-fA-F]{64})))[^ \t\v\f\r\n]+ }
+           [\"']?user[\"']?[ \t\v\f][^\r\n]*?[ \t\v\f\"']
+           (?:[<>]|[#!](?=[0-9a-fA-F]{64})))[^ \t\v\f\r\n]+ }
   (one line in the bytes; wrapped here)
 
 publicSourceScope.scopeDetectors.consequence:
@@ -59,14 +61,15 @@ publicSourceScope.scopeDetectors.consequence:
   [Inferred] a line opening, after blanks and any number of # comment
   marks, with requirepass, masterauth, tls-key-file-pass or
   tls-client-key-file-pass (quoted or not) and a value, or with an ACL rule
-  user <name> ... >password or #<64-hex password hash>, is withheld with its
-  guard lines in project-documentation, as credential-bearing-url is, and
-  withholds a body of any other class whole; a password written any other
-  way in such a file (named mid-line, in a prose comment, as a
-  rename-command target, as a module's own option, under a directive this
-  pattern does not name, or on a following line) is not matched, and a
-  prose or code line that opens with the word user and later has a blank
-  and > is matched"
+  user <name> (user quoted or not) carrying >password, <password, or # or !
+  with a 64-hex password hash, is withheld with its guard lines in
+  project-documentation, as credential-bearing-url is, and withholds a body
+  of any other class whole; a password written any other way in such a file
+  (named mid-line, in a prose comment, as a rename-command target, as a
+  module's own option, under a directive this pattern does not name, on a
+  following line, or with a name or operator spelled through an escape or an
+  inner quote) is not matched, and a prose or code line that opens with the
+  word user and later has a blank and > or < is matched"
 ```
 
 **Changed from the draft in round 1.** The draft (`d2b48c50`) carried a
@@ -76,9 +79,22 @@ and an ACL arm taking only `>` after a blank. Round 1
 the draft's own clause claimed and that passed: `## requirepass`, a quoted
 name, a vertical-tab or form-feed separator, a quoted ACL password and a
 hashed ACL password. [Inferred, from general knowledge of Redis's argument
-splitter, no body read] Redis accepts each as a working directive. The
+splitter, no body read] Redis accepts most of them as a working directive;
+whether it splits on a vertical tab inside a line is Unknown, so that
+widening may only over-match, which withholds more and leaks nothing. The
 pattern now catches each of them, and the clause names what it still does
 not catch and the cost the ACL arm carries.
+
+**Changed again in round 2.** Round 2
+(`docs/reviews/R-SCREENING-SCOPE-V6-dfd1-2-RAW.md`, finding 1) built three
+more shapes the round-1 clause named and that passed: a quoted `"user"`, the
+`<password` operator (which removes a password, and still writes it), and
+the `!` form of a password hash. The pattern now takes all three. Names and
+operators spelled through an escape or an inner quote (`require"pass"`,
+`"\x72equirepass"`, `"\x3e…"`) are named as residual 7 rather than caught:
+catching them needs a model of Redis's quoting, not a line pattern.
+**The detector is now wider than the draft answer A described**: that draft
+named an optional `#`, unquoted names and `>password`.
 
 ### Rules displaced and added
 
@@ -147,9 +163,9 @@ the one commit moves from none to `project-documentation`.
 - **Matches** a line that opens, after blanks and any number of `#` comment
   marks, with `requirepass`, `masterauth`, `tls-key-file-pass` or
   `tls-client-key-file-pass` (bare, or in single or double quotes), blanks and
-  a value; or with an ACL rule `user <name> …` that later has a blank or a
-  quote followed by `>password`, or by `#` and 64 hex digits (a hashed
-  password). Case-insensitive. Commented example lines count. Blanks are
+  a value; or with an ACL rule `user <name> …` (`user` bare or quoted) that
+  later has a blank or a quote followed by `>password` or `<password`, or by
+  `#` or `!` and 64 hex digits (a password hash). Case-insensitive. Commented example lines count. Blanks are
   space, tab, vertical tab and form feed.
 - **Line start.** The lookbehind `(?<![^\r\n])` holds at offset 0 and after
   CR or LF, so a bare-CR body is handled as the redaction line model splits
@@ -159,15 +175,17 @@ the one commit moves from none to `project-documentation`.
   a `#`, so no two unbounded runs compete for the same characters; the ACL
   arm's lazy `[^\r\n]*?` stops at the line end, and its hash lookahead reads at
   most 64 characters. The builder asserts a bound, not a timing: every offset
-  of eleven adversarial 40,000-character lines (blanks, tabs, vertical tabs,
-  `#`, `# `, `#` and vertical tab, quotes, and ACL prefixes followed by blanks
-  and letters, by ` #`, by ` "` and by near-hashes) in Python within 4 s, and
+  of thirteen adversarial 40,000-character lines (blanks, tabs, vertical
+  tabs, `#`, `# `, `#` and vertical tab, quotes, and ACL prefixes followed by
+  blanks and letters, by ` #`, by ` "`, by near-hashes, and quoted-`user`
+  prefixes followed by ` !` and by near-`!` hashes) in Python within 4 s, and
   the same shapes at 80,000 characters in node with the sticky every-offset
   loop `secret-redaction.ts` uses within 1 s each. A mutant with two adjacent
   blank runs fails the bound.
 - **Dialect.** JavaScript `RegExp` (flags `iy`) and Python `re` find the same
   match spans over every version-5 and version-6 counterexample body and nine
-  dialect probes (NBSP, BOM, U+2028, U+001C, vertical tab, form feed). It
+  dialect probes (NBSP, BOM, U+2028, U+001C, vertical tab, form feed), plus
+  the two declared-split probes below. It
   uses explicit blank classes, never `\s`; a `\s` mutant splits the two
   engines and is caught. **One declared split:** Python's `re.I` folds U+017F
   (ſ) to `s` and U+212A (the Kelvin sign) to `k`, and JavaScript without the
@@ -178,7 +196,7 @@ the one commit moves from none to `project-documentation`.
   pins the split with two probes that must differ exactly so.
 - **Self-corpus.** [Observed, `--self-corpus` at `d7bfcce2`] The draft
   pattern matched 0 of Syzygy's own 8,708 tracked UTF-8 text files; the
-  round-1 pattern is re-measured in the round-1 dispositions.
+  round-1 and round-2 patterns are re-measured in each round's dispositions.
 
 ## What it gives up — the security-posture cost
 
@@ -189,7 +207,8 @@ never body text). "Reaches" means the marked line enters the review packet.
 |---|---|---|---|
 | P | `redis.conf` with `# requirepass <value>`, `masterauth <value>`, `user worker on ><password>`, `# tls-key-file-pass <value>`, a tab-indented `tls-client-key-file-pass`, `REQUIREPASS` in capitals, or a bare-CR line | withheld (no class) | the line and its guard lines withheld; the rest admitted |
 | P (round 1) | `redis.conf` with `## requirepass`, `# # requirepass`, a quoted `"requirepass"`, a vertical-tab separator, a form-feed lead, a quoted ACL password (`">…"`, `'>…'`) or a hashed ACL password (`#` and 64 hex) | withheld (no class) | the line and its guard lines withheld |
-| P | `redis.conf` with an ACL `#note` that is not a hash | withheld (no class) | admitted, **reaches** |
+| P (round 2) | `redis.conf` with a quoted `"user"` or `'user'` ACL rule, a `<password` removal, or a `!` hash removal (`!` and 64 hex) | withheld (no class) | the line and its guard lines withheld |
+| P | `redis.conf` with an ACL `#note` or `!note` that is not a hash | withheld (no class) | admitted, **reaches** |
 | P | `redis.conf` with `<masterip>`-style placeholders | withheld (no class) | admitted (C); the `masterauth <master-password>` line withheld by the detector |
 | P | `redis.conf` with ordinary directives only | withheld (no class) | admitted, **reaches** |
 | Residual 1 | `redis.conf` naming `requirepass <value>` mid-line | withheld (no class) | **reaches** |
@@ -198,6 +217,7 @@ never body text). "Reaches" means the marked line enters the review packet.
 | Residual 4 | `redis.conf` with a module's own password option (`loadmodule … password <value>`) | withheld (no class) | **reaches** |
 | Residual 5 | `redis.conf` with a directive the pattern does not name (`sentinel auth-pass … <value>`) | withheld (no class) | **reaches** |
 | Residual 6 | `redis.conf` with a bare `requirepass` and its value lines later | withheld (no class) | **reaches** |
+| Residual 7 (round 2) | `redis.conf` with a name or operator spelled through an inner quote or escape: `require"pass" <value>`, `"\x72equirepass" <value>`, `user … "\x3e<value>"` | withheld (no class) | **reaches** |
 | Not a residual | `redis.conf` with `include /etc/redis/secrets.conf` | withheld (no class) | admitted; the included file is not placed, so it has no class and stays withheld |
 | Hardening | `TLS.md` with `tls-key-file-pass <value>` or `requirepass <value>`; a `README.md` ACL example | admitted, **reaches** | the line and its guards withheld |
 | Tightening | a `.tcl` test whose line opens with `requirepass <value>` | admitted | withheld whole (code-content) |
@@ -208,15 +228,16 @@ never body text). "Reaches" means the marked line enters the review packet.
 
 - **The largest withheld file but one joins the documentation residuals.**
   `redis.conf` holds the server's whole option set, so every secret shape the
-  detector does not name reaches the reviewer. The six residuals above are
+  detector does not name reaches the reviewer. The seven residuals above are
   named, not fixed. The draft (and the questionnaire the owner answered)
   listed five: a password in prose, a `rename-command` target, a module's own
   password option, a value split across an `include`, and a directive named
   mid-line. This package keeps four of them, records the `include` case as
   not a leak [Inferred: the included file is a different path, has no class,
   and stays withheld, and the `include` line names a path, not a secret], and
-  adds two: a password directive this pattern does not name, and a value on a
-  line after its directive.
+  adds three: a password directive this pattern does not name, a value on a
+  line after its directive, and a name or operator spelled through an escape
+  or inner quote.
 - **The shipped file holds example values, not deployed ones** [Inferred].
   The placement is pinned to the one admitted commit, so a later revision
   with real values gets no class.
@@ -225,8 +246,8 @@ never body text). "Reaches" means the marked line enters the review packet.
   script whose line opens with `requirepass <value>` is withheld where
   version 5 admitted it.
 - **The ACL arm also matches ordinary text** (round 1, finding 4). A line that
-  opens with the word `user`, in any case, and later has a blank and `>` then
-  a non-blank matches: `User input >5MB is rejected.` in a README is withheld
+  opens with the word `user`, in any case, and later has a blank and `>` or
+  `<` then a non-blank matches: `User input >5MB is rejected.` in a README is withheld
   with its guard lines, and a Tcl line `user input >5 is fine` withholds its
   file whole. Agent prose screened through `screenBody` is refused the same
   way [Inferred]. Requiring an ACL keyword before `>` would narrow it but

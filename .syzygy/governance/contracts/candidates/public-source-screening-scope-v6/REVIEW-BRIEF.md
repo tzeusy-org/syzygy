@@ -59,8 +59,10 @@ as the version-5 act left it.
      scope-detector list and its consequence sentence, and that the base
      scope and the policy's own `detectors` are untouched.
    - Re-derive the manifest row: the SHA-256 of the patched file.
-   - Is the pattern byte-identical to the draft's (`d2b48c50`)? Is the
-     consequence clause?
+   - The placement is carried from the draft (`d2b48c50`) unchanged; the
+     pattern and consequence clause were carried and then widened in rounds
+     1 and 2. Does the delta state each difference from the draft, and does
+     the clause still describe the pattern exactly?
 2. **Is the detector sound?**
    - Does it match what the delta says, in Python and in JavaScript
      `RegExp` with the flags the shipped screen uses (try `node -e`)?
@@ -77,7 +79,7 @@ as the version-5 act left it.
    - Quote RFC5-14's `project-documentation` row. Is placing a configuration
      file there argued honestly, with the alternatives?
 4. **Is the cost complete and honest?**
-   - Are the five named residuals each a fixture that reaches? Is the draft's
+   - Are the seven named residuals each a fixture that reaches? Is the draft's
      `include` residual correctly re-labelled as not a leak?
    - Is code-body whole-withholding stated and fixtured?
    - Is the `TLS.md` hardening stated and fixtured, and every version-5

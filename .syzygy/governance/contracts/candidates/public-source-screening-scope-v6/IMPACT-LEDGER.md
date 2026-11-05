@@ -68,12 +68,29 @@ same steps the same way [Inferred].
   `packages/three-surface-poc-core/src/git-object-reader.ts` pins the version
   (line 51). Test literals follow in `governance-inputs.test.ts`,
   `content-classification.test.ts`, `project-shape-model.test.ts`,
-  `packages/polaris-dossier/src/census.test.ts` and `screen-scope-v5.test.ts`
-  (which also counts three scope detectors).
+  `packages/polaris-dossier/src/census.test.ts`,
+  `packages/polaris-generation-consent/src/recorder-fixtures.testkit.test.ts`
+  and `screen-scope-v5.test.ts` (which also counts three scope detectors).
 - **`scripts/install_redis_sitting.py`.** It names each screening-scope act,
   its recorder and its manifest-heading exemption (the version-5 constants at
   lines 131-139 and 858-871), taught by `4f9c5de5` and `74a2829a` under
   version 5 [Observed]. It needs the version-6 act the same way [Inferred].
+- **The version-5 builder and the tests that call it** (round 2, finding 2).
+  `build_public_source_screening_scope_v5.py`'s `base_bytes` (lines 328-342)
+  accepts only the version-4 row or one of its own rows on disk, so after the
+  act it raises "the base is unknown", and so does its `--check` [Observed,
+  the function's text; the raise is Inferred until the act]. Five test sites
+  call it through a Python child and fail with it:
+  `packages/polaris-dossier/src/screen.test.ts` (lines 308 and 395),
+  `packages/polaris-generation-core/src/public-source-exemption.test.ts`
+  (line 26), `apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts`
+  (line 454) and `packages/polaris-dossier/src/screen-scope-v5.test.ts`
+  (line 75) [Observed, the base_bytes sweep over `packages` and `apps`: those
+  five lines and no other]. The install moves those tests to recover the
+  version-5 base through the version-6 builder's `base_bytes`, with the
+  version-5 patch reversed, as `b4230850` did for the version-3 and version-4
+  fixtures under version 5 and `8f4532a9` and `76361363` did for the
+  version-3 fixtures under version 4 [Observed, those commits' messages].
 - **Not broken:** `readOwnerPlacements` checks each placed path's shape
   (folded, distinct) and hashes no path list, so `redis.conf` is read as given.
   The project-documentation rule text, its four path rules and their texts are
@@ -103,7 +120,8 @@ same steps the same way [Inferred].
 - **Run the builder's fixtures through both TypeScript screens.** The
   builder's oracle is Python; the screens are JavaScript. The builder already
   shows the two engines find the same spans for this pattern over every
-  fixture body and seven dialect probes, but the install must show the
+  fixture body, nine dialect probes and two declared-split probes, but the
+  install must show the
   shipped screens (`screen.ts` and the app's `public-source-screening.ts`)
   reach the builder's `--score` outcomes, including line numbering under CRLF
   and bare CR, and code-body whole-withholding.
