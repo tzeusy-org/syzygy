@@ -1,0 +1,141 @@
+{
+  "epistemic": "Observed as author disposition; not acceptance/closure.",
+  "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+  "original": {
+    "id": "syzygy-bpyt.8.40",
+    "title": "island-boundary.test.ts: pin island closure; list dossier-main, dossier-render, dossier-render-main, public-source-screening",
+    "description": "From syzygy-bpyt.8.7 gen-1 reconciliation (PR #723, record docs/evidence/syzygy-bpyt-8-7/reconciliation-gen1.json, audited 542bf94e). G2. Four unlisted provider modules import the island; deleting the 20 listed modules would break them. Depends on bpyt.8.23.",
+    "priority": 3,
+    "issue_type": "task",
+    "owner": "r@x",
+    "parent": "syzygy-bpyt.8"
+  },
+  "original_edges": [
+    {
+      "id": "syzygy-bpyt.8",
+      "dependency_type": "parent-child"
+    },
+    {
+      "id": "syzygy-bpyt.8.23",
+      "dependency_type": "blocks"
+    }
+  ],
+  "current_metadata_comparison": {
+    "title": true,
+    "description": true,
+    "priority": true,
+    "issue_type": true,
+    "owner": true
+  },
+  "current_edges": [
+    {
+      "id": "syzygy-bpyt.8",
+      "dependency_type": "parent-child"
+    },
+    {
+      "id": "syzygy-bpyt.8.23",
+      "dependency_type": "blocks"
+    }
+  ],
+  "applied_scope_design_and_AC_sha256": "edcc21fbcad9c3616af8e4284848582a7f288373ac892edaf76ec39459720a09",
+  "original_7_AC_map": [
+    {
+      "number": 1,
+      "criterion_verbatim": "1. Preserve the exact original title, complete description and metadata/edges. Deliver the entire PR723 gen1 G2 closure outcome and the already-attached R7 dynamic-destructured loader counterexample in this existing bead; keep .8.23/p8j7 closed and do not create a bead, audit generation, parallel guard or owner question. Supply a source-bound map of original outcome, current callers/trust boundary, exceptions, predicates, mutation evidence and remaining gates.",
+      "author_state": "implemented; root lifecycle remains",
+      "disposition": "Preserved original identity/description/edges; whole G2 + attached R7 map below; no .8.23/p8j7 reopening/new audit generation."
+    },
+    {
+      "number": 2,
+      "criterion_verbatim": "2. In packages/polaris-generation-core/src/island-boundary.test.ts, include dossier-main.ts, dossier-render.ts, dossier-render-main.ts and public-source-screening.ts in the 24-member bookkeeping inventory, with uniqueness/existence preserved. Add one transitive ingress/closure row over the current declared production-source population; fail for an unlisted production module reaching an old/new island member directly or through a parked root, even if the module is not live-reachable. Preserve and enumerate the original roots/scripts/tests and exact named parked remainder with reasons and actual edges. Do not skip traversal at an exception or call a literal count proof of closure/deletability. Record actual census denominator and unresolved/unsupported residuals; old 286/11 counts remain explicitly historical.",
+      "author_state": "implemented and author-exercised",
+      "disposition": "24 members; transitive closure over 280 current conservative production sources, six exact remainder origins, 291 excluded test/testkit/declaration files, 24 scripts with compiled-input exception disclosed."
+    },
+    {
+      "number": 3,
+      "criterion_verbatim": "3. Extend importsOf and its existing createRequire row to catch const { createRequire: auditMake } = await import(\"node:module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\"); and the module spelling, with AST-derived alias provenance rather than matching auditMake text. The exact retained negative must fail the real guard when appended separately to each applicable live entry, with source/form/entry diagnostics and actual tests executed. Preserve the static alias killed control, ordinary non-loader destructuring/dynamic control, both entries, consent-root positive control, current literal/template/static/type/re-export edge coverage and shared workspace resolver behavior. No universal arbitrary-JavaScript-loader claim.",
+      "author_state": "implemented and author-exercised",
+      "disposition": "Exact retained dynamic-destructured source fails actual existing live resolution row in each entry; module spelling, static aliases, ordinary/nonloader and templates included in 19-case old/new corpus."
+    },
+    {
+      "number": 4,
+      "criterion_verbatim": "4. Keep shipped changes to the existing test guard and additive ordinary evidence. Shared test support may change only for a demonstrated cohesive necessity after ownership refresh and without broadening resolver/gate semantics; otherwise it remains read-only. No app/core held-source, product behavior/API/output/refusal/exit, manifests/config, provider execution/deletion/reclassification, consent/security/retention decision, observed-repository body read or governed/signed-byte change. Preserve prompts.ts in ./live and .8.38/.8.39 residual authority gates. New product/parser/gate-acceptance semantics get concrete primary-authority classification before any further action; test labels do not settle it.",
+      "author_state": "preserved",
+      "disposition": "Shipped test guard + additive evidence only; shared resolver/helper read-only, held-source/product/manifests/consent/security/retention/signed bytes unchanged."
+    },
+    {
+      "number": 5,
+      "criterion_verbatim": "5. Planned Tests +1 ~2 -0 at this existing species: one new closure row, membership row modified and createRequire row extended. Report measured actual Tests +a ~b -c and explain any variance. Each changed predicate has an independent-literal/behavior oracle and rule-6 mutate-and-fail record with final exact commit, source SHA-256, old/new fragments, command, raw output, test denominator and intended failing assertion. Cover live-to-dossier-trigger, disconnected unlisted importer, direct/new-member and via-root closure paths; exact dynamic-destructured negative in both entries; baseline/static alias/consent/template/ordinary-source controls. Zero tests, incidental compile/import errors, helper-only checks or copied historical results do not kill a real guard mutant. Retain old/new altered-prose mutated-record differential and bounded residuals under GP-Q0; no second parser/regex/guard species.",
+      "author_state": "implemented and author-exercised",
+      "disposition": "Actual Tests +1 ~2 -0, no variance. 38 real-guard old/new executions and six guard-predicate mutants; per-run source/digest/fragments/raw/denominators retained."
+    },
+    {
+      "number": 6,
+      "criterion_verbatim": "6. From pinned owned fixture/home/cache/temp/Git/negative/symlink roots, run current tier-aware island-boundary/workspace-reach/subpath-imports selections and npm run check; before PR, run current check:all and the PROJECT-STATUS-owned battery in a clean owned clone at the final subject. Serialize broad gates using the coordinator lock, retain every actual attempt and diagnose failures. No live tests, provider or observed-project execution. Add docs/evidence/syzygy-bpyt-8-40/ current importer/exception, mutation, differential and original-outcome disposition records plus PR risk/class statements; adopted specs/contracts/policies need no edit because product meaning is unchanged.",
+      "author_state": "author verification in progress",
+      "disposition": "Focused 117/117 and check 3793/3793 at final guard bytes retained; final clean-clone checkall and canonical battery are later exact-head gate records in OWN."
+    },
+    {
+      "number": 7,
+      "criterion_verbatim": "7. Refresh exact main/worktree/PR/owner and helper overlap before execution; preserve current PR652 common CLI ownership, foreign PR585 and the Nov-3 item-4 held-source merge rule until actual owner judgment plus cycle report. Obtain fresh independent exact-head default-model review confirming CC-REV-1 classes and CC-BAR-5 floors, current full hosted required checks, ordinary queue/actual merge and main-byte verification. Any later head change retires review. Root alone persists these two proposed fields, decides packet-complete/runnable-now, owns allowed merge/lifecycle/closure and nonblocking GP-Q0 cycle notice. Close only after the whole original G2 plus loader outcome is reconciled at merged bytes; partial list expansion or report landing is insufficient. First-shaping actual Tests +0 ~0 -0, no implementation/test/probe/install/commit/PR/Beads mutation.",
+      "author_state": "root gates remain open",
+      "disposition": "Bootstrap/current PR overlap checked; root owns fresh independent review, hosted CI, queue/merge/main-byte verification/lifecycle/cycle notice."
+    }
+  ],
+  "full_original_G2_outcomes": {
+    "four_named_modules": "24-member inventory",
+    "reverse_import_closure": "new transitive production-origin row, including disconnected callers and roots",
+    "live_to_dossier_trigger_mutant": "killed by actual live no-island row and new closure row",
+    "updated_importer_exceptions": "importer-census.json + census-second-method.json, exact roots/remainders/tests/scripts",
+    "attached_R7_dynamic_alias": "new AST binding provenance + actual per-entry negative; full R7 remains incomplete"
+  },
+  "trust_boundary": "Structural reads of this Syzygy source only. Parked provider source is parsed only; no provider code executes and no observed-repository body is read. Both live process entries remain separate roots.",
+  "tests": {
+    "planned": {
+      "added": 1,
+      "modified": 2,
+      "removed": 0
+    },
+    "actual": {
+      "added": 1,
+      "modified": 2,
+      "removed": 0
+    },
+    "variance": "none",
+    "added_row": "admits transitive island ingress only from the island and exact parked remainder",
+    "modified_rows": [
+      "lists twenty-four island modules, each a file in the tree",
+      "refuses createRequire calls, including imported aliases and module properties"
+    ],
+    "unchanged_rows": 6,
+    "old_rows": 8,
+    "new_rows": 9
+  },
+  "initial_review_classes": [
+    1,
+    4
+  ],
+  "initial_risk_floors": [
+    2,
+    6
+  ],
+  "classification": "Initial author declaration only; contested by default and must be confirmed/reclassified by fresh independent reviewer under CC-REV-1 and CC-BAR-2/5/6.",
+  "authority_references": [
+    "OWNER-DIRECTION-GREENFIELD-PARITY-SIMPLIFICATION-2026-10-20 items2-3",
+    "GP-Q0 Parts1-2, OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21",
+    "OWNER-DIRECTION-DOSSIER-LOCAL-CLI-SUBPROCESS-2026-10-15 item1",
+    "VIS-2/VIS-4",
+    "SEC-2/SEC-3",
+    "OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03 item4"
+  ],
+  "scope_holds": "No held app/core source edit or waiver; PR652 CLI and foreign PR585 disjoint and preserved. prompts.ts ./live and .8.38/.8.39 owner gates preserved.",
+  "rollback": "Revert this test/evidence change only; no deletion/adoption/migration.",
+  "remaining_gates": [
+    "Fresh independent exact-head default-model review and confirmation/reclassification of classes/floors",
+    "Independent qualification of retained setup/recording-adapter failures; author cannot self-certify an outside-code disposition",
+    "Independent byte capture/re-execution as required; author reports remain emitter tier",
+    "Current hosted required full CI",
+    "Ordinary queue, actual merge and main-byte verification",
+    "Root full-original-scope reconciliation/Beads lifecycle and nonblocking GP-Q0 cycle notice"
+  ]
+}
