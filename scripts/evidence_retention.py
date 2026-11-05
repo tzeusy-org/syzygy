@@ -2032,6 +2032,18 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             (root / "review-RAW.md").write_text("Comparison operand: \u2026-2026-01-01.json\n")
         source_negative("abbreviated-raw-comparison-cannot-enter-family", abbreviated_raw_dependency,
                         "undischarged-R1-family-member")
+        source_negative("first-letter-abbreviated-raw-comparison-cannot-enter-family",
+                        lambda d: (root / "review-RAW.md").write_text("Comparison operand: \u2026apture-2026-01-01.json\n"),
+                        "undischarged-R1-family-member")
+        def interior_underscore_raw_dependency(doc):
+            members = [PREFIX + "prefix-body_inner-2026-01-01.json",
+                       PREFIX + "prefix-body_inner-2026-01-02.json"]
+            for old, new in zip(paths, members):
+                (root / old).rename(root / new)
+            doc["families"][0]["members"] = members
+            (root / "review-RAW.md").write_text("Comparison operand: \u2026-body_inner-2026-01-01.json\n")
+        source_negative("interior-underscore-abbreviated-raw-comparison-cannot-enter-family",
+                        interior_underscore_raw_dependency, "undischarged-R1-family-member")
         def abbreviated_false_glob_discharge(doc):
             abbreviated_raw_dependency(doc); citer = "review-RAW.md"
             doc["discharges"].append({"citer": citer, "sha256": digest((root / citer).read_bytes()),
@@ -2459,11 +2471,35 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
         unrelated = PREFIX + "capture-unrelated.json"
         raw = "docs/reviews/comparison-RAW.md"
         fixture = {p: encoded({"subject": "synthetic-" + str(i)}) for i, p in enumerate((a, b, unrelated))}
+        # Finite representatives of independent positive character domains.
+        # Expected targets are literal fixtures, not computed by the recognizer.
+        # These cases make no exhaustive character-coverage claim.
+        domains = (
+            ("first-uppercase", "\u2026Abody-first.json", PREFIX + "prefixAbody-first.json"),
+            ("first-lowercase", "\u2026abody-first.json", PREFIX + "prefixabody-first.json"),
+            ("first-digit", "\u20260body-first.json", PREFIX + "prefix0body-first.json"),
+            ("first-underscore", "\u2026_body-first.json", PREFIX + "prefix_body-first.json"),
+            ("first-slash", "\u2026/capture-first.json", PREFIX + "nested/capture-first.json"),
+            ("interior-uppercase", "\u2026-bodyA-inner.json", PREFIX + "prefix-bodyA-inner.json"),
+            ("interior-lowercase", "\u2026-bodya-inner.json", PREFIX + "prefix-bodya-inner.json"),
+            ("interior-digit", "\u2026-body0-inner.json", PREFIX + "prefix-body0-inner.json"),
+            ("interior-underscore", "\u2026-body_inner.json", PREFIX + "prefix-body_inner.json"),
+            ("interior-period", "\u2026-body.inner.json", PREFIX + "prefix-body.inner.json"),
+            ("interior-slash", "\u2026-body/inner.json", PREFIX + "prefix-body/inner.json"),
+            ("extension-uppercase", "\u2026-body.JsOn", PREFIX + "prefix-body.JsOn"),
+            ("extension-digit", "\u2026-body.j0son", PREFIX + "prefix-body.j0son"),
+            ("extension-underscore", "\u2026-body.js_on", PREFIX + "prefix-body.js_on"),
+            ("extension-hyphen", "\u2026-body.js-on", PREFIX + "prefix-body.js-on"),
+            ("extension-period", "\u2026-body.json.gz", PREFIX + "prefix-body.json.gz"),
+        )
+        fixture.update({path: encoded({"subject": "synthetic-character-domain-" + name})
+                        for name, _, path in domains})
         inputs = (("unicode", "Comparison: `\u2026-tail.json`", {a, b}),
                   ("ascii", "Comparison: `...-tail.json`", {a, b}),
                   ("trailing-period", "Comparison: ...-tail.json.", {a, b}),
                   ("ellipsis-required", "Comparison: -tail.json", set()),
                   ("bare-extension-is-not-filename-suffix", "Fragments: M1-\u2026.json and M2-\u2026.json", set()))
+        inputs += tuple((name, "Comparison operand: " + text, {path}) for name, text, path in domains)
         for name, text, expected in inputs:
             files = {**fixture, raw: (text + "\n").encode()}
             for path, body in files.items():
