@@ -1821,6 +1821,31 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             cases.append({"predicate": name, "pass": control and restored and reason == expected,
                           "old": old, "new": new, "refusal": reason, "expected_refusal": expected,
                           "control_pass": control, "restored_pass": restored, "fixture_commit": completed})
+        for invalid_kind in ("symlink", "directory"):
+            tx_restore(); control = check(root, home) == final
+            transaction_bytes = tx_output.read_bytes(); tx_output.unlink()
+            if invalid_kind == "symlink":
+                external_input = outer / "check-transaction-identical-copy.json"
+                external_input.write_bytes(transaction_bytes); tx_output.symlink_to(external_input)
+            else:
+                tx_output.mkdir()
+            try:
+                check(root, home); reason = "unexpected-pass"
+            except (Refusal, OSError) as exc:
+                reason = str(exc)
+            finally:
+                if invalid_kind == "directory":
+                    tx_output.rmdir()
+                else:
+                    tx_output.unlink()
+                tx_output.write_bytes(transaction_bytes)
+            restored = check(root, home) == final
+            cases.append({"predicate": "transaction-check-input-" + invalid_kind, "pass":
+                          control and restored and reason == "transaction-not-regular-local-file",
+                          "old": {"transaction_kind": "regular", "sha256": digest(transaction_bytes)},
+                          "new": {"transaction_kind": invalid_kind, "symlink_target": "owned identical-byte external copy" if invalid_kind == "symlink" else None},
+                          "refusal": reason, "expected_refusal": "transaction-not-regular-local-file",
+                          "fixture_commit": completed, "control_pass": control, "restored_pass": restored})
         def tx_change(change):
             doc = load_json((home / "TRANSACTION.json").read_bytes()); change(doc)
             (home / "TRANSACTION.json").write_bytes(encoded(doc))
