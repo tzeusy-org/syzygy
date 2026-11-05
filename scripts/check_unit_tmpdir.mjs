@@ -211,21 +211,23 @@ async function ownedRun({ command = process.execPath, args, cwd = ROOT, expected
 export default class TmpdirReporter {
   onInit(ctx) { this.root = ctx.config.root; }
   onFinished(files, errors) {
-    const visit = (tasks, counts) => {
+    const visit = (tasks, counts, tests, prefix = '') => {
       for (const task of tasks ?? []) {
         if (task.type === 'test') {
           const state = task.result?.state ?? task.mode;
+          tests.push({ name: `${prefix}${task.name}`, state });
           if (state === 'pass') counts.passed++;
           else if (state === 'fail') counts.failed++;
           else if (state === 'todo') counts.todo++;
           else if (state === 'skip') counts.skipped++;
-        } else visit(task.tasks, counts);
+        } else visit(task.tasks, counts, tests, `${prefix}${task.name} > `);
       }
     };
     const rows = (files ?? []).map((f) => {
       const counts = { passed: 0, failed: 0, skipped: 0, todo: 0 };
-      visit(f.tasks, counts);
-      return { project: f.projectName ?? '', path: relative(this.root, f.filepath).split(sep).join('/'), state: f.result?.state, ...counts };
+      const tests = [];
+      visit(f.tasks, counts, tests);
+      return { project: f.projectName ?? '', path: relative(this.root, f.filepath).split(sep).join('/'), state: f.result?.state, ...counts, tests };
     });
     console.log(MARKER + JSON.stringify({ files: rows, errors: (errors ?? []).map((e) => ({ name: e.name, message: e.message })) }));
   }
@@ -297,6 +299,7 @@ async function selftest() {
       }
     });
     await caseRun('assertion and collection failure survive a clean root', async () => {
+      const nonzero = await fixture('process.exitCode=1;'); assert.equal(nonzero.ok, false); assert.equal(nonzero.child.code, 1); assert.deepEqual(nonzero.denominator.problems, []); clean(nonzero);
       const assertion = await vitestFixture("it('fails an actual assertion',()=>expect(1).toBe(2));");
       assert.equal(assertion.ok, false); assert.equal(assertion.denominator.counts.failed, 1); assert.match(assertion.child.text, /AssertionError/); clean(assertion);
       const collection = await vitestFixture("import './deliberately-absent-fixture.js';it('unreachable',()=>expect(1).toBe(1));");
@@ -329,6 +332,9 @@ async function selftest() {
       const replaced = await fixture("fs.renameSync(root,root+'.moved');fs.symlinkSync(root+'.moved',root);");
       assert.equal(replaced.ok, false); assert.equal(replaced.cleanup, false); assert(replaced.errors.some((e) => e.includes('root-identity-refused')));
       assert.equal(fs.lstatSync(replaced.root).isSymbolicLink(), true); fs.unlinkSync(replaced.root); fs.rmSync(replaced.root+'.moved', { recursive: true });
+      const foreign = await fixture("fs.renameSync(root,root+'.moved');fs.mkdirSync(root);");
+      assert.equal(foreign.ok, false); assert.equal(foreign.cleanup, false); assert(foreign.errors.some((e) => e.includes('root-identity-refused')));
+      assert.equal(fs.existsSync(foreign.root), true); fs.rmdirSync(foreign.root); fs.rmSync(foreign.root+'.moved', { recursive: true });
     });
     await caseRun('sequential concurrent isolation and denominator refusal', async () => {
       const rows = [await fixture(), await fixture(), ...await Promise.all([fixture(), fixture()])];
