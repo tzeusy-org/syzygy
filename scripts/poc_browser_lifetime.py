@@ -29,7 +29,7 @@ def identity(pid):
         fields = text[text.rfind(')') + 2:].split()
         return (pid, fields[19], int(fields[1]), fields[0],
                 directory.stat().st_uid, os.readlink(directory / 'ns/pid'))
-    except FileNotFoundError:
+    except (FileNotFoundError, ProcessLookupError):
         return None
 
 

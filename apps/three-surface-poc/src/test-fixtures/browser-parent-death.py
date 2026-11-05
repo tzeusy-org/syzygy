@@ -25,7 +25,7 @@ def identity(pid):
         return {'pid': pid, 'start': f[19], 'ppid': int(f[1]), 'pgid': int(f[2]),
                 'sid': int(f[3]), 'state': f[0], 'uid': p.stat().st_uid,
                 'namespace': os.readlink(p / 'ns/pid')}
-    except FileNotFoundError:
+    except (FileNotFoundError, ProcessLookupError):
         return None
 
 
@@ -81,6 +81,9 @@ assert mode in ('SIGTERM', 'SIGKILL')
 # real process is signalled by these controls; the real lifetime case below
 # supplies the independent process/census evidence.
 guardian = runpy.run_path(guardian_path)
+with patch.object(Path, 'read_text', side_effect=ProcessLookupError('process exited during read')):
+    assert identity(999999999) is None
+    assert guardian['identity'](999999999) is None
 stop = guardian['stop']
 ports = stop.__globals__
 row = (999999999, 'original-start', 123, 'S', UID, NAMESPACE)
@@ -107,6 +110,40 @@ with patch.dict(ports, {'identity': lambda _pid: row, 'descendants': lambda: {ro
         patch('os.kill', side_effect=AssertionError('PID-addressed signal bypassed stable handle')):
     stop(row, signal.SIGKILL)
     sent.assert_called_once_with(12345, signal.SIGKILL)
+with patch.dict(ports, {'identity': lambda _pid: None}), \
+        patch('os.pidfd_open', return_value=12345), patch('os.close'), \
+        patch('signal.pidfd_send_signal') as sent:
+    stop(row, signal.SIGKILL)
+    sent.assert_not_called()
+with patch('os.pidfd_open', side_effect=ProcessLookupError('already reaped')), \
+        patch('signal.pidfd_send_signal') as sent:
+    stop(row, signal.SIGKILL)
+    sent.assert_not_called()
+# The deadline refuses rather than acknowledging an unverified family.
+from types import SimpleNamespace
+ticks = iter([0, 0])
+clock = SimpleNamespace(monotonic=lambda: next(ticks, 4), sleep=lambda _seconds: None)
+drain = guardian['drain']
+with patch.dict(drain.__globals__, {'time': clock, 'reap': lambda _child: None,
+                'descendants': lambda: {row[0]: row},
+                'stop': lambda *_args: (_ for _ in ()).throw(AssertionError('cleanup continued after deadline'))}):
+    try:
+        drain(None)
+    except RuntimeError:
+        pass
+    else:
+        raise AssertionError('cleanup acknowledged an unverified family after deadline')
+scans = []
+populations = iter([{}, {row[0]: row}, {}, {}])
+def population():
+    scans.append(None)
+    return next(populations)
+signals = []
+with patch.dict(drain.__globals__, {'time': SimpleNamespace(monotonic=lambda: 0, sleep=lambda _seconds: None),
+                'reap': lambda _child: None, 'descendants': population,
+                'stop': lambda member, sig: signals.append((member, sig))}):
+    drain(None)
+assert len(scans) == 4 and signals == [(row, signal.SIGTERM)], 'a late descendant escaped the empty-scan check'
 decoy = subprocess.Popen(['sleep', '3600'], start_new_session=True)
 worker = subprocess.Popen([node, worker_path], stdout=subprocess.PIPE, start_new_session=True)
 report = {'mode': mode, 'worker': identity(worker.pid), 'decoy': identity(decoy.pid), 'reaped': [], 'refusals': refusals}
