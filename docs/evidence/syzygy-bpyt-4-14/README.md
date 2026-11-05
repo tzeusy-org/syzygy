@@ -28,3 +28,17 @@ security flag, observed-project execution or normative artifact changes.
 The November-3 item-4 source merge hold applies to the helper and its tests.
 Preparation and passing checks do not supply the owner's judgment or cycle
 report. The issue remains open until its full outcome and landing gates hold.
+
+## Additive namespace-lineage correction
+
+[Observed] `namespace-lineage-correction-2026-11-06.json` records the correction
+following independent review of PR763's predecessor head. Both scanners select
+lineage before namespace access; unreadable owned targets still refuse. Real
+original/changed controls, six final predicate counterexamples and both current
+kill-then-one-fresh-app runs are retained in the correction packet. That file
+retains source subjects, two-method process denominators and named directory
+remainders. Earlier process records and raw review/attempts remain unchanged.
+
+[Observed] The original eight criteria, required independent review/hosted and
+merge-group checks, and actual owner judgment AND cycle-report MERGE HOLD remain.
+This evidence authorizes no promotion, queue, merge or closure; PR763 stays DRAFT.
