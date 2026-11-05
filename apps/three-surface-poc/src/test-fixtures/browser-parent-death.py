@@ -67,10 +67,20 @@ def reap(worker):
 
 def census():
     rows = family()
-    # Method B is independently emitted by ps; only owned-family rows are
-    # retained, plus its broad metadata denominator. No argv/environment.
-    lines = subprocess.check_output(['ps', '-eo', 'pid=,ppid=,pgid=,sid=,stat='], text=True).splitlines()
-    ids = {r['pid'] for r in rows}
+    # Method B derives the family independently from ps parent fields,
+    # never from method A's PID set. Retain only owned-family rows plus the
+    # broad metadata denominator; no argv/environment is read.
+    observer = subprocess.Popen(['ps', '-eo', 'pid=,ppid=,pgid=,sid=,stat='], stdout=subprocess.PIPE, text=True)
+    lines = observer.communicate()[0].splitlines()
+    assert observer.returncode == 0
+    table = [line.split() for line in lines]
+    ids = {ROOT}
+    while True:
+        added = {int(r[0]) for r in table if int(r[1]) in ids} - ids
+        if not added:
+            break
+        ids.update(added)
+    ids -= {ROOT, decoy.pid, observer.pid}
     return {'procFamilyDenominator': len(rows), 'proc': rows, 'psVisibleDenominator': len(lines),
             'psFamily': [line.strip() for line in lines if int(line.split()[0]) in ids]}
 
