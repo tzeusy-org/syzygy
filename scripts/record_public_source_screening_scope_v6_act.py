@@ -99,15 +99,26 @@ DIRECTION_PR = 748
 #: The earlier rounds' disposition records the clearing reviewer was given.
 ROUND_RELS: tuple[pathlib.Path, ...] = (PKG / "ROUND-1-DISPOSITIONS.md", PKG / "ROUND-2-DISPOSITIONS.md",
                                         PKG / "ROUND-3-DISPOSITIONS.md")
-CONFIRMATION_REVIEW_REL: pathlib.Path = pathlib.Path("docs/reviews/R-SCREENING-SCOPE-V6-UNSET-RAW.md")
-DISPOSITION_REL: pathlib.Path = PKG / "ROUND-UNSET-DISPOSITIONS.md"
+CONFIRMATION_REVIEW_REL: pathlib.Path = pathlib.Path("docs/reviews/R-SCREENING-SCOPE-V6-b64c-4-RAW.md")
+DISPOSITION_REL: pathlib.Path = PKG / "ROUND-4-DISPOSITIONS.md"
 #: The commit the confirming review read (provenance; binding is by the manifest digest in the raw's head).
-FROZEN_SUBJECT: str | None = None
+FROZEN_SUBJECT: str | None = "b64c6769fd2fa928ae946dc27cdb729267f153fb"
 #: SHA-256 of each file the confirming review read, at FROZEN_SUBJECT, by `--freeze-table <commit>`.
-#: Unset: round 3 (docs/reviews/R-SCREENING-SCOPE-V6-d942-3-RAW.md) returned CONFIRM WITH EXCEPTIONS,
-#: but its finding 1 is tagged `(note; must be fixed before landing)`, a qualifier the shared
-#: `record_versioned_signoff.review_findings` refuses as ambiguous, and a raw is never edited.
-FROZEN_FILE_DIGESTS: dict[pathlib.Path, str] = {}
+#: Round 3 (R-SCREENING-SCOPE-V6-d942-3-RAW.md) could not be bound (its finding-1 qualifier is refused);
+#: the owner directed a narrow round 4, which confirmed these bytes.
+FROZEN_FILE_DIGESTS: dict[pathlib.Path, str] = {
+    pathlib.Path(".syzygy/governance/contracts/candidates/public-source-screening-scope-v6/PUBLIC-SOURCE-SCREENING-SCOPE-V6-MANIFEST.txt"): "76b2b6b0ac9eb185d8816e6014f86bc8a66c13501a8727a83fa6f8b8c1a18986",
+    pathlib.Path(".syzygy/governance/contracts/candidates/public-source-screening-scope-v6/proposed/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json.p.patch"): "3095900afaa95fa511911c25a3da8ed95085be67d2750c585d47b2c6537cd013",
+    pathlib.Path(".syzygy/governance/contracts/candidates/public-source-screening-scope-v6/OWNER-DECISION-PACKET.md"): "b9b786ad3cc27fdcafd5ca9a7d1cfd1746a81c1a1c235d6728991919e9955c23",
+    pathlib.Path(".syzygy/governance/contracts/candidates/public-source-screening-scope-v6/SEMANTIC-DELTA.md"): "56f4c486992e372acb1c13e3ff9481284a1d113b1f97462a6769eb5a8459709b",
+    pathlib.Path(".syzygy/governance/contracts/candidates/public-source-screening-scope-v6/REVIEW-BRIEF.md"): "2b1ee7a49a4861d40012df153ca1d05fe57fcf85625048850b3d0b0423b5b4fe",
+    pathlib.Path(".syzygy/governance/contracts/candidates/public-source-screening-scope-v6/IMPACT-LEDGER.md"): "11a5d086ad9087ee1fecb50994133bfdf6bdd7034a0cdd8030a7f80a4769275d",
+    pathlib.Path(".syzygy/governance/contracts/candidates/public-source-screening-scope-v6/ROUND-1-DISPOSITIONS.md"): "1cb21b3eb6d1483ec7ef54fdb9d45ea7e57b348e04b5c7df9447cef8e0729f2d",
+    pathlib.Path(".syzygy/governance/contracts/candidates/public-source-screening-scope-v6/ROUND-2-DISPOSITIONS.md"): "595bde55edafd045a3d87a605549098e2582074e69c4c3336fabf79076dfba73",
+    pathlib.Path(".syzygy/governance/contracts/candidates/public-source-screening-scope-v6/ROUND-3-DISPOSITIONS.md"): "be09e3d67b5637d691216bf1d27a5e7136a904b3db21567f81318f3f865718fb",
+    pathlib.Path("scripts/build_public_source_screening_scope_v6.py"): "d3bcd45341a40756db80ad65edba2c97f7b1aadd986634012353ad489b5f0031",
+    pathlib.Path("scripts/redis_screening_v6_measure.py"): "dd8bdcf6118c9da1a0ac65ffec0a32c7b08a497622df12565ed5954e9202ce95",
+}
 #: The one offer the packet makes. Decline takes no act.
 OWNER_WORDS = ("Sign screening scope version 6, variant p",)
 VERDICTS = v5rec.VERDICTS
