@@ -4,4 +4,4 @@
 # the PROPOSED bytes (the version-5 policy, variant bcd, with
 # proposed/<name>.p.patch applied). The row is the argument of one
 # superseding approve-policy act, or of none.
-162dfb65fed9317c58fb8330d876b6cb693276c034097a4308d3f0836906590f  .syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json  [variant: p]
+690e28a52af07ed6473fd9e632d600e2f680ed74c36134d1e67e2e338087c1ce  .syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json  [variant: p]

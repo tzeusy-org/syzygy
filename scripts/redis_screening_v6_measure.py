@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import json
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -82,18 +83,25 @@ def main() -> int:
 
     blobs = dict(_blobs(a.clone, a.commit))
     conf = _body(a.clone, blobs["redis.conf"]) if "redis.conf" in blobs else None
-    withheld: frozenset = frozenset()
+    # what the run's citations of redis.conf meet under v6: None = nothing reaches (absent or excluded)
+    withheld: frozenset | None = None
+    why = "absent or not UTF-8 text at this commit"
     if conf is None:
-        print("redis.conf: absent or not UTF-8 text at this commit")
+        print(f"redis.conf: {why}")
     else:
         o5 = v6.screen("redis.conf", conf, base, v6._R, a.commit)
         o6 = v6.screen("redis.conf", conf, prop, v6._R, a.commit)
-        lines = conf.count("\n") + (0 if conf.endswith("\n") else 1)
-        print(f"redis.conf: {lines} lines; v5 {o5[0]}{'' if len(o5) < 2 or o5[0] == 'redacted' else ' (' + o5[1] + ')'}; "
-              f"v6 {o6[0]}{' (' + o6[1] + ')' if o6[0] == 'excluded' else ''}")
-        if o6[0] == "redacted":
-            withheld = o6[1]
+        lines = re.findall(r"[^\r\n]*(?:\r\n|\r|\n)|[^\r\n]+$", conf)
+        print(f"redis.conf: {len(lines)} lines; v5 {_word(o5)}; v6 {_word(o6)}")
+        if o6[0] == "excluded":
+            why = f"file excluded: {o6[1]}"
+        else:
+            withheld = o6[1] if o6[0] == "redacted" else frozenset()
             print(f"redis.conf: v6 withholds {len(withheld)} lines")
+            # prices the named residuals: lines naming a password word that the detector leaves readable
+            named = [k + 1 for k, ln in enumerate(lines) if _KEYWORDS.search(ln) and k + 1 not in withheld]
+            print(f"redis.conf: {len(named)} readable lines still name requirepass, masterauth, tls-*-pass, auth-pass, "
+                  "password or a leading user")
 
     for sub in ("drafts", "inventory"):
         d = a.run / sub
@@ -109,12 +117,19 @@ def main() -> int:
             rc = [x for x in c if x["path"] == "redis.conf"]
             if not rc:
                 continue
+            if withheld is None:
+                print(f"{sub}/{f.name}: {len(rc)} redis.conf citations; 0 reach ({why})")
+                continue
             touch = sum(1 for x in rc if any(n in withheld for n in range(x["startLine"], x["endLine"] + 1)))
             print(f"{sub}/{f.name}: {len(rc)} redis.conf citations; {len(rc) - touch} reach whole under v6; "
                   f"{touch} touch a withheld line")
 
-    newly_code, doc_redacted, scanned = [], 0, 0
+    transitions: dict[tuple[str, str], int] = {}
+    newly_whole: list[str] = []
+    scanned = 0
     for path, oid in sorted(blobs.items()):
+        if path == "redis.conf":
+            continue  # reported above
         cls = v6.content_class(path, prop, v6._R, a.commit)
         if cls is None:
             continue
@@ -126,16 +141,30 @@ def main() -> int:
         o6 = v6.screen(path, body, prop, v6._R, a.commit)
         if o6 == o5:
             continue
-        if o6 == ("excluded", "secret-detector-match") and o5[0] != "excluded":
-            newly_code.append(f"{path} ({cls})")
-        elif o6[0] == "redacted":
-            doc_redacted += 1
-    print(f"classified text blobs screened: {scanned}")
-    print(f"withheld whole by v6, admitted or redacted by v5: {len(newly_code)}")
-    for p in newly_code:
+        key = (_word(o5, lines=False), _word(o6, lines=False))
+        transitions[key] = transitions.get(key, 0) + 1
+        if o6[0] == "excluded" and o5[0] != "excluded":
+            newly_whole.append(f"{path} ({cls})")
+    print(f"other classified text blobs screened: {scanned}")
+    print(f"other files whose outcome changes: {sum(transitions.values())}")
+    for (w5, w6), n in sorted(transitions.items()):
+        print(f"  v5 {w5} -> v6 {w6}: {n}")
+    print(f"other files withheld whole by v6 that v5 admitted or redacted: {len(newly_whole)}")
+    for p in newly_whole:
         print(f"  {p}")
-    print(f"other files whose outcome becomes a redaction under v6: {doc_redacted}")
     return 0
+
+
+_KEYWORDS = re.compile(r"requirepass|masterauth|tls-(?:client-)?key-file-pass|auth-pass|password|^[ \t#]*user[ \t]",
+                       re.I)
+
+
+def _word(o: tuple, lines: bool = True) -> str:
+    if o[0] == "excluded":
+        return f"excluded ({o[1]})"
+    if o[0] == "redacted":
+        return f"redacted ({len(o[1])} lines)" if lines else "redacted"
+    return "admitted"
 
 
 if __name__ == "__main__":

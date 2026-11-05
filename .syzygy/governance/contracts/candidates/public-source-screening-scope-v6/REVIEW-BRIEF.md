@@ -16,7 +16,8 @@ bodies and is the owner's to run.
 **Artifact:** every file of
 `.syzygy/governance/contracts/candidates/public-source-screening-scope-v6/`,
 `scripts/build_public_source_screening_scope_v6.py`,
-`scripts/redis_screening_v6_measure.py`, and the version-6 registration in
+`scripts/redis_screening_v6_measure.py`,
+`scripts/dossier_run_citation_census.py`, and the version-6 registration in
 `scripts/check_governance.py` (search `PUBLIC_SOURCE_SCOPE_V6`), at the commit
 named in the dispatch. The subject at its current bytes is the policy file
 `.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json`,

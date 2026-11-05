@@ -65,19 +65,25 @@ VARIANTS = ("p",)
 
 # --- P: redis.conf placement and its paired detector -----------------------------------------------------------
 
-#: A line that opens (after blanks and an optional comment mark) with a Redis password directive, or an ACL rule
-#: `user <name> ... >password`. Anchored at a line start by the lookbehind, so a directive named mid-line
-#: (`config set requirepass x` in a test) does not match; one blank run and one optional `#[ \t]*` keep it linear.
-CONFIG_SECRET_DIRECTIVE = (r"(?<![^\r\n])[ \t]*(?:#[ \t]*)?(?:(?:requirepass|masterauth|tls-key-file-pass|"
-                           r"tls-client-key-file-pass)[ \t]+|user[ \t][^\r\n]*?[ \t]>)[^ \t\r\n]+")
+#: A line that opens (after blanks and any number of `#` comment marks) with a Redis password directive, quoted or
+#: not, or an ACL rule `user <name> ... >password` (or a `#<64 hex>` password hash), the `>` or `#` after a blank or a
+#: quote. Anchored at a line start by the lookbehind, so a directive named mid-line (`config set requirepass x` in a
+#: test) does not match. Blanks are the four ASCII separators Redis's argument splitter honours that are not line ends
+#: (space, tab, vertical tab, form feed); each `#` iteration consumes a `#`, so the prefix is unambiguous and the match
+#: linear. Round 1 (finding 1) widened the draft's one optional `#`, unquoted names, `[ \t]` blanks and `>`-only ACL arm.
+CONFIG_SECRET_DIRECTIVE = (r"(?<![^\r\n])[ \t\v\f]*(?:#[ \t\v\f]*)*(?:[\"']?(?:requirepass|masterauth|"
+                           r"tls-key-file-pass|tls-client-key-file-pass)[\"']?[ \t\v\f]+|user[ \t\v\f][^\r\n]*?"
+                           r"[ \t\v\f\"'](?:>|#(?=[0-9a-fA-F]{64})))[^ \t\v\f\r\n]+")
 P_DETECTOR = {"id": "config-secret-directive", "kind": "regular-expression", "pattern": CONFIG_SECRET_DIRECTIVE,
               "flags": "gi"}
 P_CONSEQUENCE = (
-    ". config-secret-directive is paired with the redis.conf placement: [Inferred] a line opening with requirepass, "
-    "masterauth, tls-key-file-pass or tls-client-key-file-pass and a value, or an ACL rule user <name> ... "
-    ">password, commented or not, is withheld with its guard lines in project-documentation, as credential-bearing-url "
-    "is, and keeps a body of any other class whole; a password written any other way in such a file (a prose "
-    "comment, a rename-command target, a directive this pattern does not name) is not matched")
+    ". config-secret-directive is paired with the redis.conf placement: [Inferred] a line opening, after blanks and any "
+    "number of # comment marks, with requirepass, masterauth, tls-key-file-pass or tls-client-key-file-pass (quoted or "
+    "not) and a value, or with an ACL rule user <name> ... >password or #<64-hex password hash>, is withheld with its "
+    "guard lines in project-documentation, as credential-bearing-url is, and withholds a body of any other class whole; "
+    "a password written any other way in such a file (named mid-line, in a prose comment, as a rename-command target, "
+    "as a module's own option, under a directive this pattern does not name, or on a following line) is not matched, and "
+    "a prose or code line that opens with the word user and later has a blank and > is matched")
 P_PATHS = ["redis.conf"]
 
 
@@ -230,6 +236,34 @@ COUNTEREXAMPLES = [
     ("redis.conf: requirepass after a bare CR", _RC,
      f"# auth\rrequirepass {_UNMATCHED}\rport 6379\r", 2,
      {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    # round 1, finding 1: shapes the clause names that the draft pattern let through
+    ("redis.conf: requirepass commented twice", _RC,
+     f"# auth\n## requirepass {_UNMATCHED}\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    ("redis.conf: requirepass behind '# #'", _RC,
+     f"# auth\n# # requirepass {_UNMATCHED}\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    ("redis.conf: quoted directive name", _RC,
+     f"# auth\n\"requirepass\" {_UNMATCHED}\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    ("redis.conf: vertical-tab separator", _RC,
+     f"# auth\nrequirepass\v{_UNMATCHED}\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    ("redis.conf: form-feed lead", _RC,
+     f"# auth\n\fmasterauth {_UNMATCHED}\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    ("redis.conf: ACL password as a double-quoted argument", _RC,
+     f"# ACL\nuser alice on \">{_UNMATCHED} x\" ~* +@all\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    ("redis.conf: ACL password as a single-quoted argument", _RC,
+     f"# ACL\nuser alice on '>{_UNMATCHED}' ~*\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    ("redis.conf: ACL hashed password", _RC,
+     "# ACL\nuser alice on #" + "9f" * 32 + " ~*\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({1, 2, 3}))}),
+    ("redis.conf: ACL '#' comment that is not a hash", _RC,
+     "# ACL\nuser alice on #note ~*\nport 6379\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("admitted",)}),
     ("redis.conf: angle-bracket placeholders (C admits them; the masterauth line is withheld)", _RC,
      "# Replication\n# replicaof <masterip> <masterport>\n# masterauth <master-password>\nport 6379\n", 2,
      {"v5": ("excluded", "unknown-extraction-class"), "p": ("redacted", frozenset({2, 3, 4}))}),
@@ -251,6 +285,9 @@ COUNTEREXAMPLES = [
      {"v5": ("excluded", "unknown-extraction-class"), "p": ("admitted",)}),
     ("residual 5, redis.conf: a directive this pattern does not name (masteruser beside sentinel-style auth)", _RC,
      f"masteruser replica\nsentinel auth-pass mymaster {_UNMATCHED}\n", 2,
+     {"v5": ("excluded", "unknown-extraction-class"), "p": ("admitted",)}),
+    ("residual 6, redis.conf: a value on the line after its directive", _RC,
+     f"requirepass\n\n\n{_UNMATCHED}\n", 4,
      {"v5": ("excluded", "unknown-extraction-class"), "p": ("admitted",)}),
     ("not a residual, redis.conf: include names another file, which stays unclassified", _RC,
      "# Secrets live elsewhere:\ninclude /etc/redis/secrets.conf\nport 6379\n", 2,
@@ -275,6 +312,13 @@ COUNTEREXAMPLES = [
     ("src/config.c: a C string, not a line start (no detector)", "src/config.c",
      'createStringConfig("requirepass", NULL, 0, NULL, NULL);\n', 1,
      {"v5": ("admitted",), "p": ("admitted",)}),
+    # round 1, finding 4: the ACL arm's cost on ordinary prose and code
+    ("cost, README.md: a prose line opening with 'User' and a '>' comparison", "README.md",
+     "# Limits\n\nUser input >5MB is rejected.\n\nDone.\n", 3,
+     {"v5": ("admitted",), "p": ("redacted", frozenset({2, 3, 4}))}),
+    ("cost, tests/limits.tcl: a code line opening with 'user' and a '>'", "tests/limits.tcl",
+     "set x 1\nuser input >5 is fine\n", 1,
+     {"v5": ("admitted",), "p": ("excluded", "secret-detector-match")}),
     # P: the placement stays pinned
     ("redis.conf at another commit stays unclassified", _RC,
      "port 6379\n", 1,
@@ -392,14 +436,17 @@ def linear_time_findings(pattern: str = CONFIG_SECRET_DIRECTIVE, limit_s: float 
     bad = []
     rx = re.compile(pattern, re.I)
     for label, line in (("blanks", " " * 40000), ("hashes", "#" * 40000), ("hash-blank", "# " * 20000),
-                        ("acl", "user " + "a " * 20000), ("tabs", "\t" * 40000)):
+                        ("acl", "user " + "a " * 20000), ("tabs", "\t" * 40000), ("vertical-tabs", "\v" * 40000),
+                        ("hash-vt", "#\v" * 20000), ("quotes", "\"" * 40000), ("acl-hashes", "user " + " #" * 20000),
+                        ("acl-quotes", "user " + " \"" * 20000), ("acl-near-hash", "user " + (" #" + "a" * 63) * 600)):
         t0 = time.perf_counter()
         for i in range(0, len(line), 1):
             rx.match(line, i)
         if time.perf_counter() - t0 > limit_s * 4:
             bad.append(f"python every-offset match on a 40,000-character {label} line exceeds {limit_s * 4} s")
     js = ("const p=process.argv[1];const s=new RegExp(p,'iy');const lines=[' '.repeat(80000),'#'.repeat(80000),"
-          "'# '.repeat(40000),'user '+'a '.repeat(40000),'\\t'.repeat(80000)];for(const l of lines){const t=Date.now();"
+          "'# '.repeat(40000),'user '+'a '.repeat(40000),'\\t'.repeat(80000),'\\v'.repeat(80000),'#\\v'.repeat(40000),'\"'.repeat(80000),"
+          "'user '+' #'.repeat(40000),'user '+' \"'.repeat(40000),'user '+(' #'+'a'.repeat(63)).repeat(1200)];for(const l of lines){const t=Date.now();"
           "for(let i=0;i<l.length;i++){s.lastIndex=i;s.exec(l);}if(Date.now()-t>" + str(int(limit_s * 1000)) + ")"
           "{console.log('slow');process.exit(1);}}console.log('ok');")
     try:
@@ -413,10 +460,16 @@ def linear_time_findings(pattern: str = CONFIG_SECRET_DIRECTIVE, limit_s: float 
 
 def js_agreement_findings(pattern: str = CONFIG_SECRET_DIRECTIVE) -> list[str]:
     """JavaScript RegExp (flags `iy`, the sticky every-offset loop `secret-redaction.ts` uses) and Python `re` (the
-    oracle) find the same match spans over every version-6 and version-5 counterexample body and five dialect probes.
-    Bodies go to node on stdin; nothing is printed but a count."""
+    oracle) find the same match spans over every version-6 and version-5 counterexample body and the dialect probes
+    below, except on the two declared case-folding probes, where they must differ exactly as declared (round 1,
+    finding 5: Python `re.I` folds U+017F to `s` and U+212A to `k`, JavaScript without `u` does not; Redis compares
+    directive names as ASCII, so the Python oracle over-counts there and the shipped screen leaks nothing). Bodies go to
+    node on stdin; nothing is printed but a count."""
     bodies = [c[2] for c in COUNTEREXAMPLES] + [c[2] for c in v5.COUNTEREXAMPLES] + [
-        "requirepass\u00a0x\n", "\ufeffrequirepass x\n", "\u2028requirepass x\n", "user a\u00a0>x\n", "MASTERAUTH\tx\r\n", "requirepass\ufeffx\n", "requirepass\x1cx\n"]
+        "requirepass\u00a0x\n", "\ufeffrequirepass x\n", "\u2028requirepass x\n", "user a\u00a0>x\n", "MASTERAUTH\tx\r\n", "requirepass\ufeffx\n", "requirepass\x1cx\n",
+        "requirepass\vx\n", "\fmasterauth x\n", "requirepa\u017fs x\n", "tls-\u212aey-file-pass x\n"]
+    #: indices (into the probe tail) where Python matches and JavaScript does not, by design (see the docstring)
+    python_only = {len(bodies) - 2, len(bodies) - 1}
     rx = re.compile(pattern, re.I)
     py = [[[m.start(), m.end()] for i in range(len(b)) for m in [rx.match(b, i)] if m] for b in bodies]
     js = ("let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const {p,b}=JSON.parse(d);const r=new RegExp(p,'iy');"
@@ -429,7 +482,10 @@ def js_agreement_findings(pattern: str = CONFIG_SECRET_DIRECTIVE) -> list[str]:
     except (OSError, subprocess.TimeoutExpired, ValueError):
         return ["node is unavailable; the JavaScript dialect is unchecked"]
     # node reports UTF-16 offsets; every body here is in the BMP, so they equal Python's code-point offsets
-    return [f"body {i}: JavaScript and Python match spans differ" for i, (a, b) in enumerate(zip(py, got)) if a != b]
+    bad = [f"body {i}: JavaScript and Python match spans differ" for i, (a, b) in enumerate(zip(py, got))
+           if a != b and not (i in python_only and a and not b)]
+    bad += [f"body {i}: the declared case-folding split did not occur" for i in python_only if not (py[i] and not got[i])]
+    return bad
 
 
 def check(root: pathlib.Path = ROOT) -> list[str]:
@@ -615,11 +671,29 @@ def selftest() -> int:
         sem("an unanchored pattern caught (mid-line requirepass in code withheld)",
             lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("(?<![^\\r\\n])", "", 1)),
             "counterexample 'tests/auth.tcl: requirepass named mid-line")
+        sem("a one-optional-# pattern caught (a requirepass commented twice reaches)",
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("(?:#[ \\t\\v\\f]*)*", "(?:#[ \\t\\v\\f]*)?", 1)),
+            "counterexample 'redis.conf: requirepass commented twice'")
+        sem("an unquoted-name pattern caught (a quoted directive name reaches)",
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("[\\\"']?(?:requirepass", "(?:requirepass", 1)),
+            "counterexample 'redis.conf: quoted directive name'")
+        sem("a pattern blind to the hashed ACL password caught",
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("(?:>|#(?=[0-9a-fA-F]{64}))", ">", 1)),
+            "counterexample 'redis.conf: ACL hashed password'")
+        sem("a hash arm that takes any '#' caught (an ACL comment is withheld)",
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("#(?=[0-9a-fA-F]{64})", "#", 1)),
+            "counterexample \"redis.conf: ACL '#' comment that is not a hash\"")
+        sem("a quote-blind ACL arm caught",
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("[ \\t\\v\\f\\\"'](?:>", "[ \\t\\v\\f](?:>", 1)),
+            "counterexample 'redis.conf: ACL password as a double-quoted argument'")
+        sem("a tab-and-space-only blank class caught (a vertical-tab separator reaches)",
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("[\\\"']?[ \\t\\v\\f]+|user", "[\\\"']?[ \\t]+|user", 1)),
+            "counterexample 'redis.conf: vertical-tab separator'")
         sem("an uncommented-only pattern caught (commented placeholder reaches)",
-            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("(?:#[ \\t]*)?", "", 1)),
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("(?:#[ \\t\\v\\f]*)*", "", 1)),
             "counterexample 'redis.conf: commented requirepass placeholder'")
         sem("a pattern without the ACL form caught",
-            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("|user[ \\t][^\\r\\n]*?[ \\t]>", "", 1)),
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("|user[ \\t\\v\\f][^\\r\\n]*?[ \\t\\v\\f\\\"'](?:>|#(?=[0-9a-fA-F]{64}))", "", 1)),
             "counterexample 'redis.conf: ACL user with a >password'")
         sem("a pattern without masterauth caught",
             lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("masterauth|", "", 1)),
@@ -628,7 +702,7 @@ def selftest() -> int:
             lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("|\ntls-client-key-file-pass", "").replace("|tls-client-key-file-pass", "", 1)),
             "counterexample 'redis.conf: tls-client-key-file-pass, indented after a tab'")
         sem("a pattern without leading blanks caught",
-            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("(?<![^\\r\\n])[ \\t]*", "(?<![^\\r\\n])", 1)),
+            lambda d: pat(d, CONFIG_SECRET_DIRECTIVE.replace("(?<![^\\r\\n])[ \\t\\v\\f]*", "(?<![^\\r\\n])", 1)),
             "counterexample 'redis.conf: tls-client-key-file-pass, indented after a tab'")
         sem("a case-sensitive detector caught",
             lambda d: sdet(d).__setitem__("flags", "g"), "counterexample 'redis.conf: REQUIREPASS in capitals'")
@@ -656,7 +730,7 @@ def selftest() -> int:
         sem("a dropped version-5 placement caught",
             lambda d: doc_rule(sc(d))["ownerPlacements"][0].__setitem__("paths", ["redis.conf"]),
             "version-5 class fixture 'TLS.md'")
-        sem("the documentation exemption dropped caught (version-5 counterexample flips)",
+        sem("the documentation exemption dropped caught (structurally: a scope key other than the two changed)",
             lambda d: sc(d)["activeContent"].pop("projectDocumentationExemption"),
             "scope keys changed")
         sem("a guard-line change caught", lambda d: sc(d)["secretRedaction"].__setitem__("guardLines", 2),
@@ -691,7 +765,7 @@ def selftest() -> int:
     results.append(("the detector stays linear in Python and node", linear_time_findings() == []))
     results.append(("JavaScript and Python find the same spans over every fixture", js_agreement_findings() == []))
     results.append(("a dialect split is caught (mutant observed: \\s in place of [ \\t])",
-                     js_agreement_findings(CONFIG_SECRET_DIRECTIVE.replace("[ \\t]+|user", "\\s+|user", 1)) != []))
+                     js_agreement_findings(CONFIG_SECRET_DIRECTIVE.replace("[ \\t\\v\\f]+|user", "\\s+|user", 1)) != []))
     quad = r"(?<![^\r\n])[ \t]*[ \t]*(?:#[ \t]*)?(?:requirepass[ \t]+)[^ \t\r\n]+x"
     results.append(("a two-star pattern is caught as non-linear (mutant observed)",
                      linear_time_findings(quad, 0.05) != []))

@@ -9,15 +9,16 @@
 On 2026-11-05 you answered "A. Rebase P (placement + detector) onto v5 as v6,
 review, offer for your act" (questionnaire item 1). This is that version 6.
 
-Version 5 (signed 2026-11-03) gave six of the seven withheld Redis files a
-path to the reviewer. The seventh, `redis.conf`, stayed withheld because it is
-configuration with password lines in it. It matters:
+In the 2026-10-14 Redis trial, 145 of 244 quotations were withheld, across 12
+files. Version 5 (signed 2026-11-03) gave a path to every one of them except
+`README.md` (41 quotations; whether they now come back is still Unknown) and
+five files no variant placed. Of those five, four held one quotation each.
+The fifth is `redis.conf`, with 39, the most of any file after `README.md`. It
+stayed withheld because it is configuration with password lines in it.
 
-- In the 2026-10-14 trial it held 39 of the 145 withheld quotations, second
-  only to `README.md` (41), and the only one of the 12 withheld files with
-  more than one quotation that version 5 left withheld.
-- In run 3, the first draft cited it 34 times out of 180. Those quotations
-  were withheld, and the later drafts moved away from it to other sources.
+In run 3, the first draft cited `redis.conf` 34 times out of 180. Those
+quotations were withheld, and the later drafts moved away from it to other
+sources.
 
 Version 6 does two things together:
 
@@ -28,8 +29,11 @@ Version 6 does two things together:
 - **It withholds the password lines in it.** A new detector finds lines that
   start with `requirepass`, `masterauth`, `tls-key-file-pass` or
   `tls-client-key-file-pass` followed by a value, or an ACL rule
-  `user <name> … >password`, commented out or not. Those lines and the line on
-  each side are blanked; the rest of the file reaches the reviewer.
+  `user <name> … >password` (or a hashed password), whether commented out
+  (once or more), quoted or separated by unusual blanks. Those lines and the
+  line on each side are blanked. Quotations that touch a blanked line are
+  withheld whole; the others reach the reviewer, unless some other screen
+  step withholds the file (whether one does is Unknown).
 
 Nothing else in the policy changes.
 
@@ -44,20 +48,24 @@ row. A recorder takes that row as the act's argument (phrase
 It supersedes the version-5 act.
 
 Recommended: sign. It is what you asked for, and the costs below are the ones
-the answer you picked described.
+the answer you picked described, plus two the review found.
 
 ## What it costs
 
 Each cost is a synthetic example in the builder, scored before and after.
 
-- **Passwords written another way in `redis.conf` reach the reviewer.** Five
+- **Passwords written another way in `redis.conf` reach the reviewer.** Six
   named cases the detector does not catch:
   1. a password named in the middle of a line (`… CONFIG SET requirepass x`);
   2. a `rename-command` target used as a secret;
   3. a password in a prose comment;
   4. a module's own password option;
   5. any other password directive it does not name (for example Sentinel's
-     `auth-pass`).
+     `auth-pass`);
+  6. a value on a line after its directive.
+  The questionnaire's list had five. It named "a value split across an
+  `include`", which is not a leak here: the included file is not placed, so it
+  stays withheld. Cases 5 and 6 are new.
   The shipped file holds example values, not real ones [Inferred], and the
   pin to one revision means a later revision gets no class.
 - **More is withheld elsewhere.** The detector runs on every Redis file:
@@ -65,10 +73,14 @@ Each cost is a synthetic example in the builder, scored before and after.
     withheld whole, where version 5 let it through. How many: Unknown.
   - Lines written that way in `TLS.md` or a README are now withheld, where
     version 5 let them through. This closes a gap version 5 named.
+  - Ordinary text can trip the ACL part: a README line such as
+    `User input >5MB is rejected.` is blanked, and a test file with a line
+    `user input >5 …` is withheld whole.
 - **Unknown until measured:** how many of `redis.conf`'s lines the detector
-  blanks, so how many of run 3's 34 quotations would come back. It needs the
-  file's text, which no agent reads. A count-only script is ready for you
-  (it prints numbers and file names, never text):
+  blanks, so how many of run 3's 34 quotations would come back, and how many
+  code files it withholds. It needs the files' text, which no agent reads. A
+  count-only script is ready for you (it prints numbers and file names, never
+  text):
 
   ```text
   python3 scripts/redis_screening_v6_measure.py --clone <redis clone> --run <run directory>
@@ -80,10 +92,11 @@ Each cost is a synthetic example in the builder, scored before and after.
 
 - **Subject:** the policy as version 5 left it, which is the policy on disk
   now.
-- **After the act** the dossier's read gates refuse the new policy until a
-  separate install change re-pins them (a sixth act form, the detector
-  sentence's digest, the version literals). **No Redis run can start between
-  the act and that install.**
+- **After the act** the dossier's read gates refuse the new policy, and
+  several governance checks fail, until a separate install change re-pins
+  them (a sixth act form, the detector sentence's digest, the version
+  literals, the policy's act chain). **No Redis run can start between the act
+  and that install.**
 - The single next Redis run therefore waits on: this act, then its install.
 
 ## What it does not do
