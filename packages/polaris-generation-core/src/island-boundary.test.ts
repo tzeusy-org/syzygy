@@ -1,12 +1,14 @@
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
-import { isFile, reach as reachBy, readModule } from './workspace-reach.testkit.js';
+import { ROOT, isFile, reach as reachBy, readModule } from './workspace-reach.testkit.js';
 
 // syzygy-bpyt.8.1/.8.23: the CLI and the broker-client process it launches
 // never load the parked provider island (owner packet Q8). Read TypeScript
 // edges by syntax, refusing loaders whose target the walk cannot determine.
 // The shared resolver follows workspace exports, including their conditions.
-// Only the island and the two Node entries are listed, never their reach sets.
+// Entry reach sets and the production-source population are discovered, not listed.
 const ENTRIES = ['apps/syzygy/src/main.ts', 'packages/polaris-dossier/src/broker-client.ts'];
 const ISLAND = [
   'packages/polaris-generation-core/src/admitted-input.ts',
@@ -16,12 +18,16 @@ const ISLAND = [
   'packages/polaris-generation-core/src/pipeline.ts',
   'packages/polaris-generation-core/src/provider-draft.ts',
   'packages/polaris-generation-core/src/rendered-design.ts',
+  'apps/three-surface-poc/src/polaris-generation/dossier-main.ts',
+  'apps/three-surface-poc/src/polaris-generation/dossier-render.ts',
+  'apps/three-surface-poc/src/polaris-generation/dossier-render-main.ts',
   'apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts',
   'apps/three-surface-poc/src/polaris-generation/durable-lifecycle.ts',
   'apps/three-surface-poc/src/polaris-generation/generation-mutation-run-main.ts',
   'apps/three-surface-poc/src/polaris-generation/generation-mutation.ts',
   'apps/three-surface-poc/src/polaris-generation/pipeline-demo-main.ts',
   'apps/three-surface-poc/src/polaris-generation/pipeline-demo.ts',
+  'apps/three-surface-poc/src/polaris-generation/public-source-screening.ts',
   'apps/three-surface-poc/src/polaris-generation/redis-shaped-fixture.ts',
   'apps/three-surface-poc/src/polaris-generation/redis-shaped-measure-main.ts',
   'apps/three-surface-poc/src/polaris-generation/redis-shaped-measure.ts',
@@ -30,6 +36,39 @@ const ISLAND = [
   'apps/three-surface-poc/src/polaris-generation/self-corpus-main.ts',
   'apps/three-surface-poc/src/polaris-generation/self-corpus.ts',
 ];
+// Original G2 remainders: the parked roots re-export provider declarations;
+// consent-ports uses the core root, as do the two source helpers and the
+// evaluation command. These are allowed origins, never traversal cutoffs.
+const PARKED_REMAINDER = [
+  'packages/polaris-generation-core/src/index.ts',
+  'packages/polaris-generation-consent/src/index.ts',
+  'packages/polaris-generation-consent/src/consent-ports.ts',
+  'apps/three-surface-poc/src/polaris-generation/run-key.ts',
+  'apps/three-surface-poc/src/polaris-generation/synthetic-source.ts',
+  'apps/three-surface-poc/src/polaris-generation/dossier-evaluation-main.ts',
+];
+
+/** All JS/TS sources under each app/package's src directory, including
+ * disconnected modules. Tests, testkits and declaration files are the
+ * deliberate source exceptions; scripts are outside this production walk.
+ * Ordinary test helpers remain in the population, making it conservative. */
+function productionModules(): string[] {
+  const files: string[] = [];
+  const walk = (directory: string): void => {
+    for (const item of readdirSync(join(ROOT, directory), { withFileTypes: true })) {
+      const path = `${directory}/${item.name}`;
+      if (item.isDirectory()) walk(path);
+      else if (item.isFile() && /\.[cm]?[jt]s$/u.test(path)
+        && !/\.(?:test|testkit)\.[cm]?[jt]s$|\.d\.[cm]?ts$/u.test(path)) files.push(path);
+    }
+  };
+  for (const parent of ['apps', 'packages']) {
+    for (const item of readdirSync(join(ROOT, parent), { withFileTypes: true })) {
+      if (item.isDirectory() && isFile(`${parent}/${item.name}/package.json`)) walk(`${parent}/${item.name}/src`);
+    }
+  }
+  return files.sort();
+}
 /** Static, type-only, re-export, import-type and literal dynamic edges. A
  * computed import or CommonJS loader cannot be followed by this guard. */
 function importsOf(file: string, text: string): { specifiers: string[]; unsupported: string[] } {
@@ -37,17 +76,36 @@ function importsOf(file: string, text: string): { specifiers: string[]; unsuppor
   const specifiers: string[] = [];
   const unsupported: string[] = [];
   const createRequireNames = new Set(['createRequire']);
-  // An imported createRequire alias still constructs a CommonJS loader.
-  for (const node of source.statements) {
-    if (!ts.isImportDeclaration(node) || !ts.isStringLiteral(node.moduleSpecifier)
-      || !['node:module', 'module'].includes(node.moduleSpecifier.text)) continue;
-    const bindings = node.importClause?.namedBindings;
-    if (bindings !== undefined && ts.isNamedImports(bindings)) {
-      for (const imported of bindings.elements) {
-        if ((imported.propertyName ?? imported.name).text === 'createRequire') createRequireNames.add(imported.name.text);
+  // Imported aliases and destructuring an awaited literal module import
+  // retain createRequire provenance. This is finite syntax handling, not
+  // arbitrary JavaScript value/loader alias analysis.
+  const bindingsOf = (node: ts.Node): void => {
+    if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)
+      && ['node:module', 'module'].includes(node.moduleSpecifier.text)) {
+      const bindings = node.importClause?.namedBindings;
+      if (bindings !== undefined && ts.isNamedImports(bindings)) {
+        for (const imported of bindings.elements) {
+          if ((imported.propertyName ?? imported.name).text === 'createRequire') createRequireNames.add(imported.name.text);
+        }
       }
     }
-  }
+    if (ts.isVariableDeclaration(node) && ts.isObjectBindingPattern(node.name) && node.initializer !== undefined
+      && ts.isAwaitExpression(node.initializer) && ts.isCallExpression(node.initializer.expression)) {
+      const call = node.initializer.expression;
+      const argument = call.arguments[0];
+      if (call.expression.kind === ts.SyntaxKind.ImportKeyword && argument !== undefined
+        && (ts.isStringLiteral(argument) || ts.isNoSubstitutionTemplateLiteral(argument))
+        && ['node:module', 'module'].includes(argument.text)) {
+        for (const binding of node.name.elements) {
+          if (ts.isIdentifier(binding.name) && (binding.propertyName ?? binding.name).getText(source) === 'createRequire') {
+            createRequireNames.add(binding.name.text);
+          }
+        }
+      }
+    }
+    ts.forEachChild(node, bindingsOf);
+  };
+  bindingsOf(source);
   const refuse = (node: ts.Node, form: string): void => {
     const { line, character } = source.getLineAndCharacterOfPosition(node.getStart(source));
     unsupported.push(`${file}:${line + 1}:${character + 1} ${form}: ${node.getText(source)}`);
@@ -80,11 +138,11 @@ function importsOf(file: string, text: string): { specifiers: string[]; unsuppor
 
 /** Every module and unresolved/unsupported edge, with an originating path for
  * island entries. Walking the consent root deliberately reaches the island. */
-function reach(entry: string): { reachable: string[]; intoIsland: string[]; unresolved: string[]; unsupported: string[] } {
+function reach(entry: string, readImports = (file: string) => importsOf(file, readModule(file))): { reachable: string[]; intoIsland: string[]; unresolved: string[]; unsupported: string[] } {
   const island = new Set(ISLAND);
   const unsupported: string[] = [];
   const { reachable, edges, unresolved } = reachBy(entry, (file) => {
-    const imports = importsOf(file, readModule(file));
+    const imports = readImports(file);
     for (const form of imports.unsupported) unsupported.push(form);
     return imports.specifiers;
   });
@@ -102,9 +160,34 @@ function reach(entry: string): { reachable: string[]; intoIsland: string[]; unre
 }
 
 describe('the live Node entries and the parked provider island', () => {
-  it('lists twenty island modules, each a file in the tree', () => {
-    expect(new Set(ISLAND).size).toBe(20);
+  it('lists twenty-four island modules, each a file in the tree', () => {
+    expect(new Set(ISLAND).size).toBe(24);
+    expect(ISLAND).toHaveLength(24);
     expect(ISLAND.filter(path => !isFile(path))).toEqual([]);
+  });
+
+  it('admits transitive island ingress only from the island and exact parked remainder', () => {
+    const population = productionModules();
+    const allowed = new Set([...ISLAND, ...PARKED_REMAINDER]);
+    const cache = new Map<string, ReturnType<typeof importsOf>>();
+    const readImports = (file: string): ReturnType<typeof importsOf> => {
+      let imports = cache.get(file);
+      if (imports === undefined) { imports = importsOf(file, readModule(file)); cache.set(file, imports); }
+      return imports;
+    };
+    const violations: string[] = [];
+    const unresolved: string[] = [];
+    const unsupported: string[] = [];
+    for (const module of population) {
+      const result = reach(module, readImports);
+      for (const edge of result.unresolved) unresolved.push(edge);
+      for (const form of result.unsupported) unsupported.push(form);
+      if (!allowed.has(module) && result.intoIsland.length > 0) violations.push(result.intoIsland[0]!);
+    }
+    expect(population.length, 'production-source enumeration must not be empty').toBeGreaterThan(0);
+    expect([...new Set(unsupported)], `${population.length} production sources: unsupported loaders`).toEqual([]);
+    expect([...new Set(unresolved)], `${population.length} production sources: unresolved workspace edges`).toEqual([]);
+    expect(violations, `${population.length} production sources: unlisted transitive ingress\n${violations.join('\n')}`).toEqual([]);
   });
 
   it('resolves every workspace import both entries reach, dynamic ones included', () => {
@@ -156,7 +239,19 @@ describe('the live Node entries and the parked provider island', () => {
       'createRequire(import.meta.url)', '(createRequire)(import.meta.url)',
       "import { createRequire as load } from 'node:module'; load(import.meta.url)",
       "import * as mod from 'node:module'; mod.createRequire(import.meta.url)",
-    ]) expect(importsOf('fixture.ts', text).unsupported, text).toHaveLength(1);
+      ...['node:module', 'module'].map(module => `const { createRequire: auditMake } = await import('${module}'); const auditLoad = auditMake(import.meta.url); auditLoad('@syzygy/polaris-generation-core');`),
+    ]) {
+      const { unsupported } = importsOf('fixture.ts', text);
+      expect(unsupported, text).toHaveLength(1);
+      expect(unsupported[0], text).toContain('fixture.ts:');
+      expect(unsupported[0], text).toContain('require/createRequire call');
+    }
+    expect(importsOf('fixture.ts', [
+      '// createRequire and require are words here, not loaders.',
+      "const prose = 'createRequire require auditMake';",
+      "const { createInterface: ordinary } = await import('node:readline/promises'); ordinary();",
+      "const { createRequire: ordinaryName } = await import('./ordinary.js'); ordinaryName();",
+    ].join('\n'))).toEqual({ specifiers: ['node:readline/promises', './ordinary.js'], unsupported: [] });
   });
 
   it('follows a no-substitution template and the existing static, type and literal dynamic forms', () => {
