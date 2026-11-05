@@ -1974,6 +1974,13 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             (root / "review-RAW.md").write_text("Comparison operand: \u2026-2026-01-01.json\n")
         source_negative("abbreviated-raw-comparison-cannot-enter-family", abbreviated_raw_dependency,
                         "undischarged-R1-family-member")
+        def abbreviated_false_glob_discharge(doc):
+            abbreviated_raw_dependency(doc); citer = "review-RAW.md"
+            doc["discharges"].append({"citer": citer, "sha256": digest((root / citer).read_bytes()),
+                                     "form": "conservative-glob", "token": "-2026-01-01.json",
+                                     "reason": "A synthetic glob claim cannot clear an abbreviated comparison operand."})
+        source_negative("glob-discharge-cannot-clear-abbreviated-comparison", abbreviated_false_glob_discharge,
+                        "undischarged-R1-family-member")
         def false_literal_glob_discharge(doc):
             raw_dependency(doc); citer = "review-RAW.md"
             for token in (paths[0], PurePosixPath(paths[0]).name):
