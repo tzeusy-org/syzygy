@@ -615,7 +615,7 @@ def bytes_at(root, path, after):
         found = package_patches(root, later["proposed"]).get(path, [])
         if body is not None and len(found) == 1:
             reference = later.get("package") == poc_reference().KEY
-            if reference and not poc_reference().is_signed(root):
+            if reference and not reference_signed(root):
                 return None
             body = reverse_apply(root, found[0], path, body, zero_context=reference)
     return body
@@ -705,7 +705,7 @@ def check_outcomes(root, report):
                 expected = [p.as_posix() for p in poc_reference().SUBJECTS]
                 if [p for _sha, p in ROW.findall(lmanifest.decode())] != expected:
                     r2.append(f"{ltag}: manifest is not exactly the six P115 subjects")
-                if not poc_reference().is_signed(root):
+                if not reference_signed(root):
                     r1.append(f"{ltag}: incomplete or invalid exact P115 sign-off transaction")
                     continue
             if later.get("kind", "digest") == "versioned":
@@ -1334,7 +1334,7 @@ def check_census(root, report):
     pop, findings = census(root)
     examined = 0
     p_req, p_scen, p_ids = polaris_expected(root, findings)
-    signed_reference = poc_reference().is_signed(root)
+    signed_reference = reference_signed(root)
     totals = dict(EXPECTED_TOTALS, POLARIS=(p_req, p_scen))
     if signed_reference:
         totals["POC"] = (26, 34)
@@ -1668,14 +1668,35 @@ def check_unions(root, report):
                 "a change to a signed union needs a signed successor")
 
 
+# Within one run() the tree is only read, so whether its P115 transaction is
+# signed cannot change between the predicates that ask; it was asked twelve
+# times per run (~4,200 git calls, syzygy-b6dp). The memo lives for one run()
+# call only: a later run, or a caller between runs, asks afresh.
+_SIGNED_MEMO = None
+
+
+def reference_signed(root):
+    if _SIGNED_MEMO is None:
+        return poc_reference().is_signed(root)
+    key = str(Path(root).resolve())
+    if key not in _SIGNED_MEMO:
+        _SIGNED_MEMO[key] = poc_reference().is_signed(root)
+    return _SIGNED_MEMO[key]
+
+
 def run(root):
+    global _SIGNED_MEMO
     report = Report()
-    check_outcomes(root, report)
-    pop = check_census(root, report)
-    check_generated(root, pop, report)
-    check_routes(root, pop, report)
-    check_pins(root, report)
-    check_unions(root, report)
+    _SIGNED_MEMO = {}
+    try:
+        check_outcomes(root, report)
+        pop = check_census(root, report)
+        check_generated(root, pop, report)
+        check_routes(root, pop, report)
+        check_pins(root, report)
+        check_unions(root, report)
+    finally:
+        _SIGNED_MEMO = None
     return report
 
 
