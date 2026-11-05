@@ -42,3 +42,32 @@ still resolve.
   `review-packet.ts` the packet builders, `review-verdict.ts` `validateVerdict`.
 - `inventory.ts`: the inventory brief, check and record; `run-dir.ts` holds the run-opening code (`openRun`, `logStep`, `readRecord`,
   `errno`) and the sessions root paths.
+
+## Waiting-session authorization
+
+[Observed, implementation of the 2026-11-05 owner direction]
+`session-prompt <run> all`, delivery to an existing waiting review session,
+and both forms of `await` check the local-agent sign-off at operation entry.
+The date-only record must match the installed reviewed subject and contain
+one recorder-position `Date: YYYY-MM-DD`, a real calendar day no later than
+the UTC day of that operation's captured finite representable clock value.
+The same UTC day is eligible; this cannot establish the exact signing time.
+The direction is
+[OWNER-DIRECTION-POLARIS-WAIT-MODE-UTC-DAY-2026-11-05](../../.syzygy/governance/decisions/OWNER-DIRECTION-POLARIS-WAIT-MODE-UTC-DAY-2026-11-05.md).
+
+[Observed] A temporal refusal retains `outcome: refused`, `stage: unsigned`
+and exit 1, with a precise future, missing/invalid Date or invalid evaluation
+reason. It happens before prompts, packets, submission files, step logs or
+stdin consumption. Any matching in-force eligible candidate opens the gate;
+otherwise matching candidates' reasons take precedence in this order:
+future, invalid Date, missing Date; only then drifted subject or absence.
+The existing manual v1.1 hand-off remains available.
+
+[Observed] Every invocation re-reads the trusted checkout. Separate record,
+aggregate, review and specification reads are not an atomic snapshot; an
+already-running await slice retains its entry authorization. There is no
+forgery defense or continuous revocation watcher. Genuine revocation follows
+the explicit owner-act/direction route (RFC3-16, Scope A direction 6);
+arbitrary appended `Withdrawn:` prose is no new record dialect. The registry
+reader independently requires its exact template and same-day whole-second
+`Recorded at (UTC)` instant; this local-agent rule supplies no fallback there.

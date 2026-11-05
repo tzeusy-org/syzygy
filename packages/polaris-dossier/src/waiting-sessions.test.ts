@@ -3,13 +3,19 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { Readable } from 'node:stream';
 import { pathToFileURL } from 'node:url';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { runDossierCli, type CliPorts } from './cli.js';
 import { FIXTURE_SCREEN, FIXTURE_URL, LATER, NOW, REAL_ROOT, designVerdict, draft, fidelityVerdict, fixtureSources, inventory, makeClone, type Doc } from './full-run.testkit.js';
 import type { GateSources, ProviderStatementRecord } from './gate-sources.js';
 import type { DossierRenderer } from './render.js';
 import { deliverToWaiting, readStdinBytes, resolveSessionDirectory, sessionDirectoryRefusal, signoffRecordHolds, waitModeRefusal, waitModeSignedIn, waitModeStatus, waitingReviewSession } from './waiting-sessions.js';
 import { tempDir } from '@syzygy/test-kit';
+
+// Only directory enumeration is controllable, to verify candidate eligibility in both orders at the filesystem boundary.
+vi.mock('node:fs', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:fs')>();
+  return { ...actual, readdirSync: vi.fn(actual.readdirSync) };
+});
 
 // Pre-started waiting sessions (owner direction POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08; candidate v1.2 of the local-agent mode,
 // REQ-polaris-generation-035 as amended there). Every step runs through the CLI as a session would. Expected prompts, permission rules,
@@ -41,9 +47,9 @@ const statement = (agentTool: string, withdrawn = false): ProviderStatementRecor
 
 interface Harness {
   readonly run: string; readonly commit: string; readonly clone: string; readonly sessions: string;
-  readonly cli: (argv: readonly string[]) => Promise<{ readonly exit: number; readonly doc: Doc; readonly stderr: string }>;
+  readonly cli: (argv: readonly string[], json?: boolean) => Promise<{ readonly exit: number; readonly doc: Doc; readonly stderr: string; readonly stdout: string }>;
   readonly clock: { now: number };
-  readonly world: { signed: boolean; statements: ProviderStatementRecord[]; stdin: string | Uint8Array; onSleep?: () => void; /** A records root: read the gate from it, not from `signed`. */ realGate?: string };
+  readonly world: { signed: boolean; statements: ProviderStatementRecord[]; stdin: string | Uint8Array; stdinReads: number; nowReads: number; onSleep?: () => void; /** A records root: read the gate from it, not from `signed`. */ realGate?: string };
 }
 
 /** A briefed fixture run, through the CLI. `governed` makes the subject governed, relying on the statements in `world`. */
@@ -53,7 +59,7 @@ async function harness(options: { readonly governed?: boolean; readonly stateDir
   const stateRoot = path.join(dir, options.stateDirName ?? 'state');
   fs.mkdirSync(stateRoot, { recursive: true });
   const clock = { now: NOW };
-  const world: Harness['world'] = { signed: true, statements: options.governed ? [statement('claude-code'), statement('codex')] : [], stdin: '' };
+  const world: Harness['world'] = { signed: true, statements: options.governed ? [statement('claude-code'), statement('codex')] : [], stdin: '', stdinReads: 0, nowReads: 0 };
   const fixture = fixtureSources(commit);
   // With `world.realGate` set, the records root is that directory and the CLI carries no injected gate: the gate reads its records.
   const base: GateSources = Object.defineProperty({ ...fixture }, 'recordsRoot', { get: () => world.realGate ?? fixture.recordsRoot, enumerable: true });
@@ -63,17 +69,18 @@ async function harness(options: { readonly governed?: boolean; readonly stateDir
     providerStatements: { statementsFor: async () => world.statements },
   } : base;
   const ports: CliPorts = {
-    env: {}, now: () => clock.now, sources, loadScreen: async () => FIXTURE_SCREEN, renderer,
+    env: {}, now: () => { world.nowReads++; return clock.now; }, sources, loadScreen: async () => FIXTURE_SCREEN, renderer,
     get waitModeSigned() { return world.realGate === undefined ? () => world.signed : undefined; }, sleep: async (ms) => { clock.now += ms; world.onSleep?.(); },
     readStdin: async (maxBytes) => {
+      world.stdinReads++;
       const bytes = typeof world.stdin === 'string' ? new Uint8Array(Buffer.from(world.stdin, 'utf8')) : world.stdin;
       return bytes.length > maxBytes ? null : bytes;
     },
   };
-  const cli = async (argv: readonly string[]) => {
+  const cli = async (argv: readonly string[], json = true) => {
     let stdout = '', stderr = '';
-    const exit = await runDossierCli([...argv, '--json'], { stdout: (t) => { stdout += t; }, stderr: (t) => { stderr += t; } }, ports);
-    return { exit, doc: (stdout === '' ? {} : JSON.parse(stdout)) as Doc, stderr };
+    const exit = await runDossierCli([...argv, ...(json ? ['--json'] : [])], { stdout: (t) => { stdout += t; }, stderr: (t) => { stderr += t; } }, ports);
+    return { exit, doc: (!json || stdout === '' ? {} : JSON.parse(stdout)) as Doc, stderr, stdout };
   };
   const configFile = path.join(stateRoot, 'run-config.json');
   fs.writeFileSync(configFile, JSON.stringify({
@@ -116,6 +123,16 @@ async function reviewRound(h: Harness, round: number, sessionId = 'reviewer-1'):
   return { delivered: delivered.doc, awaited: awaited.doc, submitted: submitted.doc };
 }
 
+const treeOf = (root: string): unknown => fs.existsSync(root) ? fs.readdirSync(root, { recursive: true }).map(String).sort().map((name) => {
+  const file = path.join(root, name), stat = fs.lstatSync(file);
+  return [name, stat.isDirectory() ? 'directory' : sha256(fs.readFileSync(file)), stat.mtimeMs, stat.mode];
+}) : [];
+
+const FUTURE_DATE_REASON = 'wait mode cannot be authorized by the matching local-agent sign-off because its Date is later than this operation\'s UTC day; it is not in force yet for wait mode; hand each session over with session-prompt as signed in v1.1';
+const MISSING_DATE_REASON = 'wait mode cannot be authorized by the local-agent sign-off because its recorder-position Date is missing; hand each session over with session-prompt as signed in v1.1';
+const INVALID_DATE_REASON = 'wait mode cannot be authorized by the local-agent sign-off because its Date is duplicate, misplaced, malformed or not a real calendar day; hand each session over with session-prompt as signed in v1.1';
+const INVALID_EVALUATION_REASON = 'wait mode cannot be evaluated because this operation has no finite, representable evaluation instant; hand each session over with session-prompt as signed in v1.1';
+
 describe('the v1.2 gate', () => {
   it('refuses session-prompt all, await and a delivery while v1.2 is not signed off (mutant: drop the signed check)', async () => {
     const h = await harness();
@@ -130,6 +147,69 @@ describe('the v1.2 gate', () => {
     const delivery = await h.cli(['session-prompt', h.run, 'review', '--kind', 'fidelity']);
     expect(delivery.doc).toMatchObject({ outcome: 'refused', stage: 'unsigned' });
     expect(fs.existsSync(path.join(h.sessions, 'fidelity-2'))).toBe(false);
+
+    // The real CLI default, with no signed injection, must refuse before every affected flow's effects, including stdin consumption.
+    const root = tempDir('dossier-signoff-');
+    const decisions = decisionsIn(root);
+    signoff(decisions, '1.3');
+    h.world.realGate = root;
+    // Same-date controls exercise the real default before any temporal mutation.
+    const startControl = await harness();
+    startControl.world.realGate = root;
+    expect((await startControl.cli(['session-prompt', startControl.run, 'all'])).exit).toBe(0);
+    expect((await h.cli(['session-prompt', h.run, 'review', '--kind', 'fidelity'])).exit).toBe(0);
+    expect((await h.cli(['await', `${h.sessions}/session-1/`])).exit).toBe(0);
+    h.world.stdin = JSON.stringify(inventory(h.commit));
+    expect((await h.cli(['await', `${h.sessions}/session-1/`, '--submit', 'inventory.json', '--stdin'])).exit).toBe(0);
+    const record = path.join(decisions, 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md');
+    const current = fs.readFileSync(record, 'utf8');
+    const flows = [
+      ['session-prompt', h.run, 'review', '--kind', 'fidelity'],
+      ['await', `${h.sessions}/session-1/`],
+      ['await', `${h.sessions}/session-1/`, '--submit', 'inventory.json', '--stdin'],
+      ['session-prompt', h.run, 'all'],
+    ];
+    for (const [date, expected, evaluatedAt] of [
+      ['Date: 2099-01-01', FUTURE_DATE_REASON, LATER], ['', MISSING_DATE_REASON, LATER],
+      ['Date: 2026-02-30', INVALID_DATE_REASON, LATER],
+      ['Date: 2026-10-07', INVALID_EVALUATION_REASON, NaN],
+      ['Date: 2026-10-07', INVALID_EVALUATION_REASON, undefined as unknown as number],
+      ['Date: 2026-10-07', INVALID_EVALUATION_REASON, null as unknown as number],
+    ] as const) {
+      fs.writeFileSync(record, current.replace('Date: 2026-10-07', date));
+      h.clock.now = evaluatedAt;
+      const before = treeOf(path.dirname(h.run)), authority = treeOf(root), reads = h.world.stdinReads;
+      for (const argv of flows) {
+        const nowReads = h.world.nowReads;
+        const result = await h.cli(argv);
+        expect(h.world.nowReads).toBe(nowReads + 1);
+        expect(result.exit, argv.join(' ')).toBe(1);
+        expect(result.doc).toMatchObject({ outcome: 'refused', stage: 'unsigned', reason: expected });
+        expect(result.stderr.split('\n')).toContain(`reason: ${expected}`);
+        const human = await h.cli(argv, false);
+        expect(h.world.nowReads).toBe(nowReads + 2);
+        expect(human.exit).toBe(1);
+        expect(human.stdout).toBe('');
+        expect(human.stderr).toBe(result.stderr);
+        expect(treeOf(path.dirname(h.run))).toEqual(before);
+        expect(treeOf(root)).toEqual(authority);
+        expect(h.world.stdinReads).toBe(reads);
+      }
+    }
+    // A new invocation rereads replacements, with no positive-cache carryover.
+    h.clock.now = LATER;
+    fs.writeFileSync(record, current);
+    expect((await h.cli(['await', `${h.sessions}/session-1/`])).exit).toBe(0);
+    fs.writeFileSync(record, current.replace('Date: 2026-10-07', 'Date: 2099-01-01'));
+    expect((await h.cli(['await', `${h.sessions}/session-1/`])).doc['reason']).toBe(FUTURE_DATE_REASON);
+    fs.writeFileSync(record, current);
+    expect((await h.cli(['await', `${h.sessions}/session-1/`])).exit).toBe(0);
+
+    // Entry-check residual: replacing the authority while an await slice sleeps does not retroactively cancel that slice.
+    h.world.onSleep = () => fs.writeFileSync(record, current.replace('Date: 2026-10-07', 'Date: 2099-01-01'));
+    const waiting = await h.cli(['await', `${h.sessions}/design-1/`, '--wait-minutes', '1']);
+    expect(waiting.doc['outcome']).toBe('waiting');
+    expect((await h.cli(['await', `${h.sessions}/design-1/`])).doc['reason']).toBe(FUTURE_DATE_REASON);
   });
 
   // A record as record_versioned_signoff.py renders it, and its marked block in the aggregate record; with the tree it leaves: the
@@ -145,7 +225,7 @@ describe('the v1.2 gate', () => {
     fs.mkdirSync(path.join(root, 'docs', 'reviews'), { recursive: true });
     fs.writeFileSync(path.join(root, 'docs', 'reviews', `FIXTURE-v${version}-RAW.md`), reviewHead(createHash('sha256').update(spec).digest('hex')));
     fs.writeFileSync(path.join(decisions, `POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v${version}.md`), [
-      `# Polaris dossier local-agent mode — version-tagged sign-off v${version}`, '', 'Date: 2026-10-09', '', 'Owner: Tzeusy', '',
+      `# Polaris dossier local-agent mode — version-tagged sign-off v${version}`, '', 'Date: 2026-10-07', '', 'Owner: Tzeusy', '',
       'Package: polaris-dossier-local-agent-mode', '', `Version: ${version}`, '', `Tag: polaris-dossier-local-agent-mode-v${version}`, '',
       'Kind: specification delta', '', 'Owner selection: fixture', '', `Review: docs/reviews/FIXTURE-v${version}-RAW.md`, '', `Reviewed commit: ${'e'.repeat(40)}`, '',
       `Review verdict: ${verdict}`, '',
@@ -158,6 +238,9 @@ describe('the v1.2 gate', () => {
   const decisionsIn = (root: string): string => {
     const decisions = path.join(root, '.syzygy', 'governance', 'decisions');
     fs.mkdirSync(decisions, { recursive: true });
+    const doctrine = path.join(root, '.syzygy/governance/doctrine');
+    fs.mkdirSync(doctrine, { recursive: true });
+    fs.copyFileSync(path.join(REAL_ROOT, '.syzygy/governance/doctrine/security.md'), path.join(doctrine, 'security.md'));
     fs.writeFileSync(path.join(decisions, 'ACCEPTANCE-ACT-RECORD.md'), '# Acceptance act record\n');
     return decisions;
   };
@@ -177,6 +260,65 @@ describe('the v1.2 gate', () => {
     expect(waitModeSignedIn(root)).toBe(true);
     // The real checkout: v1.2 is not signed at the commit these tests run on.
     expect(waitModeSignedIn(REAL_ROOT)).toBe(fs.existsSync(path.join(REAL_ROOT, '.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md')));
+    const file = path.join(decisions, 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md');
+    const original = fs.readFileSync(file, 'utf8');
+    const at = Date.parse('2026-10-07T00:00:00Z');
+    const previousTZ = process.env['TZ'];
+    try {
+      process.env['TZ'] = 'Pacific/Honolulu';
+      for (const [field, instant, expected] of [
+        ['Date: 2026-10-07', at - 1, 'future'], ['Date: 2026-10-07', at, 'signed'],
+        ['Date: 2026-10-07', at + 1, 'signed'], ['Date: 2026-10-06', at, 'signed'],
+        ['Date: 2099-01-01', at, 'future'], ['Date: 2024-02-29', at, 'signed'],
+        ['Date: 2025-02-29', at, 'invalid-date'], ['Date: 2026-02-30', at, 'invalid-date'],
+        ['Date: 2026-13-01', at, 'invalid-date'], ['Date: 2026-00-01', at, 'invalid-date'],
+        ['Date: 2026-10-00', at, 'invalid-date'], ['Date: 2026-1-07', at, 'invalid-date'],
+        ['Date: 2026-10-7', at, 'invalid-date'], ['Date: 2026-10-07T00:00:00Z', at, 'invalid-date'],
+        ['Date: 2026-10-07T00:00:00.000Z', at, 'invalid-date'], ['Date: 2026-10-07+08:00', at, 'invalid-date'],
+        ['', at, 'missing-date'], ['Date: 2026-10-07\nDate: 2026-10-07', at, 'invalid-date'],
+        ['Date: 2026-10-07', NaN, 'invalid-evaluation'], ['Date: 2026-10-07', Infinity, 'invalid-evaluation'],
+        ['Date: 2026-10-07', -Infinity, 'invalid-evaluation'], ['Date: 2026-10-07', 8.64e15 + 1, 'invalid-evaluation'],
+      ] as const) {
+        fs.writeFileSync(file, original.replace('Date: 2026-10-07', field));
+        expect(waitModeStatus(root, instant), `${field} at ${instant}`).toBe(expected);
+        expect(waitModeSignedIn(root, instant)).toBe(expected === 'signed');
+      }
+    } finally { if (previousTZ === undefined) delete process.env['TZ']; else process.env['TZ'] = previousTZ; }
+    fs.writeFileSync(file, original.replace('Date: 2026-10-07\n', '').replace('Owner: Tzeusy', 'Owner: Tzeusy\nDate: 2026-10-07'));
+    expect(waitModeStatus(root, at)).toBe('invalid-date');
+    fs.writeFileSync(file, `${original}\nDate: 2026-10-07\n`);
+    expect(waitModeStatus(root, at)).toBe('invalid-date');
+    fs.writeFileSync(file, original);
+    // Arbitrary appended prose neither revokes nor supplies a new act dialect.
+    fs.appendFileSync(file, '\nWithdrawn: arbitrary fixture prose\n');
+    expect(waitModeStatus(root, at)).toBe('signed');
+    for (const versions of [['1.2', '1.3', '2.0'], ['2.0', '1.3', '1.2']]) {
+      const mixed = tempDir('dossier-signoff-'), d = decisionsIn(mixed);
+      for (const v of versions) signoff(d, v);
+      // Make both record candidates' applied subjects match the installed fixture, independently of directory ordering.
+      const spec = 'Exact behavioral delta, version 1.2.\nExact behavioral delta, version 1.3.\nExact behavioral delta, version 2.0.\n';
+      fs.writeFileSync(path.join(mixed, SPEC_REL), spec);
+      for (const v of versions) fs.writeFileSync(path.join(mixed, `docs/reviews/FIXTURE-v${v}-RAW.md`), reviewHead(sha256(spec)));
+      const f = path.join(d, 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md');
+      fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace('Date: 2026-10-07', 'Date: 2099-01-01'));
+      expect(waitModeStatus(mixed, at)).toBe('signed');
+      const reversed = fs.readdirSync(d).reverse();
+      vi.mocked(fs.readdirSync).mockReturnValueOnce(reversed as never);
+      expect(waitModeStatus(mixed, at)).toBe('signed');
+      for (const v of ['1.3', '2.0']) fs.rmSync(path.join(d, `POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v${v}.md`));
+      expect(waitModeStatus(mixed, at)).toBe('future');
+      fs.appendFileSync(path.join(mixed, SPEC_REL), 'drifted');
+      expect(waitModeStatus(mixed, at)).toBe('drifted');
+    }
+    // An older signed subject cannot rescue changed installed bytes; candidate/placeholder filenames cannot authorize anything.
+    signoff(decisions, '1.3');
+    fs.rmSync(path.join(decisions, 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md'));
+    expect(waitModeStatus(root, at)).toBe('drifted');
+    for (const name of ['POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4-candidate.md', 'OWNER-SELECTION-v1.4.md']) {
+      fs.writeFileSync(path.join(decisions, name), original);
+      expect(waitModeStatus(root, at)).toBe('drifted');
+    }
+
   });
 
   it('opens on no file that only carries the name (mutant: drop the head check)', () => {
@@ -309,6 +451,31 @@ describe('the v1.2 gate', () => {
     // A closed injected gate cannot say why, so it keeps the unsigned reason.
     expect(waitModeRefusal(root, () => false)).toContain('which the owner has not signed off');
     expect(waitModeRefusal(root, () => true)).toBeNull();
+    signoff(decisions, '1.3');
+    const file = path.join(decisions, 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md');
+    const original = fs.readFileSync(file, 'utf8'), at = Date.parse('2026-10-07T00:00:00Z');
+    for (const [date, reason] of [['Date: 2099-01-01', FUTURE_DATE_REASON], ['', MISSING_DATE_REASON], ['Date: invalid', INVALID_DATE_REASON]]) {
+      fs.writeFileSync(file, original.replace('Date: 2026-10-07', date!));
+      const before = treeOf(root);
+      expect(waitModeRefusal(root, undefined, at)).toBe(reason);
+      expect(waitModeRefusal(root, undefined, at)).toBe(reason);
+      expect(treeOf(root)).toEqual(before);
+    }
+    fs.writeFileSync(file, original);
+    expect(waitModeRefusal(root, undefined, NaN)).toBe(INVALID_EVALUATION_REASON);
+    expect(waitModeRefusal(root, undefined, at - 1)).toBe(FUTURE_DATE_REASON);
+    expect(waitModeRefusal(root, undefined, at)).toBeNull();
+    for (const target of [file, path.join(decisions, 'ACCEPTANCE-ACT-RECORD.md'), path.join(root, SPEC_REL), path.join(root, 'docs/reviews/FIXTURE-v1.3-RAW.md')]) {
+      const bytes = fs.readFileSync(target);
+      fs.rmSync(target);
+      expect(waitModeRefusal(root, undefined, at)).not.toBeNull();
+      fs.mkdirSync(target); // I/O refusal, independently of access-mode behavior under privileged test runners.
+      expect(waitModeRefusal(root, undefined, at)).not.toBeNull();
+      fs.rmdirSync(target);
+      fs.writeFileSync(target, bytes);
+      expect(waitModeRefusal(root, undefined, at)).toBeNull();
+    }
+
   });
 
   it.each<[string[], boolean, string]>([
