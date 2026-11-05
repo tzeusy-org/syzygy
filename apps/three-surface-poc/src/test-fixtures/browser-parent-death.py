@@ -196,7 +196,8 @@ try:
         with patch('signal.pidfd_send_signal', side_effect=AssertionError('unreadable owned process was signalled')):
             try:
                 operation()
-            except PermissionError:
+            except PermissionError as error:
+                assert error.filename == f'/proc/{unreadable.pid}/ns/pid', 'namespace refusal came from outside the owned control'
                 owned_unreadable_refusals.append(label)
             else:
                 raise AssertionError(f'{label} silently accepted an unreadable owned identity')
