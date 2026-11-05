@@ -140,6 +140,10 @@ describe.skipIf(executable === undefined || process.platform !== 'linux')('dispo
       closeAttempted = true;
       await expect(browser.close()).resolves.toBeUndefined();
       expect(frozen.filter(alive)).toEqual([]);
+      // The guardian has exited and the profile is already gone. A second
+      // cleanup must retain that completed result rather than signal a new
+      // process or wait for an acknowledgement from a dead parent.
+      await expect(browser.close()).resolves.toBeUndefined();
     } finally {
       for (const pid of frozen.filter(alive)) process.kill(pid, 'SIGKILL');
       // A failure before close() would otherwise leak this browser.
