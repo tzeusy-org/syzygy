@@ -41,7 +41,8 @@ describe('disposable browser shutdown', () => {
     events.length = 0;
     signalCode = null;
     await closeDisposableBrowser(connection, child, '/tmp/private-browser-profile', privateGroup, {
-      removeProfile: () => { events.push('profile-removed'); }, closeGraceMs: 5, groupProcesses: () => [],
+      removeProfile: () => { events.push('profile-removed'); }, closeGraceMs: 5,
+      groupProcesses: () => { throw new Error('the exited guardian group could have been reused'); },
       stopChild: () => {
         events.push('guardian-stop-requested');
         queueMicrotask(() => { signalCode = 'SIGTERM'; onExit?.(); });

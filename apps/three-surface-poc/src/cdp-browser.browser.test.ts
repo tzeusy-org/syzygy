@@ -14,7 +14,7 @@
 // on every such run. The helper reads that directory from the profile's link while Chrome
 // runs and removes it with the profile.
 import { spawn } from 'node:child_process';
-import { existsSync, mkdtempSync, readdirSync, readFileSync, readlinkSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, readlinkSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -130,24 +130,33 @@ describe.skipIf(executable === undefined || process.platform !== 'linux')('dispo
     const browser = await launchBrowser(executable as string);
     let frozen: number[] = [];
     let closeAttempted = false;
+    let replacementProfile: string | undefined;
     try {
       const page = await browser.newPage();
       await page.navigate('data:text/html,<p>teardown</p>');
       frozen = ownNetworkHelpers();
       // One helper of this launch, so the case is not vacuous.
       expect(frozen).toHaveLength(1);
+      const profile = ownProfile();
       for (const pid of frozen) process.kill(pid, 'SIGSTOP');
       closeAttempted = true;
       await expect(browser.close()).resolves.toBeUndefined();
       expect(frozen.filter(alive)).toEqual([]);
+      expect(existsSync(profile)).toBe(false);
+      mkdirSync(profile);
+      replacementProfile = profile;
+      const replacement = join(profile, 'replacement-owner');
+      writeFileSync(replacement, 'a later owner at the relinquished path');
       // The guardian has exited and the profile is already gone. A second
       // cleanup must retain that completed result rather than signal a new
       // process or wait for an acknowledgement from a dead parent.
       await expect(browser.close()).resolves.toBeUndefined();
+      expect(existsSync(replacement)).toBe(true);
     } finally {
       for (const pid of frozen.filter(alive)) process.kill(pid, 'SIGKILL');
       // A failure before close() would otherwise leak this browser.
       if (!closeAttempted) await browser.close().catch(() => undefined);
+      if (replacementProfile !== undefined) rmSync(replacementProfile, { recursive: true, force: true });
     }
   }, 60_000); // a real Chrome launch and forced teardown: worst 15.8 s over 5 alone runs at load1 91-138, the worst run failing not by timeout (docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json)
 

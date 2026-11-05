@@ -487,6 +487,7 @@ interface BrowserCleanupOptions {
   readonly stopMembers?: (group: PrivateBrowserGroup, live: readonly number[]) => void;
   /** A Vitest guardian must survive until its adopted descendants are reaped. */
   readonly stopChild?: () => void;
+  /** Verifies that the guardian reaped its complete private descendant family. */
   readonly verifyChildCleanup?: () => void | Promise<void>;
   readonly now?: () => number;
 }
@@ -527,7 +528,13 @@ export async function closeDisposableBrowser(
     else options.stopChild();
   }
   await exited;
-  await options.verifyChildCleanup?.();
+  if (options.verifyChildCleanup !== undefined) {
+    await options.verifyChildCleanup();
+    // The guardian owns and reaps the whole family, including escaped
+    // sessions. Its now-released group id is no longer signal authority.
+    (options.removeProfile ?? removeBrowserProfile)(profile);
+    return;
+  }
   const now = options.now ?? Date.now;
   const drainDeadline = now() + (options.profileDrainMs ?? BROWSER_PROFILE_DRAIN_MS);
   const groupProcesses = options.groupProcesses ?? livePrivateBrowserMembers;
@@ -622,6 +629,7 @@ export async function launchBrowser(executable: string): Promise<Browser> {
   let versionInfo: { readonly product: string };
   try { versionInfo = await connection.send<{ readonly product: string }>('Browser.getVersion'); }
   catch (error) { await closeDisposableBrowser(connection, child, profile, group, cleanup); throw error; }
+  let closing: Promise<void> | undefined;
   return {
     executable,
     version: versionInfo.product,
@@ -637,8 +645,12 @@ export async function launchBrowser(executable: string): Promise<Browser> {
       await connection.send('Emulation.setFocusEmulationEnabled', { enabled: true }, sessionId);
       return new CdpPage(connection, sessionId, targetId);
     },
-    async close(): Promise<void> {
-      await closeDisposableBrowser(connection, child, profile, group, cleanup);
+    close(): Promise<void> {
+      if (!guarded) return closeDisposableBrowser(connection, child, profile, group, cleanup);
+      // The profile and process identities have been relinquished after a
+      // completed close. Repeating it must not adopt a replacement at either
+      // identity, nor turn a failed cleanup into an implicit retry.
+      return closing ??= closeDisposableBrowser(connection, child, profile, group, cleanup);
     },
   };
 }
