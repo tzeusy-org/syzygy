@@ -616,6 +616,27 @@
       "finished_at": "2026-11-05T05:49:12.261821+00:00",
       "failure_excerpt": "\u23af\u23af\u23af\u23af\u23af\u23af\u23af Failed Tests 1 \u23af\u23af\u23af\u23af\u23af\u23af\u23af\n\n FAIL  |integration| apps/three-surface-poc/src/polaris-authority-sweep.test.ts > Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface\nAssertionError: expected [ \u2026(2) ] to deeply equal []\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[32m- []\u001b[39m\n\u001b[31m+ [\u001b[39m\n\u001b[31m+   \"docs/evidence/syzygy-mea-10-8/review-note-verification-2026-11-05.json:301: \\\"source\\\": \\\"apps/three-surface-poc/src/polaris-generation/dossier-site.ts\\\",\",\u001b[39m\n\u001b[31m+   \"docs/evidence/syzygy-mea-10-8/review-note-verification-2026-11-05.json:441: \\\"source\\\": \\\"apps/three-surface-poc/src/polaris-generation/dossier-site.ts\\\",\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n \u276f apps/three-surface-poc/src/polaris-authority-sweep.test.ts:222:18\n    220|       });\n    221|     }\n    222|     expect(hits).toEqual([]);\n       |                  ^\n    223|   }, 25_000);\n    224| });\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[1/1]\u23af\n\n\n Test Files  1 failed | 88 passed (89)\n      Tests  1 failed | 2621 passed | 3 skipped (2625)\n   Start at  13:48:24\n   Duration  47.09s (transform 5.60s, setup 696ms, collect 29.67s, tests 206.58s, environment 18ms, prepare 6.87s)\n\n",
       "disposition": "Product guard correctly refused evidence metadata labelled source that names a Polaris rendering surface. Rename the mutation subject field to subject_path; this is a metadata correction, not a guard change, infrastructure attribution, or diagnostic-policy amendment. The failed predecessor remains in git and the owned raw capture."
+    },
+    {
+      "label": "c087-check-all",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/final-check-c087",
+      "command": [
+        "npm",
+        "run",
+        "check:all"
+      ],
+      "started_at": "2026-11-05T05:53:40.524087+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "c087bad801d44b918c21751acbc7b0a095c1fa26",
+      "tree": "f638c914e7b84205193a62ec4ceb8835441a2a0c",
+      "status": "",
+      "exit_code": 1,
+      "seconds": 603.707213068963,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-8-full-review-notes-20261105/c087-check-all.log",
+      "stdout_sha256": "cd1f96a3dde487ef720a2f830b4e5eebb1d09aaa38d3780cd997da639bef3495",
+      "finished_at": "2026-11-05T06:03:44.257162+00:00",
+      "failure_excerpt": "\n--- exit 1: python3 scripts/check_docs_review_campaign_partition.py --check # every docs/reviews/ file in exactly one d...\nERROR: campaign fragment has an unexpected or repeated heading: mea10-dossier-readability: ## Carried rich-elements notes follow-up\n\n--- exit 1: python3 scripts/check_docs_review_campaign_partition.py --selftest\nERROR: campaign fragment has an unexpected or repeated heading: mea10-dossier-readability: ## Carried rich-elements notes follow-up\nbattery: 118 ok, 2 failed, 120 commands\n",
+      "disposition": "The unchanged campaign parser requires its three existing headings, in order. The new follow-up heading violates that closed document format. Retain the bounded follow-up paragraphs inside the existing What was under review section and remove only the extra heading. Preserve the failed clean-clone result; this is a necessary document-format correction, not an infrastructure cause or a weakened guard."
     }
   ],
   "metadata_amendment": {
@@ -623,5 +644,10 @@
     "predecessor_supplement_sha256": "f5cee7c02e86d293a128e8b0d9e0fbddac8e928f3a53cb3de4b3cffbf789841f",
     "field_projection": "Raw mutation records use source to name the code being mutated. This supplement labels that code subject_path, so a renderer under test is identified as a subject, never asserted as authority. Raw subprocess output and executed driver bytes remain unchanged.",
     "scope": "Metadata only; runtime, test source and the authority guard are unchanged."
+  },
+  "campaign_format_amendment": {
+    "predecessor_commit": "c087bad801d44b918c21751acbc7b0a095c1fa26",
+    "predecessor_supplement_sha256": "521644b30198bae7559e1930afbbaa8ff40aad20c3a4838a186163d4da9839ff",
+    "scope": "Remove the extra campaign heading while retaining the same follow-up prose under an existing section. Runtime, tests and campaign guard remain unchanged."
   }
 }
