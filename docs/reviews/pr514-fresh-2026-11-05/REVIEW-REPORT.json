@@ -1,0 +1,140 @@
+{
+  "schema": "syzygy-independent-pr-review/1",
+  "issue": "syzygy-1nu9",
+  "originalIssue": "syzygy-bpyt.8.21",
+  "status": "blocked-awaiting-coordinator",
+  "verdict": "REVISE / HOLD",
+  "reviewedHead": "937a7e934c1d64b37d79a23db6f4bbe6f24bd164",
+  "basePin": "0b2bab8ee9d00e34b6270f699753653fd516ef87",
+  "riskTier": "high",
+  "classes": [
+    1,
+    4
+  ],
+  "classRationale": {
+    "1": "The reader recognizes digest-bound owner acts used to authorize provider/repository gate paths; its positive result changes in F1.",
+    "4": "SEC-2 consent recognition and availability."
+  },
+  "floors": {
+    "touched": [
+      2,
+      5,
+      6
+    ],
+    "assessment": {
+      "1": "No deterministic identity, legend, internal-link or secret treatment changed by this diff.",
+      "2": "Gate/equivalence claims must stay within recorded subject and corpus; AC4 persistence remains.",
+      "3": "No runtime inference authority changes; documentation claims remain qualified.",
+      "4": "No new governed-repository write path.",
+      "5": "F1 requires the existing owner ruling; no agent waiver.",
+      "6": "Consent recognition/availability directly touched; fail-closed semantics are not universally preserved.",
+      "7": "No identity or migration change."
+    }
+  },
+  "acceptanceCriteria": [
+    {
+      "criterion": 1,
+      "status": "satisfied by fresh evidence",
+      "evidence": [
+        "independent-probe.json",
+        "independent-probe-receipt.json"
+      ],
+      "population": "7 exported row templates times 3 crafted failing kinds = 21 reads; each record over 123 KB and label repeats quote-pipe-quote separator 20,000 times",
+      "result": "Every read refused; max wall 8.354606 ms, max CPU 8.471 ms; load1 4.98 to 5.06. Historical wall failures remain recorded; this fresh measurement meets the original wall bound and does not reinterpret it as CPU."
+    },
+    {
+      "criterion": 2,
+      "status": "satisfied",
+      "evidence": [
+        "targeted-tests.json",
+        "targeted-tests-receipt.json",
+        "quadratic-mutant-tests.json",
+        "quadratic-mutant-tests-receipt.json"
+      ],
+      "result": "43/43 tests across both changed files pass. The real exported-template test alone fails with Script execution timed out after 1000ms when the exact old recorder module is mounted at its source path in the private sandbox; 1 test total, 1 failed. No repository source edited. Existing per-predicate records M0-M10 also bind byte-identical production and tests."
+    },
+    {
+      "criterion": 3,
+      "status": "satisfied for the explicitly declared historical/current-PR corpus; no universal equivalence claim",
+      "evidence": [
+        "evidence-audit.json",
+        "evidence-hashes.json"
+      ],
+      "population": "184/184 tracked decisions files at 9a30237e and at reviewed H, plus 2 rendered subjects; 2,002 inputs and 17,504 answers, including altered prose and 258 slot inputs.",
+      "result": "Recomputed input counts and answer denominator agree with retained report; every input same and mismatch list empty. Separator, leading-blank and blank-slot controls present. M4 negative control reports 35 mismatches/30 inputs; M5 reports 21/18. Source code at recorded new f7668cf4 and H is byte-identical across packages/apps. Current main has 194 decisions files; those 10 additional files are outside this historical corpus, and current-main integration is not claimed."
+    },
+    {
+      "criterion": 4,
+      "status": "fresh independent raw retained locally; owner notice for this PR not established",
+      "evidence": [
+        "R-PR514-FRESH-20261105-RAW.md",
+        "comments-syzygy-bpyt.10.json",
+        "cycle-report-bead.json"
+      ],
+      "result": "This fresh default-model raw is retained unchanged in OWN. The historical round-3 verdict is a tracker report fact; its raw at the cited other-home scratchpad was not accessed or independently resolved. Cycle report notes and its 59 comments identify only the predecessor 8.17 notice and creation of 8.21, not a posted PR514 change notice. Coordinator should persist this delivery as a durable review artifact and append the bounded PR514 notice; that notice is non-blocking under GP-Q0 and is distinct from resolving item6."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "P1",
+      "classification": "existing owner-gated outcome change; merge hold",
+      "path": "packages/polaris-generation-consent/src/recorder-template.ts",
+      "line": 21,
+      "title": "The optimized reader still changes consent-gate outcomes at the engine stack limit",
+      "observed": "Independent Node v24.6.0 source-bound probes reproduce old RangeError to new read on all seven row templates. Through the real D9 readDigestBoundActState, labels of 8,388,100 and 8,388,200 characters change old RangeError to new state ok.",
+      "authority": "GP-Q0 part 1 defines behavior preservation to include consent/security decisions; its final paragraph says any unlisted change to what a gate accepts or refuses stops and returns to the owner. CC-BAR-5 floors 5 and 6 apply.",
+      "disposition": "Existing owner packet item 6/default HOLD, already explicitly recorded in original/review comments. No new owner question or duplicate decision bead. External answer Unknown; no provided direction resolves it. Preserve the three code files pinned to 8b143272 if the existing owner ruling requires them.",
+      "evidence": [
+        "independent-probe.json",
+        "independent-gate-probe.json",
+        "comments-syzygy-bpyt.8.21.json",
+        "comments-syzygy-1nu9.json",
+        "historical-pinned-files.json"
+      ]
+    },
+    {
+      "id": "F2",
+      "severity": "P2",
+      "classification": "current change-record documentation correction",
+      "path": "PR #514 body and docs/evidence/recorder-label-row-2026-10-22.md",
+      "title": "Declare the touched risk floors separately from review classes",
+      "observed": "The PR body and evidence report declare CC-REV-1 class 4 but do not state the touched CC-BAR-5 risk floors.",
+      "authority": "CC-BAR-2 item 4 requires the change record to state the touched floors and the reviewer to confirm them.",
+      "disposition": "Implementation owner or coordinator can add the risk declaration as metadata/documentation without semantic source changes. This review confirms floors 2, 5 and 6; no floor is waived."
+    }
+  ],
+  "mergeGates": {
+    "githubState": "OPEN",
+    "draft": false,
+    "mergeable": "MERGEABLE",
+    "mergeStateStatus": "CLEAN",
+    "unresolvedThreads": 0,
+    "hostedChecks": "checks and node SUCCESS on exact H",
+    "helperMergeOk": true,
+    "mergeQueue": true,
+    "localMergeTree": "clean against M",
+    "sourceHold": "Existing item6/default HOLD remains; no provided owner answer.",
+    "integrationLimit": "Head predates current main. Current-main recorder bytes equal the old differential subject, while package-reader and the consent module boundary evolved. No integrated broad run or merge-queue admission performed.",
+    "actions": "No GitHub message/review/approval/merge, branch write, rebase/push, or Beads mutation performed."
+  },
+  "qualityGates": {
+    "lint": "not-run / no separate named lint gate",
+    "typecheck": "pass via exact-head hosted node CI",
+    "tests": "pass via exact-head hosted node CI and fresh scoped 43/43; intentional mutation fails 1/1",
+    "governance": "pass via exact-head hosted checks; no redundant full local battery"
+  },
+  "sourceBinding": "subject-binding.json",
+  "preparation": "Loaded prepare_pr_branch helper has no staged no-push flag. A recorded subprocess adapter translated its local source-branch checkout to detached HEAD and refused any rebase/push/commit/add. Helper performed fetch, dry merge and hygiene inspection, reported no rebase/cleanup/push, then local HEAD was checked against live PR head. No source branch changed.",
+  "historicalEvidence": "Round3 CONFIRM WITH EXCEPTIONS at H is explicitly reported in original comment 2026-10-24T15:32:16Z, raw sha256 0a88dea73d5a4adbea4a26911173cf76a4958875f7614953dc4e01f0727ee8b2. Its unavailable raw is not declared absent globally. Comment explicitly says F1 remains with owner item6 and landing waits for the answer.",
+  "nextSteps": [
+    "Use the existing owner item6 record/answer if supplied; otherwise preserve HOLD. Do not re-ask or presume an external answer.",
+    "Retain this raw, structured report and source/run receipts in durable repository review evidence without changing prior raws; append the PR514 bounded owner notice through the canonical coordinator.",
+    "Correct the change-record risk-floor declaration; preserve original foreign Tzeusy bead and branch.",
+    "After a valid existing owner ruling, re-evaluate unchanged source pin, exact head, required checks, threads and normal merge queue. Any semantic correction needs independent re-review."
+  ],
+  "raw": {
+    "path": "/home/orca/.tmp/syzygy-pr514-fresh-review-20261105/R-PR514-FRESH-20261105-RAW.md",
+    "sha256": "aee5eaeee48be1f2ad0b7107605f7fdca8a8313af87180937f2f98a00964da74"
+  }
+}
