@@ -116,7 +116,10 @@ export type LeadInQuotation =
 
 /** The quotations a block's text carries, in order: each `The project states: "…"` runs from the straight quote after the lead-in to the
  * last straight quote before the next lead-in or the end of the text, the quote check's lead-in rule. A lead-in not followed by a
- * straight quote, and one whose quote never closes, are reported in place. Quoted text without the lead-in is not a quotation here. */
+ * straight quote, and one whose quote never closes, are reported in place. Quoted text without the lead-in is not a quotation here.
+ * This is the local-agent interface (signed design, "The local-agent draft schema"): draft/inventory checking, fidelity verdicts and
+ * rendering share these literal lead-in ordinals, even inside another quoted string or Markdown markup. It is deliberately separate
+ * from quote-fidelity.ts's broader, source-dependent ordinary/curly quotation reader; see README.md "Quotation reader domains". */
 export function leadInQuotations(text: string, leadIn: string = QUOTE_LEAD_IN): LeadInQuotation[] {
   return scanLeadIns(text, leadIn).map(({ found }) => found);
 }
