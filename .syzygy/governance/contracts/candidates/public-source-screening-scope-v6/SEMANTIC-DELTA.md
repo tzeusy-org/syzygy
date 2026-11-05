@@ -52,7 +52,8 @@ publicSourceScope.scopeDetectors.detectors += {
            (?:[\"']?(?:requirepass|masterauth|tls-key-file-pass|
            tls-client-key-file-pass)[\"']?[ \t\v\f]+|
            [\"']?user[\"']?[ \t\v\f][^\r\n]*?[ \t\v\f\"']
-           (?:[<>]|[#!](?=[0-9a-fA-F]{64})))[^ \t\v\f\r\n]+ }
+           (?:[<>]|[#!]
+           (?=[0-9a-fA-F]{64})))[^ \t\v\f\r\n]+ }
   (one line in the bytes; wrapped here)
 
 publicSourceScope.scopeDetectors.consequence:
