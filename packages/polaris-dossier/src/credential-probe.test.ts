@@ -161,8 +161,15 @@ describe('a configured adapter\'s credential declaration', () => {
   });
 
   it('refuses a declaration the list spells differently: membership is exact', async () => {
-    const probe = createCredentialProbe(listOf([]), absent, ['/x/a.token'], [{ adapter: 'fixture-ci', credentials: ['/x//a.token'] }]);
-    expect(await probe.probe()).toEqual({ passed: false, why: `${REFUSAL}fixture-ci: /x//a.token` });
+    for (const [declared, why] of [
+      ['/x//a.token', `${REFUSAL}fixture-ci: /x//a.token`],
+      ['/X/A.token', `${REFUSAL}fixture-ci: /X/A.token`],
+      ['/x/a.token/', `${REFUSAL}fixture-ci: /x/a.token/`],
+      [' /x/a.token', `${REFUSAL}fixture-ci:  /x/a.token`],
+    ] as const) {
+      const probe = createCredentialProbe(listOf([]), absent, ['/x/a.token'], [{ adapter: 'fixture-ci', credentials: [declared] }]);
+      expect(await probe.probe()).toEqual({ passed: false, why });
+    }
   });
 
   it('refuses on the declaration, not the list source, when no list source is configured either', async () => {
