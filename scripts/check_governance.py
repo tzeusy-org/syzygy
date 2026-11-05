@@ -3719,11 +3719,38 @@ PUBLIC_SOURCE_SCOPE_V5_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBL
 def _activate_public_source_scope_v5_copy_registry():
     """The version-5 manifest is a current copy of the policy argument once the act exists."""
     if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V5_ACT))
-            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V5_MANIFEST))):
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V5_MANIFEST))
+            # once the version-6 act exists the version-5 manifest is history (pinned by the amendment registries)
+            and not os.path.isfile(os.path.join(ROOT, f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md"))):
         ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V5_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
 
 
 _activate_public_source_scope_v5_copy_registry()
+
+
+#: The public-source screening scope, version 6 (`syzygy-mcs4`, owner direction
+#: OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-05 item 1, answer A; builder
+#: `scripts/build_public_source_screening_scope_v6.py`): one `approve-policy`
+#: act over the one manifest row (variant `p`: `redis.conf` placed with the
+#: `config-secret-directive` detector), reusing the policy's phrase label and
+#: superseding the version-5 act. Its packet carries no digest, so the manifest
+#: is the only copy. Registered at drafting time and gated on the performed
+#: record, for the reason the version-2 registration gives; the version-5
+#: copies' historical pinning, the chain link and the record's manifest-heading
+#: exemption arrive with the act.
+PUBLIC_SOURCE_SCOPE_V6_DIR = f"{CANDIDATES}/public-source-screening-scope-v6"
+PUBLIC_SOURCE_SCOPE_V6_MANIFEST = f"{PUBLIC_SOURCE_SCOPE_V6_DIR}/PUBLIC-SOURCE-SCREENING-SCOPE-V6-MANIFEST.txt"
+PUBLIC_SOURCE_SCOPE_V6_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md"
+
+
+def _activate_public_source_scope_v6_copy_registry():
+    """The version-6 manifest is a current copy of the policy argument once the act exists."""
+    if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V6_ACT))
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V6_MANIFEST))):
+        ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V6_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
+
+
+_activate_public_source_scope_v6_copy_registry()
 
 
 #: The act-time digests the specification-policy restyle supersedes as the
