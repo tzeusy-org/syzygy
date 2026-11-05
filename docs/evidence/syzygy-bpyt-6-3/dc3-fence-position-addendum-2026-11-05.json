@@ -1,0 +1,165 @@
+{
+  "epistemic": "Observed measurements; independent review, final verification and landing are separate held gates",
+  "date": "2026-11-05",
+  "source_commit": "7deeb7f38c034ea225262956944b535f6b490131",
+  "base_commit": "a5afce5c623f6a2d704d3b203e7f0db646d6ffd9",
+  "outcomes": [
+    "syzygy-bpyt.1.20",
+    "syzygy-bpyt.60",
+    "syzygy-bpyt.1.22"
+  ],
+  "authority": {
+    "profile": "PWB-REQ-006",
+    "direction": "GP-B2 Q7 A and Q2 C, .syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-FOLLOWUPS-2026-10-28.md",
+    "position": "Former Q8 is recorded agent work; no owner answer to Q8 is asserted",
+    "implementation": [
+      ".syzygy/governance/decisions/PWB-IMPLEMENTATION-AUTHORIZATION-ACT.md",
+      ".syzygy/governance/decisions/PWB-IMPLEMENTATION-AUTHORIZATION-CONTINUATION-ACT.md",
+      ".syzygy/governance/decisions/PWB-TRUTH-READINESS-AMENDMENT-ACT.md",
+      ".syzygy/governance/decisions/PWB-READABILITY-SUCCESSOR-SIGNOFF-v1.0.md"
+    ],
+    "stop": "GP-Q0 unlisted gate changes stop"
+  },
+  "scope": "One existing recognizer/mask: FENCE_OPENER gains s; local positionOf counts CRLF/CR/LF with unchanged raw UTF16 columns. No downstream parser/line-model change.",
+  "finite": {
+    "rows": 114,
+    "distinct_texts": 108,
+    "admit_to_exclude": 12,
+    "exclude_to_admit": 24,
+    "same_decision": 78,
+    "same_decision_changed_findings": 38,
+    "mask_changes": 72,
+    "coordinate_rows": 31,
+    "coordinate_only_changes": 10,
+    "inherited_rows": 12
+  },
+  "tracked": {
+    "base_entries": 8823,
+    "strict_utf8_texts_without_nul": 8805,
+    "exclusions": 18,
+    "mask_changes": 0,
+    "method": "NUL-safe tree and index reconciled; direct base/combined result equality independently confirmed by base/s-only SHA256 comparison"
+  },
+  "tests": {
+    "delta": "+0 ~15 -0 executable cases across12existing declarations",
+    "added_expect_call_sites": 29,
+    "targeted_unit": "397 passed in6files",
+    "targeted_integration": "194 passed in3files",
+    "preliminary_check": "3793 unit tests passed after test target fix; its overlap with a short mutation makes it informational only; final exact-commit clean-clone checkall required"
+  },
+  "mutants": {
+    "executed": 17,
+    "effective": 14,
+    "survived_or_insufficient_selection": 3,
+    "details": "MUTATION-DISPOSITIONS.json retains every fragment/result; two malformed-helper runtime failures are effective despite initial driver AssertionError-only undercount. M10/M12 narrow controls and M14 wrong selection are retained survivors; stronger relevant controls fail. One unmatched-fragment installer refusal ran no test and is never a kill."
+  },
+  "preserved_residuals": [
+    "extractor and index readers retain LF-only line models and the bare-CR extractor residual",
+    "Q2 C stray-backtick link drop has no signal",
+    "secret scans use complete raw text; malformed recovery never drives admitted extraction/discovery",
+    "consent, ceremony and renderer rules stay distinct"
+  ],
+  "historical_provenance": "The1287 review corpus/result is historical; original round1raw/corpus unavailable as disclosed by retained round2. Q7 historical0of6640 is not the current denominator. Frozen original acts/specs/raws/evidence remain immutable.",
+  "remaining_gates": [
+    "fresh independent exact-head full original review, class4floor plus reviewer-decided1/3/6",
+    "final exact-commit clean clone checkall and canonical battery",
+    "hosted exact-head node/checks and merge-group gates",
+    "November3item4 owner judgment and cycle report (.1z3.22/.25) before app/core merge",
+    "coordinator cycle notice, authorized merge, landed reconciliation and closure"
+  ],
+  "artifact_location": "/home/orca/.tmp/syzygy-bpyt20-60-22-cohesive-implementation-20261105",
+  "artifacts": [
+    {
+      "name": "BOOTSTRAP.json",
+      "sha256": "50b5c14a33c325bbe9f03b01045cb934d595a1b1494d44a4ba4d84c299bf169b"
+    },
+    {
+      "name": "CURRENT-AUTHORITY.json",
+      "sha256": "a310f4774a8b4f1b330b64eabc9b9582377535e58627391a885cbbd459228307"
+    },
+    {
+      "name": "PRE-EDIT-ALLOCATION.json",
+      "sha256": "8827de5683770dde3ee06070e21cca85666b87f83b76f1d5174c8662e26e4db8"
+    },
+    {
+      "name": "CURRENT-PR-ALLOCATION.json",
+      "sha256": "80c5c1c58758b88e3ba351b6f65b1872c8f429f8648215f7f0f43550dc417421"
+    },
+    {
+      "name": "CURRENT-CALLER-CENSUS.json",
+      "sha256": "aeae4767d8b4d7b9db9d1e3d4ae6fffcbe76c4156d8194f5c6bc75a4a919345d"
+    },
+    {
+      "name": "CACHE-LOCK-INTEGRITY.json",
+      "sha256": "fbb1b147968df10889cf6e601e6571999be09e5a11f16c150aec386b2639e0ac"
+    },
+    {
+      "name": "WORKSPACE-LINKS.json",
+      "sha256": "100b36651e53834dd5d35ecfd8d238ebbe3e8faceea0a22cd52f2d913125da6c"
+    },
+    {
+      "name": "FINITE-CORPUS.json",
+      "sha256": "ead77b40ab1b7bd9003a922badd9b9fac5950b77aa22d7402237a642bdf9fb19"
+    },
+    {
+      "name": "FINITE-DIFFERENTIAL.json",
+      "sha256": "cb9076d53f39f26d7f3bb765ad8030bffdb2abd171ef085ed6702ae82d40d169"
+    },
+    {
+      "name": "DIFFERENTIAL-SUBJECTS.json",
+      "sha256": "ce82f7ee0d1a6744ae2267a1058b6d287b4c8e40b3db43c9802a281f9159824c"
+    },
+    {
+      "name": "COORDINATE-CORPUS.json",
+      "sha256": "a0516961e4684e4c41e7b9b266685d5f9a72c0ac065eddb256a604865b33c5ad"
+    },
+    {
+      "name": "COORDINATE-DIFFERENTIAL.json",
+      "sha256": "5750897932a95e93c39e829c8cdd48fb9df8ae0b21087ba987b50166b4e6ef0b"
+    },
+    {
+      "name": "INHERITED-READER-DIFFERENTIAL.json",
+      "sha256": "cb7b1c87d2a9e8c5dd72ab3e35b8c661274f1b8a02d49198d69c04d0814681c7"
+    },
+    {
+      "name": "TRACKED-MASK-DIFFERENTIAL.json",
+      "sha256": "e0ad38a5ac8568811f375f17e6094a16be298ed18b8631851e82f5a1af28ddfe"
+    },
+    {
+      "name": "TRACKED-MASK-CONFIRMATION.json",
+      "sha256": "e6d538f7577b8f12ffbfa14d042ac94cac773a8b09449c4c7a3cf84e8f003a93"
+    },
+    {
+      "name": "MUTATIONS.json",
+      "sha256": "7c0ea3c2536da1af535a51483a2c5053c122c8cc748c6b278b6bea54538309a0"
+    },
+    {
+      "name": "MUTATIONS-SUPPLEMENT.json",
+      "sha256": "55d911979767f4423b01ba8e216494851d62f52fe870e961bd08f83505d95b5e"
+    },
+    {
+      "name": "MUTATION-M14.json",
+      "sha256": "7815424499209f00b3f31dcbe91f9995fb70f4d80a2f5103619aed4656b584ec"
+    },
+    {
+      "name": "MUTATION-M14B.json",
+      "sha256": "32b3d9a28091c32b4fd00628ae4457fa8e7700e0e723ce3835e39120df55deaf"
+    },
+    {
+      "name": "MUTATION-DISPOSITIONS.json",
+      "sha256": "be690c1312f6e241f67892286af72a49d381c89ee6f7d7be35015eb67cd2f657"
+    },
+    {
+      "name": "MUTATION-RESTORATION.json",
+      "sha256": "99727fc3f86ba0cd1463e119b98c2d731c72f8547b820239f7bbb22092700d24"
+    },
+    {
+      "name": "TEST-DELTA.json",
+      "sha256": "b412bbf4379745713380986041bff66e8bb6a842791d95634d99f0b14766576b"
+    },
+    {
+      "name": "AUTHOR-ATTEMPTS-THROUGH-DIFFERENTIAL.jsonl",
+      "sha256": "61387a768a297c6c75c0bd19dcb056f1f86e7bc9313ac0c2bc5984f85567b1ed"
+    }
+  ]
+}
