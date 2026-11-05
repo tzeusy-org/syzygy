@@ -76,7 +76,7 @@ def census():
 
 
 mode, worker_path, node, guardian_path = sys.argv[1:]
-assert mode in ('SIGTERM', 'SIGKILL')
+assert mode in ('SIGTERM', 'SIGKILL', 'startup')
 # Exercise unsafe identity inputs at the guardian's syscall boundary. No
 # real process is signalled by these controls; the real lifetime case below
 # supplies the independent process/census evidence.
@@ -156,15 +156,19 @@ try:
         # The ancestry established above is the authority to inspect argv.
         try:
             argv = Path('/proc', str(row['pid']), 'cmdline').read_bytes()
-        except FileNotFoundError:
+        except (FileNotFoundError, ProcessLookupError):
             continue
         if b'--utility-sub-type=network.mojom.NetworkService' in argv:
             helpers.append(row)
-    assert len(helpers) == 1, 'expected exactly one live owned network helper'
-    send(helpers[0], signal.SIGSTOP)
+    if mode != 'startup':
+        assert len(helpers) == 1, 'expected exactly one live owned network helper'
+        send(helpers[0], signal.SIGSTOP)
     report['milestone'] = {'helpers': helpers, 'family': rows}
     permitted_reaps = {worker.pid, *(r['pid'] for r in rows if r['ppid'] == worker.pid)}
-    send(report['worker'], getattr(signal, mode))
+    if mode == 'startup':
+        assert worker.wait(timeout=30) == 0, 'startup failure control failed'
+    else:
+        send(report['worker'], getattr(signal, mode))
     deadline = time.monotonic() + 5
     while time.monotonic() < deadline:
         report['reaped'] += reap(worker)

@@ -63,8 +63,7 @@ function alive(pid: number): boolean {
   try { return !/\) [ZX] /.test(readFileSync(`/proc/${pid}/stat`, 'utf8')); } catch { return false; }
 }
 
-describe.skipIf(executable === undefined || process.platform !== 'linux')('disposable Chrome teardown in a real browser', () => {
-  it.each(['SIGTERM', 'SIGKILL'] as const)('reaps the browser family after its worker dies by %s', async (signal) => {
+async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Promise<void> {
     const directory = mkdtempSync(join(tmpdir(), 'syzygy-poc-parent-death-'));
     try {
       const module = join(directory, 'browser.mjs');
@@ -72,11 +71,26 @@ describe.skipIf(executable === undefined || process.platform !== 'linux')('dispo
       await build({ entryPoints: [fileURLToPath(source)], outfile: module, bundle: true, platform: 'node', format: 'esm',
         define: { 'import.meta.url': JSON.stringify(source.href) } });
       const worker = join(directory, 'worker.mjs');
-      writeFileSync(worker, `import { launchBrowser } from ${JSON.stringify(module)};\n` +
+      const endpointFailure = join(directory, 'endpoint-failure.py');
+      const versionFailure = join(directory, 'version-failure.py');
+      writeFileSync(endpointFailure, "#!/usr/bin/python3\nimport subprocess,sys\nsubprocess.Popen(['sleep','3600'])\nsys.exit(13)\n", { mode: 0o750 });
+      writeFileSync(versionFailure, "#!/usr/bin/python3\nimport time,sys\nprint('DevTools listening on ws://fixture.invalid:1',file=sys.stderr,flush=True)\ntime.sleep(3600)\n", { mode: 0o750 });
+      const body = mode === 'startup'
+        ? `import { strict as assert } from 'node:assert';\n` +
+          `await assert.rejects(launchBrowser(${JSON.stringify(endpointFailure)}), /before announcing a DevTools endpoint/);\n` +
+          `const original = globalThis.WebSocket;\n` +
+          `globalThis.WebSocket = class extends EventTarget {\n` +
+          `constructor() { super(); queueMicrotask(() => this.dispatchEvent(new Event('open'))); }\n` +
+          `send(raw) { const {id,method} = JSON.parse(raw); queueMicrotask(() => this.dispatchEvent(new MessageEvent('message', { data: JSON.stringify({id, ...(method === 'Browser.getVersion' ? {error:{message:'fixture-version-failure'}} : {result:{}})}) }))); }\n` +
+          `close() {} };\n` +
+          `try { await assert.rejects(launchBrowser(${JSON.stringify(versionFailure)}), /fixture-version-failure/); } finally { globalThis.WebSocket = original; }\n` +
+          `process.stdout.write('ready\\n');\n`
+        :
         `const browser = await launchBrowser(${JSON.stringify(executable)});\n` +
         `const page = await browser.newPage(); await page.navigate('data:text/html,<p>parent lifetime</p>');\n` +
-        `process.stdout.write('ready\\n'); setInterval(() => {}, 1000);\n`);
-      const child = spawn('python3', [fileURLToPath(new URL('./test-fixtures/browser-parent-death.py', import.meta.url)), signal, worker, process.execPath,
+        `process.stdout.write('ready\\n'); setInterval(() => {}, 1000);\n`;
+      writeFileSync(worker, `import { launchBrowser } from ${JSON.stringify(module)};\n` + body);
+      const child = spawn('python3', [fileURLToPath(new URL('./test-fixtures/browser-parent-death.py', import.meta.url)), mode, worker, process.execPath,
         fileURLToPath(new URL('../../../scripts/poc_browser_lifetime.py', import.meta.url))],
         { stdio: ['ignore', 'pipe', 'pipe'] });
       let output = '';
@@ -94,7 +108,7 @@ describe.skipIf(executable === undefined || process.platform !== 'linux')('dispo
         afterRecovery: { proc: unknown[] };
         unexpectedReaps: unknown[]; refusals: string[];
       };
-      expect(report.milestone.helpers).toHaveLength(1);
+      expect(report.milestone.helpers).toHaveLength(mode === 'startup' ? 0 : 1);
       expect(report.decoySurvived).toBe(true);
       expect(report.refusals).toEqual(['start-reused', 'other-uid', 'other-namespace', 'outside-family']);
       expect(report.unexpectedReaps).toEqual([]);
@@ -105,7 +119,12 @@ describe.skipIf(executable === undefined || process.platform !== 'linux')('dispo
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
-  }, 60_000);
+}
+
+describe.skipIf(executable === undefined || process.platform !== 'linux')('disposable Chrome teardown in a real browser', () => {
+  it.each(['SIGTERM', 'SIGKILL'] as const)('reaps the browser family after its worker dies by %s', runLifetimeScenario, 60_000);
+
+  it('reaps children after failed endpoint and version initialization', () => runLifetimeScenario('startup'), 60_000);
 
   it('closes and drains even when a helper cannot exit on its own', async () => {
     const browser = await launchBrowser(executable as string);

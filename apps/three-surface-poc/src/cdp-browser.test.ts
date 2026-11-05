@@ -231,6 +231,12 @@ describe('browser page lifetime', () => {
     await expect(withBrowserPage('fixture', async () => { events.push('assertions-complete'); }, async () => browser))
       .rejects.toThrow('target-close-failed');
     expect(events).toEqual(['assertions-complete', 'page-close-failed', 'browser-closed']);
+    events.length = 0;
+    const closingPage = { close: async () => { events.push('page-closed'); } } as unknown as BrowserPage;
+    await expect(withBrowserPage('fixture', async () => { throw new Error('assertion-or-timeout-failure'); },
+      async () => ({ ...browser, newPage: async () => closingPage })))
+      .rejects.toThrow('assertion-or-timeout-failure');
+    expect(events).toEqual(['page-closed', 'browser-closed']);
   });
 });
 
