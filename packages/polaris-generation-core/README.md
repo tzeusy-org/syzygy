@@ -91,8 +91,8 @@ flowchart LR
     one `Inferred:` sentence citing the mechanism's sources and agreeing with
     them; otherwise it stays unresolved. Every inferential block must begin
     `Inferred:`.
-  - `checkDraftQuotes` (`quote-fidelity.ts`) is the one deterministic quote
-    check. A quotation opens with `The project states: "`, runs to the last
+  - `checkDraftQuotes` (`quote-fidelity.ts`) is the pipeline's deterministic
+    quote check. A quotation opens with `The project states: "`, runs to the last
     straight quote before the next lead-in, and must equal one contiguous
     span of one cited source on word boundaries after whitespace runs
     collapse and formatting drift (comment leaders, link syntax, entities,
@@ -206,6 +206,49 @@ npm run poc:generator-demo -- --out /tmp/polaris-generator-demo-new
 - full authored bundle and owner workflow;
 - independent real-source and rendered quality judgments;
 - unchanged-engine proof on two real admitted projects.
+
+## Quotation reader domains
+
+[Observed] The operator-agent dossier uses `leadInQuotations` and
+`leadInQuotationSpans` (`quote-locate.ts`), the explicit lead-in interface
+in the adopted local-agent design, "The local-agent draft schema". Every
+literal `The project states:` starts a local check, even inside an earlier
+quotation, a code span or a fence. Whitespace followed by a straight double
+quote opens it; its closing quote is the last straight quote before the
+next literal lead-in or the end. Missing and unterminated openers are
+findings. Ordinary quotation marks without a lead-in remain the agent's
+prose and receive no verified quotation marking.
+
+[Observed] Local draft and inventory checks assign citation ordinals with
+that reader. Rendering derives them again and replaces a verified span
+with the newly located pinned blob bytes, or withholds excluded content.
+Fidelity verdicts verify their lead-in quotations against admitted packet
+spans. Design verdicts refuse lead-in quotations because their packet
+verifies none. These callers do not substitute `checkDraftQuotes` for the
+local reader; the site's local view sets `quoteFindings` to `null` and skips
+the broader check. REQ-polaris-generation-034/035 govern source fidelity
+and review binding; a parser match alone establishes neither readiness nor
+source fidelity.
+
+[Observed] `inspectBlockQuotes` / `checkDraftQuotes` (`quote-fidelity.ts`)
+also check ordinary straight and nested curly quotations. Their scan can
+consume a literal lead-in inside an earlier quotation, and ordinary
+straight quotes choose the longest source-verifying candidate. A curly
+opener after a lead-in can pass this broader check while the local reader
+reports `lead-in-without-quote`. The pipeline uses these findings for repair
+and eventual Unknown output; dossier evaluation uses their counts. This
+describes parked provider callers and grants no provider execution.
+
+[Observed] Historical G3's "1,693 of 2,375 check-passing texts" is retained
+in the original reconciliation evidence. **Its "check-passing" predicate
+is source-free:** it supplies `verifies = true` and ignores source-fidelity
+findings. It counts retained draws, including duplicates, rather than
+successful source-verified drafts. The finite caller evidence and the
+retention disposition are in
+[the quotation-domain evidence](../../docs/evidence/syzygy-bpyt-1-27/README.md).
+Different domains retain expected differences; parser equality is not a
+closure condition. Changing either gate's acceptance or refusal still
+requires the GP-Q0 disposition applicable to that change.
 
 ## Dossier evaluation
 

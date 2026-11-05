@@ -1,0 +1,4607 @@
+{
+  "schema": "quotation-domain-retention/1",
+  "bead": "syzygy-bpyt.1.27",
+  "epistemic": "Observed measurements; Inferred authority/disposition classification; no owner answer or independent review verdict",
+  "subject": {
+    "baselineCommit": "eaba8ee3ab14c51fc5cf689cd1dd4d60ac3009d9",
+    "readers": [
+      {
+        "path": "packages/polaris-generation-core/src/quote-locate.ts",
+        "beforeSha256": "d08ea4f434b6e613eaf45b9a048fb0e0abc9395aa543693dfcc6f527d3d623d1",
+        "afterSha256": "ae572a60131c3b2b9b87877962456e5984c15062810ea5662d6124d8513c8906"
+      },
+      {
+        "path": "packages/polaris-generation-core/src/quote-fidelity.ts",
+        "beforeSha256": "de885e63d6aedf7fd9d903903813fa5636f6a375cf2da8396282795f189ee4c9",
+        "afterSha256": "b2852451cf4e2f8ad981aaafb5debfa1cfaf3d0dd61e761d50d950db63bb6d1b"
+      }
+    ],
+    "candidatePatchSha256": "55499ec19cd863341dcd2956a9e900adc42c530dfea02b376939d6b9001ca0cd",
+    "runtimeBundleBeforeSha256": "4d70858044bea6bf4f5c3afc035c012b052ec6c879d5ba9e560403eaf9542327",
+    "runtimeBundleAfterSha256": "4d70858044bea6bf4f5c3afc035c012b052ec6c879d5ba9e560403eaf9542327",
+    "fixtureProbeSha256": "df246ccd0aa249926768f4af1f515672a872a98afe36206fa99a83a526e9a5d4",
+    "secondaryProbeSha256": "fb496ad2e7f04ccefcd322896a3c5be15df5f2a9f516291626fa70eb8ab80639"
+  },
+  "disposition": {
+    "classification": "Inferred: preserve the existing local explicit-lead-in interface and broader ordinary/curly-quotation domain; document actual finite differences without changing either gate",
+    "reason": "signed local design fixes the lead-in interface; REQ-polaris-generation-034/035 fix contiguous cited-source fidelity and render/review binding; a broader private checker is not the local check/render interface",
+    "ownerQuestionRequiredForThisPatch": false,
+    "unlistedAcceptanceRefusalChange": false,
+    "ownerAnswer": null,
+    "successorRequiredForThisPatch": false,
+    "reviewFloorProposed": [
+      "CC-REV-1 class 3"
+    ],
+    "reviewerDecidesFinalClass": true,
+    "limitations": [
+      "finite synthetic evidence does not prove universal correctness",
+      "parked provider pipeline exercised only through existing synthetic tests; no actual provider integration",
+      "validator seam probes use synthetic packet shapes, not independent human/agent review",
+      "full clean-clone gate, hosted checks, independent review, merge and tracker reconciliation are separate gates, recorded by the terminal handoff"
+    ]
+  },
+  "authorityQuotes": [
+    {
+      "clause": "VIS-4",
+      "epistemic": "Observed",
+      "exact_quote": "**VIS-4 \u2014 Humans steer the vision; agents shape within it.** Shape-defining\nchanges always need the owner's sign-off; Syzygy and its agents may draft\nthem, never adopt them.\n\n- **Shape-defining changes** \u2014 doctrine (heart-and-soul), craft-and-care",
+      "lines": [
+        168,
+        172
+      ],
+      "source": ".syzygy/governance/doctrine/vision.md",
+      "source_role": "adopted doctrine",
+      "source_sha256": "ff8410443dee3b53e4c8aad2e3b4072239e18ca9c16e3bef2518c8a44ae9ceeb"
+    },
+    {
+      "clause": "GP-Q0 Part 1",
+      "epistemic": "Observed",
+      "exact_quote": "\nSelected: **\"Confirm all three (Recommended)\"**. That option had three parts.\n\n### Part 1 \u2014 the reading of 2026-10-20 is confirmed\n\nItems 2\u20133 of the 2026-10-20 direction stand as recorded.\n- Behavior-preserving refactors may proceed under the acts already in force. They may touch `apps/**`, `packages/**`, `scripts/**`, tests, CI and root manifests.\n- \"Behavior-preserving\" means none of the following changes:\n  - a rendered byte, a wire format, a refusal string or an exit code;\n  - a signed or digest-bound artifact;\n  - a consent, security or retention decision.\n- POC beads are admitted as improvement-cycle work. Bead `syzygy-bpyt.10` is the cycle report, and POC shared-model work stays at WIP one.\n- Dossier beads proceed under the dossier acts already in force.\n\n**Review rule.** It applies to every pull request in this work.\n- Each pull request states which CC-REV-1 classes it touches. Any pull request whose classes are not \"none\" gets the CC-REV-1 independent review, from a fresh-context reviewer on the default model.\n- Some pull requests also get three further checks:\n  - **Which ones:** pull requests touching class 1 (authority boundaries), class 3 (deterministic observation) or class 4 (security), and class-6 pull requests that remove an endpoint.\n  - **The checks:**\n    - an old-versus-new differential over a mutated-record corpus that includes records with altered prose;\n    - a rule-6 mutant for each predicate;\n    - a non-blocking owner notice in the cycle report.",
+      "lines": [
+        45,
+        66
+      ],
+      "source": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md",
+      "source_role": "owner direction",
+      "source_sha256": "e00aee73c0c846e4995e54ebe40f370d36f007b483a854388d4d97da17721d5e"
+    },
+    {
+      "clause": "GP-Q0 terminal stop clause",
+      "epistemic": "Observed",
+      "exact_quote": "Any change not listed here to what a gate accepts or refuses stops and returns\nto the owner.",
+      "lines": [
+        95,
+        96
+      ],
+      "source": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md",
+      "source_role": "owner direction",
+      "source_sha256": "e00aee73c0c846e4995e54ebe40f370d36f007b483a854388d4d97da17721d5e"
+    },
+    {
+      "clause": "REQ-polaris-generation-034",
+      "epistemic": "Observed",
+      "exact_quote": "The labelling rules are: every claim block carries exactly one label, Inferred or Unknown, or is marked non-normative (RFC7-2 (b)); an Unknown block names its reason; an agent SHALL NOT label its own claim Observed; a claim that the agent marks as resting on its building or running of the observed project is Inferred and names, from the draft's list of reported commands, the commands it rests on; and Observed is reserved for a quotation that Syzygy has verified. The citation rules are: every Inferred block SHALL cite at least one source as a repository path and an inclusive line range at the pinned revision; an Unknown block SHALL cite the sources it considered where there are any and MAY cite none; a non-normative block SHALL carry no citation and no anchor (REQ-polaris-generation-003). The quotation rule is: a quotation is one contiguous span of one cited file at the pinned revision, without elision, joining or alteration other than the normalisation stated below, and every quotation SHALL name the citation it is taken from.\n\nSyzygy SHALL check each submitted draft and SHALL report every failure as a repair finding that names the block, the citation, the kind of failure and the location to repair. The checks are:\n\n- the draft validates against its declared schema version, with unique identities and resolving internal references (REQ-polaris-generation-019), and names the pinned revision;\n- every cited path names a blob at the pinned revision, and every cited line range lies within that blob;\n- every quotation, after the normalisation that the generator's existing quote check applies to both the quotation and the source, is one contiguous run of the cited blob's text, beginning and ending on word boundaries, that lies within the cited line range, and Syzygy records the span's byte range in the blob; that normalisation drops comment leaders at line starts and a closing comment marker at a line end, keeps only the text of markdown links and images, decodes character entities, removes markdown backslash escapes, drops backticks, drops paired emphasis marks at word edges, straightens curly quotes, turns an ellipsis character into three full stops, and collapses each whitespace run to one space; an ellipsis in a quotation that the source does not carry is an elision and fails;\n- every block carries a label the labelling rules permit and the citations the citation rules require, a non-normative block carries none, every Unknown block names a reason from RFC2-24's closed list, and every block the agent marks as resting on execution names at least one command present in the draft's list of reported commands. Syzygy can see only the marking; whether an unmarked claim rests on execution is the agent's report, and the page SHALL say so.\n\nA blob that classification or screening excludes SHALL NOT be used to verify a quotation: the quotation is unverifiable, the block that relies on it SHALL render Unknown with `excluded-content` instead of the quotation, and its exclusion is not a repair finding. A repair finding SHALL carry no excluded bytes. Each resubmission is a new draft revision with its own identity; it counts against the repair-cycle limit, and it retires earlier check results and dependent review evidence (REQ-polaris-generation-006). A draft with an unresolved finding SHALL NOT proceed to review or become ready.\n\nSyzygy SHALL render a checked draft through the existing multi-page dossier renderer. Every rendered quotation SHALL be the span Syzygy located, at render, in the blob it read and verified at the pinned revision, never the agent's copy of it and never a byte range taken on trust from a stored record. A source page SHALL be rendered only for a blob that Syzygy read and verified at the pinned revision and that screening admitted. Each anchor SHALL take RFC7-10's form: the target class is an evidence artifact identifier with integrity digest, whose identifier is the blob's object identifier as Syzygy recomputed it from the bytes it read, with its hash algorithm named, that algorithm being the one the consented revision's identifier is written in, serving as both the owning identifier and the integrity digest; the optional fragment is the byte range of the span; the target state is the pinned revision. The repository path is shown beside it as a label, never as its identity. Generated prose SHALL render in the editorial-draft state (RFC7-20), machine-marked with the operator-declared model identity and version as its inference provenance. Rendering obligations of REQ-polaris-generation-003, 004 and 012, and of REQ-polaris-generation-032 where it is adopted and applies, are unchanged.\n",
+      "lines": [
+        234,
+        246
+      ],
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "source_role": "adopted specification",
+      "source_sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3"
+    },
+    {
+      "clause": "REQ-polaris-generation-035 verdict validation",
+      "epistemic": "Observed",
+      "exact_quote": "Syzygy SHALL validate the verdict before it counts: its schema; that the packet digest equals the digest of the packet Syzygy rebuilds, at validation and at render, from the current frozen subject; that every inventory entry and every claim block has an entry; that every quotation the verdict relies on verifies as in REQ-polaris-generation-034; and that a verdict with an unresolved blocking finding does not declare the subject ready. A verdict that fails validation SHALL be recorded and SHALL NOT count as a review. Any revision of the subject or the inventory retires the verdicts bound to it.",
+      "lines": [
+        360,
+        360
+      ],
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "source_role": "adopted specification",
+      "source_sha256": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3"
+    },
+    {
+      "clause": "signed design / draft model",
+      "epistemic": "Observed",
+      "exact_quote": "(question, evidence, consequence, options, answer, answerKind, attribution),\nand `executions` (each command the agent reports having run, with its\nworking directory and purpose). A claim the agent marks as resting on\nexecution carries `basis: execution` and the identifiers of the executions\nit rests on. Quotations keep the existing lead-in form (`QUOTE_LEAD_IN`),\nand each names its citation.",
+      "lines": [
+        382,
+        387
+      ],
+      "source": "openspec/changes/polaris-dossier-local-agent-mode/design.md",
+      "source_role": "adopted design; supported by retained v1.0 tagged design",
+      "source_sha256": "d752d8f155a4837ecf4326690325f5f73ce91de49757c27e8bb5f0f72bdbafd0"
+    },
+    {
+      "clause": "CC-REV-1",
+      "epistemic": "Observed",
+      "exact_quote": "## CC-REV-1 \u2014 Mandatory independent review classes\n\nChanges touching any of seven classes require review by an independent,\nfresh-context reviewer, and the agent performing the change never finally\ndecides which classes it touches.\n\n**The reviewer:**\n\n- did not author the change;\n- does not share the authoring session's context;\n- receives the artifact, its governing doctrine/RFC references, and\n  acceptance criteria \u2014 not the author's reasoning or a desired verdict.",
+      "lines": [
+        16,
+        27
+      ],
+      "source": ".syzygy/governance/policies/craft-and-care/review-and-documentation.md",
+      "source_role": "owner-approved craft policy",
+      "source_sha256": "13928819f6573d85e3074bb6d042fef49c2d42d5beece658a3bc5292f1ea97e1"
+    },
+    {
+      "clause": "CC-REV-2",
+      "epistemic": "Observed",
+      "exact_quote": "## CC-REV-2 \u2014 The same-logical-change rule\n\nA change that invalidates any authoritative artifact updates **every**\ninvalidated authoritative artifact in the same logical change; if doctrine\nwould be invalidated, the change instead stops, routes to the owner, and\ndoes not merge while the contradiction is open.\n",
+      "lines": [
+        71,
+        77
+      ],
+      "source": ".syzygy/governance/policies/craft-and-care/review-and-documentation.md",
+      "source_role": "owner-approved craft policy",
+      "source_sha256": "13928819f6573d85e3074bb6d042fef49c2d42d5beece658a3bc5292f1ea97e1"
+    },
+    {
+      "clause": "generator implementation authorization",
+      "epistemic": "Observed",
+      "exact_quote": "Authorize the full EXECUTION-PHASES.md implementation goal, including protected effect host, complete owner experience, two-project and changed-source proof obligations. Phase A alone is not completion. Real-project reads, provider egress and destination writes remain separately admitted; no effect, production release, broad remote access or observed-project code execution is authorized by this act.\n\nThis record does not claim independently verified authorship, review verdict,",
+      "lines": [
+        42,
+        44
+      ],
+      "source": ".syzygy/governance/decisions/POLARIS-GENERATOR-IMPLEMENTATION-AUTHORIZATION-ACT.md",
+      "source_role": "primary owner act/direction",
+      "source_sha256": "04518a6444fc7255d391b42f512ec998683fb2a529a9aebc3b8f0b3ddd6bb05e"
+    },
+    {
+      "clause": "v1.0 exclusion",
+      "epistemic": "Observed",
+      "exact_quote": "It authorizes no implementation of the signed semantics, widens no consent,\nread, write or egress, and approves no registry or policy byte. Every\nexclusion of the acts in force stands.",
+      "lines": [
+        42,
+        44
+      ],
+      "source": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.0.md",
+      "source_role": "primary owner act/direction",
+      "source_sha256": "b64225c5c490c754f74ab94fa2c94ed28137a7ad9903fc501925c99dc37f3739"
+    },
+    {
+      "clause": "v1.3 exclusion",
+      "epistemic": "Observed",
+      "exact_quote": "It authorizes no implementation of the signed semantics, widens no consent,\nread, write or egress, and approves no registry or policy byte. Every\nexclusion of the acts in force stands.",
+      "lines": [
+        42,
+        44
+      ],
+      "source": ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md",
+      "source_role": "primary owner act/direction",
+      "source_sha256": "12b9cfeb6bec3ddc17dc07edd66e5f8411dd04838609dcb5621570bc4f2e03ef"
+    },
+    {
+      "clause": "provider parking",
+      "epistemic": "Observed",
+      "exact_quote": "1. **Provider routes stay parked and are no longer pursued.** Syzygy does not\n   make its own model-provider calls through a custom SDK or API client for\n   the dossier. Neither route A (the Agent SDK provider execution route) nor",
+      "lines": [
+        38,
+        40
+      ],
+      "source": ".syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-LOCAL-CLI-SUBPROCESS-2026-10-15.md",
+      "source_role": "primary owner act/direction",
+      "source_sha256": "da3a6726e1c668ef8a57a19e8093bf9f8fe9a792d446e83df83757d1577751c7"
+    },
+    {
+      "clause": "rich-elements quotation invariance",
+      "epistemic": "Observed",
+      "exact_quote": "- It changes no claim ledger, label, citation, quotation or review rule. An\n  element that carries a claim carries it under the existing rules.\n- It grants no read, egress, write or execution, and no script on a rendered",
+      "lines": [
+        71,
+        73
+      ],
+      "source": ".syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04.md",
+      "source_role": "primary owner act/direction",
+      "source_sha256": "5feab8de6b2bb33860c0e068bbad2ff2546789297cf8628fc3da2a3994a159fd"
+    }
+  ],
+  "historical": {
+    "originalClaim": "Synthetic differential: they disagree on 1,693 of 2,375 check-passing texts.",
+    "qualification": "The historical check-passing predicate is source-free: quotedSpans receives verifies=true; only termination/nonempty normalisation and absence of lead-in-without-quote are tested. It ignores quote-without-cited-source and does not establish successful checkDraftQuotes or local checks. Retained draws include duplicates. The original evidence remains unchanged.",
+    "seed": 7,
+    "draws": 200000,
+    "retainedDraws": 89719,
+    "checkPassingTexts": 2375,
+    "checkPassingWithRenderDifference": 1693,
+    "passingRenderSpanNotVerifiedByCheck": 113,
+    "passingWithNoStraightQuote": 452,
+    "renderSpanNotACheckSpan": 681,
+    "leadInWithoutQuoteCountMismatch": 14594,
+    "preservedFiles": [
+      {
+        "path": "docs/evidence/syzygy-bpyt-8-7/reconciliation-gen1.json",
+        "sha256": "a193990604f112ab457ed48632ceaf0f439c7ef85c973763e12143cbc186dea5"
+      },
+      {
+        "path": "docs/evidence/syzygy-bpyt-8-7/tools/leadin-diff.mjs",
+        "sha256": "0d2afd74b3d6aa3b1fa0ed0970e7eaf11aff255fcbdfbe8ddb2a73f351c27364"
+      },
+      {
+        "path": "docs/evidence/syzygy-bpyt-8-7/leadin-differential.json",
+        "sha256": "37a448fe9461dbd70822fc5e9f6cdf7502e87edc322ba28ca02d1cda1f849ea6"
+      }
+    ],
+    "rerun": false,
+    "zeroDifferenceCondition": "Only meaningful on a declared common domain after an authorized semantic choice; not a condition for retained distinct domains"
+  },
+  "isolation": {
+    "adapterSha256": "3e660f9c22dff79d3ad1b9af295be94957e1511a3efcb36d49ed977464cd6e53",
+    "pythonStartupSha256": "61da4eb292e94aac1d2d13ed5ad1debabdde2886987cb078011f5c1a4217cb5b",
+    "boundary": "bwrap clearenv, unshared PID/network, private HOME/cache/tmp and DNS files; only NEWOWN writable; readonly runtime/font/browser mounts",
+    "lockTarballs": 105,
+    "cacheLockSha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd",
+    "offlineInstallReceipt": {
+      "label": "npm-ci-subject-attempt1",
+      "cwd": "/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105/subject",
+      "argv": [
+        "npm",
+        "ci",
+        "--offline",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "startedAt": "2026-11-05T07:16:31.037360+00:00",
+      "elapsedSeconds": 1.5361487389891408,
+      "exitCode": 0,
+      "log": "/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105/logs/npm-ci-subject-attempt1.log",
+      "logSha256": "ebe85f03f5800e3488b3600bae373fbf9fd5f545d8a0eb649f043d1b694bb4b9",
+      "head": "eaba8ee3ab14c51fc5cf689cd1dd4d60ac3009d9",
+      "dirtyAfter": ""
+    }
+  },
+  "ownership": {
+    "openPrCount": 14,
+    "conflictsForChangedReaderAndReadmePaths": [],
+    "heldPr": 754,
+    "heldHead": "36bcc375b24e6ebc9537506893b26bf8d45e82b7",
+    "heldFilesEdited": false
+  },
+  "differential": {
+    "corpusVersion": "literal-real-callers/1",
+    "seed": null,
+    "generation": "30 explicitly enumerated adversarial cases; no sampling or filtering",
+    "beforeSha256": "a6ecaaf686990c270568674074d86df40726059b398e6aa8fa4c736ab1d2c470",
+    "afterSha256": "a6ecaaf686990c270568674074d86df40726059b398e6aa8fa4c736ab1d2c470",
+    "fullStructuredRecordsEqual": true,
+    "denominators": {
+      "cases": 30,
+      "localPassed": 16,
+      "broadPassed": 17,
+      "actualRenderAccepted": 16,
+      "errors": 0
+    },
+    "intentionalAcceptanceDifferences": [
+      "curly-opener",
+      "ordinary-altered",
+      "stray-before",
+      "wrong-citation",
+      "outside-range",
+      "range-beyond",
+      "excluded-source"
+    ],
+    "acceptanceDifferenceCount": 7,
+    "unexplainedAfterVsBefore": [],
+    "renderedFilesCompared": 224,
+    "oracle": "literal expected findings, spans and independently searched source byte ranges in corpus; second comparison enumerates retained output files independently"
+  },
+  "secondEnumeration": {
+    "schema": "quotation-retention-second-enumeration/1",
+    "byteIdentical": true,
+    "caseCount": 30,
+    "acceptanceDifferences": [
+      "curly-opener",
+      "ordinary-altered",
+      "stray-before",
+      "wrong-citation",
+      "outside-range",
+      "range-beyond",
+      "excluded-source"
+    ],
+    "rendered": 16,
+    "sha256": "a6ecaaf686990c270568674074d86df40726059b398e6aa8fa4c736ab1d2c470"
+  },
+  "fixture": {
+    "pinned": "620a27434d342586c97af352ba7f754b964fd92d",
+    "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+    "raw": "Caf\u00e9 \ud83d\ude00 prefix.\r\n// alpha **beta** gamma.\rdelta.\nseparator.\nalpha \"beta\" gamma.\nThe project states: \"alpha\"\nouter The project states: \"alpha\" tail\n",
+    "rawSha256": "d522f1b260e03db1918741348549877c25c5c6b18859292ffa354a8d56e956e6",
+    "workingTreeAlteredAfterCommit": true
+  },
+  "cases": [
+    {
+      "id": "straight-normalised",
+      "input": {
+        "id": "straight-normalised",
+        "text": "The project states: \"alpha beta gamma.\"",
+        "names": [
+          "c"
+        ],
+        "local": [],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [
+          "alpha beta gamma."
+        ],
+        "rawQuotes": [
+          "alpha **beta** gamma."
+        ]
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            23,
+            44
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha beta gamma."
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha beta gamma.",
+          "open": 20,
+          "close": 38
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "The project states: "
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 23,
+            "end": 44,
+            "text": "alpha **beta** gamma.",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 23,
+                "end": 44
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              23,
+              44
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "f0370c30625cd7cb4440ba6cd9ee8b05745646ef0b8077d68259d2073b07057c"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "e1ecfc88420dc362961f177de9f74dc7189e0c1d563f4f3ec8493434eaf58a15"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "1c53f4694232334e936089382534e8c96ff0b086ff4c4ebb4cb7b613610122f3"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "d7ee930112d84d2c4e051015bea291e594f0a863ab0cfbaf0c4d7c138d6a1b3b"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "4346c2a15f5d2d4ba9e102663a358ed651e7a214be15bf085082eece8fcb4303"
+        },
+        {
+          "path": "index.html",
+          "bytes": 25517,
+          "sha256": "6d2d2e28a1d439720fdf42a1961c3d42cacfe421dbf60769b01e869ced688fcd"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22200,
+          "sha256": "eca2b8334500262a40b48712370d856713dda16febf5f9f26b12590cdb440887"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "ed92f594062c5c0fcab89d34ca3fa8d20d7cea2ecbaae4c7b08a5ec8a3b721d2"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "4e8ba642044714128c6733dab7fcd2dee01f028cc637db53ee0b4f3f5fa50056"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "d11e3b7938e8870717114922c868f4b5ccad70369bf3eb629043612e0f7e5b3b"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "f9ce3b6cf88e01ab5f42894428794001639e5106641d4722e451f9806401a4ee"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "fc2eb2aa4326e262c365e51ffe5a43c0ef8f5d047317a76479718230406ade03"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "b3fc784bc8d571b0186cae5c68c7381a1bb1b43723de8d6aaec23521eb4aa1f3"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "curly-opener",
+      "input": {
+        "id": "curly-opener",
+        "text": "The project states: \u201calpha beta gamma.\u201d",
+        "names": [],
+        "local": [
+          "lead-in-without-quote"
+        ],
+        "broad": [],
+        "broadCount": 1,
+        "inners": []
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "lead-in-without-quote",
+          "at": "$.introduction.text",
+          "blockId": "intro",
+          "detail": "a lead-in is not followed by a straight double quote: a lead-in promises a verbatim quotation"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": false,
+          "kind": "lead-in-without-quote"
+        }
+      ],
+      "spans": [],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "lead-in-without-quote",
+            "at": "$.entries[0].statement",
+            "blockId": "e1",
+            "detail": "a lead-in is not followed by a straight double quote: a lead-in promises a verbatim quotation"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "ordinary-altered",
+      "input": {
+        "id": "ordinary-altered",
+        "text": "An \"invented\" description.",
+        "names": [],
+        "local": [],
+        "broad": [
+          "quote-not-in-cited-sources"
+        ],
+        "broadCount": 1,
+        "inners": [],
+        "rawQuotes": []
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "quote-not-in-cited-sources",
+            "quote": "invented"
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation \"invented\" is not found, after normalisation, in any source this block cites (quote-not-in-cited-sources). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [],
+      "spans": [],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "An \"invented\" description."
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "ea6bb19c6b35fc112bfd0ce400488f048e0e61305df0df4d376e9c3f908f5632"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "1932f39436cda17bc7e644684762a911d7e524bc7f5683061684dc8dcefd5409"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "6e68dfee3b3acfc204434cb86887854d21e6198e83302fff45e104c087a0fd99"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "523ef74a0292338d3728e7bf2138c415b1c4da53649a1e3fd7c81617fade3f68"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "46f8a1aa06fa1a458ffed240d25e07f1d7e2167e0d918ec7d11f0e811b13539e"
+        },
+        {
+          "path": "index.html",
+          "bytes": 24887,
+          "sha256": "65ca482147d8923accee3ac423af07ee0164c209da41a40340e4f5d98026f648"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 21665,
+          "sha256": "cc2e6e3a2b1b2715b4234a937c3f8db9ac21af12a7606fe5ceac35f6297d8b9b"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "8c1728c7efc7d19dd5a50396a5d96ebbf6b13a20058aaba19c4ffc177c6ab50c"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "ed31ade42115fcd28e99b6c4f822ef9dc36c5c84572afc57bf2490fe269b0058"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "047aea9ab326db741f35d482ad7075cdd9ef4c4cf8afb61b1fb2ab49f914872f"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "6676f51576cf9362ef31c0de455056c8adcc076b46f78e600c89be387e7bb2fa"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "8f845235adc82b7f8b9910473755ba74e2bd7de818e5c414dd0a2edb9f3ac433"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "8d0b34178eab69346884db4073e72f7f532ead6f3c1047714d179bd060aea993"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "ordinary-verified",
+      "input": {
+        "id": "ordinary-verified",
+        "text": "An ordinary \"delta.\"",
+        "names": [],
+        "local": [],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [],
+        "rawQuotes": []
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [],
+      "spans": [],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "An ordinary \"delta.\""
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "ea6bb19c6b35fc112bfd0ce400488f048e0e61305df0df4d376e9c3f908f5632"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "1932f39436cda17bc7e644684762a911d7e524bc7f5683061684dc8dcefd5409"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "6e68dfee3b3acfc204434cb86887854d21e6198e83302fff45e104c087a0fd99"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "523ef74a0292338d3728e7bf2138c415b1c4da53649a1e3fd7c81617fade3f68"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "46f8a1aa06fa1a458ffed240d25e07f1d7e2167e0d918ec7d11f0e811b13539e"
+        },
+        {
+          "path": "index.html",
+          "bytes": 24881,
+          "sha256": "db6776469f3e06971de399172cf8a5cabb708290437dc29e5ef880a2f505db5a"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 21665,
+          "sha256": "cc2e6e3a2b1b2715b4234a937c3f8db9ac21af12a7606fe5ceac35f6297d8b9b"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "8c1728c7efc7d19dd5a50396a5d96ebbf6b13a20058aaba19c4ffc177c6ab50c"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "a1df3de520058016a909739139a2583be2d38b970b9018ff4805d16e5da9cc7b"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "823bb3e3be2fd4b83df320f792c88c8c9a720e6966bc14d68c1e3d80d7e4f12b"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "6676f51576cf9362ef31c0de455056c8adcc076b46f78e600c89be387e7bb2fa"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "8f845235adc82b7f8b9910473755ba74e2bd7de818e5c414dd0a2edb9f3ac433"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "8d0b34178eab69346884db4073e72f7f532ead6f3c1047714d179bd060aea993"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "ordinary-before",
+      "input": {
+        "id": "ordinary-before",
+        "text": "\"delta.\" Then The project states: \"alpha beta gamma.\"",
+        "names": [
+          "c"
+        ],
+        "local": [],
+        "broad": [],
+        "broadCount": 2,
+        "inners": [
+          "alpha beta gamma."
+        ],
+        "rawQuotes": [
+          "alpha **beta** gamma."
+        ]
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            23,
+            44
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 2,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha beta gamma."
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha beta gamma.",
+          "open": 34,
+          "close": 52
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "\"delta.\" Then The project states: "
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 23,
+            "end": 44,
+            "text": "alpha **beta** gamma.",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 23,
+                "end": 44
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              23,
+              44
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "f0370c30625cd7cb4440ba6cd9ee8b05745646ef0b8077d68259d2073b07057c"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "e1ecfc88420dc362961f177de9f74dc7189e0c1d563f4f3ec8493434eaf58a15"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "1c53f4694232334e936089382534e8c96ff0b086ff4c4ebb4cb7b613610122f3"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "d7ee930112d84d2c4e051015bea291e594f0a863ab0cfbaf0c4d7c138d6a1b3b"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "4346c2a15f5d2d4ba9e102663a358ed651e7a214be15bf085082eece8fcb4303"
+        },
+        {
+          "path": "index.html",
+          "bytes": 25541,
+          "sha256": "1217dbb8cdd5c56146ea769c92dcbfcaaf1af3089ea451f9a569ac5396b19231"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22200,
+          "sha256": "eca2b8334500262a40b48712370d856713dda16febf5f9f26b12590cdb440887"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "ed92f594062c5c0fcab89d34ca3fa8d20d7cea2ecbaae4c7b08a5ec8a3b721d2"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "d79f83bd5069c23b7467476c58eb5078dd2a0792bd9cf3d0c9ac4ba13b287c66"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "6880853fc7f18af6ff5f5becfc27e377ea9e0ecebc0297ac0691c25377f5d7bb"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "f9ce3b6cf88e01ab5f42894428794001639e5106641d4722e451f9806401a4ee"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "fc2eb2aa4326e262c365e51ffe5a43c0ef8f5d047317a76479718230406ade03"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "b3fc784bc8d571b0186cae5c68c7381a1bb1b43723de8d6aaec23521eb4aa1f3"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "stray-before",
+      "input": {
+        "id": "stray-before",
+        "text": "\"preface The project states: \"alpha\"",
+        "names": [
+          "c"
+        ],
+        "local": [],
+        "broad": [
+          "quote-not-in-cited-sources"
+        ],
+        "broadCount": 1,
+        "inners": [
+          "alpha"
+        ],
+        "rawQuotes": [
+          "alpha"
+        ]
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            23,
+            28
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "quote-not-in-cited-sources",
+            "quote": "preface The project states: \"alpha"
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation \"preface The project states: \"alpha\" is not found, after normalisation, in any source this block cites (quote-not-in-cited-sources). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha",
+          "open": 29,
+          "close": 35
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "\"preface The project states: "
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 23,
+            "end": 28,
+            "text": "alpha",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 23,
+                "end": 28
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              23,
+              28
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "f0370c30625cd7cb4440ba6cd9ee8b05745646ef0b8077d68259d2073b07057c"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "e1ecfc88420dc362961f177de9f74dc7189e0c1d563f4f3ec8493434eaf58a15"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "1c53f4694232334e936089382534e8c96ff0b086ff4c4ebb4cb7b613610122f3"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "d7ee930112d84d2c4e051015bea291e594f0a863ab0cfbaf0c4d7c138d6a1b3b"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "4346c2a15f5d2d4ba9e102663a358ed651e7a214be15bf085082eece8fcb4303"
+        },
+        {
+          "path": "index.html",
+          "bytes": 25515,
+          "sha256": "2575667efb9fae56f3920c468811e6758a899434f168ddde58837b228d6c0cc5"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22200,
+          "sha256": "42317a0f265307237c1b071d9f814db1dfe53eb0fc4b2cfc4bdeb13c2850f104"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "ed92f594062c5c0fcab89d34ca3fa8d20d7cea2ecbaae4c7b08a5ec8a3b721d2"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "e2811911808f9110abec294811fa2b0520010a39f712f24976e9ca40fd4609ec"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "94b4de3a177c7349e29b33c37a6f8246c88b68a1cc8df3034f390e308ffdd72d"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "f9ce3b6cf88e01ab5f42894428794001639e5106641d4722e451f9806401a4ee"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "fc2eb2aa4326e262c365e51ffe5a43c0ef8f5d047317a76479718230406ade03"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "b3fc784bc8d571b0186cae5c68c7381a1bb1b43723de8d6aaec23521eb4aa1f3"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "curly-outer",
+      "input": {
+        "id": "curly-outer",
+        "text": "\u201cThe project states: \"alpha\"\u201d",
+        "names": [
+          "c"
+        ],
+        "local": [],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [
+          "alpha"
+        ],
+        "rawQuotes": [
+          "alpha"
+        ]
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            23,
+            28
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha",
+          "open": 21,
+          "close": 27
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "\u201cThe project states: "
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 23,
+            "end": 28,
+            "text": "alpha",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 23,
+                "end": 28
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          },
+          {
+            "kind": "prose",
+            "text": "\u201d"
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              23,
+              28
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "f0370c30625cd7cb4440ba6cd9ee8b05745646ef0b8077d68259d2073b07057c"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "e1ecfc88420dc362961f177de9f74dc7189e0c1d563f4f3ec8493434eaf58a15"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "1c53f4694232334e936089382534e8c96ff0b086ff4c4ebb4cb7b613610122f3"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "d7ee930112d84d2c4e051015bea291e594f0a863ab0cfbaf0c4d7c138d6a1b3b"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "4346c2a15f5d2d4ba9e102663a358ed651e7a214be15bf085082eece8fcb4303"
+        },
+        {
+          "path": "index.html",
+          "bytes": 25507,
+          "sha256": "8aeae53fcc054a2077f7a43b59472d532ec46c76cb81fbfc4cca0c1f489cd8c1"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22200,
+          "sha256": "42317a0f265307237c1b071d9f814db1dfe53eb0fc4b2cfc4bdeb13c2850f104"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "ed92f594062c5c0fcab89d34ca3fa8d20d7cea2ecbaae4c7b08a5ec8a3b721d2"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "6c55ed279d97d5b51ec898ec43f4eac2abeff0f9101ad22a46a1a7c8575d250a"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "3c9327767c4509acd471a0007788fe4074dc07b6e9fd9f7a04b40e4c03bc106a"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "f9ce3b6cf88e01ab5f42894428794001639e5106641d4722e451f9806401a4ee"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "fc2eb2aa4326e262c365e51ffe5a43c0ef8f5d047317a76479718230406ade03"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "b3fc784bc8d571b0186cae5c68c7381a1bb1b43723de8d6aaec23521eb4aa1f3"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "straight-outer",
+      "input": {
+        "id": "straight-outer",
+        "text": "\"outer The project states: \"alpha\" tail\"",
+        "names": [
+          "c"
+        ],
+        "local": [],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [
+          "alpha\" tail"
+        ],
+        "rawQuotes": [
+          "alpha\" tail"
+        ]
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            138,
+            149
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha\" tail"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha\" tail",
+          "open": 27,
+          "close": 39
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "\"outer The project states: "
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 138,
+            "end": 149,
+            "text": "alpha\" tail",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 138,
+                "end": 149
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              138,
+              149
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "f0370c30625cd7cb4440ba6cd9ee8b05745646ef0b8077d68259d2073b07057c"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "e1ecfc88420dc362961f177de9f74dc7189e0c1d563f4f3ec8493434eaf58a15"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "1c53f4694232334e936089382534e8c96ff0b086ff4c4ebb4cb7b613610122f3"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "d7ee930112d84d2c4e051015bea291e594f0a863ab0cfbaf0c4d7c138d6a1b3b"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "4346c2a15f5d2d4ba9e102663a358ed651e7a214be15bf085082eece8fcb4303"
+        },
+        {
+          "path": "index.html",
+          "bytes": 25530,
+          "sha256": "205796d7362ce61ad2356d8eb751009ebcb866ad413fc56ba98af8918a4fd47f"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22204,
+          "sha256": "5ba0630da39647a549b52886988747502a00c7702db6314c6c4d9466d7051ecf"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "ed92f594062c5c0fcab89d34ca3fa8d20d7cea2ecbaae4c7b08a5ec8a3b721d2"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "4c3d41a9902a65fd10e78e282001e5804c23d1e9d05171b599b6f725fa9328a8"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "8162641c5c586e59cbf5b9dc47a62ec23f0edcf828ec2d8dde8f9fd2121b8fb0"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "f9ce3b6cf88e01ab5f42894428794001639e5106641d4722e451f9806401a4ee"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "fc2eb2aa4326e262c365e51ffe5a43c0ef8f5d047317a76479718230406ade03"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "b3fc784bc8d571b0186cae5c68c7381a1bb1b43723de8d6aaec23521eb4aa1f3"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "next-lead-in-quoted-terms",
+      "input": {
+        "id": "next-lead-in-quoted-terms",
+        "text": "The project states: \"alpha \"beta\" gamma.\" Next The project states: \"delta.\"",
+        "names": [
+          "c",
+          "c2"
+        ],
+        "local": [],
+        "broad": [],
+        "broadCount": 2,
+        "inners": [
+          "alpha \"beta\" gamma.",
+          "delta."
+        ],
+        "rawQuotes": [
+          "alpha \"beta\" gamma.",
+          "delta."
+        ]
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            63,
+            82
+          ]
+        },
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 1,
+          "citationId": "c2",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            45,
+            51
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 2,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha \"beta\" gamma."
+        },
+        {
+          "terminated": true,
+          "inner": "delta."
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha \"beta\" gamma.",
+          "open": 20,
+          "close": 40
+        },
+        {
+          "inner": "delta.",
+          "open": 67,
+          "close": 74
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "The project states: "
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 63,
+            "end": 82,
+            "text": "alpha \"beta\" gamma.",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 63,
+                "end": 82
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          },
+          {
+            "kind": "prose",
+            "text": " Next The project states: "
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 45,
+            "end": 51,
+            "text": "delta.",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 45,
+                "end": 51
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              63,
+              82
+            ]
+          },
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 1,
+            "citationId": "c2",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              45,
+              51
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "2afbc131a236cc56afffd70fed3ed5761f97d14ae0fa32fac69d0976cceab7fa"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "fcdcb470a6ab56281895e67130c7c138c1a98f967769b62dd36c8ea3c432d317"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "ef083e2d19495a3b07bf57ade8d797fbb5ed36d9c8b54a3dba2803f5c45b56cf"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "e4bf634815eb49553c1faa441049298014731e38e8fdda75449e69d73d552d3e"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "6da5612a084ad1e4971fd358a740a3ca29c142c3caf27ab7412a940e61fe85c0"
+        },
+        {
+          "path": "index.html",
+          "bytes": 26182,
+          "sha256": "cb41013bcd29547a71a6c2f12e5bc71e35a5452afa0751c890395ec1ac54f9f8"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22733,
+          "sha256": "855a4a2df72e6955fc358f2b23f85acd6ccb4052cd5ce0f8bf10ed3a0903cd98"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "4efa7b60d61cade0be6e254beaff2a25fb7fccee618ab5a68392a3281935b1a0"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "05c02ef4705fe04d90845fc46ce77b8e54608ef61335451511a6091d0eff4a16"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "96876a15eddd5abd622975ca918ca9207025e4a571257c1c6202bfa075829766"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "52c1dd3e135594c7d27ea4618dc8a74d3a3b7a228464abf41b9da9c62bb129a8"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "5575d361d318b633d55d3d01eb346a408bfcad2630bca967c884178a93109ce0"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "5d1b43393eb2805d5f398d995de4d6576b308cc932dfe0787950db40631c07f6"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "literal-nested-lead-in",
+      "input": {
+        "id": "literal-nested-lead-in",
+        "text": "The project states: \"alpha The project states: \"delta.\"",
+        "names": [
+          "c",
+          "c2"
+        ],
+        "local": [
+          "quotation-unterminated"
+        ],
+        "broad": [
+          "unterminated-quote"
+        ],
+        "broadCount": 2,
+        "inners": [
+          "delta."
+        ]
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "quotation-unterminated",
+          "at": "$.introduction.text",
+          "blockId": "intro",
+          "detail": "quotation 1 is never closed"
+        }
+      ],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 1,
+          "citationId": "c2",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            45,
+            51
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 2,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "unterminated-quote",
+            "quote": "alpha "
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation \"alpha \" opens a quotation that is never closed (unterminated-quote). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [
+        {
+          "terminated": false,
+          "kind": "quotation-unterminated"
+        },
+        {
+          "terminated": true,
+          "inner": "delta."
+        }
+      ],
+      "spans": [
+        {
+          "inner": "delta.",
+          "open": 47,
+          "close": 54
+        }
+      ],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "quotation-unterminated",
+            "at": "$.entries[0].statement",
+            "blockId": "e1",
+            "detail": "quotation 1 is never closed"
+          }
+        ],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 1,
+            "citationId": "c2",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              45,
+              51
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "missing-opener",
+      "input": {
+        "id": "missing-opener",
+        "text": "The project states: alpha",
+        "names": [],
+        "local": [
+          "lead-in-without-quote"
+        ],
+        "broad": [
+          "lead-in-without-quote"
+        ],
+        "broadCount": 0,
+        "inners": []
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "lead-in-without-quote",
+          "at": "$.introduction.text",
+          "blockId": "intro",
+          "detail": "a lead-in is not followed by a straight double quote: a lead-in promises a verbatim quotation"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 0,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "lead-in-without-quote",
+            "quote": ""
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation announces a verbatim quotation and gives none (lead-in-without-quote). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [
+        {
+          "terminated": false,
+          "kind": "lead-in-without-quote"
+        }
+      ],
+      "spans": [],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "lead-in-without-quote",
+            "at": "$.entries[0].statement",
+            "blockId": "e1",
+            "detail": "a lead-in is not followed by a straight double quote: a lead-in promises a verbatim quotation"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "empty",
+      "input": {
+        "id": "empty",
+        "text": "The project states: \"\"",
+        "names": [
+          "c"
+        ],
+        "local": [
+          "quotation-empty"
+        ],
+        "broad": [
+          "empty-quote"
+        ],
+        "broadCount": 1,
+        "inners": [
+          ""
+        ]
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "quotation-empty",
+          "at": "$.introduction.text",
+          "blockId": "intro",
+          "citationId": "c",
+          "detail": "quotation 1 is empty after normalisation (citation \"c\")"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "empty-quote",
+            "quote": ""
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation is an empty quotation (empty-quote). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": ""
+        }
+      ],
+      "spans": [
+        {
+          "inner": "",
+          "open": 20,
+          "close": 21
+        }
+      ],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "quotation-empty",
+            "at": "$.entries[0].statement",
+            "blockId": "e1",
+            "citationId": "c",
+            "detail": "quotation 1 is empty after normalisation (citation \"c\")"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "unterminated",
+      "input": {
+        "id": "unterminated",
+        "text": "The project states: \"alpha",
+        "names": [
+          "c"
+        ],
+        "local": [
+          "quotation-unterminated"
+        ],
+        "broad": [
+          "unterminated-quote"
+        ],
+        "broadCount": 1,
+        "inners": []
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "quotation-unterminated",
+          "at": "$.introduction.text",
+          "blockId": "intro",
+          "detail": "quotation 1 is never closed"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "unterminated-quote",
+            "quote": "alpha"
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation \"alpha\" opens a quotation that is never closed (unterminated-quote). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [
+        {
+          "terminated": false,
+          "kind": "quotation-unterminated"
+        }
+      ],
+      "spans": [],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "quotation-unterminated",
+            "at": "$.entries[0].statement",
+            "blockId": "e1",
+            "detail": "quotation 1 is never closed"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "altered",
+      "input": {
+        "id": "altered",
+        "text": "The project states: \"alpha beta altered.\"",
+        "names": [
+          "c"
+        ],
+        "local": [
+          "quotation-not-in-cited-file"
+        ],
+        "broad": [
+          "quote-not-in-cited-sources"
+        ],
+        "broadCount": 1,
+        "inners": [
+          "alpha beta altered."
+        ]
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "quotation-not-in-cited-file",
+          "at": "$.introduction.text",
+          "blockId": "intro",
+          "citationId": "c",
+          "detail": "quotation 1 is not one contiguous run of the cited file after normalisation: it is altered or joins separate spans (citation \"c\")"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "quote-not-in-cited-sources",
+            "quote": "alpha beta altered."
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation \"alpha beta altered.\" is not found, after normalisation, in any source this block cites (quote-not-in-cited-sources). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha beta altered."
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha beta altered.",
+          "open": 20,
+          "close": 40
+        }
+      ],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "quotation-not-in-cited-file",
+            "at": "$.entries[0].statement",
+            "blockId": "e1",
+            "citationId": "c",
+            "detail": "quotation 1 is not one contiguous run of the cited file after normalisation: it is altered or joins separate spans (citation \"c\")"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "appended-unverified",
+      "input": {
+        "id": "appended-unverified",
+        "text": "The project states: \"alpha beta gamma.\" plus \"invented\"",
+        "names": [
+          "c"
+        ],
+        "local": [
+          "quotation-not-in-cited-file"
+        ],
+        "broad": [
+          "quote-not-in-cited-sources"
+        ],
+        "broadCount": 1,
+        "inners": [
+          "alpha beta gamma.\" plus \"invented"
+        ]
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "quotation-not-in-cited-file",
+          "at": "$.introduction.text",
+          "blockId": "intro",
+          "citationId": "c",
+          "detail": "quotation 1 is not one contiguous run of the cited file after normalisation: it is altered or joins separate spans (citation \"c\")"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "quote-not-in-cited-sources",
+            "quote": "alpha beta gamma.\" plus \"invented"
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation \"alpha beta gamma.\" plus \"invented\" is not found, after normalisation, in any source this block cites (quote-not-in-cited-sources). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha beta gamma.\" plus \"invented"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha beta gamma.\" plus \"invented",
+          "open": 20,
+          "close": 54
+        }
+      ],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "quotation-not-in-cited-file",
+            "at": "$.entries[0].statement",
+            "blockId": "e1",
+            "citationId": "c",
+            "detail": "quotation 1 is not one contiguous run of the cited file after normalisation: it is altered or joins separate spans (citation \"c\")"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "wrong-citation",
+      "input": {
+        "id": "wrong-citation",
+        "text": "The project states: \"alpha\"",
+        "names": [
+          "missing"
+        ],
+        "local": [
+          "quotation-citation"
+        ],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [
+          "alpha"
+        ]
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "quotation-citation",
+          "at": "$.introduction.quotations[0]",
+          "blockId": "intro",
+          "detail": "the quotation names no citation of this block"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha",
+          "open": 20,
+          "close": 26
+        }
+      ],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "quotation-citation",
+            "at": "$.entries[0].quotations[0]",
+            "blockId": "e1",
+            "detail": "the quotation names no citation of this block"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "uncited",
+      "input": {
+        "id": "uncited",
+        "text": "The project states: \"alpha\"",
+        "names": [
+          "c"
+        ],
+        "uncited": true,
+        "local": [
+          "schema",
+          "citation-by-kind",
+          "quotation-citation"
+        ],
+        "broad": [
+          "quote-without-cited-source"
+        ],
+        "broadCount": 1,
+        "inners": [
+          "alpha"
+        ]
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "schema",
+          "at": "$.introduction.citations",
+          "detail": "must hold 1 to 50 items; holds 0"
+        },
+        {
+          "kind": "citation-by-kind",
+          "at": "$.introduction.citations",
+          "blockId": "intro",
+          "detail": "an inferred block cites at least one source"
+        },
+        {
+          "kind": "quotation-citation",
+          "at": "$.introduction.quotations[0]",
+          "blockId": "intro",
+          "detail": "the quotation names no citation of this block"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "quote-without-cited-source",
+            "quote": "alpha"
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation \"alpha\" quotes text but cites no source (quote-without-cited-source). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha",
+          "open": 20,
+          "close": 26
+        }
+      ],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "schema",
+            "at": "$.entries[0].citations",
+            "detail": "must hold 1 to 50 items; holds 0"
+          },
+          {
+            "kind": "citation-by-kind",
+            "at": "$.entries[0].citations",
+            "blockId": "e1",
+            "detail": "an inferred block cites at least one source"
+          },
+          {
+            "kind": "quotation-citation",
+            "at": "$.entries[0].quotations[0]",
+            "blockId": "e1",
+            "detail": "the quotation names no citation of this block"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "missing-source",
+      "input": {
+        "id": "missing-source",
+        "text": "The project states: \"alpha\"",
+        "names": [
+          "c"
+        ],
+        "path": "src/absent.txt",
+        "local": [
+          "path-absent"
+        ],
+        "broad": [
+          "quote-without-cited-source"
+        ],
+        "broadCount": 1,
+        "inners": [
+          "alpha"
+        ]
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "path-absent",
+          "at": "$.introduction.citations[0].path",
+          "citationId": "c",
+          "detail": "\"src/absent.txt\" names no file at the pinned revision 620a27434d342586c97af352ba7f754b964fd92d"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "quote-without-cited-source",
+            "quote": "alpha"
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation \"alpha\" quotes text but cites no source (quote-without-cited-source). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha",
+          "open": 20,
+          "close": 26
+        }
+      ],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "path-absent",
+            "at": "$.entries[0].citations[0].path",
+            "citationId": "c",
+            "detail": "\"src/absent.txt\" names no file at the pinned revision 620a27434d342586c97af352ba7f754b964fd92d"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "outside-range",
+      "input": {
+        "id": "outside-range",
+        "text": "The project states: \"alpha beta gamma.\"",
+        "names": [
+          "c"
+        ],
+        "range": [
+          1,
+          1
+        ],
+        "local": [
+          "quotation-outside-range"
+        ],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [
+          "alpha beta gamma."
+        ]
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "quotation-outside-range",
+          "at": "$.introduction.text",
+          "blockId": "intro",
+          "citationId": "c",
+          "detail": "quotation 1 occurs in the cited file only outside the cited line range (citation \"c\")"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha beta gamma."
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha beta gamma.",
+          "open": 20,
+          "close": 38
+        }
+      ],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "quotation-outside-range",
+            "at": "$.entries[0].statement",
+            "blockId": "e1",
+            "citationId": "c",
+            "detail": "quotation 1 occurs in the cited file only outside the cited line range (citation \"c\")"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "range-beyond",
+      "input": {
+        "id": "range-beyond",
+        "text": "The project states: \"alpha\"",
+        "names": [
+          "c"
+        ],
+        "range": [
+          1,
+          999
+        ],
+        "local": [
+          "range-beyond-blob"
+        ],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [
+          "alpha"
+        ]
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "range-beyond-blob",
+          "at": "$.introduction.citations[0].endLine",
+          "citationId": "c",
+          "detail": "\"src/fixture.txt\" has 7 line(s) at the pinned revision; the range ends at line 999"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha",
+          "open": 20,
+          "close": 26
+        }
+      ],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "range-beyond-blob",
+            "at": "$.entries[0].citations[0].endLine",
+            "citationId": "c",
+            "detail": "\"src/fixture.txt\" has 7 line(s) at the pinned revision; the range ends at line 999"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "joined",
+      "input": {
+        "id": "joined",
+        "text": "The project states: \"delta. alpha beta gamma.\"",
+        "names": [
+          "c"
+        ],
+        "local": [
+          "quotation-not-in-cited-file"
+        ],
+        "broad": [
+          "quote-not-in-cited-sources"
+        ],
+        "broadCount": 1,
+        "inners": [
+          "delta. alpha beta gamma."
+        ]
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "quotation-not-in-cited-file",
+          "at": "$.introduction.text",
+          "blockId": "intro",
+          "citationId": "c",
+          "detail": "quotation 1 is not one contiguous run of the cited file after normalisation: it is altered or joins separate spans (citation \"c\")"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "quote-not-in-cited-sources",
+            "quote": "delta. alpha beta gamma."
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation \"delta. alpha beta gamma.\" is not found, after normalisation, in any source this block cites (quote-not-in-cited-sources). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "delta. alpha beta gamma."
+        }
+      ],
+      "spans": [
+        {
+          "inner": "delta. alpha beta gamma.",
+          "open": 20,
+          "close": 45
+        }
+      ],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "quotation-not-in-cited-file",
+            "at": "$.entries[0].statement",
+            "blockId": "e1",
+            "citationId": "c",
+            "detail": "quotation 1 is not one contiguous run of the cited file after normalisation: it is altered or joins separate spans (citation \"c\")"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "elided",
+      "input": {
+        "id": "elided",
+        "text": "The project states: \"alpha ... gamma.\"",
+        "names": [
+          "c"
+        ],
+        "local": [
+          "quotation-elided"
+        ],
+        "broad": [
+          "elided-quote"
+        ],
+        "broadCount": 1,
+        "inners": [
+          "alpha ... gamma."
+        ]
+      },
+      "localOutcome": "findings",
+      "localFindings": [
+        {
+          "kind": "quotation-elided",
+          "at": "$.introduction.text",
+          "blockId": "intro",
+          "citationId": "c",
+          "detail": "quotation 1 carries an ellipsis the cited file does not carry there: an elision (citation \"c\")"
+        }
+      ],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "elided-quote",
+            "quote": "alpha ... gamma."
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation \"alpha ... gamma.\" elides text with an ellipsis, which is not allowed (the ellipsis is not in the source at that spot) (elided-quote). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha ... gamma."
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha ... gamma.",
+          "open": 20,
+          "close": 37
+        }
+      ],
+      "renderedBlock": null,
+      "inventory": {
+        "findings": [
+          {
+            "kind": "quotation-elided",
+            "at": "$.entries[0].statement",
+            "blockId": "e1",
+            "citationId": "c",
+            "detail": "quotation 1 carries an ellipsis the cited file does not carry there: an elision (citation \"c\")"
+          }
+        ],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": false,
+      "renderedFiles": [],
+      "renderRefusal": {
+        "command": "render",
+        "outcome": "refused",
+        "stage": "draft",
+        "reason": "nothing is rendered: draft revision 0, the latest checked, has open findings; only a passed revision is reviewed",
+        "disclosures": [
+          "the consent, registry, policy and statement records the gates read lie in Syzygy's checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them",
+          "Every quotation, source page, check result and review binding on the rendered pages was derived at this render from Git objects read by identifier at the pinned revision and re-hashed now; no stored byte range, check result or packet was used.",
+          "Every value the pages show from Syzygy's stored records rather than re-deriving it is labelled Inferred."
+        ]
+      },
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "excluded-source",
+      "input": {
+        "id": "excluded-source",
+        "text": "The project states: \"Inert fixture text.\"",
+        "names": [
+          "c"
+        ],
+        "path": ".env",
+        "local": [],
+        "broad": [
+          "quote-without-cited-source"
+        ],
+        "broadCount": 1,
+        "inners": [
+          "Inert fixture text."
+        ],
+        "rawQuotes": []
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [],
+      "excluded": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "unknownReason": "excluded-content"
+        }
+      ],
+      "broad": {
+        "quotes": 1,
+        "findings": [
+          {
+            "blockId": "intro",
+            "kind": "quote-without-cited-source",
+            "quote": "Inert fixture text."
+          }
+        ]
+      },
+      "broadRepair": [
+        {
+          "severity": "blocking",
+          "message": "Quotation \"Inert fixture text.\" quotes text but cites no source (quote-without-cited-source). Give one quotation per lead-in, and quote it verbatim from a cited source, or remove the quotation marks and mark the sentence Inferred.",
+          "target": "intro"
+        }
+      ],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "Inert fixture text."
+        }
+      ],
+      "spans": [
+        {
+          "inner": "Inert fixture text.",
+          "open": 20,
+          "close": 40
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "excluded-content",
+        "basis": "a quotation it rests on is from a file screening excludes, so the quotation is neither verified nor shown",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "The project states: "
+          },
+          {
+            "kind": "withheld",
+            "reason": "excluded-content"
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [],
+        "excluded": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "unknownReason": "excluded-content"
+          }
+        ]
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "ea6bb19c6b35fc112bfd0ce400488f048e0e61305df0df4d376e9c3f908f5632"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "1932f39436cda17bc7e644684762a911d7e524bc7f5683061684dc8dcefd5409"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27485,
+          "sha256": "d07e3f6ce73af3173622acbaff0a6c4c5b76dade9cb8ac10c8e3713f0cfd21fd"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "523ef74a0292338d3728e7bf2138c415b1c4da53649a1e3fd7c81617fade3f68"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "46f8a1aa06fa1a458ffed240d25e07f1d7e2167e0d918ec7d11f0e811b13539e"
+        },
+        {
+          "path": "index.html",
+          "bytes": 24849,
+          "sha256": "dacf762a1d87ada4ed156f2d9aa99a83a5a2c16cc79ca774adc59af91c9347ac"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22289,
+          "sha256": "56c7ab35d05f61c828a90b5055fcebe0df52a852e431b670b3a65c46b1ee882b"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "8c1728c7efc7d19dd5a50396a5d96ebbf6b13a20058aaba19c4ffc177c6ab50c"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "e350c442a078e0eaa884f4ab964fc2d9cdaeadc9fc154554f210c19bd9cf55a7"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "824b865c2a7440cff73a652eba311b4a966d1dcbeeaab074dfe7ca70b49e0f96"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "6676f51576cf9362ef31c0de455056c8adcc076b46f78e600c89be387e7bb2fa"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24353,
+          "sha256": "4d8493b6d212b61b6fa88de0d0add8040667b613d1fab4005e89be02c2ce0820"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "8d0b34178eab69346884db4073e72f7f532ead6f3c1047714d179bd060aea993"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "no-quotations",
+      "input": {
+        "id": "no-quotations",
+        "text": "Plain prose.",
+        "names": [],
+        "local": [],
+        "broad": [],
+        "broadCount": 0,
+        "inners": [],
+        "rawQuotes": []
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [],
+      "excluded": [],
+      "broad": {
+        "quotes": 0,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [],
+      "spans": [],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "Plain prose."
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "ea6bb19c6b35fc112bfd0ce400488f048e0e61305df0df4d376e9c3f908f5632"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "1932f39436cda17bc7e644684762a911d7e524bc7f5683061684dc8dcefd5409"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "6e68dfee3b3acfc204434cb86887854d21e6198e83302fff45e104c087a0fd99"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "523ef74a0292338d3728e7bf2138c415b1c4da53649a1e3fd7c81617fade3f68"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "46f8a1aa06fa1a458ffed240d25e07f1d7e2167e0d918ec7d11f0e811b13539e"
+        },
+        {
+          "path": "index.html",
+          "bytes": 24863,
+          "sha256": "e8fbd246b059f01ed01665d6cfab86c231efb8d88319bfb07b295e4d3299440e"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 21665,
+          "sha256": "cc2e6e3a2b1b2715b4234a937c3f8db9ac21af12a7606fe5ceac35f6297d8b9b"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "8c1728c7efc7d19dd5a50396a5d96ebbf6b13a20058aaba19c4ffc177c6ab50c"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "a30684e334ae5b7fd3f7ee1b3641eedd9fef91937197af8ab424c4ffcbca8de5"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "644b7d654bfef1439766354863e7002e4e9dcbcc98c0a70f09d7f1aaccd419d6"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "6676f51576cf9362ef31c0de455056c8adcc076b46f78e600c89be387e7bb2fa"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "8f845235adc82b7f8b9910473755ba74e2bd7de818e5c414dd0a2edb9f3ac433"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "8d0b34178eab69346884db4073e72f7f532ead6f3c1047714d179bd060aea993"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "opener-whitespace-0",
+      "input": {
+        "id": "opener-whitespace-0",
+        "text": "The project states:\r\n\"alpha\"",
+        "names": [
+          "c"
+        ],
+        "local": [],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [
+          "alpha"
+        ],
+        "rawQuotes": [
+          "alpha"
+        ]
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            23,
+            28
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha",
+          "open": 21,
+          "close": 27
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "The project states:\r\n"
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 23,
+            "end": 28,
+            "text": "alpha",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 23,
+                "end": 28
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              23,
+              28
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "f0370c30625cd7cb4440ba6cd9ee8b05745646ef0b8077d68259d2073b07057c"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "e1ecfc88420dc362961f177de9f74dc7189e0c1d563f4f3ec8493434eaf58a15"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "1c53f4694232334e936089382534e8c96ff0b086ff4c4ebb4cb7b613610122f3"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "d7ee930112d84d2c4e051015bea291e594f0a863ab0cfbaf0c4d7c138d6a1b3b"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "4346c2a15f5d2d4ba9e102663a358ed651e7a214be15bf085082eece8fcb4303"
+        },
+        {
+          "path": "index.html",
+          "bytes": 25502,
+          "sha256": "0cd0fdd2376f5209a7106a8340bbe10b3578c492f796b20f988de20c487d9900"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22200,
+          "sha256": "42317a0f265307237c1b071d9f814db1dfe53eb0fc4b2cfc4bdeb13c2850f104"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "ed92f594062c5c0fcab89d34ca3fa8d20d7cea2ecbaae4c7b08a5ec8a3b721d2"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "5f715c3427b697cece87eba05018eb489b108722c41d42976af32c4e37d578f1"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "c8ee09efd611243b73a147e1778e04691d8fc845442bf0f6a025aa7fcb122a95"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "f9ce3b6cf88e01ab5f42894428794001639e5106641d4722e451f9806401a4ee"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "fc2eb2aa4326e262c365e51ffe5a43c0ef8f5d047317a76479718230406ade03"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "b3fc784bc8d571b0186cae5c68c7381a1bb1b43723de8d6aaec23521eb4aa1f3"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "opener-whitespace-1",
+      "input": {
+        "id": "opener-whitespace-1",
+        "text": "The project states:\r\"alpha\"",
+        "names": [
+          "c"
+        ],
+        "local": [],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [
+          "alpha"
+        ],
+        "rawQuotes": [
+          "alpha"
+        ]
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            23,
+            28
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha",
+          "open": 20,
+          "close": 26
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "The project states:\r"
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 23,
+            "end": 28,
+            "text": "alpha",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 23,
+                "end": 28
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              23,
+              28
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "f0370c30625cd7cb4440ba6cd9ee8b05745646ef0b8077d68259d2073b07057c"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "e1ecfc88420dc362961f177de9f74dc7189e0c1d563f4f3ec8493434eaf58a15"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "1c53f4694232334e936089382534e8c96ff0b086ff4c4ebb4cb7b613610122f3"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "d7ee930112d84d2c4e051015bea291e594f0a863ab0cfbaf0c4d7c138d6a1b3b"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "4346c2a15f5d2d4ba9e102663a358ed651e7a214be15bf085082eece8fcb4303"
+        },
+        {
+          "path": "index.html",
+          "bytes": 25501,
+          "sha256": "3b38f2ed8432689723f9e624fe6eb090c24060986c4efb7f224068cec399ccfe"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22200,
+          "sha256": "42317a0f265307237c1b071d9f814db1dfe53eb0fc4b2cfc4bdeb13c2850f104"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "ed92f594062c5c0fcab89d34ca3fa8d20d7cea2ecbaae4c7b08a5ec8a3b721d2"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "c262bcc930956bf4e06624432ff7e7e90fd8326617b47863e040041942b7afcb"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "966868c4478d9552cc580f9c400937868329245ddf42f5866796d93feac9b19d"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "f9ce3b6cf88e01ab5f42894428794001639e5106641d4722e451f9806401a4ee"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "fc2eb2aa4326e262c365e51ffe5a43c0ef8f5d047317a76479718230406ade03"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "b3fc784bc8d571b0186cae5c68c7381a1bb1b43723de8d6aaec23521eb4aa1f3"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "opener-whitespace-2",
+      "input": {
+        "id": "opener-whitespace-2",
+        "text": "The project states:\n\"alpha\"",
+        "names": [
+          "c"
+        ],
+        "local": [],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [
+          "alpha"
+        ],
+        "rawQuotes": [
+          "alpha"
+        ]
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            23,
+            28
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha",
+          "open": 20,
+          "close": 26
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "The project states:\n"
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 23,
+            "end": 28,
+            "text": "alpha",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 23,
+                "end": 28
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              23,
+              28
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "f0370c30625cd7cb4440ba6cd9ee8b05745646ef0b8077d68259d2073b07057c"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "e1ecfc88420dc362961f177de9f74dc7189e0c1d563f4f3ec8493434eaf58a15"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "1c53f4694232334e936089382534e8c96ff0b086ff4c4ebb4cb7b613610122f3"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "d7ee930112d84d2c4e051015bea291e594f0a863ab0cfbaf0c4d7c138d6a1b3b"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "4346c2a15f5d2d4ba9e102663a358ed651e7a214be15bf085082eece8fcb4303"
+        },
+        {
+          "path": "index.html",
+          "bytes": 25501,
+          "sha256": "3d0ab47f2c6c56b01f6dfcee8a839d7a2b2626d5ec50149f08b106752a8b6181"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22200,
+          "sha256": "42317a0f265307237c1b071d9f814db1dfe53eb0fc4b2cfc4bdeb13c2850f104"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "ed92f594062c5c0fcab89d34ca3fa8d20d7cea2ecbaae4c7b08a5ec8a3b721d2"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "c262bcc930956bf4e06624432ff7e7e90fd8326617b47863e040041942b7afcb"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "966868c4478d9552cc580f9c400937868329245ddf42f5866796d93feac9b19d"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "f9ce3b6cf88e01ab5f42894428794001639e5106641d4722e451f9806401a4ee"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "fc2eb2aa4326e262c365e51ffe5a43c0ef8f5d047317a76479718230406ade03"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "b3fc784bc8d571b0186cae5c68c7381a1bb1b43723de8d6aaec23521eb4aa1f3"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "inline-markup",
+      "input": {
+        "id": "inline-markup",
+        "text": "`The project states: \"alpha\"`",
+        "names": [
+          "c"
+        ],
+        "local": [],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [
+          "alpha"
+        ],
+        "rawQuotes": [
+          "alpha"
+        ]
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            23,
+            28
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha",
+          "open": 21,
+          "close": 27
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "`The project states: "
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 23,
+            "end": 28,
+            "text": "alpha",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 23,
+                "end": 28
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          },
+          {
+            "kind": "prose",
+            "text": "`"
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              23,
+              28
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "f0370c30625cd7cb4440ba6cd9ee8b05745646ef0b8077d68259d2073b07057c"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "e1ecfc88420dc362961f177de9f74dc7189e0c1d563f4f3ec8493434eaf58a15"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "1c53f4694232334e936089382534e8c96ff0b086ff4c4ebb4cb7b613610122f3"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "d7ee930112d84d2c4e051015bea291e594f0a863ab0cfbaf0c4d7c138d6a1b3b"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "4346c2a15f5d2d4ba9e102663a358ed651e7a214be15bf085082eece8fcb4303"
+        },
+        {
+          "path": "index.html",
+          "bytes": 25503,
+          "sha256": "629af47acb9e117051e7aa1c327f26079210596df6510b2b1aa3345708acb78c"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22200,
+          "sha256": "42317a0f265307237c1b071d9f814db1dfe53eb0fc4b2cfc4bdeb13c2850f104"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "ed92f594062c5c0fcab89d34ca3fa8d20d7cea2ecbaae4c7b08a5ec8a3b721d2"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "e793559bbacfdf05361f7d32006c90f0f7011f95a92e64dbe444328e7d90d9fd"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "f3dd5b5fa3ec07ec524d5d829a6a33abd1cf26e9ce1207192202753a98367c3e"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "f9ce3b6cf88e01ab5f42894428794001639e5106641d4722e451f9806401a4ee"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "fc2eb2aa4326e262c365e51ffe5a43c0ef8f5d047317a76479718230406ade03"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "b3fc784bc8d571b0186cae5c68c7381a1bb1b43723de8d6aaec23521eb4aa1f3"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "fenced-markup",
+      "input": {
+        "id": "fenced-markup",
+        "text": "```text\nThe project states: \"alpha\"\n```",
+        "names": [
+          "c"
+        ],
+        "local": [],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [
+          "alpha"
+        ],
+        "rawQuotes": [
+          "alpha"
+        ]
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            23,
+            28
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha",
+          "open": 28,
+          "close": 34
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "```text\nThe project states: "
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 23,
+            "end": 28,
+            "text": "alpha",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 23,
+                "end": 28
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          },
+          {
+            "kind": "prose",
+            "text": "\n```"
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              23,
+              28
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "f0370c30625cd7cb4440ba6cd9ee8b05745646ef0b8077d68259d2073b07057c"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "e1ecfc88420dc362961f177de9f74dc7189e0c1d563f4f3ec8493434eaf58a15"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "1c53f4694232334e936089382534e8c96ff0b086ff4c4ebb4cb7b613610122f3"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "d7ee930112d84d2c4e051015bea291e594f0a863ab0cfbaf0c4d7c138d6a1b3b"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "4346c2a15f5d2d4ba9e102663a358ed651e7a214be15bf085082eece8fcb4303"
+        },
+        {
+          "path": "index.html",
+          "bytes": 25513,
+          "sha256": "74fcd66b1ec68ed5d53a2eb8f0a5c9f92026dddb02c7802f8a9c723bbbaf9df2"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22200,
+          "sha256": "42317a0f265307237c1b071d9f814db1dfe53eb0fc4b2cfc4bdeb13c2850f104"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "ed92f594062c5c0fcab89d34ca3fa8d20d7cea2ecbaae4c7b08a5ec8a3b721d2"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "a99fac854346e30a7f294a90012a04563a0f8c1e1a79b155395b0337e8358ce3"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "03ab7b9b1dbdd3943b8e63d2a23da22b1ba588b031d605ef5be2b446c8ae26d2"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "f9ce3b6cf88e01ab5f42894428794001639e5106641d4722e451f9806401a4ee"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "fc2eb2aa4326e262c365e51ffe5a43c0ef8f5d047317a76479718230406ade03"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "b3fc784bc8d571b0186cae5c68c7381a1bb1b43723de8d6aaec23521eb4aa1f3"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    },
+    {
+      "id": "utf16-offset",
+      "input": {
+        "id": "utf16-offset",
+        "text": "\ud83d\ude00 Caf\u00e9 The project states: \"alpha\"",
+        "names": [
+          "c"
+        ],
+        "local": [],
+        "broad": [],
+        "broadCount": 1,
+        "inners": [
+          "alpha"
+        ],
+        "rawQuotes": [
+          "alpha"
+        ]
+      },
+      "localOutcome": "passed",
+      "localFindings": [],
+      "verified": [
+        {
+          "blockId": "intro",
+          "at": "$.introduction",
+          "index": 0,
+          "citationId": "c",
+          "path": "src/fixture.txt",
+          "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+          "algorithm": "sha1",
+          "byteRange": [
+            23,
+            28
+          ]
+        }
+      ],
+      "excluded": [],
+      "broad": {
+        "quotes": 1,
+        "findings": []
+      },
+      "broadRepair": [],
+      "inspected": [
+        {
+          "terminated": true,
+          "inner": "alpha"
+        }
+      ],
+      "spans": [
+        {
+          "inner": "alpha",
+          "open": 28,
+          "close": 34
+        }
+      ],
+      "renderedBlock": {
+        "marking": "unknown",
+        "unknownReason": "missing-evidence",
+        "basis": "no fidelity review counts for this draft: no fidelity verdict has been checked",
+        "segments": [
+          {
+            "kind": "prose",
+            "text": "\ud83d\ude00 Caf\u00e9 The project states: "
+          },
+          {
+            "kind": "quotation",
+            "sourceId": "src-d9a8ecb1c7dee20e9386561f",
+            "start": 23,
+            "end": 28,
+            "text": "alpha",
+            "anchor": {
+              "targetClass": "evidence-artifact-identifier-with-integrity-digest",
+              "identifier": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+              "algorithm": "sha1",
+              "fragment": {
+                "start": 23,
+                "end": 28
+              },
+              "targetState": "620a27434d342586c97af352ba7f754b964fd92d",
+              "pathLabel": "src/fixture.txt"
+            }
+          }
+        ],
+        "executions": []
+      },
+      "inventory": {
+        "findings": [],
+        "quotations": [
+          {
+            "blockId": "e1",
+            "at": "$.entries[0]",
+            "index": 0,
+            "citationId": "c",
+            "path": "src/fixture.txt",
+            "objectId": "9406e085a785ffc7cd765f73947fcd12d7ac519d",
+            "algorithm": "sha1",
+            "byteRange": [
+              23,
+              28
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      "renderAccepted": true,
+      "renderedFiles": [
+        {
+          "path": "clarifications.html",
+          "bytes": 24458,
+          "sha256": "f0370c30625cd7cb4440ba6cd9ee8b05745646ef0b8077d68259d2073b07057c"
+        },
+        {
+          "path": "contents.html",
+          "bytes": 24499,
+          "sha256": "e1ecfc88420dc362961f177de9f74dc7189e0c1d563f4f3ec8493434eaf58a15"
+        },
+        {
+          "path": "discovery.html",
+          "bytes": 27092,
+          "sha256": "1c53f4694232334e936089382534e8c96ff0b086ff4c4ebb4cb7b613610122f3"
+        },
+        {
+          "path": "dossier.json",
+          "bytes": 759,
+          "sha256": "0e16850101db9ea8010a7eb4278926b52a3bf1a1a7fd0c2e0d074ec4429efc72"
+        },
+        {
+          "path": "executions.html",
+          "bytes": 24458,
+          "sha256": "d7ee930112d84d2c4e051015bea291e594f0a863ab0cfbaf0c4d7c138d6a1b3b"
+        },
+        {
+          "path": "glossary.html",
+          "bytes": 24531,
+          "sha256": "4346c2a15f5d2d4ba9e102663a358ed651e7a214be15bf085082eece8fcb4303"
+        },
+        {
+          "path": "index.html",
+          "bytes": 25512,
+          "sha256": "a06b464b5bfff18e7a48c588a1c050446ac52942ec7415e39b9c02e03033f152"
+        },
+        {
+          "path": "machine.json",
+          "bytes": 22200,
+          "sha256": "42317a0f265307237c1b071d9f814db1dfe53eb0fc4b2cfc4bdeb13c2850f104"
+        },
+        {
+          "path": "review.html",
+          "bytes": 25338,
+          "sha256": "ed92f594062c5c0fcab89d34ca3fa8d20d7cea2ecbaae4c7b08a5ec8a3b721d2"
+        },
+        {
+          "path": "size-report.html",
+          "bytes": 25916,
+          "sha256": "0d1083cee42307bd8aa4b4b50b5634af1b51f6590585a819d62c5703dd9c60fa"
+        },
+        {
+          "path": "size-report.json",
+          "bytes": 3564,
+          "sha256": "87ab7235e6b531e1c9333ccad1cbfd14762738d2faa3d20b126e97cf287b607c"
+        },
+        {
+          "path": "sources/d783dcea41c864d2d8044821.html",
+          "bytes": 25556,
+          "sha256": "f9ce3b6cf88e01ab5f42894428794001639e5106641d4722e451f9806401a4ee"
+        },
+        {
+          "path": "sources/index.html",
+          "bytes": 24261,
+          "sha256": "fc2eb2aa4326e262c365e51ffe5a43c0ef8f5d047317a76479718230406ade03"
+        },
+        {
+          "path": "understanding.html",
+          "bytes": 31678,
+          "sha256": "b3fc784bc8d571b0186cae5c68c7381a1bb1b43723de8d6aaec23521eb4aa1f3"
+        }
+      ],
+      "renderRefusal": null,
+      "readinessEvidence": "no fidelity review counts; these renders do not establish readiness"
+    }
+  ],
+  "secondaryCallers": {
+    "schema": "quotation-secondary-callers/1",
+    "limitation": "validator seams with a synthetic packet shape and real pinned fixture text; not an independent reviewer verdict or a full fidelity-session lifecycle",
+    "fidelity": [
+      {
+        "id": "explicit-valid",
+        "text": "The project states: \"alpha\"",
+        "named": [
+          "span-0"
+        ],
+        "expected": [],
+        "problems": []
+      },
+      {
+        "id": "explicit-altered",
+        "text": "The project states: \"invented\"",
+        "named": [
+          "span-0"
+        ],
+        "expected": [
+          "quotation-unverified"
+        ],
+        "problems": [
+          {
+            "kind": "quotation-unverified",
+            "at": "$.blockSupport[0].reason",
+            "detail": "quotation 1 does not verify against span-0 (quotation-not-in-cited-file)"
+          }
+        ]
+      },
+      {
+        "id": "curly-opener",
+        "text": "The project states: \u201calpha\u201d",
+        "named": [],
+        "expected": [
+          "quotation-count",
+          "quotation-unverified"
+        ],
+        "problems": [
+          {
+            "kind": "quotation-count",
+            "at": "$.blockSupport[0].quotations",
+            "detail": "the reason carries 1 quotation(s) and quotations names 0 span(s); name one per quotation, in order"
+          },
+          {
+            "kind": "quotation-unverified",
+            "at": "$.blockSupport[0].reason",
+            "detail": "quotation 1 has no closed quote after its lead-in"
+          }
+        ]
+      },
+      {
+        "id": "ordinary-prose",
+        "text": "An \"invented\" description.",
+        "named": [],
+        "expected": [],
+        "problems": []
+      },
+      {
+        "id": "missing-opener",
+        "text": "The project states: alpha",
+        "named": [],
+        "expected": [
+          "quotation-count",
+          "quotation-unverified"
+        ],
+        "problems": [
+          {
+            "kind": "quotation-count",
+            "at": "$.blockSupport[0].quotations",
+            "detail": "the reason carries 1 quotation(s) and quotations names 0 span(s); name one per quotation, in order"
+          },
+          {
+            "kind": "quotation-unverified",
+            "at": "$.blockSupport[0].reason",
+            "detail": "quotation 1 has no closed quote after its lead-in"
+          }
+        ]
+      },
+      {
+        "id": "empty-quote",
+        "text": "The project states: \"\"",
+        "named": [
+          "span-0"
+        ],
+        "expected": [
+          "quotation-unverified"
+        ],
+        "problems": [
+          {
+            "kind": "quotation-unverified",
+            "at": "$.blockSupport[0].reason",
+            "detail": "quotation 1 does not verify against span-0 (quotation-empty)"
+          }
+        ]
+      },
+      {
+        "id": "missing-span",
+        "text": "The project states: \"alpha\"",
+        "named": [
+          "span-999"
+        ],
+        "expected": [
+          "quotation-span"
+        ],
+        "problems": [
+          {
+            "kind": "quotation-span",
+            "at": "$.blockSupport[0].quotations[0]",
+            "detail": "the quotation names no admitted span of the packet"
+          }
+        ]
+      }
+    ],
+    "design": [
+      {
+        "id": "explicit-refused",
+        "text": "The project states: \"alpha\"",
+        "expected": [
+          "quotation-unverified"
+        ],
+        "problems": [
+          {
+            "kind": "quotation-unverified",
+            "at": "$.pageReview[0].reason",
+            "detail": "a design verdict quotes nothing: no span of the design packet verifies a quotation, so name the page and describe what you see"
+          }
+        ]
+      },
+      {
+        "id": "curly-refused",
+        "text": "The project states: \u201calpha\u201d",
+        "expected": [
+          "quotation-unverified"
+        ],
+        "problems": [
+          {
+            "kind": "quotation-unverified",
+            "at": "$.pageReview[0].reason",
+            "detail": "a design verdict quotes nothing: no span of the design packet verifies a quotation, so name the page and describe what you see"
+          }
+        ]
+      },
+      {
+        "id": "ordinary-prose",
+        "text": "An \"ordinary\" label.",
+        "expected": [],
+        "problems": []
+      },
+      {
+        "id": "no-quotation",
+        "text": "Readable page.",
+        "expected": [],
+        "problems": []
+      }
+    ],
+    "evaluation": [
+      {
+        "id": "ordinary-altered",
+        "text": "An &quot;invented&quot; description.",
+        "cite": true,
+        "count": 1,
+        "outcome": "failures",
+        "inBlockQuotes": {
+          "denominator": 1,
+          "quotesChecked": 1,
+          "failures": [
+            {
+              "page": "index.html",
+              "claimId": "intro",
+              "kind": "quote-not-in-cited-sources",
+              "quote": "invented"
+            }
+          ],
+          "outcome": "failures"
+        }
+      },
+      {
+        "id": "ordinary-verified",
+        "text": "An &quot;alpha&quot; description.",
+        "cite": true,
+        "count": 1,
+        "outcome": "all-verbatim",
+        "inBlockQuotes": {
+          "denominator": 1,
+          "quotesChecked": 1,
+          "failures": [],
+          "outcome": "all-verbatim"
+        }
+      },
+      {
+        "id": "curly-verified",
+        "text": "The project states: \u201calpha\u201d",
+        "cite": true,
+        "count": 1,
+        "outcome": "all-verbatim",
+        "inBlockQuotes": {
+          "denominator": 1,
+          "quotesChecked": 1,
+          "failures": [],
+          "outcome": "all-verbatim"
+        }
+      },
+      {
+        "id": "cited-no-quotes",
+        "text": "Plain prose.",
+        "cite": true,
+        "count": 0,
+        "outcome": "no-quotes",
+        "inBlockQuotes": {
+          "denominator": 1,
+          "quotesChecked": 0,
+          "failures": [],
+          "outcome": "no-quotes"
+        }
+      },
+      {
+        "id": "empty-cited-population",
+        "text": "Plain prose.",
+        "cite": false,
+        "count": 0,
+        "outcome": "unknown",
+        "inBlockQuotes": {
+          "denominator": 0,
+          "quotesChecked": 0,
+          "failures": [],
+          "outcome": "unknown"
+        }
+      }
+    ]
+  },
+  "existingFocused": {
+    "receipt": {
+      "label": "focused-existing-attempt1",
+      "cwd": "/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105/subject",
+      "argv": [
+        "npx",
+        "vitest",
+        "run",
+        "packages/polaris-generation-core/src/quote-locate.test.ts",
+        "packages/polaris-generation-core/src/quote-fidelity.test.ts",
+        "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+        "packages/polaris-generation-core/src/pipeline.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/render.test.ts",
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-dossier/src/inventory.test.ts"
+      ],
+      "startedAt": "2026-11-05T07:18:16.066391+00:00",
+      "elapsedSeconds": 25.673979758983478,
+      "exitCode": 0,
+      "log": "/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105/logs/focused-existing-attempt1.log",
+      "logSha256": "7810928ac3e84921d07de2e351c8bfd905d94e91d7f9a69849095394309da093",
+      "head": "eaba8ee3ab14c51fc5cf689cd1dd4d60ac3009d9",
+      "dirtyAfter": ""
+    },
+    "files": 8,
+    "testsPassed": 424
+  },
+  "testDelta": {
+    "added": 0,
+    "modified": 0,
+    "removed": 0,
+    "explanation": "Repository retention/docs change. Private finite evidence reuses actual caller seams and existing regression tests; no parallel repository guard or added test farm."
+  },
+  "mutationAllocation": {
+    "changedProductionPredicates": 0,
+    "requiredPerChangedPredicate": 0,
+    "preservationControls": "Separate existing rule6 runner/spec executes negative controls against preserved readers; exact final subject is recorded in the terminal handoff."
+  },
+  "replayArtifacts": {
+    "privateOwn": "/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105",
+    "probeSource": "import assert from 'node:assert/strict';\nimport { createHash } from 'node:crypto';\nimport { execFileSync } from 'node:child_process';\nimport * as fs from 'node:fs';\nimport * as path from 'node:path';\nimport { issueBrief } from '../subject/packages/polaris-dossier/src/brief.ts';\nimport { checkDraft, deriveFindings, draftRules } from '../subject/packages/polaris-dossier/src/check.ts';\nimport { inventoryRules } from '../subject/packages/polaris-dossier/src/inventory.ts';\nimport { openPinnedObjectReader } from '../subject/packages/polaris-dossier/src/git-object-reader.ts';\nimport { NO_PROVIDER_STATEMENTS } from '../subject/packages/polaris-dossier/src/gate-sources.ts';\nimport { renderRun } from '../subject/packages/polaris-dossier/src/render.ts';\nimport { parseRunConfig } from '../subject/packages/polaris-dossier/src/run-config.ts';\nimport { NO_WORK_ITEM_REASON, encodeRunRecord } from '../subject/packages/polaris-dossier/src/run-record.ts';\nimport { buildDossierScreen } from '../subject/packages/polaris-dossier/src/screen.ts';\nimport { renderLocalDossier } from '../subject/apps/three-surface-poc/src/polaris-generation/dossier-site.ts';\nimport { leadInQuotations, leadInQuotationSpans } from '../subject/packages/polaris-generation-core/src/quote-locate.ts';\nimport { inspectBlockQuotes, checkDraftQuotes, quoteFindingAsReviewFinding } from '../subject/packages/polaris-generation-core/src/quote-fidelity.ts';\n\nconst OWN = path.resolve(import.meta.dirname, '..');\nconst SUBJECT = path.join(OWN, 'subject');\nconst argv = process.argv.slice(2);\nconst output = argv[0] ?? path.join(OWN, 'real-callers-attempt1.json');\nconst ROOT = argv[1] ?? fs.mkdtempSync(path.join(OWN, 'tmp', 'quote-'));\nassert(path.resolve(ROOT).startsWith(OWN + path.sep));\nfs.mkdirSync(ROOT, { recursive: true });\nconst ORIGIN = path.join(ROOT, 'origin');\nfs.mkdirSync(ORIGIN);\nconst gitEnv = { ...process.env, GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: '/dev/null', GIT_AUTHOR_NAME: 'fixture', GIT_AUTHOR_EMAIL: 'fixture@example.invalid', GIT_COMMITTER_NAME: 'fixture', GIT_COMMITTER_EMAIL: 'fixture@example.invalid', GIT_AUTHOR_DATE: '2026-11-05T00:00:00Z', GIT_COMMITTER_DATE: '2026-11-05T00:00:00Z' };\nconst git = (...args: string[]) => execFileSync('git', ['-C', ORIGIN, ...args], { env: gitEnv, encoding: 'utf8' }).trim();\nconst RAW = 'Caf\\u00e9 \\u{1f600} prefix.\\r\\n// alpha **beta** gamma.\\rdelta.\\nseparator.\\nalpha \"beta\" gamma.\\nThe project states: \"alpha\"\\nouter The project states: \"alpha\" tail\\n';\ngit('init', '-q', '-b', 'main');\ngit('config', 'gc.auto', '0'); git('config', 'maintenance.auto', 'false');\nfs.mkdirSync(path.join(ORIGIN, 'src'));\nfs.writeFileSync(path.join(ORIGIN, 'src/fixture.txt'), RAW);\nfs.writeFileSync(path.join(ORIGIN, '.env'), 'Inert fixture text.\\n');\ngit('add', '-A'); git('commit', '-q', '-m', 'synthetic pinned quotation fixture');\nconst pinned = git('rev-parse', 'HEAD');\nconst objectId = git('rev-parse', `${pinned}:src/fixture.txt`);\n// A changed working tree is never the source of rendered bytes.\nfs.writeFileSync(path.join(ORIGIN, 'src/fixture.txt'), 'altered working tree copy\\n');\n\nconst NOW = Date.UTC(2026, 10, 5, 0, 0, 0), LATER = NOW + 60_000;\nconst OK = { state: 'ok', record: 'FIXTURE-ACT' };\nconst sources: any = {\n  recordsRoot: SUBJECT, repositoryIdsFor: async () => ['redis-redis'],\n  consentedRevisionsFor: async () => [{ label: 'fixture', commitId: pinned }],\n  observationConsentFor: async (_id: string, revision: string) => revision === pinned ? { satisfied: true, record: 'PUBLIC-OBS-FIXTURE@1' } : { satisfied: false, why: 'fixture revision differs' },\n  registryEntry: async () => OK, screeningPolicy: async () => OK, d9: async () => OK, rfc720Ruling: async () => OK,\n  projectInput: { drawerFor: async () => ({ stated: true, drawer: 'absent', record: 'PROJECT-INPUT-FIXTURE@1' }) },\n  providerStatements: NO_PROVIDER_STATEMENTS,\n};\nconst livePolicy = JSON.parse(fs.readFileSync(path.join(SUBJECT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));\nconst screen = buildDossierScreen(new TextEncoder().encode(JSON.stringify({ policyId: 'fixture-public-source', policyVersion: '1', detectors: livePolicy.detectors, sourceAdmission: livePolicy.sourceAdmission,\n  publicSourceScope: { contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.txt'] }] } } })));\nassert(screen.ok, 'fixture screening policy loads');\nconst probe = { probe: async () => { throw new Error('fixture must never call a provider or probe credentials'); } };\nconst deps: any = { sources, now: () => LATER, probe, loadScreen: async () => screen };\nconst config = parseRunConfig(JSON.stringify({ operator: 'Tzeusy', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic', model: 'fixture-model',\n  deadline: 'PT1H', agentTokenBudget: 100_000, maxRepairCycles: 3, maxQuestions: 1, audience: 'an operator', operatorIsOwner: true }));\nassert(config.ok, 'fixture configuration loads');\nconst subject: any = { repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' }, clone: { path: ORIGIN, declaredBy: 'operator', label: 'Inferred', use: 'read' },\n  pinnedRevision: { commit: pinned, label: 'fixture', consentRecord: 'PUBLIC-OBS-FIXTURE@1', pinnedAt: '2026-11-04T23:00:00.000Z' },\n  startGates: { registryEntry: 'REGISTRY-ACT-FIXTURE', screeningPolicy: 'POLICY-ACT-FIXTURE' }, governed: { kind: 'non-governed', because: ['fixture has no kernel evidence drawer'] }, providerStatement: null,\n  workItem: { identity: null, reason: NO_WORK_ITEM_REASON } };\nconst UNDERSTANDING = ['purpose', 'beneficiary', 'proposition', 'capabilities', 'components', 'choices', 'tradeOffs', 'limits', 'terminology', 'contradictions', 'openQuestions'];\nconst cite = (id: string, file = 'src/fixture.txt', startLine = 1, endLine = 7) => ({ id, path: file, startLine, endLine });\ntype Case = { id: string; text: string; names: string[]; local: string[]; broad: string[]; broadCount: number; inners: string[]; path?: string; range?: [number, number]; uncited?: boolean; rawQuotes?: string[] };\nconst L = 'The project states:';\nconst CASES: Case[] = [\n  { id: 'straight-normalised', text: `${L} \"alpha beta gamma.\"`, names: ['c'], local: [], broad: [], broadCount: 1, inners: ['alpha beta gamma.'], rawQuotes: ['alpha **beta** gamma.'] },\n  { id: 'curly-opener', text: `${L} \\u201calpha beta gamma.\\u201d`, names: [], local: ['lead-in-without-quote'], broad: [], broadCount: 1, inners: [] },\n  { id: 'ordinary-altered', text: 'An \"invented\" description.', names: [], local: [], broad: ['quote-not-in-cited-sources'], broadCount: 1, inners: [], rawQuotes: [] },\n  { id: 'ordinary-verified', text: 'An ordinary \"delta.\"', names: [], local: [], broad: [], broadCount: 1, inners: [], rawQuotes: [] },\n  { id: 'ordinary-before', text: `\"delta.\" Then ${L} \"alpha beta gamma.\"`, names: ['c'], local: [], broad: [], broadCount: 2, inners: ['alpha beta gamma.'], rawQuotes: ['alpha **beta** gamma.'] },\n  { id: 'stray-before', text: `\"preface ${L} \"alpha\"`, names: ['c'], local: [], broad: ['quote-not-in-cited-sources'], broadCount: 1, inners: ['alpha'], rawQuotes: ['alpha'] },\n  { id: 'curly-outer', text: `\\u201c${L} \"alpha\"\\u201d`, names: ['c'], local: [], broad: [], broadCount: 1, inners: ['alpha'], rawQuotes: ['alpha'] },\n  { id: 'straight-outer', text: `\"outer ${L} \"alpha\" tail\"`, names: ['c'], local: [], broad: [], broadCount: 1, inners: ['alpha\" tail'], rawQuotes: ['alpha\" tail'] },\n  { id: 'next-lead-in-quoted-terms', text: `${L} \"alpha \"beta\" gamma.\" Next ${L} \"delta.\"`, names: ['c', 'c2'], local: [], broad: [], broadCount: 2, inners: ['alpha \"beta\" gamma.', 'delta.'], rawQuotes: ['alpha \"beta\" gamma.', 'delta.'] },\n  { id: 'literal-nested-lead-in', text: `${L} \"alpha ${L} \"delta.\"`, names: ['c', 'c2'], local: ['quotation-unterminated'], broad: ['unterminated-quote'], broadCount: 2, inners: ['delta.'] },\n  { id: 'missing-opener', text: `${L} alpha`, names: [], local: ['lead-in-without-quote'], broad: ['lead-in-without-quote'], broadCount: 0, inners: [] },\n  { id: 'empty', text: `${L} \"\"`, names: ['c'], local: ['quotation-empty'], broad: ['empty-quote'], broadCount: 1, inners: [''] },\n  { id: 'unterminated', text: `${L} \"alpha`, names: ['c'], local: ['quotation-unterminated'], broad: ['unterminated-quote'], broadCount: 1, inners: [] },\n  { id: 'altered', text: `${L} \"alpha beta altered.\"`, names: ['c'], local: ['quotation-not-in-cited-file'], broad: ['quote-not-in-cited-sources'], broadCount: 1, inners: ['alpha beta altered.'] },\n  { id: 'appended-unverified', text: `${L} \"alpha beta gamma.\" plus \"invented\"`, names: ['c'], local: ['quotation-not-in-cited-file'], broad: ['quote-not-in-cited-sources'], broadCount: 1, inners: ['alpha beta gamma.\" plus \"invented'] },\n  { id: 'wrong-citation', text: `${L} \"alpha\"`, names: ['missing'], local: ['quotation-citation'], broad: [], broadCount: 1, inners: ['alpha'] },\n  { id: 'uncited', text: `${L} \"alpha\"`, names: ['c'], uncited: true, local: ['schema', 'citation-by-kind', 'quotation-citation'], broad: ['quote-without-cited-source'], broadCount: 1, inners: ['alpha'] },\n  { id: 'missing-source', text: `${L} \"alpha\"`, names: ['c'], path: 'src/absent.txt', local: ['path-absent'], broad: ['quote-without-cited-source'], broadCount: 1, inners: ['alpha'] },\n  { id: 'outside-range', text: `${L} \"alpha beta gamma.\"`, names: ['c'], range: [1, 1], local: ['quotation-outside-range'], broad: [], broadCount: 1, inners: ['alpha beta gamma.'] },\n  { id: 'range-beyond', text: `${L} \"alpha\"`, names: ['c'], range: [1, 999], local: ['range-beyond-blob'], broad: [], broadCount: 1, inners: ['alpha'] },\n  { id: 'joined', text: `${L} \"delta. alpha beta gamma.\"`, names: ['c'], local: ['quotation-not-in-cited-file'], broad: ['quote-not-in-cited-sources'], broadCount: 1, inners: ['delta. alpha beta gamma.'] },\n  { id: 'elided', text: `${L} \"alpha ... gamma.\"`, names: ['c'], local: ['quotation-elided'], broad: ['elided-quote'], broadCount: 1, inners: ['alpha ... gamma.'] },\n  { id: 'excluded-source', text: `${L} \"Inert fixture text.\"`, names: ['c'], path: '.env', local: [], broad: ['quote-without-cited-source'], broadCount: 1, inners: ['Inert fixture text.'], rawQuotes: [] },\n  { id: 'no-quotations', text: 'Plain prose.', names: [], local: [], broad: [], broadCount: 0, inners: [], rawQuotes: [] },\n  ...['\\r\\n', '\\r', '\\n'].map((whitespace, i): Case => ({ id: `opener-whitespace-${i}`, text: `${L}${whitespace}\"alpha\"`, names: ['c'], local: [], broad: [], broadCount: 1, inners: ['alpha'], rawQuotes: ['alpha'] })),\n  { id: 'inline-markup', text: `\\`${L} \"alpha\"\\``, names: ['c'], local: [], broad: [], broadCount: 1, inners: ['alpha'], rawQuotes: ['alpha'] },\n  { id: 'fenced-markup', text: '```text\\n' + `${L} \"alpha\"` + '\\n```', names: ['c'], local: [], broad: [], broadCount: 1, inners: ['alpha'], rawQuotes: ['alpha'] },\n  { id: 'utf16-offset', text: `\\u{1f600} Caf\\u00e9 ${L} \"alpha\"`, names: ['c'], local: [], broad: [], broadCount: 1, inners: ['alpha'], rawQuotes: ['alpha'] },\n];\nconst report: any = { schema: 'quotation-real-callers/1', subjectCommit: execFileSync('git', ['-C', SUBJECT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), fixture: { root: ROOT, pinned, objectId, raw: RAW, rawSha256: createHash('sha256').update(RAW).digest('hex') }, cases: [], errors: [], boundary: 'synthetic owned Git blobs only; injected fixture gates; actual checker and renderer; no observed repository or provider' };\nconst save = () => fs.writeFileSync(output, JSON.stringify(report, null, 2) + '\\n');\nsave();\nconst makeDraft = (c: Case): any => ({ schemaVersion: 'polaris-dossier-local-draft-v2', pinnedRevision: pinned, sessionId: 'authoring-fixture', title: 'Quote fixture',\n  introduction: { id: 'intro', label: 'inferred', basis: 'source', text: c.text, citations: c.uncited ? [] : [cite('c', c.path, ...(c.range ?? [1, 7])), ...(c.names.includes('c2') ? [cite('c2')] : [])], quotations: c.names },\n  understanding: Object.fromEntries(UNDERSTANDING.map(key => [key, [{ id: `u-${key}`, label: 'inferred', statement: 'Fixture understanding.', scope: 'Fixture.', citations: [cite(`u-${key}-c`)] }]])),\n  sections: [{ id: 'core-ideas', title: 'Core ideas', paragraphs: [{ id: 'p1', label: 'non-normative', text: 'Read on.', children: [] }], disposition: { kind: 'produced', assetIds: ['core-ideas'] } }],\n  diagrams: [], deepDives: [], unresolved: [], discovery: { inspected: ['src/fixture.txt'], selected: [], excluded: [], unresolved: [], deferred: [], stoppingReason: 'Finite fixture.' }, clarifications: [], executions: [] });\nconst byteRange = (raw: string) => { const at = Buffer.from(RAW).indexOf(Buffer.from(raw)); assert(at >= 0); return [at, at + Buffer.byteLength(raw)]; };\n\nfor (let i = 0; i < CASES.length; i++) {\n  const c = CASES[i]!;\n  const runId = `run-${i.toString(16).padStart(32, '0')}`;\n  const run = path.join(ROOT, 'runs', runId); fs.mkdirSync(run, { recursive: true });\n  fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(config.config, subject));\n  const brief = await issueBrief(run, { sources, now: () => NOW });\n  assert(brief.ok, JSON.stringify(brief));\n  const doc = makeDraft(c);\n  fs.mkdirSync(path.join(run, 'drafts'), { recursive: true });\n  fs.writeFileSync(path.join(run, 'drafts', 'next.json'), JSON.stringify(doc));\n  const checked = await checkDraft(run, {}, deps);\n  assert(checked.ok, JSON.stringify(checked));\n  const admitted = !c.uncited && (c.path === undefined || c.path === 'src/fixture.txt');\n  const map = admitted ? new Map([['s', RAW]]) : new Map<string, string>();\n  const block = { id: 'intro', text: c.text, sourceIds: admitted ? ['s'] : [] };\n  const broad = inspectBlockQuotes(block, map);\n  const inspected = leadInQuotations(c.text);\n  const spans = leadInQuotationSpans(c.text);\n  let captured: any;\n  const rendered = await renderRun(run, { ...deps, renderer: (input: any) => { captured = input; return renderLocalDossier(input); } });\n  const actual: any = { id: c.id, input: c, run, localOutcome: checked.report.outcome, localFindings: checked.report.findings,\n    verified: checked.report.quotations, excluded: checked.report.excludedContent, broad, broadRepair: broad.findings.map(quoteFindingAsReviewFinding), inspected, spans,\n    render: rendered, renderedBlock: captured?.local.blocks.get('intro') ?? null };\n  if (rendered.ok) {\n    const files: { path: string; bytes: number; sha256: string }[] = [];\n    const walk = (dir: string) => { for (const item of fs.readdirSync(dir, { withFileTypes: true })) {\n      const file = path.join(dir, item.name);\n      if (item.isDirectory()) walk(file);\n      else { const bytes = fs.readFileSync(file); files.push({ path: path.relative(rendered.report.site, file), bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') }); }\n    } };\n    walk(rendered.report.site);\n    actual.renderedFiles = files.sort((a, b) => a.path.localeCompare(b.path));\n  }\n  report.cases.push(actual); save();\n  const check = (name: string, a: unknown, b: unknown) => { try { assert.deepEqual(a, b, `${c.id}: ${name}`); } catch (error) { report.errors.push(String(error)); } };\n  check('local finding vocabulary and order', checked.report.findings.map((f: any) => f.kind), c.local);\n  check('broad finding vocabulary and order', broad.findings.map(f => f.kind), c.broad);\n  check('broad real source quote count', broad.quotes, c.broadCount);\n  check('local terminated span literals', spans.map(s => s.inner), c.inners);\n  check('whole-draft broad seam', checkDraftQuotes({ introduction: block }, map), broad.findings);\n  check('render accepted iff local findings absent', rendered.ok, c.local.length === 0);\n  if (rendered.ok) {\n    check('no readiness from missing reviews', rendered.report.fidelityReview.counts, false);\n    check('literal rendered quotation bytes', actual.renderedBlock.segments.filter((s: any) => s.kind === 'quotation').map((s: any) => s.text), c.rawQuotes);\n    check('independent pinned byte ranges', checked.report.quotations.map((q: any) => q.byteRange), (c.rawQuotes ?? []).map(byteRange));\n    if (c.id === 'excluded-source') check('excluded block withheld', actual.renderedBlock.segments.filter((s: any) => s.kind === 'withheld'), [{ kind: 'withheld', reason: 'excluded-content' }]);\n    check('claim stays Unknown without fidelity evidence', actual.renderedBlock.marking, 'unknown');\n  } else check('actual local render refusal stage', rendered.refusal.stage, 'draft');\n  // The independent inventory invokes the same derivation over its own statement field.\n  const inventory = { schemaVersion: 'polaris-dossier-local-inventory-v1', pinnedRevision: pinned, sessionId: 'inventory-fixture', entries: [{ id: 'e1', kind: 'purpose', label: 'inferred', statement: c.text,\n    citations: doc.introduction.citations, quotations: c.names }], coverage: { inspected: ['src/fixture.txt'], excluded: [], deferred: [], stoppingReason: 'Finite fixture.' } };\n  const inv = await deriveFindings(inventory, { pinned, screen: screen.screen, reader: openPinnedObjectReader({ gitDir: path.join(ORIGIN, '.git'), revision: pinned }) }, inventoryRules(pinned));\n  actual.inventory = { findings: inv.findings, quotations: inv.quotations, excluded: inv.excludedContent };\n  check('inventory finding kinds', inv.findings.map(f => f.kind), c.local);\n  // Repeated/reordered source maps may exercise the normalisation cache, but may not change an answer.\n  inspectBlockQuotes({ id: 'other', text: '\"changed\"', sourceIds: ['s'] }, new Map([['s', 'other bytes']]));\n  check('reentrant broad call', inspectBlockQuotes(block, map), broad);\n  check('reentrant local call', leadInQuotations(c.text), inspected);\n  save();\n}\nreport.summary = { cases: CASES.length, localPassed: report.cases.filter((c: any) => c.localOutcome === 'passed').length, broadPassed: report.cases.filter((c: any) => c.broad.findings.length === 0).length,\n  actualRenderAccepted: report.cases.filter((c: any) => c.render.ok).length, errors: report.errors.length };\nsave();\nconsole.log(JSON.stringify(report.summary));\nassert.equal(report.errors.length, 0, report.errors.join('\\n'));\n",
+    "secondaryProbeSource": "import assert from 'node:assert/strict';\nimport * as fs from 'node:fs';\nimport * as path from 'node:path';\nimport { validateVerdict } from '../subject/packages/polaris-dossier/src/review-verdict.ts';\nimport { validateDesignVerdict } from '../subject/packages/polaris-dossier/src/design-review.ts';\nimport { fidelity, scanDossierPage } from '../subject/packages/polaris-generation-core/src/dossier-evaluation.ts';\nimport { generationSourcesForBody, gitBlobObjectId } from '../subject/packages/polaris-generation-core/src/generation-source.ts';\n\nconst OWN = path.resolve(import.meta.dirname, '..');\nconst OUT = process.argv[2] ?? path.join(OWN, 'secondary-callers-attempt2.json');\nconst base = JSON.parse(fs.readFileSync(path.join(OWN, 'real-callers-attempt2.json'), 'utf8'));\nconst first = base.cases[0];\nconst doc = JSON.parse(fs.readFileSync(path.join(first.run, 'drafts/rev-0.json'), 'utf8'));\nconst pinned = base.fixture.pinned, digest = 'a'.repeat(64);\nconst built: any = { ok: true, sha256: digest, draft: { doc }, inventory: { sessionId: 'inventory-fixture', doc: { entries: [{ id: 'e1' }] } }, spans: [{ id: 'span-0', outcome: 'admitted', text: base.fixture.raw }] };\nconst verdict = (reason: string, quotations: string[]) => ({ schemaVersion: 'polaris-dossier-local-fidelity-verdict-v1', pinnedRevision: pinned, packetSha256: digest, sessionId: 'independent-reviewer-fixture',\n  inventoryCoverage: [{ entryId: 'e1', disposition: 'represented', blockIds: ['intro'], reason: 'Introduction.', quotations: [] }], inventoryAccuracy: [{ entryId: 'e1', accuracy: 'accurate', spanIds: ['span-0'], reason: 'Fixture.', quotations: [] }], blockSupport: [{ blockId: 'intro', verdict: 'supported', spanIds: ['span-0'], reason, quotations }, { blockId: 'p1', verdict: 'supported', spanIds: [], reason: 'Non-normative.', quotations: [] }], findings: [], readiness: 'ready' });\nconst cases = [\n  { id: 'explicit-valid', text: 'The project states: \"alpha\"', named: ['span-0'], expected: [] },\n  { id: 'explicit-altered', text: 'The project states: \"invented\"', named: ['span-0'], expected: ['quotation-unverified'] },\n  { id: 'curly-opener', text: 'The project states: \\u201calpha\\u201d', named: [], expected: ['quotation-count', 'quotation-unverified'] },\n  { id: 'ordinary-prose', text: 'An \"invented\" description.', named: [], expected: [] },\n  { id: 'missing-opener', text: 'The project states: alpha', named: [], expected: ['quotation-count', 'quotation-unverified'] },\n  { id: 'empty-quote', text: 'The project states: \"\"', named: ['span-0'], expected: ['quotation-unverified'] },\n  { id: 'missing-span', text: 'The project states: \"alpha\"', named: ['span-999'], expected: ['quotation-span'] },\n];\nconst result: any = { schema: 'quotation-secondary-callers/1', limitation: 'validator seams with a synthetic packet shape and real pinned fixture text; not an independent reviewer verdict or a full fidelity-session lifecycle', fidelity: [], design: [], evaluation: [] };\nfor (const c of cases) {\n  const problems = validateVerdict(verdict(c.text, c.named), built, new Set(['authoring-fixture']));\n  result.fidelity.push({ ...c, problems });\n  fs.writeFileSync(OUT, JSON.stringify(result, null, 2)+'\\n');\n  assert.deepEqual(problems.map(p => p.kind), c.expected, c.id);\n}\nfor (const c of [\n  { id: 'explicit-refused', text: 'The project states: \"alpha\"', expected: ['quotation-unverified'] },\n  { id: 'curly-refused', text: 'The project states: \\u201calpha\\u201d', expected: ['quotation-unverified'] },\n  { id: 'ordinary-prose', text: 'An \"ordinary\" label.', expected: [] },\n  { id: 'no-quotation', text: 'Readable page.', expected: [] },\n]) {\n  const v = { schemaVersion: 'polaris-dossier-local-design-verdict-v1', pinnedRevision: pinned, packetSha256: digest, sessionId: 'design-fixture', pageReview: [{ page: 'index.html', verdict: 'acceptable', reason: c.text }], findings: [], readiness: 'ready' };\n  const problems = validateDesignVerdict(v, { ok: true, sha256: digest, bytes: '', pages: ['index.html'], files: ['index.html'] }, pinned, new Set());\n  result.design.push({ ...c, problems });\n  fs.writeFileSync(OUT, JSON.stringify(result, null, 2)+'\\n');\n  assert.deepEqual(problems.map(p => p.kind), c.expected, c.id);\n}\nconst raw = base.fixture.raw;\nconst source = generationSourcesForBody({ sourceId: 's', repositoryId: 'fixture', revision: pinned, path: 'src/fixture.txt', objectId: gitBlobObjectId(raw), evaluationId: 'fixture', body: raw });\nconst manifest: any = { format: 'polaris-dossier-v1', title: 'Fixture', entryPage: 'index.html', pages: [{ path: 'index.html', depth: 0 }] };\nfor (const c of [\n  { id: 'ordinary-altered', text: 'An &quot;invented&quot; description.', cite: true, count: 1, outcome: 'failures' },\n  { id: 'ordinary-verified', text: 'An &quot;alpha&quot; description.', cite: true, count: 1, outcome: 'all-verbatim' },\n  { id: 'curly-verified', text: 'The project states: \\u201calpha\\u201d', cite: true, count: 1, outcome: 'all-verbatim' },\n  { id: 'cited-no-quotes', text: 'Plain prose.', cite: true, count: 0, outcome: 'no-quotes' },\n  { id: 'empty-cited-population', text: 'Plain prose.', cite: false, count: 0, outcome: 'unknown' },\n]) {\n  const html = `<html><body><p data-claim-id=\"intro\" data-epistemic=\"inferred\">${c.text}${c.cite ? '<a data-source-id=\"s\" href=\"sources/s.html\">source</a>' : ''}</p></body></html>`;\n  const scanned = scanDossierPage(html);\n  const evaluated = fidelity(manifest, new Map([['index.html', scanned]]), source);\n  result.evaluation.push({ ...c, inBlockQuotes: evaluated.inBlockQuotes });\n  fs.writeFileSync(OUT, JSON.stringify(result, null, 2)+'\\n');\n  assert.equal(evaluated.inBlockQuotes.quotesChecked, c.count, c.id);\n  assert.equal(evaluated.inBlockQuotes.outcome, c.outcome, c.id);\n}\nfs.writeFileSync(OUT, JSON.stringify(result, null, 2)+'\\n');\nconsole.log('secondary caller cases:', cases.length + result.design.length + result.evaluation.length);\n",
+    "pythonComparator": "import hashlib,json\nfrom pathlib import Path\nO=Path('/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105')\nbefore=json.loads((O/'differential-before.json').read_text());after=json.loads((O/'differential-after.json').read_text())\nassert len(before['cases'])==len(after['cases'])==30\nassert before==after\ndef sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()\nactual=[]\nfor row in before['cases']:\n    if not row['render']['ok']:continue\n    old=O/'retained-before-root'/'runs'/Path(row['run']).name/'site'\n    # Site numbers and target paths are taken from the actual returned report.\n    original=Path(row['render']['report']['site'])\n    retained=O/'retained-before-root'/original.relative_to(O/'tmp/differential-root')\n    current=original\n    oldfiles={str(p.relative_to(retained)):sha(p) for p in retained.rglob('*') if p.is_file()}\n    newfiles={str(p.relative_to(current)):sha(p) for p in current.rglob('*') if p.is_file()}\n    assert oldfiles==newfiles\n    assert oldfiles=={r['path']:r['sha256'] for r in row['renderedFiles']}\n    actual.append({'case':row['id'],'fileCount':len(oldfiles),'fileNames':sorted(oldfiles)})\ndiff=[r['id'] for r in before['cases'] if (r['localOutcome']=='passed') != (not r['broad']['findings'])]\nassert diff==['curly-opener','ordinary-altered','stray-before','wrong-citation','outside-range','range-beyond','excluded-source']\nout={'schema':'quotation-retention-differential/1','beforeCommit':before['subjectCommit'],'corpusVersion':'literal-real-callers/1','seed':None,'generation':'30 explicitly enumerated adversarial cases; no sampling or filtering',\n 'beforeSha256':sha(O/'differential-before.json'),'afterSha256':sha(O/'differential-after.json'),'fullStructuredRecordsEqual':True,\n 'bundleBeforeSha256':sha(O/'fixture/before.mjs'),'bundleAfterSha256':sha(O/'fixture/after.mjs'),\n 'denominators':before['summary'],'intentionalAcceptanceDifferences':diff,'acceptanceDifferenceCount':len(diff),'unexplainedAfterVsBefore':[],\n 'independentFileCapture':actual,'renderedFilesCompared':sum(r['fileCount'] for r in actual),'oracle':'literal expected findings, spans and independently searched source byte ranges in corpus; second comparison enumerates retained output files independently',\n 'sourceFixture':before['fixture'],'cases':before['cases']}\n(O/'retention-differential.json').write_text(json.dumps(out,indent=2)+'\\n')\nprint(json.dumps({k:v for k,v in out.items() if k not in ('sourceFixture','cases','independentFileCapture')}))\n",
+    "nodeComparator": "import assert from 'node:assert/strict';\nimport fs from 'node:fs';\nimport crypto from 'node:crypto';\nconst own='/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105';\nconst a=fs.readFileSync(own+'/differential-before.json'), b=fs.readFileSync(own+'/differential-after.json');\nassert.deepEqual(a,b);\nconst rows=JSON.parse(a).cases;\nassert.equal(rows.length,30);\nconst differences=rows.filter(r=>(r.localOutcome==='passed')!==(r.broad.findings.length===0)).map(r=>r.id);\nassert.deepEqual(differences,['curly-opener','ordinary-altered','stray-before','wrong-citation','outside-range','range-beyond','excluded-source']);\nconst out={schema:'quotation-retention-second-enumeration/1',byteIdentical:true,caseCount:rows.length,acceptanceDifferences:differences,rendered:rows.filter(r=>r.render.ok).length,sha256:crypto.createHash('sha256').update(a).digest('hex')};\nfs.writeFileSync(own+'/second-enumeration.json',JSON.stringify(out,null,2)+'\\n');console.log(out);\n"
+  },
+  "rawEvidence": [
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105/real-callers-attempt2.json",
+      "sha256": "d2c8b92e029b351f20d3b34bd1e101a25dad23eb5e5712e74da61a60125539b0"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105/differential-before.json",
+      "sha256": "a6ecaaf686990c270568674074d86df40726059b398e6aa8fa4c736ab1d2c470"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105/differential-after.json",
+      "sha256": "a6ecaaf686990c270568674074d86df40726059b398e6aa8fa4c736ab1d2c470"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105/secondary-callers-attempt2.json",
+      "sha256": "80331ad34f7ea53034d2ce8584ee10840ddcdfb704ddb55a82aea79cc35249a2"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105/retention-differential.json",
+      "sha256": "cfc04f77dfe877520e3e149cdc85089d93dcdfaa8efd10c2060fdc2795d2323f"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt1-27-quote-domain-full-outcome-20261105/second-enumeration.json",
+      "sha256": "a940ec2f0dcb32d0cc5a17c6d6f72dd5893286fac6aa688c9e8d1522f41d5e59"
+    }
+  ]
+}
