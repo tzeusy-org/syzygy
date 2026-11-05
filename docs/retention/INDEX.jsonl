@@ -4984,6 +4984,7 @@
 {"basis":"R1","family":"syzygy-kpbq","kind":"live","path":"docs/evidence/syzygy-kpbq/plan-test-mutants.json","sha256":"31177c7fafcf4f3ae6efb8b42f580a763a7d10f4f4d3f54fdc722ab9a3a5ea18","version":1}
 {"basis":"R1","family":"syzygy-kpbq","kind":"live","path":"docs/evidence/syzygy-kpbq/plan_test_mutants.py","sha256":"8068132c98abc0e46445e7164db88c2ba6c99c8f90a3abd807badeb2524d243f","version":1}
 {"basis":"R1","family":"syzygy-mea-10-3","kind":"live","path":"docs/evidence/syzygy-mea-10-3/p115-later-signed-mutants-2026-11-04.json","sha256":"31429820b49b41a19b9f64c47a7f24d4ee440845967dea030647319883737e0c","version":1}
+{"basis":"R1","family":"syzygy-mea-10-7","kind":"live","path":"docs/evidence/syzygy-mea-10-7/excluded-citation-mutations-2026-11-05.json","sha256":"a19540cba8c815b6e50e5b693b3fd226efc00d2bab5dd8aef19c2cf802ca4978","version":1}
 {"basis":"R1","family":"syzygy-mea-10","kind":"live","path":"docs/evidence/syzygy-mea-10/readability-guidance-mutants-2026-11-04.json","sha256":"aed90ea22447dd84e08879d0cefd3010c5548857fec856fb5fe268db99a54199","version":1}
 {"basis":"R1","family":"syzygy-mea-10","kind":"live","path":"docs/evidence/syzygy-mea-10/render-readability-mutants-2026-11-04.json","sha256":"5f3bf0b61a71f825b744a988411793d791e8f57d8a7cabf73dfd6b54b39972d8","version":1}
 {"basis":"R1","family":"syzygy-mea-10","kind":"live","path":"docs/evidence/syzygy-mea-10/rich-elements-mutants-2026-11-04.json","sha256":"4d390190d82f879ed66d1ffab88a0ccebe74021f9b3a921973de3be419d1f99c","version":1}
