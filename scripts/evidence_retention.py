@@ -2491,7 +2491,7 @@ def selftest(implementation: Path, receipt: Path | None) -> int:
             ("extension-underscore", "\u2026-body.js_on", PREFIX + "prefix-body.js_on"),
             ("extension-hyphen", "\u2026-body.js-on", PREFIX + "prefix-body.js-on"),
             ("extension-period", "\u2026-body.json.gz", PREFIX + "prefix-body.json.gz"),
-            ("extension-period-before-trimming", "\u2026-body..", PREFIX + "prefix-body"),
+            ("extension-period-before-trimming", "\u2026-periodonly..", PREFIX + "prefix-extension-periodonly"),
         )
         fixture.update({path: encoded({"subject": "synthetic-character-domain-" + name})
                         for name, _, path in domains})
