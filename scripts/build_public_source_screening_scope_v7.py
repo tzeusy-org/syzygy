@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import inspect
 import json
 import pathlib
 import re
@@ -58,15 +59,19 @@ VARIANTS = ("s",)
 OLD_CLAUSE = ("whose default-src source list is exactly 'none' and which carries no script-src, script-src-elem, "
               "script-src-attr or object-src directive.")
 NEW_CLAUSE = (
-    "whose default-src source list is exactly 'none', which carries no script-src-elem, script-src-attr, object-src, "
-    "connect-src, worker-src, child-src, frame-src or navigate-to directive, and which carries either no script-src "
-    "directive or exactly one whose source list is one or more 'sha256-<base64>' hash sources and nothing else (no "
-    "'unsafe-inline', 'unsafe-eval', 'unsafe-hashes', 'wasm-unsafe-eval', 'strict-dynamic', 'self', 'none', nonce, scheme "
-    "or host source). Each such hash is of one inline script the renderer itself writes: its bytes are fixed in the "
-    "renderer and hold no byte of any body; it never turns page text into code or markup (no eval, no Function, no "
-    "string timer, no innerHTML, outerHTML, insertAdjacentHTML or document.write, no handler attribute, no created "
-    "script element); it writes page text only as text; it navigates only by a fragment of the current page or an "
-    "href the renderer wrote; and it stores no page text. Every page reads and navigates completely with scripts off.")
+    "whose directives are exactly default-src 'none', style-src 'unsafe-inline', base-uri 'none' and form-action 'none', "
+    "each once with that one source, and at most one script-src, which comes with require-trusted-types-for 'script' and "
+    "only then; no other directive is lawful, and a policy holding any non-ASCII byte, whitespace included, fails this "
+    "condition. A script-src's source list is one or more 'sha256-<base64>' hash sources and nothing else. Each such hash "
+    "is of one inline script with no src attribute that the renderer itself writes: its bytes are fixed in the renderer "
+    "and derive from no body; it opens no connection and loads nothing (no fetch, XMLHttpRequest, sendBeacon, WebSocket, "
+    "EventSource, WebTransport, RTCPeerConnection, Worker or window.open); it creates no element outside a list the "
+    "renderer fixes, which never holds script, link, meta, base, form, iframe, object, embed, img, audio, video, source, "
+    "track or style, and it sets no attribute that holds a URL; it never turns page text into code or markup (no eval, "
+    "no Function, no string timer, no innerHTML, outerHTML, insertAdjacentHTML, document.write, DOMParser or "
+    "createContextualFragment, no handler attribute); it writes page text only as text; it navigates only by a fragment "
+    "of the current page or an href the renderer wrote; and it stores no page text. Every page reads and navigates "
+    "completely with scripts off.")
 
 
 def patch_path(variant: str) -> pathlib.Path:
@@ -153,26 +158,56 @@ def base_bytes(root: pathlib.Path = ROOT) -> tuple[str, str]:
 
 # --- the mechanical half of the sentence ------------------------------------------------------------------------
 
-FORBIDDEN = ("script-src-elem", "script-src-attr", "object-src", "connect-src", "worker-src", "child-src", "frame-src",
-             "navigate-to")
+FIXED = {"default-src": "'none'", "style-src": "'unsafe-inline'", "base-uri": "'none'", "form-action": "'none'"}
+OPTIONAL = ("script-src", "require-trusted-types-for")
 HASH_SOURCE = re.compile(r"'sha256-[A-Za-z0-9+/]{43}='")
+ASCII_WHITESPACE = re.compile(r"[\t\n\f\r ]+")
+
+
+READING_MUTANTS = (
+    ('ASCII_WHITESPACE.split(part)', 'part.split()'),
+    ('directives = [d for d in directives if d]', 'pass'),
+    ('names = [d[0].lower() for d in directives]', 'names = [d[0] for d in directives]'),
+    ('if name not in FIXED and name not in OPTIONAL:', 'if False:'),
+    ('if names.count(name) != 1:', 'if False:'),
+    ('sources = {d[0].lower(): d[1:] for d in directives}', 'sources = {d[0]: d[1:] for d in directives}'),
+    ('if name not in sources:', 'if False:'),
+    ('len(sources[name]) != 1 or ', ''),
+    ('sources[name][0].lower() != source', 'sources[name][0] != source'),
+    ('or sources[name][0].lower() != source', ''),
+    ('if ("script-src" in sources) != ("require-trusted-types-for" in sources):', 'if False:'),
+    ('if len(types) != 1 or types[0].lower() != "\'script\'":', 'if False:'),
+    ('if not sources["script-src"]:', 'if False:'),
+    ('if not HASH_SOURCE.fullmatch(source):', 'if not HASH_SOURCE.match(source):'),
+    ('if not HASH_SOURCE.fullmatch(source):', 'if False:'),
+)
 
 
 def csp_finding(content: str) -> str | None:
-    directives = [part.split() for part in content.split(";") if part.strip()]
-    named = lambda name: [d for d in directives if d[0].lower() == name]  # noqa: E731
-    defaults = named("default-src")
-    if len(defaults) != 1 or len(defaults[0]) != 2 or defaults[0][1].lower() != "'none'":
-        return "default-src is not exactly 'none'"
-    bad = [name for name in FORBIDDEN if named(name)]
-    if bad:
-        return f"carries {bad[0]}"
-    scripts = named("script-src")
-    if not scripts:
+    directives = [[t for t in ASCII_WHITESPACE.split(part) if t] for part in content.split(";")]
+    directives = [d for d in directives if d]
+    names = [d[0].lower() for d in directives]
+    for name in names:
+        if name not in FIXED and name not in OPTIONAL:
+            return f"carries {name}"
+        if names.count(name) != 1:
+            return f"repeats {name}"
+    sources = {d[0].lower(): d[1:] for d in directives}
+    for name, source in FIXED.items():
+        if name not in sources:
+            return f"{name} is absent"
+        if len(sources[name]) != 1 or sources[name][0].lower() != source:
+            return f"{name} is not exactly {source}"
+    if ("script-src" in sources) != ("require-trusted-types-for" in sources):
+        return "script-src and require-trusted-types-for must come together"
+    if "script-src" not in sources:
         return None
-    if len(scripts) != 1 or len(scripts[0]) < 2:
-        return "script-src is not one directive with at least one source"
-    for source in scripts[0][1:]:
+    types = sources["require-trusted-types-for"]
+    if len(types) != 1 or types[0].lower() != "'script'":
+        return "require-trusted-types-for is not exactly 'script'"
+    if not sources["script-src"]:
+        return "script-src has no source"
+    for source in sources["script-src"]:
         if not HASH_SOURCE.fullmatch(source):
             return f"script-src carries {source}"
     return None
@@ -181,37 +216,54 @@ def csp_finding(content: str) -> str | None:
 _H = "'sha256-" + "A" * 43 + "='"
 _H2 = "'sha256-" + "B" * 43 + "='"
 _REST = "style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
+_TT = "require-trusted-types-for 'script'"
+_D = "default-src 'none'"
+_S = f"script-src {_H}; {_TT}"
 #: name, CSP content, allowed under version 7. Today's page must stay lawful.
 CSP_TABLE = [
-    ("today's page, no script", f"default-src 'none'; {_REST}", True),
-    ("one hash", f"default-src 'none'; script-src {_H}; {_REST}", True),
-    ("two hashes", f"default-src 'none'; script-src {_H} {_H2}; {_REST}", True),
-    ("unsafe-inline beside a hash", f"default-src 'none'; script-src {_H} 'unsafe-inline'; {_REST}", False),
-    ("unsafe-eval", f"default-src 'none'; script-src {_H} 'unsafe-eval'; {_REST}", False),
-    ("unsafe-hashes", f"default-src 'none'; script-src {_H} 'unsafe-hashes'; {_REST}", False),
-    ("wasm-unsafe-eval", f"default-src 'none'; script-src {_H} 'wasm-unsafe-eval'; {_REST}", False),
-    ("strict-dynamic", f"default-src 'none'; script-src {_H} 'strict-dynamic'; {_REST}", False),
-    ("self", f"default-src 'none'; script-src 'self'; {_REST}", False),
-    ("script-src none", f"default-src 'none'; script-src 'none'; {_REST}", False),
-    ("a nonce", f"default-src 'none'; script-src 'nonce-abc'; {_REST}", False),
-    ("a host", f"default-src 'none'; script-src {_H} https://example.test; {_REST}", False),
-    ("a scheme", f"default-src 'none'; script-src {_H} https:; {_REST}", False),
-    ("a data scheme", f"default-src 'none'; script-src data:; {_REST}", False),
-    ("a short hash", f"default-src 'none'; script-src 'sha256-AAAA'; {_REST}", False),
-    ("a sha512 hash", f"default-src 'none'; script-src 'sha512-{'A' * 86}=='; {_REST}", False),
-    ("no source at all", f"default-src 'none'; script-src; {_REST}", False),
-    ("two script-src directives", f"default-src 'none'; script-src {_H}; script-src {_H2}; {_REST}", False),
-    ("script-src-elem", f"default-src 'none'; script-src-elem {_H}; {_REST}", False),
-    ("script-src-attr", f"default-src 'none'; script-src-attr 'unsafe-inline'; {_REST}", False),
-    ("object-src", f"default-src 'none'; object-src *; {_REST}", False),
-    ("connect-src, the fetch path", f"default-src 'none'; script-src {_H}; connect-src *; {_REST}", False),
-    ("worker-src", f"default-src 'none'; script-src {_H}; worker-src *; {_REST}", False),
-    ("child-src", f"default-src 'none'; script-src {_H}; child-src *; {_REST}", False),
-    ("frame-src", f"default-src 'none'; script-src {_H}; frame-src *; {_REST}", False),
-    ("navigate-to", f"default-src 'none'; script-src {_H}; navigate-to *; {_REST}", False),
-    ("default-src not none", f"default-src 'self'; script-src {_H}; {_REST}", False),
-    ("default-src absent", f"script-src {_H}; {_REST}", False),
+    ("today's page, no script", f"{_D}; {_REST}", True),
+    ("one hash", f"{_D}; {_S}; {_REST}", True),
+    ("two hashes", f"{_D}; script-src {_H} {_H2}; {_TT}; {_REST}", True),
+    ("directive names in upper case", f"DEFAULT-SRC 'none'; SCRIPT-SRC {_H}; {_TT}; {_REST}", True),
+    ("'NONE' in upper case", f"default-src 'NONE'; {_REST}", True),
+    ("a trailing semicolon and tabs", f"default-src\t'none'; {_REST};", True),
+    ("unsafe-inline beside a hash", f"{_D}; script-src {_H} 'unsafe-inline'; {_TT}; {_REST}", False),
+    ("unsafe-eval", f"{_D}; script-src {_H} 'unsafe-eval'; {_TT}; {_REST}", False),
+    ("unsafe-hashes", f"{_D}; script-src {_H} 'unsafe-hashes'; {_TT}; {_REST}", False),
+    ("wasm-unsafe-eval", f"{_D}; script-src {_H} 'wasm-unsafe-eval'; {_TT}; {_REST}", False),
+    ("strict-dynamic", f"{_D}; script-src {_H} 'strict-dynamic'; {_TT}; {_REST}", False),
+    ("self", f"{_D}; script-src 'self'; {_TT}; {_REST}", False),
+    ("script-src none", f"{_D}; script-src 'none'; {_TT}; {_REST}", False),
+    ("a nonce", f"{_D}; script-src 'nonce-abc'; {_TT}; {_REST}", False),
+    ("a host", f"{_D}; script-src {_H} https://example.test; {_TT}; {_REST}", False),
+    ("a scheme", f"{_D}; script-src {_H} https:; {_TT}; {_REST}", False),
+    ("a data scheme", f"{_D}; script-src data:; {_TT}; {_REST}", False),
+    ("a short hash", f"{_D}; script-src 'sha256-AAAA'; {_TT}; {_REST}", False),
+    ("a hash with a trailing source glued on", f"{_D}; script-src {_H}x; {_TT}; {_REST}", False),
+    ("a sha512 hash", f"{_D}; script-src 'sha512-{'A' * 86}=='; {_TT}; {_REST}", False),
+    ("no source at all", f"{_D}; script-src; {_TT}; {_REST}", False),
+    ("two script-src directives", f"{_D}; script-src {_H}; script-src {_H2}; {_TT}; {_REST}", False),
+    ("script-src with no trusted types", f"{_D}; script-src {_H}; {_REST}", False),
+    ("trusted types with no script-src", f"{_D}; {_TT}; {_REST}", False),
+    ("trusted types for something else", f"{_D}; script-src {_H}; require-trusted-types-for 'none'; {_REST}", False),
+    ("default-src not none", f"default-src 'self'; {_S}; {_REST}", False),
+    ("default-src absent", f"{_S}; {_REST}", False),
+    ("default-src with a second source", f"default-src 'none' https:; {_REST}", False),
+    ("default-src with no source", f"default-src; {_REST}", False),
+    ("two default-src directives", f"{_D}; {_D}; {_REST}", False),
+    ("a non-breaking space, which a browser does not split", f"default-src\u00a0'none'; {_REST}", False),
+    ("a vertical tab, which a browser does not split", f"default-src\x0b'none'; {_REST}", False),
+    ("style-src absent", f"{_D}; base-uri 'none'; form-action 'none'", False),
+    ("base-uri absent", f"{_D}; style-src 'unsafe-inline'; form-action 'none'", False),
+    ("form-action absent", f"{_D}; style-src 'unsafe-inline'; base-uri 'none'", False),
+    ("style-src with a host", f"{_D}; style-src 'unsafe-inline' https://example.test; base-uri 'none'; form-action 'none'", False),
+    ("base-uri open", f"{_D}; style-src 'unsafe-inline'; base-uri *; form-action 'none'", False),
+    ("form-action open", f"{_D}; style-src 'unsafe-inline'; base-uri 'none'; form-action *", False),
 ]
+for _name in ("script-src-elem", "script-src-attr", "object-src", "connect-src", "worker-src", "child-src", "frame-src",
+              "navigate-to", "img-src", "font-src", "media-src", "manifest-src", "report-uri", "report-to", "sandbox",
+              "upgrade-insecure-requests", "trusted-types"):
+    CSP_TABLE.append((_name, f"{_D}; {_S}; {_name} *; {_REST}", False))
 
 
 def semantic_findings(base_text: str, proposed_text: str) -> list[str]:
@@ -227,7 +279,8 @@ def semantic_findings(base_text: str, proposed_text: str) -> list[str]:
     exemption["renderCondition"] = exemption["renderCondition"].replace(NEW_CLAUSE, OLD_CLAUSE, 1)
     if undo != base[SCOPE_KEY]:
         findings.append("the scope changes somewhere other than the one clause")
-    for term in ("exactly 'none'", "object-src", "connect-src", "hold no byte of any body", "with scripts off",
+    for term in ("are exactly default-src 'none'", "no other directive is lawful", "derive from no body", "with scripts off",
+                 "opens no connection", "creates no element outside a list",
                  "no handler attribute", "written as a character reference"):
         if term not in proposed[SCOPE_KEY]["activeContent"]["codeContentExemption"]["renderCondition"]:
             findings.append(f"renderCondition lost {term!r}")
@@ -319,7 +372,7 @@ def selftest() -> int:
 
     def edit_patch(tmp):
         p = tmp / patch_path("s")
-        p.write_text(p.read_text().replace("connect-src", "connect-srx", 1))
+        p.write_text(p.read_text().replace("form-action", "form-actiom", 1))
     caught("a hand-edited patch refused", edit_patch, "s: patch differs")
 
     def edit_manifest(tmp):
@@ -355,16 +408,20 @@ def selftest() -> int:
                         any("exactly once" in f for f in semantic_findings(base, json.dumps(widened)))))
 
     results.append(("the CSP table holds", table_findings() == []))
-    # One break per predicate of the reading; each must be visible in the table.
-    original = (FORBIDDEN, HASH_SOURCE)
-    for name in FORBIDDEN:
-        globals()["FORBIDDEN"] = tuple(n for n in FORBIDDEN if n != name)
-        results.append((f"dropping {name} from the forbidden list is visible", table_findings() != []))
-        globals()["FORBIDDEN"] = original[0]
-    globals()["HASH_SOURCE"] = re.compile(r".*")
-    results.append(("an open source pattern is visible", table_findings() != []))
-    globals()["HASH_SOURCE"] = original[1]
-    results.append(("the table's forbidden list is restored", table_findings() == []))
+    # One break per predicate of the reading, by source fragment; each must be visible in the table.
+    source = inspect.getsource(csp_finding)
+    for old, new in READING_MUTANTS:
+        if source.count(old) < 1:
+            results.append((f"mutant fragment present: {old}", False))
+            continue
+        scope = dict(globals())
+        exec(source.replace(old, new), scope)  # noqa: S102
+        try:
+            caught = any((scope["csp_finding"](content) is None) != ok for _n, content, ok in CSP_TABLE)
+        except Exception:  # noqa: BLE001
+            caught = True  # the row raised, which is as visible as a wrong answer
+        results.append((f"the table sees {old!r} -> {new!r}", caught))
+    results.append(("the reading is restored", table_findings() == []))
 
     failed = [name for name, passed in results if not passed]
     for name in failed:

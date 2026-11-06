@@ -33,43 +33,73 @@ whose default-src source list is exactly 'none' and which carries no script-src,
 Proposed:
 
 ````text
-whose default-src source list is exactly 'none', which carries no script-src-elem, script-src-attr, object-src, connect-src, worker-src, child-src, frame-src or navigate-to directive, and which carries either no script-src directive or exactly one whose source list is one or more 'sha256-<base64>' hash sources and nothing else (no 'unsafe-inline', 'unsafe-eval', 'unsafe-hashes', 'wasm-unsafe-eval', 'strict-dynamic', 'self', 'none', nonce, scheme or host source). Each such hash is of one inline script the renderer itself writes: its bytes are fixed in the renderer and hold no byte of any body; it never turns page text into code or markup (no eval, no Function, no string timer, no innerHTML, outerHTML, insertAdjacentHTML or document.write, no handler attribute, no created script element); it writes page text only as text; it navigates only by a fragment of the current page or an href the renderer wrote; and it stores no page text. Every page reads and navigates completely with scripts off.
+whose directives are exactly default-src 'none', style-src 'unsafe-inline', base-uri 'none' and form-action 'none', each once with that one source, and at most one script-src, which comes with require-trusted-types-for 'script' and only then; no other directive is lawful, and a policy holding any non-ASCII byte, whitespace included, fails this condition. A script-src's source list is one or more 'sha256-<base64>' hash sources and nothing else. Each such hash is of one inline script with no src attribute that the renderer itself writes: its bytes are fixed in the renderer and derive from no body; it opens no connection and loads nothing (no fetch, XMLHttpRequest, sendBeacon, WebSocket, EventSource, WebTransport, RTCPeerConnection, Worker or window.open); it creates no element outside a list the renderer fixes, which never holds script, link, meta, base, form, iframe, object, embed, img, audio, video, source, track or style, and it sets no attribute that holds a URL; it never turns page text into code or markup (no eval, no Function, no string timer, no innerHTML, outerHTML, insertAdjacentHTML, document.write, DOMParser or createContextualFragment, no handler attribute); it writes page text only as text; it navigates only by a fragment of the current page or an href the renderer wrote; and it stores no page text. Every page reads and navigates completely with scripts off.
 ````
 
 ## What this keeps
 
 - Every body byte is still written as a character reference and never parsed.
-- `default-src 'none'` still blocks every remote load. A script that matches
-  no hash does not run, so an injected script still fails at the CSP.
+- The directive set is closed. A page's policy is the four directives it has
+  today, plus at most a hash-only `script-src` with trusted types. Version 6
+  named only what it forbade, so it left `img-src` and similar directives open;
+  this closes that gap, which round 1 of review showed a page could use.
+- A script that matches no hash does not run, so an injected script still fails
+  at the CSP.
 - A page with no script stays lawful with no change: today's bytes pass.
 - A consumer that cannot confirm the condition still scans as before and
   excludes whole on a finding.
 
+## What the policy can and cannot enforce
+
+- **[Observed]** In round 1, `default-src 'none'` with `form-action 'none'` stopped
+  fetch, image, beacon, WebSocket and form loads from a script on Chrome 120
+  over `file://`. Hash-allowed inline script ran there.
+- **[Observed]** The same policy did not stop `RTCPeerConnection` sending STUN
+  packets, a created `link rel=preconnect` opening a TCP connection, or a created
+  `meta` refresh navigating. A markup `meta` refresh also navigates, and a markup
+  `script src` carrying an allowed `integrity` hash loads. CSP does not close
+  these paths.
+- **[Inferred]** So "no network" is not a browser guarantee on a page with a
+  script. The clause forbids those uses, and they rest on the renderer's fixed
+  bytes, the tests below and a reviewer. Body bytes cannot reach these paths
+  because body text is never parsed as markup and the script takes no code from it.
+
 ## What this gives up
 
 - **[Inferred]** Pages now run code. A defect in the fixed script is a defect
-  on every page, and no CSP directive catches it. The clause's script rules
-  are for the renderer and its tests; no CSP string can show them.
-- **[Observed]** The clause newly forbids `connect-src`, `worker-src`,
-  `child-src`, `frame-src` and `navigate-to` because each would reopen a path a
-  script could use; none is on a page today. This is tighter than version 6.
+  on every page, and no CSP directive catches it.
 - **[Inferred]** CSP cannot stop a script navigating away. That limb rests on
   the renderer's fixed bytes alone.
+- **[Observed]** `navigate-to` is forbidden only because the set is closed; in
+  round 1 `navigate-to 'none'` did not stop a `location` navigation on Chrome 120,
+  so it would not have helped.
 
 ## Mechanical and judged halves
 
-- Mechanical: `csp_finding` in the builder reads the directive half, over a
-  28-row table (`--score`). The install implements the same reading in
-  `pageSinkCspFinding`, with mutants for a wrong hash, an added directive and
-  `'unsafe-inline'`.
-- Judged: the script's own conduct. The install pins its hash against its bytes
-  and scans its source for the named sinks; a reviewer reads it.
+- Mechanical, by CSP string: `csp_finding` in the builder reads the directive
+  half over a 55-row table (`--score`), splitting on ASCII whitespace only.
+  Non-ASCII whitespace stays inside a token and so fails the closed set, which is
+  how a browser reads it too. `--selftest` holds one source-fragment mutant per
+  predicate. The install implements the same reading in `pageSinkCspFinding`,
+  whose split must change from `/\s+/u` to ASCII whitespace; that is also a
+  repair of today's reader.
+- Mechanical, per page, in the consumer (this is the install's job, see the
+  ledger): a new renderer contract id declares the script half, so the current
+  contract with a `script-src` is unconfirmed. Every `<script>` on a page has no
+  `src` and hashes to one of the renderer's pinned hashes.
+- Mechanical, by test: with scripts on, a canary page's DOM text is compared
+  with scripts off; a browser test with a request listener sees no connection or
+  navigation off the page; a storage dump after a run holds no page text.
+- Judged: the rest of the script's conduct. The install pins its hash against its
+  bytes and scans its source for the named sinks; a reviewer reads it.
 
 ## What this does not do
 
-- It adds no script. It changes no spec: `spec.md:247` and `:334` and
-  `design.md:429` still say no script, and change through a dossier spec
-  version. No script ships until both are signed and installed.
+- It adds no script. It changes no spec: the dossier spec's no-script text
+  changes through a dossier spec version. Diagram rules in
+  `polaris-manifesto-understanding-amendment` and
+  `polaris-project-wide-butlers-model` still require static SVG with no script
+  or link, so diagram click-through needs its own owner step. No script ships until both are signed and installed.
 - It changes no detector, placement or withheld line (answer A above). It has
   no bearing on option E.
 - It decides no feature. Zoom, click-through, remembered state and Esc dismissal

@@ -13,8 +13,12 @@ exemption and are withheld. Version 7 relaxes exactly that.
 
 - **A page may carry one or more inline scripts that the renderer itself
   writes**, each allowed by the hash of its bytes. Nothing else may run.
-- **Pages still load nothing from anywhere.** `default-src 'none'` stays, and
-  the new text also forbids the directives that could reopen a network path.
+- **The browser blocks ordinary loading, not every network path.** The policy
+  becomes a closed list of directives, tighter than version 6. It stops fetch,
+  images, forms and similar. It does not stop a script using WebRTC or creating a
+  few kinds of element; a review test got packets out that way. The new text
+  forbids those uses, and that rests on the renderer's fixed script, its tests
+  and review, not on the browser.
 - **Source text stays inert.** Every byte is still written as escaped text. A
   script injected through a source file would not match a hash, so it would not
   run.
@@ -32,8 +36,9 @@ recorder takes that row as the act's argument (phrase
 `APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY`, as for versions 2–6).
 It supersedes the version-6 act.
 
-Recommended: sign. It is what you asked for, and the wall that matters most,
-no network, stays.
+Recommended: sign. It is what you asked for, source text stays inert, and the
+directive list is tighter than today's. The no-network promise for a page with a
+script rests partly on review, as described above.
 
 ## What it costs
 
@@ -43,8 +48,11 @@ no network, stays.
 - **Signing alone adds no script.** It needs a dossier spec version as well,
   which comes to you separately, and the install is subject to the surface
   merge freeze.
-- **Unknown until tried:** hash-allowed inline scripts over `file://`, which is
-  how you open pages. If a browser refuses them, pages fall back to static.
+- **Tried on one browser:** a hash-allowed inline script ran over `file://`, which
+  is how you open pages, on Chrome 120. Other browsers are untried. If one refuses
+  it, pages fall back to static.
+- **Diagram click-through is not granted.** Two other specs still require
+  diagrams with no link or script, so that needs a separate step.
 
 ## If you decline
 
