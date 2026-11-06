@@ -134,6 +134,9 @@ for arm in ['cpu-separation.json','cpu-separation-node22.json']:
       (f'M7-{suffix}-wrong-title',[E(arm,plural('title'),'wrong plural title')],'fail','Change only a row title: exact identity must fail.'),
       (f'M8-{suffix}-wrong-id',[E(arm,plural('id'),'wrong-id')],'fail','Change only a row id: exact identity must fail.'),
       (f'M9-{suffix}-missing-head-region',[E(arm,site(TAG,'headRuns',0,'regions'),[])],'fail','One head run observes no parameter regions.'),
+      (f'M10-{suffix}-wrong-head-selection',[E(arm,site(TAG,'headRuns',0,'title'),'wrong head selection')],'fail','A head run names a different selected parameter population.'),
+      (f'M11-{suffix}-wrong-mutant-run-title',[E(arm,plural('runs',0,'title'),'wrong mutant title')],'fail','One run is assigned to a different mutant row title.'),
+      (f'M12-{suffix}-capped-head',[E(arm,site(EDGE,'headRuns',0,'capped'),{'regionCpuMsAtLeast':1})],'fail','A capped head is not a successful uncapped head observation.'),
     ])
 MUTANTS.extend([
  ('B9-census-unmeasured-timed-site',[], 'fail','Append an independently unmeasured timed source to the census.'),
@@ -177,6 +180,8 @@ with tempfile.TemporaryDirectory(prefix='clock-checker-mutants-') as scratch:
             if mid.startswith('B6-'):intended='head-run population' in message
             if mid.startswith(('M5-','M6-','M7-','M8-')):intended='exact mutant (id,title) population' in message
             if mid.startswith('M9-'):intended='every expected region/parameter identity' in message
+            if mid.startswith(('M10-','M12-')):intended='head selection identity or uncapped-success qualification' in message
+            if mid.startswith('M11-'):intended='mutant run title identity' in message
             if mid.startswith('B9-'):intended='census population' in message
             result={'id':mid,'note':note,'commit':commit,'edits':recorded,'expect':expected,'exit':run.returncode,'outcome':outcome,'intendedPredicate':intended,'asExpected':outcome==expected and intended,'stdout':run.stdout,'stderr':run.stderr}
         finally:

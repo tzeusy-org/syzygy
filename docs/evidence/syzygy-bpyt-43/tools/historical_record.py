@@ -83,6 +83,12 @@ EXPECTED_MUTANTS = {
  'TAG_SCAN_CPU_MS': [('junit-tag-regex','scans unterminated opening tags at the ceiling'),('junit-tag-regex','scans unterminated plural tags at the ceiling'),('junit-tag-regex','scans near-miss tag names at the ceiling')],
  'ATTRIBUTE_SCAN_CPU_MS': [('junit-attr-regex','scans one tag body that is a single word run at the ceiling')],
 }
+EXPECTED_HEAD_SELECTIONS = {
+ 'EDGE_TRIM_CPU_MS': 'trims a long run of spaces in linear time',
+ 'HOSTILE_LINE_CPU_MS': 'stays linear on one 100k line of spaces after',
+ 'TAG_SCAN_CPU_MS': 'scans (unterminated opening tags|unterminated plural tags|near-miss tag names) at the ceiling',
+ 'ATTRIBUTE_SCAN_CPU_MS': 'scans one tag body that is a single word run at the ceiling',
+}
 def timed_population(commit):
     paths = [p for p in git('ls-tree','-r','-z','--name-only',commit).decode().split('\0') if re.match(r'^(apps|packages)/',p) and re.search(r'\.test\.(?:ts|mts|js|mjs)$',p)]
     rows=[]
@@ -115,6 +121,7 @@ def separated(s, record):
     if b is None or s['fileBound']['ms'] != b: sys.exit(f'{name}: the separation measured a bound other than the {b} the test holds')
     if len(s['headRuns']) < 10: sys.exit(f'{name}: head-run population must be at least ten successful runs per bound')
     if any(h['exit'] != 0 for h in s['headRuns']): sys.exit(f'{name}: a head run failed')
+    if any(h['title'] != EXPECTED_HEAD_SELECTIONS[s['bound']] or h['capped'] is not None for h in s['headRuns']): sys.exit(f'{name}: head selection identity or uncapped-success qualification differs')
     expected_regions = Counter((line,s['bound']) for line in s['lines'] for _ in range({'HOSTILE_LINE_CPU_MS':2,'TAG_SCAN_CPU_MS':3}.get(s['bound'],1)))
     if any(Counter((g['line'],g['bound']) for g in h['regions']) != expected_regions for h in s['headRuns']): sys.exit(f'{name}: each head run must observe every expected region/parameter identity')
     if sorted((m['id'],m['title']) for m in s['mutants']) != sorted(EXPECTED_MUTANTS.get(s['bound'],[])): sys.exit(f'{name}: exact mutant (id,title) population including multiplicity differs')
@@ -122,6 +129,7 @@ def separated(s, record):
     if not head: sys.exit(f'{name}: no head run probed the region')
     head_max, rows = max(head), []
     for m in s['mutants']:
+        if any(r['title'] != m['title'] for r in m['runs']): sys.exit(f'{name}: mutant run title identity differs from its declared row')
         values = [r['capped']['regionCpuMsAtLeast'] if r['capped'] else min((g['cpuMs'] for g in r['regions'] if g['bound'] == s['bound']), default=None)
                   for r in m['runs']]
         if not values or None in values: sys.exit(f'{name}: {m["id"]} has a run that neither capped nor probed the region')
