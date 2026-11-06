@@ -8,7 +8,8 @@
 // each project's options as TypeScript does, through `extends` (syzygy-bpyt.65), and refuses an `outDir`, `tsBuildInfoFile` or
 // `declarationDir` outside the project's dist, any `outFile`, a `declarationDir` or `outFile` an extended file sets to `null`
 // (TypeScript reads that as unset, but the option is still present, syzygy-bpyt.4.42), and a referenced project that is not
-// composite, which `tsc -b` would refuse only after the dists were gone.
+// composite, which `tsc -b` would refuse only after the dists were gone. Recoverable TypeScript config errors also stop the
+// visit before removal, naming the visited config and its first diagnostic (syzygy-bpyt.73).
 //
 // Usage, from the repository root: node scripts/clean_build.mjs <project directory>...
 import { spawnSync } from 'node:child_process';
@@ -39,7 +40,9 @@ function visit(project) {
   if (options.outDir !== 'dist' || options.tsBuildInfoFile !== 'dist/.tsbuildinfo' || 'declarationDir' in options || 'outFile' in options) {
     throw new Error(`${path}: its outputs and incremental state are not both under dist`);
   }
-  const effective = ts.getParsedCommandLineOfConfigFile(resolve(path), undefined, unreadable(path)).options;
+  const parsed = ts.getParsedCommandLineOfConfigFile(resolve(path), undefined, unreadable(path));
+  if (parsed.errors.length > 0) throw new Error(`${path}: ${ts.flattenDiagnosticMessageText(parsed.errors[0].messageText, '\n')}`);
+  const effective = parsed.options;
   const dist = resolve(project, 'dist');
   const underDist = (file) => typeof file === 'string' && (file === dist || file.startsWith(`${dist}/`));
   if (!underDist(effective.outDir) || !underDist(effective.tsBuildInfoFile) || ('declarationDir' in effective && !underDist(effective.declarationDir))
