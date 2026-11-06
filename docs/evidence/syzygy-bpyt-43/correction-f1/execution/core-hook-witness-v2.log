@@ -1,0 +1,3 @@
+{"phase": "before", "exit": 0, "passed": 17, "failed": [], "rows": 17}
+{"phase": "mutant", "exit": 1, "passed": 16, "failed": ["daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does"], "rows": 17}
+{"phase": "restored", "exit": 0, "passed": 17, "failed": [], "rows": 17}

@@ -1,0 +1,276 @@
+{
+  "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+  "mutations": [
+    {
+      "id": "selection-filter",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "generated.filter(w => kinds.includes(w.kind))",
+      "new": "generated.filter(w => true)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "12c57d1a451bf49ccf712f658722342108375150d899676bbf0e6bd1311df562"
+    },
+    {
+      "id": "population-count",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "return { worlds: worlds.length, byKind };",
+      "new": "return { worlds: worlds.length + 1, byKind };",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "e8fe75b1a9e315efa837af163c86cdbd45732b1d98e88492403c8f353f4ef954"
+    },
+    {
+      "id": "identity-positional",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "const a = old.get(identity.key), b = next.get(identity.key);",
+      "new": "const a = old.get(identity.key), b = [...next.values()][0];",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "5dfd9b75d6bf57d4cc44f5b59c4a464b7d568d5451d80b0b1c7186d6743aaf9d"
+    },
+    {
+      "id": "new-keyset",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (map.size !== expected.length || expected.some(e => !map.has(e.key)))",
+      "new": "if (map.size !== expected.length)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "23432ed7e75ec946a07fb002a3f26149bf00d626eefcb30422da1b7cc8dafc99"
+    },
+    {
+      "id": "metadata-identity",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (JSON.stringify(row[4]) !== JSON.stringify({ reader: identity.reader, step: identity.step, instant: identity.instant }))",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "46de13a3f6a3508fc00e90f3285696265607eb24fa5c84d5bbef6a4e89c51ff1"
+    },
+    {
+      "id": "complete-value-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (typeof row[3] !== 'string' || sha256(row[3]) !== row[1])",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "7f416bcb528e0df1c633c976e1f20411cabc5bc2d92c2eb371076af3ccd02113"
+    },
+    {
+      "id": "unrelated-reader-total",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "return expected.filter(reader => !(perReader[reader]?.answers > 0 && perReader[reader]?.mismatches > 0));",
+      "new": "return Object.values(perReader).some(r => r.mismatches > 0) ? [] : expected;",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "7507a62aaf095f37022ed0fcfad349d2738327f26da683a443492f7658c85eb3"
+    },
+    {
+      "id": "positive-reader-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "perReader[reader]?.answers > 0 && perReader[reader]?.mismatches > 0",
+      "new": "perReader[reader]?.mismatches > 0",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "6b5f1f67d24f82babfee9ede70ad3fba74d78c3a2c163a28625610f49f5f3dae"
+    },
+    {
+      "id": "known-unique-expectations",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (names === undefined || names.length === 0 || names.some(n => n === '') || new Set(names).size !== names.length || names.some(n => !known.has(n)))",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "bfe0e8e8daf7b4a85aaf468e340bedbc0b7abe028de884083fbdf040b6869cbb"
+    },
+    {
+      "id": "empty-answer-population",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (rows.length === 0) throw new Error('zero executed answer population');",
+      "new": "if (false) throw new Error('zero executed answer population');",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "602166b4b9f23bcaba7ffee795848aa77d6b1d3f2e25f3137aca08f695c75444"
+    },
+    {
+      "id": "empty-selected-population",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (selected.length === 0) throw new Error('empty selected world population');",
+      "new": "if (false) throw new Error('empty selected world population');",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "d6d3744abed6655523f711f97fc838496a9986f9d050a884240df882cad96b72"
+    },
+    {
+      "id": "absent-method",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (typeof port.consentAbsenceFor !== 'function')",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "abadcb95e4c11a3f0255f05975969e139471cfeda46025a5a0b1c9abdd3b111d"
+    },
+    {
+      "id": "cleanup-leftover",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "cb8dce313bd8fae79d5b07205c8d76be791f17ee033a0cddb1ff2e9e85d73c7b"
+    },
+    {
+      "id": "cleanup-pair-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.materializedLeftOver === 0 && control.differing === 0 && control.created === control.removed",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "75a66f9506165cf89f0e96924c87d2f5c071d4292353d3292fd531a0af288553"
+    },
+    {
+      "id": "cleanup-removal-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "9b42a1a07147da732cb6a521b26f809656152ba6964a93c159fba84519cb8cee"
+    },
+    {
+      "id": "successor-exact-instant",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "const before = at === SUCCESSOR_INSTANTS[0];",
+      "new": "const before = at !== SUCCESSOR_INSTANTS[2];",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "e34b7078451c9d9b682bf11a71ed0029115a11eaab835229a6ea4887e2561617"
+    },
+    {
+      "id": "file-world-port-omission",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": ".filter(name => !FIXTURE_READERS.includes(name));",
+      "new": ".filter(name => !FIXTURE_READERS.includes(name) && name !== 'port');",
+      "mode": "probe",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "8d6ede0b164c0114ac3c66000706f55d6d17fc957d395c21614fa21b4da9f590"
+    },
+    {
+      "id": "generated-selected-alias",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "const counts = { generated: population(built.worlds), selected: population(worlds) };",
+      "new": "const counts = { generated: population(built.worlds), selected: population(built.worlds) };",
+      "mode": "probe",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "af75932de81f2df0113745be1bfe344935c184055d9af2b292b72109ee825b60"
+    },
+    {
+      "id": "successor-record-branch",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "supersedes: 'FIXTURE-OBSERVATION@1'",
+      "new": "supersedes: 'FIXTURE-MISSING@1'",
+      "mode": "observation-successor",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "f9cbdea6f3c71575b23ea0b17eafb2e0b7865acc02e75f0b5ab96635cef93148"
+    },
+    {
+      "id": "materialization-executed-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "materialization.expectedPairs += 1;",
+      "new": "materialization.expectedPairs += 0;",
+      "mode": "base",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "7b80278069af96b9af25646f046ad0d89d9aeef157881eca378c898b54263ecb"
+    },
+    {
+      "id": "actual-owned-removal",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "for (const disk of disks) fs.rmSync(disk, { recursive: true, force: true });",
+      "new": "for (const disk of disks) void disk;",
+      "mode": "base",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "ac6acd1eae75831dd0f97676dddefe746c5cc86389c378a4df2e2aaab21d7c71"
+    },
+    {
+      "id": "materialization-difference",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.materializedLeftOver === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "fc8ede05d1a9c832f47eeda8707b69838aaddc566cfd897a418dd6fa4813ad13"
+    },
+    {
+      "id": "selected-execution-population",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (world.readers.length === 0 || new Set(world.readers).size !== world.readers.length || world.instants.length === 0 || (world.steps !== undefined && world.steps.length === 0))",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "e7ce21c865433aeb57ea09651f3b22faa90c496e5c589b8fe72ba67149d19254"
+    },
+    {
+      "id": "duplicate-comparison-key",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (map.has(row[0])) throw new Error(`duplicate ${role} answer key: ${row[0]}`);",
+      "new": "if (false) throw new Error(`duplicate ${role} answer key: ${row[0]}`);",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "dc48c7db123793e52446f376069736b2699e741d36e3a452a0ddbf824583dbce"
+    },
+    {
+      "id": "complete-value-versus-label",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "same: a[3] === b[3]",
+      "new": "same: a[2] === b[2]",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "3609a55d97cd9832b5b0a88fc02dce3d320dbffd81d344698e32cf441dac1cdb"
+    },
+    {
+      "id": "duplicate-world-reader",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "new Set(world.readers).size !== world.readers.length",
+      "new": "false",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "42a4197752d9f6d803086af1fdd802d2fa65892bcb61466131f30a681a9221ad"
+    },
+    {
+      "id": "runtime-resource-validation",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (!Number.isSafeInteger(workers) || workers < 1 || workers > 32 || !Number.isSafeInteger(timeLimitMs) || timeLimitMs < 1)",
+      "new": "if (false)",
+      "mode": "probe",
+      "workers": "1.5",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "147ab57ee0de56a0dd4f1c2fd01c3b9a85db20c8d5660265b043881357bca39d"
+    },
+    {
+      "id": "bounded-sample-validation",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (!Number.isSafeInteger(samplePerKind) || samplePerKind < 1)",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "324a949bde895ba20293d46aa4bb632c4f53f3daa9279c36766fb238b4eaab9e"
+    },
+    {
+      "id": "unknown-reader-validation",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (!specs.has(name)) throw new Error(`unknown selected reader: ${name}`);",
+      "new": "if (false) throw new Error(`unknown selected reader: ${name}`);",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "9891e1c3e149fae3caace5ac74037b81d880c7d9f3eef0ab4b343d2e123780ac"
+    },
+    {
+      "id": "expectations-without-control",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (names !== undefined) throw new Error('reader mismatch expectations require negative-control mode');",
+      "new": "if (false) throw new Error('reader mismatch expectations require negative-control mode');",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "f444e59db970f88bbec187c168aae9cf0081e30b9de7fe444b11525f119ae593"
+    }
+  ]
+}

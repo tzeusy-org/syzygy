@@ -1,0 +1,12 @@
+{
+  "copiedFrom": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/capture-battery.py",
+  "sourceSha256": "c21bdc6906591e78ff68f2c4f7217711a8007cfac1651a250ade7901255edf4c",
+  "ownedAdapterSha256": "902701a4624fed443a69e9efc18f1d4a71b9db0be99fd16e11690137659166b3",
+  "wrapperSha256": "c9eaca952b1f33fa16adf0797a6dacfd4590f1f801fc7623623c33cef37610c2",
+  "changes": [
+    "own directory derived from private adapter path",
+    "current native parser defines the command population; unique index guard without a copied command count",
+    "refuse existing capture files/directory"
+  ],
+  "claim": "Passive capture of unmodified native run_one returns. Child commands, variables, statuses and native summary remain unchanged. This is emitter custody, not independent runtime authentication."
+}

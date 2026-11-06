@@ -1,0 +1,472 @@
+{
+  "schema": "full-original-ac-correction-map/1",
+  "bead": "syzygy-bpyt.8.26",
+  "canonicalSnapshot": {
+    "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/CANONICAL-DECODED.json",
+    "bytes": 52436,
+    "sha256": "b687a6d4830e983a13585ada1b2473d6536dd9b8c4f8613a9420b813089857db"
+  },
+  "canonicalComments": {
+    "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/COMMENTS-DECODED.json",
+    "bytes": 1442,
+    "sha256": "12a8d008382be21eed97052941c7232a42095a6b95fc6875e14b5be252201f3b"
+  },
+  "originalDescription": "From lane B's PR #512 report (syzygy-bpyt.8.20), 2026-10-22. [Observed, lane-reported] scripts/differential_consent_act_families.mjs compares the records port in 11 worlds only (the 8 base worlds and the 3 policy-bytes worlds), while the admission reader that the port composes runs in 3,016 worlds. Extend the port comparison to the probe and real-file worlds when the runtime allows, and record the world count beside the result.",
+  "originalComment": [
+    {
+      "id": "5f6669f5-1985-5d17-8009-8a808ce0484d",
+      "issue_id": "syzygy-bpyt.8.26",
+      "author": "Tzeusy",
+      "text": "From the CC-REV-1 review of PR #517 (syzygy-bpyt.8.19), note N1 (docs/reviews/R-GP-IMPL-CONSENT-LIVE-MODULE-1-RAW.md; dispositions docs/evidence/consent-live-module-round-1-dispositions-2026-10-24.md). [Observed by the reviewer] scripts/differential_consent_act_families.mjs has no reader that calls the gate sources' repositoryIdsFor, consentAbsenceFor, consentedRevisionsFor, observationConsentFor or screeningPolicy, the methods that reach the in-force rules through createPackageAdmissionRecordsPort; its port reader gives 22 of 56,781 answers, none in an altered-prose world, and the recorded negative control moves 0 of its 14 port answers although its controlNote expects mismatches there. Add to this bead: (1) fold the reviewer's gate-port reader and port into the shared script's ADMISSION readers (fragments in docs/evidence/consent-live-module-review-2026-10-24/tools/make_reviewer_differential.py); (2) one world where an observation record has a successor that took effect; (3) make a negative control's controlNote expectation a checked predicate (per reader, mismatches > 0). The reviewer's gp-diff.json, gp-nc1.json and gp-nc2.json in that directory are the current evidence (0 of 2,765; a blunt in-force mutant moves 25 of 30 gate-port answers).",
+      "created_at": "2026-10-24T14:51:06Z"
+    }
+  ],
+  "canonicalACVerbatim": "1. Preserve the complete original description and the one canonical Tzeusy comment, title/metadata/dependency identities and empty original AC prefix. Deliver the whole records-port differential expansion, the reviewer's five-method gate-port, ADMISSION propagation, observation-successor world and checked per-reader negative controls; do not substitute shaping, a bounded supplemental subset, historical PR512/517 evidence or another sibling's result. Keep 8.25/8.28/8.29/8.31/8.43/1.24 and existing graph/owner questions separate and unchanged.\n2. Before implementation root records a fixed real base, actual primary authority applicability for this exact tool schema/exit contract and one accountable script/fixture writer. Refresh live main, open PR file sets and local-worker custody. PR640's package-reader.ts/tests/README and PR514's recorder-template.ts/tests require a complete serial handoff before touching those files; a script-only fixed-base allocation does not adopt either PR. Any actual product acceptance/refusal, scope, security/privacy/retention or normative schema/specification change stops before dependent code and returns through a concrete fresh-reviewed same-child offering and its actual governing owner act. No new owner answer or drafting-permission request is inferred or sent during FIRST.\n3. Add the shared script's gate-port using actual createPackageGateSources methods repositoryIdsFor, consentAbsenceFor, consentedRevisionsFor, observationConsentFor for both repositories, and screeningPolicy. Compare their complete exact values/throws from each tree; assert the expected current optional-method presence so a missing method is not silently hidden. Preserve the direct port's existing complete questions and the actual ./live/root identity and in-tree build-binding checks.\n4. ADMISSION includes port and gate-port for admission/class altered lines/prose/records/artifacts/pins. Execute port and gate-port through the complete selected probe, real-file and edited-between-reads corpus and relevant policy-byte worlds; retain existing readers, full decision-file corpus, operators, pins, reduced/full bases, PR500 altered prose and materialization controls. Store a complete world\u2192reader\u2192step\u2192instant execution matrix and exact paired key sets, so unequal keys/omissions cannot pass via positional comparison. No changed product answer is permitted in the actual old/new equivalence run.\n5. Add the effective observation-successor world at the existing validated AdmissionRecordReader/createAdmissionRecordsPort boundary, including before/at/after instants and independently literal expected consent/revision/id/absence outcomes when the successor omits the predecessor's revision. Exercise the actual compiled gate-source forwarding methods through a digest-bound, fixture-only import adapter that invokes the real createAdmissionRecordsPort, and label that mode separately from actual file-backed package-port/gate-port worlds. Retain original gate module bytes, exact import substitution, adapter and record digests. Never widen parseInstance, invent an adopted observation-successor form, replace real file-world factories, synthesize expected answers in the adapter or count egress-only/direct-port-only proof as this whole obligation. If the faithful fixture route fails, preserve its exact subject/attempt and keep the full obligation blocked.\n6. Every result and count-only output names generated and selected world totals/by-kind and per-reader distinct-world, executed-step/instant-answer and mismatch denominators, beside the result. --kinds uses the identical selected population for count and execution; three steps are one world and three steps, and instants are answers. Bind old/new committed subjects, source and compiled-file digests, tool/corpus/fixture hashes, Node/workers/time limits/actual wall time, reader-key pairing, materialization and cleanup populations. Independently recount retained rows/matrix using a second method; enumerate remainders and never emit missing execution as zero. A necessary evidence-schema/CLI compatibility change is explicit and does not silently relabel historical bytes.\n7. Negative controls carry a nonempty structured unique known expected-reader list corresponding to controlNote. The tool succeeds for a control only when each declared logical reader actually ran and has mismatch count > 0; total or unrelated-reader mismatches cannot satisfy it. Missing/unknown demanded readers, absent expectations, empty selection/answers, unequal reader key sets and unmet expectations fail with retained explicit diagnostics. Normal differential success requires its complete expected population, zero changed answers and successful materialization/owned cleanup.\n8. Retain an M0-first run of the exact new tool and subjects with nonzero executed populations and literal successor outcomes before any scoring. Run meaningful separate supersession and blunt in-force controls so the observation-successor direct/injected gate readers and actual file-backed gate-port are each demonstrably sensitive. Run the false-positive control in which only an unrelated reader changes while port is demanded and require failure. Apply a rule-6 mutant to each actual new/changed selection/count/identity/reader-expectation/empty-input/fixture/cleanup predicate; retain exact unique old/new fragments, reachable subject commit, original/mutated digests, commands, logs and executed denominators. Import/compile/fragment/reporter/filter failure, zero comparisons/tests or timeout is errored/inconclusive, never a semantic kill. A failed M0 stops scoring, and author-only outside-code classification clears nothing.\n9. Complete the expanded whole corpus on separately installed/built clean Syzygy clones with private fixture/home/cache/short tmp boundaries, exact public lockfile cache before offline install, one owned build target and finite retained limits. npm ci inside each checkout precedes NodeNext. Record actual runtime/load/worker qualification; a bounded shard strategy must prove a frozen disjoint complete union with no missing/duplicated world-reader-step-instant comparison. Preserve every failed/stopped attempt and exact remainder; runtime infeasibility keeps the original outcome open/blocked rather than narrowing its population or inventing a current 3,016-world promise. No observed repository body/code, provider/credential, external act, target write, release or deployment is used.\n10. Extend the existing script's executable small fixture/selftest mode for its new evidence-tool predicates, with an old-tool failing reproduction for the unchecked-per-reader control and selection/count gap. Use one behavior-executing gate species per invariant; add no duplicate source-grep guard or product suite. The nearest existing product tests remain package-reader.test.ts's injected-port/revision cases, consent-ports.test.ts's observation-successor and not-in-force cases, and start-gates.test.ts's actual gate factory cases. Expected Vitest delta is +0 ~0 -0, with tool cases reported separately; any genuinely necessary product regression extension names the existing seam, actual custody/authority and measured Tests +N ~N -N instead of manufacturing test growth.\n11. Update only the current script's usage/header and new .26 evidence/README needed to explain the exact commands, output/control contract, actual counts, fixture-versus-file boundaries and limitations. Keep acts, raw reviews, signed/frozen predecessors and prior generated evidence immutable. Intended adopted spec/RFC/doctrine/policy impact is none because product behavior stays unchanged; any invalidation follows CC-REV-2 and cannot be called editorial. Record the actual class assessment for all seven CC-REV-1 classes (initial 1 and 4, others assessed explicitly) and all seven CC-BAR-5 floors; reviewer confirms or reclassifies them. No short-diff/none-class claim waives floors or review.\n12. Retain focused evidence-tool/selftest/differential/control outputs, proportional existing tier checks, npm run check and npm run check:all from a clean clone at the exact subject, with the canonical governance battery read from PROJECT-STATUS.md and broad driver serialized under the shared lock. Read outputs and denominators, diagnose before justified retry, keep actual test delta and all attempts. Obtain a fresh independent default-model CC-REV-1 review of the frozen exact artifact/subject+digest with governing references and these complete AC; raw is unchanged, verdict exact, all findings dispositioned, author/emitter reports distinguished from independent byte capture/execution and hosted CI. A semantic reviewer fix or later subject change gets fresh independent review. Prepare the GP-Q0 non-blocking cycle notice naming actual classes, new coverage, controls and remaining Unknowns; root records it in the cycle-report route without inventing owner adoption.\n13. At lawful landing refresh fixed-base/custody/authority and exact PR/head checks, retain the full original AC\u2192artifact map, source/build/tool/fixture digests, complete population/negative-control evidence, independent review/capture, actual test delta and frozen hash manifest. Apply the sole Nov3 item4 hold only to merges touching apps/three-surface-poc/src or packages/three-surface-poc-core/src and require BOTH actual 1z3.22 owner judgment and 1z3.25 report there; authorized/static preparation remains allowed. FIRST is packet preparation only, Tests +0 ~0 -0, with no install/runtime/source mutation/BD write/commit/push/merge/question/adoption. Root verifies/applies design+AC once and alone owns lifecycle; whole .26 closure waits for implementation, complete proof, fresh review, notice and permitted landing, never this proposal.",
+  "criteria": [
+    {
+      "criterion": 1,
+      "canonicalText": "1. Preserve the complete original description and the one canonical Tzeusy comment, title/metadata/dependency identities and empty original AC prefix. Deliver the whole records-port differential expansion, the reviewer's five-method gate-port, ADMISSION propagation, observation-successor world and checked per-reader negative controls; do not substitute shaping, a bounded supplemental subset, historical PR512/517 evidence or another sibling's result. Keep 8.25/8.28/8.29/8.31/8.43/1.24 and existing graph/owner questions separate and unchanged.",
+      "authorAssessment": "implemented and locally evidenced; independent exact-head review remains required",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/CANONICAL-LIVE-CHECK.json",
+          "bytes": 473,
+          "sha256": "bbbd163bd10468e61688c9e1692b01c8a0d1fd5e679c284e106660b6b11bbdd3"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/M0-full-recount.json",
+          "bytes": 8896,
+          "sha256": "c0bbba3e98df9ed4b04e36ed7d4322c2484890efd30cce8315211347b8ce8af3"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "criterion": 2,
+      "canonicalText": "2. Before implementation root records a fixed real base, actual primary authority applicability for this exact tool schema/exit contract and one accountable script/fixture writer. Refresh live main, open PR file sets and local-worker custody. PR640's package-reader.ts/tests/README and PR514's recorder-template.ts/tests require a complete serial handoff before touching those files; a script-only fixed-base allocation does not adopt either PR. Any actual product acceptance/refusal, scope, security/privacy/retention or normative schema/specification change stops before dependent code and returns through a concrete fresh-reviewed same-child offering and its actual governing owner act. No new owner answer or drafting-permission request is inferred or sent during FIRST.",
+      "authorAssessment": "implemented and locally evidenced; independent exact-head review remains required",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/ROOT-RELEASE.json",
+          "bytes": 1644,
+          "sha256": "954f006d308e56ae5ce1311226b82aa2a9195516c75ee6d62664cb9374e4a881"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/BOOTSTRAP.json",
+          "bytes": 600,
+          "sha256": "0066f23d5d3924a4f75f87fe4db27f7abd98de87ba01694793c984709e3e3da6"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/LIVE-CUSTODY.json",
+          "bytes": 39569,
+          "sha256": "b9d74590a5020bffb03ec2a05e734987e3550e6bfb91fcefdabaa7e60177f1d5"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "criterion": 3,
+      "canonicalText": "3. Add the shared script's gate-port using actual createPackageGateSources methods repositoryIdsFor, consentAbsenceFor, consentedRevisionsFor, observationConsentFor for both repositories, and screeningPolicy. Compare their complete exact values/throws from each tree; assert the expected current optional-method presence so a missing method is not silently hidden. Preserve the direct port's existing complete questions and the actual ./live/root identity and in-tree build-binding checks.",
+      "authorAssessment": "implemented and locally evidenced; independent exact-head review remains required",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/selftest-committed.stdout",
+          "bytes": 3226,
+          "sha256": "aa71a6427790585f7f0e22f14a8fbbaf511df9160c659a0e374088c2d3f764f4"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/M0-full.json",
+          "bytes": 50847808,
+          "sha256": "bf3ca1cc16a7a2d0975c0c569b7a6ea3f1e1f403aad830512c17fcd6cf258205"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/SEMANTIC-CONTROL-RESULT.json",
+          "bytes": 137580,
+          "sha256": "2456d5059ee9dadb5b6e176fe63300fc2b0982d35aaad8eabd74f3b6fa3c9b59"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "criterion": 4,
+      "canonicalText": "4. ADMISSION includes port and gate-port for admission/class altered lines/prose/records/artifacts/pins. Execute port and gate-port through the complete selected probe, real-file and edited-between-reads corpus and relevant policy-byte worlds; retain existing readers, full decision-file corpus, operators, pins, reduced/full bases, PR500 altered prose and materialization controls. Store a complete world\u2192reader\u2192step\u2192instant execution matrix and exact paired key sets, so unequal keys/omissions cannot pass via positional comparison. No changed product answer is permitted in the actual old/new equivalence run.",
+      "authorAssessment": "implemented and locally evidenced; independent exact-head review remains required",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/M0-full.json",
+          "bytes": 50847808,
+          "sha256": "bf3ca1cc16a7a2d0975c0c569b7a6ea3f1e1f403aad830512c17fcd6cf258205"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/M0-full-recount.json",
+          "bytes": 8896,
+          "sha256": "c0bbba3e98df9ed4b04e36ed7d4322c2484890efd30cce8315211347b8ce8af3"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/FRESHNESS-RECOUNT.json",
+          "bytes": 2534,
+          "sha256": "8c35fa64f82b71e920e94d8e4b9574666618426638eb4eb736dce0eecc67357b"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "criterion": 5,
+      "canonicalText": "5. Add the effective observation-successor world at the existing validated AdmissionRecordReader/createAdmissionRecordsPort boundary, including before/at/after instants and independently literal expected consent/revision/id/absence outcomes when the successor omits the predecessor's revision. Exercise the actual compiled gate-source forwarding methods through a digest-bound, fixture-only import adapter that invokes the real createAdmissionRecordsPort, and label that mode separately from actual file-backed package-port/gate-port worlds. Retain original gate module bytes, exact import substitution, adapter and record digests. Never widen parseInstance, invent an adopted observation-successor form, replace real file-world factories, synthesize expected answers in the adapter or count egress-only/direct-port-only proof as this whole obligation. If the faithful fixture route fails, preserve its exact subject/attempt and keep the full obligation blocked.",
+      "authorAssessment": "implemented and locally evidenced; independent exact-head review remains required",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/M0-full.json",
+          "bytes": 50847808,
+          "sha256": "bf3ca1cc16a7a2d0975c0c569b7a6ea3f1e1f403aad830512c17fcd6cf258205"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/literal-expectations.json",
+          "bytes": 4517,
+          "sha256": "214763e065e733e2cf4306686c64b272f74fad85a13d9a2afe0fe3f061d8fd37"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/compiled-inputs/old-gate-sources.js",
+          "bytes": 30728,
+          "sha256": "83e72a5739b2351eb4f039284cb86c16864ba740fe32552fd2be1f77c1c7bce5"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/compiled-inputs/new-gate-sources.js",
+          "bytes": 30728,
+          "sha256": "83e72a5739b2351eb4f039284cb86c16864ba740fe32552fd2be1f77c1c7bce5"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "criterion": 6,
+      "canonicalText": "6. Every result and count-only output names generated and selected world totals/by-kind and per-reader distinct-world, executed-step/instant-answer and mismatch denominators, beside the result. --kinds uses the identical selected population for count and execution; three steps are one world and three steps, and instants are answers. Bind old/new committed subjects, source and compiled-file digests, tool/corpus/fixture hashes, Node/workers/time limits/actual wall time, reader-key pairing, materialization and cleanup populations. Independently recount retained rows/matrix using a second method; enumerate remainders and never emit missing execution as zero. A necessary evidence-schema/CLI compatibility change is explicit and does not silently relabel historical bytes.",
+      "authorAssessment": "implemented and locally evidenced; independent exact-head review remains required",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/COUNT-full.json",
+          "bytes": 14472487,
+          "sha256": "54017e1d0b9d309fa7c6e87228318fb169622777ee82d2014e39f17f57693e53"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/COUNT-full-verified.json",
+          "bytes": 429,
+          "sha256": "a3867d785118ac95daa64b92df7fd6ec91b50d0807cf3ed9175fd8d78c58d4a4"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/COUNT-selected.json",
+          "bytes": 6319755,
+          "sha256": "e62d2602120b837bb394bd78120c6edd0d3e38499fbedc9d14c46acbf3a0c0d2"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/COUNT-selected-verified.json",
+          "bytes": 427,
+          "sha256": "00876008474585d36638f8f9b49db557395e3084ecbb1a2113bd221c7df1a510"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/M0-full-recount.json",
+          "bytes": 8896,
+          "sha256": "c0bbba3e98df9ed4b04e36ed7d4322c2484890efd30cce8315211347b8ce8af3"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "criterion": 7,
+      "canonicalText": "7. Negative controls carry a nonempty structured unique known expected-reader list corresponding to controlNote. The tool succeeds for a control only when each declared logical reader actually ran and has mismatch count > 0; total or unrelated-reader mismatches cannot satisfy it. Missing/unknown demanded readers, absent expectations, empty selection/answers, unequal reader key sets and unmet expectations fail with retained explicit diagnostics. Normal differential success requires its complete expected population, zero changed answers and successful materialization/owned cleanup.",
+      "authorAssessment": "implemented and locally evidenced; independent exact-head review remains required",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/SEMANTIC-CONTROL-RESULT.json",
+          "bytes": 137580,
+          "sha256": "2456d5059ee9dadb5b6e176fe63300fc2b0982d35aaad8eabd74f3b6fa3c9b59"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/RULE6-RESULT.json",
+          "bytes": 109080,
+          "sha256": "8f9b73eac52eab2e759a35d951ebc262986987af8567cc4b590118a6dda46698"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "criterion": 8,
+      "canonicalText": "8. Retain an M0-first run of the exact new tool and subjects with nonzero executed populations and literal successor outcomes before any scoring. Run meaningful separate supersession and blunt in-force controls so the observation-successor direct/injected gate readers and actual file-backed gate-port are each demonstrably sensitive. Run the false-positive control in which only an unrelated reader changes while port is demanded and require failure. Apply a rule-6 mutant to each actual new/changed selection/count/identity/reader-expectation/empty-input/fixture/cleanup predicate; retain exact unique old/new fragments, reachable subject commit, original/mutated digests, commands, logs and executed denominators. Import/compile/fragment/reporter/filter failure, zero comparisons/tests or timeout is errored/inconclusive, never a semantic kill. A failed M0 stops scoring, and author-only outside-code classification clears nothing.",
+      "authorAssessment": "implemented and locally evidenced; independent exact-head review remains required",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/M0-FIRST-GATE.json",
+          "bytes": 370,
+          "sha256": "b8bce9f696c1bec6a6f7e0aad150c64a7cbd75398ccceebe821aebe5ce21e3c0"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/MUTATION-SPECS.json",
+          "bytes": 19386,
+          "sha256": "334848a46120db52c7ed708996bd909ea07d49452d26ff68a9ed8396e93f4faf"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/RULE6-RESULT.json",
+          "bytes": 109080,
+          "sha256": "8f9b73eac52eab2e759a35d951ebc262986987af8567cc4b590118a6dda46698"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/SEMANTIC-CONTROL-RESULT.json",
+          "bytes": 137580,
+          "sha256": "2456d5059ee9dadb5b6e176fe63300fc2b0982d35aaad8eabd74f3b6fa3c9b59"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/COUNT-REPRODUCTION-RESULT.json",
+          "bytes": 1295,
+          "sha256": "7ca46c099499bd5116dabddba0df6079a0f3c45ddb8dc912df466066447acf54"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "criterion": 9,
+      "canonicalText": "9. Complete the expanded whole corpus on separately installed/built clean Syzygy clones with private fixture/home/cache/short tmp boundaries, exact public lockfile cache before offline install, one owned build target and finite retained limits. npm ci inside each checkout precedes NodeNext. Record actual runtime/load/worker qualification; a bounded shard strategy must prove a frozen disjoint complete union with no missing/duplicated world-reader-step-instant comparison. Preserve every failed/stopped attempt and exact remainder; runtime infeasibility keeps the original outcome open/blocked rather than narrowing its population or inventing a current 3,016-world promise. No observed repository body/code, provider/credential, external act, target write, release or deployment is used.",
+      "authorAssessment": "implemented and locally evidenced; independent exact-head review remains required",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/CACHE-VERIFICATION.json",
+          "bytes": 24465,
+          "sha256": "00e375372aca1baa28ba6f3be659c7f817e126521e305fcd3eee53cb03ca8007"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/WORKER-QUALIFICATION.json",
+          "bytes": 451,
+          "sha256": "30b536bb948c1dab1587179c9ba968282cc7f1b0a46b4d368cdd193f7a44607e"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/AUXILIARY-BINDINGS.json",
+          "bytes": 2756,
+          "sha256": "281d0436b590cc21500da0c646a3f223d0ef280f2f57765e2b251f4cafef2148"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/M0-full.json",
+          "bytes": 50847808,
+          "sha256": "bf3ca1cc16a7a2d0975c0c569b7a6ea3f1e1f403aad830512c17fcd6cf258205"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "criterion": 10,
+      "canonicalText": "10. Extend the existing script's executable small fixture/selftest mode for its new evidence-tool predicates, with an old-tool failing reproduction for the unchecked-per-reader control and selection/count gap. Use one behavior-executing gate species per invariant; add no duplicate source-grep guard or product suite. The nearest existing product tests remain package-reader.test.ts's injected-port/revision cases, consent-ports.test.ts's observation-successor and not-in-force cases, and start-gates.test.ts's actual gate factory cases. Expected Vitest delta is +0 ~0 -0, with tool cases reported separately; any genuinely necessary product regression extension names the existing seam, actual custody/authority and measured Tests +N ~N -N instead of manufacturing test growth.",
+      "authorAssessment": "implemented and locally evidenced; independent exact-head review remains required",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/selftest-committed.stdout",
+          "bytes": 3226,
+          "sha256": "aa71a6427790585f7f0e22f14a8fbbaf511df9160c659a0e374088c2d3f764f4"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/COUNT-REPRODUCTION-RESULT.json",
+          "bytes": 1295,
+          "sha256": "7ca46c099499bd5116dabddba0df6079a0f3c45ddb8dc912df466066447acf54"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/SEMANTIC-CONTROL-RESULT.json",
+          "bytes": 137580,
+          "sha256": "2456d5059ee9dadb5b6e176fe63300fc2b0982d35aaad8eabd74f3b6fa3c9b59"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/TEST-DELTA.json",
+          "bytes": 3270,
+          "sha256": "4b2f017a7201ae4b57130947343c7c2a979307a74f9fe00f98af97a18459dca0"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "criterion": 11,
+      "canonicalText": "11. Update only the current script's usage/header and new .26 evidence/README needed to explain the exact commands, output/control contract, actual counts, fixture-versus-file boundaries and limitations. Keep acts, raw reviews, signed/frozen predecessors and prior generated evidence immutable. Intended adopted spec/RFC/doctrine/policy impact is none because product behavior stays unchanged; any invalidation follows CC-REV-2 and cannot be called editorial. Record the actual class assessment for all seven CC-REV-1 classes (initial 1 and 4, others assessed explicitly) and all seven CC-BAR-5 floors; reviewer confirms or reclassifies them. No short-diff/none-class claim waives floors or review.",
+      "authorAssessment": "implemented and locally evidenced; independent exact-head review remains required",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/CLASSES-AND-FLOORS-FINAL.json",
+          "bytes": 3588,
+          "sha256": "63fdc72b7c4eae6db2f65f95153890b09825364494b3c12cfa53c89c3196a0b2"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/ROOT-RELEASE.json",
+          "bytes": 1644,
+          "sha256": "954f006d308e56ae5ce1311226b82aa2a9195516c75ee6d62664cb9374e4a881"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "criterion": 12,
+      "canonicalText": "12. Retain focused evidence-tool/selftest/differential/control outputs, proportional existing tier checks, npm run check and npm run check:all from a clean clone at the exact subject, with the canonical governance battery read from PROJECT-STATUS.md and broad driver serialized under the shared lock. Read outputs and denominators, diagnose before justified retry, keep actual test delta and all attempts. Obtain a fresh independent default-model CC-REV-1 review of the frozen exact artifact/subject+digest with governing references and these complete AC; raw is unchanged, verdict exact, all findings dispositioned, author/emitter reports distinguished from independent byte capture/execution and hosted CI. A semantic reviewer fix or later subject change gets fresh independent review. Prepare the GP-Q0 non-blocking cycle notice naming actual classes, new coverage, controls and remaining Unknowns; root records it in the cycle-report route without inventing owner adoption.",
+      "authorAssessment": "worker evidence prepared; ROOT gates remain",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/focused-consent-dossier.json",
+          "bytes": 907,
+          "sha256": "0fcf535c088a5766ad6d53ea74bd5a1995017af49c24952e9a6febc26a1e861c"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/logs/focused-consent-ports.json",
+          "bytes": 835,
+          "sha256": "b603df88a47f51744f0a88eb4dff1df8eeb91d122af8deb6a38771fcd6df2513"
+        }
+      ],
+      "remaining": [
+        "fresh independent corrected-head review",
+        "ROOT cycle-report notice",
+        "ROOT exact hosted/custody/authority and lawful protected landing",
+        "ROOT durable archival and Beads lifecycle"
+      ]
+    },
+    {
+      "criterion": 13,
+      "canonicalText": "13. At lawful landing refresh fixed-base/custody/authority and exact PR/head checks, retain the full original AC\u2192artifact map, source/build/tool/fixture digests, complete population/negative-control evidence, independent review/capture, actual test delta and frozen hash manifest. Apply the sole Nov3 item4 hold only to merges touching apps/three-surface-poc/src or packages/three-surface-poc-core/src and require BOTH actual 1z3.22 owner judgment and 1z3.25 report there; authorized/static preparation remains allowed. FIRST is packet preparation only, Tests +0 ~0 -0, with no install/runtime/source mutation/BD write/commit/push/merge/question/adoption. Root verifies/applies design+AC once and alone owns lifecycle; whole .26 closure waits for implementation, complete proof, fresh review, notice and permitted landing, never this proposal.",
+      "authorAssessment": "worker evidence prepared; ROOT gates remain",
+      "nativeArtifacts": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/BOOTSTRAP.json",
+          "bytes": 600,
+          "sha256": "0066f23d5d3924a4f75f87fe4db27f7abd98de87ba01694793c984709e3e3da6"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/LIVE-CUSTODY.json",
+          "bytes": 39569,
+          "sha256": "b9d74590a5020bffb03ec2a05e734987e3550e6bfb91fcefdabaa7e60177f1d5"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/TEST-DELTA.json",
+          "bytes": 3270,
+          "sha256": "4b2f017a7201ae4b57130947343c7c2a979307a74f9fe00f98af97a18459dca0"
+        }
+      ],
+      "remaining": [
+        "fresh independent corrected-head review",
+        "ROOT cycle-report notice",
+        "ROOT exact hosted/custody/authority and lawful protected landing",
+        "ROOT durable archival and Beads lifecycle"
+      ]
+    }
+  ],
+  "criterionDenominator": 13,
+  "sourceToolCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+  "normalFullRunActualSubjects": [
+    {
+      "role": "old",
+      "commit": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "tree": "98334f38dd50c0b592c3397d1ba3af8c20f7922e",
+      "files": {
+        "packageReaderTs": "packages/polaris-generation-consent/src/package-reader.ts",
+        "packageReaderJs": "packages/polaris-generation-consent/dist/package-reader.js",
+        "gateSourcesTs": "packages/polaris-dossier/src/gate-sources.ts",
+        "gateSourcesJs": "packages/polaris-dossier/dist/gate-sources.js",
+        "testingJs": "packages/polaris-generation-consent/dist/testing.js",
+        "consentPortsTs": "packages/polaris-generation-consent/src/consent-ports.ts",
+        "consentPortsJs": "packages/polaris-generation-consent/dist/consent-ports.js",
+        "inForceTs": "packages/polaris-generation-consent/src/in-force.ts",
+        "inForceJs": "packages/polaris-generation-consent/dist/in-force.js",
+        "consentIndexJs": "packages/polaris-generation-consent/dist/index.js",
+        "consentLiveTs": "packages/polaris-generation-consent/src/live.ts",
+        "consentLiveJs": "packages/polaris-generation-consent/dist/live.js",
+        "screenTs": "packages/polaris-dossier/src/screen.ts",
+        "screenJs": "packages/polaris-dossier/dist/screen.js"
+      },
+      "clean": true,
+      "sha256": {
+        "packageReaderTs": "e8bcdfa1670842dc9e80e4435d1be8d83fca3a0fce6c73760c3d82913acd875b",
+        "packageReaderJs": "20a5399988bc286990c41e042e57b8799694376753af37f1ceb7826b1f257f62",
+        "gateSourcesTs": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+        "gateSourcesJs": "83e72a5739b2351eb4f039284cb86c16864ba740fe32552fd2be1f77c1c7bce5",
+        "testingJs": "db5352f363e93cc0bc7893b8cbfb9195046e7e34314e66ea3c2beafe091afb14",
+        "consentPortsTs": "b9713073670b9e69efcd6bc591af92d10ca928e7501ae87f2cf12efebae937ca",
+        "consentPortsJs": "6dc4ae14ad645ed76b7b6824255a3aef8783e48d6b77d2a2286db05460bba0c6",
+        "inForceTs": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+        "inForceJs": "2e3730701c98abd576738375f20a94dff9a2999db19420513d1116ad05660b0b",
+        "consentIndexJs": "456640b1b2202d39afa32aa5d532d79a7fe1ce2aca2b3e8f2c9df71a8e5ab44f",
+        "consentLiveTs": "2aa268d84e4ba20f851e15334da5c792621acd25090b6d36674b41b39e53289c",
+        "consentLiveJs": "b814165715ec9d1059143f9b7c767bc6d02db85346a8db0874c4da49562120c6",
+        "screenTs": "aa3c2f9b8e0c9ab3ebd46c302b9b79d0ed0887b4d985fb730881f8ac9bf01ce3",
+        "screenJs": "a2a4fd0eb0f29173b6101cf4a29b71540d3c7b438ecfe7287dff18878db32886"
+      },
+      "dossierResolvesConsentInsideTree": true,
+      "consentEntry": "packages/polaris-generation-consent/dist/live.js",
+      "liveResolvesInsideTree": true,
+      "liveValuesAreRootObjects": true
+    },
+    {
+      "role": "new",
+      "commit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "tree": "6a519a1be61509f0aaafee47b6c1fa65a3c4c428",
+      "files": {
+        "packageReaderTs": "packages/polaris-generation-consent/src/package-reader.ts",
+        "packageReaderJs": "packages/polaris-generation-consent/dist/package-reader.js",
+        "gateSourcesTs": "packages/polaris-dossier/src/gate-sources.ts",
+        "gateSourcesJs": "packages/polaris-dossier/dist/gate-sources.js",
+        "testingJs": "packages/polaris-generation-consent/dist/testing.js",
+        "consentPortsTs": "packages/polaris-generation-consent/src/consent-ports.ts",
+        "consentPortsJs": "packages/polaris-generation-consent/dist/consent-ports.js",
+        "inForceTs": "packages/polaris-generation-consent/src/in-force.ts",
+        "inForceJs": "packages/polaris-generation-consent/dist/in-force.js",
+        "consentIndexJs": "packages/polaris-generation-consent/dist/index.js",
+        "consentLiveTs": "packages/polaris-generation-consent/src/live.ts",
+        "consentLiveJs": "packages/polaris-generation-consent/dist/live.js",
+        "screenTs": "packages/polaris-dossier/src/screen.ts",
+        "screenJs": "packages/polaris-dossier/dist/screen.js"
+      },
+      "clean": true,
+      "sha256": {
+        "packageReaderTs": "e8bcdfa1670842dc9e80e4435d1be8d83fca3a0fce6c73760c3d82913acd875b",
+        "packageReaderJs": "20a5399988bc286990c41e042e57b8799694376753af37f1ceb7826b1f257f62",
+        "gateSourcesTs": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+        "gateSourcesJs": "83e72a5739b2351eb4f039284cb86c16864ba740fe32552fd2be1f77c1c7bce5",
+        "testingJs": "db5352f363e93cc0bc7893b8cbfb9195046e7e34314e66ea3c2beafe091afb14",
+        "consentPortsTs": "b9713073670b9e69efcd6bc591af92d10ca928e7501ae87f2cf12efebae937ca",
+        "consentPortsJs": "6dc4ae14ad645ed76b7b6824255a3aef8783e48d6b77d2a2286db05460bba0c6",
+        "inForceTs": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+        "inForceJs": "2e3730701c98abd576738375f20a94dff9a2999db19420513d1116ad05660b0b",
+        "consentIndexJs": "456640b1b2202d39afa32aa5d532d79a7fe1ce2aca2b3e8f2c9df71a8e5ab44f",
+        "consentLiveTs": "2aa268d84e4ba20f851e15334da5c792621acd25090b6d36674b41b39e53289c",
+        "consentLiveJs": "b814165715ec9d1059143f9b7c767bc6d02db85346a8db0874c4da49562120c6",
+        "screenTs": "aa3c2f9b8e0c9ab3ebd46c302b9b79d0ed0887b4d985fb730881f8ac9bf01ce3",
+        "screenJs": "a2a4fd0eb0f29173b6101cf4a29b71540d3c7b438ecfe7287dff18878db32886"
+      },
+      "dossierResolvesConsentInsideTree": true,
+      "consentEntry": "packages/polaris-generation-consent/dist/live.js",
+      "liveResolvesInsideTree": true,
+      "liveValuesAreRootObjects": true
+    }
+  ],
+  "normalFullToolSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+  "VitestDelta": {
+    "+": 0,
+    "~": 0,
+    "-": 0
+  },
+  "toolSelftestCases": 49,
+  "toolAnswerPairComparisons": 5,
+  "classes": [
+    1,
+    4,
+    6
+  ],
+  "allSevenFloorsApply": true,
+  "historicalLimits": {
+    "priorFullNormal": "134a8c5ba16dda1f3e3935aa1b565166f3b3583f",
+    "priorBridgeTool": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+    "priorIntegrated": "4dc2af1e57bfc3e09ec8d5839e46c277eb521878",
+    "limitation": "Prior 5403-world/70999-answer normal proof covers the old six-question gate aggregate, and count mode lacked bindings. Its conditional non-normal bridge is not used for this correction."
+  },
+  "scopeBoundary": {
+    "permanent": [
+      "scripts/differential_consent_act_families.mjs",
+      "docs/evidence/syzygy-bpyt-8-26/**"
+    ],
+    "productCodeChanged": false,
+    "adoption": false,
+    "BeadsMutation": false,
+    "siblingsClosed": false,
+    "sourceACMutation": false
+  },
+  "independentReview": "ROOT restores the same syzygy-o0mz gate for a fresh corrected-head review. The preserved original raw verdict is Ready to merge? No.; this author emits no readiness verdict.",
+  "authorRoleCorrection": "The earlier f121 class/floor snapshot contained a mistaken independent-review sentence copied from the preserved reviewer assessment. The current class/floor record is explicitly an author Inferred assessment. All thirteen canonical criteria and the actual source6c full-M0 attribution remain unchanged."
+}

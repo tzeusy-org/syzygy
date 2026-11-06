@@ -2538,7 +2538,7 @@ exclusion of the acts in force stands.
                         "passed": before_record == after_record and before_aggregate == after_aggregate})
         # Packages the recorder gained after the frozen historical recorder:
         # a closed list, so any other new package still fails the census.
-        later = {"polaris-dossier-local-agent-mode@1.3"}
+        later = {"polaris-dossier-local-agent-mode@1.3", "polaris-dossier-local-agent-mode@1.4"}
         def closed_census(current_packages, prior_packages):
             return (set(keys) == set(prior_packages) - {KEY}
                     and set(current_packages) - {KEY} == set(keys) | later)
@@ -2684,7 +2684,9 @@ def later_signed_selftest() -> list[tuple[str, bool]]:
     with tmp, tempfile.TemporaryDirectory(prefix="p115-later-snapshot-") as temp, \
             mock.patch.dict(globals(), governing_inputs=lambda source: inputs):
         snapshot = Path(temp)
-        for rel in validation_inputs(ROOT):
+        # Keep the synthetic v1.3 chain closed over its own inputs; do not
+        # import real later-version records or packages into that fixture.
+        for rel in validation_inputs(ROOT) - later_signed_inputs(ROOT):
             target = root / rel
             if not target.exists():
                 target.parent.mkdir(parents=True, exist_ok=True)

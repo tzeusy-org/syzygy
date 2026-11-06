@@ -1,0 +1,9 @@
+{
+  "pythonCount": 10,
+  "nativeLines": 10,
+  "distinctPaths": 10,
+  "rawReports": 3,
+  "vitestStreams": 3,
+  "buildStreams": 4,
+  "nativeAndPythonAgree": true
+}

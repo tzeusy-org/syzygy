@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/verify_witness.py"
+  ],
+  "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.43",
+  "startedAt": "2026-11-06T05:25:01.784426+00:00",
+  "exit": 0,
+  "elapsedSeconds": 0.16138346400111914,
+  "finishedAt": "2026-11-06T05:25:01.945802+00:00"
+}

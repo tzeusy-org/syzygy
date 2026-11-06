@@ -1,0 +1,357 @@
+{
+  "subjectCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+  "mutations": [
+    {
+      "id": "selection-filter",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "generated.filter(w => kinds.includes(w.kind))",
+      "new": "generated.filter(w => true)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "b763ce41925c3e477ae9e776c08d67b848119a50ff4383deb76fc6e343ed4721"
+    },
+    {
+      "id": "population-count",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "return { worlds: worlds.length, byKind };",
+      "new": "return { worlds: worlds.length + 1, byKind };",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "669602ced49a241683492780565af566bd01fe1e38142d06f2b9389c41ba4ba1"
+    },
+    {
+      "id": "identity-positional",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "const a = old.get(identity.key), b = next.get(identity.key);",
+      "new": "const a = old.get(identity.key), b = [...next.values()][0];",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "b7c14f79c9292ba587849ad922cda934076e91d13c9737307bede0c52665858d"
+    },
+    {
+      "id": "new-keyset",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (map.size !== expected.length || expected.some(e => !map.has(e.key)))",
+      "new": "if (map.size !== expected.length)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "cabbd05e99c856d98066243afbd0de8160049e7ea056282f9077fb42c6d2090d"
+    },
+    {
+      "id": "metadata-identity",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (JSON.stringify(row[4]) !== JSON.stringify({ reader: identity.reader, step: identity.step, instant: identity.instant }))",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "7bbdfcc53e8393bff35e031ff434ee9b52e1cab711320e791bc31c133bdb5450"
+    },
+    {
+      "id": "complete-value-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (typeof row[3] !== 'string' || sha256(row[3]) !== row[1])",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "9c8ae2a8866baea719363296a816b04f4b3a52165a6621eee5d8b0c423707f17"
+    },
+    {
+      "id": "unrelated-reader-total",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "return expected.filter(reader => !(perReader[reader]?.answers > 0 && perReader[reader]?.mismatches > 0));",
+      "new": "return Object.values(perReader).some(r => r.mismatches > 0) ? [] : expected;",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "a3a2b40f2976b9555b0b755e70e6c7abcdeb7dfaefba19685c448ef13924d514"
+    },
+    {
+      "id": "positive-reader-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "perReader[reader]?.answers > 0 && perReader[reader]?.mismatches > 0",
+      "new": "perReader[reader]?.mismatches > 0",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "22f1db176115b05eb6a48db04aaea1f7c98523491711b48e25a8319605bd9fa5"
+    },
+    {
+      "id": "known-unique-expectations",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (names === undefined || names.length === 0 || names.some(n => n === '') || new Set(names).size !== names.length || names.some(n => !known.has(n)))",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "f2e172006479c9b9fc1d1619044cebd2b9e5d93a06b4b58f9632e47cb792f9aa"
+    },
+    {
+      "id": "empty-answer-population",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (rows.length === 0) throw new Error('zero executed answer population');",
+      "new": "if (false) throw new Error('zero executed answer population');",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "ac210c19b86253926d2a30f7285f38393dbb6a28d175e6fb8a65b55e5b1b6bd6"
+    },
+    {
+      "id": "empty-selected-population",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (selected.length === 0) throw new Error('empty selected world population');",
+      "new": "if (false) throw new Error('empty selected world population');",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "0ea6298a43d27b4d56370ef02341d920d7e9b08c0e0a4f1eca8f4c04d697281c"
+    },
+    {
+      "id": "absent-method",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (typeof port.consentAbsenceFor !== 'function')",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "8e2b32f8950123390b7c54472a1a546a4e8ada340bb7ba123c8be9cede45d1d4"
+    },
+    {
+      "id": "cleanup-leftover",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "7192e27821160bcc46c99209f4a1adfb2cf107efb708ecfb59d5cf35c1e0094d"
+    },
+    {
+      "id": "cleanup-pair-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.materializedLeftOver === 0 && control.differing === 0 && control.created === control.removed",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "b3311c646a2a45c41046f18a0cafa22ced23773ce79991bd7deb67871c3e5fb7"
+    },
+    {
+      "id": "cleanup-removal-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "5ddcaa7a489303224fed1098d95aa33ac6fea8253f33eb89b7d1084356cb2cfd"
+    },
+    {
+      "id": "successor-exact-instant",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "const before = at === SUCCESSOR_INSTANTS[0];",
+      "new": "const before = at !== SUCCESSOR_INSTANTS[2];",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "2244329c85720d44afc6fbcfc5c1be6cb93700c020087a3f0ff5e8aa1ac37bb6"
+    },
+    {
+      "id": "file-world-port-omission",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": ".filter(name => !FIXTURE_READERS.includes(name));",
+      "new": ".filter(name => !FIXTURE_READERS.includes(name) && name !== 'port');",
+      "mode": "probe",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "65a5ee2f61b643d3ec20528ce83cc2af40dc9219efc3975da6960f55532ed40b"
+    },
+    {
+      "id": "generated-selected-alias",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "const counts = { generated: population(built.worlds), selected: population(worlds) };",
+      "new": "const counts = { generated: population(built.worlds), selected: population(built.worlds) };",
+      "mode": "probe",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "d5228962d786abd8796f8023f1f69e4bfaf458f872a6e03d736a386d2c5d5733"
+    },
+    {
+      "id": "successor-record-branch",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "supersedes: 'FIXTURE-OBSERVATION@1'",
+      "new": "supersedes: 'FIXTURE-MISSING@1'",
+      "mode": "observation-successor",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "46dbef440ceac504971ea8c682870093257cca53fd0c953a57ab7e05c838ed47"
+    },
+    {
+      "id": "materialization-executed-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "materialization.expectedPairs += 1;",
+      "new": "materialization.expectedPairs += 0;",
+      "mode": "base",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "4c86a539c8436e9770bbdf40eaa91a140ceaeef127789c408f6980b3d6aad268"
+    },
+    {
+      "id": "actual-owned-removal",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "for (const disk of disks) fs.rmSync(disk, { recursive: true, force: true });",
+      "new": "for (const disk of disks) void disk;",
+      "mode": "base",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "c3777847a8a9fae43c4a8a51f69147e6285248dcc700cde01ed5d7ad9586f6bd"
+    },
+    {
+      "id": "materialization-difference",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.materializedLeftOver === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "6434c9d5e93ff79fb714853e728d496520ec71862f59b32489dd55825a114bd4"
+    },
+    {
+      "id": "selected-execution-population",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (world.readers.length === 0 || new Set(world.readers).size !== world.readers.length || world.instants.length === 0 || (world.steps !== undefined && world.steps.length === 0))",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "699989658e67bfce451dffa6e4ba9a29ad0a97ed7b70a76cf9e70e8aea808e61"
+    },
+    {
+      "id": "duplicate-comparison-key",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (map.has(row[0])) throw new Error(`duplicate ${role} answer key: ${row[0]}`);",
+      "new": "if (false) throw new Error(`duplicate ${role} answer key: ${row[0]}`);",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "17116a6f8515143e4fc966e6f8c9d5e346e4ee2968992c4d9399a1c7c082b0a8"
+    },
+    {
+      "id": "complete-value-versus-label",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "same: a[3] === b[3]",
+      "new": "same: a[2] === b[2]",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "0d3bdabcc17873b6fbe5abc41aa01e99054c237a25e4d508e03bc8775723077b"
+    },
+    {
+      "id": "duplicate-world-reader",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "new Set(world.readers).size !== world.readers.length",
+      "new": "false",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "c751427200053f247c5b4eb57a7803d63e1156cf2d6fff0294aff33b4a433889"
+    },
+    {
+      "id": "runtime-resource-validation",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (!Number.isSafeInteger(workers) || workers < 1 || workers > 32 || !Number.isSafeInteger(timeLimitMs) || timeLimitMs < 1)",
+      "new": "if (false)",
+      "mode": "probe",
+      "workers": "1.5",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "821579db1c601d81c64868e392a97453cf97a48df6ac7ac58438647a5ac77a04"
+    },
+    {
+      "id": "bounded-sample-validation",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (!Number.isSafeInteger(samplePerKind) || samplePerKind < 1)",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "d9978c046227ebda58e0a0a9c80bc5167862f4d740c3eb96228f3c51dca1bbfd"
+    },
+    {
+      "id": "unknown-reader-validation",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (!specs.has(name)) throw new Error(`unknown selected reader: ${name}`);",
+      "new": "if (false) throw new Error(`unknown selected reader: ${name}`);",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "1ae7477e19b50cb6e64dfa8be9039030b80170447477fc01fbcc01bcf7cd2bc1"
+    },
+    {
+      "id": "expectations-without-control",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (names !== undefined) throw new Error('reader mismatch expectations require negative-control mode');",
+      "new": "if (false) throw new Error('reader mismatch expectations require negative-control mode');",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "e4ee3c629b0cebc92c3cbe97f125ddf805e758c5c6eb814d18cd750d33625657"
+    },
+    {
+      "id": "requests-ids-query",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "idsRequests: await s.repositoryIdsFor(probe.requestsUrl)",
+      "new": "idsRequests: []",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "b0304d382856e395888e74a16d4df01330d0f7bb20124dcdbc216e8382dfd179"
+    },
+    {
+      "id": "requests-absence-query",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "absenceRequests: await s.consentAbsenceFor(probe.requestsUrl)",
+      "new": "absenceRequests: ''",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "2d8c6c0424ba5ede865d33436e540efc8c706a6aeb150b8d61eb18bde07acd29"
+    },
+    {
+      "id": "requests-revisions-query",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "revisionsRequests: await s.consentedRevisionsFor(probe.requestsId)",
+      "new": "revisionsRequests: []",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "2435ea1a8ba0e8180654c1ad50c665934343345292b1f40c63474f577fd09120"
+    },
+    {
+      "id": "count-subject-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) }, trees: binding, corpusRoot: 'old',\n    successorFixture:",
+      "new": "sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) }, trees: [], corpusRoot: 'old',\n    successorFixture:",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "0bc7b65ae7b0f9dffd5b7695c7b93e80f2a3bdf9077e06ffd1a1fc3bdd731520"
+    },
+    {
+      "id": "count-tool-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "script: { path: SCRIPT_REL, sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) }, trees: binding, corpusRoot: 'old',\n    successorFixture:",
+      "new": "script: { path: SCRIPT_REL, sha256: null }, trees: binding, corpusRoot: 'old',\n    successorFixture:",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "8f1adb6629dcef81e719de0bbd884a59aa04fda08fc393c7f4aff1dd74b38555"
+    },
+    {
+      "id": "count-fixture-record-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "records: SUCCESSOR_RECORDS, recordsSha256: sha256(JSON.stringify(SUCCESSOR_RECORDS)),",
+      "new": "records: [], recordsSha256: sha256(JSON.stringify(SUCCESSOR_RECORDS)),",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "2bcfdbfc1dca97f7f07ce69ea71eacb579bc09130b0c6f9ec36b2a7fbb0167cc"
+    },
+    {
+      "id": "count-fixture-adapter-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "instants: SUCCESSOR_INSTANTS, adapterRecipeSha256: sha256(prepareSuccessorAdapter.toString()), adapters: null, literalOutcomes: null",
+      "new": "instants: SUCCESSOR_INSTANTS, adapterRecipeSha256: null, adapters: null, literalOutcomes: null",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "ebd6abb2719308b632451924568f232ecdd2810539445e3c40e439ea91e96920"
+    },
+    {
+      "id": "count-execution-null",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "materialization: null, execution: null, executed: null };",
+      "new": "materialization: null, execution: null, executed: 0 };",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "e8d3b5fc6b5d893034e561d142eaeef1b2a7f86f4b41c983c7fa852287e73c5d"
+    },
+    {
+      "id": "count-resource-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "pool: { ...resources, node: process.version, wallSeconds: (Date.now() - started) / 1000 }, materialization: null",
+      "new": "pool: { ...resources, workers: 0, node: process.version, wallSeconds: (Date.now() - started) / 1000 }, materialization: null",
+      "mode": "selftest",
+      "originalSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "mutatedSha256": "be6013e67291ed02cfaf0ba4131d7ddb10e0c66e5d4bedb097d953b3b51cc388"
+    }
+  ]
+}

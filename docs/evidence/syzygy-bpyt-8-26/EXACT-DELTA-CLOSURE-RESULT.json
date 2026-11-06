@@ -1,0 +1,37 @@
+{
+  "schema": "exact-tool-closure-targeted-result/1",
+  "rootDispositionSha256": "d98d543fa162ccaaf1cb06603ed2020a9beb49cbbaf4d85116df25510a5275e5",
+  "proposalSha256": "837e06f6de4a5ff04850c171a887b6f556af178ca45743a6c4475c73deb7b730",
+  "oldToolSha256": "13b079994f3f01324f7feb0e754af3bd564408f6aad4c1fa9bc75be2d847a6c7",
+  "finalToolSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+  "comparisonFieldsEqual": {
+    "populations": true,
+    "readerSpecifications": true,
+    "expectedPerLogicalReader": true,
+    "perLogicalReader": true,
+    "answerTable": true,
+    "worlds": true,
+    "mismatches": true
+  },
+  "compiledAndSourceProductDigestTableEqual": true,
+  "comparisons": 274,
+  "selectedWorlds": 12,
+  "all12Kinds": true,
+  "literalRows": 12,
+  "literalRowsAllSame": true,
+  "selftest": {
+    "total": 44,
+    "failed": 0,
+    "actualComparisons": 5,
+    "scriptSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06"
+  },
+  "actualUsageControl": {
+    "exit": 2,
+    "containsNewOptions": true,
+    "stderrSha256": "d8ca94798a584c8fe5c33db5a217c0dd1c7781b3a6db269c8e2cfacb8f799641"
+  },
+  "recountSuccess": true,
+  "full134M0NotRelabelled": true,
+  "full134M0StillRequired": true,
+  "targetedClosureSucceeded": true
+}
