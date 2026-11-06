@@ -18,11 +18,27 @@ import type { EpistemicMarking } from '@syzygy/polaris-generation-core/live';
 
 const NODE_WIDTH = 200;
 const NODE_HEIGHT = 56;
-const GAP_X = 120;
-const GAP_Y = 40;
 const MARGIN = 24;
 const BACK_EDGE_DROP = 40;
-const BACK_EDGE_STEP = 30;
+const BACK_LABEL_CLEARANCE = 30;
+const SKIP_LABEL_DROP = 52;
+
+/** How much room a diagram gets. The default is the draft preview's and the provider mode's form, whose bytes are pinned. */
+export interface DiagramSpacing {
+  readonly gapX: number; readonly gapY: number;
+  /** Columns before the layers continue on a band below; the vertical gap between bands; both unused while every layer fits on one band. */
+  readonly maxColumns: number; readonly bandGap: number;
+  /** An edge label's wrap and the width one of its characters is assumed to take. */
+  readonly edgeChars: number; readonly edgeLines: number; readonly charWidth: number;
+  /** Draw edge labels above everything, lines still behind the nodes, so a line never strikes through a node's text or a label. */
+  readonly labelsOnTop: boolean;
+  /** How much lower each further back edge runs. */
+  readonly backEdgeStep: number;
+}
+export const DEFAULT_SPACING: DiagramSpacing = { gapX: 120, gapY: 40, maxColumns: Number.POSITIVE_INFINITY, bandGap: 0, edgeChars: 18, edgeLines: 2, charWidth: 7.4, labelsOnTop: false, backEdgeStep: 30 };
+/** An operator-agent dossier's diagrams: the widest edge label (22 characters: 186 px) fits its 198 px gap, three-line labels on adjacent
+ * rows of a fan-out stay clear of each other, and a long plain chain continues on the next band instead of scrolling sideways (syzygy-pdja.1). */
+export const READABLE_SPACING: DiagramSpacing = { gapX: 200, gapY: 64, maxColumns: 3, bandGap: 88, edgeChars: 22, edgeLines: 3, charWidth: 7.9, labelsOnTop: true, backEdgeStep: 56 };
 
 interface LayoutNodeInput { readonly id: string }
 interface LayoutEdgeInput { readonly id: string; readonly from: string; readonly to: string }
@@ -36,7 +52,8 @@ interface DiagramLayout { readonly width: number; readonly height: number; reado
 const num = (value: number): string => String(Math.round(value * 10) / 10);
 
 // Test seam: exported for the tests; production code reaches it only inside this file.
-export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly LayoutEdgeInput[]): DiagramLayout {
+export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly LayoutEdgeInput[], spacing: DiagramSpacing = DEFAULT_SPACING): DiagramLayout {
+  const { gapX, gapY, maxColumns, bandGap } = spacing;
   if (nodes.length === 0) throw new Error('empty-diagram');
   const index = new Map<string, number>();
   nodes.forEach((node, i) => {
@@ -96,36 +113,59 @@ export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly
     keyed.forEach(({ i }, r) => { row[i] = r; });
     members[l] = keyed.map(({ i }) => i);
   }
-  const maxRows = Math.max(...members.map(m => m.length));
-  const columnHeight = (count: number): number => count * NODE_HEIGHT + (count - 1) * GAP_Y;
-  const contentHeight = columnHeight(maxRows);
+  // Bands are for a plain chain: one node to a layer and only one-layer steps, so a hand-off between bands crosses nothing. A loop, a skip
+  // or a tall column would put a line or a label on a node, so such a diagram keeps one band and scrolls.
+  const wraps = Number.isFinite(maxColumns) && layerCount > maxColumns && !back.some(Boolean)
+    && members.every(m => m.length === 1) && ends.every(end => layer[end.to]! === layer[end.from]! + 1);
+  const columns = wraps ? maxColumns : Number.POSITIVE_INFINITY;
+  const bandOf = (l: number): number => Math.floor(l / columns);
+  const columnHeight = (count: number): number => count * NODE_HEIGHT + (count - 1) * gapY;
+  const bandHeight = new Map<number, number>();
+  members.forEach((m, l) => bandHeight.set(bandOf(l), Math.max(bandHeight.get(bandOf(l)) ?? 0, columnHeight(m.length))));
+  const bandTop = new Map<number, number>();
+  let nextTop = MARGIN;
+  for (const [band, height] of bandHeight) { bandTop.set(band, nextTop); nextTop += height + bandGap; }
+  const contentBottom = nextTop - bandGap;
   const laidNodes: LaidOutNode[] = nodes.map((node, i) => {
-    const offset = (contentHeight - columnHeight(members[layer[i]!]!.length)) / 2;
-    return { id: node.id, layer: layer[i]!, row: row[i]!, x: MARGIN + layer[i]! * (NODE_WIDTH + GAP_X), y: MARGIN + offset + row[i]! * (NODE_HEIGHT + GAP_Y) };
+    const band = bandOf(layer[i]!);
+    const offset = (bandHeight.get(band)! - columnHeight(members[layer[i]!]!.length)) / 2;
+    return { id: node.id, layer: layer[i]!, row: row[i]!, x: MARGIN + (layer[i]! % columns) * (NODE_WIDTH + gapX), y: bandTop.get(band)! + offset + row[i]! * (NODE_HEIGHT + gapY) };
   });
 
-  const contentBottom = MARGIN + contentHeight;
   let backCount = 0;
   const laidEdges: LaidOutEdge[] = edges.map((edge, e) => {
     const from = laidNodes[ends[e]!.from]!, to = laidNodes[ends[e]!.to]!;
+    if (!back[e] && bandOf(from.layer) !== bandOf(to.layer)) {
+      // The hand-off to a later band leaves the node's foot and enters the next node's head, its label in the gap between the bands.
+      const x1 = from.x + NODE_WIDTH / 2, y1 = from.y + NODE_HEIGHT, x2 = to.x + NODE_WIDTH / 2, y2 = to.y - 2;
+      const dy = (y2 - y1) / 2;
+      return { id: edge.id, from: edge.from, to: edge.to, back: false,
+        d: `M ${num(x1)} ${num(y1)} C ${num(x1)} ${num(y1 + dy)}, ${num(x2)} ${num(y2 - dy)}, ${num(x2)} ${num(y2)}`,
+        labelX: (x1 + x2) / 2, labelY: (y1 + y2) / 2 };
+    }
     if (!back[e]) {
       const x1 = from.x + NODE_WIDTH, y1 = from.y + NODE_HEIGHT / 2, x2 = to.x - 2, y2 = to.y + NODE_HEIGHT / 2;
       const dx = (x2 - x1) / 2;
+      // A skip's midpoint can land on a node it passes, so on the readable form its label sits in the first gap, under the neighbouring
+      // edge's label there.
+      const skips = spacing.labelsOnTop && to.layer > from.layer + 1;
       return { id: edge.id, from: edge.from, to: edge.to, back: false,
         d: `M ${num(x1)} ${num(y1)} C ${num(x1 + dx)} ${num(y1)}, ${num(x2 - dx)} ${num(y2)}, ${num(x2)} ${num(y2)}`,
-        labelX: (x1 + x2) / 2, labelY: (y1 + y2) / 2 };
+        labelX: skips ? x1 + gapX / 2 : (x1 + x2) / 2, labelY: skips ? y1 + SKIP_LABEL_DROP : (y1 + y2) / 2 };
     }
-    const depth = contentBottom + BACK_EDGE_DROP + backCount++ * BACK_EDGE_STEP;
+    const lane = backCount++;
+    const depth = contentBottom + BACK_EDGE_DROP + lane * spacing.backEdgeStep;
     const self = from.id === to.id;
     const sx = from.x + NODE_WIDTH / 2 + (self ? 30 : 0), sy = from.y + NODE_HEIGHT;
     const tx = to.x + NODE_WIDTH / 2 - (self ? 30 : 0), ty = to.y + NODE_HEIGHT + 2;
     return { id: edge.id, from: edge.from, to: edge.to, back: true,
       d: `M ${num(sx)} ${num(sy)} C ${num(sx)} ${num(depth)}, ${num(tx)} ${num(depth)}, ${num(tx)} ${num(ty)}`,
-      labelX: (sx + tx) / 2, labelY: (sy + ty + 6 * depth) / 8 };
+      // On the readable form a back edge's label sits in its own lane under every node, whichever row the edge leaves.
+      labelX: (sx + tx) / 2, labelY: spacing.labelsOnTop ? contentBottom + BACK_LABEL_CLEARANCE + lane * spacing.backEdgeStep : (sy + ty + 6 * depth) / 8 };
   });
-  const lowestBackEdge = backCount === 0 ? contentBottom + 24 : contentBottom + BACK_EDGE_DROP + (backCount - 1) * BACK_EDGE_STEP;
+  const lowestBackEdge = backCount === 0 ? contentBottom + (spacing.labelsOnTop ? 32 : 24) : contentBottom + BACK_EDGE_DROP + (backCount - 1) * spacing.backEdgeStep;
   return {
-    width: MARGIN * 2 + layerCount * NODE_WIDTH + (layerCount - 1) * GAP_X,
+    width: MARGIN * 2 + Math.min(layerCount, columns) * NODE_WIDTH + (Math.min(layerCount, columns) - 1) * gapX,
     height: Math.ceil(lowestBackEdge + MARGIN),
     nodes: laidNodes,
     edges: laidEdges,
@@ -166,8 +206,9 @@ export function renderDiagramSvg(
   diagram: { readonly nodes: readonly RenderableNode[]; readonly edges: readonly RenderableEdge[] },
   index: number,
   escape: (value: string) => string,
+  spacing: DiagramSpacing = DEFAULT_SPACING,
 ): string {
-  const layout = layoutDiagram(diagram.nodes, diagram.edges);
+  const layout = layoutDiagram(diagram.nodes, diagram.edges, spacing);
   const markerId = `arrow-${index}`;
   const connected = new Set(diagram.edges.flatMap(edge => [edge.from, edge.to]));
   const shown = (label: string, marking: EpistemicMarking, maxChars: number, maxLines: number): string[] => {
@@ -186,11 +227,14 @@ export function renderDiagramSvg(
   }).join('');
   const edges = diagram.edges.map((edge, i) => {
     const at = layout.edges[i]!;
-    const lines = shown(edge.label, edge.epistemic, 18, 2);
+    const lines = shown(edge.label, edge.epistemic, spacing.edgeChars, spacing.edgeLines);
     const widest = Math.max(...lines.map(line => [...line].length));
-    const boxWidth = widest * 7.4 + 12, boxHeight = lines.length * 15 + 6;
+    const boxWidth = widest * spacing.charWidth + 12, boxHeight = lines.length * 15 + 6;
     const top = at.labelY - boxHeight / 2;
-    return `<g class="edge ${edge.epistemic}${at.back ? ' back' : ''}"><title>${escape(edge.label)} (${edge.epistemic})</title><path d="${at.d}" marker-end="url(#${markerId})"/><rect class="edge-label" x="${num(at.labelX - boxWidth / 2)}" y="${num(top)}" width="${num(boxWidth)}" height="${num(boxHeight)}" rx="3"/>${textLines(lines, at.labelX, top + 15, 15)}</g>`;
-  }).join('');
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${layout.width} ${layout.height}" width="${layout.width}" height="${layout.height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}"><defs><marker id="${markerId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs>${edges}${nodes}</svg>`;
+    const head = `<g class="edge ${edge.epistemic}${at.back ? ' back' : ''}"><title>${escape(edge.label)} (${edge.epistemic})</title><path d="${at.d}" marker-end="url(#${markerId})"/>`;
+    const label = `<rect class="edge-label" x="${num(at.labelX - boxWidth / 2)}" y="${num(top)}" width="${num(boxWidth)}" height="${num(boxHeight)}" rx="3"/>${textLines(lines, at.labelX, top + 15, 15)}`;
+    return spacing.labelsOnTop ? { line: `${head}</g>`, label: `<g class="edge-text ${edge.epistemic}"><title>${escape(edge.label)} (${edge.epistemic})</title>${label}</g>` } : { line: `${head}${label}</g>`, label: '' };
+  });
+  const lines = edges.map(edge => edge.line).join(''), labels = edges.map(edge => edge.label).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${layout.width} ${layout.height}" width="${layout.width}" height="${layout.height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}"><defs><marker id="${markerId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs>${lines}${nodes}${labels}</svg>`;
 }
