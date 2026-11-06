@@ -231,7 +231,7 @@ for mid,old,new in [
     MUTANTS.append({'id':mid,'kind':'equivalent' if mid.startswith('E-') else 'defect','file':MAIN,'old':old,'new':new,
                     'note':'Isolated compiler-row property witness; a source/build exception is not a kill.'})
 MUTANTS.extend([
- {'id':'D-after-daemon','kind':'defect','file':MAIN,'edits':[[ARGV,ARGV+DAEMON],[DAEMON+"  if (parsed.kind === 'help') {\n","  if (parsed.kind === 'help') {\n"]],
+ {'id':'D-after-daemon','kind':'defect','file':MAIN,'edits':[[DAEMON,''],[ARGV,ARGV+DAEMON]],
   'note':'The daemon parse moves before both CLI branches; the placement assertion must name the branch.'},
  {'id':'D-mutable-argv-binding','kind':'defect','file':MAIN,'old':ARGV,'new':ARGV.replace('const argv','let argv'),
   'note':'An isolated const-origin predicate witness without a process.argv mutation.'},
