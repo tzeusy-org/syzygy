@@ -107,6 +107,11 @@ describe('reading the policy from a page', () => {
     expect(pageSinkCspFinding(page(POLICY).replace('<!doctype html><html lang="en"><head>\n<meta charset="utf-8">', '\n<!DOCTYPE HTML>\n<HTML LANG="en">\n<HEAD>\n<META CHARSET="UTF-8">'))).toBeNull();
     expect(pageSinkCspFinding(page(POLICY).replace('<html lang="en">', '<html>'))).toBeNull();
   });
+  it('bounds where the charset ends, at exactly 512 characters', () => {
+    const ends = page(POLICY).indexOf('<meta charset="utf-8">') + '<meta charset="utf-8">'.length;
+    expect(pageSinkCspFinding(`${' '.repeat(512 - ends)}${page(POLICY)}`)).toBeNull();
+    expect(pageSinkCspFinding(`${' '.repeat(513 - ends)}${page(POLICY)}`)).toBe('the page does not open with the fixed head that states its encoding for the browser\'s prescan');
+  });
   it.each([
     ['a stray comment before the policy', page(POLICY).replace('<meta charset', '<!-- x --><meta charset'), noUtf8],
     ['a stray comment after the charset', page(POLICY).replace('<meta name=', '<!-- x --><meta name='), notFirst],
@@ -120,7 +125,10 @@ describe('reading the policy from a page', () => {
     ['another charset', page(POLICY).replace('charset="utf-8"', 'charset="iso-2022-jp"'), noUtf8],
     ['a second charset', page(POLICY, '<meta charset="iso-2022-jp">'), 'the page does not state its encoding exactly once as a charset meta'],
     ['a charset after the viewport', page(POLICY).replace('<meta charset="utf-8">\n<meta name="viewport" content="width=device-width">', '<meta name="viewport" content="width=device-width">\n<meta charset="utf-8">'), noUtf8],
-    ['a charset past the prescan', page(POLICY).replace('<html lang="en">', `<html lang="en" title="${'x'.repeat(600)}">`), opening],
+    ['a charset past the bound, by leading whitespace', `${' '.repeat(600)}${page(POLICY)}`, opening],
+    ['a charset past the bound, by a long lang', page(POLICY).replace('<html lang="en">', `<html lang="${'x'.repeat(600)}">`), opening],
+    ['an ignored end tag before the head tag', page(POLICY).replace('<head>', '</x><head>'), opening],
+    ['an ignored end tag after the head tag', page(POLICY).replace('<head>', '<head></x>'), opening],
     ['non-ASCII before the charset', page(POLICY).replace('<html lang="en">', '<html lang="\u00e9">'), opening],
     ['a duplicate charset attribute, whose last value a browser reads', page(POLICY).replace('<meta charset="utf-8">', '<meta charset="utf-8" charset="iso-2022-jp">'), opening],
     ['a decoy meta after an ignored end tag', page(POLICY).replace('<head>', `</x><!-- <meta ${'x'.repeat(1100)} --><head>`), opening],

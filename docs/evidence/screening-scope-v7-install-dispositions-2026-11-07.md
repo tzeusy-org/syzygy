@@ -36,3 +36,9 @@ The review returned `CONFIRM WITH EXCEPTIONS` over `b3cd3a43`. It said its grade
 - Note 6 stands: "kills the two surviving case mutants" is loose, since one of them no longer exists in the code, and the baseline guard is recorded here and not in the evidence file.
 
 After round 3, one test changed and no product code: hosted CI's Chrome 156 does not run the script on the decoy page, as Chrome 120 does, so that Chrome fixture now holds only the reader's refusal. [Observed] on hosted run 42270481021.
+
+## After round 3, `syzygy-pdja.7`
+
+This follow-up changes the code round 3 read, so that round does not cover it. The opening now has a 512-character bound, the stale comment is corrected, the misnamed row is replaced with rows that test distance, a row holds an ignored end tag after `<head>`, and the Chrome duplicate-charset fixture hides its script in the attribute, with a UTF-8 control. Mutants: the evidence file names the commit, and its count stands for the final tests.
+
+`docs/reviews/R-SCREENING-SCOPE-V7-PR781-1-RAW.md` returned `REVISE` over this follow-up, on test pinning only. Findings 1 to 3 are repaired: a short row holds the gap before `<head>`, the rows are renamed, a pair holds the bound at exactly 512, and the Chrome control asserts the reader's null and runs without the policy. Finding 4 stands: the mutant runner does not include the Chrome fixtures, so its figure says nothing about them. Finding 5 is fixed. No fresh round has read these repairs, which change tests and this file only. Mutants after them: 59 of 59 killed, with a passing baseline, at the commit the evidence file names.

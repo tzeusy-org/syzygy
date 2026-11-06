@@ -86,7 +86,9 @@ function elementsOf(root: Tree.Document): readonly Tree.Element[] {
   return out;
 }
 
-/** How far into a page's bytes the charset must start. The browser's prescan reads 1024; this leaves room for the element itself. */
+/** How far into a page the charset element must end. The HTML prescan is specified over the first 1024 bytes; this leaves room to spare, and the
+ * shipped renderers end it at about 60. */
+const CHARSET_PRESCAN_BOUND = 512;
 /** Nothing a browser's prescan could read differently before the charset: a doctype, `<html>` with at most a `lang` attribute, `<head>`, then
  * exactly the charset meta, in any case, separated only by ASCII whitespace. */
 const FIXED_OPENING = /^[\t\n\f\r ]*<!doctype html>[\t\n\f\r ]*<html(?: lang="[a-z-]*")?>[\t\n\f\r ]*<head>[\t\n\f\r ]*<meta charset="utf-8">/i;
@@ -113,7 +115,8 @@ function readPage(html: string, scriptingEnabled: boolean): ReadPage | string {
   if (head === undefined || meta.parentNode !== head) return notFirst;
   const first = head.childNodes.find(node => !isBlankText(node));
   if (first === undefined || !isElement(first) || first.tagName !== 'meta' || first.attrs.length !== 1 || (attribute(first, 'charset') ?? '').toLowerCase() !== 'utf-8') return 'the page does not state utf-8 as the first element of its <head>';
-  if (!FIXED_OPENING.test(html)) return 'the page does not open with the fixed head that states its encoding for the browser\'s prescan';
+  const opening = FIXED_OPENING.exec(html);
+  if (opening === null || opening[0].length > CHARSET_PRESCAN_BOUND) return 'the page does not open with the fixed head that states its encoding for the browser\'s prescan';
   for (const node of head.childNodes) {
     if (node === meta) break;
     if (isBlankText(node) || node === first) continue;
