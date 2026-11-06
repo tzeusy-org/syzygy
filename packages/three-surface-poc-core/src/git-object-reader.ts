@@ -48,7 +48,7 @@ import type { TransientBodies } from './transient-bodies.js';
 
 export const PWB_POLICY_IDENTITY = {
   policyId: 'polaris-butlers-project-shape-secrets',
-  policyVersion: '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p',
+  policyVersion: '1.8.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s',
 } as const;
 
 export const PWB_DENIED_PATH_RULES = {

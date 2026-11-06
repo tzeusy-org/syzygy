@@ -321,11 +321,11 @@ jobs:
       - name: record_pwb_registry_machine_ceiling_act --selftest
         run: python3 scripts/record_pwb_registry_machine_ceiling_act.py --selftest
 
-      - name: record_public_source_screening_scope_v6_act --check
-        run: python3 scripts/record_public_source_screening_scope_v6_act.py --check c44058c02c244e8460c1e33ab01f0343ed0612043d7bf53e0d36410c9f9ebfa2 --date 2026-11-05 --owner-words 'Sign screening scope version 6, variant p'
+      - name: record_public_source_screening_scope_v7_act --check
+        run: python3 scripts/record_public_source_screening_scope_v7_act.py --check 626be0cadc248b9ca9b3165d51f97d39aec552eb3a97b8b7df21d2446fc233da --date 2026-11-06 --owner-words 'Sign screening scope version 7, variant s'
 
-      - name: record_public_source_screening_scope_v6_act --selftest
-        run: python3 scripts/record_public_source_screening_scope_v6_act.py --selftest
+      - name: record_public_source_screening_scope_v7_act --selftest
+        run: python3 scripts/record_public_source_screening_scope_v7_act.py --selftest
 
       - name: check_polaris_response_ceiling_reading --check
         run: python3 scripts/check_polaris_response_ceiling_reading.py --check

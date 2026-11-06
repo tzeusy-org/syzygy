@@ -448,8 +448,8 @@ python3 scripts/build_pwb_registry_machine_ceiling_amendment.py --check   # P-11
 python3 scripts/record_pwb_registry_machine_ceiling_act.py --builder-selftest   # P-114 frozen builder: actual 22 predicates in pre-install tree with v4 installed
 python3 scripts/record_pwb_registry_machine_ceiling_act.py --check   # P-114 paired version/Ask-2 act, exact registry row and aggregate block
 python3 scripts/record_pwb_registry_machine_ceiling_act.py --selftest   # P-114 recorder predicates and filesystem rollback fixtures
-python3 scripts/record_public_source_screening_scope_v6_act.py --check c44058c02c244e8460c1e33ab01f0343ed0612043d7bf53e0d36410c9f9ebfa2 --date 2026-11-05 --owner-words 'Sign screening scope version 6, variant p'   # screening-scope v6 policy act: record, aggregate block and applied subject
-python3 scripts/record_public_source_screening_scope_v6_act.py --selftest
+python3 scripts/record_public_source_screening_scope_v7_act.py --check 626be0cadc248b9ca9b3165d51f97d39aec552eb3a97b8b7df21d2446fc233da --date 2026-11-06 --owner-words 'Sign screening scope version 7, variant s'   # screening-scope v7 policy act: record, aggregate block and applied subject
+python3 scripts/record_public_source_screening_scope_v7_act.py --selftest
 python3 scripts/check_polaris_response_ceiling_reading.py --check   # P-77 Q2 reading: quotes intact, compression only under the 2026-09-30 direction
 python3 scripts/check_polaris_response_ceiling_reading.py --selftest
 python3 scripts/build_contract_readability_restyle.py --check   # restyle package: manifest = exact regeneration, applied
