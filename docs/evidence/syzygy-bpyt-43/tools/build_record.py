@@ -121,7 +121,7 @@ for row in head:
         expected = {'pin', 'text'} if mid == 'C1-comment-outside-branches' else {'pin'} if mid in pin_false_refusals or mid in ['E-type-only-import','E-multiline-type-only-import'] else set()
         if failed != expected or len(row['failed']) != len(expected):
             refuse(f'{mid}: equivalent row attribution {sorted(failed)} differs from {sorted(expected)}')
-    if mid.startswith('Y') and 'text' not in failed:
+    if mid.startswith(('Y','D-')) and 'text' not in failed:
         refuse(f'{mid}: compiler branch/control-flow predicate passes the defect')
     if mid in ['X2-close-failure-in-http-host', 'P-machine-transitive'] and 'hook' not in failed:
         refuse(f"{mid}: the runtime path's intended hook assertion did not fail")
@@ -136,6 +136,10 @@ current = population(SUBJECT)
 old = population(old_subject['evidenceCommit'])
 old_keys = {(r['path'], r['bound']) for r in old['rows']}
 current_remainder = [r for r in current['rows'] if (r['path'], r['bound']) not in old_keys]
+applicability_path = CAMPAIGNS / 'source-applicability.json'
+applicability = json.loads(applicability_path.read_text())
+if applicability['snapshots'][-1]['commit'] != SUBJECT or applicability['currentTiming'] != 'Unknown':
+    refuse('source applicability: current subject or Unknown timing qualification differs')
 source_moves = [{'path': path, 'historicalSha256': sha(git('show', f'{old_subject["evidenceCommit"]}:{path}')),
                  'currentSha256': sha(git('show', f'{SUBJECT}:{path}'))} for path in sorted({r['path'] for r in old['rows']})]
 record = {
@@ -150,6 +154,8 @@ record = {
     'timedPopulations': {'historical': old, 'current': current, 'additionalCurrentSites': current_remainder,
                         'sourceMoves': source_moves, 'currentTiming': 'Unknown',
                         'note': 'Current whole population is emitted, including later .52/rmax bounds; none is silently declared measured by the historical four-site separation.'},
+    'sourceApplicability': {'path': applicability_path.name, 'sha256': sha(applicability_path.read_bytes()),
+                            'closureMoves': applicability['moved'], 'currentTiming': 'Unknown'},
     'daemonEntry': {'campaigns': {name: {'commit': r['commit'], 'testFileFrom': r['testFileFrom'], 'rows': len(r['results']),
                                       'sha256': sha((CAMPAIGNS / f'daemon-entry-{name}.json').read_bytes())} for name, r in campaigns.items()},
                     'attribution': attribution, 'pinFalseRefusals': pin_false_refusals},

@@ -224,7 +224,7 @@ for mid,old,new in [
  ('D-wrong-name',DOSSIER_OPEN,DOSSIER_OPEN.replace("'dossier'","'Dossier'")),
  ('D-duplicate-branch',DOSSIER_OPEN,"  if (argv[0] === 'dossier') return 2;\n"+DOSSIER_OPEN),
  ('D-missing-branch',DOSSIER_OPEN,DOSSIER_OPEN.replace("'dossier'","'other'")),
- ('D-unexpected-else',DOSSIER_END,DOSSIER_END[:-4]+"  } else { throw new Error('unexpected'); }\n"),
+ ('D-unexpected-else',DOSSIER_END,DOSSIER_END[:-4]+"  } else { void 0; }\n"),
  ('D-fallthrough-without-argv-write',DOSSIER_RETURN,DOSSIER_RETURN.replace('return ','')),
  ('E-multiline-type-only-import',ANCHOR,ANCHOR+"import type {\n  renderLocalDossier,\n} from '@syzygy/three-surface-poc-app/dossier-site';\n"),
 ]:
@@ -236,6 +236,15 @@ MUTANTS.extend([
  {'id':'D-mutable-argv-binding','kind':'defect','file':MAIN,'old':ARGV,'new':ARGV.replace('const argv','let argv'),
   'note':'An isolated const-origin predicate witness without a process.argv mutation.'},
 ])
+for mutant in MUTANTS:
+    if mutant and mutant['id']=='P-entry-read':
+        mutant.update(file='packages/cap1-daemon/src/routes-human.ts',
+          old="      path: HUMAN_ENTRY_ROUTE_PATH,\n      credentialClass: 'human-open',\n      async handle(): Promise<RouteResponse> {\n",
+          new="      path: HUMAN_ENTRY_ROUTE_PATH,\n      credentialClass: 'human-open',\n      async handle(): Promise<RouteResponse> {\n        await import('@syzygy/three-surface-poc-app/dossier-site');\n",
+          predecessorFragment={'file':MAIN,'old':"    const { readFile } = await import('node:fs/promises');\n"},
+          note='The old request reader no longer exists in main.ts. Retarget to the actual transitive /entry handler; drive it in the repaired hook row.')
+for mutant in MUTANTS:
+    if mutant and mutant['id'].startswith('D-'): mutant['kind']='predicate-defect'
 git = lambda *a: subprocess.run(['git', *a], cwd=tree, capture_output=True, text=True, check=True).stdout
 sha = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
 subject = git('rev-parse', 'HEAD').strip()
@@ -248,6 +257,16 @@ def build(tag):
     done = subprocess.run(['npx','--no-install','tsc','-b','apps/syzygy'],cwd=tree,capture_output=True,text=True)
     (raw/(tag+'-build.log')).write_text(done.stdout+done.stderr)
     return done.returncode
+
+def bounded(command):
+    began=time.monotonic()
+    child=subprocess.Popen(command,cwd=tree,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,start_new_session=True,
+      env={k:v for k,v in os.environ.items() if not k.startswith('VITEST')})
+    timed_out=False
+    try:stream=child.communicate(timeout=LIMIT_S)[0]
+    except subprocess.TimeoutExpired:
+        os.killpg(child.pid,signal.SIGKILL);timed_out=True;stream=child.communicate()[0]
+    return child.returncode,stream,round(time.monotonic()-began,3),timed_out
 
 def run(mutant):
     mid = mutant['id'] if mutant else 'control'
@@ -275,20 +294,21 @@ def run(mutant):
             result.update(exit=None,buildFailure=True);return result
         report = raw/(mid+'.json'); began=time.monotonic()
         command=['npx','--no-install','vitest','run','--config','packages/cap1-system/vitest.config.ts',TEST,'--reporter=json',f'--outputFile={report}']
-        done=subprocess.run(command,cwd=tree,capture_output=True,text=True,timeout=LIMIT_S,env={k:v for k,v in os.environ.items() if not k.startswith('VITEST')})
-        (raw/(mid+'.log')).write_text(done.stdout+done.stderr)
+        code,stream,seconds,timed_out=bounded(command)
+        (raw/(mid+'.log')).write_text(stream)
         rows=[]
         if report.exists():
             for suite in json.loads(report.read_text())['testResults']:
                 rows.extend({'title':a['fullName'],'status':a['status'],'failureMessages':a.get('failureMessages',[])} for a in suite['assertionResults'])
-        result.update(exit=done.returncode,seconds=round(time.monotonic()-began,3),rows=rows,
+        result.update(exit=code,seconds=seconds,timeout=timed_out,rows=rows,
           failed=sorted(r['title'] for r in rows if r['status']=='failed'),passed=sum(r['status']=='passed' for r in rows),
           raw={'path':str(report),'sha256':sha(report) if report.exists() else None})
         if mutant and (mutant['kind']=='static-defect' or mid in ['P-transitive','X1-close-failed-callback-in-main','X3-shutdown-in-http-host']):
             static=raw/(mid+'-static.json')
-            done=subprocess.run(['npx','--no-install','vitest','run','--project','unit','packages/polaris-generation-core/src/island-boundary.test.ts','--reporter=json',f'--outputFile={static}'],cwd=tree,capture_output=True,text=True,timeout=LIMIT_S)
-            (raw/(mid+'-static.log')).write_text(done.stdout+done.stderr)
-            result['staticExit']=done.returncode
+            code,stream,seconds,timed_out=bounded(['npx','--no-install','vitest','run','--project','unit','packages/polaris-generation-core/src/island-boundary.test.ts','--reporter=json',f'--outputFile={static}'])
+            (raw/(mid+'-static.log')).write_text(stream)
+            result['staticExit']=code
+            result['staticTimeout']=timed_out
             if static.exists():
                 for suite in json.loads(static.read_text())['testResults']:
                     result['staticRows'].extend({'title':a['fullName'],'status':a['status'],'failureMessages':a.get('failureMessages',[])} for a in suite['assertionResults'])

@@ -91,7 +91,7 @@ function runSync(args: readonly string[], cwd: string, portEnv: Record<string, s
 }
 
 async function runDaemon(args: readonly string[], cwd: string, env: Record<string, string>, stateDir: string, machine = false): Promise<{
-  exit: number | null; rootStatus: number; machineStatus?: number; stdout: string; stderr: string; stateWhileRunning: string[]; stateAfterExit: string[];
+  exit: number | null; rootStatus: number; machineStatus?: number; entryStatus?: number; stdout: string; stderr: string; stateWhileRunning: string[]; stateAfterExit: string[];
 }> {
   const child = spawn(process.execPath, [ENTRY, ...args], { cwd, env: { ...ENV, ...env }, stdio: ['ignore', 'pipe', 'pipe'] });
   let out = '';
@@ -113,11 +113,12 @@ async function runDaemon(args: readonly string[], cwd: string, env: Record<strin
   const machineStatus = machine ? (await fetch(`http://127.0.0.1:${port}/api/project`, {
     headers: { authorization: `Bearer ${readFileSync(path.join(stateDir, 'machine-credential.token'), 'utf8').trim()}` },
   })).status : undefined;
+  const entryStatus = machine ? (await fetch(`http://127.0.0.1:${port}/entry`)).status : undefined;
   const stateWhileRunning = sweep(stateDir);
   child.kill('SIGINT');
   const exit = await exited;
   const mask = (text: string): string => text.split(stateDir).join('<STATE>').replace(/127\.0\.0\.1:\d+/g, '127.0.0.1:<PORT>');
-  return { exit, rootStatus, ...(machine ? { machineStatus } : {}), stdout: mask(out), stderr: mask(err), stateWhileRunning, stateAfterExit: sweep(stateDir) };
+  return { exit, rootStatus, ...(machine ? { machineStatus, entryStatus } : {}), stdout: mask(out), stderr: mask(err), stateWhileRunning, stateAfterExit: sweep(stateDir) };
 }
 
 describe('daemon entry: every invocation but `dossier` is unchanged', () => {
@@ -216,7 +217,7 @@ describe('daemon entry: the one changed input, `dossier` as the first argument',
   });
 
   // A preloaded hook watches the POC app and the exact parked modules declared by the existing island guard. The fixture
-  // drives / and an authenticated machine request, usage, refusal and shutdown. Separate real imports prove the hook
+  // drives /, /entry and an authenticated machine request, usage, refusal and shutdown. Separate real imports prove the hook
   // sees the allowed renderer and each core-island URL. The static island guard covers unexercised transitive paths,
   // including finite createRequire forms. A separate child drives the real closeOnSignal rejection arm with a fixture
   // close port. This runtime row alone is not arbitrary-path coverage.
@@ -253,7 +254,7 @@ describe('daemon entry: the one changed input, `dossier` as the first argument',
     ].join('\n'));
     const hooked = { NODE_OPTIONS: `--import=${pathToFileURL(hook).href}`, POC_APP_URL: app, ISLAND_URLS: JSON.stringify(core), POC_LOAD_LOG: log };
     const served = await runDaemon(['--root', root, '--state-dir', stateDir, '--port', '0'], dir, hooked, stateDir, true);
-    expect(served).toMatchObject({ exit: 0, rootStatus: 200, machineStatus: 200, stderr: '' });
+    expect(served).toMatchObject({ exit: 0, rootStatus: 200, machineStatus: 200, entryStatus: 200, stderr: '' });
     expect(runSync(['--help'], dir, { SYZYGY_PORT: '0', ...hooked })).toMatchObject({ status: 0, stderr: '' });
     expect(runSync(['--bogus'], dir, { SYZYGY_PORT: '0', ...hooked })).toMatchObject({ status: 1 });
     const shutdown = pathToFileURL(realpathSync(path.join(REPO_ROOT, 'packages/http-host/dist/shutdown.js'))).href;
