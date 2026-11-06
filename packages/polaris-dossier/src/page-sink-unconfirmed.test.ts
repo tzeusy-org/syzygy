@@ -6,7 +6,7 @@ import { PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT } from '@syzygy/polaris-g
 
 import { pageSinkUnconfirmed, type DossierRenderer } from './render.js';
 
-// syzygy-pdja.5: the drawn site under screening scope version 7. Every file but a machine view is a page, whatever its extension.
+// syzygy-pdja.5: the drawn site under screening scope version 7. Every file but a machine view must be a page named `.html`; any other name is refused.
 const POLICY = 'default-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; base-uri &#39;none&#39;; form-action &#39;none&#39;';
 const page = (policy = POLICY, body = '<p>x</p>'): string => `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${policy}"><title>t</title></head><body>${body}</body></html>`;
 const renderer = (contract?: string): DossierRenderer => Object.assign(() => ({ files: new Map<string, string>() }), contract === undefined ? {} : { pageSinkContract: contract });

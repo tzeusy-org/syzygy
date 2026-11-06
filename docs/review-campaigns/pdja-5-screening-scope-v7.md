@@ -12,4 +12,4 @@
 
 `CONFIRM WITH EXCEPTIONS` (`R-SCREENING-SCOPE-V7-3-RAW.md:4`), over `7f98407d`, round 3; rounds 1 and 2 were `REVISE`. No finding is blocking. The exceptions are carried, without editing the reviewed files, in the package's `ROUND-3-CARRIED-EXCEPTIONS.md`.
 
-The recorder and install had their own round: `CONFIRM WITH EXCEPTIONS` (`R-SCREENING-SCOPE-V7-INSTALL-1-RAW.md:4`), over `b3cd3a43`, no blocking finding. Its dispositions are in `docs/evidence/screening-scope-v7-install-dispositions-2026-11-07.md`.
+The recorder and install had their own rounds: `CONFIRM WITH EXCEPTIONS` (`R-SCREENING-SCOPE-V7-INSTALL-1-RAW.md:4`), over `b3cd3a43`, and `REVISE` (`R-SCREENING-SCOPE-V7-INSTALL-2-RAW.md:4`), over `d88188a4`, on one limb of the page reader. Dispositions are in `docs/evidence/screening-scope-v7-install-dispositions-2026-11-07.md`; no fresh round has confirmed the round 2 repair.

@@ -8,8 +8,11 @@ import { parse, type DefaultTreeAdapterTypes as Tree } from 'parse5';
  * duplicate `content` attribute, and a CSP meta smuggled inside another attribute's value. On such a page a pinned script would run with
  * no policy while the page still confirmed.
  *
- * The parser reads text, and a browser first decodes bytes and picks a parser. So a page must fix what it can: `utf-8` as its first head
- * element, inside the browser's prescan, with no other encoding statement; `render.ts` refuses a page not named `.html`.
+ * The parser reads text, and a browser first decodes bytes and picks a parser. So a page must fix what it can: its raw text opens with the
+ * fixed head `FIXED_OPENING` describes, up to `utf-8` in the first head element, with no other encoding statement; `render.ts` refuses a page
+ * not named `.html`. The raw text is what counts: parse5 keeps a duplicate attribute's first value and a browser's prescan its last, and an
+ * ignored end tag before a padded `<meta` makes the browser stop its prescan early, and either way it decodes another encoding while the
+ * parsed tree looks lawful (R-SCREENING-SCOPE-V7-INSTALL-2-RAW.md, finding 1).
  *
  * `<noscript>` reads differently with scripting on and off, and a script can hide in either reading, so a page is read both ways and
  * must pass both. Any `http-equiv` meta other than the one policy is refused: it could name an encoding or navigate. */
@@ -84,7 +87,9 @@ function elementsOf(root: Tree.Document): readonly Tree.Element[] {
 }
 
 /** How far into a page's bytes the charset must start. The browser's prescan reads 1024; this leaves room for the element itself. */
-const CHARSET_PRESCAN_BOUND = 512;
+/** Nothing a browser's prescan could read differently before the charset: a doctype, `<html>` with at most a `lang` attribute, `<head>`, then
+ * exactly the charset meta, in any case, separated only by ASCII whitespace. */
+const FIXED_OPENING = /^[\t\n\f\r ]*<!doctype html>[\t\n\f\r ]*<html(?: lang="[a-z-]*")?>[\t\n\f\r ]*<head>[\t\n\f\r ]*<meta charset="utf-8">/i;
 
 interface ReadPage { readonly elements: readonly Tree.Element[]; readonly policy: string }
 
@@ -108,8 +113,7 @@ function readPage(html: string, scriptingEnabled: boolean): ReadPage | string {
   if (head === undefined || meta.parentNode !== head) return notFirst;
   const first = head.childNodes.find(node => !isBlankText(node));
   if (first === undefined || !isElement(first) || first.tagName !== 'meta' || first.attrs.length !== 1 || (attribute(first, 'charset') ?? '').toLowerCase() !== 'utf-8') return 'the page does not state utf-8 as the first element of its <head>';
-  const prefix = html.slice(0, html.search(/<meta/iu));
-  if (prefix.length > CHARSET_PRESCAN_BOUND || NON_ASCII.test(prefix)) return 'the page states its encoding too late for the browser\'s prescan';
+  if (!FIXED_OPENING.test(html)) return 'the page does not open with the fixed head that states its encoding for the browser\'s prescan';
   for (const node of head.childNodes) {
     if (node === meta) break;
     if (isBlankText(node) || node === first) continue;

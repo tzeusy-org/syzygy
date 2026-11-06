@@ -16,3 +16,12 @@ The review returned `CONFIRM WITH EXCEPTIONS` over `b3cd3a43`. It said its grade
 - F10, no change needed beyond F1.
 - F11, repaired. Tests hold the viewport attributes and the `meta` limb. `scriptSource`'s text join has a fixture; the parser yields one text child, so it stays nearly equivalent.
 - F12, repaired for the refresh meta, by F1's `http-equiv` rule.
+
+## Round 2
+
+`docs/reviews/R-SCREENING-SCOPE-V7-INSTALL-2-RAW.md` returned `REVISE` over `d88188a4`, on one limb only: the F1 disposition above says "inside the prescan, with no other encoding statement", and two page forms kept that sentence false. Only an injected renderer could write them. No source body reaches them and the shipped renderers do not write them. The F1 sentence above stays as written, since it is what round 2 reviewed.
+
+- Finding 1, repaired. A page's raw text must open with a fixed head: a doctype, `<html>` with at most a `lang` attribute, `<head>`, then exactly the charset meta, in any case. This replaces the prescan-distance check, whose denominator was the first `<meta` in the raw string rather than the element read. Chrome fixtures hold both routes.
+- Finding 4, repaired. The stale test title and test comment are corrected.
+- Finding 6, repaired. A fixture confirms the opening in upper case, which kills the two surviving case mutants. `scriptSource`'s first-child mutant stays the disclosed near-equivalent.
+- Findings 2, 3, 5, 7 to 12: no change. Finding 5 stays a landing step.

@@ -96,11 +96,16 @@ describe('the closed directive set', () => {
 
 describe('reading the policy from a page', () => {
   const noUtf8 = 'the page does not state utf-8 as the first element of its <head>';
+  const opening = 'the page does not open with the fixed head that states its encoding for the browser\'s prescan';
   const anotherEquiv = 'the page carries another http-equiv meta, which could name an encoding or navigate';
   const notFirst = 'the page\'s Content-Security-Policy is not delivered first in <head>, before every other element but the charset and viewport metas';
   it('confirms a lawful page, with single-quoted or encoded attribute values', () => {
     expect(pageSinkCspFinding(page(POLICY))).toBeNull();
     expect(pageSinkCspFinding(page(POLICY).replace(`content="${attr(POLICY)}"`, `content='${POLICY.replaceAll('\'', '&apos;')}'`))).toBeNull();
+  });
+  it('confirms the fixed opening in any case, with whitespace between its tags', () => {
+    expect(pageSinkCspFinding(page(POLICY).replace('<!doctype html><html lang="en"><head>\n<meta charset="utf-8">', '\n<!DOCTYPE HTML>\n<HTML LANG="en">\n<HEAD>\n<META CHARSET="UTF-8">'))).toBeNull();
+    expect(pageSinkCspFinding(page(POLICY).replace('<html lang="en">', '<html>'))).toBeNull();
   });
   it.each([
     ['a stray comment before the policy', page(POLICY).replace('<meta charset', '<!-- x --><meta charset'), noUtf8],
@@ -115,8 +120,13 @@ describe('reading the policy from a page', () => {
     ['another charset', page(POLICY).replace('charset="utf-8"', 'charset="iso-2022-jp"'), noUtf8],
     ['a second charset', page(POLICY, '<meta charset="iso-2022-jp">'), 'the page does not state its encoding exactly once as a charset meta'],
     ['a charset after the viewport', page(POLICY).replace('<meta charset="utf-8">\n<meta name="viewport" content="width=device-width">', '<meta name="viewport" content="width=device-width">\n<meta charset="utf-8">'), noUtf8],
-    ['a charset past the prescan', page(POLICY).replace('<html lang="en">', `<html lang="en" title="${'x'.repeat(600)}">`), 'the page states its encoding too late for the browser\'s prescan'],
-    ['non-ASCII before the charset', page(POLICY).replace('<html lang="en">', '<html lang="\u00e9">'), 'the page states its encoding too late for the browser\'s prescan'],
+    ['a charset past the prescan', page(POLICY).replace('<html lang="en">', `<html lang="en" title="${'x'.repeat(600)}">`), opening],
+    ['non-ASCII before the charset', page(POLICY).replace('<html lang="en">', '<html lang="\u00e9">'), opening],
+    ['a duplicate charset attribute, whose last value a browser reads', page(POLICY).replace('<meta charset="utf-8">', '<meta charset="utf-8" charset="iso-2022-jp">'), opening],
+    ['a decoy meta after an ignored end tag', page(POLICY).replace('<head>', `</x><!-- <meta ${'x'.repeat(1100)} --><head>`), opening],
+    ['an unquoted charset', page(POLICY).replace('<meta charset="utf-8">', '<meta charset=utf-8>'), opening],
+    ['another attribute on html', page(POLICY).replace('<html lang="en">', '<html lang="en" id="x">'), opening],
+    ['a stray byte before the doctype', `x${page(POLICY)}`, notFirst],
     ['a Content-Type meta', page(POLICY).replace('<title>', '<meta http-equiv="Content-Type" content="text/html; charset=iso-2022-jp"><title>'), anotherEquiv],
     ['a refresh meta', page(POLICY, '<meta http-equiv="refresh" content="0;url=x">'), anotherEquiv],
     ['a viewport with a third attribute', page(POLICY).replace('content="width=device-width"', 'content="width=device-width" id="x"'), notFirst],
