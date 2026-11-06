@@ -74,8 +74,9 @@ describe.skipIf(executable === undefined)('the page reader against Chrome', () =
     expect(pageSinkCspFinding(html)).toBe(OPENING);
     expect(await ran(html)).toBe(true);
   });
-  it('the control: one utf-8 charset leaves the script in its attribute value, and it does not run', async () => {
-    expect(await ran(`<!doctype html><html><head><meta charset="utf-8">${hiding}${closing}`)).toBe(false);
+  it('the control: under one utf-8 charset the reader confirms that head, and with no policy the script stays in its attribute value and does not run', async () => {
+    expect(pageSinkCspFinding(`<!doctype html><html><head><meta charset="utf-8">${hiding}${closing}`)).toBeNull();
+    expect(await ran(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="\u001b$B"><meta name="x" content="y" x='\u001b(B">${SCRIPT}${closing}`)).toBe(false);
   });
   // Chrome 120 stops its prescan at the ignored end tag, autodetects and runs the script; Chrome 156 does not (hosted CI, 2026-11-06). The
   // rule is the reader's, so the test holds no browser version's outcome.
