@@ -116,6 +116,7 @@ def setup(root, ident):
         if ident == 'A14': edit(root, 'packages/a', lambda c: c.__setitem__('explanation', 'missing extends circular ERROR means nothing here'))
     elif ident == 'A02': named = ['packages/d', 'packages/b', 'packages/d', 'packages/a']
     elif ident == 'A03': named = ['packages/c/../d', './packages/d/']
+    elif ident == 'A17': named = ['packages/c/../d']
     elif ident == 'A04':
         os.symlink(root / 'packages/a', root / 'packages/alias'); named = ['packages/alias']
     elif ident == 'A05':

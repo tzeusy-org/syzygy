@@ -81,6 +81,11 @@
       "purpose": "actual complete dist path and byte comparison including .tsbuildinfo"
     },
     {
+      "id": "A17",
+      "name": "dot-segment normalized name without trailing slash",
+      "purpose": "accepted normalization control; original A03 combines a normalized name with a pre-existing refused trailing-slash name"
+    },
+    {
       "id": "P01",
       "name": "direct named missing extends",
       "purpose": "one named project fails parse; seeded tree remains exact"
@@ -381,7 +386,7 @@
       "purpose": "failure independent of formatting"
     }
   ],
-  "plannedCaseCount": 76,
+  "plannedCaseCount": 77,
   "sourcePlanSha256": "babd1068e439d353ab6e5425b498857c29b4aa6bdb856e92720b3a76a3e5545b",
-  "note": "A15/A16 are actual workspace builds in build-parity mode; all other rows use restored serial scratch fixtures. Reachability limits are reported separately."
+  "note": "A15/A16 are actual workspace builds in build-parity mode; all other rows use restored serial scratch fixtures. Reachability limits are reported separately. A17 supplements the original combined/trailing-slash A03; original A03 artifacts and actual refusal stay retained."
 }
