@@ -100,6 +100,10 @@ Doctrine itself (VIS-1…7, SEC-1…5) is adopted and lives in
 `ACCEPTANCE-ACT-RECORD.md` is the aggregate record of performed acts;
 each act's own record, and the files named below, own the details.
 
+[Observed] The dossier local-agent mode version 1.4 sign-off is recorded in
+[`POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md`](POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md).
+That record owns its selection, reviewed version and bounded consequences.
+
 ```text
 ACCEPTANCE-ACT-RECORD.md      exists — created by the Wave A act, 2026-08-17
 ```

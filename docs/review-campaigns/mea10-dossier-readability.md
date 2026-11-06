@@ -4,6 +4,7 @@
 
 - `R-MEA10-.*-RAW\.md`
 - `^R-MEA10-10-V14-5cdc02c3-1-NOTES\.md$`
+- `^R-MEA10-10-V14-59768e6f-FINAL-NOTES\.md$`
 
 ## What was under review
 
