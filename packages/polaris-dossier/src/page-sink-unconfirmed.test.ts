@@ -26,6 +26,9 @@ describe('pageSinkUnconfirmed', () => {
         .toBe(`${name}: the page carries 0 Content-Security-Policy meta elements, not exactly one`);
     }
   });
+  it('refuses a script-free page whose policy is outside the closed set', () => {
+    expect(pageSinkUnconfirmed(renderer(PAGE_SINK_CONTRACT), files({ 'a.html': page(`${POLICY}; img-src data:`) }))).toBe('a.html: the page\'s Content-Security-Policy carries img-src');
+  });
   it('names the page whose script is out of the pinned set', () => {
     const script = 'x';
     const hash = `&#39;sha256-${createHash('sha256').update(script).digest('base64')}&#39;`;
