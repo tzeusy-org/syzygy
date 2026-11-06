@@ -4,7 +4,7 @@
 //
 //   (in each tree) npm ci && npx tsc -b packages/polaris-generation-consent packages/polaris-dossier
 //   node scripts/differential_consent_act_families.mjs --old <tree> --new <tree> --out <file.json> --bead <id>
-//     [--workers <n>] [--kinds <k,...>] [--count] [--time-limit-ms <n>]
+//     [--workers <n>] [--kinds <k,...>] [--count] [--time-limit-ms <n>] [--sample-per-kind <n> (bounded fixture runs only)]
 //     [--expect-mismatches --expect-reader-mismatches <reader,...> --control-note <text>]
 //   node scripts/differential_consent_act_families.mjs --selftest
 // Version 3 intentionally changes this evidence tool's JSON/control-exit contract (syzygy-bpyt.8.26); historical /2 records stay frozen.
@@ -129,10 +129,15 @@ function prepareSuccessorAdapter(tree, scratch, role) {
     recordsSha256: sha256(JSON.stringify(SUCCESSOR_RECORDS)), records: SUCCESSOR_RECORDS };
 }
 
-function selectWorlds(generated, kinds) {
+function selectWorlds(generated, kinds, samplePerKind) {
   const available = new Set(generated.map(w => w.kind));
   if (kinds !== undefined && (kinds.length === 0 || new Set(kinds).size !== kinds.length || kinds.some(k => !available.has(k)))) throw new Error('unknown or duplicate selected world kind');
-  const selected = kinds === undefined ? generated : generated.filter(w => kinds.includes(w.kind));
+  let selected = kinds === undefined ? generated : generated.filter(w => kinds.includes(w.kind));
+  if (samplePerKind !== undefined) {
+    if (!Number.isSafeInteger(samplePerKind) || samplePerKind < 1) throw new Error('invalid bounded fixture sample');
+    const seen = new Map();
+    selected = selected.filter(w => { const n = (seen.get(w.kind) ?? 0) + 1; seen.set(w.kind, n); return n <= samplePerKind; });
+  }
   if (selected.length === 0) throw new Error('empty selected world population');
   for (const world of selected) if (world.readers.length === 0 || new Set(world.readers).size !== world.readers.length || world.instants.length === 0 || (world.steps !== undefined && world.steps.length === 0)) throw new Error('empty or duplicate world execution population');
   return selected;
@@ -693,6 +698,8 @@ function selftest() {
   run('selection includes requested worlds', () => assert.deepEqual(selectWorlds(generated, ['probe']), [world]));
   run('count uses selected population', () => assert.deepEqual(population(selectWorlds(generated, ['probe'])), { worlds: 1, byKind: { probe: 1 } }));
   run('generated count remains separate', () => assert.equal(population(generated).worlds, 2));
+  run('bounded fixture sampling uses one shared selected population', () => assert.equal(selectWorlds([world, world, generated[1]], undefined, 1).length, 2));
+  run('zero bounded fixture sample rejected', () => assert.throws(() => selectWorlds(generated, undefined, 0), /invalid/));
   run('empty selection rejected', () => assert.throws(() => selectWorlds([], undefined), /empty/));
   run('unknown selected kind rejected', () => assert.throws(() => selectWorlds(generated, ['missing']), /unknown/));
   run('duplicate kind rejected', () => assert.throws(() => selectWorlds(generated, ['probe', 'probe']), /duplicate/));
@@ -788,7 +795,8 @@ async function main(argv) {
   const { CITATION_ALLOWLIST } = await import(pathToFileURL(path.join(root, 'packages/polaris-generation-consent/dist/citation-allowlist.js')).href);
   const built = await corpus(root, consent, gate, CITATION_ALLOWLIST, NAMED), kinds = arg('--kinds')?.split(',');
   const { subjects, needles, bases, drops, kept, policyBytes } = built;
-  const worlds = selectWorlds(built.worlds, kinds);
+  const samplePerKind = arg('--sample-per-kind') === undefined ? undefined : Number(arg('--sample-per-kind'));
+  const worlds = selectWorlds(built.worlds, kinds, samplePerKind);
   const specs = new Map(readers(consent, gate, probe).map(([name, timed]) => [name, timed]));
   const demandedReaders = controlExpectations(control, arg('--expect-reader-mismatches')?.split(','), specs);
   // The consent ports' probe provider and class: those of the first egress record in force in the admission-acts base world at the
@@ -799,7 +807,7 @@ async function main(argv) {
 
   const layer = overlay => Object.entries(overlay).sort(([a], [b]) => a.localeCompare(b)).map(([rel, text]) => [rel, text === null ? null : sha256(text)]);
   const identityOf = w => ({ kind: w.kind, subject: w.subject, operator: w.operator, base: w.base, readers: w.readers, instants: w.instants, reduced: w.reduced, layers: (w.steps ?? [w.overlay]).map(layer) });
-  const generatedManifest = built.worlds.map(w => ({ id: sha256(JSON.stringify(identityOf(w))), kind: w.kind, readers: w.readers, instants: w.instants, steps: w.steps?.length ?? 1 }));
+  const generatedManifest = built.worlds.map(w => ({ id: sha256(JSON.stringify(identityOf(w))), identity: identityOf(w), kind: w.kind, readers: w.readers, instants: w.instants, steps: w.steps?.length ?? 1 }));
   if (new Set(generatedManifest.map(w => w.id)).size !== generatedManifest.length) throw new Error('duplicate stable world identity');
   const corpusSha256 = sha256(JSON.stringify({ drops, worlds: built.worlds.map(identityOf) }));
   const selectedSha256 = sha256(JSON.stringify(worlds.map(identityOf)));
@@ -813,7 +821,7 @@ async function main(argv) {
     expectedPerLogicalReader[reader] = { worlds: ownWorlds.length, steps: ownWorlds.reduce((n, w) => n + new Set(w.expected.filter(e => e.reader === reader).map(e => e.step)).size, 0), answers: comparisons.length, executed: null };
   }
   if (argv.includes('--count')) {
-    process.stdout.write(`${JSON.stringify({ schema: 'consent-act-family-count/3', ...counts, expectedPerLogicalReader, corpusSha256, selectedSha256, selectedManifest, generatedManifest, executed: null, needles: needles.length, policyBytes, subjects: subjects.map(x => x.key) })}\n`);
+    process.stdout.write(`${JSON.stringify({ schema: 'consent-act-family-count/3', ...counts, selection: { kinds: kinds ?? null, samplePerKind: samplePerKind ?? null }, readerSpecifications: Object.fromEntries(specs), expectedPerLogicalReader, corpusSha256, selectedSha256, selectedManifest, generatedManifest, executed: null, needles: needles.length, policyBytes, subjects: subjects.map(x => x.key) })}\n`);
     return 0;
   }
   const workers = Number(arg('--workers') ?? Math.max(1, Math.min(os.availableParallelism() - 2, 8)));
@@ -904,7 +912,7 @@ async function main(argv) {
     text: 'Evidence record, not authority. Version 3 adds complete exact comparison identities, generated/selected populations, typed fixture boundaries and checked per-reader controls; /2 artifacts are unchanged.',
     script: { path: SCRIPT_REL, sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) }, trees: binding, corpusRoot: 'old',
     corpus: { sha256: corpusSha256, selectedSha256, alterations: { module: TESTING, tree: 'new', named: NAMED.map(([n]) => n) }, policyBytes, generatedManifest, selectedManifest },
-    populations: counts, expectedPerLogicalReader, perLogicalReader,
+    populations: counts, selection: { kinds: kinds ?? null, samplePerKind: samplePerKind ?? null }, readerSpecifications: Object.fromEntries(specs), expectedPerLogicalReader, perLogicalReader,
     instants: INSTANTS.map(([at]) => at), pool: { workers, node: process.version, timeLimitMs, wallSeconds: (Date.now() - started) / 1000, loadAverageAtFinish: os.loadavg() },
     readers: [...perReader.keys()], materialization, consentPortsProbe: probe.egress, bases, reducedTree: { kept, dropped: drops.length },
     successorFixture: { boundary: 'validated AdmissionRecordReader injection; actual compiled gate forwarding via exact one-import adapter; never a file-backed accepted successor form', adapters, literalOutcomes },
