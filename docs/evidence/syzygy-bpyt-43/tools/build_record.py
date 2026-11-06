@@ -118,7 +118,7 @@ for row in head:
         if not intended:
             refuse(f'{mid}: existing static loader predicate did not name the defect')
     if kind == 'equivalent':
-        expected = {'pin', 'text'} if mid == 'C1-comment-outside-branches' else {'pin'} if mid in pin_false_refusals or mid == 'E-type-only-import' else set()
+        expected = {'pin', 'text'} if mid == 'C1-comment-outside-branches' else {'pin'} if mid in pin_false_refusals or mid in ['E-type-only-import','E-multiline-type-only-import'] else set()
         if failed != expected or len(row['failed']) != len(expected):
             refuse(f'{mid}: equivalent row attribution {sorted(failed)} differs from {sorted(expected)}')
     if mid.startswith('Y') and 'text' not in failed:
