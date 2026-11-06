@@ -1,0 +1,768 @@
+{
+  "schema": "corrected-full-publication-check/1",
+  "phase": "pre-manifest",
+  "recognizer": {
+    "recognizerPath": "scripts/check_governance.py",
+    "recognizerSha256": "c6cd81da1b26e0032fd12c0e9263135e00fd84ee3eca64c54e31490e1ab18ae9",
+    "performedRecordPath": ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",
+    "performedRecordSha256": "3995ada0da277419807a6a802db4e92e5f4bb824269d7f39e5578d8ae21abcfc",
+    "argumentTokens": 66,
+    "ceremonyTokens": 54
+  },
+  "payloads": [
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/CACHE-PREPARATION.json",
+      "bytes": 48831,
+      "sha256": "bfd6f608d90c908b9cb1847fd49fd7ea8ece02d2c09de9fb957d3677b023a19f",
+      "decodedBytes": 48831,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/COUNT-REPRODUCTION-RESULT.json",
+      "bytes": 654,
+      "sha256": "5849bcd3916e29801a3d756e5bef30df31703001ba18852e452de1f932a1fd36",
+      "decodedBytes": 654,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/CYCLE-NOTICE.md",
+      "bytes": 1798,
+      "sha256": "a303a3b78e1d0a4ec28903c32f522f15e9af127888abd3b8accf3489dd930119",
+      "decodedBytes": 1798,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/EXACT-DELTA-CLOSURE-PROPOSAL.json",
+      "bytes": 9260,
+      "sha256": "837e06f6de4a5ff04850c171a887b6f556af178ca45743a6c4475c73deb7b730",
+      "decodedBytes": 9260,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/EXACT-DELTA-CLOSURE-RESULT.json",
+      "bytes": 1279,
+      "sha256": "3b7216a94f1fca10eba3712c688ebcd9ffa531f280545e3f24901df9777dab64",
+      "decodedBytes": 1279,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/FRESHNESS-RECOUNT.json",
+      "bytes": 3095,
+      "sha256": "5b10d1ce9c795ba5bb4f2718ac746a8578c97eb2c15846d229c851e9158ff482",
+      "decodedBytes": 3095,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/M0-FIRST-GATE.json",
+      "bytes": 3663,
+      "sha256": "13316188af248d56e09b2d1fd77bc96db02b85181441b7894247cbcea5baf3e0",
+      "decodedBytes": 3663,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/M0-full-recount.json",
+      "bytes": 8895,
+      "sha256": "b0c3cd23e0c31339c738a22153b8c9914d1f3dda30843139a3b9ec4c7b7aadfa",
+      "decodedBytes": 8895,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/M0-full.json.commitments.json.gz",
+      "bytes": 1018502,
+      "sha256": "3463e59089897f42682975af21ab111bc20a705d41c739efe271372a8a20cf8f",
+      "decodedBytes": 30258863,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/MANIFEST.json",
+      "bytes": 6862,
+      "sha256": "dca2ea9b1f319c7ad9275c8a0c9aa950ef50bdf2ed0431629f4c5e3a2cfc74e7",
+      "decodedBytes": 6862,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/MUTATION-SPECS.json",
+      "bytes": 14764,
+      "sha256": "75b69af15791c70b2c34222c5ddb923e39a0c41f614555a24a5ca26c84fd663b",
+      "decodedBytes": 14764,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/NC-blunt.json.commitments.json.gz",
+      "bytes": 272346,
+      "sha256": "2c3f95fb126b1469cff81f182ddd09e9d8f5ff1c104d8459dc83a5afdbe17def",
+      "decodedBytes": 2548028,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/NC-supersession.json.commitments.json.gz",
+      "bytes": 266306,
+      "sha256": "1c2b9918e45eb417c12e50f5a67c172bcbce23952ae3c5a9ef09b8592552197a",
+      "decodedBytes": 2410110,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/NC-unrelated.json.commitments.json.gz",
+      "bytes": 269891,
+      "sha256": "5ab2281cca8bb2830753af8499f65813f6083124b4c6689e125fa335f8bf5b5c",
+      "decodedBytes": 2476230,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/PROJECTION-CONTROLS.json",
+      "bytes": 1658,
+      "sha256": "9cdf2bbca6f36695cede8660054bc44575584a9318f87743bab4756f818b8b10",
+      "decodedBytes": 1658,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/PROJECTION-RESULTS.json",
+      "bytes": 2824,
+      "sha256": "45e021217d097a74295291eff968e65c4fa0fc1c079e18650d7982bda1b1afff",
+      "decodedBytes": 2824,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/PUBLICATION-CENSUS.json",
+      "bytes": 19379,
+      "sha256": "b80e08cac4598a1edc4c2efc3344136a9afec14236deb7b9b7d03f46275f084a",
+      "decodedBytes": 19379,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/RAW-PACKET-INDEX.json",
+      "bytes": 81876,
+      "sha256": "cd28a4d2ee0916b02c0421bcd6a35fc41b91aa821dd023d31f29e817fa308250",
+      "decodedBytes": 81876,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/README.md",
+      "bytes": 1444,
+      "sha256": "e29abb49c7ffb774b33ba02c6f8a30a23f58b80def318a6aa81f049f56849bcf",
+      "decodedBytes": 1444,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/RESULTS.json",
+      "bytes": 24047,
+      "sha256": "51dc3eb99f979c0d8e040316b152355271f24fd20caeaf2051cc71b3522ee31f",
+      "decodedBytes": 24047,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/ROOT-CLOSURE-DISPOSITION.json",
+      "bytes": 1832,
+      "sha256": "d98d543fa162ccaaf1cb06603ed2020a9beb49cbbaf4d85116df25510a5275e5",
+      "decodedBytes": 1832,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/RULE6-RESULT.json",
+      "bytes": 88899,
+      "sha256": "580df4d957d4c1261ac5453101a4cf0a0fdb292ad16dd03b6518dca632e1094f",
+      "decodedBytes": 88899,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/SEMANTIC-CONTROL-RESULT.json",
+      "bytes": 6005,
+      "sha256": "5ee06e8c5692a1cc27ab073d291f8ea401f25bf30e7be252f935e1e4dfb35bd4",
+      "decodedBytes": 6005,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/WORKER-QUALIFICATION.json",
+      "bytes": 500,
+      "sha256": "e64a635142a5dc22e1554f2ec4ccf5df99755d7b339975f5e6d6bb1090462645",
+      "decodedBytes": 500,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/AUXILIARY-BINDINGS.json",
+      "bytes": 2756,
+      "sha256": "281d0436b590cc21500da0c646a3f223d0ef280f2f57765e2b251f4cafef2148",
+      "decodedBytes": 2756,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/CLASSES-AND-FLOORS.json",
+      "bytes": 3527,
+      "sha256": "d2df1501995af4d6d99b58ff25d44f1279a011b64f85032a6f25a112d1f5f56e",
+      "decodedBytes": 3527,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/COUNT-BINDING.json",
+      "bytes": 11993,
+      "sha256": "d956e90fdbbbbddad42352760166732e71e6153433e9feed3da045c37985d975",
+      "decodedBytes": 11993,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/COUNT-REPRODUCTION-RESULT.json",
+      "bytes": 1295,
+      "sha256": "7ca46c099499bd5116dabddba0df6079a0f3c45ddb8dc912df466066447acf54",
+      "decodedBytes": 1295,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/COUNT-full-verified.json",
+      "bytes": 429,
+      "sha256": "a3867d785118ac95daa64b92df7fd6ec91b50d0807cf3ed9175fd8d78c58d4a4",
+      "decodedBytes": 429,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/COUNT-selected-verified.json",
+      "bytes": 427,
+      "sha256": "00876008474585d36638f8f9b49db557395e3084ecbb1a2113bd221c7df1a510",
+      "decodedBytes": 427,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/CYCLE-NOTICE.md",
+      "bytes": 977,
+      "sha256": "e9b8cabeb8af28a6af3f484a134114d22b0208dcac7245843b1c14e111b6eaa1",
+      "decodedBytes": 977,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/FINDING-DISPOSITIONS.json",
+      "bytes": 2475,
+      "sha256": "f18df53486dc83564f1dd9ef7b2d9ee61d6483e0941241e1430110f51d0b832a",
+      "decodedBytes": 2475,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/FRESHNESS-RECOUNT.json",
+      "bytes": 2534,
+      "sha256": "8c35fa64f82b71e920e94d8e4b9574666618426638eb4eb736dce0eecc67357b",
+      "decodedBytes": 2534,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/M0-FIRST-GATE.json",
+      "bytes": 370,
+      "sha256": "b8bce9f696c1bec6a6f7e0aad150c64a7cbd75398ccceebe821aebe5ce21e3c0",
+      "decodedBytes": 370,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/M0-full-recount.json",
+      "bytes": 8896,
+      "sha256": "c0bbba3e98df9ed4b04e36ed7d4322c2484890efd30cce8315211347b8ce8af3",
+      "decodedBytes": 8896,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/M0-full.json.commitments.json.gz",
+      "bytes": 1019124,
+      "sha256": "97337b4ca9298a704e85ac9b0f49e585f45f6991e84dab4094579778e960e0ef",
+      "decodedBytes": 30261229,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/MUTATION-SPECS.json",
+      "bytes": 19386,
+      "sha256": "334848a46120db52c7ed708996bd909ea07d49452d26ff68a9ed8396e93f4faf",
+      "decodedBytes": 19386,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/NC-blunt-inforce.json.commitments.json.gz",
+      "bytes": 272893,
+      "sha256": "089d44d38494fdb28f05a10a4c37aefdfac0a8c495206d8672bc7d9d8cf1fafb",
+      "decodedBytes": 2550418,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/NC-requests-absence.json.commitments.json.gz",
+      "bytes": 270164,
+      "sha256": "dbc3652201f9e242a6f9b981301e62fe51dddacbbdf569ebd86550f0caba9aac",
+      "decodedBytes": 2478395,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/NC-requests-ids.json.commitments.json.gz",
+      "bytes": 270165,
+      "sha256": "87fbffb302f8575b121b673475b4e495800deee7e360a57d352a8be8ccbe1cf7",
+      "decodedBytes": 2478384,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/NC-requests-revisions.json.commitments.json.gz",
+      "bytes": 270176,
+      "sha256": "976f11cd52622db1ae7324d6e7138d27cdfe4398b699f2c2fd45c7e6e163df87",
+      "decodedBytes": 2478404,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/NC-supersession-inforce.json.commitments.json.gz",
+      "bytes": 266548,
+      "sha256": "4aca8c24719c0fea4d82632b3efc24806b7da57d84fa6e5fb50b3c0b1237e31a",
+      "decodedBytes": 2412141,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/NC-unrelated-reader-cannot-satisfy-port.json.commitments.json.gz",
+      "bytes": 270220,
+      "sha256": "767899df5b1562929d2e52c7c53c9e24424aedbd9791ea5f4ea7066421a83e55",
+      "decodedBytes": 2478498,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/PRESERVED-PACKET-VERIFICATION.json",
+      "bytes": 920,
+      "sha256": "2e547a1ee832621d7d5d10783ff325643991cf2f3c855b62fa03fc873e44db07",
+      "decodedBytes": 920,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/PROJECTION-CONTROLS.json",
+      "bytes": 1658,
+      "sha256": "dc32afd95c1df653f3efd1e5462e9a9ec6e2d3473b1792836fa71ff3c1a500f4",
+      "decodedBytes": 1658,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/PROJECTION-RESULTS.json",
+      "bytes": 5851,
+      "sha256": "8b1646ffac20d5733d0cb54b9d636305fc8f6aa0c258d14033f665d277bdf95f",
+      "decodedBytes": 5851,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/PROOF-PACKET-INDEX.json",
+      "bytes": 138764,
+      "sha256": "6ef88d5b385185d927f985f782b7c9fc73f56df1895d5039c45c62fb4cb284d2",
+      "decodedBytes": 138764,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/README.md",
+      "bytes": 5647,
+      "sha256": "30ee238ee43129f275dde29e035dfa8afea7753b430befe45ffe5369adbbe104",
+      "decodedBytes": 5647,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/RESULTS.json",
+      "bytes": 10146,
+      "sha256": "6975f8de62f2498682ffcc485b19d089eb02b7a0e54d0131ea59e69fb16d7e9e",
+      "decodedBytes": 10146,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/RULE6-RESULT.json",
+      "bytes": 109080,
+      "sha256": "8f9b73eac52eab2e759a35d951ebc262986987af8567cc4b590118a6dda46698",
+      "decodedBytes": 109080,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/SEMANTIC-CONTROL-RESULT.json",
+      "bytes": 137580,
+      "sha256": "2456d5059ee9dadb5b6e176fe63300fc2b0982d35aaad8eabd74f3b6fa3c9b59",
+      "decodedBytes": 137580,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/TEST-DELTA.json",
+      "bytes": 3270,
+      "sha256": "4b2f017a7201ae4b57130947343c7c2a979307a74f9fe00f98af97a18459dca0",
+      "decodedBytes": 3270,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/WORKER-QUALIFICATION.json",
+      "bytes": 451,
+      "sha256": "30b536bb948c1dab1587179c9ba968282cc7f1b0a46b4d368cdd193f7a44607e",
+      "decodedBytes": 451,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/qualification-parallel.json.commitments.json.gz",
+      "bytes": 275588,
+      "sha256": "02b95ac83cb03d68df3f1b165e54af402ef4b7ccff31377c3f08d1f2241bf46d",
+      "decodedBytes": 2541463,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/qualification-serial.json.commitments.json.gz",
+      "bytes": 275589,
+      "sha256": "622d055511dd84aa6053d8fa7f9691417df9bd4ea69c820a7e478e89f3bc88c3",
+      "decodedBytes": 2541460,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/scope-and-ac-map.json",
+      "bytes": 42182,
+      "sha256": "aa562a53974f351c0b539c588f84a401048929271a53a2aaa1fc80e44bc4fcd3",
+      "decodedBytes": 42182,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/baseline_driver.py",
+      "bytes": 3377,
+      "sha256": "ffe3e6051b87092d1f2a895afb4f34c923e6e30b58bb6a0f263b73cd0fefb951",
+      "decodedBytes": 3377,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/capture.py",
+      "bytes": 1312,
+      "sha256": "fc771a89ff05d546c16a1daf325694c578a563db713ec882c47b523ce8f09e41",
+      "decodedBytes": 1312,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/capture_inside.py",
+      "bytes": 1658,
+      "sha256": "cd4156bd18b8217eb6410833107da9cab2f0baff8d1efe84b1def8c84717b980",
+      "decodedBytes": 1658,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/freshness_recount.py",
+      "bytes": 1014,
+      "sha256": "4c5cdba8418a25023ed3b591fe03e7f81391ca7aa53685b0af1a2aba14df3f9f",
+      "decodedBytes": 1014,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/isolated.py",
+      "bytes": 2602,
+      "sha256": "00bb33053e5885c9c1f33a02eed1048cac8588f5fd8dff0499453611c6516442",
+      "decodedBytes": 2602,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/literal-expectations.json",
+      "bytes": 4517,
+      "sha256": "214763e065e733e2cf4306686c64b272f74fad85a13d9a2afe0fe3f061d8fd37",
+      "decodedBytes": 4517,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/post_m0_counts.py",
+      "bytes": 2809,
+      "sha256": "1d0ba2fbd907166472beb9e7ab66b1934136063cc54fd31a2b8d32e15ea1439c",
+      "decodedBytes": 2809,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/project_evidence.py",
+      "bytes": 5140,
+      "sha256": "598652fca2decaa93ed86385ba365b9eefe38ba0675d0f6317bd2360c0e79c13",
+      "decodedBytes": 5140,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/publication_guard.py",
+      "bytes": 2852,
+      "sha256": "da7fd652953354f06f14fe2f314d26975e3a2ee9fce759f16bf574f07193d8bc",
+      "decodedBytes": 2852,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/recount.py",
+      "bytes": 8655,
+      "sha256": "20e20f0b95db656872f22164656eb31d1089f37c6f2564fc0b6e4e92f39cb662",
+      "decodedBytes": 8655,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/run_rule6.py",
+      "bytes": 8518,
+      "sha256": "10faab1a90c8f80e72578611e5ede7b969207c61cd7bcc27c6e36d3039bc2173",
+      "decodedBytes": 8518,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/run_semantic_controls.py",
+      "bytes": 6025,
+      "sha256": "1ddff82f8e8d0f5955f692a254f49524ebb718a09d75c1a82c4ed33497f02ee0",
+      "decodedBytes": 6025,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/verify_count.py",
+      "bytes": 5332,
+      "sha256": "55c2a4b56c936a3b31aa53bb4d9d0002b5b046eb7746c8353bc1b378e12f788a",
+      "decodedBytes": 5332,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/tools/verify_projection_controls.py",
+      "bytes": 1601,
+      "sha256": "ead043a62316743ff8b05a539041a1bb531e304209372997085b1a7126112931",
+      "decodedBytes": 1601,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/final-targeted-M0.json.commitments.json.gz",
+      "bytes": 275130,
+      "sha256": "a3595750cfbb1734d1680e17747871c1286b20800d3dfdb849e6f7c29a8ac0a7",
+      "decodedBytes": 2539097,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/final-targeted-recount.json",
+      "bytes": 8383,
+      "sha256": "c63a8f8d5904adf01a95457146e4c06285852dd94189b5ca6bf52e32df62ae2b",
+      "decodedBytes": 8383,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/qualification-final-parallel.json.commitments.json.gz",
+      "bytes": 275125,
+      "sha256": "2b14017d3a3f02f57be5263c453df9bdd5cb11b210ceae4280246e2248ef1821",
+      "decodedBytes": 2539097,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/qualification-final-serial.json.commitments.json.gz",
+      "bytes": 275126,
+      "sha256": "ec865875ad84f1c7ea1bd318328390c6f88202d5d0839c9ccc25294a70961b32",
+      "decodedBytes": 2539096,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/scope-and-ac-map.json",
+      "bytes": 23127,
+      "sha256": "363bc875f022d541f698778ecb5612f5282f6050dfe5eb87aa628338725942ff",
+      "decodedBytes": 23127,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/tools/capture.py",
+      "bytes": 1312,
+      "sha256": "fc771a89ff05d546c16a1daf325694c578a563db713ec882c47b523ce8f09e41",
+      "decodedBytes": 1312,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/tools/capture_inside.py",
+      "bytes": 1658,
+      "sha256": "cd4156bd18b8217eb6410833107da9cab2f0baff8d1efe84b1def8c84717b980",
+      "decodedBytes": 1658,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/tools/isolated.py",
+      "bytes": 2601,
+      "sha256": "b552380a4fd8ce6efc5728934be3906efbd68c1a1085172d53bc2cead3cc31d4",
+      "decodedBytes": 2601,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/tools/literal-expectations.json",
+      "bytes": 4517,
+      "sha256": "214763e065e733e2cf4306686c64b272f74fad85a13d9a2afe0fe3f061d8fd37",
+      "decodedBytes": 4517,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/tools/prepare_cache.py",
+      "bytes": 1899,
+      "sha256": "4e3d54882e1e76e25efd8861b819f79bd5b3ed821e21ac19d8233870a9eb906c",
+      "decodedBytes": 1899,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/tools/project_evidence.py",
+      "bytes": 5140,
+      "sha256": "598652fca2decaa93ed86385ba365b9eefe38ba0675d0f6317bd2360c0e79c13",
+      "decodedBytes": 5140,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/tools/publication_guard.py",
+      "bytes": 2852,
+      "sha256": "da7fd652953354f06f14fe2f314d26975e3a2ee9fce759f16bf574f07193d8bc",
+      "decodedBytes": 2852,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/tools/recount.py",
+      "bytes": 8655,
+      "sha256": "20e20f0b95db656872f22164656eb31d1089f37c6f2564fc0b6e4e92f39cb662",
+      "decodedBytes": 8655,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/tools/run_rule6.py",
+      "bytes": 9142,
+      "sha256": "80338449b0e841eec23d9f090cf22bffe473a3d4b8644368defff3b94cab4d71",
+      "decodedBytes": 9142,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/tools/run_semantic_controls.py",
+      "bytes": 5656,
+      "sha256": "3d9370b9d638e0b70e0a269fae2e1ad36155fda9a09f9b9632e53ecee153f62f",
+      "decodedBytes": 5656,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/tools/verify_projection_controls.py",
+      "bytes": 1598,
+      "sha256": "efb13a38406fe265d5c684668d122af06f151842805082f3572cb2f7cd2d300b",
+      "decodedBytes": 1598,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "scripts/differential_consent_act_families.mjs",
+      "bytes": 84734,
+      "sha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+      "decodedBytes": 84734,
+      "prohibitedOccurrences": 0
+    }
+  ],
+  "payloadDenominator": 87,
+  "projections": [
+    {
+      "path": "M0-full.json.commitments.json.gz",
+      "nativeSha256": "cfe9e4c7dc36a5212f7357e0dce692897c2930fe554a4968ca09e968b567bc7e",
+      "worlds": 5403,
+      "answers": 70999,
+      "valueCommitments": 775,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "NC-blunt.json.commitments.json.gz",
+      "nativeSha256": "956d1717e25ebf68e001c0b9862a7f029271b579f881c5a302b4a0cb18c85662",
+      "worlds": 8,
+      "answers": 368,
+      "valueCommitments": 40,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "NC-supersession.json.commitments.json.gz",
+      "nativeSha256": "432a62a289bda71fd33df55cc4e3c1deee811a9318184d741cc258dedafa648d",
+      "worlds": 1,
+      "answers": 6,
+      "valueCommitments": 6,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "NC-unrelated.json.commitments.json.gz",
+      "nativeSha256": "5c60ce98f3eddc41c8a38b563ebdc34bcac03592942922c3ba965f663d01733c",
+      "worlds": 4,
+      "answers": 184,
+      "valueCommitments": 38,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "correction-2026-11-06/M0-full.json.commitments.json.gz",
+      "nativeSha256": "bf3ca1cc16a7a2d0975c0c569b7a6ea3f1e1f403aad830512c17fcd6cf258205",
+      "worlds": 5403,
+      "answers": 70999,
+      "valueCommitments": 777,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "correction-2026-11-06/NC-blunt-inforce.json.commitments.json.gz",
+      "nativeSha256": "c06a00840a4cfb6fdbecd8b54c82cc323570fb21bcd6b27ad219336174fc1b39",
+      "worlds": 8,
+      "answers": 368,
+      "valueCommitments": 42,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "correction-2026-11-06/NC-requests-absence.json.commitments.json.gz",
+      "nativeSha256": "f026bb3796ab3bde720d6b882d27ef69a0923191782e2855425620cfc82db575",
+      "worlds": 4,
+      "answers": 184,
+      "valueCommitments": 39,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "correction-2026-11-06/NC-requests-ids.json.commitments.json.gz",
+      "nativeSha256": "72f484d46849ce97918e21afa8fa186944a8c5c546b994d44a72943d8c844d52",
+      "worlds": 4,
+      "answers": 184,
+      "valueCommitments": 39,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "correction-2026-11-06/NC-requests-revisions.json.commitments.json.gz",
+      "nativeSha256": "65a7d1e7e3e9e98af39c0971725bfe30a90a3451fd6bef25e753fcfe7ea7176d",
+      "worlds": 4,
+      "answers": 184,
+      "valueCommitments": 39,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "correction-2026-11-06/NC-supersession-inforce.json.commitments.json.gz",
+      "nativeSha256": "0f30237a509d27335bce8fcc6279a1c99e98123f55cba462b0f210b0b2e38eb6",
+      "worlds": 1,
+      "answers": 6,
+      "valueCommitments": 6,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "correction-2026-11-06/NC-unrelated-reader-cannot-satisfy-port.json.commitments.json.gz",
+      "nativeSha256": "ecbd7bd5d10db2eb7d08b813e9a95c928419400c90d9c11088f89df797de1485",
+      "worlds": 4,
+      "answers": 184,
+      "valueCommitments": 39,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "correction-2026-11-06/qualification-parallel.json.commitments.json.gz",
+      "nativeSha256": "d01e1f4e9e88fb8410f969aef7d165b77602eba3a7216a445566e8a8e529aeb2",
+      "worlds": 12,
+      "answers": 274,
+      "valueCommitments": 59,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "correction-2026-11-06/qualification-serial.json.commitments.json.gz",
+      "nativeSha256": "eb3847bd3b78bbc1085effc0bc6da2fe94661a7398d02cc5d34aeed535d37187",
+      "worlds": 12,
+      "answers": 274,
+      "valueCommitments": 59,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "final-targeted-M0.json.commitments.json.gz",
+      "nativeSha256": "731005f8f074169a59584a0cd171ca343b599c33896679016b6fead3ac336731",
+      "worlds": 12,
+      "answers": 274,
+      "valueCommitments": 57,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "qualification-final-parallel.json.commitments.json.gz",
+      "nativeSha256": "d14fe7c60dc904437ee5196d4ae009496960546a0aeb101d825b515c42170833",
+      "worlds": 12,
+      "answers": 274,
+      "valueCommitments": 57,
+      "completeNativeReplay": true
+    },
+    {
+      "path": "qualification-final-serial.json.commitments.json.gz",
+      "nativeSha256": "d755ae3b7108ad1f52c5a9ede17c19d69b349f08616bec2126779ba74bc2ac9f",
+      "worlds": 12,
+      "answers": 274,
+      "valueCommitments": 57,
+      "completeNativeReplay": true
+    }
+  ],
+  "projectionDenominator": 16,
+  "scannerControls": {
+    "performedArgument": true,
+    "signedPrefix": true,
+    "ceremony": true,
+    "neutral": true
+  },
+  "twoTokenMethodsAgree": true,
+  "prohibitedOccurrences": 0,
+  "legacyManifestOriginalSubject": "4dc2af1e57bfc3e09ec8d5839e46c277eb521878",
+  "legacyOriginalEntryDenominator": 39,
+  "legacyOriginalEntriesReverified": true,
+  "actor": "author-computed, independent corrected-head review remains required",
+  "success": true
+}

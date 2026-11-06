@@ -1,0 +1,350 @@
+{
+  "schema": "consent-act-family-count-commitment-projection/1",
+  "script": {
+    "path": "scripts/differential_consent_act_families.mjs",
+    "sha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad"
+  },
+  "trees": [
+    {
+      "role": "old",
+      "commit": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "tree": "98334f38dd50c0b592c3397d1ba3af8c20f7922e",
+      "files": {
+        "packageReaderTs": "packages/polaris-generation-consent/src/package-reader.ts",
+        "packageReaderJs": "packages/polaris-generation-consent/dist/package-reader.js",
+        "gateSourcesTs": "packages/polaris-dossier/src/gate-sources.ts",
+        "gateSourcesJs": "packages/polaris-dossier/dist/gate-sources.js",
+        "testingJs": "packages/polaris-generation-consent/dist/testing.js",
+        "consentPortsTs": "packages/polaris-generation-consent/src/consent-ports.ts",
+        "consentPortsJs": "packages/polaris-generation-consent/dist/consent-ports.js",
+        "inForceTs": "packages/polaris-generation-consent/src/in-force.ts",
+        "inForceJs": "packages/polaris-generation-consent/dist/in-force.js",
+        "consentIndexJs": "packages/polaris-generation-consent/dist/index.js",
+        "consentLiveTs": "packages/polaris-generation-consent/src/live.ts",
+        "consentLiveJs": "packages/polaris-generation-consent/dist/live.js",
+        "screenTs": "packages/polaris-dossier/src/screen.ts",
+        "screenJs": "packages/polaris-dossier/dist/screen.js"
+      },
+      "clean": true,
+      "sha256": {
+        "packageReaderTs": "e8bcdfa1670842dc9e80e4435d1be8d83fca3a0fce6c73760c3d82913acd875b",
+        "packageReaderJs": "20a5399988bc286990c41e042e57b8799694376753af37f1ceb7826b1f257f62",
+        "gateSourcesTs": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+        "gateSourcesJs": "83e72a5739b2351eb4f039284cb86c16864ba740fe32552fd2be1f77c1c7bce5",
+        "testingJs": "db5352f363e93cc0bc7893b8cbfb9195046e7e34314e66ea3c2beafe091afb14",
+        "consentPortsTs": "b9713073670b9e69efcd6bc591af92d10ca928e7501ae87f2cf12efebae937ca",
+        "consentPortsJs": "6dc4ae14ad645ed76b7b6824255a3aef8783e48d6b77d2a2286db05460bba0c6",
+        "inForceTs": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+        "inForceJs": "2e3730701c98abd576738375f20a94dff9a2999db19420513d1116ad05660b0b",
+        "consentIndexJs": "456640b1b2202d39afa32aa5d532d79a7fe1ce2aca2b3e8f2c9df71a8e5ab44f",
+        "consentLiveTs": "2aa268d84e4ba20f851e15334da5c792621acd25090b6d36674b41b39e53289c",
+        "consentLiveJs": "b814165715ec9d1059143f9b7c767bc6d02db85346a8db0874c4da49562120c6",
+        "screenTs": "aa3c2f9b8e0c9ab3ebd46c302b9b79d0ed0887b4d985fb730881f8ac9bf01ce3",
+        "screenJs": "a2a4fd0eb0f29173b6101cf4a29b71540d3c7b438ecfe7287dff18878db32886"
+      },
+      "dossierResolvesConsentInsideTree": true,
+      "consentEntry": "packages/polaris-generation-consent/dist/live.js",
+      "liveResolvesInsideTree": true,
+      "liveValuesAreRootObjects": true
+    },
+    {
+      "role": "new",
+      "commit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+      "tree": "6a519a1be61509f0aaafee47b6c1fa65a3c4c428",
+      "files": {
+        "packageReaderTs": "packages/polaris-generation-consent/src/package-reader.ts",
+        "packageReaderJs": "packages/polaris-generation-consent/dist/package-reader.js",
+        "gateSourcesTs": "packages/polaris-dossier/src/gate-sources.ts",
+        "gateSourcesJs": "packages/polaris-dossier/dist/gate-sources.js",
+        "testingJs": "packages/polaris-generation-consent/dist/testing.js",
+        "consentPortsTs": "packages/polaris-generation-consent/src/consent-ports.ts",
+        "consentPortsJs": "packages/polaris-generation-consent/dist/consent-ports.js",
+        "inForceTs": "packages/polaris-generation-consent/src/in-force.ts",
+        "inForceJs": "packages/polaris-generation-consent/dist/in-force.js",
+        "consentIndexJs": "packages/polaris-generation-consent/dist/index.js",
+        "consentLiveTs": "packages/polaris-generation-consent/src/live.ts",
+        "consentLiveJs": "packages/polaris-generation-consent/dist/live.js",
+        "screenTs": "packages/polaris-dossier/src/screen.ts",
+        "screenJs": "packages/polaris-dossier/dist/screen.js"
+      },
+      "clean": true,
+      "sha256": {
+        "packageReaderTs": "e8bcdfa1670842dc9e80e4435d1be8d83fca3a0fce6c73760c3d82913acd875b",
+        "packageReaderJs": "20a5399988bc286990c41e042e57b8799694376753af37f1ceb7826b1f257f62",
+        "gateSourcesTs": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+        "gateSourcesJs": "83e72a5739b2351eb4f039284cb86c16864ba740fe32552fd2be1f77c1c7bce5",
+        "testingJs": "db5352f363e93cc0bc7893b8cbfb9195046e7e34314e66ea3c2beafe091afb14",
+        "consentPortsTs": "b9713073670b9e69efcd6bc591af92d10ca928e7501ae87f2cf12efebae937ca",
+        "consentPortsJs": "6dc4ae14ad645ed76b7b6824255a3aef8783e48d6b77d2a2286db05460bba0c6",
+        "inForceTs": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+        "inForceJs": "2e3730701c98abd576738375f20a94dff9a2999db19420513d1116ad05660b0b",
+        "consentIndexJs": "456640b1b2202d39afa32aa5d532d79a7fe1ce2aca2b3e8f2c9df71a8e5ab44f",
+        "consentLiveTs": "2aa268d84e4ba20f851e15334da5c792621acd25090b6d36674b41b39e53289c",
+        "consentLiveJs": "b814165715ec9d1059143f9b7c767bc6d02db85346a8db0874c4da49562120c6",
+        "screenTs": "aa3c2f9b8e0c9ab3ebd46c302b9b79d0ed0887b4d985fb730881f8ac9bf01ce3",
+        "screenJs": "a2a4fd0eb0f29173b6101cf4a29b71540d3c7b438ecfe7287dff18878db32886"
+      },
+      "dossierResolvesConsentInsideTree": true,
+      "consentEntry": "packages/polaris-generation-consent/dist/live.js",
+      "liveResolvesInsideTree": true,
+      "liveValuesAreRootObjects": true
+    }
+  ],
+  "corpusRoot": "old",
+  "generated": {
+    "worlds": 5403,
+    "byKind": {
+      "base": 4,
+      "base-reduced": 4,
+      "line": 3056,
+      "named": 535,
+      "record": 17,
+      "artifact": 24,
+      "pin": 8,
+      "probe": 1541,
+      "real-file": 197,
+      "edited-between-reads": 11,
+      "policy-bytes": 5,
+      "observation-successor": 1
+    }
+  },
+  "selected": {
+    "worlds": 5403,
+    "byKind": {
+      "base": 4,
+      "base-reduced": 4,
+      "line": 3056,
+      "named": 535,
+      "record": 17,
+      "artifact": 24,
+      "pin": 8,
+      "probe": 1541,
+      "real-file": 197,
+      "edited-between-reads": 11,
+      "policy-bytes": 5,
+      "observation-successor": 1
+    }
+  },
+  "selection": {
+    "kinds": null,
+    "samplePerKind": null
+  },
+  "readerSpecifications": {
+    "admission": false,
+    "policy-reader": false,
+    "policy-chain": true,
+    "class-act": true,
+    "in-force-egress": true,
+    "registry-git-source": true,
+    "local-agent-signoff": true,
+    "dossier-d9": true,
+    "dossier-rfc7-20": true,
+    "dossier-drawer": true,
+    "dossier-statement-v1": true,
+    "dossier-provider-v2": true,
+    "port": true,
+    "gate-port": true,
+    "successor-record-port": true,
+    "successor-gate-port": true,
+    "gate-d9": true,
+    "gate-rfc7-20": true,
+    "gate-registry-entry": true,
+    "gate-drawer:redis-redis": true,
+    "gate-statements:redis-redis": true,
+    "in-force": true,
+    "consent-ports": true,
+    "screen": true,
+    "policy-chain-disk": true,
+    "class-act-disk": true
+  },
+  "expectedPerLogicalReader": {
+    "admission": {
+      "worlds": 3040,
+      "steps": 3062,
+      "answers": 3062,
+      "executed": null
+    },
+    "policy-reader": {
+      "worlds": 3814,
+      "steps": 3836,
+      "answers": 3836,
+      "executed": null
+    },
+    "policy-chain": {
+      "worlds": 3814,
+      "steps": 3836,
+      "answers": 5901,
+      "executed": null
+    },
+    "class-act": {
+      "worlds": 2012,
+      "steps": 2034,
+      "answers": 2297,
+      "executed": null
+    },
+    "in-force-egress": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "executed": null
+    },
+    "registry-git-source": {
+      "worlds": 2032,
+      "steps": 2054,
+      "answers": 2337,
+      "executed": null
+    },
+    "local-agent-signoff": {
+      "worlds": 1763,
+      "steps": 1785,
+      "answers": 1798,
+      "executed": null
+    },
+    "dossier-d9": {
+      "worlds": 1763,
+      "steps": 1785,
+      "answers": 1798,
+      "executed": null
+    },
+    "dossier-rfc7-20": {
+      "worlds": 1763,
+      "steps": 1785,
+      "answers": 1798,
+      "executed": null
+    },
+    "dossier-drawer": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "executed": null
+    },
+    "dossier-statement-v1": {
+      "worlds": 1768,
+      "steps": 1790,
+      "answers": 1808,
+      "executed": null
+    },
+    "dossier-provider-v2": {
+      "worlds": 1768,
+      "steps": 1790,
+      "answers": 1808,
+      "executed": null
+    },
+    "port": {
+      "worlds": 3045,
+      "steps": 3067,
+      "answers": 4363,
+      "executed": null
+    },
+    "gate-port": {
+      "worlds": 3045,
+      "steps": 3067,
+      "answers": 4363,
+      "executed": null
+    },
+    "successor-record-port": {
+      "worlds": 1,
+      "steps": 1,
+      "answers": 3,
+      "executed": null
+    },
+    "successor-gate-port": {
+      "worlds": 1,
+      "steps": 1,
+      "answers": 3,
+      "executed": null
+    },
+    "gate-d9": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "executed": null
+    },
+    "gate-rfc7-20": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "executed": null
+    },
+    "gate-registry-entry": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "executed": null
+    },
+    "gate-drawer:redis-redis": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "executed": null
+    },
+    "gate-statements:redis-redis": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "executed": null
+    },
+    "in-force": {
+      "worlds": 3040,
+      "steps": 3062,
+      "answers": 4353,
+      "executed": null
+    },
+    "consent-ports": {
+      "worlds": 3040,
+      "steps": 3062,
+      "answers": 4353,
+      "executed": null
+    },
+    "screen": {
+      "worlds": 4069,
+      "steps": 4091,
+      "answers": 6411,
+      "executed": null
+    },
+    "policy-chain-disk": {
+      "worlds": 3814,
+      "steps": 3836,
+      "answers": 5901,
+      "executed": null
+    },
+    "class-act-disk": {
+      "worlds": 2012,
+      "steps": 2034,
+      "answers": 2297,
+      "executed": null
+    }
+  },
+  "pool": {
+    "workers": 4,
+    "timeLimitMs": 7200000,
+    "node": "v24.6.0",
+    "wallSeconds": 4.765
+  },
+  "materialization": null,
+  "execution": null,
+  "executed": null,
+  "nativeOutput": {
+    "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/COUNT-full.json",
+    "bytes": 14472487,
+    "sha256": "54017e1d0b9d309fa7c6e87228318fb169622777ee82d2014e39f17f57693e53"
+  },
+  "nativeSchema": "consent-act-family-count/3",
+  "corpusSha256": "65fc5f27693b20375af87617b90ea17f22db774e4e53f1f18603f88f5b3b22e5",
+  "selectedSha256": "04a2fd4a624c347d28c0326b758f3561773cf80120e8ffaca7ecdb95854e3d6a",
+  "selectedManifestSha256": "cd560ded9d83ab766b23aab4feadf931d2cca00add18d037de7cc6a6b786a9ba",
+  "generatedManifestSha256": "9f74acfb421c5b2bfa0035af1d24accb0dafc5989d08082eef6b0b4bbcd95aac",
+  "successorFixture": {
+    "boundary": "count only; validated record-reader and one-import gate adapter recipe, not executed",
+    "recordsSha256": "a7696dfb17f2c04e748673977cc66bc7f9c69c0cc97cd745f70f88a0555ae0f3",
+    "adapterRecipeSha256": "7a2fa824477381a88e6edf9e32b5ad871e9a1d6b85e32c07ef14cfd5da8969d0",
+    "instants": [
+      "2026-10-08T09:29:59.999Z",
+      "2026-10-08T09:30:00.000Z",
+      "2026-10-08T09:30:00.001Z"
+    ],
+    "adapters": null,
+    "literalOutcomes": null
+  },
+  "limitation": "Full native count identities and tuple matrix remain in the private packet; the complete identical execution matrix is published in the M0 commitments."
+}
