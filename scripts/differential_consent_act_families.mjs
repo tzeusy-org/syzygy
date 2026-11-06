@@ -29,8 +29,8 @@
 // pair differs, or a materialized world is left behind, exits 1.
 //
 // A world is the files of `--old` (read through the readers' own file-system port, rooted there for both trees) with in-memory
-// overrides: an act record altered, added or deleted, an artifact altered or deleted, or a decisions file added. Nothing on disk is
-// written; no observed repository is read. The corpus:
+// overrides: an act record altered, added or deleted, an artifact altered or deleted, or a decisions file added. Only owned screen
+// materializations and the separately labelled fixture import copies are written and cleaned; no observed repository is read. The corpus:
 // - three base worlds: the checkout as it is; with the three admission acts this checkout lacks (requests observation, egress
 //   version 1 and version 2), rendered by their recorders over the checkout's own instance records; and with the registry
 //   git-source act, rendered the same way;
@@ -704,6 +704,7 @@ function selftest() {
   run('unknown selected kind rejected', () => assert.throws(() => selectWorlds(generated, ['missing']), /unknown/));
   run('duplicate kind rejected', () => assert.throws(() => selectWorlds(generated, ['probe', 'probe']), /duplicate/));
   run('empty readers rejected', () => assert.throws(() => selectWorlds([{ ...world, readers: [] }]), /empty/));
+  run('duplicate world readers rejected', () => assert.throws(() => selectWorlds([{ ...world, readers: ['port', 'port'] }]), /duplicate/));
   run('empty instants rejected', () => assert.throws(() => selectWorlds([{ ...world, instants: [] }]), /empty/));
   run('empty steps rejected', () => assert.throws(() => selectWorlds([{ ...world, steps: [] }]), /empty/));
   run('unknown reader rejected', () => assert.throws(() => expectedComparisons({ ...world, readers: ['missing'] }, specs), /unknown/));
@@ -711,6 +712,7 @@ function selftest() {
   run('three steps and two instants are six answers in one world', () => { const w = { ...world, steps: [{}, {}, {}], instants: ['a', 'b'] }; assert.equal(population([w]).worlds, 1); assert.equal(expectedComparisons(w, specs).length, 6); });
   run('complete serialized equal answers pair', () => assert.equal(compare(rows, answerRows, answerRows)[0].same, true));
   run('changed complete value differs', () => { const changed = [[rows[0].key, sha256('2'), '2', '2', answerRows[0][4]]]; assert.equal(compare(rows, answerRows, changed)[0].same, false); });
+  run('identical labels cannot hide changed complete values', () => { const changed = [[rows[0].key, sha256('2'), answerRows[0][2], '2', answerRows[0][4]]]; assert.equal(compare(rows, answerRows, changed)[0].same, false); });
   run('unequal old key set rejected', () => assert.throws(() => compare(rows, [], answerRows), /unequal old/));
   run('unequal new key set rejected', () => assert.throws(() => compare(rows, answerRows, []), /unequal new/));
   run('same-length wrong key rejected', () => assert.throws(() => compare(rows, answerRows, [['other', ...answerRows[0].slice(1)]]), /key set/));
@@ -731,7 +733,7 @@ function selftest() {
   for (const [name, patch] of [['leftovers', { materializedLeftOver: 1 }], ['changed disk answer', { differing: 1 }], ['missing disk pair', { pairs: 0 }], ['missing removal', { removed: 0 }]]) run(`${name} fails cleanup`, () => assert.throws(() => requireCleanup({ ...clean, ...patch }), /cleanup/));
   run('successor expected outcomes change at exact effective instant', () => { assert.equal(successorExpected(SUCCESSOR_INSTANTS[0]).observationOld.satisfied, true); assert.equal(successorExpected(SUCCESSOR_INSTANTS[1]).observationOld.satisfied, false); assert.deepEqual(successorExpected(SUCCESSOR_INSTANTS[1]), successorExpected(SUCCESSOR_INSTANTS[2])); assert.equal(SUCCESSOR_RECORDS[1].supersessionAt, Date.parse(SUCCESSOR_AT)); });
   run('missing optional-method implementation is fatal', () => assert.throws(() => requiredAbsence({}), /missing/));
-  const result = { schema: 'consent-differential-selftest/1', cases, total: cases.length, failed: cases.filter(c => !c.passed).length, exercisedAnswerComparisons };
+  const result = { schema: 'consent-differential-selftest/1', scriptSha256: sha256(fs.readFileSync(SCRIPT, 'utf8')), cases, total: cases.length, failed: cases.filter(c => !c.passed).length, exercisedAnswerComparisons };
   process.stdout.write(`${JSON.stringify(result)}\n`);
   return result.failed === 0 ? 0 : 1;
 }
@@ -741,7 +743,7 @@ async function main(argv) {
   const arg = flag => (argv.includes(flag) ? argv[argv.indexOf(flag) + 1] : undefined);
   const oldTree = arg('--old'), newTree = arg('--new'), out = arg('--out'), bead = arg('--bead'), control = argv.includes('--expect-mismatches');
   if (oldTree === undefined || newTree === undefined || ((out === undefined || bead === undefined) && !argv.includes('--count')) || (control && !arg('--control-note')?.trim())) {
-    process.stderr.write('usage: node scripts/differential_consent_act_families.mjs --old <tree> --new <tree> --out <file.json> --bead <id> [--workers <n>] [--kinds <k,...>] [--count] [--expect-mismatches --control-note <text>]\n');
+    process.stderr.write('usage: node scripts/differential_consent_act_families.mjs --old <tree> --new <tree> --out <file.json> --bead <id> [--workers <n>] [--kinds <k,...>] [--count] [--sample-per-kind <n>] [--time-limit-ms <n>] [--expect-mismatches --expect-reader-mismatches <reader,...> --control-note <text>] (or --selftest)\n');
     return 2;
   }
   const trees = [path.resolve(oldTree), path.resolve(newTree)], root = trees[0];
