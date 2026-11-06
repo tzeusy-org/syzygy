@@ -1,0 +1,100 @@
+{
+  "archive": "committed-predicate-and-working-attempt.tar.gz",
+  "archiveBytes": 217146,
+  "archiveSha256": "3fae349d93efbc2093d156b1f82f18b2cb62cbd866ec54d690557eb6bc7820b2",
+  "entries": [
+    {
+      "path": "COMMITTED-PREDICATE-SEQUENCE.json",
+      "bytes": 58248,
+      "sha256": "2ba742d98efb3797d356661281d2807112d1eeadeafdfb81b59cc347a81e1c5f"
+    },
+    {
+      "path": "predicate-sequence-bound.py",
+      "bytes": 2993,
+      "sha256": "e8f914aabe8c0f964c1d4064c0d4452ca067461447e7ec74e2877eb73c724e26"
+    },
+    {
+      "path": "WORKING-CHECK-INPUT-STABILITY.json",
+      "bytes": 2697,
+      "sha256": "33b88a042c28914230edd43333277485beab11f42fbe4681ff6f1c2b96fc712a"
+    },
+    {
+      "path": "committed-M0-vitest.json",
+      "bytes": 171769,
+      "sha256": "8e0ffc5fe5d76af822df454ea95acd5e845c9cc5f9e45fe6f13fec6f701b758e"
+    },
+    {
+      "path": "committed-equality-mutant-vitest.json",
+      "bytes": 619059,
+      "sha256": "158367d8fdd1d784e7edcf42ad0983202a8a23b559e59d2977ab973c23314961"
+    },
+    {
+      "path": "committed-restored-vitest.json",
+      "bytes": 171768,
+      "sha256": "c919036a64915b11f68b35ccad8adf1472c20ea2318d9bfca99c712724792e69"
+    },
+    {
+      "path": "logs/check-working.json",
+      "bytes": 683,
+      "sha256": "46198c304119251e3bee3c6beb9f827b1a4d371e9983ed37778ada69c668918a"
+    },
+    {
+      "path": "logs/check-working.stderr",
+      "bytes": 519,
+      "sha256": "f0fd67ba9e5790fad722ec58cc6dd016aadce58ef78d0572a21dcd32e38cfa86"
+    },
+    {
+      "path": "logs/check-working.stdout",
+      "bytes": 1261272,
+      "sha256": "b028e1f7b094a047edb71cb5938742406c94553d4769677a69b57112ab8fb506"
+    },
+    {
+      "path": "logs/committed-M0.json",
+      "bytes": 1023,
+      "sha256": "a3a88634643a52ef33abdac01e21d1f21836e05a39f2dc9b63971d6ad671deee"
+    },
+    {
+      "path": "logs/committed-M0.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/committed-M0.stdout",
+      "bytes": 100,
+      "sha256": "b8244cf628b837eee535cb4b4491bc106a4bc9a8943046e1bc0b27a97d946634"
+    },
+    {
+      "path": "logs/committed-equality-mutant.json",
+      "bytes": 1075,
+      "sha256": "7400c844f6cbf49fc5cf22f99d19b2545d82b3d43b76a6f37761adbf14c2824e"
+    },
+    {
+      "path": "logs/committed-equality-mutant.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/committed-equality-mutant.stdout",
+      "bytes": 113,
+      "sha256": "8196ea5e54d40d57f4e5ca7e5eb74524d6baf5b1c8b9f32b66ed3d432c0557c2"
+    },
+    {
+      "path": "logs/committed-restored.json",
+      "bytes": 1048,
+      "sha256": "34bd60f957a41059a074571847a0983d0448e365875487d2f98b9bab64a69ca7"
+    },
+    {
+      "path": "logs/committed-restored.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs/committed-restored.stdout",
+      "bytes": 106,
+      "sha256": "9c6ee83f8d7d1ead8c90f6eb50db5ff30d5e40bb18d07bdaad9a0ac9c5d46607"
+    }
+  ],
+  "entryCount": 18,
+  "uncompressedBytes": 2292473,
+  "scope": "Additive exact committed-source M0/mutant/restoration sequence and complete working check attempt, explicitly inconclusive because of overlapping input mutation. Original proof archive stays unchanged."
+}
