@@ -281,7 +281,7 @@ def matrix(args, scripts, record):
             out = args.output / ident / engine; out.mkdir(parents=True)
             command = ['node', 'scripts/clean_build.mjs', *named] if engine != 'native' else ['node', tsc, '-b', *named]
             traced = ident in ('P01', 'P02', 'P03')
-            if traced: command = ['strace', '-f', '-e', 'trace=process,file', '-o', str(out / 'syscalls.log'), *command]
+            if traced: command = ['strace', '-f', '-s', '4096', '-e', 'trace=process,file', '-o', str(out / 'syscalls.log'), *command]
             valid_before = None
             if ident == 'C06':
                 edit(root, 'packages/a', lambda c: c.pop('extends'))
