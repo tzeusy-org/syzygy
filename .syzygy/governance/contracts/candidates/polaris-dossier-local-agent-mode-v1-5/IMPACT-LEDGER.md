@@ -2,8 +2,8 @@
 
 > **Candidate — binds nothing.** [Observed] The patches apply to the version 1.4
 > proposed bytes (commit `59768e6f28356723b39482f314cf211f245873b5`). [Observed]
-> Version 1.4 is recorded on its own branch and not yet on `main`, so this package
-> stays stacked on it. The builder and recorder row are in this package's branch.
+> Version 1.4 is recorded and on `main`. The builder and recorder row are in this
+> package's branch.
 
 ## Requirement impact
 
