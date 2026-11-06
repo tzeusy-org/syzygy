@@ -37,7 +37,9 @@ export function isGovernancePath(value: string): boolean {
   return value.split('/').every((segment) => segment !== '' && segment !== '.' && segment !== '..');
 }
 export function isIsoDate(value: string): boolean {
-  return ISO_DATE.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
+  if (!ISO_DATE.test(value)) return false;
+  const instant = Date.parse(`${value}T00:00:00Z`);
+  return Number.isFinite(instant) && new Date(instant).toISOString().slice(0, 10) === value;
 }
 export function isHumanName(value: string): boolean {
   return value.length > 0 && value.length <= 200 && !/[`*\n]/.test(value);
