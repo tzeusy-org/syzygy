@@ -849,3 +849,69 @@ describe('PWB-REQ-005 expected supersession target', () => {
     expect(evaluation.policy.kind === 'invalid' && evaluation.policy.caseId).toBe('policy:supersession-target-wrong');
   });
 });
+
+
+// GP-B2 Q6 A: these are instances of the existing malformed/expired cases,
+// not additions to the closed 195-case vocabulary. Clocks isolate calendar
+// validity from freshness, future-act and already-elapsed-expiry checks.
+describe('PWB-REQ-005 calendar read-back', () => {
+  it('refuses impossible Date and Expires values for each authority, preserving valid calendar controls', () => {
+    const dates = [
+      ['2026-02-29', false], ['2026-02-30', false], ['2026-02-31', false],
+      ['2026-04-31', false], ['2026-02-32', false], ['2026-13-01', false],
+      ['2026-00-10', false], ['2026-02-28', true], ['2028-02-29', true],
+      ['2026-04-30', true], ['2026-03-01', true],
+    ] as const;
+    for (const kind of ['consent', 'policy', 'registry'] as const) {
+      for (const field of ['Date:', 'Expires:'] as const) {
+        const expected = {
+          ...expectations(),
+          governingActInstant: '2025-01-01',
+          evaluationInstant: field === 'Date:' ? '2029-01-01T00:00:00Z' : '2026-01-02T00:00:00Z',
+        };
+        const baseline: TripleFixture = {
+          consent: { record: { set: { 'Date:': '2026-01-01' } } },
+          policy: { record: { set: { 'Date:': '2026-01-01' } } },
+          registry: { record: { set: { 'Date:': '2026-01-01' } } },
+          expectations: expected,
+        };
+        expect(evaluateBodyReadAuthority(inputs(baseline)).admits, `${kind}/${field}/baseline`).toBe(true);
+        for (const [date, valid] of dates) {
+          const id = `${kind}/${field}/${date}`;
+          const record = field === 'Date:'
+            ? { set: { 'Date:': date } }
+            : { set: { 'Date:': '2026-01-01' }, extraHead: [`Expires: ${date}`] };
+          const evaluation = evaluateBodyReadAuthority(inputs({ ...baseline, [kind]: { record } }));
+          expect.soft(evaluation.admits, id).toBe(valid);
+          expect.soft(evaluation.authorizationMode, id).toBe(valid ? 'owner-trusted-bootstrap' : 'rejected');
+          const reads = spy();
+          const observed = observeProjectShape({ authority: evaluation, read: reads.read });
+          expect.soft(reads.calls(), id).toBe(valid ? 1 : 0);
+          expect.soft(observed.kind, id).toBe(valid ? 'admitted' : 'unknown');
+          for (const other of ['consent', 'policy', 'registry'] as const) {
+            if (other !== kind) expect.soft(evaluation[other].kind, id).toBe('valid');
+          }
+          const state = evaluation[kind];
+          const disclosure = discloseAuthority(evaluation).authorities.find((entry) => entry.authority === kind);
+          if (valid) {
+            expect.soft(state.kind, id).toBe('valid');
+            expect.soft(state.kind === 'valid' && state.provenance, id).toBe('state-1');
+            expect.soft(disclosure?.state, id).toBe('owner-adopted (bootstrap, uncorrelated)');
+            expect.soft(evaluation.contradiction, id).toBeUndefined();
+          } else {
+            const caseId = `${kind}:${field === 'Date:' ? 'act-instant-malformed' : 'expired'}`;
+            expect.soft(state.kind, id).toBe('invalid');
+            expect.soft(state.kind === 'invalid' && state.caseId, id).toBe(caseId);
+            expect.soft(state.kind === 'invalid' && state.detail, id).toBe(field === 'Date:'
+              ? 'RFC3-16(b) item 6 is not a date'
+              : 'act declares an expiry that has passed or cannot be read');
+            expect.soft(evaluation.contradiction?.clause, id).toBe('RFC3-16(a)');
+            expect.soft(observed.kind === 'unknown' && observed.reason, id).toBe(EXPECTED_REASON[kind]);
+            expect.soft(disclosure?.invalidCase, id).toBe(caseId);
+            expect.soft(disclosure?.independentlyVerified, id).toBe(false);
+          }
+        }
+      }
+    }
+  });
+});

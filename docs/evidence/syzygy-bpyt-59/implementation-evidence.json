@@ -1,0 +1,65 @@
+{
+  "issue": "syzygy-bpyt.59",
+  "base": "196333c9ad78b1ed0dbd8cdc9ddb23cf53056e2b",
+  "implementationCommit": "edd92ae4c5c41859ecdb94829e144ad49c7290f5",
+  "testDelta": {
+    "added": 2,
+    "extended": 0,
+    "removed": 0,
+    "dateRows": 88,
+    "bodyReadRows": 66,
+    "judgmentRows": 22
+  },
+  "sourceChange": "One shared UTC date read-back equality after spelling and finite parse checks. Existing four call sites and public API shapes unchanged.",
+  "tests": [
+    "body-read-authority.test.ts: calendar read-back",
+    "walkthrough-judgment.test.ts: calendar read-back"
+  ],
+  "worthAdding": "Both tests fail on actual pre-fix behavior for four rolled dates across Date/Expires. No existing malformed/future/stale test detects engine rollover in an otherwise-valid act. Each uses canonical factories, hard-coded dates/reasons and temporal isolation, and verifies fail-closed product behavior rather than helper/source text.",
+  "nativeFocused": {
+    "tests": 469,
+    "passed": 469,
+    "source": "logs/focused-candidate.stdout"
+  },
+  "completeDifferential": {
+    "originalRows": 468,
+    "historyRows": 7,
+    "proseRows": 4,
+    "baselineRows": 8,
+    "dateRows": 88,
+    "allowedDeltas": 32,
+    "unexpected": 0,
+    "capturedRows": 575
+  },
+  "mutation": {
+    "subject": "edd92ae4c5c41859ecdb94829e144ad49c7290f5",
+    "newPredicates": 1,
+    "changedGuardNotes": "Finite parse protection is retained before toISOString; the new semantic admission predicate is UTC date read-back equality. All existing malformed/wrong-shaped and non-finite parse fixtures still refuse without throwing.",
+    "affectedRows": 32,
+    "semanticFailureAssertions": 296,
+    "selectedTests": 2,
+    "validOrExistingRefusalFailures": 0,
+    "restoration": "2 selected tests pass; 467 deliberately unselected"
+  },
+  "nativeRepeat": {
+    "completeDeterministicLayerEqual": true,
+    "source": "DETERMINISTIC-REPEAT.json"
+  },
+  "classesInitial": {
+    "1": true,
+    "2": false,
+    "3": true,
+    "4": true,
+    "5": false,
+    "6": true,
+    "7": false
+  },
+  "review": "ROOT fresh independent default-model review pending; author classification contested",
+  "notice": "Concrete prepared notice in OWN for ROOT to record, not sent by worker",
+  "mergeHold": "BOTH actual syzygy-1z3.22 owner judgment AND syzygy-1z3.25 cycle report required before core merge, plus review/hosted/protected landing",
+  "finalGate": "Pending sole committed clean-clone npm run check:all with ROOT observer launched before driver. This evidence record does not claim that unexecuted gate passed.",
+  "executionBoundary": "Synthetic-only private own namespace, credential homes hidden, no network, exact105public lock/SRI cache and offline installs in W/target before NodeNext. One sequential owned build target reused for base then candidate.",
+  "testSupport": "Fixture factories remain test-local; no product export/import/test-support change. Original fixture source/test assertions preserved in capture adapters.",
+  "failuresPreserved": "DIAGNOSED-ATTEMPTS.json and logs; initial native source-condition repeat import failure is not a test kill or passing evidence.",
+  "scope": "No signed/digest-bound/raw predecessor, consent reader, source observer, PR766 consumer comment or PR640 reference edited. ROOT controls Beads and owner notices/lifecycle."
+}
