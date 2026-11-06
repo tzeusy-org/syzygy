@@ -7,15 +7,21 @@
 ## The change
 
 [Inferred] This version turns your review of the Redis dossier into requirements:
-why first, a plainer voice, citations encouraged rather than required, optional
+why first, a plainer voice, marked judgements with no citation, optional
 quotations, withheld claims that say Unknown rather than stopping the run, a
-one-line warning with the rest in an appendix, a reading view beside an evidence
-view, Poles, and the rendered-design questions you asked for.
+one-sentence warning with the rest in an appendix, a reading view beside an
+evidence view, Poles, and the rendered-design questions you asked for.
+
+A fact still needs a citation or stays Unknown. Your direction allowed judgements,
+and doctrine says missing evidence never makes a claim Inferred, so an uncited
+block must be marked as a judgement and may assert no project fact.
 
 ## Costs you accept by signing
 
-See `IMPACT-LEDGER.md`, "Costs". The largest: in the reading view a judgement
-carries no visible label beyond its section's one sentence.
+See `IMPACT-LEDGER.md`, "Costs". The largest: on a narrative page a reader sees
+marks and a legend, not the words Inferred or Observed. Those words stay in the
+evidence view. Signing also confirms that the one sentence meets your RFC7-20
+condition that the page disclose how the draft was computed.
 
 ## Your words, when offered
 

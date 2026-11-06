@@ -9,15 +9,18 @@
 
 | Requirement | Effect |
 |---|---|
-| REQ-polaris-generation-033 | Human-form disclosure moves to one line and an appendix; machine form stays on every page |
-| REQ-polaris-generation-034 | Topics, voice, citation and quotation rules, withheld-span rule, reading and evidence views, Poles, script wording |
-| REQ-polaris-generation-035 | Rendered-design criteria; uncited block advisory in the fidelity verdict |
+| REQ-polaris-generation-033 | Human-form disclosure moves to one sentence and an appendix; machine form stays on every page |
+| REQ-polaris-generation-034 | Topics, voice, citation and quotation rules, withheld-span rule, reading and evidence views, Poles, script rule, test forms |
+| REQ-polaris-generation-035 | Rendered-design criteria; the verdict's form for an uncited judgement and a withheld entry; test forms |
 | REQ-polaris-generation-036 | None |
 
 ## Parent requirements read or displaced
 
 - REQ-polaris-generation-003: one quoted sentence is read to take in the
-  machine-marked judgement class; every other obligation is unchanged.
+  machine-marked judgement class, and its scenario "Unsupported or surplus anchor"
+  does not reach an unanchored judgement; every other obligation is unchanged.
+- REQ-polaris-generation-006: "draft-to-source support" is displaced for an
+  uncited judgement and a withheld entry only.
 - REQ-polaris-generation-004: primary narrative order, by the owner's ruling
   that RFC7-13 and this requirement allow.
 - REQ-polaris-generation-012: unchanged; the reading view must stay keyboard and
@@ -28,7 +31,9 @@
 [Inferred] `syzygy-pdja.3` (reading view, evidence view, appendix, nav) and
 `syzygy-pdja.4` (brief, draft schema v4, Poles, checks, skill text) implement
 this version and are blocked on it. `tasks.md` is unchanged; those beads hold the
-work. No product code changes with this package.
+work. `GOVERNING-DEPENDENCIES.md` is generated at install from the warrants above
+(`scripts/build_polaris_dependency_unions.py`), so it is not patched here. No
+product code changes with this package.
 
 ## Dependencies outside this package
 
@@ -43,5 +48,13 @@ work. No product code changes with this package.
   the section's one sentence, the marks and the evidence view. A reader who
   never opens those may take a judgement for a sourced fact. The owner chose this.
 - An uncited judgement cannot be checked against a source. It is counted and
-  disclosed, and reviewers judge only whether it is plausibly a judgement.
-- A claim resting on withheld spans cannot be read, so its row says less.
+  marked. Telling a judgement from a fact is a review call, so a reviewer can
+  miss one.
+- A claim block resting on withheld spans loses its text entirely, because the
+  agent may have drawn it from what was withheld. Its place says only that the
+  sources are withheld.
+- A block citing both admitted and withheld spans keeps today's rules, so it
+  stands on its admitted span unless a review finds otherwise. You chose "all"
+  for this rule on 2026-11-05; three of the five incident rows were partly withheld.
+- A fact with no citation is refused, not allowed. Doctrine requires that; allowing
+  it would need a doctrine amendment.

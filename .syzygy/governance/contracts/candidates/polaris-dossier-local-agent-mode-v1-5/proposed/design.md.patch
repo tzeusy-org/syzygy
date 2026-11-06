@@ -1,7 +1,10 @@
 --- a/openspec/changes/polaris-dossier-local-agent-mode/design.md
 +++ b/openspec/changes/polaris-dossier-local-agent-mode/design.md
-@@ -3,7 +3,7 @@
- > **Version 1.3.** Explains the requirements in
+@@ -1,9 +1,9 @@
+ # Design: the operator-agent mode and the `syzygy dossier` commands
+ 
+-> **Version 1.3.** Explains the requirements in
++> **Version 1.5.** Explains the requirements in
  > specs/polaris-generation/spec.md; version 1.0 was signed off by the owner
  > on 2026-10-06, version 1.1 on 2026-10-07 and version 1.2 on 2026-10-14,
 -> and this text binds only by the owner's sign-off of version 1.4. It is not an
@@ -9,28 +12,39 @@
  > implementation. It contains no code. The command surface below is a design
  > for implementation after the owner's sign-off (direction item 5); the
  > requirements are the controlling text, and doctrine, accepted contracts,
-@@ -372,7 +372,9 @@
+@@ -372,8 +372,9 @@
  deepDives, unresolved) with three changes: each paragraph cites
  `{path, startLine, endLine}` instead of `sourceIds`; each block carries
  `label` (`inferred` | `unknown` | `non-normative`) and, for `unknown`, a
 -`reason` from RFC2-24; an `inferred` block cites at least one source, an
-+`reason` from RFC2-24; an `inferred` block should cite a source and, since
-+version 1.5, may cite none when it states a judgement, which is counted in
-+the disclosed figure of uncited blocks and is advisory at review; an
- `unknown` block cites what it considered or nothing, and a `non-normative`
+-`unknown` block cites what it considered or nothing, and a `non-normative`
++`reason` from RFC2-24; an `inferred` block should cite a source and, in
++schema v4, may cite none when it carries `judgement: true`, which is counted
++in the appendix and which a review may overturn; an `unknown` block cites what it considered or nothing, and a `non-normative`
  block cites nothing. Four new top-level sections: `understanding` (purpose,
  beneficiary, proposition, capabilities, components, choices, tradeOffs,
-@@ -449,8 +451,58 @@
+ limits, terminology, contradictions, openQuestions, each item with
+@@ -390,8 +391,7 @@
+ still accepts a `polaris-dossier-local-draft-v2` draft, which uses no
+ element. Version 1.4 changes no schema field or identifier: v2 stays
+ element-free, and both accepted versions retain every claim, quotation,
+-citation and review obligation; v3 presentation follows version 1.4 only
+-after its owner sign-off. Version 3 adds presentation elements (owner direction
++citation and review obligation. Version 3 adds presentation elements (owner direction
+ `OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04`). They sit in the existing
+ `paragraphs` arrays of sections and deep dives, whose name stays. An entry
+ without `kind` is the existing block. An entry with `kind` is one of the
+@@ -449,8 +449,71 @@
  A `code` element has no `blockSupport` entry of its own; its admitted span
  is one of the cited spans the fidelity packet carries.
  
 -Every element renders as inert static HTML. Pages carry no script, and their
 -content security policy is unchanged. No meaning is carried by colour alone.
 +Every element renders as static HTML that reads and navigates completely
-+with scripts off. Since version 1.5 a page may carry a script only as the
-+screening scope's renderCondition permits, and it adds behaviour only: the
-+collapsible navigation and hash handling. No meaning is carried by colour
-+alone.
++with scripts off. Since version 1.5 a page carries no script until an owner
++act puts screening scope version 7 or a successor in force, and then only the
++script that scope describes; it adds behaviour only, such as collapsible
++navigation and hash handling. No meaning is carried by colour alone.
 +
 +## Reading view and evidence view (version 1.5)
 +
@@ -40,14 +54,18 @@
 +RFC7-34 requires it recoverable by label, text or structure, so colour and
 +hover alone are not enough.
 +
-+- The reading view is what a page opens to. Each section says once that its
-+  unmarked text is the agent's reading; a marked block carries a small
-+  citation mark that shows its file and line on hover and on keyboard focus.
-+- The evidence view is the same claims with every label and citation in the
-+  text. It is reachable from every page, with scripts off.
-+- Every page keeps its machine disclosure whole. Its human form is one line
-+  and a link to the appendix, which holds the full disclosure and the open
-+  questions.
++- The reading view is what a narrative page opens to. A legend explains the
++  marks once per page: a numbered citation mark, `judgement`, `framing`, a
++  set-off quotation and `Not established`. Syzygy writes no label token or
++  file-and-line aside into a block's visible text; the agent's own prose is
++  not examined, so ordinary uses of a word such as "unknown" are not findings.
++- The evidence view is the same claims with each RFC7-33 distinction visible.
++  It is reachable from every narrative page, with scripts off. The same values
++  stay in DOM text that plain-text extraction reads.
++- Every page keeps its machine disclosure whole. Its human form is one
++  sentence and a link to the appendix, which holds the full disclosure and the
++  open questions. An Unknown affecting a passage stays explicit at the passage.
++- Other pages (appendix, review, understanding, discovery, source) keep labels.
 +
 +## Why-first topics and voice (version 1.5)
 +
@@ -62,13 +80,21 @@
 +
 +## Citations, withheld spans and judgement (version 1.5)
 +
-+RFC7-2 (c) already allows a claim to be Inferred with its inference
-+provenance, so an uncited judgement needs no contract change: the provenance
-+is the agent's own reading, disclosed. A quotation is optional and, when used,
-+stays one contiguous verified span. A claim that rests only on spans screening
-+withholds renders Unknown with `excluded-content` (RFC5-17), is counted in the
-+appendix and machine view, and is never counted as verified. A citation to a
-+blob that does not exist at the pinned revision still fails.
++RFC7-2 defines a load-bearing claim as one asserting a fact about the project.
++A judgement, as this version defines it, asserts none, so RFC7-9's anchor rule
++does not reach it, and it stays Inferred with its inference provenance. A flat
++project fact with no citation is not a judgement: doctrine says missing
++evidence never makes a claim Inferred, so the mark does not excuse it, and the
++fidelity review treats it as a blocking finding. A quotation is optional and,
++when used, stays one contiguous verified span.
++
++A claim block citing only withheld spans renders Unknown with
++`excluded-content` (RFC5-17) in Syzygy's words. The agent read the clone without
++restriction, so its text could derive from what was withheld, and that text
++does not render (RFC2-23). The verdict's entry is `withheld`, so the review has
++a lawful answer and the run does not stop. A citation to a blob missing at the
++pinned revision still fails. A block with both admitted and withheld spans
++keeps today's rules.
 +
 +## Poles (version 1.5)
 +
@@ -77,7 +103,8 @@
 +Pole is a page boundary and carries no claim. The landing page holds the
 +title, the why and a map of the Poles, which orders the altitudes by the
 +owner's ruling under RFC7-13; a draft with no Poles renders as schema v3 does.
-+Syzygy still accepts `polaris-dossier-local-draft-v2` and `-v3` drafts.
++Syzygy still accepts `polaris-dossier-local-draft-v2` and `-v3` drafts; in those,
++every Inferred block still cites, since only v4 has the `judgement` field.
  
  ## What remains open in the implementation
  

@@ -1,21 +1,22 @@
 --- a/openspec/changes/polaris-dossier-local-agent-mode/proposal.md
 +++ b/openspec/changes/polaris-dossier-local-agent-mode/proposal.md
-@@ -1,4 +1,14 @@
+@@ -1,4 +1,15 @@
  # Polaris dossier local-agent mode
 +
 +> **Version 1.5 changes.** The owner reviewed a Redis dossier on 2026-11-06 and
 +> found it hard to read. This version opens with why a project exists, gives
-+> the brief voice rules, makes citations strongly encouraged rather than
-+> required, lets a claim that rests only on withheld spans render Unknown
-+> instead of blocking readiness, moves human-form disclosure to one line and
-+> an appendix, separates a reading view from an evidence view, and allows
-+> Poles and a script the screening scope permits. It weakens no epistemic
-+> marking: every claim keeps its label and machine attributes, and no verified
-+> count grows. It binds only by the owner's sign-off.
++> the brief voice rules, allows a marked judgement with no citation, makes
++> quotations optional, lets a claim that rests only on withheld spans render
++> Unknown in Syzygy's words instead of blocking readiness, moves human-form
++> disclosure to one sentence and an appendix, separates a reading view from an
++> evidence view, and allows Poles and, once a screening act allows it, a script.
++> A fact still needs a citation or stays Unknown. Labels leave a narrative
++> page's visible text and stay recoverable in the evidence view, DOM text and
++> machine form; no verified count grows. It binds only by the owner's sign-off.
  
  > **Version 1.3.** Drafted 2026-10-05 under the owner direction
  > `POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05`
-@@ -21,10 +31,10 @@
+@@ -21,10 +32,10 @@
  > signed off on 2026-10-14; version 1.3 adds the presentation elements of the
  > owner direction `OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04`
  > (`.syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04.md`).
@@ -30,3 +31,12 @@
  > its requirements state.
  
  **A Polaris dossier can be written by the operator's own Claude Code or Codex
+@@ -190,7 +201,7 @@
+   UTF-8 excerpts render Unknown; any displayed submitted range is stated
+   as agent-supplied and unverified. Ordinary-block citation obligations
+   remain as written in REQ-polaris-generation-034. These changes retain
+-  v2/v3 schema compatibility and await version 1.4 sign-off.
++  v2/v3 schema compatibility.
+ - **What the agent ran is its report.** Commands the agent says it ran are
+   recorded as its report, labelled Inferred; Syzygy cannot observe them.
+ - **No new permission.** This is not permission to read, egress, write,
