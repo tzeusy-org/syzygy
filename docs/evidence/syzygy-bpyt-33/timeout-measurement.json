@@ -1,0 +1,587 @@
+{
+  "schema": "syzygy-bpyt-33-timeout-measurement/1",
+  "epistemic": "[Observed] retained completed raw-report facts and deterministic byte comparisons; not a final correctness, independent execution, review, hosted-check or landing verdict",
+  "bead": "syzygy-bpyt.33",
+  "measured_subject": "829525003da054787a905bacf1e4b7d3176c68ef",
+  "assigned_base": "1396de2df4254094a432e2a8148f5d5ca4349e7e",
+  "measured_test_path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+  "full_name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+  "measured_test_sha256": "b889f04f6e558cd1bcef060e9a7bd91f1cb00e789619f75257c3b6d7a4d19688",
+  "prepared_test_sha256": "36395c6f47a6d2ae7db31f6dd3b9418af7b26b41eee5db8e1447b869ab2bc802",
+  "exact_named_test_body_unchanged": true,
+  "source_delta": "Only the adjacent timeout reason changed; existing25000, full six-case file and all predicates/fixtures preserved. No product/test registration change.",
+  "budget": {
+    "current_timeout_ms": 25000,
+    "actual_default_ms": 5000,
+    "headroom_ms": 22177.859667,
+    "budget_over_worst": 8.858524754303918,
+    "worst_x3_ms": 8466.420999,
+    "convention_round_x3_to_5000_ms": 10000,
+    "convention_not_resize_authority": true,
+    "retain_existing_under_predecessor": "current worst2822.140333 exceeds2500 keep-site threshold; retain base25000, no automatic resizing"
+  },
+  "observations": [
+    {
+      "run": 1,
+      "subject": "829525003da054787a905bacf1e4b7d3176c68ef",
+      "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "full_name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+      "state": "pass",
+      "duration_ms": 746.606145,
+      "complete_file_cases": [
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no machine reference on the model or its narrative anchors targets the Polaris surface",
+          "state": "pass",
+          "durationMs": 123.98410200000001
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > every OpenSpec warrant entry belongs to a known id family and none targets Polaris (POLARIS-DIR-* ids are owner decisions)",
+          "state": "pass",
+          "durationMs": 52.82058200000006
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > reads a Decision ID declaration only at the line end or before a parenthetical (mutant: leave the end unanchored)",
+          "state": "pass",
+          "durationMs": 0.45355499999993754
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > recognizes dossier decision identity syntax without accepting presentation references",
+          "state": "pass",
+          "durationMs": 0.5470520000000079
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > recognizes generator requirement identity syntax without accepting presentation references",
+          "state": "pass",
+          "durationMs": 0.29270199999996294
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+          "state": "pass",
+          "durationMs": 746.606145
+        }
+      ],
+      "report": "inputs/campaign/run-01/command-02/reports/report-8841.json",
+      "report_sha256": "2abda7b5e455f9c81a12e50b00646249a6cf6f235bdf5ae92ef27aedab2894b2",
+      "ordinary_integration_budget": [
+        {
+          "project": "integration",
+          "hookTimeout": 10000,
+          "testTimeout": 5000,
+          "maxWorkers": 6
+        }
+      ],
+      "load1": {
+        "start": 8.0810546875,
+        "end": 9.81591796875,
+        "min": 7.9140625,
+        "max": 10.2353515625,
+        "samples": [
+          8.0810546875,
+          7.9140625,
+          8.24169921875,
+          8.14208984375,
+          8.53125,
+          8.64892578125,
+          9.07763671875,
+          9.47216796875,
+          10.2353515625,
+          9.81591796875,
+          9.81591796875
+        ]
+      },
+      "process_exit": 0,
+      "lifetime_complete": true,
+      "raw_streams": {
+        "stdout.log": {
+          "path": "run-01/command-02/stdout.log",
+          "bytes": 72098,
+          "sha256": "c88641b99dac6bd5ad0cbf6e71dd34b068608431bf4bd6bd2a237d99fb97430a"
+        },
+        "stderr.log": {
+          "path": "run-01/command-02/stderr.log",
+          "bytes": 5202,
+          "sha256": "92c962558555abc02c1078f13dd35027240f8d7fe4b3256f34289e6a222fe1b4"
+        }
+      }
+    },
+    {
+      "run": 2,
+      "subject": "829525003da054787a905bacf1e4b7d3176c68ef",
+      "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "full_name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+      "state": "pass",
+      "duration_ms": 936.3380770000001,
+      "complete_file_cases": [
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no machine reference on the model or its narrative anchors targets the Polaris surface",
+          "state": "pass",
+          "durationMs": 187.133694
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > every OpenSpec warrant entry belongs to a known id family and none targets Polaris (POLARIS-DIR-* ids are owner decisions)",
+          "state": "pass",
+          "durationMs": 71.44638100000009
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > reads a Decision ID declaration only at the line end or before a parenthetical (mutant: leave the end unanchored)",
+          "state": "pass",
+          "durationMs": 0.8725749999999834
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > recognizes dossier decision identity syntax without accepting presentation references",
+          "state": "pass",
+          "durationMs": 0.7368900000000167
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > recognizes generator requirement identity syntax without accepting presentation references",
+          "state": "pass",
+          "durationMs": 0.700392000000079
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+          "state": "pass",
+          "durationMs": 936.3380770000001
+        }
+      ],
+      "report": "inputs/campaign/run-02/command-02/reports/report-40747.json",
+      "report_sha256": "2a13415bfa3f558c113ebda47631445f0e301010cff736a27f9ebf1f059c5835",
+      "ordinary_integration_budget": [
+        {
+          "project": "integration",
+          "hookTimeout": 10000,
+          "testTimeout": 5000,
+          "maxWorkers": 6
+        }
+      ],
+      "load1": {
+        "start": 11.26611328125,
+        "end": 11.28271484375,
+        "min": 11.00439453125,
+        "max": 11.85400390625,
+        "samples": [
+          11.26611328125,
+          11.00439453125,
+          11.72509765625,
+          11.6669921875,
+          11.85400390625,
+          11.544921875,
+          11.2607421875,
+          11.23974609375,
+          11.22021484375,
+          11.28271484375,
+          11.28271484375
+        ]
+      },
+      "process_exit": 0,
+      "lifetime_complete": true,
+      "raw_streams": {
+        "stdout.log": {
+          "path": "run-02/command-02/stdout.log",
+          "bytes": 74704,
+          "sha256": "80a00beb420411a1b318a6132ae9ae12187062345ac0b1ebd1d7869ed0268296"
+        },
+        "stderr.log": {
+          "path": "run-02/command-02/stderr.log",
+          "bytes": 5202,
+          "sha256": "414217df2a3a00ffaa9ac579c9b28d4337875b599143fb538bd1ed515d5edaa8"
+        }
+      }
+    },
+    {
+      "run": 3,
+      "subject": "829525003da054787a905bacf1e4b7d3176c68ef",
+      "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "full_name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+      "state": "pass",
+      "duration_ms": 822.8367539999999,
+      "complete_file_cases": [
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no machine reference on the model or its narrative anchors targets the Polaris surface",
+          "state": "pass",
+          "durationMs": 134.42210900000003
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > every OpenSpec warrant entry belongs to a known id family and none targets Polaris (POLARIS-DIR-* ids are owner decisions)",
+          "state": "pass",
+          "durationMs": 60.18174400000004
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > reads a Decision ID declaration only at the line end or before a parenthetical (mutant: leave the end unanchored)",
+          "state": "pass",
+          "durationMs": 0.4439780000000155
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > recognizes dossier decision identity syntax without accepting presentation references",
+          "state": "pass",
+          "durationMs": 0.5279059999999163
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > recognizes generator requirement identity syntax without accepting presentation references",
+          "state": "pass",
+          "durationMs": 0.2886549999999488
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+          "state": "pass",
+          "durationMs": 822.8367539999999
+        }
+      ],
+      "report": "inputs/campaign/run-03/command-02/reports/report-72639.json",
+      "report_sha256": "31773798c74ad8b0723595e69cf326feb4c34809f938974b05dd04bdf25d5ff6",
+      "ordinary_integration_budget": [
+        {
+          "project": "integration",
+          "hookTimeout": 10000,
+          "testTimeout": 5000,
+          "maxWorkers": 6
+        }
+      ],
+      "load1": {
+        "start": 9.77587890625,
+        "end": 10.4052734375,
+        "min": 9.18212890625,
+        "max": 10.70068359375,
+        "samples": [
+          9.77587890625,
+          9.63330078125,
+          9.18212890625,
+          9.328125,
+          9.54248046875,
+          10.70068359375,
+          10.32421875,
+          10.2177734375,
+          10.44091796875,
+          10.4052734375,
+          10.4052734375
+        ]
+      },
+      "process_exit": 0,
+      "lifetime_complete": true,
+      "raw_streams": {
+        "stdout.log": {
+          "path": "run-03/command-02/stdout.log",
+          "bytes": 74751,
+          "sha256": "04c6bbdbfd7340febdbf6a36cf4d08351c540542d18510bf0bf34f283ffedf6f"
+        },
+        "stderr.log": {
+          "path": "run-03/command-02/stderr.log",
+          "bytes": 5202,
+          "sha256": "5f7f070037da6e4549c2658ed4fa06368813edaa93ae2781b83c5652aee57013"
+        }
+      }
+    },
+    {
+      "run": 4,
+      "subject": "829525003da054787a905bacf1e4b7d3176c68ef",
+      "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "full_name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+      "state": "pass",
+      "duration_ms": 2822.140333,
+      "complete_file_cases": [
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no machine reference on the model or its narrative anchors targets the Polaris surface",
+          "state": "pass",
+          "durationMs": 137.064321
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > every OpenSpec warrant entry belongs to a known id family and none targets Polaris (POLARIS-DIR-* ids are owner decisions)",
+          "state": "pass",
+          "durationMs": 65.69453299999998
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > reads a Decision ID declaration only at the line end or before a parenthetical (mutant: leave the end unanchored)",
+          "state": "pass",
+          "durationMs": 0.5979189999999335
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > recognizes dossier decision identity syntax without accepting presentation references",
+          "state": "pass",
+          "durationMs": 0.9306169999999838
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > recognizes generator requirement identity syntax without accepting presentation references",
+          "state": "pass",
+          "durationMs": 0.436554000000001
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+          "state": "pass",
+          "durationMs": 2822.140333
+        }
+      ],
+      "report": "inputs/campaign/run-04/command-02/reports/report-104525.json",
+      "report_sha256": "48bb206df4cd45bc261647f4efb4b261032d6b580e5edb60aedb0f2b11d33b26",
+      "ordinary_integration_budget": [
+        {
+          "project": "integration",
+          "hookTimeout": 10000,
+          "testTimeout": 5000,
+          "maxWorkers": 6
+        }
+      ],
+      "load1": {
+        "start": 12.41845703125,
+        "end": 13.9638671875,
+        "min": 11.82421875,
+        "max": 14.396484375,
+        "samples": [
+          12.41845703125,
+          11.82421875,
+          12.31884765625,
+          12.53369140625,
+          12.33056640625,
+          13.90576171875,
+          14.15380859375,
+          13.74072265625,
+          14.162109375,
+          13.90869140625,
+          14.396484375,
+          13.9638671875
+        ]
+      },
+      "process_exit": 0,
+      "lifetime_complete": true,
+      "raw_streams": {
+        "stdout.log": {
+          "path": "run-04/command-02/stdout.log",
+          "bytes": 80811,
+          "sha256": "d242c30cc27383dff80a6d8cedf9d3041bea768a9694d702790ccfc2eea9374f"
+        },
+        "stderr.log": {
+          "path": "run-04/command-02/stderr.log",
+          "bytes": 5202,
+          "sha256": "550f417865ebe521b20a6573f65f6a564c56b4bbd13089b91a1fd49a87f336df"
+        }
+      }
+    },
+    {
+      "run": 5,
+      "subject": "829525003da054787a905bacf1e4b7d3176c68ef",
+      "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+      "full_name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+      "state": "pass",
+      "duration_ms": 931.353286,
+      "complete_file_cases": [
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no machine reference on the model or its narrative anchors targets the Polaris surface",
+          "state": "pass",
+          "durationMs": 155.81280099999998
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > every OpenSpec warrant entry belongs to a known id family and none targets Polaris (POLARIS-DIR-* ids are owner decisions)",
+          "state": "pass",
+          "durationMs": 68.215465
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > reads a Decision ID declaration only at the line end or before a parenthetical (mutant: leave the end unanchored)",
+          "state": "pass",
+          "durationMs": 0.5696659999999838
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > recognizes dossier decision identity syntax without accepting presentation references",
+          "state": "pass",
+          "durationMs": 0.9336929999999484
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > recognizes generator requirement identity syntax without accepting presentation references",
+          "state": "pass",
+          "durationMs": 0.49769000000003416
+        },
+        {
+          "file": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+          "project": "integration",
+          "name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+          "state": "pass",
+          "durationMs": 931.353286
+        }
+      ],
+      "report": "inputs/campaign/run-05/command-02/reports/report-136437.json",
+      "report_sha256": "0c06acc8b46d3ee3619dff4668b8ce92c456d42a66d3f1433975a9c06e1ae1f5",
+      "ordinary_integration_budget": [
+        {
+          "project": "integration",
+          "hookTimeout": 10000,
+          "testTimeout": 5000,
+          "maxWorkers": 6
+        }
+      ],
+      "load1": {
+        "start": 13.97314453125,
+        "end": 13.65087890625,
+        "min": 13.17431640625,
+        "max": 14.71728515625,
+        "samples": [
+          13.97314453125,
+          13.17431640625,
+          13.56103515625,
+          14.71728515625,
+          14.57958984375,
+          14.45263671875,
+          14.3359375,
+          14.1484375,
+          14.05615234375,
+          13.65087890625,
+          13.65087890625
+        ]
+      },
+      "process_exit": 0,
+      "lifetime_complete": true,
+      "raw_streams": {
+        "stdout.log": {
+          "path": "run-05/command-02/stdout.log",
+          "bytes": 72448,
+          "sha256": "b9998ace49bdab47a607a1f2f210d1c3268be1fbf312f226a3190e3f242e18a0"
+        },
+        "stderr.log": {
+          "path": "run-05/command-02/stderr.log",
+          "bytes": 5202,
+          "sha256": "a15ee801a94afabb2ce00bdb88332e5642b15c9336181177e44ece433b9c1c62"
+        }
+      }
+    }
+  ],
+  "host": {
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+    "cores": 12,
+    "node": "v24.6.0"
+  },
+  "vitest": "3.2.7",
+  "ordinary_configuration": {
+    "path": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/subject/vitest.config.ts",
+    "sha256": "3b677756d41400ea04e50816c4b834d07a96593bef097b67c7d1934d5ca9de22"
+  },
+  "diagnostic_budget": null,
+  "committed_corpus": {
+    "roots": [
+      ".syzygy/governance",
+      "openspec",
+      "packages",
+      "apps",
+      "docs"
+    ],
+    "files": 5983,
+    "bytes": 142194449,
+    "identical_at_assigned_base_and_measured_subject": true,
+    "retained_full_manifest": "/home/orca/.tmp/syzygy-bpyt33-full-outcome-20261106/COMMITTED-CORPUS.json",
+    "sha256": "97cd9cdc9100c1ba828479c82cc2f2ef681d24b87a02f7ebc1c68964403e6c41",
+    "independent_comparison": "Five Git subtree identities and empty git diff agree; two added scripts are outside the sweep roots."
+  },
+  "runtime_population": {
+    "complete_file_cases_per_attempt": 6,
+    "target_occurrences_per_attempt": 1,
+    "integration_files_per_attempt": 90,
+    "integration_cases_per_attempt": 2676,
+    "integration_passed_per_attempt": 2673,
+    "integration_skipped_per_attempt": 3,
+    "ordinary_unit_files_per_attempt": 169,
+    "ordinary_unit_passed_per_attempt": 3793,
+    "ordinary_e2e_files_per_attempt": 13,
+    "ordinary_e2e_cases_per_attempt": 127,
+    "ordinary_e2e_passed_per_attempt": 125,
+    "ordinary_e2e_skipped_per_attempt": 2,
+    "system_fresh_clone_guard_skipped_per_attempt": 1,
+    "scope": "Five check -> test:integration -> test:e2e (including system) contexts; live/operator tier excluded. test:tiers and governance battery were not part of this timing campaign. This does not claim all tests executed.",
+    "guarded_remainders": [
+      "Three session-view cases require nested bwrap availability",
+      "No-egress strace proof unavailable in this namespace",
+      "Captured opening-index case needs SYZYGY_P98_PAGE",
+      "Fresh-clone system case requires SYZYGY_FRESH_CLONE=1"
+    ],
+    "exact_historical_untracked_walk_identity": "[Unknown] Upstream did not capture an exact per-run filesystem walk manifest. Clean clone/committed five-tree identity and the actual sweep assertions are retained separately. The pre-edit static walk is5983files with no missing tracked or extra swept files; that is not relabeled as historical runtime evidence."
+  },
+  "capture": {
+    "completed_artifacts_copied": 143,
+    "bytes": 19644817,
+    "own_packet": "/home/orca/.tmp/syzygy-bpyt33-full-outcome-20261106",
+    "copy_provenance": "/home/orca/.tmp/syzygy-bpyt33-full-outcome-20261106/COPY-PROVENANCE.json",
+    "native_hash_verification": "/home/orca/.tmp/syzygy-bpyt33-full-outcome-20261106/COPY-HASH-METHOD2.json",
+    "independent_execution": false,
+    "hosted_integration": false,
+    "interpretation": "Sibling emitter raw outputs/reports were copied byte-for-byte into an independently hashed owned packet. This is byte capture, not an independent rerun, hosted execution or author-issued certification."
+  },
+  "extraction_controls": {
+    "count": 20,
+    "proof": "/home/orca/.tmp/syzygy-bpyt33-full-outcome-20261106/DATA-CONTROL-PROOF.json",
+    "sha256": "046fbc4c2de79bce7118d39801e47cde8b3a859dda3f708a099d408e43cd3712",
+    "scope": "Static data reconciliation; no product runtime, product mutants or permanent tests executed"
+  },
+  "historical_evidence": {
+    "prior_reason": "exj7/PR719 introduced25000, supported by30 sequential standalone complete-file stress runs, named maximum8029ms. Those bytes remain unchanged; their missing after-subject identity remains a limit.",
+    "original_full_app_report": "docs/evidence/syzygy-bpyt-7-16/suite.json at0d7eaf08 records7656ms atload1 61.66; historical only, not a current completed worst.",
+    "original_isolated5of5": "Preserved original report fact; repeat-runs.json in that directory measures different files and supplies no such proof for this case.",
+    "earlier_related": "PR332/syzygy-jsyi is historical same-symptom context, not current gate evidence."
+  },
+  "remaining_gates": [
+    "ROOT explicit product-runtime release after the .4.41 whole outcome and final broad terminal",
+    "Current exact-subject target/file/check/test:tiers and canonical clean-clone check:all verification under the shared lock",
+    "Fresh independent exact-head applicability/class/floor and evidence/code review, including the historical untracked-census limit",
+    "Any final app-source merge waits for both actual syzygy-1z3.22 owner judgment and syzygy-1z3.25 cycle report",
+    "Hosted required checks, lawful landing and existing cycle-report handoff; whole issue stays open"
+  ],
+  "prepared_corpus_delta": {
+    "new_swept_paths": [
+      "docs/evidence/syzygy-bpyt-33/README.md",
+      "docs/evidence/syzygy-bpyt-33/timeout-measurement.json"
+    ],
+    "changed_swept_path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+    "effect": "Two evidence records and an adjacent comment are new inputs to the later sweep. The named test body is unchanged; the historical5983-file observations are not relabeled as timing this prepared corpus. Final current-subject verification remains required."
+  }
+}
