@@ -1,0 +1,10 @@
+{
+  "cause": "End-anchor bypass substituted equally strict $ for negative lookahead, so intended bypass remained rejecting. Invalid control is retained, not a kill/failure classification. Exact Node characterization confirms both reject trailing LF/CR; source simplified to conventional anchored no-multiline regex, false comparison comment corrected. Current complete matrix executes again against current subject.",
+  "corrected_subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+  "source_or_infrastructure": "Harness mutation was not a semantic bypass; no infrastructure retry claim.",
+  "artifacts": [
+    "PREDICATE-PROOFS-attempt2.json",
+    "logs/r2-version-version-end-bypass-vitest.json",
+    "logs/end-anchor-characterization.stdout"
+  ]
+}

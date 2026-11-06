@@ -1,0 +1,315 @@
+{
+  "subject": "whole canonical syzygy-bpyt.58 original description; comments [] and absent AC prefix",
+  "obligation_count": 17,
+  "obligations": [
+    {
+      "id": "O1",
+      "original_obligation": "GP-B2 Q4 A; one test beside the testkit; test-only",
+      "acceptance_items": [
+        1,
+        2,
+        10
+      ],
+      "artifacts": [
+        "TEST-DELTA.json",
+        "SOURCE-INTEGRITY.json"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O2",
+      "original_obligation": "Every workspace npm sees is @syzygy/-named",
+      "acceptance_items": [
+        2,
+        4,
+        5
+      ],
+      "artifacts": [
+        "WORKSPACE-POPULATION.json",
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O3",
+      "original_obligation": "Every dependencies spec",
+      "acceptance_items": [
+        3,
+        5
+      ],
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O4",
+      "original_obligation": "Every devDependencies spec",
+      "acceptance_items": [
+        3,
+        5
+      ],
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O5",
+      "original_obligation": "Every peerDependencies spec",
+      "acceptance_items": [
+        3,
+        5
+      ],
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O6",
+      "original_obligation": "Every optionalDependencies spec",
+      "acceptance_items": [
+        3,
+        5
+      ],
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O7",
+      "original_obligation": "Every string in overrides, recursive",
+      "acceptance_items": [
+        3,
+        4,
+        5
+      ],
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O8",
+      "original_obligation": "Exact X.Y.Z or ^/~ ranges; all enumerated local/nonregistry exclusions",
+      "acceptance_items": [
+        3,
+        5
+      ],
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O9",
+      "original_obligation": "Unscoped-workspace mutation must fail",
+      "acceptance_items": [
+        4
+      ],
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O10",
+      "original_obligation": "file: dependency mutation must fail",
+      "acceptance_items": [
+        4
+      ],
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O11",
+      "original_obligation": "Bare-directory dependency mutation must fail",
+      "acceptance_items": [
+        4
+      ],
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O12",
+      "original_obligation": "Path-in-overrides mutation must fail",
+      "acceptance_items": [
+        4
+      ],
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O13",
+      "original_obligation": "Both testkit residual comments name the test",
+      "acceptance_items": [
+        7
+      ],
+      "artifacts": [
+        "../../../packages/polaris-generation-core/src/workspace-reach.testkit.ts"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O14",
+      "original_obligation": "PR545 N5 pointer or follow-up after landing",
+      "acceptance_items": [
+        7
+      ],
+      "artifacts": [
+        "PR545-N5-FOLLOWUP.md"
+      ],
+      "remaining": "Current proof authored and retained; independent capture/review remains"
+    },
+    {
+      "id": "O15",
+      "original_obligation": "Class4 declaration; reviewer may drop",
+      "acceptance_items": [
+        10,
+        12
+      ],
+      "artifacts": [
+        "ASSURANCE-AND-SCOPE.json"
+      ],
+      "remaining": "ROOT independent review/notice/hosted checks/protected landing are distinct remaining gates"
+    },
+    {
+      "id": "O16",
+      "original_obligation": "GP-Q0 extras and non-blocking owner notice",
+      "acceptance_items": [
+        5,
+        6,
+        13
+      ],
+      "artifacts": [
+        "OLD-NEW-DIFFERENTIAL.json",
+        "NOTICE-DRAFT.md"
+      ],
+      "remaining": "ROOT independent review/notice/hosted checks/protected landing are distinct remaining gates"
+    },
+    {
+      "id": "O17",
+      "original_obligation": "All canonical comments and existing AC prefix",
+      "acceptance_items": [
+        1,
+        14
+      ],
+      "artifacts": [
+        "ROOT-RELEASE.json"
+      ],
+      "remaining": "ROOT independent review/notice/hosted checks/protected landing are distinct remaining gates"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "acceptance_item": 1,
+      "artifacts": [
+        "ROOT-RELEASE.json"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 2,
+      "artifacts": [
+        "WORKSPACE-POPULATION.json"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 3,
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 4,
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 5,
+      "artifacts": [
+        "PREDICATE-PROOFS.json"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 6,
+      "artifacts": [
+        "OLD-NEW-DIFFERENTIAL.json",
+        "SOURCE-INTEGRITY.json"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 7,
+      "artifacts": [
+        "PR545-N5-FOLLOWUP.md"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 8,
+      "artifacts": [
+        "TEST-DELTA.json"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 9,
+      "artifacts": [
+        "CUSTODY.json",
+        "ROOT-RELEASE.json"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 10,
+      "artifacts": [
+        "ASSURANCE-AND-SCOPE.json"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 11,
+      "artifacts": [
+        "runs.tar.gz",
+        "RUN-ARCHIVE-INDEX.json",
+        "README.md"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 12,
+      "artifacts": [
+        "README.md"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 13,
+      "artifacts": [
+        "NOTICE-DRAFT.md"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    },
+    {
+      "acceptance_item": 14,
+      "artifacts": [
+        "MANIFEST.json"
+      ],
+      "remaining": "Final exact committed-clone full gate, ROOT distinct capture/fresh review/notice/hosted/protected landing remain; no completion inferred from author report."
+    }
+  ]
+}

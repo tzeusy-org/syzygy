@@ -1,0 +1,5 @@
+{
+  "exit": 1,
+  "cause": "Historical N5 names dossier-site.ts; current fixture moved it under polaris-generation. FileNotFoundError before probe generation or test execution. Correct harness path after rg files; not a gate failure/kill.",
+  "path_attempted": "apps/three-surface-poc/src/dossier-site.ts"
+}
