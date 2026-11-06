@@ -1,0 +1,11 @@
+Follow-ups from the four CC-REV-1 rounds of PR #532 (syzygy-bpyt.4.5). Raws: docs/reviews/R-GP-IMPL-TEST-CLOCKS-1..4-RAW.md; round 4 CONFIRM WITH EXCEPTIONS over 23af2d08 cleared the bytes. Dispositions: docs/evidence/test-clocks-round-4-dispositions-2026-10-28.md. The reviewers' tools are under docs/evidence/test-clocks-review-2026-10-27/r1..r4/.
+Any edit to packages/cap1-system/src/daemon-entry-unchanged.system.test.ts changes bytes the four daemon-entry runs bind (docs/evidence/syzygy-bpyt-4-5/tools/build_record.py:83-85), so re-run those runs and rebuild the record in the same PR, as a new record beside the landed one.
+1. Round 1 N5 (pre-existing): daemon-path loads that neither the old pin nor the new rows catch; a hook row over island prefixes, a machine route and/or a static createRequire refusal.
+2. Round 1 N6 (pre-existing): the text row fails a type-only import; skip import type lines.
+3. Round 3 N1: a then-block that falls through after the branch's own import (Y1b) passes the new test and the old pin.
+4. Round 3 N2 and round 4 N2: build_record checks neither the >=10 head runs, nor that every timed test line was measured, nor each site's mutant-row population (round 4's M5, a deleted row, builds green). Declare the row list per bound beside UNREACHED, or read cpu_separation.py's SITES with ast, and add M5 as a fail case to build_record_mutants.py.
+5. Round 3 N3: emit_equal.mjs is sound for type-only edits, but the claim it backs is wider than what it compares; state the claim it proves.
+6. Round 3 N4: the compiler-API row matches each condition as text, and its failure messages do not name the defect.
+7. Round 4 N1: the test comment's list of the pin's known false refusals (:276) leaves out round 3's G1 (Allman brace, wrapped import) and G2 (block comments around else and in the condition). Reword to 'Among its false refusals' and add them; add G1-G3 to daemon_entry_probe.py as equivalents from docs/evidence/test-clocks-review-2026-10-27/r3/tools/r3_variants.py and extend PIN_FALSE_REFUSALS.
+8. Round 4 N4: the compiler-API row's comment (:242) opens 'The kept part of the old text pin'; the whole pin is kept below it. Open it 'The compiler-API text row.'
+Round 1 N7, round 2 N3 and round 3 N5 (full-suite timeouts under load in untouched files) belong to syzygy-bpyt.4.40, not here. Test-only; no gate change.

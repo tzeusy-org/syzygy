@@ -1,0 +1,18 @@
+{
+  "at": "2026-11-06T03:32:47.645763+00:00",
+  "bead": "syzygy-bpyt.43",
+  "head": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+  "permanent_paths": [
+    "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+    "docs/evidence/syzygy-bpyt-43/**",
+    "docs/reviews/R-GP-IMPL-TEST-CLOCKS-FOLLOWUPS-1-RAW.md"
+  ],
+  "runtime_released": true,
+  "proposal_sha256": "69aa69eeaa043cef9296db1015b092954c1fdca7e606e7cbe8ec10cddd3604c1",
+  "open_prs": 16,
+  "path_memberships": 161,
+  "no_custody_overlap": true,
+  "fields_edges_preserved": true,
+  "adapter_source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/isolated.py",
+  "capture_source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/capture_inside.py"
+}
