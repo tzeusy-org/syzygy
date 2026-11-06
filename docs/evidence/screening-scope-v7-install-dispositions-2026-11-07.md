@@ -35,3 +35,4 @@ The review returned `CONFIRM WITH EXCEPTIONS` over `b3cd3a43`. It said its grade
 - Note 5 is accepted: the pattern refuses some forms only an injected renderer might write, including digits in `lang`, which fails closed.
 - Note 6 stands: "kills the two surviving case mutants" is loose, since one of them no longer exists in the code, and the baseline guard is recorded here and not in the evidence file.
 
+After round 3, one test changed and no product code: hosted CI's Chrome 156 does not run the script on the decoy page, as Chrome 120 does, so that Chrome fixture now holds only the reader's refusal. [Observed] on hosted run 42270481021.

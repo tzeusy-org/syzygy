@@ -73,10 +73,11 @@ describe.skipIf(executable === undefined)('the page reader against Chrome', () =
     expect(pageSinkCspFinding(html)).toBe(OPENING);
     expect(await ran(html)).toBe(true);
   });
-  it('a decoy meta past the prescan: Chrome stops at an ignored end tag and autodetects, and the reader refuses the page', async () => {
+  // Chrome 120 stops its prescan at the ignored end tag, autodetects and runs the script; Chrome 156 does not (hosted CI, 2026-11-06). The
+  // rule is the reader's, so the test holds no browser version's outcome.
+  it('a decoy meta past the prescan, which some Chrome versions autodetect: the reader refuses the page', () => {
     const html = `<!doctype html><html></x><!-- <meta ${'x'.repeat(1100)} --><head><meta charset="utf-8">${hiding}${closing}`;
     expect(pageSinkCspFinding(html)).toBe(OPENING);
-    expect(await ran(html)).toBe(true);
   });
   it('a hash-allowed inline script runs under the trusted-types pair, and the reader confirms the page', async () => {
     const text = 'document.documentElement.dataset.ran = "1";';
