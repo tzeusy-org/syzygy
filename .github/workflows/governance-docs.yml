@@ -416,6 +416,17 @@ jobs:
       - name: check_docs_review_campaign_partition --selftest
         run: python3 scripts/check_docs_review_campaign_partition.py --selftest
 
+      # The surface merge freeze, when scripts/surface-merge-freeze.json says it
+      # is active (owner direction of 2026-11-06, after PR #774 merged through it
+      # unnoticed). The diff step has no local form: it needs the event's base.
+      - name: check_surface_freeze --selftest
+        run: python3 scripts/check_surface_freeze.py --selftest
+
+      - name: surface freeze against this change's base
+        env:
+          FREEZE_BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+        run: if [ -n "$FREEZE_BASE" ]; then python3 scripts/check_surface_freeze.py --base "$FREEZE_BASE"; fi
+
       # The evidence index is generated on demand and never committed, so
       # only its builder's fixtures run here (syzygy-bpyt.9.1).
       - name: build_evidence_index --selftest
