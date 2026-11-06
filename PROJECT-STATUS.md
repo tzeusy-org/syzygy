@@ -473,6 +473,7 @@ python3 scripts/check_quotations.py     # a quotation beside a path:line locator
 python3 scripts/check_quotations.py --selftest
 python3 scripts/check_docs_review_campaign_partition.py --check   # every docs/reviews/ file in exactly one docs/review-campaigns/ fragment
 python3 scripts/check_docs_review_campaign_partition.py --selftest
+python3 scripts/check_surface_freeze.py --selftest   # the surface merge freeze's fixtures; hosted CI also runs it against each change's base
 python3 scripts/build_evidence_index.py --selftest   # the on-demand docs/evidence/ index's fixtures (syzygy-bpyt.9.1)
 DR=.syzygy/governance/contracts/candidates/round-2026-08f/fixtures/DRY-RUN-ADMINISTRATION.json
 python3 scripts/validate_launch_administration.py $DR
@@ -489,7 +490,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and nineteen checks above are the same one hundred and nineteen the hosted workflow runs
+The one hundred and twenty checks above are the same one hundred and twenty the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

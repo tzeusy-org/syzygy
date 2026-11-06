@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`CONFIRM WITH EXCEPTIONS` (`R-PDJA-1-READING-3-RAW.md:1`), over commit `b9e107b0`. Its exceptions 2, 3, 5 and 7 and the record's disclosures were repaired in the landed commit, which no later review has read. Exceptions 1 (labels overprinting labels on shared points) and 4 (the pointer path to a far popup) are on `syzygy-pdja.3`. Round 2's finding 6 stays partly repaired: the accessible name is unchanged and Esc is on `syzygy-pdja.5`.
+`CONFIRM WITH EXCEPTIONS` (`R-PDJA-1-READING-4-RAW.md:1`), over `f8aba7a4`, the landed commit, reviewing only what changed after round 3. It found round 3's exceptions 2, 5 and 7 repaired and exception 3 repaired for the label box only: the edge's own line still does not react, because labels sit in a separate group (`syzygy-pdja.3`). Round 3's exceptions 1 and 4 are also on `syzygy-pdja.3`. Round 2's finding 6 stays partly repaired: the accessible name is unchanged and Esc is on `syzygy-pdja.5`.
