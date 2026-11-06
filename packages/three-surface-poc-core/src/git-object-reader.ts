@@ -251,8 +251,11 @@ function positionOf(text: string, index: number): { readonly line: number; reado
   let line = 1;
   let lineStart = 0;
   for (let i = 0; i < index; i += 1) {
-    if (text.charCodeAt(i) === 10) {
-      line += 1;
+    const unit = text.charCodeAt(i);
+    // The mask's CRLF/CR/LF rule, on the original UTF-16 text. The LF of
+    // a CRLF pair advances the column start without ending another line.
+    if (unit === 13 || unit === 10) {
+      if (unit === 13 || text.charCodeAt(i - 1) !== 13) line += 1;
       lineStart = i + 1;
     }
   }
