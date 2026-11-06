@@ -13,6 +13,7 @@ import { spawn, spawnSync, type ChildProcess } from 'node:child_process';
 import { existsSync, lstatSync, mkdtempSync, readFileSync, readdirSync, readlinkSync, rmSync, statSync, type BigIntStats } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { removeTemporaryDirectory, type TemporaryDirectoryCleanupOptions } from './temporary-directory.js';
 
@@ -484,6 +485,10 @@ interface BrowserCleanupOptions {
   readonly groupProcesses?: (group: PrivateBrowserGroup) => readonly number[];
   /** Signals live members; defaults to a real kill only with the real scan. */
   readonly stopMembers?: (group: PrivateBrowserGroup, live: readonly number[]) => void;
+  /** A Vitest guardian must survive until its adopted descendants are reaped. */
+  readonly stopChild?: () => void;
+  /** Verifies that the guardian reaped its complete private descendant family. */
+  readonly verifyChildCleanup?: () => void | Promise<void>;
   readonly now?: () => number;
 }
 
@@ -518,8 +523,18 @@ export async function closeDisposableBrowser(
     if (timer !== undefined) clearTimeout(timer);
   }
   connection.close();
-  if (child.exitCode === null && child.signalCode === null) child.kill('SIGKILL');
+  if (child.exitCode === null && child.signalCode === null) {
+    if (options.stopChild === undefined) child.kill('SIGKILL');
+    else options.stopChild();
+  }
   await exited;
+  if (options.verifyChildCleanup !== undefined) {
+    await options.verifyChildCleanup();
+    // The guardian owns and reaps the whole family, including escaped
+    // sessions. Its now-released group id is no longer signal authority.
+    (options.removeProfile ?? removeBrowserProfile)(profile);
+    return;
+  }
   const now = options.now ?? Date.now;
   const drainDeadline = now() + (options.profileDrainMs ?? BROWSER_PROFILE_DRAIN_MS);
   const groupProcesses = options.groupProcesses ?? livePrivateBrowserMembers;
@@ -545,10 +560,7 @@ export async function closeDisposableBrowser(
 export async function launchBrowser(executable: string): Promise<Browser> {
   const profile = mkdtempSync(join(tmpdir(), 'syzygy-poc-browser-'));
   let singleton: ChromeSingletonDirectory | undefined;
-  const cleanup: BrowserCleanupOptions = { removeProfile: (path) => removeBrowserProfile(path, { singleton }) };
-  const child = spawn(
-    executable,
-    [
+  const args = [
       '--headless=new',
       '--no-sandbox',
       '--disable-gpu',
@@ -566,9 +578,38 @@ export async function launchBrowser(executable: string): Promise<Browser> {
       '--remote-debugging-port=0',
       '--window-size=1280,2000',
       'about:blank',
-    ],
-    { stdio: ['ignore', 'ignore', 'pipe'], detached: true },
-  );
+    ];
+  // Only Vitest needs a parent that outlives a killed test worker. Python
+  // is already a prerequisite of the integration/e2e tiers. Operator
+  // commands retain the existing direct Chrome launch and dependencies.
+  const guarded = process.env['VITEST'] === 'true';
+  const child = guarded
+    ? spawn('python3', [fileURLToPath(new URL('../../../scripts/poc_browser_lifetime.py', import.meta.url)), executable, ...args],
+      { stdio: ['pipe', 'ignore', 'pipe', 'pipe'], detached: true })
+    : spawn(executable, args, { stdio: ['ignore', 'ignore', 'pipe'], detached: true });
+  let childCleanupVerified = false;
+  let acknowledgement = '';
+  child.stdio[3]?.on('data', (chunk: Buffer) => {
+    acknowledgement += chunk.toString('utf8');
+    childCleanupVerified = acknowledgement === 'closed\n';
+  });
+  const childCleanup = new Promise<void>((resolve, reject) => {
+    if (!guarded) resolve();
+    else child.stdio[3]?.once('end', resolve).once('error', reject);
+  });
+  // EPIPE can mean the guardian already exited. Its separate acknowledgement,
+  // checked after exit, determines whether cleanup actually completed.
+  if (guarded) child.stdin?.on('error', () => undefined);
+  const cleanup: BrowserCleanupOptions = {
+    removeProfile: (path) => removeBrowserProfile(path, { singleton }),
+    ...(guarded ? {
+      stopChild: () => { child.stdin?.end('stop\n'); },
+      verifyChildCleanup: async () => {
+        await childCleanup;
+        if (!childCleanupVerified) throw new Error('private browser guardian did not verify descendant cleanup');
+      },
+    } : {}),
+  };
   let group: PrivateBrowserGroup;
   try { group = privateBrowserGroup(child); }
   catch (error) {
@@ -576,6 +617,7 @@ export async function launchBrowser(executable: string): Promise<Browser> {
     // The launched group's identity was not established. Retain its profile.
     throw error;
   }
+  if (guarded) child.stdin?.write('start\n');
   let connection: CdpConnection;
   try {
     connection = await CdpConnection.open(await waitForDevToolsUrl(child));
@@ -587,6 +629,10 @@ export async function launchBrowser(executable: string): Promise<Browser> {
   let versionInfo: { readonly product: string };
   try { versionInfo = await connection.send<{ readonly product: string }>('Browser.getVersion'); }
   catch (error) { await closeDisposableBrowser(connection, child, profile, group, cleanup); throw error; }
+  let closing: Promise<void> | undefined;
+  const dispose = (): Promise<void> => {
+    return closeDisposableBrowser(connection, child, profile, group, cleanup);
+  };
   return {
     executable,
     version: versionInfo.product,
@@ -603,7 +649,14 @@ export async function launchBrowser(executable: string): Promise<Browser> {
       return new CdpPage(connection, sessionId, targetId);
     },
     async close(): Promise<void> {
-      await closeDisposableBrowser(connection, child, profile, group, cleanup);
+      if (!guarded) {
+        await dispose();
+        return;
+      }
+      // The profile and process identities have been relinquished after a
+      // completed close. Repeating it must not adopt a replacement at either
+      // identity, nor turn a failed cleanup into an implicit retry.
+      await (closing ??= dispose());
     },
   };
 }

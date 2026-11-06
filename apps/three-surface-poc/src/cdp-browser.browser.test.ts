@@ -13,9 +13,13 @@
 // leading dot) and removes it only on a clean exit, so a killed leader left one in TMPDIR
 // on every such run. The helper reads that directory from the profile's link while Chrome
 // runs and removes it with the profile.
-import { existsSync, readdirSync, readFileSync, readlinkSync } from 'node:fs';
+import { spawn } from 'node:child_process';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, readlinkSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { build } from 'esbuild';
 
 import { describe, expect, it } from 'vitest';
 
@@ -59,25 +63,121 @@ function alive(pid: number): boolean {
   try { return !/\) [ZX] /.test(readFileSync(`/proc/${pid}/stat`, 'utf8')); } catch { return false; }
 }
 
+async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Promise<void> {
+    const directory = mkdtempSync(join(tmpdir(), 'syzygy-poc-parent-death-'));
+    // A privately launched sibling, outside both scanner families, reproduces
+    // shared hosts where same-UID namespace links may still deny access.
+    const deniedSibling = spawn('python3', ['-c',
+      "import ctypes,sys; assert ctypes.CDLL(None).prctl(4,0,0,0,0)==0; print('ready',flush=True); sys.stdin.read()"],
+      { stdio: ['pipe', 'pipe', 'pipe'] });
+    const siblingExit = new Promise<number | null>((resolve, reject) => {
+      deniedSibling.once('error', reject);
+      deniedSibling.once('exit', resolve);
+    });
+    try {
+      await new Promise<void>((resolve, reject) => {
+        deniedSibling.stdout.once('data', (chunk: Buffer) => chunk.toString('utf8') === 'ready\n' ? resolve() : reject(new Error('denied sibling failed its milestone')));
+        deniedSibling.once('error', reject);
+        deniedSibling.once('exit', () => reject(new Error('denied sibling exited before its milestone')));
+      });
+      const module = join(directory, 'browser.mjs');
+      const source = new URL('./cdp-browser.ts', import.meta.url);
+      await build({ entryPoints: [fileURLToPath(source)], outfile: module, bundle: true, platform: 'node', format: 'esm',
+        define: { 'import.meta.url': JSON.stringify(source.href) } });
+      const worker = join(directory, 'worker.mjs');
+      const endpointFailure = join(directory, 'endpoint-failure.py');
+      const versionFailure = join(directory, 'version-failure.py');
+      writeFileSync(endpointFailure, "#!/usr/bin/python3\nimport subprocess,sys\nsubprocess.Popen(['sleep','3600'])\nsys.exit(13)\n", { mode: 0o750 });
+      writeFileSync(versionFailure, "#!/usr/bin/python3\nimport time,sys\nprint('DevTools listening on ws://fixture.invalid:1',file=sys.stderr,flush=True)\ntime.sleep(3600)\n", { mode: 0o750 });
+      const body = mode === 'startup'
+        ? `import { strict as assert } from 'node:assert';\n` +
+          `await assert.rejects(launchBrowser(${JSON.stringify(endpointFailure)}), /before announcing a DevTools endpoint/);\n` +
+          `const original = globalThis.WebSocket;\n` +
+          `globalThis.WebSocket = class extends EventTarget {\n` +
+          `constructor() { super(); queueMicrotask(() => this.dispatchEvent(new Event('open'))); }\n` +
+          `send(raw) { const {id,method} = JSON.parse(raw); queueMicrotask(() => this.dispatchEvent(new MessageEvent('message', { data: JSON.stringify({id, ...(method === 'Browser.getVersion' ? {error:{message:'fixture-version-failure'}} : {result:{}})}) }))); }\n` +
+          `close() {} };\n` +
+          `try { await assert.rejects(launchBrowser(${JSON.stringify(versionFailure)}), /fixture-version-failure/); } finally { globalThis.WebSocket = original; }\n` +
+          `process.stdout.write('ready\\n');\n`
+        :
+        `const browser = await launchBrowser(${JSON.stringify(executable)});\n` +
+        `const page = await browser.newPage(); await page.navigate('data:text/html,<p>parent lifetime</p>');\n` +
+        `process.stdout.write('ready\\n'); setInterval(() => {}, 1000);\n`;
+      writeFileSync(worker, `import { launchBrowser } from ${JSON.stringify(module)};\n` + body);
+      const child = spawn('python3', [fileURLToPath(new URL('./test-fixtures/browser-parent-death.py', import.meta.url)), mode, worker, process.execPath,
+        fileURLToPath(new URL('../../../scripts/poc_browser_lifetime.py', import.meta.url)), String(deniedSibling.pid)],
+        { stdio: ['ignore', 'pipe', 'pipe'] });
+      let output = '';
+      let errors = '';
+      child.stdout.on('data', (chunk: Buffer) => { output += chunk.toString('utf8'); });
+      child.stderr.on('data', (chunk: Buffer) => { errors += chunk.toString('utf8'); });
+      const code = await new Promise<number | null>((resolve, reject) => {
+        child.once('error', reject);
+        child.once('exit', resolve);
+      });
+      expect(code, errors).toBe(0);
+      const report = JSON.parse(output) as {
+        milestone: { helpers: unknown[] }; decoySurvived: boolean;
+        after: { procFamilyDenominator: number; proc: unknown[]; psFamily: unknown[] };
+        afterRecovery: { proc: unknown[] };
+        unexpectedReaps: unknown[]; refusals: string[];
+        deniedSibling: { uid: number; namespaceDenied: boolean }; ownedUnreadableRefusals: string[]; scanRefusals: string[];
+      };
+      expect(report.deniedSibling.uid).toBe(process.getuid?.());
+      expect(report.deniedSibling.namespaceDenied).toBe(true);
+      expect(report.scanRefusals).toEqual(['guardian-scan-reused', 'observer-scan-reused']);
+      expect(report.ownedUnreadableRefusals).toEqual(['guardian-scan', 'observer-scan', 'guardian-signal']);
+      expect(report.milestone.helpers).toHaveLength(mode === 'startup' ? 0 : 1);
+      expect(report.decoySurvived).toBe(true);
+      expect(report.refusals).toEqual(['start-reused', 'other-uid', 'other-namespace', 'outside-family']);
+      expect(report.unexpectedReaps).toEqual([]);
+      expect(report.after.procFamilyDenominator).toBe(0);
+      expect(report.after.proc).toEqual([]);
+      expect(report.after.psFamily).toEqual([]);
+      expect(report.afterRecovery.proc).toEqual([]);
+    } finally {
+      deniedSibling.stdin.end();
+      expect(await siblingExit).toBe(0);
+      rmSync(directory, { recursive: true, force: true });
+    }
+}
+
 describe.skipIf(executable === undefined || process.platform !== 'linux')('disposable Chrome teardown in a real browser', () => {
+  it.each(['SIGTERM', 'SIGKILL'] as const)('reaps the browser family after its worker dies by %s', runLifetimeScenario, 60_000);
+
+  it('reaps children after failed endpoint and version initialization', () => runLifetimeScenario('startup'), 60_000);
+
   it('closes and drains even when a helper cannot exit on its own', async () => {
     const browser = await launchBrowser(executable as string);
     let frozen: number[] = [];
     let closeAttempted = false;
+    let replacementProfile: string | undefined;
     try {
       const page = await browser.newPage();
       await page.navigate('data:text/html,<p>teardown</p>');
       frozen = ownNetworkHelpers();
       // One helper of this launch, so the case is not vacuous.
       expect(frozen).toHaveLength(1);
+      const profile = ownProfile();
       for (const pid of frozen) process.kill(pid, 'SIGSTOP');
       closeAttempted = true;
       await expect(browser.close()).resolves.toBeUndefined();
       expect(frozen.filter(alive)).toEqual([]);
+      expect(existsSync(profile)).toBe(false);
+      mkdirSync(profile);
+      replacementProfile = profile;
+      const replacement = join(profile, 'replacement-owner');
+      writeFileSync(replacement, 'a later owner at the relinquished path');
+      // The guardian has exited and the profile is already gone. A second
+      // cleanup must retain that completed result rather than signal a new
+      // process or wait for an acknowledgement from a dead parent.
+      await expect(browser.close()).resolves.toBeUndefined();
+      expect(existsSync(replacement)).toBe(true);
     } finally {
       for (const pid of frozen.filter(alive)) process.kill(pid, 'SIGKILL');
       // A failure before close() would otherwise leak this browser.
       if (!closeAttempted) await browser.close().catch(() => undefined);
+      if (replacementProfile !== undefined) rmSync(replacementProfile, { recursive: true, force: true });
     }
   }, 60_000); // a real Chrome launch and forced teardown: worst 15.8 s over 5 alone runs at load1 91-138, the worst run failing not by timeout (docs/evidence/syzygy-bpyt-4-31/durations/cdp-browser.browser.test.tests.json)
 
