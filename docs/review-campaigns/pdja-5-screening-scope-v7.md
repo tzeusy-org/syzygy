@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-SCREENING-SCOPE-V7-2-RAW.md:4`), over `ad5da2bb`, round 2 of the review; round 1 was also `REVISE`. Its blocking findings B1 to B4 and its notes were repaired on the same branch; a fresh round has not yet confirmed the repair.
+`CONFIRM WITH EXCEPTIONS` (`R-SCREENING-SCOPE-V7-3-RAW.md:4`), over `7f98407d`, round 3; rounds 1 and 2 were `REVISE`. No finding is blocking. The exceptions are carried, without editing the reviewed files, in the package's `ROUND-3-CARRIED-EXCEPTIONS.md`.
