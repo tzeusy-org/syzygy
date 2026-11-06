@@ -1,0 +1,1241 @@
+{
+  "subject": "edd92ae4c5c41859ecdb94829e144ad49c7290f5",
+  "selectedTests": 2,
+  "failedTests": 2,
+  "pendingUnselectedTests": 467,
+  "failureAssertions": 296,
+  "affectedRows": 32,
+  "actualRowIds": [
+    "consent/Date:/2026-02-29",
+    "consent/Date:/2026-02-30",
+    "consent/Date:/2026-02-31",
+    "consent/Date:/2026-04-31",
+    "consent/Expires:/2026-02-29",
+    "consent/Expires:/2026-02-30",
+    "consent/Expires:/2026-02-31",
+    "consent/Expires:/2026-04-31",
+    "judgment/Date:/2026-02-29",
+    "judgment/Date:/2026-02-30",
+    "judgment/Date:/2026-02-31",
+    "judgment/Date:/2026-04-31",
+    "judgment/Expires:/2026-02-29",
+    "judgment/Expires:/2026-02-30",
+    "judgment/Expires:/2026-02-31",
+    "judgment/Expires:/2026-04-31",
+    "policy/Date:/2026-02-29",
+    "policy/Date:/2026-02-30",
+    "policy/Date:/2026-02-31",
+    "policy/Date:/2026-04-31",
+    "policy/Expires:/2026-02-29",
+    "policy/Expires:/2026-02-30",
+    "policy/Expires:/2026-02-31",
+    "policy/Expires:/2026-04-31",
+    "registry/Date:/2026-02-29",
+    "registry/Date:/2026-02-30",
+    "registry/Date:/2026-02-31",
+    "registry/Date:/2026-04-31",
+    "registry/Expires:/2026-02-29",
+    "registry/Expires:/2026-02-30",
+    "registry/Expires:/2026-02-31",
+    "registry/Expires:/2026-04-31"
+  ],
+  "perGateFieldFailureAssertions": {
+    "consent/Date:": 40,
+    "consent/Expires:": 40,
+    "policy/Date:": 40,
+    "policy/Expires:": 40,
+    "registry/Date:": 40,
+    "registry/Expires:": 40,
+    "judgment/Date:": 28,
+    "judgment/Expires:": 28
+  },
+  "allFailureMessagesIntendedSemanticAssertions": true,
+  "validOrAlreadyRefusedControlFailures": [],
+  "restoration": true,
+  "assertionFailures": [
+    {
+      "rowId": "consent/Date:/2026-02-29",
+      "message": "AssertionError: consent/Date:/2026-02-29: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-29",
+      "message": "AssertionError: consent/Date:/2026-02-29: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-29",
+      "message": "AssertionError: consent/Date:/2026-02-29: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-29",
+      "message": "AssertionError: consent/Date:/2026-02-29: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-29",
+      "message": "AssertionError: consent/Date:/2026-02-29: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-29",
+      "message": "AssertionError: consent/Date:/2026-02-29: expected false to be 'consent:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-29",
+      "message": "AssertionError: consent/Date:/2026-02-29: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-29",
+      "message": "AssertionError: consent/Date:/2026-02-29: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-29",
+      "message": "AssertionError: consent/Date:/2026-02-29: expected false to be 'unconsented-source-or-provider' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-29",
+      "message": "AssertionError: consent/Date:/2026-02-29: expected undefined to be 'consent:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-30",
+      "message": "AssertionError: consent/Date:/2026-02-30: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-30",
+      "message": "AssertionError: consent/Date:/2026-02-30: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-30",
+      "message": "AssertionError: consent/Date:/2026-02-30: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-30",
+      "message": "AssertionError: consent/Date:/2026-02-30: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-30",
+      "message": "AssertionError: consent/Date:/2026-02-30: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-30",
+      "message": "AssertionError: consent/Date:/2026-02-30: expected false to be 'consent:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-30",
+      "message": "AssertionError: consent/Date:/2026-02-30: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-30",
+      "message": "AssertionError: consent/Date:/2026-02-30: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-30",
+      "message": "AssertionError: consent/Date:/2026-02-30: expected false to be 'unconsented-source-or-provider' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-30",
+      "message": "AssertionError: consent/Date:/2026-02-30: expected undefined to be 'consent:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-31",
+      "message": "AssertionError: consent/Date:/2026-02-31: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-31",
+      "message": "AssertionError: consent/Date:/2026-02-31: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-31",
+      "message": "AssertionError: consent/Date:/2026-02-31: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-31",
+      "message": "AssertionError: consent/Date:/2026-02-31: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-31",
+      "message": "AssertionError: consent/Date:/2026-02-31: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-31",
+      "message": "AssertionError: consent/Date:/2026-02-31: expected false to be 'consent:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-31",
+      "message": "AssertionError: consent/Date:/2026-02-31: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-31",
+      "message": "AssertionError: consent/Date:/2026-02-31: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-31",
+      "message": "AssertionError: consent/Date:/2026-02-31: expected false to be 'unconsented-source-or-provider' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-02-31",
+      "message": "AssertionError: consent/Date:/2026-02-31: expected undefined to be 'consent:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-04-31",
+      "message": "AssertionError: consent/Date:/2026-04-31: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-04-31",
+      "message": "AssertionError: consent/Date:/2026-04-31: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-04-31",
+      "message": "AssertionError: consent/Date:/2026-04-31: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-04-31",
+      "message": "AssertionError: consent/Date:/2026-04-31: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-04-31",
+      "message": "AssertionError: consent/Date:/2026-04-31: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-04-31",
+      "message": "AssertionError: consent/Date:/2026-04-31: expected false to be 'consent:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-04-31",
+      "message": "AssertionError: consent/Date:/2026-04-31: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-04-31",
+      "message": "AssertionError: consent/Date:/2026-04-31: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-04-31",
+      "message": "AssertionError: consent/Date:/2026-04-31: expected false to be 'unconsented-source-or-provider' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Date:/2026-04-31",
+      "message": "AssertionError: consent/Date:/2026-04-31: expected undefined to be 'consent:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-29",
+      "message": "AssertionError: consent/Expires:/2026-02-29: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-29",
+      "message": "AssertionError: consent/Expires:/2026-02-29: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-29",
+      "message": "AssertionError: consent/Expires:/2026-02-29: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-29",
+      "message": "AssertionError: consent/Expires:/2026-02-29: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-29",
+      "message": "AssertionError: consent/Expires:/2026-02-29: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-29",
+      "message": "AssertionError: consent/Expires:/2026-02-29: expected false to be 'consent:expired' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-29",
+      "message": "AssertionError: consent/Expires:/2026-02-29: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-29",
+      "message": "AssertionError: consent/Expires:/2026-02-29: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-29",
+      "message": "AssertionError: consent/Expires:/2026-02-29: expected false to be 'unconsented-source-or-provider' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-29",
+      "message": "AssertionError: consent/Expires:/2026-02-29: expected undefined to be 'consent:expired' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-30",
+      "message": "AssertionError: consent/Expires:/2026-02-30: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-30",
+      "message": "AssertionError: consent/Expires:/2026-02-30: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-30",
+      "message": "AssertionError: consent/Expires:/2026-02-30: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-30",
+      "message": "AssertionError: consent/Expires:/2026-02-30: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-30",
+      "message": "AssertionError: consent/Expires:/2026-02-30: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-30",
+      "message": "AssertionError: consent/Expires:/2026-02-30: expected false to be 'consent:expired' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-30",
+      "message": "AssertionError: consent/Expires:/2026-02-30: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-30",
+      "message": "AssertionError: consent/Expires:/2026-02-30: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-30",
+      "message": "AssertionError: consent/Expires:/2026-02-30: expected false to be 'unconsented-source-or-provider' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-30",
+      "message": "AssertionError: consent/Expires:/2026-02-30: expected undefined to be 'consent:expired' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-31",
+      "message": "AssertionError: consent/Expires:/2026-02-31: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-31",
+      "message": "AssertionError: consent/Expires:/2026-02-31: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-31",
+      "message": "AssertionError: consent/Expires:/2026-02-31: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-31",
+      "message": "AssertionError: consent/Expires:/2026-02-31: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-31",
+      "message": "AssertionError: consent/Expires:/2026-02-31: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-31",
+      "message": "AssertionError: consent/Expires:/2026-02-31: expected false to be 'consent:expired' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-31",
+      "message": "AssertionError: consent/Expires:/2026-02-31: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-31",
+      "message": "AssertionError: consent/Expires:/2026-02-31: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-31",
+      "message": "AssertionError: consent/Expires:/2026-02-31: expected false to be 'unconsented-source-or-provider' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-02-31",
+      "message": "AssertionError: consent/Expires:/2026-02-31: expected undefined to be 'consent:expired' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-04-31",
+      "message": "AssertionError: consent/Expires:/2026-04-31: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-04-31",
+      "message": "AssertionError: consent/Expires:/2026-04-31: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-04-31",
+      "message": "AssertionError: consent/Expires:/2026-04-31: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-04-31",
+      "message": "AssertionError: consent/Expires:/2026-04-31: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-04-31",
+      "message": "AssertionError: consent/Expires:/2026-04-31: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-04-31",
+      "message": "AssertionError: consent/Expires:/2026-04-31: expected false to be 'consent:expired' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-04-31",
+      "message": "AssertionError: consent/Expires:/2026-04-31: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-04-31",
+      "message": "AssertionError: consent/Expires:/2026-04-31: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-04-31",
+      "message": "AssertionError: consent/Expires:/2026-04-31: expected false to be 'unconsented-source-or-provider' // Object.is equality"
+    },
+    {
+      "rowId": "consent/Expires:/2026-04-31",
+      "message": "AssertionError: consent/Expires:/2026-04-31: expected undefined to be 'consent:expired' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-29",
+      "message": "AssertionError: policy/Date:/2026-02-29: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-29",
+      "message": "AssertionError: policy/Date:/2026-02-29: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-29",
+      "message": "AssertionError: policy/Date:/2026-02-29: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-29",
+      "message": "AssertionError: policy/Date:/2026-02-29: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-29",
+      "message": "AssertionError: policy/Date:/2026-02-29: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-29",
+      "message": "AssertionError: policy/Date:/2026-02-29: expected false to be 'policy:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-29",
+      "message": "AssertionError: policy/Date:/2026-02-29: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-29",
+      "message": "AssertionError: policy/Date:/2026-02-29: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-29",
+      "message": "AssertionError: policy/Date:/2026-02-29: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-29",
+      "message": "AssertionError: policy/Date:/2026-02-29: expected undefined to be 'policy:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-30",
+      "message": "AssertionError: policy/Date:/2026-02-30: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-30",
+      "message": "AssertionError: policy/Date:/2026-02-30: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-30",
+      "message": "AssertionError: policy/Date:/2026-02-30: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-30",
+      "message": "AssertionError: policy/Date:/2026-02-30: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-30",
+      "message": "AssertionError: policy/Date:/2026-02-30: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-30",
+      "message": "AssertionError: policy/Date:/2026-02-30: expected false to be 'policy:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-30",
+      "message": "AssertionError: policy/Date:/2026-02-30: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-30",
+      "message": "AssertionError: policy/Date:/2026-02-30: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-30",
+      "message": "AssertionError: policy/Date:/2026-02-30: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-30",
+      "message": "AssertionError: policy/Date:/2026-02-30: expected undefined to be 'policy:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-31",
+      "message": "AssertionError: policy/Date:/2026-02-31: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-31",
+      "message": "AssertionError: policy/Date:/2026-02-31: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-31",
+      "message": "AssertionError: policy/Date:/2026-02-31: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-31",
+      "message": "AssertionError: policy/Date:/2026-02-31: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-31",
+      "message": "AssertionError: policy/Date:/2026-02-31: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-31",
+      "message": "AssertionError: policy/Date:/2026-02-31: expected false to be 'policy:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-31",
+      "message": "AssertionError: policy/Date:/2026-02-31: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-31",
+      "message": "AssertionError: policy/Date:/2026-02-31: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-31",
+      "message": "AssertionError: policy/Date:/2026-02-31: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-02-31",
+      "message": "AssertionError: policy/Date:/2026-02-31: expected undefined to be 'policy:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-04-31",
+      "message": "AssertionError: policy/Date:/2026-04-31: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-04-31",
+      "message": "AssertionError: policy/Date:/2026-04-31: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-04-31",
+      "message": "AssertionError: policy/Date:/2026-04-31: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-04-31",
+      "message": "AssertionError: policy/Date:/2026-04-31: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-04-31",
+      "message": "AssertionError: policy/Date:/2026-04-31: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-04-31",
+      "message": "AssertionError: policy/Date:/2026-04-31: expected false to be 'policy:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-04-31",
+      "message": "AssertionError: policy/Date:/2026-04-31: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-04-31",
+      "message": "AssertionError: policy/Date:/2026-04-31: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-04-31",
+      "message": "AssertionError: policy/Date:/2026-04-31: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Date:/2026-04-31",
+      "message": "AssertionError: policy/Date:/2026-04-31: expected undefined to be 'policy:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-29",
+      "message": "AssertionError: policy/Expires:/2026-02-29: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-29",
+      "message": "AssertionError: policy/Expires:/2026-02-29: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-29",
+      "message": "AssertionError: policy/Expires:/2026-02-29: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-29",
+      "message": "AssertionError: policy/Expires:/2026-02-29: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-29",
+      "message": "AssertionError: policy/Expires:/2026-02-29: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-29",
+      "message": "AssertionError: policy/Expires:/2026-02-29: expected false to be 'policy:expired' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-29",
+      "message": "AssertionError: policy/Expires:/2026-02-29: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-29",
+      "message": "AssertionError: policy/Expires:/2026-02-29: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-29",
+      "message": "AssertionError: policy/Expires:/2026-02-29: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-29",
+      "message": "AssertionError: policy/Expires:/2026-02-29: expected undefined to be 'policy:expired' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-30",
+      "message": "AssertionError: policy/Expires:/2026-02-30: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-30",
+      "message": "AssertionError: policy/Expires:/2026-02-30: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-30",
+      "message": "AssertionError: policy/Expires:/2026-02-30: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-30",
+      "message": "AssertionError: policy/Expires:/2026-02-30: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-30",
+      "message": "AssertionError: policy/Expires:/2026-02-30: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-30",
+      "message": "AssertionError: policy/Expires:/2026-02-30: expected false to be 'policy:expired' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-30",
+      "message": "AssertionError: policy/Expires:/2026-02-30: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-30",
+      "message": "AssertionError: policy/Expires:/2026-02-30: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-30",
+      "message": "AssertionError: policy/Expires:/2026-02-30: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-30",
+      "message": "AssertionError: policy/Expires:/2026-02-30: expected undefined to be 'policy:expired' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-31",
+      "message": "AssertionError: policy/Expires:/2026-02-31: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-31",
+      "message": "AssertionError: policy/Expires:/2026-02-31: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-31",
+      "message": "AssertionError: policy/Expires:/2026-02-31: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-31",
+      "message": "AssertionError: policy/Expires:/2026-02-31: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-31",
+      "message": "AssertionError: policy/Expires:/2026-02-31: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-31",
+      "message": "AssertionError: policy/Expires:/2026-02-31: expected false to be 'policy:expired' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-31",
+      "message": "AssertionError: policy/Expires:/2026-02-31: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-31",
+      "message": "AssertionError: policy/Expires:/2026-02-31: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-31",
+      "message": "AssertionError: policy/Expires:/2026-02-31: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-02-31",
+      "message": "AssertionError: policy/Expires:/2026-02-31: expected undefined to be 'policy:expired' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-04-31",
+      "message": "AssertionError: policy/Expires:/2026-04-31: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-04-31",
+      "message": "AssertionError: policy/Expires:/2026-04-31: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-04-31",
+      "message": "AssertionError: policy/Expires:/2026-04-31: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-04-31",
+      "message": "AssertionError: policy/Expires:/2026-04-31: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-04-31",
+      "message": "AssertionError: policy/Expires:/2026-04-31: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-04-31",
+      "message": "AssertionError: policy/Expires:/2026-04-31: expected false to be 'policy:expired' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-04-31",
+      "message": "AssertionError: policy/Expires:/2026-04-31: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-04-31",
+      "message": "AssertionError: policy/Expires:/2026-04-31: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-04-31",
+      "message": "AssertionError: policy/Expires:/2026-04-31: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "policy/Expires:/2026-04-31",
+      "message": "AssertionError: policy/Expires:/2026-04-31: expected undefined to be 'policy:expired' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-29",
+      "message": "AssertionError: registry/Date:/2026-02-29: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-29",
+      "message": "AssertionError: registry/Date:/2026-02-29: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-29",
+      "message": "AssertionError: registry/Date:/2026-02-29: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-29",
+      "message": "AssertionError: registry/Date:/2026-02-29: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-29",
+      "message": "AssertionError: registry/Date:/2026-02-29: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-29",
+      "message": "AssertionError: registry/Date:/2026-02-29: expected false to be 'registry:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-29",
+      "message": "AssertionError: registry/Date:/2026-02-29: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-29",
+      "message": "AssertionError: registry/Date:/2026-02-29: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-29",
+      "message": "AssertionError: registry/Date:/2026-02-29: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-29",
+      "message": "AssertionError: registry/Date:/2026-02-29: expected undefined to be 'registry:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-30",
+      "message": "AssertionError: registry/Date:/2026-02-30: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-30",
+      "message": "AssertionError: registry/Date:/2026-02-30: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-30",
+      "message": "AssertionError: registry/Date:/2026-02-30: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-30",
+      "message": "AssertionError: registry/Date:/2026-02-30: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-30",
+      "message": "AssertionError: registry/Date:/2026-02-30: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-30",
+      "message": "AssertionError: registry/Date:/2026-02-30: expected false to be 'registry:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-30",
+      "message": "AssertionError: registry/Date:/2026-02-30: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-30",
+      "message": "AssertionError: registry/Date:/2026-02-30: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-30",
+      "message": "AssertionError: registry/Date:/2026-02-30: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-30",
+      "message": "AssertionError: registry/Date:/2026-02-30: expected undefined to be 'registry:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-31",
+      "message": "AssertionError: registry/Date:/2026-02-31: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-31",
+      "message": "AssertionError: registry/Date:/2026-02-31: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-31",
+      "message": "AssertionError: registry/Date:/2026-02-31: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-31",
+      "message": "AssertionError: registry/Date:/2026-02-31: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-31",
+      "message": "AssertionError: registry/Date:/2026-02-31: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-31",
+      "message": "AssertionError: registry/Date:/2026-02-31: expected false to be 'registry:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-31",
+      "message": "AssertionError: registry/Date:/2026-02-31: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-31",
+      "message": "AssertionError: registry/Date:/2026-02-31: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-31",
+      "message": "AssertionError: registry/Date:/2026-02-31: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-02-31",
+      "message": "AssertionError: registry/Date:/2026-02-31: expected undefined to be 'registry:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-04-31",
+      "message": "AssertionError: registry/Date:/2026-04-31: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-04-31",
+      "message": "AssertionError: registry/Date:/2026-04-31: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-04-31",
+      "message": "AssertionError: registry/Date:/2026-04-31: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-04-31",
+      "message": "AssertionError: registry/Date:/2026-04-31: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-04-31",
+      "message": "AssertionError: registry/Date:/2026-04-31: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-04-31",
+      "message": "AssertionError: registry/Date:/2026-04-31: expected false to be 'registry:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-04-31",
+      "message": "AssertionError: registry/Date:/2026-04-31: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-04-31",
+      "message": "AssertionError: registry/Date:/2026-04-31: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-04-31",
+      "message": "AssertionError: registry/Date:/2026-04-31: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Date:/2026-04-31",
+      "message": "AssertionError: registry/Date:/2026-04-31: expected undefined to be 'registry:act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-29",
+      "message": "AssertionError: registry/Expires:/2026-02-29: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-29",
+      "message": "AssertionError: registry/Expires:/2026-02-29: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-29",
+      "message": "AssertionError: registry/Expires:/2026-02-29: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-29",
+      "message": "AssertionError: registry/Expires:/2026-02-29: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-29",
+      "message": "AssertionError: registry/Expires:/2026-02-29: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-29",
+      "message": "AssertionError: registry/Expires:/2026-02-29: expected false to be 'registry:expired' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-29",
+      "message": "AssertionError: registry/Expires:/2026-02-29: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-29",
+      "message": "AssertionError: registry/Expires:/2026-02-29: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-29",
+      "message": "AssertionError: registry/Expires:/2026-02-29: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-29",
+      "message": "AssertionError: registry/Expires:/2026-02-29: expected undefined to be 'registry:expired' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-30",
+      "message": "AssertionError: registry/Expires:/2026-02-30: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-30",
+      "message": "AssertionError: registry/Expires:/2026-02-30: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-30",
+      "message": "AssertionError: registry/Expires:/2026-02-30: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-30",
+      "message": "AssertionError: registry/Expires:/2026-02-30: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-30",
+      "message": "AssertionError: registry/Expires:/2026-02-30: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-30",
+      "message": "AssertionError: registry/Expires:/2026-02-30: expected false to be 'registry:expired' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-30",
+      "message": "AssertionError: registry/Expires:/2026-02-30: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-30",
+      "message": "AssertionError: registry/Expires:/2026-02-30: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-30",
+      "message": "AssertionError: registry/Expires:/2026-02-30: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-30",
+      "message": "AssertionError: registry/Expires:/2026-02-30: expected undefined to be 'registry:expired' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-31",
+      "message": "AssertionError: registry/Expires:/2026-02-31: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-31",
+      "message": "AssertionError: registry/Expires:/2026-02-31: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-31",
+      "message": "AssertionError: registry/Expires:/2026-02-31: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-31",
+      "message": "AssertionError: registry/Expires:/2026-02-31: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-31",
+      "message": "AssertionError: registry/Expires:/2026-02-31: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-31",
+      "message": "AssertionError: registry/Expires:/2026-02-31: expected false to be 'registry:expired' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-31",
+      "message": "AssertionError: registry/Expires:/2026-02-31: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-31",
+      "message": "AssertionError: registry/Expires:/2026-02-31: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-31",
+      "message": "AssertionError: registry/Expires:/2026-02-31: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-02-31",
+      "message": "AssertionError: registry/Expires:/2026-02-31: expected undefined to be 'registry:expired' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-04-31",
+      "message": "AssertionError: registry/Expires:/2026-04-31: expected true to be false // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-04-31",
+      "message": "AssertionError: registry/Expires:/2026-04-31: expected 'owner-trusted-bootstrap' to be 'rejected' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-04-31",
+      "message": "AssertionError: registry/Expires:/2026-04-31: expected 1 to be +0 // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-04-31",
+      "message": "AssertionError: registry/Expires:/2026-04-31: expected 'admitted' to be 'unknown' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-04-31",
+      "message": "AssertionError: registry/Expires:/2026-04-31: expected 'valid' to be 'invalid' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-04-31",
+      "message": "AssertionError: registry/Expires:/2026-04-31: expected false to be 'registry:expired' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-04-31",
+      "message": "AssertionError: registry/Expires:/2026-04-31: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-04-31",
+      "message": "AssertionError: registry/Expires:/2026-04-31: expected undefined to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-04-31",
+      "message": "AssertionError: registry/Expires:/2026-04-31: expected false to be 'source-uncaptured-or-unreachable' // Object.is equality"
+    },
+    {
+      "rowId": "registry/Expires:/2026-04-31",
+      "message": "AssertionError: registry/Expires:/2026-04-31: expected undefined to be 'registry:expired' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-29",
+      "message": "AssertionError: judgment/Date:/2026-02-29: expected 'lawful' to be 'unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-29",
+      "message": "AssertionError: judgment/Date:/2026-02-29: expected false to be 'act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-29",
+      "message": "AssertionError: judgment/Date:/2026-02-29: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-29",
+      "message": "AssertionError: judgment/Date:/2026-02-29: expected false to be 'verdict-unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-29",
+      "message": "AssertionError: judgment/Date:/2026-02-29: expected 'owner-verdict-carried' to be 'unknown-never-met' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-29",
+      "message": "AssertionError: judgment/Date:/2026-02-29: expected { \u2026(4) } to be undefined"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-29",
+      "message": "AssertionError: judgment/Date:/2026-02-29: expected false to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-30",
+      "message": "AssertionError: judgment/Date:/2026-02-30: expected 'lawful' to be 'unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-30",
+      "message": "AssertionError: judgment/Date:/2026-02-30: expected false to be 'act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-30",
+      "message": "AssertionError: judgment/Date:/2026-02-30: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-30",
+      "message": "AssertionError: judgment/Date:/2026-02-30: expected false to be 'verdict-unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-30",
+      "message": "AssertionError: judgment/Date:/2026-02-30: expected 'owner-verdict-carried' to be 'unknown-never-met' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-30",
+      "message": "AssertionError: judgment/Date:/2026-02-30: expected { \u2026(4) } to be undefined"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-30",
+      "message": "AssertionError: judgment/Date:/2026-02-30: expected false to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-31",
+      "message": "AssertionError: judgment/Date:/2026-02-31: expected 'lawful' to be 'unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-31",
+      "message": "AssertionError: judgment/Date:/2026-02-31: expected false to be 'act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-31",
+      "message": "AssertionError: judgment/Date:/2026-02-31: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-31",
+      "message": "AssertionError: judgment/Date:/2026-02-31: expected false to be 'verdict-unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-31",
+      "message": "AssertionError: judgment/Date:/2026-02-31: expected 'owner-verdict-carried' to be 'unknown-never-met' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-31",
+      "message": "AssertionError: judgment/Date:/2026-02-31: expected { \u2026(4) } to be undefined"
+    },
+    {
+      "rowId": "judgment/Date:/2026-02-31",
+      "message": "AssertionError: judgment/Date:/2026-02-31: expected false to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-04-31",
+      "message": "AssertionError: judgment/Date:/2026-04-31: expected 'lawful' to be 'unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-04-31",
+      "message": "AssertionError: judgment/Date:/2026-04-31: expected false to be 'act-instant-malformed' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-04-31",
+      "message": "AssertionError: judgment/Date:/2026-04-31: expected false to be 'RFC3-16(b) item 6 is not a date' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-04-31",
+      "message": "AssertionError: judgment/Date:/2026-04-31: expected false to be 'verdict-unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-04-31",
+      "message": "AssertionError: judgment/Date:/2026-04-31: expected 'owner-verdict-carried' to be 'unknown-never-met' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Date:/2026-04-31",
+      "message": "AssertionError: judgment/Date:/2026-04-31: expected { \u2026(4) } to be undefined"
+    },
+    {
+      "rowId": "judgment/Date:/2026-04-31",
+      "message": "AssertionError: judgment/Date:/2026-04-31: expected false to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-29",
+      "message": "AssertionError: judgment/Expires:/2026-02-29: expected 'lawful' to be 'unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-29",
+      "message": "AssertionError: judgment/Expires:/2026-02-29: expected false to be 'expired' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-29",
+      "message": "AssertionError: judgment/Expires:/2026-02-29: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-29",
+      "message": "AssertionError: judgment/Expires:/2026-02-29: expected false to be 'verdict-unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-29",
+      "message": "AssertionError: judgment/Expires:/2026-02-29: expected 'owner-verdict-carried' to be 'unknown-never-met' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-29",
+      "message": "AssertionError: judgment/Expires:/2026-02-29: expected { \u2026(4) } to be undefined"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-29",
+      "message": "AssertionError: judgment/Expires:/2026-02-29: expected false to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-30",
+      "message": "AssertionError: judgment/Expires:/2026-02-30: expected 'lawful' to be 'unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-30",
+      "message": "AssertionError: judgment/Expires:/2026-02-30: expected false to be 'expired' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-30",
+      "message": "AssertionError: judgment/Expires:/2026-02-30: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-30",
+      "message": "AssertionError: judgment/Expires:/2026-02-30: expected false to be 'verdict-unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-30",
+      "message": "AssertionError: judgment/Expires:/2026-02-30: expected 'owner-verdict-carried' to be 'unknown-never-met' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-30",
+      "message": "AssertionError: judgment/Expires:/2026-02-30: expected { \u2026(4) } to be undefined"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-30",
+      "message": "AssertionError: judgment/Expires:/2026-02-30: expected false to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-31",
+      "message": "AssertionError: judgment/Expires:/2026-02-31: expected 'lawful' to be 'unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-31",
+      "message": "AssertionError: judgment/Expires:/2026-02-31: expected false to be 'expired' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-31",
+      "message": "AssertionError: judgment/Expires:/2026-02-31: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-31",
+      "message": "AssertionError: judgment/Expires:/2026-02-31: expected false to be 'verdict-unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-31",
+      "message": "AssertionError: judgment/Expires:/2026-02-31: expected 'owner-verdict-carried' to be 'unknown-never-met' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-31",
+      "message": "AssertionError: judgment/Expires:/2026-02-31: expected { \u2026(4) } to be undefined"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-02-31",
+      "message": "AssertionError: judgment/Expires:/2026-02-31: expected false to be 'RFC3-16(a)' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-04-31",
+      "message": "AssertionError: judgment/Expires:/2026-04-31: expected 'lawful' to be 'unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-04-31",
+      "message": "AssertionError: judgment/Expires:/2026-04-31: expected false to be 'expired' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-04-31",
+      "message": "AssertionError: judgment/Expires:/2026-04-31: expected false to be 'act declares an expiry that has passe\u2026' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-04-31",
+      "message": "AssertionError: judgment/Expires:/2026-04-31: expected false to be 'verdict-unlawful' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-04-31",
+      "message": "AssertionError: judgment/Expires:/2026-04-31: expected 'owner-verdict-carried' to be 'unknown-never-met' // Object.is equality"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-04-31",
+      "message": "AssertionError: judgment/Expires:/2026-04-31: expected { \u2026(4) } to be undefined"
+    },
+    {
+      "rowId": "judgment/Expires:/2026-04-31",
+      "message": "AssertionError: judgment/Expires:/2026-04-31: expected false to be 'RFC3-16(a)' // Object.is equality"
+    }
+  ]
+}
