@@ -4,7 +4,10 @@
 //
 //   (in each tree) npm ci && npx tsc -b packages/polaris-generation-consent packages/polaris-dossier
 //   node scripts/differential_consent_act_families.mjs --old <tree> --new <tree> --out <file.json> --bead <id>
-//     [--workers <n>] [--kinds <k,...>] [--count] [--expect-mismatches --control-note <text>]
+//     [--workers <n>] [--kinds <k,...>] [--count] [--time-limit-ms <n>]
+//     [--expect-mismatches --expect-reader-mismatches <reader,...> --control-note <text>]
+//   node scripts/differential_consent_act_families.mjs --selftest
+// Version 3 intentionally changes this evidence tool's JSON/control-exit contract (syzygy-bpyt.8.26); historical /2 records stay frozen.
 //   (TMPDIR names where the screen's worlds are materialized; it is emptied of them on exit)
 //
 // `--old` and `--new` are two Syzygy checkouts with those packages built: the base and the change. Every reader the gate composes over
@@ -12,7 +15,7 @@
 // question the admission records port answers, and the dossier's package gate sources: D9, the RFC7-20 ruling, the registry entry,
 // each drawer and each repository's provider statements) runs from both trees' compiled packages over the same worlds, at the same
 // instants, and the two answers are compared as text: the answer's JSON, or the error the read throws. `--expect-mismatches` marks a
-// negative-control run (a `--new` tree carrying a known mutant): it succeeds only when some answer differs.
+// negative-control run (a `--new` tree carrying a known mutant): each explicitly demanded logical reader must run and differ.
 //
 // Since syzygy-bpyt.8.19 it also runs the in-force rules on their own (`inForceRecords` and `notInForceRecords` over the admission
 // records), the parked consent ports (`createConsentPorts`, from the package root: identity, admit and dispatch for one probe source,
@@ -52,6 +55,7 @@
 // answer that differs (there should be none, except in a negative-control run). Answers are stored by sha256 with a short label; a
 // label never carries a digest.
 
+import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
@@ -71,6 +75,122 @@ const INSTANTS = [INSTANT_MID, INSTANT_LATE].map(at => [at, Date.parse(at)]);
 const MARK = ' [altered]';
 
 const sha256 = text => createHash('sha256').update(text, 'utf8').digest('hex');
+
+// Evidence-only typed records, never an accepted file form or an owner act. The file parser's refusal stays unchanged.
+const SUCCESSOR_AT = '2026-10-08T09:30:00.000Z';
+const SUCCESSOR_INSTANTS = ['2026-10-08T09:29:59.999Z', SUCCESSOR_AT, '2026-10-08T09:30:00.001Z'];
+const SUCCESSOR_URL = 'https://example.invalid/fixture-observation';
+const OLD_REVISION = 'a'.repeat(40), NEW_REVISION = 'b'.repeat(40);
+const SUCCESSOR_RECORDS = [
+  { recordId: 'FIXTURE-OBSERVATION', version: '1', class: 'observation', project: 'project:syzygy', repositoryId: 'fixture-repository', providerId: null, upstream: SUCCESSOR_URL,
+    digest: '1'.repeat(64), inForceAt: 1791360000000, withdrawnAt: null, supersedes: null, supersessionAt: null, admittedRevisions: [OLD_REVISION], revisionLabels: ['predecessor'], admittedRepositories: [], contentClasses: [] },
+  { recordId: 'FIXTURE-OBSERVATION', version: '2', class: 'observation', project: 'project:syzygy', repositoryId: 'fixture-repository', providerId: null, upstream: SUCCESSOR_URL,
+    digest: '2'.repeat(64), inForceAt: 1791451800000, withdrawnAt: null, supersedes: 'FIXTURE-OBSERVATION@1', supersessionAt: 1791451800000, admittedRevisions: [NEW_REVISION], revisionLabels: ['successor'], admittedRepositories: [], contentClasses: [] },
+];
+const FIXTURE_READERS = ['successor-record-port', 'successor-gate-port'];
+
+function requiredAbsence(port) {
+  if (typeof port.consentAbsenceFor !== 'function') throw new Error('required current consentAbsenceFor method is missing');
+  return port;
+}
+
+async function successorQuestions(port) {
+  requiredAbsence(port);
+  const check = revision => port.check({ kind: 'observation-consent', repositoryId: 'fixture-repository', revision });
+  return { ids: await port.repositoryIdsFor(SUCCESSOR_URL), absence: await port.consentAbsenceFor(SUCCESSOR_URL), revisions: await port.consentedRevisionsFor('fixture-repository'),
+    observationOld: await check(OLD_REVISION), observationSuccessor: await check(NEW_REVISION) };
+}
+
+function successorExpected(at) {
+  const before = at === SUCCESSOR_INSTANTS[0];
+  return { ids: ['fixture-repository'], absence: 'the observation record(s) naming https://example.invalid/fixture-observation: FIXTURE-OBSERVATION@1 ' +
+    (before ? 'is in force; FIXTURE-OBSERVATION@2 is not in force yet' : 'is superseded by a successor in force; FIXTURE-OBSERVATION@2 is in force'),
+    revisions: [{ label: before ? 'predecessor' : 'successor', commitId: before ? OLD_REVISION : NEW_REVISION }],
+    observationOld: before ? { satisfied: true, record: 'FIXTURE-OBSERVATION@1' } : { satisfied: false, why: 'no record found: no owner act puts a observation-consent for fixture-repository in force at revision ' + OLD_REVISION },
+    observationSuccessor: before ? { satisfied: false, why: 'no record found: no owner act puts a observation-consent for fixture-repository in force at revision ' + NEW_REVISION } : { satisfied: true, record: 'FIXTURE-OBSERVATION@2' } };
+}
+
+/** The only transformation is one import specifier. The adapter supplies records, never answers or in-force logic. */
+function prepareSuccessorAdapter(tree, scratch, role) {
+  const originalPath = path.join(tree, 'packages/polaris-dossier/dist/gate-sources.js');
+  const original = fs.readFileSync(originalPath, 'utf8'), needle = "'@syzygy/polaris-generation-consent/live'";
+  if (original.split(needle).length !== 2) throw new Error('fixture gate import substitution is not unique');
+  const adapterPath = path.join(scratch, `${role}-successor-consent.mjs`);
+  const consentUrl = pathToFileURL(path.join(tree, consentEntry(tree))).href;
+  const adapter = `export * from ${JSON.stringify(consentUrl)};\nimport { parseAdmissionRecords, createAdmissionRecordsPort, createPackagePolicyReader } from ${JSON.stringify(consentUrl)};\nconst records = ${JSON.stringify(SUCCESSOR_RECORDS)};\nexport function createPackageAdmissionRecordsPort(options) {\n  return createAdmissionRecordsPort({reader: {read: async () => parseAdmissionRecords(records)}, policy: createPackagePolicyReader(options), now: options.now});\n}\n`;
+  fs.writeFileSync(adapterPath, adapter, { flag: 'wx' });
+  // Beside the original solely so unchanged relative imports retain their actual resolution.
+  const transformedPath = path.join(path.dirname(originalPath), `.successor-${path.basename(scratch)}-${role}.mjs`);
+  const replacement = JSON.stringify(pathToFileURL(adapterPath).href), transformed = original.replace(needle, replacement);
+  if (transformed.replace(replacement, needle) !== original) throw new Error('fixture changed bytes outside its one import');
+  fs.writeFileSync(transformedPath, transformed, { flag: 'wx' });
+  return { originalPath, originalSha256: sha256(original), transformedPath, transformedSha256: sha256(transformed),
+    adapterPath, adapterSha256: sha256(adapter), substitution: { old: needle, new: replacement }, adapter,
+    recordsSha256: sha256(JSON.stringify(SUCCESSOR_RECORDS)), records: SUCCESSOR_RECORDS };
+}
+
+function selectWorlds(generated, kinds) {
+  const available = new Set(generated.map(w => w.kind));
+  if (kinds !== undefined && (kinds.length === 0 || new Set(kinds).size !== kinds.length || kinds.some(k => !available.has(k)))) throw new Error('unknown or duplicate selected world kind');
+  const selected = kinds === undefined ? generated : generated.filter(w => kinds.includes(w.kind));
+  if (selected.length === 0) throw new Error('empty selected world population');
+  for (const world of selected) if (world.readers.length === 0 || new Set(world.readers).size !== world.readers.length || world.instants.length === 0 || (world.steps !== undefined && world.steps.length === 0)) throw new Error('empty or duplicate world execution population');
+  return selected;
+}
+
+function population(worlds) {
+  const byKind = {};
+  for (const world of worlds) byKind[world.kind] = (byKind[world.kind] ?? 0) + 1;
+  return { worlds: worlds.length, byKind };
+}
+
+function expectedComparisons(world, specs) {
+  const rows = [];
+  for (let step = 1; step <= (world.steps?.length ?? 1); step += 1) for (const name of world.readers) {
+    if (!specs.has(name)) throw new Error(`unknown selected reader: ${name}`);
+    for (const instant of specs.get(name) ? world.instants : [null]) rows.push({
+      key: `${world.steps === undefined ? '' : `step${step}:`}${instant === null ? name : `${name}@${instant}`}`, reader: name, step, instant,
+    });
+  }
+  if (rows.length === 0) throw new Error('zero executed answer population');
+  return rows;
+}
+
+function pairAnswers(expected, before, after) {
+  const keyed = (rows, role) => {
+    const map = new Map();
+    for (const row of rows) {
+      if (map.has(row[0])) throw new Error(`duplicate ${role} answer key: ${row[0]}`);
+      map.set(row[0], row);
+    }
+    if (map.size !== expected.length || expected.some(e => !map.has(e.key))) throw new Error(`unequal ${role} expected answer key set`);
+    return map;
+  };
+  const old = keyed(before, 'old'), next = keyed(after, 'new');
+  return expected.map(identity => {
+    const a = old.get(identity.key), b = next.get(identity.key);
+    for (const row of [a, b]) {
+      if (JSON.stringify(row[4]) !== JSON.stringify({ reader: identity.reader, step: identity.step, instant: identity.instant })) throw new Error('answer metadata does not match its exact identity');
+      if (typeof row[3] !== 'string' || sha256(row[3]) !== row[1]) throw new Error('answer digest does not bind complete serialized value');
+    }
+    return { ...identity, old: a, new: b, same: a[3] === b[3] };
+  });
+}
+
+function controlExpectations(control, names, known) {
+  if (!control) { if (names !== undefined) throw new Error('reader mismatch expectations require negative-control mode'); return []; }
+  if (names === undefined || names.length === 0 || names.some(n => n === '') || new Set(names).size !== names.length || names.some(n => !known.has(n))) throw new Error('negative control requires nonempty unique known expected readers');
+  return names;
+}
+
+function unmetExpectations(expected, perReader) {
+  return expected.filter(reader => !(perReader[reader]?.answers > 0 && perReader[reader]?.mismatches > 0));
+}
+
+function requireCleanup(control) {
+  if (!(control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed)) throw new Error('materialization or owned cleanup population failed');
+}
+
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 // The readers, run in a worker against one tree's compiled packages.
@@ -153,7 +273,7 @@ function readers(consent, gate, probe, extra) {
     ['dossier-statement-v1', true, digestBound(statementV1)],
     ['dossier-provider-v2', true, digestBound(gate.PROVIDER_V2_FORM)],
     ['port', true, async (fs, root, now) => {
-      const port = consent.createPackageAdmissionRecordsPort({ root, now: () => now, fs });
+      const port = requiredAbsence(consent.createPackageAdmissionRecordsPort({ root, now: () => now, fs }));
       const out = {};
       for (const [name, repositoryId, revision] of [['observation-redis', probe.redisId, probe.redisRevision], ['observation-requests', probe.requestsId, probe.requestsRevision]]) {
         out[name] = await port.check({ kind: 'observation-consent', repositoryId, revision });
@@ -164,6 +284,19 @@ function readers(consent, gate, probe, extra) {
       out['ids-redis'] = await port.repositoryIdsFor(probe.redisUrl);
       out['absence-redis'] = await port.consentAbsenceFor(probe.redisUrl);
       return out;
+    }],
+    ['gate-port', true, async (fs, root, now) => {
+      const s = requiredAbsence(sources(fs, root, now));
+      return { ids: await s.repositoryIdsFor(probe.redisUrl), absence: await s.consentAbsenceFor(probe.redisUrl), revisions: await s.consentedRevisionsFor(probe.redisId),
+        observationRedis: await s.observationConsentFor(probe.redisId, probe.redisRevision), observationRequests: await s.observationConsentFor(probe.requestsId, probe.requestsRevision), screeningPolicy: await s.screeningPolicy() };
+    }],
+    ['successor-record-port', true, async (fs, root, now) => successorQuestions(consent.createAdmissionRecordsPort({
+      reader: { read: async () => consent.parseAdmissionRecords(SUCCESSOR_RECORDS) }, policy: consent.createPackagePolicyReader({ root, fs }), now: () => now,
+    }))],
+    ['successor-gate-port', true, async (fs, root, now) => {
+      const s = requiredAbsence(extra.successorGate.createPackageGateSources({ root, fs, now: () => now }));
+      const values = await successorQuestions({ ...s, check: ({ repositoryId, revision }) => s.observationConsentFor(repositoryId, revision) });
+      return { ...values, observationOther: await s.observationConsentFor(probe.requestsId, probe.requestsRevision), screeningPolicy: await s.screeningPolicy() };
     }],
     // The dossier's package gate sources, which compose the digest-bound reads above (syzygy-bpyt.8.20).
     ['gate-d9', true, (fs, root, now) => sources(fs, root, now).d9()],
@@ -218,13 +351,13 @@ function consentEntry(tree) {
 }
 
 if (!isMainThread) {
-  const { trees, root, probe, drops, scratch } = workerData;
+  const { trees, root, probe, drops, scratch, adapters } = workerData;
   const module = (tree, rel) => import(pathToFileURL(path.join(tree, rel)).href);
   const loaded = await Promise.all(trees.map(async tree => readers(
     await module(tree, consentEntry(tree)),
     await module(tree, 'packages/polaris-dossier/dist/gate-sources.js'),
     probe,
-    { root: await module(tree, CONSENT_ROOT), screen: await module(tree, 'packages/polaris-dossier/dist/screen.js') },
+    { root: await module(tree, CONSENT_ROOT), screen: await module(tree, 'packages/polaris-dossier/dist/screen.js'), successorGate: await import(pathToFileURL(adapters[trees.indexOf(tree)].transformedPath).href) },
   )));
   const dropped = Object.fromEntries(drops.map(rel => [rel, null]));
   // A world with `steps` is read once per step, in order, each step's overlay replacing the last: one process reading a file whose bytes
@@ -241,11 +374,11 @@ if (!isMainThread) {
           const port = overlayFs(root, layer);
           for (const [name, timed, read, disk] of list) {
             if (!names.includes(name)) continue;
-            for (const [at, now] of timed ? INSTANTS.filter(([instant]) => instants.includes(instant)) : [[null, null]]) {
+            for (const [at, now] of timed ? instants.map(instant => [instant, Date.parse(instant)]) : [[null, null]]) {
               let text = await answer(() => read(port, root, now, disks[step]));
               // A read from disk names the materialized directory where the ported read names the root.
               if (disk) text = text.split(disks[step]).join(root);
-              answers.push([`${steps === undefined ? '' : `step${step + 1}:`}${at === null ? name : `${name}@${at}`}`, sha256(text), label(text)]);
+              answers.push([`${steps === undefined ? '' : `step${step + 1}:`}${at === null ? name : `${name}@${at}`}`, sha256(text), label(text), text, { reader: name, step: step + 1, instant: at }]);
             }
           }
         }
@@ -254,20 +387,24 @@ if (!isMainThread) {
     } finally {
       for (const disk of disks) fs.rmSync(disk, { recursive: true, force: true });
     }
-    parentPort.postMessage({ id, old: out[0], new: out[1] });
+    parentPort.postMessage({ id, old: out[0], new: out[1], materialized: disks.length, removed: disks.filter(d => !fs.existsSync(d)).length });
   });
 }
 
 function pool(size, data) {
   const workers = Array.from({ length: size }, () => new Worker(SCRIPT, { workerData: data }));
   const queue = [], idle = [...workers], waiting = new Map();
-  let next = 0;
+  let next = 0, failure;
+  const fail = error => { failure = error; for (const job of [...waiting.values(), ...queue]) job.reject(error); waiting.clear(); queue.length = 0; };
   const pump = () => {
-    while (idle.length > 0 && queue.length > 0) { const worker = idle.pop(), { resolve, ...job } = queue.shift(); waiting.set(job.id, { worker, resolve }); worker.postMessage(job); }
+    while (!failure && idle.length > 0 && queue.length > 0) { const worker = idle.pop(), job = queue.shift(); const { resolve, reject, ...message } = job; waiting.set(job.id, { worker, resolve, reject }); worker.postMessage(message); }
   };
-  for (const worker of workers) worker.on('message', message => { const w = waiting.get(message.id); waiting.delete(message.id); idle.push(w.worker); w.resolve(message); pump(); });
+  for (const worker of workers) {
+    worker.on('error', fail);
+    worker.on('message', message => { const w = waiting.get(message.id); if (!w) return; waiting.delete(message.id); idle.push(w.worker); w.resolve(message); pump(); });
+  }
   return {
-    run: world => new Promise(resolve => { queue.push({ id: next++, overlay: world.overlay, steps: world.steps, names: world.readers, instants: world.instants, reduced: world.reduced, resolve }); pump(); }),
+    run: world => new Promise((resolve, reject) => { if (failure) return reject(failure); queue.push({ id: next++, overlay: world.overlay, steps: world.steps, names: world.readers, instants: world.instants, reduced: world.reduced, resolve, reject }); pump(); }),
     close: () => Promise.all(workers.map(w => w.terminate())),
   };
 }
@@ -373,7 +510,7 @@ function walk(dir, prefix = '') {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => (entry.isDirectory() ? walk(path.join(dir, entry.name), `${prefix}${entry.name}/`) : [`${prefix}${entry.name}`]));
 }
 async function corpus(root, consent, gate, allowlist, NAMED) {
-  const ALL_READERS = readers(consent, gate, null).map(([name]) => name);
+  const ALL_READERS = readers(consent, gate, null).map(([name]) => name).filter(name => !FIXTURE_READERS.includes(name));
   const read = rel => fs.readFileSync(path.join(root, rel), 'utf8');
   const exists = rel => fs.existsSync(path.join(root, rel));
   const at = form => `${D}/${form.file}`;
@@ -407,7 +544,7 @@ async function corpus(root, consent, gate, allowlist, NAMED) {
   // over the probes, which put each of their needles into a file of its own.
   // The admission records' own readers (syzygy-bpyt.8.19 adds the in-force rules and the consent ports over them), and the screening
   // policy's and the class act's (syzygy-bpyt.8.19 adds the screen and the materialization control for each).
-  const ADMISSION = ['admission', 'in-force', 'consent-ports'];
+  const ADMISSION = ['admission', 'in-force', 'consent-ports', 'port', 'gate-port'];
   const POLICY = ['policy-reader', 'policy-chain', 'screen', 'policy-chain-disk'];
   const SUBJECTS = [
     ...consent.ADMISSION_ACT_FORMS.map(f => ({ key: `admission:${f.file}`, path: at(f), base: 'admission-acts', model: 'field-parsed', artifact: f.artifact, readers: ADMISSION })),
@@ -479,13 +616,13 @@ async function corpus(root, consent, gate, allowlist, NAMED) {
     for (const [name, place] of PLACEMENTS) {
       const overlay = {};
       for (const [file, text, appended] of place(needle)) overlay[`${D}/${file}`] = text ?? `${aggregate}${appended}`;
-      add('probe', needle, name, 'all-acts', overlay, ALL_READERS.filter(n => n !== 'port'), [INSTANT_LATE]);
+      add('probe', needle, name, 'all-acts', overlay, ALL_READERS, [INSTANT_LATE]);
     }
   }
   // Each decisions file of the checkout with one needle appended, the needles in turn, beside the reduced tree (syzygy-bpyt.8.20): every
   // real text, with whatever it spells, is swept with a needle in it.
   for (const [i, rel] of walk(path.join(root, D)).map(r => `${D}/${r}`).entries()) {
-    add('real-file', rel, `appended:${needles[i % needles.length]}`, 'all-acts', { [rel]: `${textOf('all-acts', rel)}\n\nSee ${needles[i % needles.length]}.\n` }, ALL_READERS.filter(n => n !== 'port'), [INSTANT_LATE]);
+    add('real-file', rel, `appended:${needles[i % needles.length]}`, 'all-acts', { [rel]: `${textOf('all-acts', rel)}\n\nSee ${needles[i % needles.length]}.\n` }, ALL_READERS, [INSTANT_LATE]);
   }
   // One probe file read three times in one world, its bytes changing between reads: not naming the act, naming it, not naming it; for
   // one needle of each family (syzygy-bpyt.8.20).
@@ -494,7 +631,7 @@ async function corpus(root, consent, gate, allowlist, NAMED) {
     worlds.push({
       kind: 'edited-between-reads', subject: needle, operator: 'quiet,named,quiet', base: 'all-acts', overlay: {},
       steps: [quiet, `# Probe\n\nSee ${needle}.\n`, quiet].map(text => ({ ...BASES['all-acts'], [PROBE]: text })),
-      readers: ALL_READERS.filter(n => n !== 'port'), instants: [INSTANT_LATE], reduced: true,
+      readers: ALL_READERS, instants: [INSTANT_LATE], reduced: true,
     });
   }
   // The policy file with the bytes each screening-scope policy act binds, found in the checkout's git history (N6 of the
@@ -508,8 +645,9 @@ async function corpus(root, consent, gate, allowlist, NAMED) {
     const commit = history.find(c => sha256(blob(c)) === bound);
     policyBytes.push({ act: f.file, fromCommit: commit ?? null });
     if (commit === undefined) continue;
-    add('policy-bytes', f.file, `policy-at:${commit}`, 'checkout', { [consent.POLICY_PATH]: blob(commit) }, [...POLICY, 'port']);
+    add('policy-bytes', f.file, `policy-at:${commit}`, 'checkout', { [consent.POLICY_PATH]: blob(commit) }, [...POLICY, 'port', 'gate-port']);
   }
+  add('observation-successor', 'typed-observation-records', 'effective-successor-omits-old-revision', 'all-acts', {}, FIXTURE_READERS, SUCCESSOR_INSTANTS);
   // The reduced tree: the decisions files any reader names (every form's record, its exempt records and its bound files, the pins, the
   // aggregate record, the allowlisted files and the README); every other decisions file is left out, so a read sweeps a few hundred
   // kilobytes, not the whole directory. Base worlds run over the whole tree too.
@@ -543,10 +681,57 @@ function label(text) {
   return one(value).replace(/\b[0-9a-f]{40,64}\b/g, '<hex>');
 }
 
+function selftest() {
+  const cases = [], specs = new Map([['port', true], ['gate-port', true], ['other', false]]);
+  const world = { kind: 'probe', readers: ['port'], instants: ['2026-10-08T09:30:00Z'], overlay: {} };
+  const generated = [world, { ...world, kind: 'real-file' }];
+  const run = (name, fn) => { try { fn(); cases.push({ name, passed: true }); } catch (error) { cases.push({ name, passed: false, error: String(error) }); } };
+  const rows = expectedComparisons(world, specs);
+  const answerRows = rows.map(e => [e.key, sha256('1'), '1', '1', { reader: e.reader, step: e.step, instant: e.instant }]);
+  run('selection includes requested worlds', () => assert.deepEqual(selectWorlds(generated, ['probe']), [world]));
+  run('count uses selected population', () => assert.deepEqual(population(selectWorlds(generated, ['probe'])), { worlds: 1, byKind: { probe: 1 } }));
+  run('generated count remains separate', () => assert.equal(population(generated).worlds, 2));
+  run('empty selection rejected', () => assert.throws(() => selectWorlds([], undefined), /empty/));
+  run('unknown selected kind rejected', () => assert.throws(() => selectWorlds(generated, ['missing']), /unknown/));
+  run('duplicate kind rejected', () => assert.throws(() => selectWorlds(generated, ['probe', 'probe']), /duplicate/));
+  run('empty readers rejected', () => assert.throws(() => selectWorlds([{ ...world, readers: [] }]), /empty/));
+  run('empty instants rejected', () => assert.throws(() => selectWorlds([{ ...world, instants: [] }]), /empty/));
+  run('empty steps rejected', () => assert.throws(() => selectWorlds([{ ...world, steps: [] }]), /empty/));
+  run('unknown reader rejected', () => assert.throws(() => expectedComparisons({ ...world, readers: ['missing'] }, specs), /unknown/));
+  run('zero answers rejected', () => assert.throws(() => expectedComparisons({ ...world, readers: [] }, specs), /zero/));
+  run('three steps and two instants are six answers in one world', () => { const w = { ...world, steps: [{}, {}, {}], instants: ['a', 'b'] }; assert.equal(population([w]).worlds, 1); assert.equal(expectedComparisons(w, specs).length, 6); });
+  run('complete serialized equal answers pair', () => assert.equal(pairAnswers(rows, answerRows, answerRows)[0].same, true));
+  run('changed complete value differs', () => { const changed = [[rows[0].key, sha256('2'), '2', '2', answerRows[0][4]]]; assert.equal(pairAnswers(rows, answerRows, changed)[0].same, false); });
+  run('unequal old key set rejected', () => assert.throws(() => pairAnswers(rows, [], answerRows), /unequal old/));
+  run('unequal new key set rejected', () => assert.throws(() => pairAnswers(rows, answerRows, []), /unequal new/));
+  run('same-length wrong key rejected', () => assert.throws(() => pairAnswers(rows, answerRows, [['other', ...answerRows[0].slice(1)]]), /key set/));
+  run('duplicate key rejected', () => assert.throws(() => pairAnswers(rows, [...answerRows, ...answerRows], answerRows), /duplicate/));
+  run('metadata identity rejected', () => assert.throws(() => pairAnswers(rows, answerRows, [[...answerRows[0].slice(0, 4), { ...answerRows[0][4], step: 2 }]]), /metadata/));
+  run('digest/value mismatch rejected', () => assert.throws(() => pairAnswers(rows, answerRows, [[rows[0].key, sha256('2'), '1', '1', answerRows[0][4]]]), /digest/));
+  run('order-independent key pairing', () => { const e = expectedComparisons({ ...world, readers: ['port', 'other'] }, specs), a = e.map(x => [x.key, sha256('1'), '1', '1', { reader: x.reader, step: x.step, instant: x.instant }]); assert.equal(pairAnswers(e, a, [...a].reverse()).length, 2); });
+  for (const [name, names] of [['absent', undefined], ['empty', []], ['empty name', ['']], ['duplicate', ['port', 'port']], ['unknown', ['missing']]]) run(`${name} control expectation rejected`, () => assert.throws(() => controlExpectations(true, names, specs), /nonempty unique known/));
+  run('positive expected reader accepted', () => assert.deepEqual(controlExpectations(true, ['port'], specs), ['port']));
+  run('expectation without control rejected', () => assert.throws(() => controlExpectations(false, ['port'], specs), /require/));
+  run('unrelated mismatch cannot satisfy port', () => assert.deepEqual(unmetExpectations(['port'], { port: { answers: 1, mismatches: 0 }, other: { answers: 1, mismatches: 3 } }), ['port']));
+  run('missing demanded reader fails', () => assert.deepEqual(unmetExpectations(['port'], {}), ['port']));
+  run('positive mismatches need positive denominator', () => assert.deepEqual(unmetExpectations(['port'], { port: { answers: 0, mismatches: 1 } }), ['port']));
+  run('each demanded reader must differ', () => assert.deepEqual(unmetExpectations(['port', 'gate-port'], { port: { answers: 1, mismatches: 2 }, 'gate-port': { answers: 1, mismatches: 0 } }), ['gate-port']));
+  run('positive per-reader control passes', () => assert.deepEqual(unmetExpectations(['port'], { port: { answers: 1, mismatches: 1 } }), []));
+  const clean = { materializedLeftOver: 0, differing: 0, pairs: 2, expectedPairs: 2, created: 1, removed: 1 };
+  run('clean materialization accepted', () => requireCleanup(clean));
+  for (const [name, patch] of [['leftovers', { materializedLeftOver: 1 }], ['changed disk answer', { differing: 1 }], ['missing disk pair', { pairs: 0 }], ['missing removal', { removed: 0 }]]) run(`${name} fails cleanup`, () => assert.throws(() => requireCleanup({ ...clean, ...patch }), /cleanup/));
+  run('successor expected outcomes change at exact effective instant', () => { assert.equal(successorExpected(SUCCESSOR_INSTANTS[0]).observationOld.satisfied, true); assert.equal(successorExpected(SUCCESSOR_INSTANTS[1]).observationOld.satisfied, false); assert.deepEqual(successorExpected(SUCCESSOR_INSTANTS[1]), successorExpected(SUCCESSOR_INSTANTS[2])); assert.equal(SUCCESSOR_RECORDS[1].supersessionAt, Date.parse(SUCCESSOR_AT)); });
+  run('missing optional-method implementation is fatal', () => assert.throws(() => requiredAbsence({}), /missing/));
+  const result = { schema: 'consent-differential-selftest/1', cases, total: cases.length, failed: cases.filter(c => !c.passed).length, exercisedAnswerComparisons: 5 };
+  process.stdout.write(`${JSON.stringify(result)}\n`);
+  return result.failed === 0 ? 0 : 1;
+}
+
 async function main(argv) {
+  if (argv.includes('--selftest')) return selftest();
   const arg = flag => (argv.includes(flag) ? argv[argv.indexOf(flag) + 1] : undefined);
   const oldTree = arg('--old'), newTree = arg('--new'), out = arg('--out'), bead = arg('--bead'), control = argv.includes('--expect-mismatches');
-  if (oldTree === undefined || newTree === undefined || ((out === undefined || bead === undefined) && !argv.includes('--count')) || (control && arg('--control-note') === undefined)) {
+  if (oldTree === undefined || newTree === undefined || ((out === undefined || bead === undefined) && !argv.includes('--count')) || (control && !arg('--control-note')?.trim())) {
     process.stderr.write('usage: node scripts/differential_consent_act_families.mjs --old <tree> --new <tree> --out <file.json> --bead <id> [--workers <n>] [--kinds <k,...>] [--count] [--expect-mismatches --control-note <text>]\n');
     return 2;
   }
@@ -565,6 +750,13 @@ async function main(argv) {
   const binding = await Promise.all(trees.map(async (tree, i) => {
     const entry = consentEntry(tree), live = entry !== CONSENT_ROOT;
     const loadedEntry = await import(pathToFileURL(path.join(tree, entry)).href), loadedRoot = await import(pathToFileURL(path.join(tree, CONSENT_ROOT)).href);
+    const currentPort = requiredAbsence(loadedEntry.createPackageAdmissionRecordsPort({ root, now: () => Date.parse(INSTANT_LATE) }));
+    const gateModule = await import(pathToFileURL(path.join(tree, FILES.gateSourcesJs)).href);
+    const currentGate = requiredAbsence(gateModule.createPackageGateSources({ root, now: () => Date.parse(INSTANT_LATE) }));
+    for (const name of ['repositoryIdsFor', 'consentAbsenceFor', 'consentedRevisionsFor', 'observationConsentFor', 'screeningPolicy']) {
+      if (typeof currentGate[name] !== 'function') throw new Error(`required current gate method missing: ${name}`);
+    }
+    if (typeof currentPort.check !== 'function') throw new Error('required direct port check missing');
     return {
       role: i === 0 ? 'old' : 'new',
       commit: git(tree, 'rev-parse', 'HEAD'),
@@ -593,114 +785,135 @@ async function main(argv) {
 
   const { CITATION_ALLOWLIST } = await import(pathToFileURL(path.join(root, 'packages/polaris-generation-consent/dist/citation-allowlist.js')).href);
   const built = await corpus(root, consent, gate, CITATION_ALLOWLIST, NAMED), kinds = arg('--kinds')?.split(',');
-  const { subjects, needles, bases, drops, kept, policyBytes } = built, worlds = kinds === undefined ? built.worlds : built.worlds.filter(w => kinds.includes(w.kind));
+  const { subjects, needles, bases, drops, kept, policyBytes } = built;
+  const worlds = selectWorlds(built.worlds, kinds);
+  const specs = new Map(readers(consent, gate, probe).map(([name, timed]) => [name, timed]));
+  const demandedReaders = controlExpectations(control, arg('--expect-reader-mismatches')?.split(','), specs);
   // The consent ports' probe provider and class: those of the first egress record in force in the admission-acts base world at the
   // later instant (syzygy-bpyt.8.19).
   const baseRecords = await consent.createPackageAdmissionReader({ root, fs: overlayFs(root, built.baseOverlays['admission-acts']) }).read();
   const egress = consent.inForceRecords(baseRecords, Date.parse(INSTANT_LATE)).filter(r => r.class === 'egress').sort((a, b) => a.recordId.localeCompare(b.recordId))[0];
   probe.egress = egress === undefined ? null : { providerId: egress.providerId, contentClass: egress.contentClasses[0] ?? null };
-  // The corpus's digest: each world's kind, subject, operator, base, readers, instants and tree, and each overlaid file's path and the
-  // sha256 of its text, with the reduced tree's dropped files.
+
   const layer = overlay => Object.entries(overlay).sort(([a], [b]) => a.localeCompare(b)).map(([rel, text]) => [rel, text === null ? null : sha256(text)]);
-  const corpusSha256 = sha256(JSON.stringify({
-    drops, worlds: worlds.map(w => [w.kind, w.subject, w.operator, w.base, w.readers, w.instants, w.reduced, (w.steps ?? [w.overlay]).map(layer)]),
-  }));
+  const identityOf = w => ({ kind: w.kind, subject: w.subject, operator: w.operator, base: w.base, readers: w.readers, instants: w.instants, reduced: w.reduced, layers: (w.steps ?? [w.overlay]).map(layer) });
+  const generatedManifest = built.worlds.map(w => ({ id: sha256(JSON.stringify(identityOf(w))), kind: w.kind, readers: w.readers, instants: w.instants, steps: w.steps?.length ?? 1 }));
+  if (new Set(generatedManifest.map(w => w.id)).size !== generatedManifest.length) throw new Error('duplicate stable world identity');
+  const corpusSha256 = sha256(JSON.stringify({ drops, worlds: built.worlds.map(identityOf) }));
+  const selectedSha256 = sha256(JSON.stringify(worlds.map(identityOf)));
+  const counts = { generated: population(built.worlds), selected: population(worlds) };
+  const selectedManifest = worlds.map(w => ({ id: sha256(JSON.stringify(identityOf(w))), kind: w.kind, expected: expectedComparisons(w, specs) }));
   if (argv.includes('--count')) {
-    const count = {};
-    for (const w of built.worlds) count[w.kind] = (count[w.kind] ?? 0) + 1;
-    process.stdout.write(`${JSON.stringify({ worlds: built.worlds.length, byKind: count, corpusSha256, needles: needles.length, policyBytes, subjects: subjects.map(x => x.key) })}\n`);
+    process.stdout.write(`${JSON.stringify({ schema: 'consent-act-family-count/3', ...counts, corpusSha256, selectedSha256, selectedManifest, generatedManifest, executed: null, needles: needles.length, policyBytes, subjects: subjects.map(x => x.key) })}\n`);
     return 0;
   }
   const workers = Number(arg('--workers') ?? Math.max(1, Math.min(os.availableParallelism() - 2, 8)));
+  const timeLimitMs = Number(arg('--time-limit-ms') ?? 7_200_000);
+  if (!Number.isSafeInteger(workers) || workers < 1 || workers > 32 || !Number.isSafeInteger(timeLimitMs) || timeLimitMs < 1) throw new Error('invalid worker count or finite time limit');
   const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'consent-differential-'));
-  const started = Date.now(), runs = pool(workers, { trees, root, probe, drops, scratch });
-  let done = 0;
-  const results = await Promise.all(worlds.map(async world => {
-    const result = await runs.run(world);
-    done += 1;
-    if (done % 250 === 0) process.stderr.write(`${done}/${worlds.length} worlds, ${Math.round((Date.now() - started) / 1000)} s\n`);
-    return result;
-  }));
-  await runs.close();
-  const leftOver = fs.readdirSync(scratch).length;
-  fs.rmSync(scratch, { recursive: true, force: true });
-
-  const rows = [], mismatches = [], vectors = new Map(), labelVectors = new Map(), perReader = new Map();
-  for (const [k, world] of worlds.entries()) {
-    const { old: before, new: after } = results[k];
-    const vectorSha = sha256(before.map(([name, sha]) => `${name} ${sha}`).join('\n'));
-    // The same vector over labels: what each answer says, digests and texts dropped (N6 of the syzygy-bpyt.8.4 review).
-    const labelSha = sha256(before.map(([name, , said]) => `${name} ${said}`).join('\n'));
-    labelVectors.set(labelSha, (labelVectors.get(labelSha) ?? 0) + 1);
-    for (const [j, [name, sha, said]] of before.entries()) {
-      const [, otherSha, otherSaid] = after[j];
-      if (otherSha !== sha) mismatches.push({ world: k, kind: world.kind, subject: world.subject, operator: world.operator, reader: name, old: { sha256: sha, label: said }, new: { sha256: otherSha, label: otherSaid } });
-      const answers = perReader.get(name) ?? new Map();
-      const entry = answers.get(sha) ?? { sha256: sha, label: said, worlds: 0 };
-      entry.worlds += 1;
-      answers.set(sha, entry);
-      perReader.set(name, answers);
-    }
-    const v = vectors.get(vectorSha) ?? { sha256: vectorSha, worlds: 0, first: k };
-    v.worlds += 1;
-    vectors.set(vectorSha, v);
-    rows.push({ world: k, kind: world.kind, base: world.base, subject: world.subject, operator: world.operator, answers: vectorSha, labels: labelSha, same: before.every(([, sha], j) => after[j][1] === sha) });
+  const started = Date.now(), adapters = [], results = [];
+  let runs, timer, leftOver = null;
+  try {
+    for (let i = 0; i < trees.length; i += 1) adapters.push(prepareSuccessorAdapter(trees[i], scratch, i === 0 ? 'old' : 'new'));
+    runs = pool(workers, { trees, root, probe, drops, scratch, adapters });
+    let done = 0;
+    const deadline = new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(`execution exceeded ${timeLimitMs} ms; incomplete corpus is not success`)), timeLimitMs); });
+    const jobs = Promise.all(worlds.map(async (world, index) => {
+      results[index] = await runs.run(world);
+      done += 1;
+      if (done % 250 === 0) process.stderr.write(`${done}/${worlds.length} worlds, ${Math.round((Date.now() - started) / 1000)} s\n`);
+    }));
+    await Promise.race([jobs, deadline]);
+  } finally {
+    clearTimeout(timer);
+    if (runs) await runs.close();
+    for (const adapter of adapters) { fs.rmSync(adapter.transformedPath, { force: true }); fs.rmSync(adapter.adapterPath, { force: true }); }
+    leftOver = fs.readdirSync(scratch).length;
+    // Only this invocation's owned scratch root is removed, after its unclean count is captured.
+    fs.rmSync(scratch, { recursive: true, force: true });
   }
-  const readerNames = [...new Set(results.flatMap(r => r.old.map(([name]) => name)))];
-  // The materialization control (syzygy-bpyt.8.19): in each tree, the policy chain and the class act read from the world on disk give
-  // the answers their ported reads give over the same world.
-  const materialization = { pairs: 0, differing: 0, differences: [], materializedLeftOver: leftOver };
+
+  const rows = [], mismatches = [], vectors = new Map(), labelVectors = new Map(), perReader = new Map(), answerTable = {}, perLogicalReader = {}, logicalWorlds = new Map(), logicalSteps = new Map(), literalOutcomes = [];
+  const remember = row => {
+    if (Object.hasOwn(answerTable, row[1]) && answerTable[row[1]] !== row[3]) throw new Error('answer hash collision');
+    answerTable[row[1]] = row[3];
+  };
+  for (const [k, world] of worlds.entries()) {
+    const paired = pairAnswers(selectedManifest[k].expected, results[k].old, results[k].new);
+    const vectorSha = sha256(paired.map(p => `${p.key} ${p.old[1]}`).join('\n'));
+    const labelSha = sha256(paired.map(p => `${p.key} ${p.old[2]}`).join('\n'));
+    labelVectors.set(labelSha, (labelVectors.get(labelSha) ?? 0) + 1);
+    for (const pair of paired) {
+      const { key, reader, step, instant, old: a, new: b, same } = pair;
+      remember(a); remember(b);
+      if (!same) mismatches.push({ world: k, worldId: selectedManifest[k].id, kind: world.kind, subject: world.subject, operator: world.operator, reader: key, logicalReader: reader, step, instant, old: { sha256: a[1], label: a[2] }, new: { sha256: b[1], label: b[2] } });
+      const answers = perReader.get(key) ?? new Map(), entry = answers.get(a[1]) ?? { sha256: a[1], label: a[2], worlds: 0 };
+      entry.worlds += 1; answers.set(a[1], entry); perReader.set(key, answers);
+      const count = perLogicalReader[reader] ??= { worlds: 0, steps: 0, answers: 0, mismatches: 0, byInstant: {}, byStep: {} };
+      const seenWorlds = logicalWorlds.get(reader) ?? new Set(), seenSteps = logicalSteps.get(reader) ?? new Set();
+      seenWorlds.add(selectedManifest[k].id); seenSteps.add(`${selectedManifest[k].id}:${step}`); logicalWorlds.set(reader, seenWorlds); logicalSteps.set(reader, seenSteps);
+      count.answers += 1; count.mismatches += same ? 0 : 1;
+      count.byInstant[instant ?? 'untimed'] = (count.byInstant[instant ?? 'untimed'] ?? 0) + 1; count.byStep[step] = (count.byStep[step] ?? 0) + 1;
+      if (world.kind === 'observation-successor') for (const [role, value] of [['old', a], ['new', b]]) {
+        const expected = successorExpected(instant), actual = JSON.parse(value[3]), projected = Object.fromEntries(Object.keys(expected).map(name => [name, actual[name]]));
+        literalOutcomes.push({ worldId: selectedManifest[k].id, reader, instant, role, expected, actual: projected, same: JSON.stringify(expected) === JSON.stringify(projected) });
+      }
+    }
+    const v = vectors.get(vectorSha) ?? { sha256: vectorSha, worlds: 0, first: k }; v.worlds += 1; vectors.set(vectorSha, v);
+    rows.push({ world: k, id: selectedManifest[k].id, kind: world.kind, base: world.base, subject: world.subject, operator: world.operator, answers: vectorSha, labels: labelSha, same: paired.every(p => p.same),
+      matrix: paired.map(p => ({ key: p.key, reader: p.reader, step: p.step, instant: p.instant, old: p.old[1], new: p.new[1], same: p.same })) });
+  }
+  for (const [reader, count] of Object.entries(perLogicalReader)) { count.worlds = logicalWorlds.get(reader).size; count.steps = logicalSteps.get(reader).size; }
+  const materialization = { pairs: 0, expectedPairs: 0, differing: 0, differences: [], materializedLeftOver: leftOver,
+    created: results.reduce((n, r) => n + r.materialized, 0), removed: results.reduce((n, r) => n + r.removed, 0) };
   for (const [k, world] of worlds.entries()) {
     for (const role of ['old', 'new']) {
       const answers = new Map(results[k][role].map(([name, sha, said]) => [name, { sha, said }]));
-      for (const [name, { sha, said }] of answers) {
-        const ported = name.replace(/(^|:)(policy-chain|class-act)-disk@/u, '$1$2@');
-        if (ported === name || !answers.has(ported)) continue;
+      for (const expected of selectedManifest[k].expected) {
+        const ported = expected.key.replace(/(^|:)(policy-chain|class-act)-disk@/u, '$1$2@');
+        if (ported === expected.key) continue;
+        materialization.expectedPairs += 1;
+        if (!answers.has(ported) || !answers.has(expected.key)) continue;
         materialization.pairs += 1;
-        if (answers.get(ported).sha === sha) continue;
+        const disk = answers.get(expected.key), port = answers.get(ported);
+        if (disk.sha === port.sha) continue;
         materialization.differing += 1;
-        if (materialization.differences.length < 50) materialization.differences.push({ world: k, kind: world.kind, subject: world.subject, operator: world.operator, tree: role, reader: name, disk: said, ported: answers.get(ported).said });
+        materialization.differences.push({ world: k, kind: world.kind, subject: world.subject, operator: world.operator, tree: role, reader: expected.key, disk: disk.said, ported: port.said });
       }
     }
   }
+  const unmet = unmetExpectations(demandedReaders, perLogicalReader);
+  const errors = [];
+  if (rows.length !== worlds.length || rows.length === 0 || Object.keys(answerTable).length === 0) errors.push('incomplete or zero executed population');
+  if (literalOutcomes.some(r => !r.same && (r.role === 'old' || !control))) errors.push('successor literal expected outcome failed');
+  try { requireCleanup(materialization); } catch (error) { errors.push(error.message); }
+  if (unmet.length > 0) errors.push(`unmet expected reader mismatches: ${unmet.join(',')}`);
+  if (!control && mismatches.length > 0) errors.push('changed answers in ordinary differential');
   const document = {
-    schema: 'consent-act-family-differential/2',
-    bead,
-    role: control ? 'negative-control' : 'differential',
-    ...(control ? { controlNote: arg('--control-note') } : {}),
-    text: 'Evidence record, not authority: the consent gate\'s act-record readers in two trees over one corpus. Generated by the script named here; do not edit.',
-    script: { path: SCRIPT_REL, sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) },
-    trees: binding,
-    corpusRoot: 'old',
-    corpus: { sha256: corpusSha256, alterations: { module: TESTING, tree: 'new', named: NAMED.map(([n]) => n) }, policyBytes },
-    instants: INSTANTS.map(([at]) => at),
-    pool: { workers, node: process.version, wallSeconds: Math.round((Date.now() - started) / 1000) },
-    readers: readerNames,
-    materialization,
-    consentPortsProbe: probe.egress,
-    bases,
-    reducedTree: { kept, dropped: drops.length },
-    subjects: subjects.map(({ key, path: p, base, model, readers: names }) => ({ key, path: p, base, model, readers: names })),
-    needles: needles.length,
+    schema: 'consent-act-family-differential/3', bead, role: control ? 'negative-control' : 'differential',
+    ...(control ? { controlNote: arg('--control-note'), expectedReaderMismatches: demandedReaders, unmetExpectedReaderMismatches: unmet } : {}),
+    text: 'Evidence record, not authority. Version 3 adds complete exact comparison identities, generated/selected populations, typed fixture boundaries and checked per-reader controls; /2 artifacts are unchanged.',
+    script: { path: SCRIPT_REL, sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) }, trees: binding, corpusRoot: 'old',
+    corpus: { sha256: corpusSha256, selectedSha256, alterations: { module: TESTING, tree: 'new', named: NAMED.map(([n]) => n) }, policyBytes, generatedManifest, selectedManifest },
+    populations: counts, perLogicalReader,
+    instants: INSTANTS.map(([at]) => at), pool: { workers, node: process.version, timeLimitMs, wallSeconds: (Date.now() - started) / 1000, loadAverageAtFinish: os.loadavg() },
+    readers: [...perReader.keys()], materialization, consentPortsProbe: probe.egress, bases, reducedTree: { kept, dropped: drops.length },
+    successorFixture: { boundary: 'validated AdmissionRecordReader injection; actual compiled gate forwarding via exact one-import adapter; never a file-backed accepted successor form', adapters, literalOutcomes },
+    subjects: subjects.map(({ key, path: p, base, model, readers: names }) => ({ key, path: p, base, model, readers: names })), needles: needles.length,
     operators: { line: LINE_OPERATORS.map(([n]) => n), named: NAMED.map(([n]) => n), placements: PLACEMENTS.map(([n]) => n) },
-    totals: {
-      worlds: worlds.length,
-      byKind: Object.fromEntries([...new Set(worlds.map(w => w.kind))].map(kind => [kind, worlds.filter(w => w.kind === kind).length])),
-      answersCompared: results.reduce((n, r) => n + r.old.length, 0),
-      mismatches: mismatches.length,
-      distinctAnswerVectors: vectors.size,
-      distinctLabelVectors: labelVectors.size,
-      worldsWithDistinctVector: [...vectors.values()].filter(v => v.worlds === 1).length,
+    totals: { worlds: worlds.length, byKind: counts.selected.byKind, answersCompared: rows.reduce((n, r) => n + r.matrix.length, 0), mismatches: mismatches.length,
+      distinctAnswerVectors: vectors.size, distinctLabelVectors: labelVectors.size, worldsWithDistinctVector: [...vectors.values()].filter(v => v.worlds === 1).length,
       distinctAnswersPerReader: Object.fromEntries([...perReader].map(([name, answers]) => [name, answers.size])),
-      distinctLabelsPerReader: Object.fromEntries([...perReader].map(([name, answers]) => [name, new Set([...answers.values()].map(a => a.label)).size])),
-    },
-    mismatches,
-    answersPerReader: Object.fromEntries([...perReader].map(([name, answers]) => [name, [...answers.values()].sort((a, b) => b.worlds - a.worlds)])),
-    worlds: rows,
+      distinctLabelsPerReader: Object.fromEntries([...perReader].map(([name, answers]) => [name, new Set([...answers.values()].map(a => a.label)).size])) },
+    mismatches, answerTable, answersPerReader: Object.fromEntries([...perReader].map(([name, answers]) => [name, [...answers.values()].sort((a, b) => b.worlds - a.worlds)])), worlds: rows,
+    result: { success: errors.length === 0, errors },
   };
   fs.writeFileSync(out, `${JSON.stringify(document, null, 1)}\n`);
-  process.stderr.write(`${worlds.length} worlds, ${document.totals.answersCompared} answers compared, ${mismatches.length} mismatches, ${vectors.size} distinct answer vectors, ${labelVectors.size} distinct label vectors, materialization ${materialization.differing} of ${materialization.pairs} pairs differing\n`);
-  return (mismatches.length === 0) !== control && materialization.differing === 0 && leftOver === 0 ? 0 : 1;
+  process.stderr.write(`${worlds.length} selected/${built.worlds.length} generated worlds, ${document.totals.answersCompared} answers compared, ${mismatches.length} mismatches, materialization ${materialization.differing}/${materialization.pairs}; ${errors.length === 0 ? 'PASS' : errors.join('; ')}\n`);
+  return errors.length === 0 ? 0 : 1;
 }
 
-if (isMainThread) process.exitCode = await main(process.argv.slice(2));
+if (isMainThread) {
+  try { process.exitCode = await main(process.argv.slice(2)); }
+  catch (error) { process.stderr.write(`${error.stack ?? error}\n`); process.exitCode = 1; }
+}
