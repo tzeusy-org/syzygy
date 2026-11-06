@@ -126,6 +126,8 @@ describe('reading the policy from a page', () => {
     ['a decoy meta after an ignored end tag', page(POLICY).replace('<head>', `</x><!-- <meta ${'x'.repeat(1100)} --><head>`), opening],
     ['an unquoted charset', page(POLICY).replace('<meta charset="utf-8">', '<meta charset=utf-8>'), opening],
     ['another attribute on html', page(POLICY).replace('<html lang="en">', '<html lang="en" id="x">'), opening],
+    ['a byte order mark before the doctype', `\ufeff${page(POLICY)}`, notFirst],
+    ['a second doctype, which the parser ignores', `<!doctype html>${page(POLICY)}`, opening],
     ['a stray byte before the doctype', `x${page(POLICY)}`, notFirst],
     ['a Content-Type meta', page(POLICY).replace('<title>', '<meta http-equiv="Content-Type" content="text/html; charset=iso-2022-jp"><title>'), anotherEquiv],
     ['a refresh meta', page(POLICY, '<meta http-equiv="refresh" content="0;url=x">'), anotherEquiv],
