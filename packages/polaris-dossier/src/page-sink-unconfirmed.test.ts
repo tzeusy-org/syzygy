@@ -8,7 +8,7 @@ import { pageSinkUnconfirmed, type DossierRenderer } from './render.js';
 
 // syzygy-pdja.5: the drawn site under screening scope version 7. Every file but a machine view is a page, whatever its extension.
 const POLICY = 'default-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; base-uri &#39;none&#39;; form-action &#39;none&#39;';
-const page = (policy = POLICY, body = '<p>x</p>'): string => `<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="${policy}"><title>t</title></head><body>${body}</body></html>`;
+const page = (policy = POLICY, body = '<p>x</p>'): string => `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${policy}"><title>t</title></head><body>${body}</body></html>`;
 const renderer = (contract?: string): DossierRenderer => Object.assign(() => ({ files: new Map<string, string>() }), contract === undefined ? {} : { pageSinkContract: contract });
 const files = (entries: Record<string, string>): ReadonlyMap<string, string> => new Map(Object.entries(entries));
 
@@ -20,10 +20,10 @@ describe('pageSinkUnconfirmed', () => {
     expect(pageSinkUnconfirmed(renderer(PAGE_SINK_SCRIPT_CONTRACT), files({ 'index.html': page() }))).toBeNull();
     expect(pageSinkUnconfirmed(renderer(), files({ 'index.html': page() }))).toBe('the injected renderer does not declare that it writes every source byte as entity-encoded text');
   });
-  it('reads a file of any other extension as a page', () => {
+  it('refuses a file of any other extension, whatever it holds', () => {
     for (const name of ['diagram.svg', 'page.htm', 'page.xhtml', 'notes.txt']) {
-      expect(pageSinkUnconfirmed(renderer(PAGE_SINK_CONTRACT), files({ [name]: '<svg xmlns="http://www.w3.org/2000/svg"><script>x</script></svg>' })), name)
-        .toBe(`${name}: the page carries 0 Content-Security-Policy meta elements, not exactly one`);
+      expect(pageSinkUnconfirmed(renderer(PAGE_SINK_CONTRACT), files({ [name]: page() })), name)
+        .toBe(`${name}: a page must be named .html, since a browser reads any other name with another parser`);
     }
   });
   it('refuses a script-free page whose policy is outside the closed set', () => {

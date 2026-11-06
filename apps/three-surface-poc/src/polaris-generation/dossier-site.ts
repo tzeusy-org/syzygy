@@ -630,6 +630,6 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 export function renderLocalDossier(input: LocalDossierRenderInput): RenderedDossier {
   return renderDossierSite(input, localView(input.local));
 }
-/** The encoding half of the screening scope's render condition (policy version 3): every page writes each source byte through
+/** The encoding half of the screening scope's render condition (version 7's text): every page writes each source byte through
  * `escape` and carries `DRAFT_PREVIEW_CSP_META` first in its head. `page-sink.test.ts` fails if either stops holding. */
 renderLocalDossier.pageSinkContract = PAGE_SINK_CONTRACT;

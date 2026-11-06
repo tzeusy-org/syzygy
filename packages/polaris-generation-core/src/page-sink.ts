@@ -8,7 +8,11 @@ import { parse, type DefaultTreeAdapterTypes as Tree } from 'parse5';
  * duplicate `content` attribute, and a CSP meta smuggled inside another attribute's value. On such a page a pinned script would run with
  * no policy while the page still confirmed.
  *
- * Scripting is off for the parse, so `<noscript>` content reads as elements: a superset of what either browser mode builds. */
+ * The parser reads text, and a browser first decodes bytes and picks a parser. So a page must fix what it can: `utf-8` as its first head
+ * element, inside the browser's prescan, with no other encoding statement; `render.ts` refuses a page not named `.html`.
+ *
+ * `<noscript>` reads differently with scripting on and off, and a script can hide in either reading, so a page is read both ways and
+ * must pass both. Any `http-equiv` meta other than the one policy is refused: it could name an encoding or navigate. */
 
 /** What a page renderer declares (as its `pageSinkContract` property) when it writes every byte of a source body or span it puts on a
  * page as text, each of `& < > " '` as a character reference, never parsed as Markdown or HTML and never minting a link, element,
@@ -23,7 +27,7 @@ export const PAGE_SINK_SCRIPT_CONTRACT = 'polaris/page-sink/escaped-text-under-c
 
 /** Every script hash a page may carry, as its CSP source (`'sha256-<base64>'`), mapped to the retained raw review that quotes it. It sits
  * here and not in the injected renderer, so a script and its pin do not change together unseen: `page-sink.test.ts` requires each entry's
- * raw to exist and to quote its hash. Empty: no signed specification version has added a script yet. */
+ * raw to carry a confirming verdict and the hash in its head. That is a tripwire over a retained file, not a review gate. Empty: no signed specification version has added a script yet. */
 export const PINNED_PAGE_SCRIPT_REVIEWS: Readonly<Record<string, string>> = Object.freeze({});
 
 const CSP_NAME = 'content-security-policy';
@@ -79,17 +83,22 @@ function elementsOf(root: Tree.Document): readonly Tree.Element[] {
   return out;
 }
 
+/** How far into a page's bytes the charset must start. The browser's prescan reads 1024; this leaves room for the element itself. */
+const CHARSET_PRESCAN_BOUND = 512;
+
 interface ReadPage { readonly elements: readonly Tree.Element[]; readonly policy: string }
 
 /** A page's one enforced policy, delivered first in `<head>`, or why there is none. Any `http-equiv` naming the policy counts, so a
  * near-spelling cannot sit beside the real one unread. */
-function readPage(html: string): ReadPage | string {
-  const document = parse(html, { scriptingEnabled: false });
+function readPage(html: string, scriptingEnabled: boolean): ReadPage | string {
+  const document = parse(html, { scriptingEnabled });
   const elements = elementsOf(document);
   const metas = elements.filter(element => element.tagName === 'meta' && (attribute(element, 'http-equiv') ?? '').toLowerCase().includes(CSP_NAME));
   if (metas.length !== 1) return `the page carries ${metas.length} Content-Security-Policy meta elements, not exactly one`;
   const meta = metas[0]!;
   const equiv = attribute(meta, 'http-equiv')!.toLowerCase();
+  if (elements.some(element => element !== meta && element.tagName === 'meta' && attribute(element, 'http-equiv') !== undefined)) return 'the page carries another http-equiv meta, which could name an encoding or navigate';
+  if (elements.filter(element => element.tagName === 'meta' && attribute(element, 'charset') !== undefined).length !== 1) return 'the page does not state its encoding exactly once as a charset meta';
   if (equiv.includes('report-only')) return 'the page\'s Content-Security-Policy is Report-Only, which enforces nothing';
   const notFirst = 'the page\'s Content-Security-Policy is not delivered first in <head>, before every other element but the charset and viewport metas';
   if (equiv !== CSP_NAME) return notFirst;
@@ -97,12 +106,14 @@ function readPage(html: string): ReadPage | string {
   if (document.mode !== 'no-quirks' || top.length !== 2 || top[0]!.nodeName !== '#documentType' || top[1]!.nodeName !== 'html') return notFirst;
   const head = (top[1] as Tree.Element).childNodes.find(node => node.nodeName === 'head') as Tree.Element | undefined;
   if (head === undefined || meta.parentNode !== head) return notFirst;
+  const first = head.childNodes.find(node => !isBlankText(node));
+  if (first === undefined || !isElement(first) || first.tagName !== 'meta' || first.attrs.length !== 1 || (attribute(first, 'charset') ?? '').toLowerCase() !== 'utf-8') return 'the page does not state utf-8 as the first element of its <head>';
+  const prefix = html.slice(0, html.search(/<meta/iu));
+  if (prefix.length > CHARSET_PRESCAN_BOUND || NON_ASCII.test(prefix)) return 'the page states its encoding too late for the browser\'s prescan';
   for (const node of head.childNodes) {
     if (node === meta) break;
-    if (isBlankText(node)) continue;
-    const allowed = isElement(node) && node.tagName === 'meta' && (
-      (node.attrs.length === 1 && attribute(node, 'charset') !== undefined)
-      || (node.attrs.length === 2 && attribute(node, 'name') === 'viewport' && attribute(node, 'content') !== undefined));
+    if (isBlankText(node) || node === first) continue;
+    const allowed = isElement(node) && node.tagName === 'meta' && node.attrs.length === 2 && attribute(node, 'name') === 'viewport' && attribute(node, 'content') !== undefined;
     if (!allowed) return notFirst;
   }
   const policy = attribute(meta, 'content');
@@ -113,10 +124,13 @@ function readPage(html: string): ReadPage | string {
 /** Why an HTML page does not meet the policy half of `renderCondition`, or null when it does: exactly one enforced policy meta, first in
  * `<head>`, whose text is the closed set. The encoding half is the renderer's, confirmed by its own tests. */
 export function pageSinkCspFinding(html: string): string | null {
-  const page = readPage(html);
-  if (typeof page === 'string') return page;
-  const finding = pageSinkPolicyFinding(page.policy);
-  return finding === null ? null : `the page's Content-Security-Policy ${finding}`;
+  for (const scripting of [false, true]) {
+    const page = readPage(html, scripting);
+    if (typeof page === 'string') return page;
+    const finding = pageSinkPolicyFinding(page.policy);
+    if (finding !== null) return `the page's Content-Security-Policy ${finding}`;
+  }
+  return null;
 }
 
 /** A script's CSP source: the SHA-256 of its text as the parser delivers it, UTF-8. The parser normalises newlines as the browser does
@@ -130,7 +144,14 @@ function scriptSource(script: Tree.Element): string {
  * neither. With one, the renderer must declare the script half, every script must carry no external reference and hash into `pinned`,
  * every `script-src` hash must be in `pinned`, and the page's policy must allow every script it carries. */
 export function pageSinkScriptFinding(html: string, contract: string | undefined, pinned: readonly string[] = Object.keys(PINNED_PAGE_SCRIPT_REVIEWS)): string | null {
-  const page = readPage(html);
+  for (const scripting of [false, true]) {
+    const finding = scriptFindingIn(readPage(html, scripting), contract, pinned);
+    if (finding !== null) return finding;
+  }
+  return null;
+}
+
+function scriptFindingIn(page: ReadPage | string, contract: string | undefined, pinned: readonly string[]): string | null {
   if (typeof page === 'string') return page;
   const scripts = page.elements.filter(element => element.tagName === 'script');
   const directive = page.policy.split(';').map(part => part.split(ASCII_WHITESPACE).filter(token => token !== '')).find(tokens => tokens[0] === 'script-src');

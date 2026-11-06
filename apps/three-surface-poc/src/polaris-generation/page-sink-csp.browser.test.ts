@@ -57,6 +57,13 @@ describe.skipIf(executable === undefined)('the page reader against Chrome', () =
     expect(await ran(html)).toBe(true);
     expect(pageSinkCspFinding(html)).not.toBeNull();
   });
+  // F1 of R-SCREENING-SCOPE-V7-INSTALL-1-RAW.md, as bytes: an encoding the reader never decodes hides the policy meta from Chrome.
+  it('another encoding: Chrome loses the policy meta and runs the script, and the reader refuses the page', async () => {
+    const html = document_(`<meta name="viewport" content="\u001b$B"><meta http-equiv="Content-Security-Policy" content="default-src ${STRICT}" x="\u001b(B">`).replace('charset="utf-8"', 'charset="iso-2022-jp"');
+    expect(pageSinkCspFinding(html)).toBe('the page does not state utf-8 as the first element of its <head>');
+    expect(await ran(html)).toBe(true);
+    expect(await ran(html.replace('charset="iso-2022-jp"', 'charset="utf-8"'))).toBe(false);
+  });
   it('a hash-allowed inline script runs under the trusted-types pair, and the reader confirms the page', async () => {
     const text = 'document.documentElement.dataset.ran = "1";';
     const html = document_(scripted(source(text)));

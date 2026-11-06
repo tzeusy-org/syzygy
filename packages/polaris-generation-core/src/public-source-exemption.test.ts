@@ -131,20 +131,20 @@ describe('the policy half of renderCondition on one page', () => {
   const GOOD = page(`<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n${CSP}\n<title>t</title>`);
   it('accepts a page whose only CSP meta comes first in <head> after the charset and viewport metas', () => {
     expect(pageSinkCspFinding(GOOD)).toBeNull();
-    expect(pageSinkCspFinding(page(`${CSP}\n<title>t</title>`))).toBeNull();
+    expect(pageSinkCspFinding(page(`<meta charset="utf-8">\n${CSP}\n<title>t</title>`))).toBeNull();
   });
   it.each([
     ['no CSP meta', page('<meta charset="utf-8">\n<title>t</title>'), 'the page carries 0 Content-Security-Policy meta elements, not exactly one'],
-    ['two CSP metas', page(`${CSP}\n${CSP}\n<title>t</title>`), 'the page carries 2 Content-Security-Policy meta elements, not exactly one'],
-    ['a Report-Only CSP', page(CSP.replace('Content-Security-Policy"', 'Content-Security-Policy-Report-Only"')), 'the page\'s Content-Security-Policy is Report-Only, which enforces nothing'],
+    ['two CSP metas', page(`<meta charset="utf-8">\n${CSP}\n${CSP}\n<title>t</title>`), 'the page carries 2 Content-Security-Policy meta elements, not exactly one'],
+    ['a Report-Only CSP', page(`<meta charset="utf-8">${CSP.replace('Content-Security-Policy"', 'Content-Security-Policy-Report-Only"')}`), 'the page\'s Content-Security-Policy is Report-Only, which enforces nothing'],
     ['the CSP after <title>', page(`<meta charset="utf-8">\n<title>t</title>\n${CSP}`), 'the page\'s Content-Security-Policy is not delivered first in <head>, before every other element but the charset and viewport metas'],
-    ['the CSP in <body>', page('<title>t</title>', CSP), 'the page\'s Content-Security-Policy is not delivered first in <head>, before every other element but the charset and viewport metas'],
-    ['default-src \'self\'', page(CSP.replace('default-src \'none\'', 'default-src \'self\'')), 'the page\'s Content-Security-Policy default-src is not exactly \'none\''],
-    ['default-src \'none\' with another source', page(CSP.replace('default-src \'none\'', 'default-src \'none\' https:')), 'the page\'s Content-Security-Policy default-src is not exactly \'none\''],
-    ['no default-src', page(CSP.replace('default-src \'none\'; ', '')), 'the page\'s Content-Security-Policy default-src is absent'],
-    ['a script-src with no hash', page(CSP.replace('form-action \'none\'', 'form-action \'none\'; script-src \'unsafe-inline\'; require-trusted-types-for \'script\'; trusted-types \'none\'')), 'the page\'s Content-Security-Policy script-src carries \'unsafe-inline\''],
-    ['a script-src-attr', page(CSP.replace('form-action \'none\'', 'form-action \'none\'; script-src-attr \'unsafe-inline\'')), 'the page\'s Content-Security-Policy carries script-src-attr'],
-    ['an object-src', page(CSP.replace('form-action \'none\'', 'form-action \'none\'; object-src *')), 'the page\'s Content-Security-Policy carries object-src'],
+    ['the CSP in <body>', page('<meta charset="utf-8"><title>t</title>', CSP), 'the page\'s Content-Security-Policy is not delivered first in <head>, before every other element but the charset and viewport metas'],
+    ['default-src \'self\'', page(`<meta charset="utf-8">${CSP.replace('default-src \'none\'', 'default-src \'self\'')}`), 'the page\'s Content-Security-Policy default-src is not exactly \'none\''],
+    ['default-src \'none\' with another source', page(`<meta charset="utf-8">${CSP.replace('default-src \'none\'', 'default-src \'none\' https:')}`), 'the page\'s Content-Security-Policy default-src is not exactly \'none\''],
+    ['no default-src', page(`<meta charset="utf-8">${CSP.replace('default-src \'none\'; ', '')}`), 'the page\'s Content-Security-Policy default-src is absent'],
+    ['a script-src with no hash', page(`<meta charset="utf-8">${CSP.replace('form-action \'none\'', 'form-action \'none\'; script-src \'unsafe-inline\'; require-trusted-types-for \'script\'; trusted-types \'none\'')}`), 'the page\'s Content-Security-Policy script-src carries \'unsafe-inline\''],
+    ['a script-src-attr', page(`<meta charset="utf-8">${CSP.replace('form-action \'none\'', 'form-action \'none\'; script-src-attr \'unsafe-inline\'')}`), 'the page\'s Content-Security-Policy carries script-src-attr'],
+    ['an object-src', page(`<meta charset="utf-8">${CSP.replace('form-action \'none\'', 'form-action \'none\'; object-src *')}`), 'the page\'s Content-Security-Policy carries object-src'],
   ])('refuses a page with %s', (_name, html, why) => {
     expect(pageSinkCspFinding(html)).toBe(why);
   });

@@ -95,19 +95,34 @@ describe('the closed directive set', () => {
 });
 
 describe('reading the policy from a page', () => {
+  const noUtf8 = 'the page does not state utf-8 as the first element of its <head>';
+  const anotherEquiv = 'the page carries another http-equiv meta, which could name an encoding or navigate';
   const notFirst = 'the page\'s Content-Security-Policy is not delivered first in <head>, before every other element but the charset and viewport metas';
   it('confirms a lawful page, with single-quoted or encoded attribute values', () => {
     expect(pageSinkCspFinding(page(POLICY))).toBeNull();
     expect(pageSinkCspFinding(page(POLICY).replace(`content="${attr(POLICY)}"`, `content='${POLICY.replaceAll('\'', '&apos;')}'`))).toBeNull();
   });
   it.each([
-    ['a stray comment before the policy', page(POLICY).replace('<meta charset', '<!-- x --><meta charset'), notFirst],
+    ['a stray comment before the policy', page(POLICY).replace('<meta charset', '<!-- x --><meta charset'), noUtf8],
+    ['a stray comment after the charset', page(POLICY).replace('<meta name=', '<!-- x --><meta name='), notFirst],
     ['a comment before the doctype', `<!-- x -->${page(POLICY)}`, notFirst],
     ['no doctype', page(POLICY).replace('<!doctype html>', ''), notFirst],
     ['a legacy doctype that leaves quirks mode', page(POLICY).replace('<!doctype html>', '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">'), notFirst],
     ['a comment after the document', `${page(POLICY)}<!-- x -->`, notFirst],
     ['the policy in the body, with only lawful metas in the head', `<!doctype html><html><head><meta charset="utf-8"></head><body><meta http-equiv="Content-Security-Policy" content="${attr(POLICY)}"></body></html>`, notFirst],
-    ['a charset meta with another attribute', page(POLICY).replace('<meta charset="utf-8">', '<meta charset="utf-8" id="x">'), notFirst],
+    ['a charset meta with another attribute', page(POLICY).replace('<meta charset="utf-8">', '<meta charset="utf-8" id="x">'), noUtf8],
+    ['no charset', page(POLICY).replace('<meta charset="utf-8">', ''), 'the page does not state its encoding exactly once as a charset meta'],
+    ['another charset', page(POLICY).replace('charset="utf-8"', 'charset="iso-2022-jp"'), noUtf8],
+    ['a second charset', page(POLICY, '<meta charset="iso-2022-jp">'), 'the page does not state its encoding exactly once as a charset meta'],
+    ['a charset after the viewport', page(POLICY).replace('<meta charset="utf-8">\n<meta name="viewport" content="width=device-width">', '<meta name="viewport" content="width=device-width">\n<meta charset="utf-8">'), noUtf8],
+    ['a charset past the prescan', page(POLICY).replace('<html lang="en">', `<html lang="en" title="${'x'.repeat(600)}">`), 'the page states its encoding too late for the browser\'s prescan'],
+    ['non-ASCII before the charset', page(POLICY).replace('<html lang="en">', '<html lang="\u00e9">'), 'the page states its encoding too late for the browser\'s prescan'],
+    ['a Content-Type meta', page(POLICY).replace('<title>', '<meta http-equiv="Content-Type" content="text/html; charset=iso-2022-jp"><title>'), anotherEquiv],
+    ['a refresh meta', page(POLICY, '<meta http-equiv="refresh" content="0;url=x">'), anotherEquiv],
+    ['a viewport with a third attribute', page(POLICY).replace('content="width=device-width"', 'content="width=device-width" id="x"'), notFirst],
+    ['a viewport under another name', page(POLICY).replace('name="viewport"', 'name="robots"'), notFirst],
+    ['a viewport name with no content', page(POLICY).replace('<meta name="viewport" content="width=device-width">', '<meta name="viewport" id="x">'), notFirst],
+    ['another element with a viewport\'s attributes', page(POLICY).replace('<meta name="viewport" content="width=device-width">', '<link name="viewport" content="width=device-width">'), notFirst],
     ['a near-spelling of the name', page(POLICY).replace('http-equiv="Content-Security-Policy"', 'http-equiv="X-Content-Security-Policy"'), notFirst],
     ['the name beside a near-spelling', page(POLICY).replace('<title>', '<meta http-equiv="x-content-security-policy" content="y"><title>'), 'the page carries 2 Content-Security-Policy meta elements, not exactly one'],
     ['a policy meta in a noscript', page(POLICY).replace('<title>', `<noscript><meta http-equiv="Content-Security-Policy" content="${attr(POLICY)}"></noscript><title>`), 'the page carries 2 Content-Security-Policy meta elements, not exactly one'],
@@ -117,7 +132,7 @@ describe('reading the policy from a page', () => {
   ])('refuses %s', (_name, html, why) => { expect(pageSinkCspFinding(html)).toBe(why); });
 
   // E1 of R-SCREENING-SCOPE-V7-3-RAW.md. Both pages passed the regex this reader replaced while Chrome enforced no such policy;
-  // page-sink.browser.test.ts holds what Chrome does with them.
+  // page-sink-csp.browser.test.ts holds what Chrome does with them.
   it('reads a duplicate content attribute as the browser does: the first wins', () => {
     const html = page(POLICY).replace(`content="${attr(POLICY)}"`, `content='default-src * ; script-src &#39;unsafe-inline&#39;' content="${attr(POLICY)}"`);
     expect(pageSinkCspFinding(html)).toBe('the page\'s Content-Security-Policy default-src is not exactly \'none\'');
@@ -164,6 +179,14 @@ describe('the scripts on a page', () => {
   ])('refuses a pinned script with %s', (_name, body) => {
     expect(pageSinkScriptFinding(page(withScript(H), body), PAGE_SINK_SCRIPT_CONTRACT, pinned)).toBe('the page carries a script with an external reference');
   });
+  // F2 of R-SCREENING-SCOPE-V7-INSTALL-1-RAW.md. Scripting-on Chrome reads noscript as raw text, so each of these holds a live script that
+  // the scripting-off reading sees only as text.
+  it.each([
+    ['an attribute value', `<noscript><p title="</noscript><script>x</script>"></noscript>`],
+    ['a comment', `<noscript><!-- </noscript><script>x</script> --></noscript>`],
+  ])('finds a script hidden from one parsing mode in %s', (_name, body) => {
+    expect(pageSinkScriptFinding(page(POLICY, body), PAGE_SINK_SCRIPT_CONTRACT, pinned)).toBe(`the page carries a script outside the pinned set (${hashOf('x')})`);
+  });
   it('checks both ways: a script out of the set, a script its page does not allow, a hash out of the set', () => {
     expect(pageSinkScriptFinding(scripted, PAGE_SINK_SCRIPT_CONTRACT, [])).toBe(`the page carries a script outside the pinned set (${H})`);
     const other = hashOf('other');
@@ -174,10 +197,27 @@ describe('the scripts on a page', () => {
     expect(Object.keys(PINNED_PAGE_SCRIPT_REVIEWS)).toEqual([]);
     expect(pageSinkScriptFinding(scripted, PAGE_SINK_SCRIPT_CONTRACT)).toBe(`the page carries a script outside the pinned set (${H})`);
   });
-  it('requires each pin to name a retained raw review that quotes its hash', async () => {
+  // A tripwire over a retained file, not a review gate: F3 of R-SCREENING-SCOPE-V7-INSTALL-1-RAW.md.
+  const pinHeadOk = (text: string, hash: string): boolean => {
+    const head = text.split('\n').filter(line => line.trim() !== '').slice(0, 5);
+    return head.some(line => /^Verdict: CONFIRM( WITH EXCEPTIONS)?$/.test(line)) && head.includes(`Pinned script: ${hash}`);
+  };
+  it('reads a pin\'s raw head for a confirming verdict and the hash', () => {
+    const raw = `# R\nReviewed commit: ${'a'.repeat(40)}\nVerdict: CONFIRM\nPinned script: ${H}\n`;
+    expect(pinHeadOk(raw, H)).toBe(true);
+    expect(pinHeadOk(raw.replace('CONFIRM', 'CONFIRM WITH EXCEPTIONS'), H)).toBe(true);
+    expect(pinHeadOk(raw.replace('CONFIRM', 'REVISE'), H)).toBe(false);
+    expect(pinHeadOk(raw.replace(`Pinned script: ${H}\n`, `\n\n\n\n\n\nbody\nmore\nand\nmore\nPinned script: ${H}\n`), H)).toBe(false);
+    expect(pinHeadOk(raw, hashOf('other'))).toBe(false);
+  });
+  it('requires each pin to name a retained raw review whose head confirms its hash', async () => {
     for (const [hash, raw] of Object.entries(PINNED_PAGE_SCRIPT_REVIEWS)) {
       expect(raw, hash).toMatch(/^docs\/reviews\/[^/]+-RAW\.md$/);
-      expect(await readFile(path.join(ROOT, raw), 'utf8'), raw).toContain(hash);
+      expect(pinHeadOk(await readFile(path.join(ROOT, raw), 'utf8'), hash), raw).toBe(true);
     }
+  });
+  it('hashes every text child of a script, as the browser joins them', () => {
+    const split = page(withScript(hashOf('a<!--b')), '<script>a<!--b</script>');
+    expect(pageSinkScriptFinding(split, PAGE_SINK_SCRIPT_CONTRACT, [hashOf('a<!--b')])).toBeNull();
   });
 });

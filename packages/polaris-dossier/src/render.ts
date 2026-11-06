@@ -62,11 +62,13 @@ export type DossierRenderer = ((input: DossierRendererInput) => { readonly files
 
 /** Why the drawn site cannot be confirmed to meet the screening scope's `codeContentExemption.renderCondition` (version 7), or null when
  * it can: the renderer declares the encoding half, and every page carries the closed policy first in its head and only pinned scripts.
- * Every file is read as a page but the machine views, whose `.json` a browser shows as text: an extension skip would pass an SVG page. */
+ * A machine view's `.json` a browser shows as text. Any other file must be named `.html`: the reader is an HTML parser, and a browser
+ * reads `.svg` or `.xml` with another one, where a page this reader confirms can run a script under no policy. */
 export function pageSinkUnconfirmed(renderer: DossierRenderer, files: ReadonlyMap<string, string>): string | null {
   if (renderer.pageSinkContract !== PAGE_SINK_CONTRACT && renderer.pageSinkContract !== PAGE_SINK_SCRIPT_CONTRACT) return 'the injected renderer does not declare that it writes every source byte as entity-encoded text';
   for (const [file, html] of files) {
     if (file.endsWith('.json')) continue;
+    if (!file.endsWith('.html')) return `${file}: a page must be named .html, since a browser reads any other name with another parser`;
     const finding = pageSinkCspFinding(html) ?? pageSinkScriptFinding(html, renderer.pageSinkContract);
     if (finding !== null) return `${file}: ${finding}`;
   }
@@ -199,7 +201,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const pagesMissing = [...files].filter(([file, html]) => file.endsWith('.html') && !html.includes('class="run-disclosure"')).map(([file]) => file);
   if (pagesMissing.length > 0 || !files.has('machine.json')) return refuse('render', `the rendered site does not carry the run disclosure on every page and in the machine view (${pagesMissing.join(', ') || 'machine.json'})`);
   // The code-content exemption (policy version 3) and the project-documentation exemption (version 5) admitted some bodies without the
-  // active-content scan. Each holds at these pages only while they meet the version-3 renderCondition; where that cannot be confirmed,
+  // active-content scan. Each holds at these pages only while they meet the renderCondition (version 7's text); where that cannot be confirmed,
   // each such body is scanned as before for these pages, and one with a finding is excluded whole here: a quoted or cited body cannot
   // leave the pages it is drawn on, so nothing is rendered. A redacted body is scanned over its complete body, which check kept as the
   // answer alone (`activeContentAsBefore`), so its withheld lines count and no withheld text reaches this step.
