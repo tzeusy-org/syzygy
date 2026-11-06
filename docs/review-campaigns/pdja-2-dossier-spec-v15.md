@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-5-2-RAW.md:4`), over `d95a0015`, round 2; round 1 was also `REVISE`. Findings are repaired on the same branch, listed in the package's `ROUND-2-DISPOSITIONS.md`; a fresh round has not yet confirmed the repair.
+`REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-5-3-RAW.md:4`), over `61a53cc0`, round 3; rounds 1 and 2 were also `REVISE`. Findings are repaired on the same branch, listed in the package's `ROUND-3-DISPOSITIONS.md`; a fresh round has not yet confirmed the repair.

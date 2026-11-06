@@ -20,10 +20,11 @@ block must be marked as a judgement and may assert no project fact.
 
 See `IMPACT-LEDGER.md`, "Costs". The largest: on a narrative page a reader sees
 marks and a legend, not the words Inferred or Observed. Those words stay in the
-evidence view. Signing also makes three rulings: Poles reorder the narrative
+evidence view. Signing also makes four rulings: Poles reorder the narrative
 (RFC7-13); the one sentence meets your RFC7-20 condition that the page disclose how
-the draft was computed; and the sentence and legend satisfy RFC7-20's "visually
-distinct". The withheld rule does not fully close RFC2-23: an agent that read
+the draft was computed; the sentence and legend satisfy RFC7-20's "visually
+distinct"; and a partly withheld block's count may sit in the evidence view rather
+than the reading view (RFC5-17, "disclosed on the claim"). The withheld rule does not fully close RFC2-23: an agent that read
 everything can still draw on withheld text in a block citing something else.
 
 ## Your words, when offered

@@ -45,7 +45,7 @@
  
  For an excluded or invalid-UTF-8 blob, the excerpt renders Unknown with
  `excluded-content` and no blob bytes; its exclusion is not a finding. Any
-@@ -449,8 +449,79 @@
+@@ -449,8 +449,83 @@
  A `code` element has no `blockSupport` entry of its own; its admitted span
  is one of the cited spans the fidelity packet carries.
  
@@ -77,7 +77,9 @@
 +  sentence and a link to the appendix, which holds the full disclosure and the
 +  open questions. An Unknown affecting a passage stays explicit at the passage.
 +- Other pages (appendix, review, understanding, discovery, source) keep labels.
-+- A test reads visible text by `innerText` and recoverable text by `textContent`.
++- A test reads visible text by `innerText` on a clone with the renderer's
++  visually-hidden class removed, and recoverable text by `textContent` and the
++  accessibility tree. `hidden` and `display:none` leave the text out of both.
 +
 +## Why-first topics and voice (version 1.5)
 +
@@ -110,7 +112,8 @@
 +such content becomes `Withheld item`. A path a secret detector matches is counted
 +and never named. The verdict's entry is `withheld`, so the review has a lawful
 +answer and the run does not stop. A citation to a blob missing at the pinned
-+revision still fails. A block with both admitted and withheld spans keeps today's
++revision still fails. A block that quotes a withheld file is a withheld item whatever else
++it cites. Any other block with both admitted and withheld spans keeps today's
 +rules and shows the count.
 +
 +## Poles (version 1.5)
@@ -121,7 +124,8 @@
 +on a list, and `run.json`'s optional `poleLimit`, defaulting to five. A
 +Pole is a page boundary and carries no claim. The landing page holds the
 +title, the why and a map of the Poles, which orders the altitudes by the
-+owner's ruling under RFC7-13; a draft with no Poles renders as schema v3 does.
++owner's ruling under RFC7-13; a draft with no Poles keeps schema v3's page
++division.
 +Syzygy still accepts `polaris-dossier-local-draft-v2` and `-v3` drafts; in those,
 +every Inferred block still cites, since only v4 has the `judgement` field.
  

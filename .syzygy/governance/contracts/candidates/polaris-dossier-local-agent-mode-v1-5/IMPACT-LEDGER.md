@@ -58,8 +58,11 @@ product code changes with this package.
   on the operator's host, still holds the agent's text for a withheld item.
 - A span a run's class gate holds back is not "withheld" under this rule, so a run
   with no consent statement for documentation classes keeps today's behaviour there.
-- A block citing both admitted and withheld spans keeps today's rules, so it
-  stands on its admitted span unless a review finds otherwise. The rule covers only
+- A block that quotes a withheld file becomes a withheld item whatever else it cites.
+  Any other block citing both admitted and withheld spans keeps today's rules, so it
+  stands on its admitted span unless a review finds otherwise. Its withheld count
+  shows in the evidence view, not the reading view, which is a reading of RFC5-17's
+  "disclosed on the claim" that signing confirms. The rule covers only
   wholly withheld claims, the scope the questionnaire described. In the 2026-11-04
   Redis run, three of the five rows that blocked were partly withheld and two
   wholly (bead `syzygy-mea.9`), so this rule alone would not have released all five.
