@@ -1807,3 +1807,32 @@ Claude Code CLI (quoted in the dedicated record).
 This sign-off authorizes no implementation, widens no consent, read, write or
 egress, and a later version of the package is signed separately.
 <!-- /versioned-signoff:polaris-dossier-local-agent-mode:v1.4 -->
+
+<!-- PWB-POLICY-SCOPE-V7:BEGIN -->
+## Public-source screening scope version 7 act — approve-policy — performed 2026-11-06
+
+**Phrase the act takes (given 2026-11-06 by the owner's words, not typed as a
+phrase; see the dedicated record):**
+
+```text
+APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY: 626be0cadc248b9ca9b3165d51f97d39aec552eb3a97b8b7df21d2446fc233da
+```
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Act type / artifact | `approve-policy` / `.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json` |
+| Argument | SHA-256 of the artifact itself: the one row (variant `s`) of the package manifest, recomputed at recording |
+| Provenance state | `owner-adopted (bootstrap, uncorrelated)` — a state-(1) human act, owner-trusted and never independently verified |
+| A1 audit-record identity | explicitly absent, satisfying RFC3-16(b) item 9 for state (1) |
+| Frozen subject | `7f98407d4257115a1cb890f8d15e7ad3c42a00ff` |
+| Manifest | `.syzygy/governance/contracts/candidates/public-source-screening-scope-v7/PUBLIC-SOURCE-SCREENING-SCOPE-V7-MANIFEST.txt`, SHA-256 `b187ba86f5020e55c299db5ed39a6141dea951643911c44a77c82627bd7edcd7` |
+| Review outcome | `docs/reviews/R-SCREENING-SCOPE-V7-3-RAW.md`: `CONFIRM WITH EXCEPTIONS`, its head bound to the manifest file |
+| Owner's words given (UTC) | `2026-11-06T14:04:40Z` |
+| Recorded at (UTC) | `2026-11-06T14:11:19Z` |
+| Recording | `.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md`; annotated tag `pwb-approve-policy-public-source-scope-v7-signed-2026-11-06` on the commit carrying these records |
+
+Effective status: this one record is **effective owner authority —
+owner-adopted (bootstrap, uncorrelated)** for its own role only. It grants no
+consent, read or egress and adds no script.
+<!-- PWB-POLICY-SCOPE-V7:END -->

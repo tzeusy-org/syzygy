@@ -1904,6 +1904,12 @@ PWB_EFFECT_AMENDMENT_ACTS = (
      f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md",
      f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md",
      "e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b"),
+    # The version-7 screening-scope act (syzygy-pdja.5, variant s, 2026-11-06) supersedes the
+    # version-6 act for the policy subject.
+    (PWB_EFFECT_ACTS[1][0], PWB_EFFECT_ACTS[1][1],
+     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md",
+     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md",
+     "c44058c02c244e8460c1e33ab01f0343ed0612043d7bf53e0d36410c9f9ebfa2"),
     # P-114's one registry row supersedes act B; all old copies stay history.
     (PWB_EFFECT_ACTS[2][0], PWB_EFFECT_ACTS[2][1],
      f"{DECISIONS}/PWB-OBSERVER-REGISTRY-BEHAVIOR-CONTRACT-REPIN-ACT.md",
@@ -1957,6 +1963,10 @@ PWB_EFFECT_AMENDMENT_OFFERINGS = {
     # The version-5 screening-scope act was offered the same way (variant row of its manifest).
     f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md": {
         f"{CANDIDATES}/public-source-screening-scope-v5/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt": "variant-row",
+    },
+    # The version-6 screening-scope act was offered the same way (variant row of its manifest).
+    f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md": {
+        f"{CANDIDATES}/public-source-screening-scope-v6/PUBLIC-SOURCE-SCREENING-SCOPE-V6-MANIFEST.txt": "variant-row",
     },
 }
 PWB_STATE1_SUBJECTS = tuple(sorted((
@@ -3756,11 +3766,34 @@ PUBLIC_SOURCE_SCOPE_V6_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBL
 def _activate_public_source_scope_v6_copy_registry():
     """The version-6 manifest is a current copy of the policy argument once the act exists."""
     if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V6_ACT))
-            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V6_MANIFEST))):
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V6_MANIFEST))
+            # once the version-7 act exists the version-6 manifest is history (pinned by the amendment registries)
+            and not os.path.isfile(os.path.join(ROOT, f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md"))):
         ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V6_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
 
 
 _activate_public_source_scope_v6_copy_registry()
+
+
+#: The public-source screening scope, version 7 (`syzygy-pdja.5`, owner direction
+#: OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06 item 3, answer A; builder
+#: `scripts/build_public_source_screening_scope_v7.py`): one `approve-policy`
+#: act over the one manifest row (variant `s`: a renderer-owned hash-allowed
+#: inline script). Its packet carries no digest, so the manifest is the only
+#: copy. Gated on the performed record, as for version 6.
+PUBLIC_SOURCE_SCOPE_V7_DIR = f"{CANDIDATES}/public-source-screening-scope-v7"
+PUBLIC_SOURCE_SCOPE_V7_MANIFEST = f"{PUBLIC_SOURCE_SCOPE_V7_DIR}/PUBLIC-SOURCE-SCREENING-SCOPE-V7-MANIFEST.txt"
+PUBLIC_SOURCE_SCOPE_V7_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md"
+
+
+def _activate_public_source_scope_v7_copy_registry():
+    """The version-7 manifest is a current copy of the policy argument once the act exists."""
+    if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V7_ACT))
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V7_MANIFEST))):
+        ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V7_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
+
+
+_activate_public_source_scope_v7_copy_registry()
 
 
 #: The act-time digests the specification-policy restyle supersedes as the
@@ -4065,6 +4098,7 @@ BARE_DIGEST_HEADING_MANIFEST_EXEMPTIONS = {
     (f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md", "manifest"): f"{CANDIDATES}/public-source-screening-scope-v4/PUBLIC-SOURCE-SCREENING-SCOPE-V4-MANIFEST.txt",
     (f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md", "manifest"): f"{CANDIDATES}/public-source-screening-scope-v5/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt",
     (PUBLIC_SOURCE_SCOPE_V6_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V6_MANIFEST,
+    (PUBLIC_SOURCE_SCOPE_V7_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V7_MANIFEST,
 }
 
 

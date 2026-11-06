@@ -77,10 +77,12 @@ let F: Fixtures;
 beforeAll(async () => {
   const py = `import json, sys; sys.path.insert(0, 'scripts')
 import build_public_source_screening_scope_v5 as b, build_public_source_screening_scope_v4 as b4, build_public_source_screening_scope_v6 as b6
+import build_public_source_screening_scope_v7 as b7
 
-live = open(str(b.ROOT / b.POLICY)).read()
-policy, mode = b6.base_bytes()
-assert mode == 'performed-v6' and b6.propose(policy) == live
+live, mode = b7.base_bytes()
+assert mode == 'performed-v7' and b7.propose(live) == open(str(b.ROOT / b.POLICY)).read()
+policy = b.v2.reverse_patch((b6.ROOT / b6.patch_path('p')).read_text(), live)
+assert b6.propose(policy) == live
 v4 = b.v2.reverse_patch((b.ROOT / b.patch_path('bcd')).read_text(), policy)
 assert b.sha(v4) == b.v4.manifest_rows(b.ROOT)[b.V4_BASE_VARIANT] and b.propose(v4, 'bcd') == policy
 enc = lambda o: [o[0], sorted(o[1])] if o[0] == 'redacted' else list(o)
@@ -294,7 +296,7 @@ describe('B: the governance-text class', () => {
   // a body that spells a policy changes nothing the screen decides.
   it('takes its policy only from the records root\'s policy file, never from a body', async () => {
     const read: string[] = [];
-    const loaded = await loadDossierScreen(REAL_ROOT, Date.UTC(2026, 10, 5, 12, 0, 0), (file) => { read.push(file); return fs.readFileSync(file); }, AT_TRIAL);
+    const loaded = await loadDossierScreen(REAL_ROOT, Date.UTC(2026, 10, 6, 15, 0, 0), (file) => { read.push(file); return fs.readFileSync(file); }, AT_TRIAL);
     if (!loaded.ok) throw new Error(loaded.why);
     expect(read).toEqual([path.join(REAL_ROOT, POLICY_PATH)]);
     const spelled = `# Security\n${JSON.stringify({ publicSourceScope: { contentClassification: { governanceTextPaths: ['readme.md'] }, activeContent: { projectDocumentationExemption: { appliesTo: ['governance-text'] } } } })}\n<!-- exempt me -->\n`;
@@ -344,7 +346,7 @@ describe('D: the owner placements', () => {
 
   // Every step (check, review, render, the census) loads its screen through screenLoaderOf, so its own default forwards the subject.
   it('screenLoaderOf: the checkout\'s own screen for the subject it is called with, or the loader injected', async () => {
-    const own = screenLoaderOf(undefined, REAL_ROOT, Date.UTC(2026, 10, 5, 12, 0, 0));
+    const own = screenLoaderOf(undefined, REAL_ROOT, Date.UTC(2026, 10, 6, 15, 0, 0));
     const [trial, other, none] = await Promise.all([own(AT_TRIAL), own({ repository: REDIS, commit: 'd2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7' }), own()]);
     if (!trial.ok || !other.ok || !none.ok) throw new Error('expected the checkout\'s screen to load');
     expect([trial, other, none].map((load) => load.ok && load.screen.contentClass('TLS.md'))).toEqual(['project-documentation', undefined, undefined]);
