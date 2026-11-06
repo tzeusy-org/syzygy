@@ -1,0 +1,2201 @@
+{
+  "attempts": [
+    {
+      "receipt": "baseline-workspace.json",
+      "sha256": "c09dd972a568e60d30a8c0d7d696abe16293eb1d4d15c55924d444d6d01a89a4",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/baseline-workspace-vitest.json"
+      ]
+    },
+    {
+      "receipt": "control-altered-prose.json",
+      "sha256": "7c3dbbc663b900e3fdb4137b56743fde9085d034f0d3e1bbbfaef08c9a8c71ca",
+      "exit_code": 0,
+      "subject": "718926b3b91fc56e662a099537773aa133dea865",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/control-altered-prose-vitest.json"
+      ]
+    },
+    {
+      "receipt": "control-baseline.json",
+      "sha256": "32454d88931001b2c6182666d297a3701845af8a93ee6fb25827756b8e68d056",
+      "exit_code": 0,
+      "subject": "718926b3b91fc56e662a099537773aa133dea865",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/control-baseline-vitest.json"
+      ]
+    },
+    {
+      "receipt": "control-valid-shapes-and-selector.json",
+      "sha256": "af2ae09b5dbf3442a772448515a43caa9203bf3604205cf389771c228216400d",
+      "exit_code": 0,
+      "subject": "718926b3b91fc56e662a099537773aa133dea865",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/control-valid-shapes-and-selector-vitest.json"
+      ]
+    },
+    {
+      "receipt": "current-workspace.json",
+      "sha256": "34c9ddda282772fac7e0c53a34a81c702584151ca31065b7dbd87e0d44c1a365",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/current-workspace-vitest.json"
+      ]
+    },
+    {
+      "receipt": "differential-base-alias.json",
+      "sha256": "787529b27fd5ba652c699db2b4d07fc99573a715c56dccd22fa47dde661d3de5",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-base-alias.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-base-altered-prose.json",
+      "sha256": "d4296f6298d9fa6b6101bd6784caf38b354568a903c2c4a9e990968ede1b5ec1",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-base-altered-prose.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-base-bare-directory.json",
+      "sha256": "e2af1ea2703b3bce01fc9ac42e04baf84e8b6641635fcc70f649e5f005486464",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-base-bare-directory.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-base-caret.json",
+      "sha256": "f2d101ae32e28f38b60e1237e13857345ccf82fd708b78a4963f38b9796d5ce7",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-base-caret.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-base-exact.json",
+      "sha256": "444e57eea1d5a8ec7a78f181aeb290de763fa0f29970df1e0051d254ce64c241",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-base-exact.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-base-file.json",
+      "sha256": "274e5a557aa8b5e68fa22bdf1080d84af50561041db3a9aa9c7a93b35a116885",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-base-file.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-base-tilde.json",
+      "sha256": "eb5bd28a1497636eb7bed04a4787f6b07c489972523cf04b5fee889557afd918",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-base-tilde.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-base-unscoped-no-entry.json",
+      "sha256": "1971a81b995f4cf8c7235bb2515d61fd136024379c7ba6ba668628b1f90b4eca",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "leak",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-base-unscoped-no-entry.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-head-alias.json",
+      "sha256": "66d520b245359d2abbe376404bf2ef8d111604052c16d90ff16ed72775c13686",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-head-alias.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-head-altered-prose.json",
+      "sha256": "0417f7e271878d24617afa94385edc252cd9b402f38415ed186f0274af9c7a90",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-head-altered-prose.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-head-bare-directory.json",
+      "sha256": "ce7eabdaa270b0360db475abcd3340a1406399e2dc77288d489dc6200aff05af",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-head-bare-directory.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-head-caret.json",
+      "sha256": "457b5049d063e1b637c0c7a494ca943a413f492c137763bb5a9a46b4f1378a11",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-head-caret.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-head-exact.json",
+      "sha256": "67da76ffa517b4d52b5fb4d68877ed70b9b6e5611e1f04fb3d0f51b1efbe1b6f",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-head-exact.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-head-file.json",
+      "sha256": "fe9501750b13c13e1e6fba044e90017a9ce4a59dc5101b59daad858136e32465",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-head-file.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-head-tilde.json",
+      "sha256": "34c035fc2b1dcc3c7c4b4214ce26b02f7540a4fe1380d88c08487500c7b913e6",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-head-tilde.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-head-unscoped-no-entry.json",
+      "sha256": "869787e8c27faa9ce7acdaa7cf38a931563a574355557f1d7c14decbe6069b69",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "leak",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/differential-head-unscoped-no-entry.mjs"
+      ]
+    },
+    {
+      "receipt": "differential-install.json",
+      "sha256": "0c7099c95d3427e1943f4244eca27c7300c77c2d40985f78be2fd52c2ab0a386",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npm",
+        "ci",
+        "--offline"
+      ]
+    },
+    {
+      "receipt": "end-anchor-characterization.json",
+      "sha256": "6650db63949ea65666a1282230644c3ad83216b2cca80a5ad6e05f56df0bfc11",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "node",
+        "-e",
+        "console.log(JSON.stringify([\"1.2.3\",\"1.2.3\\n\",\"1.2.3\\r\",\"1.2.3x\"].map(value=>({value,dollar:/^1\\.2\\.3$/u.test(value),lookahead:/^1\\.2\\.3(?![\\s\\S])/u.test(value),removedEnd:/^1\\.2\\.3/u.test(value)}))))"
+      ]
+    },
+    {
+      "receipt": "fixture-install.json",
+      "sha256": "80352ec32d45be1e4dbfdc39edeb3bbc8e7fbad6ebd744f85c91144d08dc6191",
+      "exit_code": 0,
+      "subject": "718926b3b91fc56e662a099537773aa133dea865",
+      "argv": [
+        "npm",
+        "ci",
+        "--offline"
+      ]
+    },
+    {
+      "receipt": "focused-callers.json",
+      "sha256": "da0f75054fee4c1ddeb7021550bf52b47a5d2a5c004c6817841e510afb1b61a7",
+      "exit_code": 0,
+      "subject": "718926b3b91fc56e662a099537773aa133dea865",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "packages/polaris-dossier/src/subpath-imports.test.ts",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/focused-callers-vitest.json"
+      ]
+    },
+    {
+      "receipt": "focused-workspace.json",
+      "sha256": "2533c723868e3855ab8848124acdb3d4c8ee8d1387128f93255b6f558c0059ac",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/focused-workspace-vitest.json"
+      ]
+    },
+    {
+      "receipt": "negative-unscoped-no-entry.json",
+      "sha256": "c1f8243257d1f19e48129c7aa14f3b431e6eb9c1b2f99b05943698394113bd72",
+      "exit_code": 1,
+      "subject": "718926b3b91fc56e662a099537773aa133dea865",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/negative-unscoped-no-entry-vitest.json"
+      ]
+    },
+    {
+      "receipt": "npm-workspace-query-current.json",
+      "sha256": "1bc6f128d4a57d9134fe885fb992de8d45b51761f5ce3c48849e41b21919ea8d",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npm",
+        "query",
+        ".workspace",
+        "--json"
+      ]
+    },
+    {
+      "receipt": "npm-workspace-query.json",
+      "sha256": "c11031ab768541adf1d8d974a068aef57ca0474a36744ba78ed4eaf7ec111e27",
+      "exit_code": 0,
+      "subject": "718926b3b91fc56e662a099537773aa133dea865",
+      "argv": [
+        "npm",
+        "query",
+        ".workspace",
+        "--json"
+      ]
+    },
+    {
+      "receipt": "r2-control-altered-prose.json",
+      "sha256": "33048346add54b3d9efca4d23741dc080a957c48187ba133db9cb78a84353fde",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-control-altered-prose-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-control-baseline.json",
+      "sha256": "b5d177a4b038bef62ed426a9b7ccaad43c17538291189c657aa6172980afa42b",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-control-baseline-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-control-valid-shapes-and-selector.json",
+      "sha256": "a007d7cf00138dd92a6543ac099b07ab7b1da7915983ab531a7b4c1ce7fea549",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-control-valid-shapes-and-selector-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-discovery-new-pattern-bypass.json",
+      "sha256": "537128a84d462cc7dcb8d36a35c64e07e1868eb67e04fb2c677e22e2efa9aa32",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-discovery-new-pattern-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-discovery-new-pattern.json",
+      "sha256": "0398b5f573128d3f70a4cec07cfc78f3576be89aee24ab27fb661e9a57c008d6",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-discovery-new-pattern-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-field-dependencies-bypass.json",
+      "sha256": "3b413f6725b0bc2a5c250ab31a90457ebdeaee77dd6a6bd86eb70db55087240a",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-field-dependencies-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-field-dependencies.json",
+      "sha256": "0c07ad2119d9504a19e38b53506bdcbf148f3a1422859c8f70571c431dcd5761",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-field-dependencies-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-field-devDependencies-bypass.json",
+      "sha256": "f117d420175f3876386731d22fba778b4480fabd9a9e1c098bf3e10f2f96e0a7",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-field-devDependencies-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-field-devDependencies.json",
+      "sha256": "eaa0806fea39370ab616d1472cd091afdda659b5aa389390e0ab4bcba1ebe93d",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-field-devDependencies-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-field-optionalDependencies-bypass.json",
+      "sha256": "3ece9b90718ea49e9ff6afd6f7f243e8eb7bd68f504fae045540b303d36fd209",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-field-optionalDependencies-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-field-optionalDependencies.json",
+      "sha256": "7935d5a4038b6037457768676be17722702479eb7866b77417cf0ab7ebc0b9be",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-field-optionalDependencies-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-field-peerDependencies-bypass.json",
+      "sha256": "cb30d6c4a225e34bbd2724113e4133950ad6a79e9788bfa9187d3c11598d8e2b",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-field-peerDependencies-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-field-peerDependencies.json",
+      "sha256": "b9cabbf2091785be1843cfe97c8ea8997db6c4ab75f9087fd21944a603fed9d3",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-field-peerDependencies-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-negative-bare-directory.json",
+      "sha256": "369c0ba4929b8e92185bc8aeff2856f5cd931da7d6ae3e6c8d1fe53fa0e11b9b",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-negative-bare-directory-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-negative-file-dependency.json",
+      "sha256": "88b4b0056d275b5aeddc486b82bb370f9e03a4a12da1c2f5e6d1ab1a9a9de42e",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-negative-file-dependency-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-negative-path-overrides-bypass.json",
+      "sha256": "f80c26667467d20039c7cc99165859c17144a4b23d99bc88177edb14be8cef96",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-negative-path-overrides-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-negative-path-overrides.json",
+      "sha256": "888418f0da37cb7c1bcc238414dc6e7af53a578340121ad4c2be31bcdf50783d",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-negative-path-overrides-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-negative-unscoped-no-entry-bypass.json",
+      "sha256": "adc00bfe0776696efc10807b1f6faafe80885bedd434f73a3d9e8e6ff04c7765",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-negative-unscoped-no-entry-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-negative-unscoped-no-entry.json",
+      "sha256": "23f700cea4aa93b86d9b3e7349ba3ff6bf912563b1f8dd01644cd0990bbf2205",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-negative-unscoped-no-entry-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-nested-overrides-bypass.json",
+      "sha256": "a760809b438afedc039f41fa7f4dc145f734c0e29307692c86835d7e73c71238",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-nested-overrides-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-nested-overrides.json",
+      "sha256": "25eb6c4710db2065b1824c0dea420bb4c503463ea04c6670098c9646891037d2",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-nested-overrides-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-root-inclusion-bypass.json",
+      "sha256": "f330296c6adef8a32a221502db8716537833c2fbbe49b1beb8747855a29f8312",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-root-inclusion-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-root-inclusion.json",
+      "sha256": "cee84174d7ce9d7002fedba00e75d177aeceed08bbae8a9aa304f8bd8cee4dc1",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-root-inclusion-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-caret-prefix-bypass.json",
+      "sha256": "c83dab5ad5224cdc6f8e07fd3b1213dcf936b580528f0a087326080357c0e353",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-caret-prefix-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-caret-prefix.json",
+      "sha256": "9c2c147d478c0fd627f672c64cddbf8f30075f5a5ce104a7848c309dcde4076d",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-caret-prefix-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-exact-major-bypass.json",
+      "sha256": "ea4535b750c17aa0eaa7b887894deb7cd656d0a56462e8b42de8c2022f01eb8e",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-exact-major-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-exact-major.json",
+      "sha256": "54856544f5b3b4565c66abe287d2d8d57398f762c0824e04290299c9a802f3ae",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-exact-major-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-minor-component-bypass.json",
+      "sha256": "e6dfec9f0962591d5ea0e7b858d558ffd7337667034eecbe30bbedbdb5c52174",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-minor-component-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-minor-component.json",
+      "sha256": "6159fd8fcd0881737f4f1f2a0d9d49994ba35eb4a9b8465c9172c5a326d41928",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-minor-component-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-patch-component-bypass.json",
+      "sha256": "7ba3154754c6946abea82bc52fcd52c435a1e883b7bdd52345d9b16600db5c81",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-patch-component-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-patch-component.json",
+      "sha256": "b0277773426806379518db47a6f4f6f53612482a08289cd8b6bfecc31bb9dd7c",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-patch-component-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-rejection-corpus.json",
+      "sha256": "c3c6fe5d553891e22f42da377590fbb2d4a74a23a0cf9959e639e0c48c5e22ae",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-rejection-corpus-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-tilde-prefix-bypass.json",
+      "sha256": "0b6a784862b5c8948e409b9c0ba507f836828c56180d6436771a7e7605ae9348",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-tilde-prefix-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-tilde-prefix.json",
+      "sha256": "f421a7958a651cb0c6d55a6250bfbfa6a13c2fbbfdab345a28a91a24bcc95ea1",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-tilde-prefix-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-version-end-bypass.json",
+      "sha256": "69701da8986dc10518d41a4eebf4f3542a0be404e2b8f61238dfd1f36c6a41f4",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-version-end-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-version-version-end.json",
+      "sha256": "626b4dc810b02e56f84cd914e497b36458d351e7e5fe39f239db89ad120dea6a",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-version-version-end-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-workspace-dependency-traversal-bypass.json",
+      "sha256": "5121c9b149101fae7c651ebdd9b219dbc3d62bd1fc803f0b9989b76e13582b7f",
+      "exit_code": 0,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-workspace-dependency-traversal-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r2-workspace-dependency-traversal.json",
+      "sha256": "a824931dffc99461911cc8a0e527893b842f89486f8478130d436ec62847c15e",
+      "exit_code": 1,
+      "subject": "23a7f5c962d894510b48039a763c7e57971bb1a5",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r2-workspace-dependency-traversal-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-control-altered-prose.json",
+      "sha256": "b985269a1839d3e404d19e4bb3dd5e8ceb72020740d8532e7bc67a88b859439f",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-control-altered-prose-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-control-baseline.json",
+      "sha256": "5f73c8396d953caca622fb085c9f084a5486833a482fd3d23720691727d228c6",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-control-baseline-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-control-restored.json",
+      "sha256": "95bc50df9a37102b9a2364ae4f91dd6ec69e919a97dc411c59eb6445f4385ac3",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-control-restored-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-control-valid-shapes-and-selector.json",
+      "sha256": "a12e37e1aae9f3925a9edada7ff8a20e0dfb8d95f79ffae407a5ef8837bfe6af",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-control-valid-shapes-and-selector-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-differential-base-alias.json",
+      "sha256": "f62a855f4ad928d17314d09d9740e2342b65f0c773b7a3fdbb6d07c727b8ca4f",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-base-alias.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-base-altered-prose.json",
+      "sha256": "5403855e92bf12eb5c1cb1036d009fb30f74ed347f59d9c78654b7b4f846cefc",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-base-altered-prose.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-base-bare-directory.json",
+      "sha256": "0fe402dd087fa7f710b19682bcea9e6eaa80666fe09b9a3049b1084f79c06ee8",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-base-bare-directory.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-base-caret.json",
+      "sha256": "2c99b1a359cd0c35dcdb7eac38914e2546665b36d11298558bc60ae2d2d35561",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-base-caret.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-base-exact.json",
+      "sha256": "cfe72a82e099d77ef72e54bf43f54524db6bc5bcfb6156cd192709db75dd01b5",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-base-exact.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-base-file.json",
+      "sha256": "880af067b5fa89ae45816dbd100414703d50987ebb57bd271951d495282cdf14",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-base-file.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-base-tilde.json",
+      "sha256": "fdb18180446d2928f0136ef4afe6b03eb8ed4d045cd736d8b6e72f08a00aa51b",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-base-tilde.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-base-unscoped-no-entry.json",
+      "sha256": "bad688ae872ef2c24fd5d4729ef297e5cf64682b8d749fcce156eda7feb1f579",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "leak",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-base-unscoped-no-entry.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-head-alias.json",
+      "sha256": "5dfa89a64247d2974506b379fa82ec9c36fa177dd709151dd6b1a8070a015a4f",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-head-alias.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-head-altered-prose.json",
+      "sha256": "592a76f28c6392e89d13085fa24bd55fa8f131ee6a873c488307f8aa78cbab37",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-head-altered-prose.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-head-bare-directory.json",
+      "sha256": "313552aac87aa30487571da1eaa235a194a1beec95ff72968c7a2c5bd71a5a1e",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-head-bare-directory.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-head-caret.json",
+      "sha256": "0a50b64e5474385616fb281f48b49e9b288f582f6c8eee3649ddf559f6d8801d",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-head-caret.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-head-exact.json",
+      "sha256": "ccebd3ae7b78b2857dae18f4f2d49cdaf46a920f2fdaa8672c5f0292e89fbe7e",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-head-exact.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-head-file.json",
+      "sha256": "502d47bebda60f1adb23b8314069b5ab6e8be1465406135ee67ab12b03fe1eb0",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-head-file.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-head-tilde.json",
+      "sha256": "65d05725033561021576d5da970a67bc8ec1d7ca50ab859e101d955f28e91df7",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "bpyt58-probe",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-head-tilde.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-differential-head-unscoped-no-entry.json",
+      "sha256": "0bf50b0d530c8547d677b7fa08232d38f664e6f742cc7d2646e6b4754ffd1f85",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "node",
+        "bpyt58-probe.ts",
+        "leak",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/r3-differential-head-unscoped-no-entry.mjs"
+      ]
+    },
+    {
+      "receipt": "r3-discovery-new-pattern-bypass.json",
+      "sha256": "81fbfaaa9712e4fee1a5df7962e98ca53ef22418cd4c74305a1da24c78fecc26",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-discovery-new-pattern-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-discovery-new-pattern.json",
+      "sha256": "37f7fe562cbd6fc6ae15df835c4b3a282efb1603cf27747fb0472291f0a616a8",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-discovery-new-pattern-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-field-dependencies-bypass.json",
+      "sha256": "3573b8000feb9476620d3e1f23dea584041a8540d074134dcff4fbc5dcc3c884",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-field-dependencies-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-field-dependencies.json",
+      "sha256": "5352c62bbde6c02a98e4d83fe8082d39ebf8cff2ef771780c9d4056f5619f95e",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-field-dependencies-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-field-devDependencies-bypass.json",
+      "sha256": "346b717cdaf10afa4aba95894b5b6d15d53ce628cf501aed2d75b0033fe35913",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-field-devDependencies-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-field-devDependencies.json",
+      "sha256": "ebde023bb418a2a8c1dab1d30d8e4e35706c02e3fb5280a3e93a0f83e1844d8b",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-field-devDependencies-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-field-optionalDependencies-bypass.json",
+      "sha256": "8e572d1006e6732ab09784cac7b5d37e7becf8e20b824ac44b227704b1ea202b",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-field-optionalDependencies-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-field-optionalDependencies.json",
+      "sha256": "3ddc743fe1f5b0da36f51d3df6a77be20cb0e389a8d0b8b3d5cbfd74c5e4eade",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-field-optionalDependencies-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-field-peerDependencies-bypass.json",
+      "sha256": "02e99a8e316e3fd0b90166889a1b4a16392d3eff8add2e187a5da40a99ac0142",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-field-peerDependencies-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-field-peerDependencies.json",
+      "sha256": "fac9dc84ec0949aec875fa213c84e71cdd4d1ea21346995cb622001f604088f2",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-field-peerDependencies-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-malformed-section-bypass.json",
+      "sha256": "72842cce1990b2dda31cc7a93ea0e1c9d45a96a70034f26c7755ca54f999530d",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-malformed-section-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-malformed-section.json",
+      "sha256": "2715189d8fb72ea6084d317aac2315265b7adf0f0893c9dcff9348992e399460",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-malformed-section-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-negative-bare-directory.json",
+      "sha256": "6a9fa2f83947fb54f07a16d2a62d7a9916e506d9645eb37494c0bbf2113c2524",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-negative-bare-directory-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-negative-file-dependency.json",
+      "sha256": "0cf4912777932afb1ccbe9ee5ecbb60914454771f0a82635b9b45200fa78110d",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-negative-file-dependency-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-negative-path-overrides-bypass.json",
+      "sha256": "0b15c44ed224c18a791ada8fdac29ef451e1d8f7a3cfdd8cf896315e92a39a0d",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-negative-path-overrides-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-negative-path-overrides.json",
+      "sha256": "6adb17f44be9694db8b043dc53ff03b31c90dc414cd02e257aab87e209b1c590",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-negative-path-overrides-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-negative-unscoped-no-entry-bypass.json",
+      "sha256": "61a87d3ca5756ea85a9fe241248dde9ba796ea7cb8f7641bed509e0f61e9ee44",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-negative-unscoped-no-entry-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-negative-unscoped-no-entry.json",
+      "sha256": "14a91335e54c4bc4c202f5d58711c7faa1fc9013dbaecee96d46249537ccf9b2",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-negative-unscoped-no-entry-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-nested-overrides-bypass.json",
+      "sha256": "dcd319b6b8b6d2a06514c6980feae94cb3765fc41f4276305c8c0bf392070cd1",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-nested-overrides-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-nested-overrides.json",
+      "sha256": "976f9c3fb6e4244a328f5673229c2de1ead08ba0c04656ccb4c9b5da3a411392",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-nested-overrides-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-root-inclusion-bypass.json",
+      "sha256": "dc021d709b6b3e69b2353f72293ec9743b0c46beb32f6fde664456b7cb5db9a5",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-root-inclusion-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-root-inclusion.json",
+      "sha256": "006e7ad20c850c3da2b6b1e4a8821b4f64e97ae8ad083247f7c1759c2b9e01f8",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-root-inclusion-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-caret-prefix-bypass.json",
+      "sha256": "73f31a450d5e870908af363c34e589f30dc18ca81413298c823e3c2fba5f233e",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-caret-prefix-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-caret-prefix.json",
+      "sha256": "3c2ac430bfedcd1b85d5aaa5e08c0e3247e45c525020eab8a48ee4951a7d7a3f",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-caret-prefix-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-exact-major-bypass.json",
+      "sha256": "2fcf5796a578461f0a796a45e5bf5b415e67caaff2391648766dcad2ddf9a170",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-exact-major-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-exact-major.json",
+      "sha256": "be706232207e4805757192cb2bd26a65657f903e1cbd4961ccb28e2f0b32c754",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-exact-major-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-minor-component-bypass.json",
+      "sha256": "d63f596ae4c501afcc19c237903335be06ced0f9ed35a5cffb1cd9dde5ff4281",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-minor-component-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-minor-component.json",
+      "sha256": "125423fc3082c455a23ba172bad291758feea3c83bf968b8f80d66ea82636edb",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-minor-component-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-patch-component-bypass.json",
+      "sha256": "d2e75bddb6c340b2de9321498d4817200808fc8f498c0b8e4f62365c9011d0f2",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-patch-component-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-patch-component.json",
+      "sha256": "02386aed32b93acebcdf39fba6037fdffd4145efc74a372867f8bce5dfe7c0d4",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-patch-component-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-rejection-corpus.json",
+      "sha256": "01d28c56b29935c025094b3d27f3440a6dbfde22a797f0c15c5293f0a501dd4e",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-rejection-corpus-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-tilde-prefix-bypass.json",
+      "sha256": "207b03b9a24d100492d71cb43dd1129357b8c2853c30e2103c4b1585a7fb3d14",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-tilde-prefix-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-tilde-prefix.json",
+      "sha256": "a7795e2eb500b8ac8ed2bef37892092128a1b19fbcac29465d8828127a7b71d5",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-tilde-prefix-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-version-end-bypass.json",
+      "sha256": "be3d0f7bd83bd0f3a8633313655c7a8d8315032b097ad814ddfd0ac6b33c839f",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-version-end-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-version-end.json",
+      "sha256": "8d7fdcfba84b07a0c887e700b0df3a603ec380875a585627ff688063f1b8adff",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-version-end-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-version-start-bypass.json",
+      "sha256": "21f7cded53240a4b80244a4ec963dc8ceb1e33502802025ce92e0566472a86bd",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-version-start-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-version-version-start.json",
+      "sha256": "f9540355942e4fa27013b94634ff3caec1f842833a86301a9c7f71f869e1da40",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-version-version-start-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-workspace-dependency-traversal-bypass.json",
+      "sha256": "bdb0231ae94a5f16e443539c4902aa44bade8071d5f7ced8fa24378253ed8ab6",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-workspace-dependency-traversal-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-workspace-dependency-traversal.json",
+      "sha256": "65df7f3c003a30abe1da3455f1fa2e2067805fed780afaa1d7debd4d07f21ff8",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-workspace-dependency-traversal-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-workspace-overrides-bypass.json",
+      "sha256": "eeb7c9511ff4519bb7747c23478aab6934ce6e950313cf8441fab1fb96af8219",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-workspace-overrides-bypass-vitest.json"
+      ]
+    },
+    {
+      "receipt": "r3-workspace-overrides.json",
+      "sha256": "def094e17d8f2561e474a4225ec4f407931afee23ff45d1aa7f074f6a18931b1",
+      "exit_code": 1,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "npx",
+        "--no-install",
+        "vitest",
+        "run",
+        "--project",
+        "unit",
+        "packages/polaris-generation-core/src/workspace-reach.test.ts",
+        "-t",
+        "requires every npm workspace",
+        "--reporter=json",
+        "--outputFile=/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/logs/r3-workspace-overrides-vitest.json"
+      ]
+    },
+    {
+      "receipt": "source-integrity.json",
+      "sha256": "223a3a2d362d9985d80d9d7c611586a9f668db9b3f8a4e7dd74b6dd9f9032ee3",
+      "exit_code": 0,
+      "subject": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+      "argv": [
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt58-full-outcome-20261106/source-integrity.mjs"
+      ]
+    },
+    {
+      "receipt": "typecheck.json",
+      "sha256": "a071d4d4b766346d42628e18ca75136996443a4831accd540faca785f37801a2",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ]
+    },
+    {
+      "receipt": "worktree-install.json",
+      "sha256": "5a426a9fdf8fc0bb961ab4ee0e148e229e5dd64b70a658a35f305ad8deefc78b",
+      "exit_code": 0,
+      "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "argv": [
+        "npm",
+        "ci",
+        "--offline",
+        "--ignore-scripts=false"
+      ]
+    }
+  ],
+  "note": "Expected negative-test exits are controlled observations, not failed suite claims. Earlier invalid controls are explicitly retained/dispositioned. No outside-code/infrastructure retry classification is claimed. Static raw attempts also remain in OWN/ATTEMPTS.json."
+}

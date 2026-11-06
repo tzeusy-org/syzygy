@@ -1,0 +1,68 @@
+[
+  {
+    "name": "isolated.py",
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/isolated.py",
+    "source_sha256": "7b6993490c0de96747204f4825dac11333d5a2d49646d4831ab3b12b989c1fa0",
+    "copy_sha256": "6291ebe02c7c4170b26863454730f2f13b5e93b026eccde8f8cc0d1ed7f798d7"
+  },
+  {
+    "name": "capture.py",
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/capture.py",
+    "source_sha256": "fc771a89ff05d546c16a1daf325694c578a563db713ec882c47b523ce8f09e41",
+    "copy_sha256": "fc771a89ff05d546c16a1daf325694c578a563db713ec882c47b523ce8f09e41"
+  },
+  {
+    "name": "capture_inside.py",
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/capture_inside.py",
+    "source_sha256": "46e02c6cef8e1328b54517d0037bd2d58cda51f6d1612ff31e8fcb03c8fc01f7",
+    "copy_sha256": "2fc55cbf15163f695bab443e4d2b9eab224505db415d88a74b054cfa00934edd"
+  },
+  {
+    "name": "run.py",
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/run.py",
+    "source_sha256": "6d4cdff338bf67e5251f8a729a3fc8127bbad241cc08c83b7cbf6322d1218ec3",
+    "copy_sha256": "6d4cdff338bf67e5251f8a729a3fc8127bbad241cc08c83b7cbf6322d1218ec3"
+  },
+  {
+    "name": "driver.py",
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/driver.py",
+    "source_sha256": "8885a248c391bc26099755304b2478b82f90b82a0edb09aa5489f484865795f6",
+    "copy_sha256": "8885a248c391bc26099755304b2478b82f90b82a0edb09aa5489f484865795f6"
+  },
+  {
+    "name": "prepare-cache.cjs",
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/prepare-cache.cjs",
+    "source_sha256": "dc06e5511b379c417c920a1e6aef760c295c6ede725a8fa3b7a50eb2536022a9",
+    "copy_sha256": "4453c650671591e7035c97d6bf1325bc527561a170c056713f0da6baa19cb36b"
+  },
+  {
+    "name": "etc-hosts",
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/etc-hosts",
+    "source_sha256": "b69b2c741be48691edabe3771c644c70473ccd6aa8effd9f17cc07fa129917f9",
+    "copy_sha256": "b69b2c741be48691edabe3771c644c70473ccd6aa8effd9f17cc07fa129917f9"
+  },
+  {
+    "name": "etc-nsswitch.conf",
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/etc-nsswitch.conf",
+    "source_sha256": "2ad90a00ddc40e2931e9da1b7c943a5d40d15039436ea2e20442d47c0916959e",
+    "copy_sha256": "2ad90a00ddc40e2931e9da1b7c943a5d40d15039436ea2e20442d47c0916959e"
+  },
+  {
+    "name": "etc-resolv.conf",
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/etc-resolv.conf",
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "user.npmrc",
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/user.npmrc",
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "global.npmrc",
+    "source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/global.npmrc",
+    "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]
