@@ -682,6 +682,8 @@ function label(text) {
 }
 
 function selftest() {
+  let exercisedAnswerComparisons = 0;
+  const compare = (...args) => { const paired = pairAnswers(...args); exercisedAnswerComparisons += paired.length; return paired; };
   const cases = [], specs = new Map([['port', true], ['gate-port', true], ['other', false]]);
   const world = { kind: 'probe', readers: ['port'], instants: ['2026-10-08T09:30:00Z'], overlay: {} };
   const generated = [world, { ...world, kind: 'real-file' }];
@@ -700,15 +702,15 @@ function selftest() {
   run('unknown reader rejected', () => assert.throws(() => expectedComparisons({ ...world, readers: ['missing'] }, specs), /unknown/));
   run('zero answers rejected', () => assert.throws(() => expectedComparisons({ ...world, readers: [] }, specs), /zero/));
   run('three steps and two instants are six answers in one world', () => { const w = { ...world, steps: [{}, {}, {}], instants: ['a', 'b'] }; assert.equal(population([w]).worlds, 1); assert.equal(expectedComparisons(w, specs).length, 6); });
-  run('complete serialized equal answers pair', () => assert.equal(pairAnswers(rows, answerRows, answerRows)[0].same, true));
-  run('changed complete value differs', () => { const changed = [[rows[0].key, sha256('2'), '2', '2', answerRows[0][4]]]; assert.equal(pairAnswers(rows, answerRows, changed)[0].same, false); });
-  run('unequal old key set rejected', () => assert.throws(() => pairAnswers(rows, [], answerRows), /unequal old/));
-  run('unequal new key set rejected', () => assert.throws(() => pairAnswers(rows, answerRows, []), /unequal new/));
-  run('same-length wrong key rejected', () => assert.throws(() => pairAnswers(rows, answerRows, [['other', ...answerRows[0].slice(1)]]), /key set/));
-  run('duplicate key rejected', () => assert.throws(() => pairAnswers(rows, [...answerRows, ...answerRows], answerRows), /duplicate/));
-  run('metadata identity rejected', () => assert.throws(() => pairAnswers(rows, answerRows, [[...answerRows[0].slice(0, 4), { ...answerRows[0][4], step: 2 }]]), /metadata/));
-  run('digest/value mismatch rejected', () => assert.throws(() => pairAnswers(rows, answerRows, [[rows[0].key, sha256('2'), '1', '1', answerRows[0][4]]]), /digest/));
-  run('order-independent key pairing', () => { const e = expectedComparisons({ ...world, readers: ['port', 'other'] }, specs), a = e.map(x => [x.key, sha256('1'), '1', '1', { reader: x.reader, step: x.step, instant: x.instant }]); assert.equal(pairAnswers(e, a, [...a].reverse()).length, 2); });
+  run('complete serialized equal answers pair', () => assert.equal(compare(rows, answerRows, answerRows)[0].same, true));
+  run('changed complete value differs', () => { const changed = [[rows[0].key, sha256('2'), '2', '2', answerRows[0][4]]]; assert.equal(compare(rows, answerRows, changed)[0].same, false); });
+  run('unequal old key set rejected', () => assert.throws(() => compare(rows, [], answerRows), /unequal old/));
+  run('unequal new key set rejected', () => assert.throws(() => compare(rows, answerRows, []), /unequal new/));
+  run('same-length wrong key rejected', () => assert.throws(() => compare(rows, answerRows, [['other', ...answerRows[0].slice(1)]]), /key set/));
+  run('duplicate key rejected', () => assert.throws(() => compare(rows, [...answerRows, ...answerRows], answerRows), /duplicate/));
+  run('metadata identity rejected', () => assert.throws(() => compare(rows, answerRows, [[...answerRows[0].slice(0, 4), { ...answerRows[0][4], step: 2 }]]), /metadata/));
+  run('digest/value mismatch rejected', () => assert.throws(() => compare(rows, answerRows, [[rows[0].key, sha256('2'), '1', '1', answerRows[0][4]]]), /digest/));
+  run('order-independent key pairing', () => { const e = expectedComparisons({ ...world, readers: ['port', 'other'] }, specs), a = e.map(x => [x.key, sha256('1'), '1', '1', { reader: x.reader, step: x.step, instant: x.instant }]); assert.equal(compare(e, a, [...a].reverse()).length, 2); });
   for (const [name, names] of [['absent', undefined], ['empty', []], ['empty name', ['']], ['duplicate', ['port', 'port']], ['unknown', ['missing']]]) run(`${name} control expectation rejected`, () => assert.throws(() => controlExpectations(true, names, specs), /nonempty unique known/));
   run('positive expected reader accepted', () => assert.deepEqual(controlExpectations(true, ['port'], specs), ['port']));
   run('expectation without control rejected', () => assert.throws(() => controlExpectations(false, ['port'], specs), /require/));
@@ -722,7 +724,7 @@ function selftest() {
   for (const [name, patch] of [['leftovers', { materializedLeftOver: 1 }], ['changed disk answer', { differing: 1 }], ['missing disk pair', { pairs: 0 }], ['missing removal', { removed: 0 }]]) run(`${name} fails cleanup`, () => assert.throws(() => requireCleanup({ ...clean, ...patch }), /cleanup/));
   run('successor expected outcomes change at exact effective instant', () => { assert.equal(successorExpected(SUCCESSOR_INSTANTS[0]).observationOld.satisfied, true); assert.equal(successorExpected(SUCCESSOR_INSTANTS[1]).observationOld.satisfied, false); assert.deepEqual(successorExpected(SUCCESSOR_INSTANTS[1]), successorExpected(SUCCESSOR_INSTANTS[2])); assert.equal(SUCCESSOR_RECORDS[1].supersessionAt, Date.parse(SUCCESSOR_AT)); });
   run('missing optional-method implementation is fatal', () => assert.throws(() => requiredAbsence({}), /missing/));
-  const result = { schema: 'consent-differential-selftest/1', cases, total: cases.length, failed: cases.filter(c => !c.passed).length, exercisedAnswerComparisons: 5 };
+  const result = { schema: 'consent-differential-selftest/1', cases, total: cases.length, failed: cases.filter(c => !c.passed).length, exercisedAnswerComparisons };
   process.stdout.write(`${JSON.stringify(result)}\n`);
   return result.failed === 0 ? 0 : 1;
 }
@@ -803,8 +805,15 @@ async function main(argv) {
   const selectedSha256 = sha256(JSON.stringify(worlds.map(identityOf)));
   const counts = { generated: population(built.worlds), selected: population(worlds) };
   const selectedManifest = worlds.map(w => ({ id: sha256(JSON.stringify(identityOf(w))), kind: w.kind, expected: expectedComparisons(w, specs) }));
+  const expectedPerLogicalReader = {};
+  for (const reader of specs.keys()) {
+    const ownWorlds = selectedManifest.filter(w => w.expected.some(e => e.reader === reader));
+    if (ownWorlds.length === 0) continue;
+    const comparisons = ownWorlds.flatMap(w => w.expected.filter(e => e.reader === reader));
+    expectedPerLogicalReader[reader] = { worlds: ownWorlds.length, steps: ownWorlds.reduce((n, w) => n + new Set(w.expected.filter(e => e.reader === reader).map(e => e.step)).size, 0), answers: comparisons.length, executed: null };
+  }
   if (argv.includes('--count')) {
-    process.stdout.write(`${JSON.stringify({ schema: 'consent-act-family-count/3', ...counts, corpusSha256, selectedSha256, selectedManifest, generatedManifest, executed: null, needles: needles.length, policyBytes, subjects: subjects.map(x => x.key) })}\n`);
+    process.stdout.write(`${JSON.stringify({ schema: 'consent-act-family-count/3', ...counts, expectedPerLogicalReader, corpusSha256, selectedSha256, selectedManifest, generatedManifest, executed: null, needles: needles.length, policyBytes, subjects: subjects.map(x => x.key) })}\n`);
     return 0;
   }
   const workers = Number(arg('--workers') ?? Math.max(1, Math.min(os.availableParallelism() - 2, 8)));
@@ -895,7 +904,7 @@ async function main(argv) {
     text: 'Evidence record, not authority. Version 3 adds complete exact comparison identities, generated/selected populations, typed fixture boundaries and checked per-reader controls; /2 artifacts are unchanged.',
     script: { path: SCRIPT_REL, sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) }, trees: binding, corpusRoot: 'old',
     corpus: { sha256: corpusSha256, selectedSha256, alterations: { module: TESTING, tree: 'new', named: NAMED.map(([n]) => n) }, policyBytes, generatedManifest, selectedManifest },
-    populations: counts, perLogicalReader,
+    populations: counts, expectedPerLogicalReader, perLogicalReader,
     instants: INSTANTS.map(([at]) => at), pool: { workers, node: process.version, timeLimitMs, wallSeconds: (Date.now() - started) / 1000, loadAverageAtFinish: os.loadavg() },
     readers: [...perReader.keys()], materialization, consentPortsProbe: probe.egress, bases, reducedTree: { kept, dropped: drops.length },
     successorFixture: { boundary: 'validated AdmissionRecordReader injection; actual compiled gate forwarding via exact one-import adapter; never a file-backed accepted successor form', adapters, literalOutcomes },
