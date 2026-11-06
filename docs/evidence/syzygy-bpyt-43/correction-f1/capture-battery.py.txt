@@ -1,0 +1,26 @@
+"""Capture unchanged canonical runner child output; no command/return/outcome substitution."""
+import sys,json,hashlib,threading
+from pathlib import Path
+own=Path(__file__).resolve().parent
+sys.path.insert(0,str(Path.cwd()/'scripts'))
+import run_status_battery as native
+original=native.run_one
+lock=threading.Lock()
+rows=native.battery(native.STATUS.read_text(encoding='utf-8'))
+indexes={command:index for index,(command,_) in enumerate(rows,1)}
+assert len(indexes)==len(rows) and len(rows)>100
+assert not (own/'battery-command-population.json').exists() and not (own/'battery-returns.jsonl').exists()
+(own/'battery-streams').mkdir(exist_ok=False)
+(own/'battery-command-population.json').write_text(json.dumps({'nativeScriptSha256':hashlib.sha256(Path(native.__file__).read_bytes()).hexdigest(),'canonicalStatusSha256':hashlib.sha256(native.STATUS.read_bytes()).hexdigest(),'commands':[{'index':i,'command':cmd,'variables':vs} for i,(cmd,vs) in enumerate(rows,1)]},indent=2)+'\n')
+def capture(row):
+    result=original(row)
+    command,code,output=result
+    stem=f'{indexes[command]:03d}-{hashlib.sha256(command.encode()).hexdigest()[:12]}'
+    (own/'battery-streams'/(stem+'.log')).write_text(output)
+    record={'index':indexes[command],'command':command,'exit':code,'outputFile':stem+'.log','bytes':len(output.encode()),'sha256':hashlib.sha256(output.encode()).hexdigest()}
+    with lock:
+        with (own/'battery-returns.jsonl').open('a') as out:out.write(json.dumps(record)+'\n')
+    return result
+native.run_one=capture
+sys.argv=[native.__file__]
+raise SystemExit(native.main())
