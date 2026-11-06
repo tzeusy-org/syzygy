@@ -109,9 +109,9 @@ root.
 
 | Command | What it runs | Needs |
 |---|---|---|
-| `npm test` | the **unit** tier | node only |
-| `npm run check` | `npm run typecheck`, then `npm test` | node only |
-| `npm run test:integration` | the **integration** tier | git, python3 |
+| `npm test` | one complete **unit** run in a fresh private TMPDIR, with a post-run leak check | node, python3 with pidfd support, Linux `/proc` |
+| `npm run check` | `npm run typecheck`, then `npm test` | node, python3 with pidfd support, Linux `/proc` |
+| `npm run test:integration` | bounded TMPDIR-driver selftests, then the **integration** tier | git, python3 with pidfd support, Linux `/proc` |
 | `npm run test:e2e` | the **e2e** tier, then the system tests (`npm run test:system`, which builds first) | Chrome or Chromium, strace, git, npm |
 | `npm run check:all` | `check`, `test:tiers`, `test:integration`, `test:e2e`, then the governance battery (`npm run check:battery`) | all of the above |
 | `npm run test:live` | the **live** tier: operator-run, skips unless `SYZYGY_POC_BUTLERS_REPO` names a real repository | a Butlers checkout |
@@ -121,6 +121,17 @@ root.
   a child process (git, node, python, a browser), a socket and a server at the
   call, and fails the file even where a test caught the error. A test that
   needs one belongs in a higher tier.
+- **Run cleanup.** `npm test` prints the unit project, selected files and contributing
+  workspaces, reconciles discovery and executed-file reports, and lists escaped
+  leftover names/types before removing only its own TMPDIR. A private Linux
+  subreaper waits for kernel-confirmed descendant completion, including children
+  that change process group or session; signals use verified child pidfds. Missing
+  lifetime proof refuses census/removal and leaves a named failed remainder. Only an exact real
+  `node-compile-cache` directory is exempt. A failed child, incomplete denominator,
+  scan error or incomplete cleanup fails the check even when no leak remains.
+  Driver controls run separately under `test:integration`; this is a unit-run
+  cleanliness gate. Focused development runs use `npx --no-install vitest run
+  --project <tier> <file>` directly.
 - **Integration** may use git, a real tree, loopback servers, python recorders
   and other child processes.
 - **e2e** drives a browser, builds or installs in a clone, traces with strace
@@ -140,6 +151,32 @@ root.
   and Redis-observation builders, which `node-ci` runs in its unit job, and
   `governance-docs.yml`, whose battery `check:battery` reads from
   `PROJECT-STATUS.md` ("How to verify this page") and never copies.
+
+### CI time budget
+
+Hosted CI must be green within **7 minutes** of a push to a pull request, and
+the merge queue within the same budget for each tree it tests (`syzygy-j5m0`).
+The clock is the slowest job of a workflow, not the sum of its steps.
+
+- **Where checks run.** Both workflows run on `pull_request` and
+  `merge_group` only. There is no `push` run on `main`: `main` moves only
+  through the merge queue, which already tested the exact tree that lands.
+- **How each workflow stays inside it.** `node-ci.yml` runs its integration
+  and e2e tiers in parallel after the unit job. `governance-docs.yml` runs
+  the governance battery in one job and its two slowest selftests
+  (`check_spec_reconciliation --selftest`,
+  `prepare_three_surface_poc_governedby_reference_recording --selftest`) in
+  a job each; the aggregate job `checks` is the required check. Both of
+  those selftests run their independent cases in forked workers and report
+  in case order (`SELFTEST_WORKERS` overrides the worker count; `1` runs
+  them serially).
+- **A check that would break the budget** gets its own job, or its cases run
+  in parallel, before it lands. It is never dropped from the pull-request run
+  or moved to a schedule without an owner decision, and a selftest that
+  mutates governed inputs is never path-filtered.
+- **Measure, then place.** Step durations come from the run's job record
+  (`gh api repos/<owner>/<repo>/actions/jobs/<id>`); cite them when moving a
+  check between jobs.
 
 ## Public-clone validation is part of done
 

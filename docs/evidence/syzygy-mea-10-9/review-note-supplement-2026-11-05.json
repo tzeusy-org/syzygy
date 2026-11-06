@@ -1,0 +1,1002 @@
+{
+  "schema": "p115-five-review-notes-supplement/1",
+  "captured_at": "2026-11-05T06:24:29.977835+00:00",
+  "issue": "syzygy-mea.10.9",
+  "source_commit": "d711a0d9d49b88b1a250bb4e612526651ef95ba5",
+  "original_mutation_binding": {
+    "original_record": "docs/evidence/syzygy-mea-10-3/p115-later-signed-mutants-2026-11-04.json",
+    "original_record_sha256": "31429820b49b41a19b9f64c47a7f24d4ee440845967dea030647319883737e0c",
+    "original_record_matches_initial": true,
+    "original_source_commit": "20c5b1b5767ae4512667801e360ad533ea6f4e2e",
+    "original_subject": "scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+    "original_subject_sha256": "2f53cf76c506f40acc3315641e3251cabea63526c986ecdb9291e8e9a7bf655f",
+    "historical_counts": {
+      "mutants": 10,
+      "killed": 9,
+      "equivalent": 1
+    },
+    "second_method_jq": {
+      "mutants": 10,
+      "killed": 9,
+      "equivalent": 1
+    }
+  },
+  "original_ten_mutants_rerun": false,
+  "historical_equivalence": "The original earlier-any-version survivor and its original equivalence argument remain in the unchanged original record. It was not rerun here.",
+  "mutation_run": {
+    "source_commit": "d711a0d9d49b88b1a250bb4e612526651ef95ba5",
+    "subjects": {
+      "scripts/prepare_three_surface_poc_governedby_reference_recording.py": "e455fd8becd6f1a222ef064779e4a57e115d347ec1f7b543a5afc319f7f0d3ce",
+      "scripts/record_versioned_signoff.py": "487f4ca24b515686222f395671fb183d93cf08b978d4bf47475169cbd64668f1",
+      "scripts/build_polaris_dossier_local_agent_mode_v1_1.py": "640960259064420ecc78dd8939ac16f95ecc4a149db2e5615f5dce3b63ced80e",
+      "scripts/build_polaris_dossier_local_agent_mode_v1_2.py": "88f3801d0a74e2092aee25efaed8c52ed0ac9d295d726fe641e4ee7b0581e187",
+      "scripts/build_polaris_dossier_local_agent_mode_v1_3.py": "950f571181358af12124db456ea003e5cafc9316d338eee2ced588bd4f504b0f"
+    },
+    "command": [
+      "python3",
+      "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutations.py"
+    ],
+    "rows": [
+      {
+        "id": "baseline",
+        "old": "",
+        "new": "",
+        "oracle": "later",
+        "case_count": 20,
+        "cases": [
+          [
+            "signed later version passes",
+            true
+          ],
+          [
+            "an input with no chain builder fails",
+            true
+          ],
+          [
+            "a frozen digest no earlier record reviewed fails",
+            true
+          ],
+          [
+            "snapshot inputs name the records, their reviews and the packages",
+            true
+          ],
+          [
+            "current bytes edited after the latest signed version fail",
+            true
+          ],
+          [
+            "a latest review digest that is not the current bytes fails",
+            true
+          ],
+          [
+            "the frozen digest no longer an earlier reviewed digest fails",
+            true
+          ],
+          [
+            "restored: passes again",
+            true
+          ],
+          [
+            "the chain's own signed check failing fails",
+            true
+          ],
+          [
+            "later bytes with no later record fail",
+            true
+          ],
+          [
+            "a later record whose review is the frozen one fails",
+            true
+          ],
+          [
+            "stub: earlier frozen, latest current, chain clean passes",
+            true
+          ],
+          [
+            "stub: frozen digest only on the latest record fails",
+            true
+          ],
+          [
+            "stub: a single recorded version fails",
+            true
+          ],
+          [
+            "stub: current bytes other than the latest reviewed fail",
+            true
+          ],
+          [
+            "stub: a chain finding fails",
+            true
+          ],
+          [
+            "stub: a chain error fails closed",
+            true
+          ],
+          [
+            "governing_input_findings admits a signed later version",
+            true
+          ],
+          [
+            "governing_input_findings refuses it once the chain check fails",
+            true
+          ],
+          [
+            "validation-only Git-free snapshot preserves signed and missing/edited target results",
+            true
+          ]
+        ],
+        "failed": [],
+        "killed": null,
+        "mutated_subject_sha256": "e455fd8becd6f1a222ef064779e4a57e115d347ec1f7b543a5afc319f7f0d3ce",
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutation-final-code-baseline.log"
+      },
+      {
+        "id": "baseline-render",
+        "old": "",
+        "new": "",
+        "oracle": "render",
+        "case_count": 5,
+        "cases": [
+          [
+            "T16 exact neutral P115 aggregate",
+            true
+          ],
+          [
+            "T18 exact P115 application provenance record",
+            true
+          ],
+          [
+            "T17 census rejects an unlisted package in either population",
+            true
+          ],
+          [
+            "T17 census rejects a missing required package in either population",
+            true
+          ],
+          [
+            "T17 all non-P115 full historical record and aggregate outputs",
+            true
+          ]
+        ],
+        "failed": [],
+        "killed": null,
+        "mutated_subject_sha256": "e455fd8becd6f1a222ef064779e4a57e115d347ec1f7b543a5afc319f7f0d3ce",
+        "output_sha256": "5403e6fea8cf2efd7700f695d54a20bddc9341649873165b7a5c05d98017b9e6",
+        "output": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutation-final-code-baseline-render.log"
+      },
+      {
+        "id": "snapshot-targets-dropped",
+        "old": "    for name in LATER_SIGNED_INPUT_BUILDERS:",
+        "new": "    for name in ():",
+        "oracle": "later",
+        "case_count": 20,
+        "cases": [
+          [
+            "signed later version passes",
+            true
+          ],
+          [
+            "an input with no chain builder fails",
+            true
+          ],
+          [
+            "a frozen digest no earlier record reviewed fails",
+            true
+          ],
+          [
+            "snapshot inputs name the records, their reviews and the packages",
+            true
+          ],
+          [
+            "current bytes edited after the latest signed version fail",
+            true
+          ],
+          [
+            "a latest review digest that is not the current bytes fails",
+            true
+          ],
+          [
+            "the frozen digest no longer an earlier reviewed digest fails",
+            true
+          ],
+          [
+            "restored: passes again",
+            true
+          ],
+          [
+            "the chain's own signed check failing fails",
+            true
+          ],
+          [
+            "later bytes with no later record fail",
+            true
+          ],
+          [
+            "a later record whose review is the frozen one fails",
+            true
+          ],
+          [
+            "stub: earlier frozen, latest current, chain clean passes",
+            true
+          ],
+          [
+            "stub: frozen digest only on the latest record fails",
+            true
+          ],
+          [
+            "stub: a single recorded version fails",
+            true
+          ],
+          [
+            "stub: current bytes other than the latest reviewed fail",
+            true
+          ],
+          [
+            "stub: a chain finding fails",
+            true
+          ],
+          [
+            "stub: a chain error fails closed",
+            true
+          ],
+          [
+            "governing_input_findings admits a signed later version",
+            true
+          ],
+          [
+            "governing_input_findings refuses it once the chain check fails",
+            true
+          ],
+          [
+            "validation-only Git-free snapshot preserves signed and missing/edited target results",
+            false
+          ]
+        ],
+        "failed": [
+          "validation-only Git-free snapshot preserves signed and missing/edited target results"
+        ],
+        "killed": true,
+        "mutated_subject_sha256": "97117f2318e2378f4ed86d995deb17b52bbbcd42fa100117e49e32dcd84eaf14",
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutation-final-code-snapshot-targets-dropped.log"
+      },
+      {
+        "id": "snapshot-input-union-dropped",
+        "old": "    paths |= later_signed_inputs(root)\n",
+        "new": "",
+        "oracle": "later",
+        "case_count": 20,
+        "cases": [
+          [
+            "signed later version passes",
+            true
+          ],
+          [
+            "an input with no chain builder fails",
+            true
+          ],
+          [
+            "a frozen digest no earlier record reviewed fails",
+            true
+          ],
+          [
+            "snapshot inputs name the records, their reviews and the packages",
+            true
+          ],
+          [
+            "current bytes edited after the latest signed version fail",
+            true
+          ],
+          [
+            "a latest review digest that is not the current bytes fails",
+            true
+          ],
+          [
+            "the frozen digest no longer an earlier reviewed digest fails",
+            true
+          ],
+          [
+            "restored: passes again",
+            true
+          ],
+          [
+            "the chain's own signed check failing fails",
+            true
+          ],
+          [
+            "later bytes with no later record fail",
+            true
+          ],
+          [
+            "a later record whose review is the frozen one fails",
+            true
+          ],
+          [
+            "stub: earlier frozen, latest current, chain clean passes",
+            true
+          ],
+          [
+            "stub: frozen digest only on the latest record fails",
+            true
+          ],
+          [
+            "stub: a single recorded version fails",
+            true
+          ],
+          [
+            "stub: current bytes other than the latest reviewed fail",
+            true
+          ],
+          [
+            "stub: a chain finding fails",
+            true
+          ],
+          [
+            "stub: a chain error fails closed",
+            true
+          ],
+          [
+            "governing_input_findings admits a signed later version",
+            true
+          ],
+          [
+            "governing_input_findings refuses it once the chain check fails",
+            true
+          ],
+          [
+            "validation-only Git-free snapshot preserves signed and missing/edited target results",
+            false
+          ]
+        ],
+        "failed": [
+          "validation-only Git-free snapshot preserves signed and missing/edited target results"
+        ],
+        "killed": true,
+        "mutated_subject_sha256": "499d6ab9b9fe407ffc849caddcbca106454469ff4dc29845704740aa29b10d54",
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "output": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutation-final-code-snapshot-input-union-dropped.log"
+      },
+      {
+        "id": "historical-census-permits-unlisted",
+        "old": "set(keys) == set(prior_packages) - {KEY}",
+        "new": "set(keys) <= set(prior_packages) - {KEY}",
+        "oracle": "render",
+        "case_count": 5,
+        "cases": [
+          [
+            "T16 exact neutral P115 aggregate",
+            true
+          ],
+          [
+            "T18 exact P115 application provenance record",
+            true
+          ],
+          [
+            "T17 census rejects an unlisted package in either population",
+            false
+          ],
+          [
+            "T17 census rejects a missing required package in either population",
+            true
+          ],
+          [
+            "T17 all non-P115 full historical record and aggregate outputs",
+            true
+          ]
+        ],
+        "failed": [
+          "T17 census rejects an unlisted package in either population"
+        ],
+        "killed": true,
+        "mutated_subject_sha256": "a27d5cf27e4a3740b36db165ec9399f36ff5ec5524d48266f5dee3b60e76d364",
+        "output_sha256": "5403e6fea8cf2efd7700f695d54a20bddc9341649873165b7a5c05d98017b9e6",
+        "output": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutation-final-code-historical-census-permits-unlisted.log"
+      },
+      {
+        "id": "historical-census-permits-missing",
+        "old": "set(keys) == set(prior_packages) - {KEY}",
+        "new": "set(keys) >= set(prior_packages) - {KEY}",
+        "oracle": "render",
+        "case_count": 5,
+        "cases": [
+          [
+            "T16 exact neutral P115 aggregate",
+            true
+          ],
+          [
+            "T18 exact P115 application provenance record",
+            true
+          ],
+          [
+            "T17 census rejects an unlisted package in either population",
+            true
+          ],
+          [
+            "T17 census rejects a missing required package in either population",
+            false
+          ],
+          [
+            "T17 all non-P115 full historical record and aggregate outputs",
+            true
+          ]
+        ],
+        "failed": [
+          "T17 census rejects a missing required package in either population"
+        ],
+        "killed": true,
+        "mutated_subject_sha256": "ae5ee92517c40633f58efa7fdb4bf9e15df996396583f1732b2760a6c37c54eb",
+        "output_sha256": "5403e6fea8cf2efd7700f695d54a20bddc9341649873165b7a5c05d98017b9e6",
+        "output": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutation-final-code-historical-census-permits-missing.log"
+      },
+      {
+        "id": "current-census-permits-missing",
+        "old": "set(current_packages) - {KEY} == set(keys) | later",
+        "new": "set(current_packages) - {KEY} <= set(keys) | later",
+        "oracle": "render",
+        "case_count": 5,
+        "cases": [
+          [
+            "T16 exact neutral P115 aggregate",
+            true
+          ],
+          [
+            "T18 exact P115 application provenance record",
+            true
+          ],
+          [
+            "T17 census rejects an unlisted package in either population",
+            true
+          ],
+          [
+            "T17 census rejects a missing required package in either population",
+            false
+          ],
+          [
+            "T17 all non-P115 full historical record and aggregate outputs",
+            true
+          ]
+        ],
+        "failed": [
+          "T17 census rejects a missing required package in either population"
+        ],
+        "killed": true,
+        "mutated_subject_sha256": "56caa7cbb6498aeafd7f4293565e8009048543157001931f1f236a81792b1507",
+        "output_sha256": "5403e6fea8cf2efd7700f695d54a20bddc9341649873165b7a5c05d98017b9e6",
+        "output": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutation-final-code-current-census-permits-missing.log"
+      },
+      {
+        "id": "current-census-permits-unlisted",
+        "old": "set(current_packages) - {KEY} == set(keys) | later",
+        "new": "set(current_packages) - {KEY} >= set(keys) | later",
+        "oracle": "render",
+        "case_count": 5,
+        "cases": [
+          [
+            "T16 exact neutral P115 aggregate",
+            true
+          ],
+          [
+            "T18 exact P115 application provenance record",
+            true
+          ],
+          [
+            "T17 census rejects an unlisted package in either population",
+            false
+          ],
+          [
+            "T17 census rejects a missing required package in either population",
+            true
+          ],
+          [
+            "T17 all non-P115 full historical record and aggregate outputs",
+            true
+          ]
+        ],
+        "failed": [
+          "T17 census rejects an unlisted package in either population"
+        ],
+        "killed": true,
+        "mutated_subject_sha256": "6c59acd187b44117e4433de563495cdf056ea669ea8887777ed927dae23a6910",
+        "output_sha256": "5403e6fea8cf2efd7700f695d54a20bddc9341649873165b7a5c05d98017b9e6",
+        "output": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutation-final-code-current-census-permits-unlisted.log"
+      }
+    ],
+    "historical_ten_mutants_rerun": false
+  },
+  "binding_probes": {
+    "source_commit": "c25fea7a3a7403874bdfa1feaf283179f74b6d5a",
+    "subjects": {
+      "scripts/prepare_three_surface_poc_governedby_reference_recording.py": "76b50d6c72c7f15731305c4b51bbd0875f1132ec18e0106368847b7be1f1a142",
+      "scripts/record_versioned_signoff.py": "487f4ca24b515686222f395671fb183d93cf08b978d4bf47475169cbd64668f1",
+      "scripts/build_polaris_dossier_local_agent_mode_v1_1.py": "640960259064420ecc78dd8939ac16f95ecc4a149db2e5615f5dce3b63ced80e",
+      "scripts/build_polaris_dossier_local_agent_mode_v1_2.py": "88f3801d0a74e2092aee25efaed8c52ed0ac9d295d726fe641e4ee7b0581e187",
+      "scripts/build_polaris_dossier_local_agent_mode_v1_3.py": "950f571181358af12124db456ea003e5cafc9316d338eee2ced588bd4f504b0f"
+    },
+    "synthetic_only": true,
+    "owner_action": false,
+    "rows": [
+      {
+        "phase": "pre-record",
+        "file": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/design.md.patch",
+        "source_commit": "9c4ac28280f2f3ca943a35d16af119a4a079e630",
+        "old": "Design v1.3.",
+        "new": "Design v1.3. Unreviewed probe edit.",
+        "exit_code": 1,
+        "output": "FAILED (before applying anything): package bytes changed since the commit the review read: ['.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/design.md.patch']\n",
+        "all_installed_targets_and_records_unchanged": true
+      },
+      {
+        "phase": "post-record",
+        "file": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/design.md.patch",
+        "installed": "openspec/changes/polaris-dossier-local-agent-mode/design.md",
+        "old": "Design v1.3.",
+        "new": "Design v1.3. Unreviewed probe edit.",
+        "clean_check_exit": 0,
+        "check_exit": 0,
+        "check_output": "recorded polaris-dossier-local-agent-mode v1.3 sign-off regenerates exactly; applied tree verified\n",
+        "builder_signed_findings": [],
+        "p115_later_signed_input": true,
+        "spec_digest_unchanged": true
+      },
+      {
+        "phase": "pre-record",
+        "file": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/proposal.md.patch",
+        "source_commit": "fb6dd73248bfa7001821f40e1d34188931a83310",
+        "old": "Proposal v1.3.",
+        "new": "Proposal v1.3. Unreviewed probe edit.",
+        "exit_code": 1,
+        "output": "FAILED (before applying anything): package bytes changed since the commit the review read: ['.syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/proposal.md.patch']\n",
+        "all_installed_targets_and_records_unchanged": true
+      },
+      {
+        "phase": "post-record",
+        "file": ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-3/proposed/proposal.md.patch",
+        "installed": "openspec/changes/polaris-dossier-local-agent-mode/proposal.md",
+        "old": "Proposal v1.3.",
+        "new": "Proposal v1.3. Unreviewed probe edit.",
+        "clean_check_exit": 0,
+        "check_exit": 0,
+        "check_output": "recorded polaris-dossier-local-agent-mode v1.3 sign-off regenerates exactly; applied tree verified\n",
+        "builder_signed_findings": [],
+        "p115_later_signed_input": true,
+        "spec_digest_unchanged": true
+      }
+    ]
+  },
+  "current_signed_state": {
+    "source_commit": "d711a0d9d49b88b1a250bb4e612526651ef95ba5",
+    "files": {
+      ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md": "12b9cfeb6bec3ddc17dc07edd66e5f8411dd04838609dcb5621570bc4f2e03ef",
+      ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md": "96928fbd20bf8f89b90c6b5fc62b441c0112eac3cc4367015854c70290aed08d",
+      "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md": "5c11c59188489b62611817efb13e6ff25c71a56f712cdc40c2dd444c7d56a6b3",
+      "openspec/changes/polaris-dossier-local-agent-mode/design.md": "d752d8f155a4837ecf4326690325f5f73ce91de49757c27e8bb5f0f72bdbafd0",
+      "openspec/changes/polaris-dossier-local-agent-mode/proposal.md": "afe81684bcf421ac3e12d8d024aa64ad1c5fbd86b0689fa267954cc2469c10eb"
+    },
+    "recorded_versions": [
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ]
+    ],
+    "builder_signed_findings": [],
+    "canonical_v13_recorder_lines": [
+      "python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.3   # dossier local-agent sign-off, v1.3 2026-11-04 (presentation elements): record, aggregate block and applied tree"
+    ],
+    "original_structured_qa_source_supplied": false,
+    "original_exchange_verbatim_fidelity": "Unknown"
+  },
+  "fixture_delta": {
+    "later_signed_rows_before": 20,
+    "later_signed_rows_after": 20,
+    "snapshot_row_replaced": true,
+    "new_T17_rows": 2,
+    "historical_argument_cases": 38,
+    "historical_record_and_aggregate_outputs": 76,
+    "new_product_vitest_suites": 0
+  },
+  "owner_qa": {
+    "original_source_supplied": false,
+    "verbatim_fidelity": "Unknown",
+    "existing_direction": ".syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md",
+    "limitation": "The original structured questions/options/selections were not supplied through this task. The derived direction records the owner decision but is not an independently checkable transcript. No unrelated home/transcript/credential search or replacement owner question was performed.",
+    "remaining_gate": "An actual authorized original capture or an actual newly dated attributed owner disposition; never a reconstructed/backdated exchange."
+  },
+  "authority_residual": {
+    "status": "open",
+    "observed": "Coordinated edits of either v1.3 design/proposal patch and its installed target pass the current signed builder, recorder check and P115 later-signed seam while the spec digest stays unchanged. Normal record() refuses the package edits before applying.",
+    "remaining_gate": "Applicable explicit owner authority and independent review for a permissible successor before three-file/whole-package or full-recorder acceptance strengthening.",
+    "authorization_unchanged": "Existing four-predicate later-signed-input exception only; the accepted REQ-034/P115 trade-off stands."
+  },
+  "reproduction": {
+    "mutations.py": {
+      "path": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutations.py",
+      "sha256": "84ed54adf36ab0994b66bffc7623d2652caa3be4488307897d68518f67359374",
+      "source": "import sys,json,hashlib,subprocess,types,io,contextlib\nfrom pathlib import Path\nroot=Path.cwd();own=Path('/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105')\nsys.path.insert(0,str(root/'scripts'))\npath=root/'scripts/prepare_three_surface_poc_governedby_reference_recording.py';source=path.read_text()\nsubjects={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (path,root/'scripts/record_versioned_signoff.py',*(root/'scripts'/f'build_polaris_dossier_local_agent_mode_v1_{v}.py' for v in (1,2,3)))}\nmutants=[\n ('snapshot-targets-dropped','    for name in LATER_SIGNED_INPUT_BUILDERS:','    for name in ():', 'later'),\n ('snapshot-input-union-dropped','    paths |= later_signed_inputs(root)\\n','', 'later'),\n ('historical-census-permits-unlisted','set(keys) == set(prior_packages) - {KEY}','set(keys) <= set(prior_packages) - {KEY}', 'render'),\n ('historical-census-permits-missing','set(keys) == set(prior_packages) - {KEY}','set(keys) >= set(prior_packages) - {KEY}', 'render'),\n ('current-census-permits-missing','set(current_packages) - {KEY} == set(keys) | later','set(current_packages) - {KEY} <= set(keys) | later','render'),\n ('current-census-permits-unlisted','set(current_packages) - {KEY} == set(keys) | later','set(current_packages) - {KEY} >= set(keys) | later','render'),\n]\nrun_label=sys.argv[1]\nrows=[]\nfor name,old,new,which in [('baseline','','','later'),('baseline-render','','','render'),*mutants]:\n assert not old or source.count(old)==1,(name,source.count(old))\n module=types.ModuleType('owned_p115_'+name.replace('-','_'));module.__file__=str(path);sys.modules[module.__name__]=module\n text=source.replace(old,new,1) if old else source\n output=io.StringIO()\n try:\n  exec(compile(text,str(path)+'::'+name,'exec'),module.__dict__)\n  with contextlib.redirect_stdout(output):\n   if which=='later':cases=module.later_signed_selftest()\n   else:\n    cases=[];module.recording_render_selftest(root,lambda name,passed:cases.append((name,passed)))\n finally:sys.modules.pop(module.__name__,None)\n log=own/('mutation-'+run_label+'-'+name+'.log');log.write_text(output.getvalue())\n failed=[n for n,ok in cases if not ok]\n rows.append({'id':name,'old':old,'new':new,'oracle':which,'case_count':len(cases),'cases':cases,'failed':failed,'killed':bool(failed) if old else None,'mutated_subject_sha256':hashlib.sha256(text.encode()).hexdigest(),'output_sha256':hashlib.sha256(log.read_bytes()).hexdigest(),'output':str(log)})\n assert (bool(failed) if old else not failed),(name,failed)\n print(name,len(cases),failed,flush=True)\nresult={'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'subjects':subjects,'command':['python3',str(Path(__file__))],'rows':rows,'historical_ten_mutants_rerun':False}\n(own/('mutation-results-'+run_label+'.json')).write_text(json.dumps(result,indent=2)+'\\n')\n"
+    },
+    "binding-probes.py": {
+      "path": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/binding-probes.py",
+      "sha256": "462f430b96f2057a8a7bb5b926d5d27fe723045d63cf75062e6664dfd3709fdf",
+      "source": "import sys,tempfile,subprocess,io,contextlib,json,hashlib\nfrom pathlib import Path\nsys.path.insert(0,str(Path.cwd()/'scripts'))\nimport record_versioned_signoff as r\nimport build_polaris_dossier_local_agent_mode_v1_3 as v13\nimport build_polaris_dossier_local_agent_mode_v1_1 as v11\nimport build_polaris_dossier_local_agent_mode_v1_2 as v12\nimport prepare_three_surface_poc_governedby_reference_recording as p\nown=Path('/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105')\nrows=[]\ndef git(root,*args):return subprocess.check_output(['git','-C',str(root),'-c','user.name=Synthetic probe','-c','user.email=synthetic@invalid','-c','core.hooksPath=/dev/null',*args],stderr=subprocess.STDOUT,text=True).strip()\nfor name in ('design.md','proposal.md'):\n with tempfile.TemporaryDirectory(prefix='binding-probe-') as temp:\n  root=Path(temp);v13._fixture(root)\n  (root/r.AGGREGATE_REL).write_text('# Synthetic record; no owner act\\n')\n  git(root,'init','-q');git(root,'config','gc.auto','0');git(root,'config','maintenance.auto','false');git(root,'add','-A');git(root,'commit','-qm','Synthetic reviewed v1.3 fixture')\n  commit=git(root,'rev-parse','HEAD');review='docs/reviews/R-SYNTHETIC-BINDING-RAW.md'\n  (root/review).write_text(f'# Review polaris-dossier-local-agent-mode\\nReviewed commit: {commit}\\nManifest SHA-256: {v13.sha(v13.subject_bytes(root))}\\nVerdict: CONFIRM\\n\\n## Findings\\n\\nNo findings.\\n')\n  pkg=r.real_packages()['polaris-dossier-local-agent-mode@1.3']\n  assert r.verify_reviewed(root,pkg,review,None)==(commit,'CONFIRM')\n  patch=root/v13.PROPOSED/(name+'.patch');before=patch.read_bytes();old=('Design v1.3.' if name=='design.md' else 'Proposal v1.3.');new=old+' Unreviewed probe edit.'\n  patch.write_bytes(before.replace(old.encode(),new.encode()))\n  subjects={str(rel):(root/rel).read_bytes() for rel in v13.TARGETS};aggregate=(root/r.AGGREGATE_REL).read_bytes()\n  out=io.StringIO()\n  with contextlib.redirect_stdout(out):code=r.record(root,pkg,'1.3','2026-11-05','Synthetic selection; no owner action',review,None)\n  unchanged=all((root/rel).read_bytes()==body for rel,body in subjects.items()) and aggregate==(root/r.AGGREGATE_REL).read_bytes() and not (root/v13.V13_RECORD).exists()\n  rows.append({'phase':'pre-record','file':str(patch.relative_to(root)),'source_commit':commit,'old':old,'new':new,'exit_code':code,'output':out.getvalue(),'all_installed_targets_and_records_unchanged':unchanged})\n  assert code==1 and 'package bytes changed since the commit the review read' in out.getvalue() and unchanged\n  patch.write_bytes(before)\n  out=io.StringIO()\n  with contextlib.redirect_stdout(out):code=r.record(root,pkg,'1.3','2026-11-05','Synthetic selection; no owner action',review,None)\n  assert code==0,out.getvalue()\n  clean=io.StringIO()\n  with contextlib.redirect_stdout(clean):clean_code=r.check(root,pkg,'1.3')\n  assert clean_code==0 and v13.signed_findings(root)==[]\n  installed=root/v13.CHANGE/name\n  patch.write_bytes(before.replace(old.encode(),new.encode()));installed.write_bytes(installed.read_bytes().replace(old.encode(),new.encode()))\n  out=io.StringIO()\n  with contextlib.redirect_stdout(out):code=r.check(root,pkg,'1.3')\n  frozen=v11.review_digest(root,v12.V12_RECORD)\n  findings=v13.signed_findings(root);later=p.later_signed_input(root,str(v13.SPEC),frozen)\n  rows.append({'phase':'post-record','file':str(patch.relative_to(root)),'installed':str(installed.relative_to(root)),'old':old,'new':new,'clean_check_exit':clean_code,'check_exit':code,'check_output':out.getvalue(),'builder_signed_findings':findings,'p115_later_signed_input':later,'spec_digest_unchanged':v13.sha((root/v13.SPEC).read_bytes())==v11.review_digest(root,v13.V13_RECORD)})\n  assert code==0 and findings==[] and later\nresult={'synthetic_only':True,'owner_action':False,'rows':rows}\n(own/sys.argv[1]).write_text(json.dumps(result,indent=2)+'\\n');print(json.dumps(result,indent=2))\n"
+    },
+    "focused.py": {
+      "path": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/focused.py",
+      "sha256": "1f66a7c69ead2cec92e9989efbc3c7af2f2d8836bd7e88ed0a6addc3480d4527",
+      "source": "import sys, tempfile, json\nfrom pathlib import Path\nassert Path(tempfile.tempdir).is_relative_to(Path('/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105'))\nsys.path.insert(0,str(Path.cwd()/'scripts'))\nimport prepare_three_surface_poc_governedby_reference_recording as p\nrows=p.later_signed_selftest()\nprint(json.dumps(rows,indent=2))\nassert len(rows)==20 and all(ok for _,ok in rows)\n"
+    },
+    "current-state.py": {
+      "path": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/current-state.py",
+      "sha256": "9f36b3d26a6303f8ef40358aeec5f28e68fa4806f7a865429d8c8807a20d920e",
+      "source": "import sys,hashlib,json,subprocess\nfrom pathlib import Path\nroot=Path.cwd();sys.path.insert(0,str(root/'scripts'))\nimport build_polaris_dossier_local_agent_mode_v1_3 as v13\nimport build_polaris_dossier_local_agent_mode_v1_1 as v11\nimport run_status_battery as battery\nrecord=v13.V13_RECORD;direction=Path('.syzygy/governance/decisions/OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md')\ninputs=(record,direction,*v13.TARGETS)\ncommand='python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.3'\nlines=[c for c,_ in battery.battery((root/'PROJECT-STATUS.md').read_text()) if c.startswith(command)]\nresult={'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'files':{str(p):hashlib.sha256((root/p).read_bytes()).hexdigest() for p in inputs},'recorded_versions':v11.recorded_versions(root),'builder_signed_findings':v13.signed_findings(root),'canonical_v13_recorder_lines':lines,'original_structured_qa_source_supplied':False,'original_exchange_verbatim_fidelity':'Unknown'}\nassert result['recorded_versions'][-1]==(1,3) and result['builder_signed_findings']==[] and len(lines)==1\nPath('/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/current-state.json').write_text(json.dumps(result,indent=2)+'\\n');print(json.dumps(result,indent=2))\n"
+    },
+    "isolated.py": {
+      "path": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/isolated.py",
+      "sha256": "3c7afd785de10de5b3cbe644d846d408076c02135c314a2e626b9531169c5358",
+      "source": "#!/usr/bin/python3\n\"\"\"Owned-fixture verification namespace; no source or assertion substitutions.\"\"\"\nimport hashlib,json,os,subprocess,sys,tempfile\nfrom pathlib import Path\nOWN=Path('/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105'); NODE=Path('/home/orca/.nvm/versions/node/v24.6.0')\ntempfile.tempdir=str(OWN/'tmp')\nfor name in ('tmp','home','npm-cache'): (OWN/name).mkdir(exist_ok=True)\ncwd=Path(sys.argv[1]).resolve(); assert cwd.is_relative_to(OWN)\nenvironment={'HOME':str(OWN/'home'),'TMPDIR':str(OWN/'tmp'),'TMP':str(OWN/'tmp'),'TEMP':str(OWN/'tmp'),'PYTHONPATH':str(OWN/'python-start'),\n 'PATH':str(NODE/'bin')+':/usr/bin:/bin','LANG':'C.UTF-8','TZ':'Asia/Singapore',\n 'NPM_CONFIG_CACHE':str(OWN/'npm-cache'),'NPM_CONFIG_OFFLINE':'true','NPM_CONFIG_AUDIT':'false','NPM_CONFIG_FUND':'false',\n 'NPM_CONFIG_USERCONFIG':str(OWN/'user.npmrc'),'NPM_CONFIG_GLOBALCONFIG':str(OWN/'global.npmrc'),\n 'GIT_CONFIG_NOSYSTEM':'1','GIT_CONFIG_GLOBAL':'/dev/null','SYZYGY_POC_BROWSER':'/opt/google/chrome/google-chrome'}\nargv=['bwrap','--unshare-pid','--unshare-net','--die-with-parent','--new-session','--clearenv',\n '--ro-bind','/usr','/usr','--ro-bind','/lib','/lib','--ro-bind','/lib64','/lib64',\n '--ro-bind','/opt/google/chrome','/opt/google/chrome','--symlink','usr/bin','/bin',\n '--proc','/proc','--dev','/dev','--dir','/etc','--ro-bind','/etc/fonts','/etc/fonts','--bind',str(OWN),str(OWN),\n '--ro-bind',str(OWN/'etc-hosts'),'/etc/hosts','--ro-bind',str(OWN/'etc-nsswitch.conf'),'/etc/nsswitch.conf',\n '--ro-bind',str(OWN/'etc-resolv.conf'),'/etc/resolv.conf',\n '--ro-bind',str(NODE),str(NODE),'--bind',str(OWN/'tmp'),'/tmp','--chdir',str(cwd)]\nfor key,value in environment.items(): argv+=['--setenv',key,value]\nargv+=['--',*sys.argv[2:]]\nreceipt={'schema':'owned-filesystem-namespace-command/1','cwd':str(cwd),'argv':argv,'environment':environment,'adapter_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}\nwith (OWN/'isolation-commands.jsonl').open('a') as out:out.write(json.dumps(receipt)+'\\n')\nraise SystemExit(subprocess.call(argv))\n"
+    },
+    "python-start/sitecustomize.py": {
+      "path": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/python-start/sitecustomize.py",
+      "sha256": "d5f4c4883ddb338294d896c812f6a51ab271d0e2d7b44c5c183ecaf8c62b2111",
+      "source": "import os, tempfile\nfrom pathlib import Path\np=Path('/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/tmp')\nassert p.is_dir()\ntempfile.tempdir=str(p)\nfor k in ('TMPDIR','TMP','TEMP'): os.environ[k]=str(p)\n"
+    },
+    "isolated-before-tighten.py": {
+      "path": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/isolated-before-tighten.py",
+      "sha256": "24b5b97df917b84963f4cb3d016cfca84c73a15920d55e4a97eb31cb98c2dce2",
+      "source": "#!/usr/bin/python3\n\"\"\"Owned-fixture verification namespace; no source or assertion substitutions.\"\"\"\nimport hashlib,json,os,subprocess,sys,tempfile\nfrom pathlib import Path\nOWN=Path('/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105'); NODE=Path('/home/orca/.nvm/versions/node/v24.6.0')\ntempfile.tempdir=str(OWN/'tmp')\nfor name in ('tmp','home','npm-cache'): (OWN/name).mkdir(exist_ok=True)\ncwd=Path(sys.argv[1]).resolve(); assert cwd.is_relative_to(OWN) or cwd == Path('/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-mea.10.9')\nenvironment={'HOME':str(OWN/'home'),'TMPDIR':str(OWN/'tmp'),'TMP':str(OWN/'tmp'),'TEMP':str(OWN/'tmp'),'PYTHONPATH':str(OWN/'python-start'),\n 'PATH':str(NODE/'bin')+':/usr/bin:/bin','LANG':'C.UTF-8','TZ':'Asia/Singapore',\n 'NPM_CONFIG_CACHE':str(OWN/'npm-cache'),'NPM_CONFIG_OFFLINE':'true','NPM_CONFIG_AUDIT':'false','NPM_CONFIG_FUND':'false',\n 'NPM_CONFIG_USERCONFIG':str(OWN/'user.npmrc'),'NPM_CONFIG_GLOBALCONFIG':str(OWN/'global.npmrc'),\n 'GIT_CONFIG_NOSYSTEM':'1','GIT_CONFIG_GLOBAL':'/dev/null','SYZYGY_POC_BROWSER':'/opt/google/chrome/google-chrome'}\nargv=['bwrap','--unshare-pid','--unshare-net','--die-with-parent','--new-session','--clearenv',\n '--ro-bind','/usr','/usr','--ro-bind','/lib','/lib','--ro-bind','/lib64','/lib64',\n '--ro-bind','/opt/google/chrome','/opt/google/chrome','--symlink','usr/bin','/bin',\n '--proc','/proc','--dev','/dev','--dir','/etc','--ro-bind','/etc/fonts','/etc/fonts','--bind',str(OWN),str(OWN),\n '--ro-bind',str(OWN/'etc-hosts'),'/etc/hosts','--ro-bind',str(OWN/'etc-nsswitch.conf'),'/etc/nsswitch.conf',\n '--ro-bind',str(OWN/'etc-resolv.conf'),'/etc/resolv.conf',\n '--bind','/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-mea.10.9','/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-mea.10.9','--ro-bind',str(NODE),str(NODE),'--bind',str(OWN/'tmp'),'/tmp','--chdir',str(cwd)]\nfor key,value in environment.items(): argv+=['--setenv',key,value]\nargv+=['--',*sys.argv[2:]]\nreceipt={'schema':'owned-filesystem-namespace-command/1','cwd':str(cwd),'argv':argv,'environment':environment,'adapter_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}\nwith (OWN/'isolation-commands.jsonl').open('a') as out:out.write(json.dumps(receipt)+'\\n')\nraise SystemExit(subprocess.call(argv))\n"
+    },
+    "commands": [
+      "python3 mutations.py final-code",
+      "python3 binding-probes.py <new-result-filename>.json",
+      "python3 focused.py",
+      "python3 current-state.py"
+    ]
+  },
+  "attempt_receipts": [
+    {
+      "label": "focused-attempt1",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/focused.py"
+      ],
+      "started_at": "2026-11-05T06:14:48.554936+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "9a5e846cb2556d9caa33771070088f33429f3107",
+      "tree": "232a3c3fc82f5e4c652956267924812db38a87cd",
+      "status": "M scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+      "exit_code": 1,
+      "seconds": 12.81617454905063,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/focused-attempt1.log",
+      "stdout_sha256": "44440708ac2761cc624efee1d03df2db6465c7a1be360c5963b85d3bb7207d6b",
+      "finished_at": "2026-11-05T06:15:01.430478+00:00"
+    },
+    {
+      "label": "snapshot-diagnose1",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/snapshot-diagnose.py"
+      ],
+      "started_at": "2026-11-05T06:15:29.567319+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "9a5e846cb2556d9caa33771070088f33429f3107",
+      "tree": "232a3c3fc82f5e4c652956267924812db38a87cd",
+      "status": "M scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+      "exit_code": 0,
+      "seconds": 17.638788164011203,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/snapshot-diagnose1.log",
+      "stdout_sha256": "2b23d3a57cc407f9748e81ffcbe85f18e06960eb753f38ea152fe31bed9f3324",
+      "finished_at": "2026-11-05T06:15:47.320603+00:00"
+    },
+    {
+      "label": "snapshot-diagnose2",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/snapshot-diagnose2.py"
+      ],
+      "started_at": "2026-11-05T06:16:27.208850+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "9a5e846cb2556d9caa33771070088f33429f3107",
+      "tree": "232a3c3fc82f5e4c652956267924812db38a87cd",
+      "status": "M scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+      "exit_code": 0,
+      "seconds": 12.25706503202673,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/snapshot-diagnose2.log",
+      "stdout_sha256": "62ea7d7ad1d2d53c02698d2712dbdc90ea140178e7c079a8148dd0fd8df9df7c",
+      "finished_at": "2026-11-05T06:16:39.518256+00:00"
+    },
+    {
+      "label": "focused-attempt2",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/focused.py"
+      ],
+      "started_at": "2026-11-05T06:17:00.684307+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "9a5e846cb2556d9caa33771070088f33429f3107",
+      "tree": "232a3c3fc82f5e4c652956267924812db38a87cd",
+      "status": "M scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+      "exit_code": 0,
+      "seconds": 7.054225263011176,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/focused-attempt2.log",
+      "stdout_sha256": "12bb6cd58802d1ed3577aa6890624e62831bfe58cb1b3757fa922ea7183d3a1a",
+      "finished_at": "2026-11-05T06:17:07.767055+00:00"
+    },
+    {
+      "label": "mutation-controls-attempt1",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutations.py"
+      ],
+      "started_at": "2026-11-05T06:18:19.665835+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "c25fea7a3a7403874bdfa1feaf283179f74b6d5a",
+      "tree": "c67401a77cf7a922f3ed745d4f31fcb0cfbeadcf",
+      "status": "",
+      "exit_code": 1,
+      "seconds": 12.09823281300487,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutation-controls-attempt1.log",
+      "stdout_sha256": "e66ecd63a32d6f0593e5338102f640bfbee70086d9afc3913d0a020b739df50f",
+      "finished_at": "2026-11-05T06:18:31.794936+00:00"
+    },
+    {
+      "label": "mutation-controls-attempt2",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutations.py"
+      ],
+      "started_at": "2026-11-05T06:19:22.888325+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "39f099a3d64efa10e3191dcd2627775146316ebe",
+      "tree": "f273226b5f4ba1b99d52de34a4c08b6739b79760",
+      "status": "",
+      "exit_code": 0,
+      "seconds": 16.879905423964374,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutation-controls-attempt2.log",
+      "stdout_sha256": "2c5f6c0a54154dc0641118fec8e52a51eaa17fc223b316f9dc2ff2881a66f245",
+      "finished_at": "2026-11-05T06:19:39.800457+00:00"
+    },
+    {
+      "label": "mutation-controls-final-code",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutations.py",
+        "final-code"
+      ],
+      "started_at": "2026-11-05T06:21:15.705104+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "d711a0d9d49b88b1a250bb4e612526651ef95ba5",
+      "tree": "7cf9413127ddc68a308d3557ca7e334dbe42a23f",
+      "status": "",
+      "exit_code": 0,
+      "seconds": 22.946091425954364,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/mutation-controls-final-code.log",
+      "stdout_sha256": "2c5f6c0a54154dc0641118fec8e52a51eaa17fc223b316f9dc2ff2881a66f245",
+      "finished_at": "2026-11-05T06:21:38.681540+00:00"
+    },
+    {
+      "label": "binding-probes-attempt1",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/binding-probes.py"
+      ],
+      "started_at": "2026-11-05T06:16:12.292094+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "9a5e846cb2556d9caa33771070088f33429f3107",
+      "tree": "232a3c3fc82f5e4c652956267924812db38a87cd",
+      "status": "M scripts/prepare_three_surface_poc_governedby_reference_recording.py",
+      "exit_code": 0,
+      "seconds": 15.75821061199531,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/binding-probes-attempt1.log",
+      "stdout_sha256": "86f150d106781951944b5a604f9f1b42c5a5995ffc09b06c9e121df9c91607e7",
+      "finished_at": "2026-11-05T06:16:28.279097+00:00"
+    },
+    {
+      "label": "binding-probes-committed",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/binding-probes.py",
+        "binding-probes-committed-result.json"
+      ],
+      "started_at": "2026-11-05T06:18:20.866300+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "c25fea7a3a7403874bdfa1feaf283179f74b6d5a",
+      "tree": "c67401a77cf7a922f3ed745d4f31fcb0cfbeadcf",
+      "status": "",
+      "exit_code": 0,
+      "seconds": 8.029483929974958,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/binding-probes-committed.log",
+      "stdout_sha256": "ef3ad64edd54cde87129e9dcc9653f13e741ca823ba9a124862415100f34aa51",
+      "finished_at": "2026-11-05T06:18:28.926539+00:00"
+    },
+    {
+      "label": "focused-committed",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/focused.py"
+      ],
+      "started_at": "2026-11-05T06:18:38.207113+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "c25fea7a3a7403874bdfa1feaf283179f74b6d5a",
+      "tree": "c67401a77cf7a922f3ed745d4f31fcb0cfbeadcf",
+      "status": "",
+      "exit_code": 0,
+      "seconds": 6.671184119011741,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/focused-committed.log",
+      "stdout_sha256": "12bb6cd58802d1ed3577aa6890624e62831bfe58cb1b3757fa922ea7183d3a1a",
+      "finished_at": "2026-11-05T06:18:44.904787+00:00"
+    },
+    {
+      "label": "recorder-selftest",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "scripts/record_versioned_signoff.py",
+        "--selftest"
+      ],
+      "started_at": "2026-11-05T06:18:44.943008+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "c25fea7a3a7403874bdfa1feaf283179f74b6d5a",
+      "tree": "c67401a77cf7a922f3ed745d4f31fcb0cfbeadcf",
+      "status": "",
+      "exit_code": 0,
+      "seconds": 6.141208521963563,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/recorder-selftest.log",
+      "stdout_sha256": "da5ec3fecdc52443f9cc4641d110a73ca638d6b381f1c51d5106a2219022c093",
+      "finished_at": "2026-11-05T06:18:51.113392+00:00"
+    },
+    {
+      "label": "v11-check",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_1.py",
+        "--check"
+      ],
+      "started_at": "2026-11-05T06:18:51.146434+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "c25fea7a3a7403874bdfa1feaf283179f74b6d5a",
+      "tree": "c67401a77cf7a922f3ed745d4f31fcb0cfbeadcf",
+      "status": "",
+      "exit_code": 0,
+      "seconds": 0.6937351259985007,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/v11-check.log",
+      "stdout_sha256": "b3c6fe3185d1768ef9ee93ff28dd82ccad66c3f7da15968ad4699dcd9b965dba",
+      "finished_at": "2026-11-05T06:18:51.868198+00:00"
+    },
+    {
+      "label": "v11-selftest",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_1.py",
+        "--selftest"
+      ],
+      "started_at": "2026-11-05T06:18:51.899215+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "c25fea7a3a7403874bdfa1feaf283179f74b6d5a",
+      "tree": "c67401a77cf7a922f3ed745d4f31fcb0cfbeadcf",
+      "status": "",
+      "exit_code": 0,
+      "seconds": 1.557484034972731,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/v11-selftest.log",
+      "stdout_sha256": "64489024f2d1079e01c30e5740375d10e8766e74c518c435f9eff9ce5dd77a68",
+      "finished_at": "2026-11-05T06:18:53.482496+00:00"
+    },
+    {
+      "label": "v12-check",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_2.py",
+        "--check"
+      ],
+      "started_at": "2026-11-05T06:18:53.517045+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "c25fea7a3a7403874bdfa1feaf283179f74b6d5a",
+      "tree": "c67401a77cf7a922f3ed745d4f31fcb0cfbeadcf",
+      "status": "",
+      "exit_code": 0,
+      "seconds": 0.8379164420184679,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/v12-check.log",
+      "stdout_sha256": "c4fac66eb68580218fe2e79451bef786b64415346ec0b5a2606fecd7cec37efa",
+      "finished_at": "2026-11-05T06:18:54.386911+00:00"
+    },
+    {
+      "label": "v12-selftest",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_2.py",
+        "--selftest"
+      ],
+      "started_at": "2026-11-05T06:18:54.434337+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "c25fea7a3a7403874bdfa1feaf283179f74b6d5a",
+      "tree": "c67401a77cf7a922f3ed745d4f31fcb0cfbeadcf",
+      "status": "",
+      "exit_code": 0,
+      "seconds": 7.71158463601023,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/v12-selftest.log",
+      "stdout_sha256": "749f197b2575f8c28158a2fd497edddeb5440a2baceae8a4e2b9a3532bdff931",
+      "finished_at": "2026-11-05T06:19:02.181815+00:00"
+    },
+    {
+      "label": "v13-check",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_3.py",
+        "--check"
+      ],
+      "started_at": "2026-11-05T06:19:02.214816+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "c25fea7a3a7403874bdfa1feaf283179f74b6d5a",
+      "tree": "c67401a77cf7a922f3ed745d4f31fcb0cfbeadcf",
+      "status": "",
+      "exit_code": 0,
+      "seconds": 0.9158431789837778,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/v13-check.log",
+      "stdout_sha256": "b6786c36b1313cbdf6b19965138e7da07552febba6692bfea1be19a7f91c06f8",
+      "finished_at": "2026-11-05T06:19:03.159866+00:00"
+    },
+    {
+      "label": "v13-selftest",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "scripts/build_polaris_dossier_local_agent_mode_v1_3.py",
+        "--selftest"
+      ],
+      "started_at": "2026-11-05T06:19:03.193041+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "c25fea7a3a7403874bdfa1feaf283179f74b6d5a",
+      "tree": "c67401a77cf7a922f3ed745d4f31fcb0cfbeadcf",
+      "status": "",
+      "exit_code": 0,
+      "seconds": 14.759238000027835,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/v13-selftest.log",
+      "stdout_sha256": "c32d8d75ded1db302dfe1b7977be542afd6e3ef7862c7caca2b936648559b812",
+      "finished_at": "2026-11-05T06:19:17.981405+00:00"
+    },
+    {
+      "label": "current-signed-state",
+      "cwd": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/subject",
+      "command": [
+        "python3",
+        "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/current-state.py"
+      ],
+      "started_at": "2026-11-05T06:22:54.350123+00:00",
+      "capture": "worker-emitter; report fact, not an emitter-distinct gate artifact",
+      "commit": "d711a0d9d49b88b1a250bb4e612526651ef95ba5",
+      "tree": "7cf9413127ddc68a308d3557ca7e334dbe42a23f",
+      "status": "",
+      "exit_code": 0,
+      "seconds": 0.9986375849694014,
+      "stdout_file": "/home/orca/.tmp/syzygy-mea10-9-full-review-notes-20261105/current-signed-state.log",
+      "stdout_sha256": "2120a9f8c392c4719e93dc6bec90ec371d6bf7b73a21f8fd0f0816c19657a63c",
+      "finished_at": "2026-11-05T06:22:55.418585+00:00"
+    }
+  ],
+  "verification_subject_limit": "The first focused attempts ran on a dirty tree and are retained as failed/diagnostic history, not clean-commit verification. Positive mutation evidence is bound to the exact clean source commit above. Final clean-commit required gates are reported in the separate terminal receipt. The final adapter is tightened to expose OWN only; preceding receipts identify their actual earlier adapter hashes."
+}

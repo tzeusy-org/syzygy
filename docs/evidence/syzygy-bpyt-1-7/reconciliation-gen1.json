@@ -1,0 +1,963 @@
+{
+  "schema": "syzygy-r7-reconciliation/1",
+  "audit_key": "greenfield:reconciliation:R7",
+  "generation": 1,
+  "hard_generation_limit": 3,
+  "subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+  "status": "blocked-awaiting-coordinator",
+  "resume_condition": "coverage gaps remain",
+  "baseline_verbatim": "# R7/gen1 baseline recorded before implementation reads\n\nSubject: d7bfcce2fabd60647dd22f69d6dee027329f63c8. Audit-key: greenfield:reconciliation:R7. Scope: original OG-1..OG-5, M7 owner choices and later M7 gates, not an audit of every other epic's implementation.\n\n[Observed] The effective target is the 2026-10-21 owner answer: one answered packet; estate stays in place; 30 installed/candidate RFC pairs stay; both generated reports stay committed; ten governed scripts stay as standing remainder; the byte-exact two-copy act template stays held by an independent oracle; provider island stays parked and decoupled. Routing-only exclusion may be generated but never filters reliance, citer or digest sweeps. GP-Q1 moves evidence only behind the four-part verified-index/protected-tag gate; it is not permission to change retention unilaterally. GP-Q7 authorizes only a reviewed candidate CC-SEC-3 amendment with explicit costs, not adoption or the execution flag.\n\n[Inferred] Interface-first sketch: preserve existing owner-record interface, exact act reader and independent recorder oracle, field-parsed successor readers with their documented refusals, one explicit execution-rule gate defaulting off, one launched-run marker gate shared by choice and issuance, explicit credential probe/list/declaration boundary, inert parked provider graph, one routing exclusion predicate separate from comprehensive evidence/reliance scans, one immutable mirrored RFC population, and a candidate packet/impact/decision surface that records unresolved owner choices. Waiting-session and package readers implementing the same sign-off contract should agree on date, withdrawal, version, principal and digest defaults/refusals. No new external consumer was demonstrated by the original audit; same-repo paths do not justify compatibility outside owner-selected preservation.\n\n[Inferred] From scratch under these choices, each surface has one small interface. Multiple encodings remain only where the owner explicitly retained the independent two-copy oracle or mirrored artifact. Tests use fixtures, one gate species per behavior, exact populations for preservation scans, controlled falsifiers at each claimed enforcement predicate, and no observed repository bodies. Expected audit output is a finite delta and deduped ledger; no product implementation or governance rewrite. Size estimates would be misleading for historical signed estate; report population and behavior rather than arbitrary LOC deletion goals.\n\n[Unknown] Whether implementation and enforcement cover that entire target; whether the future-dated waiting-session gap has been repaired; whether every claimed output is actually byte-identical. These require the following implementation audit.\n",
+  "original_six_acceptance": [
+    {
+      "number": 1,
+      "verdict": "partial",
+      "evidence": "28/28 M7 child findings mapped, plus required cross-epic follow-ups; resolved items read at source subject; remaining implementations/gates explicit."
+    },
+    {
+      "number": 2,
+      "verdict": "partial",
+      "evidence": "8726 tracked blobs/two independent lists; 32 literal whole-tree searches confirmed by git grep; all matching code paths enumerated. Universal loader closure falsified; no claim that finite syntax scans cover every possible JavaScript loader."
+    },
+    {
+      "number": 3,
+      "verdict": "partial",
+      "evidence": "Guard roots/regex/globs read, 12 controlled source mutants and63 fixture rows retained. Dynamic-destructured loader survives actual existing guard. No duplicate gate proposed; extend 8.40."
+    },
+    {
+      "number": 4,
+      "verdict": "met-with-reported-candidates",
+      "evidence": "Whole OG1\u20135 and later M7 delta rerun; one newly observed counterexample attached to existing8.40, known gaps retained. No zero-gap/convergence verdict."
+    },
+    {
+      "number": 5,
+      "verdict": "met",
+      "evidence": "Propose generation2 only after relevant merged remediation/owner outcomes; preserve hard gen3 limit and dedupe this ledger. No next-generation dispatch or creation performed."
+    },
+    {
+      "number": 6,
+      "verdict": "coordinator-only-pending",
+      "evidence": "Coordinator must cite this summary and audited subject in eventual close reason after actual reviewed/merged outcome; worker does not close."
+    }
+  ],
+  "child_checklist": [
+    {
+      "id": "syzygy-bpyt.1.1",
+      "classification": "resolved",
+      "evidence": [
+        ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md:44"
+      ],
+      "verdict": "Answered packet, four retained raw reviews and performed owner direction; no still-pending Q0/Q1/Q7 is inferred.",
+      "remaining": [],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.2",
+      "classification": "resolved",
+      "evidence": [
+        ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md:74"
+      ],
+      "verdict": "Actual selected choices constrain the code audit; a declined simplification is not an implementation gap.",
+      "remaining": [],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.3",
+      "classification": "resolved",
+      "evidence": [
+        "scripts/spent_round_routing.py:34",
+        ".syzygy/governance/contracts/candidates/scripts/build_task_router.py:619",
+        "PRESERVATION.json"
+      ],
+      "verdict": "Declined estate move; 272 original round/history/superpowers paths byte-identical; 30 mirror pairs and both committed reports preserved. Routing-only omission implemented by 9.6.",
+      "remaining": [],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.4",
+      "classification": "resolved",
+      "evidence": [
+        "POPULATION-v2.json",
+        "docs/plans/2026-10-21-greenfield-parity-audit.md:241"
+      ],
+      "verdict": "Owner retained the ten governed Python scripts as a self-rooted/bound-ledger remainder. Exact governed-code population is ten; moving them would violate the chosen target.",
+      "remaining": [],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.5",
+      "classification": "resolved",
+      "evidence": [
+        "packages/polaris-dossier/src/gate-sources.ts:96",
+        "packages/polaris-dossier/src/gate-acts.test.ts:602"
+      ],
+      "verdict": "Owner retained byte-exact two-copy sitting template plus real-recorder oracle. 8.4 preserves that boundary; gate-acts altered-prose cases refuse drift. Do not replace this with field-only acceptance.",
+      "remaining": [
+        "syzygy-bpyt.1.8",
+        "syzygy-bpyt.1.24"
+      ],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.6",
+      "classification": "resolved",
+      "evidence": [
+        "docs/reviews/R-CC-SEC-3-ATTENDED-SESSION-1-RAW.md",
+        "docs/review-campaigns/cc-sec-3-attended-session.md",
+        "PRESERVATION.json",
+        "packages/polaris-dossier/src/execution-rule.ts:17"
+      ],
+      "verdict": "Candidate drafting delivered via PR736; independent review retained via PR738, exact verdict CONFIRM WITH EXCEPTIONS. Eight candidate files equal reviewed 1c9acf2e54d4fd385f3098750f3e260c983c7f71. P117 is a draft offering; no adoption, flag flip or per-run permission.",
+      "remaining": [
+        "syzygy-bpyt.8.15",
+        "syzygy-bpyt.8.11"
+      ],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.7",
+      "classification": "partial",
+      "evidence": [
+        "README.md",
+        "reconciliation-gen1.json"
+      ],
+      "verdict": "Whole original R7/gen1 audit delivered; coverage gaps remain. Coordinator closure is forbidden until the required merged/reviewed outcome, and no next generation starts here.",
+      "remaining": [],
+      "canonical_status": "in_progress"
+    },
+    {
+      "id": "syzygy-bpyt.1.8",
+      "classification": "missing",
+      "evidence": [
+        "packages/polaris-dossier/src/gate-sources.ts:305",
+        "packages/polaris-generation-consent/src/package-reader.ts:705"
+      ],
+      "verdict": "Field-parsed successor recognition remains a separate pending acceptance choice; preserve current exact reader and old output until lawful resolution.",
+      "remaining": [
+        "syzygy-bpyt.1.24"
+      ],
+      "canonical_status": "open"
+    },
+    {
+      "id": "syzygy-bpyt.1.9",
+      "classification": "resolved",
+      "evidence": [
+        "packages/three-surface-poc-core/src/owner-act-drafter.ts:23",
+        "packages/three-surface-poc-core/src/owner-act-drafter.ts:81"
+      ],
+      "verdict": "Coordinator keep disposition, not owner adoption: pure unused-by-product drafter remains, with no persistence or command. Authorizing-act question for any command is still 1.13.",
+      "remaining": [
+        "syzygy-bpyt.1.13"
+      ],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.10",
+      "classification": "resolved",
+      "evidence": [
+        "packages/three-surface-poc-core/src/act-fields.ts:31",
+        "packages/three-surface-poc-core/src/body-read-authority.test.ts:670"
+      ],
+      "verdict": "Coordinator status-quo disposition, not owner ruling. One shared non-human-principal rule retains two arms and the known human-name false positive. Current test explicitly says no owner ruled that row.",
+      "remaining": [],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.11",
+      "classification": "resolved",
+      "evidence": [
+        "apps/three-surface-poc/src/routes.ts",
+        "packages/three-surface-poc-core/src/model.ts"
+      ],
+      "verdict": "Coordinator kept the routes after endpoint-removal byte-identity premise failed; do not delete or invent an owner endorsement. Defaults/Unknown wire work remains under 1.25/1.28.",
+      "remaining": [
+        "syzygy-bpyt.1.25",
+        "syzygy-bpyt.1.28"
+      ],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.12",
+      "classification": "partial",
+      "evidence": [
+        "packages/polaris-generation-consent/src/package-reader.ts:644",
+        "packages/polaris-generation-consent/src/act-families.test.ts:145",
+        ".syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md:157"
+      ],
+      "verdict": "Owner selected align knobs toward refusal; implementation is not complete. Quoted policy withdrawal/default differences are pinned status quo, not discharged by tests.",
+      "remaining": [
+        "syzygy-bpyt.1.24"
+      ],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.13",
+      "classification": "missing",
+      "evidence": [
+        "packages/three-surface-poc-core/src/owner-act-drafter.ts:81"
+      ],
+      "verdict": "Operator command must first name an actual authorizing act. Existing open owner-gated item retained; audit does not add a command or ask again.",
+      "remaining": [],
+      "canonical_status": "open"
+    },
+    {
+      "id": "syzygy-bpyt.1.14",
+      "classification": "resolved",
+      "evidence": [
+        "packages/three-surface-poc-core/src/markdown-code-context.ts:121",
+        "apps/three-surface-poc/src/fence-rules.test.ts:272"
+      ],
+      "verdict": "Owner CRLF/bare-CR gate ruling implemented by 16: recognizer retains line terminators and active-content gate follows it. Extractor bare-CR line model remains explicitly separate.",
+      "remaining": [],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.15",
+      "classification": "resolved",
+      "evidence": [
+        "packages/three-surface-poc-core/src/project-shape-extraction.ts:210",
+        "packages/three-surface-poc-core/src/project-shape-manifest.ts:200",
+        "apps/three-surface-poc/src/fence-rules.test.ts:302"
+      ],
+      "verdict": "Owner Q2 C implemented by 55: extractor and link/root-index readers use profile recognizer; only link reader masks spans. Consent outsideFences and renderer remain intentionally separate; stray-backtick link loss is selected residual, not a new fix.",
+      "remaining": [],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.16",
+      "classification": "resolved",
+      "evidence": [
+        "apps/three-surface-poc/src/git-observation.ts:176",
+        "apps/three-surface-poc/src/git-observation.test.ts:170"
+      ],
+      "verdict": "Owner Q3 B implemented by 56: eight compiled/loaded projects plus four root build inputs protected; derived start/build census is tested. Restart identity remains separate 57.",
+      "remaining": [
+        "syzygy-bpyt.57"
+      ],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.17",
+      "classification": "missing",
+      "evidence": [
+        "packages/polaris-generation-core/src/workspace-reach.testkit.ts:45",
+        ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-FOLLOWUPS-2026-10-28.md"
+      ],
+      "verdict": "Q4 A requests scoped/exact-caret-tilde workspace precondition. Current helper still assumes its narrower universe; 58 remains open. Do not normalize bare/unscoped members silently.",
+      "remaining": [
+        "syzygy-bpyt.58"
+      ],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.18",
+      "classification": "resolved",
+      "evidence": [
+        "packages/three-surface-poc-core/src/markdown-code-context.ts",
+        "packages/three-surface-poc-core/src/project-shape-extraction.ts"
+      ],
+      "verdict": "PR555 implements the two loop replacements for long fences/lists. The remainder spread census is separately owned by 54/74/77; no global new cleanup inferred.",
+      "remaining": [],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.19",
+      "classification": "missing",
+      "evidence": [
+        "packages/three-surface-poc-core/src/markdown-code-context.ts:70",
+        "runtime-probes.json"
+      ],
+      "verdict": "Owner Q7 A pending implementation 60: dot without s still allows U+2028/U+2029 malformed-info bypass. Synthetic U+2028 active-content signal remains hidden.",
+      "remaining": [
+        "syzygy-bpyt.60"
+      ],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.20",
+      "classification": "missing",
+      "evidence": [
+        "packages/three-surface-poc-core/src/git-object-reader.ts:250"
+      ],
+      "verdict": "Finding positions count LF only while profile recognizes bare CR. Existing 1.20 covers output-position correction alongside 60; no new questionnaire or duplicate parser.",
+      "remaining": [
+        "syzygy-bpyt.60"
+      ],
+      "canonical_status": "open"
+    },
+    {
+      "id": "syzygy-bpyt.1.21",
+      "classification": "missing",
+      "evidence": [
+        "packages/three-surface-poc-core/src/act-fields.ts:39",
+        "runtime-probes.json"
+      ],
+      "verdict": "Owner Q6 A pending implementation 59. Feb29/30/31 and Apr31 in 2026 all return true through Date.parse normalization.",
+      "remaining": [
+        "syzygy-bpyt.59"
+      ],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.22",
+      "classification": "missing",
+      "evidence": [
+        "packages/three-surface-poc-core/src/markdown-code-context.ts:70",
+        "runtime-probes.json"
+      ],
+      "verdict": "Same malformed info-string U+2028/U+2029 gap already answered by Q7 A; attach to 60, not a new owner question.",
+      "remaining": [
+        "syzygy-bpyt.60"
+      ],
+      "canonical_status": "open"
+    },
+    {
+      "id": "syzygy-bpyt.1.23",
+      "classification": "partial",
+      "evidence": [
+        "packages/three-surface-poc-core/src/work-items.ts:126",
+        "packages/three-surface-poc-core/src/code-structure.ts:78",
+        ".syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md:193"
+      ],
+      "verdict": "Owner chose structured closedReason for the named nine prose-only Unknown fields. Existing 1.25 implementation remains open; this is not permission to choose semantics for additional fields.",
+      "remaining": [
+        "syzygy-bpyt.1.25",
+        "syzygy-bpyt.1.28"
+      ],
+      "canonical_status": "closed"
+    },
+    {
+      "id": "syzygy-bpyt.1.24",
+      "classification": "missing",
+      "evidence": [
+        "packages/polaris-generation-consent/src/package-reader.ts:644",
+        "packages/polaris-generation-consent/src/act-families.test.ts:181"
+      ],
+      "verdict": "Existing blocked alignment implementation carries Nov3 A and stop conditions. Family differences remain present; exact actual decisions/verdict moves require the existing gate, not an audit fix.",
+      "remaining": [
+        "syzygy-bpyt.1.8"
+      ],
+      "canonical_status": "blocked"
+    },
+    {
+      "id": "syzygy-bpyt.1.25",
+      "classification": "missing",
+      "evidence": [
+        "packages/three-surface-poc-core/src/work-items.ts:126",
+        "packages/three-surface-poc-core/src/code-structure.ts:78"
+      ],
+      "verdict": "Existing nine-field structured-Unknown implementation after 1poh; current wire still has prose-only Unknown arms.",
+      "remaining": [],
+      "canonical_status": "open"
+    },
+    {
+      "id": "syzygy-bpyt.1.26",
+      "classification": "deviates",
+      "evidence": [
+        "packages/polaris-dossier/src/waiting-sessions.ts:77",
+        "packages/polaris-dossier/src/waiting-sessions.ts:124",
+        "packages/polaris-generation-consent/src/package-reader.ts:878",
+        "runtime-probes.json"
+      ],
+      "verdict": "On the actual current v1.3 subject, changing Date to 2099-01-01 still yields signed; wrong Version refuses. Date ordering is absent from wait signoff but enforced by package reader. Existing owner-gated 1.26 retained; no duplicate.",
+      "remaining": [],
+      "canonical_status": "open"
+    },
+    {
+      "id": "syzygy-bpyt.1.27",
+      "classification": "deviates",
+      "evidence": [
+        "packages/polaris-generation-core/src/quote-locate.ts:134",
+        "packages/polaris-generation-core/src/quote-fidelity.ts:175",
+        "runtime-probes.json"
+      ],
+      "verdict": "Current synthetic curly lead-in is one checked quotation with zero findings but renderer has no span and says lead-in-without-quote. Existing decision covers disagreement; prior 1693/2375 is historical, not a fresh count.",
+      "remaining": [],
+      "canonical_status": "open"
+    },
+    {
+      "id": "syzygy-bpyt.1.28",
+      "classification": "missing",
+      "evidence": [
+        "apps/three-surface-poc/src/routes.ts:157",
+        "packages/three-surface-poc-core/src/reevaluation.ts",
+        "packages/three-surface-poc-core/src/resource-headroom.ts:35",
+        "packages/three-surface-poc-core/src/resource-ledger.ts:85"
+      ],
+      "verdict": "Existing owner decision covers response population, observedProject limb, cost, and limit-observation Unknowns outside the nine. Do not extend the Nov3 nine-field answer to these four.",
+      "remaining": [],
+      "canonical_status": "open"
+    }
+  ],
+  "greenfield_delta": [
+    {
+      "actual": "OG1 owner packet",
+      "greenfield": "one performed answer record",
+      "verdict": "parity",
+      "classification": "resolved",
+      "evidence": "1.1/1.2; source owner answer and four raws"
+    },
+    {
+      "actual": "OG2 round/history/spent evidence",
+      "greenfield": "retained immutable estate plus routing-only omission",
+      "verdict": "justified",
+      "classification": "resolved",
+      "evidence": "GP-Q0 status quo; 1.3/9.6; 272 original paths unchanged"
+    },
+    {
+      "actual": "OG2 installed/candidate RFC mirror",
+      "greenfield": "30 byte-exact pairs",
+      "verdict": "justified",
+      "classification": "resolved",
+      "evidence": "Owner retained P33 shape M; CG7h candidate twin mutant killed"
+    },
+    {
+      "actual": "OG2 contract index/budget report",
+      "greenfield": "two committed outputs",
+      "verdict": "justified",
+      "classification": "resolved",
+      "evidence": "Owner status quo, both source hashes retained"
+    },
+    {
+      "actual": "OG3 ten governed scripts",
+      "greenfield": "standing self-rooted bundle/bound-ledger remainder",
+      "verdict": "justified",
+      "classification": "resolved",
+      "evidence": "1.4 decline; exact ten paths, not permission to add implementation"
+    },
+    {
+      "actual": "OG4 sitting template",
+      "greenfield": "two copies held by independent real-recorder oracle",
+      "verdict": "justified",
+      "classification": "resolved",
+      "evidence": "1.5 decline; 8.10 altered-prose finding; gate-acts cases"
+    },
+    {
+      "actual": "OG4 field-form recognition",
+      "greenfield": "explicit family acceptance/withdrawal semantics",
+      "verdict": "gap",
+      "classification": "missing",
+      "evidence": "1.8/1.12/1.24; no unlisted refusal change"
+    },
+    {
+      "actual": "OG5 execution permitting arm",
+      "greenfield": "off until policy adoption, implementation checks and review",
+      "verdict": "justified",
+      "classification": "resolved",
+      "evidence": "1.6 candidate only; flag false; marker and cost/choice gates"
+    },
+    {
+      "actual": "OG5 candidate CC-SEC-3 amendment",
+      "greenfield": "frozen reviewed draft with owner questions",
+      "verdict": "parity",
+      "classification": "resolved",
+      "evidence": "Eight files equal reviewed head; CONFIRM WITH EXCEPTIONS not owner act"
+    },
+    {
+      "actual": "OG5 launch marker",
+      "greenfield": "one three-state reader reused by actual issuance paths",
+      "verdict": "parity",
+      "classification": "partial",
+      "evidence": "8.8/8.12 fulfilled; library allowExecution residual 8.11"
+    },
+    {
+      "actual": "OG5 adapter credentials",
+      "greenfield": "one explicit fail-closed source/probe/declaration boundary",
+      "verdict": "gap",
+      "classification": "partial",
+      "evidence": "8.9 delivered; 8.15 skipped base reads/mislabel; candidate Q1/N5 unresolved"
+    },
+    {
+      "actual": "OG5 parked provider island",
+      "greenfield": "live path decoupled, parked island retained",
+      "verdict": "justified",
+      "classification": "partial",
+      "evidence": "8.1/8.23 delivered syntax forms; 8.40 closure and new loader blind spot"
+    },
+    {
+      "actual": "M7 drafter and principal rule",
+      "greenfield": "keep selected coordinator status quo",
+      "verdict": "justified",
+      "classification": "resolved",
+      "evidence": "1.9/1.10; no owner ruling manufactured; 1.13 remains gated"
+    },
+    {
+      "actual": "M7 kept routes and Unknown wire",
+      "greenfield": "kept endpoints, explicit per-field reasons",
+      "verdict": "gap",
+      "classification": "partial",
+      "evidence": "1.11 keep; 1.25/1.28 gaps"
+    },
+    {
+      "actual": "M7 Markdown profile/link/extractor",
+      "greenfield": "shared stated recognizer, intentional consent/renderer variants",
+      "verdict": "parity",
+      "classification": "partial",
+      "evidence": "14/15/18/16/55; 20/22/60 remaining"
+    },
+    {
+      "actual": "M7 observer/build/start identity",
+      "greenfield": "protect all inputs start actually compiles/loads",
+      "verdict": "parity",
+      "classification": "partial",
+      "evidence": "1.16/56 fulfilled; 57 restart and 6.16 parser limitation remain"
+    },
+    {
+      "actual": "M7 workspace universe",
+      "greenfield": "explicit membership/version precondition",
+      "verdict": "gap",
+      "classification": "missing",
+      "evidence": "1.17/58"
+    },
+    {
+      "actual": "M7 act calendar",
+      "greenfield": "real calendar readback",
+      "verdict": "gap",
+      "classification": "missing",
+      "evidence": "1.21/59"
+    },
+    {
+      "actual": "M7 refusal text",
+      "greenfield": "fixed error text for selected three governed paths",
+      "verdict": "gap",
+      "classification": "missing",
+      "evidence": "50; screen.ts:147 still engine message"
+    },
+    {
+      "actual": "M7 wait signoff",
+      "greenfield": "same temporal default/refusal as contract reader",
+      "verdict": "gap",
+      "classification": "deviates",
+      "evidence": "1.26 future date reproduction on v1.3"
+    },
+    {
+      "actual": "M7 quotation lead-in",
+      "greenfield": "one compatible checked/rendered quotation contract",
+      "verdict": "gap",
+      "classification": "deviates",
+      "evidence": "1.27 current curly counterexample"
+    }
+  ],
+  "delta_denominator": 21,
+  "delta_counts": {
+    "parity": 5,
+    "justified": 8,
+    "gap": 8,
+    "residue": 0
+  },
+  "delta_percent": {
+    "parity": 23.81,
+    "justified": 38.1,
+    "gap": 38.1,
+    "residue": 0.0
+  },
+  "follow_ups": [
+    {
+      "existing_id": "syzygy-bpyt.8.40",
+      "title": "Widen existing island closure guard scope to include dynamic-destructured loader aliases",
+      "type": "task",
+      "priority": 3,
+      "proposed_parent": "syzygy-bpyt.8",
+      "proposed_dependencies": [
+        "syzygy-bpyt.8.23"
+      ],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Retain the existing 20-module closure finding and named original unlisted importers; current fresh record is OPEN/unassigned.",
+        "In the same island-boundary guard, kill appended dynamic destructure const { createRequire: auditMake } = await import(\"node:module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\"); in each applicable live entry. Static named-import alias remains the killed control.",
+        "Retain exact old/new, current source commit, meaningful assertion output, workspace resolver behavior and consent-root positive control. No parallel guard, island reclassification, product loader or deletion.",
+        "Fresh independent class1/4 review, existing scope/dependency serialization and GPQ0 requirements remain."
+      ],
+      "gate_species": "packages/polaris-generation-core/src/island-boundary.test.ts; widen importsOf/closure predicates in place",
+      "expected_test_delta": "+0 ~1 -0 proposed row extension; actual implementation worker reports final delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.1.26",
+      "title": "Wait signoff future-date mismatch remains on v1.3",
+      "type": "task",
+      "priority": 2,
+      "proposed_parent": "syzygy-bpyt.1",
+      "proposed_dependencies": [],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Current positive control signed; Date 2099-01-01 still signed; Version 1.4 unsigned. Resolve actual owner gate before changed refusal.",
+        "Widen existing waiting-sessions gate with fixed-clock future/current/withdrawn-ordering fixtures as the eventual ruling requires; do not count arbitrary appended Withdrawn prose as an authorized dialect."
+      ],
+      "gate_species": "waiting-sessions.test.ts existing signoff gate",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.1.27",
+      "title": "Quote check and render lead-in readers still disagree",
+      "type": "task",
+      "priority": 3,
+      "proposed_parent": "syzygy-bpyt.1",
+      "proposed_dependencies": [],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Current curly fixture yields check quotes1/findings0 vs render lead-in-without-quote/no span. Preserve .1.27 owner choice before acceptance changes."
+      ],
+      "gate_species": "quote-locate/quote-fidelity existing differential/gates",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.1.24",
+      "title": "Apply already answered consent knob alignment only within recorded stop constraints",
+      "type": "task",
+      "priority": 2,
+      "proposed_parent": "syzygy-bpyt.1",
+      "proposed_dependencies": [
+        "syzygy-bpyt.1.12"
+      ],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Keep 7-family knob semantics and actual decision/verdict stop constraints; no owner answer is manufactured for 1.8."
+      ],
+      "gate_species": "act-families.test.ts existing dialect/withdrawal table",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.1.8",
+      "title": "Recognition successor remains gated behind alignment",
+      "type": "task",
+      "priority": 2,
+      "proposed_parent": "syzygy-bpyt.1",
+      "proposed_dependencies": [
+        "syzygy-bpyt.1.24"
+      ],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Preserve exact-template oracle and existing alternatives until the actual choice; field/prose disagreement cannot be silently admitted."
+      ],
+      "gate_species": "gate-acts.test.ts plus consent act-families table",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.1.13",
+      "title": "Drafter command still needs actual authorizing act",
+      "type": "task",
+      "priority": 4,
+      "proposed_parent": "syzygy-bpyt.1",
+      "proposed_dependencies": [],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Keep unused pure drafter; do not add operator command before the act is named."
+      ],
+      "gate_species": "owner-act-drafter.test.ts and eventual existing CLI command table",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.1.20",
+      "title": "Bare-CR finding position residual remains",
+      "type": "task",
+      "priority": 4,
+      "proposed_parent": "syzygy-bpyt.1",
+      "proposed_dependencies": [
+        "syzygy-bpyt.60"
+      ],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Existing LF-only positionOf differs from profile; extend current line-position cases if authorized, no second Markdown parser."
+      ],
+      "gate_species": "git-object-reader active-content/position cases",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.1.22",
+      "title": "Malformed fence info case belongs to already answered 60",
+      "type": "task",
+      "priority": 4,
+      "proposed_parent": "syzygy-bpyt.1",
+      "proposed_dependencies": [
+        "syzygy-bpyt.60"
+      ],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Deduplicate U+2028/U+2029 info-string case into Q7 A implementation; no new owner decision."
+      ],
+      "gate_species": "markdown-code-context/fence-rules existing malformed-info table",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.1.25",
+      "title": "Named nine structured Unknown fields remain prose-only",
+      "type": "task",
+      "priority": 2,
+      "proposed_parent": "syzygy-bpyt.1",
+      "proposed_dependencies": [],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Use actual Nov3 direction, retain reason prose, add closedReason only within named nine after dependency1poh."
+      ],
+      "gate_species": "existing per-field serialization/render parity gates",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.1.28",
+      "title": "Four additional wire Unknown fields retain existing owner decision",
+      "type": "task",
+      "priority": 3,
+      "proposed_parent": "syzygy-bpyt.1",
+      "proposed_dependencies": [
+        "syzygy-bpyt.1.25"
+      ],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Do not apply nine-field ruling to additional four; preserve response, reevaluation, resource headroom/limit observation cases."
+      ],
+      "gate_species": "existing per-field wire tests, not a parallel universal walker",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.50",
+      "title": "Owner-selected fixed screening refusals remain to implement",
+      "type": "task",
+      "priority": 3,
+      "proposed_parent": "syzygy-bpyt",
+      "proposed_dependencies": [],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "screen.ts:147 still includes engine error; preserve fixed three-path scope and 44-other-message status quo."
+      ],
+      "gate_species": "existing screening refusal golden cases",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.57",
+      "title": "Restart dist identity residual remains",
+      "type": "task",
+      "priority": 3,
+      "proposed_parent": "syzygy-bpyt",
+      "proposed_dependencies": [],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "poc:restart invokes built module without rebuilding; preserve separate owner gate before adding refusal."
+      ],
+      "gate_species": "product-build/restart existing identity gate",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.58",
+      "title": "Workspace membership/version precondition remains absent",
+      "type": "task",
+      "priority": 3,
+      "proposed_parent": "syzygy-bpyt",
+      "proposed_dependencies": [],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Implement actual Q4 A precondition for scoped names and exact/caret/tilde dependencies/overrides; preserve shared resolver and no duplicate graph gate."
+      ],
+      "gate_species": "workspace-reach.test.ts existing universe precondition",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.59",
+      "title": "Impossible act calendar dates still normalize",
+      "type": "task",
+      "priority": 3,
+      "proposed_parent": "syzygy-bpyt",
+      "proposed_dependencies": [],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Current Feb29/30/31 and Apr31 return true. Implement Q6 A in existing act-fields date helper and tests."
+      ],
+      "gate_species": "act-fields.test.ts existing date rows",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.60",
+      "title": "Fence U+2028/U+2029 active-content bypass remains",
+      "type": "task",
+      "priority": 3,
+      "proposed_parent": "syzygy-bpyt",
+      "proposed_dependencies": [],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Current malformed-info separator hides script; implement already answered Q7 A in profile recognizer and existing fence table."
+      ],
+      "gate_species": "markdown-code-context/fence-rules existing profile gate",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.8.11",
+      "title": "Library allowExecution lacks launched marker guard",
+      "type": "task",
+      "priority": 3,
+      "proposed_parent": "syzygy-bpyt.8",
+      "proposed_dependencies": [],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "CLI rejects launched/unreadable marker but direct library choice writer lacks marker input; original output disclosure owner gate remains."
+      ],
+      "gate_species": "execution-choice/CLI existing marker gate",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.8.15",
+      "title": "Credential invalid-source branch skips configured base reads and mislabels refusal",
+      "type": "task",
+      "priority": 2,
+      "proposed_parent": "syzygy-bpyt.8",
+      "proposed_dependencies": [],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Synthetic configured /fixture/base + refused source performs zero opens. Current check/render failure labels still say credential readable. Resolve listed output changes or signed alternative before flag flip."
+      ],
+      "gate_species": "credential-probe.test.ts existing probe/step table and render output cases",
+      "expected_test_delta": "+0 ~existing -0 proposed table extension; final implementation reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nSource subject: d7bfcce2fabd60647dd22f69d6dee027329f63c8\nDedupe attachment only; preserve existing acceptance and owner gates."
+    },
+    {
+      "existing_id": "syzygy-bpyt.6.16",
+      "title": "Retain observer computed-load/protected-input guard limitation",
+      "type": "task",
+      "priority": 3,
+      "proposed_parent": "syzygy-bpyt.6",
+      "proposed_dependencies": [],
+      "report": "docs/evidence/syzygy-bpyt-1-7/README.md",
+      "acceptance_evidence": [
+        "Existing observer/build guard derives static start/load paths; source population cannot prove computed-load/root-prefix completeness. Preserve current protection of8 projects/4 root inputs; retain existing6.16 scope and owner prerequisites."
+      ],
+      "gate_species": "git-observation.test.ts existing protected-input gate; no parallel import census gate",
+      "expected_test_delta": "+0 ~existing -0 proposed extension; existing implementation owner reports actual delta",
+      "reconciliation": "attach",
+      "audit_key": "greenfield:reconciliation:R7",
+      "source_subject": "d7bfcce2fabd60647dd22f69d6dee027329f63c8",
+      "implementation_permission": "none inferred by this audit",
+      "design": "Audit-key: greenfield:reconciliation:R7\nDedupe to existing6.16; do not expand R7 into an unrelated epic implementation."
+    }
+  ],
+  "new_beads_created": 0,
+  "owner_questions_created": 0,
+  "reopened_beads": 0,
+  "next_generation_candidate": {
+    "title": "R7 generation2 after verified M7 remediation",
+    "audit_key": "greenfield:reconciliation:R7",
+    "proposed_parent": "syzygy-bpyt.1",
+    "generation": 2,
+    "hard_limit": 3,
+    "trigger": "Relevant existing implementation/owner gates resolved and merged; current report independently reviewed and coordinator reconciled.",
+    "scope": "Repeat original OG1\u20135 and all assigned M7 findings/6AC at one fresh merged source; falsify widened guards and compare parallel contracts; cite this gen1 ledger. Do not expand into a new global audit."
+  },
+  "verification": {
+    "typecheck": "pass at source subject",
+    "scoped_tests": {
+      "files": 11,
+      "tests": 620,
+      "scope": "507 gate/consent/workspace tests +113 build/fence/observer tests; two distinct targeted invocations"
+    },
+    "router_selftest": "9 routing tests plus11 existing router mutation fixtures pass",
+    "runtime_probes": 63,
+    "instrument_source_mutants": 12,
+    "broad_node_gate": "not run locally; required hosted node gate before merge, no broad waiver",
+    "final_canonical_battery": "Final exact documentation head receipt to be retained in OWN/VERIFICATION.json after commit, in a clean full-history clone; do not infer result from this field.",
+    "population_self_falsifier": "Two-method assertion fails when one real matching path is deliberately dropped; source/tool hash and exact old/new retained."
+  },
+  "docs_and_review": {
+    "changed_surface": "additive ordinary audit/evidence/tools only; no implementation/governed/spec edits",
+    "test_delta": "Tests: +0 ~0 -0 in the shipped CI suite; disposable controlled probes do not add a parallel gate",
+    "initial_cc_rev_1_classes": [
+      1,
+      3,
+      4
+    ],
+    "initial_cc_bar_5_floors": [
+      2,
+      3,
+      5,
+      6
+    ],
+    "classification": "author proposal, contested; independent fresh-context reviewer decides",
+    "required": "GP-Q0 independent default-model review at exact final head; retained old/new controlled corpus including altered-prose act cases, per-predicate falsifiers where claimed, nonblocking owner cycle notice by coordinator. Any changed reviewed bytes retire review. Canonical docs battery does not substitute hosted node/e2e or owner gates."
+  },
+  "limitations": [
+    "No observed repository bodies, credential values, provider/egress, production, policy adoption or actual unattended session execution were read/run.",
+    "The current incomplete/owner-gated paths are findings, not authorization to implement. Candidate CCSEC3 review is distinct from signoff, flag flip and per-run permission.",
+    "Dated predecessor evidence is cited as historical only; source hashes and current probes bind this subject. Prior1.27 count1693/2375 was not rerun and is not asserted for current source.",
+    "Finite AST/import searches can miss aliases; actual dynamic-loader counterexample prevents universal no-island-loader/complete-instrument claim. Other epic reconciliations remain their owners' work, not silently closed by R7.",
+    "Root coordinator alone handles Beads lifecycle, overlap widening, independent review and final closure. Source14/PR747 evidence does not lift source/spec/proposal holds, and owner Nov3 walkthrough judgment/cycle gate remains."
+  ]
+}

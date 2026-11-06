@@ -1,0 +1,283 @@
+{
+  "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+  "before_guard_subject": "27389f6c1ff81bf04bea69bc6d7eb97694592f85",
+  "before_guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+  "after_guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+  "cases": 19,
+  "actual_guard_executions": 38,
+  "rows": [
+    {
+      "id": "baseline",
+      "old_exit": 0,
+      "new_exit": 0,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [],
+      "altered_prose": false,
+      "source": null,
+      "fragment": "",
+      "source_executed": false
+    },
+    {
+      "id": "live-to-dossier-trigger",
+      "old_exit": 1,
+      "new_exit": 1,
+      "old_failed_assertions": [
+        "reaches no island module from either live entry"
+      ],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder",
+        "reaches no island module from either live entry"
+      ],
+      "altered_prose": false,
+      "source": "apps/syzygy/src/main.ts",
+      "fragment": "\nimport '../../three-surface-poc/src/polaris-generation/dossier-trigger.js';\n",
+      "source_executed": false
+    },
+    {
+      "id": "disconnected-old-member",
+      "old_exit": 0,
+      "new_exit": 1,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder"
+      ],
+      "altered_prose": false,
+      "source": "apps/syzygy/src/bpyt-island-fixture.ts",
+      "fragment": "import '../../three-surface-poc/src/polaris-generation/dossier-trigger.js';\n",
+      "source_executed": false
+    },
+    {
+      "id": "disconnected-new-member",
+      "old_exit": 0,
+      "new_exit": 1,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder"
+      ],
+      "altered_prose": false,
+      "source": "apps/syzygy/src/bpyt-island-fixture.ts",
+      "fragment": "import '@syzygy/three-surface-poc-app/dossier-render';\n",
+      "source_executed": false
+    },
+    {
+      "id": "disconnected-via-core-root",
+      "old_exit": 0,
+      "new_exit": 1,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder"
+      ],
+      "altered_prose": false,
+      "source": "apps/syzygy/src/bpyt-island-fixture.ts",
+      "fragment": "import '@syzygy/polaris-generation-core';\n",
+      "source_executed": false
+    },
+    {
+      "id": "disconnected-via-parked-exception",
+      "old_exit": 0,
+      "new_exit": 1,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder"
+      ],
+      "altered_prose": false,
+      "source": "apps/syzygy/src/bpyt-island-fixture.ts",
+      "fragment": "import '../../three-surface-poc/src/polaris-generation/run-key.js';\n",
+      "source_executed": false
+    },
+    {
+      "id": "disconnected-unresolved",
+      "old_exit": 0,
+      "new_exit": 1,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder"
+      ],
+      "altered_prose": false,
+      "source": "apps/syzygy/src/bpyt-island-fixture.ts",
+      "fragment": "import '@syzygy/bpyt-missing';\n",
+      "source_executed": false
+    },
+    {
+      "id": "disconnected-unsupported",
+      "old_exit": 0,
+      "new_exit": 1,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder"
+      ],
+      "altered_prose": false,
+      "source": "apps/syzygy/src/bpyt-island-fixture.ts",
+      "fragment": "const target = \"node:module\"; import(target);\n",
+      "source_executed": false
+    },
+    {
+      "id": "exact-dynamic-node-module-entry-0",
+      "old_exit": 0,
+      "new_exit": 1,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder",
+        "resolves every workspace import both entries reach, dynamic ones included"
+      ],
+      "altered_prose": false,
+      "source": "apps/syzygy/src/main.ts",
+      "fragment": "\nconst { createRequire: auditMake } = await import(\"node:module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+      "source_executed": false
+    },
+    {
+      "id": "dynamic-module-entry-0",
+      "old_exit": 0,
+      "new_exit": 1,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder",
+        "resolves every workspace import both entries reach, dynamic ones included"
+      ],
+      "altered_prose": false,
+      "source": "apps/syzygy/src/main.ts",
+      "fragment": "\nconst { createRequire: auditMake } = await import(\"module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+      "source_executed": false
+    },
+    {
+      "id": "static-alias-entry-0",
+      "old_exit": 1,
+      "new_exit": 1,
+      "old_failed_assertions": [
+        "resolves every workspace import both entries reach, dynamic ones included"
+      ],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder",
+        "resolves every workspace import both entries reach, dynamic ones included"
+      ],
+      "altered_prose": false,
+      "source": "apps/syzygy/src/main.ts",
+      "fragment": "\nimport { createRequire as auditMake } from \"node:module\"; const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+      "source_executed": false
+    },
+    {
+      "id": "ordinary-destructuring-entry-0",
+      "old_exit": 0,
+      "new_exit": 0,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [],
+      "altered_prose": true,
+      "source": "apps/syzygy/src/main.ts",
+      "fragment": "\n// altered prose: require createRequire auditMake are only words.\nconst auditProse = \"require createRequire await import(unknown)\";\nconst { createInterface: ordinary } = await import(\"node:readline/promises\"); ordinary();\nconst { createRequire: auditMake } = await import(\"node:readline/promises\"); auditMake();\n",
+      "source_executed": false
+    },
+    {
+      "id": "template-entry-0",
+      "old_exit": 0,
+      "new_exit": 0,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [],
+      "altered_prose": false,
+      "source": "apps/syzygy/src/main.ts",
+      "fragment": "\nawait import(`node:module`);\n",
+      "source_executed": false
+    },
+    {
+      "id": "exact-dynamic-node-module-entry-1",
+      "old_exit": 0,
+      "new_exit": 1,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder",
+        "resolves every workspace import both entries reach, dynamic ones included"
+      ],
+      "altered_prose": false,
+      "source": "packages/polaris-dossier/src/broker-client.ts",
+      "fragment": "\nconst { createRequire: auditMake } = await import(\"node:module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+      "source_executed": false
+    },
+    {
+      "id": "dynamic-module-entry-1",
+      "old_exit": 0,
+      "new_exit": 1,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder",
+        "resolves every workspace import both entries reach, dynamic ones included"
+      ],
+      "altered_prose": false,
+      "source": "packages/polaris-dossier/src/broker-client.ts",
+      "fragment": "\nconst { createRequire: auditMake } = await import(\"module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+      "source_executed": false
+    },
+    {
+      "id": "static-alias-entry-1",
+      "old_exit": 1,
+      "new_exit": 1,
+      "old_failed_assertions": [
+        "resolves every workspace import both entries reach, dynamic ones included"
+      ],
+      "new_failed_assertions": [
+        "admits transitive island ingress only from the island and exact parked remainder",
+        "resolves every workspace import both entries reach, dynamic ones included"
+      ],
+      "altered_prose": false,
+      "source": "packages/polaris-dossier/src/broker-client.ts",
+      "fragment": "\nimport { createRequire as auditMake } from \"node:module\"; const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+      "source_executed": false
+    },
+    {
+      "id": "ordinary-destructuring-entry-1",
+      "old_exit": 0,
+      "new_exit": 0,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [],
+      "altered_prose": true,
+      "source": "packages/polaris-dossier/src/broker-client.ts",
+      "fragment": "\n// altered prose: require createRequire auditMake are only words.\nconst auditProse = \"require createRequire await import(unknown)\";\nconst { createInterface: ordinary } = await import(\"node:readline/promises\"); ordinary();\nconst { createRequire: auditMake } = await import(\"node:readline/promises\"); auditMake();\n",
+      "source_executed": false
+    },
+    {
+      "id": "template-entry-1",
+      "old_exit": 0,
+      "new_exit": 0,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [],
+      "altered_prose": false,
+      "source": "packages/polaris-dossier/src/broker-client.ts",
+      "fragment": "\nawait import(`node:module`);\n",
+      "source_executed": false
+    },
+    {
+      "id": "altered-prose-only",
+      "old_exit": 0,
+      "new_exit": 0,
+      "old_failed_assertions": [],
+      "new_failed_assertions": [],
+      "altered_prose": true,
+      "source": "apps/syzygy/src/bpyt-island-fixture.ts",
+      "fragment": "/* createRequire(import.meta.url); require(\"island\"); import(variable); */\nexport const prose = \"const { createRequire: auditMake } = await import(unknown)\";\n",
+      "source_executed": false
+    }
+  ],
+  "product_bytes": {
+    "changed_product_paths": [],
+    "proof_command": [
+      "git",
+      "diff",
+      "--name-only",
+      "27389f6c1ff81bf04bea69bc6d7eb97694592f85",
+      "ce29892804998bc6f330f0fb55678dfd518a971e"
+    ],
+    "actual_paths": [
+      "packages/polaris-generation-core/src/island-boundary.test.ts"
+    ],
+    "production_source_population": 280,
+    "source_hash_crosscheck": "census-second-method.json checks 598 source/script hashes against this commit"
+  },
+  "meaning": "Observed: only existing test-guard bytes changed; product code, parser/resolver, manifests, consent templates, refusal/flag/output bytes remain identical as source. Inferred: product behavior is preserved, additionally exercised by check/checkall. The intentional differential is in guard verdicts on invalid structural fixtures. No product provider/observed-project execution was performed.",
+  "residuals": [
+    "Finite awaited literal module-import destructuring only; no universal JavaScript loader or arbitrary alias-flow guarantee.",
+    "Parenthesized/indirect awaited imports, assignment aliases, shadowing and custom loaders are not newly analyzed.",
+    "Shared resolver residuals syzygy-bpyt.8.38/.8.39 remain owner-gated and unchanged.",
+    "Only current regular JS/TS source population is censused; no general arbitrary filesystem/module-loader closure claim.",
+    "Top-level source script compiled-input relation is disclosed, not treated as resolved source by the shared resolver.",
+    "Physical deletability is not established; no deletion or provider-island reclassification authorized.",
+    "Full R7 audit outcome remains incomplete; this is the attached finite loader counterexample only."
+  ]
+}

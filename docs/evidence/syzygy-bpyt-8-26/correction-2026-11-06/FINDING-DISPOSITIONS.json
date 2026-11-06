@@ -1,0 +1,57 @@
+{
+  "schema": "pr772-author-correction-dispositions/1",
+  "originalReviewSubject": "4dc2af1e57bfc3e09ec8d5839e46c277eb521878",
+  "correctedSourceSubject": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+  "reviewRaw": {
+    "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/preserved/R-PR772-FULL-INDEPENDENT-RAW.md",
+    "bytes": 10912,
+    "sha256": "471f41ea93f9ebd4e8ff91791291ca8d43ee39313e1807c5f17f967470566a8a"
+  },
+  "lineCorrectionRaw": {
+    "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/preserved/R-PR772-LINE-CORRECTION-RAW.md",
+    "bytes": 542,
+    "sha256": "345d373467e03776e7daafc2736a9c7b14bbf4b6008bfbd6ffc65847a4f19b22"
+  },
+  "rawVerdictPreserved": "Ready to merge? No.",
+  "findings": [
+    {
+      "id": "F1",
+      "oldLine": 295,
+      "correctedFunctionLine": 100,
+      "actualReaderCallLine": 314,
+      "authorDisposition": "Corrected locally; fresh independent exact-head confirmation required.",
+      "change": "Four repository methods cover each pinned repository, plus one shared policy query; complete exact values and throws remain compared.",
+      "proof": [
+        "M0-full.json",
+        "M0-full-recount.json",
+        "logs/selftest-committed.stdout",
+        "NC-requests-ids.json",
+        "NC-requests-absence.json",
+        "NC-requests-revisions.json",
+        "OLD-F1-requests-ids.json",
+        "OLD-F1-requests-absence.json",
+        "OLD-F1-requests-revisions.json"
+      ]
+    },
+    {
+      "id": "F2",
+      "originalRawLine": 832,
+      "correctedOriginalLine": 826,
+      "correctedFunctionLine": 108,
+      "countEmissionLine": 873,
+      "authorDisposition": "Corrected locally; fresh independent exact-head confirmation required.",
+      "change": "Count emits old/new commit, Git tree, fourteen source/build file paths and hashes, tool/corpus/fixture recipe and finite resources; execution/materialization/literal outcomes stay null.",
+      "proof": [
+        "COUNT-full.json",
+        "COUNT-full-verified.json",
+        "COUNT-selected.json",
+        "COUNT-selected-verified.json",
+        "COUNT-REPRODUCTION-RESULT.json",
+        "OLD-F2-count-binding-rejection.json",
+        "logs/selftest-committed.stdout",
+        "RULE6-RESULT.json"
+      ]
+    }
+  ],
+  "scope": "Full original thirteen criteria remain the outcome; neither finding narrows it to a supplemental sample. No review/thread closure, owner act, Beads mutation, readiness declaration or landing is performed."
+}

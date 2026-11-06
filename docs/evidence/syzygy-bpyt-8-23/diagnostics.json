@@ -1,0 +1,40 @@
+{
+  "subject": "f0bcece17a66cd8c0cbbe2208f38dbd3e35297be",
+  "rows": [
+    {
+      "id": "PR510-R5-broker-client-entry-imports-core-root",
+      "assertion_tests": [
+        "the live Node entries and the parked provider island reaches no island module from either live entry"
+      ],
+      "required_diagnostic_fragments": [
+        "packages/polaris-dossier/src/broker-client.ts",
+        "imports @syzygy/polaris-generation-core"
+      ],
+      "observed": true
+    },
+    {
+      "id": "PR517-B1-core-root-import-in-in-force",
+      "assertion_tests": [
+        "the live Node entries and the parked provider island reaches no island module from either live entry"
+      ],
+      "required_diagnostic_fragments": [
+        "apps/syzygy/src/main.ts",
+        "in-force.ts imports @syzygy/polaris-generation-core"
+      ],
+      "observed": true
+    },
+    {
+      "id": "PR517-R3-computed-dynamic-import-of-core-root-in-in-force",
+      "assertion_tests": [
+        "the live Node entries and the parked provider island resolves every workspace import both entries reach, dynamic ones included"
+      ],
+      "required_diagnostic_fragments": [
+        "apps/syzygy/src/main.ts",
+        "in-force.ts",
+        "computed import()",
+        "import(CORE)"
+      ],
+      "observed": true
+    }
+  ]
+}

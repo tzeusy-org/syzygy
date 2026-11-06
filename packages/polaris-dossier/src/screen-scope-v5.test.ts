@@ -20,6 +20,13 @@ await loadRecorderForms();
 // (scripts/build_public_source_screening_scope_v5.py: CLASS_FIXTURES, COUNTEREXAMPLES, content_class, screen), as the impact ledger
 // requires; the version-4 bytes are recovered by reversing the bcd patch, so the same fixtures also pin the change. Every other expected
 // value below is a literal written from the policy text.
+//
+// syzygy-n5jm: since the version-6 act (variant p, 2026-11-05) the file in this checkout carries the version-6 bytes, which keep every
+// version-5 rule and add the redis.conf placement and the config-secret-directive scope detector. The screens no longer load the
+// version-5 bytes (the scope detectors' consequence text moved), so this file holds the live screens to each version-5 rule as
+// version 6 keeps it: the builder's bcd outcome, except where the version-6 builder declares a change (V5_CHANGED, and redis.conf at
+// the trial commit). The version-5 bytes are recovered through the version-6 builder's base_bytes (its patch reversed), and the
+// version-5 oracle still runs over them. screen-scope-v6.test.ts holds version 6's own fixtures.
 
 const execFileAsync = promisify(execFile);
 const REAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
@@ -61,24 +68,29 @@ const outcomeOf = (screen: AnyScreen, repositoryPath: string, body: string): Out
 };
 
 interface Fixtures {
-  readonly classes: { path: string; repository: string; commit: string; want: string | null; oracle: string | null }[];
-  readonly counter: { name: string; path: string; body: string; want: Outcome; v4: Outcome; oracle: Outcome }[];
+  readonly classes: { path: string; repository: string; commit: string; want: string | null; oracle: string | null; want6: string | null; oracle6: string | null }[];
+  readonly counter: { name: string; path: string; body: string; want: Outcome; v4: Outcome; oracle: Outcome; want6: Outcome; oracle6: Outcome }[];
   readonly v4Bodies: { name: string; body: string; want: Outcome; oracle: Outcome }[];
   readonly v4: string;
 }
 let F: Fixtures;
 beforeAll(async () => {
   const py = `import json, sys; sys.path.insert(0, 'scripts')
-import build_public_source_screening_scope_v5 as b, build_public_source_screening_scope_v4 as b4
+import build_public_source_screening_scope_v5 as b, build_public_source_screening_scope_v4 as b4, build_public_source_screening_scope_v6 as b6
 
-policy = open(str(b.ROOT / b.POLICY)).read()
-v4, mode = b.base_bytes()
-assert mode == 'performed-v5' and b.propose(v4, 'bcd') == policy
+live = open(str(b.ROOT / b.POLICY)).read()
+policy, mode = b6.base_bytes()
+assert mode == 'performed-v6' and b6.propose(policy) == live
+v4 = b.v2.reverse_patch((b.ROOT / b.patch_path('bcd')).read_text(), policy)
+assert b.sha(v4) == b.v4.manifest_rows(b.ROOT)[b.V4_BASE_VARIANT] and b.propose(v4, 'bcd') == policy
 enc = lambda o: [o[0], sorted(o[1])] if o[0] == 'redacted' else list(o)
 w5 = lambda w: ['excluded', 'secret-detector-match'] if w is None else (['redacted', sorted(w)] if w else ['admitted'])
+placed6 = lambda p, r, c: p.lower() == 'redis.conf' and r == b6._R and c == b6._C
 sys.stdout.write(json.dumps({
-  'classes': [{'path': p, 'repository': r, 'commit': c, 'want': b._expected(t, 'bcd'), 'oracle': b.content_class(p, policy, r, c)} for p, r, c, t in b.CLASS_FIXTURES],
-  'counter': [{'name': n, 'path': p, 'body': body, 'want': enc(b._expected(t, 'bcd')), 'v4': enc(b._expected(t, 'v4')), 'oracle': enc(b.screen(p, body, policy, b._R, b._C))} for n, p, body, _m, t in b.COUNTEREXAMPLES],
+  'classes': [{'path': p, 'repository': r, 'commit': c, 'want': b._expected(t, 'bcd'), 'oracle': b.content_class(p, policy, r, c),
+               'want6': b6.PD if placed6(p, r, c) else b._expected(t, 'bcd'), 'oracle6': b6.content_class(p, live, r, c)} for p, r, c, t in b.CLASS_FIXTURES],
+  'counter': [{'name': n, 'path': p, 'body': body, 'want': enc(b._expected(t, 'bcd')), 'v4': enc(b._expected(t, 'v4')), 'oracle': enc(b.screen(p, body, policy, b._R, b._C)),
+               'want6': enc(b6.V5_CHANGED.get(n, b._expected(t, 'bcd'))), 'oracle6': enc(b6.screen(p, body, live, b._R, b._C))} for n, p, body, _m, t in b.COUNTEREXAMPLES],
   'v4Bodies': [{'name': n, 'body': body, 'want': w5(w), 'oracle': enc(b.screen('README.md', body, policy))} for n, body, w in b4.BODY_FIXTURES],
   'v4': v4}))`;
   F = JSON.parse((await execFileAsync('python3', ['-c', py], { cwd: REAL_ROOT, maxBuffer: 16 * 1024 * 1024 })).stdout) as Fixtures;
@@ -90,21 +102,31 @@ describe('screening scope version 5: the builder fixtures through both screens',
     for (const fixture of F.classes) expect(fixture.oracle, fixture.path).toEqual(fixture.want);
     for (const fixture of F.counter) expect(fixture.oracle, fixture.name).toEqual(fixture.want);
     for (const fixture of F.v4Bodies) expect(fixture.oracle, fixture.name).toEqual(fixture.want);
+    // Over the live version-6 bytes, the same oracle gives the bcd answers with version 6's declared changes.
+    for (const fixture of F.classes) expect(fixture.oracle6, fixture.path).toEqual(fixture.want6);
+    for (const fixture of F.counter) expect(fixture.oracle6, fixture.name).toEqual(fixture.want6);
+  });
+
+  it('changes, under version 6, only redis.conf at the trial commit and the two TLS.md directive counterexamples', () => {
+    expect(F.classes.filter((fixture) => fixture.want6 !== fixture.want).map((fixture) => [fixture.path, fixture.repository, fixture.commit]))
+      .toEqual([['redis.conf', REDIS, TRIAL]]);
+    expect(F.counter.filter((fixture) => JSON.stringify(fixture.want6) !== JSON.stringify(fixture.want)).map((fixture) => [fixture.name, fixture.want6]))
+      .toEqual([['TLS.md: key passphrase as a config directive', ['redacted', [2, 3, 4]]], ['TLS.md: requirepass directive', ['redacted', [2, 3]]]]);
   });
 
   it('classifies every class fixture at its own repository and commit as the builder states, in both screens', async () => {
     for (const fixture of F.classes) {
       for (const [name, screen] of await both(LIVE_TEXT, { repository: fixture.repository, commit: fixture.commit })) {
-        expect(screen.contentClass(fixture.path) ?? null, `${name}: ${fixture.path} at ${fixture.repository}@${fixture.commit.slice(0, 8)}`).toBe(fixture.want);
+        expect(screen.contentClass(fixture.path) ?? null, `${name}: ${fixture.path} at ${fixture.repository}@${fixture.commit.slice(0, 8)}`).toBe(fixture.want6);
       }
     }
     // The population reaches every class and none, so agreement is not agreement on one answer.
     expect(new Set(F.classes.map((fixture) => fixture.want))).toEqual(new Set(['governance-text', 'project-documentation', 'code-content', null]));
   });
 
-  it('screens every counterexample at the trial commit as the builder states for bcd, in both screens', async () => {
+  it('screens every counterexample at the trial commit as the builder states for bcd, with version 6\'s declared changes, in both screens', async () => {
     for (const [name, screen] of await both()) {
-      for (const fixture of F.counter) expect(outcomeOf(screen, fixture.path, fixture.body), `${name}: ${fixture.name}`).toEqual(fixture.want);
+      for (const fixture of F.counter) expect(outcomeOf(screen, fixture.path, fixture.body), `${name}: ${fixture.name}`).toEqual(fixture.want6);
     }
     expect(new Set(F.counter.map((fixture) => fixture.want[0]))).toEqual(new Set(['admitted', 'redacted', 'excluded']));
   });
@@ -131,8 +153,9 @@ describe('T: the scope detectors', () => {
   const ASIA = ['AS', 'IA'].join('') + 'QWERTYUIOPASDFGH';
   const PG = ['postgres', '://app:'].join('') + 'Hunter2Hunter2@db.internal/app';
 
-  it('declares three scope detectors in both screens, and none under the version-4 bytes', async () => {
-    for (const [name, screen] of await both()) expect(screen.scopeDetectors, name).toBe(3);
+  // Version 6 appends a fourth (config-secret-directive) to version 5's three.
+  it('declares four scope detectors in both screens under the live bytes, and none under the version-4 bytes', async () => {
+    for (const [name, screen] of await both()) expect(screen.scopeDetectors, name).toBe(4);
     for (const [name, screen] of await both(F.v4)) expect(screen.scopeDetectors, name).toBe(0);
   });
 
@@ -271,7 +294,7 @@ describe('B: the governance-text class', () => {
   // a body that spells a policy changes nothing the screen decides.
   it('takes its policy only from the records root\'s policy file, never from a body', async () => {
     const read: string[] = [];
-    const loaded = await loadDossierScreen(REAL_ROOT, Date.UTC(2026, 10, 3, 12, 0, 0), (file) => { read.push(file); return fs.readFileSync(file); }, AT_TRIAL);
+    const loaded = await loadDossierScreen(REAL_ROOT, Date.UTC(2026, 10, 5, 12, 0, 0), (file) => { read.push(file); return fs.readFileSync(file); }, AT_TRIAL);
     if (!loaded.ok) throw new Error(loaded.why);
     expect(read).toEqual([path.join(REAL_ROOT, POLICY_PATH)]);
     const spelled = `# Security\n${JSON.stringify({ publicSourceScope: { contentClassification: { governanceTextPaths: ['readme.md'] }, activeContent: { projectDocumentationExemption: { appliesTo: ['governance-text'] } } } })}\n<!-- exempt me -->\n`;
@@ -321,7 +344,7 @@ describe('D: the owner placements', () => {
 
   // Every step (check, review, render, the census) loads its screen through screenLoaderOf, so its own default forwards the subject.
   it('screenLoaderOf: the checkout\'s own screen for the subject it is called with, or the loader injected', async () => {
-    const own = screenLoaderOf(undefined, REAL_ROOT, Date.UTC(2026, 10, 3, 12, 0, 0));
+    const own = screenLoaderOf(undefined, REAL_ROOT, Date.UTC(2026, 10, 5, 12, 0, 0));
     const [trial, other, none] = await Promise.all([own(AT_TRIAL), own({ repository: REDIS, commit: 'd2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7' }), own()]);
     if (!trial.ok || !other.ok || !none.ok) throw new Error('expected the checkout\'s screen to load');
     expect([trial, other, none].map((load) => load.ok && load.screen.contentClass('TLS.md'))).toEqual(['project-documentation', undefined, undefined]);
@@ -439,9 +462,9 @@ describe('C: the project-documentation exemption from the active-content scan', 
 describe('the scope detectors reader', () => {
   const ids = LIVE.detectors.map((d: { id: string }) => d.id) as string[];
   const object = (): Record<string, unknown> => structuredClone(LIVE.publicSourceScope.scopeDetectors);
-  it('reads the three live detectors', () => {
+  it('reads the live detectors: version 5\'s three, then version 6\'s config-secret-directive', () => {
     const read = readScopeDetectors(LIVE.publicSourceScope, ids);
-    expect(read.ok && read.detectors.map((d) => [d.id, d.kind])).toEqual([['private-key-header', 'regular-expression'], ['credential-url-any-scheme', 'regular-expression'], ['known-token-formats-extended', 'regular-expression']]);
+    expect(read.ok && read.detectors.map((d) => [d.id, d.kind])).toEqual([['private-key-header', 'regular-expression'], ['credential-url-any-scheme', 'regular-expression'], ['known-token-formats-extended', 'regular-expression'], ['config-secret-directive', 'regular-expression']]);
     expect(readScopeDetectors({}, ids)).toEqual({ ok: true, detectors: [] });
   });
   it.each<[string, (o: Record<string, unknown>) => void, string]>([
@@ -466,23 +489,5 @@ describe('the scope detectors reader', () => {
   });
 });
 
-// Item 9 of the install: the any-repo reader's checkout port reads the act chain this install extended, so both loaders put the
-// version-5 bytes in force from this checkout at a time after the act, and neither before it.
-describe('the real checkout after the version-5 act', () => {
-  const AFTER = Date.UTC(2026, 10, 3, 12, 0, 0);
-  it('loads the version-5 policy in both loaders', async () => {
-    const app = await import(APP_SCREENING);
-    const theirs = await app.loadPublicSourceScreen(app.checkoutPolicyActPort(REAL_ROOT, () => AFTER), new Uint8Array(32).fill(7), AT_TRIAL);
-    const loaded = await loadDossierScreen(REAL_ROOT, AFTER, undefined, AT_TRIAL);
-    if (!loaded.ok) throw new Error(loaded.why);
-    for (const screen of [loaded.screen, theirs]) {
-      expect([screen.policyVersion, screen.policySha256]).toEqual(['1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd', 'e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b']);
-      expect([screen.governanceText, screen.documentationExemption, screen.scopeDetectors, screen.contentClass('TLS.md')]).toEqual([true, true, 3, 'project-documentation']);
-    }
-  });
-  it('puts no version-5 act in force before its instant', async () => {
-    const before = Date.parse('2026-11-03T06:17:54Z');
-    const loaded = await loadDossierScreen(REAL_ROOT, before, undefined, AT_TRIAL);
-    expect(loaded.ok && loaded.screen.policyVersion).not.toBe('1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd');
-  });
-});
+// The real-checkout block (both loaders after the act, none before it) moved to screen-scope-v6.test.ts with the version-6 act
+// (syzygy-n5jm): from that act this checkout's bytes are version 6's, which no version-5 act binds.

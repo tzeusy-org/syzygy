@@ -1,0 +1,26 @@
+{
+  "schema": "syzygy-retained-independent-review-v1",
+  "capturedAt": "2026-11-05T00:27:10.820635+00:00",
+  "subject": {
+    "pr": 514,
+    "head": "937a7e934c1d64b37d79a23db6f4bbe6f24bd164",
+    "bead": "syzygy-bpyt.8.21",
+    "reviewBead": "syzygy-1nu9"
+  },
+  "verdict": "REVISE / HOLD",
+  "sourceDeliverySha256": "9c07055d8671e87fa9b7939e997195a13daeb0b6505eb38143310f87e8008a28",
+  "files": {
+    "R-PR514-FRESH-20261105-RAW.md": {
+      "sha256": "aee5eaeee48be1f2ad0b7107605f7fdca8a8313af87180937f2f98a00964da74",
+      "bytes": 10675
+    },
+    "REVIEW-REPORT.json": {
+      "sha256": "7de707f5f79eca5eddcfc2b96b2e8cb937d19e2d826b69e1f857b53849c5463f",
+      "bytes": 9112
+    },
+    "REVIEW-RECORD.md": {
+      "sha256": "e3bfa9b3f06c4a535a0d9a1cd4cfadfdff1a3235e49d472e1d44622b03d5ea14",
+      "bytes": 1842
+    }
+  }
+}

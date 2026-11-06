@@ -1,0 +1,69 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject
+
+ ❯ |unit| packages/polaris-generation-core/src/island-boundary.test.ts (9 tests | 2 failed) 3709ms
+   × the live Node entries and the parked provider island > lists twenty-four island modules, each a file in the tree 16ms
+     → expected [ Array(1) ] to deeply equal []
+   × the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder 1973ms
+     → 280 production sources: unlisted transitive ingress
+apps/three-surface-poc/src/polaris-generation/dossier-main.ts -> apps/three-surface-poc/src/polaris-generation/dossier-main.ts imports ./dossier-render.js (apps/three-surface-poc/src/polaris-generation/dossier-render.ts): expected [ Array(1) ] to deeply equal []
+   ✓ the live Node entries and the parked provider island > resolves every workspace import both entries reach, dynamic ones included  841ms
+   ✓ the live Node entries and the parked provider island > reaches no island module from either live entry  699ms
+   ✓ the live Node entries and the parked provider island > reaches the island from the consent package root, which neither live entry imports 171ms
+   ✓ the live Node entries and the parked provider island > refuses computed import arguments, including template expressions 3ms
+   ✓ the live Node entries and the parked provider island > refuses require calls and import-equals loaders 2ms
+   ✓ the live Node entries and the parked provider island > refuses createRequire calls, including imported aliases and module properties 2ms
+   ✓ the live Node entries and the parked provider island > follows a no-substitution template and the existing static, type and literal dynamic forms 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-generation-core/src/island-boundary.test.ts > the live Node entries and the parked provider island > lists twenty-four island modules, each a file in the tree
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "apps/three-surface-poc/src/polaris-generation/bpyt-missing-island-member.ts",[39m
+[31m+ ][39m
+
+ ❯ packages/polaris-generation-core/src/island-boundary.test.ts:166:50
+    164|     expect(new Set(ISLAND).size).toBe(24);
+    165|     expect(ISLAND).toHaveLength(24);
+    166|     expect(ISLAND.filter(path => !isFile(path))).toEqual([]);
+       |                                                  ^
+    167|   });
+    168| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |unit| packages/polaris-generation-core/src/island-boundary.test.ts > the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder
+AssertionError: 280 production sources: unlisted transitive ingress
+apps/three-surface-poc/src/polaris-generation/dossier-main.ts -> apps/three-surface-poc/src/polaris-generation/dossier-main.ts imports ./dossier-render.js (apps/three-surface-poc/src/polaris-generation/dossier-render.ts): expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "apps/three-surface-poc/src/polaris-generation/dossier-main.ts -> apps/three-surface-poc/src/polaris-generation/dossier-main.ts imports ./dossier-render.js (apps/three-surface-poc/src/polaris-generation/dossier-render.ts)",[39m
+[31m+ ][39m
+
+ ❯ packages/polaris-generation-core/src/island-boundary.test.ts:190:122
+    188|     expect([...new Set(unsupported)], `${population.length} production…
+    189|     expect([...new Set(unresolved)], `${population.length} production …
+    190|     expect(violations, `${population.length} production sources: unlis…
+       |                                                                                                                          ^
+    191|   });
+    192| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 7 passed (9)
+   Start at  16:14:33
+   Duration  4.61s (transform 85ms, setup 29ms, collect 500ms, tests 3.71s, environment 0ms, prepare 52ms)
+
+JSON report written to /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-inventory-existence.vitest.json

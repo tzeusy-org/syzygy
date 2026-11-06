@@ -482,6 +482,16 @@ describe('render', () => {
     const sourcePage = [...readSite(result.report.site).entries()].find(([file, page]) => file.startsWith('sources/') && page.includes('Kestrel keeps every key'))![1];
     expect(sourcePage).toContain(`data-quote-start="${Buffer.byteLength(lines.slice(0, 4).join(''))}"`);
     expect(sourcePage.match(/class="redaction-note"/gu)).toHaveLength(1);
+    // syzygy-pdja.1: RFC5-17's count stays on the claim, on the citation itself, and the sentence never repeats in the reading text.
+    const site = readSite(result.report.site);
+    const reading = site.get('index.html')!.slice(site.get('index.html')!.indexOf('<main'));
+    expect(reading).not.toContain('redaction-note');
+    expect(reading).not.toContain('withheld line(s) in this file');
+    expect(reading).toContain('data-redacted-lines="1"');
+    expect(reading).toContain('; 1 line(s) of this file withheld by screening"');
+    expect(reading).toContain('<span class="redaction-mark" aria-hidden="true">\u20201</span></a>');
+    expect(reading).toContain('<p class="redaction-legend"><span aria-hidden="true">\u2020N</span> on a citation: N lines of that file are withheld by screening.');
+    expect(site.get('contents.html')!).not.toContain('<p class="redaction-legend">');
   });
 
   // P-116 (screening scope version 5, C): a redacted body the project-documentation exemption admitted is scanned at a page that cannot

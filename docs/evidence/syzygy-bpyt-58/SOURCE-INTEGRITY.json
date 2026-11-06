@@ -1,0 +1,70 @@
+{
+  "base": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+  "head": "0db4d7b9d2a02966cfbbf1da696cd8979f2c7e45",
+  "rows": [
+    {
+      "path": "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+      "base_sha256": "3695543f4779dadaa87bb928cdd28c9499a95e3ea97fdd76462890139e0711f5",
+      "head_sha256": "507902f321862807841993fdba82a4fa4fa5eb4ff952f468bc8fd74bdfa38869",
+      "bytes_unchanged": false,
+      "executable_emission_unchanged": true,
+      "base_emission_sha256": "abdcdb96acdd368a44a809122573485c5d07d4b0c7366e03325286a28428063b",
+      "head_emission_sha256": "abdcdb96acdd368a44a809122573485c5d07d4b0c7366e03325286a28428063b"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+      "base_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+      "head_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+      "bytes_unchanged": true,
+      "executable_emission_unchanged": true,
+      "base_emission_sha256": "c5ca3a5927350a009d0fbf9e24330da3dea59064d28600a38814ba2e20a63df0",
+      "head_emission_sha256": "c5ca3a5927350a009d0fbf9e24330da3dea59064d28600a38814ba2e20a63df0"
+    },
+    {
+      "path": "packages/polaris-dossier/src/subpath-imports.test.ts",
+      "base_sha256": "330afb3895fcb4449f3a4aa6057428fa72597e25387f2fedb9fd9182b31d4376",
+      "head_sha256": "330afb3895fcb4449f3a4aa6057428fa72597e25387f2fedb9fd9182b31d4376",
+      "bytes_unchanged": true,
+      "executable_emission_unchanged": true,
+      "base_emission_sha256": "8d10fddd722ede6997b3d283dc48e5f4afd8247696715e9270ffcbc38c3f7767",
+      "head_emission_sha256": "8d10fddd722ede6997b3d283dc48e5f4afd8247696715e9270ffcbc38c3f7767"
+    },
+    {
+      "path": "packages/polaris-dossier/src/no-egress.test.ts",
+      "base_sha256": "55f46c3a25870f1bf5209972f2ab00e44992849fe9070f4043eab8f82d0c47fe",
+      "head_sha256": "55f46c3a25870f1bf5209972f2ab00e44992849fe9070f4043eab8f82d0c47fe",
+      "bytes_unchanged": true,
+      "executable_emission_unchanged": true,
+      "base_emission_sha256": "0be6504e45a713b93adb2634166e0ed44bde3b7433a393be7607b656fa866795",
+      "head_emission_sha256": "0be6504e45a713b93adb2634166e0ed44bde3b7433a393be7607b656fa866795"
+    },
+    {
+      "path": "vitest.tiers.ts",
+      "base_sha256": "6a765ae94c98c412ee78ec08cc4aee39da22313c4cb3b120cd81e99fd9b92a85",
+      "head_sha256": "6a765ae94c98c412ee78ec08cc4aee39da22313c4cb3b120cd81e99fd9b92a85",
+      "bytes_unchanged": true,
+      "executable_emission_unchanged": true,
+      "base_emission_sha256": "68aa6ffb06fc6af5d0b307561f84e985cd7e9873fd49a5587f8927853f2b9cdf",
+      "head_emission_sha256": "68aa6ffb06fc6af5d0b307561f84e985cd7e9873fd49a5587f8927853f2b9cdf"
+    },
+    {
+      "path": "package.json",
+      "base_sha256": "0ee4a67f0749337288fe9693bc8a88ca2b69d2f132ecfc54cf093f41bf316f8f",
+      "head_sha256": "0ee4a67f0749337288fe9693bc8a88ca2b69d2f132ecfc54cf093f41bf316f8f",
+      "bytes_unchanged": true,
+      "executable_emission_unchanged": true,
+      "base_emission_sha256": "56828ee8710de34d95260ba8ad90a62d7eaf8b37b29a3acb315602a9c5bb3545",
+      "head_emission_sha256": "56828ee8710de34d95260ba8ad90a62d7eaf8b37b29a3acb315602a9c5bb3545"
+    },
+    {
+      "path": "package-lock.json",
+      "base_sha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd",
+      "head_sha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd",
+      "bytes_unchanged": true,
+      "executable_emission_unchanged": true,
+      "base_emission_sha256": "fc5d0aebf89d05a8d7032cb435d382458b115b49e51b0e2e8aa1f8b1db905b15",
+      "head_emission_sha256": "fc5d0aebf89d05a8d7032cb435d382458b115b49e51b0e2e8aa1f8b1db905b15"
+    }
+  ],
+  "all_executable_unchanged": true
+}

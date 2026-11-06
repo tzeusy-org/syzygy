@@ -448,8 +448,8 @@ python3 scripts/build_pwb_registry_machine_ceiling_amendment.py --check   # P-11
 python3 scripts/record_pwb_registry_machine_ceiling_act.py --builder-selftest   # P-114 frozen builder: actual 22 predicates in pre-install tree with v4 installed
 python3 scripts/record_pwb_registry_machine_ceiling_act.py --check   # P-114 paired version/Ask-2 act, exact registry row and aggregate block
 python3 scripts/record_pwb_registry_machine_ceiling_act.py --selftest   # P-114 recorder predicates and filesystem rollback fixtures
-python3 scripts/record_public_source_screening_scope_v5_act.py --check e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b --date 2026-11-03 --owner-words 'Sign screening scope version 5, variant bcd'   # screening-scope v5 policy act: record, aggregate block and applied subject
-python3 scripts/record_public_source_screening_scope_v5_act.py --selftest
+python3 scripts/record_public_source_screening_scope_v6_act.py --check c44058c02c244e8460c1e33ab01f0343ed0612043d7bf53e0d36410c9f9ebfa2 --date 2026-11-05 --owner-words 'Sign screening scope version 6, variant p'   # screening-scope v6 policy act: record, aggregate block and applied subject
+python3 scripts/record_public_source_screening_scope_v6_act.py --selftest
 python3 scripts/check_polaris_response_ceiling_reading.py --check   # P-77 Q2 reading: quotes intact, compression only under the 2026-09-30 direction
 python3 scripts/check_polaris_response_ceiling_reading.py --selftest
 python3 scripts/build_contract_readability_restyle.py --check   # restyle package: manifest = exact regeneration, applied
@@ -477,6 +477,7 @@ python3 scripts/check_quotations.py     # a quotation beside a path:line locator
 python3 scripts/check_quotations.py --selftest
 python3 scripts/check_docs_review_campaign_partition.py --check   # every docs/reviews/ file in exactly one docs/review-campaigns/ fragment
 python3 scripts/check_docs_review_campaign_partition.py --selftest
+python3 scripts/check_surface_freeze.py --selftest   # the surface merge freeze's fixtures; hosted CI also runs it against each change's base
 python3 scripts/build_evidence_index.py --selftest   # the on-demand docs/evidence/ index's fixtures (syzygy-bpyt.9.1)
 DR=.syzygy/governance/contracts/candidates/round-2026-08f/fixtures/DRY-RUN-ADMINISTRATION.json
 python3 scripts/validate_launch_administration.py $DR
@@ -493,7 +494,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and twenty-two checks above are the same one hundred and twenty-two the hosted workflow runs
+The one hundred and twenty-three checks above are the same one hundred and twenty-three the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

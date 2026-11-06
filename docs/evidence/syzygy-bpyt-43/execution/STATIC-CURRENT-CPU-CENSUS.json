@@ -1,0 +1,90 @@
+{
+  "subject": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+  "tracked_test_denominator": 286,
+  "tracked_test_paths_sha256": "0b9a08d1750c62f2e4d7779ac2c3579a6e22db67e960886ba072d22824d8ece9",
+  "first": [
+    {
+      "path": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+      "line": 194,
+      "bound": "EDGE_TRIM_CPU_MS",
+      "text": "expect(cpuMsSince(cpu)).toBeLessThan(EDGE_TRIM_CPU_MS);",
+      "source_sha256": "ac0884cef8123eaba628152e99c7c97334fe98e5452561588602bef92c4e662a"
+    },
+    {
+      "path": "packages/polaris-generation-core/src/excerpt.test.ts",
+      "line": 273,
+      "bound": "HOSTILE_LINE_CPU_MS",
+      "text": "expect(cpuMsSince(cpu)).toBeLessThan(HOSTILE_LINE_CPU_MS);",
+      "source_sha256": "9b91fbc8f4b8f28fcc3f466d611b6c484ad5bcba32e0b5b93cf2d7ab7da129dd"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+      "line": 189,
+      "bound": "FLOOD_CPU_MS",
+      "text": "expect(cpuMsSince(cpu)).toBeLessThan(FLOOD_CPU_MS);",
+      "source_sha256": "aef94e2ed8096fdb2415fe74e1fa5d0d30c5aae0cd6479370494b793da024d5a"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+      "line": 103,
+      "bound": "TAG_SCAN_CPU_MS",
+      "text": "expect(cpuMsSince(cpu)).toBeLessThan(TAG_SCAN_CPU_MS);",
+      "source_sha256": "88f6a008b406df4cb457e0761f85edb34657216ee8a33d9a9c6a59fadb8d3135"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+      "line": 110,
+      "bound": "ATTRIBUTE_SCAN_CPU_MS",
+      "text": "expect(cpuMsSince(cpu)).toBeLessThan(ATTRIBUTE_SCAN_CPU_MS);",
+      "source_sha256": "88f6a008b406df4cb457e0761f85edb34657216ee8a33d9a9c6a59fadb8d3135"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/unsafe-url-equivalence.test.ts",
+      "line": 146,
+      "bound": "TWO_KB_CPU_MS",
+      "text": "expect(cpuMsSince(cpu)).toBeLessThan(TWO_KB_CPU_MS);",
+      "source_sha256": "9fc33808a5e6ed42661ccc12682ae99898a4654a1d9d3df0633093718709576d"
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/unsafe-url-equivalence.test.ts",
+      "line": 159,
+      "bound": "TWENTY_KB_CPU_MS",
+      "text": "expect(cpuMsSince(cpu)).toBeLessThan(TWENTY_KB_CPU_MS);",
+      "source_sha256": "9fc33808a5e6ed42661ccc12682ae99898a4654a1d9d3df0633093718709576d"
+    }
+  ],
+  "second_rg": [
+    {
+      "path": "packages/three-surface-poc-core/src/unsafe-url-equivalence.test.ts",
+      "line": 146
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/unsafe-url-equivalence.test.ts",
+      "line": 159
+    },
+    {
+      "path": "packages/polaris-generation-core/src/excerpt.test.ts",
+      "line": 273
+    },
+    {
+      "path": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+      "line": 194
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+      "line": 103
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+      "line": 110
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+      "line": 189
+    }
+  ],
+  "method_sets_equal": true,
+  "static_only": true,
+  "runtime_and_collected_cases": "Unknown pending allocation/runtime release",
+  "line_model": "literal LF; Python splitlines counts embedded U+2028/U+2029 and was corrected with attempt retained"
+}

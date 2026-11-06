@@ -1,0 +1,13 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject
+
+ ✓ |unit| packages/polaris-generation-core/src/island-boundary.test.ts (8 tests) 1334ms
+   ✓ the live Node entries and the parked provider island > resolves every workspace import both entries reach, dynamic ones included  682ms
+   ✓ the live Node entries and the parked provider island > reaches no island module from either live entry  490ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  16:09:46
+   Duration  2.17s (transform 78ms, setup 30ms, collect 493ms, tests 1.33s, environment 0ms, prepare 59ms)
+
+JSON report written to /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unresolved-old.vitest.json

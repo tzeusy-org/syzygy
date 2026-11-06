@@ -217,3 +217,37 @@ describe('readSecretRedaction refuses what it does not implement', () => {
     expect(read(mutate).ok).toBe(false);
   });
 });
+
+// syzygy-n5jm (screening scope version 6, variant p): the header's linear-scan claim covers config-secret-directive. Each of the
+// builder's adversarial lines (scripts/build_public_source_screening_scope_v6.py, linear_time_findings, at its node length) is scanned
+// from every offset and searched once by the shipped matcher, with the detector read from the policy on disk.
+describe('config-secret-directive (policy version 6): linear every-offset scanning', () => {
+  const detector = (detectorsOf(policyDoc()) as RedactionDetector[]).find(d => d.id === 'config-secret-directive');
+  const LINES: readonly (readonly [string, string])[] = [
+    ['blanks', ' '.repeat(80_000)], ['hashes', '#'.repeat(80_000)], ['hash-blank', '# '.repeat(40_000)], ['acl', `user ${'a '.repeat(40_000)}`],
+    ['tabs', '\t'.repeat(80_000)], ['vertical tabs', '\v'.repeat(80_000)], ['hash-vt', '#\v'.repeat(40_000)], ['quotes', '"'.repeat(80_000)],
+    ['acl hashes', `user ${' #'.repeat(40_000)}`], ['acl quotes', `user ${' "'.repeat(40_000)}`], ['acl near-hash', `user ${` #${'a'.repeat(63)}`.repeat(1_200)}`],
+    ['quoted acl bangs', `"user" ${' !'.repeat(40_000)}`], ['quoted acl near-bang', `'user' ${` !${'a'.repeat(63)}`.repeat(1_200)}`],
+  ];
+
+  it('is declared, as a regular expression with flags gi', () => {
+    expect(detector).toMatchObject({ kind: 'regular-expression', flags: 'gi' });
+  });
+
+  it.each(LINES)('scans a long %s line from every offset within the bound', (_name, line) => {
+    const matcher = compileEveryOffsetMatcher([detector!]);
+    const started = performance.now();
+    matcher.all(line, 10_000);
+    matcher.first(line);
+    matcher.all(`x\n${line}\n`, 10_000);
+    expect(performance.now() - started).toBeLessThan(1_500);
+  });
+
+  it('still matches at a line start, after a bare CR, and never mid-line', () => {
+    const matcher = compileEveryOffsetMatcher([detector!]);
+    const spans = (text: string) => matcher.all(text, 100).matches.map(m => text.slice(m.start, m.end));
+    expect(spans('# requirepass s3cr3tvalue\nport 6379\n')).toEqual(['# requirepass s3cr3tvalue']);
+    expect(spans('a\rmasterauth s3cr3tvalue\r')).toEqual(['masterauth s3cr3tvalue']);
+    expect(spans('config set requirepass s3cr3tvalue\n')).toEqual([]);
+  });
+});

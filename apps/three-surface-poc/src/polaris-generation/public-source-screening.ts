@@ -39,6 +39,11 @@
 // screen is loaded for the corpus's repository and revision (one loaded
 // without them places nothing); and a project-documentation body skips the
 // active-content scan given its path (`projectDocumentationExemption`).
+// Under version 6 (variant `p`, approved 2026-11-05) the owner's placements
+// add `redis.conf` at the same repository and commit, and the scope adds a
+// fourth detector, `config-secret-directive` (read like the other three,
+// line-redactable in project documentation, whole elsewhere); no rule text
+// this reader implements changes but the scope detectors' consequence.
 // Each exemption holds at a page only while the page meets
 // the scope's `renderCondition`: this app's page sinks are the dossier
 // renderer and the draft preview, which write every body byte through

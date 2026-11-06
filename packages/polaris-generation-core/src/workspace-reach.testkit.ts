@@ -76,11 +76,14 @@ function moduleIn(workspace: Workspace, dir: string, target: string): string | u
  * tarball extension (`github:someone/dossier#v1.tar`), which npm types as `git`; both are refused too, failing closed.
  * Residual (syzygy-bpyt.8.38): npm also reads a directory spec with no leading `./`, `../`, `/` or `~/` (`packages/polaris-dossier/`,
  * `.hidden-lib`, `a/b/c`) as a directory. Those still read as outside the workspace; widening the pattern to them changes what the
- * guards refuse and needs a GP-Q0 ruling first.
+ * guards refuse and needs a GP-Q0 ruling first. GP-B2 Q4 instead supplies the separate workspace-reach.test.ts test
+ * "requires every npm workspace to be @syzygy/-named and every dependency or override spec to be a registry version shape":
+ * a complete suite refuses such manifests up front; this resolver's behavior stays as reviewed.
  * Residual (the review of 8.39, N2): a workspace whose name is not `@syzygy/`-scoped is read by its bare name as outside the
  * workspace (unless some manifest declares that name with a version this pattern matches), while npm links it under that name
  * and Node loads it from there. At syzygy-bpyt.8.39, 0 of the 12 workspaces are unscoped; closing it changes what the guards
- * refuse and needs a GP-Q0 ruling first. */
+ * refuse and needs a GP-Q0 ruling first. The same GP-B2 Q4 precondition test in workspace-reach.test.ts refuses every
+ * non-@syzygy/-named workspace, including one with no entry, as a prerequisite to the full suite's assurance. */
 const LOCAL_VERSION = /^(?:file:|link:|workspace:|npm:|\.\.?(?:\/|$)|\/|~\/)|\.(?:tgz|tar|tar\.gz)$/iu;
 
 /** Every name any manifest declares a local dependency under. npm installs a dependency where every workspace module resolves it. */

@@ -7,7 +7,7 @@ import {
   type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
-import { renderDiagramSvg } from './diagram-layout.js';
+import { READABLE_SPACING, renderDiagramSvg } from './diagram-layout.js';
 import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureMarkup, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
 import { assertInertSvg } from './svg-inert.js';
@@ -149,7 +149,23 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + 'figure.code-excerpt pre{margin:.5rem 0;overflow-x:auto;background:var(--d-surface-2);border:1px solid var(--line);border-radius:8px;padding:.75rem 1rem}'
   + 'figure.code-excerpt pre code{display:block;background:none;border:0;padding:0;font:.85rem/1.5 var(--font-mono);white-space:pre}'
   + 'figure.code-excerpt figcaption{display:flex;gap:.6rem;flex-wrap:wrap}.code-language{color:var(--cyan);text-transform:uppercase;letter-spacing:.06em;font-size:.78em}.code-path{font:400 .85em var(--font-mono);color:var(--muted)}'
-  + '.code-anchor{margin:0;font-size:.9em}';
+  + '.code-anchor{margin:0;font-size:.9em}'
+  // A modern system stack and no font download (syzygy-pdja.1, owner review of the Redis dossier). The shared stylesheet reads body text from
+  // `--font-serif`, so that token carries the sans stack here. Only code, source text and diagram text keep the code face.
+  + ':root{--font-serif:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace}'
+  + '.contents,.contents a,.contents .eyebrow,.pipeline-notice,.eyebrow,.asset-references,.sources,.diagram-legend,.marking,.deep-links,a.cite,.anchor-link,.source-anchor{font-family:var(--font-serif)}'
+  // The navigation folds with no script; the reading column takes the room it leaves.
+  + '.nav-panel>summary{cursor:pointer;font-weight:600;color:var(--muted)}.layout:has(>.nav-panel:not([open])){grid-template-columns:auto minmax(0,1fr)}.nav-panel>summary:focus-visible,.mobile-contents>summary:focus-visible{outline-offset:-3px}'
+  // A three-column diagram, the widest a plain chain reaches, may shrink to fit its column (text no smaller than 10.7px); any wider one
+  // keeps its size and scrolls. The element under the pointer stands out.
+  + '.diagram-scroll svg[width="1048"]{max-width:max(100%,860px)}.diagram-scroll g.node:hover rect{stroke-width:3}.diagram-scroll g.edge:hover path{stroke-width:3}.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--cyan);stroke-width:1.5}'
+  // A marker standing where withheld lines were, on a source page: present, and out of the reading.
+  + 'pre.redaction-note{margin:.25rem 0;padding:.1rem .75rem;border-left:4px solid var(--line);color:var(--muted);font:.8rem/1.5 var(--font-mono);white-space:pre-wrap}'
+  // A glossary term's entry on hover or keyboard focus; on touch the link opens the glossary.
+  // The entry opens from its block's left edge, so it stays on the page wherever the term falls in a line.
+  + 'main [data-claim-id]{position:relative}a.term{color:inherit;text-decoration:underline dotted var(--muted);text-underline-offset:.2em}.term-pop{display:none;position:absolute;left:0;z-index:5;width:min(22rem,100%);background:var(--panel-raised);border:1px solid var(--line);border-radius:8px;padding:.5rem .75rem;font-size:.9rem;font-weight:400;line-height:1.5}.term-pop::before{content:"";position:absolute;left:0;right:0;top:-.5rem;height:.5rem}a.term:hover>.term-pop,a.term:focus>.term-pop{display:block}'
+  + '.redaction-mark{margin-left:.1em;color:var(--muted)}.redaction-legend{margin-top:2rem;color:var(--muted);font-size:.85rem}'
+  + '.source-identity{margin:.75rem 0}.source-identity>summary{cursor:pointer;color:var(--muted)}';
 
 /** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
 interface PageChrome { readonly notice: string; readonly disclosure: string; readonly mainAttributes: string; readonly region: string }
@@ -157,7 +173,7 @@ interface PageChrome { readonly notice: string; readonly disclosure: string; rea
 function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome): string {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${DRAFT_PREVIEW_CSP_META}<title>${escape(title)}</title><style>${DESIGN_TOKENS_CSS}
 ${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}`}
-</style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure ?? ''}<div class="layout"><nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav><details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="Dossier">${nav}</nav></details><main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main></div></body></html>`;
+</style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="Dossier">${nav}</nav></details><main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main></div></body></html>`;
 }
 
 export interface DossierStop { readonly reason: string; readonly shown: string; readonly lastStage: string | null }
@@ -240,6 +256,15 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     return n;
   };
   const sourceLabel = (from: string, id: string): string => `Source ${citeNumber(from, id)}: ${sources.get(id)!.path}`;
+  // RFC5-17: a claim over a redacted file's surviving content states the redaction count on the claim. On an operator-agent page the
+  // citation carries it, visibly as a dagger and the count (each page with one says what it means, RFC7-34) and in its accessible name,
+  // tooltip and attribute, rather than a sentence after every citation in the reading text. The source page and the machine view state it
+  // in full (syzygy-pdja.1).
+  const citedRedaction = (id: string): { readonly attribute: string; readonly words: string; readonly mark: string } => {
+    const redaction = sources.get(id)?.redaction;
+    if (redaction === undefined) return { attribute: '', words: '', mark: '' };
+    return { attribute: ` data-redacted-lines="${redaction.withheldLines}"`, words: `; ${redaction.withheldLines} line(s) of this file withheld by screening`, mark: `<span class="redaction-mark" aria-hidden="true">†${redaction.withheldLines}</span>` };
+  };
   const refs = (from: string, ids: readonly string[]): string => `<span class="sources">${ids.map(id => {
     const source = sources.get(id);
     if (source === undefined) throw new DossierRenderError('unknown-source');
@@ -248,7 +273,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const note = source.redaction === undefined ? '' : ` <span class="redaction-note">[redacted-span: ${source.redaction.withheldLines} withheld line(s) in this file]</span>`;
     // The provider mode's bytes are pinned (dossier-render-provider-golden.test.ts); only an operator-agent run numbers its sources.
     if (local === undefined) return `<a href="${escape(href(from, target, 'exact-text'))}" aria-label="Read source ${escape(id)}">[${escape(id)}]</a>${note}`;
-    return `<a class="cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(id)}" aria-label="${escape(sourceLabel(from, id))}" title="${escape(source.path)}">[${citeNumber(from, id)}]</a>${note}`;
+    const cited = citedRedaction(id);
+    return `<a class="cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(id)}"${cited.attribute} aria-label="${escape(sourceLabel(from, id) + cited.words)}" title="${escape(source.path + cited.words)}">[${citeNumber(from, id)}]${cited.mark}</a>`;
   }).join(' ')}</span>`;
   // Every claim a page carries, in the order it is built; `add` files them under that page for the machine view.
   const pending: { id: string; epistemic: EpistemicMarking; unknownReason: string | null }[] = [];
@@ -261,8 +287,41 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // resting on execution names. A non-normative block is no claim and carries no anchor.
   const nonNormative: { page: string; id: string }[] = [];
   const quotations: { page: string; blockId: string; sourceId: string; start: number; end: number; anchor: unknown; redaction?: { redactionClass: 'redacted-span'; withheldLines: number } }[] = [];
+  // Agent prose links a glossary term's first use in each section to its entry, shown on hover or focus (syzygy-pdja.1). Never a quotation
+  // or a source page: only agent text passes here, and source bytes never mint an element. Case follows the term, or its capitalised form.
+  const glossaryByForm = new Map<string, LocalPageItem>();
+  if (local !== undefined && !withheld) {
+    for (const term of local.glossary) {
+      const name = term.title ?? term.id;
+      // A term the understanding record marks Unknown keeps its reason on the glossary page, its one home, and links nothing.
+      if (term.marking !== 'inferred') continue;
+      for (const base of new Set([name, name.replace(/-/gu, ' ')])) {
+        const [first = '', ...rest] = [...base];
+        const capitalised = `${first.toUpperCase()}${rest.join('')}`;
+        // The record's ids are often lower case where prose writes an acronym (`aof`, AOF).
+        for (const form of [base, `${base}s`, capitalised, `${capitalised}s`, base.toUpperCase()]) if (form !== '' && !glossaryByForm.has(form)) glossaryByForm.set(form, term);
+      }
+    }
+  }
+  const termPattern = glossaryByForm.size === 0 ? null : new RegExp(`(?<![\\p{L}\\p{N}_&;/.-])(${[...glossaryByForm.keys()].sort((a, b) => b.length - a.length).map(form => escape(form).replace(/[.*+?^\${}()|[\]\\]/gu, '\\$&')).join('|')})(?![\\p{L}\\p{N}_/-]|\\.[\\p{L}\\p{N}])`, 'gu');
+  const termsShown = new Set<string>();
+  // A cell may scroll sideways, which would clip an entry, so a table links no term.
+  let termsOff = false;
+  const glossaryShown: { page: string; id: string }[] = [];
+  const withTerms = (from: string, text: string): string => {
+    const html = prose(text);
+    if (termPattern === null) return html;
+    return html.split(/(<code>[^<]*<\/code>)/u).map((piece, i) => i % 2 === 1 ? piece : piece.replace(termPattern, (match: string) => {
+      const term = glossaryByForm.get(match.replace(/&amp;/gu, '&').replace(/&lt;/gu, '<').replace(/&gt;/gu, '>').replace(/&quot;/gu, '"').replace(/&#39;/gu, "'"));
+      if (term === undefined || termsShown.has(term.id)) return match;
+      termsShown.add(term.id);
+      if (!glossaryShown.some(shown => shown.page === from && shown.id === term.id)) glossaryShown.push({ page: from, id: term.id });
+      // The entry stays one claim, filed under glossary.html; its other appearances are listed in the machine view (RFC7-33).
+      return `<a class="term" href="${escape(href(from, 'glossary.html', `term-${term.id}`))}" aria-label="${match}, glossary entry">${match}<span class="term-pop" data-glossary-entry="${escape(term.id)}" data-epistemic="${term.marking}">${prose(term.text)} ${marking(term.marking)}</span></a>`;
+    })).join('');
+  };
   const segment = (from: string, blockId: string, part: LocalSegment): string => {
-    if (part.kind === 'prose') return prose(part.text);
+    if (part.kind === 'prose') return termsOff || local!.blocks.get(blockId)?.marking === 'non-normative' ? prose(part.text) : withTerms(from, part.text);
     if (part.kind === 'withheld') return `<span class="quote-withheld" data-unknown-reason="${escape(part.reason)}">[quotation withheld: the file it cites is excluded by screening]</span>`;
     const target = sourcePaths.get(part.sourceId);
     if (target === undefined) throw new DossierRenderError('unquotable-source');
@@ -275,8 +334,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const anchorLink = (from: string, part: Extract<LocalSegment, { kind: 'quotation' }>): string => {
     const target = sourcePaths.get(part.sourceId);
     if (target === undefined) throw new DossierRenderError('unquotable-source');
-    const redaction = sources.get(part.sourceId)?.redaction;
-    return `<a class="anchor-link cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(part.sourceId)}" aria-label="${escape(`${sourceLabel(from, part.sourceId)}, ${part.anchor.fragment === null ? 'whole file' : `bytes ${part.anchor.fragment.start}–${part.anchor.fragment.end}`}`)}"${anchorAttributes(part.anchor, escape)}>[${citeNumber(from, part.sourceId)}]</a>${redaction === undefined ? '' : ` <span class="redaction-note">[redacted-span: ${redaction.withheldLines} withheld line(s) in this file]</span>`}`;
+    const cited = citedRedaction(part.sourceId);
+    const label = `${sourceLabel(from, part.sourceId)}, ${part.anchor.fragment === null ? 'whole file' : `bytes ${part.anchor.fragment.start}–${part.anchor.fragment.end}`}${cited.words}`;
+    return `<a class="anchor-link cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(part.sourceId)}"${cited.attribute} aria-label="${escape(label)}"${cited.words === '' ? '' : ` title="${escape(`${sources.get(part.sourceId)!.path}${cited.words}`)}"`}${anchorAttributes(part.anchor, escape)}>[${citeNumber(from, part.sourceId)}]${cited.mark}</a>`;
   };
   const localParagraph = (from: string, p: DraftParagraph, tag: string): string => {
     const b = local!.blocks.get(p.id);
@@ -305,12 +365,14 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     switch (e.kind) {
       case 'table': {
         const head = `<thead><tr>${e.columns.map(column => `<th scope="col">${escape(column)}</th>`).join('')}</tr></thead>`;
+        termsOff = true;
         const rows = e.rows.map(row => `<tr data-row-id="${escape(row.id)}">${row.cells.map((cell, c) => {
           const tag = e.rowHeaders && c === 0 ? 'th' : 'td';
           const html = cell === null ? `<${tag} class="empty-cell">no entry</${tag}>` : paragraph(from, cell, tag);
           // A row header names its row: the scope goes on the opening tag only, which every form above begins with.
           return tag === 'th' ? `<th scope="row"${html.slice('<th'.length)}` : html;
         }).join('')}</tr>`).join('');
+        termsOff = false;
         return `<div class="table-scroll"${attrs}><table><caption>${escape(e.caption)}</caption>${head}<tbody>${rows}</tbody></table></div>`;
       }
       case 'callout':
@@ -324,7 +386,11 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       case 'details': {
         // A collapsed section never hides an Unknown silently (v1.3 note 2): its summary counts the Unknown claims inside it.
         const before = pending.length;
+        // A collapsed first use does not use up the section's visible one.
+        const shownBefore = new Set(termsShown);
         const inner = e.elements.map(child => block(from, child)).join('');
+        termsShown.clear();
+        for (const id of shownBefore) termsShown.add(id);
         const unknown = pending.slice(before).filter(entry => entry.epistemic === 'unknown').length;
         const count = unknown === 0 ? '' : ` <span class="details-unknown">(${unknown} Unknown)</span>`;
         return `<details class="details"${attrs}><summary>${escape(e.summary)}${count}</summary>${inner}</details>`;
@@ -355,19 +421,25 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const parent = paragraph(from, b, 'p');
     return b.children.length === 0 ? parent : `${parent}<ul class="block-children">${b.children.map(child => paragraph(from, child, 'li')).join('')}</ul>`;
   };
-  const notice = (id: string, disposition: { kind: string; reason?: string; references?: string[] }): string =>
-    `<aside class="unresolved-asset" data-asset-disposition="${escape(disposition.kind)}"><strong>${escape(id)}</strong>: ${escape(disposition.reason ?? '')} <span class="asset-references">(${escape((disposition.references ?? []).join(', '))})</span></aside>`;
+  // An operator-agent page names a referenced source by its number, or by its path where it has no page; never by its identifier.
+  const assetReferences = (from: string, ids: readonly string[]): string => local === undefined ? escape(ids.join(', ')) : ids.map(id => {
+    const source = sources.get(id);
+    if (source === undefined) return escape(id);
+    return sourcePaths.has(id) ? refs(from, [id]) : escape(source.path);
+  }).join(', ');
+  const notice = (from: string, id: string, disposition: { kind: string; reason?: string; references?: string[] }): string =>
+    `<aside class="unresolved-asset" data-asset-disposition="${escape(disposition.kind)}"><strong>${escape(id)}</strong>: ${escape(disposition.reason ?? '')} <span class="asset-references">(${assetReferences(from, disposition.references ?? [])})</span></aside>`;
   const diagram = (from: string, d: DraftDiagram, index: number): string => {
-    if (d.disposition.kind !== 'produced') return notice(d.id, d.disposition);
+    if (d.disposition.kind !== 'produced') return notice(from, d.id, d.disposition);
     const nodes = new Map(d.nodes.map(node => [node.id, node]));
     const nodeList = d.nodes.map(n => claim('li', n.id, n.epistemic, `${escape(n.label)} ${marking(n.epistemic)} ${refs(from, n.sourceIds)}`)).join('');
     const edgeList = d.edges.map(e => claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)} ${marking(e.epistemic)} ${refs(from, e.sourceIds)}`)).join('');
     let svg: string;
     try {
-      svg = renderDiagramSvg(d, index, escape);
+      svg = renderDiagramSvg(d, index, escape, local === undefined ? undefined : READABLE_SPACING);
       assertInertSvg(svg);
     } catch {
-      return notice(d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set([...d.nodes, ...d.edges].flatMap(element => element.sourceIds))] });
+      return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set([...d.nodes, ...d.edges].flatMap(element => element.sourceIds))] });
     }
     const legend = '<ul class="diagram-legend" aria-label="Line styles"><li><span class="legend-line observed" aria-hidden="true"></span>Solid: observed</li><li><span class="legend-line inferred" aria-hidden="true"></span>Dashed: inferred</li><li><span class="legend-line unknown" aria-hidden="true"></span>Dotted: unknown (label ends “?”)</li></ul>';
     return `<figure><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary><ul>${nodeList}</ul><ol>${edgeList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
@@ -393,8 +465,11 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const files = new Map<string, string>();
   const pages: { path: string; depth: number }[] = [];
   const claimsByPage: { page: string; id: string; epistemic: EpistemicMarking; unknownReason: string | null }[] = [];
+  // A page citing a redacted file says once what the mark on its citations means (RFC7-34: a visual encoding is legended).
+  const legended = (main: string): string => local !== undefined && main.includes('class="redaction-mark"')
+    ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
   const add = (path: string, depth: number, pageTitle: string, main: string): void => {
-    files.set(path, page(`${pageTitle} — ${title}`, path, nav(path), main, chrome));
+    files.set(path, page(`${pageTitle} — ${title}`, path, nav(path), legended(main), chrome));
     pages.push({ path, depth });
     claimsByPage.push(...pending.splice(0).map(entry => ({ page: path, ...entry })));
   };
@@ -402,17 +477,18 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // --- entry page
   const from = 'index.html';
   const unresolved = withheld ? '' : draft.unresolved.map((item, index) => claim('aside', `unresolved/${index + 1}`, 'unknown',
-    `<strong>${escape(item.question)}</strong>: ${escape(item.reason)} ${marking('unknown')} <span class="asset-references">(${escape(item.references.join(', '))})</span>`)).join('');
+    `<strong>${escape(item.question)}</strong>: ${escape(item.reason)} ${marking('unknown')} <span class="asset-references">(${assetReferences(from, item.references)})</span>`)).join('');
   const notGenerated = (id: string, kind: string): string => claim('aside', `not-generated/${id}`, 'unknown',
     `<strong>${escape(id)}</strong> (${escape(kind)}): not generated; the run stopped before it was written (${escape(stop!.shown)}). ${marking('unknown')}`,
     ` class="unresolved-asset" data-asset-disposition="not-generated" data-stop-reason="${escape(stop!.shown)}"`);
   const sections = withheld ? '' : draft.sections.map((section, index) => {
+    termsShown.clear();
     const head = `<span class="eyebrow">${String(index + 1).padStart(2, '0')}</span><h2>${escape(section.title)}</h2>`;
     if (view.deferredSections.has(section.id)) return `<section id="section-${escape(section.id)}" data-reading-level="1" data-topics="">${head}${notGenerated(section.id, 'section')}</section>`;
-    if (section.disposition.kind !== 'produced') return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${notice(section.id, section.disposition)}</section>`;
+    if (section.disposition.kind !== 'produced') return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${notice(from, section.id, section.disposition)}</section>`;
     const figures = draft.diagrams.map((d, i) => d.sectionId === section.id ? diagram(from, d, i) : '').join('');
     const dives = draft.deepDives.filter(dive => dive.sectionId === section.id).map(dive => dive.disposition.kind === 'produced'
-      ? `<li><a href="${escape(deepPaths.get(dive.id)!)}">Explore: ${escape(dive.title)}</a></li>` : `<li>${notice(dive.id, dive.disposition)}</li>`).join('');
+      ? `<li><a href="${escape(deepPaths.get(dive.id)!)}">Explore: ${escape(dive.title)}</a></li>` : `<li>${notice(from, dive.id, dive.disposition)}</li>`).join('');
     // An operator-agent section leads with its diagrams (syzygy-mea.10.4); the provider mode's bytes are pinned, so its figures follow.
     const body = section.paragraphs.map(b => block(from, b)).join('');
     return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${local === undefined ? `${body}${figures}` : `${figures}${body}`}${dives ? `<ul class="deep-links">${dives}</ul>` : ''}</section>`;
@@ -429,6 +505,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       ' class="policy-state" data-unknown-reason="unconsented-source-or-provider"', 'unconsented-source-or-provider');
     add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Draft layer Unknown</span><h1>${escape(title)}</h1>${policy}</header>`);
   } else {
+    termsShown.clear();
     const introduction = view.drafted ? paragraph(from, draft.introduction, 'p') : '';
     const missingList = view.notGenerated.length === 0 ? '' : `<section id="not-generated" data-reading-level="1" data-topics=""><h2>Not generated</h2>${view.notGenerated.map(item => notGenerated(item.id, item.kind)).join('')}</section>`;
     add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${sections}${missingList}`);
@@ -437,6 +514,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // --- deep dives
   for (const dive of deepDives) {
     const path = deepPaths.get(dive.id)!;
+    termsShown.clear();
     const parent = draft.sections.find(section => section.id === dive.sectionId)!;
     add(path, 1, dive.title, `<section id="deep-dive-${escape(dive.id)}" data-reading-level="2"${topicAttr(dive.id)}><span class="eyebrow">Deep dive · <a href="${escape(href(path, 'index.html', `section-${parent.id}`))}">${escape(parent.title)}</a></span><h1>${escape(dive.title)}</h1>${bannerFor(`run-stopped/dive/${dive.id}`)}${dive.paragraphs.map(b => block(path, b)).join('')}</section>`);
   }
@@ -462,13 +540,15 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   add('glossary.html', 1, 'Glossary', `<section id="glossary"><h1>Glossary</h1>${glossary}</section>`);
 
   // --- sources: the whole population as a denominator, then one page per quotable source
+  // An operator-agent page keeps the identifier on the source page's identity details and in the machine view (syzygy-pdja.1).
+  const shownId = (id: string): string => local === undefined ? ` [${escape(id)}]` : '';
   const list = input.sources.map(source => {
     const target = sourcePaths.get(source.sourceId);
     const redactedNote = source.redaction === undefined ? '' : ` · redacted-span: ${source.redaction.withheldLines} withheld line(s) in this file`;
     const reason = source.exclusion.excluded ? source.exclusion.reason : source.classificationBasis === 'path-only' ? 'path-only; body not read' : 'body unavailable for citation';
     return target === undefined
-      ? `<li>${escape(source.path)} [${escape(source.sourceId)}] — counted; exact text unavailable: ${escape(reason)}${escape(redactedNote)}.</li>`
-      : `<li><a href="${escape(href('sources/index.html', target))}">${escape(source.path)}</a> [${escape(source.sourceId)}]${escape(redactedNote)}</li>`;
+      ? `<li>${escape(source.path)}${shownId(source.sourceId)} — counted; exact text unavailable: ${escape(reason)}${escape(redactedNote)}.</li>`
+      : `<li><a href="${escape(href('sources/index.html', target))}">${escape(source.path)}</a>${shownId(source.sourceId)}${escape(redactedNote)}</li>`;
   }).join('');
   add('sources/index.html', 1, 'Sources', `<section id="sources"><h1>Sources</h1><p>${input.sources.length} sources counted, ${quotable.length} with admitted text.</p><ul>${list}</ul></section>`);
   for (const source of quotable) {
@@ -477,7 +557,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const [start, end] = generationSpanRange(source, span);
     const anchor = local?.sourceAnchors.get(source.sourceId);
     if (local !== undefined && anchor === undefined) throw new DossierRenderError('unquotable-source');
-    const identity = anchor === undefined ? ` · <code>${escape(span.anchorId)}</code></p>` : `</p>${anchorDetails(anchor, escape)}`;
+    const identity = anchor === undefined ? ` · <code>${escape(span.anchorId)}</code></p>` : `</p><details class="source-identity"><summary>Source identity</summary><p>${escape(source.sourceId)}</p>${anchorDetails(anchor, escape)}</details>`;
     const read = anchor === undefined ? '' : `<p class="read-note">${marking('observed')} Syzygy read the original Git blob at the pinned revision at this render and recomputed its object identifier before screening.</p>`;
     let exact = '';
     if (source.redaction === undefined) exact = `<blockquote class="exact-source" data-quote-source="${escape(source.sourceId)}" data-quote-start="${start}" data-quote-end="${end}">${escape(span.text).replace(/\r/gu, '&#13;')}</blockquote>`;
@@ -494,7 +574,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       if (at < bytes.length) exact += `<pre class="redaction-note">${escape(bytes.subarray(at).toString('utf8')).replace(/\r/gu, '&#13;')}</pre>`;
     }
     const extent = source.redaction === undefined ? `bytes ${start}–${end} of the file` : `redacted-span: ${source.redaction.withheldLines} withheld line(s) in this file; surviving spans use original Git byte coordinates`;
-    add(path, 2, source.path, `<section id="exact-text" data-reading-level="3"><h1 class="source-path">${escape(source.path)}</h1><p class="source-anchor">${escape(source.sourceId)} · ${extent}${identity}${exact}${read}</section>`);
+    add(path, 2, source.path, `<section id="exact-text" data-reading-level="3"><h1 class="source-path">${escape(source.path)}</h1><p class="source-anchor">${anchor === undefined ? `${escape(source.sourceId)} · ` : ''}${extent}${identity}${exact}${read}</section>`);
   }
 
   // --- the operator-agent run's own pages: understanding, discovery, clarifications, executions, review
@@ -511,17 +591,20 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   files.set('dossier.json', `${JSON.stringify(manifest, null, 2)}\n`);
   // An operator-agent page is measured without its review-status region, so a render that changes only the region leaves the size
   // report unchanged and a rendered-design review counted.
-  const measured = (html: string): string => (local === undefined ? html : withoutReviewStatusRegion(html) ?? html);
+  // Nor a glossary entry that only shows on hover or focus; the report's closing sentence says so.
+  const measured = (html: string): string => (local === undefined ? html : (withoutReviewStatusRegion(html) ?? html).replace(/<span class="term-pop"[^>]*>.*?<span class="marking [a-z-]+">[^<]*<\/span><\/span>/gsu, ''));
   const scanned = new Map(pages.map(p => [p.path, scanDossierPage(measured(files.get(p.path)!))]));
   const cost = readerCost(manifest, scanned);
   files.set('size-report.json', `${JSON.stringify({ format: 'polaris-dossier-size-report-v1', ...cost }, null, 2)}\n`);
   const first = cost.firstReadingLevel;
+  // An operator-agent report names a source page by its file, not its hashed route.
+  const pageNames = new Map(local === undefined ? [] : quotable.map(source => [sourcePaths.get(source.sourceId)!, source.path]));
   const count = (value: number | null): string => value === null ? 'Unknown' : String(value);
   files.set('size-report.html', page(`Size report — ${title}`, 'size-report.html', nav('size-report.html'), `<section id="size-report"><h1>Size report</h1>`
     + `<p>What a reader loads before choosing where to go: the first reading level of <a href="index.html">the overview</a>, ${count(first.bytesThroughFirstLevel)} bytes and ${count(first.words)} words, of an entry page of ${first.entryPageBytes} bytes. All ${cost.pages.length} pages: ${cost.pages.reduce((n, p) => n + p.bytes, 0)} bytes. No budget is declared, so nothing here is within or over one.</p>`
     + `<table><thead><tr><th>Link depth</th><th>Pages</th><th>Bytes</th><th>Words</th></tr></thead><tbody>${cost.perPageDepth.map(row => `<tr><td>${row.depth}</td><td>${row.pages}</td><td>${row.bytes}</td><td>${row.words}</td></tr>`).join('')}</tbody></table>`
-    + `<table><thead><tr><th>Page</th><th>Depth</th><th>Bytes</th><th>Words</th></tr></thead><tbody>${cost.pages.map(row => `<tr><td><a href="${escape(row.path)}">${escape(row.path)}</a></td><td>${row.depth}</td><td>${row.bytes}</td><td>${Object.values(row.wordsByReadingLevel).reduce((n, w) => n + w, 0) + row.unlabelledWords}</td></tr>`).join('')}</tbody></table>`
-    + `<p>Measured from the rendered bytes by the evaluation harness's scanner. This page and size-report.json are not counted${local === undefined ? '' : ', and each page is measured without its review-status region'}.</p></section>`, chrome));
+    + `<table><thead><tr><th>Page</th><th>Depth</th><th>Bytes</th><th>Words</th></tr></thead><tbody>${cost.pages.map(row => `<tr><td><a href="${escape(row.path)}">${escape(pageNames.get(row.path) ?? row.path)}</a></td><td>${row.depth}</td><td>${row.bytes}</td><td>${Object.values(row.wordsByReadingLevel).reduce((n, w) => n + w, 0) + row.unlabelledWords}</td></tr>`).join('')}</tbody></table>`
+    + `<p>Measured from the rendered bytes by the evaluation harness's scanner. This page and size-report.json are not counted${local === undefined ? '' : ', and each page is measured without its review-status region and its glossary entries'}.</p></section>`, chrome));
   if (local !== undefined) {
     // The machine channel of the same render: every claim it rendered with its label and page, the non-normative blocks, every
     // quotation with its anchor, the source anchors, the disclosure, the draft layer and the review-status region.
@@ -534,6 +617,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       pages: [...pages.map(p => p.path), 'size-report.html'],
       claims: claimsByPage,
       nonNormative,
+      glossaryShown,
       quotations,
       sources: quotable.map(source => ({ sourceId: source.sourceId, page: sourcePaths.get(source.sourceId)!, anchor: local.sourceAnchors.get(source.sourceId)!, ...(source.redaction === undefined ? {} : { redaction: { redactionClass: source.redaction.redactionClass, withheldLines: source.redaction.withheldLines } }) })),
       localPages: localPages,

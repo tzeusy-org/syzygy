@@ -1,0 +1,23 @@
+"""Serialize one native final gate; capture is observational, never a gate replay."""
+import datetime,fcntl,hashlib,json,subprocess,sys,time
+from pathlib import Path
+OWN=Path(__file__).resolve().parent;TREE=OWN/'subject';EXPECTED=sys.argv[1];lock=Path('/home/orca/.tmp/syzygy-full-suite-20261104.lock')
+log=OWN/'logs/final-gate-driver.log';out=OWN/'FINAL-GATE-DRIVER.json';assert not log.exists() and not out.exists()
+def git(*args):return subprocess.check_output(['git',*args],cwd=TREE,text=True).strip()
+assert git('rev-parse','HEAD')==EXPECTED and not git('status','--porcelain')
+record={'subject':EXPECTED,'driverSha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'startedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'sharedLock':str(lock),'command':['npm','run','check:all'],'captureOnly':'Native emitter and child-lifetime capture; independent byte observer and hosted runtime evidence are separate.'}
+with log.open('x') as stream:
+ def emit(message):stream.write(message+'\n');stream.flush();print(message,flush=True)
+ emit('waiting for coordinator shared broad-gate lock')
+ with lock.open('a') as held:
+  fcntl.flock(held,fcntl.LOCK_EX)
+  record['lockAcquiredAt']=datetime.datetime.now(datetime.timezone.utc).isoformat();emit('lock acquired; starting the single native npm run check:all')
+  assert git('rev-parse','HEAD')==EXPECTED and not git('status','--porcelain')
+  command=[sys.executable,str(OWN/'isolated.py'),str(TREE),'python3',str(OWN/'capture_inside.py'),'final-check-all','npm','run','check:all']
+  r=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+  for line in r.stdout:stream.write(line);stream.flush();sys.stdout.write(line);sys.stdout.flush()
+  record['exit']=r.wait();record['finishedAt']=datetime.datetime.now(datetime.timezone.utc).isoformat()
+  record['afterSubject']=git('rev-parse','HEAD');record['afterStatus']=git('status','--porcelain')
+  record['stream']={'path':str(log),'bytes':log.stat().st_size,'sha256':hashlib.sha256(log.read_bytes()).hexdigest()}
+  out.write_text(json.dumps(record,indent=2)+'\n')
+if record['exit'] or record['afterSubject']!=EXPECTED or record['afterStatus']:sys.exit(1)
