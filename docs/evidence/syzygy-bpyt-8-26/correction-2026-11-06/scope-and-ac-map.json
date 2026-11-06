@@ -284,9 +284,9 @@
       "authorAssessment": "implemented and locally evidenced; independent exact-head review remains required",
       "nativeArtifacts": [
         {
-          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/CLASSES-AND-FLOORS.json",
-          "bytes": 3527,
-          "sha256": "d2df1501995af4d6d99b58ff25d44f1279a011b64f85032a6f25a112d1f5f56e"
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/CLASSES-AND-FLOORS-FINAL.json",
+          "bytes": 3588,
+          "sha256": "63fdc72b7c4eae6db2f65f95153890b09825364494b3c12cfa53c89c3196a0b2"
         },
         {
           "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/ROOT-RELEASE.json",
@@ -467,5 +467,6 @@
     "siblingsClosed": false,
     "sourceACMutation": false
   },
-  "independentReview": "ROOT restores the same syzygy-o0mz gate for a fresh corrected-head review. The preserved original raw verdict is Ready to merge? No.; this author emits no readiness verdict."
+  "independentReview": "ROOT restores the same syzygy-o0mz gate for a fresh corrected-head review. The preserved original raw verdict is Ready to merge? No.; this author emits no readiness verdict.",
+  "authorRoleCorrection": "The earlier f121 class/floor snapshot contained a mistaken independent-review sentence copied from the preserved reviewer assessment. The current class/floor record is explicitly an author Inferred assessment. All thirteen canonical criteria and the actual source6c full-M0 attribution remain unchanged."
 }

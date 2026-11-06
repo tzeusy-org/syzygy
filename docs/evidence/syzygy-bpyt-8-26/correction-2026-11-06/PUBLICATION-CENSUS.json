@@ -179,6 +179,13 @@
       "prohibitedOccurrences": 0
     },
     {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/AUTHOR-ROLE-DISPOSITION.json",
+      "bytes": 1977,
+      "sha256": "be827520bb537ff0f523f9ceb360f4be0dafde85f84fbb26ff4cfdabe80d9132",
+      "decodedBytes": 1977,
+      "prohibitedOccurrences": 0
+    },
+    {
       "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/AUXILIARY-BINDINGS.json",
       "bytes": 2756,
       "sha256": "281d0436b590cc21500da0c646a3f223d0ef280f2f57765e2b251f4cafef2148",
@@ -187,9 +194,9 @@
     },
     {
       "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/CLASSES-AND-FLOORS.json",
-      "bytes": 3527,
-      "sha256": "d2df1501995af4d6d99b58ff25d44f1279a011b64f85032a6f25a112d1f5f56e",
-      "decodedBytes": 3527,
+      "bytes": 3588,
+      "sha256": "63fdc72b7c4eae6db2f65f95153890b09825364494b3c12cfa53c89c3196a0b2",
+      "decodedBytes": 3588,
       "prohibitedOccurrences": 0
     },
     {
@@ -260,6 +267,13 @@
       "bytes": 1019124,
       "sha256": "97337b4ca9298a704e85ac9b0f49e585f45f6991e84dab4094579778e960e0ef",
       "decodedBytes": 30261229,
+      "prohibitedOccurrences": 0
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/MANIFEST.json",
+      "bytes": 16007,
+      "sha256": "7d289b4393281e46e7d5c8d5f0e0ae96c439b9457e9cc541796d2a8552ad225b",
+      "decodedBytes": 16007,
       "prohibitedOccurrences": 0
     },
     {
@@ -340,6 +354,13 @@
       "prohibitedOccurrences": 0
     },
     {
+      "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/PUBLICATION-CENSUS.json",
+      "bytes": 28799,
+      "sha256": "11ae00b7c96081d9a1c47b3eeca15e6705d712eb087337dc98d8f44a7631653a",
+      "decodedBytes": 28799,
+      "prohibitedOccurrences": 0
+    },
+    {
       "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/README.md",
       "bytes": 5647,
       "sha256": "30ee238ee43129f275dde29e035dfa8afea7753b430befe45ffe5369adbbe104",
@@ -397,9 +418,9 @@
     },
     {
       "path": "docs/evidence/syzygy-bpyt-8-26/correction-2026-11-06/scope-and-ac-map.json",
-      "bytes": 42182,
-      "sha256": "aa562a53974f351c0b539c588f84a401048929271a53a2aaa1fc80e44bc4fcd3",
-      "decodedBytes": 42182,
+      "bytes": 42521,
+      "sha256": "65e7b9811375d571d94c7aa76188478cc0226ef527ada7afcacd33fd17e58474",
+      "decodedBytes": 42521,
       "prohibitedOccurrences": 0
     },
     {
@@ -620,7 +641,7 @@
       "prohibitedOccurrences": 0
     }
   ],
-  "payloadDenominator": 87,
+  "payloadDenominator": 90,
   "projections": [
     {
       "path": "M0-full.json.commitments.json.gz",

@@ -1,0 +1,30 @@
+{
+  "schema": "author-role-claim-correction/1",
+  "priorIntegratedSubject": "f121434e41c17c2fc0f71805e006e22b03a768f8",
+  "originalSentence": "This review is an independent Inferred judgment. Root dispositions/custody are not runtime authentication; emitted test outcomes and deterministic recounts are separately identified.",
+  "correctedSentence": "This author class/floor assessment is Inferred. ROOT dispositions and custody are not runtime authentication; emitted test outcomes and deterministic recounts are separately identified. Fresh independent corrected-head review remains required.",
+  "originalPublicBytes": {
+    "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/preserved/published-f121-before-role-correction/CLASSES-AND-FLOORS.json",
+    "bytes": 3527,
+    "sha256": "d2df1501995af4d6d99b58ff25d44f1279a011b64f85032a6f25a112d1f5f56e"
+  },
+  "correctedAuthorRecord": {
+    "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/CLASSES-AND-FLOORS-FINAL.json",
+    "bytes": 3588,
+    "sha256": "63fdc72b7c4eae6db2f65f95153890b09825364494b3c12cfa53c89c3196a0b2"
+  },
+  "originalScopeMap": {
+    "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/preserved/published-f121-before-role-correction/scope-and-ac-map.json",
+    "bytes": 42182,
+    "sha256": "aa562a53974f351c0b539c588f84a401048929271a53a2aaa1fc80e44bc4fcd3"
+  },
+  "correctedScopeMap": {
+    "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/scope-and-ac-map-final.json",
+    "bytes": 42521,
+    "sha256": "65e7b9811375d571d94c7aa76188478cc0226ef527ada7afcacd33fd17e58474"
+  },
+  "sourceToolAndM0Unchanged": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+  "preservation": "Complete prior public correction directory, first broad gate and private proof archive retain their original bytes. This correction does not authenticate author evidence as independent review.",
+  "newExactHeadGateRequired": true,
+  "freshIndependentReviewStillRequired": true
+}
