@@ -90,8 +90,8 @@ function runSync(args: readonly string[], cwd: string, portEnv: Record<string, s
   return { status: result.status, stdout: mask(result.stdout), stderr: mask(result.stderr) };
 }
 
-async function runDaemon(args: readonly string[], cwd: string, env: Record<string, string>, stateDir: string): Promise<{
-  exit: number | null; rootStatus: number; stdout: string; stderr: string; stateWhileRunning: string[]; stateAfterExit: string[];
+async function runDaemon(args: readonly string[], cwd: string, env: Record<string, string>, stateDir: string, machine = false): Promise<{
+  exit: number | null; rootStatus: number; machineStatus?: number; stdout: string; stderr: string; stateWhileRunning: string[]; stateAfterExit: string[];
 }> {
   const child = spawn(process.execPath, [ENTRY, ...args], { cwd, env: { ...ENV, ...env }, stdio: ['ignore', 'pipe', 'pipe'] });
   let out = '';
@@ -109,11 +109,15 @@ async function runDaemon(args: readonly string[], cwd: string, env: Record<strin
     await new Promise((resolve) => setTimeout(resolve, 50));
   }
   const rootStatus = (await fetch(`http://127.0.0.1:${port}/`)).status;
+  // Fixture-owned credential: consumed only by fetch, never returned or logged.
+  const machineStatus = machine ? (await fetch(`http://127.0.0.1:${port}/api/project`, {
+    headers: { authorization: `Bearer ${readFileSync(path.join(stateDir, 'machine-credential.token'), 'utf8').trim()}` },
+  })).status : undefined;
   const stateWhileRunning = sweep(stateDir);
   child.kill('SIGINT');
   const exit = await exited;
   const mask = (text: string): string => text.split(stateDir).join('<STATE>').replace(/127\.0\.0\.1:\d+/g, '127.0.0.1:<PORT>');
-  return { exit, rootStatus, stdout: mask(out), stderr: mask(err), stateWhileRunning, stateAfterExit: sweep(stateDir) };
+  return { exit, rootStatus, ...(machine ? { machineStatus } : {}), stdout: mask(out), stderr: mask(err), stateWhileRunning, stateAfterExit: sweep(stateDir) };
 }
 
 describe('daemon entry: every invocation but `dossier` is unchanged', () => {
@@ -211,71 +215,167 @@ describe('daemon entry: the one changed input, `dossier` as the first argument',
     expect(sweep(dir)).toEqual(before);
   });
 
-  // A load hook preloaded into the built entry logs every module it loads from the POC app. The daemon path, served and
-  // shut down, asked for its usage and refused an argument, logs none; `dossier render`, which injects the renderer, logs
-  // the renderer's module, so the hook does see the POC app when it loads. This pins behavior, not where main.ts spells
-  // its imports (syzygy-bpyt.4.5).
+  // A preloaded hook watches the POC app and the exact parked modules declared by the existing island guard. The fixture
+  // drives / and an authenticated machine request, usage, refusal and shutdown. Separate real imports prove the hook
+  // sees the allowed renderer and each core-island URL. The static island guard covers unexercised transitive paths,
+  // including finite createRequire forms. A separate child drives the real closeOnSignal rejection arm with a fixture
+  // close port. This runtime row alone is not arbitrary-path coverage.
   it('the daemon path never loads the POC app, and the `dossier render` branch does', async () => {
     const { base: dir, root } = base();
     const stateDir = path.join(dir, 'state'), log = path.join(dir, 'poc-loads.txt'), hook = path.join(dir, 'poc-load-hook.mjs');
     const app = `${pathToFileURL(realpathSync(path.join(REPO_ROOT, 'apps', 'three-surface-poc'))).href}/`;
+    const guardText = readFileSync(path.join(REPO_ROOT, 'packages/polaris-generation-core/src/island-boundary.test.ts'), 'utf8');
+    const guard = ts.createSourceFile('island-boundary.test.ts', guardText, ts.ScriptTarget.Latest, true);
+    const lists: ts.ArrayLiteralExpression[] = [];
+    const findIsland = (node: ts.Node): void => {
+      if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.name.text === 'ISLAND'
+        && node.initializer !== undefined && ts.isArrayLiteralExpression(node.initializer)) lists.push(node.initializer);
+      ts.forEachChild(node, findIsland);
+    };
+    findIsland(guard);
+    expect(lists, 'the existing island guard declares one literal ISLAND population').toHaveLength(1);
+    const island = lists[0]!.elements.map((node) => {
+      expect(ts.isStringLiteral(node), 'each island module has a literal path').toBe(true);
+      return (node as ts.StringLiteral).text;
+    });
+    expect(island.length, 'the island population is nonempty').toBeGreaterThan(0);
+    const core = island.filter((file) => file.startsWith('packages/')).map((file) =>
+      pathToFileURL(realpathSync(path.join(REPO_ROOT, file.replace('/src/', '/dist/').replace(/\.ts$/u, '.js')))).href);
+    expect(core.length, 'the hook watches core island modules as well as the POC app').toBeGreaterThan(0);
     writeFileSync(log, '');
     writeFileSync(hook, [
       "import { appendFileSync } from 'node:fs';",
       "import { registerHooks } from 'node:module';",
       'registerHooks({ load(url, context, nextLoad) {',
-      '  if (url.startsWith(process.env.POC_APP_URL)) appendFileSync(process.env.POC_LOAD_LOG, `${url}\\n`);',
+      '  if (url.startsWith(process.env.POC_APP_URL) || JSON.parse(process.env.ISLAND_URLS).includes(url)) appendFileSync(process.env.POC_LOAD_LOG, `${url}\\n`);',
       '  return nextLoad(url, context);',
       '} });',
     ].join('\n'));
-    const hooked = { NODE_OPTIONS: `--import=${pathToFileURL(hook).href}`, POC_APP_URL: app, POC_LOAD_LOG: log };
-    const served = await runDaemon(['--root', root, '--state-dir', stateDir, '--port', '0'], dir, hooked, stateDir);
-    expect(served).toMatchObject({ exit: 0, rootStatus: 200, stderr: '' });
+    const hooked = { NODE_OPTIONS: `--import=${pathToFileURL(hook).href}`, POC_APP_URL: app, ISLAND_URLS: JSON.stringify(core), POC_LOAD_LOG: log };
+    const served = await runDaemon(['--root', root, '--state-dir', stateDir, '--port', '0'], dir, hooked, stateDir, true);
+    expect(served).toMatchObject({ exit: 0, rootStatus: 200, machineStatus: 200, stderr: '' });
     expect(runSync(['--help'], dir, { SYZYGY_PORT: '0', ...hooked })).toMatchObject({ status: 0, stderr: '' });
     expect(runSync(['--bogus'], dir, { SYZYGY_PORT: '0', ...hooked })).toMatchObject({ status: 1 });
+    const shutdown = pathToFileURL(realpathSync(path.join(REPO_ROOT, 'packages/http-host/dist/shutdown.js'))).href;
+    const failedClose = spawnSync(process.execPath, ['--input-type=module', '--eval', [
+      `import { closeOnSignal } from ${JSON.stringify(shutdown)};`,
+      'const listeners = new Map(), events = [];',
+      "const closed = closeOnSignal({ close: () => Promise.reject(new Error('fixture-close-failure')) }, {",
+      '  onSignal: (signal, listener) => listeners.set(signal, listener), announce: signal => events.push(signal),',
+      "  closeFailed: () => events.push('close-failed'),",
+      '});',
+      "listeners.get('SIGINT')(); await closed;",
+      `if (JSON.stringify(events) !== '["SIGINT","close-failed"]') throw new Error('close-failure control did not reach its callback');`,
+    ].join('\n')], { cwd: dir, env: { ...ENV, ...hooked }, encoding: 'utf8', timeout: RUN_SYNC_TIMEOUT_MS, killSignal: 'SIGKILL' });
+    expect(failedClose.error, 'close-failure control completes within the existing process bound').toBeUndefined();
+    expect(failedClose.status, 'the real closeOnSignal rejection reaches its fixture callback').toBe(0);
+    expect(failedClose.stderr, 'the close-failure control has no unrelated loader error').toBe('');
     expect(readFileSync(log, 'utf8')).toBe('');
     const rendered = runSync(['dossier', 'render', path.join(dir, 'absent'), '--json'], dir, { SYZYGY_PORT: '0', ...hooked });
     expect(JSON.parse(rendered.stdout)).toMatchObject({ command: 'render', outcome: 'refused', stage: 'run' });
     expect(readFileSync(log, 'utf8').split('\n')).toContain(`${app}dist/polaris-generation/dossier-site.js`);
+    writeFileSync(log, '');
+    const control = spawnSync(process.execPath, ['--input-type=module', '--eval',
+      `for (const url of ${JSON.stringify(core)}) await import(url);`], {
+      cwd: dir, env: { ...ENV, ...hooked }, encoding: 'utf8', timeout: RUN_SYNC_TIMEOUT_MS, killSignal: 'SIGKILL',
+    });
+    expect(control.error, 'core-island positive control completes within the existing process bound').toBeUndefined();
+    expect(control.status, 'core-island positive control imports successfully').toBe(0);
+    const observed = new Set(readFileSync(log, 'utf8').trim().split('\n'));
+    expect(core.filter((url) => !observed.has(url)), 'the hook observes every declared core-island URL').toEqual([]);
   });
 
-  // The kept part of the old text pin. A load the row above never reaches (on a start failure, in main()'s close-failure
-  // callback, at a request-time entry read, or behind a variable or a runtime hook the row does not set) shows only in the
-  // text, and only in main.ts: a load in http-host's close-failure branch reaches neither row. The branches are found
-  // by syntax, so a close that shares its line, sits at another indentation or carries an `else` cannot widen them: each is
-  // the one `if` in main(), or in an else chain there, on `argv[0] === 'dossier'` or `'polaris'`. An else would run on every
-  // other argv, so the only one allowed is the other branch. Both end before the daemon path, and every mention of the POC
-  // app in main.ts lies inside one of their blocks.
+  // The compiler-API text row. It checks the two exact argv dispatches structurally, their bounded control flow and the
+  // runtime naming scope in main.ts. Type-only declarations do not load modules. This is finite syntax handling, not
+  // general JavaScript control-flow or alias analysis; the runtime hook and existing transitive island guard complement it.
   it('every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path', () => {
     const text = readFileSync(path.join(REPO_ROOT, 'apps/syzygy/src/main.ts'), 'utf8');
     const source = ts.createSourceFile('main.ts', text, ts.ScriptTarget.Latest, true);
     const main = source.statements.find((statement): statement is ts.FunctionDeclaration => ts.isFunctionDeclaration(statement) && statement.name?.text === 'main');
     const body = main?.body?.statements ?? [];
+    const unwrap = (expression: ts.Expression): ts.Expression =>
+      ts.isParenthesizedExpression(expression) ? unwrap(expression.expression) : expression;
+    const conditionIs = (expression: ts.Expression, name: string): boolean => {
+      const condition = unwrap(expression);
+      if (!ts.isBinaryExpression(condition) || condition.operatorToken.kind !== ts.SyntaxKind.EqualsEqualsEqualsToken) return false;
+      const left = unwrap(condition.left), right = unwrap(condition.right);
+      return ts.isElementAccessExpression(left) && ts.isIdentifier(unwrap(left.expression))
+        && (unwrap(left.expression) as ts.Identifier).text === 'argv'
+        && left.argumentExpression !== undefined && ts.isNumericLiteral(unwrap(left.argumentExpression))
+        && (unwrap(left.argumentExpression) as ts.NumericLiteral).text === '0'
+        && ts.isStringLiteral(right) && right.text === name;
+    };
     const chain = (statement: ts.Statement): ts.IfStatement[] =>
       ts.isIfStatement(statement) ? [statement, ...(statement.elseStatement === undefined ? [] : chain(statement.elseStatement))] : [];
     const ifs = body.flatMap(chain);
-    const found = ['dossier', 'polaris'].map((name) => ifs.filter((statement) => statement.expression.getText(source) === `argv[0] === '${name}'`));
-    expect(found.map((branches) => branches.length)).toEqual([1, 1]);
+    const names = ['dossier', 'polaris'];
+    const found = names.map((name) => ifs.filter((statement) => conditionIs(statement.expression, name)));
+    for (const [index, matches] of found.entries()) expect(matches, `${names[index]}: exactly one argv[0] === name branch`).toHaveLength(1);
     const branches = found.map((matches) => matches[0]!);
     const daemon = body.find((statement) => statement.getText(source).startsWith('let parsed = parseCli('));
-    expect(daemon).toBeDefined();
-    for (const branch of branches) {
-      expect(branch.elseStatement === undefined || branches.includes(branch.elseStatement as ts.IfStatement)).toBe(true);
-      expect(branch.getEnd()).toBeLessThanOrEqual(daemon!.getStart(source));
+    expect(daemon, 'dispatch: the daemon parse boundary exists').toBeDefined();
+    // A deliberately bounded termination proof: unsupported statements do not establish termination. Nested functions
+    // do not terminate their enclosing branch; try/catch must terminate on both paths and finally cannot fall through
+    // an otherwise nonterminating try. Labels, loops and outer break/continue are not accepted as a proof of departure.
+    const terminates = (statement: ts.Statement): boolean => {
+      if (ts.isReturnStatement(statement) || ts.isThrowStatement(statement)) return true;
+      if (ts.isBlock(statement)) return statement.statements.some(terminates);
+      if (ts.isIfStatement(statement)) return statement.elseStatement !== undefined
+        && terminates(statement.thenStatement) && terminates(statement.elseStatement);
+      if (ts.isTryStatement(statement)) return (statement.finallyBlock !== undefined && terminates(statement.finallyBlock))
+        || (terminates(statement.tryBlock) && (statement.catchClause === undefined || terminates(statement.catchClause.block)));
+      return false;
+    };
+    const argvDeclarations: ts.VariableDeclaration[] = [];
+    const processArgvUses: ts.PropertyAccessExpression[] = [];
+    const reentries: string[] = [];
+    const argvWrites: string[] = [];
+    const inspect = (node: ts.Node): void => {
+      if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.name.text === 'argv') argvDeclarations.push(node);
+      if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 'process'
+        && node.name.text === 'argv') processArgvUses.push(node);
+      if (ts.isCallExpression(node) && ts.isIdentifier(unwrap(node.expression))
+        && (unwrap(node.expression) as ts.Identifier).text === 'main') reentries.push(node.getText(source));
+      if (ts.isBinaryExpression(node) && node.operatorToken.kind >= ts.SyntaxKind.FirstAssignment
+        && node.operatorToken.kind <= ts.SyntaxKind.LastAssignment && /^argv(?:\W|$)/u.test(node.left.getText(source))) argvWrites.push(node.getText(source));
+      if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)
+        && ts.isIdentifier(node.expression.expression) && node.expression.expression.text === 'argv'
+        && ['splice', 'push', 'pop', 'shift', 'unshift', 'sort', 'reverse', 'fill', 'copyWithin'].includes(node.expression.name.text)) argvWrites.push(node.getText(source));
+      ts.forEachChild(node, inspect);
+    };
+    if (main?.body !== undefined) inspect(main.body);
+    expect(argvDeclarations, 'dispatch: argv has one immutable origin without a shadow declaration').toHaveLength(1);
+    const argv = argvDeclarations[0]!;
+    expect(ts.isVariableDeclarationList(argv.parent) && (argv.parent.flags & ts.NodeFlags.Const) !== 0,
+      'dispatch: argv is const').toBe(true);
+    expect(argv.initializer?.getText(source), 'dispatch: argv originates directly from process.argv.slice(2)').toBe('process.argv.slice(2)');
+    expect(argvWrites, 'dispatch: argv cannot be rewritten into a CLI branch').toEqual([]);
+    expect(reentries, 'dispatch: a loaded CLI branch cannot re-enter main').toEqual([]);
+    const allowedArgvUses = [argv.initializer, daemon].filter((node): node is ts.Expression | ts.Statement => node !== undefined);
+    expect(processArgvUses.filter((node) => !allowedArgvUses.some((allowed) => node.pos >= allowed.pos && node.end <= allowed.end))
+      .map((node) => node.parent.getText(source)), 'dispatch: process.argv has no additional use or mutation').toEqual([]);
+    for (const [index, branch] of branches.entries()) {
+      const name = names[index];
+      expect(branch.elseStatement === undefined || branches.includes(branch.elseStatement as ts.IfStatement), `${name}: only the other dispatch may be its else`).toBe(true);
+      expect(branch.getEnd(), `${name}: the complete dispatch precedes the daemon parse`).toBeLessThanOrEqual(daemon!.getStart(source));
+      expect(terminates(branch.thenStatement), `${name}: every branch path leaves before the daemon parse`).toBe(true);
     }
     const blocks = branches.map((branch) => [branch.thenStatement.getStart(source), branch.thenStatement.getEnd()] as const);
     const mentions: number[] = [];
-    for (let at = text.indexOf('three-surface-poc-app'); at !== -1; at = text.indexOf('three-surface-poc-app', at + 1)) mentions.push(at);
-    expect(mentions.length).toBeGreaterThan(0);
+    const typeOnly = source.statements.filter((statement) => ts.isImportDeclaration(statement) && statement.importClause?.isTypeOnly);
+    for (let at = text.indexOf('three-surface-poc-app'); at !== -1; at = text.indexOf('three-surface-poc-app', at + 1)) {
+      if (!typeOnly.some((statement) => at >= statement.getStart(source) && at < statement.getEnd())) mentions.push(at);
+    }
+    expect(mentions.length, 'dispatch: runtime POC imports are present').toBeGreaterThan(0);
     const lineAt = (at: number): string => text.slice(text.lastIndexOf('\n', at) + 1, text.indexOf('\n', at));
-    expect(mentions.filter((at) => !blocks.some(([start, end]) => at > start && at < end)).map(lineAt)).toEqual([]);
+    expect(mentions.filter((at) => !blocks.some(([start, end]) => at > start && at < end)).map(lineAt),
+      'dispatch: runtime POC mentions stay inside dossier/polaris branch blocks').toEqual([]);
   });
 
-  // Restored from the base byte for byte (syzygy-bpyt.4.5, round 3's stopping rule). The two rows above pass a then-block
-  // that loads the POC app and then falls through, re-enters main(), breaks out of a label or schedules a callback
-  // (rev-532c's Y1-Y5); this pin fails each, since each adds a line naming the app. Its known false refusals, which the
-  // rows above pass: a comment naming the app in the dossier branch, the renderer bound under another name, the two
-  // branches swapped, the dossier import in a nested function and the polaris import in a nested try.
+  // Restored from the base byte for byte (syzygy-bpyt.4.5, round 3's stopping rule); the compiler row now also checks
+  // branch termination. Among its false refusals, which the rows above pass: a comment naming the app in the dossier
+  // branch, the renderer bound under another name, the two branches swapped, the dossier import in a nested function,
+  // the polaris import in a nested try, G1's Allman brace/wrapped import and G2's block comments around else/in the condition.
   // The `polaris` branch (prototype, POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14) injects the same renderer the same way.
   it('the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch', () => {
     const main = readFileSync(path.join(REPO_ROOT, 'apps/syzygy/src/main.ts'), 'utf8');
