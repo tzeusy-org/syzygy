@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/isolated.py",
+    "sha256": "cc3e60d6961356b1dd6f891c9e009d22a48bae70503766f9991bc187707e3435",
+    "adaptedFrom": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/isolated.py"
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/capture_inside.py",
+    "sha256": "5315151d0bc1caab413ff47f149fb864d05a330914f8fcacc4e7629f6c1e2cb9",
+    "adaptedFrom": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/capture_inside.py"
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/capture-battery.py",
+    "sha256": "902701a4624fed443a69e9efc18f1d4a71b9db0be99fd16e11690137659166b3",
+    "adaptedFrom": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/capture-battery.py"
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/final_gate.py",
+    "sha256": "2434c8a65b5d2dde194785372a0630e54c0dda0be1aabc6e67c56917a58c1d0a",
+    "adaptedFrom": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/final_gate.py"
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/bin/python3",
+    "sha256": "b294522f2be44542928d75ae1e87a7f9d9a02a234407f9d0f7b6ed708c2e870f",
+    "adaptedFrom": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/bin/python3"
+  },
+  {
+    "path": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/prepare-cache.cjs",
+    "sha256": "9636346089b1cc0b66ad95701befa8634e7a6f559948778f7b6cd291aef82bff",
+    "adaptedFrom": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/prepare-cache.cjs"
+  }
+]

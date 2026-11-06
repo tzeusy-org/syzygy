@@ -1,0 +1,76 @@
+{
+  "classes": [
+    {
+      "id": 1,
+      "applies": true,
+      "assessment": "Test/evidence checks of daemon/adapter boundaries; no production authority delta."
+    },
+    {
+      "id": 2,
+      "applies": false,
+      "assessment": "No entity minting/continuity/split/merge delta."
+    },
+    {
+      "id": 3,
+      "applies": true,
+      "assessment": "Exact population, source identity and deterministic evidence-record validation."
+    },
+    {
+      "id": 4,
+      "applies": true,
+      "assessment": "Parked-island load protection and fixture-authenticated request coverage."
+    },
+    {
+      "id": 5,
+      "applies": false,
+      "assessment": "No schema/store migration or identity-affecting store change."
+    },
+    {
+      "id": 6,
+      "applies": true,
+      "assessment": "CLI/endpoint behavior protection and evidence-tool outputs; no endpoint removal."
+    },
+    {
+      "id": 7,
+      "applies": false,
+      "assessment": "No certificate logic."
+    }
+  ],
+  "floors": [
+    {
+      "id": 1,
+      "name": "truth",
+      "assessment": "partly blocked by F1: complete first-control retention is unproved; actual reviewed source behavior remains unchanged"
+    },
+    {
+      "id": 2,
+      "name": "evidence",
+      "assessment": "blocked for F1 witness; missing first raw cannot certify full retained control population"
+    },
+    {
+      "id": 3,
+      "name": "inference",
+      "assessment": "preserved: source interpretations labelled; read-time byte capture not promoted to execution"
+    },
+    {
+      "id": 4,
+      "name": "write",
+      "assessment": "preserved: no new product write path/authority"
+    },
+    {
+      "id": 5,
+      "name": "sign-off",
+      "assessment": "preserved: no normative/adopted/signed bytes or posture changes"
+    },
+    {
+      "id": 6,
+      "name": "security",
+      "assessment": "preserved: fixture machine credential passed only to fetch; no observed bodies/provider calls; private runtime"
+    },
+    {
+      "id": 7,
+      "name": "identity",
+      "assessment": "preserved: no kernel IDs/remint/schema migration"
+    }
+  ]
+}
