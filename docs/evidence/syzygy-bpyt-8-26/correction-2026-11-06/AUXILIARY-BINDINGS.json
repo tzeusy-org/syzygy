@@ -1,0 +1,73 @@
+{
+  "schema": "corrected-auxiliary-evidence-subject-bindings/1",
+  "sourceToolCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+  "records": [
+    {
+      "summary": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/WORKER-QUALIFICATION.json",
+        "bytes": 451,
+        "sha256": "30b536bb948c1dab1587179c9ba968282cc7f1b0a46b4d368cdd193f7a44607e"
+      },
+      "subjects": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/qualification-serial.json",
+          "bytes": 8970625,
+          "sha256": "eb3847bd3b78bbc1085effc0bc6da2fe94661a7398d02cc5d34aeed535d37187"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/qualification-parallel.json",
+          "bytes": 8970626,
+          "sha256": "d01e1f4e9e88fb8410f969aef7d165b77602eba3a7216a445566e8a8e529aeb2"
+        }
+      ]
+    },
+    {
+      "summary": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/FRESHNESS-RECOUNT.json",
+        "bytes": 2534,
+        "sha256": "8c35fa64f82b71e920e94d8e4b9574666618426638eb4eb736dce0eecc67357b"
+      },
+      "subjects": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/M0-full.json",
+          "bytes": 50847808,
+          "sha256": "bf3ca1cc16a7a2d0975c0c569b7a6ea3f1e1f403aad830512c17fcd6cf258205"
+        }
+      ]
+    },
+    {
+      "summary": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/PROJECTION-CONTROLS.json",
+        "bytes": 1658,
+        "sha256": "dc32afd95c1df653f3efd1e5462e9a9ec6e2d3473b1792836fa71ff3c1a500f4"
+      },
+      "subjects": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/qualification-serial.json",
+          "bytes": 8970625,
+          "sha256": "eb3847bd3b78bbc1085effc0bc6da2fe94661a7398d02cc5d34aeed535d37187"
+        }
+      ],
+      "checker": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/verify_projection_controls.py",
+        "bytes": 1601,
+        "sha256": "ead043a62316743ff8b05a539041a1bb531e304209372997085b1a7126112931"
+      }
+    },
+    {
+      "summary": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/CACHE-VERIFICATION.json",
+        "bytes": 24465,
+        "sha256": "00e375372aca1baa28ba6f3be659c7f817e126521e305fcd3eee53cb03ca8007"
+      },
+      "subjects": [
+        {
+          "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/STATIC-CACHE-PLAN.json",
+          "bytes": 25298,
+          "sha256": "60e994f2fbbe77a50b97ff45acc3661bd631b1b8613367fb832ae9d37cab7da9"
+        }
+      ],
+      "lockfileSha256": "49c65f0bd66a5a94c64be879bdb4c94062236bdca2d0eb5990b35c41894167cd"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "corrected-count-independent-check/1",
+  "subject": {
+    "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/COUNT-selected.json",
+    "bytes": 6319755,
+    "sha256": "e62d2602120b837bb394bd78120c6edd0d3e38499fbedc9d14c46acbf3a0c0d2"
+  },
+  "toolSha256": "55c2a4b56c936a3b31aa53bb4d9d0002b5b046eb7746c8353bc1b378e12f788a",
+  "worlds": 4,
+  "expectedAnswers": 184,
+  "errors": [],
+  "success": true
+}

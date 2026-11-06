@@ -1,0 +1,162 @@
+{
+  "schema": "corrected-complete-projection-replay/1",
+  "sourceToolCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+  "toolSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+  "records": [
+    {
+      "file": "M0-full.json.commitments.json.gz",
+      "native": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/M0-full.json",
+        "bytes": 50847808,
+        "sha256": "bf3ca1cc16a7a2d0975c0c569b7a6ea3f1e1f403aad830512c17fcd6cf258205",
+        "schema": "consent-act-family-differential/3"
+      },
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 5403,
+        "answers": 70999,
+        "valueCommitments": 777,
+        "rawSha256": "bf3ca1cc16a7a2d0975c0c569b7a6ea3f1e1f403aad830512c17fcd6cf258205"
+      }
+    },
+    {
+      "file": "qualification-serial.json.commitments.json.gz",
+      "native": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/qualification-serial.json",
+        "bytes": 8970625,
+        "sha256": "eb3847bd3b78bbc1085effc0bc6da2fe94661a7398d02cc5d34aeed535d37187",
+        "schema": "consent-act-family-differential/3"
+      },
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 12,
+        "answers": 274,
+        "valueCommitments": 59,
+        "rawSha256": "eb3847bd3b78bbc1085effc0bc6da2fe94661a7398d02cc5d34aeed535d37187"
+      }
+    },
+    {
+      "file": "qualification-parallel.json.commitments.json.gz",
+      "native": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/qualification-parallel.json",
+        "bytes": 8970626,
+        "sha256": "d01e1f4e9e88fb8410f969aef7d165b77602eba3a7216a445566e8a8e529aeb2",
+        "schema": "consent-act-family-differential/3"
+      },
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 12,
+        "answers": 274,
+        "valueCommitments": 59,
+        "rawSha256": "d01e1f4e9e88fb8410f969aef7d165b77602eba3a7216a445566e8a8e529aeb2"
+      }
+    },
+    {
+      "file": "NC-supersession-inforce.json.commitments.json.gz",
+      "native": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-supersession-inforce.json",
+        "bytes": 8557433,
+        "sha256": "0f30237a509d27335bce8fcc6279a1c99e98123f55cba462b0f210b0b2e38eb6",
+        "schema": "consent-act-family-differential/3"
+      },
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 1,
+        "answers": 6,
+        "valueCommitments": 6,
+        "rawSha256": "0f30237a509d27335bce8fcc6279a1c99e98123f55cba462b0f210b0b2e38eb6"
+      }
+    },
+    {
+      "file": "NC-blunt-inforce.json.commitments.json.gz",
+      "native": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-blunt-inforce.json",
+        "bytes": 8859158,
+        "sha256": "c06a00840a4cfb6fdbecd8b54c82cc323570fb21bcd6b27ad219336174fc1b39",
+        "schema": "consent-act-family-differential/3"
+      },
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 8,
+        "answers": 368,
+        "valueCommitments": 42,
+        "rawSha256": "c06a00840a4cfb6fdbecd8b54c82cc323570fb21bcd6b27ad219336174fc1b39"
+      }
+    },
+    {
+      "file": "NC-unrelated-reader-cannot-satisfy-port.json.commitments.json.gz",
+      "native": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-unrelated-reader-cannot-satisfy-port.json",
+        "bytes": 8746187,
+        "sha256": "ecbd7bd5d10db2eb7d08b813e9a95c928419400c90d9c11088f89df797de1485",
+        "schema": "consent-act-family-differential/3"
+      },
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 4,
+        "answers": 184,
+        "valueCommitments": 39,
+        "rawSha256": "ecbd7bd5d10db2eb7d08b813e9a95c928419400c90d9c11088f89df797de1485"
+      }
+    },
+    {
+      "file": "NC-requests-ids.json.commitments.json.gz",
+      "native": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-ids.json",
+        "bytes": 8750906,
+        "sha256": "72f484d46849ce97918e21afa8fa186944a8c5c546b994d44a72943d8c844d52",
+        "schema": "consent-act-family-differential/3"
+      },
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 4,
+        "answers": 184,
+        "valueCommitments": 39,
+        "rawSha256": "72f484d46849ce97918e21afa8fa186944a8c5c546b994d44a72943d8c844d52"
+      }
+    },
+    {
+      "file": "NC-requests-absence.json.commitments.json.gz",
+      "native": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-absence.json",
+        "bytes": 8750961,
+        "sha256": "f026bb3796ab3bde720d6b882d27ef69a0923191782e2855425620cfc82db575",
+        "schema": "consent-act-family-differential/3"
+      },
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 4,
+        "answers": 184,
+        "valueCommitments": 39,
+        "rawSha256": "f026bb3796ab3bde720d6b882d27ef69a0923191782e2855425620cfc82db575"
+      }
+    },
+    {
+      "file": "NC-requests-revisions.json.commitments.json.gz",
+      "native": {
+        "path": "/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106/NC-requests-revisions.json",
+        "bytes": 8750992,
+        "sha256": "65a7d1e7e3e9e98af39c0971725bfe30a90a3451fd6bef25e753fcfe7ea7176d",
+        "schema": "consent-act-family-differential/3"
+      },
+      "verification": {
+        "success": true,
+        "errors": [],
+        "worlds": 4,
+        "answers": 184,
+        "valueCommitments": 39,
+        "rawSha256": "65a7d1e7e3e9e98af39c0971725bfe30a90a3451fd6bef25e753fcfe7ea7176d"
+      }
+    }
+  ],
+  "success": true,
+  "actor": "author-computed replay, distinct from pending independent review"
+}

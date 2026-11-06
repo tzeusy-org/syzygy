@@ -1,0 +1,25 @@
+#!/usr/bin/python3
+"""Owned-fixture verification namespace; no source or assertion substitutions."""
+import hashlib,json,os,subprocess,sys,tempfile
+from pathlib import Path
+OWN=Path('/home/orca/.tmp/syzygy-pr772-f1-f2-correction-20261106'); NODE=Path('/home/orca/.nvm/versions/node/v24.6.0')
+tempfile.tempdir=str(OWN/'tmp')
+for name in ('tmp','home','cache'): (OWN/name).mkdir(exist_ok=True)
+cwd=Path(sys.argv[1]).resolve(); assert cwd == Path('/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.26') or cwd in [OWN/'old', OWN/'new', OWN/'subject'] or (OWN/'controls') in cwd.parents
+environment={'HOME':str(OWN/'home'),'TMPDIR':'/tmp','TMP':'/tmp','TEMP':'/tmp','TMPPREFIX':'/tmp','XDG_CACHE_HOME':str(OWN/'xdg-cache'),'XDG_CONFIG_HOME':str(OWN/'xdg-config'),'XDG_DATA_HOME':str(OWN/'xdg-data'),
+ 'PATH':str(OWN/'bin')+':'+str(NODE/'bin')+':/usr/bin:/bin','LANG':'C.UTF-8','TZ':'Asia/Singapore',
+ 'NPM_CONFIG_CACHE':str(OWN/('cache-historical' if cwd == OWN/'historical' else 'cache')),'NPM_CONFIG_OFFLINE':'true','NPM_CONFIG_AUDIT':'false','NPM_CONFIG_FUND':'false',
+ 'NPM_CONFIG_USERCONFIG':str(OWN/'user.npmrc'),'NPM_CONFIG_GLOBALCONFIG':str(OWN/'global.npmrc'),
+ 'GIT_CONFIG_NOSYSTEM':'1','GIT_CONFIG_GLOBAL':'/dev/null','SYZYGY_POC_BROWSER':'/opt/google/chrome/google-chrome'}
+argv=['bwrap','--unshare-pid','--unshare-net','--die-with-parent','--new-session','--clearenv',
+ '--ro-bind','/usr','/usr','--ro-bind','/lib','/lib','--ro-bind','/lib64','/lib64',
+ '--ro-bind','/opt/google/chrome','/opt/google/chrome','--symlink','usr/bin','/bin',
+ '--proc','/proc','--dev','/dev','--dir','/etc','--ro-bind','/etc/fonts','/etc/fonts','--bind',str(OWN),str(OWN),
+ '--ro-bind',str(OWN/'etc-hosts'),'/etc/hosts','--ro-bind',str(OWN/'etc-nsswitch.conf'),'/etc/nsswitch.conf',
+ '--ro-bind',str(OWN/'etc-resolv.conf'),'/etc/resolv.conf',
+ '--bind','/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.26','/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.8.26','--ro-bind','/home/orca/orca/projects/syzygy/.git','/home/orca/orca/projects/syzygy/.git','--ro-bind',str(NODE),str(NODE),'--bind',str(OWN/'tmp'),'/tmp','--chdir',str(cwd)]
+for key,value in environment.items(): argv+=['--setenv',key,value]
+argv+=['--',*sys.argv[2:]]
+receipt={'schema':'owned-filesystem-namespace-command/1','cwd':str(cwd),'argv':argv,'environment':environment,'adapter_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+with (OWN/'isolation-commands.jsonl').open('a') as out:out.write(json.dumps(receipt)+'\n')
+raise SystemExit(subprocess.call(argv))

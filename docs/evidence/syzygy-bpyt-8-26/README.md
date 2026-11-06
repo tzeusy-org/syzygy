@@ -1,0 +1,7 @@
+# Consent records-port differential
+
+[Observed] The current complete correction packet is [correction-2026-11-06/README.md](correction-2026-11-06/README.md), with a complete original thirteen-criterion map and fresh full-corpus proof. It corrects PR 772 findings F1 (three missing Requests gate queries) and F2 (count subject/tool/fixture binding).
+
+[Observed] Pre-existing payloads in this directory retain their historical source subjects: full134, bridge2a and integrated4dc. Their original six-question gate aggregate is incomplete for the required Requests coverage; their old count output has no subject/tool/fixture binding. They do not establish the corrected tool's normal proof. Their exact original README and manifest-bound bytes remain in the preserved pre-correction packet and at commit 4dc2af1e57bfc3e09ec8d5839e46c277eb521878. The root MANIFEST.json is the frozen historical manifest; the correction directory's MANIFEST.json binds the complete current published population.
+
+[Observed] Public compressed evidence contains full comparison matrices and exact-value commitments. Complete native values and identity bodies remain in frozen private archives, required for full-value review. Product source and tests remain unchanged (Vitest +0 ~0 -0). ROOT owns fresh independent review, cycle notice, exact hosted/custody/authority refresh, permitted landing and lifecycle; this page asserts no merge readiness or owner adoption.

@@ -1,0 +1,1385 @@
+{
+  "schema": "consent-differential-rule6/1",
+  "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+  "M0Sha256": "cfe9e4c7dc36a5212f7357e0dce692897c2930fe554a4968ca09e968b567bc7e",
+  "mutations": [
+    {
+      "id": "selection-filter",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "generated.filter(w => kinds.includes(w.kind))",
+      "new": "generated.filter(w => true)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "12c57d1a451bf49ccf712f658722342108375150d899676bbf0e6bd1311df562",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:46.128439+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/selection-filter.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-selection-filter\", \"startedAt\": \"2026-11-06T04:52:46.154384+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/selection-filter.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:46.388271+00:00\", \"elapsedSeconds\": 0.2316703819669783, \"streams\": {\"rule6-selection-filter.stdout\": {\"bytes\": 3396, \"sha256\": \"ef4cfebfb342828f7cd0fd4a3ccc729fd3910713535e19040d32f5b67946d669\"}, \"rule6-selection-filter.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-selection-filter.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "selection includes requested worlds",
+        "count uses selected population"
+      ],
+      "finishedAt": "2026-11-06T04:52:46.394768+00:00"
+    },
+    {
+      "id": "population-count",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "return { worlds: worlds.length, byKind };",
+      "new": "return { worlds: worlds.length + 1, byKind };",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "e8fe75b1a9e315efa837af163c86cdbd45732b1d98e88492403c8f353f4ef954",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:46.394925+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/population-count.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-population-count\", \"startedAt\": \"2026-11-06T04:52:46.421044+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/population-count.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:46.658245+00:00\", \"elapsedSeconds\": 0.23349281499395147, \"streams\": {\"rule6-population-count.stdout\": {\"bytes\": 3176, \"sha256\": \"f4276dd13b9ae5d4bdf66d14a990b15f7619c882cdb59473500162c3f46aba8a\"}, \"rule6-population-count.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-population-count.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "count uses selected population",
+        "generated count remains separate",
+        "three steps and two instants are six answers in one world"
+      ],
+      "finishedAt": "2026-11-06T04:52:46.665221+00:00"
+    },
+    {
+      "id": "identity-positional",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "const a = old.get(identity.key), b = next.get(identity.key);",
+      "new": "const a = old.get(identity.key), b = [...next.values()][0];",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "5dfd9b75d6bf57d4cc44f5b59c4a464b7d568d5451d80b0b1c7186d6743aaf9d",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:46.665366+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/identity-positional.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-identity-positional\", \"startedAt\": \"2026-11-06T04:52:46.691348+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/identity-positional.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:46.962608+00:00\", \"elapsedSeconds\": 0.26891124300891533, \"streams\": {\"rule6-identity-positional.stdout\": {\"bytes\": 2866, \"sha256\": \"f7df443bd7beed7e20c00c368d197be69106ae7140f406b62b717cd45b54d589\"}, \"rule6-identity-positional.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-identity-positional.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 3,
+      "failedCases": [
+        "order-independent key pairing"
+      ],
+      "finishedAt": "2026-11-06T04:52:46.969792+00:00"
+    },
+    {
+      "id": "new-keyset",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (map.size !== expected.length || expected.some(e => !map.has(e.key)))",
+      "new": "if (map.size !== expected.length)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "23432ed7e75ec946a07fb002a3f26149bf00d626eefcb30422da1b7cc8dafc99",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:46.969896+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/new-keyset.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-new-keyset\", \"startedAt\": \"2026-11-06T04:52:46.996330+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/new-keyset.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:47.251917+00:00\", \"elapsedSeconds\": 0.2530273890006356, \"streams\": {\"rule6-new-keyset.stdout\": {\"bytes\": 2976, \"sha256\": \"7031f62cea0defe0f4c8f1d05567a57fa8a5eac470a1b10d83d9cf7fe9b39b16\"}, \"rule6-new-keyset.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-new-keyset.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "same-length wrong key rejected"
+      ],
+      "finishedAt": "2026-11-06T04:52:47.258080+00:00"
+    },
+    {
+      "id": "metadata-identity",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (JSON.stringify(row[4]) !== JSON.stringify({ reader: identity.reader, step: identity.step, instant: identity.instant }))",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "46de13a3f6a3508fc00e90f3285696265607eb24fa5c84d5bbef6a4e89c51ff1",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:47.258164+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/metadata-identity.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-metadata-identity\", \"startedAt\": \"2026-11-06T04:52:47.286129+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/metadata-identity.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:47.541271+00:00\", \"elapsedSeconds\": 0.2531524150399491, \"streams\": {\"rule6-metadata-identity.stdout\": {\"bytes\": 2869, \"sha256\": \"9b51cd7912607399f1bcbc66a58032afe5cdd4221a3c2b271a1440dee321b362\"}, \"rule6-metadata-identity.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-metadata-identity.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 6,
+      "failedCases": [
+        "metadata identity rejected"
+      ],
+      "finishedAt": "2026-11-06T04:52:47.548224+00:00"
+    },
+    {
+      "id": "complete-value-binding",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (typeof row[3] !== 'string' || sha256(row[3]) !== row[1])",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "7f416bcb528e0df1c633c976e1f20411cabc5bc2d92c2eb371076af3ccd02113",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:47.548328+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/complete-value-binding.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-complete-value-binding\", \"startedAt\": \"2026-11-06T04:52:47.577670+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/complete-value-binding.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:47.844143+00:00\", \"elapsedSeconds\": 0.2637982820160687, \"streams\": {\"rule6-complete-value-binding.stdout\": {\"bytes\": 2869, \"sha256\": \"b54f360233a2f7178192633b5e44db4db1f0e97fc99810ef9422d69551b66115\"}, \"rule6-complete-value-binding.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-complete-value-binding.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 6,
+      "failedCases": [
+        "digest/value mismatch rejected"
+      ],
+      "finishedAt": "2026-11-06T04:52:47.851081+00:00"
+    },
+    {
+      "id": "unrelated-reader-total",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "return expected.filter(reader => !(perReader[reader]?.answers > 0 && perReader[reader]?.mismatches > 0));",
+      "new": "return Object.values(perReader).some(r => r.mismatches > 0) ? [] : expected;",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "7507a62aaf095f37022ed0fcfad349d2738327f26da683a443492f7658c85eb3",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:47.851181+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/unrelated-reader-total.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-unrelated-reader-total\", \"startedAt\": \"2026-11-06T04:52:47.876088+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/unrelated-reader-total.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:48.168377+00:00\", \"elapsedSeconds\": 0.2900888220174238, \"streams\": {\"rule6-unrelated-reader-total.stdout\": {\"bytes\": 3220, \"sha256\": \"430b2d9161631a91f1ed7ae47fb9ffbc146a2d15e4e6d77f46f2394c4be7a8e1\"}, \"rule6-unrelated-reader-total.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-unrelated-reader-total.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "unrelated mismatch cannot satisfy port",
+        "positive mismatches need positive denominator",
+        "each demanded reader must differ"
+      ],
+      "finishedAt": "2026-11-06T04:52:48.175254+00:00"
+    },
+    {
+      "id": "positive-reader-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "perReader[reader]?.answers > 0 && perReader[reader]?.mismatches > 0",
+      "new": "perReader[reader]?.mismatches > 0",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "6b5f1f67d24f82babfee9ede70ad3fba74d78c3a2c163a28625610f49f5f3dae",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:48.175366+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/positive-reader-denominator.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-positive-reader-denominator\", \"startedAt\": \"2026-11-06T04:52:48.200003+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/positive-reader-denominator.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:48.459531+00:00\", \"elapsedSeconds\": 0.25743195199174806, \"streams\": {\"rule6-positive-reader-denominator.stdout\": {\"bytes\": 2937, \"sha256\": \"2b82838c3bdd649f2bf242487f72b9e5e074fb1a3ea34de4d44fb9417bf0478d\"}, \"rule6-positive-reader-denominator.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-positive-reader-denominator.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "positive mismatches need positive denominator"
+      ],
+      "finishedAt": "2026-11-06T04:52:48.468216+00:00"
+    },
+    {
+      "id": "known-unique-expectations",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (names === undefined || names.length === 0 || names.some(n => n === '') || new Set(names).size !== names.length || names.some(n => !known.has(n)))",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "bfe0e8e8daf7b4a85aaf468e340bedbc0b7abe028de884083fbdf040b6869cbb",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:48.468334+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/known-unique-expectations.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-known-unique-expectations\", \"startedAt\": \"2026-11-06T04:52:48.505329+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/known-unique-expectations.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:48.807000+00:00\", \"elapsedSeconds\": 0.29725524300010875, \"streams\": {\"rule6-known-unique-expectations.stdout\": {\"bytes\": 3153, \"sha256\": \"a5ccde14de6c12b8eb69398dfec32a7b7f6ecb52cac8602eb8c7da013e317446\"}, \"rule6-known-unique-expectations.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-known-unique-expectations.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "absent control expectation rejected",
+        "empty control expectation rejected",
+        "empty name control expectation rejected",
+        "duplicate control expectation rejected",
+        "unknown control expectation rejected"
+      ],
+      "finishedAt": "2026-11-06T04:52:48.814253+00:00"
+    },
+    {
+      "id": "empty-answer-population",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (rows.length === 0) throw new Error('zero executed answer population');",
+      "new": "if (false) throw new Error('zero executed answer population');",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "602166b4b9f23bcaba7ffee795848aa77d6b1d3f2e25f3137aca08f695c75444",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:48.814368+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/empty-answer-population.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-empty-answer-population\", \"startedAt\": \"2026-11-06T04:52:48.845544+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/empty-answer-population.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:49.115802+00:00\", \"elapsedSeconds\": 0.26773034199140966, \"streams\": {\"rule6-empty-answer-population.stdout\": {\"bytes\": 2869, \"sha256\": \"38d7b9fe6c50e9a84a30e9ac0e6aacb9533766456e26cffc94185a5bc3a88c29\"}, \"rule6-empty-answer-population.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-empty-answer-population.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "zero answers rejected"
+      ],
+      "finishedAt": "2026-11-06T04:52:49.122797+00:00"
+    },
+    {
+      "id": "empty-selected-population",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (selected.length === 0) throw new Error('empty selected world population');",
+      "new": "if (false) throw new Error('empty selected world population');",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "d6d3744abed6655523f711f97fc838496a9986f9d050a884240df882cad96b72",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:49.122905+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/empty-selected-population.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-empty-selected-population\", \"startedAt\": \"2026-11-06T04:52:49.155963+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/empty-selected-population.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:49.456735+00:00\", \"elapsedSeconds\": 0.29848771303659305, \"streams\": {\"rule6-empty-selected-population.stdout\": {\"bytes\": 2869, \"sha256\": \"fc242c84e1fc86c1a8296c9a9dd4622fec50275b5f4b884c8d32562af73a4ed7\"}, \"rule6-empty-selected-population.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-empty-selected-population.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "empty selection rejected"
+      ],
+      "finishedAt": "2026-11-06T04:52:49.464499+00:00"
+    },
+    {
+      "id": "absent-method",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (typeof port.consentAbsenceFor !== 'function')",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "abadcb95e4c11a3f0255f05975969e139471cfeda46025a5a0b1c9abdd3b111d",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:49.464604+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/absent-method.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-absent-method\", \"startedAt\": \"2026-11-06T04:52:49.490600+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/absent-method.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:49.768225+00:00\", \"elapsedSeconds\": 0.27536465896992013, \"streams\": {\"rule6-absent-method.stdout\": {\"bytes\": 2869, \"sha256\": \"b7e0ec646c18b8c345fc7337bc6d8d76a044ecb4fbdf77d2be4fc97cb1f450cb\"}, \"rule6-absent-method.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-absent-method.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "missing optional-method implementation is fatal"
+      ],
+      "finishedAt": "2026-11-06T04:52:49.775389+00:00"
+    },
+    {
+      "id": "cleanup-leftover",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "cb8dce313bd8fae79d5b07205c8d76be791f17ee033a0cddb1ff2e9e85d73c7b",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:49.775535+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/cleanup-leftover.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-cleanup-leftover\", \"startedAt\": \"2026-11-06T04:52:49.804005+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/cleanup-leftover.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:50.071522+00:00\", \"elapsedSeconds\": 0.2646434790221974, \"streams\": {\"rule6-cleanup-leftover.stdout\": {\"bytes\": 2869, \"sha256\": \"5779e6d8bfa418decf84a4f2997dade56773db40185370e5f879b71827d4bf89\"}, \"rule6-cleanup-leftover.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-cleanup-leftover.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "leftovers fails cleanup"
+      ],
+      "finishedAt": "2026-11-06T04:52:50.078781+00:00"
+    },
+    {
+      "id": "cleanup-pair-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.materializedLeftOver === 0 && control.differing === 0 && control.created === control.removed",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "75a66f9506165cf89f0e96924c87d2f5c071d4292353d3292fd531a0af288553",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:50.078876+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/cleanup-pair-denominator.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-cleanup-pair-denominator\", \"startedAt\": \"2026-11-06T04:52:50.106571+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/cleanup-pair-denominator.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:50.391443+00:00\", \"elapsedSeconds\": 0.28227186104049906, \"streams\": {\"rule6-cleanup-pair-denominator.stdout\": {\"bytes\": 2869, \"sha256\": \"d1b1dd89ce78d1ac37a69f8ff071275ac174feea4daa10a91187c1e786c05d98\"}, \"rule6-cleanup-pair-denominator.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-cleanup-pair-denominator.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "missing disk pair fails cleanup"
+      ],
+      "finishedAt": "2026-11-06T04:52:50.401219+00:00"
+    },
+    {
+      "id": "cleanup-removal-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "9b42a1a07147da732cb6a521b26f809656152ba6964a93c159fba84519cb8cee",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:50.401349+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/cleanup-removal-denominator.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-cleanup-removal-denominator\", \"startedAt\": \"2026-11-06T04:52:50.434773+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/cleanup-removal-denominator.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:50.736964+00:00\", \"elapsedSeconds\": 0.29935794696211815, \"streams\": {\"rule6-cleanup-removal-denominator.stdout\": {\"bytes\": 2869, \"sha256\": \"d5d2ec22a82c9bbddf02896d56cd76334ee5687a36c840d7d1ab352fc12957c6\"}, \"rule6-cleanup-removal-denominator.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-cleanup-removal-denominator.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "missing removal fails cleanup"
+      ],
+      "finishedAt": "2026-11-06T04:52:50.743930+00:00"
+    },
+    {
+      "id": "successor-exact-instant",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "const before = at === SUCCESSOR_INSTANTS[0];",
+      "new": "const before = at !== SUCCESSOR_INSTANTS[2];",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "e34b7078451c9d9b682bf11a71ed0029115a11eaab835229a6ea4887e2561617",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:50.744040+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/successor-exact-instant.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-successor-exact-instant\", \"startedAt\": \"2026-11-06T04:52:50.769964+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/successor-exact-instant.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:51.046641+00:00\", \"elapsedSeconds\": 0.2728980569518171, \"streams\": {\"rule6-successor-exact-instant.stdout\": {\"bytes\": 2899, \"sha256\": \"fc646a356d8e52cf2b2376a56b13937e03ecb0aa8b018d1b091db19716cc9dfa\"}, \"rule6-successor-exact-instant.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-successor-exact-instant.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "successor expected outcomes change at exact effective instant"
+      ],
+      "finishedAt": "2026-11-06T04:52:51.053376+00:00"
+    },
+    {
+      "id": "file-world-port-omission",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": ".filter(name => !FIXTURE_READERS.includes(name));",
+      "new": ".filter(name => !FIXTURE_READERS.includes(name) && name !== 'port');",
+      "mode": "probe",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "8d6ede0b164c0114ac3c66000706f55d6d17fc957d395c21614fa21b4da9f590",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:51.053503+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/file-world-port-omission.mjs",
+        "--old",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old",
+        "--new",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject",
+        "--out",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/file-world-port-omission.json",
+        "--bead",
+        "syzygy-bpyt.8.26",
+        "--kinds",
+        "probe",
+        "--sample-per-kind",
+        "1",
+        "--workers",
+        "1",
+        "--time-limit-ms",
+        "600000"
+      ],
+      "execution": {
+        "wrapperExit": 0,
+        "wrapperStdout": "{\"name\": \"rule6-file-world-port-omission\", \"startedAt\": \"2026-11-06T04:52:51.081629+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/file-world-port-omission.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/file-world-port-omission.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"probe\", \"--sample-per-kind\", \"1\", \"--workers\", \"1\", \"--time-limit-ms\", \"600000\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T04:52:54.849794+00:00\", \"elapsedSeconds\": 3.7656307620345615, \"streams\": {\"rule6-file-world-port-omission.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"rule6-file-world-port-omission.stderr\": {\"bytes\": 95, \"sha256\": \"44367714c25aa91539459f0b46147145d44b0cf3de9089bc66e792ffca1b77b7\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-file-world-port-omission.json"
+      },
+      "recountExecution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-file-world-port-omission-recount\", \"startedAt\": \"2026-11-06T04:52:54.986645+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/recount.py\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/file-world-port-omission.json\", \"--tree\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/rule6-file-world-port-omission-recount.json\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:52:55.575651+00:00\", \"elapsedSeconds\": 0.5862693039816804, \"streams\": {\"rule6-file-world-port-omission-recount.stdout\": {\"bytes\": 178934, \"sha256\": \"79cbed6b2d3c08e9d7b3982dfc700ed805bee17639bcf6cf342c7f6932eb8dbe\"}, \"rule6-file-world-port-omission-recount.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-file-world-port-omission-recount.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 23,
+      "failedCases": null,
+      "finishedAt": "2026-11-06T04:52:55.584017+00:00"
+    },
+    {
+      "id": "generated-selected-alias",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "const counts = { generated: population(built.worlds), selected: population(worlds) };",
+      "new": "const counts = { generated: population(built.worlds), selected: population(built.worlds) };",
+      "mode": "probe",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "af75932de81f2df0113745be1bfe344935c184055d9af2b292b72109ee825b60",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:52:55.584166+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/generated-selected-alias.mjs",
+        "--old",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old",
+        "--new",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject",
+        "--out",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/generated-selected-alias.json",
+        "--bead",
+        "syzygy-bpyt.8.26",
+        "--kinds",
+        "probe",
+        "--sample-per-kind",
+        "1",
+        "--workers",
+        "1",
+        "--time-limit-ms",
+        "600000"
+      ],
+      "execution": {
+        "wrapperExit": 0,
+        "wrapperStdout": "{\"name\": \"rule6-generated-selected-alias\", \"startedAt\": \"2026-11-06T04:52:55.612188+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/generated-selected-alias.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/generated-selected-alias.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"probe\", \"--sample-per-kind\", \"1\", \"--workers\", \"1\", \"--time-limit-ms\", \"600000\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T04:52:59.743454+00:00\", \"elapsedSeconds\": 4.127599982020911, \"streams\": {\"rule6-generated-selected-alias.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"rule6-generated-selected-alias.stderr\": {\"bytes\": 95, \"sha256\": \"4b2bbb304f3fbb56498dc52b22778589e7ada7ce3ee7de78f19920b16121c260\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-generated-selected-alias.json"
+      },
+      "recountExecution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-generated-selected-alias-recount\", \"startedAt\": \"2026-11-06T04:52:59.867429+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/recount.py\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/generated-selected-alias.json\", \"--tree\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/rule6-generated-selected-alias-recount.json\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:53:00.430756+00:00\", \"elapsedSeconds\": 0.5601423830376007, \"streams\": {\"rule6-generated-selected-alias-recount.stdout\": {\"bytes\": 570, \"sha256\": \"526b64b41eb819767e4915d5a9cc87bca11c919f76fb0330d7168865f0c1cf77\"}, \"rule6-generated-selected-alias-recount.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-generated-selected-alias-recount.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 24,
+      "failedCases": null,
+      "finishedAt": "2026-11-06T04:53:00.438391+00:00"
+    },
+    {
+      "id": "successor-record-branch",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "supersedes: 'FIXTURE-OBSERVATION@1'",
+      "new": "supersedes: 'FIXTURE-MISSING@1'",
+      "mode": "observation-successor",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "f9cbdea6f3c71575b23ea0b17eafb2e0b7865acc02e75f0b5ab96635cef93148",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:53:00.438546+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/successor-record-branch.mjs",
+        "--old",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old",
+        "--new",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject",
+        "--out",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/successor-record-branch.json",
+        "--bead",
+        "syzygy-bpyt.8.26",
+        "--kinds",
+        "observation-successor",
+        "--sample-per-kind",
+        "1",
+        "--workers",
+        "1",
+        "--time-limit-ms",
+        "600000"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-successor-record-branch\", \"startedAt\": \"2026-11-06T04:53:00.474271+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/successor-record-branch.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/successor-record-branch.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"observation-successor\", \"--sample-per-kind\", \"1\", \"--workers\", \"1\", \"--time-limit-ms\", \"600000\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:53:03.029179+00:00\", \"elapsedSeconds\": 2.5521326059824787, \"streams\": {\"rule6-successor-record-branch.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"rule6-successor-record-branch.stderr\": {\"bytes\": 131, \"sha256\": \"3fb4fea5c8d93f7c9e38f2178fdf5e474a63f468be9ce1e0141b097bbf94865a\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-successor-record-branch.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 6,
+      "failedCases": null,
+      "finishedAt": "2026-11-06T04:53:03.108626+00:00"
+    },
+    {
+      "id": "materialization-executed-denominator",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "materialization.expectedPairs += 1;",
+      "new": "materialization.expectedPairs += 0;",
+      "mode": "base",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "7b80278069af96b9af25646f046ad0d89d9aeef157881eca378c898b54263ecb",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:53:03.108802+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/materialization-executed-denominator.mjs",
+        "--old",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old",
+        "--new",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject",
+        "--out",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/materialization-executed-denominator.json",
+        "--bead",
+        "syzygy-bpyt.8.26",
+        "--kinds",
+        "base",
+        "--sample-per-kind",
+        "1",
+        "--workers",
+        "1",
+        "--time-limit-ms",
+        "600000"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-materialization-executed-denominator\", \"startedAt\": \"2026-11-06T04:53:03.137243+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/materialization-executed-denominator.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/materialization-executed-denominator.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base\", \"--sample-per-kind\", \"1\", \"--workers\", \"1\", \"--time-limit-ms\", \"600000\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:53:30.801198+00:00\", \"elapsedSeconds\": 27.661682831996586, \"streams\": {\"rule6-materialization-executed-denominator.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"rule6-materialization-executed-denominator.stderr\": {\"bytes\": 141, \"sha256\": \"5d3c3e39a09fb1d127e02d7dea3cfa0258e992a6ceed9b28f759813e1dc53068\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-materialization-executed-denominator.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 46,
+      "failedCases": null,
+      "finishedAt": "2026-11-06T04:53:30.910663+00:00"
+    },
+    {
+      "id": "actual-owned-removal",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "for (const disk of disks) fs.rmSync(disk, { recursive: true, force: true });",
+      "new": "for (const disk of disks) void disk;",
+      "mode": "base",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "ac6acd1eae75831dd0f97676dddefe746c5cc86389c378a4df2e2aaab21d7c71",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:53:30.910895+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/actual-owned-removal.mjs",
+        "--old",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old",
+        "--new",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject",
+        "--out",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/actual-owned-removal.json",
+        "--bead",
+        "syzygy-bpyt.8.26",
+        "--kinds",
+        "base",
+        "--sample-per-kind",
+        "1",
+        "--workers",
+        "1",
+        "--time-limit-ms",
+        "600000"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-actual-owned-removal\", \"startedAt\": \"2026-11-06T04:53:30.942247+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/actual-owned-removal.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/actual-owned-removal.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"base\", \"--sample-per-kind\", \"1\", \"--workers\", \"1\", \"--time-limit-ms\", \"600000\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:26.750393+00:00\", \"elapsedSeconds\": 55.80597394303186, \"streams\": {\"rule6-actual-owned-removal.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"rule6-actual-owned-removal.stderr\": {\"bytes\": 141, \"sha256\": \"5d3c3e39a09fb1d127e02d7dea3cfa0258e992a6ceed9b28f759813e1dc53068\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-actual-owned-removal.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 46,
+      "failedCases": null,
+      "finishedAt": "2026-11-06T04:54:26.850473+00:00"
+    },
+    {
+      "id": "materialization-difference",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "control.materializedLeftOver === 0 && control.differing === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "new": "control.materializedLeftOver === 0 && control.pairs === control.expectedPairs && control.created === control.removed",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "fc8ede05d1a9c832f47eeda8707b69838aaddc566cfd897a418dd6fa4813ad13",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:54:26.850736+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/materialization-difference.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-materialization-difference\", \"startedAt\": \"2026-11-06T04:54:26.886790+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/materialization-difference.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:27.197675+00:00\", \"elapsedSeconds\": 0.3076251689926721, \"streams\": {\"rule6-materialization-difference.stdout\": {\"bytes\": 2869, \"sha256\": \"e0ec8cec689d483bb2221a26f9a14c0b5dd4e9ec235e4fa31c97bf54ff9b868d\"}, \"rule6-materialization-difference.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-materialization-difference.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "changed disk answer fails cleanup"
+      ],
+      "finishedAt": "2026-11-06T04:54:27.214635+00:00"
+    },
+    {
+      "id": "selected-execution-population",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (world.readers.length === 0 || new Set(world.readers).size !== world.readers.length || world.instants.length === 0 || (world.steps !== undefined && world.steps.length === 0))",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "e7ce21c865433aeb57ea09651f3b22faa90c496e5c589b8fe72ba67149d19254",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:54:27.214902+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/selected-execution-population.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-selected-execution-population\", \"startedAt\": \"2026-11-06T04:54:27.246395+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/selected-execution-population.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:27.545306+00:00\", \"elapsedSeconds\": 0.2961756940349005, \"streams\": {\"rule6-selected-execution-population.stdout\": {\"bytes\": 3082, \"sha256\": \"ddc19c2fe3fc745769b8ad3f7387e4c108b7cbac0fcf6d3c13ecd8ce99597b1f\"}, \"rule6-selected-execution-population.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-selected-execution-population.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "empty readers rejected",
+        "duplicate world readers rejected",
+        "empty instants rejected",
+        "empty steps rejected"
+      ],
+      "finishedAt": "2026-11-06T04:54:27.556393+00:00"
+    },
+    {
+      "id": "duplicate-comparison-key",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (map.has(row[0])) throw new Error(`duplicate ${role} answer key: ${row[0]}`);",
+      "new": "if (false) throw new Error(`duplicate ${role} answer key: ${row[0]}`);",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "dc48c7db123793e52446f376069736b2699e741d36e3a452a0ddbf824583dbce",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:54:27.556536+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/duplicate-comparison-key.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-duplicate-comparison-key\", \"startedAt\": \"2026-11-06T04:54:27.589079+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/duplicate-comparison-key.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:27.899319+00:00\", \"elapsedSeconds\": 0.3077812240226194, \"streams\": {\"rule6-duplicate-comparison-key.stdout\": {\"bytes\": 2869, \"sha256\": \"76955a603a88abf82f196168eec72f564961f1e91f8a69f12c0daed7b77c0654\"}, \"rule6-duplicate-comparison-key.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-duplicate-comparison-key.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 6,
+      "failedCases": [
+        "duplicate key rejected"
+      ],
+      "finishedAt": "2026-11-06T04:54:27.907113+00:00"
+    },
+    {
+      "id": "complete-value-versus-label",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "same: a[3] === b[3]",
+      "new": "same: a[2] === b[2]",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "3609a55d97cd9832b5b0a88fc02dce3d320dbffd81d344698e32cf441dac1cdb",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:54:27.907225+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/complete-value-versus-label.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-complete-value-versus-label\", \"startedAt\": \"2026-11-06T04:54:27.940168+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/complete-value-versus-label.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:28.239836+00:00\", \"elapsedSeconds\": 0.29698271898087114, \"streams\": {\"rule6-complete-value-versus-label.stdout\": {\"bytes\": 2899, \"sha256\": \"e85ee4e8a822a951a5f72710205bcc2984761d23328e111264beb1ff3a460bc9\"}, \"rule6-complete-value-versus-label.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-complete-value-versus-label.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "identical labels cannot hide changed complete values"
+      ],
+      "finishedAt": "2026-11-06T04:54:28.247994+00:00"
+    },
+    {
+      "id": "duplicate-world-reader",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "new Set(world.readers).size !== world.readers.length",
+      "new": "false",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "42a4197752d9f6d803086af1fdd802d2fa65892bcb61466131f30a681a9221ad",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:54:28.248098+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/duplicate-world-reader.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-duplicate-world-reader\", \"startedAt\": \"2026-11-06T04:54:28.275169+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/duplicate-world-reader.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:28.542311+00:00\", \"elapsedSeconds\": 0.2643787899869494, \"streams\": {\"rule6-duplicate-world-reader.stdout\": {\"bytes\": 2869, \"sha256\": \"47b6f8477e6ebbc2315c0bbffbf6b9dd8ab60a501348ff9517c64c7a8488f9d4\"}, \"rule6-duplicate-world-reader.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-duplicate-world-reader.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "duplicate world readers rejected"
+      ],
+      "finishedAt": "2026-11-06T04:54:28.549958+00:00"
+    },
+    {
+      "id": "runtime-resource-validation",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (!Number.isSafeInteger(workers) || workers < 1 || workers > 32 || !Number.isSafeInteger(timeLimitMs) || timeLimitMs < 1)",
+      "new": "if (false)",
+      "mode": "probe",
+      "workers": "1.5",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "147ab57ee0de56a0dd4f1c2fd01c3b9a85db20c8d5660265b043881357bca39d",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:54:28.550064+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/runtime-resource-validation.mjs",
+        "--old",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old",
+        "--new",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject",
+        "--out",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/runtime-resource-validation.json",
+        "--bead",
+        "syzygy-bpyt.8.26",
+        "--kinds",
+        "probe",
+        "--sample-per-kind",
+        "1",
+        "--workers",
+        "1.5",
+        "--time-limit-ms",
+        "600000"
+      ],
+      "execution": {
+        "wrapperExit": 0,
+        "wrapperStdout": "{\"name\": \"rule6-runtime-resource-validation\", \"startedAt\": \"2026-11-06T04:54:28.578649+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/runtime-resource-validation.mjs\", \"--old\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--new\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/runtime-resource-validation.json\", \"--bead\", \"syzygy-bpyt.8.26\", \"--kinds\", \"probe\", \"--sample-per-kind\", \"1\", \"--workers\", \"1.5\", \"--time-limit-ms\", \"600000\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 0, \"finishedAt\": \"2026-11-06T04:54:32.500838+00:00\", \"elapsedSeconds\": 3.9195054639712907, \"streams\": {\"rule6-runtime-resource-validation.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"rule6-runtime-resource-validation.stderr\": {\"bytes\": 95, \"sha256\": \"4b2bbb304f3fbb56498dc52b22778589e7ada7ce3ee7de78f19920b16121c260\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-runtime-resource-validation.json"
+      },
+      "recountExecution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-runtime-resource-validation-recount\", \"startedAt\": \"2026-11-06T04:54:32.617551+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/recount.py\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/runtime-resource-validation.json\", \"--tree\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/rule6-runtime-resource-validation-recount.json\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:33.135789+00:00\", \"elapsedSeconds\": 0.5149662679759786, \"streams\": {\"rule6-runtime-resource-validation-recount.stdout\": {\"bytes\": 578, \"sha256\": \"0591391ed61efcb57ade7cfdeaa4931a8a9debfebb07c7c175d5cd1488ed6cfd\"}, \"rule6-runtime-resource-validation-recount.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-runtime-resource-validation-recount.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 24,
+      "failedCases": null,
+      "finishedAt": "2026-11-06T04:54:33.144337+00:00"
+    },
+    {
+      "id": "bounded-sample-validation",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (!Number.isSafeInteger(samplePerKind) || samplePerKind < 1)",
+      "new": "if (false)",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "324a949bde895ba20293d46aa4bb632c4f53f3daa9279c36766fb238b4eaab9e",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:54:33.144512+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/bounded-sample-validation.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-bounded-sample-validation\", \"startedAt\": \"2026-11-06T04:54:33.177534+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/bounded-sample-validation.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:33.459357+00:00\", \"elapsedSeconds\": 0.27894262998597696, \"streams\": {\"rule6-bounded-sample-validation.stdout\": {\"bytes\": 2952, \"sha256\": \"081002b828f020ad4ebf5cccc2975315060ea46435c7d7a4bcdb1916845542f3\"}, \"rule6-bounded-sample-validation.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-bounded-sample-validation.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "zero bounded fixture sample rejected"
+      ],
+      "finishedAt": "2026-11-06T04:54:33.477551+00:00"
+    },
+    {
+      "id": "unknown-reader-validation",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (!specs.has(name)) throw new Error(`unknown selected reader: ${name}`);",
+      "new": "if (false) throw new Error(`unknown selected reader: ${name}`);",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "9891e1c3e149fae3caace5ac74037b81d880c7d9f3eef0ab4b343d2e123780ac",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:54:33.477692+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/unknown-reader-validation.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-unknown-reader-validation\", \"startedAt\": \"2026-11-06T04:54:33.507161+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/unknown-reader-validation.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:33.805906+00:00\", \"elapsedSeconds\": 0.29602950799744576, \"streams\": {\"rule6-unknown-reader-validation.stdout\": {\"bytes\": 2869, \"sha256\": \"e7a4cc8f1f263023f97154ec4b7774249a2f5361245f2d37af372f55ca73a147\"}, \"rule6-unknown-reader-validation.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-unknown-reader-validation.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "unknown reader rejected"
+      ],
+      "finishedAt": "2026-11-06T04:54:33.812635+00:00"
+    },
+    {
+      "id": "expectations-without-control",
+      "file": "scripts/differential_consent_act_families.mjs",
+      "old": "if (names !== undefined) throw new Error('reader mismatch expectations require negative-control mode');",
+      "new": "if (false) throw new Error('reader mismatch expectations require negative-control mode');",
+      "mode": "selftest",
+      "originalSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+      "mutatedSha256": "f444e59db970f88bbec187c168aae9cf0081e30b9de7fe444b11525f119ae593",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "startedAt": "2026-11-06T04:54:33.812756+00:00",
+      "command": [
+        "timeout",
+        "660",
+        "node",
+        "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/expectations-without-control.mjs",
+        "--selftest"
+      ],
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-expectations-without-control\", \"startedAt\": \"2026-11-06T04:54:33.842760+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"660\", \"node\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/tool-mutants/expectations-without-control.mjs\", \"--selftest\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:34.109915+00:00\", \"elapsedSeconds\": 0.2647623440134339, \"streams\": {\"rule6-expectations-without-control.stdout\": {\"bytes\": 2869, \"sha256\": \"71796d669fe91ec3a0bcaa05e76c7c911b18d935170022f2de0a61fcd79bf00a\"}, \"rule6-expectations-without-control.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-expectations-without-control.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 5,
+      "failedCases": [
+        "expectation without control rejected"
+      ],
+      "finishedAt": "2026-11-06T04:54:34.119032+00:00"
+    },
+    {
+      "id": "adapter-byte-binding",
+      "inputPointer": [
+        "successorFixture",
+        "adapters",
+        0,
+        "transformedSha256"
+      ],
+      "old": "33c282096a02c558f0ac0c0a4444bd728dc70c3a3c67083cb3ed54c6450ba0e0",
+      "new": "0000000000000000000000000000000000000000000000000000000000000000",
+      "originalRecordSha256": "731005f8f074169a59584a0cd171ca343b599c33896679016b6fead3ac336731",
+      "mutatedRecordSha256": "e2ebb39eff2b90d8a1a515aaf2a9b9df9fe4ff1d7d31c79e9147128bd54547a6",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-adapter-byte-binding\", \"startedAt\": \"2026-11-06T04:54:34.541117+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/recount.py\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/adapter-byte-binding.json\", \"--tree\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/adapter-byte-binding-recount.json\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:35.045940+00:00\", \"elapsedSeconds\": 0.5013372550019994, \"streams\": {\"rule6-adapter-byte-binding.stdout\": {\"bytes\": 789, \"sha256\": \"2154cc7c1c4de75a7535dd8605f1caf1061b60aac3ff317bd4afc59986bee6ee\"}, \"rule6-adapter-byte-binding.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-adapter-byte-binding.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 274
+    },
+    {
+      "id": "captured-cleanup-denominator",
+      "inputPointer": [
+        "materialization",
+        "materializedLeftOver"
+      ],
+      "old": 0,
+      "new": 1,
+      "originalRecordSha256": "731005f8f074169a59584a0cd171ca343b599c33896679016b6fead3ac336731",
+      "mutatedRecordSha256": "e4903ab9e7f24e0deda60e240065a6c4e3a8018d9fa62fa611c92c962fb21dd3",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-captured-cleanup-denominator\", \"startedAt\": \"2026-11-06T04:54:35.355602+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/recount.py\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/captured-cleanup-denominator.json\", \"--tree\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/captured-cleanup-denominator-recount.json\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:35.942589+00:00\", \"elapsedSeconds\": 0.5837710550404154, \"streams\": {\"rule6-captured-cleanup-denominator.stdout\": {\"bytes\": 756, \"sha256\": \"0b60164972768ea23a7839e7d11e106535bf35d44985425c9156ed29c6d0e889\"}, \"rule6-captured-cleanup-denominator.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-captured-cleanup-denominator.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 274
+    },
+    {
+      "id": "captured-worker-limit",
+      "inputPointer": [
+        "pool",
+        "workers"
+      ],
+      "old": 4,
+      "new": 0,
+      "originalRecordSha256": "731005f8f074169a59584a0cd171ca343b599c33896679016b6fead3ac336731",
+      "mutatedRecordSha256": "b5eb34ac2aadfe2bb4a3609cbceda8993fbd92126e73459c480c57f11601efe4",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-captured-worker-limit\", \"startedAt\": \"2026-11-06T04:54:36.202737+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/recount.py\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/captured-worker-limit.json\", \"--tree\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/captured-worker-limit-recount.json\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:36.723180+00:00\", \"elapsedSeconds\": 0.5179289570078254, \"streams\": {\"rule6-captured-worker-limit.stdout\": {\"bytes\": 762, \"sha256\": \"cbfd2011e5d4dceb993ce02011b64646e42d318697bff721a0f92a535604bcc0\"}, \"rule6-captured-worker-limit.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-captured-worker-limit.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 274
+    },
+    {
+      "id": "captured-time-limit",
+      "inputPointer": [
+        "pool",
+        "timeLimitMs"
+      ],
+      "old": 600000,
+      "new": 0,
+      "originalRecordSha256": "731005f8f074169a59584a0cd171ca343b599c33896679016b6fead3ac336731",
+      "mutatedRecordSha256": "f9d6f7d59c5caa3ac7cb2f21c7f0d372d79dcec3ed0ab41bb2b8947d3d59465c",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-captured-time-limit\", \"startedAt\": \"2026-11-06T04:54:36.998213+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/recount.py\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/captured-time-limit.json\", \"--tree\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/captured-time-limit-recount.json\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:37.508228+00:00\", \"elapsedSeconds\": 0.5075286439969204, \"streams\": {\"rule6-captured-time-limit.stdout\": {\"bytes\": 758, \"sha256\": \"6770ecba1283e6d2dd705437298bcc1a5617b24f3b2564d8e22cf2e19a615306\"}, \"rule6-captured-time-limit.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-captured-time-limit.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 274
+    },
+    {
+      "id": "captured-successor-literal",
+      "inputPointer": [
+        "successorFixture",
+        "literalOutcomes",
+        0,
+        "expected",
+        "ids"
+      ],
+      "old": [
+        "fixture-repository"
+      ],
+      "new": [
+        "invented-repository"
+      ],
+      "originalRecordSha256": "731005f8f074169a59584a0cd171ca343b599c33896679016b6fead3ac336731",
+      "mutatedRecordSha256": "53edd8e44ba5f38dbfadde3805cde55053abde6f20d5afb35183b1a1779262ea",
+      "subjectCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"rule6-captured-successor-literal\", \"startedAt\": \"2026-11-06T04:54:37.729908+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"python3\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/recount.py\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/captured-successor-literal.json\", \"--tree\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/old\", \"--out\", \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/captured-successor-literal-recount.json\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:38.269486+00:00\", \"elapsedSeconds\": 0.5369555199868046, \"streams\": {\"rule6-captured-successor-literal.stdout\": {\"bytes\": 821, \"sha256\": \"3e3f416cb4e11a75d39a6e9f4d2372565b604051710817c032da5b2dc630ec59\"}, \"rule6-captured-successor-literal.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/rule6-captured-successor-literal.json"
+      },
+      "classification": "killed",
+      "executedComparisons": 274
+    }
+  ],
+  "classifierControls": [
+    {
+      "id": "zero-comparisons",
+      "input": {
+        "exit": 1,
+        "document": {
+          "schema": "consent-act-family-differential/3",
+          "totals": {
+            "answersCompared": 0
+          },
+          "worlds": [
+            {}
+          ],
+          "result": {
+            "success": false
+          }
+        },
+        "mode": "probe"
+      },
+      "expected": "errored",
+      "actual": "errored",
+      "same": true
+    },
+    {
+      "id": "reporter-empty",
+      "input": {
+        "exit": 1,
+        "document": {},
+        "mode": "selftest"
+      },
+      "expected": "errored",
+      "actual": "errored",
+      "same": true
+    },
+    {
+      "id": "surviving-valid-control",
+      "input": {
+        "exit": 0,
+        "document": {
+          "schema": "consent-differential-selftest/1",
+          "scriptSha256": "25c2a8a2b97da87fc3b0a36f73738366bbfd770a58bd648a949ce0ecc11f8c06",
+          "cases": [
+            {
+              "name": "selection includes requested worlds",
+              "passed": true
+            },
+            {
+              "name": "count uses selected population",
+              "passed": true
+            },
+            {
+              "name": "generated count remains separate",
+              "passed": true
+            },
+            {
+              "name": "bounded fixture sampling uses one shared selected population",
+              "passed": true
+            },
+            {
+              "name": "zero bounded fixture sample rejected",
+              "passed": true
+            },
+            {
+              "name": "empty selection rejected",
+              "passed": true
+            },
+            {
+              "name": "unknown selected kind rejected",
+              "passed": true
+            },
+            {
+              "name": "duplicate kind rejected",
+              "passed": true
+            },
+            {
+              "name": "empty readers rejected",
+              "passed": true
+            },
+            {
+              "name": "duplicate world readers rejected",
+              "passed": true
+            },
+            {
+              "name": "empty instants rejected",
+              "passed": true
+            },
+            {
+              "name": "empty steps rejected",
+              "passed": true
+            },
+            {
+              "name": "unknown reader rejected",
+              "passed": true
+            },
+            {
+              "name": "zero answers rejected",
+              "passed": true
+            },
+            {
+              "name": "three steps and two instants are six answers in one world",
+              "passed": true
+            },
+            {
+              "name": "complete serialized equal answers pair",
+              "passed": true
+            },
+            {
+              "name": "changed complete value differs",
+              "passed": true
+            },
+            {
+              "name": "identical labels cannot hide changed complete values",
+              "passed": true
+            },
+            {
+              "name": "unequal old key set rejected",
+              "passed": true
+            },
+            {
+              "name": "unequal new key set rejected",
+              "passed": true
+            },
+            {
+              "name": "same-length wrong key rejected",
+              "passed": true
+            },
+            {
+              "name": "duplicate key rejected",
+              "passed": true
+            },
+            {
+              "name": "metadata identity rejected",
+              "passed": true
+            },
+            {
+              "name": "digest/value mismatch rejected",
+              "passed": true
+            },
+            {
+              "name": "order-independent key pairing",
+              "passed": true
+            },
+            {
+              "name": "absent control expectation rejected",
+              "passed": true
+            },
+            {
+              "name": "empty control expectation rejected",
+              "passed": true
+            },
+            {
+              "name": "empty name control expectation rejected",
+              "passed": true
+            },
+            {
+              "name": "duplicate control expectation rejected",
+              "passed": true
+            },
+            {
+              "name": "unknown control expectation rejected",
+              "passed": true
+            },
+            {
+              "name": "positive expected reader accepted",
+              "passed": true
+            },
+            {
+              "name": "expectation without control rejected",
+              "passed": true
+            },
+            {
+              "name": "unrelated mismatch cannot satisfy port",
+              "passed": true
+            },
+            {
+              "name": "missing demanded reader fails",
+              "passed": true
+            },
+            {
+              "name": "positive mismatches need positive denominator",
+              "passed": true
+            },
+            {
+              "name": "each demanded reader must differ",
+              "passed": true
+            },
+            {
+              "name": "positive per-reader control passes",
+              "passed": true
+            },
+            {
+              "name": "clean materialization accepted",
+              "passed": true
+            },
+            {
+              "name": "leftovers fails cleanup",
+              "passed": true
+            },
+            {
+              "name": "changed disk answer fails cleanup",
+              "passed": true
+            },
+            {
+              "name": "missing disk pair fails cleanup",
+              "passed": true
+            },
+            {
+              "name": "missing removal fails cleanup",
+              "passed": true
+            },
+            {
+              "name": "successor expected outcomes change at exact effective instant",
+              "passed": true
+            },
+            {
+              "name": "missing optional-method implementation is fatal",
+              "passed": true
+            }
+          ],
+          "total": 44,
+          "failed": 0,
+          "exercisedAnswerComparisons": 5
+        },
+        "mode": "selftest"
+      },
+      "expected": "survived",
+      "actual": "survived",
+      "same": true
+    },
+    {
+      "id": "import-error",
+      "execution": {
+        "wrapperExit": 1,
+        "wrapperStdout": "{\"name\": \"classifier-import-error\", \"startedAt\": \"2026-11-06T04:54:38.351374+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"node\", \"--input-type=module\", \"-e\", \"await import('file:///home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/controls/missing-evidence-module.mjs')\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 1, \"finishedAt\": \"2026-11-06T04:54:38.607162+00:00\", \"elapsedSeconds\": 0.2531363860471174, \"streams\": {\"classifier-import-error.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"classifier-import-error.stderr\": {\"bytes\": 1203, \"sha256\": \"879d6582d893fd1f7e639ec84afdf63b04fadb78e2ad5938bc0cd69ffaf496c5\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/classifier-import-error.json"
+      },
+      "expected": "errored",
+      "actual": "errored",
+      "same": true
+    },
+    {
+      "id": "timeout",
+      "execution": {
+        "wrapperExit": 124,
+        "wrapperStdout": "{\"name\": \"classifier-timeout\", \"startedAt\": \"2026-11-06T04:54:38.642733+00:00\", \"cwd\": \"/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/subject\", \"argv\": [\"timeout\", \"1\", \"node\", \"-e\", \"setTimeout(() => {}, 10000)\"], \"head\": \"2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5\", \"exitCode\": 124, \"finishedAt\": \"2026-11-06T04:54:39.859617+00:00\", \"elapsedSeconds\": 1.2144473519874737, \"streams\": {\"classifier-timeout.stdout\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}, \"classifier-timeout.stderr\": {\"bytes\": 0, \"sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}}}\n",
+        "wrapperStderr": "",
+        "receipt": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/logs/classifier-timeout.json"
+      },
+      "expected": "errored",
+      "actual": "errored",
+      "same": true
+    }
+  ],
+  "totals": {
+    "killed": 35,
+    "survived": 0,
+    "errored": 0
+  },
+  "allClassifierControlsAsExpected": true
+}
