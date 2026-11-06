@@ -325,6 +325,10 @@ sweep lessons added 2026-09-23; the raw-head digest lesson the same day.
   assert the match ends where the next heading begins.
 - The Write tool has emitted mixed NFC/NFD bytes; use Unicode escapes in
   fixtures when exact matching matters.
+- Tool input, including Bash heredocs, can turn a typed `\u00a0` escape
+  into literal U+00A0. After any Edit or Write whose text names a `\u`
+  escape, use Python to check changed lines for new non-ASCII (for example,
+  count `chr(0xa0)`). Fixtures should write escapes rather than literals.
 - A mutation that throws at describe time reports zero tests and scores as
   survived — build fixtures in `beforeAll`.
 - A rule-6 evidence record must store each mutant's `old`/`new` fragment and
