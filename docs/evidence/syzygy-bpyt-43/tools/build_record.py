@@ -85,10 +85,16 @@ for name in ['head', 'base-test', 'prior-test', 'round1-test']:
             refuse(f'{name}: selected test-copy digest differs')
         mutant = row['mutant'] or {'id': 'control', 'kind': 'control'}
         if row.get('skipped'):
-            if name == 'head' or mutant['kind'] != 'hook':
+            if name != 'base-test' or mutant['id'] not in ['H-hook-blind', 'H-no-preload'] or mutant['kind'] != 'hook' or 'old occurs 0 times' not in row['skipped']:
                 refuse(f'{name}/{mutant["id"]}: an inadmissible skip')
         elif row.get('timeout') or row.get('buildFailure') or not row['rows']:
             refuse(f'{name}/{mutant["id"]}: no nonempty executed test population')
+        if not row.get('skipped'):
+            expected_rows = {'head': 17, 'base-test': 15, 'prior-test': 16, 'round1-test': 17}[name]
+            if len(row['rows']) != expected_rows or len({r['title'] for r in row['rows']}) != expected_rows:
+                refuse(f'{name}/{mutant["id"]}: selected test collection population differs')
+            if row['passed'] != sum(r['status'] == 'passed' for r in row['rows']) or sorted(row['failed']) != sorted(r['title'] for r in row['rows'] if r['status'] == 'failed'):
+                refuse(f'{name}/{mutant["id"]}: row status summaries differ from executed rows')
         if mutant['id'] == 'control' and (row['failed'] or not row['passed']):
             refuse(f'{name}: control failed or ran nothing')
 
@@ -100,6 +106,25 @@ identities = [(row['mutant'] or {'id': 'control', 'kind': 'control'}) for row in
 for name, campaign in campaigns.items():
     if [(r['mutant'] or {'id': 'control', 'kind': 'control'}) for r in campaign['results']] != identities:
         refuse(f'{name}: campaign mutant identities/fragments/population differ')
+by_campaign = {name: {(row['mutant'] or {'id': 'control'})['id']: row for row in campaign['results']}
+               for name, campaign in campaigns.items()}
+
+
+def passed_predecessor(name, mid):
+    row = by_campaign[name][mid]
+    if row['failed'] or not row['passed'] or row.get('skipped'):
+        refuse(f'{name}/{mid}: predecessor witness no longer passes; its claimed survivor identity is invalid')
+
+
+for mid in ['R1-flag-between-branches', 'R2-flag-createRequire-before-daemon', 'R3-runtime-hook']:
+    passed_predecessor('prior-test', mid)
+for mid in ['S1-else-if-flag-after-dossier', 'S2-same-line-if-after-dossier', 'S3-else-if-flag-after-polaris',
+            'S4-else-runtime-hook-after-dossier', 'S5-else-createRequire-flag-after-polaris', 'S6-misindented-close-after-dossier',
+            'S7-else-split-specifier-after-dossier']:
+    passed_predecessor('round1-test', mid)
+for mid in ['Y1b-dossier-serve-falls-through-no-new-mention', 'X2-close-failure-in-http-host', 'P-entry-read', 'P-machine-transitive']:
+    for name in ['base-test', 'prior-test', 'round1-test']:
+        passed_predecessor(name, mid)
 
 
 def failures(row):
@@ -114,7 +139,7 @@ for row in head:
     mutant = row['mutant'] or {'id': 'control', 'kind': 'control'}
     mid, kind = mutant['id'], mutant['kind']
     failed = failures(row)
-    if kind == 'defect' and not row['failed']:
+    if kind == 'defect' and not (failed & {'hook', 'text', 'pin'}):
         refuse(f'{mid}: repaired test passes a daemon-path defect')
     if kind == 'hook' and 'hook' not in failed:
         refuse(f'{mid}: broken hook passes its positive control')
@@ -129,7 +154,7 @@ for row in head:
             refuse(f'{mid}: equivalent row attribution {sorted(failed)} differs from {sorted(expected)}')
     if mid.startswith(('Y','D-')) and 'text' not in failed:
         refuse(f'{mid}: compiler branch/control-flow predicate passes the defect')
-    if mid in ['X2-close-failure-in-http-host', 'P-machine-transitive'] and 'hook' not in failed:
+    if mid in ['X2-close-failure-in-http-host', 'P-machine-transitive', 'P-entry-read', 'X3-shutdown-in-http-host', 'P-transitive'] and 'hook' not in failed:
         refuse(f"{mid}: the runtime path's intended hook assertion did not fail")
     # Assertion failures must be identifiable; collection exceptions and timeouts cannot stand in for kills.
     for test in row['rows']:
@@ -162,7 +187,7 @@ record = {
                         'note': 'Current whole population is emitted, including later .52/rmax bounds; none is silently declared measured by the historical four-site separation.'},
     'sourceApplicability': {'path': applicability_path.name, 'sha256': sha(applicability_path.read_bytes()),
                             'closureMoves': applicability['moved'], 'currentTiming': 'Unknown'},
-    'daemonEntry': {'campaigns': {name: {'commit': r['commit'], 'testFileFrom': r['testFileFrom'], 'rows': len(r['results']),
+    'daemonEntry': {'inheritedNoteQualification': 'The X2 case retains its historical residual note verbatim; its current kind and actual hook failure show the repaired coverage. R7 remains a finite static-loader refusal, not runtime execution of that flagged path.', 'campaigns': {name: {'commit': r['commit'], 'testFileFrom': r['testFileFrom'], 'rows': len(r['results']),
                                       'sha256': sha((CAMPAIGNS / f'daemon-entry-{name}.json').read_bytes())} for name, r in campaigns.items()},
                     'attribution': attribution, 'pinFalseRefusals': pin_false_refusals},
     'emitClaim': {'proves': 'Equality of masked TypeScript-transpiled JavaScript for named files under the recorded compiler/options only.',

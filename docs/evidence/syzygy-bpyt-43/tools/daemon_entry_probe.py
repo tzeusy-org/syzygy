@@ -213,7 +213,7 @@ MUTANTS.append({'id':'P-machine-transitive','kind':'defect','file':'packages/cap
  'old':'      async handle() {\n',
  'new':"      async handle() {\n        await import('@syzygy/three-surface-poc-app/dossier-site');\n",
  'note':'Transitive lazy authenticated machine-request load; the hook must see it without relying on main.ts text.'})
-# The close-failure arm is unexercised by normal shutdown: the static import guard is its intended predicate.
+# The real closeOnSignal rejection control exercises this former residual. The inherited case note above describes its historical disposition; current per-row results supersede that coverage claim.
 for mutant in MUTANTS:
     if mutant and mutant['id'] == 'X2-close-failure-in-http-host': mutant['kind'] = 'defect'
 
