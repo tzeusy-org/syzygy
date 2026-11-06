@@ -1,0 +1,40 @@
+{
+  "observer": "outer task-owned observe.py process; captures distinct child emitter stdio",
+  "observer_pid": 600763,
+  "observer_sha256": "c6a3e3a19aab952f6ee14dde24d8c4c9a7199ddfb3e98fc258cb521f9c32e4c5",
+  "captured_at": "2026-11-06T10:25:22.970613+00:00",
+  "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.20",
+  "argv": [
+    "/usr/bin/python3",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/isolated.py",
+    "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.20",
+    "npm",
+    "ci",
+    "--offline",
+    "--ignore-scripts"
+  ],
+  "timeout_seconds": 300.0,
+  "no_proc": false,
+  "subject": "38eab812488c85198f37b8be18f1dd24cd5898f8",
+  "subject_status": "",
+  "sources": {
+    "apps/three-surface-poc/src/fixture-directories.test.ts": "7d6c805bff973d5cab16e2470db436d8351bfdf58cca9f84c5a315beb6a7e980",
+    "apps/three-surface-poc/src/fixture-directories.ts": "df5a319e02b9bbc3294bf0b0b90a987ecea86bfd219a41d0341855a3e9dc5ada",
+    "docs/evidence/poc-fixture-leak-2026-10-22/leak_by_file.py": "96aba7927e4a60108e227d122223c74e3cfea006a3960565549cfe8c4b1256b2",
+    "docs/evidence/poc-fixture-leak-2026-10-22/guard_probe.py": "c2db048db78e7064d2e7dd32e1fbe255eebb286110bd53a18005065d5c602e19"
+  },
+  "pid": 600786,
+  "pidfd_owned": true,
+  "exit": 0,
+  "timed_out": false,
+  "reaped_adopted_children": [
+    {
+      "pid": 600790,
+      "wait_status": 0
+    }
+  ],
+  "remaining_owned_direct_children": [],
+  "elapsed_seconds": 1.4263886909466237,
+  "stdout_sha256": "1e3aace850796184fdae398da7da03173121f3fdb3092e7e0caa86e7fc1b4663",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

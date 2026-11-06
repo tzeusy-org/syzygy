@@ -1,0 +1,6 @@
+{
+  "at": "2026-11-06T10:38:07.415183+00:00",
+  "pid": 755927,
+  "initial_files": 2,
+  "qualification": "ROOT read-time byte custody starts AFTER author whole outer driver launch. No retrospective runtime authentication/independent execution; every later-added source has own first-read timestamp. Native-child source population pending explicit locator."
+}
