@@ -2,7 +2,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {
-  excludedSourceId, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, pageSinkCspFinding,
+  excludedSourceId, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
   type LocalDisclosureItem, type LocalDraftLayer, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment,
   type DossierDraft, type DraftBlock, type DraftParagraph,
@@ -60,14 +60,16 @@ const SECRET_PATH = 'a path a secret detector matches (not shown)';
 export interface DossierRendererInput { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] }
 export type DossierRenderer = ((input: DossierRendererInput) => { readonly files: ReadonlyMap<string, string> }) & { readonly pageSinkContract?: string };
 
-/** Why the drawn site cannot be confirmed to meet the screening scope's `codeContentExemption.renderCondition` (policy version 3), or
- * null when it can: the renderer declares the encoding half (`PAGE_SINK_CONTRACT`) and every HTML page carries the required
- * Content-Security-Policy first in its head (`pageSinkCspFinding`). */
+/** Why the drawn site cannot be confirmed to meet the screening scope's `codeContentExemption.renderCondition` (version 7), or null when
+ * it can: the renderer declares the encoding half, and every page carries the closed policy first in its head and only pinned scripts.
+ * A machine view's `.json` a browser shows as text. Any other file must be named `.html`: the reader is an HTML parser, and a browser
+ * reads `.svg` or `.xml` with another one, where a page this reader confirms can run a script under no policy. */
 export function pageSinkUnconfirmed(renderer: DossierRenderer, files: ReadonlyMap<string, string>): string | null {
-  if (renderer.pageSinkContract !== PAGE_SINK_CONTRACT) return 'the injected renderer does not declare that it writes every source byte as entity-encoded text';
+  if (renderer.pageSinkContract !== PAGE_SINK_CONTRACT && renderer.pageSinkContract !== PAGE_SINK_SCRIPT_CONTRACT) return 'the injected renderer does not declare that it writes every source byte as entity-encoded text';
   for (const [file, html] of files) {
-    if (!file.endsWith('.html')) continue;
-    const finding = pageSinkCspFinding(html);
+    if (file.endsWith('.json')) continue;
+    if (!file.endsWith('.html')) return `${file}: a page must be named .html, since a browser reads any other name with another parser`;
+    const finding = pageSinkCspFinding(html) ?? pageSinkScriptFinding(html, renderer.pageSinkContract);
     if (finding !== null) return `${file}: ${finding}`;
   }
   return null;
@@ -199,7 +201,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const pagesMissing = [...files].filter(([file, html]) => file.endsWith('.html') && !html.includes('class="run-disclosure"')).map(([file]) => file);
   if (pagesMissing.length > 0 || !files.has('machine.json')) return refuse('render', `the rendered site does not carry the run disclosure on every page and in the machine view (${pagesMissing.join(', ') || 'machine.json'})`);
   // The code-content exemption (policy version 3) and the project-documentation exemption (version 5) admitted some bodies without the
-  // active-content scan. Each holds at these pages only while they meet the version-3 renderCondition; where that cannot be confirmed,
+  // active-content scan. Each holds at these pages only while they meet the renderCondition (version 7's text); where that cannot be confirmed,
   // each such body is scanned as before for these pages, and one with a finding is excluded whole here: a quoted or cited body cannot
   // leave the pages it is drawn on, so nothing is rendered. A redacted body is scanned over its complete body, which check kept as the
   // answer alone (`activeContentAsBefore`), so its withheld lines count and no withheld text reaches this step.

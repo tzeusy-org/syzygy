@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 36,
-      "scenarios": 254,
+      "scenarios": 257,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1006,7 +1006,10 @@
             "Code excerpt rendered from Syzygy's read",
             "Code excerpt over its limit",
             "Code excerpt of an excluded file",
-            "Presentation element rendered inert"
+            "Presentation element rendered inert",
+            "Empty table cell states nothing",
+            "Path-excluded code excerpt left unread",
+            "Collapsed section discloses Unknown claims"
           ]
         },
         "REQ-polaris-generation-035": {

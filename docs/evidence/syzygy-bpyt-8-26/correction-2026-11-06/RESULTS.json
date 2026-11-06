@@ -1,0 +1,487 @@
+{
+  "schema": "corrected-full-consent-outcome/1",
+  "sourceToolCommit": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+  "toolSha256": "5d695a19d17fa6fa0a7b6708ee46ef7a285242a0decb6f73e61ef714e7417aad",
+  "fixedBase": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+  "populations": {
+    "generated": {
+      "worlds": 5403,
+      "byKind": {
+        "base": 4,
+        "base-reduced": 4,
+        "line": 3056,
+        "named": 535,
+        "record": 17,
+        "artifact": 24,
+        "pin": 8,
+        "probe": 1541,
+        "real-file": 197,
+        "edited-between-reads": 11,
+        "policy-bytes": 5,
+        "observation-successor": 1
+      }
+    },
+    "selected": {
+      "worlds": 5403,
+      "byKind": {
+        "base": 4,
+        "base-reduced": 4,
+        "line": 3056,
+        "named": 535,
+        "record": 17,
+        "artifact": 24,
+        "pin": 8,
+        "probe": 1541,
+        "real-file": 197,
+        "edited-between-reads": 11,
+        "policy-bytes": 5,
+        "observation-successor": 1
+      }
+    }
+  },
+  "totals": {
+    "worlds": 5403,
+    "answersCompared": 70999,
+    "mismatches": 0
+  },
+  "perLogicalReader": {
+    "admission": {
+      "worlds": 3040,
+      "steps": 3062,
+      "answers": 3062,
+      "mismatches": 0,
+      "byInstant": {
+        "untimed": 3062
+      },
+      "byStep": {
+        "1": 3040,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "policy-reader": {
+      "worlds": 3814,
+      "steps": 3836,
+      "answers": 3836,
+      "mismatches": 0,
+      "byInstant": {
+        "untimed": 3836
+      },
+      "byStep": {
+        "1": 3814,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "policy-chain": {
+      "worlds": 3814,
+      "steps": 3836,
+      "answers": 5901,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2065,
+        "2026-10-22T12:00:00Z": 3836
+      },
+      "byStep": {
+        "1": 5879,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "class-act": {
+      "worlds": 2012,
+      "steps": 2034,
+      "answers": 2297,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 263,
+        "2026-10-22T12:00:00Z": 2034
+      },
+      "byStep": {
+        "1": 2275,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "in-force-egress": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 8,
+        "2026-10-22T12:00:00Z": 1779
+      },
+      "byStep": {
+        "1": 1765,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "registry-git-source": {
+      "worlds": 2032,
+      "steps": 2054,
+      "answers": 2337,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 283,
+        "2026-10-22T12:00:00Z": 2054
+      },
+      "byStep": {
+        "1": 2315,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "local-agent-signoff": {
+      "worlds": 1763,
+      "steps": 1785,
+      "answers": 1798,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 13,
+        "2026-10-22T12:00:00Z": 1785
+      },
+      "byStep": {
+        "1": 1776,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "dossier-d9": {
+      "worlds": 1763,
+      "steps": 1785,
+      "answers": 1798,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 13,
+        "2026-10-22T12:00:00Z": 1785
+      },
+      "byStep": {
+        "1": 1776,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "dossier-rfc7-20": {
+      "worlds": 1763,
+      "steps": 1785,
+      "answers": 1798,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 13,
+        "2026-10-22T12:00:00Z": 1785
+      },
+      "byStep": {
+        "1": 1776,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "dossier-drawer": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 8,
+        "2026-10-22T12:00:00Z": 1779
+      },
+      "byStep": {
+        "1": 1765,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "dossier-statement-v1": {
+      "worlds": 1768,
+      "steps": 1790,
+      "answers": 1808,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 18,
+        "2026-10-22T12:00:00Z": 1790
+      },
+      "byStep": {
+        "1": 1786,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "dossier-provider-v2": {
+      "worlds": 1768,
+      "steps": 1790,
+      "answers": 1808,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 18,
+        "2026-10-22T12:00:00Z": 1790
+      },
+      "byStep": {
+        "1": 1786,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "port": {
+      "worlds": 3045,
+      "steps": 3067,
+      "answers": 4363,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 1296,
+        "2026-10-22T12:00:00Z": 3067
+      },
+      "byStep": {
+        "1": 4341,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "gate-port": {
+      "worlds": 3045,
+      "steps": 3067,
+      "answers": 4363,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 1296,
+        "2026-10-22T12:00:00Z": 3067
+      },
+      "byStep": {
+        "1": 4341,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "gate-d9": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 8,
+        "2026-10-22T12:00:00Z": 1779
+      },
+      "byStep": {
+        "1": 1765,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "gate-rfc7-20": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 8,
+        "2026-10-22T12:00:00Z": 1779
+      },
+      "byStep": {
+        "1": 1765,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "gate-registry-entry": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 8,
+        "2026-10-22T12:00:00Z": 1779
+      },
+      "byStep": {
+        "1": 1765,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "gate-drawer:redis-redis": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 8,
+        "2026-10-22T12:00:00Z": 1779
+      },
+      "byStep": {
+        "1": 1765,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "gate-statements:redis-redis": {
+      "worlds": 1757,
+      "steps": 1779,
+      "answers": 1787,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 8,
+        "2026-10-22T12:00:00Z": 1779
+      },
+      "byStep": {
+        "1": 1765,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "in-force": {
+      "worlds": 3040,
+      "steps": 3062,
+      "answers": 4353,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 1291,
+        "2026-10-22T12:00:00Z": 3062
+      },
+      "byStep": {
+        "1": 4331,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "consent-ports": {
+      "worlds": 3040,
+      "steps": 3062,
+      "answers": 4353,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 1291,
+        "2026-10-22T12:00:00Z": 3062
+      },
+      "byStep": {
+        "1": 4331,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "screen": {
+      "worlds": 4069,
+      "steps": 4091,
+      "answers": 6411,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2320,
+        "2026-10-22T12:00:00Z": 4091
+      },
+      "byStep": {
+        "1": 6389,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "policy-chain-disk": {
+      "worlds": 3814,
+      "steps": 3836,
+      "answers": 5901,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 2065,
+        "2026-10-22T12:00:00Z": 3836
+      },
+      "byStep": {
+        "1": 5879,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "class-act-disk": {
+      "worlds": 2012,
+      "steps": 2034,
+      "answers": 2297,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:30:00Z": 263,
+        "2026-10-22T12:00:00Z": 2034
+      },
+      "byStep": {
+        "1": 2275,
+        "2": 11,
+        "3": 11
+      }
+    },
+    "successor-record-port": {
+      "worlds": 1,
+      "steps": 1,
+      "answers": 3,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:29:59.999Z": 1,
+        "2026-10-08T09:30:00.000Z": 1,
+        "2026-10-08T09:30:00.001Z": 1
+      },
+      "byStep": {
+        "1": 3
+      }
+    },
+    "successor-gate-port": {
+      "worlds": 1,
+      "steps": 1,
+      "answers": 3,
+      "mismatches": 0,
+      "byInstant": {
+        "2026-10-08T09:29:59.999Z": 1,
+        "2026-10-08T09:30:00.000Z": 1,
+        "2026-10-08T09:30:00.001Z": 1
+      },
+      "byStep": {
+        "1": 3
+      }
+    }
+  },
+  "materialization": {
+    "pairs": 16396,
+    "expectedPairs": 16396,
+    "differing": 0,
+    "differences": [],
+    "materializedLeftOver": 0,
+    "created": 4091,
+    "removed": 4091
+  },
+  "fullPool": {
+    "workers": 4,
+    "node": "v24.6.0",
+    "timeLimitMs": 7200000,
+    "wallSeconds": 2004.567,
+    "loadAverageAtFinish": [
+      8.18,
+      9.28,
+      10.73
+    ]
+  },
+  "successorLiteralRows": 12,
+  "semanticControlDenominator": 6,
+  "rule6Totals": {
+    "killed": 44,
+    "survived": 0,
+    "errored": 0
+  },
+  "classifierControlDenominator": 5,
+  "selftestCases": 49,
+  "VitestDelta": {
+    "+": 0,
+    "~": 0,
+    "-": 0
+  },
+  "authorCorrectedFindings": [
+    "F1",
+    "F2"
+  ],
+  "all13CanonicalCriteriaPreserved": true,
+  "classes": [
+    1,
+    4,
+    6
+  ],
+  "allSevenFloorsApply": true,
+  "externalGates": [
+    "fresh independent corrected-head review under same review bead",
+    "ROOT cycle-report notice",
+    "exact-head hosted/custody/authority refresh and lawful protected landing",
+    "durable full archive and tracker lifecycle"
+  ],
+  "limits": "Author runtime/recounts are separately identified evidence, not a readiness verdict. Prior134/2a/4dc artifacts retain their actual old incomplete gate-question population."
+}

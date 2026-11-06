@@ -32,7 +32,7 @@ import {
 } from './governance-inputs.js';
 
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
-const EVALUATION_INSTANT = '2026-11-05T09:43:08Z';
+const EVALUATION_INSTANT = '2026-11-06T14:11:19Z';
 const CURRENT_COMMIT = 'f'.repeat(40);
 
 function git(root: string, args: readonly string[]): string {
@@ -177,7 +177,7 @@ describe('loadBodyReadAuthorityInputs (hermetic)', () => {
     const tree = fakeTree();
     tree.files.delete(PWB_ACT_RECORDS.policy);
     const inputs = loaderFor(tree);
-    expect(inputs.policy.actRecord).toEqual({ kind: 'git-ref-only', ref: 'pwb-approve-policy-public-source-scope-v6-signed-2026-11-05' });
+    expect(inputs.policy.actRecord).toEqual({ kind: 'git-ref-only', ref: 'pwb-approve-policy-public-source-scope-v7-signed-2026-11-06' });
     const evaluation = evaluateBodyReadAuthority(inputs);
     expect(evaluation.policy.kind === 'invalid' && evaluation.policy.caseId).toBe('policy:git-ref-only');
   });
@@ -342,12 +342,12 @@ describe('loadBodyReadAuthorityInputs (hermetic)', () => {
   it('the gate admits the current exact acts and refuses when either act names another digest', () => {
     const tree = fakeTree();
     const expected = pwbAuthorityExpectations(EVALUATION_INSTANT).authorities;
-    expect(expected.policy.actIdentity).toBe('PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-APPROVAL-2026-11-05');
+    expect(expected.policy.actIdentity).toBe('PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-APPROVAL-2026-11-06');
     expect(expected.registry.actIdentity).toBe('PWB-OBSERVER-REGISTRY-ENTRY-MACHINE-CEILING-2026-10-20');
-    expect(expected.policy.recordingTag).toBe('pwb-approve-policy-public-source-scope-v6-signed-2026-11-05');
+    expect(expected.policy.recordingTag).toBe('pwb-approve-policy-public-source-scope-v7-signed-2026-11-06');
     expect(expected.registry.recordingTag).toBe('pwb-registry-machine-ceiling-amendment-v1.0');
     // Registry version and scope anchors are unchanged by the ceiling act.
-    expect(expected.policy.scopeAnchors).toContain('1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p');
+    expect(expected.policy.scopeAnchors).toContain('1.8.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s');
     expect(expected.registry.scopeAnchors).toContain('1.2.0-candidate.1');
     const admitted = evaluateBodyReadAuthority(loaderFor(tree));
     expect(admitted.admits).toBe(true);
@@ -624,7 +624,7 @@ describe('owner-act records under altered prose (characterization, syzygy-bpyt.6
   // [authority, non-blank lines, append ignored, delete ignored]; ignored = the authority's verdict is unchanged (parser-isolated).
   const CENSUS: ReadonlyArray<readonly [(typeof KINDS)[number], number, number, number]> = [
     ['consent', 56, 42, 37],
-    ['policy', 69, 55, 50],
+    ['policy', 70, 56, 51],
     ['registry', 52, 38, 30],
   ];
   it.each(CENSUS)('FAIL-OPEN (parser-isolated) line census, %s record: of %s non-blank lines, %s ignore an appended suffix and %s ignore deletion; none do under the loader-faithful reading', (kind, nonBlank, appendIgnored, deleteIgnored) => {

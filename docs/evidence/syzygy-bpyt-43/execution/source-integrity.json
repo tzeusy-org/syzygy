@@ -1,0 +1,41 @@
+{
+  "subject": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+  "baseline": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+  "allowedPaths": [
+    "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+    "docs/evidence/syzygy-bpyt-43/**",
+    "docs/reviews/R-GP-IMPL-TEST-CLOCKS-FOLLOWUPS-1-RAW.md"
+  ],
+  "changedTrackedPaths": [
+    "docs/evidence/syzygy-bpyt-43/tools/build_record.py",
+    "docs/evidence/syzygy-bpyt-43/tools/build_record_mutants.py",
+    "docs/evidence/syzygy-bpyt-43/tools/daemon-case-population.json",
+    "docs/evidence/syzygy-bpyt-43/tools/daemon_entry_probe.py",
+    "docs/evidence/syzygy-bpyt-43/tools/emit_equal.mjs",
+    "docs/evidence/syzygy-bpyt-43/tools/historical_record.py",
+    "docs/evidence/syzygy-bpyt-43/tools/r3_variants.py",
+    "docs/evidence/syzygy-bpyt-43/tools/row_delta.py",
+    "docs/evidence/syzygy-bpyt-43/tools/source_applicability.mjs",
+    "docs/evidence/syzygy-bpyt-43/tools/timing_census.py",
+    "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts"
+  ],
+  "outsideAllocationChanges": [],
+  "method1": "git diff --name-only over the complete base-to-subject tracked delta",
+  "method2": {
+    "method": "Independent complete git ls-tree object-identity maps outside the allocation compare exactly",
+    "baselineTrackedFiles": 8836,
+    "subjectTrackedFiles": 8846,
+    "outsideAllocationFiles": 8835,
+    "outsideMapSha256": "8cf4b8ba0ba1c98e9d34b4c154eb67654f74e4488bd8c7de854bed0112f10338"
+  },
+  "pinExecutableBlock": {
+    "sha256": "fb4a33f3c3f7327661224b45de0f26b895c4fb597550aae49e2e51811a64d36b",
+    "baselineBytes": 990,
+    "subjectBytes": 990,
+    "byteEqual": true,
+    "commentExcluded": true
+  },
+  "appCoreHold": "Neither apps/three-surface-poc/src nor packages/three-surface-poc-core/src changes. BOTH actual owner judgment .1z3.22 and cycle report .1z3.25 remain required for any such later change.",
+  "productOrNormativeChange": false,
+  "currentTiming": "Unknown"
+}

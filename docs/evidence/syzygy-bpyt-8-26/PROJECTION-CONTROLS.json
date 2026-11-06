@@ -1,0 +1,68 @@
+{
+  "schema": "consent-port-projection-controls/1",
+  "nativeSha256": "731005f8f074169a59584a0cd171ca343b599c33896679016b6fead3ac336731",
+  "cases": [
+    {
+      "id": "missing-world",
+      "executedComparisons": 268,
+      "classification": "killed",
+      "errors": [
+        "executed world population",
+        "complete comparison denominator"
+      ]
+    },
+    {
+      "id": "missing-matrix-row",
+      "executedComparisons": 273,
+      "classification": "killed",
+      "errors": [
+        "exact full matrix binding",
+        "complete comparison denominator"
+      ]
+    },
+    {
+      "id": "paired-value-key",
+      "executedComparisons": 274,
+      "classification": "killed",
+      "errors": [
+        "exact full matrix binding",
+        "paired value presence"
+      ]
+    },
+    {
+      "id": "native-binding",
+      "executedComparisons": 274,
+      "classification": "killed",
+      "errors": [
+        "native byte binding"
+      ]
+    },
+    {
+      "id": "missing-value",
+      "executedComparisons": 274,
+      "classification": "killed",
+      "errors": [
+        "complete value commitment population",
+        "exact value byte binding"
+      ]
+    },
+    {
+      "id": "value-byte-length",
+      "executedComparisons": 274,
+      "classification": "killed",
+      "errors": [
+        "exact value byte binding"
+      ]
+    },
+    {
+      "id": "identity-ordinal",
+      "executedComparisons": 274,
+      "classification": "killed",
+      "errors": [
+        "identity ordinal/hash binding"
+      ]
+    }
+  ],
+  "success": true,
+  "scope": "Projection fidelity only; full normal tool and semantic controls have separate gates."
+}

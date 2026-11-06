@@ -1,0 +1,52 @@
+{
+  "status": "PENDING",
+  "codeSubject": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+  "integratedSubject": "Unknown at packet creation; ROOT binding and the eventual native capture will name the actual committed clean subject",
+  "command": [
+    "npm",
+    "run",
+    "check:all"
+  ],
+  "freshClone": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/subject",
+  "precondition": "Replace the disposable campaign clone with a fresh clean committed clone at the same private path; finish exact-cache offline npm ci before NodeNext/runtime; ROOT binds independent observer and releases gate",
+  "sharedLock": "/home/orca/.tmp/syzygy-full-suite-20261104.lock",
+  "driver": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/final_gate.py",
+  "capturePaths": {
+    "main": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/final-check-all.log",
+    "receipt": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/final-check-all.json",
+    "outerDriver": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/logs/final-gate-driver.log",
+    "batteryPopulation": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/battery-command-population.json",
+    "batteryReturns": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/battery-returns.jsonl",
+    "batteryStreams": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/battery-streams"
+  },
+  "adapters": [
+    {
+      "path": "final_gate.py",
+      "sha256": "2434c8a65b5d2dde194785372a0630e54c0dda0be1aabc6e67c56917a58c1d0a"
+    },
+    {
+      "path": "capture_inside.py",
+      "sha256": "5315151d0bc1caab413ff47f149fb864d05a330914f8fcacc4e7629f6c1e2cb9"
+    },
+    {
+      "path": "isolated.py",
+      "sha256": "f4854c2f4255b302566f2869c46c84b5448007b5999f193a4a9426e1f6c5746a"
+    },
+    {
+      "path": "capture-battery.py",
+      "sha256": "902701a4624fed443a69e9efc18f1d4a71b9db0be99fd16e11690137659166b3"
+    },
+    {
+      "path": "bin/python3",
+      "sha256": "c9eaca952b1f33fa16adf0797a6dacfd4590f1f801fc7623623c33cef37610c2"
+    }
+  ],
+  "claim": "One native check:all with passive per-emitter capture; byte observer is custody only, not independent runtime authentication. No replay solely for capture. Every actual failure and unperformed stage must remain explicit.",
+  "pending": [
+    "ROOT final subject/capture binding and release",
+    "final clean-clone check:all",
+    "fresh independent review",
+    "hosted integration",
+    "ROOT notice/lawful landing"
+  ]
+}

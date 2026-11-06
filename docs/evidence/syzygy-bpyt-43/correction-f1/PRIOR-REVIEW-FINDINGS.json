@@ -1,0 +1,38 @@
+[
+  {
+    "id": "F1",
+    "severity": "correction-required",
+    "priority": 2,
+    "path": "docs/evidence/syzygy-bpyt-43/execution/hook-core-positive-control.json",
+    "line": 114,
+    "title": "Keep distinct first and restored control raw artifacts",
+    "missingRawSha256": "29c79260f5160fe829f3cfdc9a70432d6645416c1f7993ae0de6910ef0b3bb97",
+    "retainedRestoredSha256": "e6e0f56e8fc6ace2e9d5a49387c44fa48a9370ac0bfda9482899bc4378ad8f54",
+    "actualRetainedFileSha256": "e6e0f56e8fc6ace2e9d5a49387c44fa48a9370ac0bfda9482899bc4378ad8f54",
+    "sameRawPath": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/hook-core-positive-control/control.json",
+    "cause": "Archived core_hook_witness.py:10 calls run(None) twice; daemon_entry_probe.py run(None) names both outputs control.json, so the second replaces the first.",
+    "evidencePopulation": [
+      {
+        "population": "enrollment",
+        "denominator": 1210,
+        "nativeHashLines": 1210,
+        "targetDigestHits": 0,
+        "pythonDigestHits": 0
+      },
+      {
+        "population": "archive",
+        "denominator": 1040,
+        "nativeHashLines": 1040,
+        "targetDigestHits": 0,
+        "pythonDigestHits": 0
+      }
+    ],
+    "criterionImpact": [
+      3,
+      10,
+      17,
+      21
+    ],
+    "unblock": "A correction owner retains this failed proof attempt, creates a new three-run core-island witness with unique before/mutant/restored raw report and stream paths, binds each source/tool/test-copy identity and actual result, updates the successor evidence/index without overwriting this frozen packet, and obtains fresh independent review. Do not relabel the missing raw as retained or recoverable from row summaries."
+  }
+]

@@ -279,7 +279,7 @@ export function readGovernanceTextRule(classification: unknown): GovernanceTextR
  * Its rule lifts, for an exempt body only, the active-content scan, its success condition and the malformed-code-context exclusion;
  * every detector still runs, and a project-documentation body, or a code-content body whose extension the exemption does not list, is
  * scanned as before. Its `renderCondition` binds every page sink the body reaches: a consumer that cannot confirm it for a page scans
- * the body as before for that page (`pageSinkCspFinding` below checks the policy half; the dossier's `render.ts` applies it).
+ * the body as before for that page (`pageSinkCspFinding` in `page-sink.ts` checks the policy half; the dossier's `render.ts` applies it).
  *
  * As for the class rule, the texts are pinned by digest: the screen implements one reading of one text, and any other text (either
  * variant's `appliesTo` is accepted, the extension list deciding the variant) refuses the screen. */
@@ -287,7 +287,8 @@ const EXEMPTION_TEXTS = {
   appliesTo: ['d202ff90a058d968503ef1de9f1de6f13cb31d4217b6761dee2579e8fc0f97b4', '215d99e9b193efd3be87442cf55fec0b4c37d3482767917b0ddfacee987fcbca'],
   // Version 3's text, and version 5's, which names projectDocumentationExemption for the bodies this exemption does not name.
   rule: ['b2d0ec79e84ac51239073b9c84040d92951400575c6204825d990681d0b4a41c', 'f08bb1c9462d3c73f184e715665523bc0a56d0db69eab64230ae6ffbf640337e'],
-  renderCondition: '2942af13a00058568faaf88e6a3abe9f43a9a1f0c056f1531fd2aff4797265a9',
+  // Version 3's text, and version 7's, whose closed directive set and renderer-owned script `page-sink.ts` reads.
+  renderCondition: ['2942af13a00058568faaf88e6a3abe9f43a9a1f0c056f1531fd2aff4797265a9', '7c0b7605f1f2ea55e404a32e6d5d2fe0bb62ff1f58de9ccd221df0464e296ffc'],
   egress: '4ffff86212a31309259037674aa7d95f4458c2f460335ef12198ba7a453148fd',
 } as const;
 const EXEMPTION_KEYS = ['appliesTo', 'exemptExtensions', 'rule', 'renderCondition', 'egress'] as const;
@@ -313,10 +314,10 @@ export function readCodeContentExemption(scope: unknown, sourceExtensions: reado
   if (typeof applies !== 'string' || !(EXEMPTION_TEXTS.appliesTo as readonly string[]).includes(sha256(applies))) return refuse('appliesTo is not a text this screen implements');
   const ruleText = exemption['rule'];
   if (typeof ruleText !== 'string' || !(EXEMPTION_TEXTS.rule as readonly string[]).includes(sha256(ruleText))) return refuse('rule is not a text this screen implements');
-  for (const key of ['renderCondition', 'egress'] as const) {
-    const value = exemption[key];
-    if (typeof value !== 'string' || sha256(value) !== EXEMPTION_TEXTS[key]) return refuse(`${key} is not the text this screen implements`);
-  }
+  const condition = exemption['renderCondition'];
+  if (typeof condition !== 'string' || !(EXEMPTION_TEXTS.renderCondition as readonly string[]).includes(sha256(condition))) return refuse('renderCondition is not the text this screen implements');
+  const egress = exemption['egress'];
+  if (typeof egress !== 'string' || sha256(egress) !== EXEMPTION_TEXTS.egress) return refuse('egress is not the text this screen implements');
   const extensions = exemption['exemptExtensions'];
   if (!Array.isArray(extensions) || extensions.length === 0 || new Set(extensions).size !== extensions.length
     || !extensions.every(entry => typeof entry === 'string' && sourceExtensions.includes(entry))) {
@@ -377,39 +378,3 @@ export function documentationExempt(contentClass: PublicSourceContentClass | und
   return declared && contentClass === 'project-documentation';
 }
 
-/** What a page renderer declares (as its `pageSinkContract` property) when it writes every byte of a source body or span it puts on a
- * page as text, each of `& < > " '` as a character reference, never parsed as Markdown or HTML and never minting a link, element,
- * attribute, script or handler: the encoding half of `renderCondition`. The declaration is the renderer's; its own tests must fail if a
- * page path stops encoding. A consumer reads it together with `pageSinkCspFinding` on every page drawn. */
-export const PAGE_SINK_CONTRACT = 'polaris/page-sink/escaped-text-under-csp/1';
-
-/** Directives a later declaration lets override `default-src` for script or plugin fetches; `renderCondition` forbids each. */
-const FORBIDDEN_DIRECTIVES = ['script-src', 'script-src-elem', 'script-src-attr', 'object-src'] as const;
-const CSP_META = /<meta\s[^>]*http-equiv\s*=\s*(["'])\s*content-security-policy(?:-report-only)?\s*\1[^>]*>/giu;
-const decodeAttribute = (value: string): string =>
-  value.replace(/&(?:#39|#x27|apos);/giu, '\'').replace(/&(?:#34|#x22|quot);/giu, '"').replace(/&(?:#38|#x26|amp);/giu, '&');
-
-/** Why an HTML page does not meet the policy half of `renderCondition`, or null when it does: exactly one enforced
- * Content-Security-Policy `<meta>` (no Report-Only one) in `<head>`, before `<title>`, `<body` and any other element but the charset
- * and viewport metas; a `default-src` whose source list is exactly `'none'`; and none of `script-src`, `script-src-elem`,
- * `script-src-attr` or `object-src`. The encoding half (every body byte written as text, `& < > " '` as character references) is the
- * renderer's, confirmed by its own tests; this checks only what one page's bytes can show. */
-export function pageSinkCspFinding(html: string): string | null {
-  const metas = [...html.matchAll(CSP_META)];
-  if (metas.length !== 1) return `the page carries ${metas.length} Content-Security-Policy meta elements, not exactly one`;
-  const meta = metas[0]!;
-  if (/content-security-policy-report-only/iu.test(meta[0])) return 'the page\'s Content-Security-Policy is Report-Only, which enforces nothing';
-  const before = html.slice(0, meta.index);
-  const head = /^<!doctype html>\s*<html(?:\s[^>]*)?>\s*<head>\s*/iu.exec(before);
-  const rest = head === null ? null : before.slice(head[0].length).replace(/<meta\s+charset\s*=\s*"[^"<>]*"\s*\/?>\s*/iu, '').replace(/<meta\s+name\s*=\s*"viewport"\s+content\s*=\s*"[^"<>]*"\s*\/?>\s*/iu, '');
-  if (rest !== '') return 'the page\'s Content-Security-Policy is not delivered first in <head>, before every other element but the charset and viewport metas';
-  const content = /\scontent\s*=\s*"([^"]*)"/iu.exec(meta[0]) ?? /\scontent\s*=\s*'([^']*)'/iu.exec(meta[0]);
-  if (content === null) return 'the page\'s Content-Security-Policy meta carries no content attribute';
-  const directives = decodeAttribute(content[1]!).split(';').map(part => part.trim()).filter(part => part !== '').map(part => part.split(/\s+/u));
-  const named = (name: string) => directives.filter(([directive]) => directive!.toLowerCase() === name);
-  const defaults = named('default-src');
-  if (defaults.length !== 1 || defaults[0]!.length !== 2 || defaults[0]![1]!.toLowerCase() !== '\'none\'') return 'the page\'s default-src source list is not exactly \'none\'';
-  const forbidden = FORBIDDEN_DIRECTIVES.filter(name => named(name).length > 0);
-  if (forbidden.length > 0) return `the page's Content-Security-Policy carries ${forbidden.join(', ')}, which may override default-src for script or plugins`;
-  return null;
-}

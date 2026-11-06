@@ -60,7 +60,7 @@ function expectEncodedPages(files: ReadonlyMap<string, string>): void {
   }
 }
 
-describe('page sinks under the version-3 renderCondition', () => {
+describe('page sinks under the renderCondition', () => {
   it('the dossier renderer writes the canary body entity-encoded, never raw, on every page under the policy CSP', () => {
     expect(renderDossier.pageSinkContract).toBe('polaris/page-sink/escaped-text-under-csp/1');
     expectEncodedPages(renderDossier({ result: run.result, sources: canarySources }).files);

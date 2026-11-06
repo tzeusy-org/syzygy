@@ -100,6 +100,10 @@ Doctrine itself (VIS-1…7, SEC-1…5) is adopted and lives in
 `ACCEPTANCE-ACT-RECORD.md` is the aggregate record of performed acts;
 each act's own record, and the files named below, own the details.
 
+[Observed] The dossier local-agent mode version 1.4 sign-off is recorded in
+[`POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md`](POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md).
+That record owns its selection, reviewed version and bounded consequences.
+
 ```text
 ACCEPTANCE-ACT-RECORD.md      exists — created by the Wave A act, 2026-08-17
 ```
@@ -184,6 +188,9 @@ exists and what it is about, so that a reader can find it.
 | 2026-10-29 | [`OWNER-DIRECTION-SHARED-MUTATION-RUNNER-2026-10-29.md`](OWNER-DIRECTION-SHARED-MUTATION-RUNNER-2026-10-29.md) | The owner selected A for the reviewed shared mutation test-runner direction and corrected consumer addendum: faithful project replay, versioned evidence, preserved controls and explicit failure exits in owned scratch copies; recording and the existing handoff update included. Current ownership, migration mapping and verification gates remain. Plain implementation direction; no product specification adoption or historical evidence rewrite. [Recovered owner-message timestamp](../../../docs/evidence/shared-mutation-runner-authorization-2026-10-29/OWNER-MESSAGE-TIMESTAMP-SUPPLEMENT.md) |
 | 2026-11-04 | [`OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04.md`](OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04.md) | Dossier presentation elements (tables, callouts, steps, definitions, cards, collapsible sections, code excerpts) as inert static HTML; amending the signed local-agent mode as version 1.3 is approved, and 1.3 binds only by the owner's own version-tagged sign-off. Plain direction: binds no digest, adds no acceptance-record row, signs nothing |
 | 2026-11-04 | [`OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md`](OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04.md) | The owner's answers to the dossier v1.3 packet: sign v1.3; P115's checker accepts a recorded, reviewed, signed later version of a frozen governing input (cost: no re-confirmation of P115's `explicitly-unaffected` reading of REQ-034); the empty-cell `-` rendering is a v1.4 item. Plain direction: binds no digest, adds no acceptance-record row |
+| 2026-11-06 | [`OWNER-DIRECTION-DOSSIER-VOICE-AND-SCRIPTS-2026-11-06.md`](OWNER-DIRECTION-DOSSIER-VOICE-AND-SCRIPTS-2026-11-06.md) | Dossier judgements allowed, the quote rule to become strongly encouraged citations, and the no-scripts rule to be given up with every page still working as a static site; each binds only through a later signed amendment. |
+| 2026-11-06 | [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06.md) | The owner's four answers, each the recommended option: the surface merge freeze starts when a readiness run begins, with a re-ask on 2026-11-20; sign dossier v1.4; no withheld-line change yet; option E settled inside the voice amendment. |
+| 2026-11-06 | [`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06-2.md`](OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06-2.md) | The owner's three answers, each the recommended option: the coordinator records dossier v1.4 with a dated takeover; dossier v1.5 keeps the withheld rule for one full round; sign screening scope version 7, variant s, through its own recorder. |
 
 Dates are each file's first-commit date, not a claim about when the owner
 acted; the act's own record states that. [Observed — enumerated 2026-09-05 over

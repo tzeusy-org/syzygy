@@ -17,6 +17,7 @@ const ENTRIES = {
   tsc: ['node_modules', '.bin', 'tsc'],
   'polaris-generation-core': ['node_modules', '@syzygy', 'polaris-generation-core'],
   support: ['node_modules', '@syzygy', 'support'],
+  parse5: ['node_modules', 'parse5'],
 } as const;
 type Entry = keyof typeof ENTRIES;
 
@@ -42,14 +43,15 @@ async function check(directory: string): Promise<{ readonly exit: number; readon
 }
 
 describe('the generator install check', () => {
-  it('passes a checkout holding tsc, the generation core and the support package', async () => {
-    expect(await check(checkoutWith(['tsc', 'polaris-generation-core', 'support']))).toEqual({ exit: 0, stderr: '' });
+  it('passes a checkout holding tsc, the generation core, the support package and the HTML parser', async () => {
+    expect(await check(checkoutWith(['tsc', 'polaris-generation-core', 'support', 'parse5']))).toEqual({ exit: 0, stderr: '' });
   });
 
   it.each([
-    ['support', ['tsc', 'polaris-generation-core']],
-    ['polaris-generation-core', ['tsc', 'support']],
-    ['tsc', ['polaris-generation-core', 'support']],
+    ['support', ['tsc', 'polaris-generation-core', 'parse5']],
+    ['polaris-generation-core', ['tsc', 'support', 'parse5']],
+    ['tsc', ['polaris-generation-core', 'support', 'parse5']],
+    ['parse5', ['tsc', 'polaris-generation-core', 'support']],
     ['every entry', []],
   ] as const)('refuses a checkout without %s, with the instruction to run npm ci', async (_missing, present) => {
     expect(await check(checkoutWith(present))).toEqual({ exit: 1, stderr: REFUSAL });

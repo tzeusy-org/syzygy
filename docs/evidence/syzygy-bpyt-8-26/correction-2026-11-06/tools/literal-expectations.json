@@ -1,0 +1,129 @@
+{
+  "label": "Static proposed evidence-only literal fixture, not parsed or executed, not accepted file form, not owner act",
+  "records": [
+    {
+      "recordId": "FIXTURE-OBSERVATION",
+      "version": "1",
+      "class": "observation",
+      "project": "project:syzygy",
+      "repositoryId": "fixture-repository",
+      "providerId": null,
+      "upstream": "https://example.invalid/fixture-observation",
+      "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+      "inForceAt": 1791360000000,
+      "withdrawnAt": null,
+      "supersedes": null,
+      "supersessionAt": null,
+      "admittedRevisions": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "revisionLabels": [
+        "predecessor"
+      ],
+      "admittedRepositories": [],
+      "contentClasses": []
+    },
+    {
+      "recordId": "FIXTURE-OBSERVATION",
+      "version": "2",
+      "class": "observation",
+      "project": "project:syzygy",
+      "repositoryId": "fixture-repository",
+      "providerId": null,
+      "upstream": "https://example.invalid/fixture-observation",
+      "digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "inForceAt": 1791451800000,
+      "withdrawnAt": null,
+      "supersedes": "FIXTURE-OBSERVATION@1",
+      "supersessionAt": 1791451800000,
+      "admittedRevisions": [
+        "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "revisionLabels": [
+        "successor"
+      ],
+      "admittedRepositories": [],
+      "contentClasses": []
+    }
+  ],
+  "world_readers": [
+    "successor-record-port",
+    "successor-gate-port"
+  ],
+  "instants_and_literals": [
+    {
+      "position": "before",
+      "instant": 1791451799999,
+      "expected": {
+        "ids": [
+          "fixture-repository"
+        ],
+        "revisions": [
+          {
+            "label": "predecessor",
+            "commitId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "absence": "the observation record(s) naming https://example.invalid/fixture-observation: FIXTURE-OBSERVATION@1 is in force; FIXTURE-OBSERVATION@2 is not in force yet",
+        "observationOld": {
+          "satisfied": true,
+          "record": "FIXTURE-OBSERVATION@1"
+        },
+        "observationSuccessor": {
+          "satisfied": false,
+          "why": "no record found: no owner act puts a observation-consent for fixture-repository in force at revision bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      }
+    },
+    {
+      "position": "at",
+      "instant": 1791451800000,
+      "expected": {
+        "ids": [
+          "fixture-repository"
+        ],
+        "revisions": [
+          {
+            "label": "successor",
+            "commitId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        ],
+        "absence": "the observation record(s) naming https://example.invalid/fixture-observation: FIXTURE-OBSERVATION@1 is superseded by a successor in force; FIXTURE-OBSERVATION@2 is in force",
+        "observationOld": {
+          "satisfied": false,
+          "why": "no record found: no owner act puts a observation-consent for fixture-repository in force at revision aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "observationSuccessor": {
+          "satisfied": true,
+          "record": "FIXTURE-OBSERVATION@2"
+        }
+      }
+    },
+    {
+      "position": "after",
+      "instant": 1791451800001,
+      "expected": {
+        "ids": [
+          "fixture-repository"
+        ],
+        "revisions": [
+          {
+            "label": "successor",
+            "commitId": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        ],
+        "absence": "the observation record(s) naming https://example.invalid/fixture-observation: FIXTURE-OBSERVATION@1 is superseded by a successor in force; FIXTURE-OBSERVATION@2 is in force",
+        "observationOld": {
+          "satisfied": false,
+          "why": "no record found: no owner act puts a observation-consent for fixture-repository in force at revision aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "observationSuccessor": {
+          "satisfied": true,
+          "record": "FIXTURE-OBSERVATION@2"
+        }
+      }
+    }
+  ],
+  "adapter_contract": "Only package-port construction is injected. All consent exports/functions remain actual; all five gate methods remain actual compiled code. screeningPolicy actual file-chain output compared in full but excluded from synthetic literal record expectations.",
+  "unexecuted": true
+}

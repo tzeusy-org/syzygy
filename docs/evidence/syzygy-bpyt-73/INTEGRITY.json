@@ -1,0 +1,19 @@
+{
+  "schema": "syzygy-bpyt.73/package-integrity/v1",
+  "at": "2026-11-06T14:29:42.644948+00:00",
+  "archive": {
+    "path": "raw/proof-objects.tar.gz",
+    "sha256": "7c40de3acbd28c2add4c6c5780b967208f4a8ab8350cd4b3bbd269834db28ec6",
+    "bytes": 6720158
+  },
+  "rawLocatorsVerifiedAgainstOriginalBytes": 2359,
+  "distinctObjectsVerifiedByPythonTarfileAndNativeTarSha256sum": 1375,
+  "cacheLogCount": 105,
+  "canonicalDescriptionAndAllCriteriaExact": 15,
+  "scratchCaseCount": 75,
+  "newlyRefused": [],
+  "newlyAccepted": [],
+  "auditScriptSha256": "18c1ad34aac8310592b0c86fdf89f70623f1226ba1bb2624f822d9a6900dd774",
+  "nativeLogSha256": "5cd1b171eb7cf5e95d66d6ddc4887fe8681e114740d395a8aa8ebd1fff4bdae2",
+  "nativeLogLocator": "/home/orca/.tmp/syzygy-bpyt73-current-full-outcome-readiness-20261106/package-audit/native-sha256sum.log"
+}

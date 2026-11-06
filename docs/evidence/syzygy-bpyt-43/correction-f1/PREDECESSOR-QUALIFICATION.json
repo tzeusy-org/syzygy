@@ -1,0 +1,21 @@
+{
+  "schema": "core-hook-f1-predecessor-qualification/1",
+  "finding": "F1",
+  "priorRecord": {
+    "path": "docs/evidence/syzygy-bpyt-43/execution/hook-core-positive-control.json",
+    "sha256": "ba2ce2d1161860d0e9e51b795b937495d82cc8bbc231b7362d45d0dffa7921d2"
+  },
+  "reviewManifest": {
+    "path": "/home/orca/.tmp/syzygy-pr770-full-independent-review-20261106/MANIFEST.json",
+    "sha256": "c95ad5bc268001a14aca3f23f2d3a2f85bc74005cffbe37bfd12ba29cd1404f2"
+  },
+  "authorEnrollment": {
+    "path": "/home/orca/.tmp/syzygy-bpyt43-full-outcome-20261106/MANIFEST-ENROLLMENT.json",
+    "sha256": "aba007ee10b79bd03b84ec981fdd803f9c37a71bdd5413c575a86310fb580042"
+  },
+  "missingOriginalFirstRawSha256": "29c79260f5160fe829f3cfdc9a70432d6645416c1f7993ae0de6910ef0b3bb97",
+  "retainedRestoredRawSha256": "e6e0f56e8fc6ace2e9d5a49387c44fa48a9370ac0bfda9482899bc4378ad8f54",
+  "qualification": "Original first control raw was overwritten. Reviewer Python/native sweeps found no original first digest in 1210 enrolled files or 1040 archive members. First-control complete retention is Unknown; row summary cannot recover that raw. Frozen predecessor claims of full raw retention are superseded only for F1 by this qualification. New proof is a distinct execution and does not repair or relabel the old attempt.",
+  "oldAttemptPreserved": true,
+  "freshIndependentReviewRequired": true
+}
