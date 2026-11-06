@@ -25,5 +25,6 @@ Criteria:
 
 Never read an observed repository body or a run's output. Run no provider call.
 Report a verdict word, CONFIRM, CONFIRM WITH EXCEPTIONS or REVISE, on its own line
-in the head, and name the subject digests you checked. Findings carry a severity
+in the head, and name the subject digests you checked. `scripts/record_versioned_signoff.py` reads the
+`Verdict:` line and a `## Findings` section with numbered findings, so give both. Findings carry a severity
 and an anchor. Output your raw report as your final message.

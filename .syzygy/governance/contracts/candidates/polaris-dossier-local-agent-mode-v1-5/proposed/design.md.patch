@@ -45,7 +45,7 @@
  
  For an excluded or invalid-UTF-8 blob, the excerpt renders Unknown with
  `excluded-content` and no blob bytes; its exclusion is not a finding. Any
-@@ -449,8 +449,83 @@
+@@ -449,8 +449,85 @@
  A `code` element has no `blockSupport` entry of its own; its admitted span
  is one of the cited spans the fidelity packet carries.
  
@@ -77,9 +77,11 @@
 +  sentence and a link to the appendix, which holds the full disclosure and the
 +  open questions. An Unknown affecting a passage stays explicit at the passage.
 +- Other pages (appendix, review, understanding, discovery, source) keep labels.
-+- A test reads visible text by `innerText` on a clone with the renderer's
-+  visually-hidden class removed, and recoverable text by `textContent` and the
-+  accessibility tree. `hidden` and `display:none` leave the text out of both.
++- A test reads visible text by `innerText` on a clone with the elements carrying
++  the renderer's visually-hidden class removed, and recoverable text by
++  `textContent` and the accessibility tree, opening collapsed sections first.
++  `hidden` and `display:none` take text out of the accessibility tree, so they
++  are not used.
 +
 +## Why-first topics and voice (version 1.5)
 +
