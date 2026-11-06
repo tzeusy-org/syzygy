@@ -4,8 +4,6 @@ import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import {
-  computeDiscoverabilityWithProposal,
-  computeDiscoverability,
   deriveEffectiveStatus,
   proposeEntryLink,
   renderHuman,
@@ -245,9 +243,12 @@ describe('RT5 — GET / project page over a real daemon', () => {
     const daemon = await startDaemon(humanRoutes(deps));
     const { body: html } = await fetchText(daemon, HUMAN_PAGE_PATH);
 
-    // The literal public-facing name, hard-coded, once per answer.
+    // The literal public-facing name, hard-coded: once per shape answer
+    // and once per discoverability row (three declared repositories).
     const summaries = html.match(/<summary>Why this answer\?<\/summary>/g) ?? [];
-    expect(summaries).toHaveLength(7);
+    expect(summaries).toHaveLength(10);
+    expect(html.match(/<details data-explains="/g) ?? []).toHaveLength(7);
+    expect(html.match(/<details data-explains-discoverability="/g) ?? []).toHaveLength(3);
     for (const name of ['Registered', 'Observable', 'Mission-ready']) {
       expect(html).toContain(`data-explains="${name}"`);
     }
@@ -348,10 +349,12 @@ describe('RT5 — GET / project page over a real daemon', () => {
     expect(html).not.toContain('data-fact-name=');
   });
 
-  it('renders supplied authority exposures with stamp and effective status readable apart', async () => {
-    const { deps } = await evaluatedFixture();
+  it('renders an available authority plane with stamp and effective status readable apart', async () => {
+    const { deps, evaluation } = await evaluatedFixture();
+    if (evaluation.kind !== 'project-evaluated') throw new Error('fixture must evaluate');
     // Fixture: stamped `accepted`, NO owner-act record — core derives
-    // effectively unadopted with the disagreement disclosed.
+    // effectively unadopted with the disagreement disclosed. The plane is
+    // part of the evaluation, never a route-supplied provider.
     const exposure = deriveEffectiveStatus(
       {
         artifactId: 'artifact-rt5',
@@ -361,9 +364,11 @@ describe('RT5 — GET / project page over a real daemon', () => {
       },
       [],
     );
-    const daemon = await startDaemon(
-      humanRoutes({ ...deps, getAuthorityExposures: () => [exposure] }),
-    );
+    const withPlane: ProjectEvaluation = {
+      ...evaluation,
+      planes: { ...evaluation.planes, authorityExposures: { state: 'available', values: [exposure] } },
+    };
+    const daemon = await startDaemon(humanRoutes({ ...deps, getEvaluation: () => withPlane }));
     const { body: html } = await fetchText(daemon, HUMAN_PAGE_PATH);
 
     expect(html).toContain('data-self-declared-stamp="accepted"');
@@ -373,39 +378,49 @@ describe('RT5 — GET / project page over a real daemon', () => {
     expect(html).toContain('no-owner-act-record-at-this-digest');
   });
 
-  it('renders supplied discoverability findings; a proposal never renders as applied', async () => {
-    const { deps } = await evaluatedFixture();
-    const finding = computeDiscoverability(
-      'repo-governance-root' as RepositoryId,
-      'governance-root',
-      { state: 'captured', linksToEntry: false },
-    );
-    const withProposal = computeDiscoverabilityWithProposal(
-      finding,
-      proposeEntryLink('repo-governance-root' as RepositoryId, HUMAN_ENTRY_PATH),
-    );
-    const daemon = await startDaemon(
-      humanRoutes({ ...deps, getDiscoverability: () => [withProposal] }),
-    );
+  it('an available proposal renders as proposed and never changes the finding', async () => {
+    const { deps, evaluation } = await evaluatedFixture();
+    if (evaluation.kind !== 'project-evaluated') throw new Error('fixture must evaluate');
+    const withProposal: ProjectEvaluation = {
+      ...evaluation,
+      planes: {
+        ...evaluation.planes,
+        proposals: {
+          state: 'available',
+          values: [proposeEntryLink('repo-governance-root' as RepositoryId, HUMAN_ENTRY_PATH)],
+        },
+      },
+    };
+    const daemon = await startDaemon(humanRoutes({ ...deps, getEvaluation: () => withProposal }));
     const { body: html } = await fetchText(daemon, HUMAN_PAGE_PATH);
 
-    // The finding stays a truthful `no` — the closed four-value
-    // vocabulary verbatim — while the proposal renders as proposed,
-    // machine-readably distinct, with no status authority.
-    expect(html).toContain('data-discoverability-value="no"');
+    // The governance root's README is absent in this fixture, so the row
+    // stays Unknown with its reason whatever is proposed (CAP1-REQ-053).
+    expect(html).toMatch(/data-discoverability-row="repo-governance-root"[^>]*data-discoverability-value="Unknown"/);
     expect(html).toContain('data-proposed-vs-current="proposed"');
     expect(html).toContain('data-adopted-vs-unadopted="false"');
     expect(html).toContain('data-status-authority="none"');
     expect(html).toContain('proposed (unapplied)');
   });
 
-  it('when no discoverability or authority provenance is supplied, absence is disclosed', async () => {
+  it('serves every required plane as its named state, one discoverability row per declared repository', async () => {
     const { deps } = await evaluatedFixture();
     const daemon = await startDaemon(humanRoutes(deps));
     const { body: html } = await fetchText(daemon, HUMAN_PAGE_PATH);
 
-    expect(html).toContain('No discoverability findings were supplied at this evaluation.');
-    expect(html).toContain('No authority exposures were supplied at this evaluation.');
+    expect(html).toContain('data-plane-state="unavailable" data-plane-reason="authority-input-not-designed"');
+    expect(html).toContain('data-plane-state="not-produced" data-plane-reason="proposal-input-not-designed"');
+    expect(html).toContain('data-plane-state="available" data-row-count="3"');
+    const rows = [...html.matchAll(/<li (data-discoverability-row="[^"]*"[^>]*)>/g)].map((m) => m[1]);
+    // Role before consent before README: the README-less governance root is
+    // Unknown with its reason; both observed sources are not-applicable,
+    // the unconsented one included, and neither README was read.
+    expect(rows.map((row) => row?.replace(/ data-evaluation-id="[^"]*"/, ''))).toStrictEqual([
+      'data-discoverability-row="repo-governance-root" data-repository-id="repo-governance-root" data-discoverability-value="Unknown" data-epistemic-label="Unknown" data-unknown-reason="source-uncaptured-or-unreachable" data-basis-kind="readme-uncaptured" data-basis-relative-path="README.md" data-basis-failure="missing" data-proposal-state="not-produced"',
+      'data-discoverability-row="repo-observed-source" data-repository-id="repo-observed-source" data-discoverability-value="not-applicable" data-epistemic-label="Observed" data-basis-kind="no-governance-root" data-proposal-state="not-produced"',
+      'data-discoverability-row="repo-unconsented" data-repository-id="repo-unconsented" data-discoverability-value="not-applicable" data-epistemic-label="Observed" data-basis-kind="no-governance-root" data-proposal-state="not-produced"',
+    ]);
+    expect(html).not.toContain('No discoverability findings were supplied');
   });
 });
 

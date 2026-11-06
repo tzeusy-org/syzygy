@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import {
   computeDiscoverability,
   computeDiscoverabilityWithProposal,
@@ -6,7 +6,11 @@ import {
   HUMAN_ENTRY_PATH,
   isInsideGovernedPlane,
   type RepositoryId,
+  discoverabilityRow,
 } from '@syzygy/cap1-core';
+
+// A literal README digest: the evidence identity a yes/no finding carries.
+const README_DIGEST = 'sha256:5555555555555555555555555555555555555555555555555555555555555555' as const;
 
 // CAP1-REQ-053 — Proposal beside finding; finding unchanged; proposal
 // carries proposed marking; no write outside plane.
@@ -24,10 +28,7 @@ describe('CAP1-REQ-053 — proposal beside finding', () => {
   });
 
   it('finding value is unchanged by the proposal', () => {
-    const finding = computeDiscoverability(REPO_ID, 'governance-root', {
-      state: 'captured',
-      linksToEntry: false,
-    });
+    const finding = computeDiscoverability(REPO_ID, 'governance-root', { state: 'captured', relativePath: 'README.md', digest: README_DIGEST, linksToEntry: false });
     const withProposal = computeDiscoverabilityWithProposal(
       finding,
       proposeEntryLink(REPO_ID, HUMAN_ENTRY_PATH),
@@ -37,10 +38,7 @@ describe('CAP1-REQ-053 — proposal beside finding', () => {
   });
 
   it('proposal renders beside the finding as proposed', () => {
-    const finding = computeDiscoverability(REPO_ID, 'governance-root', {
-      state: 'captured',
-      linksToEntry: false,
-    });
+    const finding = computeDiscoverability(REPO_ID, 'governance-root', { state: 'captured', relativePath: 'README.md', digest: README_DIGEST, linksToEntry: false });
     const proposal = proposeEntryLink(REPO_ID, HUMAN_ENTRY_PATH);
     const withProposal = computeDiscoverabilityWithProposal(finding, proposal);
     expect(withProposal.proposed.length).toBe(1);
@@ -50,10 +48,7 @@ describe('CAP1-REQ-053 — proposal beside finding', () => {
   });
 
   it('without a proposal, the proposed array is empty', () => {
-    const finding = computeDiscoverability(REPO_ID, 'governance-root', {
-      state: 'captured',
-      linksToEntry: true,
-    });
+    const finding = computeDiscoverability(REPO_ID, 'governance-root', { state: 'captured', relativePath: 'README.md', digest: README_DIGEST, linksToEntry: true });
     const withProposal = computeDiscoverabilityWithProposal(finding, undefined);
     expect(withProposal.proposed.length).toBe(0);
     expect(withProposal.current).toBe(finding);
@@ -61,5 +56,22 @@ describe('CAP1-REQ-053 — proposal beside finding', () => {
 
   it('the entry path is inside the governed plane — no write outside', () => {
     expect(isInsideGovernedPlane(HUMAN_ENTRY_PATH)).toBe(true);
+  });
+});
+
+describe('CAP1-REQ-053 — the served row never rests on a proposal (syzygy-u2a.7)', () => {
+  it('the row value and evidence come from the finding; the proposal state is carried beside them', () => {
+    const finding = computeDiscoverability(REPO_ID, 'governance-root', {
+      state: 'captured',
+      relativePath: 'README.md',
+      digest: README_DIGEST,
+      linksToEntry: false,
+    });
+    const row = discoverabilityRow(finding, 'not-produced');
+    expect([row.value, row.proposal, row.evidence]).toStrictEqual([
+      'no',
+      'not-produced',
+      { relativePath: 'README.md', digest: README_DIGEST },
+    ]);
   });
 });

@@ -6,7 +6,6 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import {
   computeCoverage,
-  computeDiscoverability,
   designateRoots,
   registerProject,
   type ConsentRecord,
@@ -17,7 +16,6 @@ import {
 
 import {
   observeDeclaration,
-  observeReadmeEvidence,
   observeRepositorySnapshot,
   observeRootCandidate,
 } from './observation.js';
@@ -243,62 +241,6 @@ describe('observeDeclaration — malformed declaration passes through core named
     expect(candidate.kind).toBe('candidate');
     if (candidate.kind !== 'candidate') return;
     expect(candidate.candidate.hasDeclaration).toBe(true);
-  });
-});
-
-describe('observeReadmeEvidence — root README as discoverability evidence (CAP1-REQ-050, 051)', () => {
-  it('a root README linking the fixed entry captures linksToEntry=true → yes', async () => {
-    const root = makeRepo();
-    writeFileSync(
-      join(root, 'README.md'),
-      '# Fixture\n\nSee the [project entry](.syzygy/intent/OVERVIEW.md).\n',
-      'utf8',
-    );
-
-    const evidence = await observeReadmeEvidence(root);
-    expect(evidence).toEqual({ state: 'captured', linksToEntry: true });
-
-    const finding = computeDiscoverability(REPO_ID, 'governance-root', evidence);
-    expect(finding.value).toBe('yes');
-    expect(finding.epistemic.label).toBe('Observed');
-  });
-
-  it('a root README without the link captures linksToEntry=false → a truthful no', async () => {
-    const root = makeRepo();
-    writeFileSync(join(root, 'README.md'), '# Fixture\n\nNo entry link here.\n', 'utf8');
-
-    const evidence = await observeReadmeEvidence(root);
-    expect(evidence).toEqual({ state: 'captured', linksToEntry: false });
-
-    const finding = computeDiscoverability(REPO_ID, 'governance-root', evidence);
-    expect(finding.value).toBe('no');
-  });
-
-  it('a missing root README is uncaptured → Unknown with its reason, never a truthful-looking no', async () => {
-    const root = makeRepo();
-    // No README written: no evidence that "the root README exists and
-    // does not provide the link", so no `no` may be served.
-
-    const evidence = await observeReadmeEvidence(root);
-    expect(evidence).toEqual({ state: 'uncaptured' });
-
-    const finding = computeDiscoverability(REPO_ID, 'governance-root', evidence);
-    expect(finding.value).toBe('Unknown');
-    expect(finding.basis).toBe('source-uncaptured-or-unreachable');
-  });
-
-  it.skipIf(runningAsRoot)('an unreadable front door is uncaptured (CAP1-REQ-051 scenario)', async () => {
-    const root = makeRepo();
-    writeFileSync(join(root, 'README.md'), '# Locked\n', 'utf8');
-    lockDown(join(root, 'README.md'));
-
-    const evidence = await observeReadmeEvidence(root);
-    expect(evidence).toEqual({ state: 'uncaptured' });
-  });
-
-  it('an unreachable repository root is uncaptured', async () => {
-    const evidence = await observeReadmeEvidence(join(makeRepo(), 'absent'));
-    expect(evidence).toEqual({ state: 'uncaptured' });
   });
 });
 

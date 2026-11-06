@@ -34,20 +34,21 @@ describe('cap1-daemon package', () => {
 
   // The generic host moved to @syzygy/http-host (syzygy-bpyt.7.3). The barrel re-exports it, so a consumer finds every value it
   // found before, and no other: the list is the barrel's runtime names at 9b539e5f, plus the eleven the captured-snapshot
-  // pipeline added (syzygy-u2a.2: the capture, its reader and versions, the act-record location and the consent disclaimer).
+  // pipeline added (syzygy-u2a.2: the capture, its reader and versions, the act-record location and the consent disclaimer),
+  // less the substring README reader and plus the README link reader and the required evaluated planes (syzygy-u2a.7).
   it('exports the values it exported before the host moved out', () => {
     expect(Object.keys(daemon).sort()).toEqual([
-      'CONSENT_DECISIONS_RELATIVE_PATH', 'CONSENT_EFFECT_DISCLAIMER', 'CONSENT_RECORD_EXTENSION', 'CONSENT_RECORD_FIELDS',
+      'AUTHORITY_PLANE_NOT_DESIGNED', 'CONSENT_DECISIONS_RELATIVE_PATH', 'CONSENT_EFFECT_DISCLAIMER', 'CONSENT_RECORD_EXTENSION', 'CONSENT_RECORD_FIELDS',
       'CREDENTIAL_FILE_MODE', 'CREDENTIAL_FILE_NAME', 'CREDENTIAL_TOKEN_BYTES', 'DAEMON_CAPTURE_VERSIONS', 'DAEMON_HOST',
       'DAEMON_SCENARIO_CONTEXT', 'DECLARATION_RELATIVE_PATH', 'HANDLER_FAILURE_REASON', 'HANDLER_FAILURE_STATUS',
-      'HUMAN_ENTRY_ROUTE_PATH', 'HUMAN_PAGE_PATH', 'MACHINE_CONTENT_TYPE', 'MACHINE_PROJECT_PATH', 'OWNER_ACT_EXTENSION',
-      'OWNER_ACT_SUFFIX', 'README_RELATIVE_PATH', 'REFUSAL_BODY', 'REFUSAL_STATUS', 'REPOSITORY_ROOT_SCOPE',
+      'HUMAN_ENTRY_ROUTE_PATH', 'HUMAN_PAGE_PATH', 'MACHINE_CONTENT_TYPE', 'MACHINE_PROJECT_PATH', 'NO_LINK_CONTEXT',
+      'OWNER_ACT_EXTENSION', 'OWNER_ACT_SUFFIX', 'PROPOSAL_PLANE_NOT_PRODUCED', 'README_LINK_READER_VERSION', 'README_RELATIVE_PATH', 'REFUSAL_BODY', 'REFUSAL_STATUS', 'REPOSITORY_ROOT_SCOPE',
       'STATE_DIR_MODE', 'STATE_WRITE_REFUSALS', 'UNKNOWN_ROUTE_REASON', 'UNKNOWN_ROUTE_STATUS', 'authorizeStateWrite',
       'captureProjectInputs', 'consentLoadFromText', 'consentPairFromText', 'consentReferenceFormProblem', 'createDaemon',
-      'credentialFromAuthorizationHeader', 'ensureCredential', 'escapeHtml', 'evaluateCapturedProject', 'evaluateProject',
-      'factsFromAnswers', 'fsCaptureReader', 'humanRoutes', 'isCaptureFailure', 'loadConsentReference', 'loadConsentReferences',
-      'machineProjectBody', 'machineRoutes', 'minimalRootRoute', 'observeDeclaration', 'observeReadmeEvidence',
-      'observeRepositorySnapshot', 'observeRootCandidate', 'resolveConsentReferencePath', 'verifyCredential',
+      'credentialFromAuthorizationHeader', 'discoverabilityPlane', 'ensureCredential', 'escapeHtml', 'evaluateCapturedProject',
+      'evaluateProject', 'extractReadmeEntryLink', 'factsFromAnswers', 'fsCaptureReader', 'humanRoutes', 'isCaptureFailure', 'loadConsentReference', 'loadConsentReferences',
+      'machineProjectBody', 'machineRoutes', 'minimalRootRoute', 'observeDeclaration',
+      'observeRepositorySnapshot', 'observeRootCandidate', 'resolveConsentReferencePath', 'servedEntry', 'verifyCredential',
     ]);
   });
 
