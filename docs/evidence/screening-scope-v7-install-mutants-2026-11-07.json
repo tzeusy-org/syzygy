@@ -1,14 +1,14 @@
 {
  "subject": "screening scope v7 page check",
- "commit": "3ef6023bf3a58cf11494418089b0f2767d0a70c7",
+ "commit": "15dfa758cea12a84535ffe6cbba61b74b5672753",
  "runner": [
   "packages/polaris-generation-core/src/page-sink.test.ts",
   "packages/polaris-generation-core/src/public-source-exemption.test.ts",
   "packages/polaris-dossier/src/page-sink-unconfirmed.test.ts",
   "packages/polaris-dossier/src/render.test.ts"
  ],
- "population": 47,
- "killed": 47,
+ "population": 51,
+ "killed": 51,
  "mutants": [
   {
    "id": 1,
@@ -16,7 +16,7 @@
    "old": "if (NON_ASCII.test(content)) return 'holds a non-ASCII byte';",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  4 failed | 226 passed (230)"
+   "tests": "Tests  4 failed | 234 passed (238)"
   },
   {
    "id": 2,
@@ -24,7 +24,7 @@
    "old": "const ASCII_WHITESPACE = /[\\t\\n\\f\\r ]+/;",
    "new": "const ASCII_WHITESPACE = /\\s+/u;",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 3,
@@ -32,7 +32,7 @@
    "old": "if (!LAWFUL.has(name)) return `carries ${name}`;",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  22 failed | 208 passed (230)"
+   "tests": "Tests  22 failed | 216 passed (238)"
   },
   {
    "id": 4,
@@ -40,7 +40,7 @@
    "old": "if (names.indexOf(name) !== names.lastIndexOf(name)) return `repeats ${name}`;",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  2 failed | 228 passed (230)"
+   "tests": "Tests  2 failed | 236 passed (238)"
   },
   {
    "id": 5,
@@ -48,7 +48,7 @@
    "old": "found.length === 1 && found[0] === source",
    "new": "found[0] === source",
    "outcome": "killed",
-   "tests": "Tests  4 failed | 226 passed (230)"
+   "tests": "Tests  4 failed | 234 passed (238)"
   },
   {
    "id": 6,
@@ -56,7 +56,7 @@
    "old": "found.length === 1 && found[0] === source",
    "new": "found.length === 1 && found[0]!.toLowerCase() === source",
    "outcome": "killed",
-   "tests": "Tests  3 failed | 227 passed (230)"
+   "tests": "Tests  3 failed | 235 passed (238)"
   },
   {
    "id": 7,
@@ -64,7 +64,7 @@
    "old": "if (!sources.has(name)) return `${name} is absent`;",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  5 failed | 225 passed (230)"
+   "tests": "Tests  5 failed | 233 passed (238)"
   },
   {
    "id": 8,
@@ -72,7 +72,7 @@
    "old": "return extra === undefined ? null : `${extra[0]} without script-src`;",
    "new": "return null;",
    "outcome": "killed",
-   "tests": "Tests  2 failed | 228 passed (230)"
+   "tests": "Tests  2 failed | 236 passed (238)"
   },
   {
    "id": 9,
@@ -80,7 +80,7 @@
    "old": "for (const [name, source] of SCRIPT_FIXED) if (!exactly(name, source)) return `${name} is not exactly ${source}`;",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  7 failed | 223 passed (230)"
+   "tests": "Tests  7 failed | 231 passed (238)"
   },
   {
    "id": 10,
@@ -88,7 +88,7 @@
    "old": "if (scriptSources.length === 0) return 'script-src has no source';",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 11,
@@ -96,7 +96,7 @@
    "old": "if (!HASH_SOURCE.test(source)) return `script-src carries ${source}`;",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  18 failed | 212 passed (230)"
+   "tests": "Tests  18 failed | 220 passed (238)"
   },
   {
    "id": 12,
@@ -104,7 +104,7 @@
    "old": "const HASH_SOURCE = /^'sha256-[A-Za-z0-9+/]{43}='$/;",
    "new": "const HASH_SOURCE = /'sha256-[A-Za-z0-9+/]{43}='/;",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 13,
@@ -112,7 +112,7 @@
    "old": "for (const scripting of [false, true]) {\n    const finding = scriptFindingIn",
    "new": "for (const scripting of [false]) {\n    const finding = scriptFindingIn",
    "outcome": "killed",
-   "tests": "Tests  2 failed | 228 passed (230)"
+   "tests": "Tests  2 failed | 236 passed (238)"
   },
   {
    "id": 14,
@@ -120,7 +120,7 @@
    "old": "for (const scripting of [false, true]) {\n    const finding = scriptFindingIn",
    "new": "for (const scripting of [true]) {\n    const finding = scriptFindingIn",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 15,
@@ -128,7 +128,7 @@
    "old": "for (const scripting of [false, true]) {\n    const page = readPage",
    "new": "for (const scripting of [true]) {\n    const page = readPage",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 16,
@@ -136,7 +136,7 @@
    "old": "if (node.tagName === 'template' && 'content' in node) for (const child of (node as Tree.Template).content.childNodes) stack.push(child);",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  2 failed | 228 passed (230)"
+   "tests": "Tests  2 failed | 236 passed (238)"
   },
   {
    "id": 17,
@@ -144,7 +144,7 @@
    "old": ".toLowerCase().includes(CSP_NAME));",
    "new": ".toLowerCase() === CSP_NAME || (attribute(element, 'http-equiv') ?? '').toLowerCase() === CSP_NAME + '-report-only');",
    "outcome": "killed",
-   "tests": "Tests  2 failed | 228 passed (230)"
+   "tests": "Tests  2 failed | 236 passed (238)"
   },
   {
    "id": 18,
@@ -152,7 +152,7 @@
    "old": "if (equiv.includes('report-only')) return 'the page\\'s Content-Security-Policy is Report-Only, which enforces nothing';",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  2 failed | 228 passed (230)"
+   "tests": "Tests  2 failed | 236 passed (238)"
   },
   {
    "id": 19,
@@ -160,7 +160,7 @@
    "old": "if (equiv !== CSP_NAME) return notFirst;",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 20,
@@ -168,7 +168,7 @@
    "old": "document.mode !== 'no-quirks' || ",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 21,
@@ -176,7 +176,7 @@
    "old": "top.length !== 2 || ",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 22,
@@ -184,7 +184,7 @@
    "old": "if (head === undefined || meta.parentNode !== head) return notFirst;",
    "new": "if (head === undefined) return notFirst;",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 23,
@@ -192,7 +192,7 @@
    "old": "if (!allowed) return notFirst;",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  6 failed | 224 passed (230)"
+   "tests": "Tests  6 failed | 232 passed (238)"
   },
   {
    "id": 24,
@@ -200,7 +200,7 @@
    "old": "first.attrs.length !== 1 || ",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 25,
@@ -208,7 +208,7 @@
    "old": "(attribute(first, 'charset') ?? '').toLowerCase() !== 'utf-8'",
    "new": "attribute(first, 'charset') === undefined",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 26,
@@ -216,7 +216,7 @@
    "old": "if (elements.some(element => element !== meta && element.tagName === 'meta' && attribute(element, 'http-equiv') !== undefined)) return 'the page carries another http-equiv meta, which could name an encoding or navigate';",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  2 failed | 228 passed (230)"
+   "tests": "Tests  2 failed | 236 passed (238)"
   },
   {
    "id": 27,
@@ -224,167 +224,199 @@
    "old": "if (elements.filter(element => element.tagName === 'meta' && attribute(element, 'charset') !== undefined).length !== 1) return 'the page does not state its encoding exactly once as a charset meta';",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  2 failed | 228 passed (230)"
+   "tests": "Tests  2 failed | 236 passed (238)"
   },
   {
    "id": 28,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "prefix.length > CHARSET_PRESCAN_BOUND || ",
+   "old": "if (!FIXED_OPENING.test(html)) return 'the page does not open with the fixed head that states its encoding for the browser\\'s prescan';",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  7 failed | 231 passed (238)"
   },
   {
    "id": 29,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": " || NON_ASCII.test(prefix)",
-   "new": "",
+   "old": "<meta charset=\"utf-8\">/i;",
+   "new": "<meta charset=\"utf-8\"/i;",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 30,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "node.attrs.length === 2 && attribute(node, 'name') === 'viewport'",
-   "new": "attribute(node, 'name') === 'viewport'",
+   "old": "<meta charset=\"utf-8\">/i;",
+   "new": "<meta charset=\"utf-8\">/;",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 31,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "attribute(node, 'name') === 'viewport' && attribute(node, 'content') !== undefined",
-   "new": "attribute(node, 'content') !== undefined",
+   "old": "const FIXED_OPENING = /^[",
+   "new": "const FIXED_OPENING = /[",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 32,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "attribute(node, 'name') === 'viewport' && attribute(node, 'content') !== undefined",
-   "new": "attribute(node, 'name') === 'viewport'",
+   "old": "<html(?: lang=\"[a-z-]*\")?>",
+   "new": "<html[^>]*>",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  3 failed | 235 passed (238)"
   },
   {
    "id": 33,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "const allowed = isElement(node) && node.tagName === 'meta' && node.attrs.length === 2",
-   "new": "const allowed = isElement(node) && node.attrs.length === 2",
+   "old": "[\\t\\n\\f\\r ]*<!doctype html>",
+   "new": "<!doctype html>",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 34,
-   "file": "packages/polaris-dossier/src/render.ts",
-   "old": "if (!file.endsWith('.html')) return `${file}: a page must be named .html, since a browser reads any other name with another parser`;",
-   "new": "",
+   "file": "packages/polaris-generation-core/src/page-sink.ts",
+   "old": "node.attrs.length === 2 && attribute(node, 'name') === 'viewport'",
+   "new": "attribute(node, 'name') === 'viewport'",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 35,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "if (policy === undefined) return 'the page\\'s Content-Security-Policy meta carries no content attribute';",
-   "new": "if (policy === undefined) return { elements, policy: '' };",
+   "old": "attribute(node, 'name') === 'viewport' && attribute(node, 'content') !== undefined",
+   "new": "attribute(node, 'content') !== undefined",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 36,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "if (scripts.length === 0 && directive === undefined) return null;",
-   "new": "if (scripts.length === 0) return null;",
+   "old": "attribute(node, 'name') === 'viewport' && attribute(node, 'content') !== undefined",
+   "new": "attribute(node, 'name') === 'viewport'",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 37,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "if (contract !== PAGE_SINK_SCRIPT_CONTRACT) return 'the page carries a script or a script-src, and the injected renderer does not declare the script half';",
-   "new": "",
+   "old": "const allowed = isElement(node) && node.tagName === 'meta' && node.attrs.length === 2",
+   "new": "const allowed = isElement(node) && node.attrs.length === 2",
    "outcome": "killed",
-   "tests": "Tests  2 failed | 228 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 38,
-   "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "attr.name === 'src' || attr.name === 'href'",
-   "new": "attr.name === 'src'",
+   "file": "packages/polaris-dossier/src/render.ts",
+   "old": "if (!file.endsWith('.html')) return `${file}: a page must be named .html, since a browser reads any other name with another parser`;",
+   "new": "",
    "outcome": "killed",
-   "tests": "Tests  2 failed | 228 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 39,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "attr.name === 'src' || attr.name === 'href'",
-   "new": "attr.name === 'href'",
+   "old": "if (policy === undefined) return 'the page\\'s Content-Security-Policy meta carries no content attribute';",
+   "new": "if (policy === undefined) return { elements, policy: '' };",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 40,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "if (!pinned.includes(source)) return `the page carries a script outside the pinned set (${source})`;",
-   "new": "",
+   "old": "if (scripts.length === 0 && directive === undefined) return null;",
+   "new": "if (scripts.length === 0) return null;",
    "outcome": "killed",
-   "tests": "Tests  6 failed | 224 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 41,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "if (!allowed.includes(source)) return `the page's script-src does not allow its script (${source})`;",
+   "old": "if (contract !== PAGE_SINK_SCRIPT_CONTRACT) return 'the page carries a script or a script-src, and the injected renderer does not declare the script half';",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  2 failed | 236 passed (238)"
   },
   {
    "id": 42,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "for (const source of allowed) if (!pinned.includes(source)) return `the page's script-src carries a hash outside the pinned set (${source})`;",
-   "new": "",
+   "old": "attr.name === 'src' || attr.name === 'href'",
+   "new": "attr.name === 'src'",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  2 failed | 236 passed (238)"
   },
   {
    "id": 43,
    "file": "packages/polaris-generation-core/src/page-sink.ts",
-   "old": "Object.freeze({});",
-   "new": "Object.freeze({ \"'sha256-x'\": 'docs/reviews/none-RAW.md' });",
+   "old": "attr.name === 'src' || attr.name === 'href'",
+   "new": "attr.name === 'href'",
    "outcome": "killed",
-   "tests": "Tests  2 failed | 228 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
    "id": 44,
+   "file": "packages/polaris-generation-core/src/page-sink.ts",
+   "old": "if (!pinned.includes(source)) return `the page carries a script outside the pinned set (${source})`;",
+   "new": "",
+   "outcome": "killed",
+   "tests": "Tests  6 failed | 232 passed (238)"
+  },
+  {
+   "id": 45,
+   "file": "packages/polaris-generation-core/src/page-sink.ts",
+   "old": "if (!allowed.includes(source)) return `the page's script-src does not allow its script (${source})`;",
+   "new": "",
+   "outcome": "killed",
+   "tests": "Tests  1 failed | 237 passed (238)"
+  },
+  {
+   "id": 46,
+   "file": "packages/polaris-generation-core/src/page-sink.ts",
+   "old": "for (const source of allowed) if (!pinned.includes(source)) return `the page's script-src carries a hash outside the pinned set (${source})`;",
+   "new": "",
+   "outcome": "killed",
+   "tests": "Tests  1 failed | 237 passed (238)"
+  },
+  {
+   "id": 47,
+   "file": "packages/polaris-generation-core/src/page-sink.ts",
+   "old": "Object.freeze({});",
+   "new": "Object.freeze({ \"'sha256-x'\": 'docs/reviews/none-RAW.md' });",
+   "outcome": "killed",
+   "tests": "Tests  2 failed | 236 passed (238)"
+  },
+  {
+   "id": 48,
    "file": "packages/polaris-dossier/src/render.ts",
    "old": "if (file.endsWith('.json')) continue;",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  3 failed | 227 passed (230)"
+   "tests": "Tests  3 failed | 235 passed (238)"
   },
   {
-   "id": 45,
+   "id": 49,
    "file": "packages/polaris-dossier/src/render.ts",
    "old": "pageSinkCspFinding(html) ?? pageSinkScriptFinding(html, renderer.pageSinkContract)",
    "new": "pageSinkCspFinding(html)",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
-   "id": 46,
+   "id": 50,
    "file": "packages/polaris-dossier/src/render.ts",
    "old": "pageSinkCspFinding(html) ?? pageSinkScriptFinding(html, renderer.pageSinkContract)",
    "new": "pageSinkScriptFinding(html, renderer.pageSinkContract)",
    "outcome": "killed",
-   "tests": "Tests  1 failed | 229 passed (230)"
+   "tests": "Tests  1 failed | 237 passed (238)"
   },
   {
-   "id": 47,
+   "id": 51,
    "file": "packages/polaris-dossier/src/render.ts",
    "old": " && renderer.pageSinkContract !== PAGE_SINK_SCRIPT_CONTRACT",
    "new": "",
    "outcome": "killed",
-   "tests": "Tests  2 failed | 228 passed (230)"
+   "tests": "Tests  2 failed | 236 passed (238)"
   }
  ]
 }

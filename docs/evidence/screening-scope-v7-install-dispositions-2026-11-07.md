@@ -24,4 +24,5 @@ The review returned `CONFIRM WITH EXCEPTIONS` over `b3cd3a43`. It said its grade
 - Finding 1, repaired. A page's raw text must open with a fixed head: a doctype, `<html>` with at most a `lang` attribute, `<head>`, then exactly the charset meta, in any case. This replaces the prescan-distance check, whose denominator was the first `<meta` in the raw string rather than the element read. Chrome fixtures hold both routes.
 - Finding 4, repaired. The stale test title and test comment are corrected.
 - Finding 6, repaired. A fixture confirms the opening in upper case, which kills the two surviving case mutants. `scriptSource`'s first-child mutant stays the disclosed near-equivalent.
+- Mutants, re-run after the repair: 51 of 51 killed, with a baseline guard, in `docs/evidence/screening-scope-v7-install-mutants-2026-11-07.json`. A run over a failing baseline was discarded and left no evidence.
 - Findings 2, 3, 5, 7 to 12: no change. Finding 5 stays a landing step.
