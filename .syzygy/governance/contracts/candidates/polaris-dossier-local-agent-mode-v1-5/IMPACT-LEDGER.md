@@ -50,9 +50,14 @@ product code changes with this package.
 - An uncited judgement cannot be checked against a source. It is counted and
   marked. Telling a judgement from a fact is a review call, so a reviewer can
   miss one.
-- A claim block resting on withheld spans loses its text entirely, because the
-  agent may have drawn it from what was withheld. Its place says only that the
-  sources are withheld.
+- An item citing only withheld spans loses its text, because the agent may have
+  drawn it from what was withheld. Its place says only that its sources are withheld.
+- This does not close RFC2-23 completely. The agent read the whole clone, so text
+  citing an admitted file, an uncited judgement, or a summary of a withheld child
+  could still draw on withheld content. Syzygy cannot see that. The fidelity packet,
+  on the operator's host, still holds the agent's text for a withheld item.
+- A span a run's class gate holds back is not "withheld" under this rule, so a run
+  with no consent statement for documentation classes keeps today's behaviour there.
 - A block citing both admitted and withheld spans keeps today's rules, so it
   stands on its admitted span unless a review finds otherwise. The rule covers only
   wholly withheld claims, the scope the questionnaire described. In the 2026-11-04

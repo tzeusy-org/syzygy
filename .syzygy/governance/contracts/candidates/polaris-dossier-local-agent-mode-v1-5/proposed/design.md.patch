@@ -34,7 +34,18 @@
  `OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04`). They sit in the existing
  `paragraphs` arrays of sections and deep dives, whose name stays. An entry
  without `kind` is the existing block. An entry with `kind` is one of the
-@@ -449,8 +449,71 @@
+@@ -439,8 +439,8 @@
+ For a body actually read and then excluded by content screening or invalid
+ UTF-8, the check retains the line boundaries obtainable from that read and
+ reports an out-of-range citation without excluded bytes or the blob's line
+-count. This exception is confined to code excerpts; the ordinary-block
+-citation obligation in 034 is unchanged.
++count. Since version 1.5 the no-read exception reaches any citation of a
++path-excluded blob, whose range then stays agent-supplied and unverified.
+ 
+ For an excluded or invalid-UTF-8 blob, the excerpt renders Unknown with
+ `excluded-content` and no blob bytes; its exclusion is not a finding. Any
+@@ -449,8 +449,79 @@
  A `code` element has no `blockSupport` entry of its own; its admitted span
  is one of the cited spans the fidelity packet carries.
  
@@ -66,6 +77,7 @@
 +  sentence and a link to the appendix, which holds the full disclosure and the
 +  open questions. An Unknown affecting a passage stays explicit at the passage.
 +- Other pages (appendix, review, understanding, discovery, source) keep labels.
++- A test reads visible text by `innerText` and recoverable text by `textContent`.
 +
 +## Why-first topics and voice (version 1.5)
 +
@@ -88,18 +100,25 @@
 +fidelity review treats it as a blocking finding. A quotation is optional and,
 +when used, stays one contiguous verified span.
 +
-+A claim block citing only withheld spans renders Unknown with
-+`excluded-content` (RFC5-17) in Syzygy's words. The agent read the clone without
-+restriction, so its text could derive from what was withheld, and that text
-+does not render (RFC2-23). The verdict's entry is `withheld`, so the review has
-+a lawful answer and the run does not stop. A citation to a blob missing at the
-+pinned revision still fails. A block with both admitted and withheld spans
-+keeps today's rules.
++A withheld span is one whose blob is excluded whole, is not valid UTF-8, or whose
++range touches a redacted line; a span a run's class gate keeps from agent-bound
++artifacts is a different thing and keeps its treatment. A claim block,
++understanding item or diagram element citing only withheld spans renders Unknown
++with `excluded-content` (RFC5-17) in Syzygy's words, with its count on the item.
++The agent read the clone without restriction, so its text could derive from what
++was withheld, and that text does not render (RFC2-23). A short label over only
++such content becomes `Withheld item`. A path a secret detector matches is counted
++and never named. The verdict's entry is `withheld`, so the review has a lawful
++answer and the run does not stop. A citation to a blob missing at the pinned
++revision still fails. A block with both admitted and withheld spans keeps today's
++rules and shows the count.
 +
 +## Poles (version 1.5)
 +
 +Schema `polaris-dossier-local-draft-v4` adds an optional top-level `poles`
-+array of `{label, sections}` and a run-declared limit, defaulting to five. A
++array of `{label, sections}` with `whySection` naming the section that answers
++why the project exists, a `judgement` flag on a block, a `repeatsDiagram` field
++on a list, and `run.json`'s optional `poleLimit`, defaulting to five. A
 +Pole is a page boundary and carries no claim. The landing page holds the
 +title, the why and a map of the Poles, which orders the altitudes by the
 +owner's ruling under RFC7-13; a draft with no Poles renders as schema v3 does.
