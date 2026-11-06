@@ -24,7 +24,17 @@ Criteria:
    pointer, without colour and with scripts off.
 
 Never read an observed repository body or a run's output. Run no provider call.
-Report a verdict word, CONFIRM, CONFIRM WITH EXCEPTIONS or REVISE, on its own line
-in the head, and name the subject digests you checked. `scripts/record_versioned_signoff.py` reads the
-`Verdict:` line and a `## Findings` section with numbered findings, so give both. Findings carry a severity
-and an anchor. Output your raw report as your final message.
+Begin your report with these four lines, in this order, no blank line among them:
+
+```
+<one title line>
+Reviewed commit: <the frozen commit you were given>
+Manifest SHA-256: <sha256 of the proposed spec.md, which you compute yourself>
+Verdict: <CONFIRM | CONFIRM WITH EXCEPTIONS | REVISE>
+```
+
+`Manifest SHA-256` here means the proposed `spec.md` bytes, reconstructed by applying
+`proposed/spec.md.patch` to the installed spec: the recorder binds your review to that digest,
+and to no other file's. Name the other two subject digests in the body.
+`scripts/record_versioned_signoff.py` also reads a `## Findings` section with numbered findings, so give
+one. Findings carry a severity and an anchor. Output your raw report as your final message.
