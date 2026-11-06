@@ -191,7 +191,7 @@ record = {
                        for name in campaigns],
         'oldAssertions': {'from': f'{PREDECESSOR}/bounds-and-pins.json#/daemonEntry',
                           'to': '#/daemonEntry/attribution', 'disposition': 'actual new per-row outcomes supersede old pin-alone Y/type-only/C1/residual statements for this subject only'},
-        'emit': {'from': f'{PREDECESSOR}/emit-equality.json', 'to': '#/emitClaim', 'disposition': 'historical observation retained; present claim explicitly limited'},
+        'emit': {'from': f'{PREDECESSOR}/bounds-and-pins.json#/files', 'to': '#/emitClaim', 'disposition': 'historical observation retained; present claim explicitly limited'},
     },
     'historicalCpuValidation': {'timings': 'historical', 'currentTiming': 'Unknown', 'args': historical_args,
                               'bounds': {site['bound']: site['separation'] for site in historical['sites'] if 'bound' in site},
