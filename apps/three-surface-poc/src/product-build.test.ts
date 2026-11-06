@@ -37,7 +37,7 @@ const BUILT_KITS = {
 // What each project's tsconfig.json excludes from its include, ["src"].
 const EXCLUDES: Readonly<Record<string, readonly string[]>> = {
   'apps/syzygy': ['src/**/*.test.ts'],
-  'apps/three-surface-poc': ['src/**/*.test.ts', 'src/test-deep-dive-markers.ts', 'src/test-fixture-sweep.global-setup.ts', 'src/test-http-client.ts'],
+  'apps/three-surface-poc': ['src/**/*.test.ts', 'src/polaris-generation/dossier-reading.testkit.ts', 'src/test-deep-dive-markers.ts', 'src/test-fixture-sweep.global-setup.ts', 'src/test-http-client.ts'],
   'packages/cap1-core': ['src/**/*.test.ts'],
   'packages/cap1-daemon': ['src/**/*.test.ts'],
   'packages/http-host': ['src/**/*.test.ts'],
