@@ -26,3 +26,12 @@ The review returned `CONFIRM WITH EXCEPTIONS` over `b3cd3a43`. It said its grade
 - Finding 6, repaired. A fixture confirms the opening in upper case, which kills the two surviving case mutants. `scriptSource`'s first-child mutant stays the disclosed near-equivalent.
 - Mutants, re-run after the repair: 51 of 51 killed, with a baseline guard, in `docs/evidence/screening-scope-v7-install-mutants-2026-11-07.json`. A run over a failing baseline was discarded and left no evidence.
 - Findings 2, 3, 5, 7 to 12: no change. Finding 5 stays a landing step.
+
+## Round 3
+
+`docs/reviews/R-SCREENING-SCOPE-V7-INSTALL-3-RAW.md` returned `CONFIRM WITH EXCEPTIONS` over `f182fc91`, scoped to the round 2 repair, with six notes and no blocking or revise finding. Later commits on this branch add this section, the raw and the campaign line only, so the code it read lands unedited.
+
+- Notes 2 to 4 are real and follow on bead `syzygy-pdja.7`: the opening has no distance bound now, a code comment is stale, a test row's name misleads, and two fixtures hold less than they say. The Round 2 section above does not say that no distance is enforced; this sentence does.
+- Note 5 is accepted: the pattern refuses some forms only an injected renderer might write, including digits in `lang`, which fails closed.
+- Note 6 stands: "kills the two surviving case mutants" is loose, since one of them no longer exists in the code, and the baseline guard is recorded here and not in the evidence file.
+
