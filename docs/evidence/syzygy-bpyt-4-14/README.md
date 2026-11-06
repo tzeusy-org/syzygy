@@ -25,7 +25,16 @@ class 4 (signal ownership); final classification belongs to independent
 review. Evidence, sign-off and security floors apply. No product permission,
 security flag, observed-project execution or normative artifact changes.
 
-The November-3 item-4 source merge hold applies to the helper and its tests.
+[Observed] Historical wording; its freeze start was superseded on 2026-11-06:
+
+> The November-3 item-4 source merge hold applies to the helper and its tests.
+
+[Observed] [November-6 item 1](../../../.syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06.md)
+starts the freeze when a candidate head's readiness run begins and releases it
+if that head is NOT READY. It retains the [November-3 item-4 paths and
+judgment/report end](../../../.syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md).
+The candidate and active state are recorded in
+[scripts/surface-merge-freeze.json](../../../scripts/surface-merge-freeze.json).
 Preparation and passing checks do not supply the owner's judgment or cycle
 report. The issue remains open until its full outcome and landing gates hold.
 
@@ -39,6 +48,18 @@ kill-then-one-fresh-app runs are retained in the correction packet. That file
 retains source subjects, two-method process denominators and named directory
 remainders. Earlier process records and raw review/attempts remain unchanged.
 
-[Observed] The original eight criteria, required independent review/hosted and
-merge-group checks, and actual owner judgment AND cycle-report MERGE HOLD remain.
+[Observed] Historical wording; its freeze start was superseded on 2026-11-06:
+
+> [Observed] The original eight criteria, required independent review/hosted and
+> merge-group checks, and actual owner judgment AND cycle-report MERGE HOLD remain.
+
+[Observed] The original eight criteria and applicable review/landing checks remain.
+[November-6 item 1](../../../.syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06.md)
+replaces the freeze start with a candidate head's readiness run, releases it if
+that head is NOT READY, and preserves the [November-3 paths and judgment/report
+end](../../../.syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md).
+Consult [the recorded conditional-freeze state](../../../scripts/surface-merge-freeze.json)
+for the candidate and active state. Neither the syzygy-1z3.22 owner judgment nor
+the syzygy-1z3.25 cycle report is performed or waived by this correction.
+The full outcome remains open pending its actual gates and legitimate landing.
 This evidence authorizes no promotion, queue, merge or closure; PR763 stays DRAFT.
