@@ -2684,7 +2684,9 @@ def later_signed_selftest() -> list[tuple[str, bool]]:
     with tmp, tempfile.TemporaryDirectory(prefix="p115-later-snapshot-") as temp, \
             mock.patch.dict(globals(), governing_inputs=lambda source: inputs):
         snapshot = Path(temp)
-        for rel in validation_inputs(ROOT):
+        # Keep the synthetic v1.3 chain closed over its own inputs; do not
+        # import real later-version records or packages into that fixture.
+        for rel in validation_inputs(ROOT) - later_signed_inputs(ROOT):
             target = root / rel
             if not target.exists():
                 target.parent.mkdir(parents=True, exist_ok=True)
