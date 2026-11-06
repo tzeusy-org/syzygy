@@ -1,0 +1,62 @@
+{
+  "at": "2026-11-06T04:52:46.058753+00:00",
+  "M0Sha256": "cfe9e4c7dc36a5212f7357e0dce692897c2930fe554a4968ca09e968b567bc7e",
+  "finalToolCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+  "M0ActualSubjects": [
+    {
+      "role": "old",
+      "commit": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+      "clean": true,
+      "sha256": {
+        "packageReaderTs": "e8bcdfa1670842dc9e80e4435d1be8d83fca3a0fce6c73760c3d82913acd875b",
+        "packageReaderJs": "20a5399988bc286990c41e042e57b8799694376753af37f1ceb7826b1f257f62",
+        "gateSourcesTs": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+        "gateSourcesJs": "83e72a5739b2351eb4f039284cb86c16864ba740fe32552fd2be1f77c1c7bce5",
+        "testingJs": "db5352f363e93cc0bc7893b8cbfb9195046e7e34314e66ea3c2beafe091afb14",
+        "consentPortsTs": "b9713073670b9e69efcd6bc591af92d10ca928e7501ae87f2cf12efebae937ca",
+        "consentPortsJs": "6dc4ae14ad645ed76b7b6824255a3aef8783e48d6b77d2a2286db05460bba0c6",
+        "inForceTs": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+        "inForceJs": "2e3730701c98abd576738375f20a94dff9a2999db19420513d1116ad05660b0b",
+        "consentIndexJs": "456640b1b2202d39afa32aa5d532d79a7fe1ce2aca2b3e8f2c9df71a8e5ab44f",
+        "consentLiveTs": "2aa268d84e4ba20f851e15334da5c792621acd25090b6d36674b41b39e53289c",
+        "consentLiveJs": "b814165715ec9d1059143f9b7c767bc6d02db85346a8db0874c4da49562120c6",
+        "screenTs": "aa3c2f9b8e0c9ab3ebd46c302b9b79d0ed0887b4d985fb730881f8ac9bf01ce3",
+        "screenJs": "a2a4fd0eb0f29173b6101cf4a29b71540d3c7b438ecfe7287dff18878db32886"
+      },
+      "dossierResolvesConsentInsideTree": true,
+      "consentEntry": "packages/polaris-generation-consent/dist/live.js",
+      "liveResolvesInsideTree": true,
+      "liveValuesAreRootObjects": true
+    },
+    {
+      "role": "new",
+      "commit": "134a8c5ba16dda1f3e3935aa1b565166f3b3583f",
+      "clean": true,
+      "sha256": {
+        "packageReaderTs": "e8bcdfa1670842dc9e80e4435d1be8d83fca3a0fce6c73760c3d82913acd875b",
+        "packageReaderJs": "20a5399988bc286990c41e042e57b8799694376753af37f1ceb7826b1f257f62",
+        "gateSourcesTs": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+        "gateSourcesJs": "83e72a5739b2351eb4f039284cb86c16864ba740fe32552fd2be1f77c1c7bce5",
+        "testingJs": "db5352f363e93cc0bc7893b8cbfb9195046e7e34314e66ea3c2beafe091afb14",
+        "consentPortsTs": "b9713073670b9e69efcd6bc591af92d10ca928e7501ae87f2cf12efebae937ca",
+        "consentPortsJs": "6dc4ae14ad645ed76b7b6824255a3aef8783e48d6b77d2a2286db05460bba0c6",
+        "inForceTs": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+        "inForceJs": "2e3730701c98abd576738375f20a94dff9a2999db19420513d1116ad05660b0b",
+        "consentIndexJs": "456640b1b2202d39afa32aa5d532d79a7fe1ce2aca2b3e8f2c9df71a8e5ab44f",
+        "consentLiveTs": "2aa268d84e4ba20f851e15334da5c792621acd25090b6d36674b41b39e53289c",
+        "consentLiveJs": "b814165715ec9d1059143f9b7c767bc6d02db85346a8db0874c4da49562120c6",
+        "screenTs": "aa3c2f9b8e0c9ab3ebd46c302b9b79d0ed0887b4d985fb730881f8ac9bf01ce3",
+        "screenJs": "a2a4fd0eb0f29173b6101cf4a29b71540d3c7b438ecfe7287dff18878db32886"
+      },
+      "dossierResolvesConsentInsideTree": true,
+      "consentEntry": "packages/polaris-generation-consent/dist/live.js",
+      "liveResolvesInsideTree": true,
+      "liveValuesAreRootObjects": true
+    }
+  ],
+  "closureResultSha256": "3b7216a94f1fca10eba3712c688ebcd9ffa531f280545e3f24901df9777dab64",
+  "worlds": 5403,
+  "answers": 70999,
+  "literalRows": 12,
+  "mutationScoringReleased": true
+}
