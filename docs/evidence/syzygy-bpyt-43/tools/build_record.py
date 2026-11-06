@@ -169,7 +169,8 @@ old_keys = {(r['path'], r['bound']) for r in old['rows']}
 current_remainder = [r for r in current['rows'] if (r['path'], r['bound']) not in old_keys]
 applicability_path = CAMPAIGNS / 'source-applicability.json'
 applicability = json.loads(applicability_path.read_text())
-if applicability['snapshots'][-1]['commit'] != SUBJECT or applicability['currentTiming'] != 'Unknown':
+expected_applicability = [json.loads((TREE / PREDECESSOR / name).read_text())['tree'] for name in ['cpu-separation.json', 'cpu-separation-node22.json']] + [SUBJECT]
+if [snapshot['commit'] for snapshot in applicability['snapshots']] != expected_applicability or applicability['currentTiming'] != 'Unknown':
     refuse('source applicability: current subject or Unknown timing qualification differs')
 source_moves = [{'path': path, 'historicalSha256': sha(git('show', f'{old_subject["evidenceCommit"]}:{path}')),
                  'currentSha256': sha(git('show', f'{SUBJECT}:{path}'))} for path in sorted({r['path'] for r in old['rows']})]
