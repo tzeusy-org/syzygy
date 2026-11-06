@@ -33,9 +33,9 @@ it('requires every npm workspace to be @syzygy/-named and every dependency or ov
   const directories = workspaceDirectories(ROOT);
   if (directories.length === 0) throw new Error('package.json workspaces: discovered no workspace manifests');
   const failures: string[] = [];
-  // Whole X.Y.Z components, optionally prefixed by one ^ or ~. The final lookahead requires the actual end of input; unlike $,
-  // it cannot accept a trailing line terminator. Partial versions, prerelease/build suffixes, whitespace and other ranges fail.
-  const registryVersion = /^(?:\^|~)?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?![\s\S])/u;
+  // Whole X.Y.Z components, optionally prefixed by one ^ or ~. Partial versions, prerelease/build suffixes, whitespace and
+  // other ranges fail; the anchors apply to the whole input (there is no multiline flag).
+  const registryVersion = /^(?:\^|~)?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/u;
   const checkSpec = (location: string, spec: unknown): void => {
     if (typeof spec !== 'string' || !registryVersion.test(spec)) failures.push(`${location}: ${JSON.stringify(spec)} is not exact X.Y.Z or a ^/~ X.Y.Z range`);
   };
