@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-SCREENING-SCOPE-V7-1-RAW.md:4`), over `23f6d050`. Its findings F1 to F5 and the packet's overclaims were repaired on the same branch; a fresh round has not yet confirmed the repair.
+`REVISE` (`R-SCREENING-SCOPE-V7-2-RAW.md:4`), over `ad5da2bb`, round 2 of the review; round 1 was also `REVISE`. Its blocking findings B1 to B4 and its notes were repaired on the same branch; a fresh round has not yet confirmed the repair.

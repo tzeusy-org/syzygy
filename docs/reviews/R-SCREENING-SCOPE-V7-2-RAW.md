@@ -1,0 +1,244 @@
+# Review, round 2 — public-source screening scope, version 7
+Reviewed commit: ad5da2bb7fe38fbdb85d3db92c6eb91814af6f8d
+Manifest SHA-256: f091ca0d24b6ee6abf8e0c43de84111abf0087b0b520a0a6b8273fe581ca16b3
+Verdict: REVISE
+
+- REVISE: the repairs mostly hold, but four blocking defects remain
+  - A CSP string passes `csp_finding` and switches off trusted types in Chrome (B1)
+  - The install plan leaves a non-ASCII hole open (B2)
+  - The consumer check can be circular, so fail-closed is not yet earned (B3)
+  - The named network test cannot see the paths CSP leaves open (B4)
+  - Clause text needs no change for any of the four; N1 is the one optional clause change
+- Answers to the dispatch's questions
+  - Closed set: faithful except one comparison, B1
+    - [Observed] Every other string that passes reads as strict in Chrome 120
+  - Trusted types over `file://`: yes, plain script runs and text writes work
+    - [Observed] Evidence is under "Browser results" below
+  - Honesty of the prose: mostly honest, with errors both ways
+    - Overclaims: B4, N2 and N3
+    - Under-claim: N4, what the browser does enforce goes unsaid
+  - Consumer mechanism: enough only if the pin sits outside the renderer, B3
+- B1, blocking: `'SCRIPT'` passes `csp_finding` and disables trusted types
+  - Anchor: `scripts/build_public_source_screening_scope_v7.py:206`, `types[0].lower()`
+  - [Observed] `csp_finding` returns None for both spellings
+    - `require-trusted-types-for 'SCRIPT'`
+    - `require-trusted-types-for 'Script'`
+  - [Observed] Chrome 120 drops the directive for each, over `file://`
+    - Console: "Invalid expression in 'require-trusted-types-for'"
+    - `innerHTML` on that page was allowed and inserted a real element
+    - The exact-case control threw `TypeError`
+    - The clause then holds on paper with its trusted-types half absent
+  - [Observed] Case-folding is safe everywhere else I tried
+    - Upper-case directive names, `'NONE'` and `'UNSAFE-INLINE'` enforced as usual
+    - Includes `REQUIRE-TRUSTED-TYPES-FOR` as a name
+  - [Observed] The table cannot see it
+    - No row in the 55 carries `'SCRIPT'`
+    - Mutant dropping that `.lower()`: survives
+    - Mutant dropping `len(types) != 1`: survives
+    - Line 179's mutant breaks the whole line, so it hides both
+  - [Inferred] The install inherits this
+    - `IMPACT-LEDGER.md:27-28` asks for one fixture per row
+    - Today's reader uses `.toLowerCase()` on keywords
+  - Repair: compare `'script'` exactly; add rows and mutants for both limbs
+    - Rows: `'SCRIPT'`, `'Script'`, `'script' 'script'`
+    - Consider exact case for every token; no renderer writes another case
+- B2, blocking: the install plan changes the split but keeps a Unicode `trim`
+  - Anchors
+    - `SEMANTIC-DELTA.md:84`, "whose split must change"
+    - `IMPACT-LEDGER.md:27`, "splits on ASCII whitespace only"
+    - `packages/polaris-generation-core/src/public-source-classification.ts:408`, `.map(part => part.trim())`
+  - [Observed] With only the split changed, the reader accepts edge whitespace
+    - Tried U+00A0, U+FEFF, U+2028 and U+3000 around `default-src 'none'`
+    - I ran a copy of that line's logic in node, split changed, for all four
+  - [Observed] Chrome reads each of the four as having no `default-src`
+    - An image request reached my listener in all four runs
+  - [Observed] `csp_finding` refuses them, so the Python and the plan differ
+    - The table has only the interior NBSP and VT rows, so a fixture per row passes
+  - Repair: name `trim` in the plan, or refuse any non-ASCII byte first
+    - The clause already says the latter
+    - Add a leading-NBSP row
+- B3, blocking: the per-page check can be circular
+  - Anchors
+    - `IMPACT-LEDGER.md:29-31`, "the renderer's pinned set"
+    - `SEMANTIC-DELTA.md:86-89`
+    - `packages/polaris-dossier/src/render.ts:67`, `:78`
+  - [Observed] The renderer is an injected port
+    - It declares its own contract by a string property
+  - [Inferred] A set the renderer supplies confirms the renderer against itself
+    - Any renderer can carry the new id and its own hashes
+    - A changed script then still "confirms"
+    - The fail-closed sentence only bites if a changed script stops confirming
+  - [Inferred] Three further gaps in the same check
+    - Nothing requires each `script-src` hash to be in the pinned set
+    - Scanner form is unspecified, and it must be a tokenizer
+      - [Observed] These all ran under a matching hash
+      - `<SCRIPT>`, `<script/x>`, `<svg><script>` and `</script` plus newline
+    - `pageSinkUnconfirmed` skips files not ending `.html`, and the clause's page includes SVG
+  - [Observed] Declared scope is limited, and the prose should say so
+    - `render.ts` runs the check only when `scannedAsBefore` is non-empty
+    - A site with no exempt cited body gets no script check at all
+  - Repair: hold the set beside `PAGE_SINK_CONTRACT` in the core package
+    - State both directions: every script in the set, every hash in the set
+    - State that the check confirms bytes, and review confirms what those bytes do
+- B4, blocking: the "mechanical" network test misses the two paths that matter
+  - Anchors: `SEMANTIC-DELTA.md:90-92`, `IMPACT-LEDGER.md:47-48`
+  - [Observed] Socket hit with no matching CDP network event
+    - Created `link rel=preconnect`: my TCP listener saw 1 accept; CDP 0 requests
+    - `RTCPeerConnection`: my UDP listener saw 3 STUN packets; CDP 0 requests
+  - [Observed] CDP does see navigation-class paths
+    - Created `meta` refresh, `location`, created `a` click
+  - [Inferred] A socket listener only sees a destination the test already knows
+    - So "sees no connection" is not pinned by what the text names
+  - [Inferred] `OWNER-DECISION-PACKET.md:20-21` leans on "its tests" for exactly these paths
+  - Repair: pick one and say which
+    - Capture all traffic in an isolated network namespace
+    - Or state the listener covers requests only, and these rest on source scan and review
+- N1, note: `trusted-types 'none'` would move a judged limb to the browser
+  - Anchor: table row `trusted-types`, refused by the closed set
+  - [Observed] Under v7's set a script can defeat trusted types
+    - `trustedTypes.createPolicy('e', {createHTML: s => s})`, then `innerHTML`, inserts markup
+    - A `default` policy does the same
+    - The clause names neither `createPolicy` nor `trustedTypes`
+  - [Observed] Adding `trusted-types 'none'` makes both throw
+    - `textContent`, `createElement` and `addEventListener` still work
+  - Owner-visible trade: it changes clause bytes and the manifest row
+    - Recommended, and cheapest while the package is already being revised
+- N2, note: the delta says the clause forbids a use it does not reach
+  - Anchor: `SEMANTIC-DELTA.md:59-63`, "The clause forbids those uses"
+  - [Observed] The paragraph's paths include markup `meta` refresh
+    - The clause bars only what the script creates
+    - No per-page check looks at markup `meta` or `link`
+  - [Observed] Markup paths work on a page with no script at all
+    - Markup `meta` refresh navigated to my listener
+    - Markup `preconnect` opened a TCP connection
+    - So "not a browser guarantee on a page with a script" wrongly implies the opposite elsewhere
+  - [Inferred] Not body-reachable, since a body mints no element
+  - Repair: scope the sentence, or add a per-page refusal of those two markup forms
+- N3, note: "Body bytes cannot reach these paths" is stronger than its support
+  - Anchor: `SEMANTIC-DELTA.md:64-65`
+  - [Inferred] Parsing is ruled out; a defective script reading page text is not
+    - The browser would not stop page text going into a STUN or preconnect target
+  - Repair: "cannot reach them unless the script's limbs fail"
+- N4, note: the prose under-claims what the browser enforces
+  - Anchors: `SEMANTIC-DELTA.md:69-70`, `OWNER-DECISION-PACKET.md:45-46`
+    - "no CSP directive catches it"; "CSP cannot catch it"
+  - [Observed] CSP and trusted types do catch a defect class
+    - Threw: `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `document.write`
+    - Threw: `DOMParser`, `createContextualFragment`, `eval`, `Function`, string timer
+    - Threw: script `textContent`, script `src`, `srcdoc`, handler attribute
+  - [Observed] Trusted types' purpose appears nowhere in delta or packet
+    - "What the policy can and cannot enforce" does not mention it
+  - Repair: say what it stops, and name N1's limit
+- N5, note: packet details a signer would want
+  - `OWNER-DECISION-PACKET.md:11-12`, "lose their exemption and are withheld"
+    - [Observed] Bodies are scanned as before, and only a finding excludes them
+    - In `render.ts` a finding means nothing renders at all
+  - `OWNER-DECISION-PACKET.md:52-53`, "pages fall back to static"
+    - [Inferred] Covers a browser refusing the script, not one ignoring trusted types
+    - That browser runs the script with no such guard
+    - [Unknown] Which browsers those are; only Chrome 120 was tried
+- N6, note: table and selftest details
+  - Anchor `:255`: "a vertical tab, which a browser does not split" is false on Chrome 120
+    - [Observed] All-VT separators enforced the policy, so Chrome split them
+    - Refusing it is still right; the row's reason is wrong
+  - [Observed] Two listed mutants are killed only by a crash
+    - `if name not in sources` by `KeyError` only
+    - Empty-directive filter by `IndexError` only
+    - `:422` counts a raise as caught, so "for the reason it names" is unmet there
+  - [Observed] Character classes are unpinned; each change below survives the table
+    - Whitespace narrowed to tab and space
+    - Hash class widened to base64url
+    - Hash padding made optional
+    - Hash regex made case-insensitive
+- N7, note: smaller install and test wording
+  - `IMPACT-LEDGER.md:43`, "`DRAFT_PREVIEW_CSP_META`'s dossier counterpart" does not exist
+    - [Observed] `dossier-site.ts:174` uses that same constant
+    - The install has to split it, and the ledger should say so
+  - `SEMANTIC-DELTA.md:91-92` "no navigation off the page" conflicts with the clause
+    - The clause allows navigating by an href the renderer wrote, including other pages
+  - [Inferred] No named test exercises "navigates completely with scripts off"
+    - The canary comparison covers DOM text only
+  - The clause does not name `setHTMLUnsafe`; [Unknown] behaviour where it exists
+  - [Observed] A bare TCP accept sometimes occurs under `form-action 'none'`
+    - 3 of 15 submits, no HTTP request and no form data; the refusal was logged
+    - [Unknown] Cause; the control without the directive sent the GET
+    - The delta's "stopped form loads" holds for the request, not always the socket
+- Round 1 findings
+  - F1 holds: the denylist is now a closed set
+    - [Observed] All 17 named extra directives and absent `form-action`, `base-uri`, `style-src` are refused
+    - Sole exception is B1
+  - F2 holds, with one residue
+    - [Observed] Clause has the limbs; WebRTC, created `link` and `meta` reproduce as the delta says
+    - [Observed] Markup `script src` with an allowed `integrity` still loads, as stated
+    - Residue is N2
+  - F3 holds in the builder, not in the plan
+    - [Observed] NBSP and VT refused
+    - [Observed] Non-ASCII claim: no code point accepted, every one inserted at 12 sampled positions
+    - [Observed] The Kelvin sign lowers to ASCII `k`, but no token holds `k`
+    - Plan gap is B2
+  - F4 partly holds
+    - [Observed] Ledger now names a new id, a hash check and no `src`
+    - Remaining defect is B3
+  - F5 holds for its five mutants
+    - [Observed] All 15 listed mutants flip or raise; 28 of 28 selftests pass
+    - New survivors are in B1 and N6
+- Round 1 criterion notes
+  - Criterion 1: inert SVG and clobbering remain unexercised
+    - [Observed] Ledger now names a clobbering and a fragment test
+    - [Unknown] No script exists to attack
+    - [Observed] Against the policy itself: SVG `image`, SVG `script href`, CSS `url()` and `@import` blocked
+    - [Observed] A created `base` under `base-uri 'NONE'` left `baseURI` unchanged
+  - Criterion 3: `navigate-to` repaired
+    - [Observed] `navigate-to 'none'` did not stop a `location` navigation, as stated
+  - Criterion 4: repaired, with weak spots above
+    - "Hold no byte" became "derive from no body"
+    - Trusted types added; `DOMParser` and `createContextualFragment` named
+    - Three test limbs named; the navigation one is weak (B4)
+  - Criterion 5: repaired
+    - [Observed] The three no-network overclaims are gone by a `grep -F` of each
+    - `file://` is narrowed; both omissions now stated
+    - [Observed] Diagram citations carry directories now
+      - Sweep over 106 tracked `openspec` files: 7 hit my regex
+      - Hits beyond the named specs: the dossier spec itself and the POC's own surface
+      - The regex is mine, so this is not a proof of absence
+- Criterion 6 and mechanics reproduce
+  - [Observed] Sweeps at base `0bf6b9c1`
+    - Version literal: 18 lines in 11 files outside the builders
+    - v6 act file name: 8 files outside the builders
+  - [Observed] Digests and builder at the subject commit
+    - `--manifest-digest` printed the dispatched digest
+    - An independent hunk application hashed to the manifest row
+    - `--check` current; `--score` 55 rows; new clause text has 0 non-ASCII characters
+    - Today's preview constant matches the table's lawful no-script row
+    - `check_governance.py`: 32 OK, 21 WARN, 0 FAIL; not the full battery
+    - Campaign partition: PASS, 0 unmatched
+  - [Observed] Registration mirrors version 6, gated on the act file
+  - [Observed] Freeze prefixes cover the two files the ledger says
+  - [Inferred] `main.ts` does not reach the dossier renderer
+    - Regex import walk: 118 files, 0 paths naming `dossier`
+- Browser results
+  - [Observed] Plain hash script under `require-trusted-types-for 'script'` ran
+    - Over `file://` and over a loopback HTTP origin, with identical results
+  - [Observed] Text-only work was unaffected
+    - `textContent`, `createTextNode`, `nodeValue`, `replaceChildren`
+    - `createElement` with a listener, SVG `createElementNS`, `classList`, `dataset`
+    - `style.setProperty`, `dialog`, `details`, `localStorage`
+    - `location.hash`, an anchor click, a `keydown` handler
+  - [Inferred] One implementer trap: `innerHTML = ''` throws too
+  - [Observed] Blocked with no socket hit
+    - fetch, XHR, beacon, WebSocket, EventSource, image, CSS background
+    - `link` stylesheet, prefetch and modulepreload; `a ping`
+    - iframe, blob worker, `import()`, video poster, unhashed inline script
+  - [Observed] Not blocked
+    - Created `preconnect`, created `meta` refresh, created `a` click
+    - `location`, `window.open` on a user click, WebRTC STUN
+    - `window.open` without a gesture produced no hit
+- What I ran, and its limits
+  - `google-chrome` 120.0.6099.224 headless, `--no-sandbox`, driven over CDP
+    - Local pages over `file://`, one loopback origin
+    - Per-probe TCP and UDP listeners
+    - Harness: `/tmp/claude-996/-home-orca-orca-projects-syzygy/2521ee96-232a-47bb-8d46-79eeeed3789c/scratchpad/h`
+  - No target repository, site directory, dossier run or provider call
+  - Throwaway worktree used, then removed; no existing checkout touched
+  - `npm ci` not run; no TypeScript test tier run, so the TS reader was tested by a copied line
+  - [Unknown] Other browsers and later Chrome versions untested

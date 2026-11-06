@@ -61,14 +61,14 @@ OLD_CLAUSE = ("whose default-src source list is exactly 'none' and which carries
 NEW_CLAUSE = (
     "whose directives are exactly default-src 'none', style-src 'unsafe-inline', base-uri 'none' and form-action 'none', "
     "each once with that one source, and at most one script-src, which comes with require-trusted-types-for 'script' and "
-    "only then; no other directive is lawful, and a policy holding any non-ASCII byte, whitespace included, fails this "
-    "condition. A script-src's source list is one or more 'sha256-<base64>' hash sources and nothing else. Each such hash "
+    "trusted-types 'none' and only then; no other directive is lawful, every token is written exactly as here in lower "
+    "case, and a policy holding any non-ASCII byte, whitespace included, fails this condition. A script-src's source list is one or more 'sha256-<base64>' hash sources and nothing else. Each such hash "
     "is of one inline script with no src attribute that the renderer itself writes: its bytes are fixed in the renderer "
     "and derive from no body; it opens no connection and loads nothing (no fetch, XMLHttpRequest, sendBeacon, WebSocket, "
     "EventSource, WebTransport, RTCPeerConnection, Worker or window.open); it creates no element outside a list the "
     "renderer fixes, which never holds script, link, meta, base, form, iframe, object, embed, img, audio, video, source, "
     "track or style, and it sets no attribute that holds a URL; it never turns page text into code or markup (no eval, "
-    "no Function, no string timer, no innerHTML, outerHTML, insertAdjacentHTML, document.write, DOMParser or "
+    "no Function, no string timer, no innerHTML, outerHTML, insertAdjacentHTML, setHTMLUnsafe, document.write, DOMParser or "
     "createContextualFragment, no handler attribute); it writes page text only as text; it navigates only by a fragment "
     "of the current page or an href the renderer wrote; and it stores no page text. Every page reads and navigates "
     "completely with scripts off.")
@@ -159,24 +159,27 @@ def base_bytes(root: pathlib.Path = ROOT) -> tuple[str, str]:
 # --- the mechanical half of the sentence ------------------------------------------------------------------------
 
 FIXED = {"default-src": "'none'", "style-src": "'unsafe-inline'", "base-uri": "'none'", "form-action": "'none'"}
-OPTIONAL = ("script-src", "require-trusted-types-for")
+SCRIPT_FIXED = {"require-trusted-types-for": "'script'", "trusted-types": "'none'"}
+OPTIONAL = ("script-src", *SCRIPT_FIXED)
 HASH_SOURCE = re.compile(r"'sha256-[A-Za-z0-9+/]{43}='")
 ASCII_WHITESPACE = re.compile(r"[\t\n\f\r ]+")
+#: A mutant that makes the reading raise counts as seen: a table run that raises is as visible as a wrong answer.
 
 
 READING_MUTANTS = (
     ('ASCII_WHITESPACE.split(part)', 'part.split()'),
+    ('ASCII_WHITESPACE.split(part)', 're.split(r"[\\t ]+", part)'),
     ('directives = [d for d in directives if d]', 'pass'),
-    ('names = [d[0].lower() for d in directives]', 'names = [d[0] for d in directives]'),
+    ('names = [d[0] for d in directives]', 'names = [d[0].lower() for d in directives]'),
     ('if name not in FIXED and name not in OPTIONAL:', 'if False:'),
     ('if names.count(name) != 1:', 'if False:'),
-    ('sources = {d[0].lower(): d[1:] for d in directives}', 'sources = {d[0]: d[1:] for d in directives}'),
     ('if name not in sources:', 'if False:'),
-    ('len(sources[name]) != 1 or ', ''),
-    ('sources[name][0].lower() != source', 'sources[name][0] != source'),
-    ('or sources[name][0].lower() != source', ''),
-    ('if ("script-src" in sources) != ("require-trusted-types-for" in sources):', 'if False:'),
-    ('if len(types) != 1 or types[0].lower() != "\'script\'":', 'if False:'),
+    ('if sources[name] != [source]:', 'if sources[name][:1] != [source]:'),
+    ('if sources[name] != [source]:', 'if [s.lower() for s in sources[name]] != [source]:'),
+    ('return f"{extra[0]} without script-src" if extra else None', 'return None'),
+    ('if sources.get(name) != [source]:', 'if False:'),
+    ('if sources.get(name) != [source]:', 'if (sources.get(name) or [""])[0] != source:'),
+    ('if sources.get(name) != [source]:', 'if [s.lower() for s in sources.get(name, [])] != [source]:'),
     ('if not sources["script-src"]:', 'if False:'),
     ('if not HASH_SOURCE.fullmatch(source):', 'if not HASH_SOURCE.match(source):'),
     ('if not HASH_SOURCE.fullmatch(source):', 'if False:'),
@@ -186,25 +189,24 @@ READING_MUTANTS = (
 def csp_finding(content: str) -> str | None:
     directives = [[t for t in ASCII_WHITESPACE.split(part) if t] for part in content.split(";")]
     directives = [d for d in directives if d]
-    names = [d[0].lower() for d in directives]
+    names = [d[0] for d in directives]
     for name in names:
         if name not in FIXED and name not in OPTIONAL:
             return f"carries {name}"
         if names.count(name) != 1:
             return f"repeats {name}"
-    sources = {d[0].lower(): d[1:] for d in directives}
+    sources = {name: d[1:] for name, d in zip(names, directives)}
     for name, source in FIXED.items():
         if name not in sources:
             return f"{name} is absent"
-        if len(sources[name]) != 1 or sources[name][0].lower() != source:
+        if sources[name] != [source]:
             return f"{name} is not exactly {source}"
-    if ("script-src" in sources) != ("require-trusted-types-for" in sources):
-        return "script-src and require-trusted-types-for must come together"
     if "script-src" not in sources:
-        return None
-    types = sources["require-trusted-types-for"]
-    if len(types) != 1 or types[0].lower() != "'script'":
-        return "require-trusted-types-for is not exactly 'script'"
+        extra = [name for name in SCRIPT_FIXED if name in sources]
+        return f"{extra[0]} without script-src" if extra else None
+    for name, source in SCRIPT_FIXED.items():
+        if sources.get(name) != [source]:
+            return f"{name} is not exactly {source}"
     if not sources["script-src"]:
         return "script-src has no source"
     for source in sources["script-src"]:
@@ -216,7 +218,7 @@ def csp_finding(content: str) -> str | None:
 _H = "'sha256-" + "A" * 43 + "='"
 _H2 = "'sha256-" + "B" * 43 + "='"
 _REST = "style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
-_TT = "require-trusted-types-for 'script'"
+_TT = "require-trusted-types-for 'script'; trusted-types 'none'"
 _D = "default-src 'none'"
 _S = f"script-src {_H}; {_TT}"
 #: name, CSP content, allowed under version 7. Today's page must stay lawful.
@@ -224,9 +226,24 @@ CSP_TABLE = [
     ("today's page, no script", f"{_D}; {_REST}", True),
     ("one hash", f"{_D}; {_S}; {_REST}", True),
     ("two hashes", f"{_D}; script-src {_H} {_H2}; {_TT}; {_REST}", True),
-    ("directive names in upper case", f"DEFAULT-SRC 'none'; SCRIPT-SRC {_H}; {_TT}; {_REST}", True),
-    ("'NONE' in upper case", f"default-src 'NONE'; {_REST}", True),
-    ("a trailing semicolon and tabs", f"default-src\t'none'; {_REST};", True),
+    ("a directive name in upper case", f"DEFAULT-SRC 'none'; {_REST}", False),
+    ("'NONE' in upper case", f"default-src 'NONE'; {_REST}", False),
+    ("'SCRIPT', which Chrome drops as invalid", f"{_D}; script-src {_H}; require-trusted-types-for 'SCRIPT'; trusted-types 'none'; {_REST}", False),
+    ("'Script'", f"{_D}; script-src {_H}; require-trusted-types-for 'Script'; trusted-types 'none'; {_REST}", False),
+    ("'script' twice", f"{_D}; script-src {_H}; require-trusted-types-for 'script' 'script'; trusted-types 'none'; {_REST}", False),
+    ("trusted-types naming a policy", f"{_D}; script-src {_H}; require-trusted-types-for 'script'; trusted-types x; {_REST}", False),
+    ("trusted-types absent", f"{_D}; script-src {_H}; require-trusted-types-for 'script'; {_REST}", False),
+    ("a trailing semicolon", f"{_D}; {_REST};", True),
+    ("tab separators", f"default-src\t'none'; {_REST}", True),
+    ("line feed separators", f"default-src\n'none'; {_REST}", True),
+    ("form feed separators", f"default-src\f'none'; {_REST}", True),
+    ("carriage return separators", f"default-src\r'none'; {_REST}", True),
+    ("base64url in a hash", f"{_D}; script-src 'sha256-{'-' * 43}='; {_TT}; {_REST}", False),
+    ("a hash with no padding", f"{_D}; script-src 'sha256-{'A' * 43}'; {_TT}; {_REST}", False),
+    ("a hash with an upper-case algorithm", f"{_D}; script-src 'SHA256-{'A' * 43}='; {_TT}; {_REST}", False),
+    ("a leading non-breaking space", f"\u00a0default-src 'none'; {_REST}", False),
+    ("a leading byte-order mark", f"\ufeffdefault-src 'none'; {_REST}", False),
+    ("a trailing ideographic space", f"{_D}; {_REST}\u3000", False),
     ("unsafe-inline beside a hash", f"{_D}; script-src {_H} 'unsafe-inline'; {_TT}; {_REST}", False),
     ("unsafe-eval", f"{_D}; script-src {_H} 'unsafe-eval'; {_TT}; {_REST}", False),
     ("unsafe-hashes", f"{_D}; script-src {_H} 'unsafe-hashes'; {_TT}; {_REST}", False),
@@ -245,14 +262,15 @@ CSP_TABLE = [
     ("two script-src directives", f"{_D}; script-src {_H}; script-src {_H2}; {_TT}; {_REST}", False),
     ("script-src with no trusted types", f"{_D}; script-src {_H}; {_REST}", False),
     ("trusted types with no script-src", f"{_D}; {_TT}; {_REST}", False),
-    ("trusted types for something else", f"{_D}; script-src {_H}; require-trusted-types-for 'none'; {_REST}", False),
+    ("trusted-types alone with no script-src", f"{_D}; trusted-types 'none'; {_REST}", False),
+    ("trusted types for something else", f"{_D}; script-src {_H}; require-trusted-types-for 'none'; trusted-types 'none'; {_REST}", False),
     ("default-src not none", f"default-src 'self'; {_S}; {_REST}", False),
     ("default-src absent", f"{_S}; {_REST}", False),
     ("default-src with a second source", f"default-src 'none' https:; {_REST}", False),
     ("default-src with no source", f"default-src; {_REST}", False),
     ("two default-src directives", f"{_D}; {_D}; {_REST}", False),
     ("a non-breaking space, which a browser does not split", f"default-src\u00a0'none'; {_REST}", False),
-    ("a vertical tab, which a browser does not split", f"default-src\x0b'none'; {_REST}", False),
+    ("a vertical tab, outside CSP's ASCII whitespace, though Chrome 120 splits it", f"default-src\x0b'none'; {_REST}", False),
     ("style-src absent", f"{_D}; base-uri 'none'; form-action 'none'", False),
     ("base-uri absent", f"{_D}; style-src 'unsafe-inline'; form-action 'none'", False),
     ("form-action absent", f"{_D}; style-src 'unsafe-inline'; base-uri 'none'", False),
@@ -262,7 +280,7 @@ CSP_TABLE = [
 ]
 for _name in ("script-src-elem", "script-src-attr", "object-src", "connect-src", "worker-src", "child-src", "frame-src",
               "navigate-to", "img-src", "font-src", "media-src", "manifest-src", "report-uri", "report-to", "sandbox",
-              "upgrade-insecure-requests", "trusted-types"):
+              "upgrade-insecure-requests"):
     CSP_TABLE.append((_name, f"{_D}; {_S}; {_name} *; {_REST}", False))
 
 

@@ -23,12 +23,17 @@ A policy act without its install turns `main` red, so these land together:
 
 - `packages/polaris-generation-core/src/public-source-classification.ts`:
   `EXEMPTION_TEXTS.renderCondition` accepts the new text's digest;
-  `pageSinkCspFinding` implements the closed set, replacing `FORBIDDEN_DIRECTIVES`,
-  and splits on ASCII whitespace only, with one fixture per row of the builder's
-  table.
+  `pageSinkCspFinding` implements the closed set, replacing `FORBIDDEN_DIRECTIVES`.
+  It refuses any non-ASCII byte first, drops its Unicode `trim` and `/\s+/u` split for
+  ASCII whitespace, and compares tokens exactly, with one fixture per row of the
+  builder's table.
 - `packages/polaris-dossier/src/render.ts`: a new `PAGE_SINK_CONTRACT` id declares
-  the script half, so the current id with a `script-src` is unconfirmed. Each page
-  is checked: every `<script>` has no `src` and hashes to the renderer's pinned set.
+  the script half, so the current id with a `script-src` is unconfirmed. The pinned
+  hash set sits beside it in the core package, not in the injected renderer. Each
+  page, read with a real HTML tokenizer, is checked both ways: every `<script>` has
+  no `src` and hashes into the set, and every `script-src` hash is in the set. The
+  check must not skip a page by file extension (`pageSinkUnconfirmed` skips files not
+  ending `.html`, and the clause's page includes SVG).
 - `apps/three-surface-poc/src/governance-inputs.ts` and
   `packages/three-surface-poc-core/src/git-object-reader.ts`: act records and
   policy identity, as the version-6 install changed them. Both are under the
@@ -40,13 +45,17 @@ A policy act without its install turns `main` red, so these land together:
 ## What the feature then requires, separately
 
 - A dossier spec version replacing the no-script text; signed by the owner.
-- The script, its hash in `DRAFT_PREVIEW_CSP_META`'s dossier counterpart, tests
+- The script and its hash in the page policy. `dossier-site.ts` uses
+  `DRAFT_PREVIEW_CSP_META` itself today, so the install splits that constant. Tests
   with scripts on and off, and a run over `file://`, which is how pages are
   opened. **[Observed]** Round 1 of review ran a hash-allowed inline script over
   `file://` on Chrome 120; **[Unknown]** other browsers are untried.
-- Tests for the judged limbs: scripts-on against scripts-off DOM text on a canary;
-  a request listener sees no connection or navigation; a storage dump holds no page
-  text; a page with ids that clobber the script's lookups; a fragment holding markup.
+- Tests for the judged limbs: scripts-on against scripts-off DOM text on a canary; a
+  scripts-off crawl reaching every page; a request listener seeing no request to a
+  URL the renderer did not write; a source scan for the named constructors and
+  elements, which covers what the listener cannot see (WebRTC, bare preconnect); a
+  storage dump holding no page text; a page with ids that clobber the script's
+  lookups; a fragment holding markup.
 - `page-sink.test.ts` and its renderer contract. Provider and preview bytes stay
   pinned: the preview keeps its no-script policy.
 
