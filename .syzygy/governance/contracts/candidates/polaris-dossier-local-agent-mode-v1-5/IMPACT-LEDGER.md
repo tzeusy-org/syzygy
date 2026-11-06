@@ -54,7 +54,9 @@ product code changes with this package.
   agent may have drawn it from what was withheld. Its place says only that the
   sources are withheld.
 - A block citing both admitted and withheld spans keeps today's rules, so it
-  stands on its admitted span unless a review finds otherwise. You chose "all"
-  for this rule on 2026-11-05; three of the five incident rows were partly withheld.
+  stands on its admitted span unless a review finds otherwise. The rule covers only
+  wholly withheld claims, the scope the questionnaire described. In the 2026-11-04
+  Redis run, three of the five rows that blocked were partly withheld and two
+  wholly (bead `syzygy-mea.9`), so this rule alone would not have released all five.
 - A fact with no citation is refused, not allowed. Doctrine requires that; allowing
   it would need a doctrine amendment.
