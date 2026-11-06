@@ -1,9 +1,9 @@
 # Impact ledger — Polaris dossier local-agent mode, version 1.5
 
 > **Candidate — binds nothing.** [Observed] The patches apply to the version 1.4
-> proposed bytes (commit `59768e6f28356723b39482f314cf211f245873b5`). [Unknown]
-> Version 1.4 is selected by the owner but not yet recorded or installed, so the
-> version 1.5 builder, recorder row and tag cannot exist until it is.
+> proposed bytes (commit `59768e6f28356723b39482f314cf211f245873b5`). [Observed]
+> Version 1.4 is recorded on its own branch and not yet on `main`, so this package
+> stays stacked on it. The builder and recorder row are in this package's branch.
 
 ## Requirement impact
 
@@ -23,6 +23,9 @@
   uncited judgement and a withheld entry only.
 - REQ-polaris-generation-004: primary narrative order, by the owner's ruling
   that RFC7-13 and this requirement allow.
+- REQ-polaris-generation-002: "Source-supported inference SHALL expose its
+  admitted premises" is displaced for an uncited judgement only, which has no
+  premise to expose.
 - REQ-polaris-generation-012: unchanged; the reading view must stay keyboard and
   nonvisually recoverable.
 
@@ -46,7 +49,9 @@ product code changes with this package.
 
 - A reader in the reading view sees no label word on running text. They rely on
   the section's one sentence, the marks and the evidence view. A reader who
-  never opens those may take a judgement for a sourced fact. The owner chose this.
+  never opens those may take a judgement for a sourced fact. The owner asked for pages
+  that read without label words on the text; the reading view is this version's
+  answer, and signing accepts it.
 - An uncited judgement cannot be checked against a source. It is counted and
   marked. Telling a judgement from a fact is a review call, so a reviewer can
   miss one.

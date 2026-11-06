@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-5-4-RAW.md:4`), over `28bd58f4`, round 4, with one blocking contradiction; rounds 1 to 3 were also `REVISE`. Findings are repaired on the same branch, listed in the package's `ROUND-4-DISPOSITIONS.md`; no fresh round has confirmed the repair.
+`REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-5-5-RAW.md:4`), over `e260e36f`, round 5, with one blocking legend sentence; rounds 1 to 4 were also `REVISE`. Findings are repaired on the same branch, listed in the package's `ROUND-5-DISPOSITIONS.md`; no fresh round has confirmed the repair, and the next step is the owner's.

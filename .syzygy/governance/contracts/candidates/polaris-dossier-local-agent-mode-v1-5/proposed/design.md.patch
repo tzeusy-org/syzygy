@@ -12,6 +12,15 @@
  > implementation. It contains no code. The command surface below is a design
  > for implementation after the owner's sign-off (direction item 5); the
  > requirements are the controlling text, and doctrine, accepted contracts,
+@@ -328,7 +328,7 @@
+ | `syzygy dossier inventory-brief <run>` / `inventory-check <run> --inventory <file>` | inventory session | Brief without the draft; checks and freezes the inventory like a draft; refuses an inventory declared under the authoring session's identifier | as `brief` / `check`; `ProviderInventory` types | inventory schema with path + line-range citations |
+ | `syzygy dossier review-packet <run> --kind fidelity\|design` | operator or review session | Builds the packet (frozen subject, frozen inventory, cited spans as Syzygy read them, criteria, verdict schema) and prints its digest | `ProviderReview` shape (`inventoryCoverage`, `blockSupport`, `findings`) | packet assembly and digest; the design packet holds the rendered pages |
+ | `syzygy dossier review-check <run> --verdict <file>` | review session | Re-checks the pinned revision against the consent, rebuilds the packet and validates schema, packet digest, pinned revision, completeness, entry accuracy, quotations, consistency and session-identifier distinctness; records the verdict as refused, or as counting once its launch form is recorded | `reviewVerdict` (`provider-draft.ts`) | digest binding; session-identifier rule; subject list from 006 |
+-| `syzygy dossier render <run>` | agent or operator | Re-reads and re-hashes every object, re-locates every quotation, re-runs the checks and rebuilds the review packets, then renders the multi-page site from the latest checked revision; source pages only for screened blobs Syzygy read and verified; disclosure block on every page, including the reported commands and the Inferred integrity of stored records; draft layer only when the three conditions of the owner's RFC7-20 reading hold | `renderDossier` / `writeDossierRun` (`apps/three-surface-poc/src/polaris-generation/dossier-render.ts`, `dossier-render-main.ts`); `sourceRoute` | an adapter from the local draft to the renderer's input (today a `PipelineResult`); RFC7-10 anchors of class evidence artifact identifier with integrity digest, from the recomputed object id, byte range and revision; the disclosure block; the two discovery populations |
++| `syzygy dossier render <run>` | agent or operator | Re-reads and re-hashes every object, re-locates every quotation, re-runs the checks and rebuilds the review packets, then renders the multi-page site from the latest checked revision; source pages only for screened blobs Syzygy read and verified; the one sentence on every page, with the full disclosure, including the reported commands and the Inferred integrity of stored records, in the appendix; draft layer only when the three conditions of the owner's RFC7-20 reading hold | `renderDossier` / `writeDossierRun` (`apps/three-surface-poc/src/polaris-generation/dossier-render.ts`, `dossier-render-main.ts`); `sourceRoute` | an adapter from the local draft to the renderer's input (today a `PipelineResult`); RFC7-10 anchors of class evidence artifact identifier with integrity digest, from the recomputed object id, byte range and revision; the disclosure block; the two discovery populations |
+ | `syzygy dossier evaluate <run>` | operator | Optional measurement of the rendered dossier | `evaluateDossier`, `resolveQuote` (`dossier-evaluation.ts`); `poc:dossier-evaluation` | none beyond wiring |
+ | `syzygy dossier close <run> [--usage-tokens N] [--usage-turns N]` | agent, on the operator's answer | Records operator-declared usage and closes the run record | — | the record |
+ | `syzygy dossier status <run>` | anyone | Prints the run's state, limits spent, open findings and reviews still required | — | — |
 @@ -372,8 +372,9 @@
  deepDives, unresolved) with three changes: each paragraph cites
  `{path, startLine, endLine}` instead of `sourceIds`; each block carries
@@ -45,7 +54,7 @@
  
  For an excluded or invalid-UTF-8 blob, the excerpt renders Unknown with
  `excluded-content` and no blob bytes; its exclusion is not a finding. Any
-@@ -449,8 +449,85 @@
+@@ -449,8 +449,86 @@
  A `code` element has no `blockSupport` entry of its own; its admitted span
  is one of the cited spans the fidelity packet carries.
  
@@ -67,7 +76,8 @@
 +
 +- The reading view is what a narrative page opens to. A legend explains the
 +  marks once per page: a numbered citation mark, `judgement`, `framing`, a
-+  set-off quotation and `Not established`. Syzygy writes no label token or
++  set-off quotation, `Not established`, and `†` with a number on a citation,
++  counting the lines of that file screening withheld. Syzygy writes no label token or
 +  file-and-line aside into a block's visible text; the agent's own prose is
 +  not examined, so ordinary uses of a word such as "unknown" are not findings.
 +- The evidence view is the same claims with each RFC7-33 distinction visible.

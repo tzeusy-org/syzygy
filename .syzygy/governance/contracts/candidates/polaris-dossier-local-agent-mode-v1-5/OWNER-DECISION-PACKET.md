@@ -24,7 +24,7 @@ evidence view. Signing also makes four rulings: Poles reorder the narrative
 (RFC7-13); the one sentence meets your RFC7-20 condition that the page disclose how
 the draft was computed; the sentence and legend satisfy RFC7-20's "visually
 distinct"; and a partly withheld block's count may sit in the evidence view rather
-than the reading view (RFC5-17, "disclosed on the claim"). The withheld rule does not fully close RFC2-23: an agent that read
+than the reading view (RFC5-17, "disclosed on the claim"). A judgement block with no citation is also not held to REQ-polaris-generation-002's exposed premises. The withheld rule does not fully close RFC2-23: an agent that read
 everything can still draw on withheld text in a block citing something else.
 
 ## Your words, when offered
