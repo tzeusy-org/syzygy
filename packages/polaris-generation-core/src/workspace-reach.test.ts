@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join, posix } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import { workspaceDirectories } from '../../../vitest.tiers.js';
 import { ROOT, WORKSPACE, entryModulesIn, resolve, resolveIn, segmentFaultOf, type Manifest, type Workspace } from './workspace-reach.testkit.js';
 
 // syzygy-bpyt.8.36 (the review of 8.34, N1): the resolver both reach guards share reads a specifier it cannot follow as Node would
@@ -9,6 +10,57 @@ import { ROOT, WORKSPACE, entryModulesIn, resolve, resolveIn, segmentFaultOf, ty
 // such specifier and no `imports` field today, so the forms that need one run against a workspace of two packages written here.
 
 const BARREL = 'packages/polaris-dossier/src/index.ts';
+
+// GP-B2 Q4: the reach resolver and S10 keep their reviewed @syzygy/-only behavior. This real-tree precondition refuses the
+// workspace/dependency shapes outside their assurance, including packages with no entry. It is not a general npm spec parser.
+it('requires every npm workspace to be @syzygy/-named and every dependency or override spec to be a registry version shape', () => {
+  const record = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
+  const readManifest = (path: string): Record<string, unknown> => {
+    try {
+      const value: unknown = JSON.parse(readFileSync(join(ROOT, path), 'utf8'));
+      if (!record(value)) throw new Error('manifest must be an object');
+      return value;
+    } catch (cause) {
+      throw new Error(`${path}: cannot read a manifest`, { cause });
+    }
+  };
+  const root = readManifest('package.json');
+  const patterns = root['workspaces'];
+  if (!Array.isArray(patterns) || patterns.length === 0 || patterns.some((pattern) => typeof pattern !== 'string')) {
+    throw new Error('package.json workspaces: expected nonempty workspace patterns');
+  }
+  // Enumerate paths from root workspaces, independently of WORKSPACE's name-keyed Map. Unsupported patterns/read failures throw.
+  const directories = workspaceDirectories(ROOT);
+  if (directories.length === 0) throw new Error('package.json workspaces: discovered no workspace manifests');
+  const failures: string[] = [];
+  // Whole X.Y.Z components, optionally prefixed by one ^ or ~. The final lookahead requires the actual end of input; unlike $,
+  // it cannot accept a trailing line terminator. Partial versions, prerelease/build suffixes, whitespace and other ranges fail.
+  const registryVersion = /^(?:\^|~)?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?![\s\S])/u;
+  const checkSpec = (location: string, spec: unknown): void => {
+    if (typeof spec !== 'string' || !registryVersion.test(spec)) failures.push(`${location}: ${JSON.stringify(spec)} is not exact X.Y.Z or a ^/~ X.Y.Z range`);
+  };
+  for (const directory of ['.', ...directories]) {
+    const path = directory === '.' ? 'package.json' : `${directory}/package.json`;
+    const manifest = directory === '.' ? root : readManifest(path);
+    if (directory !== '.' && (typeof manifest['name'] !== 'string' || !manifest['name'].startsWith('@syzygy/'))) {
+      failures.push(`${path} name: ${JSON.stringify(manifest['name'])} is not @syzygy/-named`);
+    }
+    for (const field of ['dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies']) {
+      const declarations = manifest[field];
+      if (declarations === undefined) continue;
+      if (!record(declarations)) throw new Error(`${path} ${field}: expected a dependency object`);
+      for (const [name, spec] of Object.entries(declarations)) checkSpec(`${path} ${field}.${name}`, spec);
+    }
+    const checkOverrides = (value: unknown, location: string): void => {
+      if (typeof value === 'string') checkSpec(location, value);
+      else if (value !== null && typeof value === 'object') {
+        for (const [key, nested] of Object.entries(value)) checkOverrides(nested, `${location}[${JSON.stringify(key)}]`);
+      }
+    };
+    checkOverrides(manifest['overrides'], `${path} overrides`);
+  }
+  expect(failures, 'workspace/dependency precondition for the shared reach guards and S10').toEqual([]);
+});
 
 type DependencyFields = Pick<Manifest, 'dependencies' | 'devDependencies' | 'optionalDependencies' | 'peerDependencies'>;
 
