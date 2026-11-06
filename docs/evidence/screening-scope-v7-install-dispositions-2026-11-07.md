@@ -36,3 +36,8 @@ The review returned `CONFIRM WITH EXCEPTIONS` over `b3cd3a43`. It said its grade
 - Note 6 stands: "kills the two surviving case mutants" is loose, since one of them no longer exists in the code, and the baseline guard is recorded here and not in the evidence file.
 
 After round 3, one test changed and no product code: hosted CI's Chrome 156 does not run the script on the decoy page, as Chrome 120 does, so that Chrome fixture now holds only the reader's refusal. [Observed] on hosted run 42270481021.
+
+## After round 3, `syzygy-pdja.7`
+
+This follow-up changes the code round 3 read, so that round does not cover it. The opening now has a 512-character bound, the stale comment is corrected, the misnamed row is replaced with rows that test distance, a row holds an ignored end tag after `<head>`, and the Chrome duplicate-charset fixture hides its script in the attribute, with a UTF-8 control. Mutants: the evidence file names the commit, 54 of 54 killed.
+
