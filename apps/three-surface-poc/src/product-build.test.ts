@@ -179,6 +179,11 @@ describe('the clean build', () => {
       'packages/d -> packages/b -> packages/a -> packages/d: project references form a cycle'],
     ['reaches a tsconfig.json that is not plain JSON', ['packages/d'], (root) => writeFileSync(join(root, 'packages/a/tsconfig.json'), `// a comment\n${readFileSync(join(root, 'packages/a/tsconfig.json'), 'utf8')}`),
       'packages/a/tsconfig.json: not plain JSON'],
+    // Recoverable parse errors must stop the build before deletion, with the visited file and the first diagnostic.
+    ['reaches a project with missing extends targets', ['packages/d'], (root) => editConfig(root, 'packages/a', (config) => { config.extends = ['missing-first-config', 'missing-second-config']; }),
+      "packages/a/tsconfig.json: File 'missing-first-config' not found."],
+    ['reaches a project with circular extends', ['packages/d'], (root) => editConfig(root, 'packages/a', (config) => { config.extends = './tsconfig.json'; }),
+      'packages/a/tsconfig.json: Circularity detected while resolving configuration:'],
     ['names a project whose directory resolves outside the checkout', ['packages/e'], (root) => {
       const outside = tempDir('syzygy-clean-build-outside-');
       plant(outside, 'tsconfig.json', readFileSync(join(root, 'packages/c/tsconfig.json'), 'utf8'));
@@ -208,7 +213,10 @@ describe('the clean build', () => {
     edit(root);
     for (const path of KEPT) plant(root, path, 'kept\n');
     await expect(cleanBuild(root, ...projects)).rejects.toMatchObject({ stderr: expect.stringContaining(reason) });
-    for (const path of [...KEPT.map((kept) => join(root, kept)), ...KEPT_OUTSIDE]) expect(readFileSync(path, 'utf8'), path).toBe('kept\n');
+    for (const path of [...KEPT.map((kept) => join(root, kept)), ...KEPT_OUTSIDE]) {
+      expect(existsSync(path), `${path}: refusal preserves the output`).toBe(true);
+      expect(readFileSync(path, 'utf8'), path).toBe('kept\n');
+    }
   }, 30_000);
 
   // TypeScript reads a backslash in a path as a separator, so it resolves this project's outDir to packages/x/y/dist, outside its

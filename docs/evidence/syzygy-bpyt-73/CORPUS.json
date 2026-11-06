@@ -1,0 +1,387 @@
+{
+  "caseRows": [
+    {
+      "id": "A01",
+      "name": "transitive d -> b -> a",
+      "purpose": "unchanged valid graph and all output bytes"
+    },
+    {
+      "id": "A02",
+      "name": "repeated named projects and shared references",
+      "purpose": "normalized/deduplicated traversal and stable output set"
+    },
+    {
+      "id": "A03",
+      "name": "normalized named path with dot segments",
+      "purpose": "preserve existing path normalization"
+    },
+    {
+      "id": "A04",
+      "name": "in-checkout project-directory alias",
+      "purpose": "preserve existing realpath confinement behavior"
+    },
+    {
+      "id": "A05",
+      "name": "unreferenced named non-composite incremental c",
+      "purpose": "referenced-only composite requirement"
+    },
+    {
+      "id": "A06",
+      "name": "referenced inherited composite true",
+      "purpose": "valid inherited effective options"
+    },
+    {
+      "id": "A07",
+      "name": "valid multilevel extends",
+      "purpose": "real TypeScript inherited options; owned output overrides"
+    },
+    {
+      "id": "A08",
+      "name": "valid extends array",
+      "purpose": "real TypeScript array precedence; no reimplementation"
+    },
+    {
+      "id": "A09",
+      "name": "valid package extends",
+      "purpose": "consented task-owned package fixture only"
+    },
+    {
+      "id": "A10",
+      "name": "JSONC in extended config",
+      "purpose": "retain native inherited grammar while own visited JSON stays strict"
+    },
+    {
+      "id": "A11",
+      "name": "stale/poisoned/deleted-source output cleanup",
+      "purpose": "rebuild exact same transitive roots; leave unrelated c/tools/outside controls"
+    },
+    {
+      "id": "A12",
+      "name": "repeat accepted identical inputs",
+      "purpose": "repeat deterministic output path/byte set"
+    },
+    {
+      "id": "A13",
+      "name": "valid whitespace/key order variation",
+      "purpose": "real grammar acceptance independent of nonsemantic formatting"
+    },
+    {
+      "id": "A14",
+      "name": "valid harmless explanatory string variation",
+      "purpose": "top-level prose cannot drive admission"
+    },
+    {
+      "id": "A15",
+      "name": "full npm build",
+      "purpose": "actual complete dist path and byte comparison including .tsbuildinfo"
+    },
+    {
+      "id": "A16",
+      "name": "full npm build:poc",
+      "purpose": "actual complete dist path and byte comparison including .tsbuildinfo"
+    },
+    {
+      "id": "P01",
+      "name": "direct named missing extends",
+      "purpose": "one named project fails parse; seeded tree remains exact"
+    },
+    {
+      "id": "P02",
+      "name": "transitive missing extends at a",
+      "purpose": "d/b traversal reaches failed a before removal"
+    },
+    {
+      "id": "P03",
+      "name": "multiple named projects: valid d then invalid c",
+      "purpose": "previously visited full d graph still has no removal attempt"
+    },
+    {
+      "id": "P04",
+      "name": "multiple named projects: invalid c then valid d",
+      "purpose": "order control; no tsc execution"
+    },
+    {
+      "id": "P05",
+      "name": "deep inherited missing target",
+      "purpose": "a -> base -> absent target"
+    },
+    {
+      "id": "P06",
+      "name": "extends array with two missing targets",
+      "purpose": "multiple real diagnostics; literal first selection"
+    },
+    {
+      "id": "P07",
+      "name": "extends array with one missing target",
+      "purpose": "single recoverable error counterexample"
+    },
+    {
+      "id": "P08",
+      "name": "extends array mixing valid and invalid targets",
+      "purpose": "native parse ordering and admission"
+    },
+    {
+      "id": "P09",
+      "name": "missing package extends target",
+      "purpose": "real package resolution failure"
+    },
+    {
+      "id": "P10",
+      "name": "package extends with deep missing target",
+      "purpose": "real package fixture resolution"
+    },
+    {
+      "id": "P11",
+      "name": "self circular extends",
+      "purpose": "single-error durable regression"
+    },
+    {
+      "id": "P12",
+      "name": "two-file circular extends",
+      "purpose": "native cycle diagnostic/context"
+    },
+    {
+      "id": "P13",
+      "name": "three-file circular extends",
+      "purpose": "deep cycle; no effects"
+    },
+    {
+      "id": "P14",
+      "name": "unknown own compiler option",
+      "purpose": "actual invalid compilerOptions grammar"
+    },
+    {
+      "id": "P15",
+      "name": "invalid own compiler option value type",
+      "purpose": "actual parser type error rather than prose token"
+    },
+    {
+      "id": "P16",
+      "name": "multiple invalid compiler options",
+      "purpose": "first diagnostic stable against later selection"
+    },
+    {
+      "id": "P17",
+      "name": "invalid option in inherited config",
+      "purpose": "same inherited parser-error boundary"
+    },
+    {
+      "id": "P18",
+      "name": "malformed inherited JSON",
+      "purpose": "parse diagnostics with own strict JSON still valid"
+    },
+    {
+      "id": "P19",
+      "name": "invalid extends value type",
+      "purpose": "real invalid root-field grammar"
+    },
+    {
+      "id": "P20",
+      "name": "no input files under valid own output options",
+      "purpose": "native parse versus build boundary; actual errors and membership measured"
+    },
+    {
+      "id": "P21",
+      "name": "invalid parse plus effective-output refusal",
+      "purpose": "enumerate actual changed precedence without changing raw grammar"
+    },
+    {
+      "id": "P22",
+      "name": "invalid parse plus reference-cycle/non-composite facts",
+      "purpose": "enumerate actual parse-before-downstream-refusal precedence"
+    },
+    {
+      "id": "O01",
+      "name": "names no project",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O02",
+      "name": "names a directory with no tsconfig.json",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O03",
+      "name": "names a project outside the workspaces",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O04",
+      "name": "reaches a project whose outputs leave dist",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O05",
+      "name": "reaches a project whose declarations leave dist",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O06",
+      "name": "reaches a project that bundles its outputs into one file",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O07",
+      "name": "reaches a reference cycle",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O08",
+      "name": "reaches a tsconfig.json that is not plain JSON",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O09",
+      "name": "names a project whose directory resolves outside the checkout",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O10",
+      "name": "reaches a project whose declarations leave dist through extends",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O11",
+      "name": "reaches a project that bundles its outputs into one file through extends",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O12",
+      "name": "reaches a referenced project that is not composite",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O13",
+      "name": "reaches a referenced project that does not set composite",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O14",
+      "name": "reaches a referenced project that inherits composite false",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "O15",
+      "name": "reaches a project whose declarations sit in a sibling of dist through extends",
+      "purpose": "retain existing exact executable refusal row, diagnostic and exit; compare native separately"
+    },
+    {
+      "id": "G01",
+      "name": "directory name containing backslash",
+      "purpose": "existing wrapper/effective-output grammar"
+    },
+    {
+      "id": "G02",
+      "name": "inherited declarationDir null",
+      "purpose": "existing stricter key-presence refusal"
+    },
+    {
+      "id": "G03",
+      "name": "inherited outFile null",
+      "purpose": "existing stricter key-presence refusal"
+    },
+    {
+      "id": "G04",
+      "name": "wrong own tsBuildInfoFile",
+      "purpose": "existing strict owned-output grammar"
+    },
+    {
+      "id": "G05",
+      "name": "missing directly named config",
+      "purpose": "existing exists/shape refusal"
+    },
+    {
+      "id": "G06",
+      "name": "unreadable own config mode",
+      "purpose": "real unprivileged read failure before parser; restore original mode"
+    },
+    {
+      "id": "G07",
+      "name": "strict malformed own JSON",
+      "purpose": "existing own JSON parse refusal"
+    },
+    {
+      "id": "G08",
+      "name": "strict own JSON with comments",
+      "purpose": "existing wrapper grammar may be stricter than native"
+    },
+    {
+      "id": "G09",
+      "name": "non-object/primitive own JSON",
+      "purpose": "preserve actual baseline failure; no shape repair"
+    },
+    {
+      "id": "G10",
+      "name": "raw reference names a config file rather than project directory",
+      "purpose": "enumerate pre-existing raw-reference strictness"
+    },
+    {
+      "id": "G11",
+      "name": "raw reference malformed path type",
+      "purpose": "preserve actual baseline grammar/failure; no reference repair"
+    },
+    {
+      "id": "G12",
+      "name": "directory at tsconfig.json path",
+      "purpose": "existing unreadable read boundary"
+    },
+    {
+      "id": "G13",
+      "name": "TypeScript module unavailable in isolated fixture",
+      "purpose": "existing dependency-resolution failure; never mutate shared installation"
+    },
+    {
+      "id": "T01",
+      "name": "ordinary source error after successful config parse",
+      "purpose": "same tsc path/status/removal and partial native effects"
+    },
+    {
+      "id": "T02",
+      "name": "ordinary missing import after successful config parse",
+      "purpose": "same native failure boundary and spawned argv"
+    },
+    {
+      "id": "C01",
+      "name": "invalid extends with harmless prose altered",
+      "purpose": "same real invalid field; explanation cannot affect refusal"
+    },
+    {
+      "id": "C02",
+      "name": "invalid option with unrelated prose altered",
+      "purpose": "same real invalid compilerOptions field"
+    },
+    {
+      "id": "C03",
+      "name": "restore missing target to valid",
+      "purpose": "same fixture restored; must build"
+    },
+    {
+      "id": "C04",
+      "name": "break cycle then restore it to valid",
+      "purpose": "same fixture restored; must build"
+    },
+    {
+      "id": "C05",
+      "name": "repeat early refusal with initial tree unchanged",
+      "purpose": "second refusal keeps exact full initial snapshot"
+    },
+    {
+      "id": "C06",
+      "name": "valid -> invalid -> restored-valid",
+      "purpose": "serial state control with no concurrency claim"
+    },
+    {
+      "id": "C07",
+      "name": "single versus multiple parse diagnostics",
+      "purpose": "guard threshold and selected-first controls"
+    },
+    {
+      "id": "C08",
+      "name": "config whitespace/key order while invalid extends remains",
+      "purpose": "failure independent of formatting"
+    }
+  ],
+  "plannedCaseCount": 76,
+  "sourcePlanSha256": "babd1068e439d353ab6e5425b498857c29b4aa6bdb856e92720b3a76a3e5545b",
+  "note": "A15/A16 are actual workspace builds in build-parity mode; all other rows use restored serial scratch fixtures. Reachability limits are reported separately."
+}
