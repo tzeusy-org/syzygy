@@ -2,7 +2,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {
-  excludedSourceId, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, pageSinkCspFinding,
+  excludedSourceId, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
   type LocalDisclosureItem, type LocalDraftLayer, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment,
   type DossierDraft, type DraftBlock, type DraftParagraph,
@@ -60,14 +60,14 @@ const SECRET_PATH = 'a path a secret detector matches (not shown)';
 export interface DossierRendererInput { readonly local: LocalRenderInput; readonly sources: readonly GenerationSource[] }
 export type DossierRenderer = ((input: DossierRendererInput) => { readonly files: ReadonlyMap<string, string> }) & { readonly pageSinkContract?: string };
 
-/** Why the drawn site cannot be confirmed to meet the screening scope's `codeContentExemption.renderCondition` (policy version 3), or
- * null when it can: the renderer declares the encoding half (`PAGE_SINK_CONTRACT`) and every HTML page carries the required
- * Content-Security-Policy first in its head (`pageSinkCspFinding`). */
+/** Why the drawn site cannot be confirmed to meet the screening scope's `codeContentExemption.renderCondition` (version 7), or null when
+ * it can: the renderer declares the encoding half, and every page carries the closed policy first in its head and only pinned scripts.
+ * Every file is read as a page but the machine views, whose `.json` a browser shows as text: an extension skip would pass an SVG page. */
 export function pageSinkUnconfirmed(renderer: DossierRenderer, files: ReadonlyMap<string, string>): string | null {
-  if (renderer.pageSinkContract !== PAGE_SINK_CONTRACT) return 'the injected renderer does not declare that it writes every source byte as entity-encoded text';
+  if (renderer.pageSinkContract !== PAGE_SINK_CONTRACT && renderer.pageSinkContract !== PAGE_SINK_SCRIPT_CONTRACT) return 'the injected renderer does not declare that it writes every source byte as entity-encoded text';
   for (const [file, html] of files) {
-    if (!file.endsWith('.html')) continue;
-    const finding = pageSinkCspFinding(html);
+    if (file.endsWith('.json')) continue;
+    const finding = pageSinkCspFinding(html) ?? pageSinkScriptFinding(html, renderer.pageSinkContract);
     if (finding !== null) return `${file}: ${finding}`;
   }
   return null;

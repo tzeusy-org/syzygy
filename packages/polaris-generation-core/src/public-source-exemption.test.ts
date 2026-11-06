@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { codeContentExempt, pageSinkCspFinding, readCodeContentExemption } from './public-source-classification.js';
+import { pageSinkCspFinding } from './page-sink.js';
+import { codeContentExempt, readCodeContentExemption } from './public-source-classification.js';
 
 // syzygy-wsev / P-105 (owner act of 2026-10-08): the version-3 screening scope's code-content exemption and the policy half of its
 // renderCondition. The policies are the builder's own proposed bytes for each variant (scripts/build_public_source_screening_scope_v3.py),
@@ -24,7 +25,9 @@ beforeAll(async () => {
   const py = `import json, sys; sys.path.insert(0, 'scripts')
 import build_public_source_screening_scope_v2 as b2, build_public_source_screening_scope_v3 as b, build_public_source_screening_scope_v4 as b4, build_public_source_screening_scope_v5 as b5
 import build_public_source_screening_scope_v6 as b6
-v5_bcd, _mode = b6.base_bytes()
+import build_public_source_screening_scope_v7 as b7
+v6_p, _mode = b7.base_bytes()
+v5_bcd = b2.reverse_patch((b6.ROOT / b6.patch_path('p')).read_text(), v6_p)
 v4_span = b2.reverse_patch((b5.ROOT / b5.patch_path(b6.V5_BASE_VARIANT)).read_text(), v5_bcd)
 assert b5.sha(v4_span) == b5.v4.manifest_rows(b5.ROOT)[b5.V4_BASE_VARIANT] and b5.propose(v4_span, b6.V5_BASE_VARIANT) == v5_bcd
 v3_all = b2.reverse_patch((b4.ROOT / b4.patch_path(b5.V4_BASE_VARIANT)).read_text(), v4_span)
@@ -123,7 +126,7 @@ describe('which bodies are exempt', () => {
 });
 
 describe('the policy half of renderCondition on one page', () => {
-  const CSP = '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; img-src data:">';
+  const CSP = '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; base-uri \'none\'; form-action \'none\'">';
   const page = (head: string, body = '<p>a&lt;b &amp;&amp; c&gt;d</p>'): string => `<!doctype html>\n<html lang="en">\n<head>\n${head}\n</head>\n<body>${body}</body>\n</html>\n`;
   const GOOD = page(`<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n${CSP}\n<title>t</title>`);
   it('accepts a page whose only CSP meta comes first in <head> after the charset and viewport metas', () => {
@@ -136,12 +139,12 @@ describe('the policy half of renderCondition on one page', () => {
     ['a Report-Only CSP', page(CSP.replace('Content-Security-Policy"', 'Content-Security-Policy-Report-Only"')), 'the page\'s Content-Security-Policy is Report-Only, which enforces nothing'],
     ['the CSP after <title>', page(`<meta charset="utf-8">\n<title>t</title>\n${CSP}`), 'the page\'s Content-Security-Policy is not delivered first in <head>, before every other element but the charset and viewport metas'],
     ['the CSP in <body>', page('<title>t</title>', CSP), 'the page\'s Content-Security-Policy is not delivered first in <head>, before every other element but the charset and viewport metas'],
-    ['default-src \'self\'', page(CSP.replace('default-src \'none\'', 'default-src \'self\'')), 'the page\'s default-src source list is not exactly \'none\''],
-    ['default-src \'none\' with another source', page(CSP.replace('default-src \'none\'', 'default-src \'none\' https:')), 'the page\'s default-src source list is not exactly \'none\''],
-    ['no default-src', page(CSP.replace('default-src \'none\'; ', '')), 'the page\'s default-src source list is not exactly \'none\''],
-    ['a script-src', page(CSP.replace('img-src data:', 'script-src \'unsafe-inline\'')), 'the page\'s Content-Security-Policy carries script-src, which may override default-src for script or plugins'],
-    ['a script-src-attr', page(CSP.replace('img-src data:', 'script-src-attr \'unsafe-inline\'')), 'the page\'s Content-Security-Policy carries script-src-attr, which may override default-src for script or plugins'],
-    ['an object-src', page(CSP.replace('img-src data:', 'object-src *')), 'the page\'s Content-Security-Policy carries object-src, which may override default-src for script or plugins'],
+    ['default-src \'self\'', page(CSP.replace('default-src \'none\'', 'default-src \'self\'')), 'the page\'s Content-Security-Policy default-src is not exactly \'none\''],
+    ['default-src \'none\' with another source', page(CSP.replace('default-src \'none\'', 'default-src \'none\' https:')), 'the page\'s Content-Security-Policy default-src is not exactly \'none\''],
+    ['no default-src', page(CSP.replace('default-src \'none\'; ', '')), 'the page\'s Content-Security-Policy default-src is absent'],
+    ['a script-src with no hash', page(CSP.replace('form-action \'none\'', 'form-action \'none\'; script-src \'unsafe-inline\'; require-trusted-types-for \'script\'; trusted-types \'none\'')), 'the page\'s Content-Security-Policy script-src carries \'unsafe-inline\''],
+    ['a script-src-attr', page(CSP.replace('form-action \'none\'', 'form-action \'none\'; script-src-attr \'unsafe-inline\'')), 'the page\'s Content-Security-Policy carries script-src-attr'],
+    ['an object-src', page(CSP.replace('form-action \'none\'', 'form-action \'none\'; object-src *')), 'the page\'s Content-Security-Policy carries object-src'],
   ])('refuses a page with %s', (_name, html, why) => {
     expect(pageSinkCspFinding(html)).toBe(why);
   });
