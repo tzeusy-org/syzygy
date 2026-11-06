@@ -386,7 +386,7 @@ def mutants(args, scripts, record):
         try: outcome = attempt(command, root, args.output / ident / 'run')
         finally: (root / SCRIPT).write_bytes(scripts['head'])
         parsed = json.loads(report.read_text()) if report.exists() else {}
-        assertions = [a for f in parsed.get('testResults', []) for a in f.get('assertionResults', []) if a['status'] != 'pending']
+        assertions = [a for f in parsed.get('testResults', []) for a in f.get('assertionResults', []) if a['status'] in ('passed', 'failed')]
         failures = [a for a in assertions if a['status'] == 'failed']
         intended = bool(failures) and all(any(s in message for s in ('AssertionError:', 'expected ')) for a in failures for message in a.get('failureMessages', []))
         if ident == 'CONTROL' and (outcome['exit'] != 0 or len(assertions) != 2 or failures):
