@@ -541,7 +541,7 @@
     "scope": "Five check -> test:integration -> test:e2e (including system) contexts; live/operator tier excluded. test:tiers and governance battery were not part of this timing campaign. This does not claim all tests executed.",
     "guarded_remainders": [
       "Three session-view cases require nested bwrap availability",
-      "No-egress strace proof unavailable in this namespace",
+      "[Correction 2026-11-06] The prepared record said \"No-egress strace proof unavailable in this namespace\". Superseded: actual strace capture and its loopback canary passed in each original context; the without-strace fallback alone was skipped because HAVE_STRACE was true.",
       "Captured opening-index case needs SYZYGY_P98_PAGE",
       "Fresh-clone system case requires SYZYGY_FRESH_CLONE=1"
     ],
