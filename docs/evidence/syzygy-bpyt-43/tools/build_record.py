@@ -73,6 +73,9 @@ campaigns = {}
 for name in ['head', 'base-test', 'prior-test', 'round1-test']:
     path = CAMPAIGNS / f'daemon-entry-{name}.json'
     campaigns[name] = json.loads(path.read_text())
+    producer_path = 'docs/evidence/syzygy-bpyt-43/tools/daemon_entry_probe.py'
+    if campaigns[name]['tool']['sha256'] != sha(git('show', f'{campaigns[name]["commit"]}:{producer_path}')):
+        refuse(f'{name}: producer tool differs from its recorded committed subject')
     if campaigns[name]['commonInputs'] != subject_inputs:
         refuse(f'{name}: common current source/test inputs differ from the subject')
     selected = SUBJECT if name == 'head' else {'base-test': historical_args[0], 'prior-test': historical_args[3], 'round1-test': historical_args[4]}[name]
@@ -90,6 +93,9 @@ for name in ['head', 'base-test', 'prior-test', 'round1-test']:
             refuse(f'{name}: control failed or ran nothing')
 
 head = campaigns['head']['results']
+expected_ids = json.loads((HERE / 'daemon-case-population.json').read_text())['expectedIds']
+if sorted((row['mutant'] or {'id': 'control'})['id'] for row in head) != sorted(expected_ids):
+    refuse('daemon campaign: complete independent case population including multiplicity differs')
 identities = [(row['mutant'] or {'id': 'control', 'kind': 'control'}) for row in head]
 for name, campaign in campaigns.items():
     if [(r['mutant'] or {'id': 'control', 'kind': 'control'}) for r in campaign['results']] != identities:
