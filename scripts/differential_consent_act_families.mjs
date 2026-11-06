@@ -7,6 +7,8 @@
 //     [--workers <n>] [--kinds <k,...>] [--count] [--time-limit-ms <n>] [--sample-per-kind <n> (bounded fixture runs only)]
 //     [--expect-mismatches --expect-reader-mismatches <reader,...> --control-note <text>]
 //   node scripts/differential_consent_act_families.mjs --selftest
+// Count /3 now adds subject/tree/source/build/tool/fixture and finite-resource bindings; execution remains null.
+// File-backed gate-port asks all four repository methods for both pinned repositories plus shared screeningPolicy.
 // Version 3 intentionally changes this evidence tool's JSON/control-exit contract (syzygy-bpyt.8.26); historical /2 records stay frozen.
 //   (TMPDIR names where the screen's worlds are materialized; it is emptied of them on exit)
 //
@@ -92,6 +94,24 @@ const FIXTURE_READERS = ['successor-record-port', 'successor-gate-port'];
 function requiredAbsence(port) {
   if (typeof port.consentAbsenceFor !== 'function') throw new Error('required current consentAbsenceFor method is missing');
   return port;
+}
+
+/** All file-backed gate questions use the two repository identities pinned by the corpus. */
+async function fileGateQuestions(s, probe) {
+  requiredAbsence(s);
+  return { ids: await s.repositoryIdsFor(probe.redisUrl), absence: await s.consentAbsenceFor(probe.redisUrl), revisions: await s.consentedRevisionsFor(probe.redisId),
+    idsRequests: await s.repositoryIdsFor(probe.requestsUrl), absenceRequests: await s.consentAbsenceFor(probe.requestsUrl), revisionsRequests: await s.consentedRevisionsFor(probe.requestsId),
+    observationRedis: await s.observationConsentFor(probe.redisId, probe.redisRevision), observationRequests: await s.observationConsentFor(probe.requestsId, probe.requestsRevision), screeningPolicy: await s.screeningPolicy() };
+}
+
+/** Count mode identifies the same subjects and fixture recipe without claiming any execution. */
+function countRecord(data, binding, resources, started) {
+  return { schema: 'consent-act-family-count/3', ...data,
+    script: { path: SCRIPT_REL, sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) }, trees: binding, corpusRoot: 'old',
+    successorFixture: { boundary: 'count only; validated record-reader and one-import gate adapter recipe, not executed',
+      records: SUCCESSOR_RECORDS, recordsSha256: sha256(JSON.stringify(SUCCESSOR_RECORDS)),
+      instants: SUCCESSOR_INSTANTS, adapterRecipeSha256: sha256(prepareSuccessorAdapter.toString()), adapters: null, literalOutcomes: null },
+    pool: { ...resources, node: process.version, wallSeconds: (Date.now() - started) / 1000 }, materialization: null, execution: null, executed: null };
 }
 
 async function successorQuestions(port) {
@@ -291,9 +311,7 @@ function readers(consent, gate, probe, extra) {
       return out;
     }],
     ['gate-port', true, async (fs, root, now) => {
-      const s = requiredAbsence(sources(fs, root, now));
-      return { ids: await s.repositoryIdsFor(probe.redisUrl), absence: await s.consentAbsenceFor(probe.redisUrl), revisions: await s.consentedRevisionsFor(probe.redisId),
-        observationRedis: await s.observationConsentFor(probe.redisId, probe.redisRevision), observationRequests: await s.observationConsentFor(probe.requestsId, probe.requestsRevision), screeningPolicy: await s.screeningPolicy() };
+      return fileGateQuestions(sources(fs, root, now), probe);
     }],
     ['successor-record-port', true, async (fs, root, now) => successorQuestions(consent.createAdmissionRecordsPort({
       reader: { read: async () => consent.parseAdmissionRecords(SUCCESSOR_RECORDS) }, policy: consent.createPackagePolicyReader({ root, fs }), now: () => now,
@@ -686,7 +704,7 @@ function label(text) {
   return one(value).replace(/\b[0-9a-f]{40,64}\b/g, '<hex>');
 }
 
-function selftest() {
+async function selftest() {
   let exercisedAnswerComparisons = 0;
   const compare = (...args) => { const paired = pairAnswers(...args); exercisedAnswerComparisons += paired.length; return paired; };
   const cases = [], specs = new Map([['port', true], ['gate-port', true], ['other', false]]);
@@ -733,6 +751,31 @@ function selftest() {
   for (const [name, patch] of [['leftovers', { materializedLeftOver: 1 }], ['changed disk answer', { differing: 1 }], ['missing disk pair', { pairs: 0 }], ['missing removal', { removed: 0 }]]) run(`${name} fails cleanup`, () => assert.throws(() => requireCleanup({ ...clean, ...patch }), /cleanup/));
   run('successor expected outcomes change at exact effective instant', () => { assert.equal(successorExpected(SUCCESSOR_INSTANTS[0]).observationOld.satisfied, true); assert.equal(successorExpected(SUCCESSOR_INSTANTS[1]).observationOld.satisfied, false); assert.deepEqual(successorExpected(SUCCESSOR_INSTANTS[1]), successorExpected(SUCCESSOR_INSTANTS[2])); assert.equal(SUCCESSOR_RECORDS[1].supersessionAt, Date.parse(SUCCESSOR_AT)); });
   run('missing optional-method implementation is fatal', () => assert.throws(() => requiredAbsence({}), /missing/));
+  const probe = { redisUrl: 'https://example.invalid/redis', requestsUrl: 'https://example.invalid/requests', redisId: 'redis-id', requestsId: 'requests-id', redisRevision: 'redis-rev', requestsRevision: 'requests-rev' };
+  const calls = [], gate = Object.fromEntries(['repositoryIdsFor', 'consentAbsenceFor', 'consentedRevisionsFor', 'observationConsentFor', 'screeningPolicy'].map(name => [name, async (...args) => { calls.push([name, ...args]); return [name, ...args]; }]));
+  try {
+    const values = await fileGateQuestions(gate, probe);
+    run('both repositories reach every required gate method', () => {
+      assert.deepEqual(calls, [['repositoryIdsFor', probe.redisUrl], ['consentAbsenceFor', probe.redisUrl], ['consentedRevisionsFor', probe.redisId],
+        ['repositoryIdsFor', probe.requestsUrl], ['consentAbsenceFor', probe.requestsUrl], ['consentedRevisionsFor', probe.requestsId],
+        ['observationConsentFor', probe.redisId, probe.redisRevision], ['observationConsentFor', probe.requestsId, probe.requestsRevision], ['screeningPolicy']]);
+      assert.deepEqual(values.idsRequests, ['repositoryIdsFor', probe.requestsUrl]); assert.deepEqual(values.absenceRequests, ['consentAbsenceFor', probe.requestsUrl]); assert.deepEqual(values.revisionsRequests, ['consentedRevisionsFor', probe.requestsId]);
+    });
+  } catch (error) { cases.push({ name: 'both repositories reach every required gate method', passed: false, error: String(error) }); }
+  for (const [name, target] of [['repositoryIdsFor', probe.requestsUrl], ['consentAbsenceFor', probe.requestsUrl], ['consentedRevisionsFor', probe.requestsId]]) {
+    try {
+      await assert.rejects(fileGateQuestions({ ...gate, [name]: async value => { if (value === target) throw new TypeError(`Requests-only ${name}`); return value; } }, probe), { name: 'TypeError', message: `Requests-only ${name}` });
+      cases.push({ name: `Requests-only ${name} failure propagates`, passed: true });
+    } catch (error) { cases.push({ name: `Requests-only ${name} failure propagates`, passed: false, error: String(error) }); }
+  }
+  run('count output binds subjects source compiled tool fixture and finite resources without execution', () => {
+    const binding = [{ role: 'old', commit: 'old-commit', tree: 'old-tree', files: { source: 'source.ts', compiled: 'compiled.js' }, sha256: { source: 'source-digest', compiled: 'compiled-digest' } }, { role: 'new', commit: 'new-commit', tree: 'new-tree', files: { source: 'source.ts', compiled: 'compiled.js' }, sha256: { source: 'source-digest', compiled: 'compiled-digest' } }];
+    const record = JSON.parse(JSON.stringify(countRecord({ generated: population(generated), selected: population([world]), expectedPerLogicalReader: { port: { answers: 1, executed: null } } }, binding, { workers: 1, timeLimitMs: 1000 }, Date.now())));
+    assert.deepEqual(record.trees, binding); assert.deepEqual(record.script, { path: SCRIPT_REL, sha256: sha256(fs.readFileSync(SCRIPT, 'utf8')) });
+    assert.deepEqual(record.successorFixture.records, SUCCESSOR_RECORDS); assert.equal(record.successorFixture.recordsSha256, sha256(JSON.stringify(SUCCESSOR_RECORDS))); assert.equal(record.successorFixture.adapterRecipeSha256, sha256(prepareSuccessorAdapter.toString())); assert.deepEqual(record.successorFixture.instants, SUCCESSOR_INSTANTS);
+    assert.equal(record.successorFixture.adapters, null); assert.equal(record.successorFixture.literalOutcomes, null); assert.equal(record.executed, null); assert.equal(record.expectedPerLogicalReader.port.executed, null);
+    assert.equal(record.pool.workers, 1); assert.equal(record.pool.timeLimitMs, 1000); assert.equal(record.pool.node, process.version); assert.ok(record.pool.wallSeconds >= 0); assert.equal(record.generated.worlds, 2); assert.equal(record.selected.worlds, 1);
+  });
   const result = { schema: 'consent-differential-selftest/1', scriptSha256: sha256(fs.readFileSync(SCRIPT, 'utf8')), cases, total: cases.length, failed: cases.filter(c => !c.passed).length, exercisedAnswerComparisons };
   process.stdout.write(`${JSON.stringify(result)}\n`);
   return result.failed === 0 ? 0 : 1;
@@ -746,6 +789,7 @@ async function main(argv) {
     process.stderr.write('usage: node scripts/differential_consent_act_families.mjs --old <tree> --new <tree> --out <file.json> --bead <id> [--workers <n>] [--kinds <k,...>] [--count] [--sample-per-kind <n>] [--time-limit-ms <n>] [--expect-mismatches --expect-reader-mismatches <reader,...> --control-note <text>] (or --selftest)\n');
     return 2;
   }
+  const countStarted = Date.now();
   const trees = [path.resolve(oldTree), path.resolve(newTree)], root = trees[0];
   // Each tree's sources and the compiled files the workers load (N5 of the syzygy-bpyt.8.4 review), and whether its dossier build
   // resolves the consent package inside its own tree (a fresh worktree without `npm ci` resolves the main checkout's).
@@ -770,7 +814,7 @@ async function main(argv) {
     if (typeof currentPort.check !== 'function') throw new Error('required direct port check missing');
     return {
       role: i === 0 ? 'old' : 'new',
-      commit: git(tree, 'rev-parse', 'HEAD'),
+      commit: git(tree, 'rev-parse', 'HEAD'), tree: git(tree, 'rev-parse', 'HEAD^{tree}'), files: FILES,
       clean: git(tree, 'status', '--porcelain', '--untracked-files=no') === '',
       sha256: Object.fromEntries(Object.entries(FILES).map(([key, rel]) => [key, fs.existsSync(path.join(tree, rel)) ? sha256(fs.readFileSync(path.join(tree, rel), 'utf8')) : null])),
       dossierResolvesConsentInsideTree: inTree(tree, FILES.gateSourcesJs, '@syzygy/polaris-generation-consent', CONSENT_ROOT),
@@ -792,7 +836,7 @@ async function main(argv) {
   const firstRow = text => /^\| `[^`\n]+` \| `([0-9a-f]{40})` \|$/m.exec(text)[1];
   const repo = text => /^Subject: `\(project:syzygy, repository:([a-z0-9-]+)\)`$/m.exec(text)[1];
   const redis = instance(`${consent.INSTANCES_DIR}/redis/OBSERVATION-CONSENT.md`), requests = instance(`${consent.INSTANCES_DIR}/requests/OBSERVATION-CONSENT.md`);
-  const probe = { redisId: repo(redis), redisRevision: firstRow(redis), redisUrl: /^Upstream: (\S+)/m.exec(redis)[1], requestsId: repo(requests), requestsRevision: firstRow(requests) };
+  const probe = { redisId: repo(redis), redisRevision: firstRow(redis), redisUrl: /^Upstream: (\S+)/m.exec(redis)[1], requestsId: repo(requests), requestsRevision: firstRow(requests), requestsUrl: /^Upstream: (\S+)/m.exec(requests)[1] };
 
   const { CITATION_ALLOWLIST } = await import(pathToFileURL(path.join(root, 'packages/polaris-generation-consent/dist/citation-allowlist.js')).href);
   const built = await corpus(root, consent, gate, CITATION_ALLOWLIST, NAMED), kinds = arg('--kinds')?.split(',');
@@ -822,13 +866,15 @@ async function main(argv) {
     const comparisons = ownWorlds.flatMap(w => w.expected.filter(e => e.reader === reader));
     expectedPerLogicalReader[reader] = { worlds: ownWorlds.length, steps: ownWorlds.reduce((n, w) => n + new Set(w.expected.filter(e => e.reader === reader).map(e => e.step)).size, 0), answers: comparisons.length, executed: null };
   }
-  if (argv.includes('--count')) {
-    process.stdout.write(`${JSON.stringify({ schema: 'consent-act-family-count/3', ...counts, selection: { kinds: kinds ?? null, samplePerKind: samplePerKind ?? null }, readerSpecifications: Object.fromEntries(specs), expectedPerLogicalReader, corpusSha256, selectedSha256, selectedManifest, generatedManifest, executed: null, needles: needles.length, policyBytes, subjects: subjects.map(x => x.key) })}\n`);
-    return 0;
-  }
   const workers = Number(arg('--workers') ?? Math.max(1, Math.min(os.availableParallelism() - 2, 8)));
   const timeLimitMs = Number(arg('--time-limit-ms') ?? 7_200_000);
   if (!Number.isSafeInteger(workers) || workers < 1 || workers > 32 || !Number.isSafeInteger(timeLimitMs) || timeLimitMs < 1) throw new Error('invalid worker count or finite time limit');
+  if (argv.includes('--count')) {
+    const document = countRecord({ ...counts, selection: { kinds: kinds ?? null, samplePerKind: samplePerKind ?? null }, readerSpecifications: Object.fromEntries(specs), expectedPerLogicalReader,
+      corpusSha256, selectedSha256, selectedManifest, generatedManifest, needles: needles.length, policyBytes, subjects: subjects.map(x => x.key) }, binding, { workers, timeLimitMs }, countStarted);
+    process.stdout.write(`${JSON.stringify(document)}\n`);
+    return 0;
+  }
   const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'consent-differential-'));
   const started = Date.now(), adapters = [], results = [];
   let runs, timer, leftOver = null;
