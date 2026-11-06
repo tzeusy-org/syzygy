@@ -59,7 +59,7 @@ it('requires every npm workspace to be @syzygy/-named and every dependency or ov
     };
     checkOverrides(manifest['overrides'], `${path} overrides`);
   }
-  expect(failures, 'workspace/dependency precondition for the shared reach guards and S10').toEqual([]);
+  expect(failures, `workspace/dependency precondition for the shared reach guards and S10:\n${failures.join('\n')}`).toEqual([]);
 });
 
 type DependencyFields = Pick<Manifest, 'dependencies' | 'devDependencies' | 'optionalDependencies' | 'peerDependencies'>;
