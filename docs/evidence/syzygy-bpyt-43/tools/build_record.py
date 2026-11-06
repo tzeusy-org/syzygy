@@ -179,6 +179,20 @@ record = {
                 'diffFromBaselineSha256': sha(git('diff', '740279435178a882f1c2d526a2a7ea0bf2b52cbc', SUBJECT, '--', TEST))},
     'predecessor': {'path': f'{PREDECESSOR}/bounds-and-pins.json', 'sha256': sha((TREE / PREDECESSOR / 'bounds-and-pins.json').read_bytes()),
                     'subject': old_subject, 'role': 'historical; immutable; never relabeled as this landing subject'},
+    'predecessorMap': {
+        'subject': {'from': f'{PREDECESSOR}/bounds-and-pins.json#/subject', 'to': '#/predecessor/subject', 'disposition': 'historical identity retained; current source subject is separate'},
+        'sites': [{'from': f'{PREDECESSOR}/bounds-and-pins.json#/sites/{index}', 'site': site['site'],
+                   'to': f'#/historicalCpuValidation/bounds/{site["bound"]}' if 'bound' in site else None,
+                   'disposition': 'historical two-arm figures revalidated' if 'bound' in site else 'unchanged historical test-clock disposition; no present execution claim'}
+                  for index, site in enumerate(predecessor['sites'])],
+        'daemonRows': [{'from': f'{PREDECESSOR}/daemon-entry-{name}.json#/results',
+                        'to': f'daemon-entry-{name}.json#/results', 'currentRows': len(campaigns[name]['results']),
+                        'disposition': 'new full population on common current inputs; each selected test-copy identity is separate'}
+                       for name in campaigns],
+        'oldAssertions': {'from': f'{PREDECESSOR}/bounds-and-pins.json#/daemonEntry',
+                          'to': '#/daemonEntry/attribution', 'disposition': 'actual new per-row outcomes supersede old pin-alone Y/type-only/C1/residual statements for this subject only'},
+        'emit': {'from': f'{PREDECESSOR}/emit-equality.json', 'to': '#/emitClaim', 'disposition': 'historical observation retained; present claim explicitly limited'},
+    },
     'historicalCpuValidation': {'timings': 'historical', 'currentTiming': 'Unknown', 'args': historical_args,
                               'bounds': {site['bound']: site['separation'] for site in historical['sites'] if 'bound' in site},
                               'note': 'Stronger checks validate retained populations and margins at their recorded subjects. They do not establish present CPU behavior.'},
