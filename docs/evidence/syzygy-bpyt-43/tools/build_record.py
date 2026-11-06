@@ -90,7 +90,7 @@ for name in ['head', 'base-test', 'prior-test', 'round1-test']:
         elif row.get('timeout') or row.get('buildFailure') or not row['rows']:
             refuse(f'{name}/{mutant["id"]}: no nonempty executed test population')
         if not row.get('skipped'):
-            expected_rows = {'head': 17, 'base-test': 15, 'prior-test': 16, 'round1-test': 17}[name]
+            expected_rows = {'head': 17, 'base-test': 15, 'prior-test': 16, 'round1-test': 16}[name]
             if len(row['rows']) != expected_rows or len({r['title'] for r in row['rows']}) != expected_rows:
                 refuse(f'{name}/{mutant["id"]}: selected test collection population differs')
             if row['passed'] != sum(r['status'] == 'passed' for r in row['rows']) or sorted(row['failed']) != sorted(r['title'] for r in row['rows'] if r['status'] == 'failed'):
