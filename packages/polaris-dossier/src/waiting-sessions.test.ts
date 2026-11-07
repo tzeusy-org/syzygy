@@ -8,7 +8,7 @@ import { runDossierCli, type CliPorts } from './cli.js';
 import { FIXTURE_SCREEN, FIXTURE_URL, LATER, NOW, REAL_ROOT, designVerdict, draft, fidelityVerdict, fixtureSources, inventory, makeClone, type Doc } from './full-run.testkit.js';
 import type { GateSources, ProviderStatementRecord } from './gate-sources.js';
 import type { DossierRenderer } from './render.js';
-import { deliverToWaiting, readStdinBytes, resolveSessionDirectory, sessionDirectoryRefusal, signoffRecordHolds, waitModeRefusal, waitModeSignedIn, waitModeStatus, waitingReviewSession } from './waiting-sessions.js';
+import { deliverToWaiting, readStdinBytes, resolveSessionDirectory, sessionDirectoryRefusal, signoffRecordHolds, specNamesVersion, waitModeRefusal, waitModeSignedIn, waitModeStatus, waitingReviewSession } from './waiting-sessions.js';
 import { tempDir } from '@syzygy/test-kit';
 
 // Only directory enumeration is controllable, to verify candidate eligibility in both orders at the filesystem boundary.
@@ -244,6 +244,17 @@ describe('the v1.2 gate', () => {
     fs.writeFileSync(path.join(decisions, 'ACCEPTANCE-ACT-RECORD.md'), '# Acceptance act record\n');
     return decisions;
   };
+
+  it('reads the version statement at a line start, ended by a full stop or a comma (the signed v1.5 bytes use the comma)', () => {
+    const v15 = '# Polaris dossier local-agent mode\n\nExact behavioral delta, version 1.5, a candidate on version 1.4. Version 1.0 was signed.\n';
+    expect(specNamesVersion(v15, '1.5')).toBe(true);
+    expect(specNamesVersion(v15, '1.4')).toBe(false);
+    expect(specNamesVersion('Exact behavioral delta, version 1.4. Fixture.\n', '1.4')).toBe(true);
+    expect(specNamesVersion('Exact behavioral delta, version 1.25. Fixture.\n', '1.2')).toBe(false);
+    expect(specNamesVersion('Exact behavioral delta, version 1x5. Fixture.\n', '1.5')).toBe(false);
+    expect(specNamesVersion('Exact behavioral delta, version 1.5 Fixture.\n', '1.5')).toBe(false);
+    expect(specNamesVersion('Note. Exact behavioral delta, version 1.5. Fixture.\n', '1.5')).toBe(false);
+  });
 
   it('reads the sign-off from the decisions directory: 1.1 is not enough, 1.2 and later are (mutant: compare the minor only)', () => {
     const root = tempDir('dossier-signoff-');
