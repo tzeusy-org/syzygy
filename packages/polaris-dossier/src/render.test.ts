@@ -9,7 +9,7 @@ import { withoutReviewStatusRegion } from '@syzygy/polaris-generation-core/live'
 import { issueBrief, READABILITY_GUIDANCE, READABILITY_GUIDANCE_VERSION } from './brief.js';
 import { checkDraft, type CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
-import { designCriteria } from './design-review.js';
+import { buildDesignPacket, designCriteria } from './design-review.js';
 import { designVerdictSchemaDocument } from './draft-schema.js';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
@@ -352,6 +352,8 @@ describe('render', () => {
         const tokens = /\[(Observed|Inferred|Unknown|Non-normative)\]/gu;
         expect(body.match(tokens)?.length ?? 0, file).toBeGreaterThan(0);
         expect(visible(body).replace(/<[^>]*>/gu, '').match(tokens), file).toBeNull();
+        // Nor does Syzygy write a file-and-line aside there: the citation mark's pop carries the file and lines, clipped from the text.
+        expect(visible(body).replace(/<span class="cite-pop"[^>]*>[^<]*<\/span>/gu, '').replace(/<[^>]*>/gu, ''), file).not.toMatch(/[\w./-]+\.\w+, (lines? \d|bytes \d|whole file)/u);
         // Clipped, never removed from layout: no reading-view text hides by `hidden` or `display:none`.
         expect(body, file).not.toMatch(/<span[^>]* hidden[ >=]/u);
       }
@@ -408,6 +410,22 @@ describe('render', () => {
       expect(pops).toContain('src/kestrel.c, line 1');
       expect(pops).toContain('src/kestrel.c, lines 2\u20133');
       for (const pop of pops) expect(pop).toMatch(/^[^,]+(, (whole file|bytes \d+–\d+|lines? \d+(–\d+)?))?$/u);
+    });
+
+    it('puts the evidence view in the rendered-design packet: each narrative page holds both views', async () => {
+      const run = await prepared();
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const packet = buildDesignPacket({ run, runId: 'run-1', pinnedRevision: 'f'.repeat(40), files: readSite(result.report.site) });
+      if (!packet.ok) throw new Error(packet.reason);
+      const files = (JSON.parse(packet.bytes) as { files: { path: string; content: string }[] }).files;
+      const narrative = files.filter((file) => file.path === 'index.html' || file.path.startsWith('deep-dives/'));
+      expect(narrative.length).toBeGreaterThan(0);
+      for (const file of narrative) {
+        expect(file.content, file.path).toContain('<span id="evidence-view"></span>');
+        expect(file.content, file.path).toContain('<span class="evidence-note">Evidence: label ');
+        expect(file.content, file.path).toContain('main:has(#evidence-view:target) .visually-hidden.ev{');
+      }
     });
 
     it('counts in the appendix what the machine view counts', async () => {
@@ -1245,8 +1263,8 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
   });
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
-    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v2');
-    expect(READABILITY_GUIDANCE).toContain('Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and what it is for, as its sources state; a stated advantage is still a quotation (rule 4 of the dossier guidance). Define each term at its first use. Keep one idea to a sentence and prefer short sentences; give a concrete example from the sources before an abstraction.');
+    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v3');
+    expect(READABILITY_GUIDANCE).toContain('Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and why it exists, as its sources state. Define each term at its first use.');
     expect(READABILITY_GUIDANCE).toContain('carries at least one diagram with that section\'s `sectionId`, and Syzygy draws it at the top of the section');
     expect(READABILITY_GUIDANCE).toContain('a `flow` for an end-to-end workflow or a user\'s path through the project, a `boundary` or `dependency` diagram for the architecture and how components talk to each other');
     expect(READABILITY_GUIDANCE).toContain('An enumeration of three or more items is never a run-on sentence: write a short lead block and give each item its own child block, which renders as a bulleted list. A block holds at most twelve children, so group a longer enumeration under several lead blocks.');
@@ -1256,6 +1274,15 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     expect(READABILITY_GUIDANCE).toContain('5. Elements. A section or deep dive entry may be a plain block or, in draft schema `polaris-dossier-local-draft-v3`, one of seven presentation elements.');
     expect(READABILITY_GUIDANCE).toContain('Captions, column names, titles, terms, labels, summaries and languages are short plain labels of at most 120 characters, never claims or quotations, with no quotation mark and no markup (no angle bracket, ampersand, backtick, Markdown link, or * or _ at a word edge); quote only in a claim, where Syzygy verifies it; every cell, item, definition and body is a claim and follows every rule above.');
     expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
+    // Dossier spec v1.5, "Rendered-design packet carries its questions": the six questions, and the evidence view among the rendered pages.
+    const criteria = designCriteria('/run').join('\n');
+    for (const question of ['whether its opening states why the project exists', 'whether its lead uses the category term a software engineer knows',
+      'whether warnings sit in the one sentence and the appendix rather than in the reading text', 'whether the page is too long to read at one sitting',
+      'whether a list repeats a diagram instead of folding beneath it', 'whether the page reads as a person explaining the project']) expect(criteria).toContain(question);
+    expect(criteria).toContain('the evidence view, the same page at its #evidence-view target, where they show. Judge both.');
+    expect(criteria).toContain('agrees with machine.json, which on a narrative page (index.html and deep-dives/) means in its evidence view;');
+    expect(criteria).toContain('whether every page carries the run\'s one sentence and a link to the appendix, which holds the disclosure.');
+    expect(criteria).not.toContain('whether the run disclosure is on every page');
   });
 });
 

@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
-import { DOSSIER_READER_QUESTIONS, DOSSIER_REQUESTED_ASSETS, OWNER_TOPICS } from '@syzygy/polaris-generation-core/live';
+import { DOSSIER_REQUESTED_ASSETS } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { readSec3 } from './doctrine-quote.js';
 import { CLARIFICATION_ANSWER_KINDS, LOCAL_DRAFT_SCHEMA_VERSION, QUOTATION_FORM, SESSION_ID_RULE, UNDERSTANDING_ITEMS, draftSchemaDocument } from './draft-schema.js';
@@ -31,7 +31,26 @@ import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6). It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-export const BRIEF_VERSION = 'polaris-dossier-brief-v1';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v2';
+
+/** The reader topics of an operator-agent dossier, in the owner's order (dossier spec v1.5, "Why-first topics and voice"): why the
+ * project exists first, holding the advantages its maintainers state, then core ideas, end-to-end workflows, and mechanisms and
+ * trade-offs. The provider pipeline's profile keeps its own five questions (`DOSSIER_READER_QUESTIONS`). */
+export const BRIEF_TOPICS: readonly { readonly id: string; readonly text: string }[] = [
+  { id: 'why-the-project-exists', text: 'Why does this project exist: what problem does it solve, for whom, and what advantages over the alternatives do its maintainers themselves state? Write it as an argument; a quotation, where you use one, supports the argument and is never the argument itself. A repository that states no reason for existing gets an `unknown` block here, never an invented reason.' },
+  { id: 'core-ideas', text: 'What are this project\'s core ideas, stated so a newcomer could repeat them?' },
+  { id: 'end-to-end-workflows', text: 'How does a user get from start to finish on the most important end-to-end workflows?' },
+  { id: 'mechanisms-and-trade-offs', text: 'What mechanisms underneath make those workflows work, where does each live, and what trade-offs, limits and costs does the design accept for them?' },
+];
+
+/** The voice rules (dossier spec v1.5): brief guidance, open to the rendered-design review and to no mechanical check. */
+export const VOICE_RULES = [
+  '1. Lead with the standard category term a software engineer knows (a cache, a queue, a key-value store), then define only what is specific to this project.',
+  '2. State facts flatly. Write "The cache keeps recent answers so the database is asked less often", never "This section describes the component\'s role as established by the cited documents".',
+  '3. Write no sentence about the document or its sources: no "this section explains", no "according to the README", and no file-and-line aside such as "(README.md, line 12)" in a claim\'s text. The citation says where a claim comes from, and its mark shows the file and lines.',
+  '4. State a judgement of the project as a judgement: mark it `judgement: true` (see the citation rules). It stays `inferred`.',
+  '5. Say why one step leads to the next: what each hand-off is for, not only that it happens.',
+].join('\n');
 export const BRIEF_RECORD_FORMAT = 'polaris-dossier-brief/1';
 
 /** The dossier profile's writing guidance: its seven dossier rules and the author guidance. The brief owns this text. It was first cut
@@ -51,9 +70,9 @@ Dossier draft: open with a two- or three-sentence introduction that says what th
 
 /** Readability rules for an operator-agent dossier (syzygy-mea.10.4, owner feedback on the Redis run-3 dossier), after the profile's
  * guidance: they serve DESIGN-ACCEPTANCE's Concision, Composition and Terminology rows and change no claim, citation or quotation rule. */
-export const READABILITY_GUIDANCE_VERSION = 'polaris-dossier-readability-v2';
+export const READABILITY_GUIDANCE_VERSION = 'polaris-dossier-readability-v3';
 export const READABILITY_GUIDANCE = [
-  '1. Reader. Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and what it is for, as its sources state; a stated advantage is still a quotation (rule 4 of the dossier guidance). Define each term at its first use. Keep one idea to a sentence and prefer short sentences; give a concrete example from the sources before an abstraction. A sentence a newcomer would have to reread is too dense: split it.',
+  '1. Reader. Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and why it exists, as its sources state. Define each term at its first use. Keep one idea to a sentence and prefer short sentences; give a concrete example from the sources before an abstraction. A sentence a newcomer would have to reread is too dense: split it.',
   '2. Diagrams lead. Every section whose sources describe components, steps, states or hand-offs carries at least one diagram with that section\'s `sectionId`, and Syzygy draws it at the top of the section: a `flow` for an end-to-end workflow or a user\'s path through the project, a `boundary` or `dependency` diagram for the architecture and how components talk to each other, a `lifecycle` or `state-machine` for states. The section\'s blocks then explain the diagram. Prefer several small diagrams to one large one; keep node and edge labels to a few words.',
   '3. Lists. An enumeration of three or more items is never a run-on sentence: write a short lead block and give each item its own child block, which renders as a bulleted list. A block holds at most twelve children, so group a longer enumeration under several lead blocks.',
   '4. Code. Put commands, identifiers, file names and configuration keys in backticks outside quotations; they render as inline code.',
@@ -81,7 +100,7 @@ export function renderBrief(input: BriefInput): string {
   const { subject, declared } = input;
   const commit = subject.pinnedRevision.commit;
   const deadlineEnds = input.issuedAt + declared.deadline.seconds * 1000;
-  const topicLines = DOSSIER_READER_QUESTIONS.map((question) => `- \`${question.id}\`: ${question.text}`);
+  const topicLines = BRIEF_TOPICS.map((topic) => `- \`${topic.id}\`: ${topic.text}`);
   const optional = DOSSIER_REQUESTED_ASSETS.filter((asset) => !asset.required).map((asset) => `\`${asset.id}\` (${asset.kind})`);
   const budget = (value: number | null, unit: string): string => (value === null ? `no ${unit} budget declared` : `${value} ${unit}s`);
   return [
@@ -100,15 +119,21 @@ export function renderBrief(input: BriefInput): string {
     '',
     '## What the dossier answers',
     '',
-    'The owner set five reader topics for a dossier. A reader of the finished dossier must be able to answer each question:',
+    'The owner set four reader topics for a dossier, in this order. A reader of the finished dossier must be able to answer each question:',
     '',
     ...topicLines,
     '',
-    `Write one section per topic, in this order, each section's \`id\` the topic's id (${OWNER_TOPICS.map((topic) => `\`${topic}\``).join(', ')}). The advantages are the ones the maintainers themselves state, quoted; never your own comparative judgment. Optional assets: ${optional.join(', ')}. A topic the clone does not answer keeps its section with an \`unresolved\` disposition naming the missing evidence.`,
+    `Write one section per topic, in this order, each section's \`id\` the topic's id (${BRIEF_TOPICS.map((topic) => `\`${topic.id}\``).join(', ')}). The advantages are the ones the maintainers themselves state, inside the first topic and cited; never a comparison of your own. Optional assets: ${optional.join(', ')}. A topic the clone does not answer keeps its section with an \`unresolved\` disposition naming the missing evidence.`,
     '',
     '## The understanding record',
     '',
     `Before the argument, write \`understanding\`: the subject's ${UNDERSTANDING_ITEMS.map((item) => `\`${item}\``).join(', ')}. Each holds at least one item. An item is \`inferred\`, with its statement, its scope and at least one citation, or \`unknown\`, with a reason from the list below and the citations you considered, if any; an item you cannot establish is an \`unknown\` entry, never left out. Syzygy checks each item as it checks a claim block and renders the record as your self-reported understanding, labelled Inferred; that you formed it before drafting the argument is your report.`,
+    '',
+    '## Voice',
+    '',
+    'These rules shape how the dossier sounds. No check enforces them; the rendered-design review asks whether each page reads as a person explaining the project.',
+    '',
+    VOICE_RULES,
     '',
     '## Labelling rules',
     '',
@@ -122,12 +147,16 @@ export function renderBrief(input: BriefInput): string {
     '## Citation rules',
     '',
     `- A citation is \`{id, path, startLine, endLine}\`: a repository path and an inclusive line range of that file at the pinned revision \`${commit}\`, never the working tree.`,
-    '- Every `inferred` block cites at least one source.',
+    '- Cite every `inferred` block: Syzygy strongly encourages it, and a reader can check a cited claim.',
+    '- The one exception is a judgement: your own assessment of the project, such as that a design is sound or a trade-off is worth making, which asserts no fact about the project\'s rules, behaviour, structure, status, history or decisions. Mark it `judgement: true`. It stays `inferred`, may cite nothing, and renders with a `judgement` mark; a cited block may carry the mark too.',
+    '- A fact is never a judgement. A fact you cannot cite is written as an `unknown` block, and the fidelity review blocks a marked judgement that asserts a fact. A fact a judgement rests on is a fact: cite it.',
     '- An `unknown` block cites the sources it considered, where there are any, and may cite none.',
     '- A `non-normative` block carries no citation and no anchor.',
     '- Syzygy refuses a cited path that names no file at the pinned revision, and a line range beyond the file\'s end.',
     '',
     '## Quotation rule',
+    '',
+    'A quotation is optional: a claim in your own words, with its citation, is the norm. Where a block quotes, this rule holds.',
     '',
     `${QUOTATION_FORM} ${QUOTATION_RULE}`,
     '',
@@ -154,7 +183,7 @@ export function renderBrief(input: BriefInput): string {
     '',
     `## Writing guidance from the dossier profile (\`${DOSSIER_GUIDANCE_VERSION}\`)`,
     '',
-    'This guidance was written for Syzygy\'s provider pipeline. Where it and this brief differ, this brief governs, and the instructions above that it refers to are the pipeline\'s, which this brief replaces. In particular: a claim\'s label is its `label` field, so begin no text with `Inferred:`; cite with `{path, startLine, endLine}` citations, never source ids; the admitted sources are the files at the pinned revision; and what you may run is the execution rule above.',
+    'This guidance was written for Syzygy\'s provider pipeline. Where it and this brief differ, this brief governs, and the instructions above that it refers to are the pipeline\'s, which this brief replaces. In particular: a claim\'s label is its `label` field, so begin no text with `Inferred:`; cite with `{path, startLine, endLine}` citations, never source ids; the admitted sources are the files at the pinned revision; and what you may run is the execution rule above. Rules 4 and 5 give way to this brief too: a quotation is optional, and an advantage or comparison the maintainers state sits in the first topic in your words, cited, with a quotation only where you choose one; never add a comparison of your own. A marked judgement is the one claim rule 1 lets you write with no source.',
     '',
     DOSSIER_GUIDANCE,
     '',

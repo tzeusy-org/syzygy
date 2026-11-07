@@ -1,0 +1,247 @@
+{
+  "format": "mutation-record",
+  "bead": "syzygy-pdja.3",
+  "subject": {
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "806e7a6819190430c8d074444b2589f51db57e642da1c3f949e66dfa5f4f8e78",
+    "packages/polaris-dossier/src/brief.ts": "ec2b927eef757faab0c68265d8858abaa8128a725ac2ce970c79169e7f56765a",
+    "packages/polaris-dossier/src/design-review.ts": "bf94d4cd1ab02ea904d3158bf9172a64de3930a52259c9714b93b2b46e32efc0"
+  },
+  "ranAt": "a29d5ff8fb5232aac070d1e23a91b88aa24615d3",
+  "note": "PR 4 of 4: the brief's why-first topics, voice rules, judgement and quotation guidance, and the rendered-design criteria (dossier spec v1.5). Each mutant replaces old with new once in the committed tree, runs its testFiles with vitest, then restores the file. 17 ran at ranAt and all were killed. Voice rule 3 then gained the file-and-line aside sentence, so its mutant was re-run at the later commit with the new text, beside a renderer mutant that writes the citation's file and lines into the reading text (each carries its own ranAt). The first run's voice-rule-3 entry is kept under superseded.",
+  "denominator": 18,
+  "killed": 18,
+  "mutants": [
+    {
+      "id": "topics-old-order",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "const topicLines = BRIEF_TOPICS.map(",
+      "new": "const topicLines = [...BRIEF_TOPICS].reverse().map(",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "topics-profile",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "BRIEF_TOPICS.map((topic) => `\\`${topic.id}\\``).join(', ')",
+      "new": "['core-ideas', 'end-to-end-workflows', 'mechanisms', 'maintainer-stated-advantages', 'trade-offs'].map((topic) => `\\`${topic}\\``).join(', ')",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "why-unknown-dropped",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": " A repository that states no reason for existing gets an `unknown` block here, never an invented reason.",
+      "new": "",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "voice-off",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    VOICE_RULES,\n",
+      "new": "    '',\n",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "judgement-off",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "Mark it `judgement: true`. It stays `inferred`, may cite nothing,",
+      "new": "It stays `inferred`, may cite nothing,",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "fact-rule-off",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    '- A fact is never a judgement.",
+      "new": "    '- A fact",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "cite-every-old",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "'- Cite every `inferred` block: Syzygy strongly encourages it, and a reader can check a cited claim.',",
+      "new": "'- Every `inferred` block cites at least one source.',",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "quote-optional-off",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    'A quotation is optional: a claim in your own words, with its citation, is the norm. Where a block quotes, this rule holds.',\n    '',\n",
+      "new": "",
+      "killed": true,
+      "tests": "2 failed | 97 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "guidance-override-off",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": " Rules 4 and 5 give way to this brief too:",
+      "new": " Rules 4 and 5 hold:",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "readability-version",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "'polaris-dossier-readability-v3'",
+      "new": "'polaris-dossier-readability-v2'",
+      "killed": true,
+      "tests": "2 failed | 97 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "brief-version",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "'polaris-dossier-brief-v2'",
+      "new": "'polaris-dossier-brief-v1'",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "criteria-questions-off",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": " Ask of each such page: whether its opening states why the project exists;",
+      "new": " Ask of each such page:",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "criteria-person-off",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "; and whether the page reads as a person explaining the project.",
+      "new": ".",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "criteria-evidence-off",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": " Judge both.",
+      "new": " Judge the reading view.",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "criteria-label-scope",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": ", which on a narrative page (index.html and deep-dives/) means in its evidence view;",
+      "new": ";",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "criteria-sentence",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "whether every page carries the run\\'s one sentence and a link to the appendix, which holds the disclosure.",
+      "new": "whether the run disclosure is on every page.",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "voice-rule-3",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "  '3. Write no sentence about the document or its sources: no \"this section explains\", no \"according to the README\", and no file-and-line aside such as \"(README.md, line 12)\" in a claim\\'s text. The citation says where a claim comes from, and its mark shows the file and lines.',\n",
+      "new": "",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "ranAt": "205b039af69ab9f95e16e5ff3bccd7d4dac9f9ae"
+    },
+    {
+      "id": "aside-in-text",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${cited.mark}<span class=\"cite-pop\" aria-hidden=\"true\">${escape(where)}</span></a>`;\n  }).join(' ')}</span>`;",
+      "new": "${cited.mark}</a> (${escape(where)})`;\n  }).join(' ')}</span>`;",
+      "killed": true,
+      "tests": "3 failed | 96 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ],
+      "ranAt": "205b039af69ab9f95e16e5ff3bccd7d4dac9f9ae"
+    }
+  ],
+  "superseded": [
+    {
+      "id": "voice-rule-3",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "  '3. Write no sentence about the document or its sources: no \"this section explains\", no \"according to the README\". The citation says where a claim comes from.',\n",
+      "new": "",
+      "killed": true,
+      "tests": "1 failed | 98 passed (99)",
+      "testFiles": [
+        "packages/polaris-dossier/src/brief.test.ts",
+        "packages/polaris-dossier/src/render.test.ts"
+      ]
+    }
+  ]
+}
