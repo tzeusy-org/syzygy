@@ -2,9 +2,9 @@ import { createHash, randomBytes } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {
-  excludedSourceId, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
+  excludedSourceId, spanTouchesWithheld, generationSourcesForBody, generationSourcesForRedactedBody, generationSpanRange, generationSourceTextAt, isDossierPagePath, leadInQuotationSpans, PAGE_SINK_CONTRACT, PAGE_SINK_SCRIPT_CONTRACT, pageSinkCspFinding, pageSinkScriptFinding,
   type EpistemicMarking, type EvidenceAnchor, type GenerationExclusionReason, type GenerationSource, type LocalBlock,
-  type LocalDisclosureItem, type LocalDraftLayer, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment,
+  type LocalDisclosureItem, type LocalDraftLayer, type LocalPage, type LocalPageItem, type LocalRenderInput, type LocalSegment, type WithheldNote,
   type DossierDraft, type DraftBlock, type DraftParagraph,
 } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
@@ -25,6 +25,8 @@ import { CLASS_NOT_CONSENTED, unconsentedClass, unconsentedText } from './class-
 import { placementSubjectOf, screenLoaderOf, type DossierScreen, type ScreenExclusion } from './screen.js';
 import { RUN_LAYOUT } from './state-directory.js';
 import { continuationOf } from './waiting-sessions.js';
+import { packetSpanStanding } from './review-verdict.js';
+import { citationIdsOf, isWithheldItem, type SpanStanding } from './withheld-items.js';
 
 /** `syzygy dossier render <run>` (REQ-polaris-generation-033, 034, 036; design "Command surface", `render`; syzygy-qkea.10).
  *
@@ -216,7 +218,10 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   try { site = writeSite(run, files); } catch (cause) { return refuse('write', `the site could not be written (${cause instanceof Error && cause.message.startsWith('invalid') ? cause.message : errno(cause)})`); }
   const quoted = built.local.blocks;
   const rendered = [...quoted.values()].reduce((n, block) => n + block.segments.filter((part) => part.kind === 'quotation').length, 0);
-  const withheldQuotes = [...quoted.values()].reduce((n, block) => n + block.segments.filter((part) => part.kind === 'withheld').length, 0);
+  // A withheld item (v1.5) carries none of its segments, so its withheld quotations are counted from the check's own record.
+  const withheldQuotes = [...quoted].reduce((n, [id, block]) => n + (block.withheld !== undefined
+    ? derived.excludedContent.filter((quotation) => quotation.blockId === id).length
+    : block.segments.filter((part) => part.kind === 'withheld').length), 0);
   const report: RenderReport = {
     format: RENDER_REPORT_FORMAT,
     command: 'render',
@@ -321,6 +326,44 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   const redacted = new Map([...derived.admitted].flatMap(([repositoryPath, blob]) => (blob.withheld === undefined ? [] : [[repositoryPath, { withheld: blob.withheld.length, lines: blob.retainedLines!.length }] as const])));
   const admitted = new Map([...derived.admitted].filter(([repositoryPath]) => !withheldClass.has(repositoryPath)));
 
+  // Dossier spec v1.5 (`withheld-items.ts`): how each cited span stands at this render, read as the fidelity packet reads it. A span is
+  // withheld when its blob is excluded whole or is not UTF-8, or when its range touches a line screening redacts, or its retained text
+  // matches a detector; a span of a blob the class gate keeps from agent-bound artifacts keeps its own treatment.
+  const outcomeOf = new Map(derived.citedBlobs.flatMap((cited) => (cited.path === null ? [] : [[cited.path, cited.outcome] as const])));
+  const spanStanding = (citation: Readonly<Record<string, unknown>>): SpanStanding => {
+    const cited = text(citation['path']);
+    if (cited === undefined) return 'other';
+    const blob = admitted.get(cited);
+    // A blob the class gate withholds is not in `admitted` and its screening outcome is `admitted`, so it stands `other`.
+    if (blob === undefined) {
+      const outcome = outcomeOf.get(cited) ?? screen.screenPath(cited);
+      return outcome === undefined || outcome === 'admitted' ? 'other' : packetSpanStanding(outcome);
+    }
+    const startLine = citation['startLine'], endLine = citation['endLine'];
+    if (typeof startLine !== 'number' || typeof endLine !== 'number') return 'other';
+    if (blob.withheld === undefined) return 'admitted';
+    if (spanTouchesWithheld(blob.withheld, startLine, endLine)) return 'withheld';
+    return screen.screenBody(blob.retainedLines!.slice(startLine - 1, endLine).join('')) === 'secret-detector-match' ? 'withheld' : 'admitted';
+  };
+  const standingIn = (value: Readonly<Record<string, unknown>>): ((citationId: string) => SpanStanding) => {
+    const by = new Map(list(value['citations']).filter(isRecord).flatMap((citation) => (text(citation['id']) === undefined ? [] : [[text(citation['id'])!, spanStanding(citation)] as const])));
+    return (citationId) => by.get(citationId) ?? 'other';
+  };
+  // A withheld item's note: the withheld files it rests on, cited or quoted, and those it may name.
+  const withheldNote = (value: Readonly<Record<string, unknown>>): WithheldNote | undefined => {
+    const standing = standingIn(value);
+    if (!isWithheldItem(value, standing)) return undefined;
+    const { cited, quoted } = citationIdsOf(value);
+    const ids = new Set([...cited, ...quoted].filter((id) => standing(id) === 'withheld'));
+    const files = new Set(list(value['citations']).filter(isRecord).flatMap((citation) => (ids.has(text(citation['id']) ?? '') && text(citation['path']) !== undefined ? [text(citation['path'])!] : [])));
+    const named = [...files].filter((file) => screen.screenPath(file) !== 'secret-detector-match').sort();
+    return { sources: files.size, named };
+  };
+  const withheldSpanCount = (value: Readonly<Record<string, unknown>>): number => {
+    const standing = standingIn(value);
+    return citationIdsOf(value).cited.filter((id) => standing(id) === 'withheld').length;
+  };
+
   // Sources: every cited blob read now and admitted (whole, or in pieces when too long to quote whole), and every cited blob screening
   // excluded or the class gate withheld as a counted row with its reason. A blob whose path a secret detector matches is named nowhere.
   const sources: GenerationSource[] = [];
@@ -388,11 +431,21 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   const executions = new Map(list(doc['executions']).flatMap((entry) => (isRecord(entry) && text(entry['id']) !== undefined ? [[text(entry['id'])!, clean(text(entry['command']) ?? '')] as const] : [])));
   const support = review.counts ? review.verdict.blockSupport : {};
   const blocks = new Map<string, LocalBlock>();
+  let withheldExcerpts = 0;
   for (const block of collectBlocks(doc).filter((candidate) => candidate.textKey === 'text')) {
     const value = block.value;
     const id = text(value['id'])!;
     const prose = text(value['text']) ?? '';
     const label = value['label'];
+    // A withheld item (dossier spec v1.5): none of the agent's text for it renders, since the agent read the clone without restriction and
+    // its text may derive from what screening withheld (RFC2-23). Syzygy says what is withheld, with the count on the item (RFC5-17).
+    const held = label === 'non-normative' ? undefined : withheldNote(value);
+    if (held !== undefined) {
+      blocks.set(id, { marking: 'unknown', unknownReason: 'excluded-content', basis: WITHHELD_BASIS, segments: [{ kind: 'prose', text: withheldSentence(held) }], executions: [], withheld: held });
+      continue;
+    }
+    const judgement = label === 'inferred' && value['judgement'] === true ? (list(value['citations']).length === 0 ? 'uncited' as const : 'cited' as const) : undefined;
+    const marks = { ...(judgement === undefined ? {} : { judgement }), ...(withheldSpanCount(value) === 0 ? {} : { withheldSpans: withheldSpanCount(value) }) };
     let segments: LocalSegment[] = [];
     let at = 0;
     let withheld = false;
@@ -419,7 +472,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     if (secret) segments = [{ kind: 'prose', text: WITHHELD_TEXT }];
     segments = segments.filter((part) => part.kind !== 'prose' || part.text !== '');
     const named = list(value['executionIds']).flatMap((executionId) => (typeof executionId === 'string' && executions.has(executionId) ? [{ id: executionId, command: executions.get(executionId)! }] : []));
-    const unknown = (reason: string, basis: string): LocalBlock => ({ marking: 'unknown', unknownReason: reason, basis, segments, executions: named });
+    const unknown = (reason: string, basis: string): LocalBlock => ({ marking: 'unknown', unknownReason: reason, basis, segments, executions: named, ...marks });
     if (label === 'non-normative') blocks.set(id, { marking: 'non-normative', unknownReason: null, basis: 'the agent marks this block non-normative: it claims nothing from a source', segments, executions: [] });
     else if (label === 'unknown') blocks.set(id, unknown(text(value['reason']) ?? 'missing-evidence', 'the agent labels this block Unknown'));
     else if (withheld || secret) {
@@ -428,7 +481,9 @@ export function buildLocalInput(inputs: BuildInputs): Built {
           : 'a quotation it rests on is from a file screening excludes, so the quotation is neither verified nor shown'));
     }
     else if (support[id] === 'supported') {
-      blocks.set(id, { marking: 'inferred', unknownReason: null, basis: 'the agent\'s claim, which the counted fidelity review judged supported by the spans it cites', segments, executions: named });
+      blocks.set(id, { marking: 'inferred', unknownReason: null, basis: 'the agent\'s claim, which the counted fidelity review judged supported by the spans it cites', segments, executions: named, ...marks });
+    } else if (judgement === 'uncited' && support[id] === 'advisory') {
+      blocks.set(id, { marking: 'inferred', unknownReason: null, basis: JUDGEMENT_BASIS, segments, executions: named, ...marks });
     } else {
       blocks.set(id, unknown('missing-evidence', review.counts ? `the counted fidelity review judged it ${support[id] ?? 'not at all'}, not supported` : `no fidelity review counts for this draft: ${review.why}`));
     }
@@ -469,6 +524,21 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     return { id: text(record['id'])!, text: plain(text(record['id'])!), sourceIds: record['label'] === 'non-normative' ? [] : citedSources(record) };
   };
   const label = (value: unknown): string => clean(text(value) ?? '');
+  // A code excerpt whose cited span is withheld (v1.5): counted, and a label over it alone reads `Withheld item`.
+  const excerptHeld = (record: Readonly<Record<string, unknown>>): boolean => isRecord(record['citation']) && spanStanding(record['citation']) === 'withheld';
+  // Whether everything a short label stands over is withheld: at least one claim block or excerpt, every one a withheld item or a
+  // withheld excerpt. Such a label is the agent's text over withheld content, so it renders as Syzygy's `Withheld item` (v1.5).
+  const leaves = (value: unknown): boolean[] => {
+    if (Array.isArray(value)) return value.flatMap(leaves);
+    if (!isRecord(value)) return [];
+    if (value['kind'] === 'code') return [excerptHeld(value)];
+    if (value['kind'] === 'empty') return [];
+    const own = typeof value['id'] === 'string' && blocks.has(value['id']) ? [blocks.get(value['id'])!.withheld !== undefined] : [];
+    return [...own, ...['children', 'items', 'entries', 'rows', 'cells', 'elements', 'definition', 'body', 'paragraphs'].flatMap((key) => leaves(value[key]))];
+  };
+  const heldOver = (value: unknown): boolean => { const all = leaves(value); return all.length > 0 && all.every(Boolean); };
+  const over = (content: unknown, value: unknown): string => (heldOver(content) ? WITHHELD_LABEL : label(value));
+  const repeats = (record: Readonly<Record<string, unknown>>): { readonly repeatsDiagram?: string } => (text(record['repeatsDiagram']) === undefined ? {} : { repeatsDiagram: text(record['repeatsDiagram'])! });
   const entry = (value: unknown): DraftBlock => {
     const record = isRecord(value) ? value : {};
     const kind = record['kind'];
@@ -476,17 +546,18 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     const shell = { id: text(record['id'])!, text: '', sourceIds: [], children: [] };
     const records = (key: string): Readonly<Record<string, unknown>>[] => list(record[key]).filter(isRecord);
     switch (kind) {
-      case 'table': return { ...shell, element: { kind: 'table', caption: label(record['caption']), columns: list(record['columns']).map(label), rowHeaders: record['rowHeaders'] === true,
+      case 'table': return { ...shell, element: { kind: 'table', caption: over(record['rows'], record['caption']), columns: list(record['columns']).map((column) => over(record['rows'], column)), rowHeaders: record['rowHeaders'] === true,
         rows: records('rows').map((row) => ({ id: text(row['id'])!, cells: list(row['cells']).map((cell) => (isRecord(cell) && cell['kind'] === 'empty' ? null : paragraph(cell))) })) } };
-      case 'callout': return { ...shell, element: { kind: 'callout', tone: record['tone'] as 'note' | 'tip' | 'caution' | 'important', title: label(record['title']), children: list(record['children']).map(entry) } };
-      case 'steps': return { ...shell, element: { kind: 'steps', items: list(record['items']).map(paragraph) } };
-      case 'definitions': return { ...shell, element: { kind: 'definitions', entries: records('entries').map((item) => ({ term: label(item['term']), definition: paragraph(item['definition']) })) } };
-      case 'cards': return { ...shell, element: { kind: 'cards', items: records('items').map((item) => ({ label: label(item['label']), body: paragraph(item['body']) })) } };
-      case 'details': return { ...shell, element: { kind: 'details', summary: label(record['summary']), elements: list(record['elements']).map(entry) } };
+      case 'callout': return { ...shell, element: { kind: 'callout', tone: record['tone'] as 'note' | 'tip' | 'caution' | 'important', title: over(record['children'], record['title']), children: list(record['children']).map(entry) } };
+      case 'steps': return { ...shell, element: { kind: 'steps', items: list(record['items']).map(paragraph), ...repeats(record) } };
+      case 'definitions': return { ...shell, element: { kind: 'definitions', entries: records('entries').map((item) => ({ term: over(item['definition'], item['term']), definition: paragraph(item['definition']) })), ...repeats(record) } };
+      case 'cards': return { ...shell, element: { kind: 'cards', items: records('items').map((item) => ({ label: over(item['body'], item['label']), body: paragraph(item['body']) })), ...repeats(record) } };
+      case 'details': return { ...shell, element: { kind: 'details', summary: over(record['elements'], record['summary']), elements: list(record['elements']).map(entry) } };
       case 'code': {
         const cited = isRecord(record['citation']) ? record['citation'] : {};
         const repositoryPath = text(cited['path'])!;
         const startLine = cited['startLine'] as number, endLine = cited['endLine'] as number;
+        if (excerptHeld(record)) withheldExcerpts += 1;
         const language = text(record['language']) === undefined ? languageOf(repositoryPath) : label(record['language']);
         return { ...shell, element: { kind: 'code', language, path: shownPath(repositoryPath), startLine, endLine, parts: excerpt(repositoryPath, startLine, endLine) } };
       }
@@ -500,17 +571,44 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     return { kind: record['kind'] === 'omitted' ? 'omitted' : 'unresolved', reason: clean(text(record['reason']) ?? ''), references: citedSources(record) };
   };
   const title = (value: unknown): string => clean(text(value) ?? '');
+  // Diagram nodes and edges, and understanding items, that are withheld items, by claim id (v1.5).
+  const withheldElements = new Map<string, WithheldNote>();
+  const element = (prefix: string, value: Readonly<Record<string, unknown>>): { readonly held: WithheldNote | undefined } => {
+    const held = withheldNote(value);
+    if (held !== undefined) withheldElements.set(`${prefix}${text(value['id'])!}`, held);
+    return { held };
+  };
+  const diagramHeld = (diagram: Readonly<Record<string, unknown>>): boolean => {
+    const parts = [...list(diagram['nodes']), ...list(diagram['edges'])].filter(isRecord);
+    return parts.length > 0 && parts.every((part) => withheldNote(part) !== undefined);
+  };
+  // A section's or deep dive's title over paragraphs and diagrams that are all withheld.
+  const containerTitle = (container: Readonly<Record<string, unknown>>, diagrams: readonly Readonly<Record<string, unknown>>[]): string => {
+    const paragraphs = leaves(container['paragraphs']);
+    const held = paragraphs.every(Boolean) && diagrams.every(diagramHeld) && paragraphs.length + diagrams.length > 0;
+    return held ? WITHHELD_LABEL : title(container['title']);
+  };
+  const diagramRecords = list(doc['diagrams']).filter(isRecord);
   const draft: DossierDraft = {
     title: title(doc['title']),
     introduction: paragraph(doc['introduction']),
-    sections: list(doc['sections']).filter(isRecord).map((section) => ({ id: text(section['id'])!, title: title(section['title']), paragraphs: tree(section['paragraphs']), disposition: disposition(section['disposition']) })),
-    diagrams: list(doc['diagrams']).filter(isRecord).map((diagram) => ({
-      id: text(diagram['id'])!, title: title(diagram['title']), sectionId: text(diagram['sectionId'])!, kind: diagram['kind'] as DossierDraft['diagrams'][number]['kind'], relationship: title(diagram['relationship']),
-      nodes: list(diagram['nodes']).filter(isRecord).map((node) => ({ id: text(node['id'])!, label: title(node['label']), sourceIds: citedSources(node), epistemic: node['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const })),
-      edges: list(diagram['edges']).filter(isRecord).map((edge) => ({ id: text(edge['id'])!, from: text(edge['from'])!, to: text(edge['to'])!, label: title(edge['label']), sourceIds: citedSources(edge), epistemic: edge['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const })),
-      disposition: disposition(diagram['disposition']),
-    })),
-    deepDives: list(doc['deepDives']).filter(isRecord).map((dive) => ({ id: text(dive['id'])!, title: title(dive['title']), sectionId: text(dive['sectionId'])!, paragraphs: tree(dive['paragraphs']), disposition: disposition(dive['disposition']) })),
+    sections: list(doc['sections']).filter(isRecord).map((section) => ({ id: text(section['id'])!, title: containerTitle(section, diagramRecords.filter((diagram) => diagram['sectionId'] === section['id'])), paragraphs: tree(section['paragraphs']), disposition: disposition(section['disposition']) })),
+    diagrams: diagramRecords.map((diagram) => {
+      const held = diagramHeld(diagram);
+      return {
+        id: text(diagram['id'])!, title: held ? WITHHELD_LABEL : title(diagram['title']), sectionId: text(diagram['sectionId'])!, kind: diagram['kind'] as DossierDraft['diagrams'][number]['kind'], relationship: held ? WITHHELD_LABEL : title(diagram['relationship']),
+        nodes: list(diagram['nodes']).filter(isRecord).map((node) => {
+          const { held: gone } = element('', node);
+          return { id: text(node['id'])!, label: gone === undefined ? title(node['label']) : WITHHELD_LABEL, sourceIds: citedSources(node), epistemic: gone === undefined && node['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
+        }),
+        edges: list(diagram['edges']).filter(isRecord).map((edge) => {
+          const { held: gone } = element('', edge);
+          return { id: text(edge['id'])!, from: text(edge['from'])!, to: text(edge['to'])!, label: gone === undefined ? title(edge['label']) : WITHHELD_LABEL, sourceIds: citedSources(edge), epistemic: gone === undefined && edge['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
+        }),
+        disposition: disposition(diagram['disposition']),
+      };
+    }),
+    deepDives: list(doc['deepDives']).filter(isRecord).map((dive) => ({ id: text(dive['id'])!, title: containerTitle(dive, []), sectionId: text(dive['sectionId'])!, paragraphs: tree(dive['paragraphs']), disposition: disposition(dive['disposition']) })),
     unresolved: list(doc['unresolved']).filter(isRecord).map((item) => ({ question: title(item['question']), reason: title(item['reason']), references: citedSources(item) })),
   };
 
@@ -518,13 +616,21 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   const understanding = isRecord(doc['understanding']) ? doc['understanding'] : {};
   const understandingItem = (prefix: string, value: unknown): LocalPageItem => {
     const record = isRecord(value) ? value : {};
+    // An understanding item's identity is its short label (a glossary term is its id), so a withheld one takes a Syzygy-numbered identity.
+    const held = withheldNote(record);
+    if (held !== undefined) {
+      const id = `${prefix}/withheld-${[...withheldElements.keys()].filter((key) => key.startsWith(`${prefix}/`)).length + 1}`;
+      withheldElements.set(id, held);
+      return { id, marking: 'unknown', unknownReason: 'excluded-content', title: WITHHELD_LABEL, text: withheldSentence(held), details: [], sourceIds: citedSources(record) };
+    }
     const unknown = record['label'] === 'unknown';
     return {
       id: `${prefix}/${text(record['id'])!}`, marking: unknown ? 'unknown' : 'inferred', unknownReason: unknown ? text(record['reason']) ?? 'missing-evidence' : null,
       title: text(record['id'])!, text: clean(text(record['statement']) ?? ''), details: [`Scope: ${clean(text(record['scope']) ?? '')}`], sourceIds: citedSources(record),
     };
   };
-  const glossary = list(understanding['terminology']).map((value) => understandingItem('glossary', value));
+  // A term drawn from a withheld item renders nowhere in the glossary (v1.5); the understanding page counts it as withheld.
+  const glossary = list(understanding['terminology']).filter((value) => !isRecord(value) || withheldNote(value) === undefined).map((value) => understandingItem('glossary', value));
   const understandingPage: LocalPage = {
     path: 'understanding.html', title: 'Understanding',
     intro: 'The agent\'s understanding record, which it reports forming before it drafted the argument (that order is its own report). Every item is its self-reported understanding: Inferred where it cites the files it rests on, Unknown with its reason where it could not be established.',
@@ -627,9 +733,27 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     sources,
     local: {
       draft, withheldTitle: `Dossier of ${subject.repository.url} at ${pinned.slice(0, 12)}`, draftLayer, blocks, glossary, disclosure,
-      sourceAnchors, pages, reviewStatus,
+      sourceAnchors, pages, reviewStatus, withheldElements,
+      counts: {
+        uncitedJudgements: [...blocks.values()].filter((block) => block.judgement === 'uncited').length,
+        withheldItems: [...blocks.values()].filter((block) => block.withheld !== undefined).length + withheldElements.size,
+        withheldExcerpts,
+        withheldInventoryEntries: review.counts ? review.withheldInventoryEntries : null,
+      },
     },
   };
+}
+
+/** The Syzygy-written short label over content that is all withheld (dossier spec v1.5). */
+export const WITHHELD_LABEL = 'Withheld item';
+const WITHHELD_BASIS = 'every source it cites is withheld from this dossier by screening, or it quotes a withheld file, so the agent\'s text for it is not shown';
+const JUDGEMENT_BASIS = 'the agent\'s own judgement, which cites nothing and asserts no project fact; the counted fidelity review found it advisory';
+
+/** What Syzygy says in place of a withheld item's text: how many withheld files it rests on, naming those it may. */
+export function withheldSentence(note: WithheldNote): string {
+  const unnamed = note.sources - note.named.length;
+  const names = [...note.named, ...(unnamed === 0 ? [] : [`${unnamed} not named, because a secret detector matches the path`])];
+  return `Withheld from this dossier: it rests on ${note.sources} source file(s) that screening withholds (${names.join('; ')}), so its text is not shown.`;
 }
 
 const DESIGN_REVIEW_WHERE = 'Whether a rendered-design review counts for these pages is stated in the review-status region at the foot of every page, the only part of a page a later render may change without retiring that review; this page is part of what that review reviews, so it does not repeat it.';

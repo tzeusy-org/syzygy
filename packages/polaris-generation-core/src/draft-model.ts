@@ -50,9 +50,9 @@ export interface DraftBlock extends DraftParagraph { children: DraftParagraph[];
 export type DraftElement =
   | { kind: 'table'; caption: string; columns: string[]; rowHeaders: boolean; rows: { id: string; cells: (DraftParagraph | null)[] }[] }
   | { kind: 'callout'; tone: 'note' | 'tip' | 'caution' | 'important'; title: string; children: DraftBlock[] }
-  | { kind: 'steps'; items: DraftParagraph[] }
-  | { kind: 'definitions'; entries: { term: string; definition: DraftParagraph }[] }
-  | { kind: 'cards'; items: { label: string; body: DraftParagraph }[] }
+  | { kind: 'steps'; items: DraftParagraph[]; repeatsDiagram?: string }
+  | { kind: 'definitions'; entries: { term: string; definition: DraftParagraph }[]; repeatsDiagram?: string }
+  | { kind: 'cards'; items: { label: string; body: DraftParagraph }[]; repeatsDiagram?: string }
   | { kind: 'details'; summary: string; elements: DraftBlock[] }
   /** Lines Syzygy read at the pinned revision, as quotation segments (one per source piece), or one withheld segment. */
   | { kind: 'code'; language: string; path: string; startLine: number; endLine: number; parts: LocalSegment[] };
