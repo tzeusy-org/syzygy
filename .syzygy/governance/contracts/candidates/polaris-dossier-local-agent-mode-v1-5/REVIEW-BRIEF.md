@@ -11,7 +11,13 @@ REQ-polaris-generation-003, 004, 006, 012 in
 `openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md`,
 and the two directions named in `SEMANTIC-DELTA.md`.
 
-Criteria:
+Scope of this round, by the owner's direction
+(`decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-07.md`): judge the repairs to round 5 and what
+they touch, read with `ROUND-5-DISPOSITIONS.md` and `docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-5-5-RAW.md`. Report
+anything you notice elsewhere, graded as usual: there is no lesser grade for a finding out of scope. State in
+your report what you read and what you did not.
+
+Criteria, over that scope:
 
 1. Each "contract reading" in the delta holds against the clause, quoted.
 2. No accepted contract or doctrine clause is weakened without an act; name any.

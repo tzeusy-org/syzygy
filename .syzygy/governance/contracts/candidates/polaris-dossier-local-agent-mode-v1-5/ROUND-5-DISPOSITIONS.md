@@ -1,6 +1,6 @@
 # Round 5 dispositions — dossier spec version 1.5
 
-> **Candidate — binds nothing.** Repairs to `R-DOSSIER-LOCAL-AGENT-V1-5-5-RAW.md`, whose verdict was REVISE over `e260e36f`. No fresh round has judged these, and the owner's next step for this package is pending (`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-06-2.md`, item 2: a blocker that is not on the withheld rule comes back to the owner).
+> **Candidate — binds nothing.** Repairs to `R-DOSSIER-LOCAL-AGENT-V1-5-5-RAW.md`, whose verdict was REVISE over `e260e36f`. No fresh round has judged these, and the owner chose a round over these repairs and what they touch (`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-07.md`).
 
 | Finding | Disposition |
 |---|---|
