@@ -169,6 +169,19 @@ describe('the sources list says why each file is there (syzygy-pdja.15)', () => 
     expect(list).toContain('>docs/reading.md</a> <span class="cited-on">Cited on <a href="../index.html">Overview</a> (32 times).</span></li>');
     expect(list).toContain('>docs/unused.md</a> <span class="cited-on">Not cited on the dossier\'s pages.</span></li>');
   });
+
+  it('adds the agent\'s own reason for choosing a source where it reports one, marked Inferred', () => {
+    const input = readingInput();
+    const excluded: GenerationSource = { repositoryId: 'synthetic:reading', revision: READING_SOURCE.revision, path: 'docs/held.md', objectId: gitBlobObjectId('Held.\n'),
+      sourceId: 's-aaaabbbbccccddddeeeeffff', evaluationId: 'synthetic-evaluation:reading', classificationBasis: 'body', exclusion: { excluded: true, reason: 'body-not-retained-for-generation' }, spans: [] };
+    const local = { ...input.local, selectionReasons: new Map([['docs/reading.md', 'zq-reason: it explains the reading order.'], ['docs/held.md', 'zq-held-reason.']]) };
+    const list = main(renderLocalDossier({ local, sources: [...input.sources, excluded] }).files.get('sources/index.html')!);
+    // Never beside an excluded or withheld file: the agent's words there may derive from what screening kept out.
+    expect(list).toContain('<li>docs/held.md — counted; exact text unavailable: body-not-retained-for-generation.</li>');
+    expect(list).not.toContain('zq-held-reason');
+    expect(list).toContain('(32 times).</span> <span class="selected-why">Why the agent chose it, as it reports: zq-reason: it explains the reading order. <span class="marking inferred">[Inferred]</span></span></li>');
+    expect(main(renderLocalDossier(input).files.get('sources/index.html')!)).not.toContain('selected-why');
+  });
 });
 
 describe('colour: six hues for Poles, diagrams and cards, none carrying a claim (syzygy-pdja.14)', () => {

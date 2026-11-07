@@ -514,6 +514,31 @@ describe('render', () => {
     for (const [file, page] of html(files)) expect(page, file).toMatch(/<li><a href="(\.\.\/)?appendix\.html">Appendix<\/a><\/li><\/ol>/u);
   });
 
+  it('says on the sources list why the agent reports choosing each source, Inferred, never a secret-named path (syzygy-pdja.15)', async () => {
+    const doc = draft();
+    (doc['discovery'] as Doc)['selected'] = [
+      { path: 'src/kestrel.c', reason: 'zq-why-1: the server loop.' },
+      { path: 'src/kestrel.c', reason: 'zq-why-2: the reply writer.' },
+      { path: 'src/kestrel.c', reason: 'zq-why-1: the server loop.' },
+      { path: SECRET_PATH, reason: 'zq-why-secret.' },
+      { path: 'docs/notes.txt', reason: 'Notes <b>bold</b> & more.' },
+      { path: 'docs/notes.txt', reason: `Also ${SECRET_PATH}.` },
+    ];
+    const result = await renderRun(await prepared(doc), renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const list = files.get('sources/index.html')!.split('<section id="sources">')[1]!;
+    const why = (text: string): string => ` <span class="selected-why">Why the agent chose it, as it reports: ${text} <span class="marking inferred">[Inferred]</span></span></li>`;
+    expect(list).toContain(`(4 times), <a href="../glossary.html">Glossary</a>.</span>${why('zq-why-1: the server loop. zq-why-2: the reply writer.')}`);
+    // A reason a secret detector matches is withheld, as on every other page.
+    expect(list).toContain(`(2 times).</span>${why('Notes &lt;b&gt;bold&lt;/b&gt; &amp; more. [withheld: a secret detector matches this text]')}`);
+    expect(list).not.toContain('abcdefghijk');
+    // The discovery page still lists it, under the secret placeholder; the sources list, which names paths, does not.
+    expect(files.get('discovery.html')).toContain('zq-why-secret.');
+    expect(files.get('sources/index.html')).not.toContain('zq-why-secret');
+    expect(list.split('class="selected-why"').length - 1).toBe(2);
+  });
+
   it('says on the sources list which pages cite each source and how often (syzygy-pdja.15)', async () => {
     const run = await prepared();
     const result = await renderRun(run, renderDeps());
