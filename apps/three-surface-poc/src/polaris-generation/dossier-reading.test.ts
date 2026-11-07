@@ -8,6 +8,61 @@ const render = () => renderLocalDossier(readingInput()).files;
 const main = (html: string): string => html.slice(html.indexOf('<main'));
 const ID = READING_SOURCE.sourceId;
 
+describe('Poles: a landing page with the why section and a map, then one page per Pole (dossier spec v1.5)', () => {
+  type Poles = NonNullable<ReturnType<typeof readingInput>['local']['poles']>;
+  const withPoles = (poles: Poles) => { const input = readingInput(); return renderLocalDossier({ ...input, local: { ...input.local, poles } }).files; };
+  const claims = (files: ReadonlyMap<string, string>) => (JSON.parse(files.get('machine.json')!) as { claims: { id: string; page: string }[] }).claims;
+  const sectionsOn = (html: string) => [...html.matchAll(/<section id="section-([a-z]+)"/gu)].map(m => m[1]);
+  const SPEC: Poles = { whySection: 'one', poles: [
+    { label: 'Why it exists', sections: ['one'] },
+    { label: 'Words', sections: ['two', 'three', 'four'] },
+    { label: 'The rest', sections: ['five', 'six', 'seven', 'nine', 'eight'] },
+  ] };
+
+  it('draws the why section and the map on the landing page, each other Pole on its own page, and a why-only Pole on none', () => {
+    const files = withPoles(SPEC);
+    const order = (JSON.parse(files.get('dossier.json')!) as { pages: { path: string }[] }).pages.map(page => page.path);
+    expect(order.slice(0, 3)).toEqual(['index.html', 'poles/2.html', 'poles/3.html']);
+    expect(files.has('poles/1.html')).toBe(false);
+    const index = files.get('index.html')!;
+    expect(sectionsOn(index)).toEqual(['one']);
+    expect(sectionsOn(files.get('poles/2.html')!)).toEqual(['two', 'three', 'four']);
+    expect(sectionsOn(files.get('poles/3.html')!)).toEqual(['five', 'six', 'seven', 'nine', 'eight']);
+    expect(index).toContain('<nav class="pole-map" aria-label="The parts of this dossier"><h2>The parts of this dossier</h2><ol><li><a href="index.html#section-one">Why it exists</a><ul><li><a href="index.html#section-one">One</a></li></ul></li><li><a href="poles/2.html">Words</a><ul><li><a href="poles/2.html#section-two">Two</a></li>');
+    // Every page's navigation reaches each Pole page, and the contents send a section to its Pole's page.
+    for (const [path, html] of files) if (path.endsWith('.html')) expect(html, path).toContain(`<li><a href="${path.includes('/') ? '../' : ''}poles/3.html">The rest</a></li>`);
+    expect(files.get('contents.html')!).toContain('<li><a href="poles/2.html#section-two">Two</a>');
+    // A Pole page is a narrative page: it opens in the reading view with the legend.
+    expect(files.get('poles/2.html')!.split('class="reading-legend"').length - 1).toBe(1);
+  });
+
+  it('loses and repeats no claim against the page division with no Poles', () => {
+    const flat = claims(renderLocalDossier(readingInput()).files);
+    const poled = claims(withPoles(SPEC));
+    expect(poled.map(claim => claim.id).sort()).toEqual(flat.map(claim => claim.id).sort());
+    expect(new Set(poled.map(claim => claim.id)).size).toBe(poled.length);
+    expect(poled.find(claim => claim.id === 'plural')!.page).toBe('poles/2.html');
+    expect(poled.find(claim => claim.id === 'forms')!.page).toBe('index.html');
+  });
+
+  it('links a Pole page holding the why section back to it rather than repeating it', () => {
+    const files = withPoles({ whySection: 'one', poles: [{ label: 'Start', sections: ['one', 'two'] }, { label: 'Rest', sections: ['three', 'four', 'five', 'six', 'seven', 'nine', 'eight'] }] });
+    const start = files.get('poles/1.html')!;
+    expect(sectionsOn(start)).toEqual(['two']);
+    expect(start).toContain('<p class="pole-why"><a href="../index.html#section-one">One</a> is on the overview.</p>');
+    expect(files.get('index.html')!).toContain('<li><a href="poles/1.html">Start</a><ul><li><a href="index.html#section-one">One</a></li><li><a href="poles/1.html#section-two">Two</a></li></ul></li>');
+  });
+
+  it.each<[string, Poles]>([
+    ['a section in no Pole', { whySection: 'one', poles: [{ label: 'A', sections: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'nine'] }] }],
+    ['a section in two Poles', { whySection: 'one', poles: [{ label: 'A', sections: ['one', 'two', 'three', 'four'] }, { label: 'B', sections: ['four', 'five', 'six', 'seven', 'nine', 'eight'] }] }],
+    ['an empty Pole', { whySection: 'one', poles: [...SPEC.poles, { label: 'Empty', sections: [] }] }],
+    ['a why section that is no section', { ...SPEC, whySection: 'ten' }],
+  ])('refuses to draw %s', (_name, poles) => {
+    expect(() => withPoles(poles)).toThrow(expect.objectContaining({ code: 'invalid-poles' }));
+  });
+});
+
 describe('the reading view clips what Syzygy adds to a block (dossier spec v1.5)', () => {
   // Visible text: every element of the renderer's visually-hidden class removed, with whatever it nests.
   const visible = (html: string): string => {

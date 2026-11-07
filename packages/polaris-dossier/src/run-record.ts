@@ -84,6 +84,7 @@ function declaredInput(config: RunConfig): Record<string, unknown> {
   if (config.modelVersion !== null) input['modelVersion'] = config.modelVersion;
   if (config.agentTokenBudget !== null) input['agentTokenBudget'] = config.agentTokenBudget;
   if (config.agentTurnBudget !== null) input['agentTurnBudget'] = config.agentTurnBudget;
+  if (config.poleLimit !== null) input['poleLimit'] = config.poleLimit;
   return input;
 }
 

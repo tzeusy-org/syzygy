@@ -363,6 +363,53 @@ describe('check: each rule refuses its own violation', () => {
     expect(result.findings.filter((finding) => finding.kind === 'repeats-diagram').map((finding) => finding.detail)).toEqual([expect.stringContaining(detail)]);
   });
 
+  // Dossier spec v1.5, "Poles within and over the limit": a v4 draft's Poles, against the run's limit (five unless declared).
+  describe('Poles', () => {
+    const section = (id: string) => ({ id, title: `Section ${id}`, paragraphs: [{ id: `${id}-p`, label: 'non-normative', text: 'Framing.' }], disposition: { kind: 'produced', assetIds: [id] } });
+    const poled = (poles: { label: string; sections: string[] }[], extra: string[] = [], whySection: string | null = 'core-ideas') => (d: Draft) => {
+      d.schemaVersion = 'polaris-dossier-local-draft-v4';
+      for (const id of extra) d.sections.push(section(id));
+      d.poles = poles;
+      if (whySection !== null) d.whySection = whySection;
+    };
+    const poleFindings = async (change: (d: Draft) => void, over: Record<string, unknown> = {}) => {
+      const run = await briefedRun(over);
+      writeDraft(run, mutate(change));
+      return report(await checkDraft(run, {}, deps())).findings.filter((finding) => !['schema'].includes(finding.kind)).map(({ detail, ...rest }) => ({ ...rest, detail }));
+    };
+
+    it('accepts one Pole and five, each section in exactly one, with a named why section', async () => {
+      expect(await poleFindings(poled([{ label: 'Everything', sections: ['core-ideas'] }]))).toEqual([]);
+      expect(await poleFindings(poled(['core-ideas', 'b', 'c', 'd', 'e'].map((id) => ({ label: `Pole ${id}`, sections: [id] })), ['b', 'c', 'd', 'e']))).toEqual([]);
+    });
+
+    it.each<[string, (d: Draft) => void, Record<string, unknown>, { kind: string; at: string; detail: string }[]]>([
+      ['six Poles under the default limit of five', poled(['core-ideas', 'b', 'c', 'd', 'e', 'f'].map((id) => ({ label: `Pole ${id}`, sections: [id] })), ['b', 'c', 'd', 'e', 'f']), {},
+        [{ kind: 'pole', at: '$.poles', detail: 'the draft declares 6 Poles; this run\'s Pole limit is 5' }]],
+      ['two Poles under a declared limit of one', poled([{ label: 'A', sections: ['core-ideas'] }, { label: 'B', sections: ['more'] }], ['more']), { poleLimit: 1 },
+        [{ kind: 'pole', at: '$.poles', detail: 'the draft declares 2 Poles; this run\'s Pole limit is 1' }]],
+      ['a section in no Pole', poled([{ label: 'A', sections: ['core-ideas'] }], ['more']), {},
+        [{ kind: 'pole', at: '$.sections[1]', detail: 'the section "more" is in no Pole; with Poles, every section is in exactly one' }]],
+      ['a section in two Poles', poled([{ label: 'A', sections: ['core-ideas'] }, { label: 'B', sections: ['core-ideas', 'more'] }], ['more']), {},
+        [{ kind: 'pole', at: '$.sections[0]', detail: 'the section "core-ideas" is in 2 Poles ($.poles[0], $.poles[1]); every section is in exactly one' }]],
+      ['an empty Pole', poled([{ label: 'A', sections: ['core-ideas'] }, { label: 'B', sections: [] }]), {},
+        [{ kind: 'pole', at: '$.poles[1].sections', detail: 'a Pole holds at least one section' }]],
+      ['Poles with no why section', poled([{ label: 'A', sections: ['core-ideas'] }], [], null), {},
+        [{ kind: 'pole', at: '$.whySection', detail: 'a draft with Poles names in `whySection` the section that answers why the project exists' }]],
+      ['a why section naming no section', poled([{ label: 'A', sections: ['core-ideas'] }], [], 'why'), {},
+        [{ kind: 'pole', at: '$.whySection', detail: '`whySection` names "why", which is no section of this draft' }]],
+      ['a Pole naming no section', poled([{ label: 'A', sections: ['core-ideas', 'ghost'] }]), {},
+        [{ kind: 'unresolved-reference', at: '$.poles[0].sections[1]', detail: 'no section has the identity "ghost"' }]],
+      ['markup in a Pole label', poled([{ label: 'The **core**', sections: ['core-ideas'] }]), {},
+        [{ kind: 'label-markup', at: '$.poles[0].label', detail: expect.stringContaining('a short label is plain text') as unknown as string }]],
+      ['Poles in a v3 draft', (d) => { poled([{ label: 'A', sections: ['core-ideas'] }])(d); d.schemaVersion = 'polaris-dossier-local-draft-v3'; }, {},
+        [{ kind: 'field-version', at: '$.poles', detail: '`poles` needs draft schema polaris-dossier-local-draft-v4' },
+          { kind: 'field-version', at: '$.whySection', detail: '`whySection` needs draft schema polaris-dossier-local-draft-v4' }]],
+    ])('reports %s', async (_name, change, over, expected) => {
+      expect(await poleFindings(change, over)).toEqual(expected);
+    });
+  });
+
   it('reports no range finding for an excerpt of a file screening read and excluded, within its lines, nor for a path-excluded file it never reads', async () => {
     const run = await briefedRun();
     writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'code', id: 'x1', citation: cite('c-x1', 'src/types.ts', 1, 2) }, { kind: 'code', id: 'x2', citation: cite('c-x2', '.env', 1, 5) }); d.understanding.purpose[0].citations = [cite('c-path', '.env', 1, 500)]; }));

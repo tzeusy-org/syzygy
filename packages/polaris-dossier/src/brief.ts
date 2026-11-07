@@ -11,7 +11,7 @@ import { isoOf } from './iso-of.js';
 import { launchedMarkerState } from './launched.js';
 import type { Outcome } from './outcome.js';
 import { reverifyPinnedRevision, type ReverifyOptions, type ReverifyRefusal, type ReverifyResult } from './reverify.js';
-import type { RunConfig } from './run-config.js';
+import { poleLimitOf, type RunConfig } from './run-config.js';
 import type { RunSubject } from './run-record.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 
@@ -124,6 +124,10 @@ export function renderBrief(input: BriefInput): string {
     ...topicLines,
     '',
     `Write one section per topic, in this order, each section's \`id\` the topic's id (${BRIEF_TOPICS.map((topic) => `\`${topic.id}\``).join(', ')}). The advantages are the ones the maintainers themselves state, inside the first topic and cited; never a comparison of your own. Optional assets: ${optional.join(', ')}. A topic the clone does not answer keeps its section with an \`unresolved\` disposition naming the missing evidence.`,
+    '',
+    '## Poles',
+    '',
+    `Divide the sections into Poles in \`poles\`: at most ${poleLimitOf(declared)}, this run's Pole limit, each a short label (under the rules for an element's short label) and the sections it holds, every section in exactly one. Choose the Poles from what the repository holds, each holding a substantial share of its documentation; never fill a fixed template, such as a server and a client, where the repository says little about one of them. Name in \`whySection\` the section that answers why the project exists. Syzygy renders a landing page holding the title, that section and a map of the Poles, then one page per Pole; the why section's own Pole links back to the landing page rather than repeating it, and a Pole holding only that section has no page of its own. A Pole is a page boundary and carries no claim. A draft with no \`poles\` keeps its sections on one page.`,
     '',
     '## The understanding record',
     '',
