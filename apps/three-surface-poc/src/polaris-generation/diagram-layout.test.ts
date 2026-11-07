@@ -155,36 +155,82 @@ describe('layered left-to-right diagram layout', () => {
       expect(grown).toBeGreaterThan(0);
     });
 
-    it('moves a label the least distance, up before down and both before sideways, on an eight-pixel step', () => {
-      const label = { x: 100, y: 100, width: 60, height: 20, back: false };
+    it('searches on an eight-pixel step, up before down, both before sideways, right before left, and diagonally last', () => {
+      const place1 = (label: { x: number; y: number; width: number; height: number }, walls: readonly { left: number; top: number; right: number; bottom: number }[]) =>
+        placeEdgeLabels([{ ...label, back: false }], walls, 400);
+      const wide = { x: 100, y: 100, width: 60, height: 20 };
       const pebble = { left: 90, top: 95, right: 110, bottom: 105 };
-      // Clear needs 19 px either way, so three steps of 8; up comes first.
-      expect(placeEdgeLabels([label], [pebble], 400)).toEqual([{ x: 100, y: 76 }]);
-      // With the way up taken, down.
-      expect(placeEdgeLabels([label], [pebble, { left: 90, top: 40, right: 110, bottom: 80 }], 400)).toEqual([{ x: 100, y: 124 }]);
+      expect(place1(wide, [pebble])).toEqual([{ x: 100, y: 76 }]);
+      expect(place1(wide, [pebble, { left: 90, top: 40, right: 110, bottom: 80 }])).toEqual([{ x: 100, y: 124 }]);
+      // Clear needs 9 px up, which only a step of 8 meets at 16.
+      expect(place1(wide, [{ left: 95, top: 105, right: 105, bottom: 150 }])).toEqual([{ x: 100, y: 84 }]);
+      // A small label clears a small pebble at the same count of steps straight up and straight across: up wins.
+      const small = { x: 100, y: 100, width: 10, height: 10 };
+      expect(place1(small, [{ left: 95, top: 95, right: 105, bottom: 105 }])).toEqual([{ x: 100, y: 84 }]);
+      // A wall top to bottom leaves only sideways: right, the first of the two.
+      expect(place1(small, [{ left: 95, top: 0, right: 105, bottom: 400 }])).toEqual([{ x: 116, y: 100 }]);
+      // A wall and a bar leave only a diagonal.
+      expect(place1({ x: 200, y: 200, width: 10, height: 10 }, [{ left: 180, top: 0, right: 220, bottom: 400 }, { left: 0, top: 180, right: 400, bottom: 220 }])).toEqual([{ x: 232, y: 168 }]);
     });
 
-    it('draws a leader from a moved label to a point on its own line, and none for a label left in place', () => {
-      const fan = [edge('ab1', 'a', 'b'), edge('ab2', 'a', 'b')];
-      const svg = renderDiagramSvg(renderOf(['a', 'b'], fan, LONG), 0, text => text, READABLE_SPACING);
-      const layout = layoutDiagram(['a', 'b'].map(id => ({ id })), fan, READABLE_SPACING);
-      const leaders = [...svg.matchAll(/<path class="edge-leader" d="M ([\d.]+) ([\d.]+) L ([\d.]+) ([\d.]+)"\/>/gu)].map(m => m.slice(1).map(Number));
-      expect(leaders).toHaveLength(1);
-      const [fromX, fromY, toX, toY] = leaders[0]!;
-      const [first, second] = placedLabels(svg);
-      // It starts inside the moved label, the second one, and sits in that edge's own group, under the nodes.
-      expect(fromX!).toBeGreaterThan(second!.left);
-      expect(fromX!).toBeLessThan(second!.right);
-      expect(fromY!).toBeGreaterThan(second!.top);
-      expect(fromY!).toBeLessThan(second!.bottom);
-      expect((first!.top + first!.bottom) / 2).toBeCloseTo(layout.edges[0]!.labelY, 0);
-      const groups = svg.split('<g class="edge ').slice(1);
-      expect(groups[0]).not.toContain('edge-leader');
-      expect(groups[1]!.split('</g>')[0]).toContain('edge-leader');
-      expect(svg.indexOf('edge-leader')).toBeLessThan(svg.indexOf('<g class="node'));
-      // Both parallel edges share one curve, whose midpoint is the label's first place: the leader ends there, the nearest point to a label straight below it.
-      expect(toX!).toBeCloseTo(layout.edges[1]!.labelX, 0);
-      expect(toY!).toBeCloseTo(layout.edges[1]!.labelY, 0);
+    const leadersIn = (svg: string) => [...svg.split('<g class="edge ').slice(1).entries()].map(([i, group]) => {
+      const body = group.split('</g>')[0]!;
+      const leader = /<path class="edge-leader" d="M ([\d.]+) ([\d.]+) L ([\d.]+) ([\d.]+)"/u.exec(body);
+      return { i, curve: /<path d="(M [^"]+)" marker-end/u.exec(body)![1]!, leader: leader === null ? undefined : leader.slice(1).map(Number) as [number, number, number, number] };
+    });
+    const curvePoints = (d: string) => {
+      const [x0, y0, x1, y1, x2, y2, x3, y3] = [...d.matchAll(/-?[\d.]+/gu)].map(m => Number(m[0])) as [number, number, number, number, number, number, number, number];
+      return Array.from({ length: 2001 }, (_, i) => {
+        const t = i / 2000, u = 1 - t;
+        return { x: u ** 3 * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t ** 3 * x3, y: u ** 3 * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t ** 3 * y3 };
+      });
+    };
+
+    it('runs each leader from its own label to its own line, in plain sight of every other label and node', () => {
+      let seed = 20261108, leaders = 0;
+      const next = (bound: number): number => { seed = (seed * 1103515245 + 12345) % 2147483648; return Math.floor(seed / 65536) % bound; };
+      for (let graph = 0; graph < 300; graph++) {
+        const ids = Array.from({ length: 3 + next(8) }, (_, i) => `n${i}`);
+        const edges = Array.from({ length: 2 + next(ids.length * 2) }, (_, i) => ({ id: `e${i}`, from: ids[next(ids.length)]!, to: ids[next(ids.length)]! }));
+        const svg = renderDiagramSvg(renderOf(ids, edges, 'carries the request onward'), graph, text => text, READABLE_SPACING);
+        const layout = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
+        const labels = placedLabels(svg);
+        const blocks = [...labels, ...layout.nodes.map(n => ({ left: n.x, right: n.x + 200, top: n.y, bottom: n.y + 56 }))];
+        for (const { i, curve, leader } of leadersIn(svg)) {
+          const own = labels[i]!;
+          const natural = layout.edges[i]!;
+          const centerX = (own.left + own.right) / 2, centerY = (own.top + own.bottom) / 2;
+          const stayed = Math.abs(centerX - natural.labelX) < 0.11 && Math.abs(centerY - natural.labelY) < 0.11;
+          if (leader === undefined) continue;
+          leaders++;
+          expect(stayed, `graph ${graph} edge ${i}: a leader on a label left in place`).toBe(false);
+          const [fromX, fromY, toX, toY] = leader;
+          expect(Math.hypot(fromX - centerX, fromY - centerY), `graph ${graph} edge ${i} start`).toBeLessThan(0.2);
+          // Its end is on this edge's own curve.
+          const onOwn = Math.min(...curvePoints(curve).map(at => Math.hypot(at.x - toX, at.y - toY)));
+          expect(onOwn, `graph ${graph} edge ${i} end`).toBeLessThan(1);
+          // A label against its own line needs none.
+          const clearance = Math.min(...curvePoints(curve).map(at => Math.hypot(Math.max(own.left - at.x, 0, at.x - own.right), Math.max(own.top - at.y, 0, at.y - own.bottom))));
+          expect(clearance, `graph ${graph} edge ${i} against its line`).toBeGreaterThan(5);
+          for (const [b, block] of blocks.entries()) {
+            if (b === i) continue;
+            for (let step = 0; step <= 40; step++) {
+              const x = fromX + (toX - fromX) * step / 40, y = fromY + (toY - fromY) * step / 40;
+              expect(x > block.left + 0.2 && x < block.right - 0.2 && y > block.top + 0.2 && y < block.bottom - 0.2, `graph ${graph} edge ${i} runs under block ${b}`).toBe(false);
+            }
+          }
+        }
+      }
+      expect(leaders).toBeGreaterThan(20);
+    });
+
+    it('ends a leader at the nearest point of its line that it can see', () => {
+      // `a` fans to `b` and `c`; the second parallel edge's label is pushed clear of the first's. The nearest point it can see is a literal.
+      const fan = [edge('ab', 'a', 'b'), edge('ab2', 'a', 'b'), edge('ac', 'a', 'c')];
+      const svg = renderDiagramSvg(renderOf(['a', 'b', 'c'], fan, 'to'), 0, text => text, READABLE_SPACING);
+      const groups = leadersIn(svg);
+      expect(groups[0]!.leader).toBeUndefined();
+      expect(groups[1]!.leader).toEqual([323, 50, 341.9, 71]);
     });
 
     it('draws no leader on the provider form, or where no label moved', () => {

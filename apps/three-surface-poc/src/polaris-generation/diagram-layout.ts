@@ -25,7 +25,8 @@ const SKIP_LABEL_DROP = 52;
 const NODE_NOTE_HEIGHT = 24;
 const LABEL_CLEARANCE = 4;
 const LABEL_STEP = 8;
-const LEADER_SAMPLES = 32;
+const LEADER_SAMPLES = 64;
+const LEADER_MIN_RUN = 6;
 
 /** How much room a diagram gets. The default is the draft preview's and the provider mode's form, whose bytes are pinned. */
 export interface DiagramSpacing {
@@ -198,28 +199,47 @@ export function wrapLabel(text: string, maxChars: number, maxLines: number): str
   return kept;
 }
 
-/** The point of a laid-out edge's cubic curve nearest to (x, y), by sampling: a moved label's leader ends there. */
-function nearestOnEdge(d: string, x: number, y: number): { readonly x: number; readonly y: number } {
+interface LabelBox { readonly left: number; readonly top: number; readonly right: number; readonly bottom: number }
+/** Whether the segment from (x0, y0) to (x1, y1) enters the box, by clipping it to the box's two slabs. */
+function segmentEntersBox(x0: number, y0: number, x1: number, y1: number, box: LabelBox): boolean {
+  let enter = 0, leave = 1;
+  for (const [from, delta, low, high] of [[x0, x1 - x0, box.left, box.right], [y0, y1 - y0, box.top, box.bottom]] as const) {
+    if (delta === 0) { if (from <= low || from >= high) return false; continue; }
+    const a = (low - from) / delta, b = (high - from) / delta;
+    enter = Math.max(enter, Math.min(a, b));
+    leave = Math.min(leave, Math.max(a, b));
+  }
+  return enter < leave;
+}
+
+/**
+ * Where a moved label's leader ends: the point of its own cubic curve nearest the label that a reader can see, reached by a straight run
+ * clear of every other label and every node. Undefined when the label already sits on or against its own line, since a leader says nothing
+ * more there, and when no such point exists: a leader running under another label would tie this label to that one.
+ */
+function leaderEnd(d: string, label: LabelBox, others: readonly LabelBox[]): { readonly x: number; readonly y: number } | undefined {
   const [x0, y0, x1, y1, x2, y2, x3, y3] = [...d.matchAll(/-?[\d.]+/gu)].map(m => Number(m[0])) as [number, number, number, number, number, number, number, number];
-  let best = { x: x0, y: y0 };
-  for (let i = 0; i <= LEADER_SAMPLES; i++) {
+  const fromX = (label.left + label.right) / 2, fromY = (label.top + label.bottom) / 2;
+  const samples = Array.from({ length: LEADER_SAMPLES + 1 }, (_, i) => {
     const t = i / LEADER_SAMPLES, u = 1 - t;
-    const at = {
+    return {
       x: u * u * u * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x3,
       y: u * u * u * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t * y3,
     };
-    if (Math.hypot(at.x - x, at.y - y) < Math.hypot(best.x - x, best.y - y)) best = at;
-  }
-  return best;
+  });
+  const gap = (at: { readonly x: number; readonly y: number }): number => Math.hypot(Math.max(label.left - at.x, 0, at.x - label.right), Math.max(label.top - at.y, 0, at.y - label.bottom));
+  if (samples.some(at => gap(at) < LEADER_MIN_RUN)) return undefined;
+  const visible = samples.filter(at => others.every(box => !segmentEntersBox(fromX, fromY, at.x, at.y, box)));
+  return visible.reduce<{ readonly x: number; readonly y: number } | undefined>((best, at) => best === undefined || gap(at) < gap(best) ? at : best, undefined);
 }
 
-interface LabelBox { readonly left: number; readonly top: number; readonly right: number; readonly bottom: number }
 interface WantedLabel { readonly x: number; readonly y: number; readonly width: number; readonly height: number; readonly back: boolean }
 
 /**
- * Moves each edge label the least distance that clears every node and every label already placed, keeping a label that is clear where it
- * is. Back edges' labels go first, since each has its own lane under the nodes. The search widens one step at a time, up and down before
- * sideways, stays on the canvas across and above, and may run below it (the caller grows the canvas). It ends whenever each label's own column fits the canvas, which every label does: the widest is 24 characters (201.6 px) on a canvas of at least 248.
+ * Moves each edge label to the first spot that clears every node and every label already placed, keeping a label that is clear where it
+ * is. Back edges' labels go first, since each has its own lane under the nodes. The search widens one step at a time, counting steps across
+ * plus steps down, so a diagonal spot counts as farther than a straight one the same distance away. Within a step it tries up, then down,
+ * before sideways, and right before left. It stays on the canvas across and above, and may run below it (the caller grows the canvas). It ends whenever each label's own column fits the canvas, which every label does: the widest is 24 characters (201.6 px) on a canvas of at least 248.
  */
 // Test seam: exported for the tests; production code reaches it only inside this file.
 export function placeEdgeLabels(wanted: readonly WantedLabel[], nodes: readonly LabelBox[], canvasWidth: number): readonly { readonly x: number; readonly y: number }[] {
@@ -286,12 +306,17 @@ export function renderDiagramSvg(
     return { left: at.x, top: at.y, right: at.x + NODE_WIDTH, bottom: at.y + NODE_HEIGHT + (connected.has(node.id) ? 0 : NODE_NOTE_HEIGHT) };
   });
   const placed = spacing.labelsOnTop ? placeEdgeLabels(wanted, standing, layout.width) : wanted;
+  const boxOf = (i: number): LabelBox => {
+    const { width, height } = wanted[i]!, { x, y } = placed[i]!;
+    return { left: x - width / 2, top: y - height / 2, right: x + width / 2, bottom: y + height / 2 };
+  };
   const edges = diagram.edges.map((edge, i) => {
     const at = layout.edges[i]!, lines = edgeLines[i]!, { x, y, width, height } = { ...wanted[i]!, ...placed[i]! };
     const top = y - height / 2;
-    // A label the search moved keeps a thin leader to its own line, in the line's layer: without one, it can read as another line's label.
+    // A label the search moved keeps a thin leader to its own line where one can be seen, in the line's layer: without one, it can read as
+    // another line's label.
     const moved = x !== at.labelX || y !== at.labelY;
-    const reach = moved ? nearestOnEdge(at.d, x, y) : undefined;
+    const reach = moved ? leaderEnd(at.d, boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])]) : undefined;
     const leader = reach === undefined ? '' : `<path class="edge-leader" d="M ${num(x)} ${num(y)} L ${num(reach.x)} ${num(reach.y)}"/>`;
     const head = `<g class="edge ${edge.epistemic}${at.back ? ' back' : ''}"><title>${escape(edge.label)} (${edge.epistemic})</title><path d="${at.d}" marker-end="url(#${markerId})"/>${leader}`;
     const label = `<rect class="edge-label" x="${num(x - width / 2)}" y="${num(top)}" width="${num(width)}" height="${num(height)}" rx="3"/>${textLines(lines, x, top + 15, 15)}`;
