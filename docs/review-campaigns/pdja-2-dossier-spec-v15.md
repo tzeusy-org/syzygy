@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-5-6-RAW.md:4`), over `0bdf6ac7`, round 6, on the repairs to round 5 and what they touch, with one revise finding, a missing parent declaration; rounds 1 to 5 were also `REVISE`. Findings are repaired on the same branch, listed in the package's `ROUND-6-DISPOSITIONS.md`; no fresh round has confirmed the repair. The owner directed the same narrow round again, with at most two reruns.
+`CONFIRM WITH EXCEPTIONS` (`R-DOSSIER-LOCAL-AGENT-V1-5-7-RAW.md:4`), over `ee4ed45a`, round 7, on the repairs to round 6 and what they touch, with notes only and yes to three repair questions, so the round returns to the owner (`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-07-2.md`); rounds 1 to 6 were `REVISE`. Findings are listed in the package's `ROUND-7-DISPOSITIONS.md`.
