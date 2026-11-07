@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { READABLE_SPACING, layoutDiagram, renderDiagramSvg, wrapLabel } from './diagram-layout.js';
+import { READABLE_SPACING, layoutDiagram, placeEdgeLabels, renderDiagramSvg, wrapLabel } from './diagram-layout.js';
 import { assertInertSvg } from './svg-inert.js';
 
 const nodes = (...ids: string[]) => ids.map(id => ({ id }));
@@ -95,6 +95,11 @@ describe('layered left-to-right diagram layout', () => {
       'loop over a tall middle layer': { nodes: ['a', 'm1', 'm2', 'm3', 'x'], edges: [edge('am1', 'a', 'm1'), edge('am2', 'a', 'm2'), edge('am3', 'a', 'm3'), edge('m1x', 'm1', 'x'), edge('m2x', 'm2', 'x'), edge('m3x', 'm3', 'x'), edge('xa', 'x', 'a')], bands: 1 },
       'tall column before a band break': { nodes: ['a', 'm1', 'm2', 'm3', 'x', 'y', 'z'], edges: [edge('am1', 'a', 'm1'), edge('am2', 'a', 'm2'), edge('am3', 'a', 'm3'), edge('m1x', 'm1', 'x'), edge('m2x', 'm2', 'x'), edge('m3x', 'm3', 'x'), edge('xy', 'x', 'y'), edge('yz', 'y', 'z')], bands: 1 },
       'fan inside one band': { nodes: ['hub', 'x', 'y', 'z'], edges: [edge('hx', 'hub', 'x'), edge('hy', 'hub', 'y'), edge('hz', 'hub', 'z')], bands: 1 },
+      'two skips from one node': { nodes: ['a', 'b', 'c', 'd'], edges: [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd', 'c', 'd'), edge('ac', 'a', 'c'), edge('ad', 'a', 'd')], bands: 1 },
+      'fan plus a skip': { nodes: ['hub', 'x', 'y', 'z', 'end'], edges: [edge('hx', 'hub', 'x'), edge('hy', 'hub', 'y'), edge('hz', 'hub', 'z'), edge('xe', 'x', 'end'), edge('he', 'hub', 'end')], bands: 1 },
+      'crossing edges': { nodes: ['a', 'b', 'x', 'y'], edges: [edge('ax', 'a', 'x'), edge('ay', 'a', 'y'), edge('bx', 'b', 'x'), edge('by', 'b', 'y')], bands: 1 },
+      'parallel edges': { nodes: ['a', 'b'], edges: [edge('ab1', 'a', 'b'), edge('ab2', 'a', 'b'), edge('ab3', 'a', 'b')], bands: 1 },
+      'parallel edges across a band break': { nodes: ['a', 'b', 'c', 'd'], edges: [edge('ab', 'a', 'b'), edge('bc', 'b', 'c'), edge('cd1', 'c', 'd'), edge('cd2', 'c', 'd')], bands: 2 },
     };
     const LONG = 'twenty-two characters plus more than fit in three lines of this width, which ends in an ellipsis';
     for (const [name, shape] of Object.entries(SHAPES)) {
@@ -114,9 +119,180 @@ describe('layered left-to-right diagram layout', () => {
         // Lines behind the nodes, labels above them.
         expect(svg.lastIndexOf('<path d="M')).toBeLessThan(svg.indexOf('<g class="node'));
         expect(svg.lastIndexOf('<g class="node')).toBeLessThan(svg.indexOf('<g class="edge-text'));
-        for (const l of labels) expect(l.bottom).toBeLessThanOrEqual(layout.height);
+        const canvasHeight = Number(/ height="(\d+)"/u.exec(svg)![1]);
+        expect(canvasHeight).toBeGreaterThanOrEqual(layout.height);
+        for (const l of labels) expect(l.bottom).toBeLessThanOrEqual(canvasHeight);
       });
     }
+
+    const placedLabels = (svg: string) => [...svg.matchAll(/<rect class="edge-label" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/gu)]
+      .map(m => ({ left: Number(m[1]), top: Number(m[2]), right: Number(m[1]) + Number(m[3]), bottom: Number(m[2]) + Number(m[4]) }));
+    const renderOf = (nodes: readonly string[], edges: readonly { id: string; from: string; to: string }[], label: string, lonely = false) => ({
+      nodes: [...nodes, ...(lonely ? ['lonely'] : [])].map(id => ({ id, label: id, epistemic: 'inferred' as const })),
+      edges: edges.map(e => ({ ...e, label, epistemic: 'inferred' as const })),
+    });
+
+    it('holds over dense random graphs: no label on a node, on another label, or off the canvas', () => {
+      let seed = 20261107;
+      const next = (bound: number): number => { seed = (seed * 1103515245 + 12345) % 2147483648; return Math.floor(seed / 65536) % bound; };
+      let grown = 0;
+      for (let graph = 0; graph < 400; graph++) {
+        const ids = Array.from({ length: 2 + next(9) }, (_, i) => `n${i}`);
+        const edges = Array.from({ length: 1 + next(ids.length * 2) }, (_, i) => ({ id: `e${i}`, from: ids[next(ids.length)]!, to: ids[next(ids.length)]! }));
+        const svg = renderDiagramSvg(renderOf(ids, edges, LONG), graph, text => text, READABLE_SPACING);
+        assertInertSvg(svg);
+        const layout = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
+        const nodes = layout.nodes.map(n => ({ left: n.x, right: n.x + 200, top: n.y, bottom: n.y + 56 }));
+        const labels = placedLabels(svg);
+        const canvasHeight = Number(/ height="(\d+)"/u.exec(svg)![1]);
+        expect(labels.filter(l => nodes.some(n => l.left < n.right && n.left < l.right && l.top < n.bottom && n.top < l.bottom)), `graph ${graph} on a node`).toEqual([]);
+        // Touching counts as overprinted: a gap of 4 less the renderer's rounding to a tenth.
+        expect(labels.filter((l, i) => labels.some((o, j) => j > i && l.left < o.right + 3.8 && o.left < l.right + 3.8 && l.top < o.bottom + 3.8 && o.top < l.bottom + 3.8)), `graph ${graph} overprinted`).toEqual([]);
+        expect(labels.filter(l => l.left < 0 || l.right > layout.width || l.top < 0 || l.bottom > canvasHeight), `graph ${graph} off the canvas`).toEqual([]);
+        if (canvasHeight > layout.height) grown++;
+      }
+      // The population reaches the pass: some graphs had to grow the canvas.
+      expect(grown).toBeGreaterThan(0);
+    });
+
+    it('searches on an eight-pixel step, up before down, straight before diagonal before sideways at one count of steps, right before left', () => {
+      const place1 = (label: { x: number; y: number; width: number; height: number }, walls: readonly { left: number; top: number; right: number; bottom: number }[]) =>
+        placeEdgeLabels([{ ...label, back: false }], walls, 400);
+      const wide = { x: 100, y: 100, width: 60, height: 20 };
+      const pebble = { left: 90, top: 95, right: 110, bottom: 105 };
+      expect(place1(wide, [pebble])).toEqual([{ x: 100, y: 76 }]);
+      expect(place1(wide, [pebble, { left: 90, top: 40, right: 110, bottom: 80 }])).toEqual([{ x: 100, y: 124 }]);
+      // Clear needs 9 px up, which only a step of 8 meets at 16.
+      expect(place1(wide, [{ left: 95, top: 105, right: 105, bottom: 150 }])).toEqual([{ x: 100, y: 84 }]);
+      // A small label clears a small pebble at the same count of steps straight up and straight across: up wins.
+      const small = { x: 100, y: 100, width: 10, height: 10 };
+      expect(place1(small, [{ left: 95, top: 95, right: 105, bottom: 105 }])).toEqual([{ x: 100, y: 84 }]);
+      // A wall top to bottom leaves only sideways: right, the first of the two.
+      expect(place1(small, [{ left: 95, top: 0, right: 105, bottom: 400 }])).toEqual([{ x: 116, y: 100 }]);
+      // A wall and a bar leave only a diagonal.
+      expect(place1({ x: 200, y: 200, width: 10, height: 10 }, [{ left: 180, top: 0, right: 220, bottom: 400 }, { left: 0, top: 180, right: 400, bottom: 220 }])).toEqual([{ x: 232, y: 168 }]);
+    });
+
+    const leadersIn = (svg: string) => [...svg.split('<g class="edge ').slice(1).entries()].map(([i, group]) => {
+      const body = group.split('</g>')[0]!;
+      const leader = /<path class="edge-leader" d="M ([\d.]+) ([\d.]+) L ([\d.]+) ([\d.]+)"/u.exec(body);
+      return { i, curve: /<path d="(M [^"]+)" marker-end/u.exec(body)![1]!, leader: leader === null ? undefined : leader.slice(1).map(Number) as [number, number, number, number] };
+    });
+    const curvePoints = (d: string) => {
+      const [x0, y0, x1, y1, x2, y2, x3, y3] = [...d.matchAll(/-?[\d.]+/gu)].map(m => Number(m[0])) as [number, number, number, number, number, number, number, number];
+      return Array.from({ length: 2001 }, (_, i) => {
+        const t = i / 2000, u = 1 - t;
+        return { x: u ** 3 * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t ** 3 * x3, y: u ** 3 * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t ** 3 * y3 };
+      });
+    };
+
+    it('runs each leader from its own label to its own line, in plain sight of every other label and node', () => {
+      let seed = 20261108, leaders = 0, sideways = 0;
+      const next = (bound: number): number => { seed = (seed * 1103515245 + 12345) % 2147483648; return Math.floor(seed / 65536) % bound; };
+      for (let graph = 0; graph < 300; graph++) {
+        const ids = Array.from({ length: 3 + next(8) }, (_, i) => `n${i}`);
+        const edges = Array.from({ length: 2 + next(ids.length * 2) }, (_, i) => ({ id: `e${i}`, from: ids[next(ids.length)]!, to: ids[next(ids.length)]! }));
+        const svg = renderDiagramSvg(renderOf(ids, edges, graph % 2 === 0 ? 'carries the request onward' : 'sends'), graph, text => text, READABLE_SPACING);
+        const layout = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
+        const labels = placedLabels(svg);
+        const blocks = [...labels, ...layout.nodes.map(n => ({ left: n.x, right: n.x + 200, top: n.y, bottom: n.y + 56 }))];
+        const curvesIn = leadersIn(svg).map(group => group.curve);
+        for (const { i, curve, leader } of leadersIn(svg)) {
+          const own = labels[i]!;
+          const natural = layout.edges[i]!;
+          const centerX = (own.left + own.right) / 2, centerY = (own.top + own.bottom) / 2;
+          if (leader !== undefined && Math.abs(centerY - natural.labelY) < 0.11) sideways++;
+          const stayed = Math.abs(centerX - natural.labelX) < 0.11 && Math.abs(centerY - natural.labelY) < 0.11;
+          if (leader === undefined) continue;
+          leaders++;
+          expect(stayed, `graph ${graph} edge ${i}: a leader on a label left in place`).toBe(false);
+          const [fromX, fromY, toX, toY] = leader;
+          // It starts on its own label's edge.
+          const offEdge = Math.min(Math.abs(fromX - own.left), Math.abs(fromX - own.right), Math.abs(fromY - own.top), Math.abs(fromY - own.bottom));
+          expect(offEdge, `graph ${graph} edge ${i} start`).toBeLessThan(0.2);
+          expect(fromX >= own.left - 0.2 && fromX <= own.right + 0.2 && fromY >= own.top - 0.2 && fromY <= own.bottom + 0.2, `graph ${graph} edge ${i} start on its box`).toBe(true);
+          // No different line runs through its end.
+          for (const other of curvesIn) {
+            if (other === curve) continue;
+            expect(Math.min(...curvePoints(other).map(at => Math.hypot(at.x - toX, at.y - toY))), `graph ${graph} edge ${i} ends on another line`).toBeGreaterThan(1);
+          }
+          // Its end is on this edge's own curve.
+          const onOwn = Math.min(...curvePoints(curve).map(at => Math.hypot(at.x - toX, at.y - toY)));
+          expect(onOwn, `graph ${graph} edge ${i} end`).toBeLessThan(1);
+          // A label against its own line needs none.
+          const clearance = Math.min(...curvePoints(curve).map(at => Math.hypot(Math.max(own.left - at.x, 0, at.x - own.right), Math.max(own.top - at.y, 0, at.y - own.bottom))));
+          expect(clearance, `graph ${graph} edge ${i} against its line`).toBeGreaterThan(5);
+          for (const [b, block] of blocks.entries()) {
+            if (b === i) continue;
+            for (let step = 0; step <= 40; step++) {
+              const x = fromX + (toX - fromX) * step / 40, y = fromY + (toY - fromY) * step / 40;
+              expect(x > block.left + 0.2 && x < block.right - 0.2 && y > block.top + 0.2 && y < block.bottom - 0.2, `graph ${graph} edge ${i} runs under block ${b}`).toBe(false);
+            }
+          }
+        }
+      }
+      expect(leaders).toBeGreaterThan(20);
+      expect(sideways, 'a label moved only sideways keeps its leader').toBeGreaterThan(0);
+    });
+
+    it('ends a leader at the nearest point of its line that it can see', () => {
+      // `a` fans to `b` and `c`; the second parallel edge's label is pushed clear of the first's. The nearest point it can see is a literal.
+      const fan = [edge('ab', 'a', 'b'), edge('ab2', 'a', 'b'), edge('ac', 'a', 'c')];
+      const svg = renderDiagramSvg(renderOf(['a', 'b', 'c'], fan, 'to'), 0, text => text, READABLE_SPACING);
+      const groups = leadersIn(svg);
+      expect(groups[0]!.leader).toBeUndefined();
+      expect(groups[1]!.leader).toEqual([336.9, 60.5, 341.9, 71]);
+    });
+
+    it('draws no leader on the provider form, or where no label moved', () => {
+      const parallel = [edge('ab1', 'a', 'b'), edge('ab2', 'a', 'b')];
+      expect(renderDiagramSvg(renderOf(['a', 'b'], parallel, LONG), 0, text => text)).not.toContain('edge-leader');
+      expect(renderDiagramSvg(renderOf(['a', 'b', 'c'], [edge('ab', 'a', 'b'), edge('bc', 'b', 'c')], LONG), 0, text => text, READABLE_SPACING)).not.toContain('edge-leader');
+    });
+
+    it('leaves a label that is already clear where its edge puts it', () => {
+      const edges = [edge('ab', 'a', 'b'), edge('bc', 'b', 'c')];
+      const layout = layoutDiagram(['a', 'b', 'c'].map(id => ({ id })), edges, READABLE_SPACING);
+      const labels = placedLabels(renderDiagramSvg(renderOf(['a', 'b', 'c'], edges, LONG), 0, text => text, READABLE_SPACING));
+      labels.forEach((l, i) => {
+        expect((l.left + l.right) / 2).toBeCloseTo(layout.edges[i]!.labelX, 0);
+        expect((l.top + l.bottom) / 2).toBeCloseTo(layout.edges[i]!.labelY, 0);
+      });
+    });
+
+    it('keeps a back edge\'s label in its lane', () => {
+      const edges = [edge('ab', 'a', 'b'), edge('ab2', 'a', 'b'), edge('ba', 'b', 'a')];
+      const layout = layoutDiagram(['a', 'b'].map(id => ({ id })), edges, READABLE_SPACING);
+      const labels = placedLabels(renderDiagramSvg(renderOf(['a', 'b'], edges, LONG), 0, text => text, READABLE_SPACING));
+      expect((labels[2]!.top + labels[2]!.bottom) / 2).toBeCloseTo(layout.edges[2]!.labelY, 0);
+    });
+
+    it('moves a label off an unconnected node\'s note', () => {
+      // The loop's lane starts right under the bottom row, where the note under the node below `a` sits.
+      const noted = renderDiagramSvg(renderOf(['a'], [edge('aa', 'a', 'a')], LONG, true), 0, text => text, READABLE_SPACING);
+      const noteAt = /<text class="note" x="([\d.]+)" y="([\d.]+)"/u.exec(noted)!;
+      const note = { left: Number(noteAt[1]) - 80, right: Number(noteAt[1]) + 80, top: Number(noteAt[2]) - 14, bottom: Number(noteAt[2]) + 4 };
+      expect(placedLabels(noted).filter(l => l.left < note.right && note.left < l.right && l.top < note.bottom && note.top < l.bottom)).toEqual([]);
+    });
+
+    it('never searches off the canvas across, and the provider form never moves a label', () => {
+      // The nearest clear spot lies past the canvas's edge, nearer than any on the canvas.
+      const [fromLeft] = placeEdgeLabels([{ x: 40, y: 200, width: 60, height: 20, back: false }], [{ left: 30, top: 0, right: 76, bottom: 400 }], 300);
+      expect(fromLeft!.x - 30).toBeGreaterThanOrEqual(0);
+      const [fromRight] = placeEdgeLabels([{ x: 260, y: 200, width: 60, height: 20, back: false }], [{ left: 224, top: 0, right: 270, bottom: 400 }], 300);
+      expect(fromRight!.x + 30).toBeLessThanOrEqual(300);
+      const parallel = [edge('ab1', 'a', 'b'), edge('ab2', 'a', 'b')];
+      const provider = placedLabels(renderDiagramSvg(renderOf(['a', 'b'], parallel, 'to'), 0, text => text));
+      expect(provider[0]).toEqual(provider[1]);
+    });
+
+    it('gives each readable label a copy of its line, drawn only under the pointer, and the provider form none', () => {
+      const edges = [edge('ab', 'a', 'b')];
+      const readable = renderDiagramSvg(renderOf(['a', 'b'], edges, 'to'), 0, text => text, READABLE_SPACING);
+      const line = /<path d="(M [^"]+)" marker-end/u.exec(readable)![1]!;
+      expect(readable).toContain(`<g class="edge-text inferred"><title>to (inferred)</title><path class="edge-echo" d="${line}"/><rect class="edge-label"`);
+      expect(renderDiagramSvg(renderOf(['a', 'b'], edges, 'to'), 0, text => text)).not.toContain('edge-echo');
+    });
   });
 
   it('wraps labels by word, splits long words and ellipsizes overflow', () => {

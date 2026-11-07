@@ -158,12 +158,15 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + '.nav-panel>summary{cursor:pointer;font-weight:600;color:var(--muted)}.layout:has(>.nav-panel:not([open])){grid-template-columns:auto minmax(0,1fr)}.nav-panel>summary:focus-visible,.mobile-contents>summary:focus-visible{outline-offset:-3px}'
   // A three-column diagram, the widest a plain chain reaches, may shrink to fit its column (text no smaller than 10.7px); any wider one
   // keeps its size and scrolls. The element under the pointer stands out.
-  + '.diagram-scroll svg[width="1048"]{max-width:max(100%,860px)}.diagram-scroll g.node:hover rect{stroke-width:3}.diagram-scroll g.edge:hover path{stroke-width:3}.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--cyan);stroke-width:1.5}'
+  + '.diagram-scroll svg[width="1048"]{max-width:max(100%,860px)}.diagram-scroll g.node:hover rect{stroke-width:3}.diagram-scroll g.edge:hover path{stroke-width:3}.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--cyan);stroke-width:1.5}.diagram-scroll path.edge-leader{stroke-width:1;fill:none}.diagram-scroll path.edge-echo{display:none;fill:none;stroke:var(--cyan);stroke-width:3;pointer-events:none}.diagram-scroll g.edge-text:hover path.edge-echo{display:inline}'
   // A marker standing where withheld lines were, on a source page: present, and out of the reading.
   + 'pre.redaction-note{margin:.25rem 0;padding:.1rem .75rem;border-left:4px solid var(--line);color:var(--muted);font:.8rem/1.5 var(--font-mono);white-space:pre-wrap}'
   // A glossary term's entry on hover or keyboard focus; on touch the link opens the glossary.
   // The entry opens from its block's left edge, so it stays on the page wherever the term falls in a line.
-  + 'main [data-claim-id]{position:relative}a.term{color:inherit;text-decoration:underline dotted var(--muted);text-underline-offset:.2em}.term-pop{display:none;position:absolute;left:0;z-index:5;width:min(22rem,100%);background:var(--panel-raised);border:1px solid var(--line);border-radius:8px;padding:.5rem .75rem;font-size:.9rem;font-weight:400;line-height:1.5}.term-pop::before{content:"";position:absolute;left:0;right:0;top:-.5rem;height:.5rem}a.term:hover>.term-pop,a.term:focus>.term-pop{display:block}'
+  // An entry opens at once and closes a moment after the pointer leaves, so a pointer crossing plain text from a term far along the line
+  // reaches it. A hit area that spanned the line instead would cover the citations and other terms on it. It closes by visibility: Chrome 120
+  // takes a discrete display transition's element out of hit testing while it still paints, so the pointer would arrive at nothing.
+  + 'main [data-claim-id]{position:relative}a.term{color:inherit;text-decoration:underline dotted var(--muted);text-underline-offset:.2em}.term-pop{display:block;visibility:hidden;position:absolute;left:0;z-index:5;width:min(22rem,100%);background:var(--panel-raised);border:1px solid var(--line);border-radius:8px;padding:.5rem .75rem;font-size:.9rem;font-weight:400;line-height:1.5;transition:visibility 0s .35s}.term-pop::before{content:"";position:absolute;left:0;right:0;top:-.5rem;height:.5rem}a.term:hover>.term-pop,a.term:focus>.term-pop{visibility:visible;transition-delay:0s}'
   + '.redaction-mark{margin-left:.1em;color:var(--muted)}.redaction-legend{margin-top:2rem;color:var(--muted);font-size:.85rem}'
   + '.source-identity{margin:.75rem 0}.source-identity>summary{cursor:pointer;color:var(--muted)}';
 

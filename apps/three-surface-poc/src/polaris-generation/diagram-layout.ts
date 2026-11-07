@@ -22,6 +22,13 @@ const MARGIN = 24;
 const BACK_EDGE_DROP = 40;
 const BACK_LABEL_CLEARANCE = 30;
 const SKIP_LABEL_DROP = 52;
+const NODE_NOTE_HEIGHT = 24;
+const LABEL_CLEARANCE = 4;
+const LABEL_STEP = 8;
+const LEADER_SAMPLES = 64;
+const LEADER_MIN_RUN = 6;
+const LEADER_SHARED = 1.5;
+const LEADER_EDGE_STOPS = 16;
 
 /** How much room a diagram gets. The default is the draft preview's and the provider mode's form, whose bytes are pinned. */
 export interface DiagramSpacing {
@@ -30,7 +37,7 @@ export interface DiagramSpacing {
   readonly maxColumns: number; readonly bandGap: number;
   /** An edge label's wrap and the width one of its characters is assumed to take. */
   readonly edgeChars: number; readonly edgeLines: number; readonly charWidth: number;
-  /** Draw edge labels above everything, lines still behind the nodes, so a line never strikes through a node's text or a label. */
+  /** Draw edge labels above everything, lines still behind the nodes, so at rest a line never strikes through a node's text or a label; a label under the pointer draws its line above both. */
   readonly labelsOnTop: boolean;
   /** How much lower each further back edge runs. */
   readonly backEdgeStep: number;
@@ -146,8 +153,8 @@ export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly
     if (!back[e]) {
       const x1 = from.x + NODE_WIDTH, y1 = from.y + NODE_HEIGHT / 2, x2 = to.x - 2, y2 = to.y + NODE_HEIGHT / 2;
       const dx = (x2 - x1) / 2;
-      // A skip's midpoint can land on a node it passes, so on the readable form its label sits in the first gap, under the neighbouring
-      // edge's label there.
+      // A skip's midpoint can land on a node it passes, so on the readable form its label starts in the first gap, under the neighbouring
+      // edge's label there; the renderer moves it if that is taken.
       const skips = spacing.labelsOnTop && to.layer > from.layer + 1;
       return { id: edge.id, from: edge.from, to: edge.to, back: false,
         d: `M ${num(x1)} ${num(y1)} C ${num(x1 + dx)} ${num(y1)}, ${num(x2 - dx)} ${num(y2)}, ${num(x2)} ${num(y2)}`,
@@ -194,6 +201,89 @@ export function wrapLabel(text: string, maxChars: number, maxLines: number): str
   return kept;
 }
 
+interface LabelBox { readonly left: number; readonly top: number; readonly right: number; readonly bottom: number }
+/** Whether the segment from (x0, y0) to (x1, y1) enters the box, by clipping it to the box's two slabs. */
+function segmentEntersBox(x0: number, y0: number, x1: number, y1: number, box: LabelBox): boolean {
+  let enter = 0, leave = 1;
+  for (const [from, delta, low, high] of [[x0, x1 - x0, box.left, box.right], [y0, y1 - y0, box.top, box.bottom]] as const) {
+    if (delta === 0) { if (from <= low || from >= high) return false; continue; }
+    const a = (low - from) / delta, b = (high - from) / delta;
+    enter = Math.max(enter, Math.min(a, b));
+    leave = Math.min(leave, Math.max(a, b));
+  }
+  return enter < leave;
+}
+
+interface Point { readonly x: number; readonly y: number }
+
+function curveSamples(d: string): readonly Point[] {
+  const [x0, y0, x1, y1, x2, y2, x3, y3] = [...d.matchAll(/-?[\d.]+/gu)].map(m => Number(m[0])) as [number, number, number, number, number, number, number, number];
+  return Array.from({ length: LEADER_SAMPLES + 1 }, (_, i) => {
+    const t = i / LEADER_SAMPLES, u = 1 - t;
+    return {
+      x: u * u * u * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x3,
+      y: u * u * u * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t * y3,
+    };
+  });
+}
+
+function distanceToSegment(at: Point, a: Point, b: Point): number {
+  const dx = b.x - a.x, dy = b.y - a.y, length = dx * dx + dy * dy;
+  const t = length === 0 ? 0 : Math.max(0, Math.min(1, ((at.x - a.x) * dx + (at.y - a.y) * dy) / length));
+  return Math.hypot(at.x - (a.x + t * dx), at.y - (a.y + t * dy));
+}
+
+/**
+ * A moved label's leader: the shortest straight run from the label's edge to a point of its own curve, clear of every other label and node,
+ * ending where no other line runs, so the picture cannot tie the label to that line. Undefined when the label already sits against its own
+ * line, since a leader says nothing more there, and when no such run exists: an absent leader leaves a reader unassisted, a wrong one misleads.
+ */
+function leaderRun(own: readonly Point[], label: LabelBox, others: readonly LabelBox[], otherCurves: readonly (readonly Point[])[]): { readonly from: Point; readonly to: Point } | undefined {
+  const gap = (at: Point): number => Math.hypot(Math.max(label.left - at.x, 0, at.x - label.right), Math.max(label.top - at.y, 0, at.y - label.bottom));
+  if (own.some(at => gap(at) < LEADER_MIN_RUN)) return undefined;
+  const ends = own.filter(at => otherCurves.every(curve => curve.every((a, i) => i === 0 || distanceToSegment(at, curve[i - 1]!, a) >= LEADER_SHARED)));
+  const starts: Point[] = [];
+  for (let k = 0; k <= LEADER_EDGE_STOPS; k++) {
+    const across = label.left + (label.right - label.left) * k / LEADER_EDGE_STOPS, down = label.top + (label.bottom - label.top) * k / LEADER_EDGE_STOPS;
+    starts.push({ x: across, y: label.top }, { x: across, y: label.bottom }, { x: label.left, y: down }, { x: label.right, y: down });
+  }
+  const runs = ends.flatMap(to => starts.map(from => ({ from, to, length: Math.hypot(to.x - from.x, to.y - from.y) })));
+  runs.sort((a, b) => a.length - b.length);
+  return runs.find(({ from, to }) => others.every(box => !segmentEntersBox(from.x, from.y, to.x, to.y, box)));
+}
+
+interface WantedLabel { readonly x: number; readonly y: number; readonly width: number; readonly height: number; readonly back: boolean }
+
+/**
+ * Moves each edge label to the first spot that clears every node and every label already placed, keeping a label that is clear where it
+ * is. Back edges' labels go first, since each has its own lane under the nodes. The search widens one step at a time, counting steps across
+ * plus steps down, so a diagonal spot counts as farther than a straight one the same distance away. Within a step it tries up, then down,
+ * before sideways, and right before left. It stays on the canvas across and above, and may run below it (the caller grows the canvas). It ends whenever each label's own column fits the canvas, which every label does: the widest is 24 characters (201.6 px) on a canvas of at least 248.
+ */
+// Test seam: exported for the tests; production code reaches it only inside this file.
+export function placeEdgeLabels(wanted: readonly WantedLabel[], nodes: readonly LabelBox[], canvasWidth: number): readonly { readonly x: number; readonly y: number }[] {
+  const taken = [...nodes];
+  const placed: { x: number; y: number }[] = wanted.map(({ x, y }) => ({ x, y }));
+  const order = [...wanted.keys()].sort((a, b) => Number(wanted[b]!.back) - Number(wanted[a]!.back) || a - b);
+  for (const i of order) {
+    const label = wanted[i]!;
+    const boxAt = (dx: number, dy: number): LabelBox => ({ left: label.x + dx - label.width / 2, top: label.y + dy - label.height / 2, right: label.x + dx + label.width / 2, bottom: label.y + dy + label.height / 2 });
+    const clear = (box: LabelBox): boolean => box.left >= 0 && box.right <= canvasWidth && box.top >= LABEL_CLEARANCE
+      && !taken.some(other => box.left < other.right + LABEL_CLEARANCE && other.left < box.right + LABEL_CLEARANCE && box.top < other.bottom + LABEL_CLEARANCE && other.top < box.bottom + LABEL_CLEARANCE);
+    let found: LabelBox | undefined;
+    for (let ring = 0; found === undefined; ring++) {
+      for (let across = 0; across <= ring && found === undefined; across++) {
+        for (const [dx, dy] of [[across, across - ring], [across, ring - across], [-across, across - ring], [-across, ring - across]] as const) {
+          const box = boxAt(dx * LABEL_STEP, dy * LABEL_STEP);
+          if (clear(box)) { found = box; placed[i] = { x: (box.left + box.right) / 2, y: (box.top + box.bottom) / 2 }; break; }
+        }
+      }
+    }
+    taken.push(found);
+  }
+  return placed;
+}
+
 interface RenderableNode extends LayoutNodeInput { readonly label: string; readonly epistemic: EpistemicMarking }
 interface RenderableEdge extends LayoutEdgeInput { readonly label: string; readonly epistemic: EpistemicMarking }
 
@@ -225,16 +315,37 @@ export function renderDiagramSvg(
     const note = connected.has(node.id) ? '' : `<text class="note" x="${num(at.x + NODE_WIDTH / 2)}" y="${num(at.y + NODE_HEIGHT + 18)}" text-anchor="middle">No relationship supplied</text>`;
     return `<g class="node ${node.epistemic}"><title>${escape(node.label)} (${node.epistemic})</title><rect x="${num(at.x)}" y="${num(at.y)}" width="${NODE_WIDTH}" height="${NODE_HEIGHT}" rx="6"/>${textLines(lines, at.x + NODE_WIDTH / 2, baseline, 16)}${note}</g>`;
   }).join('');
-  const edges = diagram.edges.map((edge, i) => {
-    const at = layout.edges[i]!;
-    const lines = shown(edge.label, edge.epistemic, spacing.edgeChars, spacing.edgeLines);
-    const widest = Math.max(...lines.map(line => [...line].length));
-    const boxWidth = widest * spacing.charWidth + 12, boxHeight = lines.length * 15 + 6;
-    const top = at.labelY - boxHeight / 2;
-    const head = `<g class="edge ${edge.epistemic}${at.back ? ' back' : ''}"><title>${escape(edge.label)} (${edge.epistemic})</title><path d="${at.d}" marker-end="url(#${markerId})"/>`;
-    const label = `<rect class="edge-label" x="${num(at.labelX - boxWidth / 2)}" y="${num(top)}" width="${num(boxWidth)}" height="${num(boxHeight)}" rx="3"/>${textLines(lines, at.labelX, top + 15, 15)}`;
-    return spacing.labelsOnTop ? { line: `${head}</g>`, label: `<g class="edge-text ${edge.epistemic}"><title>${escape(edge.label)} (${edge.epistemic})</title>${label}</g>` } : { line: `${head}${label}</g>`, label: '' };
+  const edgeLines = diagram.edges.map(edge => shown(edge.label, edge.epistemic, spacing.edgeChars, spacing.edgeLines));
+  const wanted = edgeLines.map((lines, i) => ({
+    x: layout.edges[i]!.labelX, y: layout.edges[i]!.labelY, back: layout.edges[i]!.back,
+    width: Math.max(...lines.map(line => [...line].length)) * spacing.charWidth + 12, height: lines.length * 15 + 6,
+  }));
+  const standing = diagram.nodes.map((node, i) => {
+    const at = layout.nodes[i]!;
+    return { left: at.x, top: at.y, right: at.x + NODE_WIDTH, bottom: at.y + NODE_HEIGHT + (connected.has(node.id) ? 0 : NODE_NOTE_HEIGHT) };
   });
+  const placed = spacing.labelsOnTop ? placeEdgeLabels(wanted, standing, layout.width) : wanted;
+  const curves = spacing.labelsOnTop ? layout.edges.map(edge => curveSamples(edge.d)) : [];
+  const boxOf = (i: number): LabelBox => {
+    const { width, height } = wanted[i]!, { x, y } = placed[i]!;
+    return { left: x - width / 2, top: y - height / 2, right: x + width / 2, bottom: y + height / 2 };
+  };
+  const edges = diagram.edges.map((edge, i) => {
+    const at = layout.edges[i]!, lines = edgeLines[i]!, { x, y, width, height } = { ...wanted[i]!, ...placed[i]! };
+    const top = y - height / 2;
+    // A label the search moved keeps a thin leader to its own line where one can be seen, in the line's layer: without one, it can read as
+    // another line's label.
+    const moved = x !== at.labelX || y !== at.labelY;
+    const run = moved
+      ? leaderRun(curves[i]!, boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])], curves.filter((_, j) => layout.edges[j]!.d !== at.d))
+      : undefined;
+    const leader = run === undefined ? '' : `<path class="edge-leader" d="M ${num(run.from.x)} ${num(run.from.y)} L ${num(run.to.x)} ${num(run.to.y)}"/>`;
+    const head = `<g class="edge ${edge.epistemic}${at.back ? ' back' : ''}"><title>${escape(edge.label)} (${edge.epistemic})</title><path d="${at.d}" marker-end="url(#${markerId})"/>${leader}`;
+    const label = `<rect class="edge-label" x="${num(x - width / 2)}" y="${num(top)}" width="${num(width)}" height="${num(height)}" rx="3"/>${textLines(lines, x, top + 15, 15)}`;
+    // A label's own copy of its line, hidden until the label is under the pointer: the line itself sits in a lower layer the label cannot reach without a script.
+    return spacing.labelsOnTop ? { line: `${head}</g>`, label: `<g class="edge-text ${edge.epistemic}"><title>${escape(edge.label)} (${edge.epistemic})</title><path class="edge-echo" d="${at.d}"/>${label}</g>` } : { line: `${head}${label}</g>`, label: '' };
+  });
+  const height = Math.max(layout.height, ...(spacing.labelsOnTop ? placed.map((box, i) => Math.ceil(box.y + wanted[i]!.height / 2 + LABEL_STEP)) : []));
   const lines = edges.map(edge => edge.line).join(''), labels = edges.map(edge => edge.label).join('');
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${layout.width} ${layout.height}" width="${layout.width}" height="${layout.height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}"><defs><marker id="${markerId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs>${lines}${nodes}${labels}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${layout.width} ${height}" width="${layout.width}" height="${height}" role="img" aria-labelledby="diagram-title-${index}" aria-describedby="diagram-text-${index}"><defs><marker id="${markerId}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs>${lines}${nodes}${labels}</svg>`;
 }

@@ -126,10 +126,16 @@ describe('glossary terms in agent prose', () => {
     expect(files.get('size-report.html')!).toContain('each page is measured without its review-status region and its glossary entries');
   });
 
-  it('opens an entry on hover and on focus, from its block, and dims a withheld marker', () => {
-    expect(DOSSIER_THEME_CSS).toContain('a.term:hover>.term-pop,a.term:focus>.term-pop{display:block}');
-    expect(DOSSIER_THEME_CSS).toContain('main [data-claim-id]{position:relative}');
+  it('marks the diagram element under the pointer, and a label\'s line with it', () => {
     expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--cyan);stroke-width:1.5}');
+    expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll path.edge-leader{stroke-width:1;fill:none}');
+    expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll path.edge-echo{display:none;fill:none;stroke:var(--cyan);stroke-width:3;pointer-events:none}.diagram-scroll g.edge-text:hover path.edge-echo{display:inline}');
+  });
+
+  it('opens an entry at once on hover and on focus, from its block, closes it a moment later, and dims a withheld marker', () => {
+    expect(DOSSIER_THEME_CSS).toContain('a.term:hover>.term-pop,a.term:focus>.term-pop{visibility:visible;transition-delay:0s}');
+    expect(DOSSIER_THEME_CSS).toContain('transition:visibility 0s .35s}');
+    expect(DOSSIER_THEME_CSS).toContain('main [data-claim-id]{position:relative}');
     expect(DOSSIER_THEME_CSS).toContain('.term-pop::before{content:"";position:absolute;left:0;right:0;top:-.5rem;height:.5rem}');
     expect(DOSSIER_THEME_CSS).toContain('pre.redaction-note{margin:.25rem 0;padding:.1rem .75rem;border-left:4px solid var(--line);color:var(--muted);');
   });
