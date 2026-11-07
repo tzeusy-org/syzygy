@@ -514,6 +514,58 @@ describe('render', () => {
     for (const [file, page] of html(files)) expect(page, file).toMatch(/<li><a href="(\.\.\/)?appendix\.html">Appendix<\/a><\/li><\/ol>/u);
   });
 
+  it('says on the sources list which pages cite each source and how often (syzygy-pdja.15)', async () => {
+    const run = await prepared();
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const list = files.get('sources/index.html')!.split('<section id="sources">')[1]!;
+    expect(list).toContain('<p>2 sources counted, 2 with admitted text. 2 cited by the dossier\'s pages; each says where.</p>');
+    expect(list).toContain('>docs/notes.txt</a> <span class="cited-on">Cited on <a href="../index.html">Overview</a> (2 times).</span></li>');
+    expect(list).toContain('>src/kestrel.c</a> <span class="cited-on">Cited on <a href="../index.html">Overview</a> (4 times), <a href="../glossary.html">Glossary</a>.</span></li>');
+    // An independent count: the citation marks each reading page carries, against what the list says of it.
+    const marks = (page: string, id: string): number => files.get(page)!.split('<main')[1]!.split(`data-source-id="${id}"`).length - 1;
+    const ids = [...list.matchAll(/href="\.\.\/sources\/[0-9a-f]+\.html">([^<]+)<\/a>/gu)].map(match => match[1]!);
+    expect(ids).toEqual(['docs/notes.txt', 'src/kestrel.c']);
+    const sourceIds = [...new Set([...files.get('index.html')!.matchAll(/data-source-id="([^"]+)"/gu)].map(match => match[1]!))];
+    const onIndex = sourceIds.map(id => marks('index.html', id)).sort((a, b) => a - b);
+    expect(onIndex).toEqual([2, 4]);
+  });
+
+  it('folds how the dossier was made under one Review report entry, apart from the product, open on the pages it holds (syzygy-pdja.13)', async () => {
+    const run = await prepared();
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const report = ['understanding.html', 'discovery.html', 'clarifications.html', 'executions.html', 'review.html', 'size-report.html', 'appendix.html'].filter(path => files.has(path));
+    for (const path of ['understanding.html', 'discovery.html', 'size-report.html', 'appendix.html']) expect(report, path).toContain(path);
+    for (const [file, page] of html(files)) {
+      const navs = [...page.matchAll(/<nav aria-label="Dossier">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!);
+      expect(navs.length, file).toBeGreaterThan(0);
+      for (const nav of navs) {
+        const fold = nav.indexOf('<details class="review-report"');
+        expect(fold, file).toBeGreaterThan(0);
+        const product = nav.slice(0, fold);
+        const folded = nav.slice(fold);
+        const up = file.includes('/') ? '../' : '';
+        for (const path of report) {
+          expect(product, `${file} ${path}`).not.toContain(`href="${up}${path}"`);
+          expect(folded, `${file} ${path}`).toContain(`href="${up}${path}"`);
+        }
+        expect(product, file).toContain(`href="${up}sources/index.html"`);
+        expect(product, file).toContain(`href="${up}index.html"`);
+        expect(folded.startsWith(`<details class="review-report"${report.includes(file) ? ' open' : ''}><summary>Review report</summary>`), file).toBe(true);
+      }
+    }
+    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!;
+    const heading = contents.indexOf('<h2 id="review-report">Review report</h2>');
+    expect(heading).toBeGreaterThan(0);
+    for (const path of report) {
+      expect(contents.indexOf(`href="${path}"`), path).toBeGreaterThan(heading);
+    }
+    expect(contents.indexOf('href="sources/index.html"')).toBeLessThan(heading);
+  });
+
   it('withholds the draft layer as Unknown while the RFC7-20 ruling is not in force, keeping sources, disclosure and discovery', async () => {
     const run = await prepared();
     const result = await renderRun(run, renderDeps({ sources: sources(RULING_ABSENT) }));

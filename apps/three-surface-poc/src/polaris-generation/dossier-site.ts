@@ -155,6 +155,8 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + ':root{--font-serif:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace}'
   + '.contents,.contents a,.contents .eyebrow,.pipeline-notice,.eyebrow,.asset-references,.sources,.diagram-legend,.marking,.deep-links,a.cite,.anchor-link,.source-anchor{font-family:var(--font-serif)}'
   // The navigation folds with no script; the reading column takes the room it leaves.
+  + '.cited-on{display:block;font-size:.88rem;color:var(--muted)}'
+  + '.review-report{margin-top:1rem;border-top:1px solid var(--line);padding-top:.5rem}.review-report>summary{cursor:pointer;color:var(--muted);font-weight:600}.review-report>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}'
   + '.nav-panel>summary{cursor:pointer;font-weight:600;color:var(--muted)}.layout:has(>.nav-panel:not([open])){grid-template-columns:auto minmax(0,1fr)}.nav-panel>summary:focus-visible,.mobile-contents>summary:focus-visible{outline-offset:-3px}'
   // A three-column diagram, the widest a plain chain reaches, may shrink to fit its column (text no smaller than 10.7px); any wider one
   // keeps its size and scrolls. The element under the pointer stands out.
@@ -298,6 +300,15 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (redaction === undefined) return { attribute: '', words: '', mark: '' };
     return { attribute: ` data-redacted-lines="${redaction.withheldLines}"`, words: `; ${redaction.withheldLines} line(s) of this file withheld by screening`, mark: `<span class="redaction-mark" aria-hidden="true">†${redaction.withheldLines}</span>` };
   };
+  // Which pages cite each source, and how often, so the sources list can say why a file is there (syzygy-pdja.15). Filled as pages are
+  // drawn; the sources list reads it after the reading pages and the glossary, before the run's own pages.
+  const citedOn = new Map<string, Map<string, number>>();
+  const pageTitles = new Map<string, string>();
+  const noteCitation = (from: string, id: string): void => {
+    const onPages = citedOn.get(id) ?? new Map<string, number>();
+    onPages.set(from, (onPages.get(from) ?? 0) + 1);
+    citedOn.set(id, onPages);
+  };
   const refs = (from: string, ids: readonly string[], claimId?: string): string => `<span class="sources">${ids.map(id => {
     const source = sources.get(id);
     if (source === undefined) throw new DossierRenderError('unknown-source');
@@ -306,6 +317,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const note = source.redaction === undefined ? '' : ` <span class="redaction-note">[redacted-span: ${source.redaction.withheldLines} withheld line(s) in this file]</span>`;
     // The provider mode's bytes are pinned (dossier-render-provider-golden.test.ts); only an operator-agent run numbers its sources.
     if (local === undefined) return `<a href="${escape(href(from, target, 'exact-text'))}" aria-label="Read source ${escape(id)}">[${escape(id)}]</a>${note}`;
+    noteCitation(from, id);
     const cited = citedRedaction(id);
     // The mark shows its file and cited lines on hover and on keyboard focus (v1.5), out of the reading text until then.
     const lines = claimId === undefined ? undefined : local.citationLines?.get(claimId)?.get(id);
@@ -375,6 +387,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const anchorLink = (from: string, part: Extract<LocalSegment, { kind: 'quotation' }>): string => {
     const target = sourcePaths.get(part.sourceId);
     if (target === undefined) throw new DossierRenderError('unquotable-source');
+    noteCitation(from, part.sourceId);
     const cited = citedRedaction(part.sourceId);
     const label = `${sourceLabel(from, part.sourceId)}, ${part.anchor.fragment === null ? 'whole file' : `bytes ${part.anchor.fragment.start}–${part.anchor.fragment.end}`}${cited.words}`;
     // Like any citation mark, it shows its file and the quoted bytes on hover and on keyboard focus (v1.5).
@@ -525,7 +538,14 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     reserved.add(localPage.path);
   }
   const localNav = (from: string): string => localPages.map(localPage => `<li><a href="${escape(href(from, localPage.path))}">${escape(localPage.title)}</a></li>`).join('');
-  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li>${poles.map(pole => pole.path === null ? '' : `<li><a href="${escape(href(from, pole.path))}">${escape(pole.label)}</a></li>`).join('')}<li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li><li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${localNav(from)}<li><a href="${href(from, 'size-report.html')}">Size report</a></li>${local === undefined ? '' : `<li><a href="${href(from, APPENDIX)}">Appendix</a></li>`}</ol>`;
+  // How the dossier was made, kept apart from the product (owner review of the Redis run, syzygy-pdja.13): the run's own pages, the size
+  // report and the appendix fold under one "Review report" entry after the product's pages. The appendix stays the last page of the
+  // reading order (dossier spec v1.5), and the fold opens itself on the pages it holds.
+  const reportPaths = [...localPages.map(localPage => localPage.path), 'size-report.html', ...(local === undefined ? [] : [APPENDIX])];
+  const reportItems = (from: string): string => `${localNav(from)}<li><a href="${href(from, 'size-report.html')}">Size report</a></li>${local === undefined ? '' : `<li><a href="${href(from, APPENDIX)}">Appendix</a></li>`}`;
+  // A provider run's bytes are pinned, so its list keeps its old shape.
+  const reviewReport = (from: string): string => local === undefined ? `${reportItems(from)}</ol>` : `</ol><details class="review-report"${reportPaths.includes(from) ? ' open' : ''}><summary>Review report</summary><ol>${reportItems(from)}</ol></details>`;
+  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li>${poles.map(pole => pole.path === null ? '' : `<li><a href="${escape(href(from, pole.path))}">${escape(pole.label)}</a></li>`).join('')}<li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li><li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${reviewReport(from)}`;
   // The dossier's open questions and Unknown claims, counted for the one sentence before any page is drawn.
   const openQuestions = withheld ? 0 : draft.unresolved.length;
   const unknownClaims = local === undefined || withheld ? 0 : [...local.blocks.values()].filter(b => b.marking === 'unknown').length
@@ -553,6 +573,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     : local !== undefined && main.includes('class="redaction-mark"')
     ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
   const add = (path: string, depth: number, pageTitle: string, main: string): void => {
+    pageTitles.set(path, pageTitle);
     files.set(path, page(`${pageTitle} — ${title}`, path, nav(path), legended(path, main), chrome));
     pages.push({ path, depth });
     claimsByPage.push(...pending.splice(0).map(entry => ({ page: path, ...entry })));
@@ -628,7 +649,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
   // --- contents
   const contents = `<ol>${(withheld ? [] : draft.sections).map(section => `<li><a href="${escape(sectionHref('contents.html', section.id))}">${escape(section.title)}</a>${draft.deepDives.some(dive => dive.sectionId === section.id && deepPaths.has(dive.id))
-    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${localNav('contents.html')}<li><a href="size-report.html">Size report</a></li>${local === undefined ? '' : `<li><a href="${APPENDIX}">Appendix</a></li>`}</ol>`;
+    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${local === undefined ? `${reportItems('contents.html')}</ol>` : `</ol><h2 id="review-report">Review report</h2><p>How this dossier was made, apart from what it says about the project.</p><ol>${reportItems('contents.html')}</ol>`}`;
   add('contents.html', 1, 'Contents', `<section id="contents"><h1>Contents</h1>${contents}</section>`);
 
   // --- glossary: inventory terms, each an Inferred claim; for an operator-agent run, the understanding record's terminology
@@ -649,15 +670,23 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // --- sources: the whole population as a denominator, then one page per quotable source
   // An operator-agent page keeps the identifier on the source page's identity details and in the machine view (syzygy-pdja.1).
   const shownId = (id: string): string => local === undefined ? ` [${escape(id)}]` : '';
+  // An operator-agent run says, for each source, the pages that cite it and how often; a source no page cites says so.
+  const citedOnNote = (id: string): string => {
+    if (local === undefined) return '';
+    const onPages = citedOn.get(id);
+    if (onPages === undefined) return ' <span class="cited-on">Not cited on the dossier\'s pages.</span>';
+    return ` <span class="cited-on">Cited on ${[...onPages].map(([at, times]) => `<a href="${escape(href('sources/index.html', at))}">${escape(pageTitles.get(at) ?? at)}</a>${times === 1 ? '' : ` (${times} times)`}`).join(', ')}.</span>`;
+  };
   const list = input.sources.map(source => {
     const target = sourcePaths.get(source.sourceId);
     const redactedNote = source.redaction === undefined ? '' : ` · redacted-span: ${source.redaction.withheldLines} withheld line(s) in this file`;
     const reason = source.exclusion.excluded ? source.exclusion.reason : source.classificationBasis === 'path-only' ? 'path-only; body not read' : 'body unavailable for citation';
     return target === undefined
       ? `<li>${escape(source.path)}${shownId(source.sourceId)} — counted; exact text unavailable: ${escape(reason)}${escape(redactedNote)}.</li>`
-      : `<li><a href="${escape(href('sources/index.html', target))}">${escape(source.path)}</a>${shownId(source.sourceId)}${escape(redactedNote)}</li>`;
+      : `<li><a href="${escape(href('sources/index.html', target))}">${escape(source.path)}</a>${shownId(source.sourceId)}${escape(redactedNote)}${citedOnNote(source.sourceId)}</li>`;
   }).join('');
-  add('sources/index.html', 1, 'Sources', `<section id="sources"><h1>Sources</h1><p>${input.sources.length} sources counted, ${quotable.length} with admitted text.</p><ul>${list}</ul></section>`);
+  const citedCount = local === undefined ? '' : ` ${input.sources.filter(source => citedOn.has(source.sourceId)).length} cited by the dossier's pages; each says where.`;
+  add('sources/index.html', 1, 'Sources', `<section id="sources"><h1>Sources</h1><p>${input.sources.length} sources counted, ${quotable.length} with admitted text.${citedCount}</p><ul>${list}</ul></section>`);
   for (const source of quotable) {
     const path = sourcePaths.get(source.sourceId)!;
     const span = source.spans[0]!;

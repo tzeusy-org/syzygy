@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { pageSinkCspFinding } from '@syzygy/polaris-generation-core';
+import { generationAnchorId, gitBlobObjectId, pageSinkCspFinding, type GenerationSource } from '@syzygy/polaris-generation-core';
 import { READING_QUOTE, READING_SOURCE, readingInput } from './dossier-reading.testkit.js';
 import { DOSSIER_THEME_CSS, renderLocalDossier } from './dossier-site.js';
 
@@ -143,6 +143,23 @@ describe('an operator-agent dossier page reads without its machinery', () => {
     expect(DOSSIER_THEME_CSS).toContain('--font-mono:ui-monospace,');
     expect(DOSSIER_THEME_CSS).not.toContain('@font-face');
     expect(DOSSIER_THEME_CSS).not.toContain('url(');
+  });
+});
+
+describe('the sources list says why each file is there (syzygy-pdja.15)', () => {
+  it('names the pages citing each source with a count, and says so of a source no page cites', () => {
+    const input = readingInput();
+    const body = 'Unused.\n';
+    const base = { repositoryId: 'synthetic:reading', revision: READING_SOURCE.revision, path: 'docs/unused.md', objectId: gitBlobObjectId(body) };
+    const unused: GenerationSource = { ...base, sourceId: 'src-fedcba9876543210fedcba98', evaluationId: 'synthetic-evaluation:reading',
+      classificationBasis: 'body', exclusion: { excluded: false }, body,
+      spans: [{ anchorId: generationAnchorId(base, 0, Buffer.byteLength(body)), start: 0, end: Buffer.byteLength(body), text: body }] };
+    const anchor = { targetClass: 'evidence-artifact-identifier-with-integrity-digest' as const, identifier: unused.objectId!, algorithm: 'sha1' as const, fragment: null, targetState: unused.revision, pathLabel: unused.path };
+    const local = { ...input.local, sourceAnchors: new Map([...input.local.sourceAnchors, [unused.sourceId, anchor]]) };
+    const list = main(renderLocalDossier({ local, sources: [...input.sources, unused] }).files.get('sources/index.html')!);
+    expect(list).toContain('<p>2 sources counted, 2 with admitted text. 1 cited by the dossier\'s pages; each says where.</p>');
+    expect(list).toContain('>docs/reading.md</a> <span class="cited-on">Cited on <a href="../index.html">Overview</a> (32 times).</span></li>');
+    expect(list).toContain('>docs/unused.md</a> <span class="cited-on">Not cited on the dossier\'s pages.</span></li>');
   });
 });
 
