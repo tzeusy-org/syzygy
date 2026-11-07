@@ -35,6 +35,7 @@ export interface BrowserPage {
   evaluate<T>(expression: string): Promise<T>;
   /** Dispatches a real key press (down + up) through the browser's input pipeline. */
   press(key: KeyName, modifiers?: { readonly shift?: boolean }): Promise<void>;
+  mouseMove(x: number, y: number): Promise<void>;
   axTree(): Promise<readonly AxNode[]>;
   /** The browser-computed accessible name of each element of the array
    * `expression` evaluates to, in order (PWB-REQ-016 distinct names). The
@@ -210,6 +211,10 @@ class CdpPage implements BrowserPage {
     const base = { key: spec.key ?? key, code: spec.code, windowsVirtualKeyCode: spec.keyCode, nativeVirtualKeyCode: spec.keyCode, modifiers: modifierBits };
     await this.connection.send('Input.dispatchKeyEvent', { type: spec.text === undefined ? 'rawKeyDown' : 'keyDown', ...base, ...(spec.text === undefined ? {} : { text: spec.text }) }, this.sessionId);
     await this.connection.send('Input.dispatchKeyEvent', { type: 'keyUp', ...base }, this.sessionId);
+  }
+
+  async mouseMove(x: number, y: number): Promise<void> {
+    await this.connection.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y }, this.sessionId);
   }
 
   async axTree(): Promise<readonly AxNode[]> {

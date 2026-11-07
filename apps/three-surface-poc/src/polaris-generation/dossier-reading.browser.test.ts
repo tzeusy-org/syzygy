@@ -57,16 +57,16 @@ it.skipIf(executable === undefined)('folds the navigation, keeps diagram labels 
       // A long chain fits without scrolling sideways at this width once the navigation has folded.
       expect(await page.evaluate('(() => { const s = document.querySelector(".diagram-scroll"); return s.scrollWidth <= s.clientWidth; })()')).toBe(true);
       // The entry is hidden until the term has focus.
-      const popup = 'getComputedStyle(document.querySelector("a.term > .term-pop")).display';
-      expect(await page.evaluate(popup)).toBe('none');
+      const popup = 'getComputedStyle(document.querySelector("a.term > .term-pop")).visibility';
+      expect(await page.evaluate(popup)).toBe('hidden');
       await page.evaluate('document.querySelector("a.term").focus()');
-      expect(await page.evaluate(popup)).toBe('block');
-      // An open entry stays on the page, at the width that used to overflow.
+      expect(await page.evaluate(popup)).toBe('visible');
       // At the narrow width the first navigation stop is the mobile panel's summary, with the same clipped ring to avoid.
       await page.setViewport(390, 900);
       await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
       for (let i = 0; i < 6 && !await page.evaluate<boolean>('document.activeElement.matches(".mobile-contents > summary")'); i++) await page.press('Tab');
       expect(await page.evaluate('document.activeElement.matches(".mobile-contents > summary:focus-visible") && getComputedStyle(document.activeElement).outlineOffset')).toBe('-3px');
+      // An open entry stays on the page, at the width that used to overflow.
       await page.setViewport(500, 900);
       await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
       const terms = await page.evaluate('document.querySelectorAll("a.term").length') as number;
@@ -75,6 +75,34 @@ it.skipIf(executable === undefined)('folds the navigation, keeps diagram labels 
         await page.evaluate(`document.querySelectorAll("a.term")[${term}].focus()`);
         expect(await page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), `term ${term}`).toBe(true);
       }
+      // A pointer leaving a term far along its line crosses plain text before it reaches the entry, which opens from the block's left edge.
+      await page.setViewport(1440, 4000);
+      await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
+      const far = `[...document.querySelectorAll("a.term")].map(a => ({ a, r: a.getClientRects()[0] })).sort((p, q) => q.r.left - p.r.left)[0]`;
+      const term = await page.evaluate<{ x: number; y: number; left: number; bottom: number }>(`(() => { const { r } = ${far}; return { x: r.left + r.width / 2, y: r.top + r.height / 2, left: r.left, bottom: r.bottom }; })()`);
+      const farPopup = `${far}.a.querySelector(".term-pop")`;
+      await page.mouseMove(term.x, term.y);
+      expect(await page.evaluate(`getComputedStyle(${farPopup}).visibility`)).toBe('visible');
+      const entry = await page.evaluate<{ x: number; y: number; right: number }>(`(() => { const r = ${farPopup}.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, right: r.right }; })()`);
+      // The fixture is the case: the term lies right of its entry, and the path out of the term runs through neither.
+      expect(term.left).toBeGreaterThan(entry.right);
+      await page.mouseMove(term.left - 4, term.y);
+      expect(await page.evaluate(`${far}.a.matches(":hover")`)).toBe(false);
+      await page.mouseMove(entry.x, entry.y);
+      expect(await page.evaluate(`document.elementFromPoint(${entry.x}, ${entry.y}).closest(".term-pop") !== null`), 'the entry was still open when the pointer arrived').toBe(true);
+      expect(await page.evaluate(`${far}.a.matches(":hover")`)).toBe(true);
+      await new Promise(resolve => setTimeout(resolve, 600));
+      expect(await page.evaluate(`getComputedStyle(${farPopup}).visibility`), 'held open by the pointer').toBe('visible');
+      // Off the entry it closes, a moment later.
+      await page.mouseMove(entry.x, entry.y + 400);
+      await new Promise(resolve => setTimeout(resolve, 600));
+      expect(await page.evaluate(`getComputedStyle(${farPopup}).visibility`)).toBe('hidden');
+      // A label under the pointer draws its line, on the first diagram's first label.
+      const echo = 'document.querySelector("g.edge-text path.edge-echo")';
+      expect(await page.evaluate(`getComputedStyle(${echo}).display`)).toBe('none');
+      const label = await page.evaluate<{ x: number; y: number }>(`(() => { const r = document.querySelector("g.edge-text rect.edge-label").getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+      await page.mouseMove(label.x, label.y);
+      expect(await page.evaluate(`getComputedStyle(${echo}).display`)).toBe('inline');
     } finally {
       await page.close();
     }

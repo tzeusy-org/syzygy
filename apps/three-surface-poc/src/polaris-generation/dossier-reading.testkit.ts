@@ -39,7 +39,7 @@ export function readingInput(): { readonly local: LocalRenderInput; readonly sou
     hidden: 'Hidden replica.',
     shown: 'Visible replica.',
     // A term late in a long line, whose entry must still stay on the page.
-    late: 'A long sentence of plain words runs along here so that its term falls far along a line: the replica.',
+    late: 'A long sentence of plain words runs along so that the replica.',
     // A table links no term.
     cell: 'A replica in a cell.',
   };
