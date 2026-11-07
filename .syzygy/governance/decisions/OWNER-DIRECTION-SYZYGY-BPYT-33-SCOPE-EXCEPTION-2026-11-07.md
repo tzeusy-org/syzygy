@@ -11,7 +11,7 @@ in the coordinator's asynchronous owner conversation:
 
 > Authorize and record the exact bounded scope exception (Recommended)
 
-The presented question was, verbatim:
+The coordinator's retained capture summarizes the presented question as follows:
 
 > Authorize and record .33 exact reviewed scope exception: add one-line depth < 6 guard in obfuscated-destination-equivalence.test.ts, permit this additional existing-case edit and its two self-read input changes (+15 bytes each), amend only owned-surface/AC7 restriction needed for repair; 597871 ordered exhaustive inputs unchanged; all15criteria/12obligations/runtime/review/mergegates remain.
 
