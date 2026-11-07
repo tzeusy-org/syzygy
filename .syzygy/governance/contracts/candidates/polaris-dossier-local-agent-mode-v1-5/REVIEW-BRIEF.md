@@ -11,11 +11,16 @@ REQ-polaris-generation-003, 004, 006, 012 in
 `openspec/changes/polaris-manifesto-generation/specs/polaris-generation/spec.md`,
 and the two directions named in `SEMANTIC-DELTA.md`.
 
-Scope of this round, by the owner's direction
-(`decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-07.md`): judge the repairs to round 5 and what
-they touch, read with `ROUND-5-DISPOSITIONS.md` and `docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-5-5-RAW.md`. Report
-anything you notice elsewhere, graded as usual: there is no lesser grade for a finding out of scope. State in
-your report what you read and what you did not.
+Scope of this round, by the owner's directions
+(`decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-07.md` and `-2.md`): judge the repairs to round 6 and
+what they touch, read with `ROUND-6-DISPOSITIONS.md` and `docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-5-6-RAW.md`.
+Report anything you notice elsewhere, graded as usual: there is no lesser grade for a finding out of scope, and
+say where each finding sits. State in your report what you read and what you did not.
+
+Add a section `## Repair questions`. For each repair in round 6, and each later repair `ROUND-*-DISPOSITIONS.md`
+lists, answer yes, no or unsure, with one reason: does it change a rule's meaning or an owner ruling, or touch
+the withheld rule, screening or secret handling? A repair that edits a test of the withheld rule touches it.
+The author of the repairs does not decide this; you do.
 
 Criteria, over that scope:
 

@@ -1,6 +1,6 @@
 # Round 6 dispositions — dossier spec version 1.5
 
-> **Candidate — binds nothing.** Repairs to `R-DOSSIER-LOCAL-AGENT-V1-5-6-RAW.md`, whose verdict was REVISE over `0bdf6ac7`, on a reach the owner directed (`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-07.md`). No reviewer has read these, and that direction returns the next step to the owner.
+> **Candidate — binds nothing.** Repairs to `R-DOSSIER-LOCAL-AGENT-V1-5-6-RAW.md`, whose verdict was REVISE over `0bdf6ac7`, on a reach the owner directed (`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-07.md`). No reviewer has read these, and that direction returned the next step to the owner.
 
 | Finding | Disposition |
 |---|---|
@@ -11,4 +11,4 @@
 | 5 | Left, for the offer: neither rule says what a citation mark on a secret-matching path shows. SEC-5 and the falsifier settle that it never names the path |
 | 6 | A falsifier tests the legend's sentences |
 | 7 | Left, for the offer: the fourth ruling covers a block citing an excluded file too |
-| 8 | Left. The "unchanged" stumble and the design's last column stand; the packet's words take the partial reach at offer time |
+| 8 | Left: the "unchanged" stumble and the design's last column stand. The packet's head now states the last round's reach, and the owner's second direction of 2026-11-07 governs the next step |
