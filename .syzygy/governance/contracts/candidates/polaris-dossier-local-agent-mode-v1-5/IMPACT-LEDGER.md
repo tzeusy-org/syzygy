@@ -21,9 +21,9 @@
   does not reach an unanchored judgement; every other obligation is unchanged.
 - REQ-polaris-generation-006: "draft-to-source support" is displaced for an
   uncited judgement and a withheld entry only.
-- REQ-polaris-generation-004: primary narrative order, by the owner's ruling
+- REQ-polaris-generation-004 (a declared parent of REQ-033): primary narrative order, by the owner's ruling
   that RFC7-13 and this requirement allow.
-- REQ-polaris-generation-002: "Source-supported inference SHALL expose its
+- REQ-polaris-generation-002 (a declared parent of REQ-035): "Source-supported inference SHALL expose its
   admitted premises" is displaced for an uncited judgement only, which has no
   premise to expose.
 - REQ-polaris-generation-012: unchanged; the reading view must stay keyboard and
@@ -49,9 +49,9 @@ product code changes with this package.
 
 - A reader in the reading view sees no label word on running text. They rely on
   the section's one sentence, the marks and the evidence view. A reader who
-  never opens those may take a judgement for a sourced fact. The owner asked for pages
-  that read without label words on the text; the reading view is this version's
-  answer, and signing accepts it.
+  never opens those may take a judgement for a sourced fact. [Observed] The epic's record
+  of the owner's review names "robotic reading caused by inline [Observed]/[Inferred]";
+  [Inferred] the reading view is this version's answer, and signing accepts it.
 - An uncited judgement cannot be checked against a source. It is counted and
   marked. Telling a judgement from a fact is a review call, so a reviewer can
   miss one.

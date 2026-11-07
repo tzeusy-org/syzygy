@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-5-5-RAW.md:4`), over `e260e36f`, round 5, with one blocking legend sentence; rounds 1 to 4 were also `REVISE`. Findings are repaired on the same branch, listed in the package's `ROUND-5-DISPOSITIONS.md`; no fresh round has confirmed the repair. The owner directed one round over the repairs and what they touch.
+`REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-5-6-RAW.md:4`), over `0bdf6ac7`, round 6, on the repairs to round 5 and what they touch, with one revise finding, a missing parent declaration; rounds 1 to 5 were also `REVISE`. Findings are repaired on the same branch, listed in the package's `ROUND-6-DISPOSITIONS.md`; no fresh round has confirmed the repair, and the next step is the owner's.
