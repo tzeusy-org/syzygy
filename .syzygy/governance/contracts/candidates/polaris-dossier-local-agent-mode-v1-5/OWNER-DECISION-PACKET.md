@@ -1,8 +1,11 @@
 # Owner packet — Polaris dossier local-agent mode, version 1.5
 
-> **Candidate — not yet offerable; binds nothing.** [Unknown] The owner-directed review of the round 5 repairs is pending.
-> The install tooling is `scripts/build_polaris_dossier_local_agent_mode_v1_5.py`. No
-> option here records a choice. Only an owner selection after review binds this version.
+> **Candidate — binds nothing.** [Observed] This packet may be offered only after a
+> `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over these bytes. By the
+> owner's direction of 2026-11-07 the last review round reads the repairs and what they
+> touch, not the whole document; the offer states that reach from the round's raw. The
+> install tooling is `scripts/build_polaris_dossier_local_agent_mode_v1_5.py`. No option
+> here records a choice. Only an owner selection after review binds this version.
 
 ## The change
 
