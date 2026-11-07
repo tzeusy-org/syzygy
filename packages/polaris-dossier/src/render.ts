@@ -659,6 +659,15 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   const reported = (part: string): LocalPageItem[] => list(discovery[part]).filter(isRecord).map((entry, i) => ({
     id: `discovery/${part}/${i + 1}`, marking: 'inferred', unknownReason: null, title: shownPath(text(entry['path']) ?? ''), text: clean(text(entry['reason']) ?? ''), details: [], sourceIds: [],
   }));
+  // Each selected path's reason, for the sources index; repeated entries for one path keep every distinct reason, in order. The index
+  // looks a reason up by a listed source's path, which is never a path a secret detector matches.
+  const reasonsByPath = new Map<string, Set<string>>();
+  for (const entry of list(discovery['selected']).filter(isRecord)) {
+    const path = text(entry['path']), reason = clean(text(entry['reason']) ?? '');
+    if (path === undefined) continue;
+    reasonsByPath.set(path, (reasonsByPath.get(path) ?? new Set()).add(reason));
+  }
+  const selectionReasons: ReadonlyMap<string, string> = new Map([...reasonsByPath].map(([path, reasons]) => [path, [...reasons].join(' ')]));
   const inspected = list(discovery['inspected']).filter((entry): entry is string => typeof entry === 'string');
   const observedReads: LocalPageItem[] = derived.citedBlobs.map((cited, i) => ({
     id: `discovery/read/${i + 1}`, marking: 'observed', unknownReason: null,
@@ -754,6 +763,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
       draft, withheldTitle: `Dossier of ${subject.repository.url} at ${pinned.slice(0, 12)}`, draftLayer, blocks, glossary, disclosure,
       sourceAnchors, pages, reviewStatus, withheldElements, citationLines,
       authoring: { tool: declared.agentTool, model: declared.model },
+      selectionReasons,
       // A checked draft's Poles are whole: every section in one Pole and a named why section (check-derive's Pole findings).
       ...(Array.isArray(doc['poles']) && typeof doc['whySection'] === 'string' ? { poles: {
         whySection: doc['whySection'],

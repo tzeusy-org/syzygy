@@ -160,6 +160,9 @@ export interface LocalRenderInput {
   readonly citationLines?: ReadonlyMap<string, ReadonlyMap<string, string>>;
   /** The operator-declared agent tool and model, named in the one sentence every page carries (v1.5). */
   readonly authoring?: { readonly tool: string; readonly model: string };
+  /** The agent's own reasons for selecting each path, by repository path, as its discovery record reports them: self-reported and
+   * Inferred. Shown beside the source of that path on the sources index. */
+  readonly selectionReasons?: ReadonlyMap<string, string>;
   /** A schema-v4 draft's Poles (dossier spec v1.5): page boundaries that carry no claim, each a short label and its sections in order,
    * with the section that answers why the project exists. Absent when the draft declares none: its sections then stay on one page. */
   readonly poles?: { readonly whySection: string; readonly poles: readonly { readonly label: string; readonly sections: readonly string[] }[] };

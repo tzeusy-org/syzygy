@@ -1,0 +1,97 @@
+{
+  "subject": "Sources index shows the agent's self-reported reason for selecting each source (syzygy-pdja.15 part 2)",
+  "bead": "syzygy-pdja.15",
+  "date": "2026-11-08",
+  "ranAt": "d5c48fca9001f68d8517aa1cd9f6e880a4e2f1a2",
+  "ranAtNote": "Base commit (origin/main at the time); the change ran on top of it and is the bytes digested below.",
+  "subjectDigests": {
+    "packages/polaris-dossier/src/render.ts": "2d14d7e68bf3dbab430215a29c5ca16432861a41dbd51885dc5027ebf2088849",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "5a3ba77939a81602dd9fbd27c48333768a4d0240faad2ed2e77359861bb6c8de",
+    "packages/polaris-generation-core/src/local-render.ts": "3468742ff7f200f4732da430836365c631b0e91194b87b5615501954488a25c1",
+    "packages/polaris-dossier/src/render.test.ts": "f9ec4d447edd46b3c30e14e783a7d3ff1a8b71d5ac02ac8bd66864cc75692804",
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts": "80a3b0726ba0602680bfc11485afec417de5c768f8a7035a25359678bc08d0b6"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/render.test.ts apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts apps/three-surface-poc/src/polaris-generation/dossier-render-provider-golden.test.ts (each mutant alone, restored after)",
+  "mutants": [
+    {
+      "id": "no-dedupe",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "[...reasons].join(' ')",
+      "new": "[...reasons, ...reasons].join(' ')",
+      "killed": true,
+      "tests": "Tests  1 failed | 107 passed (108)"
+    },
+    {
+      "id": "first-reason-only",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "(reasonsByPath.get(path) ?? new Set()).add(reason)",
+      "new": "reasonsByPath.get(path) ?? new Set([reason])",
+      "killed": true,
+      "tests": "Tests  1 failed | 107 passed (108)"
+    },
+    {
+      "id": "reason-uncleaned",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "reason = clean(text(entry['reason']) ?? '')",
+      "new": "reason = text(entry['reason']) ?? ''",
+      "killed": true,
+      "tests": "Tests  1 failed | 107 passed (108)"
+    },
+    {
+      "id": "reasons-not-passed",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "      selectionReasons,\n",
+      "new": "",
+      "killed": true,
+      "tests": "Tests  1 failed | 107 passed (108)"
+    },
+    {
+      "id": "reads-excluded",
+      "file": "packages/polaris-dossier/src/render.ts",
+      "old": "list(discovery['selected']).filter(isRecord)",
+      "new": "list(discovery['excluded']).filter(isRecord)",
+      "killed": true,
+      "tests": "Tests  1 failed | 107 passed (108)"
+    },
+    {
+      "id": "unescaped",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "as it reports: ${escape(reason)}",
+      "new": "as it reports: ${reason}",
+      "killed": true,
+      "tests": "Tests  1 failed | 107 passed (108)"
+    },
+    {
+      "id": "no-marking",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${escape(reason)} ${marking('inferred')}</span>",
+      "new": "${escape(reason)}</span>",
+      "killed": true,
+      "tests": "Tests  2 failed | 106 passed (108)"
+    },
+    {
+      "id": "not-on-cited",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "${citedOnNote(source.sourceId)}${selectedNote(source.path)}</li>",
+      "new": "${citedOnNote(source.sourceId)}</li>",
+      "killed": true,
+      "tests": "Tests  2 failed | 106 passed (108)"
+    },
+    {
+      "id": "reason-on-excluded-row",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": "{escape(reason)}${escape(redactedNote)}.</li>`",
+      "new": "{escape(reason)}${escape(redactedNote)}.${selectedNote(source.path)}</li>`",
+      "killed": true,
+      "tests": "Tests  1 failed | 107 passed (108)"
+    }
+  ],
+  "killed": 9,
+  "total": 9,
+  "discarded": [
+    {
+      "id": "secret-path-kept",
+      "reason": "Ran against an earlier draft that skipped secret-named paths when collecting reasons; it survived because the sources index never lists such a path (render.ts writes no source row for a cited blob whose path is null, which is how a secret-named path arrives). The guard was removed as unreachable; the test still asserts no secret-named path's reason reaches the sources index."
+    }
+  ]
+}
