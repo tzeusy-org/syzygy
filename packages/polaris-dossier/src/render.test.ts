@@ -352,6 +352,8 @@ describe('render', () => {
         const tokens = /\[(Observed|Inferred|Unknown|Non-normative)\]/gu;
         expect(body.match(tokens)?.length ?? 0, file).toBeGreaterThan(0);
         expect(visible(body).replace(/<[^>]*>/gu, '').match(tokens), file).toBeNull();
+        // Nor does Syzygy write a file-and-line aside there: the citation mark's pop carries the file and lines, clipped from the text.
+        expect(visible(body).replace(/<span class="cite-pop"[^>]*>[^<]*<\/span>/gu, '').replace(/<[^>]*>/gu, ''), file).not.toMatch(/[\w./-]+\.\w+, (lines? \d|bytes \d|whole file)/u);
         // Clipped, never removed from layout: no reading-view text hides by `hidden` or `display:none`.
         expect(body, file).not.toMatch(/<span[^>]* hidden[ >=]/u);
       }

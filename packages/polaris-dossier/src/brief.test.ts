@@ -123,7 +123,7 @@ describe('brief: issued', () => {
     for (const gone of ['`maintainer-stated-advantages`', '- `trade-offs`', 'five reader topics', 'quoted; never your own comparative judgment']) expect(brief).not.toContain(gone);
     for (const text of [
       '## Voice', '1. Lead with the standard category term a software engineer knows', '2. State facts flatly.',
-      '3. Write no sentence about the document or its sources', '4. State a judgement of the project as a judgement', '5. Say why one step leads to the next',
+      '3. Write no sentence about the document or its sources', 'and no file-and-line aside such as "(README.md, line 12)" in a claim\'s text.', '4. State a judgement of the project as a judgement', '5. Say why one step leads to the next',
       '## The understanding record', '`purpose`, `beneficiary`, `proposition`, `capabilities`, `components`, `choices`, `tradeOffs`, `limits`, `terminology`, `contradictions`, `openQuestions`',
       '## Labelling rules', 'Never label a claim `observed`',
       '## Citation rules', '- Cite every `inferred` block: Syzygy strongly encourages it', 'Mark it `judgement: true`. It stays `inferred`, may cite nothing',

@@ -47,7 +47,7 @@ export const BRIEF_TOPICS: readonly { readonly id: string; readonly text: string
 export const VOICE_RULES = [
   '1. Lead with the standard category term a software engineer knows (a cache, a queue, a key-value store), then define only what is specific to this project.',
   '2. State facts flatly. Write "The cache keeps recent answers so the database is asked less often", never "This section describes the component\'s role as established by the cited documents".',
-  '3. Write no sentence about the document or its sources: no "this section explains", no "according to the README". The citation says where a claim comes from.',
+  '3. Write no sentence about the document or its sources: no "this section explains", no "according to the README", and no file-and-line aside such as "(README.md, line 12)" in a claim\'s text. The citation says where a claim comes from, and its mark shows the file and lines.',
   '4. State a judgement of the project as a judgement: mark it `judgement: true` (see the citation rules). It stays `inferred`.',
   '5. Say why one step leads to the next: what each hand-off is for, not only that it happens.',
 ].join('\n');
