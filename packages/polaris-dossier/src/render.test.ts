@@ -447,7 +447,7 @@ describe('render', () => {
       const index = files.get('index.html')!;
       expect(index).toContain('<section id="section-why"');
       expect(index).not.toContain('<section id="section-core-ideas"');
-      expect(index).toContain('<li><a href="poles/2.html">How it works</a><ul><li><a href="poles/2.html#section-core-ideas">Core ideas</a></li></ul></li>');
+      expect(index).toContain('<li data-hue="2"><a href="poles/2.html">How it works</a><ul><li><a href="poles/2.html#section-core-ideas">Core ideas</a></li></ul></li>');
       const machine = JSON.parse(files.get('machine.json')!) as { claims: { id: string; page: string }[] };
       expect(machine.claims.filter((claim) => claim.id === 'p1').map((claim) => claim.page)).toEqual(['poles/2.html']);
       const packet = buildDesignPacket({ run, runId: 'run-1', pinnedRevision: 'f'.repeat(40), files });
@@ -512,6 +512,58 @@ describe('render', () => {
     // The appendix is the last page of the reading order, and every page's navigation reaches it.
     expect(JSON.parse(files.get('dossier.json')!).pages.at(-1)).toEqual({ path: 'appendix.html', depth: 1 });
     for (const [file, page] of html(files)) expect(page, file).toMatch(/<li><a href="(\.\.\/)?appendix\.html">Appendix<\/a><\/li><\/ol>/u);
+  });
+
+  it('says on the sources list which pages cite each source and how often (syzygy-pdja.15)', async () => {
+    const run = await prepared();
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const list = files.get('sources/index.html')!.split('<section id="sources">')[1]!;
+    expect(list).toContain('<p>2 sources counted, 2 with admitted text. 2 cited by the dossier\'s pages; each says where.</p>');
+    expect(list).toContain('>docs/notes.txt</a> <span class="cited-on">Cited on <a href="../index.html">Overview</a> (2 times).</span></li>');
+    expect(list).toContain('>src/kestrel.c</a> <span class="cited-on">Cited on <a href="../index.html">Overview</a> (4 times), <a href="../glossary.html">Glossary</a>.</span></li>');
+    // An independent count: the citation marks each reading page carries, against what the list says of it.
+    const marks = (page: string, id: string): number => files.get(page)!.split('<main')[1]!.split(`data-source-id="${id}"`).length - 1;
+    const ids = [...list.matchAll(/href="\.\.\/sources\/[0-9a-f]+\.html">([^<]+)<\/a>/gu)].map(match => match[1]!);
+    expect(ids).toEqual(['docs/notes.txt', 'src/kestrel.c']);
+    const sourceIds = [...new Set([...files.get('index.html')!.matchAll(/data-source-id="([^"]+)"/gu)].map(match => match[1]!))];
+    const onIndex = sourceIds.map(id => marks('index.html', id)).sort((a, b) => a - b);
+    expect(onIndex).toEqual([2, 4]);
+  });
+
+  it('folds how the dossier was made under one Review report entry, apart from the product, open on the pages it holds (syzygy-pdja.13)', async () => {
+    const run = await prepared();
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const report = ['understanding.html', 'discovery.html', 'clarifications.html', 'executions.html', 'review.html', 'size-report.html', 'appendix.html'].filter(path => files.has(path));
+    for (const path of ['understanding.html', 'discovery.html', 'size-report.html', 'appendix.html']) expect(report, path).toContain(path);
+    for (const [file, page] of html(files)) {
+      const navs = [...page.matchAll(/<nav aria-label="Dossier">([\s\S]*?)<\/nav>/gu)].map(match => match[1]!);
+      expect(navs.length, file).toBeGreaterThan(0);
+      for (const nav of navs) {
+        const fold = nav.indexOf('<details class="review-report"');
+        expect(fold, file).toBeGreaterThan(0);
+        const product = nav.slice(0, fold);
+        const folded = nav.slice(fold);
+        const up = file.includes('/') ? '../' : '';
+        for (const path of report) {
+          expect(product, `${file} ${path}`).not.toContain(`href="${up}${path}"`);
+          expect(folded, `${file} ${path}`).toContain(`href="${up}${path}"`);
+        }
+        expect(product, file).toContain(`href="${up}sources/index.html"`);
+        expect(product, file).toContain(`href="${up}index.html"`);
+        expect(folded.startsWith(`<details class="review-report"${report.includes(file) ? ' open' : ''}><summary>Review report</summary>`), file).toBe(true);
+      }
+    }
+    const contents = files.get('contents.html')!.split('<section id="contents">')[1]!;
+    const heading = contents.indexOf('<h2 id="review-report">Review report</h2>');
+    expect(heading).toBeGreaterThan(0);
+    for (const path of report) {
+      expect(contents.indexOf(`href="${path}"`), path).toBeGreaterThan(heading);
+    }
+    expect(contents.indexOf('href="sources/index.html"')).toBeLessThan(heading);
   });
 
   it('withholds the draft layer as Unknown while the RFC7-20 ruling is not in force, keeping sources, disclosure and discovery', async () => {
@@ -1295,14 +1347,21 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     if (!result.ok) throw new Error(result.refusal.reason);
     const index = readSite(result.report.site).get('index.html')!;
     const section = index.slice(index.indexOf('<section id="section-core-ideas"'));
-    expect(section.indexOf('<figure>')).toBeGreaterThan(-1);
-    expect(section.indexOf('<figure>')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
+    // An operator-agent page gives its first diagram the first hue (syzygy-pdja.14).
+    expect(section.indexOf('<figure data-hue="1">')).toBeGreaterThan(-1);
+    expect(section.indexOf('<figure data-hue="1">')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
   });
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
-    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v3');
+    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v4');
     expect(READABILITY_GUIDANCE).toContain('Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and why it exists, as its sources state. Define each term at its first use.');
-    expect(READABILITY_GUIDANCE).toContain('carries at least one diagram with that section\'s `sectionId`, and Syzygy draws it at the top of the section');
+    // Owner review of the Redis run, 2026-11-08 (syzygy-pdja.11, syzygy-pdja.12): draw first, few words, few and broad pages.
+    expect(READABILITY_GUIDANCE).toContain('2. Diagrams lead, prose follows. Draw before you write: every end-to-end workflow, every mechanism and every set of components that talk to each other gets a diagram with its section\'s `sectionId`, and Syzygy draws it at the top of the section');
+    expect(READABILITY_GUIDANCE).toContain('The section\'s blocks then explain what the diagram cannot show (why a step exists, what it costs), never retell it edge by edge.');
+    expect(READABILITY_GUIDANCE).toContain('6. Few words. Keep a section\'s own prose short: about 300 words of blocks at most, outside its diagrams and elements. A paragraph that lists three or more things, compares options or walks through steps becomes a table, cards, steps or a diagram');
+    expect(READABILITY_GUIDANCE).toContain('7. Few, broad pages. A deep dive is a page of its own, so write one only for a mechanism a reader of the stated audience needs and the section cannot hold: at most three in a dossier.');
+    expect(READABILITY_GUIDANCE).toContain('never by a function, type or file name (Inside handleRequest); the identifiers belong in the text, in backticks. Two deep dives that serve the same reader question are one.');
+    expect(READABILITY_GUIDANCE.split('\n').map(line => line.slice(0, 3))).toEqual(['1. ', '2. ', '3. ', '4. ', '5. ', '6. ', '7. ']);
     expect(READABILITY_GUIDANCE).toContain('a `flow` for an end-to-end workflow or a user\'s path through the project, a `boundary` or `dependency` diagram for the architecture and how components talk to each other');
     expect(READABILITY_GUIDANCE).toContain('An enumeration of three or more items is never a run-on sentence: write a short lead block and give each item its own child block, which renders as a bulleted list. A block holds at most twelve children, so group a longer enumeration under several lead blocks.');
     expect(READABILITY_GUIDANCE).toContain('Put commands, identifiers, file names and configuration keys in backticks outside quotations; they render as inline code.');
@@ -1310,14 +1369,16 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     expect(READABILITY_GUIDANCE).toContain('An empty table cell renders "no entry" and states nothing: write a negative or an absence as a claim.');
     expect(READABILITY_GUIDANCE).toContain('5. Elements. A section or deep dive entry may be a plain block or, in draft schema `polaris-dossier-local-draft-v3`, one of seven presentation elements.');
     expect(READABILITY_GUIDANCE).toContain('Captions, column names, titles, terms, labels, summaries and languages are short plain labels of at most 120 characters, never claims or quotations, with no quotation mark and no markup (no angle bracket, ampersand, backtick, Markdown link, or * or _ at a word edge); quote only in a claim, where Syzygy verifies it; every cell, item, definition and body is a claim and follows every rule above.');
-    expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
+    expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, a paragraph that would read better as a diagram, table, cards or steps, a section whose prose runs well past what a reader takes in at once, a deep dive or section titled by a function, type or file name rather than by what it explains, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
     // Dossier spec v1.5, "Rendered-design packet carries its questions": the six questions, and the evidence view among the rendered pages.
     const criteria = designCriteria('/run').join('\n');
     for (const question of ['whether its opening states why the project exists', 'whether its lead uses the category term a software engineer knows',
       'whether warnings sit in the one sentence and the appendix rather than in the reading text', 'whether the page is too long to read at one sitting',
       'whether a list repeats a diagram instead of folding beneath it', 'whether the page reads as a person explaining the project']) expect(criteria).toContain(question);
     expect(criteria).toContain('the evidence view, the same page at its #evidence-view target, where they show. Judge both.');
-    expect(criteria).toContain('agrees with machine.json, which on a narrative page (index.html and deep-dives/) means in its evidence view;');
+    expect(criteria).toContain('A narrative page (index.html and the pages under poles/ and deep-dives/) has two views');
+    expect(criteria).toContain('a paragraph that would read better as a diagram, table, cards or steps, a section whose prose runs well past what a reader takes in at once, a deep dive or section titled by a function, type or file name rather than by what it explains,');
+    expect(criteria).toContain('agrees with machine.json, which on a narrative page (index.html, poles/ and deep-dives/) means in its evidence view;');
     expect(criteria).toContain('whether every page carries the run\'s one sentence and a link to the appendix, which holds the disclosure.');
     expect(criteria).not.toContain('whether the run disclosure is on every page');
   });

@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { pageSinkCspFinding } from '@syzygy/polaris-generation-core';
+import { generationAnchorId, gitBlobObjectId, pageSinkCspFinding, type GenerationSource } from '@syzygy/polaris-generation-core';
 import { READING_QUOTE, READING_SOURCE, readingInput } from './dossier-reading.testkit.js';
 import { DOSSIER_THEME_CSS, renderLocalDossier } from './dossier-site.js';
 
@@ -28,12 +28,20 @@ describe('Poles: a landing page with the why section and a map, then one page pe
     expect(sectionsOn(index)).toEqual(['one']);
     expect(sectionsOn(files.get('poles/2.html')!)).toEqual(['two', 'three', 'four']);
     expect(sectionsOn(files.get('poles/3.html')!)).toEqual(['five', 'six', 'seven', 'nine', 'eight']);
-    expect(index).toContain('<nav class="pole-map" aria-label="The parts of this dossier"><h2>The parts of this dossier</h2><ol><li><a href="index.html#section-one">Why it exists</a><ul><li><a href="index.html#section-one">One</a></li></ul></li><li><a href="poles/2.html">Words</a><ul><li><a href="poles/2.html#section-two">Two</a></li>');
+    expect(index).toContain('<nav class="pole-map" aria-label="The parts of this dossier"><h2>The parts of this dossier</h2><ol><li data-hue="1"><a href="index.html#section-one">Why it exists</a><ul><li><a href="index.html#section-one">One</a></li></ul></li><li data-hue="2"><a href="poles/2.html">Words</a><ul><li><a href="poles/2.html#section-two">Two</a></li>');
     // Every page's navigation reaches each Pole page, and the contents send a section to its Pole's page.
-    for (const [path, html] of files) if (path.endsWith('.html')) expect(html, path).toContain(`<li><a href="${path.includes('/') ? '../' : ''}poles/3.html">The rest</a></li>`);
+    for (const [path, html] of files) if (path.endsWith('.html')) expect(html, path).toContain(`<li data-hue="3"><a href="${path.includes('/') ? '../' : ''}poles/3.html">The rest</a></li>`);
     expect(files.get('contents.html')!).toContain('<li><a href="poles/2.html#section-two">Two</a>');
     // A Pole page is a narrative page: it opens in the reading view with the legend.
     expect(files.get('poles/2.html')!.split('class="reading-legend"').length - 1).toBe(1);
+  });
+
+  it('colours a Pole page by its Pole, its diagrams included, and a diagram on the landing page by its own hue (syzygy-pdja.14)', () => {
+    const files = withPoles(SPEC);
+    const pole = files.get('poles/2.html')!;
+    expect(pole).toContain('<section id="pole" data-reading-level="1" data-pole="poles/2.html" data-hue="2">');
+    expect(pole).toContain('<figure><figcaption>Loop</figcaption>');
+    expect(files.get('index.html')!).toContain('<figure data-hue="1"><figcaption>Flow</figcaption>');
   });
 
   it('loses and repeats no claim against the page division with no Poles', () => {
@@ -50,7 +58,7 @@ describe('Poles: a landing page with the why section and a map, then one page pe
     const start = files.get('poles/1.html')!;
     expect(sectionsOn(start)).toEqual(['two']);
     expect(start).toContain('<p class="pole-why"><a href="../index.html#section-one">One</a> is on the overview.</p>');
-    expect(files.get('index.html')!).toContain('<li><a href="poles/1.html">Start</a><ul><li><a href="index.html#section-one">One</a></li><li><a href="poles/1.html#section-two">Two</a></li></ul></li>');
+    expect(files.get('index.html')!).toContain('<li data-hue="1"><a href="poles/1.html">Start</a><ul><li><a href="index.html#section-one">One</a></li><li><a href="poles/1.html#section-two">Two</a></li></ul></li>');
   });
 
   it.each<[string, Poles]>([
@@ -143,6 +151,61 @@ describe('an operator-agent dossier page reads without its machinery', () => {
     expect(DOSSIER_THEME_CSS).toContain('--font-mono:ui-monospace,');
     expect(DOSSIER_THEME_CSS).not.toContain('@font-face');
     expect(DOSSIER_THEME_CSS).not.toContain('url(');
+  });
+});
+
+describe('the sources list says why each file is there (syzygy-pdja.15)', () => {
+  it('names the pages citing each source with a count, and says so of a source no page cites', () => {
+    const input = readingInput();
+    const body = 'Unused.\n';
+    const base = { repositoryId: 'synthetic:reading', revision: READING_SOURCE.revision, path: 'docs/unused.md', objectId: gitBlobObjectId(body) };
+    const unused: GenerationSource = { ...base, sourceId: 'src-fedcba9876543210fedcba98', evaluationId: 'synthetic-evaluation:reading',
+      classificationBasis: 'body', exclusion: { excluded: false }, body,
+      spans: [{ anchorId: generationAnchorId(base, 0, Buffer.byteLength(body)), start: 0, end: Buffer.byteLength(body), text: body }] };
+    const anchor = { targetClass: 'evidence-artifact-identifier-with-integrity-digest' as const, identifier: unused.objectId!, algorithm: 'sha1' as const, fragment: null, targetState: unused.revision, pathLabel: unused.path };
+    const local = { ...input.local, sourceAnchors: new Map([...input.local.sourceAnchors, [unused.sourceId, anchor]]) };
+    const list = main(renderLocalDossier({ local, sources: [...input.sources, unused] }).files.get('sources/index.html')!);
+    expect(list).toContain('<p>2 sources counted, 2 with admitted text. 1 cited by the dossier\'s pages; each says where.</p>');
+    expect(list).toContain('>docs/reading.md</a> <span class="cited-on">Cited on <a href="../index.html">Overview</a> (32 times).</span></li>');
+    expect(list).toContain('>docs/unused.md</a> <span class="cited-on">Not cited on the dossier\'s pages.</span></li>');
+  });
+});
+
+describe('colour: six hues for Poles, diagrams and cards, none carrying a claim (syzygy-pdja.14)', () => {
+  const luminance = (hex: string): number => {
+    const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(c => c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+    return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
+  };
+  const contrast = (a: string, b: string): number => { const [x, y] = [luminance(a), luminance(b)].sort((p, q) => p - q); return (y! + 0.05) / (x! + 0.05); };
+  const tokens = (css: string): Record<string, string> => Object.fromEntries([...css.matchAll(/--([a-z0-9-]+):(#[0-9a-f]{6})/gu)].map(match => [match[1]!, match[2]!]));
+
+  it('defines every hue and its tint in both themes, with ink, muted text and links at 4.5:1 or more on each tint, and each line colour at 3:1', () => {
+    // The light theme is what the light-scheme blocks set; the dark theme, the default, is everything outside them.
+    const parts = DOSSIER_THEME_CSS.split('@media (prefers-color-scheme:light){');
+    const inside = parts.slice(1).map(part => part.slice(0, part.indexOf('}}') + 1));
+    const outside = [parts[0]!, ...parts.slice(1).map(part => part.slice(part.indexOf('}}') + 2))];
+    const dark = tokens(outside.join(''));
+    const light = { ...dark, ...tokens(inside.join('')) };
+    for (const theme of [dark, light]) {
+      for (let hue = 1; hue <= 6; hue++) {
+        const line = theme[`h${hue}`], tint = theme[`h${hue}t`];
+        expect(line, `h${hue}`).toMatch(/^#[0-9a-f]{6}$/u);
+        expect(tint, `h${hue}t`).toMatch(/^#[0-9a-f]{6}$/u);
+        for (const text of ['ink', 'muted', 'cyan']) expect(contrast(theme[text]!, tint!), `${text} on h${hue}t`).toBeGreaterThanOrEqual(4.5);
+        expect(contrast(line!, tint!), `h${hue} on h${hue}t`).toBeGreaterThanOrEqual(3);
+      }
+    }
+    expect(light.h1).toBe('#3a64b8');
+    expect(dark.h1).toBe('#8fb0f0');
+    for (let hue = 1; hue <= 6; hue++) expect(DOSSIER_THEME_CSS).toContain(`[data-hue="${hue}"],ul.cards>li.card:nth-child(6n+${hue % 6}){--accent:var(--h${hue});--accent-tint:var(--h${hue}t)}`);
+  });
+
+  it('gives each diagram outside a Pole page a hue in turn, and a diagram on a Pole page its Pole\'s', () => {
+    const files = render();
+    const figures = [...files].flatMap(([path, html]) => path.endsWith('.html') ? [...html.matchAll(/<figure( data-hue="(\d)")?><figcaption>[^<]*<\/figcaption><p class="diagram-relationship">/gu)].map(match => ({ path, hue: match[2] })) : []);
+    expect(figures.length).toBeGreaterThan(0);
+    expect(figures[0]).toEqual({ path: 'index.html', hue: '1' });
+    for (const figure of figures) expect(figure.hue === undefined, figure.path).toBe(figure.path.startsWith('poles/'));
   });
 });
 
