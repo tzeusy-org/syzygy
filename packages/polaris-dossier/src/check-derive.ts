@@ -2,7 +2,7 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { UNDERSTANDING_ITEMS, checkDraftShape, localDraftSchema, type DraftSchemaWithDefs } from './draft-schema.js';
+import { LOCAL_DRAFT_SCHEMA_VERSION, UNDERSTANDING_ITEMS, V4_FIELDS, checkDraftShape, localDraftSchema, type DraftSchemaWithDefs } from './draft-schema.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { type DossierScreen, type ScreenExclusion } from './screen.js';
 import { type CheckFinding, type CitedBlob, type ExcludedQuotation, type VerifiedQuotation, blobRedaction, line, list, text } from './check-model.js';
@@ -140,6 +140,14 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   if (doc['schemaVersion'] === 'polaris-dossier-local-draft-v2') {
     for (const label of elementEntries(doc)) add({ kind: 'element-version', at: label, detail: 'a presentation element needs draft schema polaris-dossier-local-draft-v3' });
   }
+  // Only a v4 draft has the judgement mark and a list's repeated diagram (dossier spec v1.5); in an earlier draft each is a finding at
+  // its path, so an uncited block in one is never excused by a mark its version does not define.
+  const v4 = doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION;
+  if (rules.noun === 'draft' && !v4) {
+    walk(doc, '$', (value, at) => {
+      for (const field of V4_FIELDS) if (Object.hasOwn(value, field)) add({ kind: 'field-version', at: `${at}.${field}`, detail: `\`${field}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+    });
+  }
 
   // Labels, citations by block kind and the execution marking.
   const blocks = rules.blocks(doc);
@@ -158,7 +166,13 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     // The rules by kind apply to a block whose label is one its kind permits; any other label is already a finding.
     if (typeof label !== 'string' || !allowed.includes(label)) continue;
     const citations = Array.isArray(value['citations']) ? value['citations'] : null;
-    if (label === 'inferred' && (citations === null || citations.length === 0)) add({ kind: 'citation-by-kind', at: `${at}.citations`, ...about, detail: 'an inferred block cites at least one source' });
+    // A v4 Inferred block may cite nothing only when it carries the judgement mark: the session's own assessment, asserting no project
+    // fact. A block with the mark is counted, never a finding; whether it asserts a fact is the fidelity review's question.
+    const judged = v4 && value['judgement'] === true;
+    if (label === 'inferred' && (citations === null || citations.length === 0) && !judged) {
+      add({ kind: 'citation-by-kind', at: `${at}.citations`, ...about, detail: v4 ? 'an inferred block cites at least one source, unless it is your own judgement of the project, asserting no fact about it, and carries "judgement": true' : 'an inferred block cites at least one source' });
+    }
+    if (Object.hasOwn(value, 'judgement') && label !== 'inferred') add({ kind: 'judgement-mark', at: `${at}.judgement`, ...about, detail: 'only an inferred block carries the judgement mark' });
     if (label === 'non-normative' && (Object.hasOwn(value, 'citations') || Object.hasOwn(value, 'quotations'))) {
       add({ kind: 'citation-by-kind', at, ...about, detail: 'a non-normative block carries no citation and no anchor' });
     }
@@ -364,6 +378,22 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
       walk(asset, '$', (value, at) => { const id = text(value['id']); if (id !== undefined && !/\.(?:citations|evidence)\[|\.citation$/u.test(at)) own.add(id); });
       list(asset['disposition']['assetIds']).forEach((assetId, k) => {
         if (typeof assetId === 'string' && !own.has(assetId)) add({ kind: 'unresolved-reference', at: `$.${part}[${i}].disposition.assetIds[${k}]`, detail: `${JSON.stringify(assetId)} is not this asset or a part of it` });
+      });
+    });
+  }
+
+  // A list repeating a diagram names one in its own section (a deep dive's section is the one it belongs to).
+  const diagramSections = new Map(list(doc['diagrams']).flatMap((diagram) => (isRecord(diagram) && text(diagram['id']) !== undefined ? [[text(diagram['id'])!, text(diagram['sectionId'])] as const] : [])));
+  for (const part of ['sections', 'deepDives'] as const) {
+    list(doc[part]).forEach((container, i) => {
+      if (!isRecord(container)) return;
+      const sectionId = part === 'sections' ? text(container['id']) : text(container['sectionId']);
+      walk(container, `$.${part}[${i}]`, (value, at) => {
+        if (!Object.hasOwn(value, 'repeatsDiagram')) return;
+        const named = text(value['repeatsDiagram']);
+        if (named === undefined) return;
+        if (!diagramSections.has(named)) add({ kind: 'repeats-diagram', at: `${at}.repeatsDiagram`, detail: `no diagram has the identity ${JSON.stringify(named)}` });
+        else if (diagramSections.get(named) !== sectionId) add({ kind: 'repeats-diagram', at: `${at}.repeatsDiagram`, detail: `the diagram ${JSON.stringify(named)} is not in this list's section; a list repeats a diagram of its own section` });
       });
     });
   }

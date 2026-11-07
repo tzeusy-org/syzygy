@@ -223,6 +223,38 @@ describe('check: the screen subject', () => {
   });
 });
 
+const STEPS = { kind: 'steps', id: 'st1', items: [{ id: 'st1a', label: 'non-normative', text: 'First.' }, { id: 'st1b', label: 'non-normative', text: 'Then.' }] };
+const DIAGRAM = { id: 'flow-1', title: 'Flow', sectionId: 'core-ideas', kind: 'flow', relationship: 'Order.', disposition: { kind: 'produced', assetIds: ['flow-1'] },
+  nodes: [{ id: 'n1', label: 'Client', epistemic: 'inferred', citations: [cite('c-n1')] }, { id: 'n2', label: 'Server', epistemic: 'inferred', citations: [cite('c-n2')] }],
+  edges: [{ id: 'x1', from: 'n1', to: 'n2', label: 'sends', epistemic: 'inferred', citations: [cite('c-x1e')] }] };
+
+describe('check: schema v4 (dossier spec v1.5)', () => {
+  it('passes an uncited judgement and a list repeating a diagram of its own section', async () => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => {
+      d.schemaVersion = 'polaris-dossier-local-draft-v4';
+      d.sections[0].paragraphs[0].children[2].citations = [];
+      d.sections[0].paragraphs[0].children[2].judgement = true;
+      d.introduction.judgement = true;
+      d.diagrams.push(DIAGRAM);
+      d.sections[0].paragraphs.push({ ...STEPS, repeatsDiagram: 'flow-1' });
+    }));
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result.findings).toEqual([]);
+    expect(result.outcome).toBe('passed');
+  });
+
+  it('never lets the mark excuse an uncited block in a v3 draft: both the field and the missing citation are findings', async () => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs[0].children[2].citations = []; d.sections[0].paragraphs[0].children[2].judgement = true; }));
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result.findings.filter((finding) => finding.kind !== 'schema').map(({ detail: _detail, ...rest }) => rest)).toEqual([
+      { kind: 'field-version', at: '$.sections[0].paragraphs[0].children[2].judgement' },
+      { kind: 'citation-by-kind', at: '$.sections[0].paragraphs[0].children[2].citations', blockId: 'p1c' },
+    ]);
+  });
+});
+
 describe('check: each rule refuses its own violation', () => {
   const kestrel = (d: Draft) => d.sections[0].paragraphs[0];
   it.each<[string, (d: Draft) => void, { kind: string; at: string; blockId?: string; citationId?: string }]>([
@@ -299,6 +331,18 @@ describe('check: each rule refuses its own violation', () => {
     ]),
     ['a lead-in in capitals in a callout title', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.sections[0].paragraphs.push({ kind: 'callout', id: 'k1', tone: 'note', title: 'THE README STATES: FAST', children: [{ id: 'k1a', label: 'non-normative', text: 'W.', children: [] }] }); },
       { kind: 'label-quotation', at: '$.sections[0].paragraphs[2].title' }],
+    // Dossier spec v1.5 (schema v4): the judgement mark and a list's repeated diagram.
+    ['an uncited inferred block in a v4 draft without the judgement mark', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; kestrel(d).children[2].citations = []; },
+      { kind: 'citation-by-kind', at: '$.sections[0].paragraphs[0].children[2].citations', blockId: 'p1c' }],
+    ['the judgement mark in a v3 draft', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.introduction.judgement = true; }, { kind: 'field-version', at: '$.introduction.judgement' }],
+    ['the judgement mark on an Unknown block', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; kestrel(d).children[0].judgement = true; },
+      { kind: 'judgement-mark', at: '$.sections[0].paragraphs[0].children[0].judgement', blockId: 'p1a' }],
+    ['a list repeating a diagram that does not exist', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; d.sections[0].paragraphs.push({ ...STEPS, repeatsDiagram: 'flow-9' }); },
+      { kind: 'repeats-diagram', at: '$.sections[0].paragraphs[2].repeatsDiagram' }],
+    ['a list repeating a diagram of another section', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; d.diagrams.push(DIAGRAM); d.sections.push({ id: 'more', title: 'More', paragraphs: [{ ...STEPS, repeatsDiagram: 'flow-1' }], disposition: { kind: 'produced', assetIds: ['more'] } }); },
+      { kind: 'repeats-diagram', at: '$.sections[1].paragraphs[0].repeatsDiagram' }],
+    ['a repeated diagram in a v3 draft', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v3'; d.diagrams.push(DIAGRAM); d.sections[0].paragraphs.push({ ...STEPS, repeatsDiagram: 'flow-1' }); },
+      { kind: 'field-version', at: '$.sections[0].paragraphs[2].repeatsDiagram' }],
     ['a self-reported selection absent at the pinned revision', (d) => { d.discovery.deferred.push({ path: 'docs', reason: 'Later.' }); }, { kind: 'discovery-path-absent', at: '$.discovery.deferred[0].path' }],
   ])('reports %s', async (_name, change, expected) => {
     const run = await briefedRun();
@@ -306,6 +350,17 @@ describe('check: each rule refuses its own violation', () => {
     const result = report(await checkDraft(run, {}, deps()));
     expect(result.outcome).toBe('findings');
     expect(result.findings.filter((finding) => finding.kind !== 'schema').map(({ detail: _detail, ...rest }) => rest)).toEqual([expected]);
+  });
+
+  it.each<[string, (d: Draft) => void, string]>([
+    ['names a diagram no draft carries', (d) => { d.sections[0].paragraphs.push({ ...STEPS, repeatsDiagram: 'flow-9' }); }, 'no diagram has the identity "flow-9"'],
+    ['names a diagram of another section', (d) => { d.diagrams.push(DIAGRAM); d.sections.push({ id: 'more', title: 'More', paragraphs: [{ ...STEPS, repeatsDiagram: 'flow-1' }], disposition: { kind: 'produced', assetIds: ['more'] } }); },
+      'the diagram "flow-1" is not in this list\'s section'],
+  ])('says why a list that %s cannot repeat it', async (_name, change, detail) => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => { d.schemaVersion = 'polaris-dossier-local-draft-v4'; change(d); }));
+    const result = report(await checkDraft(run, {}, deps()));
+    expect(result.findings.filter((finding) => finding.kind === 'repeats-diagram').map((finding) => finding.detail)).toEqual([expect.stringContaining(detail)]);
   });
 
   it('reports no range finding for an excerpt of a file screening read and excluded, within its lines, nor for a path-excluded file it never reads', async () => {
