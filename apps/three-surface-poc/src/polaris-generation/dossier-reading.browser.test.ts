@@ -75,10 +75,28 @@ it.skipIf(executable === undefined)('folds the navigation, keeps diagram labels 
         await page.evaluate(`document.querySelectorAll("a.term")[${term}].focus()`);
         expect(await page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), `term ${term}`).toBe(true);
       }
+      // Dossier spec v1.5, reading view: block text read by innerText on a clone without the visually-hidden elements holds no label
+      // token, while textContent keeps every one; a citation mark shows its file and line on focus; the evidence view opens with no script.
+      const intro = 'document.querySelector("[data-claim-id=\\"introduction\\"] a.cite")';
+      const blocks = `[...document.querySelectorAll("main [data-claim-id]")].filter(e => !e.closest("[data-review-status-region]"))`;
+      const reading = await page.evaluate<string[]>(`${blocks}.map(e => { const c = e.cloneNode(true); c.querySelectorAll(".visually-hidden").forEach(h => h.remove()); document.body.append(c); const t = c.innerText; c.remove(); return t; })`);
+      expect(reading.length).toBeGreaterThan(2);
+      for (const text of reading) expect(text).not.toMatch(/\[(Observed|Inferred|Unknown|Non-normative)\]/u);
+      expect(await page.evaluate(`${blocks}.map(e => e.textContent).join(" ")`)).toMatch(/\[Inferred\]/u);
+      expect(await page.evaluate('getComputedStyle(document.querySelector("a.cite .cite-pop")).display')).toBe('none');
+      await page.evaluate('document.querySelector("a.cite").focus()');
+      expect(await page.evaluate('getComputedStyle(document.querySelector("a.cite .cite-pop")).display')).toBe('block');
+      expect(await page.evaluate('document.querySelector("a.cite .cite-pop").textContent')).toMatch(/, (lines? \d+|bytes \d+|whole file)/u);
+      expect(await page.evaluate('document.querySelector(".evidence-note").parentElement.getBoundingClientRect().width')).toBeLessThanOrEqual(1);
+      // The page's own link opens it, as a reader would follow it.
+      await page.evaluate('document.querySelector(\'a[href="#evidence-view"]\').click()');
+      expect(await page.evaluate('document.querySelector(".evidence-note").parentElement.getBoundingClientRect().width')).toBeGreaterThan(50);
       // A pointer leaving a term far along its line crosses plain text before it reaches the entry, which opens from the block's left edge.
-      await page.setViewport(1440, 4000);
+      await page.setViewport(1440, 900);
       await page.navigate(pathToFileURL(join(directory, 'index.html')).href);
       const far = `[...document.querySelectorAll("a.term")].map(a => ({ a, r: a.getClientRects()[0] })).sort((p, q) => q.r.left - p.r.left)[0]`;
+      // The reading legend lengthens the page, so the term is brought to the middle of the view before anything is measured.
+      await page.evaluate(`(() => { const { r } = ${far}; window.scrollTo({ top: scrollY + r.top - innerHeight / 2, behavior: 'instant' }); return scrollY; })()`);
       const term = await page.evaluate<{ x: number; y: number; left: number; bottom: number }>(`(() => { const { r } = ${far}; return { x: r.left + r.width / 2, y: r.top + r.height / 2, left: r.left, bottom: r.bottom }; })()`);
       const farPopup = `${far}.a.querySelector(".term-pop")`;
       await page.mouseMove(term.x, term.y);
@@ -106,6 +124,7 @@ it.skipIf(executable === undefined)('folds the navigation, keeps diagram labels 
       // A label under the pointer draws its line, on the first diagram's first label.
       const echo = 'document.querySelector("g.edge-text path.edge-echo")';
       expect(await page.evaluate(`getComputedStyle(${echo}).display`)).toBe('none');
+      await page.evaluate(`(() => { const r = document.querySelector("g.edge-text rect.edge-label").getBoundingClientRect(); window.scrollTo({ top: scrollY + r.top - innerHeight / 2, behavior: 'instant' }); })()`);
       const label = await page.evaluate<{ x: number; y: number }>(`(() => { const r = document.querySelector("g.edge-text rect.edge-label").getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
       await page.mouseMove(label.x, label.y);
       expect(await page.evaluate(`getComputedStyle(${echo}).display`)).toBe('inline');

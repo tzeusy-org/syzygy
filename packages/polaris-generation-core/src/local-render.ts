@@ -156,4 +156,8 @@ export interface LocalRenderInput {
   /** Diagram nodes and edges, and understanding items, that are withheld items (v1.5), by claim id; blocks carry their own note. */
   readonly withheldElements?: ReadonlyMap<string, WithheldNote>;
   readonly counts?: LocalCounts;
+  /** The cited lines behind each citation mark, by claim id, then source id: shown on the mark's hover and focus (v1.5). */
+  readonly citationLines?: ReadonlyMap<string, ReadonlyMap<string, string>>;
+  /** The operator-declared agent tool and model, named in the one sentence every page carries (v1.5). */
+  readonly authoring?: { readonly tool: string; readonly model: string };
 }

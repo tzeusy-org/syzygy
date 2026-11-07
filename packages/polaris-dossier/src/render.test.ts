@@ -5,6 +5,7 @@ import * as path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { evaluateDossier, excludedSourceId, parseDossierManifest, scanDossierPage } from '@syzygy/polaris-generation-core';
+import { withoutReviewStatusRegion } from '@syzygy/polaris-generation-core/live';
 import { issueBrief, READABILITY_GUIDANCE, READABILITY_GUIDANCE_VERSION } from './brief.js';
 import { checkDraft, type CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
@@ -306,7 +307,8 @@ describe('render', () => {
     expect(marking('p1b')).toBeUndefined(); // non-normative: no claim
     expect(machine.nonNormative).toEqual([{ page: 'index.html', id: 'p1b' }]);
     expect(marked(files.get('index.html')!, 'p1')).toEqual({ epistemic: 'unknown', reason: 'missing-evidence' });
-    expect(files.get('index.html')).toMatch(/data-non-normative[^>]*>Read on\.[^<]*<span class="marking[^"]*">\[Non-normative\]/u);
+    // The reading view (dossier spec v1.5): the mark `framing` shows; the label stays in DOM text, clipped.
+    expect(files.get('index.html')).toMatch(/data-non-normative[^>]*>Read on\. <span class="framing-mark">framing<\/span><span class="visually-hidden ev"> <span class="marking non-normative">\[Non-normative\]/u);
     // The fidelity review page: the binding Observed, the verdict Inferred; the design review's status is only in the region.
     expect(marking('review/fidelity/binding')).toBe('observed');
     expect(marking('review/fidelity/verdict')).toBe('inferred');
@@ -318,7 +320,113 @@ describe('render', () => {
     expect(tuples.filter((tuple) => tuple.split(' ')[1]!.startsWith('discovery/read/')).map((tuple) => tuple.split(' ')[2])).toEqual(['observed', 'observed']);
   });
 
-  it('carries the run disclosure on every page and in the machine view, and one review-status region per page holding no claim', async () => {
+  describe('the reading view and the evidence view (dossier spec v1.5)', () => {
+    /** The page as a sighted reader of the reading view sees it: every clipped span removed, with whatever it nests. */
+    const visible = (page: string): string => {
+      const opener = '<span class="visually-hidden ev">';
+      let out = page;
+      for (let at = out.indexOf(opener); at !== -1; at = out.indexOf(opener)) {
+        let depth = 0;
+        let end = at;
+        for (const m of out.slice(at).matchAll(/<span\b|<\/span>/gu)) {
+          depth += m[0] === '</span>' ? -1 : 1;
+          if (depth === 0) { end = at + m.index! + m[0].length; break; }
+        }
+        if (end === at) throw new Error('unbalanced clipped span');
+        out = out.slice(0, at) + out.slice(end);
+      }
+      return out;
+    };
+    const mainOf = (page: string): string => page.slice(page.indexOf('<main'), page.indexOf('</main>'));
+    const narrativePages = (files: Map<string, string>): [string, string][] => html(files).filter(([file]) => file === 'index.html' || file.startsWith('deep-dives/'));
+
+    // The review-status region holds no claim and names its own status, so it keeps its labels; the rule is about block text.
+    it('shows no label token in the block text of a narrative page, and keeps every one for the evidence view', async () => {
+      const run = await prepared();
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const pages = narrativePages(readSite(result.report.site));
+      expect(pages.length).toBeGreaterThan(0);
+      for (const [file, page] of pages) {
+        const body = withoutReviewStatusRegion(mainOf(page))!;
+        const tokens = /\[(Observed|Inferred|Unknown|Non-normative)\]/gu;
+        expect(body.match(tokens)?.length ?? 0, file).toBeGreaterThan(0);
+        expect(visible(body).replace(/<[^>]*>/gu, '').match(tokens), file).toBeNull();
+        // Clipped, never removed from layout: no reading-view text hides by `hidden` or `display:none`.
+        expect(body, file).not.toMatch(/<span[^>]* hidden[ >=]/u);
+      }
+    });
+
+    it('carries the legend and the evidence-view target once per narrative page, and the redaction legend elsewhere', async () => {
+      const run = await prepared();
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const files = readSite(result.report.site);
+      for (const [file, page] of html(files)) {
+        const narrative = file === 'index.html' || file.startsWith('deep-dives/');
+        expect(page.split('class="reading-legend"').length - 1, file).toBe(narrative ? 1 : 0);
+        expect(page.split('id="evidence-view"').length - 1, file).toBe(narrative ? 1 : 0);
+      }
+      const legend = files.get('index.html')!;
+      expect(legend).toContain('<a href="#evidence-view">Show the evidence view</a>');
+      expect(legend).toContain('text with such a mark is the agent\'s reading of that source.');
+      // The evidence view needs no script: a stylesheet rule keyed on the target shows the clipped text.
+      expect(legend).toMatch(/main:has\(#evidence-view:target\)/u);
+    });
+
+    it('gives each block an evidence note whose values equal its machine attributes', async () => {
+      const run = await prepared();
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      let notes = 0;
+      for (const [file, page] of narrativePages(readSite(result.report.site))) {
+        for (const m of page.matchAll(/<span class="evidence-note">Evidence: label (\w+); claim-block kind ([a-z-]+)(?:; reason ([a-z-]+))?/gu)) {
+          const at = page.lastIndexOf(' data-claim-id="', m.index);
+          const tag = page.slice(page.lastIndexOf('<', at), page.indexOf('>', at) + 1);
+          expect(tag, file).toContain(` data-epistemic="${m[1]!.toLowerCase()}"`);
+          expect(tag, file).toContain(`data-claim-kind="${m[2]}"`);
+          if (m[3] !== undefined) expect(tag, file).toContain(` data-unknown-reason="${m[3]}"`);
+          notes++;
+        }
+      }
+      expect(notes).toBeGreaterThan(2);
+      // A block citing nothing is labeled, one citing a source anchored: the fixture has both.
+      const index = readSite(result.report.site).get('index.html')!;
+      const kinds = [...index.matchAll(/<(?:p|li) [^>]*data-claim-kind="(anchored|labeled)"[^>]*>(.*?)<\/(?:p|li)>/gsu)];
+      expect(new Set(kinds.map((m) => m[1]))).toEqual(new Set(['anchored', 'labeled']));
+      for (const [, kind, inner] of kinds) expect(inner!.includes('class="cite"') || inner!.includes('class="anchor-link cite"'), kind).toBe(kind === 'anchored');
+    });
+
+    it('says in each citation pop which lines of which file the mark cites', async () => {
+      const run = await prepared();
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const index = readSite(result.report.site).get('index.html')!;
+      const pops = [...index.matchAll(/<span class="cite-pop" aria-hidden="true">([^<]*)<\/span>/gu)].map((m) => m[1]!);
+      expect(pops.length).toBeGreaterThan(0);
+      // The fixture's own citations, as literals: one line, and a range of two.
+      expect(pops).toContain('src/kestrel.c, line 1');
+      expect(pops).toContain('src/kestrel.c, lines 2\u20133');
+      for (const pop of pops) expect(pop).toMatch(/^[^,]+(, (whole file|bytes \d+–\d+|lines? \d+(–\d+)?))?$/u);
+    });
+
+    it('counts in the appendix what the machine view counts', async () => {
+      const run = await prepared();
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const files = readSite(result.report.site);
+      const counts = JSON.parse(files.get('machine.json')!).counts as Record<string, number | null>;
+      const appendix = files.get('appendix.html')!;
+      const shown = new Map([...appendix.matchAll(/<li data-count="([a-z-]+)">[^<]*?: (\d+)\.<\/li>/gu)].map((m) => [m[1]!, Number(m[2])]));
+      expect(shown.get('uncited-judgements')).toBe(counts.uncitedJudgements);
+      expect(shown.get('withheld-items')).toBe(counts.withheldItems);
+      expect(shown.get('withheld-excerpts')).toBe(counts.withheldExcerpts);
+      expect(shown.get('unknown-claims')).toBe(2);
+      expect(appendix.split('data-count="').length - 1).toBe(6);
+    });
+  });
+
+  it('carries the one sentence and the machine disclosure on every page, the human disclosure in the appendix, and one review-status region per page holding no claim', async () => {
     const run = await prepared();
     const result = await renderRun(run, renderDeps());
     if (!result.ok) throw new Error(result.refusal.reason);
@@ -328,17 +436,27 @@ describe('render', () => {
     expect(ids).toEqual(['mode', 'agent', 'unrestricted-reading', 'read-account', 'execution-rule', 'reported-commands', 'no-provider-call', 'pinned-revision',
       'pinned-revision-verified', 'quotations', 'stored-records', 'records-within-reach', 'unattributed-execution', 'draft-layer']);
     expect(html(files).length).toBeGreaterThan(5);
+    const sentence = 'This is a draft written by claude-code with claude-opus-5-5; no human review is recorded. It has 2 Unknown claim(s).';
     for (const [file, page] of html(files)) {
-      expect(page.split('class="run-disclosure"').length - 1, file).toBe(1);
-      for (const id of ids) expect(page, `${file} ${id}`).toContain(`data-disclosure-id="${id}"`);
+      // Dossier spec v1.5: one sentence of human text linking to the appendix, and the machine form whole, on every page.
+      expect(page.split('class="run-sentence"').length - 1, file).toBe(1);
+      expect(page, file).toContain(`<p class="run-sentence">${sentence} <a href="${file.includes('/') ? '../' : ''}appendix.html">`);
+      expect(page, file).toContain(` data-disclosure-ids="${ids.join(' ')}"`);
+      expect(page.split('class="run-disclosure"').length - 1, file).toBe(file === 'appendix.html' ? 1 : 0);
       const regions = page.split('data-review-status-region="review-status"');
       expect(regions.length - 1, file).toBe(1);
       const region = regions[1]!.slice(0, regions[1]!.indexOf('</aside>'));
       expect(region, file).not.toContain('data-claim-id');
       expect(region, file).not.toMatch(/ id="/u);
     }
-    expect(files.get('index.html')).toContain('Agent tool claude-code 2.1.0, provider anthropic, model claude-opus-5-5');
-    expect(files.get('index.html')).toContain('Syzygy made no provider call and transmitted no project content.');
+    const appendix = files.get('appendix.html')!;
+    for (const id of ids) expect(appendix, id).toContain(`data-disclosure-id="${id}"`);
+    expect(appendix).toContain('Agent tool claude-code 2.1.0, provider anthropic, model claude-opus-5-5');
+    expect(appendix).toContain('Syzygy made no provider call and transmitted no project content.');
+    expect(appendix).toContain('Syzygy can see only the marking: whether an unmarked claim rests on the agent\'s building or running of the project is the agent\'s report.');
+    // The appendix is the last page of the reading order, and every page's navigation reaches it.
+    expect(JSON.parse(files.get('dossier.json')!).pages.at(-1)).toEqual({ path: 'appendix.html', depth: 1 });
+    for (const [file, page] of html(files)) expect(page, file).toMatch(/<li><a href="(\.\.\/)?appendix\.html">Appendix<\/a><\/li><\/ol>/u);
   });
 
   it('withholds the draft layer as Unknown while the RFC7-20 ruling is not in force, keeping sources, disclosure and discovery', async () => {
@@ -494,8 +612,10 @@ describe('render', () => {
     expect(reading).not.toContain('withheld line(s) in this file');
     expect(reading).toContain('data-redacted-lines="1"');
     expect(reading).toContain('; 1 line(s) of this file withheld by screening"');
-    expect(reading).toContain('<span class="redaction-mark" aria-hidden="true">\u20201</span></a>');
-    expect(reading).toContain('<p class="redaction-legend"><span aria-hidden="true">\u2020N</span> on a citation: N lines of that file are withheld by screening.');
+    expect(reading).toContain('<span class="redaction-mark" aria-hidden="true">\u20201</span><span class="cite-pop" aria-hidden="true">');
+    // A narrative page's legend explains the dagger (dossier spec v1.5), once.
+    expect(reading.split('<span class="legend-sample">\u2020N</span> on a citation counts the N lines of that citation\'s file that screening withheld.').length - 1).toBe(1);
+    expect(reading).not.toContain('<p class="redaction-legend">');
     expect(site.get('contents.html')!).not.toContain('<p class="redaction-legend">');
   });
 
@@ -540,8 +660,12 @@ describe('render', () => {
   it('refuses when the stored passed draft revision is altered, after the deadline, and when the output lacks the disclosure', async () => {
     const run = await prepared(draft(), false);
     expect(await renderRun(run, renderDeps({ now: () => NOW + 3_600_000 }))).toMatchObject({ ok: false, refusal: { stage: 'deadline' } });
-    const bare: DossierRenderer = (input) => ({ files: new Map([...renderLocalDossier(input).files].map(([file, page]) => [file, page.replace('class="run-disclosure"', 'class="x"')])) });
-    expect(await renderRun(run, renderDeps({ renderer: bare }))).toMatchObject({ ok: false, refusal: { stage: 'render' } });
+    for (const [from, to] of [['class="run-disclosure"', 'class="x"'], ['class="run-sentence"', 'class="x"'], [' data-disclosure-ids="', ' data-x="']]) {
+      const bare: DossierRenderer = (input) => ({ files: new Map([...renderLocalDossier(input).files].map(([file, page]) => [file, page.replace(from!, to!)])) });
+      expect(await renderRun(run, renderDeps({ renderer: bare })), from).toMatchObject({ ok: false, refusal: { stage: 'render' } });
+    }
+    const noAppendix: DossierRenderer = (input) => { const files = new Map(renderLocalDossier(input).files); files.delete('appendix.html'); return { files }; };
+    expect(await renderRun(run, renderDeps({ renderer: noAppendix }))).toMatchObject({ ok: false, refusal: { stage: 'render' } });
     expect(await renderRun(run, renderDeps({ renderer: () => { throw new Error('boom'); } }))).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'the renderer refused the run: boom' } });
     expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
     fs.appendFileSync(path.join(run, 'drafts', 'rev-0.json'), ' ');
@@ -1057,13 +1181,13 @@ describe('readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2)', () 
     const result = await renderRun(run, renderDeps());
     if (!result.ok) throw new Error(result.refusal.reason);
     const index = readSite(result.report.site).get('index.html')!;
-    const links = [...index.matchAll(/<a class="(?:anchor-link )?cite" href="[^"]*" data-source-id="(src-[0-9a-f]{24})" aria-label="([^"]*)"[^>]*>\[(\d+)\]<\/a>/gu)].map((m) => [m[1], m[2], m[3]]);
+    const links = [...index.matchAll(/<a class="(?:anchor-link )?cite" href="[^"]*" data-source-id="(src-[0-9a-f]{24})" aria-label="([^"]*)"[^>]*>\[(\d+)\]<span class="cite-pop" aria-hidden="true">[^<]*<\/span><\/a>/gu)].map((m) => [m[1], m[2], m[3]]);
     expect(links.length).toBeGreaterThan(1);
     const numberOf = new Map<string, string>();
     for (const [id, label, n] of links) {
       if (!numberOf.has(id!)) numberOf.set(id!, String(numberOf.size + 1));
       expect(n).toBe(numberOf.get(id!));
-      expect(label).toMatch(new RegExp(`^Source ${n}: (src/kestrel\\.c|docs/notes\\.txt)(, (whole file|bytes \\d+–\\d+))?$`, 'u'));
+      expect(label).toMatch(new RegExp(`^Source ${n}: (src/kestrel\\.c|docs/notes\\.txt)(, (whole file|bytes \\d+–\\d+|lines? \\d+(–\\d+)?))?$`, 'u'));
     }
     expect(numberOf.size).toBe(2);
     // No identifier or digest is reading text: outside tags the page never shows `[src-` or a `[sha1:` anchor.
@@ -1175,7 +1299,7 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
 
   it('renders a table with a caption, column headers, row headers and an empty cell', () => {
     expect(index).toContain('<div class="table-scroll" id="element-t1" data-element="table"><table><caption>The server&#39;s commands and what they do</caption><thead><tr><th scope="col">Command</th><th scope="col">Effect</th></tr></thead>');
-    expect(index).toContain('<th scope="row" class="non-normative" data-non-normative="t1c1">The <code>GET</code> command <span class="marking non-normative">[Non-normative]</span></th>');
+    expect(index).toContain('<th scope="row" class="non-normative" data-non-normative="t1c1" data-claim-kind="non-normative">The <code>GET</code> command <span class="framing-mark">framing</span><span class="visually-hidden ev"> <span class="marking non-normative">[Non-normative]</span>');
     expect(index).toMatch(/<td[^>]*data-claim-id="t1c2"[^>]*>/u);
     expect(index).toContain('<td class="empty-cell">no entry</td>');
     expect(index).toContain('<code>GET</code>');
@@ -1183,7 +1307,7 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
 
   it('numbers a cell\'s citation as any block\'s', () => {
     const cell = index.slice(index.indexOf('data-claim-id="t1c2"'));
-    expect(cell.slice(0, cell.indexOf('</td>'))).toMatch(/class="cite"[^>]*>\[\d+\]<\/a>/u);
+    expect(cell.slice(0, cell.indexOf('</td>'))).toMatch(/class="cite"[^>]*>\[\d+\]<span class="cite-pop" aria-hidden="true">[^<]+<\/span><\/a>/u);
   });
 
   it('renders a callout with its visible tone, steps, definitions, cards and details', () => {
@@ -1212,7 +1336,7 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
     expect(body).not.toContain('a < b');
     expect(body).not.toContain('"&lt;"');
     expect(body).not.toContain('"</pre>');
-    expect(body).toMatch(/<span class="marking observed">\[Observed\]<\/span> <a class="anchor-link cite"[^>]*data-anchor-class="evidence-artifact-identifier-with-integrity-digest"[^>]*data-anchor-fragment="0-\d+"[^>]*>\[\d+\]<\/a>/u);
+    expect(body).toMatch(/<span class="visually-hidden ev"><span class="marking observed">\[Observed\]<\/span><\/span> <a class="anchor-link cite"[^>]*data-anchor-class="evidence-artifact-identifier-with-integrity-digest"[^>]*data-anchor-fragment="0-\d+"[^>]*>\[\d+\]<span class="cite-pop" aria-hidden="true">src\/markup\.c, bytes 0–\d+<\/span><\/a>/u);
     expect(body).not.toContain('int tail');
   });
 
