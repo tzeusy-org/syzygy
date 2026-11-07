@@ -46,7 +46,9 @@ const SECRETS = 'Deploy notes.\n';
 const MARKUP = 'if (a < b && c > d) return;\n#define LT "&lt;"\n#define AMP &amp;\nint tail;\n';
 /** A raw tag is active content: screening withholds the file, so a cited `</pre>` never reaches a page. */
 const TAGGED = 'const end = "</pre>";\n';
-const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'src/markup.c': MARKUP, 'src/tagged.c': TAGGED, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', 'docs/deploy.md': SECRETS };
+/** A path the credential-assignment detector matches: counted wherever cited, and never named (dossier spec v1.5). */
+const SECRET_PATH = 'conf/token=abcdefghijk';
+const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'src/markup.c': MARKUP, 'src/tagged.c': TAGGED, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', 'docs/deploy.md': SECRETS, [SECRET_PATH]: 'x\n' };
 const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));
 const policy = (extensions: string[]): Uint8Array => new TextEncoder().encode(JSON.stringify({
   policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
@@ -176,7 +178,7 @@ const verdict = (packetSha256: string): Doc => ({
 });
 
 /** A briefed run with a passed draft revision; with `reviewed`, an inventory of record and a counted fidelity review. */
-async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: readonly Doc[] = []): Promise<string> {
+async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: readonly Doc[] = [], edit: { readonly inventory?: (inv: Doc) => void; readonly verdict?: (v: Doc) => void } = {}): Promise<string> {
   const clone = path.join(tempDir('dossier-render-clone-'), 'kestrel');
   execFileSync('git', ['clone', '-q', '--no-hardlinks', origin, clone], { env: GIT_ENV });
   const run = path.join(tempDir('dossier-render-state-'), RUN_ID);
@@ -196,7 +198,9 @@ async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: reado
   if (!reviewed) return run;
   const handed = await sessionPrompt(run, { role: 'inventory' }, { sources: sources(), now: () => LATER });
   if (!handed.ok) throw new Error(handed.refusal.reason);
-  fs.writeFileSync(path.join(handed.report.directory, 'inventory.json'), JSON.stringify(inventory(), null, 2));
+  const inv0 = inventory();
+  edit.inventory?.(inv0);
+  fs.writeFileSync(path.join(handed.report.directory, 'inventory.json'), JSON.stringify(inv0, null, 2));
   const inv = await checkInventory(run, {}, checkDeps());
   if (!inv.ok || inv.report.outcome !== 'passed') throw new Error(`fixture inventory: ${JSON.stringify(inv.ok ? inv.report.findings : inv.refusal)}`);
   await launchForm(run, { role: 'inventory', form: 'terminal' }, { sources: sources(), now: () => LATER });
@@ -211,6 +215,7 @@ async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: reado
   v.blockSupport[0].spanIds = v.inventoryAccuracy[0].spanIds;
   v.blockSupport[4].spanIds = v.inventoryAccuracy[1].spanIds;
   v.blockSupport.push(...extraSupport);
+  edit.verdict?.(v);
   fs.writeFileSync(path.join(review.report.directory, 'verdict.json'), JSON.stringify(v, null, 2));
   const validated = await reviewCheck(run, {}, { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN });
   if (!validated.ok || validated.report.outcome !== 'validated') throw new Error(`fixture verdict: ${JSON.stringify(validated.ok ? validated.report.problems : validated.refusal)}`);
@@ -658,6 +663,140 @@ async function designReviewed(run: string, edit: (v: Doc) => Doc = (v) => v, lau
   if (launched) await launchForm(run, { role: 'review', form: 'terminal', kind: 'design' }, { sources: sources(), now: () => LATER });
   return { site: rendered.report.site, digest, dir: handed.report.directory };
 }
+
+// Dossier spec v1.5 (syzygy-pdja.3): withheld items, a block citing a withheld span beside an admitted one, and the judgement mark.
+// `.env` is path-excluded (denied-path) and never read. Words only an agent wrote carry `zq-`, which nothing Syzygy writes contains.
+describe('render: withheld items and judgements (dossier spec v1.5)', () => {
+  const ENV = (id: string) => cite(id, '.env', 1, 1);
+  const withheldDraft = (): Doc => {
+    const doc = draft();
+    doc.schemaVersion = 'polaris-dossier-local-draft-v4';
+    doc.understanding.purpose = [{ id: 'u-purpose', label: 'inferred', statement: 'zq-purpose words.', scope: 'zq-scope.', citations: [ENV('u-purpose-c')] }];
+    doc.understanding.terminology = [...doc.understanding.terminology, { id: 'zq-term', label: 'inferred', statement: 'zq-term words.', scope: 'zq-scope.', citations: [ENV('u-term-c')] },
+      // A glossary term Syzygy's own sentence contains: the sentence is Syzygy's words, never linked as agent prose is.
+      { id: 'screening', label: 'inferred', statement: 'What decides what a dossier may show.', scope: 'The server.', citations: [cite('u-screen-c', 'src/kestrel.c', 1, 1)] }];
+    doc.sections.push({ id: 'held-sec', title: 'zq-held section', paragraphs: [{ id: 'p9', label: 'inferred', basis: 'source', text: 'zq-held section words.', citations: [ENV('c-p9')], quotations: [], children: [] }], disposition: { kind: 'produced', assetIds: ['held-sec'] } });
+    doc.sections[0].paragraphs.push(
+      { id: 'p3', label: 'inferred', basis: 'source', text: 'zq-held paragraph.', citations: [ENV('c-p3'), cite('c-p3s', SECRET_PATH, 1, 1)], quotations: [], children: [] },
+      { kind: 'code', id: 'cx9', citation: ENV('c-cx9') },
+      { id: 'p4', label: 'inferred', basis: 'source', text: 'zq-mixed paragraph stays.', citations: [cite('c-p4a', 'src/kestrel.c', 1, 1), ENV('c-p4b')], quotations: [], children: [] },
+      { kind: 'cards', id: 'g9', items: [{ label: 'zq-card label', body: { id: 'g9a', label: 'inferred', basis: 'source', text: 'zq-card body.', citations: [ENV('c-g9a')], quotations: [] } }, { label: 'Second card', body: { id: 'g9b', label: 'non-normative', text: 'Framing.' } }] },
+      { kind: 'steps', id: 'st9', repeatsDiagram: 'flow-9', items: [{ id: 'st9a', label: 'unknown', reason: 'missing-evidence', text: 'No source says it.', citations: [] }, { id: 'st9b', label: 'non-normative', text: 'Then.' }] },
+    );
+    doc.diagrams = [{ id: 'flow-9', title: 'Flow', sectionId: 'core-ideas', kind: 'flow', relationship: 'Order.', disposition: { kind: 'produced', assetIds: ['flow-9'] },
+      nodes: [{ id: 'n1', label: 'zq-node', epistemic: 'inferred', citations: [ENV('c-n1')] }, { id: 'n2', label: 'Server', epistemic: 'inferred', citations: [cite('c-n2', 'src/kestrel.c', 1, 1)] }],
+      edges: [{ id: 'x1', from: 'n1', to: 'n2', label: 'zq-edge', epistemic: 'inferred', citations: [ENV('c-x1')] }] },
+    { id: 'flow-8', title: 'zq-diagram title', sectionId: 'core-ideas', kind: 'flow', relationship: 'zq-relationship.', disposition: { kind: 'produced', assetIds: ['flow-8'] },
+      nodes: [{ id: 'm1', label: 'zq-m1', epistemic: 'inferred', citations: [ENV('c-m1')] }, { id: 'm2', label: 'zq-m2', epistemic: 'inferred', citations: [ENV('c-m2')] }],
+      edges: [{ id: 'y1', from: 'm1', to: 'm2', label: 'zq-y1', epistemic: 'inferred', citations: [ENV('c-y1')] }] }];
+    return doc;
+  };
+
+  it('renders each withheld item Unknown in Syzygy\'s words with its count, and none of the agent\'s text for it', async () => {
+    const run = await prepared(withheldDraft(), false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const index = files.get('index.html')!;
+    for (const [file, page] of files) for (const words of ['zq-held', 'zq-card', 'zq-node', 'zq-edge', 'zq-purpose', 'zq-scope', 'zq-term', 'zq-diagram', 'zq-relationship', 'zq-m1', 'zq-m2', 'zq-y1', 'token=']) expect(`${file} ${words}: ${page.includes(words)}`).toBe(`${file} ${words}: false`);
+    expect(marked(index, 'p3')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(index).toMatch(/data-withheld-sources="2" data-claim-id="p3"/u);
+    expect(index).toContain('Withheld from this dossier: it rests on 2 source file(s) that screening withholds (.env; 1 not named, because a secret detector matches the path), so its text is not shown.');
+    expect(index).toContain('<h2>Withheld item</h2>');
+    expect(index).toContain('<figcaption>Withheld item</figcaption>');
+    expect(files.get('glossary.html')).not.toContain('zq-term');
+    expect(index).toContain('<p class="card-label">Withheld item</p>');
+    expect(marked(index, 'n1')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(marked(index, 'x1')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(index).toContain('(withheld from this dossier: it rests on 1 source file(s) that screening withholds: .env)');
+    const understanding = files.get('understanding.html')!;
+    expect(marked(understanding, 'understanding/withheld-1')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(understanding).toContain('<strong>Withheld item</strong>');
+    const machine = JSON.parse(files.get('machine.json')!);
+    expect(machine.counts).toEqual({ uncitedJudgements: 0, withheldItems: 10, withheldExcerpts: 1, withheldInventoryEntries: null });
+    expect(machine.claims.find((claim: { id: string }) => claim.id === 'p3')).toMatchObject({ epistemic: 'unknown', unknownReason: 'excluded-content', v15: { withheldSources: 2 } });
+    expect(machine.claims.find((claim: { id: string }) => claim.id === 'n1')).toMatchObject({ epistemic: 'unknown', unknownReason: 'excluded-content', v15: { withheldSources: 1 } });
+    expect(Object.keys(machine.withheldElements).sort()).toEqual(['m1', 'm2', 'n1', 'understanding/withheld-1', 'understanding/withheld-2', 'x1', 'y1']);
+  });
+
+  it('keeps a block citing a withheld span beside an admitted one, counting the withheld span', async () => {
+    const run = await prepared(withheldDraft(), false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const index = files.get('index.html')!;
+    expect(index).toContain('zq-mixed paragraph stays.');
+    expect(marked(index, 'p4')).toEqual({ epistemic: 'unknown', reason: 'missing-evidence' });
+    expect(index).toMatch(/data-withheld-spans="1" data-claim-id="p4"/u);
+    expect(JSON.parse(files.get('machine.json')!).claims.find((claim: { id: string }) => claim.id === 'p4')).toMatchObject({ v15: { withheldSpans: 1 } });
+  });
+
+  it('withholds an item whose span touches a redacted line, and keeps one over surviving lines of the same file', async () => {
+    const doc = draft();
+    doc.schemaVersion = 'polaris-dossier-local-draft-v4';
+    doc.sections[0].paragraphs.push(
+      { id: 'pr', label: 'inferred', basis: 'source', text: 'zq-redacted line.', citations: [cite('c-pr', 'src/kestrel.c', 4, 4)], quotations: [], children: [] },
+      { id: 'pk', label: 'inferred', basis: 'source', text: 'zq-kept line stays.', citations: [cite('c-pk', 'src/kestrel.c', 1, 1)], quotations: [], children: [] },
+    );
+    const run = await prepared(doc, false);
+    if (!SCREEN.ok) throw new Error(SCREEN.why);
+    const base = SCREEN.screen;
+    const lines = KESTREL.match(/[^\n]*\n|[^\n]+$/gu)!;
+    const retainedLines = lines.map((line, i) => i === 3 ? '\n' : line);
+    const lineByteOffsets: number[] = []; let offset = 0;
+    for (const line of lines) { lineByteOffsets.push(offset); offset += Buffer.byteLength(line); }
+    const redacting = { ok: true as const, screen: { ...base, screenTargetBody: (body: string, repositoryPath: string) => (repositoryPath === 'src/kestrel.c'
+      ? { kind: 'redacted' as const, retained: retainedLines.join(''), retainedLines, lineByteOffsets, originalBytes: offset, contentSha256: createHash('sha256').update(KESTREL).digest('hex'), withheld: [4], detectorIds: ['credential-assignment'] }
+      : base.screenTargetBody(body, repositoryPath)) } };
+    const result = await renderRun(run, renderDeps({ loadScreen: async () => redacting }));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const index = readSite(result.report.site).get('index.html')!;
+    expect(index).not.toContain('zq-redacted');
+    expect(marked(index, 'pr')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(index).toContain('it rests on 1 source file(s) that screening withholds (src/kestrel.c)');
+    expect(index).toContain('zq-kept line stays.');
+    expect(index).not.toMatch(/data-withheld-[a-z]+="[0-9]+" data-claim-id="pk"/u);
+  });
+
+  it('renders a list repeating a diagram collapsed, with Syzygy\'s summary and its Unknown count', async () => {
+    const run = await prepared(withheldDraft(), false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const index = readSite(result.report.site).get('index.html')!;
+    expect(index).toMatch(/<details class="details repeats-diagram" id="element-st9" data-element="steps" data-repeats-diagram="flow-9"><summary>The diagram “Flow” as a list <span class="details-unknown">\(1 Unknown\)<\/span><\/summary><ol class="steps">/u);
+  });
+
+  it('renders an uncited judgement Inferred with its mark where the counted review finds it advisory', async () => {
+    const doc = draft();
+    doc.schemaVersion = 'polaris-dossier-local-draft-v4';
+    doc.sections[0].paragraphs.push({ id: 'pj', label: 'inferred', basis: 'source', judgement: true, text: 'zq-judged: the design is sound.', citations: [], quotations: [], children: [] });
+    const run = await prepared(doc, true, [{ blockId: 'pj', verdict: 'advisory', spanIds: [], reason: 'The agent\'s own judgement.', quotations: [] }], {
+      inventory: (inv) => { inv.entries.push({ id: 'e-env', kind: 'capability', label: 'inferred', statement: 'zq-env entry.', citations: [ENV('c-e-env')], quotations: [] }); },
+      verdict: (v) => {
+        v.inventoryCoverage.push({ entryId: 'e-env', disposition: 'withheld', blockIds: [], reason: 'Withheld by screening.', quotations: [] });
+        v.inventoryAccuracy.push({ entryId: 'e-env', accuracy: 'withheld', spanIds: [], reason: 'Withheld by screening.', quotations: [] });
+      },
+    });
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const index = files.get('index.html')!;
+    expect(marked(index, 'pj')).toEqual({ epistemic: 'inferred', reason: null });
+    expect(index).toMatch(/data-judgement="uncited" data-claim-id="pj"[^>]*>zq-judged: the design is sound\. <span class="judgement-mark">judgement<\/span>/u);
+    expect(JSON.parse(files.get('machine.json')!).counts).toMatchObject({ uncitedJudgements: 1, withheldItems: 0, withheldInventoryEntries: 1 });
+    expect([...files.values()].some((page) => page.includes('zq-env'))).toBe(false);
+  });
+
+  it('keeps an uncited judgement Unknown while no counted review finds it advisory', async () => {
+    const doc = draft();
+    doc.schemaVersion = 'polaris-dossier-local-draft-v4';
+    doc.sections[0].paragraphs.push({ id: 'pj', label: 'inferred', basis: 'source', judgement: true, text: 'zq-judged.', citations: [], quotations: [], children: [] });
+    const run = await prepared(doc, false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    expect(marked(readSite(result.report.site).get('index.html')!, 'pj')).toEqual({ epistemic: 'unknown', reason: 'missing-evidence' });
+  });
+});
 
 describe('rendered-design review (S9b)', () => {
   it('builds the design packet from the latest site, outside the review-status region, byte for byte, and names its digest at render', async () => {

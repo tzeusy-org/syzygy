@@ -60,6 +60,29 @@ export interface LocalBlock {
   readonly segments: readonly LocalSegment[];
   /** The commands a claim resting on execution names, as the agent reported them (Inferred, self-reported). */
   readonly executions: readonly { readonly id: string; readonly command: string }[];
+  /** Dossier spec v1.5: `uncited` for an Inferred block the draft marks as a judgement and that cites nothing, `cited` for a marked block
+   * that cites; absent for an unmarked block. */
+  readonly judgement?: 'uncited' | 'cited';
+  /** A withheld item (v1.5): every span it cites, or a span it quotes, is withheld. Its segments are Syzygy's words, never the agent's. */
+  readonly withheld?: WithheldNote;
+  /** A block citing both admitted and withheld spans, not a withheld item: how many of its cited spans are withheld. */
+  readonly withheldSpans?: number;
+}
+
+/** What Syzygy says of a withheld item: how many withheld sources it rests on, and those it may name. A path a secret detector matches is
+ * counted and never named. */
+export interface WithheldNote {
+  readonly sources: number;
+  readonly named: readonly string[];
+}
+
+/** Dossier spec v1.5's counts, disclosed in the appendix and the machine form. `null` where the count rests on a record that does not
+ * count at this render (the withheld inventory entries, while no fidelity review counts). */
+export interface LocalCounts {
+  readonly uncitedJudgements: number;
+  readonly withheldItems: number;
+  readonly withheldExcerpts: number;
+  readonly withheldInventoryEntries: number | null;
 }
 
 /** A line of the run disclosure or of the review-status region, with the label its content carries (null for a plain statement of
@@ -130,4 +153,7 @@ export interface LocalRenderInput {
   readonly pages: readonly LocalPage[];
   /** The one named review-status region of every page: the only part a later render may change without retiring a rendered-design review. */
   readonly reviewStatus: readonly LocalDisclosureItem[];
+  /** Diagram nodes and edges, and understanding items, that are withheld items (v1.5), by claim id; blocks carry their own note. */
+  readonly withheldElements?: ReadonlyMap<string, WithheldNote>;
+  readonly counts?: LocalCounts;
 }

@@ -4,7 +4,7 @@ import {
   DOSSIER_FORMAT, OWNER_TOPICS, PAGE_SINK_CONTRACT, checkDraftQuotes, diagramToMermaid, isDossierPagePath, parseDossierManifest, readerCost, reviewVerdict, scanDossierPage, sourceTextById, withoutReviewStatusRegion,
   generationSpanRange, validateGenerationSources,
   type DossierDraft, type DossierManifest, type DraftBlock, type DraftDiagram, type DraftElement, type DraftParagraph, type EpistemicMarking, type GenerationSource, type LocalPageItem,
-  type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding,
+  type LocalBlock, type LocalRenderInput, type LocalSegment, type OwnerTopic, type QuoteFinding, type WithheldNote,
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { READABLE_SPACING, renderDiagramSvg } from './diagram-layout.js';
@@ -280,11 +280,12 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     return `<a class="cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(id)}"${cited.attribute} aria-label="${escape(sourceLabel(from, id) + cited.words)}" title="${escape(source.path + cited.words)}">[${citeNumber(from, id)}]${cited.mark}</a>`;
   }).join(' ')}</span>`;
   // Every claim a page carries, in the order it is built; `add` files them under that page for the machine view.
-  const pending: { id: string; epistemic: EpistemicMarking; unknownReason: string | null }[] = [];
-  // `attributes` is markup the caller built with escape(); nothing is spliced in afterwards.
-  const claim = (tag: string, id: string, m: EpistemicMarking, body: string, attributes = '', unknownReason: string | null = null): string => {
-    pending.push({ id, epistemic: m, unknownReason });
-    return `<${tag}${attributes} data-claim-id="${escape(id)}" data-epistemic="${m}">${body}</${tag}>`;
+  const pending: { id: string; epistemic: EpistemicMarking; unknownReason: string | null; v15?: ClaimMarks }[] = [];
+  // `attributes` is markup the caller built with escape(); nothing is spliced in afterwards. `marks` are dossier spec v1.5's machine
+  // attributes, present only where a claim has one, so a page without them keeps its bytes.
+  const claim = (tag: string, id: string, m: EpistemicMarking, body: string, attributes = '', unknownReason: string | null = null, marks?: ClaimMarks): string => {
+    pending.push({ id, epistemic: m, unknownReason, ...(marks === undefined || Object.keys(marks).length === 0 ? {} : { v15: marks }) });
+    return `<${tag}${attributes}${marks === undefined ? '' : marksAttributes(marks)} data-claim-id="${escape(id)}" data-epistemic="${m}">${body}</${tag}>`;
   };
   // An operator-agent block: its segments (Syzygy's located bytes for every quotation), its marking and reason, and the commands a claim
   // resting on execution names. A non-normative block is no claim and carries no anchor.
@@ -324,7 +325,11 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     })).join('');
   };
   const segment = (from: string, blockId: string, part: LocalSegment): string => {
-    if (part.kind === 'prose') return termsOff || local!.blocks.get(blockId)?.marking === 'non-normative' ? prose(part.text) : withTerms(from, part.text);
+    if (part.kind === 'prose') {
+      const own = local!.blocks.get(blockId);
+      if (own?.withheld !== undefined) return escape(part.text);
+      return termsOff || own?.marking === 'non-normative' ? prose(part.text) : withTerms(from, part.text);
+    }
     if (part.kind === 'withheld') return `<span class="quote-withheld" data-unknown-reason="${escape(part.reason)}">[quotation withheld: the file it cites is excluded by screening]</span>`;
     const target = sourcePaths.get(part.sourceId);
     if (target === undefined) throw new DossierRenderError('unquotable-source');
@@ -351,8 +356,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     }
     const reason = b.unknownReason === null ? '' : ` <span class="unknown-reason">(${escape(b.unknownReason)}: ${escape(b.basis)})</span>`;
     const executions = b.executions.length === 0 ? '' : ` <span class="executions">Rests on the agent's report of running ${b.executions.map(run => `<code>${escape(run.command)}</code>`).join('; ')} (Inferred, self-reported)</span>`;
-    return claim(tag, p.id, b.marking, `${body} ${marking(b.marking)}${reason}${executions} ${refs(from, p.sourceIds)}`,
-      b.unknownReason === null ? '' : ` data-unknown-reason="${escape(b.unknownReason)}"`, b.unknownReason);
+    const judged = b.judgement === undefined ? '' : ' <span class="judgement-mark">judgement</span>';
+    return claim(tag, p.id, b.marking, `${body}${judged} ${marking(b.marking)}${reason}${executions} ${refs(from, p.sourceIds)}`,
+      b.unknownReason === null ? '' : ` data-unknown-reason="${escape(b.unknownReason)}"`, b.unknownReason, blockMarks(b));
   };
   const paragraph = (from: string, p: DraftParagraph, tag: string): string => local !== undefined ? localParagraph(from, p, tag)
     : claim(tag, p.id, label(p.id), `${escape(p.text)} ${marking(label(p.id))}${quoteNote(p.id)} ${refs(from, p.sourceIds)}`);
@@ -363,6 +369,19 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // A v1.3 rich element (operator-agent drafts only, syzygy-mea.10.5): semantic, inert HTML. Its labels are escaped presentation; every
   // claim inside renders through `paragraph`, so it carries its marking, reason and numbered sources as any block does.
   const TONE_NAME: Readonly<Record<string, string>> = { note: 'Note', tip: 'Tip', caution: 'Caution', important: 'Important' };
+  // A list repeating a diagram of its section (dossier spec v1.5) renders collapsed, its summary Syzygy's words with the count of Unknown
+  // claims inside; each item stays a claim block. The element's identity moves to the details, outside the collapsed part.
+  const repeated = (diagramId: string | undefined, attrs: string, list: (own: string) => string): string => {
+    if (diagramId === undefined) return list(attrs);
+    const before = pending.length;
+    const shownBefore = new Set(termsShown);
+    const inner = list('');
+    termsShown.clear();
+    for (const id of shownBefore) termsShown.add(id);
+    const unknown = pending.slice(before).filter(entry => entry.epistemic === 'unknown').length;
+    const shown = draft.diagrams.find(d => d.id === diagramId)?.title ?? diagramId;
+    return `<details class="details repeats-diagram"${attrs} data-repeats-diagram="${escape(diagramId)}"><summary>The diagram “${escape(shown)}” as a list${unknown === 0 ? '' : ` <span class="details-unknown">(${unknown} Unknown)</span>`}</summary>${inner}</details>`;
+  };
   const element = (from: string, id: string, e: DraftElement): string => {
     const attrs = ` id="element-${escape(id)}" data-element="${e.kind}"`;
     switch (e.kind) {
@@ -381,11 +400,11 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       case 'callout':
         return `<aside class="callout callout-${e.tone}"${attrs} aria-label="${escape(`${TONE_NAME[e.tone]}: ${e.title}`)}"><p class="callout-title"><span class="callout-tone">${TONE_NAME[e.tone]}</span> ${escape(e.title)}</p>${e.children.map(child => block(from, child)).join('')}</aside>`;
       case 'steps':
-        return `<ol class="steps"${attrs}>${e.items.map(item => paragraph(from, item, 'li')).join('')}</ol>`;
+        return repeated(e.repeatsDiagram, attrs, own => `<ol class="steps"${own}>${e.items.map(item => paragraph(from, item, 'li')).join('')}</ol>`);
       case 'definitions':
-        return `<dl class="definitions"${attrs}>${e.entries.map(entry => `<dt>${escape(entry.term)}</dt>${paragraph(from, entry.definition, 'dd')}`).join('')}</dl>`;
+        return repeated(e.repeatsDiagram, attrs, own => `<dl class="definitions"${own}>${e.entries.map(entry => `<dt>${escape(entry.term)}</dt>${paragraph(from, entry.definition, 'dd')}`).join('')}</dl>`);
       case 'cards':
-        return `<ul class="cards"${attrs}>${e.items.map(item => `<li class="card"><p class="card-label">${escape(item.label)}</p>${paragraph(from, item.body, 'div')}</li>`).join('')}</ul>`;
+        return repeated(e.repeatsDiagram, attrs, own => `<ul class="cards"${own}>${e.items.map(item => `<li class="card"><p class="card-label">${escape(item.label)}</p>${paragraph(from, item.body, 'div')}</li>`).join('')}</ul>`);
       case 'details': {
         // A collapsed section never hides an Unknown silently (v1.3 note 2): its summary counts the Unknown claims inside it.
         const before = pending.length;
@@ -435,8 +454,12 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const diagram = (from: string, d: DraftDiagram, index: number): string => {
     if (d.disposition.kind !== 'produced') return notice(from, d.id, d.disposition);
     const nodes = new Map(d.nodes.map(node => [node.id, node]));
-    const nodeList = d.nodes.map(n => claim('li', n.id, n.epistemic, `${escape(n.label)} ${marking(n.epistemic)} ${refs(from, n.sourceIds)}`)).join('');
-    const edgeList = d.edges.map(e => claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)} ${marking(e.epistemic)} ${refs(from, e.sourceIds)}`)).join('');
+    // A withheld node or edge (v1.5) reads `Withheld item` and says, in Syzygy's words, what is withheld, with its count.
+    const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
+    const heldText = (id: string): string => held(id) === undefined ? '' : ` <span class="withheld-note">${escape(withheldWords(held(id)!))}</span>`;
+    const heldAttrs = (id: string): string => held(id) === undefined ? '' : ' data-unknown-reason="excluded-content"';
+    const nodeList = d.nodes.map(n => claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${marking(n.epistemic)} ${refs(from, n.sourceIds)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources })).join('');
+    const edgeList = d.edges.map(e => claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${marking(e.epistemic)} ${refs(from, e.sourceIds)}`, heldAttrs(e.id), held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources })).join('');
     let svg: string;
     try {
       svg = renderDiagramSvg(d, index, escape, local === undefined ? undefined : READABLE_SPACING);
@@ -467,7 +490,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
   const files = new Map<string, string>();
   const pages: { path: string; depth: number }[] = [];
-  const claimsByPage: { page: string; id: string; epistemic: EpistemicMarking; unknownReason: string | null }[] = [];
+  const claimsByPage: { page: string; id: string; epistemic: EpistemicMarking; unknownReason: string | null; v15?: ClaimMarks }[] = [];
   // A page citing a redacted file says once what the mark on its citations means (RFC7-34: a visual encoding is legended).
   const legended = (main: string): string => local !== undefined && main.includes('class="redaction-mark"')
     ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
@@ -624,6 +647,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       quotations,
       sources: quotable.map(source => ({ sourceId: source.sourceId, page: sourcePaths.get(source.sourceId)!, anchor: local.sourceAnchors.get(source.sourceId)!, ...(source.redaction === undefined ? {} : { redaction: { redactionClass: source.redaction.redactionClass, withheldLines: source.redaction.withheldLines } }) })),
       localPages: localPages,
+      ...(local.counts === undefined ? {} : { counts: local.counts }),
+      ...(local.withheldElements === undefined || local.withheldElements.size === 0 ? {} : { withheldElements: Object.fromEntries(local.withheldElements) }),
     }, null, 2)}\n`);
   }
   return { files, manifest };
@@ -636,3 +661,26 @@ export function renderLocalDossier(input: LocalDossierRenderInput): RenderedDoss
 /** The encoding half of the screening scope's render condition (version 7's text): every page writes each source byte through
  * `escape` and carries `DRAFT_PREVIEW_CSP_META` first in its head. `page-sink.test.ts` fails if either stops holding. */
 renderLocalDossier.pageSinkContract = PAGE_SINK_CONTRACT;
+
+/** A claim's dossier spec v1.5 machine attributes: the judgement mark, a withheld item's count of withheld sources, a mixed block's count
+ * of withheld spans. */
+interface ClaimMarks { readonly judgement?: 'uncited' | 'cited'; readonly withheldSources?: number; readonly withheldSpans?: number }
+
+function blockMarks(block: LocalBlock): ClaimMarks {
+  return {
+    ...(block.judgement === undefined ? {} : { judgement: block.judgement }),
+    ...(block.withheld === undefined ? {} : { withheldSources: block.withheld.sources }),
+    ...(block.withheldSpans === undefined ? {} : { withheldSpans: block.withheldSpans }),
+  };
+}
+
+function marksAttributes(marks: ClaimMarks): string {
+  return `${marks.judgement === undefined ? '' : ` data-judgement="${marks.judgement}"`}${marks.withheldSources === undefined ? '' : ` data-withheld-sources="${marks.withheldSources}"`}${marks.withheldSpans === undefined ? '' : ` data-withheld-spans="${marks.withheldSpans}"`}`;
+}
+
+/** A withheld diagram element's words: the count, and the files Syzygy may name. */
+function withheldWords(note: WithheldNote): string {
+  const unnamed = note.sources - note.named.length;
+  const names = [...note.named, ...(unnamed === 0 ? [] : [`${unnamed} not named, because a secret detector matches the path`])];
+  return `(withheld from this dossier: it rests on ${note.sources} source file(s) that screening withholds: ${names.join('; ')})`;
+}

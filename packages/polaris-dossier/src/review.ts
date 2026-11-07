@@ -14,7 +14,8 @@ import { recheckSessionStatement, type SessionStatementOfRecord } from './sessio
 import { RUN_LAYOUT } from './state-directory.js';
 import { REVIEW_CHECKS, REVIEW_CHECK_FORMAT, type ReviewCheckRecord, type ReviewCheckResult, type ReviewDeps, type ReviewInferred, type ReviewKind, type ReviewObserved, type ReviewProblem, VERDICT_FILE, VERDICT_MAX_BYTES, isReviewKind, latestReviewSession, list, reviewLaunchRecordName, reviewPromptRecordName, reviewSessionDirectory, verdictFileName } from './review-model.js';
 import { DESIGN_PACKET_DISCLOSURES, PACKET_DISCLOSURES, buildFidelityPacket, buildStoredDesignPacket, parseSubject, writePacket } from './review-packet.js';
-import { derivedBlocking, nextVerdictNumber, validateVerdict } from './review-verdict.js';
+import { derivedBlocking, nextVerdictNumber, standingBySubject, validateVerdict } from './review-verdict.js';
+import { isWithheldItem } from './withheld-items.js';
 export { FIDELITY_PACKET_FORMAT, REVIEW_CHECK_FORMAT, PACKET_FILE, PACKET_DIGEST_FILE, VERDICT_FILE, REVIEW_KINDS, isReviewKind, REVIEW_CHECKS, packetDirName, verdictFileName, reviewSessionDirName, reviewPromptRecordName, reviewLaunchRecordName, reviewSessionDirectory, latestReviewSession } from './review-model.js';
 export type { ReviewKind, PacketSpan, SpanRedaction, SpanCitation, PacketBuild, ReviewDeps, ReviewProblemKind, ReviewProblem, ReviewCheckRecord, ReviewCheckResult, ReviewObserved, ReviewInferred } from './review-model.js';
 export { fidelityCriteria, latestPassedDraft, buildFidelityPacket, writePacket, buildStoredDesignPacket } from './review-packet.js';
@@ -210,9 +211,12 @@ export type ReviewOfRecord =
     /** The verdict's content: its readiness, whether it blocks, and its support judgement of each claim block, by block id. */
     readonly verdict: {
       readonly readiness: 'ready' | 'not-ready'; readonly blocking: boolean;
-      readonly blockSupport: Readonly<Record<string, 'supported' | 'anchor-does-not-support' | 'unresolved'>>;
+      readonly blockSupport: Readonly<Record<string, 'supported' | 'anchor-does-not-support' | 'unresolved' | 'withheld' | 'advisory'>>;
       readonly declaredBy: 'the review session'; readonly label: 'Inferred';
     };
+    /** Inventory entries that cite at least one span, every one withheld (dossier spec v1.5), counted from the packet rebuilt now and never
+     * from the verdict. They render nowhere; the appendix and the machine form count them. */
+    readonly withheldInventoryEntries: number;
     readonly sessionId: { readonly value: string; readonly declaredBy: 'the review session'; readonly label: 'Inferred' };
     readonly launchForm: { readonly value: 'terminal' | 'bang' | 'syzygy-launched'; readonly declaredBy: 'operator' | 'syzygy'; readonly label: 'Inferred' | 'Observed' };
     /** The per-project statement the review session's work stands on now; null when the run relies on none. */
@@ -267,6 +271,12 @@ async function latestCheckedVerdict(
   return { ok: true, number, session, verdict, form: form['value'] as 'terminal' | 'bang' | 'syzygy-launched', providerStatement: statement.statement };
 }
 
+/** How many of the rebuilt packet's inventory entries are withheld items. */
+function withheldInventoryEntries(built: Extract<Awaited<ReturnType<typeof buildFidelityPacket>>, { ok: true }>): number {
+  const standing = standingBySubject(built.spans);
+  return list(built.inventory.doc['entries']).filter(isRecord).filter((entry) => isWithheldItem(entry, standing.inventory)).length;
+}
+
 /** The fidelity review that counts, if any: the latest checked verdict, validated, its frozen bytes unchanged, naming the packet Syzygy
  * rebuilds now from the current frozen subject, under an identifier neither the authoring nor the inventory session declares, written in
  * a session whose launch form is recorded against that session's prompt. */
@@ -285,9 +295,10 @@ export async function reviewOfRecord(opened: Extract<OpenedRun, { ok: true }>, d
     counts: true, kind: 'fidelity', number, session, packetSha256: built.sha256,
     verdict: {
       readiness: verdict['readiness'] as 'ready' | 'not-ready', blocking: derivedBlocking(verdict),
-      blockSupport: Object.fromEntries(list(verdict['blockSupport']).filter(isRecord).map((row) => [row['blockId'] as string, row['verdict'] as 'supported' | 'anchor-does-not-support' | 'unresolved'])),
+      blockSupport: Object.fromEntries(list(verdict['blockSupport']).filter(isRecord).map((row) => [row['blockId'] as string, row['verdict'] as 'supported' | 'anchor-does-not-support' | 'unresolved' | 'withheld' | 'advisory'])),
       declaredBy: 'the review session', label: 'Inferred',
     },
+    withheldInventoryEntries: withheldInventoryEntries(built),
     sessionId: { value: declaredSessionId(verdict)!, declaredBy: 'the review session', label: 'Inferred' },
     launchForm: form === 'syzygy-launched' ? { value: form, declaredBy: 'syzygy', label: 'Observed' } : { value: form, declaredBy: 'operator', label: 'Inferred' },
     providerStatement,
