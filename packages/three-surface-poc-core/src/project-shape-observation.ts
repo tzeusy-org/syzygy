@@ -22,7 +22,7 @@
 // entry; the test proves them byte-equal so that a missing or altered
 // registry cannot change what the observer claims about itself.
 
-import { execFileSync } from 'node:child_process';
+import { createGitRunner } from './git-runner.js';
 import type { UnknownReason } from '@syzygy/cap1-core';
 import { decodeUtf8, deepFreeze, sha256 } from '@syzygy/support';
 
@@ -87,13 +87,12 @@ export type PwbFailureState = keyof typeof PWB_FAILURE_STATES;
 // The production `GitRunner` (`pwb-types.ts`): one git command against the
 // configured repository's object database, raw stdout bytes.
 export function gitRunnerFor(repoRoot: string): GitRunner {
-  return (args) =>
-    new Uint8Array(
-      execFileSync('git', ['--no-optional-locks', '-C', repoRoot, ...args], {
-        maxBuffer: 256 * 1024 * 1024,
-        stdio: ['ignore', 'pipe', 'ignore'],
-      }),
-    );
+  const runGit = createGitRunner({
+    prefix: ['--no-optional-locks', '-C', repoRoot],
+    maxBuffer: 256 * 1024 * 1024,
+    stdio: ['ignore', 'pipe', 'ignore'],
+  });
+  return (args) => new Uint8Array(runGit(args));
 }
 
 // ---------------------------------------------------------------------

@@ -26,6 +26,7 @@ export interface GitObservation {
 }
 
 function readGit(root: string, args: readonly string[]): string {
+  // G5 row 4 exception: its per-call env override is forbidden in the core live-observer import closure.
   return execFileSync('git', ['--no-optional-locks', '-C', root, ...args], {
     encoding: 'utf8',
     env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' },

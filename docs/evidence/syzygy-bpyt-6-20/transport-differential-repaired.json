@@ -1,0 +1,4884 @@
+{
+  "base": "f5487c186626513724e1eff28a2789a4d78c154c",
+  "head": "1675b3967b36812ee05775a6f2bb31627f247f04",
+  "node": "v24.6.0",
+  "v8": "13.6.233.10-node.24",
+  "harnessSha256": "d73db28de2cbd3d300d88e34dbc59b08abef13b4110842e9a0632e44d2059940",
+  "fakeGitSha256": "020789636e582a9582e0abda85ca3dba2acf6e76687920c2ca76c4d1e571933f",
+  "cases": 69,
+  "differences": [],
+  "results": [
+    {
+      "profile": 1,
+      "case": "valid-utf8-bom-nul",
+      "bound": 67108864,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 18,
+              "sha256": "49acc993bee0a8c20b7b1ca97bcfc13b3fd2fee3b2dff44397503af7f6e35bdc",
+              "text": "﻿text é\u0000path\nline\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 18,
+              "sha256": "49acc993bee0a8c20b7b1ca97bcfc13b3fd2fee3b2dff44397503af7f6e35bdc",
+              "text": "﻿text é\u0000path\nline\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 1,
+      "case": "invalid-utf8",
+      "bound": 67108864,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 6,
+              "sha256": "6df76e346457fea327d0d368a47147785685e122e260561ce8db808818652514",
+              "text": "﻿a\u0000�é\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 6,
+              "sha256": "6df76e346457fea327d0d368a47147785685e122e260561ce8db808818652514",
+              "text": "﻿a\u0000�é\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 1,
+      "case": "nonzero-both-streams",
+      "bound": 67108864,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "string",
+                "length": 6,
+                "sha256": "6df76e346457fea327d0d368a47147785685e122e260561ce8db808818652514",
+                "text": "﻿a\u0000�é\u0000"
+              },
+              "stderr": {
+                "type": "string",
+                "length": 6,
+                "sha256": "6df76e346457fea327d0d368a47147785685e122e260561ce8db808818652514",
+                "text": "﻿a\u0000�é\u0000"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "string",
+                "length": 6,
+                "sha256": "6df76e346457fea327d0d368a47147785685e122e260561ce8db808818652514",
+                "text": "﻿a\u0000�é\u0000"
+              },
+              "stderr": {
+                "type": "string",
+                "length": 6,
+                "sha256": "6df76e346457fea327d0d368a47147785685e122e260561ce8db808818652514",
+                "text": "﻿a\u0000�é\u0000"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 1,
+      "case": "stderr-pressure",
+      "bound": 67108864,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "string",
+                "length": 2,
+                "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+                "text": "ok"
+              },
+              "stderr": {
+                "type": "string",
+                "length": 67108864,
+                "sha256": "5869b9c838ca33868278645f2f27ec7c8249ae6f28085c70ab3c28460ec8c910"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "string",
+                "length": 2,
+                "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+                "text": "ok"
+              },
+              "stderr": {
+                "type": "string",
+                "length": 67108864,
+                "sha256": "5869b9c838ca33868278645f2f27ec7c8249ae6f28085c70ab3c28460ec8c910"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 1,
+      "case": "missing-executable",
+      "bound": 67108864,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 1,
+      "case": "stdout-bound-1",
+      "bound": 67108864,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 67108863,
+              "sha256": "44161dfe38c1f3661a56e8d2e290ec9a7cdcdf1e7192cd44145479d8a6fccb70"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 67108863,
+              "sha256": "44161dfe38c1f3661a56e8d2e290ec9a7cdcdf1e7192cd44145479d8a6fccb70"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 1,
+      "case": "stdout-bound0",
+      "bound": 67108864,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 67108864,
+              "sha256": "fae972222d455a2eaee1661ad9625502ec3bfc5ec38b87a6eec5afd5107331b5"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 67108864,
+              "sha256": "fae972222d455a2eaee1661ad9625502ec3bfc5ec38b87a6eec5afd5107331b5"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 1,
+      "case": "stdout-bound1",
+      "bound": 67108864,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "string",
+                "length": 67108865,
+                "sha256": "0ed59c6929ac1c013be3a95779b6edf64fd7d9858e28fc246964c5bddce58ba2"
+              },
+              "stderr": {
+                "type": "string",
+                "length": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "text": ""
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "string",
+                "length": 67108865,
+                "sha256": "0ed59c6929ac1c013be3a95779b6edf64fd7d9858e28fc246964c5bddce58ba2"
+              },
+              "stderr": {
+                "type": "string",
+                "length": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "text": ""
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 1,
+      "case": "distinct-root-and-env",
+      "bound": 67108864,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "text": "repeat"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "text": "repeat"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 2,
+      "case": "valid-utf8-bom-nul",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 17,
+              "sha256": "15757afd08955c2091bef4618d64a74426c56763bfd56f779978f0ba86120c4c",
+              "text": "text é\u0000path\nline\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 17,
+              "sha256": "15757afd08955c2091bef4618d64a74426c56763bfd56f779978f0ba86120c4c",
+              "text": "text é\u0000path\nline\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 2,
+      "case": "invalid-utf8",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "TypeError",
+              "code": "ERR_ENCODING_INVALID_ENCODED_DATA",
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "TypeError",
+              "code": "ERR_ENCODING_INVALID_ENCODED_DATA",
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 2,
+      "case": "nonzero-both-streams",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "Buffer",
+                "length": 9,
+                "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+                "base64": "77u/YQD/w6kA"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "Buffer",
+                "length": 9,
+                "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+                "base64": "77u/YQD/w6kA"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 2,
+      "case": "stderr-pressure",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 2,
+              "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+              "text": "ok"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 2,
+              "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+              "text": "ok"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 2,
+      "case": "missing-executable",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 2,
+      "case": "stdout-bound-1",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 1048575,
+              "sha256": "3311ea1faad557de3899e89a39076c69d9d0cc5b4cff56a0b61339f487395d56"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 1048575,
+              "sha256": "3311ea1faad557de3899e89a39076c69d9d0cc5b4cff56a0b61339f487395d56"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 2,
+      "case": "stdout-bound0",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 1048576,
+              "sha256": "9bc1b2a288b26af7257a36277ae3816a7d4f16e89c1e7e77d0a5c48bad62b360"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 1048576,
+              "sha256": "9bc1b2a288b26af7257a36277ae3816a7d4f16e89c1e7e77d0a5c48bad62b360"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 2,
+      "case": "stdout-bound1",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 1048577,
+                "sha256": "4a3f0c0c213adea174f9a3d4c13177315b588bdb2e9c1012d3d0bf0453ca0f6a"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 1048577,
+                "sha256": "4a3f0c0c213adea174f9a3d4c13177315b588bdb2e9c1012d3d0bf0453ca0f6a"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 2,
+      "case": "distinct-root-and-env",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "text": "repeat"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "text": "repeat"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 3,
+      "case": "valid-utf8-bom-nul",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 21,
+              "sha256": "49acc993bee0a8c20b7b1ca97bcfc13b3fd2fee3b2dff44397503af7f6e35bdc",
+              "base64": "77u/dGV4dCDDqQBwYXRoCmxpbmUA"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 21,
+              "sha256": "49acc993bee0a8c20b7b1ca97bcfc13b3fd2fee3b2dff44397503af7f6e35bdc",
+              "base64": "77u/dGV4dCDDqQBwYXRoCmxpbmUA"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 3,
+      "case": "invalid-utf8",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 9,
+              "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+              "base64": "77u/YQD/w6kA"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 9,
+              "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+              "base64": "77u/YQD/w6kA"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 3,
+      "case": "nonzero-both-streams",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "Buffer",
+                "length": 9,
+                "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+                "base64": "77u/YQD/w6kA"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "Buffer",
+                "length": 9,
+                "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+                "base64": "77u/YQD/w6kA"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 3,
+      "case": "stderr-pressure",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 2,
+              "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+              "base64": "b2s="
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 2,
+              "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+              "base64": "b2s="
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 3,
+      "case": "missing-executable",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 3,
+      "case": "stdout-bound-1",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 1048575,
+              "sha256": "3311ea1faad557de3899e89a39076c69d9d0cc5b4cff56a0b61339f487395d56"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 1048575,
+              "sha256": "3311ea1faad557de3899e89a39076c69d9d0cc5b4cff56a0b61339f487395d56"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 3,
+      "case": "stdout-bound0",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 1048576,
+              "sha256": "9bc1b2a288b26af7257a36277ae3816a7d4f16e89c1e7e77d0a5c48bad62b360"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 1048576,
+              "sha256": "9bc1b2a288b26af7257a36277ae3816a7d4f16e89c1e7e77d0a5c48bad62b360"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 3,
+      "case": "stdout-bound1",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 1048577,
+                "sha256": "4a3f0c0c213adea174f9a3d4c13177315b588bdb2e9c1012d3d0bf0453ca0f6a"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 1048577,
+                "sha256": "4a3f0c0c213adea174f9a3d4c13177315b588bdb2e9c1012d3d0bf0453ca0f6a"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 3,
+      "case": "distinct-root-and-env",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "base64": "cmVwZWF0"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "base64": "cmVwZWF0"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+                "cat-file",
+                "blob",
+                "object"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 4,
+      "case": "valid-utf8-bom-nul",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 18,
+              "sha256": "49acc993bee0a8c20b7b1ca97bcfc13b3fd2fee3b2dff44397503af7f6e35bdc",
+              "text": "﻿text é\u0000path\nline\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 18,
+              "sha256": "49acc993bee0a8c20b7b1ca97bcfc13b3fd2fee3b2dff44397503af7f6e35bdc",
+              "text": "﻿text é\u0000path\nline\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 4,
+      "case": "invalid-utf8",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 6,
+              "sha256": "6df76e346457fea327d0d368a47147785685e122e260561ce8db808818652514",
+              "text": "﻿a\u0000�é\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 6,
+              "sha256": "6df76e346457fea327d0d368a47147785685e122e260561ce8db808818652514",
+              "text": "﻿a\u0000�é\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 4,
+      "case": "nonzero-both-streams",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "string",
+                "length": 6,
+                "sha256": "6df76e346457fea327d0d368a47147785685e122e260561ce8db808818652514",
+                "text": "﻿a\u0000�é\u0000"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "string",
+                "length": 6,
+                "sha256": "6df76e346457fea327d0d368a47147785685e122e260561ce8db808818652514",
+                "text": "﻿a\u0000�é\u0000"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 4,
+      "case": "stderr-pressure",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 2,
+              "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+              "text": "ok"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 2,
+              "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+              "text": "ok"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 4,
+      "case": "missing-executable",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 4,
+      "case": "stdout-bound-1",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 1048575,
+              "sha256": "3311ea1faad557de3899e89a39076c69d9d0cc5b4cff56a0b61339f487395d56"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 1048575,
+              "sha256": "3311ea1faad557de3899e89a39076c69d9d0cc5b4cff56a0b61339f487395d56"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 4,
+      "case": "stdout-bound0",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 1048576,
+              "sha256": "9bc1b2a288b26af7257a36277ae3816a7d4f16e89c1e7e77d0a5c48bad62b360"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 1048576,
+              "sha256": "9bc1b2a288b26af7257a36277ae3816a7d4f16e89c1e7e77d0a5c48bad62b360"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 4,
+      "case": "stdout-bound1",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "string",
+                "length": 1048577,
+                "sha256": "4a3f0c0c213adea174f9a3d4c13177315b588bdb2e9c1012d3d0bf0453ca0f6a"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "string",
+                "length": 1048577,
+                "sha256": "4a3f0c0c213adea174f9a3d4c13177315b588bdb2e9c1012d3d0bf0453ca0f6a"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 4,
+      "case": "distinct-root-and-env",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "text": "repeat"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "text": "repeat"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "0"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 5,
+      "case": "valid-utf8-bom-nul",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 17,
+              "sha256": "15757afd08955c2091bef4618d64a74426c56763bfd56f779978f0ba86120c4c",
+              "text": "text é\u0000path\nline\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 17,
+              "sha256": "15757afd08955c2091bef4618d64a74426c56763bfd56f779978f0ba86120c4c",
+              "text": "text é\u0000path\nline\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 5,
+      "case": "invalid-utf8",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 5,
+      "case": "nonzero-both-streams",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "Buffer",
+                "length": 9,
+                "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+                "base64": "77u/YQD/w6kA"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "Buffer",
+                "length": 9,
+                "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+                "base64": "77u/YQD/w6kA"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 5,
+      "case": "stderr-pressure",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 2,
+              "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+              "text": "ok"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 2,
+              "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+              "text": "ok"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 5,
+      "case": "missing-executable",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 5,
+      "case": "stdout-bound-1",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 268435455,
+              "sha256": "d6f0545aa627350be728a5b233e11b7f37d1ca935a9e881e8e54ef011113a6db"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 268435455,
+              "sha256": "d6f0545aa627350be728a5b233e11b7f37d1ca935a9e881e8e54ef011113a6db"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 5,
+      "case": "stdout-bound0",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 268435456,
+              "sha256": "b4a0226ee3f9b159ac06a86332dca0d90a04adef7f88934aa2a75be2a011d504"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 268435456,
+              "sha256": "b4a0226ee3f9b159ac06a86332dca0d90a04adef7f88934aa2a75be2a011d504"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 5,
+      "case": "stdout-bound1",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 268435457,
+                "sha256": "412aa5d0613cdca7146c715892fc75eec352cf7ad1a248489391ddacbb30117b"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 268435457,
+                "sha256": "412aa5d0613cdca7146c715892fc75eec352cf7ad1a248489391ddacbb30117b"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 5,
+      "case": "distinct-root-and-env",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "text": "repeat"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "text": "repeat"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 5,
+      "case": "listing-valid",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 68,
+              "sha256": "eb0634a307f043a519fc7aa7c0f88be788636b0c898c33d175b272f9fee77c0c",
+              "text": "100644 blob 1111111111111111111111111111111111111111       1\tone.ts\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 68,
+              "sha256": "eb0634a307f043a519fc7aa7c0f88be788636b0c898c33d175b272f9fee77c0c",
+              "text": "100644 blob 1111111111111111111111111111111111111111       1\tone.ts\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 5,
+      "case": "listing-gitlink-before-decode",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 68,
+              "sha256": "eb0634a307f043a519fc7aa7c0f88be788636b0c898c33d175b272f9fee77c0c",
+              "text": "100644 blob 1111111111111111111111111111111111111111       1\tone.ts\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "string",
+              "length": 68,
+              "sha256": "eb0634a307f043a519fc7aa7c0f88be788636b0c898c33d175b272f9fee77c0c",
+              "text": "100644 blob 1111111111111111111111111111111111111111       1\tone.ts\u0000"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 5,
+      "case": "listing-allocation-failed",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 6,
+      "case": "valid-utf8-bom-nul",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 21,
+              "sha256": "49acc993bee0a8c20b7b1ca97bcfc13b3fd2fee3b2dff44397503af7f6e35bdc",
+              "base64": "77u/dGV4dCDDqQBwYXRoCmxpbmUA"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 21,
+              "sha256": "49acc993bee0a8c20b7b1ca97bcfc13b3fd2fee3b2dff44397503af7f6e35bdc",
+              "base64": "77u/dGV4dCDDqQBwYXRoCmxpbmUA"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 6,
+      "case": "invalid-utf8",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 9,
+              "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+              "base64": "77u/YQD/w6kA"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 9,
+              "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+              "base64": "77u/YQD/w6kA"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 6,
+      "case": "nonzero-both-streams",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "Buffer",
+                "length": 9,
+                "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+                "base64": "77u/YQD/w6kA"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "Buffer",
+                "length": 9,
+                "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+                "base64": "77u/YQD/w6kA"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 6,
+      "case": "stderr-pressure",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 2,
+              "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+              "base64": "b2s="
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 2,
+              "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+              "base64": "b2s="
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 6,
+      "case": "missing-executable",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 6,
+      "case": "stdout-bound-1",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 268435455,
+              "sha256": "d6f0545aa627350be728a5b233e11b7f37d1ca935a9e881e8e54ef011113a6db"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 268435455,
+              "sha256": "d6f0545aa627350be728a5b233e11b7f37d1ca935a9e881e8e54ef011113a6db"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 6,
+      "case": "stdout-bound0",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 268435456,
+              "sha256": "b4a0226ee3f9b159ac06a86332dca0d90a04adef7f88934aa2a75be2a011d504"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 268435456,
+              "sha256": "b4a0226ee3f9b159ac06a86332dca0d90a04adef7f88934aa2a75be2a011d504"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 6,
+      "case": "stdout-bound1",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 268435457,
+                "sha256": "412aa5d0613cdca7146c715892fc75eec352cf7ad1a248489391ddacbb30117b"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 268435457,
+                "sha256": "412aa5d0613cdca7146c715892fc75eec352cf7ad1a248489391ddacbb30117b"
+              },
+              "stderr": {
+                "type": "null"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 6,
+      "case": "distinct-root-and-env",
+      "bound": 268435456,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "base64": "cmVwZWF0"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "base64": "cmVwZWF0"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "--no-optional-locks",
+                "-C",
+                "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.6.20",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 7,
+      "case": "valid-utf8-bom-nul",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 21,
+              "sha256": "49acc993bee0a8c20b7b1ca97bcfc13b3fd2fee3b2dff44397503af7f6e35bdc",
+              "base64": "77u/dGV4dCDDqQBwYXRoCmxpbmUA"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 21,
+              "sha256": "49acc993bee0a8c20b7b1ca97bcfc13b3fd2fee3b2dff44397503af7f6e35bdc",
+              "base64": "77u/dGV4dCDDqQBwYXRoCmxpbmUA"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 7,
+      "case": "invalid-utf8",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 9,
+              "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+              "base64": "77u/YQD/w6kA"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 9,
+              "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+              "base64": "77u/YQD/w6kA"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 7,
+      "case": "nonzero-both-streams",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "Buffer",
+                "length": 9,
+                "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+                "base64": "77u/YQD/w6kA"
+              },
+              "stderr": {
+                "type": "Buffer",
+                "length": 9,
+                "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+                "base64": "77u/YQD/w6kA"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "status": 7,
+              "signal": null,
+              "stdout": {
+                "type": "Buffer",
+                "length": 9,
+                "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+                "base64": "77u/YQD/w6kA"
+              },
+              "stderr": {
+                "type": "Buffer",
+                "length": 9,
+                "sha256": "3c6677943faefc948162c46adc3e627d4ee3dc242423edb18cd2094b1ceda6b4",
+                "base64": "77u/YQD/w6kA"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 7,
+      "case": "stderr-pressure",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 2,
+                "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+                "base64": "b2s="
+              },
+              "stderr": {
+                "type": "Buffer",
+                "length": 1048576,
+                "sha256": "58d8d1bac7272bfce62a6a2d90d14b56790543f56418cd7bc0cd6ca121984295"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 2,
+                "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df",
+                "base64": "b2s="
+              },
+              "stderr": {
+                "type": "Buffer",
+                "length": 1048576,
+                "sha256": "58d8d1bac7272bfce62a6a2d90d14b56790543f56418cd7bc0cd6ca121984295"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 7,
+      "case": "missing-executable",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOENT",
+              "status": null,
+              "signal": null,
+              "stdout": {
+                "type": "undefined"
+              },
+              "stderr": {
+                "type": "undefined"
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": []
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 7,
+      "case": "stdout-bound-1",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 1048575,
+              "sha256": "3311ea1faad557de3899e89a39076c69d9d0cc5b4cff56a0b61339f487395d56"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 1048575,
+              "sha256": "3311ea1faad557de3899e89a39076c69d9d0cc5b4cff56a0b61339f487395d56"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 7,
+      "case": "stdout-bound0",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 1048576,
+              "sha256": "9bc1b2a288b26af7257a36277ae3816a7d4f16e89c1e7e77d0a5c48bad62b360"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 1048576,
+              "sha256": "9bc1b2a288b26af7257a36277ae3816a7d4f16e89c1e7e77d0a5c48bad62b360"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 7,
+      "case": "stdout-bound1",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 1048577,
+                "sha256": "4a3f0c0c213adea174f9a3d4c13177315b588bdb2e9c1012d3d0bf0453ca0f6a"
+              },
+              "stderr": {
+                "type": "Buffer",
+                "length": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "base64": ""
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 1048577,
+                "sha256": "4a3f0c0c213adea174f9a3d4c13177315b588bdb2e9c1012d3d0bf0453ca0f6a"
+              },
+              "stderr": {
+                "type": "Buffer",
+                "length": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "base64": ""
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 7,
+      "case": "distinct-root-and-env",
+      "bound": 1048576,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "base64": "cmVwZWF0"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 6,
+              "sha256": "25e2b6b106523880e27763084ffa6a0756335be0d7106022535365b9ad39b4b1",
+              "base64": "cmVwZWF0"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-two",
+              "env": {
+                "G5_SENTINEL": "second",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 7,
+      "case": "narrow-envelope-1",
+      "bound": 64,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 63,
+              "sha256": "7d3e74a05d7db15bce4ad9ec0658ea98e3f06eeecf16b4c6fff2da457ddc2f34",
+              "base64": "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 63,
+              "sha256": "7d3e74a05d7db15bce4ad9ec0658ea98e3f06eeecf16b4c6fff2da457ddc2f34",
+              "base64": "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh"
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 7,
+      "case": "narrow-envelope0",
+      "bound": 64,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 64,
+              "sha256": "ffe054fe7ae0cb6dc65c3af9b61d5209f439851db43d0ba5997337df154668eb",
+              "base64": "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYQ=="
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": true,
+            "value": {
+              "type": "Uint8Array",
+              "length": 64,
+              "sha256": "ffe054fe7ae0cb6dc65c3af9b61d5209f439851db43d0ba5997337df154668eb",
+              "base64": "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYQ=="
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    },
+    {
+      "profile": 7,
+      "case": "narrow-envelope1",
+      "bound": 64,
+      "outputs": {
+        "old": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 65,
+                "sha256": "635361c48bb9eab14198e76ea8ab7f1a41685d6ad62aa9146d301d4f17eb0ae0",
+                "base64": "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWE="
+              },
+              "stderr": {
+                "type": "Buffer",
+                "length": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "base64": ""
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        },
+        "new": {
+          "result": {
+            "ok": false,
+            "error": {
+              "name": "Error",
+              "code": "ENOBUFS",
+              "status": null,
+              "signal": "SIGTERM",
+              "stdout": {
+                "type": "Buffer",
+                "length": 65,
+                "sha256": "635361c48bb9eab14198e76ea8ab7f1a41685d6ad62aa9146d301d4f17eb0ae0",
+                "base64": "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWE="
+              },
+              "stderr": {
+                "type": "Buffer",
+                "length": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "base64": ""
+              }
+            }
+          },
+          "parentStderr": "",
+          "calls": [
+            {
+              "argv": [
+                "ls-tree",
+                "-r",
+                "-z",
+                "-l",
+                "unresolved ref"
+              ],
+              "cwd": "/home/orca/.tmp/syzygy-bpyt6-20-implementation-20261105/repaired-differential/root-one",
+              "env": {
+                "G5_SENTINEL": "first",
+                "GIT_OPTIONAL_LOCKS": "sentinel"
+              }
+            }
+          ]
+        }
+      },
+      "equal": true
+    }
+  ]
+}

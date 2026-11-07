@@ -12,7 +12,6 @@
 // controlled evaluation input", so the input must come from outside the
 // artifacts being judged.
 
-import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
@@ -20,6 +19,7 @@ import { readGitBlobsBatch, type ReadGitBlobs } from './git-blob-batch.js';
 
 import {
   A1_CORRELATION_UNAVAILABLE,
+  createGitRunner,
   AUTHORITY_KINDS,
   supersessionTargetsOf,
   type ActRecordInput,
@@ -194,18 +194,18 @@ export interface LoadGovernanceInputsOptions {
 }
 
 function defaultRunGit(repoRoot: string, args: readonly string[]): string {
-  const stdout = execFileSync('git', ['--no-optional-locks', '-C', repoRoot, ...args], {
+  const stdout = createGitRunner({
+    prefix: ['--no-optional-locks', '-C', repoRoot],
     stdio: ['ignore', 'pipe', 'ignore'],
-  });
+  })(args);
   return new TextDecoder('utf-8', { fatal: true }).decode(stdout);
 }
 
 function defaultReadGitBlob(repoRoot: string, object: string): Uint8Array {
-  return new Uint8Array(
-    execFileSync('git', ['--no-optional-locks', '-C', repoRoot, 'cat-file', 'blob', object], {
-      stdio: ['ignore', 'pipe', 'ignore'],
-    }),
-  );
+  return new Uint8Array(createGitRunner({
+    prefix: ['--no-optional-locks', '-C', repoRoot],
+    stdio: ['ignore', 'pipe', 'ignore'],
+  })(['cat-file', 'blob', object]));
 }
 
 function readArtifact(read: (path: string) => Uint8Array, absolutePath: string): ArtifactInput {
@@ -242,6 +242,7 @@ function sameBytes(left: Uint8Array, right: Uint8Array): boolean {
 }
 
 function batchReaderFor(options: Pick<LoadGovernanceInputsOptions, 'readGitBlob' | 'readGitBlobs'>): ReadGitBlobs | undefined {
+  // G5 exception 8: isolated batch keeps its allowlisted env, config flags, piped input and framing.
   return options.readGitBlobs ?? (options.readGitBlob === undefined ? readGitBlobsBatch : undefined);
 }
 

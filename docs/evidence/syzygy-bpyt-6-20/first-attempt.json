@@ -1,0 +1,19 @@
+{
+  "subjectCommit": "e6dc955da03af3b42fff2e622f6c09df13442b8b",
+  "command": "npm run check:all",
+  "exitCode": 1,
+  "cause": "new factory dynamic/spread execFileSync options rejected by unchanged test-artifact-verification-live-source.test.ts",
+  "files": {
+    "passed": 169,
+    "failed": 1,
+    "total": 170
+  },
+  "tests": {
+    "passed": 3778,
+    "failed": 1,
+    "total": 3779
+  },
+  "logSha256": "a5e5a5d5f0bc80e28fdeadca766d1153ae303bf9d709bae211327f0ce2c1cf75",
+  "battery": "partial/interrupted-subject-changed; not a successful result",
+  "interruption": "first-attempt-interruption.json"
+}

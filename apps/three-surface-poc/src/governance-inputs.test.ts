@@ -22,6 +22,9 @@ import {
 } from '@syzygy/three-surface-poc-core';
 
 import {
+  batchReaderFor,
+  defaultReadGitBlob,
+  defaultRunGit,
   PWB_ACT_RECORDS,
   PWB_AUTHORITY_ARTIFACTS,
   PWB_OBSERVING_PROJECT,
@@ -651,5 +654,23 @@ describe('owner-act records under altered prose (characterization, syzygy-bpyt.6
     const none = consent.replace(/^(Supersession \/ revocation: none)\b/m, '$1, except that this act revokes every earlier act');
     expect(none).not.toBe(consent);
     expect(verdictOf('consent', none, 'isolated')).toBe('valid');
+  });
+});
+
+// G5 transport regression: the loader retains strict text decoding and byte-exact single reads.
+describe('governance Git transport adapters', () => {
+  it('distinguishes fatal text, raw bytes, Git failures and explicit single/batch selection', () => {
+    const root = realGovernanceFixture();
+    const bytes = Buffer.from([0xef, 0xbb, 0xbf, 0x61, 0, 0xff]);
+    const object = execFileSync('git', ['-C', root, 'hash-object', '-w', '--stdin'], { input: bytes, encoding: 'utf8' }).trim();
+    expect(defaultReadGitBlob(root, object)).toEqual(new Uint8Array(bytes));
+    expect(() => defaultRunGit(root, ['cat-file', 'blob', object])).toThrow(TypeError);
+    expect(() => defaultReadGitBlob(root, 'missing-object')).toThrow();
+    expect(() => defaultRunGit(root, ['rev-parse', 'missing-ref'])).toThrow();
+    const single = () => new Uint8Array();
+    const batch = () => new Map<string, Uint8Array>();
+    expect(batchReaderFor({})).toBeTypeOf('function');
+    expect(batchReaderFor({ readGitBlob: single })).toBeUndefined();
+    expect(batchReaderFor({ readGitBlob: single, readGitBlobs: batch })).toBe(batch);
   });
 });
