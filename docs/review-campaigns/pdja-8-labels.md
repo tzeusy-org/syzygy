@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-PDJA-8-LABELS-2-RAW.md:1`), over `49e36777`, with three revise findings: a leader often ran under the label that had displaced it, its "own line" had no test, and the search test claimed more than it pinned. A leader now ends at the nearest point of its own line it can see, along a run clear of other labels and nodes, or is not drawn; tests pin its end and the search's step and order. Round 1 was also `REVISE`; its notes and these stand in the PR.
+`REVISE` (`R-PDJA-8-LABELS-3-RAW.md:1`), over `f65fe8b2`, with two revise findings: a label on another line could draw no leader because its run started at the label's centre, and a leader could end on a stretch shared with another line. Rounds 1 and 2 were also `REVISE`. The branch carries an unreviewed repair of both; no further round is dispatched without the owner.

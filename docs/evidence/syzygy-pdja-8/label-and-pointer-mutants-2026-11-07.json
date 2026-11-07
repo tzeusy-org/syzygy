@@ -2,13 +2,13 @@
  "format": "mutation-record",
  "bead": "syzygy-pdja.8",
  "subject": {
-  "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "e4bf810bb76222d4791df72de03b22f03b561864b8d08f329e2a7373c7e59a63",
+  "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "d84d94fe61ba22c1bfdc7e72bc9e38e8a42287fcb5dd8cfdc3b5c3ab030993c5",
   "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "008bf930a37a0509b9d4cbb180a0efb66f8ccce98254121f85b0d80698f62862"
  },
- "ranAt": "fc8e550d5ad191d6536182b11668d5acc1582858",
+ "ranAt": "64a3eeb1ad80b8de25b780f8bb5753ecb9bddc67",
  "note": "Each mutant replaces old with new once, runs the diagram-layout, dossier-reading and dossier-reading browser tests, then restores. The baseline passed before and after.",
- "denominator": 38,
- "killed": 38,
+ "denominator": 39,
+ "killed": 39,
  "mutants": [
   {
    "id": "pass-off",
@@ -123,55 +123,6 @@
    "killed": true
   },
   {
-   "id": "leader-off",
-   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
-   "old": "marker-end=\"url(#${markerId})\"/>${leader}`;",
-   "new": "marker-end=\"url(#${markerId})\"/>`;",
-   "killed": true
-  },
-  {
-   "id": "leader-always",
-   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
-   "old": "const moved = x !== at.labelX || y !== at.labelY;",
-   "new": "const moved = true;",
-   "killed": true
-  },
-  {
-   "id": "leader-under-labels",
-   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
-   "old": "others.every(box => !segmentEntersBox(fromX, fromY, at.x, at.y, box))",
-   "new": "true",
-   "killed": true
-  },
-  {
-   "id": "leader-end-only-clear",
-   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
-   "old": "others.every(box => !segmentEntersBox(fromX, fromY, at.x, at.y, box))",
-   "new": "others.every(box => !(at.x > box.left && at.x < box.right && at.y > box.top && at.y < box.bottom))",
-   "killed": true
-  },
-  {
-   "id": "leader-on-line-too",
-   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
-   "old": "  if (samples.some(at => gap(at) < LEADER_MIN_RUN)) return undefined;\n",
-   "new": "",
-   "killed": true
-  },
-  {
-   "id": "leader-to-first-place",
-   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
-   "old": "const reach = moved ? leaderEnd(at.d, boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])]) : undefined;",
-   "new": "const reach = moved ? { x: at.labelX, y: at.labelY } : undefined;",
-   "killed": true
-  },
-  {
-   "id": "leader-neighbour",
-   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
-   "old": "const reach = moved ? leaderEnd(at.d,",
-   "new": "const reach = moved ? leaderEnd(layout.edges[0]!.d,",
-   "killed": true
-  },
-  {
    "id": "leader-samples-2",
    "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
    "old": "const LEADER_SAMPLES = 64;",
@@ -183,13 +134,6 @@
    "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
    "old": "const LEADER_SAMPLES = 64;",
    "new": "const LEADER_SAMPLES = 8;",
-   "killed": true
-  },
-  {
-   "id": "leader-far-end",
-   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
-   "old": "best === undefined || gap(at) < gap(best) ? at : best",
-   "new": "best === undefined || gap(at) > gap(best) ? at : best",
    "killed": true
   },
   {
@@ -260,6 +204,69 @@
    "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
    "old": "[[across, across - ring], [across, ring - across], [-across, across - ring], [-across, ring - across]]",
    "new": "[[across, ring - across], [-across, ring - across]]",
+   "killed": true
+  },
+  {
+   "id": "leader-off",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "marker-end=\"url(#${markerId})\"/>${leader}`;",
+   "new": "marker-end=\"url(#${markerId})\"/>`;",
+   "killed": true
+  },
+  {
+   "id": "leader-always",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const moved = x !== at.labelX || y !== at.labelY;",
+   "new": "const moved = true;",
+   "killed": true
+  },
+  {
+   "id": "leader-y-only",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const moved = x !== at.labelX || y !== at.labelY;",
+   "new": "const moved = y !== at.labelY;",
+   "killed": true
+  },
+  {
+   "id": "leader-under-labels",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "runs.find(({ from, to }) => others.every(box => !segmentEntersBox(from.x, from.y, to.x, to.y, box)))",
+   "new": "runs[0]",
+   "killed": true
+  },
+  {
+   "id": "leader-from-centre",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "starts.push({ x: across, y: label.top }, { x: across, y: label.bottom }, { x: label.left, y: down }, { x: label.right, y: down });",
+   "new": "starts.push({ x: (label.left + label.right) / 2, y: (label.top + label.bottom) / 2 });",
+   "killed": true
+  },
+  {
+   "id": "leader-on-line-too",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "  if (own.some(at => gap(at) < LEADER_MIN_RUN)) return undefined;\n",
+   "new": "",
+   "killed": true
+  },
+  {
+   "id": "leader-shared-ok",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const ends = own.filter(at => otherCurves.every(curve => curve.every((a, i) => i === 0 || distanceToSegment(at, curve[i - 1]!, a) >= LEADER_SHARED)));",
+   "new": "const ends = own;",
+   "killed": true
+  },
+  {
+   "id": "leader-neighbour",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "? leaderRun(curves[i]!,",
+   "new": "? leaderRun(curves[0]!,",
+   "killed": true
+  },
+  {
+   "id": "leader-far-end",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "runs.sort((a, b) => a.length - b.length);",
+   "new": "runs.sort((a, b) => b.length - a.length);",
    "killed": true
   },
   {
