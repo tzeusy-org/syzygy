@@ -178,16 +178,16 @@ describe('layered left-to-right diagram layout', () => {
       const leader = /<path class="edge-leader" d="M ([\d.]+) ([\d.]+) L ([\d.]+) ([\d.]+)"/u.exec(body);
       return { i, curve: /<path d="(M [^"]+)" marker-end/u.exec(body)![1]!, leader: leader === null ? undefined : leader.slice(1).map(Number) as [number, number, number, number] };
     });
-    const curvePoints = (d: string) => {
+    const curvePoints = (d: string, pieces = 2000) => {
       const [x0, y0, x1, y1, x2, y2, x3, y3] = [...d.matchAll(/-?[\d.]+/gu)].map(m => Number(m[0])) as [number, number, number, number, number, number, number, number];
-      return Array.from({ length: 2001 }, (_, i) => {
-        const t = i / 2000, u = 1 - t;
+      return Array.from({ length: pieces + 1 }, (_, i) => {
+        const t = i / pieces, u = 1 - t;
         return { x: u ** 3 * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t ** 3 * x3, y: u ** 3 * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t ** 3 * y3 };
       });
     };
 
     it('runs each leader from its own label to its own line, in plain sight of every other label and node', () => {
-      let seed = 20261108, leaders = 0, sideways = 0;
+      let seed = 20261108, leaders = 0, sideways = 0, direct = 0, offCorner = 0, onSide = 0, offHalves = 0;
       const next = (bound: number): number => { seed = (seed * 1103515245 + 12345) % 2147483648; return Math.floor(seed / 65536) % bound; };
       for (let graph = 0; graph < 300; graph++) {
         const ids = Array.from({ length: 3 + next(8) }, (_, i) => `n${i}`);
@@ -197,6 +197,9 @@ describe('layered left-to-right diagram layout', () => {
         const labels = placedLabels(svg);
         const blocks = [...labels, ...layout.nodes.map(n => ({ left: n.x, right: n.x + 200, top: n.y, bottom: n.y + 56 }))];
         const curvesIn = leadersIn(svg).map(group => group.curve);
+        // Another line as the layout sees it: 64 straight pieces (a literal; the code's LEADER_SAMPLES).
+        const sampled = new Map(curvesIn.map(d => [d, curvePoints(d, 64)]));
+        const pointsOf = (d: string) => sampled.get(d)!;
         for (const { i, curve, leader } of leadersIn(svg)) {
           const own = labels[i]!;
           const natural = layout.edges[i]!;
@@ -211,10 +214,23 @@ describe('layered left-to-right diagram layout', () => {
           const offEdge = Math.min(Math.abs(fromX - own.left), Math.abs(fromX - own.right), Math.abs(fromY - own.top), Math.abs(fromY - own.bottom));
           expect(offEdge, `graph ${graph} edge ${i} start`).toBeLessThan(0.2);
           expect(fromX >= own.left - 0.2 && fromX <= own.right + 0.2 && fromY >= own.top - 0.2 && fromY <= own.bottom + 0.2, `graph ${graph} edge ${i} start on its box`).toBe(true);
-          // No different line runs through its end.
+          // Where along its side it starts, as a fraction: the search tries 17 points down every side, not only the corners or halves.
+          const atSide = (Math.abs(fromX - own.left) < 0.2 || Math.abs(fromX - own.right) < 0.2) && fromY > own.top + 0.2 && fromY < own.bottom - 0.2;
+          const along = atSide ? (fromY - own.top) / (own.bottom - own.top) : (fromX - own.left) / (own.right - own.left);
+          if (atSide) onSide++;
+          if (along > 0.02 && along < 0.98) offCorner++;
+          if ([0, 0.5, 1].every(half => Math.abs(along - half) > 0.02)) offHalves++;
+          // No different line runs within 1.5 px of its end (1.4 here: the drawing rounds to a tenth), measured to each of that line's 64 straight
+          // pieces, not only their ends.
+          const toSegment = (a: { x: number; y: number }, b: { x: number; y: number }): number => {
+            const dx = b.x - a.x, dy = b.y - a.y, length = dx * dx + dy * dy;
+            const t = length === 0 ? 0 : Math.max(0, Math.min(1, ((toX - a.x) * dx + (toY - a.y) * dy) / length));
+            return Math.hypot(a.x + t * dx - toX, a.y + t * dy - toY);
+          };
           for (const other of curvesIn) {
             if (other === curve) continue;
-            expect(Math.min(...curvePoints(other).map(at => Math.hypot(at.x - toX, at.y - toY))), `graph ${graph} edge ${i} ends on another line`).toBeGreaterThan(1);
+            const points = pointsOf(other);
+            expect(Math.min(...points.slice(1).map((at, k) => toSegment(points[k]!, at))), `graph ${graph} edge ${i} ends on another line`).toBeGreaterThanOrEqual(1.4);
           }
           // Its end is on this edge's own curve.
           const onOwn = Math.min(...curvePoints(curve).map(at => Math.hypot(at.x - toX, at.y - toY)));
@@ -222,6 +238,18 @@ describe('layered left-to-right diagram layout', () => {
           // A label against its own line needs none.
           const clearance = Math.min(...curvePoints(curve).map(at => Math.hypot(Math.max(own.left - at.x, 0, at.x - own.right), Math.max(own.top - at.y, 0, at.y - own.bottom))));
           expect(clearance, `graph ${graph} edge ${i} against its line`).toBeGreaterThan(5);
+          // It is the shortest run to its end: where the straight run from the nearest point of its box is clear, the leader is no longer
+          // than that run plus half the spacing of 16 starting points along the box's longer side.
+          const nearX = Math.max(own.left, Math.min(toX, own.right)), nearY = Math.max(own.top, Math.min(toY, own.bottom));
+          const clear = blocks.every((block, b) => b === i || Array.from({ length: 41 }, (_, step) => step / 40).every(t => {
+            const x = nearX + (toX - nearX) * t, y = nearY + (toY - nearY) * t;
+            return !(x > block.left + 0.2 && x < block.right - 0.2 && y > block.top + 0.2 && y < block.bottom - 0.2);
+          }));
+          if (clear) {
+            direct++;
+            const spacing = Math.max(own.right - own.left, own.bottom - own.top) / 16;
+            expect(Math.hypot(toX - fromX, toY - fromY), `graph ${graph} edge ${i} shortest`).toBeLessThanOrEqual(Math.hypot(toX - nearX, toY - nearY) + spacing / 2 + 0.3);
+          }
           for (const [b, block] of blocks.entries()) {
             if (b === i) continue;
             for (let step = 0; step <= 40; step++) {
@@ -232,16 +260,45 @@ describe('layered left-to-right diagram layout', () => {
         }
       }
       expect(leaders).toBeGreaterThan(20);
+      expect(direct, 'leaders whose shortest run is checked').toBeGreaterThan(10);
       expect(sideways, 'a label moved only sideways keeps its leader').toBeGreaterThan(0);
+      expect(offCorner, 'leaders starting between a side\'s corners').toBeGreaterThan(0);
+      expect(onSide, 'leaders starting on a label\'s left or right side').toBeGreaterThan(0);
+      expect(offHalves, 'leaders starting off a side\'s corners and middle').toBeGreaterThan(0);
     });
 
-    it('ends a leader at the nearest point of its line that it can see', () => {
-      // `a` fans to `b` and `c`; the second parallel edge's label is pushed clear of the first's. The nearest point it can see is a literal.
+    it('runs a leader the shortest way from its label\'s edge to a point of its own line that no other line runs through', () => {
+      // `a` fans to `b` and `c`; the second parallel edge's label is pushed clear of the first's. Its leader's ends are literals.
       const fan = [edge('ab', 'a', 'b'), edge('ab2', 'a', 'b'), edge('ac', 'a', 'c')];
       const svg = renderDiagramSvg(renderOf(['a', 'b', 'c'], fan, 'to'), 0, text => text, READABLE_SPACING);
       const groups = leadersIn(svg);
       expect(groups[0]!.leader).toBeUndefined();
       expect(groups[1]!.leader).toEqual([336.9, 60.5, 341.9, 71]);
+    });
+
+    it('ends a leader clear of a back edge as of any other line', () => {
+      // A random graph (seed 77, graph 1186) where a moved label's nearest end of its own line lies where a back edge's line runs.
+      const pairs = [['n3', 'n4'], ['n7', 'n1'], ['n6', 'n7'], ['n1', 'n6'], ['n9', 'n7'], ['n1', 'n2'], ['n4', 'n6'], ['n9', 'n8'], ['n9', 'n6'], ['n3', 'n5']] as const;
+      const edges = pairs.map(([from, to], i) => edge(`e${i}`, from, to));
+      const ids = Array.from({ length: 10 }, (_, i) => `n${i}`);
+      const layout = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
+      expect(layout.edges.some(e => e.back), 'the graph has a back edge').toBe(true);
+      const groups = leadersIn(renderDiagramSvg(renderOf(ids, edges, 'a long label that wraps twice over'), 1186, text => text, READABLE_SPACING));
+      const lines = groups.map(group => curvePoints(group.curve, 64));
+      const ends = groups.flatMap(({ i, leader }) => leader === undefined ? [] : [{ i, x: leader[2], y: leader[3] }]);
+      expect(ends.length).toBeGreaterThan(0);
+      for (const end of ends) {
+        for (const [j, points] of lines.entries()) {
+          if (j === end.i) continue;
+          // 1.4, not the layout's 1.5: the drawing rounds the line and the end to a tenth.
+          const near = Math.min(...points.slice(1).map((b, k) => {
+            const a = points[k]!, dx = b.x - a.x, dy = b.y - a.y, length = dx * dx + dy * dy;
+            const t = length === 0 ? 0 : Math.max(0, Math.min(1, ((end.x - a.x) * dx + (end.y - a.y) * dy) / length));
+            return Math.hypot(a.x + t * dx - end.x, a.y + t * dy - end.y);
+          }));
+          expect(near, `edge ${end.i} ends on edge ${j}${layout.edges[j]!.back ? ' (a back edge)' : ''}`).toBeGreaterThanOrEqual(1.4);
+        }
+      }
     });
 
     it('draws no leader on the provider form, or where no label moved', () => {

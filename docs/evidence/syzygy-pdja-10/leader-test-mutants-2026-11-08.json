@@ -1,0 +1,56 @@
+{
+  "subject": "Leader tests in apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts against the five mutants review R-PDJA-8-LABELS-4 note 2 left surviving",
+  "bead": "syzygy-pdja.10",
+  "review": "docs/reviews/R-PDJA-8-LABELS-4-RAW.md",
+  "ranAt": "d5c48fca9001f68d8517aa1cd9f6e880a4e2f1a2",
+  "ranAtNote": "Base commit; the test edits ran uncommitted on top of it and are the bytes digested below.",
+  "subjectDigests": {
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "d84d94fe61ba22c1bfdc7e72bc9e38e8a42287fcb5dd8cfdc3b5c3ab030993c5",
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts": "89526b20d6dc034d2e5b7f811a89e7330a0db1e95ec62b927eb2eae5abbb484a"
+  },
+  "command": "npx vitest run apps/three-surface-poc/src/polaris-generation/ (each mutant applied alone to diagram-layout.ts, restored after)",
+  "date": "2026-11-08",
+  "mutants": [
+    {
+      "id": "shared-1.01",
+      "old": "const LEADER_SHARED = 1.5;",
+      "new": "const LEADER_SHARED = 1.01;",
+      "killed": true,
+      "tests": "Tests  2 failed | 344 passed (346)"
+    },
+    {
+      "id": "no-back-others",
+      "old": "curves.filter((_, j) => layout.edges[j]!.d !== at.d))",
+      "new": "curves.filter((_, j) => layout.edges[j]!.d !== at.d && !layout.edges[j]!.back))",
+      "killed": true,
+      "tests": "Tests  1 failed | 345 passed (346)"
+    },
+    {
+      "id": "stops-1",
+      "old": "const LEADER_EDGE_STOPS = 16;",
+      "new": "const LEADER_EDGE_STOPS = 1;",
+      "killed": true,
+      "tests": "Tests  1 failed | 345 passed (346)"
+    },
+    {
+      "id": "stops-2",
+      "old": "const LEADER_EDGE_STOPS = 16;",
+      "new": "const LEADER_EDGE_STOPS = 2;",
+      "killed": true,
+      "tests": "Tests  1 failed | 345 passed (346)"
+    },
+    {
+      "id": "starts-tb-only",
+      "old": "starts.push({ x: across, y: label.top }, { x: across, y: label.bottom }, { x: label.left, y: down }, { x: label.right, y: down });",
+      "new": "starts.push({ x: across, y: label.top }, { x: across, y: label.bottom });",
+      "killed": true,
+      "tests": "Tests  1 failed | 345 passed (346)"
+    }
+  ],
+  "killed": 5,
+  "total": 5,
+  "notes": [
+    "no-back-others was indistinguishable on 4000 random graphs; a diff of 6000 rendered graphs (two seeds) under the real code and the mutant found one graph that differs (seed 77, graph 1186), now a fixture test.",
+    "The end-clearance bound is 1.4 rather than the layout's 1.5: the drawing rounds lines and ends to a tenth, and graph 321 of seed 20261108 measures 1.498 from its SVG under the real code."
+  ]
+}
