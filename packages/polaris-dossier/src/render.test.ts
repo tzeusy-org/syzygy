@@ -447,7 +447,7 @@ describe('render', () => {
       const index = files.get('index.html')!;
       expect(index).toContain('<section id="section-why"');
       expect(index).not.toContain('<section id="section-core-ideas"');
-      expect(index).toContain('<li><a href="poles/2.html">How it works</a><ul><li><a href="poles/2.html#section-core-ideas">Core ideas</a></li></ul></li>');
+      expect(index).toContain('<li data-hue="2"><a href="poles/2.html">How it works</a><ul><li><a href="poles/2.html#section-core-ideas">Core ideas</a></li></ul></li>');
       const machine = JSON.parse(files.get('machine.json')!) as { claims: { id: string; page: string }[] };
       expect(machine.claims.filter((claim) => claim.id === 'p1').map((claim) => claim.page)).toEqual(['poles/2.html']);
       const packet = buildDesignPacket({ run, runId: 'run-1', pinnedRevision: 'f'.repeat(40), files });
@@ -1347,8 +1347,9 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     if (!result.ok) throw new Error(result.refusal.reason);
     const index = readSite(result.report.site).get('index.html')!;
     const section = index.slice(index.indexOf('<section id="section-core-ideas"'));
-    expect(section.indexOf('<figure>')).toBeGreaterThan(-1);
-    expect(section.indexOf('<figure>')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
+    // An operator-agent page gives its first diagram the first hue (syzygy-pdja.14).
+    expect(section.indexOf('<figure data-hue="1">')).toBeGreaterThan(-1);
+    expect(section.indexOf('<figure data-hue="1">')).toBeLessThan(section.indexOf('data-claim-id="p1"'));
   });
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {

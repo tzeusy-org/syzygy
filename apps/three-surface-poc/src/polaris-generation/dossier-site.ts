@@ -180,6 +180,17 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   // The pop repeats the mark's accessible name, so it is out of layout until shown: a hidden but laid-out pop widens a narrow page.
   + 'a.cite{position:relative}.cite-pop{display:none;position:absolute;left:0;top:1.6em;z-index:6;white-space:nowrap;background:var(--panel-raised);border:1px solid var(--line);border-radius:6px;padding:.2rem .5rem;font:400 .8rem/1.4 var(--font-mono);color:var(--ink);vertical-align:baseline}'
   + 'a.cite:hover>.cite-pop,a.cite:focus>.cite-pop,a.cite:focus-visible>.cite-pop{display:block}'
+  // Colour (syzygy-pdja.14): six hues, light and dark, each a line colour and a tint. A Pole, a diagram outside a Pole page and a card
+  // each take one in turn; text stays ink on a tint, so every text contrast is the page's own. No hue carries a claim.
+  + ':root{--h1:#8fb0f0;--h1t:#262d3d;--h2:#5cc6b8;--h2t:#1f302e;--h3:#b9a2f0;--h3t:#2d2740;--h4:#f08aa9;--h4t:#3a2630;--h5:#a6d16f;--h5t:#29321f;--h6:#e5937a;--h6t:#3a2c26;--accent:var(--cyan);--accent-tint:var(--d-accent-tint)}'
+  + '@media (prefers-color-scheme:light){:root{--h1:#3a64b8;--h1t:#eef2fb;--h2:#0f766e;--h2t:#e7f4f2;--h3:#6d4bc3;--h3t:#f2eefb;--h4:#b4235a;--h4t:#fbeef3;--h5:#4d7c0f;--h5t:#f0f6e6;--h6:#ad4f2c;--h6t:#fbf3ee;}}'
+  + '[data-hue="1"],ul.cards>li.card:nth-child(6n+1){--accent:var(--h1);--accent-tint:var(--h1t)}[data-hue="2"],ul.cards>li.card:nth-child(6n+2){--accent:var(--h2);--accent-tint:var(--h2t)}[data-hue="3"],ul.cards>li.card:nth-child(6n+3){--accent:var(--h3);--accent-tint:var(--h3t)}[data-hue="4"],ul.cards>li.card:nth-child(6n+4){--accent:var(--h4);--accent-tint:var(--h4t)}[data-hue="5"],ul.cards>li.card:nth-child(6n+5){--accent:var(--h5);--accent-tint:var(--h5t)}[data-hue="6"],ul.cards>li.card:nth-child(6n+0){--accent:var(--h6);--accent-tint:var(--h6t)}'
+  + 'figure:has(.diagram-scroll){border-top:4px solid var(--accent)}.diagram-scroll svg rect{fill:var(--accent-tint);stroke:var(--accent)}.diagram-scroll svg path{stroke:var(--muted)}.diagram-scroll svg marker path{fill:var(--muted)}.diagram-scroll svg rect.edge-label{fill:var(--panel);stroke:none}.diagram-scroll path.edge-echo{stroke:var(--accent)}.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--accent)}'
+  + 'section[data-hue]>h1{border-bottom:4px solid var(--accent);padding-bottom:.4rem}section[data-hue] h2{border-bottom-color:color-mix(in srgb,var(--accent) 45%,var(--line))}'
+  + '.pole-map>ol{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.9rem}.pole-map>ol>li{background:var(--accent-tint);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:12px;padding:.85rem 1rem}.pole-map>ol>li>a{font-weight:600;font-size:1.05rem}.pole-map>ol>li>ul{margin:.4rem 0 0;padding-left:1.1rem;font-size:.92rem}'
+  + '.contents li[data-hue]>a::before{content:"";display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--accent);margin-right:.45em;vertical-align:.05em}'
+  + '.pole-map,.review-report>summary{font-family:var(--font-serif)}.legend-line{border-top-color:var(--muted)}'
+  + 'li.card{background:var(--accent-tint);border-top:3px solid var(--accent)}th{background:color-mix(in srgb,var(--accent) 12%,var(--panel))}ol.steps>li::before{border-color:var(--accent);background:var(--accent-tint)}'
   + '.run-sentence{margin:.5rem 0;font-size:.9rem;color:var(--muted)}.reading-legend{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.85rem;color:var(--muted)}.reading-legend ul{margin:.25rem 0;padding-left:1.2rem}.view-switch{margin:0}.legend-sample{font:600 .9em var(--font-mono)}';
 
 /** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
@@ -256,8 +267,11 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // its own page, and one holding only the why section has none. Every section is in exactly one Pole, and the why section is one of them.
   const poleSpec = withheld ? undefined : local?.poles;
   const poles = poleSpec === undefined ? [] : poleSpec.poles.map((pole, index) => ({
-    label: pole.label, sections: pole.sections, path: pole.sections.every(id => id === poleSpec.whySection) ? null : `poles/${index + 1}.html`,
+    label: pole.label, sections: pole.sections, hue: index % HUES + 1, path: pole.sections.every(id => id === poleSpec.whySection) ? null : `poles/${index + 1}.html`,
   }));
+  // Colour (syzygy-pdja.14, owner review of the Redis run): an operator-agent page gives each Pole, and each diagram outside a Pole page,
+  // one of six hues in turn. A hue only tells parts apart; it carries no claim, so nothing a reader needs rests on it.
+  const hueAttr = (hue: number): string => local === undefined ? '' : ` data-hue="${hue}"`;
   if (poleSpec !== undefined) {
     const homes = draft.sections.map(section => poles.filter(pole => pole.sections.includes(section.id)).length);
     if (poles.length === 0 || homes.some(count => count !== 1) || poles.some(pole => pole.sections.length === 0 || pole.sections.some(id => !draft.sections.some(section => section.id === id)))
@@ -527,7 +541,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       return notice(from, d.id, { kind: 'unresolved', reason: 'diagram could not be rendered inertly', references: [...new Set([...d.nodes, ...d.edges].flatMap(element => element.sourceIds))] });
     }
     const legend = '<ul class="diagram-legend" aria-label="Line styles"><li><span class="legend-line observed" aria-hidden="true"></span>Solid: observed</li><li><span class="legend-line inferred" aria-hidden="true"></span>Dashed: inferred</li><li><span class="legend-line unknown" aria-hidden="true"></span>Dotted: unknown (label ends “?”)</li></ul>';
-    return `<figure><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary><ul>${nodeList}</ul><ol>${edgeList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
+    return `<figure${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}><figcaption>${escape(d.title)}</figcaption><p class="diagram-relationship"><span class="eyebrow">${escape(d.kind)}</span> ${escape(d.relationship)}</p><div class="diagram-scroll">${svg}</div>${legend}<details><summary>Read every component and relationship</summary><ul>${nodeList}</ul><ol>${edgeList}</ol><details class="diagram-source"><summary>Declarative source (Mermaid)</summary><pre>${escape(diagramToMermaid(d))}</pre></details></details></figure>`;
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
   const localPages = local?.pages ?? [];
@@ -545,7 +559,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const reportItems = (from: string): string => `${localNav(from)}<li><a href="${href(from, 'size-report.html')}">Size report</a></li>${local === undefined ? '' : `<li><a href="${href(from, APPENDIX)}">Appendix</a></li>`}`;
   // A provider run's bytes are pinned, so its list keeps its old shape.
   const reviewReport = (from: string): string => local === undefined ? `${reportItems(from)}</ol>` : `</ol><details class="review-report"${reportPaths.includes(from) ? ' open' : ''}><summary>Review report</summary><ol>${reportItems(from)}</ol></details>`;
-  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li>${poles.map(pole => pole.path === null ? '' : `<li><a href="${escape(href(from, pole.path))}">${escape(pole.label)}</a></li>`).join('')}<li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li><li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${reviewReport(from)}`;
+  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li>${poles.map(pole => pole.path === null ? '' : `<li${hueAttr(pole.hue)}><a href="${escape(href(from, pole.path))}">${escape(pole.label)}</a></li>`).join('')}<li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li><li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${reviewReport(from)}`;
   // The dossier's open questions and Unknown claims, counted for the one sentence before any page is drawn.
   const openQuestions = withheld ? 0 : draft.unresolved.length;
   const unknownClaims = local === undefined || withheld ? 0 : [...local.blocks.values()].filter(b => b.marking === 'unknown').length
@@ -605,7 +619,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // The map of the Poles: each Pole's label linking to its page (the why section's Pole to the section here), with its sections.
   const poleMap = poles.length === 0 ? '' : `<nav class="pole-map" aria-label="The parts of this dossier"><h2>The parts of this dossier</h2><ol>${poles.map(pole => {
     const target = pole.path === null ? href(from, 'index.html', `section-${poleSpec!.whySection}`) : href(from, pole.path);
-    return `<li><a href="${escape(target)}">${escape(pole.label)}</a><ul>${pole.sections.map(id => `<li><a href="${escape(sectionHref(from, id))}">${escape(draft.sections.find(section => section.id === id)!.title)}</a></li>`).join('')}</ul></li>`;
+    return `<li${hueAttr(pole.hue)}><a href="${escape(target)}">${escape(pole.label)}</a><ul>${pole.sections.map(id => `<li><a href="${escape(sectionHref(from, id))}">${escape(draft.sections.find(section => section.id === id)!.title)}</a></li>`).join('')}</ul></li>`;
   }).join('')}</ol></nav>`;
   // Claim ids are unique across the dossier, so each page's banner carries its own.
   const bannerFor = (claimId: string): string => stop === null ? '' : claim('aside', claimId, 'unknown',
@@ -636,7 +650,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         ? `<p class="pole-why"><a href="${escape(href(at, 'index.html', `section-${id}`))}">${escape(section.title)}</a> is on the overview.</p>`
         : sectionMarkup(at, section, draft.sections.indexOf(section));
     }).join('');
-    add(at, 1, pole.label, `<section id="pole" data-reading-level="1" data-pole="${escape(at)}"><span class="eyebrow">Part of <a href="${escape(href(at, 'index.html'))}">${escape(draft.title)}</a></span><h1>${escape(pole.label)}</h1>${bannerFor(`run-stopped/pole/${at}`)}${body}</section>`);
+    add(at, 1, pole.label, `<section id="pole" data-reading-level="1" data-pole="${escape(at)}"${hueAttr(pole.hue)}><span class="eyebrow">Part of <a href="${escape(href(at, 'index.html'))}">${escape(draft.title)}</a></span><h1>${escape(pole.label)}</h1>${bannerFor(`run-stopped/pole/${at}`)}${body}</section>`);
   }
 
   // --- deep dives
@@ -809,6 +823,9 @@ function withheldWords(note: WithheldNote): string {
   const names = [...note.named, ...(unnamed === 0 ? [] : [`${unnamed} not named, because a secret detector matches the path`])];
   return `(withheld from this dossier: it rests on ${note.sources} source file(s) that screening withholds: ${names.join('; ')})`;
 }
+
+/** How many hues an operator-agent page cycles through (syzygy-pdja.14). */
+const HUES = 6;
 
 /** The appendix page (dossier spec v1.5). */
 const APPENDIX = 'appendix.html';
