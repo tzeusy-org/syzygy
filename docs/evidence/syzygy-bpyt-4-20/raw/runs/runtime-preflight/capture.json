@@ -1,0 +1,39 @@
+{
+  "observer": "outer task-owned observe.py process; captures distinct child emitter stdio",
+  "observer_pid": 607819,
+  "observer_sha256": "c6a3e3a19aab952f6ee14dde24d8c4c9a7199ddfb3e98fc258cb521f9c32e4c5",
+  "captured_at": "2026-11-06T10:26:25.108391+00:00",
+  "cwd": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject",
+  "argv": [
+    "/usr/bin/python3",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/isolated.py",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject",
+    "python3",
+    "-c",
+    "import os,sys,subprocess,json; print(json.dumps({\"python\":sys.version,\"node\":subprocess.check_output([\"node\",\"--version\"],text=True).strip(),\"npm\":subprocess.check_output([\"npm\",\"--version\"],text=True).strip(),\"bwrap\":subprocess.check_output([\"bwrap\",\"--version\"],text=True).strip(),\"pid_namespace\":os.readlink(\"/proc/self/ns/pid\"),\"home\":os.path.expanduser(\"~\"),\"tmp\":os.environ[\"TMPDIR\"]})); print(subprocess.check_output([\"node\",\"node_modules/vitest/vitest.mjs\",\"--version\"],text=True))"
+  ],
+  "timeout_seconds": 300.0,
+  "no_proc": false,
+  "subject": "38eab812488c85198f37b8be18f1dd24cd5898f8",
+  "subject_status": "",
+  "sources": {
+    "apps/three-surface-poc/src/fixture-directories.test.ts": "7d6c805bff973d5cab16e2470db436d8351bfdf58cca9f84c5a315beb6a7e980",
+    "apps/three-surface-poc/src/fixture-directories.ts": "df5a319e02b9bbc3294bf0b0b90a987ecea86bfd219a41d0341855a3e9dc5ada",
+    "docs/evidence/poc-fixture-leak-2026-10-22/leak_by_file.py": "96aba7927e4a60108e227d122223c74e3cfea006a3960565549cfe8c4b1256b2",
+    "docs/evidence/poc-fixture-leak-2026-10-22/guard_probe.py": "c2db048db78e7064d2e7dd32e1fbe255eebb286110bd53a18005065d5c602e19"
+  },
+  "pid": 607868,
+  "pidfd_owned": true,
+  "exit": 0,
+  "timed_out": false,
+  "reaped_adopted_children": [
+    {
+      "pid": 607872,
+      "wait_status": 0
+    }
+  ],
+  "remaining_owned_direct_children": [],
+  "elapsed_seconds": 0.7972041689790785,
+  "stdout_sha256": "64b8fb86e0d00d5a6502e2ed8d638deb00061d69e3318dff86d832ec05ceb60b",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

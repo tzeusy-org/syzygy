@@ -1,0 +1,21 @@
+{
+  "case": "non-directory",
+  "source": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/subject/docs/evidence/poc-fixture-leak-2026-10-22/leak_by_file.py",
+  "source_sha256": "96aba7927e4a60108e227d122223c74e3cfea006a3960565549cfe8c4b1256b2",
+  "boundary": "subprocess.run is explicitly synthetic; actual guarded script executes unchanged via runpy",
+  "legacy_selector": "unchanged, not a current full-app measurement",
+  "base": "/tmp/s420-v_93z8jr",
+  "root": "/tmp/s420-v_93z8jr/scratch",
+  "calls": [],
+  "error": {
+    "type": "SystemExit",
+    "message": "refusing /tmp/s420-v_93z8jr/scratch: it exists and is not an empty directory"
+  },
+  "stdout": "",
+  "stderr": "",
+  "record": null,
+  "replay": null,
+  "sibling_bytes_metadata_preserved": true,
+  "root_retained_for_accountable_inspection": true,
+  "holds": true
+}

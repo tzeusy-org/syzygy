@@ -1,0 +1,35 @@
+[
+  {
+    "id": "F1",
+    "severity": "Important",
+    "category": "prerequisite-blocker / acceptance incomplete",
+    "location": "docs/evidence/syzygy-bpyt-4-20/raw/runs/n12-no-proc/capture.json:27; raw/runs/n12-collision-no-proc/capture.json:36",
+    "criteria": [
+      1,
+      7,
+      8,
+      15
+    ],
+    "summary": "Literal no-proc success and original-suffix regression control do not complete.",
+    "observed": "Both outer runs reached their declared 300-second timeout and exit -9. Fixed source emits 9 passes / 7 skips; the mutant emits 7 passes / 7 skips / both intended directory-count failures. Neither produces the terminal runner JSON.",
+    "primary_rule": "AC7 explicitly requires exit0 without a post-summary hang; AC8 says timeout/collection errors do not count as kills. CC-TEST-1: \u201cA defect fix includes a test that fails on the pre-fix behavior and passes on the fixed behavior\u201d.",
+    "effect": "The original combined outcome cannot be represented as complete or ready to land. Ordinary readable CI cannot cover this literal no-proc gate.",
+    "remediation": "Keep the full outcome open. Resolve the demonstrated stock runtime/framework prerequisite through the existing authorized workflow, then obtain completed source-bound fixed and original-suffix results at the unchanged literal no-proc seam, retaining current failed attempts. Do not alter library/global/proc-memory behavior or waive criteria to manufacture completion. Any expanded prerequisite needs its own actual governing scope.",
+    "qualification": "Independent ROOT controls establish stock Node memoryUsage failure in this fixture and support the Tinypool nontermination explanation; they neither establish sole cause nor waive AC1/7/8."
+  },
+  {
+    "id": "F2",
+    "severity": "Important",
+    "category": "current-outcome evidence correction required",
+    "location": "docs/evidence/syzygy-bpyt-4-20/tools/guard_corpus.py:6; :14; :16",
+    "criteria": [
+      15
+    ],
+    "summary": "The retained corpus is not the required old-versus-new differential over input records with altered prose.",
+    "observed": "The 16 emitted rows are eight filesystem states times two variants of the same new private_directory function. The altered text is its source docstring. No old executable boundary is compared; each row supplies the constant description \u201caccepted by static absence of guard; unsafe full predecessor is NOT executed\u201d. The input is a Path, with no altered input-record prose.",
+    "primary_rule": "GP-Q0 Part1 review rule (OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md:62-66) applies to class1/class4 and requires \u201can old-versus-new differential over a mutated-record corpus that includes records with altered prose\u201d; the other two checks are per-predicate rule6 mutants and a non-blocking cycle-report notice. The actual N12/N13 direction preserves applicable GP-Q0 checks.",
+    "effect": "These honest predicate/source-prose controls remain useful supporting evidence but cannot discharge the required GP-Q0 differential. This remains a separate AC15 gap even after ordinary hosted success or a future no-proc fix.",
+    "remediation": "Add a bounded executable comparison of the predecessor admission boundary and guarded successor at the declared safe seam over a retained input-record corpus with structured path/state and independently varied narrative prose. Bind actual old/new source versions, expected admitted/refused changes and per-row outputs, and demonstrate that altered input prose cannot override the structured refusal predicates. Keep unsafe full legacy writers and real shared roots unexecuted. Retain the existing 16-row record with its narrow label; do not relabel it as the missing gate.",
+    "qualification": "This is an evidence/readiness correction, not a newly identified defect in the three approved repair source changes. No broad rerun or new owner question is requested."
+  }
+]

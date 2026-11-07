@@ -1,0 +1,57 @@
+{
+  "trace_sha256": "0a59e42599f76db64c640895799950ebf076776f163584e8271eaa09603195e7",
+  "successful_execs": [
+    {
+      "executable": "/usr/bin/python3",
+      "argv0": "python3"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/node",
+      "argv0": "node"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/npx",
+      "argv0": "npx"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/node",
+      "argv0": "node"
+    },
+    {
+      "executable": "node_modules/.bin/vitest",
+      "argv0": "node_modules/.bin/vitest"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/node",
+      "argv0": "node"
+    }
+  ],
+  "rejected_by_repaired_allowlist": [
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/node",
+      "argv0": "node"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/npx",
+      "argv0": "npx"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/node",
+      "argv0": "node"
+    },
+    {
+      "executable": "node_modules/.bin/vitest",
+      "argv0": "node_modules/.bin/vitest"
+    },
+    {
+      "executable": "/home/orca/.nvm/versions/node/v24.6.0/bin/node",
+      "argv0": "node"
+    }
+  ],
+  "required_actual_positive_names": [
+    "node",
+    "npx",
+    "vitest"
+  ],
+  "holds": true
+}

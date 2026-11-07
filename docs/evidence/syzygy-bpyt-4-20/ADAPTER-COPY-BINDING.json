@@ -1,0 +1,12 @@
+{
+  "reference": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/isolated.py",
+  "reference_sha256": "b552380a4fd8ce6efc5728934be3906efbd68c1a1085172d53bc2cead3cc31d4",
+  "copy_sha256": "1976804c4aa2e2f8f8b55009cda82241ddabfa0e2e5ee8cf45aa3aae1e61ee61",
+  "changes": [
+    "task paths",
+    "add required --unshare-user",
+    "task-owned S420_NO_PROC mode replaces proc mount with tmpfs",
+    "dynamic exact lockfile tarball count in cache preflight"
+  ],
+  "source_or_assertion_substitution": false
+}

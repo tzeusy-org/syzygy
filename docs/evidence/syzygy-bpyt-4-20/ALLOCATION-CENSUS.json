@@ -1,0 +1,25 @@
+{
+  "captured_at": "2026-11-06T10:18:27.458528+00:00",
+  "open_prs": 19,
+  "file_incidences": 194,
+  "overlap_method1": [],
+  "overlap_method2": [],
+  "sources": [
+    {
+      "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+      "sha256": "736e9ac84e1ee5fdeacf2134b75ce0ce4f8ba8274e5a9d6e25a12534f1f5f695",
+      "same_as_frozen_5110": true
+    },
+    {
+      "path": "docs/evidence/poc-fixture-leak-2026-10-22/leak_by_file.py",
+      "sha256": "fc7e19608090dcbbab3aea5ba604b449b71a6ecce5bcad4e42929ade8e893554",
+      "same_as_frozen_5110": true
+    },
+    {
+      "path": "docs/evidence/poc-fixture-leak-2026-10-22/guard_probe.py",
+      "sha256": "7022f90385454d7afcc8eccbc9b47c6d9880fb5ea38ca1345bfa7e8c196428b8",
+      "same_as_frozen_5110": true
+    }
+  ],
+  "actual_live_head": "4a5d0f38dd3ed215f10c56592ab08788b1002923"
+}

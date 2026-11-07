@@ -1,0 +1,57 @@
+{
+  "head": "d0babb086ebb58999aec1291765e491e15ceae65",
+  "ruling": [
+    1,
+    4,
+    6
+  ],
+  "rationale": {
+    "1": "The new dated direction records the precise adapter/worker authorization boundary for an intentional acceptance/refusal change.",
+    "4": "The guard changes destructive scratch-root acceptance and fail-closed write safety; review the effects against SEC-4 and the bounded authorized fixture.",
+    "6": "The positional evidence-tool CLI gains externally dependable stderr/nonzero refusal behavior. No endpoint is removed.",
+    "not_touched": "Classes2(graph identity),3(deterministic observation),5(data migration),7(certificate logic) have no changed implementation in this diff. The terminal/source evidence distinction is provenance, not a change to product observation identity."
+  },
+  "GP-Q0": {
+    "trigger": "Classes1/4 independently trigger all three additional checks.",
+    "differential": "INCOMPLETE \u2014 F2",
+    "predicate_mutants": "15 isolated predicate rows and5 wiring rows retained and audited; N12 collision is not a completed kill (F1).",
+    "notice": "Non-blocking owner notice belongs in the existing cycle report; pending. It releases neither owner merge hold."
+  },
+  "floors": [
+    {
+      "id": 1,
+      "name": "Truth",
+      "ruling": "Preserved within changed source scope. No product rendering, legend or identity code changes. Evidence denominators and incomplete literal execution are kept explicit; 120 battery commands comprise119checks plus orientation."
+    },
+    {
+      "id": 2,
+      "name": "Evidence",
+      "ruling": "Not waived. AC1/7/8 incomplete and AC15 partial prevent full-outcome success. Distinct task process captures, ROOT late read-time custody, ROOT independent minimal diagnostics and hosted exact-head CI remain separate provenance levels."
+    },
+    {
+      "id": 3,
+      "name": "Inference",
+      "ruling": "Preserved. Tinypool causality remains an inference beyond the independently observed stock memoryUsage prerequisite failure; it establishes no positive completion claim."
+    },
+    {
+      "id": 4,
+      "name": "Write",
+      "ruling": "Preserved. Explicitly authorized human-directed worker source/evidence changes; Syzygy gains no implementation-writing behavior. The new refusal runs before the leak tool queries/creates/removes/launches."
+    },
+    {
+      "id": 5,
+      "name": "Sign-off",
+      "ruling": "Preserved. Exact actual answer is recorded canonically before implementation. It is not a specification adoption, predecessor amendment, blanket approval, task closure or merge-hold release."
+    },
+    {
+      "id": 6,
+      "name": "Security",
+      "ruling": "Strengthened for admitted destructive tooling by the inherited guard. Evidence describes credential-free/private namespace and offline install boundaries; no observed repository execution or provider egress is authorized. Non-atomic races and absent mode/UID/symlink prohibitions remain disclosed, not newly claimed protections."
+    },
+    {
+      "id": 7,
+      "name": "Identity",
+      "ruling": "Preserved. No durable product identity/schema migration or historical evidence renumbering. Old reviewed bytes remain unchanged; new tools are explicit successors and old reviews are not applied to them."
+    }
+  ]
+}
