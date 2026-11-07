@@ -1,0 +1,70 @@
+{
+ "format": "rule-6-mutation-record",
+ "bead": "syzygy-pdja.15",
+ "ranAt": {
+  "base": "49512529ebeed716c85bf820a0e4dde20d049df0",
+  "note": "uncommitted working tree on agent/syzygy-pdja.13-review-report over base; subject digests below are the bytes mutated"
+ },
+ "subjectDigests": {
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "57d5c297747af297306752d649efda59c9f9e68aa13aa7e1e771162a19a5a128",
+  "packages/polaris-dossier/src/render.test.ts": "39df632c0b4a3d6b56c6ce1bce3dd678d59c0f83adac7023789e10730905b570",
+  "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts": "fd2dca57c61e9e3626904064a1756caad77f28bb4f27fbb0fd6cc84f17badc14"
+ },
+ "command": "npx vitest run packages/polaris-dossier/src/render.test.ts apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts",
+ "mutants": [
+  {
+   "id": "refs-not-noted",
+   "old": "    noteCitation(from, id);\n    const cited = citedRedaction(id);",
+   "new": "    const cited = citedRedaction(id);",
+   "killed": true,
+   "tests": "2 failed | 100 passed (102)"
+  },
+  {
+   "id": "anchor-not-noted",
+   "old": "    noteCitation(from, part.sourceId);\n",
+   "new": "",
+   "killed": true,
+   "tests": "2 failed | 100 passed (102)"
+  },
+  {
+   "id": "count-hidden",
+   "old": "${times === 1 ? '' : ` (${times} times)`}",
+   "new": "",
+   "killed": true,
+   "tests": "2 failed | 100 passed (102)"
+  },
+  {
+   "id": "count-always",
+   "old": "${times === 1 ? '' : ` (${times} times)`}",
+   "new": "${` (${times} times)`}",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "uncited-silent",
+   "old": "if (onPages === undefined) return ' <span class=\"cited-on\">Not cited on the dossier\\'s pages.</span>';",
+   "new": "if (onPages === undefined) return '';",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "cited-count-all",
+   "old": "input.sources.filter(source => citedOn.has(source.sourceId)).length",
+   "new": "input.sources.length",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "page-title-path",
+   "old": "escape(pageTitles.get(at) ?? at)",
+   "new": "escape(at)",
+   "killed": true,
+   "tests": "2 failed | 100 passed (102)"
+  }
+ ],
+ "killed": 7,
+ "total": 7,
+ "accepted": [],
+ "discarded": [],
+ "rerunAfter": "any edit to the subject files"
+}

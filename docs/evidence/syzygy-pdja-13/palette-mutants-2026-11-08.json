@@ -1,0 +1,99 @@
+{
+ "format": "rule-6-mutation-record",
+ "bead": "syzygy-pdja.14",
+ "ranAt": {
+  "base": "7f4f98b70edb0e7deee97bc7bd954c7b0e12fb57",
+  "note": "uncommitted working tree over base on agent/syzygy-pdja.13-review-report; subject digests are the bytes mutated"
+ },
+ "subjectDigests": {
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "7789531af2204bd117725156e82cdb5bd13bb20565e9e496cbac99a60dcfe83f",
+  "packages/polaris-dossier/src/render.test.ts": "754fcf5ad2502ff5a26c2aea949a341059903112e978186fb1e2355476c6fbb3",
+  "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts": "8b90715c2087d6be3d209d87bf6f69544e97b3b766e6d6d2e2f0be6cc5658cd9"
+ },
+ "command": "npx vitest run packages/polaris-dossier/src/render.test.ts apps/three-surface-poc/src/polaris-generation",
+ "mutants": [
+  {
+   "id": "light-tint-dark",
+   "old": "--h3t:#f2eefb;",
+   "new": "--h3t:#8a86a0;",
+   "killed": true,
+   "tests": "1 failed | 424 passed (425)"
+  },
+  {
+   "id": "dark-line-dim",
+   "old": "--h4:#f08aa9;",
+   "new": "--h4:#4a3038;",
+   "killed": true,
+   "tests": "1 failed | 424 passed (425)"
+  },
+  {
+   "id": "hue-rule-missing",
+   "old": "[data-hue=\"5\"],ul.cards>li.card:nth-child(6n+5){--accent:var(--h5);--accent-tint:var(--h5t)}",
+   "new": "",
+   "killed": true,
+   "tests": "1 failed | 424 passed (425)"
+  },
+  {
+   "id": "diagram-hue-on-pole",
+   "old": "${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}",
+   "new": "${hueAttr(index % HUES + 1)}",
+   "killed": true,
+   "tests": "1 failed | 424 passed (425)"
+  },
+  {
+   "id": "diagram-no-hue",
+   "old": "${from.startsWith('poles/') ? '' : hueAttr(index % HUES + 1)}",
+   "new": "",
+   "killed": true,
+   "tests": "3 failed | 422 passed (425)"
+  },
+  {
+   "id": "diagram-hue-off-by-one",
+   "old": "hueAttr(index % HUES + 1)}><figcaption>",
+   "new": "hueAttr(index % HUES + 2)}><figcaption>",
+   "killed": true,
+   "tests": "3 failed | 422 passed (425)"
+  },
+  {
+   "id": "pole-map-no-hue",
+   "old": "return `<li${hueAttr(pole.hue)}><a href=\"${escape(target)}\">",
+   "new": "return `<li><a href=\"${escape(target)}\">",
+   "killed": true,
+   "tests": "3 failed | 422 passed (425)"
+  },
+  {
+   "id": "nav-no-hue",
+   "old": "`<li${hueAttr(pole.hue)}><a href=\"${escape(href(from, pole.path))}\">",
+   "new": "`<li><a href=\"${escape(href(from, pole.path))}\">",
+   "killed": true,
+   "tests": "1 failed | 424 passed (425)"
+  },
+  {
+   "id": "pole-hue-shift",
+   "old": "hue: index % HUES + 1, path:",
+   "new": "hue: (index + 1) % HUES + 1, path:",
+   "killed": true,
+   "tests": "4 failed | 421 passed (425)"
+  },
+  {
+   "id": "provider-hue",
+   "old": "const hueAttr = (hue: number): string => local === undefined ? '' :",
+   "new": "const hueAttr = (hue: number): string =>",
+   "killed": true,
+   "tests": "1 failed | 424 passed (425)"
+  },
+  {
+   "id": "pole-section-no-hue",
+   "old": "data-pole=\"${escape(at)}\"${hueAttr(pole.hue)}>",
+   "new": "data-pole=\"${escape(at)}\">",
+   "killed": true,
+   "tests": "1 failed | 424 passed (425)"
+  }
+ ],
+ "killed": 11,
+ "total": 11,
+ "accepted": [],
+ "discarded": [],
+ "history": "a first run at the same fragments let diagram-hue-on-pole survive (no fixture put a diagram on a Pole page); the Pole-page colour test was added and the whole set re-run on these bytes",
+ "rerunAfter": "any edit to the subject files"
+}
