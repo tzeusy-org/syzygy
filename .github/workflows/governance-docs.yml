@@ -204,6 +204,9 @@ jobs:
       - name: record_versioned_signoff --check polaris-dossier-local-agent-mode v1.4
         run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.4
 
+      - name: record_versioned_signoff --check polaris-dossier-local-agent-mode v1.5
+        run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.5
+
       - name: record_pwb_behavior_amendment_acts --check render-mode
         run: python3 scripts/record_pwb_behavior_amendment_acts.py --check render-mode 527be5ac3732619608355ae9658c92cee45341e831521bc526398481dd915785 --date 2026-10-02
 
@@ -284,6 +287,13 @@ jobs:
 
       - name: build_polaris_dossier_local_agent_mode_v1_4 --selftest
         run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_4.py --selftest
+
+      # Signed v1.5 layer: verify applied subject and preserved signed predecessors.
+      - name: build_polaris_dossier_local_agent_mode_v1_5 --check
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_5.py --check
+
+      - name: build_polaris_dossier_local_agent_mode_v1_5 --selftest
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_5.py --selftest
 
       - name: record_pwb_behavior_amendment_acts --check opening-band
         run: python3 scripts/record_pwb_behavior_amendment_acts.py --check opening-band 7f80cb05f644dd1e4f49e7b212d6972ee4754e40682450e59a6c3245546d5c46 --date 2026-10-01
