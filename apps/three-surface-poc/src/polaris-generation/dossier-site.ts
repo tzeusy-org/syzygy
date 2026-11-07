@@ -155,7 +155,7 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   + ':root{--font-serif:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace}'
   + '.contents,.contents a,.contents .eyebrow,.pipeline-notice,.eyebrow,.asset-references,.sources,.diagram-legend,.marking,.deep-links,a.cite,.anchor-link,.source-anchor{font-family:var(--font-serif)}'
   // The navigation folds with no script; the reading column takes the room it leaves.
-  + '.cited-on{display:block;font-size:.88rem;color:var(--muted)}'
+  + '.cited-on,.selected-why{display:block;font-size:.88rem;color:var(--muted)}'
   + '.review-report{margin-top:1rem;border-top:1px solid var(--line);padding-top:.5rem}.review-report>summary{cursor:pointer;color:var(--muted);font-weight:600}.review-report>summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}'
   + '.nav-panel>summary{cursor:pointer;font-weight:600;color:var(--muted)}.layout:has(>.nav-panel:not([open])){grid-template-columns:auto minmax(0,1fr)}.nav-panel>summary:focus-visible,.mobile-contents>summary:focus-visible{outline-offset:-3px}'
   // A three-column diagram, the widest a plain chain reaches, may shrink to fit its column (text no smaller than 10.7px); any wider one
@@ -691,13 +691,19 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (onPages === undefined) return ' <span class="cited-on">Not cited on the dossier\'s pages.</span>';
     return ` <span class="cited-on">Cited on ${[...onPages].map(([at, times]) => `<a href="${escape(href('sources/index.html', at))}">${escape(pageTitles.get(at) ?? at)}</a>${times === 1 ? '' : ` (${times} times)`}`).join(', ')}.</span>`;
   };
+  // And why the agent chose it, in its own words from its discovery record: self-reported, so Inferred (syzygy-pdja.15). Only on a source
+  // with admitted text: beside an excluded or withheld file the agent's words may derive from what screening kept out (RFC2-23).
+  const selectedNote = (path: string): string => {
+    const reason = local?.selectionReasons?.get(path);
+    return reason === undefined ? '' : ` <span class="selected-why">Why the agent chose it, as it reports: ${escape(reason)} ${marking('inferred')}</span>`;
+  };
   const list = input.sources.map(source => {
     const target = sourcePaths.get(source.sourceId);
     const redactedNote = source.redaction === undefined ? '' : ` · redacted-span: ${source.redaction.withheldLines} withheld line(s) in this file`;
     const reason = source.exclusion.excluded ? source.exclusion.reason : source.classificationBasis === 'path-only' ? 'path-only; body not read' : 'body unavailable for citation';
     return target === undefined
       ? `<li>${escape(source.path)}${shownId(source.sourceId)} — counted; exact text unavailable: ${escape(reason)}${escape(redactedNote)}.</li>`
-      : `<li><a href="${escape(href('sources/index.html', target))}">${escape(source.path)}</a>${shownId(source.sourceId)}${escape(redactedNote)}${citedOnNote(source.sourceId)}</li>`;
+      : `<li><a href="${escape(href('sources/index.html', target))}">${escape(source.path)}</a>${shownId(source.sourceId)}${escape(redactedNote)}${citedOnNote(source.sourceId)}${selectedNote(source.path)}</li>`;
   }).join('');
   const citedCount = local === undefined ? '' : ` ${input.sources.filter(source => citedOn.has(source.sourceId)).length} cited by the dossier's pages; each says where.`;
   add('sources/index.html', 1, 'Sources', `<section id="sources"><h1>Sources</h1><p>${input.sources.length} sources counted, ${quotable.length} with admitted text.${citedCount}</p><ul>${list}</ul></section>`);
