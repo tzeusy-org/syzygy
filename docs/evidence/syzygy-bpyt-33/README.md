@@ -1,0 +1,15 @@
+# Authority-sweep timeout reconciliation
+
+[Observed] The existing tree sweep already has a 25,000 ms local timeout, introduced by exj7/PR719. This change retains that value and updates only its adjacent reason. Tests: +0 ~1 -0; runtime case delta: 0. The six-case file, five roots, extensions, exclusions, population assertions, keyed-line predicate, self/raw-review exemptions, fixtures and titles are unchanged.
+
+[Observed] [timeout-measurement.json](timeout-measurement.json) retains five named observations from completed ordinary unit/integration/e2e-system contexts at the measured commit. Each ran the complete six-case file. The named maximum was 2,822.140333 ms, above PR537's 2,500 ms keep-site threshold. The existing 25,000 ms leaves 22,177.859667 ms of headroom (8.858524754303918 times that maximum). The sizing convention would suggest 10,000 ms, but the predecessor's keep-existing rule does not authorize resizing this existing site. Global defaults remain 5,000 ms per test and 10,000 ms per hook.
+
+[Observed] Both measured and assigned commits contain the same 5,983 committed swept files, 142,194,449 bytes. The only commit differences are two scripts outside the swept roots. The record names the full corpus manifest, raw reports, streams, process outcomes, effective budgets, contemporaneous load samples, copy hashes and static data controls in the retained execution packet. It distinguishes emitter records and independent byte capture from independent execution and hosted integration.
+
+[Unknown] The upstream reporter did not capture an exact historical per-run untracked filesystem census. The pre-edit static walk and identical committed trees do not establish that missing temporal fact. Each context also has three guarded session-view skips, two e2e skips and one guarded fresh-clone system skip. The live/operator tier is excluded. These are ordinary timing contexts with disclosed guards, not full execution coverage or the final canonical check:all gate.
+
+[Observed] Historical evidence stays unchanged: the original full-app report at 0d7eaf08 records 7,656 ms; the existing exj7 reason cites a separate 8,029 ms standalone stress maximum. Those are distinct measurement contexts. The original isolated5of5 assertion remains a report fact; another file's repeat-runs record does not prove it.
+
+[Observed] The prepared change adds these two evidence records to the swept corpus and changes the adjacent test comment. The historical timings describe their original 5,983-file subject. They are not relabeled as measurements of this enlarged prepared corpus.
+
+[Unknown] Final exact-subject verification, independent review of applicability/classes/floors, hosted checks and lawful landing remain pending in this prepared record. Any app-source merge also waits for both the actual syzygy-1z3.22 owner judgment and syzygy-1z3.25 cycle report. The coordinator receives the complete outcome for the existing improvement-cycle report; this artifact sends no owner notice and closes no issue.
