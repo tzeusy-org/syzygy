@@ -8,7 +8,7 @@ import {
 } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
 import { READABLE_SPACING, renderDiagramSvg } from './diagram-layout.js';
-import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureMarkup, regionMarkup } from './dossier-render-local.js';
+import { LOCAL_CSS, LOCAL_MACHINE_VIEW, anchorAttributes, anchorDetails, disclosureList, regionMarkup } from './dossier-render-local.js';
 import { DRAFT_PREVIEW_CSP_META, DRAFT_PREVIEW_CSS, MARKING_LABEL, escapeHtml as escape } from './draft-preview.js';
 import { assertInertSvg } from './svg-inert.js';
 
@@ -168,15 +168,25 @@ export const DOSSIER_THEME_CSS = ':root{--void:#262624;--panel:#30302e;--panel-r
   // takes a discrete display transition's element out of hit testing while it still paints, so the pointer would arrive at nothing.
   + 'main [data-claim-id]{position:relative}a.term{color:inherit;text-decoration:underline dotted var(--muted);text-underline-offset:.2em}.term-pop{display:block;visibility:hidden;position:absolute;left:0;z-index:5;width:min(22rem,100%);background:var(--panel-raised);border:1px solid var(--line);border-radius:8px;padding:.5rem .75rem;font-size:.9rem;font-weight:400;line-height:1.5;transition:visibility 0s .35s}.term-pop::before{content:"";position:absolute;left:0;right:0;top:-.5rem;height:.5rem}a.term:hover>.term-pop,a.term:focus>.term-pop{visibility:visible;transition-delay:0s}'
   + '.redaction-mark{margin-left:.1em;color:var(--muted)}.redaction-legend{margin-top:2rem;color:var(--muted);font-size:.85rem}'
-  + '.source-identity{margin:.75rem 0}.source-identity>summary{cursor:pointer;color:var(--muted)}';
+  + '.source-identity{margin:.75rem 0}.source-identity>summary{cursor:pointer;color:var(--muted)}'
+  // Dossier spec v1.5: the reading view's marks, the evidence view (opened by a fragment link with scripts off; the clipped text is in the
+  // DOM all along), a citation mark's file and lines on hover and focus, the one sentence and the legend.
+  + 'main:has(#evidence-view:target) .visually-hidden.ev{position:static;width:auto;height:auto;overflow:visible;clip:auto;white-space:normal}'
+  + 'main:has(#evidence-view:target) .evidence-note{display:block;font:.8rem/1.5 var(--font-mono);color:var(--muted);margin-top:.25rem}'
+  + '.judgement-mark,.framing-mark{font:600 .72em var(--font-serif);letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line);border-radius:4px;padding:0 .3em;margin-left:.25em;color:var(--muted);vertical-align:.1em}'
+  + '.not-established{font-weight:600;color:var(--unknown)}.unknown-words{color:var(--muted);font-size:.9rem}'
+  // The pop repeats the mark's accessible name, so it is out of layout until shown: a hidden but laid-out pop widens a narrow page.
+  + 'a.cite{position:relative}.cite-pop{display:none;position:absolute;left:0;top:1.6em;z-index:6;white-space:nowrap;background:var(--panel-raised);border:1px solid var(--line);border-radius:6px;padding:.2rem .5rem;font:400 .8rem/1.4 var(--font-mono);color:var(--ink);vertical-align:baseline}'
+  + 'a.cite:hover>.cite-pop,a.cite:focus>.cite-pop,a.cite:focus-visible>.cite-pop{display:block}'
+  + '.run-sentence{margin:.5rem 0;font-size:.9rem;color:var(--muted)}.reading-legend{border:1px solid var(--line);border-radius:10px;padding:.5rem 1rem;margin:0 0 1.5rem;font-size:.85rem;color:var(--muted)}.reading-legend ul{margin:.25rem 0;padding-left:1.2rem}.view-switch{margin:0}.legend-sample{font:600 .9em var(--font-mono)}';
 
 /** What an operator-agent run adds to every page: its notice, the run disclosure, attributes on `main` and the review-status region. */
-interface PageChrome { readonly notice: string; readonly disclosure: string; readonly mainAttributes: string; readonly region: string }
+interface PageChrome { readonly notice: string; readonly disclosure: (path: string) => string; readonly mainAttributes: string; readonly region: string }
 
 function page(title: string, path: string, nav: string, main: string, chrome?: PageChrome): string {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${DRAFT_PREVIEW_CSP_META}<title>${escape(title)}</title><style>${DESIGN_TOKENS_CSS}
 ${DRAFT_PREVIEW_CSS}${DOSSIER_CSS}${chrome === undefined ? '' : `${LOCAL_CSS}${DOSSIER_THEME_CSS}`}
-</style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="Dossier">${nav}</nav></details><main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main></div></body></html>`;
+</style></head><body><a class="skip" href="#content">Skip to content</a><div class="pipeline-notice">${chrome?.notice ?? 'Generated dossier draft — not reviewed or adopted'}</div>${chrome?.disclosure(path) ?? ''}<div class="layout">${chrome === undefined ? `<nav class="contents desktop-contents" aria-label="Dossier">${nav}</nav>` : `<details class="contents desktop-contents nav-panel" open><summary>Contents</summary><nav aria-label="Dossier">${nav}</nav></details>`}<details class="contents mobile-contents"><summary>In this dossier</summary><nav aria-label="Dossier">${nav}</nav></details><main id="content" data-page="${escape(path)}"${chrome?.mainAttributes ?? ''}>${main}${chrome?.region ?? ''}</main></div></body></html>`;
 }
 
 export interface DossierStop { readonly reason: string; readonly shown: string; readonly lastStage: string | null }
@@ -248,6 +258,12 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const quoteNote = (blockId: string): string => quoteFlags.has(blockId)
     ? ` <span class="quote-unverified">Quotation not verified against the cited sources (${escape([...quoteFlags.get(blockId)!].join(', '))}).</span>` : '';
   const marking = (m: EpistemicMarking): string => `<span class="marking ${m}">[${MARKING_LABEL[m]}]</span>`;
+  // Dossier spec v1.5: a narrative page (the landing page or a deep dive) opens in a reading view. Syzygy writes no label token and no
+  // file-and-line aside into a block's visible text there; each stays in DOM text, clipped by the renderer's visually-hidden class (never
+  // `hidden` or `display:none`), and shows in the evidence view. Every other page keeps its labels.
+  const narrative = (from: string): boolean => local !== undefined && !withheld && (from === 'index.html' || from.startsWith('deep-dives/'));
+  const clipped = (html: string): string => `<span class="visually-hidden ev">${html}</span>`;
+  const mark = (from: string, m: EpistemicMarking): string => (narrative(from) ? clipped(marking(m)) : marking(m));
   // Each page numbers its sources [1], [2], … in the order it first cites them; the identifier rides on `data-source-id` and the source
   // page, never in the reading text (DESIGN-ACCEPTANCE "Depth and evidence": references must not dominate the narrative).
   const numbering = new Map<string, Map<string, number>>();
@@ -268,7 +284,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (redaction === undefined) return { attribute: '', words: '', mark: '' };
     return { attribute: ` data-redacted-lines="${redaction.withheldLines}"`, words: `; ${redaction.withheldLines} line(s) of this file withheld by screening`, mark: `<span class="redaction-mark" aria-hidden="true">†${redaction.withheldLines}</span>` };
   };
-  const refs = (from: string, ids: readonly string[]): string => `<span class="sources">${ids.map(id => {
+  const refs = (from: string, ids: readonly string[], claimId?: string): string => `<span class="sources">${ids.map(id => {
     const source = sources.get(id);
     if (source === undefined) throw new DossierRenderError('unknown-source');
     const target = sourcePaths.get(id);
@@ -277,7 +293,10 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     // The provider mode's bytes are pinned (dossier-render-provider-golden.test.ts); only an operator-agent run numbers its sources.
     if (local === undefined) return `<a href="${escape(href(from, target, 'exact-text'))}" aria-label="Read source ${escape(id)}">[${escape(id)}]</a>${note}`;
     const cited = citedRedaction(id);
-    return `<a class="cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(id)}"${cited.attribute} aria-label="${escape(sourceLabel(from, id) + cited.words)}" title="${escape(source.path + cited.words)}">[${citeNumber(from, id)}]${cited.mark}</a>`;
+    // The mark shows its file and cited lines on hover and on keyboard focus (v1.5), out of the reading text until then.
+    const lines = claimId === undefined ? undefined : local.citationLines?.get(claimId)?.get(id);
+    const where = `${source.path}${lines === undefined ? '' : `, ${lines}`}${cited.words}`;
+    return `<a class="cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(id)}"${cited.attribute} aria-label="${escape(`${sourceLabel(from, id)}${lines === undefined ? '' : `, ${lines}`}${cited.words}`)}">[${citeNumber(from, id)}]${cited.mark}<span class="cite-pop" aria-hidden="true">${escape(where)}</span></a>`;
   }).join(' ')}</span>`;
   // Every claim a page carries, in the order it is built; `add` files them under that page for the machine view.
   const pending: { id: string; epistemic: EpistemicMarking; unknownReason: string | null; v15?: ClaimMarks }[] = [];
@@ -321,7 +340,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
       termsShown.add(term.id);
       if (!glossaryShown.some(shown => shown.page === from && shown.id === term.id)) glossaryShown.push({ page: from, id: term.id });
       // The entry stays one claim, filed under glossary.html; its other appearances are listed in the machine view (RFC7-33).
-      return `<a class="term" href="${escape(href(from, 'glossary.html', `term-${term.id}`))}" aria-label="${match}, glossary entry">${match}<span class="term-pop" data-glossary-entry="${escape(term.id)}" data-epistemic="${term.marking}">${prose(term.text)} ${marking(term.marking)}</span></a>`;
+      return `<a class="term" href="${escape(href(from, 'glossary.html', `term-${term.id}`))}" aria-label="${match}, glossary entry">${match}<span class="term-pop" data-glossary-entry="${escape(term.id)}" data-epistemic="${term.marking}">${prose(term.text)} ${mark(from, term.marking)}</span></a>`;
     })).join('');
   };
   const segment = (from: string, blockId: string, part: LocalSegment): string => {
@@ -336,7 +355,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const redaction = sources.get(part.sourceId)?.redaction;
     const disclosure = redaction === undefined ? {} : { redaction: { redactionClass: redaction.redactionClass, withheldLines: redaction.withheldLines } };
     quotations.push({ page: from, blockId, sourceId: part.sourceId, start: part.start, end: part.end, anchor: part.anchor, ...disclosure });
-    return `<q class="verified-quote" data-quote-source="${escape(part.sourceId)}" data-quote-start="${part.start}" data-quote-end="${part.end}">${escape(part.text).replace(/\r/gu, '&#13;')}</q> ${marking('observed')} ${anchorLink(from, part)}`;
+    return `<q class="verified-quote" data-quote-source="${escape(part.sourceId)}" data-quote-start="${part.start}" data-quote-end="${part.end}">${escape(part.text).replace(/\r/gu, '&#13;')}</q> ${mark(from, 'observed')} ${anchorLink(from, part)}`;
   };
   // The numbered anchor after a located quotation, with its redaction note.
   const anchorLink = (from: string, part: Extract<LocalSegment, { kind: 'quotation' }>): string => {
@@ -344,27 +363,38 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     if (target === undefined) throw new DossierRenderError('unquotable-source');
     const cited = citedRedaction(part.sourceId);
     const label = `${sourceLabel(from, part.sourceId)}, ${part.anchor.fragment === null ? 'whole file' : `bytes ${part.anchor.fragment.start}–${part.anchor.fragment.end}`}${cited.words}`;
-    return `<a class="anchor-link cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(part.sourceId)}"${cited.attribute} aria-label="${escape(label)}"${cited.words === '' ? '' : ` title="${escape(`${sources.get(part.sourceId)!.path}${cited.words}`)}"`}${anchorAttributes(part.anchor, escape)}>[${citeNumber(from, part.sourceId)}]${cited.mark}</a>`;
+    // Like any citation mark, it shows its file and the quoted bytes on hover and on keyboard focus (v1.5).
+    const where = `${sources.get(part.sourceId)!.path}, ${part.anchor.fragment === null ? 'whole file' : `bytes ${part.anchor.fragment.start}–${part.anchor.fragment.end}`}${cited.words}`;
+    return `<a class="anchor-link cite" href="${escape(href(from, target, 'exact-text'))}" data-source-id="${escape(part.sourceId)}"${cited.attribute} aria-label="${escape(label)}"${anchorAttributes(part.anchor, escape)}>[${citeNumber(from, part.sourceId)}]${cited.mark}<span class="cite-pop" aria-hidden="true">${escape(where)}</span></a>`;
   };
   const localParagraph = (from: string, p: DraftParagraph, tag: string): string => {
     const b = local!.blocks.get(p.id);
     if (b === undefined) throw new DossierRenderError('unknown-block');
     const body = b.segments.map(part => segment(from, p.id, part)).join('');
+    const reading = narrative(from);
     if (b.marking === 'non-normative') {
       nonNormative.push({ page: from, id: p.id });
-      return `<${tag} class="non-normative" data-non-normative="${escape(p.id)}">${body} <span class="marking non-normative">[Non-normative]</span></${tag}>`;
+      return reading
+        ? `<${tag} class="non-normative" data-non-normative="${escape(p.id)}" data-claim-kind="non-normative">${body} <span class="framing-mark">framing</span>${clipped(' <span class="marking non-normative">[Non-normative]</span> Evidence: claim-block kind non-normative; it claims nothing from a source.')}</${tag}>`
+        : `<${tag} class="non-normative" data-non-normative="${escape(p.id)}">${body} <span class="marking non-normative">[Non-normative]</span></${tag}>`;
     }
-    const reason = b.unknownReason === null ? '' : ` <span class="unknown-reason">(${escape(b.unknownReason)}: ${escape(b.basis)})</span>`;
-    const executions = b.executions.length === 0 ? '' : ` <span class="executions">Rests on the agent's report of running ${b.executions.map(run => `<code>${escape(run.command)}</code>`).join('; ')} (Inferred, self-reported)</span>`;
+    const kind = p.sourceIds.length > 0 ? 'anchored' : 'labeled';
+    // In the reading view an Unknown block opens with `Not established` and its reason follows in words; the reason code is clipped.
+    const reason = b.unknownReason === null ? '' : reading ? ` <span class="unknown-words">(${escape(b.basis)})</span>${clipped(` <span class="unknown-reason">(${escape(b.unknownReason)})</span>`)}`
+      : ` <span class="unknown-reason">(${escape(b.unknownReason)}: ${escape(b.basis)})</span>`;
+    const lead = reading && b.marking === 'unknown' ? '<span class="not-established">Not established.</span> ' : '';
+    const selfReported = reading ? clipped(' (Inferred, self-reported)') : ' (Inferred, self-reported)';
+    const executions = b.executions.length === 0 ? '' : ` <span class="executions">Rests on the agent's report of running ${b.executions.map(run => `<code>${escape(run.command)}</code>`).join('; ')}${selfReported}</span>`;
     const judged = b.judgement === undefined ? '' : ' <span class="judgement-mark">judgement</span>';
-    return claim(tag, p.id, b.marking, `${body}${judged} ${marking(b.marking)}${reason}${executions} ${refs(from, p.sourceIds)}`,
-      b.unknownReason === null ? '' : ` data-unknown-reason="${escape(b.unknownReason)}"`, b.unknownReason, blockMarks(b));
+    const evidence = reading ? clipped(` <span class="evidence-note">${escape(evidenceNote(b, kind))}</span>`) : '';
+    return claim(tag, p.id, b.marking, `${lead}${body}${judged} ${mark(from, b.marking)}${reason}${executions}${evidence} ${refs(from, p.sourceIds, p.id)}`,
+      `${b.unknownReason === null ? '' : ` data-unknown-reason="${escape(b.unknownReason)}"`}${reading ? ` data-claim-kind="${kind}"` : ''}`, b.unknownReason, blockMarks(b));
   };
   const paragraph = (from: string, p: DraftParagraph, tag: string): string => local !== undefined ? localParagraph(from, p, tag)
     : claim(tag, p.id, label(p.id), `${escape(p.text)} ${marking(label(p.id))}${quoteNote(p.id)} ${refs(from, p.sourceIds)}`);
   // A labelled record on one of the run's own pages, or a glossary term.
   const item = (from: string, tag: string, entry: LocalPageItem): string => claim(tag, entry.id, entry.marking,
-    `${entry.title === null ? '' : `<strong>${escape(entry.title)}</strong>: `}${(local === undefined ? escape : prose)(entry.text)} ${marking(entry.marking)}${entry.unknownReason === null ? '' : ` <span class="unknown-reason">(${escape(entry.unknownReason)})</span>`}${entry.details.length === 0 ? '' : `<ul class="item-details">${entry.details.map(detail => `<li>${escape(detail)}</li>`).join('')}</ul>`} ${refs(from, entry.sourceIds)}`,
+    `${entry.title === null ? '' : `<strong>${escape(entry.title)}</strong>: `}${(local === undefined ? escape : prose)(entry.text)} ${marking(entry.marking)}${entry.unknownReason === null ? '' : ` <span class="unknown-reason">(${escape(entry.unknownReason)})</span>`}${entry.details.length === 0 ? '' : `<ul class="item-details">${entry.details.map(detail => `<li>${escape(detail)}</li>`).join('')}</ul>`} ${refs(from, entry.sourceIds, entry.id)}`,
     entry.unknownReason === null ? '' : ` data-unknown-reason="${escape(entry.unknownReason)}"`, entry.unknownReason);
   // A v1.3 rich element (operator-agent drafts only, syzygy-mea.10.5): semantic, inert HTML. Its labels are escaped presentation; every
   // claim inside renders through `paragraph`, so it carries its marking, reason and numbered sources as any block does.
@@ -421,7 +451,9 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         const caption = `<figcaption><span class="code-language">${escape(e.language)}</span> <span class="code-path">${escape(e.path)}, lines ${e.startLine}–${e.endLine}</span></figcaption>`;
         const located = e.parts.filter((part): part is Extract<LocalSegment, { kind: 'quotation' }> => part.kind === 'quotation');
         if (located.length !== e.parts.length) {
-          return claim('figure', id, 'unknown', `${caption}<p><span class="quote-withheld" data-unknown-reason="excluded-content">[code excerpt withheld: the file it cites is excluded by screening]</span> ${marking('unknown')}</p>`,
+          // A withheld excerpt's range is the agent's, never checked against the blob, and says so (REQ-polaris-generation-034).
+          const unverified = `<figcaption><span class="code-language">${escape(e.language)}</span> <span class="code-path">${escape(e.path)}, lines ${e.startLine}–${e.endLine} as the agent gave them, unverified</span></figcaption>`;
+          return claim('figure', id, 'unknown', `${unverified}<p><span class="quote-withheld" data-unknown-reason="excluded-content">[code excerpt withheld: the file it cites is excluded by screening]</span> ${mark(from, 'unknown')}</p>`,
             ` class="code-excerpt"${attrs} data-unknown-reason="excluded-content"`, 'excluded-content');
         }
         for (const part of located) {
@@ -431,7 +463,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
         }
         // Entity-encoded text, so a cited `<`, `&` or `</pre>` is shown, never parsed (v1.3 note 1).
         const lines = located.map(part => `<code class="verified-quote" data-quote-source="${escape(part.sourceId)}" data-quote-start="${part.start}" data-quote-end="${part.end}">${escape(part.text).replace(/\r/gu, '&#13;')}</code>`).join('');
-        return claim('figure', id, 'observed', `${caption}<pre>${lines}</pre><p class="code-anchor">${marking('observed')} ${located.map(part => anchorLink(from, part)).join(' ')}</p>`, ` class="code-excerpt"${attrs}`);
+        return claim('figure', id, 'observed', `${caption}<pre>${lines}</pre><p class="code-anchor">${mark(from, 'observed')} ${located.map(part => anchorLink(from, part)).join(' ')}</p>`, ` class="code-excerpt"${attrs}`);
       }
     }
   };
@@ -458,8 +490,8 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const held = (id: string): WithheldNote | undefined => local?.withheldElements?.get(id);
     const heldText = (id: string): string => held(id) === undefined ? '' : ` <span class="withheld-note">${escape(withheldWords(held(id)!))}</span>`;
     const heldAttrs = (id: string): string => held(id) === undefined ? '' : ' data-unknown-reason="excluded-content"';
-    const nodeList = d.nodes.map(n => claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${marking(n.epistemic)} ${refs(from, n.sourceIds)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources })).join('');
-    const edgeList = d.edges.map(e => claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${marking(e.epistemic)} ${refs(from, e.sourceIds)}`, heldAttrs(e.id), held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources })).join('');
+    const nodeList = d.nodes.map(n => claim('li', n.id, n.epistemic, `${escape(n.label)}${heldText(n.id)} ${mark(from, n.epistemic)} ${refs(from, n.sourceIds, n.id)}`, heldAttrs(n.id), held(n.id) === undefined ? null : 'excluded-content', held(n.id) === undefined ? undefined : { withheldSources: held(n.id)!.sources })).join('');
+    const edgeList = d.edges.map(e => claim('li', e.id, e.epistemic, `${escape(nodes.get(e.from)!.label)} → ${escape(nodes.get(e.to)!.label)}: ${escape(e.label)}${heldText(e.id)} ${mark(from, e.epistemic)} ${refs(from, e.sourceIds, e.id)}`, heldAttrs(e.id), held(e.id) === undefined ? null : 'excluded-content', held(e.id) === undefined ? undefined : { withheldSources: held(e.id)!.sources })).join('');
     let svg: string;
     try {
       svg = renderDiagramSvg(d, index, escape, local === undefined ? undefined : READABLE_SPACING);
@@ -472,19 +504,29 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
   const localPages = local?.pages ?? [];
-  const reserved = new Set(['index.html', 'contents.html', 'glossary.html', 'dossier.json', 'size-report.json', 'size-report.html', LOCAL_MACHINE_VIEW, ...deepPaths.values(), ...sourcePaths.values()]);
+  const reserved = new Set(['index.html', 'contents.html', 'glossary.html', 'dossier.json', 'size-report.json', 'size-report.html', APPENDIX, LOCAL_MACHINE_VIEW, ...deepPaths.values(), ...sourcePaths.values()]);
   for (const localPage of localPages) {
     if (!isDossierPagePath(localPage.path) || localPage.path.includes('/') || !localPage.path.endsWith('.html') || reserved.has(localPage.path)) throw new DossierRenderError('page-path-collision');
     reserved.add(localPage.path);
   }
   const localNav = (from: string): string => localPages.map(localPage => `<li><a href="${escape(href(from, localPage.path))}">${escape(localPage.title)}</a></li>`).join('');
-  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li><li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li><li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${localNav(from)}<li><a href="${href(from, 'size-report.html')}">Size report</a></li></ol>`;
+  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li><li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li><li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${localNav(from)}<li><a href="${href(from, 'size-report.html')}">Size report</a></li>${local === undefined ? '' : `<li><a href="${href(from, APPENDIX)}">Appendix</a></li>`}</ol>`;
+  // The dossier's open questions and Unknown claims, counted for the one sentence before any page is drawn.
+  const openQuestions = withheld ? 0 : draft.unresolved.length;
+  const unknownClaims = local === undefined || withheld ? 0 : [...local.blocks.values()].filter(b => b.marking === 'unknown').length
+    + draft.diagrams.filter(d => d.disposition.kind === 'produced').flatMap(d => [...d.nodes, ...d.edges]).filter(element => element.epistemic === 'unknown').length;
+  const tally = [openQuestions === 0 ? '' : `${openQuestions} open question(s)`, unknownClaims === 0 ? '' : `${unknownClaims} Unknown claim(s)`].filter(part => part !== '');
+  const runSentence = local === undefined ? '' : withheld
+    ? 'The draft layer of this dossier is Unknown, so none of the agent\'s draft is shown; no human review is recorded.'
+    : `This is a draft written by ${local.authoring?.tool ?? 'the operator\'s agent tool'} with ${local.authoring?.model ?? 'an operator-declared model'}; no human review is recorded.${tally.length === 0 ? '' : ` It has ${tally.join(' and ')}.`}`;
   const chrome: PageChrome | undefined = local === undefined ? undefined : {
     notice: withheld ? 'Operator-agent dossier — draft layer Unknown (unconsented-source-or-provider)' : 'Operator-agent editorial draft — not adopted; how it was made is stated below',
-    disclosure: disclosureMarkup(local.disclosure, escape),
-    mainAttributes: local.draftLayer.state === 'editorial-draft'
+    // Dossier spec v1.5: one sentence of human text and a link to the appendix, which holds the disclosure in human form; the machine form
+    // stays whole on every page, as these attributes read with the machine view.
+    disclosure: (path: string) => `<p class="run-sentence">${escape(runSentence)} <a href="${escape(href(path, APPENDIX))}">How this dossier was made, its counts and its open questions</a></p>`,
+    mainAttributes: `${local.draftLayer.state === 'editorial-draft'
       ? ` data-draft-state="editorial-draft" data-inference-model="${escape(local.draftLayer.inferenceProvenance.modelIdentity)}" data-inference-model-version="${escape(local.draftLayer.inferenceProvenance.modelVersion ?? 'not shown by the agent tool')}"`
-      : ' data-draft-state="unknown" data-unknown-reason="unconsented-source-or-provider"',
+      : ' data-draft-state="unknown" data-unknown-reason="unconsented-source-or-provider"'} data-disclosure-ids="${escape(local.disclosure.map(item => item.id).join(' '))}"`,
     region: regionMarkup(local.reviewStatus, escape),
   };
 
@@ -492,18 +534,21 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const pages: { path: string; depth: number }[] = [];
   const claimsByPage: { page: string; id: string; epistemic: EpistemicMarking; unknownReason: string | null; v15?: ClaimMarks }[] = [];
   // A page citing a redacted file says once what the mark on its citations means (RFC7-34: a visual encoding is legended).
-  const legended = (main: string): string => local !== undefined && main.includes('class="redaction-mark"')
+  const legended = (path: string, main: string): string => narrative(path) ? `${READING_LEGEND}${main}`
+    : local !== undefined && main.includes('class="redaction-mark"')
     ? `${main}<p class="redaction-legend"><span aria-hidden="true">†N</span> on a citation: N lines of that file are withheld by screening. Its source page marks where.</p>` : main;
   const add = (path: string, depth: number, pageTitle: string, main: string): void => {
-    files.set(path, page(`${pageTitle} — ${title}`, path, nav(path), legended(main), chrome));
+    files.set(path, page(`${pageTitle} — ${title}`, path, nav(path), legended(path, main), chrome));
     pages.push({ path, depth });
     claimsByPage.push(...pending.splice(0).map(entry => ({ page: path, ...entry })));
   };
 
   // --- entry page
   const from = 'index.html';
-  const unresolved = withheld ? '' : draft.unresolved.map((item, index) => claim('aside', `unresolved/${index + 1}`, 'unknown',
-    `<strong>${escape(item.question)}</strong>: ${escape(item.reason)} ${marking('unknown')} <span class="asset-references">(${assetReferences(from, item.references)})</span>`)).join('');
+  // The open questions: on the overview for a provider run; for an operator-agent run, on the appendix (v1.5), drawn there.
+  const openQuestionClaims = (at: string): string => withheld ? '' : draft.unresolved.map((item, index) => claim('aside', `unresolved/${index + 1}`, 'unknown',
+    `<strong>${escape(item.question)}</strong>: ${escape(item.reason)} ${marking('unknown')} <span class="asset-references">(${assetReferences(at, item.references)})</span>`)).join('');
+  const unresolved = local === undefined ? openQuestionClaims(from) : '';
   const notGenerated = (id: string, kind: string): string => claim('aside', `not-generated/${id}`, 'unknown',
     `<strong>${escape(id)}</strong> (${escape(kind)}): not generated; the run stopped before it was written (${escape(stop!.shown)}). ${marking('unknown')}`,
     ` class="unresolved-asset" data-asset-disposition="not-generated" data-stop-reason="${escape(stop!.shown)}"`);
@@ -547,7 +592,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
 
   // --- contents
   const contents = `<ol>${(withheld ? [] : draft.sections).map(section => `<li><a href="${escape(href('contents.html', 'index.html', `section-${section.id}`))}">${escape(section.title)}</a>${draft.deepDives.some(dive => dive.sectionId === section.id && deepPaths.has(dive.id))
-    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${localNav('contents.html')}<li><a href="size-report.html">Size report</a></li></ol>`;
+    ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${localNav('contents.html')}<li><a href="size-report.html">Size report</a></li>${local === undefined ? '' : `<li><a href="${APPENDIX}">Appendix</a></li>`}</ol>`;
   add('contents.html', 1, 'Contents', `<section id="contents"><h1>Contents</h1>${contents}</section>`);
 
   // --- glossary: inventory terms, each an Inferred claim; for an operator-agent run, the understanding record's terminology
@@ -608,6 +653,21 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const groups = localPage.groups.map(group => `<section id="${escape(group.id)}" data-reading-level="1" data-topics=""><h2>${escape(group.heading)}</h2><p class="group-note">${escape(group.note)}</p>${group.items.length === 0 ? `<p>${escape(group.empty)}</p>` : `<ul class="local-items">${group.items.map(entry => item(localPage.path, 'li', entry)).join('')}</ul>`}</section>`).join('');
     add(localPage.path, 1, localPage.title, `<section id="page-${escape(localPage.path.replace(/\.html$/u, ''))}" data-topics=""><h1>${escape(localPage.title)}</h1><p>${escape(localPage.intro)}</p>${groups}</section>`);
   }
+  // --- the appendix (v1.5): the last page of the reading order, holding the run disclosure in human form, the counts and the open questions.
+  if (local !== undefined) {
+    const counts = local.counts;
+    const countRows: [string, string][] = counts === undefined ? [] : [
+      ['uncited-judgements', `Blocks the agent marks as its own judgement and that cite nothing: ${counts.uncitedJudgements}.`],
+      ['withheld-items', `Withheld items, whose every cited source screening withholds, shown Unknown in Syzygy's words: ${counts.withheldItems}.`],
+      ['withheld-excerpts', `Code excerpts withheld: ${counts.withheldExcerpts}.`],
+      ['withheld-inventory-entries', counts.withheldInventoryEntries === null ? 'Inventory entries withheld: Unknown, since no fidelity review counts at this render.' : `Inventory entries withheld, rendered nowhere: ${counts.withheldInventoryEntries}.`],
+    ];
+    const questions = openQuestionClaims(APPENDIX);
+    add(APPENDIX, 1, 'Appendix', `<section id="appendix"><h1>Appendix</h1><p>${escape(runSentence)}</p>`
+      + `<section id="appendix-disclosure" class="run-disclosure" aria-label="How this dossier was made"><h2>How this dossier was made</h2>${disclosureList(local.disclosure, escape)}<p>Syzygy can see only the marking: whether an unmarked claim rests on the agent's building or running of the project is the agent's report.</p></section>`
+      + `<section id="appendix-counts"><h2>Counts</h2><ul>${countRows.map(([id, words]) => `<li data-count="${id}">${escape(words)}</li>`).join('')}<li data-count="unknown-claims">${escape(`Unknown claims in the argument: ${unknownClaims}.`)}</li><li data-count="open-questions">${escape(`Open questions: ${openQuestions}.`)}</li></ul></section>`
+      + `<section id="appendix-questions"><h2>Open questions</h2>${questions === '' ? '<p>The draft records no open question.</p>' : questions}</section></section>`);
+  }
   if (local !== undefined) {
     const ids = claimsByPage.map(entry => entry.id);
     if (new Set(ids).size !== ids.length) throw new DossierRenderError('duplicate-claim');
@@ -618,7 +678,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // An operator-agent page is measured without its review-status region, so a render that changes only the region leaves the size
   // report unchanged and a rendered-design review counted.
   // Nor a glossary entry that only shows on hover or focus; the report's closing sentence says so.
-  const measured = (html: string): string => (local === undefined ? html : (withoutReviewStatusRegion(html) ?? html).replace(/<span class="term-pop"[^>]*>.*?<span class="marking [a-z-]+">[^<]*<\/span><\/span>/gsu, ''));
+  const measured = (html: string): string => (local === undefined ? html : (withoutReviewStatusRegion(html) ?? html).replace(/<span class="term-pop"[^>]*>.*?(?:<span class="visually-hidden ev">)?<span class="marking [a-z-]+">[^<]*<\/span>(?:<\/span>)?<\/span>/gsu, ''));
   const scanned = new Map(pages.map(p => [p.path, scanDossierPage(measured(files.get(p.path)!))]));
   const cost = readerCost(manifest, scanned);
   files.set('size-report.json', `${JSON.stringify({ format: 'polaris-dossier-size-report-v1', ...cost }, null, 2)}\n`);
@@ -683,4 +743,29 @@ function withheldWords(note: WithheldNote): string {
   const unnamed = note.sources - note.named.length;
   const names = [...note.named, ...(unnamed === 0 ? [] : [`${unnamed} not named, because a secret detector matches the path`])];
   return `(withheld from this dossier: it rests on ${note.sources} source file(s) that screening withholds: ${names.join('; ')})`;
+}
+
+/** The appendix page (dossier spec v1.5). */
+const APPENDIX = 'appendix.html';
+
+/** The legend every narrative page carries once (REQ-polaris-generation-034, v1.5), with the control that opens the evidence view. The
+ * control is a fragment link and a CSS rule, so it works with scripts off. */
+const READING_LEGEND = '<aside class="reading-legend" aria-label="How to read this page"><p class="view-switch"><a href="#evidence-view">Show the evidence view</a> · <a href="#content">Back to the reading view</a></p><span id="evidence-view"></span><ul>'
+  + '<li>A numbered mark, such as <span class="legend-sample">[1]</span>, cites a source; text with such a mark is the agent\'s reading of that source.</li>'
+  + '<li>The mark <span class="judgement-mark">judgement</span> is the agent\'s own assessment.</li>'
+  + '<li>The mark <span class="framing-mark">framing</span> makes no claim.</li>'
+  + '<li>A set-off quotation is verified against the repository.</li>'
+  + '<li><span class="not-established">Not established.</span> introduces an Unknown block, whose reason follows in words.</li>'
+  + '<li><span class="legend-sample">†N</span> on a citation counts the N lines of that citation\'s file that screening withheld.</li>'
+  + '</ul></aside>';
+
+/** A block's RFC7-33 distinctions as the evidence view shows them: the same values its machine attributes carry. */
+function evidenceNote(block: LocalBlock, kind: 'anchored' | 'labeled'): string {
+  const parts = [`label ${MARKING_LABEL[block.marking as EpistemicMarking]}`, `claim-block kind ${kind}`];
+  if (block.unknownReason !== null) parts.push(`reason ${block.unknownReason}`);
+  if (block.judgement !== undefined) parts.push(`judgement, ${block.judgement}`);
+  if (block.withheld !== undefined) parts.push(`${block.withheld.sources} withheld source file(s)`);
+  if (block.withheldSpans !== undefined) parts.push(`${block.withheldSpans} withheld span(s)`);
+  parts.push('editorial draft');
+  return `Evidence: ${parts.join('; ')}.`;
 }

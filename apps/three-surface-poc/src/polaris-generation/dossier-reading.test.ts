@@ -8,6 +8,41 @@ const render = () => renderLocalDossier(readingInput()).files;
 const main = (html: string): string => html.slice(html.indexOf('<main'));
 const ID = READING_SOURCE.sourceId;
 
+describe('the reading view clips what Syzygy adds to a block (dossier spec v1.5)', () => {
+  // Visible text: every element of the renderer's visually-hidden class removed, with whatever it nests.
+  const visible = (html: string): string => {
+    const opener = '<span class="visually-hidden ev">';
+    let out = html;
+    for (let at = out.indexOf(opener); at !== -1; at = out.indexOf(opener)) {
+      let depth = 0, end = at;
+      for (const m of out.slice(at).matchAll(/<span\b|<\/span>/gu)) {
+        depth += m[0] === '</span>' ? -1 : 1;
+        if (depth === 0) { end = at + m.index! + m[0].length; break; }
+      }
+      out = out.slice(0, at) + out.slice(end);
+    }
+    return out.replace(/<[^>]+>/gu, '');
+  };
+  it('clips the self-reported aside and the reason code, keeps the commands and the reason in words', () => {
+    const input = readingInput();
+    const blocks = new Map(input.local.blocks);
+    blocks.set('late', { ...blocks.get('late')!, executions: [{ id: 'run-1', command: 'make check-kestrel' }] });
+    blocks.set('shown', { ...blocks.get('shown')!, marking: 'unknown', unknownReason: 'missing-evidence', basis: 'no file states the replica count' });
+    const index = renderLocalDossier({ ...input, local: { ...input.local, blocks } }).files.get('index.html')!;
+    const body = index.slice(index.indexOf('<main'), index.indexOf('</main>'));
+    const shown = visible(body);
+    expect(shown).toContain('make check-kestrel');
+    expect(shown).toContain('Not established.');
+    expect(shown).toContain('(no file states the replica count)');
+    expect(shown).not.toContain('self-reported');
+    expect(shown).not.toContain('missing-evidence');
+    // Kept in DOM text, where plain-text extraction and the evidence view read them.
+    expect(body).toContain('<span class="visually-hidden ev"> (Inferred, self-reported)</span>');
+    expect(body).toContain('<span class="visually-hidden ev"> <span class="unknown-reason">(missing-evidence)</span></span>');
+    expect(body).toMatch(/<span class="evidence-note">Evidence: label Unknown; claim-block kind anchored; reason missing-evidence; editorial draft\.<\/span>/u);
+  });
+});
+
 describe('an operator-agent dossier page reads without its machinery', () => {
   // In beforeAll: a throw at describe time reports zero tests.
   let files: ReadonlyMap<string, string>, index: string, sourcePage: string;
@@ -21,9 +56,10 @@ describe('an operator-agent dossier page reads without its machinery', () => {
     // Not in the text of the open questions, the sources list or the size report; the attribute that carries it is not reading text.
     const text = (html: string): string => main(html).replace(/<[^>]+>/gu, ' ');
     const reading = [...files.keys()].filter(path => path.endsWith('.html') && (!path.startsWith('sources/') || path === 'sources/index.html'));
-    expect(reading).toEqual(['index.html', 'contents.html', 'glossary.html', 'sources/index.html', 'understanding.html', 'size-report.html']);
+    expect(reading).toEqual(['index.html', 'contents.html', 'glossary.html', 'sources/index.html', 'understanding.html', 'appendix.html', 'size-report.html']);
     for (const page of reading) expect(text(files.get(page)!), page).not.toContain(ID);
-    expect(main(index)).toContain(`<span class="asset-references">(<span class="sources"><a class="cite" href="sources/`);
+    // The open questions sit in the appendix (dossier spec v1.5), their references numbered as any citation is.
+    expect(main(files.get('appendix.html')!)).toContain(`<span class="asset-references">(<span class="sources"><a class="cite" href="sources/`);
     expect(sourcePage).toContain(`<details class="source-identity"><summary>Source identity</summary><p>${ID}</p><dl class="evidence-anchor"`);
     expect(sourcePage).toContain(`<p class="source-anchor">bytes 0–`);
     // Outside its identity details a source page's text does not name the identifier.
@@ -108,8 +144,8 @@ describe('glossary terms in agent prose', () => {
     expect(glossary.slice(0, glossary.indexOf('<dt id="term-glossary/replica">'))).not.toContain('<details class="details"');
   });
 
-  it('shows the entry as prose with its marking and machine attributes, and lists it in the machine view', () => {
-    expect(index).toContain('<span class="term-pop" data-glossary-entry="glossary/event-loop" data-epistemic="inferred">The loop that serves <code>clients</code>. <span class="marking inferred">[Inferred]</span></span>');
+  it('shows the entry as prose with its marking clipped in the reading view, its machine attributes, and lists it in the machine view', () => {
+    expect(index).toContain('<span class="term-pop" data-glossary-entry="glossary/event-loop" data-epistemic="inferred">The loop that serves <code>clients</code>. <span class="visually-hidden ev"><span class="marking inferred">[Inferred]</span></span></span>');
     const machine = JSON.parse(files.get('machine.json')!) as { claims: { page: string; id: string }[]; glossaryShown: { page: string; id: string }[] };
     expect(machine.glossaryShown).toContainEqual({ page: 'index.html', id: 'glossary/replica' });
     expect(machine.claims.filter(claim => claim.id === 'glossary/replica').map(claim => claim.page)).toEqual(['glossary.html']);

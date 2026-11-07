@@ -53,6 +53,8 @@ export function readingInput(): { readonly local: LocalRenderInput; readonly sou
   return {
     sources: [source],
     local: {
+      // The lines the introduction cites, as the render adapter records them: its citation mark shows them on focus and hover.
+      citationLines: new Map([['introduction', new Map([[source.sourceId, 'lines 1\u20133']])]]),
       draft: {
         title: 'Reading dossier', introduction: { id: 'introduction', text: 'intro', sourceIds: [source.sourceId] },
         sections: [

@@ -199,9 +199,13 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   if (!published.ok || published.sha256 !== reviewed.sha256) {
     return refuse('render', 'stating the rendered-design review in the review-status region changed the pages outside that region, so the review of record cannot be decided from them');
   }
-  // The first RFC7-20 condition, checked on the output itself: the disclosure on every page and in the machine view.
-  const pagesMissing = [...files].filter(([file, html]) => file.endsWith('.html') && !html.includes('class="run-disclosure"')).map(([file]) => file);
-  if (pagesMissing.length > 0 || !files.has('machine.json')) return refuse('render', `the rendered site does not carry the run disclosure on every page and in the machine view (${pagesMissing.join(', ') || 'machine.json'})`);
+  // The first RFC7-20 condition, checked on the output itself (dossier spec v1.5): every page carries the one sentence and its machine
+  // disclosure, the appendix carries the disclosure in human form, and the machine view exists.
+  const pagesMissing = [...files].filter(([file, html]) => file.endsWith('.html') && !(html.includes('class="run-sentence"') && html.includes(' data-disclosure-ids="'))).map(([file]) => file);
+  const appendix = files.get('appendix.html');
+  if (pagesMissing.length > 0 || appendix === undefined || !appendix.includes('class="run-disclosure"') || !files.has('machine.json')) {
+    return refuse('render', `the rendered site does not carry the run disclosure: the one sentence and machine form on every page, the appendix and the machine view (${[...pagesMissing, ...(appendix === undefined ? ['appendix.html'] : [])].join(', ') || 'machine.json'})`);
+  }
   // The code-content exemption (policy version 3) and the project-documentation exemption (version 5) admitted some bodies without the
   // active-content scan. Each holds at these pages only while they meet the renderCondition (version 7's text); where that cannot be confirmed,
   // each such body is scanned as before for these pages, and one with a finding is excluded whole here: a quoted or cited body cannot
@@ -415,6 +419,20 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     const piece = blob === undefined ? undefined : pieceAt(cited!, blob.lineByteOffsets?.[(typeof citation['startLine'] === 'number' ? citation['startLine'] : 1) - 1] ?? byteOf(blob.raw, typeof citation['startLine'] === 'number' ? citation['startLine'] : 1));
     return piece === undefined ? [] : [piece.sourceId];
   }))];
+  // The cited lines behind each citation mark, by claim and source piece: a mark shows its file and lines on hover and focus (v1.5). These
+  // are the draft's ranges, checked against the blob at this render; a withheld item's are never shown, since it cites no admitted piece.
+  const citationLines = new Map<string, Map<string, string>>();
+  const cites = (claimId: string, value: Readonly<Record<string, unknown>>): string[] => {
+    const lines = new Map<string, string[]>();
+    for (const citation of list(value['citations']).filter(isRecord)) {
+      const [sourceId] = citedSources({ citations: [citation] });
+      const startLine = citation['startLine'], endLine = citation['endLine'];
+      if (sourceId === undefined || typeof startLine !== 'number' || typeof endLine !== 'number') continue;
+      lines.set(sourceId, [...(lines.get(sourceId) ?? []), startLine === endLine ? `line ${startLine}` : `lines ${startLine}\u2013${endLine}`]);
+    }
+    if (lines.size > 0) citationLines.set(claimId, new Map([...lines].map(([sourceId, ranges]) => [sourceId, [...new Set(ranges)].join(', ')])));
+    return citedSources(value);
+  };
   const anchorOf = (source: GenerationSource, start: number, end: number): EvidenceAnchor => ({
     targetClass: 'evidence-artifact-identifier-with-integrity-digest', identifier: source.objectId!, algorithm, fragment: { start, end }, targetState: pinned, pathLabel: source.path,
   });
@@ -521,7 +539,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
   };
   const paragraph = (value: unknown): DraftParagraph => {
     const record = isRecord(value) ? value : {};
-    return { id: text(record['id'])!, text: plain(text(record['id'])!), sourceIds: record['label'] === 'non-normative' ? [] : citedSources(record) };
+    return { id: text(record['id'])!, text: plain(text(record['id'])!), sourceIds: record['label'] === 'non-normative' ? [] : cites(text(record['id'])!, record) };
   };
   const label = (value: unknown): string => clean(text(value) ?? '');
   // A code excerpt whose cited span is withheld (v1.5): counted, and a label over it alone reads `Withheld item`.
@@ -599,11 +617,11 @@ export function buildLocalInput(inputs: BuildInputs): Built {
         id: text(diagram['id'])!, title: held ? WITHHELD_LABEL : title(diagram['title']), sectionId: text(diagram['sectionId'])!, kind: diagram['kind'] as DossierDraft['diagrams'][number]['kind'], relationship: held ? WITHHELD_LABEL : title(diagram['relationship']),
         nodes: list(diagram['nodes']).filter(isRecord).map((node) => {
           const { held: gone } = element('', node);
-          return { id: text(node['id'])!, label: gone === undefined ? title(node['label']) : WITHHELD_LABEL, sourceIds: citedSources(node), epistemic: gone === undefined && node['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
+          return { id: text(node['id'])!, label: gone === undefined ? title(node['label']) : WITHHELD_LABEL, sourceIds: cites(text(node['id'])!, node), epistemic: gone === undefined && node['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
         }),
         edges: list(diagram['edges']).filter(isRecord).map((edge) => {
           const { held: gone } = element('', edge);
-          return { id: text(edge['id'])!, from: text(edge['from'])!, to: text(edge['to'])!, label: gone === undefined ? title(edge['label']) : WITHHELD_LABEL, sourceIds: citedSources(edge), epistemic: gone === undefined && edge['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
+          return { id: text(edge['id'])!, from: text(edge['from'])!, to: text(edge['to'])!, label: gone === undefined ? title(edge['label']) : WITHHELD_LABEL, sourceIds: cites(text(edge['id'])!, edge), epistemic: gone === undefined && edge['epistemic'] === 'inferred' ? 'inferred' as const : 'unknown' as const };
         }),
         disposition: disposition(diagram['disposition']),
       };
@@ -626,7 +644,7 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     const unknown = record['label'] === 'unknown';
     return {
       id: `${prefix}/${text(record['id'])!}`, marking: unknown ? 'unknown' : 'inferred', unknownReason: unknown ? text(record['reason']) ?? 'missing-evidence' : null,
-      title: text(record['id'])!, text: clean(text(record['statement']) ?? ''), details: [`Scope: ${clean(text(record['scope']) ?? '')}`], sourceIds: citedSources(record),
+      title: text(record['id'])!, text: clean(text(record['statement']) ?? ''), details: [`Scope: ${clean(text(record['scope']) ?? '')}`], sourceIds: cites(`${prefix}/${text(record['id'])!}`, record),
     };
   };
   // A term drawn from a withheld item renders nowhere in the glossary (v1.5); the understanding page counts it as withheld.
@@ -733,7 +751,8 @@ export function buildLocalInput(inputs: BuildInputs): Built {
     sources,
     local: {
       draft, withheldTitle: `Dossier of ${subject.repository.url} at ${pinned.slice(0, 12)}`, draftLayer, blocks, glossary, disclosure,
-      sourceAnchors, pages, reviewStatus, withheldElements,
+      sourceAnchors, pages, reviewStatus, withheldElements, citationLines,
+      authoring: { tool: declared.agentTool, model: declared.model },
       counts: {
         uncitedJudgements: [...blocks.values()].filter((block) => block.judgement === 'uncited').length,
         withheldItems: [...blocks.values()].filter((block) => block.withheld !== undefined).length + withheldElements.size,
