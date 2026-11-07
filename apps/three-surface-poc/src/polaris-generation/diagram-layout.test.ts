@@ -155,7 +155,7 @@ describe('layered left-to-right diagram layout', () => {
       expect(grown).toBeGreaterThan(0);
     });
 
-    it('searches on an eight-pixel step, up before down, both before sideways, right before left, and diagonally last', () => {
+    it('searches on an eight-pixel step, up before down, straight before diagonal before sideways at one count of steps, right before left', () => {
       const place1 = (label: { x: number; y: number; width: number; height: number }, walls: readonly { left: number; top: number; right: number; bottom: number }[]) =>
         placeEdgeLabels([{ ...label, back: false }], walls, 400);
       const wide = { x: 100, y: 100, width: 60, height: 20 };
@@ -187,25 +187,35 @@ describe('layered left-to-right diagram layout', () => {
     };
 
     it('runs each leader from its own label to its own line, in plain sight of every other label and node', () => {
-      let seed = 20261108, leaders = 0;
+      let seed = 20261108, leaders = 0, sideways = 0;
       const next = (bound: number): number => { seed = (seed * 1103515245 + 12345) % 2147483648; return Math.floor(seed / 65536) % bound; };
       for (let graph = 0; graph < 300; graph++) {
         const ids = Array.from({ length: 3 + next(8) }, (_, i) => `n${i}`);
         const edges = Array.from({ length: 2 + next(ids.length * 2) }, (_, i) => ({ id: `e${i}`, from: ids[next(ids.length)]!, to: ids[next(ids.length)]! }));
-        const svg = renderDiagramSvg(renderOf(ids, edges, 'carries the request onward'), graph, text => text, READABLE_SPACING);
+        const svg = renderDiagramSvg(renderOf(ids, edges, graph % 2 === 0 ? 'carries the request onward' : 'sends'), graph, text => text, READABLE_SPACING);
         const layout = layoutDiagram(ids.map(id => ({ id })), edges, READABLE_SPACING);
         const labels = placedLabels(svg);
         const blocks = [...labels, ...layout.nodes.map(n => ({ left: n.x, right: n.x + 200, top: n.y, bottom: n.y + 56 }))];
+        const curvesIn = leadersIn(svg).map(group => group.curve);
         for (const { i, curve, leader } of leadersIn(svg)) {
           const own = labels[i]!;
           const natural = layout.edges[i]!;
           const centerX = (own.left + own.right) / 2, centerY = (own.top + own.bottom) / 2;
+          if (leader !== undefined && Math.abs(centerY - natural.labelY) < 0.11) sideways++;
           const stayed = Math.abs(centerX - natural.labelX) < 0.11 && Math.abs(centerY - natural.labelY) < 0.11;
           if (leader === undefined) continue;
           leaders++;
           expect(stayed, `graph ${graph} edge ${i}: a leader on a label left in place`).toBe(false);
           const [fromX, fromY, toX, toY] = leader;
-          expect(Math.hypot(fromX - centerX, fromY - centerY), `graph ${graph} edge ${i} start`).toBeLessThan(0.2);
+          // It starts on its own label's edge.
+          const offEdge = Math.min(Math.abs(fromX - own.left), Math.abs(fromX - own.right), Math.abs(fromY - own.top), Math.abs(fromY - own.bottom));
+          expect(offEdge, `graph ${graph} edge ${i} start`).toBeLessThan(0.2);
+          expect(fromX >= own.left - 0.2 && fromX <= own.right + 0.2 && fromY >= own.top - 0.2 && fromY <= own.bottom + 0.2, `graph ${graph} edge ${i} start on its box`).toBe(true);
+          // No different line runs through its end.
+          for (const other of curvesIn) {
+            if (other === curve) continue;
+            expect(Math.min(...curvePoints(other).map(at => Math.hypot(at.x - toX, at.y - toY))), `graph ${graph} edge ${i} ends on another line`).toBeGreaterThan(1);
+          }
           // Its end is on this edge's own curve.
           const onOwn = Math.min(...curvePoints(curve).map(at => Math.hypot(at.x - toX, at.y - toY)));
           expect(onOwn, `graph ${graph} edge ${i} end`).toBeLessThan(1);
@@ -222,6 +232,7 @@ describe('layered left-to-right diagram layout', () => {
         }
       }
       expect(leaders).toBeGreaterThan(20);
+      expect(sideways, 'a label moved only sideways keeps its leader').toBeGreaterThan(0);
     });
 
     it('ends a leader at the nearest point of its line that it can see', () => {
@@ -230,7 +241,7 @@ describe('layered left-to-right diagram layout', () => {
       const svg = renderDiagramSvg(renderOf(['a', 'b', 'c'], fan, 'to'), 0, text => text, READABLE_SPACING);
       const groups = leadersIn(svg);
       expect(groups[0]!.leader).toBeUndefined();
-      expect(groups[1]!.leader).toEqual([323, 50, 341.9, 71]);
+      expect(groups[1]!.leader).toEqual([336.9, 60.5, 341.9, 71]);
     });
 
     it('draws no leader on the provider form, or where no label moved', () => {

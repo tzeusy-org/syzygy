@@ -27,6 +27,8 @@ const LABEL_CLEARANCE = 4;
 const LABEL_STEP = 8;
 const LEADER_SAMPLES = 64;
 const LEADER_MIN_RUN = 6;
+const LEADER_SHARED = 1.5;
+const LEADER_EDGE_STOPS = 16;
 
 /** How much room a diagram gets. The default is the draft preview's and the provider mode's form, whose bytes are pinned. */
 export interface DiagramSpacing {
@@ -212,25 +214,42 @@ function segmentEntersBox(x0: number, y0: number, x1: number, y1: number, box: L
   return enter < leave;
 }
 
-/**
- * Where a moved label's leader ends: the point of its own cubic curve nearest the label that a reader can see, reached by a straight run
- * clear of every other label and every node. Undefined when the label already sits on or against its own line, since a leader says nothing
- * more there, and when no such point exists: a leader running under another label would tie this label to that one.
- */
-function leaderEnd(d: string, label: LabelBox, others: readonly LabelBox[]): { readonly x: number; readonly y: number } | undefined {
+interface Point { readonly x: number; readonly y: number }
+
+function curveSamples(d: string): readonly Point[] {
   const [x0, y0, x1, y1, x2, y2, x3, y3] = [...d.matchAll(/-?[\d.]+/gu)].map(m => Number(m[0])) as [number, number, number, number, number, number, number, number];
-  const fromX = (label.left + label.right) / 2, fromY = (label.top + label.bottom) / 2;
-  const samples = Array.from({ length: LEADER_SAMPLES + 1 }, (_, i) => {
+  return Array.from({ length: LEADER_SAMPLES + 1 }, (_, i) => {
     const t = i / LEADER_SAMPLES, u = 1 - t;
     return {
       x: u * u * u * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x3,
       y: u * u * u * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t * y3,
     };
   });
-  const gap = (at: { readonly x: number; readonly y: number }): number => Math.hypot(Math.max(label.left - at.x, 0, at.x - label.right), Math.max(label.top - at.y, 0, at.y - label.bottom));
-  if (samples.some(at => gap(at) < LEADER_MIN_RUN)) return undefined;
-  const visible = samples.filter(at => others.every(box => !segmentEntersBox(fromX, fromY, at.x, at.y, box)));
-  return visible.reduce<{ readonly x: number; readonly y: number } | undefined>((best, at) => best === undefined || gap(at) < gap(best) ? at : best, undefined);
+}
+
+function distanceToSegment(at: Point, a: Point, b: Point): number {
+  const dx = b.x - a.x, dy = b.y - a.y, length = dx * dx + dy * dy;
+  const t = length === 0 ? 0 : Math.max(0, Math.min(1, ((at.x - a.x) * dx + (at.y - a.y) * dy) / length));
+  return Math.hypot(at.x - (a.x + t * dx), at.y - (a.y + t * dy));
+}
+
+/**
+ * A moved label's leader: the shortest straight run from the label's edge to a point of its own curve, clear of every other label and node,
+ * ending where no other line runs, so the picture cannot tie the label to that line. Undefined when the label already sits against its own
+ * line, since a leader says nothing more there, and when no such run exists: an absent leader leaves a reader unassisted, a wrong one misleads.
+ */
+function leaderRun(own: readonly Point[], label: LabelBox, others: readonly LabelBox[], otherCurves: readonly (readonly Point[])[]): { readonly from: Point; readonly to: Point } | undefined {
+  const gap = (at: Point): number => Math.hypot(Math.max(label.left - at.x, 0, at.x - label.right), Math.max(label.top - at.y, 0, at.y - label.bottom));
+  if (own.some(at => gap(at) < LEADER_MIN_RUN)) return undefined;
+  const ends = own.filter(at => otherCurves.every(curve => curve.every((a, i) => i === 0 || distanceToSegment(at, curve[i - 1]!, a) >= LEADER_SHARED)));
+  const starts: Point[] = [];
+  for (let k = 0; k <= LEADER_EDGE_STOPS; k++) {
+    const across = label.left + (label.right - label.left) * k / LEADER_EDGE_STOPS, down = label.top + (label.bottom - label.top) * k / LEADER_EDGE_STOPS;
+    starts.push({ x: across, y: label.top }, { x: across, y: label.bottom }, { x: label.left, y: down }, { x: label.right, y: down });
+  }
+  const runs = ends.flatMap(to => starts.map(from => ({ from, to, length: Math.hypot(to.x - from.x, to.y - from.y) })));
+  runs.sort((a, b) => a.length - b.length);
+  return runs.find(({ from, to }) => others.every(box => !segmentEntersBox(from.x, from.y, to.x, to.y, box)));
 }
 
 interface WantedLabel { readonly x: number; readonly y: number; readonly width: number; readonly height: number; readonly back: boolean }
@@ -306,6 +325,7 @@ export function renderDiagramSvg(
     return { left: at.x, top: at.y, right: at.x + NODE_WIDTH, bottom: at.y + NODE_HEIGHT + (connected.has(node.id) ? 0 : NODE_NOTE_HEIGHT) };
   });
   const placed = spacing.labelsOnTop ? placeEdgeLabels(wanted, standing, layout.width) : wanted;
+  const curves = spacing.labelsOnTop ? layout.edges.map(edge => curveSamples(edge.d)) : [];
   const boxOf = (i: number): LabelBox => {
     const { width, height } = wanted[i]!, { x, y } = placed[i]!;
     return { left: x - width / 2, top: y - height / 2, right: x + width / 2, bottom: y + height / 2 };
@@ -316,8 +336,10 @@ export function renderDiagramSvg(
     // A label the search moved keeps a thin leader to its own line where one can be seen, in the line's layer: without one, it can read as
     // another line's label.
     const moved = x !== at.labelX || y !== at.labelY;
-    const reach = moved ? leaderEnd(at.d, boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])]) : undefined;
-    const leader = reach === undefined ? '' : `<path class="edge-leader" d="M ${num(x)} ${num(y)} L ${num(reach.x)} ${num(reach.y)}"/>`;
+    const run = moved
+      ? leaderRun(curves[i]!, boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])], curves.filter((_, j) => layout.edges[j]!.d !== at.d))
+      : undefined;
+    const leader = run === undefined ? '' : `<path class="edge-leader" d="M ${num(run.from.x)} ${num(run.from.y)} L ${num(run.to.x)} ${num(run.to.y)}"/>`;
     const head = `<g class="edge ${edge.epistemic}${at.back ? ' back' : ''}"><title>${escape(edge.label)} (${edge.epistemic})</title><path d="${at.d}" marker-end="url(#${markerId})"/>${leader}`;
     const label = `<rect class="edge-label" x="${num(x - width / 2)}" y="${num(top)}" width="${num(width)}" height="${num(height)}" rx="3"/>${textLines(lines, x, top + 15, 15)}`;
     // A label's own copy of its line, hidden until the label is under the pointer: the line itself sits in a lower layer the label cannot reach without a script.
