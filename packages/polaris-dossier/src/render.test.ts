@@ -1300,9 +1300,15 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
   });
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
-    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v3');
+    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v4');
     expect(READABILITY_GUIDANCE).toContain('Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and why it exists, as its sources state. Define each term at its first use.');
-    expect(READABILITY_GUIDANCE).toContain('carries at least one diagram with that section\'s `sectionId`, and Syzygy draws it at the top of the section');
+    // Owner review of the Redis run, 2026-11-08 (syzygy-pdja.11, syzygy-pdja.12): draw first, few words, few and broad pages.
+    expect(READABILITY_GUIDANCE).toContain('2. Diagrams lead, prose follows. Draw before you write: every end-to-end workflow, every mechanism and every set of components that talk to each other gets a diagram with its section\'s `sectionId`, and Syzygy draws it at the top of the section');
+    expect(READABILITY_GUIDANCE).toContain('The section\'s blocks then explain what the diagram cannot show (why a step exists, what it costs), never retell it edge by edge.');
+    expect(READABILITY_GUIDANCE).toContain('6. Few words. Keep a section\'s own prose short: about 300 words of blocks at most, outside its diagrams and elements. A paragraph that lists three or more things, compares options or walks through steps becomes a table, cards, steps or a diagram');
+    expect(READABILITY_GUIDANCE).toContain('7. Few, broad pages. A deep dive is a page of its own, so write one only for a mechanism a reader of the stated audience needs and the section cannot hold: at most three in a dossier.');
+    expect(READABILITY_GUIDANCE).toContain('never by a function, type or file name (Inside handleRequest); the identifiers belong in the text, in backticks. Two deep dives that serve the same reader question are one.');
+    expect(READABILITY_GUIDANCE.split('\n').map(line => line.slice(0, 3))).toEqual(['1. ', '2. ', '3. ', '4. ', '5. ', '6. ', '7. ']);
     expect(READABILITY_GUIDANCE).toContain('a `flow` for an end-to-end workflow or a user\'s path through the project, a `boundary` or `dependency` diagram for the architecture and how components talk to each other');
     expect(READABILITY_GUIDANCE).toContain('An enumeration of three or more items is never a run-on sentence: write a short lead block and give each item its own child block, which renders as a bulleted list. A block holds at most twelve children, so group a longer enumeration under several lead blocks.');
     expect(READABILITY_GUIDANCE).toContain('Put commands, identifiers, file names and configuration keys in backticks outside quotations; they render as inline code.');
@@ -1310,14 +1316,16 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     expect(READABILITY_GUIDANCE).toContain('An empty table cell renders "no entry" and states nothing: write a negative or an absence as a claim.');
     expect(READABILITY_GUIDANCE).toContain('5. Elements. A section or deep dive entry may be a plain block or, in draft schema `polaris-dossier-local-draft-v3`, one of seven presentation elements.');
     expect(READABILITY_GUIDANCE).toContain('Captions, column names, titles, terms, labels, summaries and languages are short plain labels of at most 120 characters, never claims or quotations, with no quotation mark and no markup (no angle bracket, ampersand, backtick, Markdown link, or * or _ at a word edge); quote only in a claim, where Syzygy verifies it; every cell, item, definition and body is a claim and follows every rule above.');
-    expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
+    expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, a paragraph that would read better as a diagram, table, cards or steps, a section whose prose runs well past what a reader takes in at once, a deep dive or section titled by a function, type or file name rather than by what it explains, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
     // Dossier spec v1.5, "Rendered-design packet carries its questions": the six questions, and the evidence view among the rendered pages.
     const criteria = designCriteria('/run').join('\n');
     for (const question of ['whether its opening states why the project exists', 'whether its lead uses the category term a software engineer knows',
       'whether warnings sit in the one sentence and the appendix rather than in the reading text', 'whether the page is too long to read at one sitting',
       'whether a list repeats a diagram instead of folding beneath it', 'whether the page reads as a person explaining the project']) expect(criteria).toContain(question);
     expect(criteria).toContain('the evidence view, the same page at its #evidence-view target, where they show. Judge both.');
-    expect(criteria).toContain('agrees with machine.json, which on a narrative page (index.html and deep-dives/) means in its evidence view;');
+    expect(criteria).toContain('A narrative page (index.html and the pages under poles/ and deep-dives/) has two views');
+    expect(criteria).toContain('a paragraph that would read better as a diagram, table, cards or steps, a section whose prose runs well past what a reader takes in at once, a deep dive or section titled by a function, type or file name rather than by what it explains,');
+    expect(criteria).toContain('agrees with machine.json, which on a narrative page (index.html, poles/ and deep-dives/) means in its evidence view;');
     expect(criteria).toContain('whether every page carries the run\'s one sentence and a link to the appendix, which holds the disclosure.');
     expect(criteria).not.toContain('whether the run disclosure is on every page');
   });

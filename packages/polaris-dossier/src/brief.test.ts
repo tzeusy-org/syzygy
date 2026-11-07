@@ -77,7 +77,7 @@ describe('brief: issued', () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v2', schemaVersion: 'polaris-dossier-local-draft-v4',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v3', schemaVersion: 'polaris-dossier-local-draft-v4',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     const brief = read(run, 'brief.md'), schema = read(run, 'draft.schema.json');
@@ -96,7 +96,7 @@ describe('brief: issued', () => {
     expect(JSON.parse(schema).properties.pinnedRevision.enum).toEqual([REV]);
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
-      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v2', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
+      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v3', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
       schemaVersion: 'polaris-dossier-local-draft-v4', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
       files: { brief: { name: 'brief.md', sha256: sha(brief) }, draftSchema: { name: 'draft.schema.json', sha256: sha(schema) } },
@@ -194,7 +194,7 @@ describe('brief: issued', () => {
     if (!sec3.ok) throw new Error(sec3.reason);
     const rule = await decideExecutionRule({ role: 'authoring', runDir: '/r', runId: RUN_ID, pinnedRevision: REV, operatorIsOwner: true, sec3: sec3.sec3, now: NOW, d9: async () => OK, launched: () => 'absent', permitting: { enabled: false } });
     const text = renderBrief({ runId: RUN_ID, subject: SUBJECT, declared: configOf(), issuedAt: NOW, schemaSha256: '0'.repeat(64), executionRule: rule, revisionLabel: '8.10.2' });
-    const heading = '## Readability (`polaris-dossier-readability-v3`)';
+    const heading = '## Readability (`polaris-dossier-readability-v4`)';
     expect(text).toContain(`${heading}\n\nThese rules shape how the dossier reads; every claim, citation and quotation rule above still holds.\n\n${READABILITY_GUIDANCE}\n`);
     expect(text.indexOf(heading)).toBeGreaterThan(text.indexOf(DOSSIER_GUIDANCE));
   });

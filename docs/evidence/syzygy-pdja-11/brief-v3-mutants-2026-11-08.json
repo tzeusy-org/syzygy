@@ -1,0 +1,126 @@
+{
+ "format": "rule-6-mutation-record",
+ "bead": "syzygy-pdja.11, syzygy-pdja.12",
+ "ranAt": {
+  "base": "49512529ebeed716c85bf820a0e4dde20d049df0",
+  "note": "uncommitted working tree on agent/syzygy-pdja.11-brief-v3 over base; subject digests are the bytes mutated"
+ },
+ "subjectDigests": {
+  "packages/polaris-dossier/src/brief.ts": "90908b3d4a7657272d6c33797e5fbbdf9c556f1706f76ec356417ad49a04e832",
+  "packages/polaris-dossier/src/design-review.ts": "40dedf2d204122255f19ba52ce859349f876d8b717f9c5f49427a56c1a75f4f1",
+  "packages/polaris-dossier/src/brief.test.ts": "6c4c68dfc611114d16bd465104db5ebaf4515d51f049c7ee8c4a5ed49519e1f3",
+  "packages/polaris-dossier/src/render.test.ts": "9171b3b75c4f3881dd2d16c73fa68a9135c1cad1ca71c706ca34c388771146bd"
+ },
+ "command": "npx vitest run packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/render.test.ts",
+ "mutants": [
+  {
+   "id": "version-v2",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "'polaris-dossier-brief-v3'",
+   "new": "'polaris-dossier-brief-v2'",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "readability-v3",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "'polaris-dossier-readability-v4'",
+   "new": "'polaris-dossier-readability-v3'",
+   "killed": true,
+   "tests": "2 failed | 100 passed (102)"
+  },
+  {
+   "id": "no-retell-dropped",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": " The section\\'s blocks then explain what the diagram cannot show (why a step exists, what it costs), never retell it edge by edge.",
+   "new": "",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "budget-500",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "about 300 words of blocks at most",
+   "new": "about 500 words of blocks at most",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "rule6-dropped",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "  '6. Few words.",
+   "new": "  '6x. Few words.",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "deep-dive-cap",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "at most three in a dossier",
+   "new": "at most ten in a dossier",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "naming-dropped",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": "never by a function, type or file name (Inside handleRequest); ",
+   "new": "",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "merge-dropped",
+   "file": "packages/polaris-dossier/src/brief.ts",
+   "old": " Two deep dives that serve the same reader question are one.",
+   "new": "",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "poles-path-1",
+   "file": "packages/polaris-dossier/src/design-review.ts",
+   "old": "(index.html, poles/ and deep-dives/)",
+   "new": "(index.html and deep-dives/)",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "poles-path-2",
+   "file": "packages/polaris-dossier/src/design-review.ts",
+   "old": "(index.html and the pages under poles/ and deep-dives/)",
+   "new": "(index.html and the pages under deep-dives/)",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "paragraph-diagram-dropped",
+   "file": "packages/polaris-dossier/src/design-review.ts",
+   "old": "a paragraph that would read better as a diagram, table, cards or steps, ",
+   "new": "",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "long-section-dropped",
+   "file": "packages/polaris-dossier/src/design-review.ts",
+   "old": "a section whose prose runs well past what a reader takes in at once, ",
+   "new": "",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  },
+  {
+   "id": "naming-criterion-dropped",
+   "file": "packages/polaris-dossier/src/design-review.ts",
+   "old": "a deep dive or section titled by a function, type or file name rather than by what it explains, ",
+   "new": "",
+   "killed": true,
+   "tests": "1 failed | 101 passed (102)"
+  }
+ ],
+ "killed": 13,
+ "total": 13,
+ "accepted": [],
+ "discarded": [],
+ "rerunAfter": "any edit to the subject files"
+}
