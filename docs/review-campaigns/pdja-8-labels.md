@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-PDJA-8-LABELS-1-RAW.md:1`), over `e2813e7d`, with two revise findings: a moved label could read as another line's, and "least distance" had no test. A moved label now draws a leader to its own line, a literal fixture pins the search order, and two comments and a docstring were corrected. Notes 3, 4, 5, 8, 9 and 10 stand and are named in the PR.
+`REVISE` (`R-PDJA-8-LABELS-2-RAW.md:1`), over `49e36777`, with three revise findings: a leader often ran under the label that had displaced it, its "own line" had no test, and the search test claimed more than it pinned. A leader now ends at the nearest point of its own line it can see, along a run clear of other labels and nodes, or is not drawn; tests pin its end and the search's step and order. Round 1 was also `REVISE`; its notes and these stand in the PR.

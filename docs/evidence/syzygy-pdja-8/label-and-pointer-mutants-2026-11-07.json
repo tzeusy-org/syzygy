@@ -2,13 +2,13 @@
  "format": "mutation-record",
  "bead": "syzygy-pdja.8",
  "subject": {
-  "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "ae3353df9e21162999355e4d038dd9b451b72fd003a1b94870ac34ce189c7b45",
+  "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "e4bf810bb76222d4791df72de03b22f03b561864b8d08f329e2a7373c7e59a63",
   "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "008bf930a37a0509b9d4cbb180a0efb66f8ccce98254121f85b0d80698f62862"
  },
- "ranAt": "6314696ebff71f0ecee8016fb8fb494dbf6c49c3",
+ "ranAt": "fc8e550d5ad191d6536182b11668d5acc1582858",
  "note": "Each mutant replaces old with new once, runs the diagram-layout, dossier-reading and dossier-reading browser tests, then restores. The baseline passed before and after.",
- "denominator": 24,
- "killed": 24,
+ "denominator": 38,
+ "killed": 38,
  "mutants": [
   {
    "id": "pass-off",
@@ -137,10 +137,108 @@
    "killed": true
   },
   {
-   "id": "leader-to-start",
+   "id": "leader-under-labels",
    "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
-   "old": "if (Math.hypot(at.x - x, at.y - y) < Math.hypot(best.x - x, best.y - y)) best = at;",
+   "old": "others.every(box => !segmentEntersBox(fromX, fromY, at.x, at.y, box))",
+   "new": "true",
+   "killed": true
+  },
+  {
+   "id": "leader-end-only-clear",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "others.every(box => !segmentEntersBox(fromX, fromY, at.x, at.y, box))",
+   "new": "others.every(box => !(at.x > box.left && at.x < box.right && at.y > box.top && at.y < box.bottom))",
+   "killed": true
+  },
+  {
+   "id": "leader-on-line-too",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "  if (samples.some(at => gap(at) < LEADER_MIN_RUN)) return undefined;\n",
    "new": "",
+   "killed": true
+  },
+  {
+   "id": "leader-to-first-place",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const reach = moved ? leaderEnd(at.d, boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])]) : undefined;",
+   "new": "const reach = moved ? { x: at.labelX, y: at.labelY } : undefined;",
+   "killed": true
+  },
+  {
+   "id": "leader-neighbour",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const reach = moved ? leaderEnd(at.d,",
+   "new": "const reach = moved ? leaderEnd(layout.edges[0]!.d,",
+   "killed": true
+  },
+  {
+   "id": "leader-samples-2",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const LEADER_SAMPLES = 64;",
+   "new": "const LEADER_SAMPLES = 2;",
+   "killed": true
+  },
+  {
+   "id": "leader-samples-8",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const LEADER_SAMPLES = 64;",
+   "new": "const LEADER_SAMPLES = 8;",
+   "killed": true
+  },
+  {
+   "id": "leader-far-end",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "best === undefined || gap(at) < gap(best) ? at : best",
+   "new": "best === undefined || gap(at) > gap(best) ? at : best",
+   "killed": true
+  },
+  {
+   "id": "step-24",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const LABEL_STEP = 8;",
+   "new": "const LABEL_STEP = 24;",
+   "killed": true
+  },
+  {
+   "id": "step-6",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const LABEL_STEP = 8;",
+   "new": "const LABEL_STEP = 6;",
+   "killed": true
+  },
+  {
+   "id": "step-12",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const LABEL_STEP = 8;",
+   "new": "const LABEL_STEP = 12;",
+   "killed": true
+  },
+  {
+   "id": "across-reversed",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "for (let across = 0; across <= ring && found === undefined; across++) {",
+   "new": "for (let across = ring; across >= 0 && found === undefined; across--) {",
+   "killed": true
+  },
+  {
+   "id": "left-before-right",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "[[across, across - ring], [across, ring - across], [-across, across - ring], [-across, ring - across]]",
+   "new": "[[-across, across - ring], [-across, ring - across], [across, across - ring], [across, ring - across]]",
+   "killed": true
+  },
+  {
+   "id": "down-before-up",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "[[across, across - ring], [across, ring - across], [-across, across - ring], [-across, ring - across]]",
+   "new": "[[across, ring - across], [across, across - ring], [-across, ring - across], [-across, across - ring]]",
+   "killed": true
+  },
+  {
+   "id": "skip-diagonals",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "for (let across = 0; across <= ring && found === undefined; across++) {",
+   "new": "for (const across of [0, ring]) {\n        if (found !== undefined) break;",
    "killed": true
   },
   {
