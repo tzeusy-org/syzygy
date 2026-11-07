@@ -672,7 +672,9 @@ describe('render: withheld items and judgements (dossier spec v1.5)', () => {
     const doc = draft();
     doc.schemaVersion = 'polaris-dossier-local-draft-v4';
     doc.understanding.purpose = [{ id: 'u-purpose', label: 'inferred', statement: 'zq-purpose words.', scope: 'zq-scope.', citations: [ENV('u-purpose-c')] }];
-    doc.understanding.terminology = [...doc.understanding.terminology, { id: 'zq-term', label: 'inferred', statement: 'zq-term words.', scope: 'zq-scope.', citations: [ENV('u-term-c')] }];
+    doc.understanding.terminology = [...doc.understanding.terminology, { id: 'zq-term', label: 'inferred', statement: 'zq-term words.', scope: 'zq-scope.', citations: [ENV('u-term-c')] },
+      // A glossary term Syzygy's own sentence contains: the sentence is Syzygy's words, never linked as agent prose is.
+      { id: 'screening', label: 'inferred', statement: 'What decides what a dossier may show.', scope: 'The server.', citations: [cite('u-screen-c', 'src/kestrel.c', 1, 1)] }];
     doc.sections.push({ id: 'held-sec', title: 'zq-held section', paragraphs: [{ id: 'p9', label: 'inferred', basis: 'source', text: 'zq-held section words.', citations: [ENV('c-p9')], quotations: [], children: [] }], disposition: { kind: 'produced', assetIds: ['held-sec'] } });
     doc.sections[0].paragraphs.push(
       { id: 'p3', label: 'inferred', basis: 'source', text: 'zq-held paragraph.', citations: [ENV('c-p3'), cite('c-p3s', SECRET_PATH, 1, 1)], quotations: [], children: [] },
