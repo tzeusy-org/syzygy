@@ -108,7 +108,7 @@ describe('OBFUSCATED_DESTINATION rewrite matches the replaced pattern exactly (s
     let layer = [''];
     for (let depth = 0; depth <= 6; depth += 1) {
       for (const suffix of layer) inputs.push(`](${suffix}`);
-      layer = layer.flatMap((prefix) => alphabet.map((token) => prefix + token));
+      if (depth < 6) layer = layer.flatMap((prefix) => alphabet.map((token) => prefix + token));
     }
     expect(inputs.length).toBe((9 ** 7 - 1) / 8);
     const matched = inputs.filter((text) => oracle(text).length > 0).length;
