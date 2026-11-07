@@ -1,0 +1,133 @@
+{
+ "format": "mutation-record",
+ "bead": "syzygy-pdja.8",
+ "subject": {
+  "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "bed2c8a743e32e57aaa0488cd5ced4fc3bcc93fcebc166dcd0249a5bc7507ef4",
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "6e0f4f4a3a0074b729842ef97f947c2ed9be103f2bcc65bc85636644fcc5721d"
+ },
+ "ranAt": "b546a74cd8a23e2103636434f3b3c73d735a855e",
+ "note": "Each mutant replaces old with new once, runs the diagram-layout, dossier-reading and dossier-reading browser tests, then restores. The baseline passed before and after.",
+ "denominator": 17,
+ "killed": 17,
+ "mutants": [
+  {
+   "id": "pass-off",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const placed = spacing.labelsOnTop ? placeEdgeLabels(wanted, standing, layout.width) : wanted;",
+   "new": "const placed = wanted;",
+   "killed": true
+  },
+  {
+   "id": "pass-on-default-form",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const placed = spacing.labelsOnTop ? placeEdgeLabels(wanted, standing, layout.width) : wanted;",
+   "new": "const placed = placeEdgeLabels(wanted, standing, layout.width);",
+   "killed": true
+  },
+  {
+   "id": "order-input",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const order = [...wanted.keys()].sort((a, b) => Number(wanted[b]!.back) - Number(wanted[a]!.back) || a - b);",
+   "new": "const order = [...wanted.keys()];",
+   "killed": true
+  },
+  {
+   "id": "no-growth",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const height = Math.max(layout.height, ...(spacing.labelsOnTop ? placed.map((box, i) => Math.ceil(box.y + wanted[i]!.height / 2 + LABEL_STEP)) : []));",
+   "new": "const height = layout.height;",
+   "killed": true
+  },
+  {
+   "id": "note-free",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "(connected.has(node.id) ? 0 : NODE_NOTE_HEIGHT)",
+   "new": "0",
+   "killed": true
+  },
+  {
+   "id": "clearance-0",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const LABEL_CLEARANCE = 4;",
+   "new": "const LABEL_CLEARANCE = 0;",
+   "killed": true
+  },
+  {
+   "id": "no-left-bound",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "box.left >= 0 && ",
+   "new": "",
+   "killed": true
+  },
+  {
+   "id": "no-right-bound",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "box.right <= canvasWidth && ",
+   "new": "",
+   "killed": true
+  },
+  {
+   "id": "no-top-bound",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": " && box.top >= LABEL_CLEARANCE",
+   "new": "",
+   "killed": true
+  },
+  {
+   "id": "nodes-not-obstacles",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const taken = [...nodes];",
+   "new": "const taken: LabelBox[] = [];",
+   "killed": true
+  },
+  {
+   "id": "labels-not-obstacles",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "    taken.push(found);\n",
+   "new": "",
+   "killed": true
+  },
+  {
+   "id": "moves-always",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "for (let ring = 0; found === undefined; ring++)",
+   "new": "for (let ring = 1; found === undefined; ring++)",
+   "killed": true
+  },
+  {
+   "id": "no-echo",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "<path class=\"edge-echo\" d=\"${at.d}\"/>",
+   "new": "",
+   "killed": true
+  },
+  {
+   "id": "css-no-grace",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "transition:visibility 0s .35s}",
+   "new": "transition:visibility 0s 0s}",
+   "killed": true
+  },
+  {
+   "id": "css-opens-late",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "{visibility:visible;transition-delay:0s}",
+   "new": "{visibility:visible}",
+   "killed": true
+  },
+  {
+   "id": "css-echo-shown",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "path.edge-echo{display:none;",
+   "new": "path.edge-echo{",
+   "killed": true
+  },
+  {
+   "id": "css-echo-never",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": ".diagram-scroll g.edge-text:hover path.edge-echo{display:inline}",
+   "new": "",
+   "killed": true
+  }
+ ]
+}
