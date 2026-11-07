@@ -9,7 +9,6 @@ import { DECLARATIONS, RUN_DIRECTORY_CHOICES, allowExecution } from './execution
 import { PERMITTING_ARM_ENABLED } from './execution-rule.js';
 import { createPackageGateSources, type GateSources } from './gate-sources.js';
 import { initRun } from './init.js';
-import { launchedMarkerState } from './launched.js';
 import { checkInventory, inventoryBrief } from './inventory.js';
 import { preflight } from './preflight.js';
 import type { ReverifyOptions } from './reverify.js';
@@ -301,13 +300,6 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
       const revision = values.get('--revision'), declare = values.get('--declare');
       if (revision === undefined) return ctx.usageError('allow-execution requires --revision <pinned revision>');
       if (declare === undefined) return ctx.usageError(`allow-execution requires --declare ${Object.keys(DECLARATIONS).join(',')}`);
-      const marker = launchedMarkerState(run!);
-      if (marker === 'launched') {
-        return ctx.refused({ command: 'allow-execution', outcome: 'refused', stage: 'launched', reason: 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing' });
-      }
-      if (marker === 'unreadable') {
-        return ctx.refused({ command: 'allow-execution', outcome: 'refused', stage: 'launched', reason: 'this run\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)' });
-      }
       const result = await allowExecution(run!, { revision, declarations: declare.split(',') }, ctx.deps('openReader'));
       return result.ok ? ctx.report(result.report, EXIT.clean) : ctx.refused(result.refusal);
     },
