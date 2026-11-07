@@ -297,7 +297,7 @@ describe('RT3 — state-write boundary', () => {
     }
   });
 
-  // syzygy-bpyt.7.16: containment compares case too. The `rt3-cred-` prefix
+  // syzygy-bpyt.7.16: lexical containment compares case too. The `rt3-cred-` prefix
   // holds letters, so the upper-cased name always differs from the state dir's.
   it('refuses a sibling whose name differs from the state dir name only in case, as traversal', () => {
     const stateDir = tempDir();
@@ -348,6 +348,20 @@ describe('RT3 — state-write boundary', () => {
       expect(decision.refusedBy).toBe('symlink-escape');
     }
   });
+
+  it('refuses a symlink into a sibling whose name differs from the state dir name only in case, named', () => {
+    const base = tempDir();
+    const stateDir = join(base, 'state');
+    mkdirSync(stateDir, { recursive: true });
+    mkdirSync(join(base, 'STATE'));
+    symlinkSync(join(base, 'STATE'), join(stateDir, 'link'));
+
+    const decision = authorizeStateWrite(stateDir, 'link/escape.txt');
+    expect(decision.authorized).toBe(false);
+    if (!decision.authorized) {
+      expect(decision.refusedBy).toBe('symlink-escape');
+    }
+  });
 });
 
 describe('RT3 — credential verification through core admission', () => {
@@ -387,7 +401,7 @@ describe('RT3 — credential verification through core admission', () => {
   // syzygy-bpyt.7.14: the scheme is followed by exactly one space and the
   // token is every character after it, never trimmed. syzygy-bpyt.7.16: the
   // scheme opens the header, and the one space is U+0020, not another space.
-  it('the minted token behind any other whitespace refuses, named', () => {
+  it('the minted token with leading, separator or trailing whitespace variations refuses, named', () => {
     for (const header of [`Bearer  ${TOKEN}`, `Bearer\t${TOKEN}`, `Bearer ${TOKEN} `, `Bearer ${TOKEN}\n`, ` Bearer ${TOKEN}`, `Bearer\u00a0${TOKEN}`]) {
       const credential = credentialFromAuthorizationHeader(header);
       expect(verifyCredential(TOKEN, credential), JSON.stringify(header)).toEqual({

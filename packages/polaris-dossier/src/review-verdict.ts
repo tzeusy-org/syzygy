@@ -3,7 +3,25 @@ import { bodyLines, leadInQuotations, locateQuote, normaliseTracked, reviewVerdi
 import { isRecord } from '@syzygy/support';
 import { collectBlocks, declaredSessionId } from './check.js';
 import { checkDraftShape, localVerdictSchema } from './draft-schema.js';
-import { type PacketBuild, type ReviewKind, type ReviewProblem, type ReviewProblemKind, list, text } from './review-model.js';
+import { type PacketBuild, type PacketSpan, type ReviewKind, type ReviewProblem, type ReviewProblemKind, list, text } from './review-model.js';
+import { ADVISORY_ENTRY, WITHHELD_ENTRY } from './draft-schema.js';
+import { isUncitedJudgement, isWithheldItem, type SpanStanding } from './withheld-items.js';
+
+/** How a packet span stands for the withheld-item rule (`withheld-items.ts`): an excluded or invalid UTF-8 blob, or a range touching a
+ * redacted line, is withheld; a class-gated span keeps its own treatment. */
+export function packetSpanStanding(outcome: PacketSpan['outcome']): SpanStanding {
+  if (outcome === 'admitted') return 'admitted';
+  if (outcome === 'redacted-span' || outcome === 'denied-path' || outcome === 'secret-detector-match' || outcome === 'unknown-extraction-class'
+    || outcome === 'not-utf8-text' || outcome === 'active-content') return 'withheld';
+  return 'other';
+}
+
+/** Each subject's citation identities, by how the span they name stands. */
+export function standingBySubject(spans: readonly PacketSpan[]): { readonly draft: (citationId: string) => SpanStanding; readonly inventory: (citationId: string) => SpanStanding } {
+  const by = { draft: new Map<string, SpanStanding>(), inventory: new Map<string, SpanStanding>() };
+  for (const span of spans) for (const cited of span.citedBy) by[cited.subject].set(cited.citationId, packetSpanStanding(span.outcome));
+  return { draft: (id) => by.draft.get(id) ?? 'other', inventory: (id) => by.inventory.get(id) ?? 'other' };
+}
 
 /** Validating a reviewer's verdict against the packet; split out of `review.ts` unchanged. */
 
@@ -19,9 +37,9 @@ export function nextVerdictNumber(reviews: string, kind: ReviewKind): number {
 export function derivedBlocking(verdict: Readonly<Record<string, unknown>>): boolean {
   const rows = (key: string): Readonly<Record<string, unknown>>[] => list(verdict[key]).filter(isRecord);
   return rows('findings').some((row) => row['severity'] === 'blocking')
-    || rows('inventoryCoverage').some((row) => row['disposition'] !== 'represented' && row['disposition'] !== 'justified-omission')
-    || rows('inventoryAccuracy').some((row) => row['accuracy'] !== 'accurate')
-    || rows('blockSupport').some((row) => row['verdict'] !== 'supported');
+    || rows('inventoryCoverage').some((row) => row['disposition'] !== 'represented' && row['disposition'] !== 'justified-omission' && row['disposition'] !== WITHHELD_ENTRY)
+    || rows('inventoryAccuracy').some((row) => row['accuracy'] !== 'accurate' && row['accuracy'] !== WITHHELD_ENTRY)
+    || rows('blockSupport').some((row) => row['verdict'] !== 'supported' && row['verdict'] !== WITHHELD_ENTRY && row['verdict'] !== ADVISORY_ENTRY);
 }
 
 /** Every validation of REQ-polaris-generation-035 over a parsed verdict, against the packet rebuilt now. */
@@ -70,6 +88,27 @@ export function validateVerdict(verdict: Readonly<Record<string, unknown>>, buil
     });
   }
 
+  // v1.5: `withheld` fits a withheld item and an inventory entry whose every cited span is withheld; `advisory` fits an uncited judgement
+  // block. Either entry marked accurate or supported is refused, and so is either value on an entry it does not fit.
+  const standing = standingBySubject(built.spans);
+  const withheldBlocks = new Set(claimBlocks.filter((block) => isWithheldItem(block.value, standing.draft)).map((block) => text(block.value['id'])));
+  const judgements = new Set(claimBlocks.filter((block) => isUncitedJudgement(block.value)).map((block) => text(block.value['id'])));
+  const withheldEntries = new Set(list(built.inventory.doc['entries']).filter(isRecord).filter((entry) => isWithheldItem(entry, standing.inventory)).map((entry) => text(entry['id'])));
+  const fit = (key: string, idKey: string, valueKey: string, held: ReadonlySet<string | undefined>, judged: ReadonlySet<string | undefined>, judgedAs: string | null): void => {
+    list(verdict[key]).forEach((row, i) => {
+      if (!isRecord(row)) return;
+      const id = text(row[idKey]), value = row[valueKey], at = `$.${key}[${i}].${valueKey}`;
+      if (value === WITHHELD_ENTRY && !held.has(id)) add('withheld-entry', at, `${JSON.stringify(id)} is not withheld: \`withheld\` is only for an item every cited span of which, or a quotation of which, screening withholds`);
+      if (judgedAs !== null && held.has(id) && value === judgedAs) add('withheld-entry', at, `${JSON.stringify(id)} is withheld, so it is never judged ${judgedAs}: its entry is \`withheld\``);
+      if (value === ADVISORY_ENTRY && !judged.has(id)) add('advisory-entry', at, `${JSON.stringify(id)} is not an uncited judgement: \`advisory\` is only for an Inferred block marked as a judgement and citing nothing`);
+      if (judgedAs !== null && judged.has(id) && value === judgedAs) add('advisory-entry', at, `${JSON.stringify(id)} is an uncited judgement, so it is never judged ${judgedAs}: its entry is \`advisory\`, or a blocking finding where it asserts a project fact`);
+    });
+  };
+  fit('blockSupport', 'blockId', 'verdict', withheldBlocks, judgements, 'supported');
+  fit('inventoryAccuracy', 'entryId', 'accuracy', withheldEntries, new Set(), 'accurate');
+  // Coverage judges whether the draft carries an entry, not the entry's accuracy: a withheld entry may still be represented.
+  fit('inventoryCoverage', 'entryId', 'disposition', withheldEntries, new Set(), null);
+
   // Every quotation the verdict relies on verifies against the span it names, in the blob Syzygy read now.
   const tracked = new Map<string, TrackedText>();
   for (const [key, field] of [['inventoryCoverage', 'reason'], ['inventoryAccuracy', 'reason'], ['blockSupport', 'reason'], ['findings', 'message']] as const) {
@@ -98,11 +137,12 @@ export function validateVerdict(verdict: Readonly<Record<string, unknown>>, buil
   // Consistency: the shared verdict rule, then no readiness beside a blocking row. Only a verdict of the right shape is judged. The
   // shared rule's support rows are the inferred blocks': an unknown or non-normative block cites nothing it claims, so its support row
   // judges its label and names no span.
-  const supportRows = list(verdict['blockSupport']).filter(isRecord).filter((row) => inferredBlocks.has(text(row['blockId'])));
+  // A `withheld` or `advisory` row judges no support, so the shared rule does not see it.
+  const supportRows = list(verdict['blockSupport']).filter(isRecord).filter((row) => inferredBlocks.has(text(row['blockId'])) && row['verdict'] !== WITHHELD_ENTRY && row['verdict'] !== ADVISORY_ENTRY);
   if (!problems.some((problem) => problem.kind === 'schema') && supportRows.length > 0) {
     try {
       reviewVerdict({
-        inventoryCoverage: list(verdict['inventoryCoverage']).filter(isRecord).map((row) => ({ entryId: row['entryId'], disposition: row['disposition'], blockIds: row['blockIds'], reason: row['reason'] })),
+        inventoryCoverage: list(verdict['inventoryCoverage']).filter(isRecord).filter((row) => row['disposition'] !== WITHHELD_ENTRY).map((row) => ({ entryId: row['entryId'], disposition: row['disposition'], blockIds: row['blockIds'], reason: row['reason'] })),
         blockSupport: supportRows.map((row) => ({ blockId: row['blockId'], verdict: row['verdict'], sourceIds: row['spanIds'], reason: row['reason'] })),
         findings: list(verdict['findings']).filter(isRecord).map((row) => ({ severity: row['severity'], message: row['message'], target: row['target'] })),
       });

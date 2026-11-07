@@ -2,9 +2,10 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { leadInQuotations, lineCount, locateQuote, normaliseTracked, retainedWithMarkers, spanTouchesWithheld, verifiedRedactedBody, type VerifiedRedactedBody, type TrackedText } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { UNDERSTANDING_ITEMS, checkDraftShape, localDraftSchema, type DraftSchemaWithDefs } from './draft-schema.js';
+import { LOCAL_DRAFT_SCHEMA_VERSION, UNDERSTANDING_ITEMS, V4_FIELDS, checkDraftShape, localDraftSchema, type DraftSchemaWithDefs } from './draft-schema.js';
 import { BLOB_MODES, type PinnedObjectReader, type TreeEntry } from './git-object-reader.js';
 import { type DossierScreen, type ScreenExclusion } from './screen.js';
+import { DEFAULT_POLE_LIMIT } from './run-config.js';
 import { type CheckFinding, type CitedBlob, type ExcludedQuotation, type VerifiedQuotation, blobRedaction, line, list, text } from './check-model.js';
 
 /** `deriveFindings` and the draft's rules and walkers; split out of `check.ts` unchanged. */
@@ -38,6 +39,8 @@ export function elementLabels(doc: Readonly<Record<string, unknown>>): { at: str
     if (kind === 'definitions') list(value['entries']).forEach((entry, i) => { if (isRecord(entry) && typeof entry['term'] === 'string') out.push({ at: `${at}.entries[${i}].term`, value: entry['term'] }); });
     if (kind === 'cards') list(value['items']).forEach((item, i) => { if (isRecord(item) && typeof item['label'] === 'string') out.push({ at: `${at}.items[${i}].label`, value: item['label'] }); });
   });
+  // A Pole's label follows the rules for an element's short label (dossier spec v1.5).
+  list(doc['poles']).forEach((pole, i) => { if (isRecord(pole) && typeof pole['label'] === 'string') out.push({ at: `$.poles[${i}].label`, value: pole['label'] }); });
   return out;
 }
 
@@ -140,6 +143,14 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
   if (doc['schemaVersion'] === 'polaris-dossier-local-draft-v2') {
     for (const label of elementEntries(doc)) add({ kind: 'element-version', at: label, detail: 'a presentation element needs draft schema polaris-dossier-local-draft-v3' });
   }
+  // Only a v4 draft has the judgement mark and a list's repeated diagram (dossier spec v1.5); in an earlier draft each is a finding at
+  // its path, so an uncited block in one is never excused by a mark its version does not define.
+  const v4 = doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION;
+  if (rules.noun === 'draft' && !v4) {
+    walk(doc, '$', (value, at) => {
+      for (const field of V4_FIELDS) if (Object.hasOwn(value, field)) add({ kind: 'field-version', at: `${at}.${field}`, detail: `\`${field}\` needs draft schema ${LOCAL_DRAFT_SCHEMA_VERSION}` });
+    });
+  }
 
   // Labels, citations by block kind and the execution marking.
   const blocks = rules.blocks(doc);
@@ -158,7 +169,13 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
     // The rules by kind apply to a block whose label is one its kind permits; any other label is already a finding.
     if (typeof label !== 'string' || !allowed.includes(label)) continue;
     const citations = Array.isArray(value['citations']) ? value['citations'] : null;
-    if (label === 'inferred' && (citations === null || citations.length === 0)) add({ kind: 'citation-by-kind', at: `${at}.citations`, ...about, detail: 'an inferred block cites at least one source' });
+    // A v4 Inferred block may cite nothing only when it carries the judgement mark: the session's own assessment, asserting no project
+    // fact. A block with the mark is counted, never a finding; whether it asserts a fact is the fidelity review's question.
+    const judged = v4 && value['judgement'] === true;
+    if (label === 'inferred' && (citations === null || citations.length === 0) && !judged) {
+      add({ kind: 'citation-by-kind', at: `${at}.citations`, ...about, detail: v4 ? 'an inferred block cites at least one source, unless it is your own judgement of the project, asserting no fact about it, and carries "judgement": true' : 'an inferred block cites at least one source' });
+    }
+    if (Object.hasOwn(value, 'judgement') && label !== 'inferred') add({ kind: 'judgement-mark', at: `${at}.judgement`, ...about, detail: 'only an inferred block carries the judgement mark' });
     if (label === 'non-normative' && (Object.hasOwn(value, 'citations') || Object.hasOwn(value, 'quotations'))) {
       add({ kind: 'citation-by-kind', at, ...about, detail: 'a non-normative block carries no citation and no anchor' });
     }
@@ -322,18 +339,18 @@ export async function deriveFindings(subject: unknown, inputs: DeriveInputs, rul
 const CLAIM_UNQUOTABLE = 'only an inferred claim block carries quotations; give this one its own inferred block with a citation';
 
 /** The authoring draft's rules: its schema and question limit, references, understanding record, blocks and discovery account. */
-export function draftRules(pinned: string, maxQuestions: number): SubjectRules {
+export function draftRules(pinned: string, maxQuestions: number, poleLimit: number = DEFAULT_POLE_LIMIT): SubjectRules {
   return {
     noun: 'draft',
     schema: localDraftSchema({ pinnedRevision: pinned, maxQuestions }),
     maxQuestions,
-    structural: draftStructure,
+    structural: (doc, add) => draftStructure(doc, add, poleLimit),
     blocks: collectBlocks,
     account: { key: 'discovery', parts: ['selected', 'excluded', 'unresolved', 'deferred'] },
   };
 }
 
-function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void): void {
+function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: CheckFinding) => void, poleLimit: number): void {
   // References.
   const sectionIds = new Set(list(doc['sections']).flatMap((section) => (isRecord(section) && text(section['id']) !== undefined ? [text(section['id'])!] : [])));
   for (const part of ['diagrams', 'deepDives'] as const) {
@@ -366,6 +383,55 @@ function draftStructure(doc: Readonly<Record<string, unknown>>, add: (finding: C
         if (typeof assetId === 'string' && !own.has(assetId)) add({ kind: 'unresolved-reference', at: `$.${part}[${i}].disposition.assetIds[${k}]`, detail: `${JSON.stringify(assetId)} is not this asset or a part of it` });
       });
     });
+  }
+
+  // A list repeating a diagram names one in its own section (a deep dive's section is the one it belongs to).
+  const diagramSections = new Map(list(doc['diagrams']).flatMap((diagram) => (isRecord(diagram) && text(diagram['id']) !== undefined ? [[text(diagram['id'])!, text(diagram['sectionId'])] as const] : [])));
+  for (const part of ['sections', 'deepDives'] as const) {
+    list(doc[part]).forEach((container, i) => {
+      if (!isRecord(container)) return;
+      const sectionId = part === 'sections' ? text(container['id']) : text(container['sectionId']);
+      walk(container, `$.${part}[${i}]`, (value, at) => {
+        if (!Object.hasOwn(value, 'repeatsDiagram')) return;
+        const named = text(value['repeatsDiagram']);
+        if (named === undefined) return;
+        if (!diagramSections.has(named)) add({ kind: 'repeats-diagram', at: `${at}.repeatsDiagram`, detail: `no diagram has the identity ${JSON.stringify(named)}` });
+        else if (diagramSections.get(named) !== sectionId) add({ kind: 'repeats-diagram', at: `${at}.repeatsDiagram`, detail: `the diagram ${JSON.stringify(named)} is not in this list's section; a list repeats a diagram of its own section` });
+      });
+    });
+  }
+
+  // Poles (dossier spec v1.5): at most the run's limit, every section in exactly one, none empty, and a named why section. Whether
+  // that section answers why the project exists, and whether the Poles fit what the repository holds, are review judgements.
+  // Only a v4 draft has Poles; in an earlier one the field is a field-version finding and nothing more.
+  const v4 = doc['schemaVersion'] === LOCAL_DRAFT_SCHEMA_VERSION;
+  if (v4 && Object.hasOwn(doc, 'poles')) {
+    const poles = list(doc['poles']);
+    if (poles.length > poleLimit) add({ kind: 'pole', at: '$.poles', detail: `the draft declares ${poles.length} Poles; this run's Pole limit is ${poleLimit}` });
+    const homes = new Map<string, number[]>();
+    poles.forEach((pole, i) => {
+      if (!isRecord(pole)) return;
+      const sections = list(pole['sections']);
+      if (sections.length === 0) add({ kind: 'pole', at: `$.poles[${i}].sections`, detail: 'a Pole holds at least one section' });
+      sections.forEach((section, k) => {
+        const id = text(section);
+        if (id === undefined) return;
+        if (!sectionIds.has(id)) add({ kind: 'unresolved-reference', at: `$.poles[${i}].sections[${k}]`, detail: `no section has the identity ${JSON.stringify(id)}` });
+        else homes.set(id, [...(homes.get(id) ?? []), i]);
+      });
+    });
+    list(doc['sections']).forEach((section, i) => {
+      const id = isRecord(section) ? text(section['id']) : undefined;
+      if (id === undefined) return;
+      const home = homes.get(id) ?? [];
+      if (home.length === 0) add({ kind: 'pole', at: `$.sections[${i}]`, detail: `the section ${JSON.stringify(id)} is in no Pole; with Poles, every section is in exactly one` });
+      else if (home.length > 1) add({ kind: 'pole', at: `$.sections[${i}]`, detail: `the section ${JSON.stringify(id)} is in ${home.length} Poles (${home.map((n) => `$.poles[${n}]`).join(', ')}); every section is in exactly one` });
+    });
+    const why = text(doc['whySection']);
+    if (why === undefined) add({ kind: 'pole', at: '$.whySection', detail: 'a draft with Poles names in `whySection` the section that answers why the project exists' });
+    else if (!sectionIds.has(why)) add({ kind: 'pole', at: '$.whySection', detail: `\`whySection\` names ${JSON.stringify(why)}, which is no section of this draft` });
+  } else if (v4 && text(doc['whySection']) !== undefined && !sectionIds.has(text(doc['whySection'])!)) {
+    add({ kind: 'unresolved-reference', at: '$.whySection', detail: `no section has the identity ${JSON.stringify(text(doc['whySection']))}` });
   }
 
   // The understanding record.

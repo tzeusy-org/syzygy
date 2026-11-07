@@ -8,6 +8,96 @@ const render = () => renderLocalDossier(readingInput()).files;
 const main = (html: string): string => html.slice(html.indexOf('<main'));
 const ID = READING_SOURCE.sourceId;
 
+describe('Poles: a landing page with the why section and a map, then one page per Pole (dossier spec v1.5)', () => {
+  type Poles = NonNullable<ReturnType<typeof readingInput>['local']['poles']>;
+  const withPoles = (poles: Poles) => { const input = readingInput(); return renderLocalDossier({ ...input, local: { ...input.local, poles } }).files; };
+  const claims = (files: ReadonlyMap<string, string>) => (JSON.parse(files.get('machine.json')!) as { claims: { id: string; page: string }[] }).claims;
+  const sectionsOn = (html: string) => [...html.matchAll(/<section id="section-([a-z]+)"/gu)].map(m => m[1]);
+  const SPEC: Poles = { whySection: 'one', poles: [
+    { label: 'Why it exists', sections: ['one'] },
+    { label: 'Words', sections: ['two', 'three', 'four'] },
+    { label: 'The rest', sections: ['five', 'six', 'seven', 'nine', 'eight'] },
+  ] };
+
+  it('draws the why section and the map on the landing page, each other Pole on its own page, and a why-only Pole on none', () => {
+    const files = withPoles(SPEC);
+    const order = (JSON.parse(files.get('dossier.json')!) as { pages: { path: string }[] }).pages.map(page => page.path);
+    expect(order.slice(0, 3)).toEqual(['index.html', 'poles/2.html', 'poles/3.html']);
+    expect(files.has('poles/1.html')).toBe(false);
+    const index = files.get('index.html')!;
+    expect(sectionsOn(index)).toEqual(['one']);
+    expect(sectionsOn(files.get('poles/2.html')!)).toEqual(['two', 'three', 'four']);
+    expect(sectionsOn(files.get('poles/3.html')!)).toEqual(['five', 'six', 'seven', 'nine', 'eight']);
+    expect(index).toContain('<nav class="pole-map" aria-label="The parts of this dossier"><h2>The parts of this dossier</h2><ol><li><a href="index.html#section-one">Why it exists</a><ul><li><a href="index.html#section-one">One</a></li></ul></li><li><a href="poles/2.html">Words</a><ul><li><a href="poles/2.html#section-two">Two</a></li>');
+    // Every page's navigation reaches each Pole page, and the contents send a section to its Pole's page.
+    for (const [path, html] of files) if (path.endsWith('.html')) expect(html, path).toContain(`<li><a href="${path.includes('/') ? '../' : ''}poles/3.html">The rest</a></li>`);
+    expect(files.get('contents.html')!).toContain('<li><a href="poles/2.html#section-two">Two</a>');
+    // A Pole page is a narrative page: it opens in the reading view with the legend.
+    expect(files.get('poles/2.html')!.split('class="reading-legend"').length - 1).toBe(1);
+  });
+
+  it('loses and repeats no claim against the page division with no Poles', () => {
+    const flat = claims(renderLocalDossier(readingInput()).files);
+    const poled = claims(withPoles(SPEC));
+    expect(poled.map(claim => claim.id).sort()).toEqual(flat.map(claim => claim.id).sort());
+    expect(new Set(poled.map(claim => claim.id)).size).toBe(poled.length);
+    expect(poled.find(claim => claim.id === 'plural')!.page).toBe('poles/2.html');
+    expect(poled.find(claim => claim.id === 'forms')!.page).toBe('index.html');
+  });
+
+  it('links a Pole page holding the why section back to it rather than repeating it', () => {
+    const files = withPoles({ whySection: 'one', poles: [{ label: 'Start', sections: ['one', 'two'] }, { label: 'Rest', sections: ['three', 'four', 'five', 'six', 'seven', 'nine', 'eight'] }] });
+    const start = files.get('poles/1.html')!;
+    expect(sectionsOn(start)).toEqual(['two']);
+    expect(start).toContain('<p class="pole-why"><a href="../index.html#section-one">One</a> is on the overview.</p>');
+    expect(files.get('index.html')!).toContain('<li><a href="poles/1.html">Start</a><ul><li><a href="index.html#section-one">One</a></li><li><a href="poles/1.html#section-two">Two</a></li></ul></li>');
+  });
+
+  it.each<[string, Poles]>([
+    ['a section in no Pole', { whySection: 'one', poles: [{ label: 'A', sections: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'nine'] }] }],
+    ['a section in two Poles', { whySection: 'one', poles: [{ label: 'A', sections: ['one', 'two', 'three', 'four'] }, { label: 'B', sections: ['four', 'five', 'six', 'seven', 'nine', 'eight'] }] }],
+    ['an empty Pole', { whySection: 'one', poles: [...SPEC.poles, { label: 'Empty', sections: [] }] }],
+    ['a why section that is no section', { ...SPEC, whySection: 'ten' }],
+  ])('refuses to draw %s', (_name, poles) => {
+    expect(() => withPoles(poles)).toThrow(expect.objectContaining({ code: 'invalid-poles' }));
+  });
+});
+
+describe('the reading view clips what Syzygy adds to a block (dossier spec v1.5)', () => {
+  // Visible text: every element of the renderer's visually-hidden class removed, with whatever it nests.
+  const visible = (html: string): string => {
+    const opener = '<span class="visually-hidden ev">';
+    let out = html;
+    for (let at = out.indexOf(opener); at !== -1; at = out.indexOf(opener)) {
+      let depth = 0, end = at;
+      for (const m of out.slice(at).matchAll(/<span\b|<\/span>/gu)) {
+        depth += m[0] === '</span>' ? -1 : 1;
+        if (depth === 0) { end = at + m.index! + m[0].length; break; }
+      }
+      out = out.slice(0, at) + out.slice(end);
+    }
+    return out.replace(/<[^>]+>/gu, '');
+  };
+  it('clips the self-reported aside and the reason code, keeps the commands and the reason in words', () => {
+    const input = readingInput();
+    const blocks = new Map(input.local.blocks);
+    blocks.set('late', { ...blocks.get('late')!, executions: [{ id: 'run-1', command: 'make check-kestrel' }] });
+    blocks.set('shown', { ...blocks.get('shown')!, marking: 'unknown', unknownReason: 'missing-evidence', basis: 'no file states the replica count' });
+    const index = renderLocalDossier({ ...input, local: { ...input.local, blocks } }).files.get('index.html')!;
+    const body = index.slice(index.indexOf('<main'), index.indexOf('</main>'));
+    const shown = visible(body);
+    expect(shown).toContain('make check-kestrel');
+    expect(shown).toContain('Not established.');
+    expect(shown).toContain('(no file states the replica count)');
+    expect(shown).not.toContain('self-reported');
+    expect(shown).not.toContain('missing-evidence');
+    // Kept in DOM text, where plain-text extraction and the evidence view read them.
+    expect(body).toContain('<span class="visually-hidden ev"> (Inferred, self-reported)</span>');
+    expect(body).toContain('<span class="visually-hidden ev"> <span class="unknown-reason">(missing-evidence)</span></span>');
+    expect(body).toMatch(/<span class="evidence-note">Evidence: label Unknown; claim-block kind anchored; reason missing-evidence; editorial draft\.<\/span>/u);
+  });
+});
+
 describe('an operator-agent dossier page reads without its machinery', () => {
   // In beforeAll: a throw at describe time reports zero tests.
   let files: ReadonlyMap<string, string>, index: string, sourcePage: string;
@@ -21,9 +111,10 @@ describe('an operator-agent dossier page reads without its machinery', () => {
     // Not in the text of the open questions, the sources list or the size report; the attribute that carries it is not reading text.
     const text = (html: string): string => main(html).replace(/<[^>]+>/gu, ' ');
     const reading = [...files.keys()].filter(path => path.endsWith('.html') && (!path.startsWith('sources/') || path === 'sources/index.html'));
-    expect(reading).toEqual(['index.html', 'contents.html', 'glossary.html', 'sources/index.html', 'understanding.html', 'size-report.html']);
+    expect(reading).toEqual(['index.html', 'contents.html', 'glossary.html', 'sources/index.html', 'understanding.html', 'appendix.html', 'size-report.html']);
     for (const page of reading) expect(text(files.get(page)!), page).not.toContain(ID);
-    expect(main(index)).toContain(`<span class="asset-references">(<span class="sources"><a class="cite" href="sources/`);
+    // The open questions sit in the appendix (dossier spec v1.5), their references numbered as any citation is.
+    expect(main(files.get('appendix.html')!)).toContain(`<span class="asset-references">(<span class="sources"><a class="cite" href="sources/`);
     expect(sourcePage).toContain(`<details class="source-identity"><summary>Source identity</summary><p>${ID}</p><dl class="evidence-anchor"`);
     expect(sourcePage).toContain(`<p class="source-anchor">bytes 0–`);
     // Outside its identity details a source page's text does not name the identifier.
@@ -108,8 +199,8 @@ describe('glossary terms in agent prose', () => {
     expect(glossary.slice(0, glossary.indexOf('<dt id="term-glossary/replica">'))).not.toContain('<details class="details"');
   });
 
-  it('shows the entry as prose with its marking and machine attributes, and lists it in the machine view', () => {
-    expect(index).toContain('<span class="term-pop" data-glossary-entry="glossary/event-loop" data-epistemic="inferred">The loop that serves <code>clients</code>. <span class="marking inferred">[Inferred]</span></span>');
+  it('shows the entry as prose with its marking clipped in the reading view, its machine attributes, and lists it in the machine view', () => {
+    expect(index).toContain('<span class="term-pop" data-glossary-entry="glossary/event-loop" data-epistemic="inferred">The loop that serves <code>clients</code>. <span class="visually-hidden ev"><span class="marking inferred">[Inferred]</span></span></span>');
     const machine = JSON.parse(files.get('machine.json')!) as { claims: { page: string; id: string }[]; glossaryShown: { page: string; id: string }[] };
     expect(machine.glossaryShown).toContainEqual({ page: 'index.html', id: 'glossary/replica' });
     expect(machine.claims.filter(claim => claim.id === 'glossary/replica').map(claim => claim.page)).toEqual(['glossary.html']);
@@ -126,10 +217,16 @@ describe('glossary terms in agent prose', () => {
     expect(files.get('size-report.html')!).toContain('each page is measured without its review-status region and its glossary entries');
   });
 
-  it('opens an entry on hover and on focus, from its block, and dims a withheld marker', () => {
-    expect(DOSSIER_THEME_CSS).toContain('a.term:hover>.term-pop,a.term:focus>.term-pop{display:block}');
-    expect(DOSSIER_THEME_CSS).toContain('main [data-claim-id]{position:relative}');
+  it('marks the diagram element under the pointer, and a label\'s line with it', () => {
     expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll g.edge-text:hover rect.edge-label{stroke:var(--cyan);stroke-width:1.5}');
+    expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll path.edge-leader{stroke-width:1;fill:none}');
+    expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll path.edge-echo{display:none;fill:none;stroke:var(--cyan);stroke-width:3;pointer-events:none}.diagram-scroll g.edge-text:hover path.edge-echo{display:inline}');
+  });
+
+  it('opens an entry at once on hover and on focus, from its block, closes it a moment later, and dims a withheld marker', () => {
+    expect(DOSSIER_THEME_CSS).toContain('a.term:hover>.term-pop,a.term:focus>.term-pop{visibility:visible;transition-delay:0s}');
+    expect(DOSSIER_THEME_CSS).toContain('transition:visibility 0s .35s}');
+    expect(DOSSIER_THEME_CSS).toContain('main [data-claim-id]{position:relative}');
     expect(DOSSIER_THEME_CSS).toContain('.term-pop::before{content:"";position:absolute;left:0;right:0;top:-.5rem;height:.5rem}');
     expect(DOSSIER_THEME_CSS).toContain('pre.redaction-note{margin:.25rem 0;padding:.1rem .75rem;border-left:4px solid var(--line);color:var(--muted);');
   });

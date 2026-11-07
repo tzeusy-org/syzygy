@@ -5,10 +5,11 @@ import * as path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { evaluateDossier, excludedSourceId, parseDossierManifest, scanDossierPage } from '@syzygy/polaris-generation-core';
+import { withoutReviewStatusRegion } from '@syzygy/polaris-generation-core/live';
 import { issueBrief, READABILITY_GUIDANCE, READABILITY_GUIDANCE_VERSION } from './brief.js';
 import { checkDraft, type CheckDeps } from './check.js';
 import { runDossierCli } from './cli.js';
-import { designCriteria } from './design-review.js';
+import { buildDesignPacket, designCriteria } from './design-review.js';
 import { designVerdictSchemaDocument } from './draft-schema.js';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { NO_PROVIDER_STATEMENTS, type GateSources, type GateState } from './gate-sources.js';
@@ -46,7 +47,9 @@ const SECRETS = 'Deploy notes.\n';
 const MARKUP = 'if (a < b && c > d) return;\n#define LT "&lt;"\n#define AMP &amp;\nint tail;\n';
 /** A raw tag is active content: screening withholds the file, so a cited `</pre>` never reaches a page. */
 const TAGGED = 'const end = "</pre>";\n';
-const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'src/markup.c': MARKUP, 'src/tagged.c': TAGGED, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', 'docs/deploy.md': SECRETS };
+/** A path the credential-assignment detector matches: counted wherever cited, and never named (dossier spec v1.5). */
+const SECRET_PATH = 'conf/token=abcdefghijk';
+const FILES: Record<string, string> = { 'src/kestrel.c': KESTREL, 'src/markup.c': MARKUP, 'src/tagged.c': TAGGED, 'docs/notes.txt': NOTES, 'README.md': '# Kestrel\n', '.env': 'X=1\n', 'docs/deploy.md': SECRETS, [SECRET_PATH]: 'x\n' };
 const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json'), 'utf8'));
 const policy = (extensions: string[]): Uint8Array => new TextEncoder().encode(JSON.stringify({
   policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
@@ -176,7 +179,7 @@ const verdict = (packetSha256: string): Doc => ({
 });
 
 /** A briefed run with a passed draft revision; with `reviewed`, an inventory of record and a counted fidelity review. */
-async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: readonly Doc[] = []): Promise<string> {
+async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: readonly Doc[] = [], edit: { readonly inventory?: (inv: Doc) => void; readonly verdict?: (v: Doc) => void } = {}): Promise<string> {
   const clone = path.join(tempDir('dossier-render-clone-'), 'kestrel');
   execFileSync('git', ['clone', '-q', '--no-hardlinks', origin, clone], { env: GIT_ENV });
   const run = path.join(tempDir('dossier-render-state-'), RUN_ID);
@@ -196,7 +199,9 @@ async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: reado
   if (!reviewed) return run;
   const handed = await sessionPrompt(run, { role: 'inventory' }, { sources: sources(), now: () => LATER });
   if (!handed.ok) throw new Error(handed.refusal.reason);
-  fs.writeFileSync(path.join(handed.report.directory, 'inventory.json'), JSON.stringify(inventory(), null, 2));
+  const inv0 = inventory();
+  edit.inventory?.(inv0);
+  fs.writeFileSync(path.join(handed.report.directory, 'inventory.json'), JSON.stringify(inv0, null, 2));
   const inv = await checkInventory(run, {}, checkDeps());
   if (!inv.ok || inv.report.outcome !== 'passed') throw new Error(`fixture inventory: ${JSON.stringify(inv.ok ? inv.report.findings : inv.refusal)}`);
   await launchForm(run, { role: 'inventory', form: 'terminal' }, { sources: sources(), now: () => LATER });
@@ -211,6 +216,7 @@ async function prepared(doc: Doc = draft(), reviewed = true, extraSupport: reado
   v.blockSupport[0].spanIds = v.inventoryAccuracy[0].spanIds;
   v.blockSupport[4].spanIds = v.inventoryAccuracy[1].spanIds;
   v.blockSupport.push(...extraSupport);
+  edit.verdict?.(v);
   fs.writeFileSync(path.join(review.report.directory, 'verdict.json'), JSON.stringify(v, null, 2));
   const validated = await reviewCheck(run, {}, { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN });
   if (!validated.ok || validated.report.outcome !== 'validated') throw new Error(`fixture verdict: ${JSON.stringify(validated.ok ? validated.report.problems : validated.refusal)}`);
@@ -301,7 +307,8 @@ describe('render', () => {
     expect(marking('p1b')).toBeUndefined(); // non-normative: no claim
     expect(machine.nonNormative).toEqual([{ page: 'index.html', id: 'p1b' }]);
     expect(marked(files.get('index.html')!, 'p1')).toEqual({ epistemic: 'unknown', reason: 'missing-evidence' });
-    expect(files.get('index.html')).toMatch(/data-non-normative[^>]*>Read on\.[^<]*<span class="marking[^"]*">\[Non-normative\]/u);
+    // The reading view (dossier spec v1.5): the mark `framing` shows; the label stays in DOM text, clipped.
+    expect(files.get('index.html')).toMatch(/data-non-normative[^>]*>Read on\. <span class="framing-mark">framing<\/span><span class="visually-hidden ev"> <span class="marking non-normative">\[Non-normative\]/u);
     // The fidelity review page: the binding Observed, the verdict Inferred; the design review's status is only in the region.
     expect(marking('review/fidelity/binding')).toBe('observed');
     expect(marking('review/fidelity/verdict')).toBe('inferred');
@@ -313,7 +320,168 @@ describe('render', () => {
     expect(tuples.filter((tuple) => tuple.split(' ')[1]!.startsWith('discovery/read/')).map((tuple) => tuple.split(' ')[2])).toEqual(['observed', 'observed']);
   });
 
-  it('carries the run disclosure on every page and in the machine view, and one review-status region per page holding no claim', async () => {
+  describe('the reading view and the evidence view (dossier spec v1.5)', () => {
+    /** The page as a sighted reader of the reading view sees it: every clipped span removed, with whatever it nests. */
+    const visible = (page: string): string => {
+      const opener = '<span class="visually-hidden ev">';
+      let out = page;
+      for (let at = out.indexOf(opener); at !== -1; at = out.indexOf(opener)) {
+        let depth = 0;
+        let end = at;
+        for (const m of out.slice(at).matchAll(/<span\b|<\/span>/gu)) {
+          depth += m[0] === '</span>' ? -1 : 1;
+          if (depth === 0) { end = at + m.index! + m[0].length; break; }
+        }
+        if (end === at) throw new Error('unbalanced clipped span');
+        out = out.slice(0, at) + out.slice(end);
+      }
+      return out;
+    };
+    const mainOf = (page: string): string => page.slice(page.indexOf('<main'), page.indexOf('</main>'));
+    const narrativePages = (files: Map<string, string>): [string, string][] => html(files).filter(([file]) => file === 'index.html' || file.startsWith('deep-dives/'));
+
+    // The review-status region holds no claim and names its own status, so it keeps its labels; the rule is about block text.
+    it('shows no label token in the block text of a narrative page, and keeps every one for the evidence view', async () => {
+      const run = await prepared();
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const pages = narrativePages(readSite(result.report.site));
+      expect(pages.length).toBeGreaterThan(0);
+      for (const [file, page] of pages) {
+        const body = withoutReviewStatusRegion(mainOf(page))!;
+        const tokens = /\[(Observed|Inferred|Unknown|Non-normative)\]/gu;
+        expect(body.match(tokens)?.length ?? 0, file).toBeGreaterThan(0);
+        expect(visible(body).replace(/<[^>]*>/gu, '').match(tokens), file).toBeNull();
+        // Nor does Syzygy write a file-and-line aside there: the citation mark's pop carries the file and lines, clipped from the text.
+        expect(visible(body).replace(/<span class="cite-pop"[^>]*>[^<]*<\/span>/gu, '').replace(/<[^>]*>/gu, ''), file).not.toMatch(/[\w./-]+\.\w+, (lines? \d|bytes \d|whole file)/u);
+        // Clipped, never removed from layout: no reading-view text hides by `hidden` or `display:none`.
+        expect(body, file).not.toMatch(/<span[^>]* hidden[ >=]/u);
+      }
+    });
+
+    it('carries the legend and the evidence-view target once per narrative page, and the redaction legend elsewhere', async () => {
+      const run = await prepared();
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const files = readSite(result.report.site);
+      for (const [file, page] of html(files)) {
+        const narrative = file === 'index.html' || file.startsWith('deep-dives/');
+        expect(page.split('class="reading-legend"').length - 1, file).toBe(narrative ? 1 : 0);
+        expect(page.split('id="evidence-view"').length - 1, file).toBe(narrative ? 1 : 0);
+      }
+      const legend = files.get('index.html')!;
+      expect(legend).toContain('<a href="#evidence-view">Show the evidence view</a>');
+      expect(legend).toContain('text with such a mark is the agent\'s reading of that source.');
+      // The evidence view needs no script: a stylesheet rule keyed on the target shows the clipped text.
+      expect(legend).toMatch(/main:has\(#evidence-view:target\)/u);
+    });
+
+    it('gives each block an evidence note whose values equal its machine attributes', async () => {
+      const run = await prepared();
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      let notes = 0;
+      for (const [file, page] of narrativePages(readSite(result.report.site))) {
+        for (const m of page.matchAll(/<span class="evidence-note">Evidence: label (\w+); claim-block kind ([a-z-]+)(?:; reason ([a-z-]+))?/gu)) {
+          const at = page.lastIndexOf(' data-claim-id="', m.index);
+          const tag = page.slice(page.lastIndexOf('<', at), page.indexOf('>', at) + 1);
+          expect(tag, file).toContain(` data-epistemic="${m[1]!.toLowerCase()}"`);
+          expect(tag, file).toContain(`data-claim-kind="${m[2]}"`);
+          if (m[3] !== undefined) expect(tag, file).toContain(` data-unknown-reason="${m[3]}"`);
+          notes++;
+        }
+      }
+      expect(notes).toBeGreaterThan(2);
+      // A block citing nothing is labeled, one citing a source anchored: the fixture has both.
+      const index = readSite(result.report.site).get('index.html')!;
+      const kinds = [...index.matchAll(/<(?:p|li) [^>]*data-claim-kind="(anchored|labeled)"[^>]*>(.*?)<\/(?:p|li)>/gsu)];
+      expect(new Set(kinds.map((m) => m[1]))).toEqual(new Set(['anchored', 'labeled']));
+      for (const [, kind, inner] of kinds) expect(inner!.includes('class="cite"') || inner!.includes('class="anchor-link cite"'), kind).toBe(kind === 'anchored');
+    });
+
+    it('says in each citation pop which lines of which file the mark cites', async () => {
+      const run = await prepared();
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const index = readSite(result.report.site).get('index.html')!;
+      const pops = [...index.matchAll(/<span class="cite-pop" aria-hidden="true">([^<]*)<\/span>/gu)].map((m) => m[1]!);
+      expect(pops.length).toBeGreaterThan(0);
+      // The fixture's own citations, as literals: one line, and a range of two.
+      expect(pops).toContain('src/kestrel.c, line 1');
+      expect(pops).toContain('src/kestrel.c, lines 2\u20133');
+      for (const pop of pops) expect(pop).toMatch(/^[^,]+(, (whole file|bytes \d+–\d+|lines? \d+(–\d+)?))?$/u);
+    });
+
+    it('puts the evidence view in the rendered-design packet: each narrative page holds both views', async () => {
+      const run = await prepared();
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const packet = buildDesignPacket({ run, runId: 'run-1', pinnedRevision: 'f'.repeat(40), files: readSite(result.report.site) });
+      if (!packet.ok) throw new Error(packet.reason);
+      const files = (JSON.parse(packet.bytes) as { files: { path: string; content: string }[] }).files;
+      const narrative = files.filter((file) => file.path === 'index.html' || file.path.startsWith('deep-dives/'));
+      expect(narrative.length).toBeGreaterThan(0);
+      for (const file of narrative) {
+        expect(file.content, file.path).toContain('<span id="evidence-view"></span>');
+        expect(file.content, file.path).toContain('<span class="evidence-note">Evidence: label ');
+        expect(file.content, file.path).toContain('main:has(#evidence-view:target) .visually-hidden.ev{');
+      }
+    });
+
+    it('renders a checked v4 draft\'s Poles: the why section on the landing page, the other Pole on its own page, in the design packet too', async () => {
+      const doc = draft();
+      doc['schemaVersion'] = 'polaris-dossier-local-draft-v4';
+      (doc['sections'] as Doc[]).unshift({ id: 'why', title: 'Why Kestrel exists', paragraphs: [{ id: 'w1', label: 'non-normative', text: 'Framing for the why.', children: [] }], disposition: { kind: 'produced', assetIds: ['why'] } });
+      doc['poles'] = [{ label: 'Why', sections: ['why'] }, { label: 'How it works', sections: ['core-ideas'] }];
+      doc['whySection'] = 'why';
+      // Unreviewed: the fidelity fixture's verdict knows only the base draft's blocks. A Pole carries no claim, so no review row is owed it.
+      const run = await prepared(doc, false);
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const files = readSite(result.report.site);
+      expect(files.has('poles/1.html')).toBe(false);
+      const pole = files.get('poles/2.html')!;
+      expect(pole).toContain('<section id="section-core-ideas"');
+      expect(pole).toContain('<h1>How it works</h1>');
+      expect(pole).toContain('class="run-sentence"');
+      const index = files.get('index.html')!;
+      expect(index).toContain('<section id="section-why"');
+      expect(index).not.toContain('<section id="section-core-ideas"');
+      expect(index).toContain('<li><a href="poles/2.html">How it works</a><ul><li><a href="poles/2.html#section-core-ideas">Core ideas</a></li></ul></li>');
+      const machine = JSON.parse(files.get('machine.json')!) as { claims: { id: string; page: string }[] };
+      expect(machine.claims.filter((claim) => claim.id === 'p1').map((claim) => claim.page)).toEqual(['poles/2.html']);
+      const packet = buildDesignPacket({ run, runId: 'run-1', pinnedRevision: 'f'.repeat(40), files });
+      if (!packet.ok) throw new Error(packet.reason);
+      expect(packet.pages).toContain('poles/2.html');
+    });
+
+    it('refuses to render a v4 draft over the run\'s Pole limit, as check reports it', async () => {
+      const doc = draft();
+      doc['schemaVersion'] = 'polaris-dossier-local-draft-v4';
+      const ids = ['a', 'b', 'c', 'd', 'e'];
+      for (const id of ids) (doc['sections'] as Doc[]).push({ id, title: `Part ${id}`, paragraphs: [{ id: `${id}1`, label: 'non-normative', text: 'Framing.', children: [] }], disposition: { kind: 'produced', assetIds: [id] } });
+      doc['poles'] = ['core-ideas', ...ids].map((id) => ({ label: `Pole ${id}`, sections: [id] }));
+      doc['whySection'] = 'core-ideas';
+      await expect(prepared(doc)).rejects.toThrow('fixture draft: [{"kind":"pole","at":"$.poles","detail":"the draft declares 6 Poles; this run\'s Pole limit is 5"}]');
+    });
+
+    it('counts in the appendix what the machine view counts', async () => {
+      const run = await prepared();
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const files = readSite(result.report.site);
+      const counts = JSON.parse(files.get('machine.json')!).counts as Record<string, number | null>;
+      const appendix = files.get('appendix.html')!;
+      const shown = new Map([...appendix.matchAll(/<li data-count="([a-z-]+)">[^<]*?: (\d+)\.<\/li>/gu)].map((m) => [m[1]!, Number(m[2])]));
+      expect(shown.get('uncited-judgements')).toBe(counts.uncitedJudgements);
+      expect(shown.get('withheld-items')).toBe(counts.withheldItems);
+      expect(shown.get('withheld-excerpts')).toBe(counts.withheldExcerpts);
+      expect(shown.get('unknown-claims')).toBe(2);
+      expect(appendix.split('data-count="').length - 1).toBe(6);
+    });
+  });
+
+  it('carries the one sentence and the machine disclosure on every page, the human disclosure in the appendix, and one review-status region per page holding no claim', async () => {
     const run = await prepared();
     const result = await renderRun(run, renderDeps());
     if (!result.ok) throw new Error(result.refusal.reason);
@@ -323,17 +491,27 @@ describe('render', () => {
     expect(ids).toEqual(['mode', 'agent', 'unrestricted-reading', 'read-account', 'execution-rule', 'reported-commands', 'no-provider-call', 'pinned-revision',
       'pinned-revision-verified', 'quotations', 'stored-records', 'records-within-reach', 'unattributed-execution', 'draft-layer']);
     expect(html(files).length).toBeGreaterThan(5);
+    const sentence = 'This is a draft written by claude-code with claude-opus-5-5; no human review is recorded. It has 2 Unknown claim(s).';
     for (const [file, page] of html(files)) {
-      expect(page.split('class="run-disclosure"').length - 1, file).toBe(1);
-      for (const id of ids) expect(page, `${file} ${id}`).toContain(`data-disclosure-id="${id}"`);
+      // Dossier spec v1.5: one sentence of human text linking to the appendix, and the machine form whole, on every page.
+      expect(page.split('class="run-sentence"').length - 1, file).toBe(1);
+      expect(page, file).toContain(`<p class="run-sentence">${sentence} <a href="${file.includes('/') ? '../' : ''}appendix.html">`);
+      expect(page, file).toContain(` data-disclosure-ids="${ids.join(' ')}"`);
+      expect(page.split('class="run-disclosure"').length - 1, file).toBe(file === 'appendix.html' ? 1 : 0);
       const regions = page.split('data-review-status-region="review-status"');
       expect(regions.length - 1, file).toBe(1);
       const region = regions[1]!.slice(0, regions[1]!.indexOf('</aside>'));
       expect(region, file).not.toContain('data-claim-id');
       expect(region, file).not.toMatch(/ id="/u);
     }
-    expect(files.get('index.html')).toContain('Agent tool claude-code 2.1.0, provider anthropic, model claude-opus-5-5');
-    expect(files.get('index.html')).toContain('Syzygy made no provider call and transmitted no project content.');
+    const appendix = files.get('appendix.html')!;
+    for (const id of ids) expect(appendix, id).toContain(`data-disclosure-id="${id}"`);
+    expect(appendix).toContain('Agent tool claude-code 2.1.0, provider anthropic, model claude-opus-5-5');
+    expect(appendix).toContain('Syzygy made no provider call and transmitted no project content.');
+    expect(appendix).toContain('Syzygy can see only the marking: whether an unmarked claim rests on the agent\'s building or running of the project is the agent\'s report.');
+    // The appendix is the last page of the reading order, and every page's navigation reaches it.
+    expect(JSON.parse(files.get('dossier.json')!).pages.at(-1)).toEqual({ path: 'appendix.html', depth: 1 });
+    for (const [file, page] of html(files)) expect(page, file).toMatch(/<li><a href="(\.\.\/)?appendix\.html">Appendix<\/a><\/li><\/ol>/u);
   });
 
   it('withholds the draft layer as Unknown while the RFC7-20 ruling is not in force, keeping sources, disclosure and discovery', async () => {
@@ -489,8 +667,10 @@ describe('render', () => {
     expect(reading).not.toContain('withheld line(s) in this file');
     expect(reading).toContain('data-redacted-lines="1"');
     expect(reading).toContain('; 1 line(s) of this file withheld by screening"');
-    expect(reading).toContain('<span class="redaction-mark" aria-hidden="true">\u20201</span></a>');
-    expect(reading).toContain('<p class="redaction-legend"><span aria-hidden="true">\u2020N</span> on a citation: N lines of that file are withheld by screening.');
+    expect(reading).toContain('<span class="redaction-mark" aria-hidden="true">\u20201</span><span class="cite-pop" aria-hidden="true">');
+    // A narrative page's legend explains the dagger (dossier spec v1.5), once.
+    expect(reading.split('<span class="legend-sample">\u2020N</span> on a citation counts the N lines of that citation\'s file that screening withheld.').length - 1).toBe(1);
+    expect(reading).not.toContain('<p class="redaction-legend">');
     expect(site.get('contents.html')!).not.toContain('<p class="redaction-legend">');
   });
 
@@ -535,8 +715,12 @@ describe('render', () => {
   it('refuses when the stored passed draft revision is altered, after the deadline, and when the output lacks the disclosure', async () => {
     const run = await prepared(draft(), false);
     expect(await renderRun(run, renderDeps({ now: () => NOW + 3_600_000 }))).toMatchObject({ ok: false, refusal: { stage: 'deadline' } });
-    const bare: DossierRenderer = (input) => ({ files: new Map([...renderLocalDossier(input).files].map(([file, page]) => [file, page.replace('class="run-disclosure"', 'class="x"')])) });
-    expect(await renderRun(run, renderDeps({ renderer: bare }))).toMatchObject({ ok: false, refusal: { stage: 'render' } });
+    for (const [from, to] of [['class="run-disclosure"', 'class="x"'], ['class="run-sentence"', 'class="x"'], [' data-disclosure-ids="', ' data-x="']]) {
+      const bare: DossierRenderer = (input) => ({ files: new Map([...renderLocalDossier(input).files].map(([file, page]) => [file, page.replace(from!, to!)])) });
+      expect(await renderRun(run, renderDeps({ renderer: bare })), from).toMatchObject({ ok: false, refusal: { stage: 'render' } });
+    }
+    const noAppendix: DossierRenderer = (input) => { const files = new Map(renderLocalDossier(input).files); files.delete('appendix.html'); return { files }; };
+    expect(await renderRun(run, renderDeps({ renderer: noAppendix }))).toMatchObject({ ok: false, refusal: { stage: 'render' } });
     expect(await renderRun(run, renderDeps({ renderer: () => { throw new Error('boom'); } }))).toMatchObject({ ok: false, refusal: { stage: 'render', reason: 'the renderer refused the run: boom' } });
     expect(fs.existsSync(path.join(run, 'site'))).toBe(false);
     fs.appendFileSync(path.join(run, 'drafts', 'rev-0.json'), ' ');
@@ -658,6 +842,140 @@ async function designReviewed(run: string, edit: (v: Doc) => Doc = (v) => v, lau
   if (launched) await launchForm(run, { role: 'review', form: 'terminal', kind: 'design' }, { sources: sources(), now: () => LATER });
   return { site: rendered.report.site, digest, dir: handed.report.directory };
 }
+
+// Dossier spec v1.5 (syzygy-pdja.3): withheld items, a block citing a withheld span beside an admitted one, and the judgement mark.
+// `.env` is path-excluded (denied-path) and never read. Words only an agent wrote carry `zq-`, which nothing Syzygy writes contains.
+describe('render: withheld items and judgements (dossier spec v1.5)', () => {
+  const ENV = (id: string) => cite(id, '.env', 1, 1);
+  const withheldDraft = (): Doc => {
+    const doc = draft();
+    doc.schemaVersion = 'polaris-dossier-local-draft-v4';
+    doc.understanding.purpose = [{ id: 'u-purpose', label: 'inferred', statement: 'zq-purpose words.', scope: 'zq-scope.', citations: [ENV('u-purpose-c')] }];
+    doc.understanding.terminology = [...doc.understanding.terminology, { id: 'zq-term', label: 'inferred', statement: 'zq-term words.', scope: 'zq-scope.', citations: [ENV('u-term-c')] },
+      // A glossary term Syzygy's own sentence contains: the sentence is Syzygy's words, never linked as agent prose is.
+      { id: 'screening', label: 'inferred', statement: 'What decides what a dossier may show.', scope: 'The server.', citations: [cite('u-screen-c', 'src/kestrel.c', 1, 1)] }];
+    doc.sections.push({ id: 'held-sec', title: 'zq-held section', paragraphs: [{ id: 'p9', label: 'inferred', basis: 'source', text: 'zq-held section words.', citations: [ENV('c-p9')], quotations: [], children: [] }], disposition: { kind: 'produced', assetIds: ['held-sec'] } });
+    doc.sections[0].paragraphs.push(
+      { id: 'p3', label: 'inferred', basis: 'source', text: 'zq-held paragraph.', citations: [ENV('c-p3'), cite('c-p3s', SECRET_PATH, 1, 1)], quotations: [], children: [] },
+      { kind: 'code', id: 'cx9', citation: ENV('c-cx9') },
+      { id: 'p4', label: 'inferred', basis: 'source', text: 'zq-mixed paragraph stays.', citations: [cite('c-p4a', 'src/kestrel.c', 1, 1), ENV('c-p4b')], quotations: [], children: [] },
+      { kind: 'cards', id: 'g9', items: [{ label: 'zq-card label', body: { id: 'g9a', label: 'inferred', basis: 'source', text: 'zq-card body.', citations: [ENV('c-g9a')], quotations: [] } }, { label: 'Second card', body: { id: 'g9b', label: 'non-normative', text: 'Framing.' } }] },
+      { kind: 'steps', id: 'st9', repeatsDiagram: 'flow-9', items: [{ id: 'st9a', label: 'unknown', reason: 'missing-evidence', text: 'No source says it.', citations: [] }, { id: 'st9b', label: 'non-normative', text: 'Then.' }] },
+    );
+    doc.diagrams = [{ id: 'flow-9', title: 'Flow', sectionId: 'core-ideas', kind: 'flow', relationship: 'Order.', disposition: { kind: 'produced', assetIds: ['flow-9'] },
+      nodes: [{ id: 'n1', label: 'zq-node', epistemic: 'inferred', citations: [ENV('c-n1')] }, { id: 'n2', label: 'Server', epistemic: 'inferred', citations: [cite('c-n2', 'src/kestrel.c', 1, 1)] }],
+      edges: [{ id: 'x1', from: 'n1', to: 'n2', label: 'zq-edge', epistemic: 'inferred', citations: [ENV('c-x1')] }] },
+    { id: 'flow-8', title: 'zq-diagram title', sectionId: 'core-ideas', kind: 'flow', relationship: 'zq-relationship.', disposition: { kind: 'produced', assetIds: ['flow-8'] },
+      nodes: [{ id: 'm1', label: 'zq-m1', epistemic: 'inferred', citations: [ENV('c-m1')] }, { id: 'm2', label: 'zq-m2', epistemic: 'inferred', citations: [ENV('c-m2')] }],
+      edges: [{ id: 'y1', from: 'm1', to: 'm2', label: 'zq-y1', epistemic: 'inferred', citations: [ENV('c-y1')] }] }];
+    return doc;
+  };
+
+  it('renders each withheld item Unknown in Syzygy\'s words with its count, and none of the agent\'s text for it', async () => {
+    const run = await prepared(withheldDraft(), false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const index = files.get('index.html')!;
+    for (const [file, page] of files) for (const words of ['zq-held', 'zq-card', 'zq-node', 'zq-edge', 'zq-purpose', 'zq-scope', 'zq-term', 'zq-diagram', 'zq-relationship', 'zq-m1', 'zq-m2', 'zq-y1', 'token=']) expect(`${file} ${words}: ${page.includes(words)}`).toBe(`${file} ${words}: false`);
+    expect(marked(index, 'p3')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(index).toMatch(/data-withheld-sources="2" data-claim-id="p3"/u);
+    expect(index).toContain('Withheld from this dossier: it rests on 2 source file(s) that screening withholds (.env; 1 not named, because a secret detector matches the path), so its text is not shown.');
+    expect(index).toContain('<h2>Withheld item</h2>');
+    expect(index).toContain('<figcaption>Withheld item</figcaption>');
+    expect(files.get('glossary.html')).not.toContain('zq-term');
+    expect(index).toContain('<p class="card-label">Withheld item</p>');
+    expect(marked(index, 'n1')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(marked(index, 'x1')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(index).toContain('(withheld from this dossier: it rests on 1 source file(s) that screening withholds: .env)');
+    const understanding = files.get('understanding.html')!;
+    expect(marked(understanding, 'understanding/withheld-1')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(understanding).toContain('<strong>Withheld item</strong>');
+    const machine = JSON.parse(files.get('machine.json')!);
+    expect(machine.counts).toEqual({ uncitedJudgements: 0, withheldItems: 10, withheldExcerpts: 1, withheldInventoryEntries: null });
+    expect(machine.claims.find((claim: { id: string }) => claim.id === 'p3')).toMatchObject({ epistemic: 'unknown', unknownReason: 'excluded-content', v15: { withheldSources: 2 } });
+    expect(machine.claims.find((claim: { id: string }) => claim.id === 'n1')).toMatchObject({ epistemic: 'unknown', unknownReason: 'excluded-content', v15: { withheldSources: 1 } });
+    expect(Object.keys(machine.withheldElements).sort()).toEqual(['m1', 'm2', 'n1', 'understanding/withheld-1', 'understanding/withheld-2', 'x1', 'y1']);
+  });
+
+  it('keeps a block citing a withheld span beside an admitted one, counting the withheld span', async () => {
+    const run = await prepared(withheldDraft(), false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const index = files.get('index.html')!;
+    expect(index).toContain('zq-mixed paragraph stays.');
+    expect(marked(index, 'p4')).toEqual({ epistemic: 'unknown', reason: 'missing-evidence' });
+    expect(index).toMatch(/data-withheld-spans="1" data-claim-id="p4"/u);
+    expect(JSON.parse(files.get('machine.json')!).claims.find((claim: { id: string }) => claim.id === 'p4')).toMatchObject({ v15: { withheldSpans: 1 } });
+  });
+
+  it('withholds an item whose span touches a redacted line, and keeps one over surviving lines of the same file', async () => {
+    const doc = draft();
+    doc.schemaVersion = 'polaris-dossier-local-draft-v4';
+    doc.sections[0].paragraphs.push(
+      { id: 'pr', label: 'inferred', basis: 'source', text: 'zq-redacted line.', citations: [cite('c-pr', 'src/kestrel.c', 4, 4)], quotations: [], children: [] },
+      { id: 'pk', label: 'inferred', basis: 'source', text: 'zq-kept line stays.', citations: [cite('c-pk', 'src/kestrel.c', 1, 1)], quotations: [], children: [] },
+    );
+    const run = await prepared(doc, false);
+    if (!SCREEN.ok) throw new Error(SCREEN.why);
+    const base = SCREEN.screen;
+    const lines = KESTREL.match(/[^\n]*\n|[^\n]+$/gu)!;
+    const retainedLines = lines.map((line, i) => i === 3 ? '\n' : line);
+    const lineByteOffsets: number[] = []; let offset = 0;
+    for (const line of lines) { lineByteOffsets.push(offset); offset += Buffer.byteLength(line); }
+    const redacting = { ok: true as const, screen: { ...base, screenTargetBody: (body: string, repositoryPath: string) => (repositoryPath === 'src/kestrel.c'
+      ? { kind: 'redacted' as const, retained: retainedLines.join(''), retainedLines, lineByteOffsets, originalBytes: offset, contentSha256: createHash('sha256').update(KESTREL).digest('hex'), withheld: [4], detectorIds: ['credential-assignment'] }
+      : base.screenTargetBody(body, repositoryPath)) } };
+    const result = await renderRun(run, renderDeps({ loadScreen: async () => redacting }));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const index = readSite(result.report.site).get('index.html')!;
+    expect(index).not.toContain('zq-redacted');
+    expect(marked(index, 'pr')).toEqual({ epistemic: 'unknown', reason: 'excluded-content' });
+    expect(index).toContain('it rests on 1 source file(s) that screening withholds (src/kestrel.c)');
+    expect(index).toContain('zq-kept line stays.');
+    expect(index).not.toMatch(/data-withheld-[a-z]+="[0-9]+" data-claim-id="pk"/u);
+  });
+
+  it('renders a list repeating a diagram collapsed, with Syzygy\'s summary and its Unknown count', async () => {
+    const run = await prepared(withheldDraft(), false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const index = readSite(result.report.site).get('index.html')!;
+    expect(index).toMatch(/<details class="details repeats-diagram" id="element-st9" data-element="steps" data-repeats-diagram="flow-9"><summary>The diagram “Flow” as a list <span class="details-unknown">\(1 Unknown\)<\/span><\/summary><ol class="steps">/u);
+  });
+
+  it('renders an uncited judgement Inferred with its mark where the counted review finds it advisory', async () => {
+    const doc = draft();
+    doc.schemaVersion = 'polaris-dossier-local-draft-v4';
+    doc.sections[0].paragraphs.push({ id: 'pj', label: 'inferred', basis: 'source', judgement: true, text: 'zq-judged: the design is sound.', citations: [], quotations: [], children: [] });
+    const run = await prepared(doc, true, [{ blockId: 'pj', verdict: 'advisory', spanIds: [], reason: 'The agent\'s own judgement.', quotations: [] }], {
+      inventory: (inv) => { inv.entries.push({ id: 'e-env', kind: 'capability', label: 'inferred', statement: 'zq-env entry.', citations: [ENV('c-e-env')], quotations: [] }); },
+      verdict: (v) => {
+        v.inventoryCoverage.push({ entryId: 'e-env', disposition: 'withheld', blockIds: [], reason: 'Withheld by screening.', quotations: [] });
+        v.inventoryAccuracy.push({ entryId: 'e-env', accuracy: 'withheld', spanIds: [], reason: 'Withheld by screening.', quotations: [] });
+      },
+    });
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const index = files.get('index.html')!;
+    expect(marked(index, 'pj')).toEqual({ epistemic: 'inferred', reason: null });
+    expect(index).toMatch(/data-judgement="uncited" data-claim-id="pj"[^>]*>zq-judged: the design is sound\. <span class="judgement-mark">judgement<\/span>/u);
+    expect(JSON.parse(files.get('machine.json')!).counts).toMatchObject({ uncitedJudgements: 1, withheldItems: 0, withheldInventoryEntries: 1 });
+    expect([...files.values()].some((page) => page.includes('zq-env'))).toBe(false);
+  });
+
+  it('keeps an uncited judgement Unknown while no counted review finds it advisory', async () => {
+    const doc = draft();
+    doc.schemaVersion = 'polaris-dossier-local-draft-v4';
+    doc.sections[0].paragraphs.push({ id: 'pj', label: 'inferred', basis: 'source', judgement: true, text: 'zq-judged.', citations: [], quotations: [], children: [] });
+    const run = await prepared(doc, false);
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    expect(marked(readSite(result.report.site).get('index.html')!, 'pj')).toEqual({ epistemic: 'unknown', reason: 'missing-evidence' });
+  });
+});
 
 describe('rendered-design review (S9b)', () => {
   it('builds the design packet from the latest site, outside the review-status region, byte for byte, and names its digest at render', async () => {
@@ -918,13 +1236,13 @@ describe('readable operator-agent pages (syzygy-mea.10.1, syzygy-mea.10.2)', () 
     const result = await renderRun(run, renderDeps());
     if (!result.ok) throw new Error(result.refusal.reason);
     const index = readSite(result.report.site).get('index.html')!;
-    const links = [...index.matchAll(/<a class="(?:anchor-link )?cite" href="[^"]*" data-source-id="(src-[0-9a-f]{24})" aria-label="([^"]*)"[^>]*>\[(\d+)\]<\/a>/gu)].map((m) => [m[1], m[2], m[3]]);
+    const links = [...index.matchAll(/<a class="(?:anchor-link )?cite" href="[^"]*" data-source-id="(src-[0-9a-f]{24})" aria-label="([^"]*)"[^>]*>\[(\d+)\]<span class="cite-pop" aria-hidden="true">[^<]*<\/span><\/a>/gu)].map((m) => [m[1], m[2], m[3]]);
     expect(links.length).toBeGreaterThan(1);
     const numberOf = new Map<string, string>();
     for (const [id, label, n] of links) {
       if (!numberOf.has(id!)) numberOf.set(id!, String(numberOf.size + 1));
       expect(n).toBe(numberOf.get(id!));
-      expect(label).toMatch(new RegExp(`^Source ${n}: (src/kestrel\\.c|docs/notes\\.txt)(, (whole file|bytes \\d+–\\d+))?$`, 'u'));
+      expect(label).toMatch(new RegExp(`^Source ${n}: (src/kestrel\\.c|docs/notes\\.txt)(, (whole file|bytes \\d+–\\d+|lines? \\d+(–\\d+)?))?$`, 'u'));
     }
     expect(numberOf.size).toBe(2);
     // No identifier or digest is reading text: outside tags the page never shows `[src-` or a `[sha1:` anchor.
@@ -982,8 +1300,8 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
   });
 
   it('puts the readability rules in the brief, after the profile guidance, and the newcomer test in the design criteria', () => {
-    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v2');
-    expect(READABILITY_GUIDANCE).toContain('Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and what it is for, as its sources state; a stated advantage is still a quotation (rule 4 of the dossier guidance). Define each term at its first use. Keep one idea to a sentence and prefer short sentences; give a concrete example from the sources before an abstraction.');
+    expect(READABILITY_GUIDANCE_VERSION).toBe('polaris-dossier-readability-v3');
+    expect(READABILITY_GUIDANCE).toContain('Write for a software engineer new to this project and its domain, such as a recent graduate. Before any project term, say in everyday words what the project does and why it exists, as its sources state. Define each term at its first use.');
     expect(READABILITY_GUIDANCE).toContain('carries at least one diagram with that section\'s `sectionId`, and Syzygy draws it at the top of the section');
     expect(READABILITY_GUIDANCE).toContain('a `flow` for an end-to-end workflow or a user\'s path through the project, a `boundary` or `dependency` diagram for the architecture and how components talk to each other');
     expect(READABILITY_GUIDANCE).toContain('An enumeration of three or more items is never a run-on sentence: write a short lead block and give each item its own child block, which renders as a bulleted list. A block holds at most twelve children, so group a longer enumeration under several lead blocks.');
@@ -993,6 +1311,15 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     expect(READABILITY_GUIDANCE).toContain('5. Elements. A section or deep dive entry may be a plain block or, in draft schema `polaris-dossier-local-draft-v3`, one of seven presentation elements.');
     expect(READABILITY_GUIDANCE).toContain('Captions, column names, titles, terms, labels, summaries and languages are short plain labels of at most 120 characters, never claims or quotations, with no quotation mark and no markup (no angle bracket, ampersand, backtick, Markdown link, or * or _ at a word edge); quote only in a claim, where Syzygy verifies it; every cell, item, definition and body is a claim and follows every rule above.');
     expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
+    // Dossier spec v1.5, "Rendered-design packet carries its questions": the six questions, and the evidence view among the rendered pages.
+    const criteria = designCriteria('/run').join('\n');
+    for (const question of ['whether its opening states why the project exists', 'whether its lead uses the category term a software engineer knows',
+      'whether warnings sit in the one sentence and the appendix rather than in the reading text', 'whether the page is too long to read at one sitting',
+      'whether a list repeats a diagram instead of folding beneath it', 'whether the page reads as a person explaining the project']) expect(criteria).toContain(question);
+    expect(criteria).toContain('the evidence view, the same page at its #evidence-view target, where they show. Judge both.');
+    expect(criteria).toContain('agrees with machine.json, which on a narrative page (index.html and deep-dives/) means in its evidence view;');
+    expect(criteria).toContain('whether every page carries the run\'s one sentence and a link to the appendix, which holds the disclosure.');
+    expect(criteria).not.toContain('whether the run disclosure is on every page');
   });
 });
 
@@ -1036,7 +1363,7 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
 
   it('renders a table with a caption, column headers, row headers and an empty cell', () => {
     expect(index).toContain('<div class="table-scroll" id="element-t1" data-element="table"><table><caption>The server&#39;s commands and what they do</caption><thead><tr><th scope="col">Command</th><th scope="col">Effect</th></tr></thead>');
-    expect(index).toContain('<th scope="row" class="non-normative" data-non-normative="t1c1">The <code>GET</code> command <span class="marking non-normative">[Non-normative]</span></th>');
+    expect(index).toContain('<th scope="row" class="non-normative" data-non-normative="t1c1" data-claim-kind="non-normative">The <code>GET</code> command <span class="framing-mark">framing</span><span class="visually-hidden ev"> <span class="marking non-normative">[Non-normative]</span>');
     expect(index).toMatch(/<td[^>]*data-claim-id="t1c2"[^>]*>/u);
     expect(index).toContain('<td class="empty-cell">no entry</td>');
     expect(index).toContain('<code>GET</code>');
@@ -1044,7 +1371,7 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
 
   it('numbers a cell\'s citation as any block\'s', () => {
     const cell = index.slice(index.indexOf('data-claim-id="t1c2"'));
-    expect(cell.slice(0, cell.indexOf('</td>'))).toMatch(/class="cite"[^>]*>\[\d+\]<\/a>/u);
+    expect(cell.slice(0, cell.indexOf('</td>'))).toMatch(/class="cite"[^>]*>\[\d+\]<span class="cite-pop" aria-hidden="true">[^<]+<\/span><\/a>/u);
   });
 
   it('renders a callout with its visible tone, steps, definitions, cards and details', () => {
@@ -1073,7 +1400,7 @@ describe('rich presentation elements (syzygy-mea.10.5)', () => {
     expect(body).not.toContain('a < b');
     expect(body).not.toContain('"&lt;"');
     expect(body).not.toContain('"</pre>');
-    expect(body).toMatch(/<span class="marking observed">\[Observed\]<\/span> <a class="anchor-link cite"[^>]*data-anchor-class="evidence-artifact-identifier-with-integrity-digest"[^>]*data-anchor-fragment="0-\d+"[^>]*>\[\d+\]<\/a>/u);
+    expect(body).toMatch(/<span class="visually-hidden ev"><span class="marking observed">\[Observed\]<\/span><\/span> <a class="anchor-link cite"[^>]*data-anchor-class="evidence-artifact-identifier-with-integrity-digest"[^>]*data-anchor-fragment="0-\d+"[^>]*>\[\d+\]<span class="cite-pop" aria-hidden="true">src\/markup\.c, bytes 0–\d+<\/span><\/a>/u);
     expect(body).not.toContain('int tail');
   });
 

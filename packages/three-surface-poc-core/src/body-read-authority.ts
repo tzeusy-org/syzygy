@@ -22,7 +22,7 @@
 // 55 common owner-act cases decided per authority (× 3 = 165) plus 30
 // authority-specific cases. Every case is one predicate site below,
 // marked `// mutation-point: <case>` on the line before it so that the
-// mutation runner (`apps/three-surface-poc/src/pwb-mutation-runner.ts`)
+// mutation runner (`apps/three-surface-poc/src/pwb-mutation-run-main.ts`)
 // can disable exactly that predicate and prove the independent test
 // notices. The FIRST failing predicate names the case; predicates are
 // ordered so that every case is reachable by a fixture that is wrong in

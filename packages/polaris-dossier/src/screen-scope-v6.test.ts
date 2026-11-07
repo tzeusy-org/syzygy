@@ -34,8 +34,6 @@ const TRIAL = '498ecd0d6d007db11ddb3aea9428552598a78622';
 // The other three revisions the Redis observation consent admits (public-repo-admission/instances/redis/params.json).
 const OTHER_REDIS = ['d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7', 'c9d29f6a918c335bc1778d9f68e521c1bbb36a0f', 'e91a340e241cf0abe3c6a0c254214fbe4aa1d95f'];
 const AT_TRIAL = { repository: REDIS, commit: TRIAL };
-const V6_VERSION = '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p';
-const V6_INSTANT = Date.parse('2026-11-05T09:43:08Z');
 
 type Subject = { readonly repository: string; readonly commit: string } | null;
 type AnyScreen = Pick<DossierScreen, 'screenPath' | 'contentClass' | 'screenBody' | 'screenTargetBody' | 'scopeDetectors'>;
@@ -74,10 +72,12 @@ let F: Fixtures;
 beforeAll(async () => {
   const py = `import json, sys; sys.path.insert(0, 'scripts')
 import build_public_source_screening_scope_v6 as b
+import build_public_source_screening_scope_v7 as b7
 
-policy = open(str(b.ROOT / b.POLICY)).read()
-v5, mode = b.base_bytes()
-assert mode == 'performed-v6' and b.propose(v5) == policy
+policy, mode = b7.base_bytes()
+assert mode == 'performed-v7' and b7.propose(policy) == open(str(b.ROOT / b.POLICY)).read()
+v5 = b.v2.reverse_patch((b.ROOT / b.patch_path('p')).read_text(), policy)
+assert b.propose(v5) == policy
 enc = lambda o: [o[0], sorted(o[1])] if o[0] == 'redacted' else list(o)
 ends = lambda p, body, r, c: [{'ending': e, 'body': body.replace('\\n', t), 'oracle': enc(b.screen(p, body.replace('\\n', t), policy, r, c))} for e, t in (('crlf', '\\r\\n'), ('cr', '\\r')) if '\\n' in body]
 sys.stdout.write(json.dumps({
@@ -209,25 +209,28 @@ describe('P: the config-secret-directive scope detector', () => {
   });
 });
 
-// The any-repo reader's checkout port reads the act chain this install extended, so both loaders put the version-6 bytes in force from
-// this checkout at a time after the act, and neither before it (the version-5 act then in force binds other bytes).
-describe('the real checkout after the version-6 act', () => {
-  const AFTER = Date.UTC(2026, 10, 5, 12, 0, 0);
-  it('loads the version-6 policy in both loaders', async () => {
+// The any-repo reader's checkout port reads the act chain, so both loaders put the version-7 bytes in force from this checkout at a time
+// after that act, and neither before it (the version-6 act then in force binds other bytes). Version 7 changed one clause of the
+// renderCondition, so version 6's detector and placement still hold.
+describe('the real checkout after the version-7 act', () => {
+  const V7_VERSION = '1.8.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s';
+  const V7_INSTANT = Date.parse('2026-11-06T14:11:19Z');
+  const AFTER = Date.UTC(2026, 10, 6, 15, 0, 0);
+  it('loads the version-7 policy in both loaders', async () => {
     const app = await import(APP_SCREENING);
     const theirs = await app.loadPublicSourceScreen(app.checkoutPolicyActPort(REAL_ROOT, () => AFTER), new Uint8Array(32).fill(7), AT_TRIAL);
     const loaded = await loadDossierScreen(REAL_ROOT, AFTER, undefined, AT_TRIAL);
     if (!loaded.ok) throw new Error(loaded.why);
     for (const screen of [loaded.screen, theirs]) {
-      expect([screen.policyVersion, screen.policySha256]).toEqual([V6_VERSION, 'c44058c02c244e8460c1e33ab01f0343ed0612043d7bf53e0d36410c9f9ebfa2']);
+      expect([screen.policyVersion, screen.policySha256]).toEqual([V7_VERSION, '626be0cadc248b9ca9b3165d51f97d39aec552eb3a97b8b7df21d2446fc233da']);
       expect([screen.governanceText, screen.documentationExemption, screen.scopeDetectors, screen.contentClass('redis.conf')]).toEqual([true, true, 4, 'project-documentation']);
     }
   });
-  it('refuses the checkout\'s bytes before the version-6 act\'s instant', async () => {
-    const loaded = await loadDossierScreen(REAL_ROOT, V6_INSTANT - 1_000, undefined, AT_TRIAL);
+  it('refuses the checkout\'s bytes before the version-7 act\'s instant', async () => {
+    const loaded = await loadDossierScreen(REAL_ROOT, V7_INSTANT - 1_000, undefined, AT_TRIAL);
     expect(loaded.ok).toBe(false);
-    const own = screenLoaderOf(undefined, REAL_ROOT, V6_INSTANT);
+    const own = screenLoaderOf(undefined, REAL_ROOT, V7_INSTANT);
     const at = await own(AT_TRIAL);
-    expect(at.ok && [at.screen.policyVersion, at.screen.contentClass('redis.conf')]).toEqual([V6_VERSION, 'project-documentation']);
+    expect(at.ok && [at.screen.policyVersion, at.screen.contentClass('redis.conf')]).toEqual([V7_VERSION, 'project-documentation']);
   });
 });

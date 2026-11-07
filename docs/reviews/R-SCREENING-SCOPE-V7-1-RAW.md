@@ -1,0 +1,143 @@
+# Review — public-source screening scope, version 7
+Reviewed commit: 23f6d050693dd8ee6e63828fa844dcd39a32c195
+Manifest SHA-256: 6dcaeaf559f002066aab87a723a8ae0fbfb4cf9480cca39423a66e227bb56882
+Verdict: REVISE
+
+- REVISE: body text stays inert, but the "no network" promise is false
+  - Package mechanics hold; the clause and packet overclaim
+  - Must change before a signature: F1 to F5 and the packet's sentences
+- F1: a denylist of directives leaves network paths open
+  - [Observed] Directives with fallback gaps pass the clause and `csp_finding`
+    - Clause: `SEMANTIC-DELTA.md:36`; list: `scripts/build_public_source_screening_scope_v7.py:156`
+    - Unlisted: `img-src`, `font-src`, `media-src`, `manifest-src`, host-bearing `style-src`
+    - `csp_finding` returned None on `img-src *`, `form-action *; base-uri *` and `report-uri`
+  - [Observed] A passing page sends page text to a loopback listener
+    - T11, `img-src <host>` plus hash script: server saw `/img-exfil?secret`
+    - T10, `img-src *`, no script: server saw the image fetch
+    - T12, `style-src *`: server saw `/s.css`
+  - [Observed] `form-action` and `base-uri` are not required by the clause
+    - Neither falls back to `default-src`
+    - T6, no `form-action`: the script's form submit reached the server
+    - T14, no `base-uri`: a markup `<base>` redirected a relative link
+    - Every table row carries both, via `_REST` at `:183`, so no row tests absence
+  - [Inferred] v6 has the same reader gap; v7 raises its consequence
+    - A page script can now read text and use the opened path
+  - Repair: state a closed directive set instead
+    - `default-src 'none'`, the optional `script-src`, `style-src 'unsafe-inline'`
+    - `base-uri 'none'` and `form-action 'none'`; nothing else
+- F2: the script half has no limb forbidding network use
+  - [Observed] Network activity under the page's real directive shape
+    - CSP: `default-src 'none'; script-src <hash>; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'`
+    - T7, `RTCPeerConnection`: 5 UDP STUN packets reached my listener
+    - T8, created `<link rel=preconnect>`: 1 TCP accept, no HTTP request
+    - T4, created `<meta http-equiv=refresh>`: server saw `/meta?secret`
+    - T9, markup `<script src integrity=<allowed hash>>`: server saw `/ext.js`
+  - [Observed] These overclaims follow
+    - `SEMANTIC-DELTA.md:42`: "still blocks every remote load"
+    - `OWNER-DECISION-PACKET.md:16-17`: "Pages still load nothing from anywhere"
+    - `OWNER-DECISION-PACKET.md:35-36`: "the wall that matters most, no network, stays"
+  - [Inferred] The sentence bars only a created script element
+    - Created `link`, `meta`, `form`, `base` and `iframe` are unnamed
+    - "Navigates only by" covers T4 by reading; T7 and T8 are not navigation
+  - Repair: add two limbs
+    - The script opens no connection, naming the WebRTC constructors
+    - It creates only an allow-list of presentational elements
+- F3: `csp_finding` confirms a page the browser does not protect
+  - [Observed] `default-src\u00a0'none'` returns None at `:162`
+    - Python `split()` treats NBSP as whitespace
+    - T16 in Chrome: image and fetch both reached the server
+    - T16b, no script: the image still loaded
+  - [Observed] The current TypeScript reader splits the same way
+    - `pageSinkCspFinding` uses `/\s+/u`, which split the same string in node
+    - [Inferred] The install's "same reading" inherits this, since `pageSinkCspFinding` keeps that split
+  - Repair: split on ASCII whitespace; refuse any non-ASCII byte
+- F4: no consumer can confirm the half the clause now requires
+  - [Observed] The consumer reads a contract string plus directives
+    - `packages/polaris-dossier/src/render.ts:66`, `PAGE_SINK_CONTRACT` `/1`
+    - That contract's documented meaning is the encoding half only
+  - [Inferred] The clause's fail-closed sentence then has two bad readings
+    - Literally, no consumer confirms the script half, so every page scans as before
+    - Otherwise, the consumer claims a confirmation it never performed
+  - [Observed] The ledger leaves the mechanism unspecified
+    - `IMPACT-LEDGER.md:43` says only "its renderer contract"
+    - `:25-26` lists directive reading alone for the landing
+    - `SEMANTIC-DELTA.md:66` assigns the script half to a reviewer
+  - Repair: name the mechanism in the ledger and delta
+    - A new contract id that declares the script half, so `/1` plus `script-src` is unconfirmed
+    - A per-page check of each inline script's hash against the renderer's pinned set
+    - No `<script src>` on any page
+- F5: rule 6 is claimed per predicate but not met
+  - [Observed] The selftest breaks only two predicates, `FORBIDDEN` and `HASH_SOURCE`
+    - Comment at `:358` says "One break per predicate"
+  - [Observed] I tried 10 further mutants; 5 survive the table
+    - Dropping `.lower()` on the directive name
+    - Dropping `.lower()` on `'none'`
+    - Dropping `len(defaults) != 1`
+    - Dropping `len(defaults[0]) != 2`, with no row for `default-src 'none' https:`
+    - `fullmatch` weakened to `match`
+    - Killed: 4 by table rows, 1 by an `IndexError` crash
+  - [Inferred] The ledger's "one fixture per row" carries these gaps into the install
+  - Repair: add rows and mutants for all five
+- Criterion 1: the core protection holds where I could test it
+  - [Observed] Execution controls held on the renderer-shaped CSP
+    - T1b: a non-matching injected script did not run; only the hashed one ran
+    - T2: fetch, image, beacon and WebSocket produced no server hits
+    - T5: `form-action 'none'` blocked the script's form submit
+  - [Observed] One markup path is not new to v7
+    - T13: a markup `meta` refresh navigates under `default-src 'none'`
+    - [Inferred] It needs a minted element, which the encoding rule forbids
+  - [Unknown] Inert SVG and DOM clobbering were not exercised against real output
+    - No script exists to attack, and no dossier run was allowed
+    - The clause names no limb on clobbered lookups or on URL-fragment input
+- Criterion 3: table reasons are right; its coverage is the problem
+  - [Observed] All 28 rows match expectation, each for its named reason
+  - [Observed] Delta says each forbidden directive "would reopen a path" (`SEMANTIC-DELTA.md:54`)
+    - T20: `navigate-to 'none'` did not stop a `location` navigation on Chrome 120
+    - [Inferred] The directive only narrows, so that sentence is wrong for it
+- Criterion 4: the script half mixes pinned limbs with wishes
+  - [Inferred] Browser or hash already pins some limbs
+    - Fixed bytes: a hash pin against a constant
+    - Eval, `Function`, string timers and handler attributes: CSP refuses them with no unsafe source
+    - "Hold no byte of any body" is literally unsatisfiable; any byte occurs in some body, so say "derived from"
+  - [Observed] The named-sink list is a weak denylist
+    - T19: `createContextualFragment` and `DOMParser` both inserted markup under the CSP
+    - T18: `require-trusted-types-for 'script'` made `innerHTML` and `createContextualFragment` throw, on `file://`
+    - Worth adding as a mechanical pin
+    - T18 and T19 say nothing of `setHTMLUnsafe`; it threw as absent on Chrome 120
+  - [Inferred] Three limbs have no named test
+    - Text-only writes: needs a canary DOM comparison with scripts on
+    - Navigation: needs a browser test with a request listener
+    - No stored text: needs a storage dump after run; a token scan fails once remembered state ships
+  - [Inferred] "Reads and navigates with scripts off" is checkable by a JS-disabled render
+- Criterion 5: the packet states real costs but misleads on the main one
+  - [Observed] Script bugs and navigation are stated plainly (`OWNER-DECISION-PACKET.md:40-41`)
+  - [Observed] The no-network sentences are false per F1 and F2
+    - The recommendation rests on them, so a signer is misinformed
+  - [Observed] Its `file://` unknown can now be narrowed
+    - T1: a hash-allowed inline script ran over `file://` on Chrome 120
+    - [Unknown] Other browsers remain untried
+    - `IMPACT-LEDGER.md:41` carries the same unknown
+  - [Inferred] Two omissions a signer would want
+    - The script half is reviewer-judged and no consumer confirms it (F4)
+    - Diagram click-through may meet further no-script, no-link text
+      - `polaris-manifesto-understanding-amendment/specs/polaris-generation/spec.md:208`
+      - `polaris-project-wide-butlers-model/specs/polaris-project-wide-butlers-model/spec.md:1790`
+      - `SEMANTIC-DELTA.md:70` names only three lines, by a directory-less `spec.md:247`
+- Criterion 6 and package mechanics reproduce
+  - [Observed] Ledger sweeps at base `0bf6b9c1`
+    - Version literal: 18 lines in 11 files outside the builders
+    - v6 act filename: 8 files outside the builders
+  - [Observed] Digests and builder at the subject commit
+    - `--manifest-digest` printed the dispatched digest
+    - Applying the patch hashed to the manifest row
+    - `--check` current; `--selftest` 22 of 22; `--score` 28 rows
+    - `check_governance.py`: 32 OK, 21 WARN, 0 FAIL, not the full battery
+  - [Inferred] `main.ts` closure does not reach the dossier renderer
+    - Regex import walk: 118 files, no hit
+- What I ran, and its limits
+  - Local pages in `google-chrome` 120.0.6099.224, headless, over `file://`
+    - A loopback HTTP, TCP and UDP listener counted hits
+    - Harness: `/tmp/claude-996/-home-orca-orca-projects-syzygy/2521ee96-232a-47bb-8d46-79eeeed3789c/scratchpad/lab/lab.py`
+  - No target repository, site directory, dossier run or provider call
+  - Throwaway worktree used, then removed; no existing checkout touched
+  - [Unknown] Other browsers and later Chrome versions were not tested

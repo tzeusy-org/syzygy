@@ -1211,6 +1211,26 @@ describe('the extractor reads the profile\'s fences', () => {
     expect(principles(['  ' + FENCE, '9. **Hidden.** inside', '  ' + FENCE], eol)).toEqual(ALL);
     // Four spaces: indented code in CommonMark, and nothing the profile recognizes, so the line is ordinary text and mints nothing here.
     expect(principles(['    ' + FENCE, 'code', '    ' + FENCE], eol)).toEqual(ALL);
+    for (const separator of ['\u2028', '\u2029']) {
+      for (const delimiter of ['```', '~~~']) {
+        for (const indent of ['', ' ', '  ', '   ']) {
+          expect(principles([indent + delimiter + separator, '## Hidden heading', '9. **Hidden.** inside', delimiter], eol)).toEqual(ALL);
+        }
+        const text = ['# Vision', '## Non-Negotiable Rules', '1. **Outside.** visible', delimiter + separator,
+          '## Hidden heading', '9. **Hidden.** inside', delimiter, '2. **After.** visible'].join(eol);
+        const passes: ParsePassIdentity[] = [];
+        const result = extractSource({ path: 'heart-and-soul/vision.md', extractionClasses: ['principle'] }, text,
+          (pass) => { passes.push(pass); return undefined; });
+        expect(result.kind).toBe('extracted');
+        if (result.kind !== 'extracted') throw new Error('expected extracted source');
+        expect(result.items.map(({ key, path, line }) => ({ key, path, line }))).toEqual([
+          { key: 'Outside.', path: 'heart-and-soul/vision.md', line: 3 },
+          { key: 'After.', path: 'heart-and-soul/vision.md', line: 8 },
+        ]);
+        expect(result.denominators['principle']).toBe(2);
+        expect(passes).toEqual(['declared-item-extraction']);
+      }
+    }
   });
 
   it.each([['LF', '\n'], ['CRLF', '\r\n']])('%s: a closer-shaped line with an info string or a trailing tab does not close the fence', (_name, eol) => {

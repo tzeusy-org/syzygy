@@ -60,8 +60,9 @@ With a URL (the author, driving the loop):
    the answer. The choice covers this one run at its pinned revision: never
    reuse one from an earlier run. Then `syzygy dossier brief <run>`; read `brief.md` and
    `draft.schema.json`.
-5. Explore the clone for the five reader topics. Keep `discovery`: what you
-   inspected and selected, what you left out and why, and why you stopped.
+5. Explore the clone for the brief's reader topics, why the project exists
+   first. Keep `discovery`: what you inspected and selected, what you left
+   out and why, and why you stopped.
    Write `understanding` before the argument.
 6. Ask the consequential questions, at most the brief's limit, with
    AskUserQuestion; record each with the operator's exact answer.

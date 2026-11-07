@@ -99,7 +99,7 @@ const MANIFEST_LINE = /^Manifest SHA-256: ([0-9a-f]{64})$/u;
 
 /** Whether the records root carries the applied, signed bytes of `version`, as the v1.2 builder's signed check reads them: the review the
  * record names (a path inside the records root) carries exactly one `Manifest SHA-256` in its head, its first four non-blank lines; the
- * installed spec hashes to it; and the spec's head names the version. A record written by hand, with no review and no applied patch,
+ * installed spec hashes to it; and a line of the spec opens with the version (`specNamesVersion`). A record written by hand, with no review and no applied patch,
  * opens nothing. */
 export function appliedSubjectHolds(recordsRoot: string, recordFile: string, version: string): boolean {
   let record: string, spec: Buffer;
@@ -114,7 +114,15 @@ export function appliedSubjectHolds(recordsRoot: string, recordFile: string, ver
   try { reviewText = fs.readFileSync(path.join(recordsRoot, review), 'utf8'); } catch { return false; }
   const digests = reviewText.split(/\r?\n/u).filter((line) => line.trim() !== '').slice(0, 4)
     .flatMap((line) => { const match = MANIFEST_LINE.exec(line); return match === null ? [] : [match[1]]; });
-  return digests.length === 1 && sha256(spec) === digests[0] && spec.toString('utf8').includes(`Exact behavioral delta, version ${version}.`);
+  return digests.length === 1 && sha256(spec) === digests[0] && specNamesVersion(spec.toString('utf8'), version);
+}
+
+/** Whether a line of the spec opens with its version statement for `version`: "Exact behavioral delta, version 1.4." and, since the
+ * signed v1.5 bytes, "Exact behavioral delta, version 1.5, a candidate on version 1.4." Anchored at a line start and followed by a full
+ * stop or a comma, so a predecessor named mid-sentence ("on version 1.4.") or a longer version ("1.25") does not count. */
+export function specNamesVersion(spec: string, version: string): boolean {
+  const escaped = version.replace(/\./gu, '\\.');
+  return new RegExp(`^Exact behavioral delta, version ${escaped}[.,]`, 'mu').test(spec);
 }
 
 /** A matching applied subject may still lack effective-day authorization. These temporal states never assert installed-byte drift. */

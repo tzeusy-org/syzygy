@@ -1,0 +1,301 @@
+{
+  "schema": "syzygy-bpyt.4.14-owned-browser-lifetime/1",
+  "epistemic": "Observed author-captured execution reports; independent confirmation remains required",
+  "codeSubject": "7e61983958d9c6f073e9d19af4fbe282030788a8",
+  "baselineSubject": "a5afce5c623f6a2d704d3b203e7f0db646d6ffd9",
+  "processProbeSubject": "7e61983958d9c6f073e9d19af4fbe282030788a8",
+  "guardianImplementationSha256": "54cd26be55af9b4ab6a5df7b43bcad20460442a49ec353e02903c3926570ca74",
+  "guardianBytesMatchProbedSubject": true,
+  "scope": "Vitest-owned local browser lifetime; operator launch path retained; no observed repository or provider execution",
+  "testsDelta": "+3 ~4 -0",
+  "forecastAdjustment": "The initial +2 parent-death forecast did not cover the existing unpinned endpoint/version initialization paths. One coherent startup-failure case was added; existing cases cover stop/proof, drain failure, callback failure and repeated close.",
+  "correctedExperiments": [
+    {
+      "mode": "SIGTERM",
+      "subjectCommit": "7e61983958d9c6f073e9d19af4fbe282030788a8",
+      "record": {
+        "path": "final-current-SIGTERM.json",
+        "sha256": "baece63145b9239fb83453b9c7908dc014a9f070fd9dbbe3f1874596171a977d",
+        "bytes": 101222
+      },
+      "stages": {
+        "afterInterruption": {
+          "procDenominator": 3,
+          "psDenominator": 4,
+          "psObserverPid": 2185,
+          "subjectSetsMatch": true,
+          "ownedSurvivors": [],
+          "ownedZombieCount": 0,
+          "unknown": []
+        },
+        "afterFresh": {
+          "procDenominator": 3,
+          "psDenominator": 4,
+          "psObserverPid": 17496,
+          "subjectSetsMatch": true,
+          "ownedSurvivors": [],
+          "ownedZombieCount": 0,
+          "unknown": []
+        },
+        "final": {
+          "procDenominator": 2,
+          "psDenominator": 3,
+          "psObserverPid": 17498,
+          "subjectSetsMatch": true,
+          "ownedSurvivors": [],
+          "ownedZombieCount": 0,
+          "unknown": []
+        }
+      },
+      "stoppedHelperCount": 1,
+      "decoySurvived": true,
+      "recoverySignalCount": 0,
+      "passiveInitReapCount": 27,
+      "fresh": {
+        "numTotalTests": 1482,
+        "numPassedTests": 1481,
+        "numFailedTests": 0,
+        "numPendingTests": 1,
+        "success": true
+      },
+      "freshFiles": 99,
+      "initialDirectoryCount": 201,
+      "finalDirectoryCount": 220,
+      "newDirectoryRemainders": [
+        ".com.google.Chrome.5coOii",
+        ".com.google.Chrome.DV5eso",
+        ".com.google.Chrome.K0EI2v",
+        ".com.google.Chrome.PjtXeH",
+        ".com.google.Chrome.Xgru2u",
+        ".com.google.Chrome.cjPaCr",
+        ".com.google.Chrome.oeRc5y",
+        ".com.google.Chrome.s8zEdS",
+        "JdQfSqbZeGD3gLK66zXtu",
+        "V7ROdYcCFyJhaiiI6H5ng",
+        "syzygy-generator-onramp-z28TRQ",
+        "syzygy-poc-browser-Dzf9ki",
+        "syzygy-poc-browser-KAuwgA",
+        "syzygy-poc-browser-TsWvzq",
+        "syzygy-poc-browser-Ws3CWV",
+        "syzygy-poc-browser-cvuXpm",
+        "syzygy-poc-browser-oYqeiS",
+        "syzygy-poc-browser-y3xKko",
+        "syzygy-poc-browser-yDZ1FV"
+      ]
+    },
+    {
+      "mode": "SIGKILL",
+      "subjectCommit": "7e61983958d9c6f073e9d19af4fbe282030788a8",
+      "record": {
+        "path": "final-current-SIGKILL.json",
+        "sha256": "0f195d1860f7a8f36377d8c510348bb1c66938e0b374a54daaf39a3ec10e9068",
+        "bytes": 104576
+      },
+      "stages": {
+        "afterInterruption": {
+          "procDenominator": 3,
+          "psDenominator": 4,
+          "psObserverPid": 2109,
+          "subjectSetsMatch": true,
+          "ownedSurvivors": [],
+          "ownedZombieCount": 0,
+          "unknown": []
+        },
+        "afterFresh": {
+          "procDenominator": 3,
+          "psDenominator": 4,
+          "psObserverPid": 17399,
+          "subjectSetsMatch": true,
+          "ownedSurvivors": [],
+          "ownedZombieCount": 0,
+          "unknown": []
+        },
+        "final": {
+          "procDenominator": 2,
+          "psDenominator": 3,
+          "psObserverPid": 17401,
+          "subjectSetsMatch": true,
+          "ownedSurvivors": [],
+          "ownedZombieCount": 0,
+          "unknown": []
+        }
+      },
+      "stoppedHelperCount": 1,
+      "decoySurvived": true,
+      "recoverySignalCount": 0,
+      "passiveInitReapCount": 25,
+      "fresh": {
+        "numTotalTests": 1482,
+        "numPassedTests": 1481,
+        "numFailedTests": 0,
+        "numPendingTests": 1,
+        "success": true
+      },
+      "freshFiles": 99,
+      "initialDirectoryCount": 222,
+      "finalDirectoryCount": 239,
+      "newDirectoryRemainders": [
+        ".com.google.Chrome.EBZI5o",
+        ".com.google.Chrome.EOdY3o",
+        ".com.google.Chrome.PLEsQo",
+        ".com.google.Chrome.R6kqSP",
+        ".com.google.Chrome.WE2T6P",
+        ".com.google.Chrome.XohIbq",
+        ".com.google.Chrome.epMTz9",
+        ".com.google.Chrome.uX4Qm7",
+        "VsZOkUU8hNDWHAQ6K5vNr",
+        "foAm9-6jHTypbtyqXX1Zy",
+        "syzygy-generator-onramp-p1hWbS",
+        "syzygy-poc-browser-5gheT8",
+        "syzygy-poc-browser-6ghHaw",
+        "syzygy-poc-browser-AB2C8f",
+        "syzygy-poc-browser-NLR8Or",
+        "syzygy-poc-browser-OG281W",
+        "syzygy-poc-browser-aXxhnT",
+        "syzygy-poc-browser-pQo00C",
+        "syzygy-poc-browser-rJZlu8"
+      ]
+    }
+  ],
+  "baselineExperiments": [
+    {
+      "path": "SIGTERM.json",
+      "sha256": "9f0590f1afc775f6f07ba9a8c59506b16e4876f1b4669fef6170408f52c9498c",
+      "bytes": 130071
+    },
+    {
+      "path": "SIGKILL.json",
+      "sha256": "aa637399493ebcbf145e2d8da33bd79c134fb32555857d112da3a74f31c4585a",
+      "bytes": 155613
+    }
+  ],
+  "baselineObserverLimitation": "The baseline diagnostic deliberately held adopted zombies before reaping. Those zombie counts do not assert persistent host-init zombies. Corrected probes passively reap dead adopted children as init would, and the regression separately refuses unexpected Chrome-helper reaps by that outer observer.",
+  "retainedFailedFreshRun": {
+    "subject": "181d7f9d2d17d2042882632891fcc1e7283c8cd3",
+    "record": {
+      "path": "final-181d7f9d-SIGKILL.json",
+      "sha256": "d90f583deadc20d29f5c624a760bc7d972d2a6b13feba032cfc21c47291b1d16",
+      "bytes": 54299
+    },
+    "testReport": {
+      "path": "final-181d7f9d-SIGKILL-fresh-tests.json",
+      "sha256": "a2c9d02ec6f0ebbe0a22d5ab363df7945bfa437ff1ff0797874db9a62fe8fe0e",
+      "bytes": 601931
+    },
+    "cause": "New metadata reader handled ENOENT but not ESRCH during concurrent process exit. Both readers were repaired, with a direct ESRCH control; no infrastructure exemption or unchanged-subject retry.",
+    "processOutcomeWasSeparate": "No owned process remainder after passive init reaping; fresh suite still failed."
+  },
+  "mutations": {
+    "path": "MUTATIONS-CURRENT.json",
+    "sha256": "653bb33fa78c02bda9cccd6a09478556062b6b15af4284986b11248bf12561c2",
+    "bytes": 47137
+  },
+  "mutationReachability": {
+    "path": "MUTATION-SUBJECTS-FINAL.bundle",
+    "sha256": "17af82c06b7206df909096286a73f90bc4100c438cf5cd5a49d9287f894e08f7",
+    "bytes": 61011
+  },
+  "differential": {
+    "path": "DIFFERENTIAL-CURRENT.json",
+    "sha256": "f019f28aa833c82c184c0186b75135f9c6cb3b2a28a639791cdd72d836b641db",
+    "bytes": 3800
+  },
+  "sourceBindings": {
+    "path": "SOURCE-BINDINGS-7e619839.json",
+    "sha256": "37660df481960c4d0033387cd77122666c716ed480df2e0298a97716e3030a9a",
+    "bytes": 11155
+  },
+  "callerInventory": {
+    "path": "CALLERS-7e619839.json",
+    "sha256": "1a838495b623b1ddde5092385e39ff8306dce52a56671a269d6c1b17629e855f",
+    "bytes": 3162
+  },
+  "authority": [
+    "GP-Q0",
+    "VIS-2",
+    "VIS-4",
+    "SEC-3",
+    "CC-REV-1",
+    "CC-BAR-5",
+    "CC-TEST-1",
+    "CC-TEST-2",
+    "CC-TEST-4",
+    "OWNER-DIRECTION-GREENFIELD-PARITY-SIMPLIFICATION-2026-10-20 item 3",
+    "THREE-SURFACE-POC-IMPROVEMENT-CYCLES-DIRECTION",
+    "OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03 item 4"
+  ],
+  "proposedReviewClasses": [
+    4
+  ],
+  "floors": [
+    "evidence",
+    "sign-off",
+    "security"
+  ],
+  "remainingGates": [
+    "Final clean-clone npm run check and check:all/current canonical battery",
+    "Fresh independent exact-head review and classification",
+    "GP-Q0 cycle notice through coordinator",
+    "Exact-tree hosted node/governance and merge-group checks",
+    "Owner judgment AND cycle report for the source merge hold"
+  ],
+  "retention": "Relative paths name payloads under the dispatched OWN. Full raw logs, process identities, source copies and an enclosing manifest are retained there. Temporary directory remainders are enumerated; no directory-clear claim is made.",
+  "siblingsRemainSeparate": [
+    "syzygy-bpyt.4.29 real crash-handler configuration",
+    "syzygy-bpyt.4.35 profile naming and post-kill sweep",
+    "syzygy-bpyt.4.44 drain timing predicates"
+  ],
+  "lifecycle": "Bead stays OPEN; draft preparation does not lift the merge hold.",
+  "directoryAttributionLimit": "The process namespaces are isolated, but these signal experiments overlapped author-owned mutant checks sharing OWN/tmp. Every observed directory remainder is named; directory deltas cannot be attributed solely to the interrupted/fresh run. No directory-clear claim is made. Final required broad gate uses a separate OWN runtime TMP root.",
+  "retainedAdditionalAttempts": [
+    {
+      "path": "focused-fbbe9d15.json",
+      "sha256": "4a133fcf056cc7518d81ab12194fd4e258184e4d66674430de4062192d2ad749",
+      "bytes": 16211
+    },
+    {
+      "path": "owned-final-fbbe9d15-SIGTERM.json",
+      "sha256": "e427c05f414823e47ee9c2e0681a94deb8b934800e4fad7fb19f81d7b004856f",
+      "bytes": 7946
+    },
+    {
+      "path": "PROCESS-DEPARTURE-61258.json",
+      "sha256": "dd51323a1973263eb7ec923cefc5c865a962d79b58ae4f0a0d253ce93ee0708d",
+      "bytes": 578
+    }
+  ],
+  "latestCorrections": [
+    "Do not inspect unrelated foreign-UID namespace links; retain metadata and refuse a foreign descendant.",
+    "A verified guardian acknowledgement finishes the family proof without reusing a relinquished process-group identity.",
+    "Cache test-only close result so repeated close cannot remove a replacement profile or retry failed cleanup."
+  ],
+  "timeoutRetry": {
+    "fixture": {
+      "path": "timeout-retry/timeout.browser.test.ts",
+      "sha256": "423bb483ac3314e3493c2e897b6e70e30f22f856a30c0278fbcc12a727bcb7ae",
+      "bytes": 1641
+    },
+    "report": {
+      "path": "timeout-retry/tests.json",
+      "sha256": "95f3bce15445acf967c4b35147a0ef6673605fe66bd1620ccd1fe77ef62e5137",
+      "bytes": 3284
+    },
+    "events": {
+      "path": "timeout-retry/events.jsonl",
+      "sha256": "04273c8666cfbd2e2c883f6b44df4b07dfecf2246b4e2bc84ee75966d53793df",
+      "bytes": 281
+    },
+    "observed": "Actual Vitest timeout aborted attempt 1 after a real Chrome page milestone. Retry attempt 2 rendered and asserted the same synthetic page. Both withBrowserPage cleanup completions were observed. One assertion passes after retry; retained first-attempt error is intentional, not a silently erased failure.",
+    "limit": "Cooperative runner AbortSignal rejection is covered here; uncooperative abrupt worker loss is covered by the SIGKILL seam. This fixture itself does not claim an independent process census."
+  },
+  "mutantCounts": {
+    "finalPredicates": 20,
+    "killedByNamedExecutedNonTimeoutAssertions": 20,
+    "retainedPriorBatchCounts": [
+      14,
+      14,
+      16
+    ],
+    "reachableMutantRefs": 64
+  }
+}

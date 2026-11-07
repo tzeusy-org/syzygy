@@ -163,6 +163,8 @@ configuration file with these fields:
 - `deadline`, as an ISO 8601 duration such as `PT3H`
 - `agentTokenBudget` and/or `agentTurnBudget`
 - `maxRepairCycles`, `maxQuestions`, `audience` and `operatorIsOwner`
+- optionally `poleLimit`, the most Poles a draft may declare: a positive
+  integer, five when it is left out (dossier spec v1.5)
 
 [Inferred] Give a generous deadline. It runs on Syzygy's clock from `brief`,
 and it must also cover the inventory, both reviews, `render` and `close`.

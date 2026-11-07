@@ -820,6 +820,64 @@ describe('screening scope version 6 policy act', () => {
   });
 });
 
+describe('screening scope version 7 policy act', () => {
+  const V1 = `${DECISIONS_DIR}/${POLICY_ACT_FILE}`;
+  const V2 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V2-ACT.md`;
+  const V3 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V3-ACT.md`;
+  const V4 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md`;
+  const V5 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md`;
+  const V6 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-ACT.md`;
+  const p1 = JSON.stringify({ policyVersion: '1.2.0-public-source-candidate.1', publicSourceScope: { rules: [] } }, null, 1) + '\n';
+  const p2 = JSON.stringify({ policyVersion: '1.3.0-public-source-candidate.1.none', publicSourceScope: { rules: ['more'] } }, null, 1) + '\n';
+  const p3 = JSON.stringify({ policyVersion: '1.4.0-public-source-candidate.1.none.code-all', publicSourceScope: { rules: ['more'], activeContent: {} } }, null, 1) + '\n';
+  const p4 = JSON.stringify({ policyVersion: '1.5.0-public-source-candidate.1.none.code-all.redact-span', publicSourceScope: { rules: ['more'], activeContent: {}, secretRedaction: {} } }, null, 1) + '\n';
+  const p5 = JSON.stringify({ policyVersion: '1.6.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd', publicSourceScope: { rules: ['more'], activeContent: {}, secretRedaction: {}, scopeDetectors: {} } }, null, 1) + '\n';
+  const p6 = JSON.stringify({ policyVersion: '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p', publicSourceScope: { rules: ['more', 'redis.conf'], activeContent: {}, secretRedaction: {}, scopeDetectors: { detectors: 2 } } }, null, 1) + '\n';
+  const p7 = JSON.stringify({ policyVersion: '1.8.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s', publicSourceScope: { rules: ['more', 'redis.conf'], activeContent: { renderCondition: 'v7' }, secretRedaction: {}, scopeDetectors: { detectors: 2 } } }, null, 1) + '\n';
+  const V7 = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md`;
+  const V7_AT = Date.UTC(2026, 9, 9, 9, 30, 0);
+  const v1 = (): string => renderPolicyAct(sha(p1), '2026-10-03', '2026-10-03T09:30:00Z', 1);
+  const v2 = (): string => renderPolicyAct(sha(p2), '2026-10-04', '2026-10-04T09:30:00Z', 2, sha(p1));
+  const v3 = (): string => renderPolicyAct(sha(p3), '2026-10-05', '2026-10-05T09:30:00Z', 3, sha(p2));
+  const v4 = (): string => renderPolicyAct(sha(p4), '2026-10-06', '2026-10-06T09:30:00Z', 4, sha(p3));
+  const v5 = (): string => renderPolicyAct(sha(p5), '2026-10-07', '2026-10-07T09:30:00Z', 5, sha(p4));
+  const v6 = (): string => renderPolicyAct(sha(p6), '2026-10-08', '2026-10-08T09:30:00Z', 6, sha(p5));
+  const v7 = (text = p7, date = '2026-10-09', superseded = sha(p6)): string => renderPolicyAct(sha(text), date, `${date}T09:30:00Z`, 7, superseded);
+  const files = (policy: string, extra: Record<string, string>): Record<string, string> => ({ ...world(), [POLICY_PATH]: policy, ...extra });
+  const all = (): Record<string, string> => ({ [V1]: v1(), [V2]: v2(), [V3]: v3(), [V4]: v4(), [V5]: v5(), [V6]: v6(), [V7]: v7() });
+  const chainAt = (f: Record<string, string>, now: number) => readPolicyActChain({ root: '/r', fs: memoryFs(seen(f)), now });
+  const check = (f: Record<string, string>, now: number) => createPackageAdmissionRecordsPort({ root: '/r', now: () => now, fs: memoryFs(seen(f)) }).check(requirement('public-source-policy'));
+  const V6_ID = 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-APPROVAL-2026-10-08';
+  const V7_ID = 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-APPROVAL-2026-10-09';
+
+  it('puts version 7 in force from its instant over versions 6 to 1, in both views', async () => {
+    const f = files(p7, all());
+    expect(await chainAt(f, V7_AT)).toMatchObject({ state: 'ok', v6: { digest: sha(p6) }, v7: { digest: sha(p7) }, final: { identity: V7_ID, recordedAt: V7_AT }, policyDigest: sha(p7) });
+    expect(await check(f, V7_AT)).toEqual({ satisfied: true, record: V7_ID });
+    expect(await createPackagePolicyReader({ root: '/r', fs: memoryFs(seen(f)) }).read()).toEqual([{ actIdentity: V7_ID, digest: sha(p7), inForceAt: V7_AT, until: null }]);
+  });
+  it('leaves version 6 in force before version 7\'s instant, and never brings it back after', async () => {
+    const before = files(p6, all());
+    expect(await chainAt(before, V7_AT - 1)).toMatchObject({ state: 'ok', final: { identity: V6_ID } });
+    expect(await check(before, V7_AT - 1)).toEqual({ satisfied: true, record: V6_ID });
+    expect(await chainAt(before, V7_AT)).toMatchObject({ state: 'refused' });
+    expect(await check(before, V7_AT)).toMatchObject({ satisfied: false });
+  });
+  it.each<[string, string, Record<string, string>]>([
+    ['version 7 without version 6', p7, { [V1]: v1(), [V2]: v2(), [V3]: v3(), [V4]: v4(), [V5]: v5(), [V7]: v7() }],
+    ['version 7 alone', p7, { [V7]: v7() }],
+    ['version 7 not later than version 6', p7, { ...all(), [V7]: v7(p7, '2026-10-08') }],
+    ['version 7 over version 6\'s bytes', p6, { ...all(), [V7]: v7(p6) }],
+    ['a supersession naming version 5\'s argument', p7, { ...all(), [V7]: v7(p7, '2026-10-09', sha(p5)) }],
+    ['a supersession naming version 5\'s record', p7, { ...all(), [V7]: v7().replace('PUBLIC-SOURCE-SCOPE-V6-ACT.md', 'PUBLIC-SOURCE-SCOPE-V5-ACT.md') }],
+    ['a version 7 record titled as version 6', p7, { ...all(), [V7]: v7().replace(', version 7)', ', version 6)') }],
+    ['a version 7 record with version 6\'s identity', p7, { ...all(), [V7]: v7().replace('V7-APPROVAL', 'V6-APPROVAL') }],
+    ['other policy bytes', `${p7} `, all()],
+  ])('refuses %s', async (_name, policy, extra) => {
+    expect(await chainAt(files(policy, extra), V7_AT + 1000)).toMatchObject({ state: 'refused' });
+  });
+});
+
 describe('strict act reads', () => {
   const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
   const POLICY_V1 = `${DECISIONS_DIR}/${POLICY_ACT_FILE}`;

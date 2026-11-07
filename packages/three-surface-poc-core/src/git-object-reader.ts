@@ -48,7 +48,7 @@ import type { TransientBodies } from './transient-bodies.js';
 
 export const PWB_POLICY_IDENTITY = {
   policyId: 'polaris-butlers-project-shape-secrets',
-  policyVersion: '1.7.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p',
+  policyVersion: '1.8.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s',
 } as const;
 
 export const PWB_DENIED_PATH_RULES = {
@@ -251,8 +251,11 @@ function positionOf(text: string, index: number): { readonly line: number; reado
   let line = 1;
   let lineStart = 0;
   for (let i = 0; i < index; i += 1) {
-    if (text.charCodeAt(i) === 10) {
-      line += 1;
+    const unit = text.charCodeAt(i);
+    // The mask's CRLF/CR/LF rule, on the original UTF-16 text. The LF of
+    // a CRLF pair advances the column start without ending another line.
+    if (unit === 13 || unit === 10) {
+      if (unit === 13 || text.charCodeAt(i - 1) !== 13) line += 1;
       lineStart = i + 1;
     }
   }
