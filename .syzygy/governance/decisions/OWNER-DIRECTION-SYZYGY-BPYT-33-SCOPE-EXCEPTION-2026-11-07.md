@@ -22,7 +22,7 @@ supplied. Its source question item is
 The coordinator is `coordinator:codex-20261104-cdcf24d2`.
 
 The retained source is
-`/home/orca/.tmp/syzygy-33-owner-scope-exception-answer-20261107/ATTRIBUTED-OWNER-ANSWER.json`,
+/home/orca/.tmp/syzygy-33-owner-scope-exception-answer-20261107/ATTRIBUTED-OWNER-ANSWER.json,
 SHA-256 `e22d54f4874b6a1dde3114743abc3dbd4ecce340b0f65e73b4faf3cc650ee780`.
 The exact selection authorizes this recording; it does not require the owner
 to answer the same bounded question again.
@@ -71,7 +71,7 @@ applicability assessment; no unrelated private descendant is approved.
 ## Reviewed qualifications and remaining gates
 
 [Observed] The independent review at
-`/home/orca/.tmp/syzygy-33-code-candidate-independent-review-20261107-lko5_9n8/R-SYZYGY-BPYT33-CONCRETE-CANDIDATE-SCOPE-INDEPENDENT-RAW.md`
+/home/orca/.tmp/syzygy-33-code-candidate-independent-review-20261107-lko5_9n8/R-SYZYGY-BPYT33-CONCRETE-CANDIDATE-SCOPE-INDEPENDENT-RAW.md
 records the exact verdict **REVISE — APPLICATION SCOPE; QUALIFIED STATIC
 CANDIDATE CONFIRMED**. Its SHA-256 is
 `d435dd51d190486e183fc9b601f0d9a52118eb9e91c62ef047f7479cc48a012a`;
