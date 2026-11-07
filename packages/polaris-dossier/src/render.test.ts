@@ -428,6 +428,43 @@ describe('render', () => {
       }
     });
 
+    it('renders a checked v4 draft\'s Poles: the why section on the landing page, the other Pole on its own page, in the design packet too', async () => {
+      const doc = draft();
+      doc['schemaVersion'] = 'polaris-dossier-local-draft-v4';
+      (doc['sections'] as Doc[]).unshift({ id: 'why', title: 'Why Kestrel exists', paragraphs: [{ id: 'w1', label: 'non-normative', text: 'Framing for the why.', children: [] }], disposition: { kind: 'produced', assetIds: ['why'] } });
+      doc['poles'] = [{ label: 'Why', sections: ['why'] }, { label: 'How it works', sections: ['core-ideas'] }];
+      doc['whySection'] = 'why';
+      // Unreviewed: the fidelity fixture's verdict knows only the base draft's blocks. A Pole carries no claim, so no review row is owed it.
+      const run = await prepared(doc, false);
+      const result = await renderRun(run, renderDeps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      const files = readSite(result.report.site);
+      expect(files.has('poles/1.html')).toBe(false);
+      const pole = files.get('poles/2.html')!;
+      expect(pole).toContain('<section id="section-core-ideas"');
+      expect(pole).toContain('<h1>How it works</h1>');
+      expect(pole).toContain('class="run-sentence"');
+      const index = files.get('index.html')!;
+      expect(index).toContain('<section id="section-why"');
+      expect(index).not.toContain('<section id="section-core-ideas"');
+      expect(index).toContain('<li><a href="poles/2.html">How it works</a><ul><li><a href="poles/2.html#section-core-ideas">Core ideas</a></li></ul></li>');
+      const machine = JSON.parse(files.get('machine.json')!) as { claims: { id: string; page: string }[] };
+      expect(machine.claims.filter((claim) => claim.id === 'p1').map((claim) => claim.page)).toEqual(['poles/2.html']);
+      const packet = buildDesignPacket({ run, runId: 'run-1', pinnedRevision: 'f'.repeat(40), files });
+      if (!packet.ok) throw new Error(packet.reason);
+      expect(packet.pages).toContain('poles/2.html');
+    });
+
+    it('refuses to render a v4 draft over the run\'s Pole limit, as check reports it', async () => {
+      const doc = draft();
+      doc['schemaVersion'] = 'polaris-dossier-local-draft-v4';
+      const ids = ['a', 'b', 'c', 'd', 'e'];
+      for (const id of ids) (doc['sections'] as Doc[]).push({ id, title: `Part ${id}`, paragraphs: [{ id: `${id}1`, label: 'non-normative', text: 'Framing.', children: [] }], disposition: { kind: 'produced', assetIds: [id] } });
+      doc['poles'] = ['core-ideas', ...ids].map((id) => ({ label: `Pole ${id}`, sections: [id] }));
+      doc['whySection'] = 'core-ideas';
+      await expect(prepared(doc)).rejects.toThrow('fixture draft: [{"kind":"pole","at":"$.poles","detail":"the draft declares 6 Poles; this run\'s Pole limit is 5"}]');
+    });
+
     it('counts in the appendix what the machine view counts', async () => {
       const run = await prepared();
       const result = await renderRun(run, renderDeps());

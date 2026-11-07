@@ -76,7 +76,7 @@ export interface RenderedDossier {
 }
 
 export class DossierRenderError extends Error {
-  constructor(readonly code: 'not-renderable' | 'missing-requested-assets' | 'unknown-source' | 'unquotable-source' | 'ambiguous-source-anchor' | 'unknown-section' | 'unknown-topic' | 'page-path-collision' | 'invalid-inventory' | 'unknown-stop-reason' | 'unknown-block' | 'duplicate-claim') {
+  constructor(readonly code: 'not-renderable' | 'missing-requested-assets' | 'unknown-source' | 'unquotable-source' | 'ambiguous-source-anchor' | 'unknown-section' | 'unknown-topic' | 'page-path-collision' | 'invalid-inventory' | 'unknown-stop-reason' | 'unknown-block' | 'duplicate-claim' | 'invalid-poles') {
     super(`Dossier render refused: ${code}`);
     this.name = 'DossierRenderError';
   }
@@ -250,6 +250,20 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const deepDives = withheld ? [] : draft.deepDives.filter(dive => dive.disposition.kind === 'produced');
   const deepPaths = new Map(deepDives.map(dive => [dive.id, deepDivePath(dive.id)]));
   if (new Set(deepPaths.values()).size !== deepPaths.size) throw new DossierRenderError('page-path-collision');
+  // Poles (dossier spec v1.5): page boundaries that carry no claim. The landing page holds the why section and a map; each other Pole has
+  // its own page, and one holding only the why section has none. Every section is in exactly one Pole, and the why section is one of them.
+  const poleSpec = withheld ? undefined : local?.poles;
+  const poles = poleSpec === undefined ? [] : poleSpec.poles.map((pole, index) => ({
+    label: pole.label, sections: pole.sections, path: pole.sections.every(id => id === poleSpec.whySection) ? null : `poles/${index + 1}.html`,
+  }));
+  if (poleSpec !== undefined) {
+    const homes = draft.sections.map(section => poles.filter(pole => pole.sections.includes(section.id)).length);
+    if (poles.length === 0 || homes.some(count => count !== 1) || poles.some(pole => pole.sections.length === 0 || pole.sections.some(id => !draft.sections.some(section => section.id === id)))
+      || !draft.sections.some(section => section.id === poleSpec.whySection)) throw new DossierRenderError('invalid-poles');
+  }
+  /** The page a section is drawn on: with Poles, the landing page for the why section and its Pole's page for every other. */
+  const sectionPage = (id: string): string => poleSpec === undefined || id === poleSpec.whySection ? 'index.html' : poles.find(pole => pole.sections.includes(id))!.path!;
+  const sectionHref = (from: string, id: string): string => href(from, sectionPage(id), `section-${id}`);
   const quotable = input.sources.filter(source => !source.exclusion.excluded && source.classificationBasis === 'body' && source.spans.length > 0);
   const sourcePaths = new Map(quotable.map(source => [source.sourceId, sourceRoute(source)]));
 
@@ -261,7 +275,7 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   // Dossier spec v1.5: a narrative page (the landing page or a deep dive) opens in a reading view. Syzygy writes no label token and no
   // file-and-line aside into a block's visible text there; each stays in DOM text, clipped by the renderer's visually-hidden class (never
   // `hidden` or `display:none`), and shows in the evidence view. Every other page keeps its labels.
-  const narrative = (from: string): boolean => local !== undefined && !withheld && (from === 'index.html' || from.startsWith('deep-dives/'));
+  const narrative = (from: string): boolean => local !== undefined && !withheld && (from === 'index.html' || from.startsWith('deep-dives/') || from.startsWith('poles/'));
   const clipped = (html: string): string => `<span class="visually-hidden ev">${html}</span>`;
   const mark = (from: string, m: EpistemicMarking): string => (narrative(from) ? clipped(marking(m)) : marking(m));
   // Each page numbers its sources [1], [2], … in the order it first cites them; the identifier rides on `data-source-id` and the source
@@ -504,13 +518,14 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   };
   const topicAttr = (id: string): string => ` data-topics="${escape((topics[id] ?? []).join(' '))}"`;
   const localPages = local?.pages ?? [];
-  const reserved = new Set(['index.html', 'contents.html', 'glossary.html', 'dossier.json', 'size-report.json', 'size-report.html', APPENDIX, LOCAL_MACHINE_VIEW, ...deepPaths.values(), ...sourcePaths.values()]);
+  const reserved = new Set(['index.html', 'contents.html', 'glossary.html', 'dossier.json', 'size-report.json', 'size-report.html', APPENDIX, LOCAL_MACHINE_VIEW, ...deepPaths.values(), ...sourcePaths.values(),
+    ...poles.flatMap(pole => pole.path === null ? [] : [pole.path])]);
   for (const localPage of localPages) {
     if (!isDossierPagePath(localPage.path) || localPage.path.includes('/') || !localPage.path.endsWith('.html') || reserved.has(localPage.path)) throw new DossierRenderError('page-path-collision');
     reserved.add(localPage.path);
   }
   const localNav = (from: string): string => localPages.map(localPage => `<li><a href="${escape(href(from, localPage.path))}">${escape(localPage.title)}</a></li>`).join('');
-  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li><li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li><li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${localNav(from)}<li><a href="${href(from, 'size-report.html')}">Size report</a></li>${local === undefined ? '' : `<li><a href="${href(from, APPENDIX)}">Appendix</a></li>`}</ol>`;
+  const nav = (from: string): string => `<span class="eyebrow">${escape(title)}</span><ol><li><a href="${href(from, 'index.html')}">Overview</a></li>${poles.map(pole => pole.path === null ? '' : `<li><a href="${escape(href(from, pole.path))}">${escape(pole.label)}</a></li>`).join('')}<li><a href="${href(from, 'contents.html')}">Contents</a></li>${deepDives.map(dive => `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}<li><a href="${href(from, 'glossary.html')}">Glossary</a></li><li><a href="${href(from, 'sources/index.html')}">Sources</a></li>${localNav(from)}<li><a href="${href(from, 'size-report.html')}">Size report</a></li>${local === undefined ? '' : `<li><a href="${href(from, APPENDIX)}">Appendix</a></li>`}</ol>`;
   // The dossier's open questions and Unknown claims, counted for the one sentence before any page is drawn.
   const openQuestions = withheld ? 0 : draft.unresolved.length;
   const unknownClaims = local === undefined || withheld ? 0 : [...local.blocks.values()].filter(b => b.marking === 'unknown').length
@@ -552,18 +567,25 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
   const notGenerated = (id: string, kind: string): string => claim('aside', `not-generated/${id}`, 'unknown',
     `<strong>${escape(id)}</strong> (${escape(kind)}): not generated; the run stopped before it was written (${escape(stop!.shown)}). ${marking('unknown')}`,
     ` class="unresolved-asset" data-asset-disposition="not-generated" data-stop-reason="${escape(stop!.shown)}"`);
-  const sections = withheld ? '' : draft.sections.map((section, index) => {
+  const sectionMarkup = (from: string, section: DossierDraft['sections'][number], index: number): string => {
     termsShown.clear();
     const head = `<span class="eyebrow">${String(index + 1).padStart(2, '0')}</span><h2>${escape(section.title)}</h2>`;
     if (view.deferredSections.has(section.id)) return `<section id="section-${escape(section.id)}" data-reading-level="1" data-topics="">${head}${notGenerated(section.id, 'section')}</section>`;
     if (section.disposition.kind !== 'produced') return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${notice(from, section.id, section.disposition)}</section>`;
     const figures = draft.diagrams.map((d, i) => d.sectionId === section.id ? diagram(from, d, i) : '').join('');
     const dives = draft.deepDives.filter(dive => dive.sectionId === section.id).map(dive => dive.disposition.kind === 'produced'
-      ? `<li><a href="${escape(deepPaths.get(dive.id)!)}">Explore: ${escape(dive.title)}</a></li>` : `<li>${notice(from, dive.id, dive.disposition)}</li>`).join('');
+      ? `<li><a href="${escape(href(from, deepPaths.get(dive.id)!))}">Explore: ${escape(dive.title)}</a></li>` : `<li>${notice(from, dive.id, dive.disposition)}</li>`).join('');
     // An operator-agent section leads with its diagrams (syzygy-mea.10.4); the provider mode's bytes are pinned, so its figures follow.
     const body = section.paragraphs.map(b => block(from, b)).join('');
     return `<section id="section-${escape(section.id)}" data-reading-level="1"${topicAttr(section.id)}>${head}${local === undefined ? `${body}${figures}` : `${figures}${body}`}${dives ? `<ul class="deep-links">${dives}</ul>` : ''}</section>`;
-  }).join('');
+  };
+  const onLanding = poleSpec === undefined ? draft.sections : draft.sections.filter(section => section.id === poleSpec.whySection);
+  const sections = withheld ? '' : onLanding.map(section => sectionMarkup(from, section, draft.sections.indexOf(section))).join('');
+  // The map of the Poles: each Pole's label linking to its page (the why section's Pole to the section here), with its sections.
+  const poleMap = poles.length === 0 ? '' : `<nav class="pole-map" aria-label="The parts of this dossier"><h2>The parts of this dossier</h2><ol>${poles.map(pole => {
+    const target = pole.path === null ? href(from, 'index.html', `section-${poleSpec!.whySection}`) : href(from, pole.path);
+    return `<li><a href="${escape(target)}">${escape(pole.label)}</a><ul>${pole.sections.map(id => `<li><a href="${escape(sectionHref(from, id))}">${escape(draft.sections.find(section => section.id === id)!.title)}</a></li>`).join('')}</ul></li>`;
+  }).join('')}</ol></nav>`;
   // Claim ids are unique across the dossier, so each page's banner carries its own.
   const bannerFor = (claimId: string): string => stop === null ? '' : claim('aside', claimId, 'unknown',
     `<strong>Incomplete dossier.</strong> The run stopped (${escape(stop.shown)}) ${stop.lastStage === null ? 'before any stage completed' : `after the ${escape(stop.lastStage)} stage`}${view.drafted && view.review === null ? '; no fidelity review covers this draft, so every generated sentence is Unknown' : ''}. ${marking('unknown')}`,
@@ -579,7 +601,21 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     termsShown.clear();
     const introduction = view.drafted ? paragraph(from, draft.introduction, 'p') : '';
     const missingList = view.notGenerated.length === 0 ? '' : `<section id="not-generated" data-reading-level="1" data-topics=""><h2>Not generated</h2>${view.notGenerated.map(item => notGenerated(item.id, item.kind)).join('')}</section>`;
-    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${sections}${missingList}`);
+    add(from, 0, 'Overview', `<header data-reading-level="0"><span class="eyebrow">Polaris · Editorial draft</span><h1>${escape(draft.title)}</h1>${banner}${introduction}${unresolved}</header>${sections}${poleMap}${missingList}`);
+  }
+
+  // --- Pole pages, in the map's order, after the landing page: each draws its sections; the why section stays on the landing page,
+  // and its Pole's page links back to it rather than repeating it.
+  for (const pole of poles) {
+    if (pole.path === null) continue;
+    const at = pole.path;
+    const body = pole.sections.map(id => {
+      const section = draft.sections.find(candidate => candidate.id === id)!;
+      return id === poleSpec!.whySection
+        ? `<p class="pole-why"><a href="${escape(href(at, 'index.html', `section-${id}`))}">${escape(section.title)}</a> is on the overview.</p>`
+        : sectionMarkup(at, section, draft.sections.indexOf(section));
+    }).join('');
+    add(at, 1, pole.label, `<section id="pole" data-reading-level="1" data-pole="${escape(at)}"><span class="eyebrow">Part of <a href="${escape(href(at, 'index.html'))}">${escape(draft.title)}</a></span><h1>${escape(pole.label)}</h1>${bannerFor(`run-stopped/pole/${at}`)}${body}</section>`);
   }
 
   // --- deep dives
@@ -587,11 +623,11 @@ export function renderDossierSite(input: DossierSiteInput & { readonly local?: L
     const path = deepPaths.get(dive.id)!;
     termsShown.clear();
     const parent = draft.sections.find(section => section.id === dive.sectionId)!;
-    add(path, 1, dive.title, `<section id="deep-dive-${escape(dive.id)}" data-reading-level="2"${topicAttr(dive.id)}><span class="eyebrow">Deep dive · <a href="${escape(href(path, 'index.html', `section-${parent.id}`))}">${escape(parent.title)}</a></span><h1>${escape(dive.title)}</h1>${bannerFor(`run-stopped/dive/${dive.id}`)}${dive.paragraphs.map(b => block(path, b)).join('')}</section>`);
+    add(path, 1, dive.title, `<section id="deep-dive-${escape(dive.id)}" data-reading-level="2"${topicAttr(dive.id)}><span class="eyebrow">Deep dive · <a href="${escape(sectionHref(path, parent.id))}">${escape(parent.title)}</a></span><h1>${escape(dive.title)}</h1>${bannerFor(`run-stopped/dive/${dive.id}`)}${dive.paragraphs.map(b => block(path, b)).join('')}</section>`);
   }
 
   // --- contents
-  const contents = `<ol>${(withheld ? [] : draft.sections).map(section => `<li><a href="${escape(href('contents.html', 'index.html', `section-${section.id}`))}">${escape(section.title)}</a>${draft.deepDives.some(dive => dive.sectionId === section.id && deepPaths.has(dive.id))
+  const contents = `<ol>${(withheld ? [] : draft.sections).map(section => `<li><a href="${escape(sectionHref('contents.html', section.id))}">${escape(section.title)}</a>${draft.deepDives.some(dive => dive.sectionId === section.id && deepPaths.has(dive.id))
     ? `<ol>${draft.deepDives.filter(dive => dive.sectionId === section.id && deepPaths.has(dive.id)).map(dive => `<li><a href="${escape(href('contents.html', deepPaths.get(dive.id)!))}">${escape(dive.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}<li><a href="glossary.html">Glossary</a></li><li><a href="sources/index.html">Sources</a></li>${localNav('contents.html')}<li><a href="size-report.html">Size report</a></li>${local === undefined ? '' : `<li><a href="${APPENDIX}">Appendix</a></li>`}</ol>`;
   add('contents.html', 1, 'Contents', `<section id="contents"><h1>Contents</h1>${contents}</section>`);
 

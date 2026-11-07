@@ -23,12 +23,13 @@ export const LOCAL_DRAFT_SCHEMA_VERSION_V2 = 'polaris-dossier-local-draft-v2';
  * collapsible details; syzygy-mea.10.5). A v2 draft still checks: v3 only adds forms. */
 export const LOCAL_DRAFT_SCHEMA_VERSION_V3 = 'polaris-dossier-local-draft-v3';
 /** v4 (dossier spec v1.5): an Inferred block may carry `judgement: true`, and only so marked may it cite nothing; a list element (steps,
- * definitions or cards) may name, in `repeatsDiagram`, a diagram of its section that it repeats. A v2 or v3 draft still checks, and in
- * one every Inferred block still cites, since only v4 has the mark. */
+ * definitions or cards) may name, in `repeatsDiagram`, a diagram of its section that it repeats; and the draft may divide its sections
+ * into `poles`, naming in `whySection` the section that answers why the project exists. A v2 or v3 draft still checks, and in one every
+ * Inferred block still cites, since only v4 has the mark. */
 export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v4';
 export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION] as const);
 /** The fields only a v4 draft may carry, each a finding in an earlier version. */
-export const V4_FIELDS = Object.freeze(['judgement', 'repeatsDiagram'] as const);
+export const V4_FIELDS = Object.freeze(['judgement', 'repeatsDiagram', 'poles', 'whySection'] as const);
 /** The tones a callout takes; each renders with its visible name. */
 export const CALLOUT_TONES = Object.freeze(['note', 'tip', 'caution', 'important'] as const);
 
@@ -184,7 +185,11 @@ export function localDraftSchema(parameters: DraftSchemaParameters): DraftSchema
     // REQ-polaris-generation-033 (v1.1, N6): a command is admitted whether or not it carries its working directory and scope; where
     // execution was permitted, Syzygy flags one without them or outside the clone or scope (execution-flags.ts), and refuses nothing.
     executions: list(object({ id: handle, command: text, workingDirectory: text, scope: choice(EXECUTION_SCOPES), purpose: text }, ['workingDirectory', 'scope']), 0, 500),
-  }) };
+    // Poles (v4, dossier spec v1.5): page boundaries that carry no claim, each a short label and its sections. The run's Pole limit, an
+    // empty Pole and a section in no Pole or two are repair findings with their own wording, so the schema bounds only the shape.
+    poles: list(object({ label: presentationLabel, sections: refs(0, 30) }), 1, 30),
+    whySection: handle,
+  }, ['poles', 'whySection']) };
 }
 
 /** The schema as the JSON Schema document written to `draft.schema.json`. The internal form already uses JSON Schema's keywords. */

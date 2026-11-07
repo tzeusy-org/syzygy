@@ -9,7 +9,7 @@ import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reade
 import { isoOf } from './iso-of.js';
 import type { Outcome } from './outcome.js';
 import { reverifyPinnedRevision } from './reverify.js';
-import type { RunConfig } from './run-config.js';
+import { poleLimitOf, type RunConfig } from './run-config.js';
 import { placementSubjectOf, screenLoaderOf } from './screen.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
@@ -94,7 +94,7 @@ const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
   frozenDir: RUN_LAYOUT.drafts,
   checksDir: RUN_LAYOUT.checks,
   defaultFile: (run) => path.join(run, RUN_LAYOUT.drafts, DEFAULT_DRAFT),
-  rules: (pinned, declared) => draftRules(pinned, declared.maxQuestions),
+  rules: (pinned, declared) => draftRules(pinned, declared.maxQuestions, poleLimitOf(declared)),
   gate: () => ({ ok: true, found: null }),
   record: (checked, _found, declared) => ({
     format: CHECK_RECORD_FORMAT,

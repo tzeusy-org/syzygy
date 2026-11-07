@@ -107,6 +107,20 @@ describe('brief: issued', () => {
     for (const name of ['brief.md', 'draft.schema.json', 'brief.json']) expect(fs.statSync(path.join(run, name)).mode & 0o777).toBe(0o600);
   });
 
+  it('asks for Poles under the run\'s Pole limit, five unless declared, and keeps run.json free of an undeclared limit (dossier spec v1.5)', async () => {
+    const plain = runDirectory();
+    expect(read(plain, 'run.json')).not.toContain('poleLimit');
+    await issueBrief(plain, { sources: sources(), openReader: tree(), now: () => NOW });
+    const brief = read(plain, 'brief.md');
+    expect(brief).toContain('## Poles\n\nDivide the sections into Poles in `poles`: at most 5, this run\'s Pole limit,');
+    expect(brief).toContain('Choose the Poles from what the repository holds, each holding a substantial share of its documentation;');
+    expect(brief).toContain('Name in `whySection` the section that answers why the project exists.');
+    const three = runDirectory(SUBJECT, configOf({ poleLimit: 3 }));
+    expect(JSON.parse(read(three, 'run.json')).declared.poleLimit).toBe(3);
+    await issueBrief(three, { sources: sources(), openReader: tree(), now: () => NOW });
+    expect(read(three, 'brief.md')).toContain('Divide the sections into Poles in `poles`: at most 3, this run\'s Pole limit,');
+  });
+
   it('states the four reader topics in the owner\'s order, the voice rules, the understanding record and every rule 034 and 036 name', async () => {
     const run = runDirectory();
     await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });

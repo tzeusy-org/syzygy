@@ -30,7 +30,7 @@ export type CheckFindingKind =
   // v1.3 presentation elements (syzygy-mea.10.5).
   | 'code-excerpt-too-long' | 'label-markup' | 'label-quotation' | 'element-version'
   // v1.5 (schema v4): a v4 field in an earlier draft, a judgement mark off an Inferred block, a list's repeated diagram not in its section.
-  | 'field-version' | 'judgement-mark' | 'repeats-diagram';
+  | 'field-version' | 'judgement-mark' | 'repeats-diagram' | 'pole';
 
 /** A repair finding: the kind of failure, where to repair it (a JSON path into the draft), and the block and citation it concerns. It
  * never carries quoted text or any byte of a blob. */

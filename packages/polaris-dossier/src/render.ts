@@ -27,6 +27,7 @@ import { RUN_LAYOUT } from './state-directory.js';
 import { continuationOf } from './waiting-sessions.js';
 import { packetSpanStanding } from './review-verdict.js';
 import { citationIdsOf, isWithheldItem, type SpanStanding } from './withheld-items.js';
+import { poleLimitOf } from './run-config.js';
 
 /** `syzygy dossier render <run>` (REQ-polaris-generation-033, 034, 036; design "Command surface", `render`; syzygy-qkea.10).
  *
@@ -164,7 +165,7 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   const reader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });
   let derived: Derived;
   try {
-    derived = await deriveFindings(doc, { pinned, screen, reader }, draftRules(pinned, declared.maxQuestions));
+    derived = await deriveFindings(doc, { pinned, screen, reader }, draftRules(pinned, declared.maxQuestions, poleLimitOf(declared)));
   } catch (cause) {
     if (cause instanceof GitObjectReadRefusal) return refuse('object-read', `an object at the pinned revision could not be read: ${cause.message}`, { objectRead: cause.toJSON() });
     throw cause;
@@ -753,6 +754,16 @@ export function buildLocalInput(inputs: BuildInputs): Built {
       draft, withheldTitle: `Dossier of ${subject.repository.url} at ${pinned.slice(0, 12)}`, draftLayer, blocks, glossary, disclosure,
       sourceAnchors, pages, reviewStatus, withheldElements, citationLines,
       authoring: { tool: declared.agentTool, model: declared.model },
+      // A checked draft's Poles are whole: every section in one Pole and a named why section (check-derive's Pole findings).
+      ...(Array.isArray(doc['poles']) && typeof doc['whySection'] === 'string' ? { poles: {
+        whySection: doc['whySection'],
+        // A Pole's label is a short label over its sections: over only withheld ones it reads as any such label does (v1.5).
+        poles: doc['poles'].filter(isRecord).map((pole) => {
+          const sections = list(pole['sections']).filter((id): id is string => typeof id === 'string');
+          const held = sections.length > 0 && sections.every((id) => draft.sections.find((section) => section.id === id)?.title === WITHHELD_LABEL);
+          return { label: held ? WITHHELD_LABEL : title(pole['label']), sections };
+        }),
+      } } : {}),
       counts: {
         uncitedJudgements: [...blocks.values()].filter((block) => block.judgement === 'uncited').length,
         withheldItems: [...blocks.values()].filter((block) => block.withheld !== undefined).length + withheldElements.size,
