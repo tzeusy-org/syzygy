@@ -25,6 +25,7 @@ const SKIP_LABEL_DROP = 52;
 const NODE_NOTE_HEIGHT = 24;
 const LABEL_CLEARANCE = 4;
 const LABEL_STEP = 8;
+const LEADER_SAMPLES = 32;
 
 /** How much room a diagram gets. The default is the draft preview's and the provider mode's form, whose bytes are pinned. */
 export interface DiagramSpacing {
@@ -33,7 +34,7 @@ export interface DiagramSpacing {
   readonly maxColumns: number; readonly bandGap: number;
   /** An edge label's wrap and the width one of its characters is assumed to take. */
   readonly edgeChars: number; readonly edgeLines: number; readonly charWidth: number;
-  /** Draw edge labels above everything, lines still behind the nodes, so a line never strikes through a node's text or a label. */
+  /** Draw edge labels above everything, lines still behind the nodes, so at rest a line never strikes through a node's text or a label; a label under the pointer draws its line above both. */
   readonly labelsOnTop: boolean;
   /** How much lower each further back edge runs. */
   readonly backEdgeStep: number;
@@ -149,8 +150,8 @@ export function layoutDiagram(nodes: readonly LayoutNodeInput[], edges: readonly
     if (!back[e]) {
       const x1 = from.x + NODE_WIDTH, y1 = from.y + NODE_HEIGHT / 2, x2 = to.x - 2, y2 = to.y + NODE_HEIGHT / 2;
       const dx = (x2 - x1) / 2;
-      // A skip's midpoint can land on a node it passes, so on the readable form its label sits in the first gap, under the neighbouring
-      // edge's label there.
+      // A skip's midpoint can land on a node it passes, so on the readable form its label starts in the first gap, under the neighbouring
+      // edge's label there; the renderer moves it if that is taken.
       const skips = spacing.labelsOnTop && to.layer > from.layer + 1;
       return { id: edge.id, from: edge.from, to: edge.to, back: false,
         d: `M ${num(x1)} ${num(y1)} C ${num(x1 + dx)} ${num(y1)}, ${num(x2 - dx)} ${num(y2)}, ${num(x2)} ${num(y2)}`,
@@ -197,13 +198,28 @@ export function wrapLabel(text: string, maxChars: number, maxLines: number): str
   return kept;
 }
 
+/** The point of a laid-out edge's cubic curve nearest to (x, y), by sampling: a moved label's leader ends there. */
+function nearestOnEdge(d: string, x: number, y: number): { readonly x: number; readonly y: number } {
+  const [x0, y0, x1, y1, x2, y2, x3, y3] = [...d.matchAll(/-?[\d.]+/gu)].map(m => Number(m[0])) as [number, number, number, number, number, number, number, number];
+  let best = { x: x0, y: y0 };
+  for (let i = 0; i <= LEADER_SAMPLES; i++) {
+    const t = i / LEADER_SAMPLES, u = 1 - t;
+    const at = {
+      x: u * u * u * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x3,
+      y: u * u * u * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t * y3,
+    };
+    if (Math.hypot(at.x - x, at.y - y) < Math.hypot(best.x - x, best.y - y)) best = at;
+  }
+  return best;
+}
+
 interface LabelBox { readonly left: number; readonly top: number; readonly right: number; readonly bottom: number }
 interface WantedLabel { readonly x: number; readonly y: number; readonly width: number; readonly height: number; readonly back: boolean }
 
 /**
  * Moves each edge label the least distance that clears every node and every label already placed, keeping a label that is clear where it
  * is. Back edges' labels go first, since each has its own lane under the nodes. The search widens one step at a time, up and down before
- * sideways, stays on the canvas across and above, and may run below it (the caller grows the canvas), so it always ends.
+ * sideways, stays on the canvas across and above, and may run below it (the caller grows the canvas). It ends whenever each label's own column fits the canvas, which every label does: the widest is 24 characters (201.6 px) on a canvas of at least 248.
  */
 // Test seam: exported for the tests; production code reaches it only inside this file.
 export function placeEdgeLabels(wanted: readonly WantedLabel[], nodes: readonly LabelBox[], canvasWidth: number): readonly { readonly x: number; readonly y: number }[] {
@@ -273,7 +289,11 @@ export function renderDiagramSvg(
   const edges = diagram.edges.map((edge, i) => {
     const at = layout.edges[i]!, lines = edgeLines[i]!, { x, y, width, height } = { ...wanted[i]!, ...placed[i]! };
     const top = y - height / 2;
-    const head = `<g class="edge ${edge.epistemic}${at.back ? ' back' : ''}"><title>${escape(edge.label)} (${edge.epistemic})</title><path d="${at.d}" marker-end="url(#${markerId})"/>`;
+    // A label the search moved keeps a thin leader to its own line, in the line's layer: without one, it can read as another line's label.
+    const moved = x !== at.labelX || y !== at.labelY;
+    const reach = moved ? nearestOnEdge(at.d, x, y) : undefined;
+    const leader = reach === undefined ? '' : `<path class="edge-leader" d="M ${num(x)} ${num(y)} L ${num(reach.x)} ${num(reach.y)}"/>`;
+    const head = `<g class="edge ${edge.epistemic}${at.back ? ' back' : ''}"><title>${escape(edge.label)} (${edge.epistemic})</title><path d="${at.d}" marker-end="url(#${markerId})"/>${leader}`;
     const label = `<rect class="edge-label" x="${num(x - width / 2)}" y="${num(top)}" width="${num(width)}" height="${num(height)}" rx="3"/>${textLines(lines, x, top + 15, 15)}`;
     // A label's own copy of its line, hidden until the label is under the pointer: the line itself sits in a lower layer the label cannot reach without a script.
     return spacing.labelsOnTop ? { line: `${head}</g>`, label: `<g class="edge-text ${edge.epistemic}"><title>${escape(edge.label)} (${edge.epistemic})</title><path class="edge-echo" d="${at.d}"/>${label}</g>` } : { line: `${head}${label}</g>`, label: '' };

@@ -71,6 +71,8 @@ export function readingInput(): { readonly local: LocalRenderInput; readonly sou
           id: 'loop', sectionId: 'two', kind: 'flow', title: 'Loop', relationship: 'how it repeats', disposition: { kind: 'produced', assetIds: [] },
           nodes: chain.map(id => ({ id: `loop-${id}`, label: `Step ${id}`, epistemic: 'inferred', sourceIds: [source.sourceId] })),
           edges: [...chain.slice(1).map((id, i) => ({ id: `loop-edge-${id}`, from: `loop-${chain[i]!}`, to: `loop-${id}`, label: 'next step', epistemic: 'inferred', sourceIds: [source.sourceId] })),
+            // A parallel edge, whose label cannot stay where its edge puts it.
+            { id: 'loop-edge-parallel', from: `loop-${chain[0]!}`, to: `loop-${chain[1]!}`, label: 'also next', epistemic: 'inferred', sourceIds: [source.sourceId] },
             { id: 'loop-back', from: 'loop-e', to: 'loop-a', label: 'starts again', epistemic: 'inferred', sourceIds: [source.sourceId] }],
         }],
         deepDives: [],

@@ -2,13 +2,13 @@
  "format": "mutation-record",
  "bead": "syzygy-pdja.8",
  "subject": {
-  "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "bed2c8a743e32e57aaa0488cd5ced4fc3bcc93fcebc166dcd0249a5bc7507ef4",
-  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "6e0f4f4a3a0074b729842ef97f947c2ed9be103f2bcc65bc85636644fcc5721d"
+  "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "ae3353df9e21162999355e4d038dd9b451b72fd003a1b94870ac34ce189c7b45",
+  "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "008bf930a37a0509b9d4cbb180a0efb66f8ccce98254121f85b0d80698f62862"
  },
- "ranAt": "b546a74cd8a23e2103636434f3b3c73d735a855e",
+ "ranAt": "6314696ebff71f0ecee8016fb8fb494dbf6c49c3",
  "note": "Each mutant replaces old with new once, runs the diagram-layout, dossier-reading and dossier-reading browser tests, then restores. The baseline passed before and after.",
- "denominator": 17,
- "killed": 17,
+ "denominator": 24,
+ "killed": 24,
  "mutants": [
   {
    "id": "pass-off",
@@ -120,6 +120,55 @@
    "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
    "old": "path.edge-echo{display:none;",
    "new": "path.edge-echo{",
+   "killed": true
+  },
+  {
+   "id": "leader-off",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "marker-end=\"url(#${markerId})\"/>${leader}`;",
+   "new": "marker-end=\"url(#${markerId})\"/>`;",
+   "killed": true
+  },
+  {
+   "id": "leader-always",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const moved = x !== at.labelX || y !== at.labelY;",
+   "new": "const moved = true;",
+   "killed": true
+  },
+  {
+   "id": "leader-to-start",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "if (Math.hypot(at.x - x, at.y - y) < Math.hypot(best.x - x, best.y - y)) best = at;",
+   "new": "",
+   "killed": true
+  },
+  {
+   "id": "css-leader-thick",
+   "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+   "old": "path.edge-leader{stroke-width:1;fill:none}",
+   "new": "path.edge-leader{fill:none}",
+   "killed": true
+  },
+  {
+   "id": "sideways-first",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "[[across, across - ring], [across, ring - across], [-across, across - ring], [-across, ring - across]]",
+   "new": "[[across - ring, across], [ring - across, across], [across - ring, -across], [ring - across, -across]]",
+   "killed": true
+  },
+  {
+   "id": "down-only",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "[[across, across - ring], [across, ring - across], [-across, across - ring], [-across, ring - across]]",
+   "new": "[[across, ring - across], [-across, ring - across]]",
+   "killed": true
+  },
+  {
+   "id": "step-32",
+   "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+   "old": "const LABEL_STEP = 8;",
+   "new": "const LABEL_STEP = 32;",
    "killed": true
   },
   {

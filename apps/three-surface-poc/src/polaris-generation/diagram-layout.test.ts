@@ -135,7 +135,7 @@ describe('layered left-to-right diagram layout', () => {
     it('holds over dense random graphs: no label on a node, on another label, or off the canvas', () => {
       let seed = 20261107;
       const next = (bound: number): number => { seed = (seed * 1103515245 + 12345) % 2147483648; return Math.floor(seed / 65536) % bound; };
-      let moved = 0;
+      let grown = 0;
       for (let graph = 0; graph < 400; graph++) {
         const ids = Array.from({ length: 2 + next(9) }, (_, i) => `n${i}`);
         const edges = Array.from({ length: 1 + next(ids.length * 2) }, (_, i) => ({ id: `e${i}`, from: ids[next(ids.length)]!, to: ids[next(ids.length)]! }));
@@ -149,10 +149,48 @@ describe('layered left-to-right diagram layout', () => {
         // Touching counts as overprinted: a gap of 4 less the renderer's rounding to a tenth.
         expect(labels.filter((l, i) => labels.some((o, j) => j > i && l.left < o.right + 3.8 && o.left < l.right + 3.8 && l.top < o.bottom + 3.8 && o.top < l.bottom + 3.8)), `graph ${graph} overprinted`).toEqual([]);
         expect(labels.filter(l => l.left < 0 || l.right > layout.width || l.top < 0 || l.bottom > canvasHeight), `graph ${graph} off the canvas`).toEqual([]);
-        if (canvasHeight > layout.height) moved++;
+        if (canvasHeight > layout.height) grown++;
       }
       // The population reaches the pass: some graphs had to grow the canvas.
-      expect(moved).toBeGreaterThan(0);
+      expect(grown).toBeGreaterThan(0);
+    });
+
+    it('moves a label the least distance, up before down and both before sideways, on an eight-pixel step', () => {
+      const label = { x: 100, y: 100, width: 60, height: 20, back: false };
+      const pebble = { left: 90, top: 95, right: 110, bottom: 105 };
+      // Clear needs 19 px either way, so three steps of 8; up comes first.
+      expect(placeEdgeLabels([label], [pebble], 400)).toEqual([{ x: 100, y: 76 }]);
+      // With the way up taken, down.
+      expect(placeEdgeLabels([label], [pebble, { left: 90, top: 40, right: 110, bottom: 80 }], 400)).toEqual([{ x: 100, y: 124 }]);
+    });
+
+    it('draws a leader from a moved label to a point on its own line, and none for a label left in place', () => {
+      const fan = [edge('ab1', 'a', 'b'), edge('ab2', 'a', 'b')];
+      const svg = renderDiagramSvg(renderOf(['a', 'b'], fan, LONG), 0, text => text, READABLE_SPACING);
+      const layout = layoutDiagram(['a', 'b'].map(id => ({ id })), fan, READABLE_SPACING);
+      const leaders = [...svg.matchAll(/<path class="edge-leader" d="M ([\d.]+) ([\d.]+) L ([\d.]+) ([\d.]+)"\/>/gu)].map(m => m.slice(1).map(Number));
+      expect(leaders).toHaveLength(1);
+      const [fromX, fromY, toX, toY] = leaders[0]!;
+      const [first, second] = placedLabels(svg);
+      // It starts inside the moved label, the second one, and sits in that edge's own group, under the nodes.
+      expect(fromX!).toBeGreaterThan(second!.left);
+      expect(fromX!).toBeLessThan(second!.right);
+      expect(fromY!).toBeGreaterThan(second!.top);
+      expect(fromY!).toBeLessThan(second!.bottom);
+      expect((first!.top + first!.bottom) / 2).toBeCloseTo(layout.edges[0]!.labelY, 0);
+      const groups = svg.split('<g class="edge ').slice(1);
+      expect(groups[0]).not.toContain('edge-leader');
+      expect(groups[1]!.split('</g>')[0]).toContain('edge-leader');
+      expect(svg.indexOf('edge-leader')).toBeLessThan(svg.indexOf('<g class="node'));
+      // Both parallel edges share one curve, whose midpoint is the label's first place: the leader ends there, the nearest point to a label straight below it.
+      expect(toX!).toBeCloseTo(layout.edges[1]!.labelX, 0);
+      expect(toY!).toBeCloseTo(layout.edges[1]!.labelY, 0);
+    });
+
+    it('draws no leader on the provider form, or where no label moved', () => {
+      const parallel = [edge('ab1', 'a', 'b'), edge('ab2', 'a', 'b')];
+      expect(renderDiagramSvg(renderOf(['a', 'b'], parallel, LONG), 0, text => text)).not.toContain('edge-leader');
+      expect(renderDiagramSvg(renderOf(['a', 'b', 'c'], [edge('ab', 'a', 'b'), edge('bc', 'b', 'c')], LONG), 0, text => text, READABLE_SPACING)).not.toContain('edge-leader');
     });
 
     it('leaves a label that is already clear where its edge puts it', () => {

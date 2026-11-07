@@ -97,6 +97,12 @@ it.skipIf(executable === undefined)('folds the navigation, keeps diagram labels 
       await page.mouseMove(entry.x, entry.y + 400);
       await new Promise(resolve => setTimeout(resolve, 600));
       expect(await page.evaluate(`getComputedStyle(${farPopup}).visibility`)).toBe('hidden');
+      // A moved label's leader is drawn, thinner than its line and in the line's colour.
+      const leader = await page.evaluate<{ stroke: string; line: string; width: string; length: number }>(`(() => { const l = document.querySelector("path.edge-leader"); return { stroke: getComputedStyle(l).stroke, line: getComputedStyle(l.parentElement.querySelector("path[marker-end]")).stroke, width: getComputedStyle(l).strokeWidth, length: l.getTotalLength() }; })()`);
+      expect(leader.stroke).toBe(leader.line);
+      expect(leader.stroke).not.toBe('none');
+      expect(leader.width).toBe('1px');
+      expect(leader.length).toBeGreaterThan(0);
       // A label under the pointer draws its line, on the first diagram's first label.
       const echo = 'document.querySelector("g.edge-text path.edge-echo")';
       expect(await page.evaluate(`getComputedStyle(${echo}).display`)).toBe('none');
