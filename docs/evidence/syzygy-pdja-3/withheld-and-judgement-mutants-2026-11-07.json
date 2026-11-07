@@ -1,0 +1,210 @@
+{
+  "format": "mutation-record",
+  "bead": "syzygy-pdja.3",
+  "subject": {
+    "packages/polaris-dossier/src/check-derive.ts": "005cbbebdd71b8cfcc6cc7a60657356a8ac9815a12122d1c91a2ad951916177f",
+    "packages/polaris-dossier/src/review-verdict.ts": "af8ffb4515c2f7da254c3b30e5115b8b63e3bdeaf710f183fe278ff097440a7f",
+    "packages/polaris-dossier/src/withheld-items.ts": "534c3563ca0d0dd90d463a633d66c23a0a43a8187bd95b45a62aa01de59a18d5"
+  },
+  "ranAt": "b0c11b9b9900e0bc00077ab3decadbed6cb2a7ae",
+  "note": "Ran over the uncommitted PR-1 working tree on base ranAt; subject gives the sha256 of each mutated file as committed. Each mutant replaces old with new once, runs its testFiles with vitest, then restores the file. The first four ran against all three test files; the rest against the files that exercise the mutated module.",
+  "denominator": 16,
+  "killed": 16,
+  "mutants": [
+    {
+      "id": "judged-ignored",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "&& !judged) {",
+      "new": "&& true) {",
+      "killed": true,
+      "tests": "6 failed | 210 passed (216)",
+      "testFiles": [
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-dossier/src/withheld-items.test.ts"
+      ]
+    },
+    {
+      "id": "judged-any-version",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "const judged = v4 && value['judgement'] === true;",
+      "new": "const judged = value['judgement'] === true;",
+      "killed": true,
+      "tests": "1 failed | 215 passed (216)",
+      "testFiles": [
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-dossier/src/withheld-items.test.ts"
+      ]
+    },
+    {
+      "id": "no-field-version",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (rules.noun === 'draft' && !v4) {",
+      "new": "if (false) {",
+      "killed": true,
+      "tests": "3 failed | 213 passed (216)",
+      "testFiles": [
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-dossier/src/withheld-items.test.ts"
+      ]
+    },
+    {
+      "id": "no-judgement-mark",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (Object.hasOwn(value, 'judgement') && label !== 'inferred')",
+      "new": "if (false)",
+      "killed": true,
+      "tests": "1 failed | 215 passed (216)",
+      "testFiles": [
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-dossier/src/withheld-items.test.ts"
+      ]
+    },
+    {
+      "id": "repeats-any-section",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "else if (diagramSections.get(named) !== sectionId)",
+      "new": "else if (false)",
+      "killed": true,
+      "tests": "1 failed | 117 passed (118)",
+      "testFiles": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ]
+    },
+    {
+      "id": "repeats-unknown-ok",
+      "file": "packages/polaris-dossier/src/check-derive.ts",
+      "old": "if (!diagramSections.has(named)) add(",
+      "new": "if (false) add(",
+      "killed": true,
+      "tests": "1 failed | 119 passed (120)",
+      "testFiles": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "rerunAfter": "added the reason-wording test to check.test.ts after the first run survived (118 passed)"
+    },
+    {
+      "id": "withheld-fit-off",
+      "file": "packages/polaris-dossier/src/review-verdict.ts",
+      "old": "if (value === WITHHELD_ENTRY && !held.has(id))",
+      "new": "if (false)",
+      "killed": true,
+      "tests": "4 failed | 94 passed (98)",
+      "testFiles": [
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-dossier/src/withheld-items.test.ts"
+      ]
+    },
+    {
+      "id": "withheld-judged-ok",
+      "file": "packages/polaris-dossier/src/review-verdict.ts",
+      "old": "if (judgedAs !== null && held.has(id) && value === judgedAs)",
+      "new": "if (false)",
+      "killed": true,
+      "tests": "2 failed | 96 passed (98)",
+      "testFiles": [
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-dossier/src/withheld-items.test.ts"
+      ]
+    },
+    {
+      "id": "advisory-fit-off",
+      "file": "packages/polaris-dossier/src/review-verdict.ts",
+      "old": "if (value === ADVISORY_ENTRY && !judged.has(id))",
+      "new": "if (false)",
+      "killed": true,
+      "tests": "2 failed | 96 passed (98)",
+      "testFiles": [
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-dossier/src/withheld-items.test.ts"
+      ]
+    },
+    {
+      "id": "advisory-judged-ok",
+      "file": "packages/polaris-dossier/src/review-verdict.ts",
+      "old": "if (judgedAs !== null && judged.has(id) && value === judgedAs)",
+      "new": "if (false)",
+      "killed": true,
+      "tests": "1 failed | 97 passed (98)",
+      "testFiles": [
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-dossier/src/withheld-items.test.ts"
+      ]
+    },
+    {
+      "id": "withheld-blocks-support",
+      "file": "packages/polaris-dossier/src/review-verdict.ts",
+      "old": "row['verdict'] !== 'supported' && row['verdict'] !== WITHHELD_ENTRY && row['verdict'] !== ADVISORY_ENTRY);",
+      "new": "row['verdict'] !== 'supported');",
+      "killed": true,
+      "tests": "1 failed | 97 passed (98)",
+      "testFiles": [
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-dossier/src/withheld-items.test.ts"
+      ]
+    },
+    {
+      "id": "withheld-blocks-accuracy",
+      "file": "packages/polaris-dossier/src/review-verdict.ts",
+      "old": "row['accuracy'] !== 'accurate' && row['accuracy'] !== WITHHELD_ENTRY)",
+      "new": "row['accuracy'] !== 'accurate')",
+      "killed": true,
+      "tests": "2 failed | 96 passed (98)",
+      "testFiles": [
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-dossier/src/withheld-items.test.ts"
+      ]
+    },
+    {
+      "id": "redacted-not-withheld",
+      "file": "packages/polaris-dossier/src/review-verdict.ts",
+      "old": "if (outcome === 'redacted-span' || outcome === 'denied-path'",
+      "new": "if (outcome === 'denied-path'",
+      "killed": true,
+      "tests": "1 failed | 97 passed (98)",
+      "testFiles": [
+        "packages/polaris-dossier/src/review.test.ts",
+        "packages/polaris-dossier/src/withheld-items.test.ts"
+      ]
+    },
+    {
+      "id": "quoted-withheld-ignored",
+      "file": "packages/polaris-dossier/src/withheld-items.ts",
+      "old": "if (quoted.some((id) => standing(id) === 'withheld')) return true;",
+      "new": "",
+      "killed": true,
+      "tests": "1 failed | 97 passed (98)",
+      "testFiles": [
+        "packages/polaris-dossier/src/withheld-items.test.ts",
+        "packages/polaris-dossier/src/review.test.ts"
+      ]
+    },
+    {
+      "id": "cited-some",
+      "file": "packages/polaris-dossier/src/withheld-items.ts",
+      "old": "cited.every((id) => standing(id) === 'withheld')",
+      "new": "cited.some((id) => standing(id) === 'withheld')",
+      "killed": true,
+      "tests": "3 failed | 95 passed (98)",
+      "testFiles": [
+        "packages/polaris-dossier/src/withheld-items.test.ts",
+        "packages/polaris-dossier/src/review.test.ts"
+      ]
+    },
+    {
+      "id": "uncited-any-citations",
+      "file": "packages/polaris-dossier/src/withheld-items.ts",
+      "old": "value['judgement'] === true && list(value['citations']).length === 0;",
+      "new": "value['judgement'] === true;",
+      "killed": true,
+      "tests": "1 failed | 97 passed (98)",
+      "testFiles": [
+        "packages/polaris-dossier/src/withheld-items.test.ts",
+        "packages/polaris-dossier/src/review.test.ts"
+      ]
+    }
+  ]
+}

@@ -78,7 +78,9 @@ export interface ReviewDeps {
 
 export type ReviewProblemKind =
   | 'not-json' | 'schema' | 'stale-packet' | 'session-identity' | 'coverage-incomplete' | 'accuracy-incomplete' | 'support-incomplete'
-  | 'page-review-incomplete' | 'duplicate-entry' | 'unresolved-reference' | 'quotation-count' | 'quotation-span' | 'quotation-unverified' | 'inconsistent';
+  | 'page-review-incomplete' | 'duplicate-entry' | 'unresolved-reference' | 'quotation-count' | 'quotation-span' | 'quotation-unverified' | 'inconsistent'
+  // v1.5: a `withheld` or `advisory` row on an entry it does not fit, or such an entry marked accurate or supported.
+  | 'withheld-entry' | 'advisory-entry';
 
 /** Why a verdict does not count. It never carries quoted text or any byte of a blob. */
 export interface ReviewProblem { readonly kind: ReviewProblemKind; readonly at: string; readonly detail: string }

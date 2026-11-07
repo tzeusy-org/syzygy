@@ -64,14 +64,13 @@ describe('local-agent draft schema', () => {
   it.each<[string, (draft: Draft) => void, { path: string; detail: string }]>([
     ['an agent labels its claim observed', (d) => { d.introduction.label = 'observed'; },
       { path: '$.introduction', detail: 'matches none of the permitted forms (label inferred, basis source; label inferred, basis execution; label unknown; label non-normative)' }],
-    ['an inferred block cites nothing', (d) => { d.introduction.citations = []; }, { path: '$.introduction.citations', detail: 'must hold 1 to 50 items; holds 0' }],
     ['an unknown block names no reason', (d) => { delete d.sections[0].paragraphs[0].children[0].reason; }, { path: '$.sections[0].paragraphs[0].children[0].reason', detail: 'is required' }],
     ['an unknown reason outside RFC2-24', (d) => { d.sections[0].paragraphs[0].children[0].reason = 'agent-unsure'; },
       { path: '$.sections[0].paragraphs[0].children[0].reason', detail: 'must be one of missing-declaration, missing-evidence, no-currency-bound-declared, stale-beyond-currency-bound, mapping-coverage-absent, unconsented-source-or-provider, excluded-content, contradicted-pending-adjudication, challenge-suspended, source-uncaptured-or-unreachable, reference-unresolvable, execution-blocked' }],
     ['a non-normative block carries a citation', (d) => { d.sections[0].paragraphs[0].children[1].citations = [cite('x')]; }, { path: '$.sections[0].paragraphs[0].children[1].citations', detail: 'is not a field of this form' }],
     ['an execution-based claim names no execution', (d) => { d.sections[0].paragraphs[0].children[2].executionIds = []; }, { path: '$.sections[0].paragraphs[0].children[2].executionIds', detail: 'must hold 1 to 20 items; holds 0' }],
     ['the draft names another revision', (d) => { d.pinnedRevision = 'a'.repeat(40); }, { path: '$.pinnedRevision', detail: `must be one of ${REV}` }],
-    ['the draft names another schema version', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v0'; }, { path: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3' }],
+    ['the draft names another schema version', (d) => { d.schemaVersion = 'polaris-dossier-local-draft-v0'; }, { path: '$.schemaVersion', detail: 'must be one of polaris-dossier-local-draft-v2, polaris-dossier-local-draft-v3, polaris-dossier-local-draft-v4' }],
     ['the understanding record omits an item', (d) => { delete d.understanding.tradeOffs; }, { path: '$.understanding.tradeOffs', detail: 'is required' }],
     ['an understanding item is left empty rather than Unknown', (d) => { d.understanding.limits = []; }, { path: '$.understanding.limits', detail: 'must hold 1 to 100 items; holds 0' }],
     ['the draft has no understanding record', (d) => { delete d.understanding; }, { path: '$.understanding', detail: 'is required' }],
@@ -129,7 +128,7 @@ describe('draft.schema.json', () => {
 
   it('is a JSON Schema 2020-12 document carrying the version, the revision and closed objects', () => {
     expect(document['$schema']).toBe('https://json-schema.org/draft/2020-12/schema');
-    expect(document['$id']).toBe('urn:syzygy:polaris-dossier:polaris-dossier-local-draft-v3');
+    expect(document['$id']).toBe('urn:syzygy:polaris-dossier:polaris-dossier-local-draft-v4');
     expect(document['additionalProperties']).toBe(false);
     expect((document['properties'] as Record<string, unknown>)['pinnedRevision']).toMatchObject({ enum: [REV] });
     expect(JSON.parse(JSON.stringify(document))).toEqual(document);

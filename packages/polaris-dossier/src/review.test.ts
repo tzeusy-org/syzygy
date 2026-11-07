@@ -152,7 +152,7 @@ const inventory = (): Doc => ({
 
 /** A briefed run with a passed draft revision and an inventory of record (passed, launch form recorded), its session handed over with
  * the run's declared tool or `inventoryTool`. */
-async function prepared(inventoryTool?: 'codex'): Promise<string> {
+async function prepared(inventoryTool?: 'codex', edit?: (d: Doc) => void): Promise<string> {
   const clone = path.join(tempDir('dossier-review-clone-'), 'kestrel');
   execFileSync('git', ['clone', '-q', '--no-hardlinks', origin, clone], { env: GIT_ENV });
   const run = path.join(tempDir('dossier-review-state-'), RUN_ID);
@@ -165,7 +165,9 @@ async function prepared(inventoryTool?: 'codex'): Promise<string> {
   fs.writeFileSync(path.join(run, 'run.json'), encodeRunRecord(parsed.config, subject(clone)));
   const brief = await issueBrief(run, { sources: sources(), now: () => NOW });
   if (!brief.ok) throw new Error(`fixture brief refused: ${brief.refusal.reason}`);
-  await submitDraft(run, draft());
+  const submitted = draft();
+  edit?.(submitted);
+  await submitDraft(run, submitted);
   const handed = await sessionPrompt(run, { role: 'inventory', ...(inventoryTool ? { tool: inventoryTool } : {}) }, { sources: sources(), now: () => LATER });
   if (!handed.ok) throw new Error(handed.refusal.reason);
   fs.writeFileSync(path.join(handed.report.directory, 'inventory.json'), JSON.stringify(inventory(), null, 2));
@@ -473,14 +475,20 @@ describe('review-check', () => {
     ['relies on a quotation that does not verify', (v) => { v.inventoryCoverage[1].reason = 'The project states: "Snapshots are written hourly." and p2 says so.'; }, 'quotation-unverified'],
     ['quotes the excluded span', (v) => { v.inventoryCoverage[1].quotations = ['span-1']; }, 'quotation-span'],
     ['names a span the packet lacks', (v) => { v.blockSupport[0].spanIds = ['span-9']; }, 'unresolved-reference'],
-    ['declares readiness beside a blocking finding', (v) => { v.inventoryAccuracy[2].accuracy = 'accurate'; v.findings[0].severity = 'blocking'; v.readiness = 'ready'; }, 'inconsistent'],
-    ['declares readiness beside an unsupported entry', (v) => { v.inventoryAccuracy[2].accuracy = 'accurate'; v.inventoryCoverage[2].disposition = 'unsupported'; v.readiness = 'ready'; }, 'inconsistent'],
-    ['declares readiness beside an unsupported block', (v) => { v.inventoryAccuracy[2].accuracy = 'accurate'; v.blockSupport[2].verdict = 'anchor-does-not-support'; v.readiness = 'ready'; }, 'inconsistent'],
+    ['declares readiness beside a blocking finding', (v) => { v.inventoryAccuracy[2].accuracy = 'withheld'; v.findings[0].severity = 'blocking'; v.readiness = 'ready'; }, 'inconsistent'],
+    ['declares readiness beside an unsupported entry', (v) => { v.inventoryAccuracy[2].accuracy = 'withheld'; v.inventoryCoverage[2].disposition = 'unsupported'; v.readiness = 'ready'; }, 'inconsistent'],
+    ['declares readiness beside an unsupported block', (v) => { v.inventoryAccuracy[2].accuracy = 'withheld'; v.blockSupport[2].verdict = 'anchor-does-not-support'; v.readiness = 'ready'; }, 'inconsistent'],
     ['declares readiness beside an entry not accurate', (v) => { v.readiness = 'ready'; }, 'inconsistent'],
     ['represents an entry by no block',(v) => { v.inventoryCoverage[0].blockIds = []; }, 'inconsistent'],
     ['repeats a coverage row', (v) => { v.inventoryCoverage.push(structuredClone(v.inventoryCoverage[0])); }, 'duplicate-entry'],
     ['quotes in a reason without naming the span', (v) => { v.inventoryCoverage[1].quotations = []; }, 'quotation-count'],
     ['carries a field outside the schema',(v) => { v.trust = 'me'; }, 'schema'],
+    // Dossier spec v1.5: `withheld` fits only a withheld entry, which is never judged accurate; `advisory` fits only an uncited judgement.
+    ['marks the withheld entry accurate', (v) => { v.inventoryAccuracy[2].accuracy = 'accurate'; }, 'withheld-entry'],
+    ['marks an admitted entry\'s accuracy withheld', (v) => { v.inventoryAccuracy[0].accuracy = 'withheld'; }, 'withheld-entry'],
+    ['marks an admitted entry\'s coverage withheld', (v) => { v.inventoryCoverage[0].disposition = 'withheld'; v.inventoryCoverage[0].blockIds = []; }, 'withheld-entry'],
+    ['marks a cited block withheld', (v) => { v.blockSupport[0].verdict = 'withheld'; }, 'withheld-entry'],
+    ['marks a cited block advisory', (v) => { v.blockSupport[0].verdict = 'advisory'; }, 'advisory-entry'],
   ])('records and refuses a verdict that %s', async (_name, change, kind) => {
     const run = await prepared();
     const dir = await reviewSessionOf(run);
@@ -497,11 +505,50 @@ describe('review-check', () => {
     expect(await reviewOfRecord(await opened(run), deps())).toEqual({ counts: false, why: 'fidelity verdict 0 failed validation' });
   });
 
+  describe('withheld and advisory entries (dossier spec v1.5)', () => {
+    // A v4 draft adding an uncited judgement and a block whose one citation is a file screening excludes.
+    const v4 = (d: Doc): void => {
+      d.schemaVersion = 'polaris-dossier-local-draft-v4';
+      d.sections[0].paragraphs.push(
+        { id: 'pj', label: 'inferred', basis: 'source', judgement: true, text: 'Keeping every key in memory is the right trade for a cache.', citations: [], quotations: [], children: [] },
+        { id: 'pw', label: 'inferred', basis: 'source', text: 'The environment file sets the port.', citations: [cite('c-pw', '.env', 1, 1)], quotations: [], children: [] },
+      );
+    };
+    const rows = (pj: string, pw: string): Doc[] => [
+      { blockId: 'pj', verdict: pj, spanIds: [], reason: 'It asserts no project fact.', quotations: [] },
+      { blockId: 'pw', verdict: pw, spanIds: ['span-1'], reason: 'Its only span is withheld.', quotations: [] },
+    ];
+    it.each<[string, string, string, string | null]>([
+      ['validates `advisory` on the uncited judgement and `withheld` on the withheld block, neither blocking', 'advisory', 'withheld', null],
+      ['refuses the uncited judgement marked supported', 'supported', 'withheld', 'advisory-entry'],
+      ['refuses the withheld block marked supported', 'advisory', 'supported', 'withheld-entry'],
+      ['refuses `withheld` on the uncited judgement', 'withheld', 'withheld', 'withheld-entry'],
+      ['refuses `advisory` on the withheld block', 'advisory', 'advisory', 'advisory-entry'],
+    ])('%s', async (_name, pj, pw, kind) => {
+      const run = await prepared(undefined, v4);
+      const dir = await reviewSessionOf(run);
+      // The packet's own oracle (expectedPacket) spells the base fixture; this one's digest is the packet Syzygy emitted for the session.
+      const emitted = fs.readdirSync(path.join(run, 'reviews')).filter((name) => /^fidelity-packet-[0-9a-f]{64}$/u.test(name));
+      expect(emitted).toHaveLength(1);
+      const v = verdict(emitted[0]!.slice('fidelity-packet-'.length));
+      v.schemaVersion = 'polaris-dossier-local-fidelity-verdict-v2';
+      v.inventoryAccuracy[2].accuracy = 'withheld';
+      v.blockSupport.push(...rows(pj, pw));
+      v.readiness = 'ready';
+      writeVerdict(dir, v);
+      const result = await reviewCheck(run, {}, deps());
+      if (!result.ok) throw new Error(result.refusal.reason);
+      if (kind === null) expect(result.report).toMatchObject({ outcome: 'validated', problems: [], readiness: { declared: 'ready', blocking: false } });
+      // A supported row with no span is also the shared rule's inconsistency; the v1.5 problem is what this case pins.
+      else expect(result.report.problems.map((problem) => problem.kind)).toContain(kind);
+    });
+  });
+
   it('records an inventory omission as blocking: the verdict validates, and the draft does not become ready', async () => {
     const run = await prepared();
     const dir = await reviewSessionOf(run);
     const v = verdict(sha256(expectedPacket(run)));
-    v.inventoryAccuracy[2].accuracy = 'accurate';
+    v.inventoryAccuracy[2].accuracy = 'withheld';
     v.inventoryCoverage[1] = { entryId: 'e-snap', disposition: 'unsupported', blockIds: [], reason: 'No block covers snapshots.', quotations: [] };
     v.findings.push({ severity: 'blocking', subject: 'argument', target: 'e-snap', message: 'Snapshots are a material capability the dossier omits.', quotations: [] });
     writeVerdict(dir, v);
@@ -531,7 +578,7 @@ describe('review-check', () => {
     const run = await prepared();
     const dir = await reviewSessionOf(run);
     const v = verdict(sha256(expectedPacket(run)));
-    v.inventoryAccuracy[2].accuracy = 'accurate';
+    v.inventoryAccuracy[2].accuracy = 'withheld';
     v.readiness = 'ready';
     writeVerdict(dir, v);
     expect(await reviewCheck(run, {}, deps())).toMatchObject({ ok: true, report: { outcome: 'validated', problems: [], readiness: { declared: 'ready', blocking: false } } });

@@ -77,13 +77,13 @@ describe('brief: issued', () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v1', schemaVersion: 'polaris-dossier-local-draft-v3',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v1', schemaVersion: 'polaris-dossier-local-draft-v4',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     const brief = read(run, 'brief.md'), schema = read(run, 'draft.schema.json');
     expect(brief).toContain(`- Run: \`${RUN_ID}\``);
     expect(brief).toContain(`- Pinned revision: \`${REV}\` (8.10.2)`);
-    expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v3\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
+    expect(brief).toContain(`- Draft schema: \`polaris-dossier-local-draft-v4\`, in \`draft.schema.json\` beside this brief (sha256 \`${sha(schema)}\`)`);
     expect(brief).toContain('Your draft names that revision in `pinnedRevision`');
     expect(brief).toContain('Write it to `drafts/next.json` in the run directory and run `syzygy dossier check <run>`;');
     // The one quotation form, with an example, and what quoted text without it is: the brief and the schema say the same.
@@ -97,7 +97,7 @@ describe('brief: issued', () => {
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
       format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v1', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
-      schemaVersion: 'polaris-dossier-local-draft-v3', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
+      schemaVersion: 'polaris-dossier-local-draft-v4', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
       files: { brief: { name: 'brief.md', sha256: sha(brief) }, draftSchema: { name: 'draft.schema.json', sha256: sha(schema) } },
       executionRule: { arm: 'sec-3', cites: 'SEC-3', sec3Head: { text: lines(61, 62), startLine: 61, endLine: 62 } },

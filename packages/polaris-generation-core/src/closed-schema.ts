@@ -10,8 +10,8 @@ import { SOURCE_ID_MAX_LENGTH, SOURCE_ID_MIN_LENGTH, SOURCE_ID_PATTERN } from '.
 export type Schema =
   | { readonly type: 'object'; readonly properties: Readonly<Record<string, Schema>>; readonly required: readonly string[]; readonly additionalProperties: false }
   | { readonly type: 'array'; readonly items: Schema; readonly minItems: number; readonly maxItems: number; readonly uniqueItems?: boolean; readonly description?: string }
-  | { readonly type: 'string'; readonly minLength: number; readonly maxLength: number; readonly pattern?: string; readonly enum?: readonly string[] }
-  | { readonly type: 'boolean' }
+  | { readonly type: 'string'; readonly minLength: number; readonly maxLength: number; readonly pattern?: string; readonly enum?: readonly string[]; readonly description?: string }
+  | { readonly type: 'boolean'; readonly description?: string }
   | { readonly type: 'number'; readonly minimum: number; readonly maximum: number }
   | { readonly type: 'integer'; readonly minimum: number; readonly maximum: number }
   | { readonly oneOf: readonly Schema[] }
