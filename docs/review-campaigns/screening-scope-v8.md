@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-SCREENING-SCOPE-V8-3-RAW.md:4`), over `fa258a05`, round 3, the last round under the stopping rule; round 2 was `REVISE` (`R-SCREENING-SCOPE-V8-2-RAW.md:4`), over `3a07714d`, and round 1 `REVISE` (`R-SCREENING-SCOPE-V8-1-RAW.md:4`), over `e9f8cf42`. Dispositions are in the package's `ROUND-1-DISPOSITIONS.md`, `ROUND-2-DISPOSITIONS.md` and `ROUND-3-DISPOSITIONS.md`. Whether a round 4 runs is the owner's decision.
+`CONFIRM WITH EXCEPTIONS` (`R-SCREENING-SCOPE-V8-4-RAW.md:4`), over `0f2767d2`, round 4, which the owner ordered after the stopping rule; four of its exceptions require a change, so it fails the owner's offer condition and the package goes back to the owner. Round 3 was `REVISE` (`R-SCREENING-SCOPE-V8-3-RAW.md:4`), over `fa258a05`; round 2 was `REVISE` (`R-SCREENING-SCOPE-V8-2-RAW.md:4`), over `3a07714d`, and round 1 `REVISE` (`R-SCREENING-SCOPE-V8-1-RAW.md:4`), over `e9f8cf42`. Dispositions are in the package's `ROUND-1-DISPOSITIONS.md`, `ROUND-2-DISPOSITIONS.md`, `ROUND-3-DISPOSITIONS.md` and `ROUND-4-DISPOSITIONS.md`. Whether a round 5 runs is the owner's decision.
