@@ -37,15 +37,24 @@ A policy act without its install turns `main` red, so these land together:
   body for a private pair. That needs fixtures for a private pair with a
   credential-assignment match in a project-documentation body (excluded
   whole) and the same body for a public pair (redacted, as today).
-- **Visibility.** A reader of `sourceVisibility` that returns public only
-  for a record stating public, and private for anything else, including an
-  unreadable statement. [Observed]
-  `packages/polaris-generation-consent/src/package-reader.ts` reads
-  observation consents through a closed list of act forms
-  (`ADMISSION_ACT_FORMS`), every one titled "public-repository observation
-  consent", so a private repository has no form there. [Inferred] It reaches
-  Syzygy through the launch-consent change's generic form, or through a new
-  form drafted as its own package. This policy adds neither.
+- **Visibility.** A reader of `sourceVisibility` that decides per commit
+  read. It returns public only when the record admitting that commit, and
+  every other effective observation record of the same pair, state public
+  through a carrier. Anything else, including an unreadable record, is
+  private. The carriers are named in the policy. [Observed]
+  `packages/polaris-generation-consent/src/package-reader.ts` reads the
+  existing observation consents through a closed list of act forms
+  (`ADMISSION_ACT_FORMS`); its two `consent-observation` forms are the
+  requests and redis public-repository observation acts. The reader states
+  public by form identity, never from the record's title or its
+  `Upstream: … (public; …)` parenthetical, which the reader's regex treats as
+  ignorable. `packages/polaris-dossier/src/gate-sources.ts` reaches them
+  through that reader. Fixtures needed: each existing form reads public; a
+  launch record answering no reads private; a public pair that also holds a
+  private or unreadable record reads private at every commit. [Inferred] A
+  private repository reaches Syzygy only through the launch-consent change's
+  generic form, or through a new form drafted as its own package. This
+  policy adds neither.
 - **Egress.** Syzygy's provider-mode egress check must refuse a private pair's
   content, target-metadata included, unless an egress consent names the pair
   and states it private. [Observed] The egress consents present are titled
@@ -58,6 +67,14 @@ A policy act without its install turns `main` red, so these land together:
   (`declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`)
   reads the operator's clone, makes no fetch, and needs no change beyond its
   name.
+- **When it lands.** The policy file changes only in the commit that
+  records the act. [Observed] The version-7 act says the read gates "refuse a
+  policy on its digest first", and its recording commit carried the read-gate
+  change. So that commit must carry the install, or every run, public ones
+  included, is refused until the install lands. If the install cannot land
+  (for example, under an active surface merge freeze,
+  `scripts/surface-merge-freeze.json`), recording waits, and runs continue
+  under version 7.
 - **Governance registration** at the act, as for version 7: a version-8
   recorder written after a confirming review; the version-7 manifest
   activation gated off once the version-8 act exists; the chain link; the
@@ -67,8 +84,9 @@ A policy act without its install turns `main` red, so these land together:
 
 No byte of any specification is edited here. The launch-consent change below
 is another agent's draft on its own branch, read at
-`agent/syzygy-pdja.21-launch-consent` commit `882d2297`. It binds nothing
-until signed.
+`agent/syzygy-pdja.21-launch-consent` commit `913c6b7d` (round 1 read
+`882d2297`; the line numbers below were re-derived at `913c6b7d`). It binds
+nothing until signed.
 
 The launch-consent change's proposed polaris-generation spec (path
 proposed/polaris-generation/spec.md in that change, not yet on `main`),
@@ -80,11 +98,26 @@ REQ-polaris-generation-046:
   lists `private`, so the condition is false and the refusal does not fire.
   The same paragraph says "A successor that admits non-public sources through
   this same observation consent record lifts the refusal for the sources it
-  admits with no change to this requirement". [Inferred] This version is such
-  a successor. It reads visibility from "the operator's declaration whether
-  the repository is public" that the record already carries (line 17), asks
-  no other field, consent class or disclosure of the record or the question,
-  and needs no REQ-046 amendment.
+  admits with no change to this requirement; one that asks more of the
+  record or the question (another field, consent class or disclosure) needs
+  this requirement amended alongside it". The policy takes its carrier for a
+  launch record from "the operator's declaration whether the repository is
+  public", which line 17 already requires the record to carry. It asks for
+  no new consent class or disclosure. **What is honestly open:** REQ-046
+  names that declaration but fixes no encoding for it. The policy requires
+  the generic form to read it as one of exactly two values, with the
+  affirmative answer meaning public. [Inferred] That pins the encoding of an
+  item the record already carries, so it is not "another field". A reader
+  who counts a fixed two-value encoding as another field would need REQ-046
+  amended alongside this act, by its own drafter. The disagreement is
+  recorded here rather than settled by this package.
+- **Line 15**, the identity residuals: "a fork or mirror at a commit an
+  upstream record names, or at a child of one, is proposed the upstream's
+  identity". Under this version a private fork launched that way joins the
+  upstream's pair, and its record stating private makes the whole pair read
+  private (`sourceVisibility.rule`). [Inferred] The spec text needs no change,
+  but the question at line 11 could warn that the upstream's runs then get
+  the stricter rules.
 - **Line 11**, the question asks "the operator's declaration whether the
   repository is public". A "no" now records a private repository instead of
   ending in a refusal. [Inferred] The question would do well to say that a
@@ -120,6 +153,11 @@ the operator's agent provider with no per-project statement. [Observed: "For
 a non-governed subject the agent sessions' sends are the operator's own act
 as stated above and no statement is required."] The policy records this in
 `sourceVisibility.agentSessions` and cannot change it.
+
+`openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md`
+line 257 reads "`public-source screening scope version 7` or a successor".
+Version 8 is such a successor and keeps `renderCondition`, so that clause
+reads the same.
 
 `openspec/changes/polaris-dossier-arbitrary-public-repo/` (the standing
 public-observation consent) is public-only by its own text and is unaffected.

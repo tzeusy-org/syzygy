@@ -15,7 +15,9 @@ One variant, `pv`, one manifest row. Inside `publicSourceScope` it adds one key,
 route of `accessBoundary.networkEgressRoutes`, two sentences of `secretRedaction.appliesTo` and the end of
 `rawBodyHandling.rule`. Every edit admits private sources or makes a rule stricter for them; none relaxes a rule for
 a public source. `policyVersion` is the only other value that changes. Nothing else may change, and
-`semantic_findings` undoes each edit and requires the version-7 scope back exactly.
+`semantic_findings` undoes each edit and requires the version-7 scope back exactly. Independently of EDITS it pins
+the number of edits (EDIT_COUNT) and the scope paths the change may touch (CHANGED_PATHS), so a seventh edit fails
+even when EDITS is extended to undo it (round-1 review, finding 6).
 
   --write             regenerate the patch and the manifest
   --check             verify the package against the policy on disk
@@ -90,14 +92,23 @@ SOURCE_VISIBILITY = {
     "values": ["public", "private"],
     "admitted": ["public", "private"],
     "rule": (
-        "a repository's visibility is public only when its effective observation consent record states that the "
-        "repository is public; every other repository, including one whose record states no visibility, states it "
-        "ambiguously or states it private, is private for every rule of this scope. The statement is the operator's "
-        "declaration and is labelled Inferred wherever it is shown: Syzygy makes no network request and uses no "
-        "credential to learn or verify it, and a consumer that cannot read the statement treats the repository as "
-        "private. Visibility is read for each pair from that pair's own record and is never inherited from another "
-        "pair, a fork or an upstream. admitted lists the visibilities this scope admits; a repository of a visibility "
-        "it does not list is not in observedRepositories"),
+        "visibility is decided for each commit Syzygy reads, from the effective observation consent record that admits "
+        "that commit (the record of that pair naming that revision), and it is public only when that record states "
+        "public through its carrier and every other effective observation consent record of the same pair states "
+        "public through its carrier too; in every other case, including a record that states private, states nothing, "
+        "or cannot be read, the repository is private for every rule of this scope at every commit. A fork or mirror "
+        "that a record places in an upstream's pair is part of that pair, so its record stating private makes the whole "
+        "pair private. The carriers, and the only ones: for a launch consent record, the operator's declaration "
+        "whether the repository is public that REQ-polaris-generation-046 requires the record to carry, which states "
+        "public only when it is the affirmative answer, read by the generic launch form as one of exactly two values; "
+        "for a record made by an owner act of one of the forms that the consent package's closed list types "
+        "consent-observation (ADMISSION_ACT_FORMS in packages/polaris-generation-consent/src/package-reader.ts, each "
+        "titled as a public-repository observation consent, today PUBLIC-REPO-ADMISSION-REQUESTS-OBSERVATION-ACT.md "
+        "and PUBLIC-REPO-ADMISSION-REDIS-OBSERVATION-ACT.md under .syzygy/governance/decisions/), the form itself, which "
+        "states public. No other text of a record, its title or prose included, is a carrier. The statement is the "
+        "operator's or the owner's declaration and is labelled Inferred wherever it is shown: Syzygy makes no network "
+        "request and uses no credential to learn or verify it. admitted lists the visibilities this scope admits; a "
+        "repository of a visibility it does not list is not in observedRepositories"),
     "privateSourceRules": (
         "a private repository is admitted under the same observation consent as a public one, and every rule of this "
         "scope applies to it as to a public one, except three, each written at its own site and each stricter: "
@@ -131,7 +142,19 @@ SOURCE_VISIBILITY = {
         "reason for the redaction rule: a retained redacted-span body shows every line but the withheld ones, and the "
         "whole body's content digest and Git object id stay recorded (RFC5-17), so a guess at a short withheld line "
         "can be confirmed against them offline; for a public repository the body is published already and this adds "
-        "nothing, for a private one it would"),
+        "nothing, for a private one it would. A residual remains after whole exclusion: an excluded private body's "
+        "content digest and path stay recorded (RFC5-17) and its Git object id is in the clone, so where a guesser "
+        "knows the rest of the body (a private fork of a public upstream whose file differs by one secret line, a "
+        "template, earlier public history) a digest confirms a guessed secret offline. Whole exclusion does not close "
+        "that; this scope keeps such digests in the run directory only and states nothing more about who can read "
+        "them. A pair that a private fork's record joins becomes private, so its public upstream's runs get the "
+        "stricter rules too"),
+    "consentRecordMetadata": (
+        "[Inferred] a launch consent record carries the repository's declared identity and normalised URL and is "
+        "committed into the observing project's own governance repository, on a dedicated reference Syzygy never "
+        "pushes (REQ-polaris-generation-046); for a private repository that makes its name, host path and commit ids "
+        "tracked objects of Syzygy's repository, one push by the operator from its remote. This scope does not govern "
+        "those records and cannot change it; the specification does"),
 }
 
 
@@ -243,8 +266,41 @@ def base_bytes(root: pathlib.Path = ROOT) -> tuple[str, str]:
                      "the base is unknown")
 
 
-def semantic_findings(base_text: str, proposed_text: str) -> list[str]:
+#: Pinned independently of EDITS: the number of edits and every scope path the change may touch. A seventh edit,
+#: or an edit anywhere else, fails here even if EDITS itself was extended.
+EDIT_COUNT = 6
+CHANGED_PATHS = frozenset({
+    ("purpose",), ("observedRepositories",), (NEW_KEY,), ("accessBoundary", "networkEgressRoutes", 0),
+    ("secretRedaction", "appliesTo"), ("rawBodyHandling", "rule"),
+})
+
+
+def _leaves(obj, path=()):
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            yield from _leaves(v, path + (k,))
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            yield from _leaves(v, path + (i,))
+    else:
+        yield path, obj
+
+
+def changed_paths(base_scope: dict, scope: dict) -> set[tuple]:
+    a, b = dict(_leaves(base_scope)), dict(_leaves(scope))
+    missing = object()
+    out = set()
+    for path in set(a) | set(b):
+        if a.get(path, missing) != b.get(path, missing):
+            out.add(path[:1] if path[:1] == (NEW_KEY,) else path)
+    return out
+
+
+def semantic_findings(base_text: str, proposed_text: str, edits=None) -> list[str]:
+    edits = EDITS if edits is None else edits
     findings: list[str] = []
+    if len(edits) != EDIT_COUNT:
+        findings.append(f"the change declares {len(edits)} edits, not {EDIT_COUNT}")
     base, proposed = json.loads(base_text), json.loads(proposed_text)
     changed = [k for k in base if base[k] != proposed.get(k)]
     if sorted(changed) != sorted(["policyVersion", SCOPE_KEY]) or list(base) != list(proposed):
@@ -261,7 +317,7 @@ def semantic_findings(base_text: str, proposed_text: str) -> list[str]:
     if visibility.get("admitted") != ["public", "private"] or visibility.get("values") != ["public", "private"]:
         findings.append("the admitted visibilities are not exactly public and private")
     undo = copy.deepcopy({k: v for k, v in scope.items() if k != NEW_KEY})
-    for where, old, new in reversed(EDITS):
+    for where, old, new in reversed(edits):
         try:
             text = _get(undo, where)
         except (KeyError, IndexError, TypeError):
@@ -273,10 +329,15 @@ def semantic_findings(base_text: str, proposed_text: str) -> list[str]:
         _set(undo, where, text.replace(new, old, 1))
     if undo != base[SCOPE_KEY]:
         findings.append("the scope changes somewhere other than the declared edits")
+    outside = changed_paths(base[SCOPE_KEY], scope) - CHANGED_PATHS
+    if outside:
+        findings.append(f"the scope changes outside the pinned paths: {sorted(map(str, outside))}")
     for term in ("public visibility exempts nothing",):
         if term not in scope.get("detectors", ""):
             findings.append(f"detectors lost {term!r}")
-    for term in ("is private for every rule of this scope", "labelled Inferred", "treats the repository as private"):
+    for term in ("is private for every rule of this scope", "labelled Inferred", "or cannot be read",
+                 "every other effective observation consent record of the same pair", "No other text of a record",
+                 "ADMISSION_ACT_FORMS"):
         if term not in visibility.get("rule", ""):
             findings.append(f"{NEW_KEY}.rule lost {term!r}")
     return findings
@@ -416,6 +477,29 @@ def selftest() -> int:
                         finds(lambda d: d[scope][NEW_KEY].__setitem__("rule", d[scope][NEW_KEY]["rule"].replace(
                             "is private for every rule of this scope", "is public for every rule of this scope")),
                               "rule lost")))
+
+        def revert(where, old, new):
+            def go(d):
+                _set(d[scope], where, _get(d[scope], where).replace(new, old, 1))
+            return go
+        for where, old, new in EDITS:
+            results.append((f"a reverted edit at {'.'.join(map(str, where))} ({old[:40]!r}) is found",
+                            finds(revert(where, old, new), "not present exactly once")))
+        for key in ("values", "rule", "privateSourceRules", "unchanged", "agentSessions", "consequence",
+                    "consentRecordMetadata"):
+            def gut(d, key=key):
+                d[scope][NEW_KEY][key] = "x" if isinstance(d[scope][NEW_KEY][key], str) else ["public"]
+            results.append((f"a gutted {NEW_KEY}.{key} is found", finds(gut, "not the declared value")))
+
+        # A seventh edit that relaxes detectors while keeping the pinned phrase: extending EDITS must not hide it.
+        relax = (("detectors",), "applies unchanged to every body under this scope",
+                 "applies to some bodies under this scope")
+        relaxed = copy.deepcopy(doc)
+        relaxed[scope]["detectors"] = relaxed[scope]["detectors"].replace(relax[1], relax[2], 1)
+        got = semantic_findings(base, json.dumps(relaxed), EDITS + (relax,))
+        results.append(("a seventh edit is refused by count", any("not 6" in f for f in got)))
+        results.append(("a seventh edit is refused by path", any("outside the pinned paths" in f for f in got)))
+        results.append(("the edit count is pinned", len(EDITS) == EDIT_COUNT))
 
     failed = [name for name, passed in results if not passed]
     for name in failed:
