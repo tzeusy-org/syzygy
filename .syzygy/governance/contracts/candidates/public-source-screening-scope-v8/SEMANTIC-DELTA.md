@@ -52,10 +52,14 @@ and renaming it would change every reader for no change in meaning.
      commit. A fork that a record places in an upstream's pair is part of that
      pair, so its private record makes the whole pair private. (Round 2,
      finding 3; defined in round 3, finding 4; its population named in round
-     4, E1.) Every file at a location where observation consent records are
-     read counts as a possible record: for launch records, every file at the
-     launch records' location on the dedicated reference, a drawer or
-     provider statement included; for the act forms, each named act file.
+     4, E1; bounded in round 5, X1.) Every file at a location where
+     observation consent records are read counts as a possible record: for
+     launch records, every file that a recording commit on the dedicated
+     reference added at the launch records' location (recording commits add
+     new files only), a drawer or provider statement included, and no file
+     the reference holds that no recording commit added, so a decision record
+     carried from the trunk is not a candidate; for the act forms, each named
+     act file.
      Such a file, not shown to be revoked or superseded, whose kind cannot be
      read, or that reads as an observation consent record whose effectiveness
      or pair cannot be read, including one that cannot be read at all, could
@@ -64,8 +68,8 @@ and renaming it would change every reader for no change in meaning.
      does not ignore it, guess its kind or pair or turn every pair private: a
      refusal names the fault, while a silent private reading would change the
      rules for every repository without saying why. **Its cost:** launch
-     records lie within the agent sessions' write reach, so one malformed
-     record written there stops every run, redis included. That costs
+     records lie within the agent sessions' write reach, so one malformed or
+     unreadable file written there stops every run, redis included. That costs
      availability, never exposure.
    - **The carriers, and the only ones.** A launch consent record states it by
      the operator's declaration whether the repository is public, which
@@ -106,10 +110,11 @@ and renaming it would change every reader for no change in meaning.
    ground** are not code-structure. Grounds include a denied path, an
    indeterminate or unclassifiable blob, a detector match on its path or
    body, active content, and a strict-UTF-8, NUL or resource-limit failure.
-   They are kept only in the run directory's check records and its local
-   review packets, and are never rendered or carried in any egress (round 4,
-   E2: the exclusion records hold neither, and this scope keeps their retained
-   fields unchanged). Public repositories keep today's reading.
+   They are kept, if at all, only in the run directory's check records and
+   its local review packets, and are never rendered or carried in any egress
+   (round 4, E2: the exclusion records hold neither, and this scope keeps
+   their retained fields unchanged). [Observed] Today those records hold the
+   object id and no size (round 5, N1). Public repositories keep today's reading.
 8. **`contentClassification.indeterminate`**, last sentence (round 3,
    finding 1): "Its path, object id and size remain code-structure" gains
    "except that, for a repository whose visibility is private, its object id
@@ -140,7 +145,7 @@ cost, the cost is in the owner packet.
 | **SEC-2, the operator-agent mode's agent sends** | **Not decidable by this policy.** Named in `agentSessions` | [Observed] REQ-polaris-generation-033: neither the statement's classes nor the screening policies bind the agent's reads or sends, and a non-governed subject needs no statement. See open question 1 |
 | **SEC-5, detectors** | Unchanged: every detector runs on every body, and a match excludes or redacts exactly as for a public repository | [Observed] `detectors` already says "public visibility exempts nothing". [Inferred] A private repository is likelier to hold live secrets, because the host's public push protection and secret scanning did not apply to it. That changes nothing in the detectors, which already run on all content |
 | **SEC-5, redacted-span retention** | **Off for private repositories:** any match excludes the whole body | [Observed] `withheldLines`: the whole body's content digest and Git object id stay recorded (RFC5-17), "so a guess at short withheld lines can be checked against them". [Inferred] For a public repository the guess gains nothing, because the body is published. For a private one, rendering every other line turns the digest into an offline oracle for the withheld line. [Observed] `secretRedaction.consequence` also says a secret next to a match but beyond the guard line is admitted, which matters more where secrets are live |
-| **Digests, object ids and sizes of excluded or withheld private blobs, on any ground** | **Withheld from pages and from every egress** (edits 7 and 8). They are kept only in the run directory's check records and its local review packets. Not moved into the exclusion records: RFC5-17 names neither field, `matchAction` and `unclassifiableExclusion` retain neither, and this scope keeps both exactly; a denied-path blob is never read and has no content digest to record (round 4, E2). The residual is disclosed in `sourceVisibility.consequence` | [Observed] Version 7 makes object ids and sizes code-structure (the class rule, and the indeterminate rule: "Its path, object id and size remain code-structure"). Code-structure can leave under an egress consent that lists it. The dossier renders the object id of an excluded blob (`packages/polaris-dossier/src/check-derive.ts`, which keeps it unless the path matched a detector, so a denied-path, indeterminate or body-matched blob keeps it; `packages/polaris-dossier/src/render.ts`, the discovery row and the source population). Round 3 found that denied paths (`.env`, `.pem`, `id_rsa`, the most secret-dense files) and indeterminate blobs are never run through a detector, so a detector-only rule missed them. [Inferred] A Git object id is a digest of the whole body. Where a guesser knows the rest of the body (a private fork of a public upstream whose file differs by one secret line, a template, earlier public history), it confirms a guessed secret offline, and the size narrows the secret's length. Withholding them, for every excluded or withheld private blob, closes the page and egress routes. What remains, stated rather than removed: whoever can read the run directory or the operator's clone, which holds every object id, can still confirm a guess; the pinned commit id, rendered on every discovery row and recorded in the launch record, digests the commit header and the root tree and so every object id in it, so a guesser who also knows the commit header (author, dates, message, parent) and the rest of the tree can confirm a guess against it: a narrower oracle, and one the scope cannot withhold (round 4, E4); and a secret that no detector matches in a body the scope admits is admitted and rendered under either visibility (SEC-5's general residual, unchanged). Alternative not taken: disclosing the residual and leaving the ids rendered and egressable |
+| **Digests, object ids and sizes of excluded or withheld private blobs, on any ground** | **Withheld from pages and from every egress** (edits 7 and 8). They are kept, if at all, only in the run directory's check records and its local review packets; today those hold the object id and no size (round 5, N1). Not moved into the exclusion records: RFC5-17 names neither field, `matchAction` and `unclassifiableExclusion` retain neither, and this scope keeps both exactly; a denied-path blob is never read and has no content digest to record (round 4, E2). The residual is disclosed in `sourceVisibility.consequence` | [Observed] Version 7 makes object ids and sizes code-structure (the class rule, and the indeterminate rule: "Its path, object id and size remain code-structure"). Code-structure can leave under an egress consent that lists it. The dossier renders the object id of an excluded blob (`packages/polaris-dossier/src/check-derive.ts`, which keeps it unless the path matched a detector, so a denied-path, indeterminate or body-matched blob keeps it; `packages/polaris-dossier/src/render.ts`, the discovery row and the source population). Round 3 found that denied paths (`.env`, `.pem`, `id_rsa`, the most secret-dense files) and indeterminate blobs are never run through a detector, so a detector-only rule missed them. [Inferred] A Git object id is a digest of the whole body. Where a guesser knows the rest of the body (a private fork of a public upstream whose file differs by one secret line, a template, earlier public history), it confirms a guessed secret offline, and the size narrows the secret's length. Withholding them, for every excluded or withheld private blob, closes the page and egress routes. What remains, stated rather than removed: whoever can read the run directory or the operator's clone, which holds every object id, can still confirm a guess; the pinned commit id, rendered on every discovery row and recorded in the launch record, digests the commit header and the root tree and so every object id in it, so a guesser who also knows the commit header (author, dates, message, parent) and the rest of the tree can confirm a guess against it: a narrower oracle, and one the scope cannot withhold (round 4, E4); and a secret that no detector matches in a body the scope admits is admitted and rendered under either visibility (SEC-5's general residual, unchanged). Alternative not taken: disclosing the residual and leaving the ids rendered and egressable |
 | **Excluded sources' metadata** | Unchanged | [Observed] `targetMetadataRule`: an excluded source's id is opaque, its path is not carried, and no body or digest is carried |
 | **Storage, logging, rendering, retention** | Unchanged: run directory only, never logged, a generated editorial draft never published, no machine response | [Observed] `rawBodyHandling`. [Unknown] No retention period is stated for a run directory under either visibility, and this version adds none (open question 3) |
 | **Agent review packets and page sinks** | Unchanged: the exemptions' `egress` rule governs what reaches an agent session | [Observed] `activeContent.codeContentExemption.egress`. [Inferred] A review packet that Syzygy writes for the operator's agent session is not an external egress Syzygy makes, because in that mode Syzygy makes no provider call (REQ-polaris-generation-033). So `rawBodyHandling.rule`'s stated-private condition does not reach it. If a review role uses a different provider from the author, that provider receives the content on the operator's act. Open question 1 covers it |

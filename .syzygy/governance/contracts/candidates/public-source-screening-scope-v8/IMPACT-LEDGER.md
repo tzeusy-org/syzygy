@@ -55,27 +55,34 @@ A policy act without its install turns `main` red, so these land together:
   which the reader's regex treats as ignorable.
   `packages/polaris-dossier/src/gate-sources.ts` reaches them through that
   reader. Every file at a location where observation consent records are
-  read counts as a possible record: every file at the launch records'
-  location on the dedicated reference, a drawer or provider statement
-  included, and each named act file. Such a file whose kind cannot be read,
+  read counts as a possible record: every file that a recording commit on
+  the dedicated reference added at the launch records' location (recording
+  commits add new files only), a drawer or provider statement included, but
+  no file the reference holds that no recording commit added; and each named
+  act file. Such a file, not shown to be revoked or superseded, whose kind
+  cannot be read,
   or that reads as an observation consent record whose effectiveness or pair
   cannot be read, including one that cannot be read at all, must refuse every
   read under the scope and name the file (round 2, finding 3; round 3,
-  finding 4; round 4, E1).
+  finding 4; round 4, E1; round 5, X1).
   Fixtures needed: the redis form reads public; a launch record answering no
   reads private; a public pair that also holds a private, silent or
   unreadable record reads private at every commit; a record with no readable
   pair refuses every read; an unparseable file, and a drawer or provider
   statement of unreadable kind, at the launch records' location each refuse
   every read; a drawer or provider statement that reads as its own kind does
-  not. [Inferred] A
+  not; a well-formed decision record the reference carries from the trunk,
+  added by no recording commit, is not a candidate. [Inferred] A
   private repository reaches Syzygy only through the launch-consent change's
   generic form, or through a new form drafted as its own package. This
   policy adds neither.
 - **Object ids and sizes** (round 2, finding 1; widened in round 3, finding
   1; sites added in round 4, E2 and E3). For a private pair, a blob excluded
-  or withheld on any ground keeps its object id and size only in the run
-  directory's check records and its local review packets. The grounds are a
+  or withheld on any ground keeps its object id and size, if at all, only in
+  the run directory's check records and its local review packets. [Observed]
+  Today those records hold the object id and no size (`CitedBlob` in
+  `packages/polaris-dossier/src/check-model.ts`, the packet spans in
+  `packages/polaris-dossier/src/review-model.ts`; round 5, N1). The grounds are a
   denied path, an indeterminate or unclassifiable blob, a detector match on
   path or body, active content, a strict-UTF-8, NUL or resource-limit
   failure, and the class gate's withholding of a body screening admitted but

@@ -4,4 +4,4 @@
 # hashes the PROPOSED bytes (the version-7 policy, variant s, with
 # proposed/<name>.pv.patch applied). The row is the argument of one
 # superseding approve-policy act, or of none.
-2dc07ba699ca4db31a365415375a860d2d6730b51b69ef9e09f0abd0b526c50e  .syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json  [variant: pv]
+44153bbe210c7a724f224f2bc1c9255db43cf0887b6ad22dd24884514f21bbe8  .syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json  [variant: pv]

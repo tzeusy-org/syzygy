@@ -96,8 +96,8 @@ EDITS: tuple[tuple[tuple[str | int, ...], str, str], ...] = (
      "metadata, with no body; except that, for a repository whose visibility is private (sourceVisibility), the object "
      "id and size of a blob that is excluded or withheld on any ground (a denied path, an indeterminate or "
      "unclassifiable blob, a detector match on its path or its body, active content, a strict-UTF-8, NUL or resource-"
-     "limit failure, or any other exclusion) are not code-structure: they are kept only in the run directory's check "
-     "records and its local review packets, and are never rendered or carried in any egress"),
+     "limit failure, or any other exclusion) are not code-structure: they are kept, if at all, only in the run "
+     "directory's check records and its local review packets, and are never rendered or carried in any egress"),
     (("contentClassification", "indeterminate"),
      "Its path, object id and size remain code-structure",
      "Its path, object id and size remain code-structure, except that, for a repository whose visibility is private "
@@ -123,8 +123,9 @@ SOURCE_VISIBILITY = {
         "public; a further act states public by its form only when a later version of this policy names it, never "
         "because a code list of act forms grows. No other text of a record, its title or prose included, is a carrier. "
         "Every file at a location where observation consent records are read counts as a possible one: for launch consent "
-        "records, every file at the launch records' location on the dedicated reference, a drawer or provider statement "
-        "included; for the act forms, each act file named above. Any such file not shown to be revoked or superseded "
+        "records, every file that a recording commit on the dedicated reference added at the launch records' location "
+        "(a recording commit adds new files only), a drawer or provider statement included, and no file the reference "
+        "holds that no recording commit added; for the act forms, each act file named above. Any such file not shown to be revoked or superseded "
         "whose kind cannot be read, or that reads as an observation consent record whose effectiveness or pair cannot "
         "be read, including one that cannot be read at all, could be a record of any pair, so while one exists every "
         "read under this scope is refused, with that file named, until it is read or revoked; this scope does not "
@@ -179,8 +180,9 @@ SOURCE_VISIBILITY = {
         "template, earlier public history), and the size narrows the secret's length. For a public repository the "
         "object id and size are code-structure, rendered on the dossier's pages and carried by an egress consent that "
         "lists code-structure. For a private repository this version withholds them for every blob excluded or "
-        "withheld on any ground, a denied path, an indeterminate blob and a detector match among them: they are kept only "
-        "in the run directory's check records and its local review packets, and are never rendered or sent. What is "
+        "withheld on any ground, a denied path, an indeterminate blob and a detector match among them: they are kept, if "
+        "at all, only in the run directory's check records and its local review packets, and are never rendered or "
+        "sent. What is "
         "left: the run directory itself and the operator's clone, which holds every object id, so whoever can read "
         "either can still confirm a guess; the pinned commit id, rendered on every discovery row and recorded in the "
         "launch record, which is a digest of the commit header and the root tree and so of every object id in it, the "
@@ -314,7 +316,8 @@ RULE_PHRASES = ("is private for every rule of this scope", "labelled Inferred", 
                 "every other effective observation consent record of the same pair", "No other text of a record",
                 "and by no other act", "every read under this scope is refused",
                 "whose effectiveness or pair cannot be read", "including one that cannot be read at all",
-                "a drawer or provider statement included", "whose kind cannot be read", "with that file named")
+                "a drawer or provider statement included", "whose kind cannot be read", "with that file named",
+                "that a recording commit on the dedicated reference added")
 
 #: Pinned independently of EDITS: the number of edits and every scope path the change may touch. An extra edit,
 #: or an edit anywhere else, fails here even if EDITS itself was extended.

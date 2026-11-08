@@ -44,8 +44,9 @@ as for a public repository or stricter.
   is withheld, for any reason, are not shown on any page and not sent
   anywhere. That covers a secret-detector match, a denied path such as
   `.env` or a key file, a file of a kind the policy cannot classify, and a
-  file whose kind your consent does not cover. They stay only in the run
-  directory's check records and its review packets.
+  file whose kind your consent does not cover. The object id stays only in
+  the run directory's check records and its review packets; the size is
+  kept in neither.
   Public repositories keep showing them, as today.
 - **Every detector, placement and storage rule stays as it is.**
 
@@ -93,11 +94,13 @@ screening rule gets looser for anyone.
   secret that no detector
   recognises, in a file the policy admits, is shown as before, for public
   and private repositories alike.
-- **One broken consent record stops every run.** If a file where consent
-  records are kept cannot be read, Syzygy cannot tell whether it is a
-  consent record or which repository it concerns, so it refuses every run,
-  public ones included, until the file is fixed or revoked. That includes
-  any file there that should be a drawer or provider statement.
+- **One broken consent record stops every run.** If a file that a launch
+  recording added cannot be read, Syzygy cannot tell whether it is a consent
+  record or which repository it concerns, so it refuses every run, public
+  ones included, until it is read or a later record revokes it (records are
+  only ever added, never edited or removed). That includes a recorded file
+  that should be a drawer or provider statement. Other files the branch
+  carries, such as decision records, do not count.
   Launch records sit where your agent could write, so one malformed record
   there would stop everything. It never exposes anything; it only stops.
 - **The label is your word.** If a private repository is declared public, it
@@ -112,7 +115,7 @@ screening rule gets looser for anyone.
   changed without the code, every run, public ones included, would be
   refused, so the two are not separated.
 - **It also waits for launch-consent spec version 1.1.** You chose that the
-  launch question warns that a private repository's name goes onto a branch
+  launch question warns that a private repository's name and URL go onto a branch
   of Syzygy's repository (question 2 below). That warning is drafted into
   launch-consent spec version 1.1. Version 8 takes effect only after you
   have signed version 1.1, even if you sign version 8 first. Until both are
@@ -128,9 +131,9 @@ policy's bytes.
 1. **Should every private repository need a per-project provider statement
    before a run?** Today the specification asks for one only for "governed"
    repositories, and this policy cannot require one.
-   **Your answer (item `syzygy-pdja.23-provider-statement`, B):** no
-   provider statement for a non-governed private repository; your launch
-   answer suffices. So a private repository with no evidence drawer and no
+   **Your answer (item `syzygy-pdja.23-provider-statement`, B): "No: the
+   launch answer suffices".** No provider statement is needed for a
+   non-governed private repository. So a private repository with no evidence drawer and no
    `openspec/` or `.syzygy/` tree reaches your agent's provider on your
    launch alone, as "What it costs" says. No specification amendment follows
    from this answer.
