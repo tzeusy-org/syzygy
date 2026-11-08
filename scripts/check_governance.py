@@ -3796,6 +3796,31 @@ def _activate_public_source_scope_v7_copy_registry():
 _activate_public_source_scope_v7_copy_registry()
 
 
+#: The public-source screening scope, version 8 (`syzygy-pdja.23`, owner direction
+#: OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08 item `syzygy-pdja.21-public`,
+#: answer B; builder `scripts/build_public_source_screening_scope_v8.py`): one
+#: `approve-policy` act over the one manifest row (variant `pv`: private sources
+#: admitted under stricter rules), reusing the policy's phrase label and
+#: superseding the version-7 act. Its packet carries no digest, so the manifest
+#: is the only copy. Registered at drafting time and gated on the performed
+#: record, for the reason the version-2 registration gives; the version-7
+#: copies' historical pinning, the chain link and the record's manifest-heading
+#: exemption arrive with the act.
+PUBLIC_SOURCE_SCOPE_V8_DIR = f"{CANDIDATES}/public-source-screening-scope-v8"
+PUBLIC_SOURCE_SCOPE_V8_MANIFEST = f"{PUBLIC_SOURCE_SCOPE_V8_DIR}/PUBLIC-SOURCE-SCREENING-SCOPE-V8-MANIFEST.txt"
+PUBLIC_SOURCE_SCOPE_V8_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-ACT.md"
+
+
+def _activate_public_source_scope_v8_copy_registry():
+    """The version-8 manifest is a current copy of the policy argument once the act exists."""
+    if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT))
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_MANIFEST))):
+        ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V8_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
+
+
+_activate_public_source_scope_v8_copy_registry()
+
+
 #: The act-time digests the specification-policy restyle supersedes as the
 #: current policy state: act 7's CC-IMPACT argument and the bootstrap
 #: transaction's CC-SPEC row (row 5 of its act, line 11 of its manifest).
