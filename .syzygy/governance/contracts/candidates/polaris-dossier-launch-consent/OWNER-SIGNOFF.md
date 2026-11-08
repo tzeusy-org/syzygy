@@ -48,11 +48,12 @@ Every finding below is a note; none blocks. Each would be a later version
     naming the pinned revision" now describes only the common case. A run
     whose observation consent came from another act meets it by that
     consent. The sentence stays true; an optional rewording would name both.
-  - I3: a run that relies on no launch consent record keeps every
-    predecessor meaning, as the header says, but REQ-046 may still ask it for
-    a missing statement. An optional clause would say so.
+  - I3: a run that neither relies on nor records a launch consent record
+    keeps every predecessor meaning, as the header says, but REQ-046 may
+    still ask it for a missing statement. An optional clause would say so.
   - I4 [Unknown]: the wider "launch-consented run" also widens the
-    no-placement scenario to runs whose consent another act made. Whether the
+    no-placement scenario to runs whose observation consent another act made
+    but which rely on or record a launch consent record. Whether the
     placement meaning of REQ-polaris-generation-025 is unchanged for those
     runs was outside the round's reading set and was not checked.
   - I5: "any reference a run may pin", where the records may not live, can
@@ -64,18 +65,27 @@ Every finding below is a note; none blocks. Each would be a later version
   - G5: the run record must state the commit date, but the rule on what
     pre-answer reads may store does not list the run record, so a test cannot
     tell which read a stored date came from.
-  - G6: four duties have no falsifier: asking before refusing when the write
-    consent is absent; refusing a self-observation after asking; reading
-    records from any other reference; and per-repository code. The last needs
-    a structural test.
+  - G6: four forbidden behaviours are not named by the falsifier, so a test
+    could miss them: asking anything before refusing when the write consent is
+    absent (the spec says Syzygy SHALL ask nothing and refuse); refusing a
+    self-observation only after asking (it SHALL refuse before asking);
+    reading records from any reference but the dedicated one; and
+    per-repository code. The last needs a structural test.
   - G7: "every file a placement would have placed is withheld" is vacuous for
     a repository with no placement at all. A better wording is "every file
     the screening withholds for want of a placement".
   - G8: "any reference a run may pin" is vacuous for every repository but
     Syzygy's own. The dedicated branch also lies in agent sessions' write
-    reach: deleting or force-moving it hides every launch record, after which
+    reach: deleting or force-moving it hides every launch consent record, after which
     a revoked record goes unnamed. That residual is disclosed for the
     identity but not for the branch.
+  - G9: the shorthand "launch records" for "launch consent records" remains
+    in the design and impact ledger (four places). It changes no meaning; no
+    spec byte uses it.
+- **Status page after install:** the figure "without the signed-off dossier
+  local-agent addition" will count this addition too, because that figure
+  means everything except the local-agent spec. It stays accurate; the page
+  does not say so.
 
 ## After the sign-off (for the lead, not the owner)
 
