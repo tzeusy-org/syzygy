@@ -194,10 +194,11 @@ describe('Zero downstream citations of Polaris as authority (PWB-REQ-014)', () =
     }
   });
 
-  // This exact case reached 2,822.140333 ms in five ordinary product contexts at 82952500 (5,983 committed swept files):
-  // docs/evidence/syzygy-bpyt-33/timeout-measurement.json. Retain the existing 25 s under PR537's keep-existing rule:
-  // 22,177.859667 ms headroom over that full-context worst. The earlier stressed whole-file 8,029 ms observation remains
-  // in docs/evidence/syzygy-exj7/flaky-under-load-2026-11-04.json; it is standalone evidence, not a full-context measurement.
+  // This exact case took 4,624.105763 ms in the completed ordinary e8bc911d check:all context (6,251 swept files).
+  // docs/evidence/syzygy-bpyt-33/fullgate-e8-2026-11-08.json retains its identity and one-observation maximum.
+  // Keep the existing 25 s under PR537's keep-existing rule: 20,375.894237 ms headroom over that observation.
+  // The five historical 82952500 contexts remain in timeout-measurement.json with their corpus/applicability limits;
+  // the earlier 8,029 ms exj7 observation is standalone evidence. Neither is relabeled as current timing.
   it('no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface', () => {
     const roots = ['.syzygy/governance', 'openspec', 'packages', 'apps', 'docs'];
     const isSwept = (path: string): boolean => /\.(md|json|ya?ml|ts)$/.test(path);

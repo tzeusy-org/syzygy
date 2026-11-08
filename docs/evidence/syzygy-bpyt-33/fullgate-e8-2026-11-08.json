@@ -1,0 +1,220 @@
+{
+  "schema": "syzygy-bpyt33-current-fullgate-measurement/1",
+  "epistemic": "[Observed] exact retained current report/source/corpus/process facts; sufficiency is independently reviewed inference, not acceptance or new execution.",
+  "bead": "syzygy-bpyt.33",
+  "measured_subject": "e8bc911d7328b5f035b06dbe571f8fb59c3bc879",
+  "measured_artifact": {
+    "path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+    "sha256": "36395c6f47a6d2ae7db31f6dd3b9418af7b26b41eee5db8e1447b869ab2bc802"
+  },
+  "successor_artifact": {
+    "path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+    "sha256": "b3d9a24c9bad53fba953d61a0f19e65a90b85fa3b2066031a212f49cb3e3fe24",
+    "delta": "Adjacent reason only; complete test body/title/assertions/fixtures and25000 unchanged. Successor source/corpus is not the subject executed by this gate."
+  },
+  "current_observation": {
+    "full_path": "apps/three-surface-poc/src/polaris-authority-sweep.test.ts",
+    "full_name": "Zero downstream citations of Polaris as authority (PWB-REQ-014) > no source/authority/provenance field in the governance, spec, code or docs trees names the Polaris surface",
+    "source_sha256": "36395c6f47a6d2ae7db31f6dd3b9418af7b26b41eee5db8e1447b869ab2bc802",
+    "report": {
+      "path": "/home/orca/.tmp/syzygy-33-pinned-e8-fullgate-20261108-84fdyuyz/current-runtime-attempt-01/command-01/reports/report-9138.json",
+      "bytes": 1047847,
+      "sha256": "e0809e15e0edad93e71fdabd36655307a84683bd885a429169b54a8a5f28e855"
+    },
+    "named_rows": 1,
+    "file_cases": 6,
+    "state": "pass",
+    "duration_ms_literal": "4624.1057630000005",
+    "ordinary_project_default_ms": 5000,
+    "ordinary_hook_default_ms": 10000,
+    "committed_site_ms": 25000,
+    "site_budget_evidence": "Literal committed source, no budget override; reporter does not record per-case effective timeout.",
+    "current_applicable_fullcontext_observation_count": 1,
+    "observed_maximum_ms": "4624.1057630000005",
+    "headroom_subtraction": "25000 - 4624.1057630000005",
+    "headroom_ms": "20375.8942369999995",
+    "budget_over_observation": "5.406450734764475865379256598",
+    "five_bundle_sizing": false,
+    "helper_invocation": "NONE; existing size(five) precondition unchanged, not applicable to one witness."
+  },
+  "product_population": {
+    "tiers": [
+      {
+        "project": "unit",
+        "files": 173,
+        "cases": 4016,
+        "states": {
+          "pass": 4016
+        }
+      },
+      {
+        "project": "e2e",
+        "files": 15,
+        "cases": 142,
+        "states": {
+          "pass": 140,
+          "skip": 2
+        }
+      },
+      {
+        "project": "system",
+        "files": 11,
+        "cases": 53,
+        "states": {
+          "pass": 53
+        }
+      },
+      {
+        "project": "integration",
+        "files": 90,
+        "cases": 2738,
+        "states": {
+          "pass": 2735,
+          "skip": 3
+        }
+      }
+    ],
+    "files": 289,
+    "cases": 6949,
+    "passed": 6944,
+    "skipped": 5,
+    "exact_skips": [
+      {
+        "file": "apps/three-surface-poc/src/polaris-opening-index.browser.test.ts",
+        "project": "e2e",
+        "name": "opening index in a real browser (PWB-REQ-010, P-98) > a captured /polaris page meets the oracle at both viewports",
+        "state": "skip"
+      },
+      {
+        "file": "packages/polaris-dossier/src/no-egress.test.ts",
+        "project": "e2e",
+        "name": "no provider call and no transmission (S10), without strace > is not proved on this host: strace is unavailable, so the capture is skipped, never reported as passed",
+        "state": "skip"
+      },
+      {
+        "file": "packages/polaris-dossier/src/session-view.test.ts",
+        "project": "integration",
+        "name": "session views > the inventory session sees the clone read-only and its own directory, never the run or another session",
+        "state": "skip"
+      },
+      {
+        "file": "packages/polaris-dossier/src/session-view.test.ts",
+        "project": "integration",
+        "name": "session views > a review session sees only its own directory and the checkout read-only",
+        "state": "skip"
+      },
+      {
+        "file": "packages/polaris-dossier/src/session-view.test.ts",
+        "project": "integration",
+        "name": "session views > the author writes only drafts/ and sees no helper session",
+        "state": "skip"
+      }
+    ],
+    "nested_reports": 10,
+    "all_retained_reports": 14,
+    "nested_intentional_failures_not_product_failures": true,
+    "unhandled_recorded": 0,
+    "battery": {
+      "ok": 127,
+      "failed": 0,
+      "commands": 127,
+      "two_methods": "Python literal/line count and native awk"
+    },
+    "live_operator_exclusions": "The ordinary product check:all contract excludes live/operator-only commands; no live/operator proof inferred."
+  },
+  "measurement_context": "ONE canonical clean committed pinned-e8 clone check:all (which includes check and tiers, full unit/integration/e2e/system and canonical battery); explicit Chrome and freshclone guard enabled, passive reporter only, no standalone repeats or global/hook timeout override.",
+  "command": {
+    "argv": [
+      "npm",
+      "run",
+      "check:all"
+    ],
+    "startedAt": "2026-11-07T23:49:04.684814+00:00",
+    "finishedAt": "2026-11-07T23:59:43.114887+00:00",
+    "reported_wall_seconds": 638.4300819040509,
+    "native_exit": 0,
+    "native_driver_session": 67925,
+    "native_completion_chunk": "3954b7"
+  },
+  "corpus": {
+    "files": 6251,
+    "bytes": 157556770,
+    "before_after_equal": true,
+    "current_python_native_hash_agree": true
+  },
+  "configuration": {
+    "runtime_config": {
+      "path": "/home/orca/.tmp/syzygy-33-pinned-e8-fullgate-20261108-84fdyuyz/current-runtime-attempt-01/CURRENT-CONFIG.json",
+      "bytes": 776,
+      "sha256": "5b111c3b54546151ff46c60706c0640db0df0d3f21edadb7ed3e2c4f73593788"
+    },
+    "preflight_host_and_bindings": {
+      "path": "/home/orca/.tmp/syzygy-33-root-live-preflight-02-20261108/ROOT-LIVE-PREFLIGHT.json",
+      "bytes": 2307,
+      "sha256": "e89f2f45c6dbe7a12ca04bfb7d24062a56cfbb3a97aeb6ddd5c6a179e42ccc1a"
+    },
+    "actual_attempt_load_and_streams": {
+      "path": "/home/orca/.tmp/syzygy-33-pinned-e8-fullgate-20261108-84fdyuyz/current-runtime-attempt-01/command-01/attempt.json",
+      "bytes": 8833,
+      "sha256": "44249da26a65fb3cf9656249c60e3d8d5946c0ebfa5c39efb10aa7e6fc736740"
+    },
+    "site_timeout_ms": 25000,
+    "site_budget_qualification": "Committed literal; reporter captures project5000/hook10000, not a per-case effective-timeout field. No override introduced."
+  },
+  "lifetime": {
+    "method": "linux-subreaper-pidfd",
+    "complete_reported": true,
+    "reaped_count": 150,
+    "writers_reported": 0,
+    "signals_reported": 0,
+    "qualification": "Emitter lifetime method/result reconciled to native natural whole-driver terminal; no independent kernel endpoint authentication claimed"
+  },
+  "tmp": {
+    "pre_entries": 589,
+    "post_entries": 1511,
+    "current_python_native_census_agree": true,
+    "cleanup_performed": false
+  },
+  "capture": {
+    "root_manifest": {
+      "path": "/home/orca/.tmp/syzygy-33-one-fullgate-terminal-root-intake-20261108/MANIFEST.json",
+      "bytes": 85939,
+      "sha256": "50481a6c64c45add5dbb7f0b41dd8d03af3f24a425f52b37a3ad89954481b428"
+    },
+    "root_outcome": {
+      "path": "/home/orca/.tmp/syzygy-33-one-fullgate-terminal-root-intake-20261108/ROOT-ACTUAL-ONE-FULLGATE-OUTCOME.json",
+      "bytes": 15914,
+      "sha256": "817f498e0b3ecef2f4b470e486c50baea4cfe35b6d47adca5db2cb66602aeae1"
+    },
+    "observer_first_latest": 109,
+    "events": 236,
+    "latest_current_bytes_agree": true,
+    "qualification": "ROOT read-time byte custody, native natural whole-driver terminal and emitter lifetime reconciliation. Not authentication, independent kernel endpoints, separate product rerun or hosted integration."
+  },
+  "historical_five": {
+    "predecessor": {
+      "path": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.33/docs/evidence/syzygy-bpyt-33/timeout-measurement.json",
+      "bytes": 27625,
+      "sha256": "aa74958017cd96ccda7487291c08e89249860bafd630795fa5616732d690f9b2"
+    },
+    "measured_subject": "829525003da054787a905bacf1e4b7d3176c68ef",
+    "historical_files": 5983,
+    "current_measured_files": 6251,
+    "path_population_delta": {
+      "added": 268,
+      "removed": 0
+    },
+    "scope": "Retained five complete-file attempts plus one current complete context; no historical timing transplant/current five-bundle sizing/newfive quota."
+  },
+  "failures_retained": "Prior failed/censored gates, preflight47509 and exact8guard runnera816ef native1 remain unchanged; current0 rewrites none.",
+  "proof_applicability_record": "proof-applicability-2026-11-08.json",
+  "review": {
+    "manifest": {
+      "path": "/home/orca/.tmp/syzygy-33-current-fullscope-evidence-quality-review-20261108/REVIEW-MANIFEST.json",
+      "bytes": 15528,
+      "sha256": "eed413123ffaf9e5b81270b4bcd987f1f9b0523dd4ff66e8033a450b6961ea1e"
+    },
+    "verdict": "QUALIFIED CONFIRM - CURRENT EVIDENCE AND KEEP-EXISTING; ORIGINAL OUTCOME INCOMPLETE"
+  },
+  "remaining": "Successor source/corpus applicability and affected review/verification; bounded applicability of actually relied-on changed/reused GP-Q0 altered-prose/per-predicate proof and existing-cycle notice; BOTHactual1z3.22AND1z3.25, finalreview/hosted/current-main applicability/lawful landing/validated cleanup. No passing aggregate guard-runner or whole-outcome claim."
+}
