@@ -1,0 +1,137 @@
+{
+  "subject": "Polaris dossier reader standards: shipped skill reference, carried by the brief and the design-review criteria, counted advice on the check report (syzygy-pdja.17)",
+  "bead": "syzygy-pdja.17",
+  "date": "2026-11-08",
+  "ranAt": "9b108eabbd3cd004bc395bc022650e618bd707ad",
+  "ranAtNote": "A work-in-progress commit on agent/syzygy-pdja.17-reader-standards; a rebase-merge leaves it reachable from no ref, so the digests below are the anchor.",
+  "subjectDigests": {
+    ".claude/skills/polaris-dossier/references/reader-standards.md": "ede073f11ee7eaf5832cba4b8c7addd0bb9ae1cb3b058b7f0ef502aefb7e9555",
+    ".codex/skills/polaris-dossier/references/reader-standards.md": "ede073f11ee7eaf5832cba4b8c7addd0bb9ae1cb3b058b7f0ef502aefb7e9555",
+    "packages/polaris-dossier/src/brief.test.ts": "1fe91212c6739f68715f8d1bb023f10d71be2f4d2674c87c4f2c5300116e33c9",
+    "packages/polaris-dossier/src/brief.ts": "f454eead177bb2947b3ac9c8e1b04faeeb14d4ea0e66999c1b655f9fb6a17fb0",
+    "packages/polaris-dossier/src/check.test.ts": "6ae91b9d86889ab89e17f86f7fe15abc05c9b1dfb903b95e8107baf9beda147d",
+    "packages/polaris-dossier/src/check.ts": "f0aa4f976644c69fe326416c9601237a11c4a4e0284b314638bbf26c084f9f61",
+    "packages/polaris-dossier/src/design-review.ts": "3a9f588b09792f6eeb2c3dffe85b82603fb8aad35c8fa9a0080fad789500b3e9",
+    "packages/polaris-dossier/src/reader-advice.ts": "1efd9dc8617b8350a648b5ba804006187afefa146dd19fabc735f2842625017d",
+    "packages/polaris-dossier/src/reader-standards.test.ts": "1d4cdc26466e1144fe8e8af915a25fc6b86277273044514711069b54f052e13d",
+    "packages/polaris-dossier/src/reader-standards.ts": "e869391c2e96ca8aa13b85255faeb351b2a8aead9e3672f35af8e489e639b2d8"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/{reader-standards,brief,check,cli,design-review}.test.ts (each mutant alone, restored after)",
+  "mutants": [
+    {
+      "id": "brief-no-standards",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    readerStandardsSection(),\n",
+      "new": "",
+      "outcome": "killed"
+    },
+    {
+      "id": "record-no-standards",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    readerStandards: { version: READER_STANDARDS_VERSION, sha256: READER_STANDARDS_SHA256 },\n",
+      "new": "",
+      "outcome": "killed"
+    },
+    {
+      "id": "criteria-no-text",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "    READER_STANDARDS,\n",
+      "new": "",
+      "outcome": "killed"
+    },
+    {
+      "id": "criteria-no-ids",
+      "file": "packages/polaris-dossier/src/design-review.ts",
+      "old": "whose message begins with the standard's identifier (RS-1 to RS-25)",
+      "new": "naming the standard",
+      "outcome": "killed"
+    },
+    {
+      "id": "report-no-advice",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "plan.command === 'check' && parseFault === null ? readerAdvice(doc) : undefined",
+      "new": "undefined",
+      "outcome": "killed"
+    },
+    {
+      "id": "words-ge",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (words > SECTION_WORD_LIMIT)",
+      "new": "if (words >= SECTION_WORD_LIMIT)",
+      "outcome": "killed"
+    },
+    {
+      "id": "dives-ge",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (deepDives.length > DEEP_DIVE_LIMIT)",
+      "new": "if (deepDives.length >= DEEP_DIVE_LIMIT)",
+      "outcome": "killed"
+    },
+    {
+      "id": "drawn-inverted",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (id !== undefined && !drawn.has(id))",
+      "new": "if (id !== undefined && drawn.has(id))",
+      "outcome": "killed"
+    },
+    {
+      "id": "dives-need-diagram",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "    list(doc['sections']).forEach((section, i) => {\n      const id",
+      "new": "    [...list(doc['sections']), ...list(doc['deepDives'])].forEach((section, i) => {\n      const id",
+      "outcome": "killed"
+    },
+    {
+      "id": "elements-counted",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (!isRecord(entry) || entry['kind'] !== undefined) return 0;",
+      "new": "if (!isRecord(entry)) return 0;",
+      "outcome": "killed"
+    },
+    {
+      "id": "children-ignored",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "words(entry['text']) + list(entry['children'])",
+      "new": "words(entry['text']) + 0 * list(entry['children'])",
+      "outcome": "killed"
+    },
+    {
+      "id": "no-camel",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (/\\b[a-z]+[A-Z][A-Za-z0-9]*\\b/u.test(title)) return 'it holds a camelCase identifier';\n",
+      "new": "",
+      "outcome": "killed"
+    },
+    {
+      "id": "no-file",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "return 'it names a file';",
+      "new": "return undefined;",
+      "outcome": "killed"
+    },
+    {
+      "id": "no-demote",
+      "file": "packages/polaris-dossier/src/reader-standards.ts",
+      "old": "(line.startsWith('## ') ? `#${line}` : line)",
+      "new": "line",
+      "outcome": "killed"
+    },
+    {
+      "id": "version-kept",
+      "file": "packages/polaris-dossier/src/reader-standards.ts",
+      "old": "!line.startsWith('Version: ') && ",
+      "new": "",
+      "outcome": "killed"
+    },
+    {
+      "id": "codex-copy-diverges",
+      "file": ".codex/skills/polaris-dossier/references/reader-standards.md",
+      "old": "## Truth\n",
+      "new": "## Truth and honesty\n",
+      "outcome": "killed"
+    }
+  ],
+  "killed": 16,
+  "total": 16,
+  "history": "In a first pass elements-counted survived: its only element case was a table, whose entry carries no text. A callout whose children hold 400 words was added; all 16 killed on the second pass."
+}
