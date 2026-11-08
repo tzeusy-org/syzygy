@@ -16,9 +16,12 @@
 - [x] Owner answers Q1 to Q10 and the identity question (G1), recorded in
       `OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08.md`; REQ-046 and REQ-047
       narrowed to them and repaired for G1, G2 and G3.
-- [ ] Round 3 confirmation of the repaired bytes per
+- [x] Round 3 confirmation of the repaired bytes per
       `REVIEW-BRIEF-ROUND-3.md`, which the owner left in place by not writing
       "no review".
+- [ ] Round 4, narrow: confirm only the round-3 repairs per
+      `REVIEW-BRIEF-ROUND-4.md` (`ROUND-3-DISPOSITIONS.md`); the last round
+      before the sign-off package, whatever it returns.
 - [ ] Build the sign-off package: a version tag under
       `OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md`, offered to the
       owner; never signed by an agent.

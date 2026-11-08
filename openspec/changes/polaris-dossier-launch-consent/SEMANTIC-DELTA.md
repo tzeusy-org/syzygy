@@ -26,6 +26,8 @@ as signed in the local-agent-mode change.
 
 ## Displaced (for launch-consented runs only)
 
+A launch-consented run is one that relies on or records any launch consent record: an observation consent, a drawer statement or a provider statement recorded at launch (round 3, H1).
+
 | Predecessor text (quoted) | Reading under this change |
 |---|---|
 | REQ-polaris-generation-033: "Syzygy SHALL write only to its own state directory for the run, never to a location derived from the clone's path" | Besides the run's state directory, Syzygy may write the launch consent records and their recording commit on the dedicated reference, and only those, before the state directory is created. The ban on a location derived from the clone's path is unchanged |

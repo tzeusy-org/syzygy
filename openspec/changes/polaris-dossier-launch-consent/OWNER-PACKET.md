@@ -241,6 +241,7 @@ starts before sign-off and the Q3 act.
   records that disagree are refused before asking. A URL change at a commit no
   record names still splits the identity, a fork at an upstream commit is
   proposed the upstream identity, and two repositories sharing the last two
-  URL segments share one; all are disclosed, labelled Inferred.
+  URL segments share one; all are disclosed, labelled Inferred. The refusal when matching records disagree was drafted after your
+  answer, as the direction record says it was owed; round 3 accepted it.
 - Reconstructed motivations and comparisons (the parked REQ-038/039) are
   separate.
