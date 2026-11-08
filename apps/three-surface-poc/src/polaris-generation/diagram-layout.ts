@@ -29,6 +29,9 @@ const LEADER_SAMPLES = 64;
 const LEADER_MIN_RUN = 6;
 const LEADER_SHARED = 1.5;
 const LEADER_EDGE_STOPS = 16;
+/** An arrowhead as drawn: the marker's 10-unit triangle at `markerWidth` 8 in stroke units, on an edge stroked 2 wide (1.6 px a unit),
+ * its tip one unit past the line's end (`refX` 9). The hover's wider stroke draws it larger; at rest it is this size. */
+const ARROW_UNIT = 1.6;
 
 /** How much room a diagram gets. The default is the draft preview's and the provider mode's form, whose bytes are pinned. */
 export interface DiagramSpacing {
@@ -227,6 +230,28 @@ function curveSamples(d: string): readonly Point[] {
   });
 }
 
+type Triangle = readonly [Point, Point, Point];
+
+/** An edge's arrowhead triangle, pointing along the curve's end tangent (the marker's `orient="auto"`). */
+// Test seam: exported for the tests; production code reaches it only inside this file.
+export function arrowheadOf(d: string): Triangle {
+  const [x0, y0, x1, y1, x2, y2, x3, y3] = [...d.matchAll(/-?[\d.]+/gu)].map(m => Number(m[0])) as [number, number, number, number, number, number, number, number];
+  // The end tangent runs from the last control point that differs from the end.
+  const [fromX, fromY] = x2 !== x3 || y2 !== y3 ? [x2, y2] : x1 !== x3 || y1 !== y3 ? [x1, y1] : [x0, y0];
+  const length = Math.hypot(x3 - fromX, y3 - fromY) || 1;
+  const ux = (x3 - fromX) / length, uy = (y3 - fromY) / length;
+  const at = (along: number, across: number): Point => ({ x: x3 + (ux * along - uy * across) * ARROW_UNIT, y: y3 + (uy * along + ux * across) * ARROW_UNIT });
+  return [at(1, 0), at(-9, -5), at(-9, 5)];
+}
+
+// Test seam: exported for the tests; production code reaches it only inside this file.
+export function distanceToTriangle(at: Point, [a, b, c]: Triangle): number {
+  const side = (p: Point, q: Point): number => (q.x - p.x) * (at.y - p.y) - (q.y - p.y) * (at.x - p.x);
+  const ab = side(a, b), bc = side(b, c), ca = side(c, a);
+  if ((ab >= 0 && bc >= 0 && ca >= 0) || (ab <= 0 && bc <= 0 && ca <= 0)) return 0;
+  return Math.min(distanceToSegment(at, a, b), distanceToSegment(at, b, c), distanceToSegment(at, c, a));
+}
+
 function distanceToSegment(at: Point, a: Point, b: Point): number {
   const dx = b.x - a.x, dy = b.y - a.y, length = dx * dx + dy * dy;
   const t = length === 0 ? 0 : Math.max(0, Math.min(1, ((at.x - a.x) * dx + (at.y - a.y) * dy) / length));
@@ -235,13 +260,15 @@ function distanceToSegment(at: Point, a: Point, b: Point): number {
 
 /**
  * A moved label's leader: the shortest straight run from the label's edge to a point of its own curve, clear of every other label and node,
- * ending where no other line runs, so the picture cannot tie the label to that line. Undefined when the label already sits against its own
+ * ending where no other line runs and outside every other line's arrowhead, so the picture cannot tie the label to that line. Undefined when the label already sits against its own
  * line, since a leader says nothing more there, and when no such run exists: an absent leader leaves a reader unassisted, a wrong one misleads.
  */
-function leaderRun(own: readonly Point[], label: LabelBox, others: readonly LabelBox[], otherCurves: readonly (readonly Point[])[]): { readonly from: Point; readonly to: Point } | undefined {
+// Test seam: exported for the tests; production code reaches it only inside this file.
+export function leaderRun(own: readonly Point[], label: LabelBox, others: readonly LabelBox[], otherCurves: readonly (readonly Point[])[], otherHeads: readonly Triangle[]): { readonly from: Point; readonly to: Point } | undefined {
   const gap = (at: Point): number => Math.hypot(Math.max(label.left - at.x, 0, at.x - label.right), Math.max(label.top - at.y, 0, at.y - label.bottom));
   if (own.some(at => gap(at) < LEADER_MIN_RUN)) return undefined;
-  const ends = own.filter(at => otherCurves.every(curve => curve.every((a, i) => i === 0 || distanceToSegment(at, curve[i - 1]!, a) >= LEADER_SHARED)));
+  const ends = own.filter(at => otherCurves.every(curve => curve.every((a, i) => i === 0 || distanceToSegment(at, curve[i - 1]!, a) >= LEADER_SHARED))
+    && otherHeads.every(head => distanceToTriangle(at, head) >= LEADER_SHARED));
   const starts: Point[] = [];
   for (let k = 0; k <= LEADER_EDGE_STOPS; k++) {
     const across = label.left + (label.right - label.left) * k / LEADER_EDGE_STOPS, down = label.top + (label.bottom - label.top) * k / LEADER_EDGE_STOPS;
@@ -326,6 +353,7 @@ export function renderDiagramSvg(
   });
   const placed = spacing.labelsOnTop ? placeEdgeLabels(wanted, standing, layout.width) : wanted;
   const curves = spacing.labelsOnTop ? layout.edges.map(edge => curveSamples(edge.d)) : [];
+  const heads = spacing.labelsOnTop ? layout.edges.map(edge => arrowheadOf(edge.d)) : [];
   const boxOf = (i: number): LabelBox => {
     const { width, height } = wanted[i]!, { x, y } = placed[i]!;
     return { left: x - width / 2, top: y - height / 2, right: x + width / 2, bottom: y + height / 2 };
@@ -337,7 +365,8 @@ export function renderDiagramSvg(
     // another line's label.
     const moved = x !== at.labelX || y !== at.labelY;
     const run = moved
-      ? leaderRun(curves[i]!, boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])], curves.filter((_, j) => layout.edges[j]!.d !== at.d))
+      ? leaderRun(curves[i]!, boxOf(i), [...standing, ...wanted.flatMap((_, j) => j === i ? [] : [boxOf(j)])], curves.filter((_, j) => layout.edges[j]!.d !== at.d),
+        heads.filter((_, j) => layout.edges[j]!.d !== at.d))
       : undefined;
     const leader = run === undefined ? '' : `<path class="edge-leader" d="M ${num(run.from.x)} ${num(run.from.y)} L ${num(run.to.x)} ${num(run.to.y)}"/>`;
     const head = `<g class="edge ${edge.epistemic}${at.back ? ' back' : ''}"><title>${escape(edge.label)} (${edge.epistemic})</title><path d="${at.d}" marker-end="url(#${markerId})"/>${leader}`;

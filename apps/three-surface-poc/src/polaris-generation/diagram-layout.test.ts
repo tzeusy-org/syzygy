@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { READABLE_SPACING, layoutDiagram, placeEdgeLabels, renderDiagramSvg, wrapLabel } from './diagram-layout.js';
+import { READABLE_SPACING, arrowheadOf, distanceToTriangle, layoutDiagram, leaderRun, placeEdgeLabels, renderDiagramSvg, wrapLabel } from './diagram-layout.js';
 import { assertInertSvg } from './svg-inert.js';
 
 const nodes = (...ids: string[]) => ids.map(id => ({ id }));
@@ -187,7 +187,7 @@ describe('layered left-to-right diagram layout', () => {
     };
 
     it('runs each leader from its own label to its own line, in plain sight of every other label and node', () => {
-      let seed = 20261108, leaders = 0, sideways = 0, direct = 0, offCorner = 0, onSide = 0, offHalves = 0;
+      let seed = 20261108, leaders = 0, sideways = 0, direct = 0, offCorner = 0, onSide = 0, offHalves = 0, ownHead = 0;
       const next = (bound: number): number => { seed = (seed * 1103515245 + 12345) % 2147483648; return Math.floor(seed / 65536) % bound; };
       for (let graph = 0; graph < 300; graph++) {
         const ids = Array.from({ length: 3 + next(8) }, (_, i) => `n${i}`);
@@ -232,6 +232,24 @@ describe('layered left-to-right diagram layout', () => {
             const points = pointsOf(other);
             expect(Math.min(...points.slice(1).map((at, k) => toSegment(points[k]!, at))), `graph ${graph} edge ${i} ends on another line`).toBeGreaterThanOrEqual(1.4);
           }
+          // Nor inside, or within 1.4 px of, another line's arrowhead: the marker's triangle, 16 px long and wide on a stroke of 2, its tip
+          // 1.6 px past the line's end, pointing from the last control point that differs from the end.
+          const toHead = (d: string): number => {
+            const c = [...d.matchAll(/-?[\d.]+/gu)].map(m => Number(m[0]));
+            const [ex, ey] = [c[6]!, c[7]!];
+            const [bx, by] = c[4] !== ex || c[5] !== ey ? [c[4]!, c[5]!] : c[2] !== ex || c[3] !== ey ? [c[2]!, c[3]!] : [c[0]!, c[1]!];
+            const n = Math.hypot(ex - bx, ey - by), ux = (ex - bx) / n, uy = (ey - by) / n;
+            const corner = (along: number, across: number) => ({ x: ex + (ux * along - uy * across) * 1.6, y: ey + (uy * along + ux * across) * 1.6 });
+            const head = [corner(1, 0), corner(-9, -5), corner(-9, 5)] as const;
+            const cross = (a: { x: number; y: number }, b: { x: number; y: number }) => (b.x - a.x) * (toY - a.y) - (b.y - a.y) * (toX - a.x);
+            const signs = [cross(head[0], head[1]), cross(head[1], head[2]), cross(head[2], head[0])];
+            return signs.every(v => v >= 0) || signs.every(v => v <= 0) ? 0 : Math.min(toSegment(head[0], head[1]), toSegment(head[1], head[2]), toSegment(head[2], head[0]));
+          };
+          for (const other of curvesIn) {
+            if (other !== curve) expect(toHead(other), `graph ${graph} edge ${i} ends in another line's arrowhead`).toBeGreaterThanOrEqual(1.4);
+          }
+          // Its own arrowhead is no other line's, so a leader may end there.
+          if (toHead(curve) < 1.5) ownHead++;
           // Its end is on this edge's own curve.
           const onOwn = Math.min(...curvePoints(curve).map(at => Math.hypot(at.x - toX, at.y - toY)));
           expect(onOwn, `graph ${graph} edge ${i} end`).toBeLessThan(1);
@@ -265,6 +283,7 @@ describe('layered left-to-right diagram layout', () => {
       expect(offCorner, 'leaders starting between a side\'s corners').toBeGreaterThan(0);
       expect(onSide, 'leaders starting on a label\'s left or right side').toBeGreaterThan(0);
       expect(offHalves, 'leaders starting off a side\'s corners and middle').toBeGreaterThan(0);
+      expect(ownHead, 'leaders ending in their own line\'s arrowhead').toBeGreaterThan(0);
     });
 
     it('runs a leader the shortest way from its label\'s edge to a point of its own line that no other line runs through', () => {
@@ -299,6 +318,34 @@ describe('layered left-to-right diagram layout', () => {
           expect(near, `edge ${end.i} ends on edge ${j}${layout.edges[j]!.back ? ' (a back edge)' : ''}`).toBeGreaterThanOrEqual(1.4);
         }
       }
+    });
+
+    it('models an arrowhead as drawn: 16 px long and wide on a stroke of 2, tip 1.6 px past the end, along the end tangent', () => {
+      const close = (tri: readonly { x: number; y: number }[]) => tri.map(p => [Math.round(p.x * 100) / 100, Math.round(p.y * 100) / 100]);
+      expect(close(arrowheadOf('M 0 0 C 10 0 20 0 100 0'))).toEqual([[101.6, 0], [85.6, -8], [85.6, 8]]);
+      // The tangent runs from the last control point that differs from the end: here the second, (90, 0), not the start.
+      expect(close(arrowheadOf('M 0 100 C 50 100 90 0 100 0'))).toEqual([[101.6, 0], [85.6, -8], [85.6, 8]]);
+      // With the third control point on the end, from the second: (0, 50) towards (100, 0).
+      const slant = close(arrowheadOf('M 0 0 C 0 50 100 0 100 0'));
+      expect(slant[0]).toEqual([101.43, -0.72]);
+    });
+
+    it('measures a point to a triangle as 0 inside, whichever way the triangle winds, and to its nearest side outside', () => {
+      const clockwise = [{ x: 0, y: 0 }, { x: 10, y: 0 }, { x: 0, y: 10 }] as const;
+      const counter = [{ x: 0, y: 0 }, { x: 0, y: 10 }, { x: 10, y: 0 }] as const;
+      expect(distanceToTriangle({ x: 2, y: 2 }, clockwise)).toBe(0);
+      expect(distanceToTriangle({ x: 2, y: 2 }, counter)).toBe(0);
+      expect(distanceToTriangle({ x: 2, y: -1 }, counter)).toBe(1);
+    });
+
+    it('ends a leader 1.5 px or more from another line\'s arrowhead, not only outside it', () => {
+      // A label left of a vertical line; the line's nearest point, (50, 50), sits 1 px outside another line's arrowhead, so the leader ends
+      // at the next nearest, (50, 40).
+      const own = Array.from({ length: 11 }, (_, k) => ({ x: 50, y: k * 10 }));
+      const label = { left: 0, top: 45, right: 30, bottom: 55 };
+      const head = [{ x: 51, y: 45 }, { x: 61, y: 45 }, { x: 51, y: 55 }] as const;
+      expect(leaderRun(own, label, [], [], [])!.to).toEqual({ x: 50, y: 50 });
+      expect(leaderRun(own, label, [], [], [head])!.to).toEqual({ x: 50, y: 40 });
     });
 
     it('draws no leader on the provider form, or where no label moved', () => {
