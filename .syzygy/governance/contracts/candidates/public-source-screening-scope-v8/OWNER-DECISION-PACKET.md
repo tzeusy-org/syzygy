@@ -57,9 +57,9 @@ row. A recorder takes that row as the act's argument, under the phrase
 `APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY` as for versions 2–7.
 It supersedes the version-7 act. No agent may sign it for you.
 
-Recommended: sign, if you accept open question 1 below as it stands. It is
-what you asked for. Beyond admitting private repositories, no screening rule
-gets looser for anyone.
+Recommended: sign. It is what you asked for, and you have already answered
+the three questions below. Beyond admitting private repositories, no
+screening rule gets looser for anyone.
 
 ## What it costs
 
@@ -70,7 +70,7 @@ gets looser for anyone.
   renders and sends (REQ-polaris-generation-033). For a private repository
   with no evidence drawer and no `openspec/` or `.syzygy/` tree, the spec asks
   for no per-project provider statement. Its content reaches your agent's
-  provider on your act alone. See open question 1.
+  provider on your act alone. You chose this (question 1 below).
 - **More withheld files.** A private repository's documentation with any
   secret-looking line is withheld whole, so its dossier can show more Unknown
   than a public one would.
@@ -102,27 +102,42 @@ gets looser for anyone.
   public runs keep working, and private launches stay refused. If the policy
   changed without the code, every run, public ones included, would be
   refused, so the two are not separated.
+- **It also waits for launch-consent spec version 1.1.** You chose that the
+  launch question warns that a private repository's name goes onto a branch
+  of Syzygy's repository (question 2 below). That warning is drafted into
+  launch-consent spec version 1.1. Version 8 takes effect only after you
+  have signed version 1.1, even if you sign version 8 first. Until both are
+  signed and installed, private launches stay refused.
 
-## Open questions for you
+## Questions you have answered
+
+You answered all three on the owner questionnaire 2026-11-08T12:24:33Z. The
+answers are recorded here as you gave them. None of them changes this
+policy's bytes.
 
 1. **Should every private repository need a per-project provider statement
    before a run?** Today the specification asks for one only for "governed"
-   repositories. This policy cannot require one, because only the
-   specification can (REQ-polaris-generation-033, or the launch-consent
-   change). Answering yes means a specification amendment, drafted
-   separately. Answering no keeps sending a private repository's content to
-   your agent's provider on your launch alone.
+   repositories, and this policy cannot require one.
+   **Your answer (item `syzygy-pdja.23-provider-statement`, B):** no
+   provider statement for a non-governed private repository; your launch
+   answer suffices. So a private repository with no evidence drawer and no
+   `openspec/` or `.syzygy/` tree reaches your agent's provider on your
+   launch alone, as "What it costs" says. No specification amendment follows
+   from this answer.
 2. **Whose private repositories, and where their names go?** The policy
    cannot tell your own repositories from ones you hold under a duty of
-   confidence (an employer's, a client's). Should the launch question ask you
-   to confirm that you may disclose the repository to the named provider?
-   Also, each launch record writes the repository's name, URL and commit into
-   Syzygy's own repository, on a branch Syzygy never pushes. For a private
-   repository, one push would publish them. Both would be specification
-   changes.
+   confidence. Each launch record also writes the repository's name, URL and
+   commit into Syzygy's own repository, on a branch Syzygy never pushes.
+   **Your answer (item `syzygy-pdja.23-confidence`, C):** only the warning
+   that the name goes onto that branch, with no confirmation that you may
+   disclose the repository. The warning is drafted into launch-consent spec
+   version 1.1, and version 8 does not take effect before 1.1 is signed.
+   Nothing asks you to confirm a duty of confidence; that stays your own
+   judgement at each launch.
 3. **Retention.** No run directory has a retention period today, public or
-   private. Should a private repository's run directory have one? That would
-   be its own rule.
+   private.
+   **Your answer (A):** no retention rule for now. A private repository's
+   run directory is kept like any other until you delete it.
 
 ## If you decline
 
