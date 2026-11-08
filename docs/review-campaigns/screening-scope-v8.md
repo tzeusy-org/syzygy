@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-SCREENING-SCOPE-V8-1-RAW.md:4`), over `e9f8cf42`, round 1. Dispositions are in the package's `ROUND-1-DISPOSITIONS.md`.
+`REVISE` (`R-SCREENING-SCOPE-V8-2-RAW.md:4`), over `3a07714d`, round 2; round 1 was `REVISE` (`R-SCREENING-SCOPE-V8-1-RAW.md:4`), over `e9f8cf42`. Dispositions are in the package's `ROUND-1-DISPOSITIONS.md` and `ROUND-2-DISPOSITIONS.md`. Round 3 is the last review round; whatever it returns goes to the owner with the package.
