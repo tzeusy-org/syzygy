@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 38,
-      "scenarios": 297,
+      "scenarios": 298,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1063,6 +1063,7 @@
             "Statement declined for a governed subject",
             "No terminal or no phrase",
             "Not declared public",
+            "Name and URL warning for a repository not declared public",
             "Records already in force",
             "Earlier consent revoked",
             "Re-identified clone",

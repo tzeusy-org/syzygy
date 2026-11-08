@@ -22,9 +22,11 @@ v1.0 builder (``build_polaris_dossier_local_agent_mode.py``).
   the sign-off brief cites the proposed path in full (the install rewrites it);
 - applied: the spec is in ``specs/`` only, with the same shape; the status
   page's effective figure equals the recount, which composes both names; the
-  page names the installed spec and the v1.0 sign-off record; and no file in
+  page names the installed spec and the v1.0 sign-off record; no file in
   the candidate or change directory cites the proposed path, in full or as
-  the short ``proposed/…`` span.
+  the short ``proposed/…`` span; and, once any sign-off is recorded, the
+  installed bytes are the latest recorded version's (the v1.1 builder's
+  ``signed_findings()``: v1.0's signed bytes, or those plus the v1.1 patch).
 
 The CLI writes nothing. The sign-off recorder (``--record``) is the one
 writer: it verifies the reviewed bytes, calls ``apply()``, and writes the
@@ -132,7 +134,7 @@ def _package_files(root: pathlib.Path) -> list[pathlib.Path]:
             if p.name != "GOVERNING-DEPENDENCIES.md"]
 
 
-def check(root: pathlib.Path = ROOT) -> list[str]:
+def check(root: pathlib.Path = ROOT, signed: bool = True) -> list[str]:
     current = state(root)
     if current == "absent":
         signed = sorted(p.name for p in (root / DECISIONS).glob(
@@ -176,6 +178,13 @@ def check(root: pathlib.Path = ROOT) -> list[str]:
                     findings.append(f"{path.relative_to(root)}: still cites {span}")
         if (root / BRIEF).is_file() and brief_note() not in (root / BRIEF).read_text(encoding="utf-8"):
             findings.append(f"{BRIEF}: does not keep the path its review read")
+        if signed:
+            # Signed or unsigned: the installed bytes must be the latest
+            # recorded sign-off's (v1.0's alone, or v1.0 plus the v1.1 patch).
+            # The v1.1 builder skips this (``signed=False``) while it applies,
+            # before the recorder writes the v1.1 record.
+            import build_polaris_dossier_launch_consent_v1_1 as v11
+            findings += v11.signed_findings(root)
     return findings
 
 

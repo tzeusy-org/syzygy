@@ -1136,6 +1136,7 @@ def real_packages() -> dict[str, Package]:
     dossier14 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_4")  # noqa: E731
     dossier15 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_5")  # noqa: E731
     launch_consent = lambda: _module("build_polaris_dossier_launch_consent")  # noqa: E731
+    launch_consent11 = lambda: _module("build_polaris_dossier_launch_consent_v1_1")  # noqa: E731
     anchor = lambda: _module("build_pwb_anchor_resolution_amendment")  # noqa: E731
     provenance = lambda: _module("build_three_surface_poc_block_provenance_amendment")  # noqa: E731
     anchor_dir = CANDIDATES / "pwb-anchor-resolution-amendment"
@@ -1592,6 +1593,24 @@ def real_packages() -> dict[str, Package]:
             also=(pathlib.Path("openspec/changes/polaris-dossier-launch-consent"),),
             subject=pathlib.Path("openspec/changes/polaris-dossier-launch-consent/"
                                  "proposed/polaris-generation/spec.md"),
+        ),
+        # Launch-consent v1.1 patches the installed, signed v1.0 (the owner's
+        # name-on-branch warning, syzygy-pdja.23-confidence answer C): its own
+        # candidate directory, builder and reviewed bytes, under the same key,
+        # record stem and tag series, and no option.
+        "polaris-dossier-launch-consent@1.1": Package(
+            "polaris-dossier-launch-consent",
+            "Polaris dossier launch-time consent",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-launch-consent-v1-1",
+            "POLARIS-DOSSIER-LAUNCH-CONSENT",
+            lambda root: launch_consent11().check(root),
+            lambda root: launch_consent11().apply(root),
+            lambda root: launch_consent11().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-launch-consent"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-launch-consent/"
+                                 "specs/polaris-generation/spec.md"),
+            subject_bytes=lambda root: launch_consent11().subject_bytes(root),
         ),
     }
 
@@ -3126,6 +3145,35 @@ def selftest() -> int:
                     and real15.candidate == v15.CANDIDATE and real15.subject == v15.SPEC
                     and real15.subject_bytes is not None and real15.options == ()
                     and real15.apply_with is None and real15.applied_options is None
+                    and routed))
+    real_lc = packages["polaris-dossier-launch-consent"]
+    real_lc11 = packages["polaris-dossier-launch-consent@1.1"]
+    lc11 = _module("build_polaris_dossier_launch_consent_v1_1")
+    with tempfile.TemporaryDirectory() as temporary:
+        import contextlib
+        import io
+        fixture_root = pathlib.Path(temporary)
+        lc11._fixture(fixture_root)
+        expected_subject = lc11.subject_bytes(fixture_root)
+        try:
+            routed = (real_lc11.check(fixture_root) == []
+                      and real_lc11.subject_bytes(fixture_root) == expected_subject
+                      and not real_lc11.applied(fixture_root))
+            with contextlib.redirect_stdout(io.StringIO()):
+                routed = routed and real_lc11.apply(fixture_root) == 0
+            routed = (routed and real_lc11.applied(fixture_root)
+                      and (fixture_root / lc11.SPEC).read_bytes() == expected_subject
+                      and lc11.BOTH_LINKS in (fixture_root / lc11.STATUS).read_text())
+        except ValueError:
+            routed = False
+    results.append(("the real launch-consent v1.1 entry shares v1.0's key and record stem, "
+                    "binds the computed subject in its own candidate directory and offers no option",
+                    package_for(packages, real_lc.key, "1.1") is real_lc11
+                    and package_for(packages, real_lc.key, "1.0") is real_lc
+                    and real_lc11.key == real_lc.key and real_lc11.record_stem == real_lc.record_stem
+                    and real_lc11.candidate == lc11.CANDIDATE and real_lc11.subject == lc11.SPEC
+                    and real_lc11.subject_bytes is not None and real_lc11.options == ()
+                    and real_lc11.apply_with is None and real_lc11.applied_options is None
                     and routed))
     taken: list[frozenset[str]] = []
 
