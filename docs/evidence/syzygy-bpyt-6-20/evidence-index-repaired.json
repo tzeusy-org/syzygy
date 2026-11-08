@@ -1,0 +1,69 @@
+{
+  "sourceSubjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+  "baselineCommit": "f5487c186626513724e1eff28a2789a4d78c154c",
+  "transportCases": 69,
+  "callerCases": 93,
+  "differences": 0,
+  "mutants": {
+    "denominator": 27,
+    "executed": 27,
+    "killed": 27
+  },
+  "targeted": {
+    "files": 10,
+    "cases": 248,
+    "logSha256": "785ec2aeca68310de310ab563a1d61453835a6f270227dd0b4a4f41442b45831"
+  },
+  "records": [
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/bundle-source-manifest-repaired.json",
+      "sha256": "66484acdec3a3b2bc448c34c4897b2ebb265a093cfa16bbb99af52107668217c",
+      "bytes": 38591
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/caller-differential-repaired.json",
+      "sha256": "193861e4364a0ce2c41abffc3694e9b388fc0836892b777dd41da7f4e18c82d4",
+      "bytes": 1964353
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/census-repaired.json",
+      "sha256": "3677914a34f55f7e543e052f87f2ac339b447e9cbb039a449a016efebbe27a30",
+      "bytes": 1854
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/corpus-manifest-repaired.json",
+      "sha256": "bff3f6832a3d71b1ecd39d028c043c55f89add8b0a8097b5026dc01d42a2e1c4",
+      "bytes": 2231
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/differential.mjs",
+      "sha256": "d73db28de2cbd3d300d88e34dbc59b08abef13b4110842e9a0632e44d2059940",
+      "bytes": 20025
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/first-attempt-interruption.json",
+      "sha256": "e9e713293481267d4f460f8998e32389e103e1b7526754e330191a547ef0e4e7",
+      "bytes": 4728
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/first-attempt.json",
+      "sha256": "d485c259097390822bc9250df06b226aac31e9e978d83c7bb1050ce484f39347",
+      "bytes": 605
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/mutants-repaired.json",
+      "sha256": "7898468e5c65200eb5e491beefab52e0ad6784c6c0b2db812a3748c1b4888e8d",
+      "bytes": 30573
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/mutate.py",
+      "sha256": "b878ff035cce9d27f86bb91180cfabd421f659b2ed39517d66f8762e4f5aaede",
+      "bytes": 8409
+    },
+    {
+      "path": "docs/evidence/syzygy-bpyt-6-20/transport-differential-repaired.json",
+      "sha256": "1176ba6940ffa3e72c35d2e079e3a98c49b3457db223febee7efd83b36953584",
+      "bytes": 141767
+    }
+  ]
+}

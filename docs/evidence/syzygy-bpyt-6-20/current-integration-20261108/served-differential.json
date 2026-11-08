@@ -1,0 +1,4742 @@
+{
+  "baseline": "fd08ea62f8b55fb60d7c79628688bc014b40875b",
+  "head": "5414a20faf3d2deafc576d4eac6dcb72d8042a07",
+  "sourceRowDenominator": 239,
+  "inputs": {
+    "observedAt": "2026-11-06T14:11:19Z",
+    "authorityFixtures": [
+      "ADMITTING_AUTHORITY",
+      "REJECTING_AUTHORITY"
+    ],
+    "corpusFixtures": [
+      "PROJECT_SHAPE_FIXTURE_TEXTS",
+      "PROJECT_SHAPE_FIXTURE_TEXTS_WITH_SECRET",
+      "PROJECT_SHAPE_FIXTURE_TEXTS_WITH_BASELINE_SPEC"
+    ],
+    "fixtureRepo": "fixtureRepoWithGit([])"
+  },
+  "node": "v24.6.0",
+  "harnessSha256": "ddd2e62d849791b75265266233e5e859207ae4a200ed1c2e88fe272a373b7837",
+  "frozenBundleManifestSha256": "9e6bab50570a0c71f72a9687e00851e4c2027a57b01bfbca68e0487cc82810fc",
+  "bundles": {
+    "old": "e3e1a9dab3c916e90bdd3ebee098aa72deaa7cba29195dea01927383438bdf53",
+    "new": "061d9721b6872f6c5ed6e21f371a7498c8058f64120718ed5bdb2431d74590c6"
+  },
+  "cases": 18,
+  "routePairDenominator": 72,
+  "humanRoutePairDenominator": 54,
+  "machineRoutePairDenominator": 18,
+  "differences": [],
+  "results": [
+    {
+      "name": "admitted-normal-loopback-host",
+      "headers": {
+        "host": "127.0.0.1:7478"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 209709,
+            "sha256": "d0d2677fcafc84f3b1a5e614807191351838ddb995700ed3a498095a3306089a"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32511,
+            "sha256": "0759a35007a1952585d21cae272beb5f3386f00b671cae34e473206661c121e0"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46660,
+            "sha256": "2ad8831eec13655a55511a71a4396fee94911892ea6e82efec33020e4bd1c3f2"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 152672,
+            "sha256": "9b5c241c8395b2ab836c5d76734265c2bc8550c13c613a3c7c9bf2fd65ab01ad"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-normal-loopback-host-old-polaris.html",
+          "admitted-normal-loopback-host-old-trajectory.html",
+          "admitted-normal-loopback-host-old-orrery.html",
+          "admitted-normal-loopback-host-old-api-poc.json"
+        ],
+        "modelSha256": "1c2806d437c9a975d6e54d32e23777990bb414ba52dfd9c1e88dbbf2e6f063d1",
+        "responseIdentity": {
+          "contentKey": "sha256:658165fbaaafc2b1b347bcbbfbb8f00ef703e9e8e94f3d0340d32e7624524bf1",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "84ba0d5173fcde8df3ee7ca3a6c075ece89228b4"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "37bc6555c7b885f26661cae7e57e7c48bcc540bd"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 209709,
+            "sha256": "d0d2677fcafc84f3b1a5e614807191351838ddb995700ed3a498095a3306089a"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32511,
+            "sha256": "0759a35007a1952585d21cae272beb5f3386f00b671cae34e473206661c121e0"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46660,
+            "sha256": "2ad8831eec13655a55511a71a4396fee94911892ea6e82efec33020e4bd1c3f2"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 152672,
+            "sha256": "9b5c241c8395b2ab836c5d76734265c2bc8550c13c613a3c7c9bf2fd65ab01ad"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-normal-loopback-host-new-polaris.html",
+          "admitted-normal-loopback-host-new-trajectory.html",
+          "admitted-normal-loopback-host-new-orrery.html",
+          "admitted-normal-loopback-host-new-api-poc.json"
+        ],
+        "modelSha256": "1c2806d437c9a975d6e54d32e23777990bb414ba52dfd9c1e88dbbf2e6f063d1",
+        "responseIdentity": {
+          "contentKey": "sha256:658165fbaaafc2b1b347bcbbfbb8f00ef703e9e8e94f3d0340d32e7624524bf1",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "84ba0d5173fcde8df3ee7ca3a6c075ece89228b4"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "37bc6555c7b885f26661cae7e57e7c48bcc540bd"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "admitted-normal-loopback-origin",
+      "headers": {
+        "host": "localhost:7478",
+        "origin": "http://localhost:7478"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 209709,
+            "sha256": "d0d2677fcafc84f3b1a5e614807191351838ddb995700ed3a498095a3306089a"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32511,
+            "sha256": "0759a35007a1952585d21cae272beb5f3386f00b671cae34e473206661c121e0"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46660,
+            "sha256": "2ad8831eec13655a55511a71a4396fee94911892ea6e82efec33020e4bd1c3f2"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 152672,
+            "sha256": "9b5c241c8395b2ab836c5d76734265c2bc8550c13c613a3c7c9bf2fd65ab01ad"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-normal-loopback-origin-old-polaris.html",
+          "admitted-normal-loopback-origin-old-trajectory.html",
+          "admitted-normal-loopback-origin-old-orrery.html",
+          "admitted-normal-loopback-origin-old-api-poc.json"
+        ],
+        "modelSha256": "1c2806d437c9a975d6e54d32e23777990bb414ba52dfd9c1e88dbbf2e6f063d1",
+        "responseIdentity": {
+          "contentKey": "sha256:658165fbaaafc2b1b347bcbbfbb8f00ef703e9e8e94f3d0340d32e7624524bf1",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "84ba0d5173fcde8df3ee7ca3a6c075ece89228b4"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "37bc6555c7b885f26661cae7e57e7c48bcc540bd"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 209709,
+            "sha256": "d0d2677fcafc84f3b1a5e614807191351838ddb995700ed3a498095a3306089a"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32511,
+            "sha256": "0759a35007a1952585d21cae272beb5f3386f00b671cae34e473206661c121e0"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46660,
+            "sha256": "2ad8831eec13655a55511a71a4396fee94911892ea6e82efec33020e4bd1c3f2"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 152672,
+            "sha256": "9b5c241c8395b2ab836c5d76734265c2bc8550c13c613a3c7c9bf2fd65ab01ad"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-normal-loopback-origin-new-polaris.html",
+          "admitted-normal-loopback-origin-new-trajectory.html",
+          "admitted-normal-loopback-origin-new-orrery.html",
+          "admitted-normal-loopback-origin-new-api-poc.json"
+        ],
+        "modelSha256": "1c2806d437c9a975d6e54d32e23777990bb414ba52dfd9c1e88dbbf2e6f063d1",
+        "responseIdentity": {
+          "contentKey": "sha256:658165fbaaafc2b1b347bcbbfbb8f00ef703e9e8e94f3d0340d32e7624524bf1",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "84ba0d5173fcde8df3ee7ca3a6c075ece89228b4"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "37bc6555c7b885f26661cae7e57e7c48bcc540bd"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "admitted-normal-tailnet-origin",
+      "headers": {
+        "host": "tzeusy.parrot-hen.ts.net",
+        "origin": "https://tzeusy.parrot-hen.ts.net"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 209979,
+            "sha256": "ea76621db5816e93100d01b7b993933392691d93f8df50ff2e700d10b177d509"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32601,
+            "sha256": "c32c7a28b697e885040cf70c09eaff587d2ef7ba46d4713288695d4bcd51cd42"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46750,
+            "sha256": "cd377e7260f5afa69b9dcf56a6e91ca05a53fe4811cf56169622ba7785ea3e30"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 152672,
+            "sha256": "043a756ab7fb1d4cbb5456f30c45669a28e368efcb4ae6fd3fc64b4e7190b170"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-normal-tailnet-origin-old-polaris.html",
+          "admitted-normal-tailnet-origin-old-trajectory.html",
+          "admitted-normal-tailnet-origin-old-orrery.html",
+          "admitted-normal-tailnet-origin-old-api-poc.json"
+        ],
+        "modelSha256": "1c2806d437c9a975d6e54d32e23777990bb414ba52dfd9c1e88dbbf2e6f063d1",
+        "responseIdentity": {
+          "contentKey": "sha256:658165fbaaafc2b1b347bcbbfbb8f00ef703e9e8e94f3d0340d32e7624524bf1",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "84ba0d5173fcde8df3ee7ca3a6c075ece89228b4"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "37bc6555c7b885f26661cae7e57e7c48bcc540bd"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 209979,
+            "sha256": "ea76621db5816e93100d01b7b993933392691d93f8df50ff2e700d10b177d509"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32601,
+            "sha256": "c32c7a28b697e885040cf70c09eaff587d2ef7ba46d4713288695d4bcd51cd42"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46750,
+            "sha256": "cd377e7260f5afa69b9dcf56a6e91ca05a53fe4811cf56169622ba7785ea3e30"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 152672,
+            "sha256": "043a756ab7fb1d4cbb5456f30c45669a28e368efcb4ae6fd3fc64b4e7190b170"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-normal-tailnet-origin-new-polaris.html",
+          "admitted-normal-tailnet-origin-new-trajectory.html",
+          "admitted-normal-tailnet-origin-new-orrery.html",
+          "admitted-normal-tailnet-origin-new-api-poc.json"
+        ],
+        "modelSha256": "1c2806d437c9a975d6e54d32e23777990bb414ba52dfd9c1e88dbbf2e6f063d1",
+        "responseIdentity": {
+          "contentKey": "sha256:658165fbaaafc2b1b347bcbbfbb8f00ef703e9e8e94f3d0340d32e7624524bf1",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "84ba0d5173fcde8df3ee7ca3a6c075ece89228b4"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "37bc6555c7b885f26661cae7e57e7c48bcc540bd"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "admitted-secret-loopback-host",
+      "headers": {
+        "host": "127.0.0.1:7478"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 213789,
+            "sha256": "a62926f40433ed09de1c1585247f04b2c2eda61c8c32213d8d85935498fd41ca"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32511,
+            "sha256": "7bcdc392b1a084607e1fbff9e58d86e1c63e47182347bed4d85b732a7e63301d"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46660,
+            "sha256": "cfd373dca3757056c1eb43d064906c1ca06363b30f8c57463e39a312cfed4e90"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 150100,
+            "sha256": "467c92bd50e8c70df75fc0a7aa451ad460f8037ccda7b97a0ac0e74cf7c7e3e8"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-secret-loopback-host-old-polaris.html",
+          "admitted-secret-loopback-host-old-trajectory.html",
+          "admitted-secret-loopback-host-old-orrery.html",
+          "admitted-secret-loopback-host-old-api-poc.json"
+        ],
+        "modelSha256": "90f557170c8b04a479f34790a4131781f46184a61bb6a3701a1c71cb9286f382",
+        "responseIdentity": {
+          "contentKey": "sha256:12d431c1e1a91ee63a9d60d4da4a3c4f35279fcf2b47fb01e8b2417081d53aa5",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "6be53e81ef60cd5b05f94b55216ed541a5723243"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "6be53e81ef60cd5b05f94b55216ed541a5723243"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 213789,
+            "sha256": "a62926f40433ed09de1c1585247f04b2c2eda61c8c32213d8d85935498fd41ca"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32511,
+            "sha256": "7bcdc392b1a084607e1fbff9e58d86e1c63e47182347bed4d85b732a7e63301d"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46660,
+            "sha256": "cfd373dca3757056c1eb43d064906c1ca06363b30f8c57463e39a312cfed4e90"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 150100,
+            "sha256": "467c92bd50e8c70df75fc0a7aa451ad460f8037ccda7b97a0ac0e74cf7c7e3e8"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-secret-loopback-host-new-polaris.html",
+          "admitted-secret-loopback-host-new-trajectory.html",
+          "admitted-secret-loopback-host-new-orrery.html",
+          "admitted-secret-loopback-host-new-api-poc.json"
+        ],
+        "modelSha256": "90f557170c8b04a479f34790a4131781f46184a61bb6a3701a1c71cb9286f382",
+        "responseIdentity": {
+          "contentKey": "sha256:12d431c1e1a91ee63a9d60d4da4a3c4f35279fcf2b47fb01e8b2417081d53aa5",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "6be53e81ef60cd5b05f94b55216ed541a5723243"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "6be53e81ef60cd5b05f94b55216ed541a5723243"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "admitted-secret-loopback-origin",
+      "headers": {
+        "host": "localhost:7478",
+        "origin": "http://localhost:7478"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 213789,
+            "sha256": "a62926f40433ed09de1c1585247f04b2c2eda61c8c32213d8d85935498fd41ca"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32511,
+            "sha256": "7bcdc392b1a084607e1fbff9e58d86e1c63e47182347bed4d85b732a7e63301d"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46660,
+            "sha256": "cfd373dca3757056c1eb43d064906c1ca06363b30f8c57463e39a312cfed4e90"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 150100,
+            "sha256": "467c92bd50e8c70df75fc0a7aa451ad460f8037ccda7b97a0ac0e74cf7c7e3e8"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-secret-loopback-origin-old-polaris.html",
+          "admitted-secret-loopback-origin-old-trajectory.html",
+          "admitted-secret-loopback-origin-old-orrery.html",
+          "admitted-secret-loopback-origin-old-api-poc.json"
+        ],
+        "modelSha256": "90f557170c8b04a479f34790a4131781f46184a61bb6a3701a1c71cb9286f382",
+        "responseIdentity": {
+          "contentKey": "sha256:12d431c1e1a91ee63a9d60d4da4a3c4f35279fcf2b47fb01e8b2417081d53aa5",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "6be53e81ef60cd5b05f94b55216ed541a5723243"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "6be53e81ef60cd5b05f94b55216ed541a5723243"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 213789,
+            "sha256": "a62926f40433ed09de1c1585247f04b2c2eda61c8c32213d8d85935498fd41ca"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32511,
+            "sha256": "7bcdc392b1a084607e1fbff9e58d86e1c63e47182347bed4d85b732a7e63301d"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46660,
+            "sha256": "cfd373dca3757056c1eb43d064906c1ca06363b30f8c57463e39a312cfed4e90"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 150100,
+            "sha256": "467c92bd50e8c70df75fc0a7aa451ad460f8037ccda7b97a0ac0e74cf7c7e3e8"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-secret-loopback-origin-new-polaris.html",
+          "admitted-secret-loopback-origin-new-trajectory.html",
+          "admitted-secret-loopback-origin-new-orrery.html",
+          "admitted-secret-loopback-origin-new-api-poc.json"
+        ],
+        "modelSha256": "90f557170c8b04a479f34790a4131781f46184a61bb6a3701a1c71cb9286f382",
+        "responseIdentity": {
+          "contentKey": "sha256:12d431c1e1a91ee63a9d60d4da4a3c4f35279fcf2b47fb01e8b2417081d53aa5",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "6be53e81ef60cd5b05f94b55216ed541a5723243"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "6be53e81ef60cd5b05f94b55216ed541a5723243"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "admitted-secret-tailnet-origin",
+      "headers": {
+        "host": "tzeusy.parrot-hen.ts.net",
+        "origin": "https://tzeusy.parrot-hen.ts.net"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 214059,
+            "sha256": "0f87ef20a31add02532741881997033a2834281b36cce0eb6a56a938386ab3e0"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32601,
+            "sha256": "4e8661392682816573d93e5edaff10874b01c77caefd5065a129bd68faa3e8a8"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46750,
+            "sha256": "012e44ceb9e057df2eb9e4523ef330bfc2d9402028de7158d95c05b07b7c4fa5"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 150100,
+            "sha256": "6ddab075eeed36742675a670a41267b36b4bcb6cd75c84595ca19a3abd6bd02c"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-secret-tailnet-origin-old-polaris.html",
+          "admitted-secret-tailnet-origin-old-trajectory.html",
+          "admitted-secret-tailnet-origin-old-orrery.html",
+          "admitted-secret-tailnet-origin-old-api-poc.json"
+        ],
+        "modelSha256": "90f557170c8b04a479f34790a4131781f46184a61bb6a3701a1c71cb9286f382",
+        "responseIdentity": {
+          "contentKey": "sha256:12d431c1e1a91ee63a9d60d4da4a3c4f35279fcf2b47fb01e8b2417081d53aa5",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "6be53e81ef60cd5b05f94b55216ed541a5723243"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "6be53e81ef60cd5b05f94b55216ed541a5723243"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 214059,
+            "sha256": "0f87ef20a31add02532741881997033a2834281b36cce0eb6a56a938386ab3e0"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32601,
+            "sha256": "4e8661392682816573d93e5edaff10874b01c77caefd5065a129bd68faa3e8a8"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46750,
+            "sha256": "012e44ceb9e057df2eb9e4523ef330bfc2d9402028de7158d95c05b07b7c4fa5"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 150100,
+            "sha256": "6ddab075eeed36742675a670a41267b36b4bcb6cd75c84595ca19a3abd6bd02c"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-secret-tailnet-origin-new-polaris.html",
+          "admitted-secret-tailnet-origin-new-trajectory.html",
+          "admitted-secret-tailnet-origin-new-orrery.html",
+          "admitted-secret-tailnet-origin-new-api-poc.json"
+        ],
+        "modelSha256": "90f557170c8b04a479f34790a4131781f46184a61bb6a3701a1c71cb9286f382",
+        "responseIdentity": {
+          "contentKey": "sha256:12d431c1e1a91ee63a9d60d4da4a3c4f35279fcf2b47fb01e8b2417081d53aa5",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "6be53e81ef60cd5b05f94b55216ed541a5723243"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "6be53e81ef60cd5b05f94b55216ed541a5723243"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "admitted-baseline-spec-loopback-host",
+      "headers": {
+        "host": "127.0.0.1:7478"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 215526,
+            "sha256": "5ae81e3a81dee5621c59563dd570874e64a6ac81df36113a674cc14158fcd0cb"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32511,
+            "sha256": "c9e592ef8f737a60bbd90a6e30ba67d79a461feba3c3dd8675bc566df32da813"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46660,
+            "sha256": "9cba398a31cbc3b4e8e8630941bc0e869b14ef12319904a164576e768d6c8d04"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 157069,
+            "sha256": "0383afd66b2b52a304676c3a9be205125efabce6962040fb2fa1e05ac3e7fc1c"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-baseline-spec-loopback-host-old-polaris.html",
+          "admitted-baseline-spec-loopback-host-old-trajectory.html",
+          "admitted-baseline-spec-loopback-host-old-orrery.html",
+          "admitted-baseline-spec-loopback-host-old-api-poc.json"
+        ],
+        "modelSha256": "f7c39800dac120d47ef36a27618534299d8f47a6da59cc6bcb008461bcc07c5f",
+        "responseIdentity": {
+          "contentKey": "sha256:e701d5fff8e488ca28b1dad0a7d4b30affb894c076f0159a073d2a17e0ad0d66",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "84ba0d5173fcde8df3ee7ca3a6c075ece89228b4"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "37bc6555c7b885f26661cae7e57e7c48bcc540bd"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 215526,
+            "sha256": "5ae81e3a81dee5621c59563dd570874e64a6ac81df36113a674cc14158fcd0cb"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32511,
+            "sha256": "c9e592ef8f737a60bbd90a6e30ba67d79a461feba3c3dd8675bc566df32da813"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46660,
+            "sha256": "9cba398a31cbc3b4e8e8630941bc0e869b14ef12319904a164576e768d6c8d04"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 157069,
+            "sha256": "0383afd66b2b52a304676c3a9be205125efabce6962040fb2fa1e05ac3e7fc1c"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-baseline-spec-loopback-host-new-polaris.html",
+          "admitted-baseline-spec-loopback-host-new-trajectory.html",
+          "admitted-baseline-spec-loopback-host-new-orrery.html",
+          "admitted-baseline-spec-loopback-host-new-api-poc.json"
+        ],
+        "modelSha256": "f7c39800dac120d47ef36a27618534299d8f47a6da59cc6bcb008461bcc07c5f",
+        "responseIdentity": {
+          "contentKey": "sha256:e701d5fff8e488ca28b1dad0a7d4b30affb894c076f0159a073d2a17e0ad0d66",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "84ba0d5173fcde8df3ee7ca3a6c075ece89228b4"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "37bc6555c7b885f26661cae7e57e7c48bcc540bd"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "admitted-baseline-spec-loopback-origin",
+      "headers": {
+        "host": "localhost:7478",
+        "origin": "http://localhost:7478"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 215526,
+            "sha256": "5ae81e3a81dee5621c59563dd570874e64a6ac81df36113a674cc14158fcd0cb"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32511,
+            "sha256": "c9e592ef8f737a60bbd90a6e30ba67d79a461feba3c3dd8675bc566df32da813"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46660,
+            "sha256": "9cba398a31cbc3b4e8e8630941bc0e869b14ef12319904a164576e768d6c8d04"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 157069,
+            "sha256": "0383afd66b2b52a304676c3a9be205125efabce6962040fb2fa1e05ac3e7fc1c"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-baseline-spec-loopback-origin-old-polaris.html",
+          "admitted-baseline-spec-loopback-origin-old-trajectory.html",
+          "admitted-baseline-spec-loopback-origin-old-orrery.html",
+          "admitted-baseline-spec-loopback-origin-old-api-poc.json"
+        ],
+        "modelSha256": "f7c39800dac120d47ef36a27618534299d8f47a6da59cc6bcb008461bcc07c5f",
+        "responseIdentity": {
+          "contentKey": "sha256:e701d5fff8e488ca28b1dad0a7d4b30affb894c076f0159a073d2a17e0ad0d66",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "84ba0d5173fcde8df3ee7ca3a6c075ece89228b4"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "37bc6555c7b885f26661cae7e57e7c48bcc540bd"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 215526,
+            "sha256": "5ae81e3a81dee5621c59563dd570874e64a6ac81df36113a674cc14158fcd0cb"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32511,
+            "sha256": "c9e592ef8f737a60bbd90a6e30ba67d79a461feba3c3dd8675bc566df32da813"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46660,
+            "sha256": "9cba398a31cbc3b4e8e8630941bc0e869b14ef12319904a164576e768d6c8d04"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 157069,
+            "sha256": "0383afd66b2b52a304676c3a9be205125efabce6962040fb2fa1e05ac3e7fc1c"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-baseline-spec-loopback-origin-new-polaris.html",
+          "admitted-baseline-spec-loopback-origin-new-trajectory.html",
+          "admitted-baseline-spec-loopback-origin-new-orrery.html",
+          "admitted-baseline-spec-loopback-origin-new-api-poc.json"
+        ],
+        "modelSha256": "f7c39800dac120d47ef36a27618534299d8f47a6da59cc6bcb008461bcc07c5f",
+        "responseIdentity": {
+          "contentKey": "sha256:e701d5fff8e488ca28b1dad0a7d4b30affb894c076f0159a073d2a17e0ad0d66",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "84ba0d5173fcde8df3ee7ca3a6c075ece89228b4"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "37bc6555c7b885f26661cae7e57e7c48bcc540bd"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "admitted-baseline-spec-tailnet-origin",
+      "headers": {
+        "host": "tzeusy.parrot-hen.ts.net",
+        "origin": "https://tzeusy.parrot-hen.ts.net"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 215856,
+            "sha256": "63b77384488eeec7cb4b6234dac7030b16e599ff1ea09c6449b35b7805759cfc"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32601,
+            "sha256": "86c26320a2c5e17faa93941dcacb102a143f7075e6fe1221c0ca5e3e154d7482"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46750,
+            "sha256": "9061541eb9bde1cc53fe5667f3f380222e0319626dc955f4ac25edd8eb087d35"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 157069,
+            "sha256": "d7556b6c76ba101a607e8a2fcf710e0d0aa60c80c64c526ebc15d241151615f8"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-baseline-spec-tailnet-origin-old-polaris.html",
+          "admitted-baseline-spec-tailnet-origin-old-trajectory.html",
+          "admitted-baseline-spec-tailnet-origin-old-orrery.html",
+          "admitted-baseline-spec-tailnet-origin-old-api-poc.json"
+        ],
+        "modelSha256": "f7c39800dac120d47ef36a27618534299d8f47a6da59cc6bcb008461bcc07c5f",
+        "responseIdentity": {
+          "contentKey": "sha256:e701d5fff8e488ca28b1dad0a7d4b30affb894c076f0159a073d2a17e0ad0d66",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "84ba0d5173fcde8df3ee7ca3a6c075ece89228b4"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "37bc6555c7b885f26661cae7e57e7c48bcc540bd"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 215856,
+            "sha256": "63b77384488eeec7cb4b6234dac7030b16e599ff1ea09c6449b35b7805759cfc"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32601,
+            "sha256": "86c26320a2c5e17faa93941dcacb102a143f7075e6fe1221c0ca5e3e154d7482"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46750,
+            "sha256": "9061541eb9bde1cc53fe5667f3f380222e0319626dc955f4ac25edd8eb087d35"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 157069,
+            "sha256": "d7556b6c76ba101a607e8a2fcf710e0d0aa60c80c64c526ebc15d241151615f8"
+          }
+        ],
+        "bodyFiles": [
+          "admitted-baseline-spec-tailnet-origin-new-polaris.html",
+          "admitted-baseline-spec-tailnet-origin-new-trajectory.html",
+          "admitted-baseline-spec-tailnet-origin-new-orrery.html",
+          "admitted-baseline-spec-tailnet-origin-new-api-poc.json"
+        ],
+        "modelSha256": "f7c39800dac120d47ef36a27618534299d8f47a6da59cc6bcb008461bcc07c5f",
+        "responseIdentity": {
+          "contentKey": "sha256:e701d5fff8e488ca28b1dad0a7d4b30affb894c076f0159a073d2a17e0ad0d66",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": [
+          [
+            "rev-parse",
+            "--verify",
+            "2ade4e966635973c82defd6bbeb21bfe6e69fdc3^{commit}"
+          ],
+          [
+            "show",
+            "-s",
+            "--format=%cI",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "ls-tree",
+            "-r",
+            "-z",
+            "-l",
+            "4444444444444444444444444444444444444444"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "14fd6e025ebd486127572eb984fe0a51d8cbb83c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a8502a47e42ecdef5cbea221f0a52e268efd5d5c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "759b76a830b84285aaafc445c123258488dd9bda"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "168bdad197aa8b8ba3f75282209abc7c1e0db4c7"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "976e7f1a6b0ab2c8b05094ab4fb5cb0e75f1878c"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "84ba0d5173fcde8df3ee7ca3a6c075ece89228b4"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "37bc6555c7b885f26661cae7e57e7c48bcc540bd"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "a2c838dcb993b52e56f5c1c7a7279388150371a5"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "cefaf1d04353c86592ffa3885429aa0959a0bbc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "4eef382feb42a39805fa39dadea07fd78c0dd246"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "0482c460780bf6fef501b9fde9a96b861117d94d"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "d3a9d78c40ac7b9f3ca03caf4053fce330e5ecc3"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "f0ae05a00ffadce535bd36defaf110fd1a3a676b"
+          ],
+          [
+            "cat-file",
+            "blob",
+            "fca3aa1590927b3273e1528b0fa4bfa442aaa621"
+          ]
+        ]
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "refused-normal-loopback-host",
+      "headers": {
+        "host": "127.0.0.1:7478"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115516,
+            "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32433,
+            "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46582,
+            "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+          }
+        ],
+        "bodyFiles": [
+          "refused-normal-loopback-host-old-polaris.html",
+          "refused-normal-loopback-host-old-trajectory.html",
+          "refused-normal-loopback-host-old-orrery.html",
+          "refused-normal-loopback-host-old-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115516,
+            "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32433,
+            "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46582,
+            "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+          }
+        ],
+        "bodyFiles": [
+          "refused-normal-loopback-host-new-polaris.html",
+          "refused-normal-loopback-host-new-trajectory.html",
+          "refused-normal-loopback-host-new-orrery.html",
+          "refused-normal-loopback-host-new-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "refused-normal-loopback-origin",
+      "headers": {
+        "host": "localhost:7478",
+        "origin": "http://localhost:7478"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115516,
+            "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32433,
+            "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46582,
+            "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+          }
+        ],
+        "bodyFiles": [
+          "refused-normal-loopback-origin-old-polaris.html",
+          "refused-normal-loopback-origin-old-trajectory.html",
+          "refused-normal-loopback-origin-old-orrery.html",
+          "refused-normal-loopback-origin-old-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115516,
+            "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32433,
+            "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46582,
+            "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+          }
+        ],
+        "bodyFiles": [
+          "refused-normal-loopback-origin-new-polaris.html",
+          "refused-normal-loopback-origin-new-trajectory.html",
+          "refused-normal-loopback-origin-new-orrery.html",
+          "refused-normal-loopback-origin-new-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "refused-normal-tailnet-origin",
+      "headers": {
+        "host": "tzeusy.parrot-hen.ts.net",
+        "origin": "https://tzeusy.parrot-hen.ts.net"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115756,
+            "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32523,
+            "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46672,
+            "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7"
+          }
+        ],
+        "bodyFiles": [
+          "refused-normal-tailnet-origin-old-polaris.html",
+          "refused-normal-tailnet-origin-old-trajectory.html",
+          "refused-normal-tailnet-origin-old-orrery.html",
+          "refused-normal-tailnet-origin-old-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115756,
+            "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32523,
+            "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46672,
+            "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7"
+          }
+        ],
+        "bodyFiles": [
+          "refused-normal-tailnet-origin-new-polaris.html",
+          "refused-normal-tailnet-origin-new-trajectory.html",
+          "refused-normal-tailnet-origin-new-orrery.html",
+          "refused-normal-tailnet-origin-new-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "refused-secret-loopback-host",
+      "headers": {
+        "host": "127.0.0.1:7478"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115516,
+            "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32433,
+            "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46582,
+            "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+          }
+        ],
+        "bodyFiles": [
+          "refused-secret-loopback-host-old-polaris.html",
+          "refused-secret-loopback-host-old-trajectory.html",
+          "refused-secret-loopback-host-old-orrery.html",
+          "refused-secret-loopback-host-old-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115516,
+            "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32433,
+            "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46582,
+            "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+          }
+        ],
+        "bodyFiles": [
+          "refused-secret-loopback-host-new-polaris.html",
+          "refused-secret-loopback-host-new-trajectory.html",
+          "refused-secret-loopback-host-new-orrery.html",
+          "refused-secret-loopback-host-new-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "refused-secret-loopback-origin",
+      "headers": {
+        "host": "localhost:7478",
+        "origin": "http://localhost:7478"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115516,
+            "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32433,
+            "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46582,
+            "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+          }
+        ],
+        "bodyFiles": [
+          "refused-secret-loopback-origin-old-polaris.html",
+          "refused-secret-loopback-origin-old-trajectory.html",
+          "refused-secret-loopback-origin-old-orrery.html",
+          "refused-secret-loopback-origin-old-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115516,
+            "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32433,
+            "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46582,
+            "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+          }
+        ],
+        "bodyFiles": [
+          "refused-secret-loopback-origin-new-polaris.html",
+          "refused-secret-loopback-origin-new-trajectory.html",
+          "refused-secret-loopback-origin-new-orrery.html",
+          "refused-secret-loopback-origin-new-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "refused-secret-tailnet-origin",
+      "headers": {
+        "host": "tzeusy.parrot-hen.ts.net",
+        "origin": "https://tzeusy.parrot-hen.ts.net"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115756,
+            "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32523,
+            "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46672,
+            "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7"
+          }
+        ],
+        "bodyFiles": [
+          "refused-secret-tailnet-origin-old-polaris.html",
+          "refused-secret-tailnet-origin-old-trajectory.html",
+          "refused-secret-tailnet-origin-old-orrery.html",
+          "refused-secret-tailnet-origin-old-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115756,
+            "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32523,
+            "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46672,
+            "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7"
+          }
+        ],
+        "bodyFiles": [
+          "refused-secret-tailnet-origin-new-polaris.html",
+          "refused-secret-tailnet-origin-new-trajectory.html",
+          "refused-secret-tailnet-origin-new-orrery.html",
+          "refused-secret-tailnet-origin-new-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "refused-baseline-spec-loopback-host",
+      "headers": {
+        "host": "127.0.0.1:7478"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115516,
+            "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32433,
+            "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46582,
+            "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+          }
+        ],
+        "bodyFiles": [
+          "refused-baseline-spec-loopback-host-old-polaris.html",
+          "refused-baseline-spec-loopback-host-old-trajectory.html",
+          "refused-baseline-spec-loopback-host-old-orrery.html",
+          "refused-baseline-spec-loopback-host-old-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115516,
+            "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32433,
+            "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46582,
+            "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+          }
+        ],
+        "bodyFiles": [
+          "refused-baseline-spec-loopback-host-new-polaris.html",
+          "refused-baseline-spec-loopback-host-new-trajectory.html",
+          "refused-baseline-spec-loopback-host-new-orrery.html",
+          "refused-baseline-spec-loopback-host-new-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "refused-baseline-spec-loopback-origin",
+      "headers": {
+        "host": "localhost:7478",
+        "origin": "http://localhost:7478"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115516,
+            "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32433,
+            "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46582,
+            "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+          }
+        ],
+        "bodyFiles": [
+          "refused-baseline-spec-loopback-origin-old-polaris.html",
+          "refused-baseline-spec-loopback-origin-old-trajectory.html",
+          "refused-baseline-spec-loopback-origin-old-orrery.html",
+          "refused-baseline-spec-loopback-origin-old-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115516,
+            "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32433,
+            "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46582,
+            "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+          }
+        ],
+        "bodyFiles": [
+          "refused-baseline-spec-loopback-origin-new-polaris.html",
+          "refused-baseline-spec-loopback-origin-new-trajectory.html",
+          "refused-baseline-spec-loopback-origin-new-orrery.html",
+          "refused-baseline-spec-loopback-origin-new-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "directByteEquality": true,
+      "equal": true
+    },
+    {
+      "name": "refused-baseline-spec-tailnet-origin",
+      "headers": {
+        "host": "tzeusy.parrot-hen.ts.net",
+        "origin": "https://tzeusy.parrot-hen.ts.net"
+      },
+      "old": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115756,
+            "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32523,
+            "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46672,
+            "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7"
+          }
+        ],
+        "bodyFiles": [
+          "refused-baseline-spec-tailnet-origin-old-polaris.html",
+          "refused-baseline-spec-tailnet-origin-old-trajectory.html",
+          "refused-baseline-spec-tailnet-origin-old-orrery.html",
+          "refused-baseline-spec-tailnet-origin-old-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "new": {
+        "served": [
+          {
+            "path": "/polaris",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 115756,
+            "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3"
+          },
+          {
+            "path": "/trajectory",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 32523,
+            "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a"
+          },
+          {
+            "path": "/orrery",
+            "status": 200,
+            "contentType": "text/html; charset=utf-8",
+            "type": "string",
+            "bytes": 46672,
+            "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410"
+          },
+          {
+            "path": "/api/poc",
+            "status": 200,
+            "contentType": "application/json",
+            "type": "string",
+            "bytes": 37513,
+            "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7"
+          }
+        ],
+        "bodyFiles": [
+          "refused-baseline-spec-tailnet-origin-new-polaris.html",
+          "refused-baseline-spec-tailnet-origin-new-trajectory.html",
+          "refused-baseline-spec-tailnet-origin-new-orrery.html",
+          "refused-baseline-spec-tailnet-origin-new-api-poc.json"
+        ],
+        "modelSha256": "7cd4e4812a58e349282c862ee63227c2b24bb9d23c2930d0a21ed9b34e5a979a",
+        "responseIdentity": {
+          "contentKey": "sha256:10ee56660f12f2a2e39a9bb98b08e8fef2411a44d8b69066e7c4dac4b3a80acd",
+          "excludes": [
+            "codeStructure.capturedAt",
+            "evaluation.asOf",
+            "projectShape.authority.evaluationId",
+            "projectShape.authority.evaluationInstant",
+            "projectShape.claim.evaluationId",
+            "projectShape.classes.baseline-spec.claim.evaluationId",
+            "projectShape.classes.catalog-entry.claim.evaluationId",
+            "projectShape.classes.craft-policy.claim.evaluationId",
+            "projectShape.classes.design-contract.claim.evaluationId",
+            "projectShape.classes.principle.claim.evaluationId",
+            "projectShape.classes.project-account-section.claim.evaluationId",
+            "projectShape.classes.roster-identity.claim.evaluationId",
+            "projectShape.classes.success-criterion.claim.evaluationId",
+            "projectShape.classes.topology-component.claim.evaluationId",
+            "projectShape.facts[].claim.evaluationId",
+            "projectShape.identity.capturedAt",
+            "projectShape.identity.deterministicInputs.authority.evaluationId",
+            "projectShape.items[].claim.evaluationId",
+            "projectShape.projectAccount[].claim.evaluationId",
+            "projectShape.sources[].claim.evaluationId",
+            "projectShape.sources[].stamp.capturedAt",
+            "proposedWork.currentAuthority.claim.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationId",
+            "walkthroughJudgment.evaluation.evaluationInstant",
+            "workItems.capturedAt"
+          ],
+          "stableAcross": [
+            "daemon restart at one evaluation input set"
+          ],
+          "varyingWith": [
+            "butlers revision",
+            "observer revision",
+            "project shape"
+          ]
+        },
+        "calls": []
+      },
+      "directByteEquality": true,
+      "equal": true
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "at": "2026-11-08T05:57:19.696650+00:00",
+  "head": "5414a20faf3d2deafc576d4eac6dcb72d8042a07",
+  "base": "fd08ea62f8b55fb60d7c79628688bc014b40875b",
+  "nativeExit": 0,
+  "stages": 5,
+  "scopedUnit": {
+    "files": 4,
+    "tests": 201
+  },
+  "scopedIntegration": {
+    "files": 1,
+    "tests": 52
+  },
+  "callerPairs": 93,
+  "servedCases": 18,
+  "servedPairs": 72,
+  "humanPairs": 54,
+  "machinePairs": 18,
+  "bodyFiles": 144,
+  "bodyBytesSum": 12200400,
+  "trackedSourceRows": 235,
+  "virtualPreludeRows": 4,
+  "trackedClean": true,
+  "actualIndependentMethod": "Python structural/full-body reads + jq structural comparator/nativecmp72 + nativefind145/nativeGit235 and nativeSHA256",
+  "runtimeSubjectTree": "1c2f1c638ee233912b59edf74e81260e6ea2169e",
+  "nativeElapsedSeconds": 36.716578557,
+  "freshRuntimeTransportPairs": 0,
+  "historicalTransportPairsReused": 69,
+  "historicalSourceMutantsReused": 27,
+  "newTests": 0,
+  "removedTests": 0,
+  "tierMoves": 0,
+  "broadGateRun": false,
+  "processObserverOrCensusClaim": false,
+  "kernelEndpoints": "Unknown",
+  "wholeEightAcceptance": "not claimed; independent applicability review and protected current landing remain",
+  "limits": [
+    "synthetic declared corpus/Node24.6.0 only; other runtimes/platforms/general equivalence Unknown",
+    "original 403 human-route results remain refusal coverage; successful 72-pair supplement is distinct",
+    "historical initial default-TMPDIR containment/cleanup unverified; later controls do not backfill it",
+    "historical full gate, skips, Unknown pins/nonexecuted fixtures and instrumentation qualifications retain their exact subjects",
+    "current scoped tests characterize existing altered-prose fail-open residuals; this transport correction does not endorse or repair them"
+  ]
+}

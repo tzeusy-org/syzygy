@@ -119,7 +119,7 @@ function withoutGitlinkRecords(bytes: Buffer): Buffer {
 }
 
 function defaultRunGit(repoRoot: string, args: readonly string[]): string {
-  // The one production Git runner (same flags, buffer bound and stdio as the PWB reader's); the decode below is this observer's own.
+  // G5 profile 5 shares profile 6's transport (flags, 256 MiB bound and stdio); this adapter keeps strict decode and gitlink filtering.
   const stdout = gitRunnerFor(repoRoot)(args);
   const bytes = Buffer.from(stdout.buffer, stdout.byteOffset, stdout.byteLength);
   // The gitlink filter runs inside the try, as the decode always did: a copy it cannot allocate is reported like the bytes that

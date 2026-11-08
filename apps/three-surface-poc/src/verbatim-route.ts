@@ -53,6 +53,7 @@ import type { VerbatimLeafReader, VerbatimRefusal } from './capability-detail.js
  * captured on the thrown error, never inherited by the daemon.
  */
 export function gitBlobReaderFor(repoRoot: string, limits: PwbResourceLimits = PWB_RESOURCE_LIMITS): GitRunner {
+  // G5 row 7 exception: cwd must stay explicit, a key forbidden in the core live-observer import closure.
   return (args) =>
     new Uint8Array(execFileSync('git', [...args], { cwd: repoRoot, maxBuffer: limits.maxBytesPerSource, stdio: ['ignore', 'pipe', 'pipe'] }));
 }

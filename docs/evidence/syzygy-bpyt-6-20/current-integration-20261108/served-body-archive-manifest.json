@@ -1,0 +1,1318 @@
+{
+  "runtimeSubject": "5414a20faf3d2deafc576d4eac6dcb72d8042a07",
+  "base": "fd08ea62f8b55fb60d7c79628688bc014b40875b",
+  "archive": {
+    "path": "served-bodies.tar.gz",
+    "bytes": 1759766,
+    "sha256": "15d2025f8e2b068e0ea8b24ebd5561555ce1f7f2b2c8dea00a820075451e98ef",
+    "format": "gzip(mtime=0) of USTAR ordinary relative flat-file members; fixed mode0644/uid0/gid0/mtime0 for container metadata only"
+  },
+  "memberDenominator": 144,
+  "bodyBytes": 12200400,
+  "sourceManifest": "served-differential.json",
+  "methods": [
+    "full source bytes matched recorded source hash/size",
+    "archive re-read bytes equal source; ordinary relative REGTYPE members",
+    "native tar listing144 names",
+    "native sha256sum145 archive/source digests"
+  ],
+  "members": [
+    {
+      "member": "admitted-normal-loopback-host-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-old-polaris.html",
+      "bytes": 209709,
+      "sha256": "d0d2677fcafc84f3b1a5e614807191351838ddb995700ed3a498095a3306089a",
+      "case": "admitted-normal-loopback-host",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-normal-loopback-host-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-old-trajectory.html",
+      "bytes": 32511,
+      "sha256": "0759a35007a1952585d21cae272beb5f3386f00b671cae34e473206661c121e0",
+      "case": "admitted-normal-loopback-host",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-normal-loopback-host-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-old-orrery.html",
+      "bytes": 46660,
+      "sha256": "2ad8831eec13655a55511a71a4396fee94911892ea6e82efec33020e4bd1c3f2",
+      "case": "admitted-normal-loopback-host",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-normal-loopback-host-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-old-api-poc.json",
+      "bytes": 152672,
+      "sha256": "9b5c241c8395b2ab836c5d76734265c2bc8550c13c613a3c7c9bf2fd65ab01ad",
+      "case": "admitted-normal-loopback-host",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-normal-loopback-host-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-new-polaris.html",
+      "bytes": 209709,
+      "sha256": "d0d2677fcafc84f3b1a5e614807191351838ddb995700ed3a498095a3306089a",
+      "case": "admitted-normal-loopback-host",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-normal-loopback-host-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-new-trajectory.html",
+      "bytes": 32511,
+      "sha256": "0759a35007a1952585d21cae272beb5f3386f00b671cae34e473206661c121e0",
+      "case": "admitted-normal-loopback-host",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-normal-loopback-host-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-new-orrery.html",
+      "bytes": 46660,
+      "sha256": "2ad8831eec13655a55511a71a4396fee94911892ea6e82efec33020e4bd1c3f2",
+      "case": "admitted-normal-loopback-host",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-normal-loopback-host-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-new-api-poc.json",
+      "bytes": 152672,
+      "sha256": "9b5c241c8395b2ab836c5d76734265c2bc8550c13c613a3c7c9bf2fd65ab01ad",
+      "case": "admitted-normal-loopback-host",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-normal-loopback-origin-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-old-polaris.html",
+      "bytes": 209709,
+      "sha256": "d0d2677fcafc84f3b1a5e614807191351838ddb995700ed3a498095a3306089a",
+      "case": "admitted-normal-loopback-origin",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-normal-loopback-origin-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-old-trajectory.html",
+      "bytes": 32511,
+      "sha256": "0759a35007a1952585d21cae272beb5f3386f00b671cae34e473206661c121e0",
+      "case": "admitted-normal-loopback-origin",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-normal-loopback-origin-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-old-orrery.html",
+      "bytes": 46660,
+      "sha256": "2ad8831eec13655a55511a71a4396fee94911892ea6e82efec33020e4bd1c3f2",
+      "case": "admitted-normal-loopback-origin",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-normal-loopback-origin-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-old-api-poc.json",
+      "bytes": 152672,
+      "sha256": "9b5c241c8395b2ab836c5d76734265c2bc8550c13c613a3c7c9bf2fd65ab01ad",
+      "case": "admitted-normal-loopback-origin",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-normal-loopback-origin-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-new-polaris.html",
+      "bytes": 209709,
+      "sha256": "d0d2677fcafc84f3b1a5e614807191351838ddb995700ed3a498095a3306089a",
+      "case": "admitted-normal-loopback-origin",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-normal-loopback-origin-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-new-trajectory.html",
+      "bytes": 32511,
+      "sha256": "0759a35007a1952585d21cae272beb5f3386f00b671cae34e473206661c121e0",
+      "case": "admitted-normal-loopback-origin",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-normal-loopback-origin-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-new-orrery.html",
+      "bytes": 46660,
+      "sha256": "2ad8831eec13655a55511a71a4396fee94911892ea6e82efec33020e4bd1c3f2",
+      "case": "admitted-normal-loopback-origin",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-normal-loopback-origin-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-new-api-poc.json",
+      "bytes": 152672,
+      "sha256": "9b5c241c8395b2ab836c5d76734265c2bc8550c13c613a3c7c9bf2fd65ab01ad",
+      "case": "admitted-normal-loopback-origin",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-normal-tailnet-origin-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-old-polaris.html",
+      "bytes": 209979,
+      "sha256": "ea76621db5816e93100d01b7b993933392691d93f8df50ff2e700d10b177d509",
+      "case": "admitted-normal-tailnet-origin",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-normal-tailnet-origin-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-old-trajectory.html",
+      "bytes": 32601,
+      "sha256": "c32c7a28b697e885040cf70c09eaff587d2ef7ba46d4713288695d4bcd51cd42",
+      "case": "admitted-normal-tailnet-origin",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-normal-tailnet-origin-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-old-orrery.html",
+      "bytes": 46750,
+      "sha256": "cd377e7260f5afa69b9dcf56a6e91ca05a53fe4811cf56169622ba7785ea3e30",
+      "case": "admitted-normal-tailnet-origin",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-normal-tailnet-origin-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-old-api-poc.json",
+      "bytes": 152672,
+      "sha256": "043a756ab7fb1d4cbb5456f30c45669a28e368efcb4ae6fd3fc64b4e7190b170",
+      "case": "admitted-normal-tailnet-origin",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-normal-tailnet-origin-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-new-polaris.html",
+      "bytes": 209979,
+      "sha256": "ea76621db5816e93100d01b7b993933392691d93f8df50ff2e700d10b177d509",
+      "case": "admitted-normal-tailnet-origin",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-normal-tailnet-origin-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-new-trajectory.html",
+      "bytes": 32601,
+      "sha256": "c32c7a28b697e885040cf70c09eaff587d2ef7ba46d4713288695d4bcd51cd42",
+      "case": "admitted-normal-tailnet-origin",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-normal-tailnet-origin-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-new-orrery.html",
+      "bytes": 46750,
+      "sha256": "cd377e7260f5afa69b9dcf56a6e91ca05a53fe4811cf56169622ba7785ea3e30",
+      "case": "admitted-normal-tailnet-origin",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-normal-tailnet-origin-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-new-api-poc.json",
+      "bytes": 152672,
+      "sha256": "043a756ab7fb1d4cbb5456f30c45669a28e368efcb4ae6fd3fc64b4e7190b170",
+      "case": "admitted-normal-tailnet-origin",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-secret-loopback-host-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-old-polaris.html",
+      "bytes": 213789,
+      "sha256": "a62926f40433ed09de1c1585247f04b2c2eda61c8c32213d8d85935498fd41ca",
+      "case": "admitted-secret-loopback-host",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-secret-loopback-host-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-old-trajectory.html",
+      "bytes": 32511,
+      "sha256": "7bcdc392b1a084607e1fbff9e58d86e1c63e47182347bed4d85b732a7e63301d",
+      "case": "admitted-secret-loopback-host",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-secret-loopback-host-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-old-orrery.html",
+      "bytes": 46660,
+      "sha256": "cfd373dca3757056c1eb43d064906c1ca06363b30f8c57463e39a312cfed4e90",
+      "case": "admitted-secret-loopback-host",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-secret-loopback-host-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-old-api-poc.json",
+      "bytes": 150100,
+      "sha256": "467c92bd50e8c70df75fc0a7aa451ad460f8037ccda7b97a0ac0e74cf7c7e3e8",
+      "case": "admitted-secret-loopback-host",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-secret-loopback-host-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-new-polaris.html",
+      "bytes": 213789,
+      "sha256": "a62926f40433ed09de1c1585247f04b2c2eda61c8c32213d8d85935498fd41ca",
+      "case": "admitted-secret-loopback-host",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-secret-loopback-host-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-new-trajectory.html",
+      "bytes": 32511,
+      "sha256": "7bcdc392b1a084607e1fbff9e58d86e1c63e47182347bed4d85b732a7e63301d",
+      "case": "admitted-secret-loopback-host",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-secret-loopback-host-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-new-orrery.html",
+      "bytes": 46660,
+      "sha256": "cfd373dca3757056c1eb43d064906c1ca06363b30f8c57463e39a312cfed4e90",
+      "case": "admitted-secret-loopback-host",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-secret-loopback-host-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-new-api-poc.json",
+      "bytes": 150100,
+      "sha256": "467c92bd50e8c70df75fc0a7aa451ad460f8037ccda7b97a0ac0e74cf7c7e3e8",
+      "case": "admitted-secret-loopback-host",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-secret-loopback-origin-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-old-polaris.html",
+      "bytes": 213789,
+      "sha256": "a62926f40433ed09de1c1585247f04b2c2eda61c8c32213d8d85935498fd41ca",
+      "case": "admitted-secret-loopback-origin",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-secret-loopback-origin-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-old-trajectory.html",
+      "bytes": 32511,
+      "sha256": "7bcdc392b1a084607e1fbff9e58d86e1c63e47182347bed4d85b732a7e63301d",
+      "case": "admitted-secret-loopback-origin",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-secret-loopback-origin-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-old-orrery.html",
+      "bytes": 46660,
+      "sha256": "cfd373dca3757056c1eb43d064906c1ca06363b30f8c57463e39a312cfed4e90",
+      "case": "admitted-secret-loopback-origin",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-secret-loopback-origin-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-old-api-poc.json",
+      "bytes": 150100,
+      "sha256": "467c92bd50e8c70df75fc0a7aa451ad460f8037ccda7b97a0ac0e74cf7c7e3e8",
+      "case": "admitted-secret-loopback-origin",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-secret-loopback-origin-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-new-polaris.html",
+      "bytes": 213789,
+      "sha256": "a62926f40433ed09de1c1585247f04b2c2eda61c8c32213d8d85935498fd41ca",
+      "case": "admitted-secret-loopback-origin",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-secret-loopback-origin-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-new-trajectory.html",
+      "bytes": 32511,
+      "sha256": "7bcdc392b1a084607e1fbff9e58d86e1c63e47182347bed4d85b732a7e63301d",
+      "case": "admitted-secret-loopback-origin",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-secret-loopback-origin-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-new-orrery.html",
+      "bytes": 46660,
+      "sha256": "cfd373dca3757056c1eb43d064906c1ca06363b30f8c57463e39a312cfed4e90",
+      "case": "admitted-secret-loopback-origin",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-secret-loopback-origin-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-new-api-poc.json",
+      "bytes": 150100,
+      "sha256": "467c92bd50e8c70df75fc0a7aa451ad460f8037ccda7b97a0ac0e74cf7c7e3e8",
+      "case": "admitted-secret-loopback-origin",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-secret-tailnet-origin-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-old-polaris.html",
+      "bytes": 214059,
+      "sha256": "0f87ef20a31add02532741881997033a2834281b36cce0eb6a56a938386ab3e0",
+      "case": "admitted-secret-tailnet-origin",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-secret-tailnet-origin-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-old-trajectory.html",
+      "bytes": 32601,
+      "sha256": "4e8661392682816573d93e5edaff10874b01c77caefd5065a129bd68faa3e8a8",
+      "case": "admitted-secret-tailnet-origin",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-secret-tailnet-origin-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-old-orrery.html",
+      "bytes": 46750,
+      "sha256": "012e44ceb9e057df2eb9e4523ef330bfc2d9402028de7158d95c05b07b7c4fa5",
+      "case": "admitted-secret-tailnet-origin",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-secret-tailnet-origin-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-old-api-poc.json",
+      "bytes": 150100,
+      "sha256": "6ddab075eeed36742675a670a41267b36b4bcb6cd75c84595ca19a3abd6bd02c",
+      "case": "admitted-secret-tailnet-origin",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-secret-tailnet-origin-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-new-polaris.html",
+      "bytes": 214059,
+      "sha256": "0f87ef20a31add02532741881997033a2834281b36cce0eb6a56a938386ab3e0",
+      "case": "admitted-secret-tailnet-origin",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-secret-tailnet-origin-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-new-trajectory.html",
+      "bytes": 32601,
+      "sha256": "4e8661392682816573d93e5edaff10874b01c77caefd5065a129bd68faa3e8a8",
+      "case": "admitted-secret-tailnet-origin",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-secret-tailnet-origin-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-new-orrery.html",
+      "bytes": 46750,
+      "sha256": "012e44ceb9e057df2eb9e4523ef330bfc2d9402028de7158d95c05b07b7c4fa5",
+      "case": "admitted-secret-tailnet-origin",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-secret-tailnet-origin-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-new-api-poc.json",
+      "bytes": 150100,
+      "sha256": "6ddab075eeed36742675a670a41267b36b4bcb6cd75c84595ca19a3abd6bd02c",
+      "case": "admitted-secret-tailnet-origin",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-host-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-old-polaris.html",
+      "bytes": 215526,
+      "sha256": "5ae81e3a81dee5621c59563dd570874e64a6ac81df36113a674cc14158fcd0cb",
+      "case": "admitted-baseline-spec-loopback-host",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-host-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-old-trajectory.html",
+      "bytes": 32511,
+      "sha256": "c9e592ef8f737a60bbd90a6e30ba67d79a461feba3c3dd8675bc566df32da813",
+      "case": "admitted-baseline-spec-loopback-host",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-host-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-old-orrery.html",
+      "bytes": 46660,
+      "sha256": "9cba398a31cbc3b4e8e8630941bc0e869b14ef12319904a164576e768d6c8d04",
+      "case": "admitted-baseline-spec-loopback-host",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-host-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-old-api-poc.json",
+      "bytes": 157069,
+      "sha256": "0383afd66b2b52a304676c3a9be205125efabce6962040fb2fa1e05ac3e7fc1c",
+      "case": "admitted-baseline-spec-loopback-host",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-host-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-new-polaris.html",
+      "bytes": 215526,
+      "sha256": "5ae81e3a81dee5621c59563dd570874e64a6ac81df36113a674cc14158fcd0cb",
+      "case": "admitted-baseline-spec-loopback-host",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-host-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-new-trajectory.html",
+      "bytes": 32511,
+      "sha256": "c9e592ef8f737a60bbd90a6e30ba67d79a461feba3c3dd8675bc566df32da813",
+      "case": "admitted-baseline-spec-loopback-host",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-host-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-new-orrery.html",
+      "bytes": 46660,
+      "sha256": "9cba398a31cbc3b4e8e8630941bc0e869b14ef12319904a164576e768d6c8d04",
+      "case": "admitted-baseline-spec-loopback-host",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-host-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-new-api-poc.json",
+      "bytes": 157069,
+      "sha256": "0383afd66b2b52a304676c3a9be205125efabce6962040fb2fa1e05ac3e7fc1c",
+      "case": "admitted-baseline-spec-loopback-host",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-origin-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-old-polaris.html",
+      "bytes": 215526,
+      "sha256": "5ae81e3a81dee5621c59563dd570874e64a6ac81df36113a674cc14158fcd0cb",
+      "case": "admitted-baseline-spec-loopback-origin",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-origin-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-old-trajectory.html",
+      "bytes": 32511,
+      "sha256": "c9e592ef8f737a60bbd90a6e30ba67d79a461feba3c3dd8675bc566df32da813",
+      "case": "admitted-baseline-spec-loopback-origin",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-origin-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-old-orrery.html",
+      "bytes": 46660,
+      "sha256": "9cba398a31cbc3b4e8e8630941bc0e869b14ef12319904a164576e768d6c8d04",
+      "case": "admitted-baseline-spec-loopback-origin",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-origin-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-old-api-poc.json",
+      "bytes": 157069,
+      "sha256": "0383afd66b2b52a304676c3a9be205125efabce6962040fb2fa1e05ac3e7fc1c",
+      "case": "admitted-baseline-spec-loopback-origin",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-origin-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-new-polaris.html",
+      "bytes": 215526,
+      "sha256": "5ae81e3a81dee5621c59563dd570874e64a6ac81df36113a674cc14158fcd0cb",
+      "case": "admitted-baseline-spec-loopback-origin",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-origin-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-new-trajectory.html",
+      "bytes": 32511,
+      "sha256": "c9e592ef8f737a60bbd90a6e30ba67d79a461feba3c3dd8675bc566df32da813",
+      "case": "admitted-baseline-spec-loopback-origin",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-origin-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-new-orrery.html",
+      "bytes": 46660,
+      "sha256": "9cba398a31cbc3b4e8e8630941bc0e869b14ef12319904a164576e768d6c8d04",
+      "case": "admitted-baseline-spec-loopback-origin",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-baseline-spec-loopback-origin-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-new-api-poc.json",
+      "bytes": 157069,
+      "sha256": "0383afd66b2b52a304676c3a9be205125efabce6962040fb2fa1e05ac3e7fc1c",
+      "case": "admitted-baseline-spec-loopback-origin",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-baseline-spec-tailnet-origin-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-old-polaris.html",
+      "bytes": 215856,
+      "sha256": "63b77384488eeec7cb4b6234dac7030b16e599ff1ea09c6449b35b7805759cfc",
+      "case": "admitted-baseline-spec-tailnet-origin",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-baseline-spec-tailnet-origin-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-old-trajectory.html",
+      "bytes": 32601,
+      "sha256": "86c26320a2c5e17faa93941dcacb102a143f7075e6fe1221c0ca5e3e154d7482",
+      "case": "admitted-baseline-spec-tailnet-origin",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-baseline-spec-tailnet-origin-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-old-orrery.html",
+      "bytes": 46750,
+      "sha256": "9061541eb9bde1cc53fe5667f3f380222e0319626dc955f4ac25edd8eb087d35",
+      "case": "admitted-baseline-spec-tailnet-origin",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-baseline-spec-tailnet-origin-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-old-api-poc.json",
+      "bytes": 157069,
+      "sha256": "d7556b6c76ba101a607e8a2fcf710e0d0aa60c80c64c526ebc15d241151615f8",
+      "case": "admitted-baseline-spec-tailnet-origin",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "admitted-baseline-spec-tailnet-origin-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-new-polaris.html",
+      "bytes": 215856,
+      "sha256": "63b77384488eeec7cb4b6234dac7030b16e599ff1ea09c6449b35b7805759cfc",
+      "case": "admitted-baseline-spec-tailnet-origin",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "admitted-baseline-spec-tailnet-origin-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-new-trajectory.html",
+      "bytes": 32601,
+      "sha256": "86c26320a2c5e17faa93941dcacb102a143f7075e6fe1221c0ca5e3e154d7482",
+      "case": "admitted-baseline-spec-tailnet-origin",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "admitted-baseline-spec-tailnet-origin-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-new-orrery.html",
+      "bytes": 46750,
+      "sha256": "9061541eb9bde1cc53fe5667f3f380222e0319626dc955f4ac25edd8eb087d35",
+      "case": "admitted-baseline-spec-tailnet-origin",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "admitted-baseline-spec-tailnet-origin-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-new-api-poc.json",
+      "bytes": 157069,
+      "sha256": "d7556b6c76ba101a607e8a2fcf710e0d0aa60c80c64c526ebc15d241151615f8",
+      "case": "admitted-baseline-spec-tailnet-origin",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-normal-loopback-host-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-old-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379",
+      "case": "refused-normal-loopback-host",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-normal-loopback-host-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-old-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625",
+      "case": "refused-normal-loopback-host",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-normal-loopback-host-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-old-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc",
+      "case": "refused-normal-loopback-host",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-normal-loopback-host-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88",
+      "case": "refused-normal-loopback-host",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-normal-loopback-host-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-new-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379",
+      "case": "refused-normal-loopback-host",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-normal-loopback-host-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-new-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625",
+      "case": "refused-normal-loopback-host",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-normal-loopback-host-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-new-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc",
+      "case": "refused-normal-loopback-host",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-normal-loopback-host-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88",
+      "case": "refused-normal-loopback-host",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-normal-loopback-origin-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-old-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379",
+      "case": "refused-normal-loopback-origin",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-normal-loopback-origin-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-old-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625",
+      "case": "refused-normal-loopback-origin",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-normal-loopback-origin-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-old-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc",
+      "case": "refused-normal-loopback-origin",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-normal-loopback-origin-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88",
+      "case": "refused-normal-loopback-origin",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-normal-loopback-origin-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-new-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379",
+      "case": "refused-normal-loopback-origin",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-normal-loopback-origin-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-new-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625",
+      "case": "refused-normal-loopback-origin",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-normal-loopback-origin-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-new-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc",
+      "case": "refused-normal-loopback-origin",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-normal-loopback-origin-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88",
+      "case": "refused-normal-loopback-origin",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-normal-tailnet-origin-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-old-polaris.html",
+      "bytes": 115756,
+      "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3",
+      "case": "refused-normal-tailnet-origin",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-normal-tailnet-origin-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-old-trajectory.html",
+      "bytes": 32523,
+      "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a",
+      "case": "refused-normal-tailnet-origin",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-normal-tailnet-origin-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-old-orrery.html",
+      "bytes": 46672,
+      "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410",
+      "case": "refused-normal-tailnet-origin",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-normal-tailnet-origin-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7",
+      "case": "refused-normal-tailnet-origin",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-normal-tailnet-origin-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-new-polaris.html",
+      "bytes": 115756,
+      "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3",
+      "case": "refused-normal-tailnet-origin",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-normal-tailnet-origin-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-new-trajectory.html",
+      "bytes": 32523,
+      "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a",
+      "case": "refused-normal-tailnet-origin",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-normal-tailnet-origin-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-new-orrery.html",
+      "bytes": 46672,
+      "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410",
+      "case": "refused-normal-tailnet-origin",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-normal-tailnet-origin-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7",
+      "case": "refused-normal-tailnet-origin",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-secret-loopback-host-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-old-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379",
+      "case": "refused-secret-loopback-host",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-secret-loopback-host-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-old-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625",
+      "case": "refused-secret-loopback-host",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-secret-loopback-host-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-old-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc",
+      "case": "refused-secret-loopback-host",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-secret-loopback-host-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88",
+      "case": "refused-secret-loopback-host",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-secret-loopback-host-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-new-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379",
+      "case": "refused-secret-loopback-host",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-secret-loopback-host-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-new-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625",
+      "case": "refused-secret-loopback-host",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-secret-loopback-host-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-new-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc",
+      "case": "refused-secret-loopback-host",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-secret-loopback-host-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88",
+      "case": "refused-secret-loopback-host",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-secret-loopback-origin-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-old-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379",
+      "case": "refused-secret-loopback-origin",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-secret-loopback-origin-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-old-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625",
+      "case": "refused-secret-loopback-origin",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-secret-loopback-origin-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-old-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc",
+      "case": "refused-secret-loopback-origin",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-secret-loopback-origin-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88",
+      "case": "refused-secret-loopback-origin",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-secret-loopback-origin-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-new-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379",
+      "case": "refused-secret-loopback-origin",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-secret-loopback-origin-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-new-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625",
+      "case": "refused-secret-loopback-origin",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-secret-loopback-origin-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-new-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc",
+      "case": "refused-secret-loopback-origin",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-secret-loopback-origin-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88",
+      "case": "refused-secret-loopback-origin",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-secret-tailnet-origin-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-old-polaris.html",
+      "bytes": 115756,
+      "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3",
+      "case": "refused-secret-tailnet-origin",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-secret-tailnet-origin-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-old-trajectory.html",
+      "bytes": 32523,
+      "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a",
+      "case": "refused-secret-tailnet-origin",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-secret-tailnet-origin-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-old-orrery.html",
+      "bytes": 46672,
+      "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410",
+      "case": "refused-secret-tailnet-origin",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-secret-tailnet-origin-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7",
+      "case": "refused-secret-tailnet-origin",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-secret-tailnet-origin-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-new-polaris.html",
+      "bytes": 115756,
+      "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3",
+      "case": "refused-secret-tailnet-origin",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-secret-tailnet-origin-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-new-trajectory.html",
+      "bytes": 32523,
+      "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a",
+      "case": "refused-secret-tailnet-origin",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-secret-tailnet-origin-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-new-orrery.html",
+      "bytes": 46672,
+      "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410",
+      "case": "refused-secret-tailnet-origin",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-secret-tailnet-origin-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7",
+      "case": "refused-secret-tailnet-origin",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-host-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-old-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379",
+      "case": "refused-baseline-spec-loopback-host",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-host-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-old-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625",
+      "case": "refused-baseline-spec-loopback-host",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-host-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-old-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc",
+      "case": "refused-baseline-spec-loopback-host",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-host-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88",
+      "case": "refused-baseline-spec-loopback-host",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-host-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-new-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379",
+      "case": "refused-baseline-spec-loopback-host",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-host-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-new-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625",
+      "case": "refused-baseline-spec-loopback-host",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-host-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-new-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc",
+      "case": "refused-baseline-spec-loopback-host",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-host-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88",
+      "case": "refused-baseline-spec-loopback-host",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-origin-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-old-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379",
+      "case": "refused-baseline-spec-loopback-origin",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-origin-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-old-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625",
+      "case": "refused-baseline-spec-loopback-origin",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-origin-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-old-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc",
+      "case": "refused-baseline-spec-loopback-origin",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-origin-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88",
+      "case": "refused-baseline-spec-loopback-origin",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-origin-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-new-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379",
+      "case": "refused-baseline-spec-loopback-origin",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-origin-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-new-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625",
+      "case": "refused-baseline-spec-loopback-origin",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-origin-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-new-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc",
+      "case": "refused-baseline-spec-loopback-origin",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-baseline-spec-loopback-origin-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88",
+      "case": "refused-baseline-spec-loopback-origin",
+      "side": "new",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-baseline-spec-tailnet-origin-old-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-old-polaris.html",
+      "bytes": 115756,
+      "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3",
+      "case": "refused-baseline-spec-tailnet-origin",
+      "side": "old",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-baseline-spec-tailnet-origin-old-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-old-trajectory.html",
+      "bytes": 32523,
+      "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a",
+      "case": "refused-baseline-spec-tailnet-origin",
+      "side": "old",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-baseline-spec-tailnet-origin-old-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-old-orrery.html",
+      "bytes": 46672,
+      "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410",
+      "case": "refused-baseline-spec-tailnet-origin",
+      "side": "old",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-baseline-spec-tailnet-origin-old-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7",
+      "case": "refused-baseline-spec-tailnet-origin",
+      "side": "old",
+      "route": "/api/poc"
+    },
+    {
+      "member": "refused-baseline-spec-tailnet-origin-new-polaris.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-new-polaris.html",
+      "bytes": 115756,
+      "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3",
+      "case": "refused-baseline-spec-tailnet-origin",
+      "side": "new",
+      "route": "/polaris"
+    },
+    {
+      "member": "refused-baseline-spec-tailnet-origin-new-trajectory.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-new-trajectory.html",
+      "bytes": 32523,
+      "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a",
+      "case": "refused-baseline-spec-tailnet-origin",
+      "side": "new",
+      "route": "/trajectory"
+    },
+    {
+      "member": "refused-baseline-spec-tailnet-origin-new-orrery.html",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-new-orrery.html",
+      "bytes": 46672,
+      "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410",
+      "case": "refused-baseline-spec-tailnet-origin",
+      "side": "new",
+      "route": "/orrery"
+    },
+    {
+      "member": "refused-baseline-spec-tailnet-origin-new-api-poc.json",
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7",
+      "case": "refused-baseline-spec-tailnet-origin",
+      "side": "new",
+      "route": "/api/poc"
+    }
+  ],
+  "qualification": "Additive copy of already compared body bytes, not another runtime or differential execution. External original files are unchanged."
+}

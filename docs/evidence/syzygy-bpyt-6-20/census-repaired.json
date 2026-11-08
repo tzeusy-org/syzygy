@@ -1,0 +1,64 @@
+{
+  "sourceSubjectCommit": "1675b3967b36812ee05775a6f2bb31627f247f04",
+  "fileDenominator": 6,
+  "profileDenominator": 7,
+  "factoryProfiles": [
+    1,
+    2,
+    3,
+    5,
+    6
+  ],
+  "directExceptionProfiles": [
+    4,
+    7
+  ],
+  "isolatedBatchException": 8,
+  "directCalls": 2,
+  "secondMethod": 2,
+  "factoryCalls": 4,
+  "rows": [
+    {
+      "path": "packages/three-surface-poc-core/src/worker-change-observation.ts",
+      "sha256": "707eeacd65c9b86a987cfa4519e03e64716b08f7fe9f9b4d7930cd1ec374b53d",
+      "directCalls": 0,
+      "factoryCalls": 1,
+      "secondMethodDirectCalls": 0
+    },
+    {
+      "path": "apps/three-surface-poc/src/governance-inputs.ts",
+      "sha256": "492965ca0af3477062bf5bd6780bc259e1036a7e98991d73f4651d778c7c19a0",
+      "directCalls": 0,
+      "factoryCalls": 2,
+      "secondMethodDirectCalls": 0
+    },
+    {
+      "path": "apps/three-surface-poc/src/git-observation.ts",
+      "sha256": "57ee838fccf606f686fd2be589d65f2d91ac5330a3cce3ec6d330281aacd51ed",
+      "directCalls": 1,
+      "factoryCalls": 0,
+      "secondMethodDirectCalls": 1
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/code-structure.ts",
+      "sha256": "d91d5b4fda54cfdc79b2fb90261e96bdcb56bc4acd39dcd22cd7c506e6aabe97",
+      "directCalls": 0,
+      "factoryCalls": 0,
+      "secondMethodDirectCalls": 0
+    },
+    {
+      "path": "packages/three-surface-poc-core/src/project-shape-observation.ts",
+      "sha256": "fe9f87dd5374b5c5ad7b9cc92a52a8722665de017fd72bf13c2a308797fdf8e4",
+      "directCalls": 0,
+      "factoryCalls": 1,
+      "secondMethodDirectCalls": 0
+    },
+    {
+      "path": "apps/three-surface-poc/src/verbatim-route.ts",
+      "sha256": "cd83655b9f1196dec61def09f278f189733fdbdc30cc75e75644b9129ff4939d",
+      "directCalls": 1,
+      "factoryCalls": 0,
+      "secondMethodDirectCalls": 1
+    }
+  ]
+}
