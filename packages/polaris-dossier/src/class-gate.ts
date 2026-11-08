@@ -16,7 +16,7 @@ import type { PublicSourceContentClass } from '@syzygy/polaris-generation-core/l
  * check derivation (`check.ts`, `deriveFindings`), local quotation verification whose findings and records carry byte ranges and no
  * source text, so it sends nothing; `close.ts`, which runs the detectors over the run's own values and reads no blob; and `census.ts`,
  * whose path-only census (`screenPath`, `contentClass` and this gate's `unconsentedClass` over the pinned tree's listing) reaches the
- * inventory brief and `check`'s report as escaped paths and outcomes, never a span or a body (syzygy-mea.3).
+ * inventory brief and `check`'s report as escaped paths and outcomes, never a span or a body (syzygy-mea.3); and `review-reach.ts`, which reads the check derivation's blobs through this gate to tell the author, on `check`'s report, which claim blocks the review cannot confirm, naming block identities and JSON paths only (syzygy-pdja.20).
  *
  * Residual, not repaired here (R-PR403-SCREEN-DOCS-2 E1): the gate covers the spans Syzygy reads. The fidelity packet's `draft` and
  * `inventory` documents are agent-authored and may quote a withheld body verbatim, and `check` has verified such a quotation against it,

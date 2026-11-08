@@ -13,6 +13,7 @@ import { poleLimitOf, type RunConfig } from './run-config.js';
 import { placementSubjectOf, screenLoaderOf } from './screen.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { readerAdvice, type ReaderAdvice } from './reader-advice.js';
+import { reviewReachAdvice, type ReviewReachAdvice } from './review-reach.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, deriveFindings, draftRules } from './check-derive.js';
@@ -85,9 +86,9 @@ export interface SubjectPlan<R extends object, G> {
   readonly disclosures: readonly string[];
 }
 
-/** `screenCensus` (`census.ts`) and `readerAdvice` (`reader-advice.ts`) are on `check`'s report only: advice to the author, never written
+/** `screenCensus` (`census.ts`), `readerAdvice` (`reader-advice.ts`) and `reviewReach` (`review-reach.ts`) are on `check`'s report only: advice to the author, never written
  * to the check record and never a finding. */
-export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly readerAdvice?: ReaderAdvice; readonly reviewVisibility?: ReviewVisibility };
+export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly readerAdvice?: ReaderAdvice; readonly reviewReach?: ReviewReachAdvice; readonly reviewVisibility?: ReviewVisibility };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -196,6 +197,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const reader = (deps.openReader ?? openPinnedObjectReader)({ gitDir: path.join(subject.clone.path, '.git'), revision: pinned });
   const findings: CheckFinding[] = [];
   let quotations: VerifiedQuotation[] = [], excludedContent: ExcludedQuotation[] = [], citedBlobs: CitedBlob[] = [];
+  let admitted: Derived['admitted'] = new Map();
   if (parseFault !== null) findings.push({ kind: 'not-json', at: '$', detail: parseFault });
   else {
     let derived: Derived;
@@ -206,7 +208,7 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
       throw cause;
     }
     findings.push(...derived.findings);
-    ({ quotations, excludedContent, citedBlobs } = derived);
+    ({ quotations, excludedContent, citedBlobs, admitted } = derived);
   }
   // The author's path-only census of what the review will not see (syzygy-mea.3, lead ruling): every blob of the pinned tree, through the
   // same screen and the class gate, on every check from the first. The reader re-lists the tree it listed for the derivation.
@@ -260,9 +262,13 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   const disclosures = credential.required ? [...plan.disclosures, CREDENTIAL_CHECK_DISCLOSURE] : plan.disclosures;
   const visibility = reviewVisibility(citedBlobs, screen.contentClass, checked.contentClasses);
   const advice = plan.command === 'check' && parseFault === null ? readerAdvice(doc) : undefined;
+  // The claim blocks no fidelity verdict can confirm (syzygy-pdja.20), read from this derivation's own blobs.
+  const reach = plan.command === 'check' && parseFault === null
+    ? reviewReachAdvice(doc, { citedBlobs, admitted, screen, consented: checked.contentClasses }) : undefined;
   return { ok: true, report: {
     command: plan.command, run, checkFile, ...record, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
-    ...(advice === undefined ? {} : { readerAdvice: advice }), ...(visibility === null ? {} : { reviewVisibility: visibility }),
+    ...(advice === undefined ? {} : { readerAdvice: advice }), ...(reach === undefined ? {} : { reviewReach: reach }),
+    ...(visibility === null ? {} : { reviewVisibility: visibility }),
   } };
 }
 

@@ -32,7 +32,11 @@ import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-export const BRIEF_VERSION = 'polaris-dossier-brief-v4';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v5';
+
+/** Which blocks the fidelity review can never confirm (syzygy-pdja.20): the brief's rule, which carries no project content; `check`
+ * names the blocks under `reviewReach` (`review-reach.ts`). Advice: no check refuses a draft for it. */
+export const REVIEW_REACH_RULE = 'The fidelity review is given a cited span\'s text only when screening admits its file and the run\'s consent covers that file\'s class. An Inferred block none of whose cited spans the review is given cannot be confirmed by a review: where screening withholds them all, the block renders Unknown and none of its text renders; otherwise its row stays unresolved and blocks readiness. `syzygy dossier check` lists such blocks under `reviewReach`. Before you resubmit, cite an admitted file that states the same fact, as well or instead, or state it as `unknown`: resubmitting such a block unchanged spends a repair cycle and cannot confirm it.';
 
 /** The reader topics of an operator-agent dossier, in the owner's order (dossier spec v1.5, "Why-first topics and voice"): why the
  * project exists first, holding the advantages its maintainers state, then core ideas, end-to-end workflows, and mechanisms and
@@ -160,6 +164,7 @@ export function renderBrief(input: BriefInput): string {
     '- An `unknown` block cites the sources it considered, where there are any, and may cite none.',
     '- A `non-normative` block carries no citation and no anchor.',
     '- Syzygy refuses a cited path that names no file at the pinned revision, and a line range beyond the file\'s end.',
+    `- ${REVIEW_REACH_RULE}`,
     '',
     '## Quotation rule',
     '',
