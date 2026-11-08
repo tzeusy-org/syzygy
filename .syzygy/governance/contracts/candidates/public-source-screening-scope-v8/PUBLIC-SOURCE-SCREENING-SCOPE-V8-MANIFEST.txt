@@ -1,0 +1,7 @@
+# PUBLIC-SOURCE SCREENING SCOPE VERSION 8 MANIFEST
+# Candidate; this file and its row bind nothing by themselves.
+# 1 row, variant pv (private sources admitted under stricter rules). The row
+# hashes the PROPOSED bytes (the version-7 policy, variant s, with
+# proposed/<name>.pv.patch applied). The row is the argument of one
+# superseding approve-policy act, or of none.
+f76bfa8a0e14224748f412b9b7cd3a9a73c283d013b78da4761dde9b532b64a1  .syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json  [variant: pv]
