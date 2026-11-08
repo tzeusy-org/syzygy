@@ -53,8 +53,9 @@ A policy act without its install turns `main` red, so these land together:
   from the record's title or its `Upstream: … (public; …)` parenthetical,
   which the reader's regex treats as ignorable.
   `packages/polaris-dossier/src/gate-sources.ts` reaches them through that
-  reader. An effective-looking record whose pair cannot be read must refuse
-  every read under the scope and name the record (round 2, finding 3).
+  reader. A record whose effectiveness or pair cannot be read, including one
+  that cannot be read at all, must refuse every read under the scope and
+  name the record (round 2, finding 3; round 3, finding 4).
   Fixtures needed: the redis form reads public; a launch record answering no
   reads private; a public pair that also holds a private, silent or
   unreadable record reads private at every commit; a record with no readable
@@ -62,16 +63,24 @@ A policy act without its install turns `main` red, so these land together:
   private repository reaches Syzygy only through the launch-consent change's
   generic form, or through a new form drafted as its own package. This
   policy adds neither.
-- **Object ids and sizes** (round 2, finding 1). For a private pair, a blob
-  that any detector matched, on its path or body, keeps its object id and size
-  only in its exclusion record in the run directory. [Observed]
+- **Object ids and sizes** (round 2, finding 1; widened in round 3, finding
+  1). For a private pair, a blob excluded or withheld on any ground keeps its
+  object id and size only in its exclusion record in the run directory. The
+  grounds are a denied path, an indeterminate or unclassifiable blob, a
+  detector match on path or body, active content, and a strict-UTF-8, NUL or
+  resource-limit failure. [Observed]
   `packages/polaris-dossier/src/check-derive.ts` keeps `path` and `objectId`
-  for a cited blob excluded by screening unless the path matched a detector.
+  for a cited blob excluded by screening unless the path matched a detector,
+  so `denied-path` and `unknown-extraction-class` outcomes keep them.
+  [Observed] `packages/polaris-dossier/src/screen.ts`
+  returns `denied-path` before any detector runs.
   `packages/polaris-dossier/src/render.ts` writes the object id on the
   discovery page row and in the source population. Both must drop the object
-  id and size for such a private blob. Every code-structure egress table must
-  leave them out too. Fixtures needed: a private body-matched blob renders no
-  object id or size, and a public one renders them as today.
+  id and size for every excluded private blob, whatever the outcome. Every
+  code-structure egress table must leave them out too, and the indeterminate
+  reading must follow edit 8. Fixtures needed: a private denied-path blob, a
+  private indeterminate blob and a private body-matched blob each render no
+  object id or size; their public counterparts render them as today.
 - **Egress.** Syzygy's provider-mode egress check must refuse a private pair's
   content, target-metadata included, unless an egress consent names the pair
   and states it private. [Observed] The egress consents present are titled
@@ -185,6 +194,8 @@ name its form.
 
 ## Not affected
 
-Every detector, placement, class rule, exemption and consent. The Butlers
+Every detector, placement, exemption and consent, and every class rule
+except the code-structure rule and the last sentence of `indeterminate`
+(edits 7 and 8), which change for private repositories only. The Butlers
 base scope (`scope`) is outside `publicSourceScope`, so its rules do not
 change (`inheritedRules`).

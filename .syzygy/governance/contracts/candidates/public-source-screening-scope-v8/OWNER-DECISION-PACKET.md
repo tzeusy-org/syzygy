@@ -40,9 +40,11 @@ as for a public repository or stricter.
   agent) need an egress consent that names the repository and says it is
   private. Your existing public-target egress consent never covers one.
 - **A withheld private file's fingerprint stays out of pages and sends.**
-  For a private repository, the Git object id and size of a file a secret
-  detector matched are not shown on any page and not sent anywhere. Public
-  repositories keep showing them, as today.
+  For a private repository, the Git object id and size of every file that
+  is withheld, for any reason, are not shown on any page and not sent
+  anywhere. That covers a secret-detector match, a denied path such as
+  `.env` or a key file, and a file of a kind the policy cannot classify.
+  Public repositories keep showing them, as today.
 - **Every detector, placement and storage rule stays as it is.**
 
 ## The one question
@@ -79,9 +81,16 @@ gets looser for anyone.
   line, either fingerprint lets them confirm a guess at that line, and the
   file's size narrows the guess. Today, version 7 shows the Git object id on
   dossier pages and counts it, with the size, as content an egress consent
-  may send. Version 8 stops both for a private file a detector matched.
-  What remains: anyone who can read the run directory, or your clone (which
-  holds every object id), can still check a guess.
+  may send. Version 8 stops both for every withheld private file. What
+  remains: anyone who can read the run directory, or your clone (which holds
+  every object id), can still check a guess. A secret that no detector
+  recognises, in a file the policy admits, is shown as before, for public
+  and private repositories alike.
+- **One broken consent record stops every run.** If a consent record cannot
+  be read, Syzygy cannot tell which repository it concerns, so it refuses
+  every run, public ones included, until the record is fixed or revoked.
+  Launch records sit where your agent could write, so one malformed record
+  there would stop everything. It never exposes anything; it only stops.
 - **The label is your word.** If a private repository is declared public, it
   gets the public rules: partial redaction, an upstream fetch in the provider
   mode, and coverage by your public-target egress consent if that consent
