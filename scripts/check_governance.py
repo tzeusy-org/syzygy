@@ -1828,6 +1828,18 @@ DOSSIER_PROVIDER_V2_ACT_RECORDS = {
     "CONSENT TO ANTHROPIC AGENT PROVIDER VERSION 2 FOR REDIS":
         f"{DECISIONS}/DOSSIER-AGENT-PROVIDER-V2-REDIS-ANTHROPIC-ACT.md",
 }
+#: The launch-consent write consent (`syzygy-pdja.22`): one state-(1) act over
+#: the one row of its manifest, a write consent (RFC5-12; SEC-4) letting Syzygy
+#: add launch consent records on one dedicated, non-trunk branch. Registered
+#: before its packet exists so a stale argument copy fails CG-7d and CG-7e;
+#: existence-gated on the manifest. The performed record, any chain link and
+#: the recorder arrive with the act.
+LAUNCH_WRITE_CONSENT_DIR = f"{CANDIDATES}/launch-consent-write-consent"
+LAUNCH_WRITE_CONSENT_MANIFEST = f"{LAUNCH_WRITE_CONSENT_DIR}/LAUNCH-CONSENT-WRITE-CONSENT-MANIFEST.txt"
+LAUNCH_WRITE_CONSENT_ACTS = (
+    ("CONSENT TO WRITE LAUNCH CONSENT RECORDS ON THE DEDICATED BRANCH",
+     f"{LAUNCH_WRITE_CONSENT_DIR}/instances/syzygy/WRITE-CONSENT-LAUNCH-RECORDS.md"),
+)
 DOSSIER_LOCAL_AGENT_ACT_RECORDS = {
     "STATE NO KERNEL EVIDENCE DRAWER FOR REDIS-REDIS":
         f"{DECISIONS}/DOSSIER-LOCAL-AGENT-REDIS-NO-EVIDENCE-DRAWER-ACT.md",
@@ -2738,6 +2750,11 @@ def _act_subjects():
             if not any(l == label for l, _rel, _pat in out):
                 out.append((label, subject, re.compile(
                     re.escape(label) + r"\s*:\s*`?([0-9a-f]{64})")))
+    if os.path.isfile(os.path.join(ROOT, LAUNCH_WRITE_CONSENT_MANIFEST)):
+        for label, subject in LAUNCH_WRITE_CONSENT_ACTS:
+            if not any(l == label for l, _rel, _pat in out):
+                out.append((label, subject, re.compile(
+                    re.escape(label) + r"\s*:\s*`?([0-9a-f]{64})")))
     return tuple(out)
 
 
@@ -3643,6 +3660,24 @@ def _activate_dossier_provider_v2_copy_registry():
 
 
 _activate_dossier_provider_v2_copy_registry()
+
+
+def _activate_launch_write_consent_copy_registry():
+    """The launch-consent write-consent manifest carries its one argument as a row.
+
+    Existence-gated candidate registration; the performed record joins the
+    aggregate with the act. A round notes record is registered when it
+    exists, so a digest ever quoted there is checked.
+    """
+    labels = tuple(label for label, _subject in LAUNCH_WRITE_CONSENT_ACTS)
+    if os.path.isfile(os.path.join(ROOT, LAUNCH_WRITE_CONSENT_MANIFEST)):
+        ACT_DIGEST_COPY_FILES[LAUNCH_WRITE_CONSENT_MANIFEST] = labels
+        for path in sorted(os.listdir(os.path.join(ROOT, LAUNCH_WRITE_CONSENT_DIR))):
+            if re.fullmatch(r"ROUND-\d+-DISPOSITIONS\.md", path):
+                ACT_DIGEST_COPY_FILES[f"{LAUNCH_WRITE_CONSENT_DIR}/{path}"] = labels
+
+
+_activate_launch_write_consent_copy_registry()
 
 
 #: The public-source screening scope, version 2 (sitting row 12): one state-(1)

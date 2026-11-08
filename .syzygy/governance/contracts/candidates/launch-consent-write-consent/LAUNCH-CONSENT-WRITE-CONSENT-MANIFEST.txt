@@ -1,0 +1,5 @@
+# LAUNCH-CONSENT WRITE-CONSENT MANIFEST
+# Candidate; this file and its rows bind nothing by themselves.
+# 1 row(s) sorted by codepoint path; each hashes the record's exact bytes
+# and is the argument of one separate owner act over that record.
+88915b84800292de150d4c179aba74db12ff7776424e3f11d83258cc2191aefa  .syzygy/governance/contracts/candidates/launch-consent-write-consent/instances/syzygy/WRITE-CONSENT-LAUNCH-RECORDS.md
