@@ -1,0 +1,970 @@
+{
+  "runtimeSubject": "5414a20faf3d2deafc576d4eac6dcb72d8042a07",
+  "base": "fd08ea62f8b55fb60d7c79628688bc014b40875b",
+  "copiedArtifacts": [
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/differential/caller-differential.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/caller-differential.json",
+      "sha256": "25b5e9986b29a3c7a8300addaf503527f624a2deba165de4fe925bdfb2b070bf"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/results.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/served-differential.json",
+      "sha256": "344c7b75c332bd9f1f32799855c2fa1fac622ac9b7ef70ef0fb15703453971c0"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/differential/bundle-source-manifest.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/bundle-source-manifest.json",
+      "sha256": "9e6bab50570a0c71f72a9687e00851e4c2027a57b01bfbca68e0487cc82810fc"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/ROOT-BATCH-001-RESULT-INTAKE/SUCCESS.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/root-result-intake.json",
+      "sha256": "9d0397ff57e17824f9eb5691cdedee3236d79c25045af094be05184adaa322dd"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/ROOT-BATCH-001-RESULT-INTAKE/SOURCE-BINDINGS-INTAKE.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/root-source-bindings.json",
+      "sha256": "a3c75a64f9ddf1cbb067929f3dc6c80cdb38e2f7dae28a3ddcd8afcc892bfd00"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/ROOT-BATCH-001-RESULT-INTAKE/BODY-COMPARISONS.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/root-body-comparisons.json",
+      "sha256": "63b42c4d3c6227920a86ad6520b77692a9101547ebcc1f5c94534fe510579ae4"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/ROOT-BATCH-001-ADMISSION/NATIVE.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/root-native-completion.json",
+      "sha256": "774622563fb2be0c9b0a7e652b3e95d555e88bb9b636f5bd789d85ebde16a2d6"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/TERMINAL.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/runtime-terminal.json",
+      "sha256": "4ee543584f4f438710f3a7af23f38b6c704f346dfe62c75ce2bd9a4e7cd123ce"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/SETUP.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/runtime-setup.json",
+      "sha256": "9ca8858034175db3a7a732881597a35191e04b256fc78b6f305030b477a493f6"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/TRANSPORT-SOURCE-REUSE.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/transport-source-reuse.json",
+      "sha256": "53ff6c2b08cbe5e3d13c807247e0775599c88ac0672d498f98bddeda9c5e8b39"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/MUTANT-SOURCE-REUSE.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/mutant-source-reuse.json",
+      "sha256": "656e6d118635bc9795b7838f8a738d4ab82dcaaf4a1d03739c4de32f5f14410e"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/AFFECTED-DEPENDENCIES.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/affected-dependencies.json",
+      "sha256": "204335d7e62a47abebd0d9aaf5d25d17d9c9407d5fe497eca22c942f7838f933"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/HARNESS-ADAPTATIONS.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/harness-adaptations.json",
+      "sha256": "5f0e8e0296833140031291f2dc5d1e404011b43f24cbf3417c08243e6fa8a273"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/differential-current.mjs",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/differential-current.mjs",
+      "sha256": "e5275167fe23f77caf91e516454520d1ecacd5e2c194e0a56bbc21cd9dd3a718"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/served-current.mjs",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/served-current.mjs",
+      "sha256": "ddd2e62d849791b75265266233e5e859207ae4a200ed1c2e88fe272a373b7837"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/capture-current.py",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture-current.py",
+      "sha256": "0d90da8c84c532c087e57cdcdc9cf123d5889e6fb65c01531b4bb9e36fd2dc06"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/BATCH-001/run-current-batch.py",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/run-current-batch.py",
+      "sha256": "2c663f2960adb8dd9384b10a38f09028a8b0503267bbb4fb4e3fd5affbe9a5e8"
+    },
+    {
+      "source": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/BATCH-001/BATCH-PACKET.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/batch-packet.json",
+      "sha256": "944bfac5adb4acb20eba2cb706aec90cf72c234728b444c199dd69ccd9cdc19d"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/01-offline-install.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/01-offline-install.json",
+      "sha256": "9c41713179b80266ef491363daea39bd79f6fce22555b0633543c9688537e560"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/01-offline-install.stdout",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/01-offline-install.stdout",
+      "sha256": "cde4b333b0ffb7e00c902a82cb88b929806847a8160731227c9ecb24ed868161"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/01-offline-install.stderr",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/01-offline-install.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/02-caller-and-served-capture.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/02-caller-and-served-capture.json",
+      "sha256": "aa13453debc08d88fe31cd3c255a9d3dfa378796c13a833591ea9bded49de5d3"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/02-caller-and-served-capture.stdout",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/02-caller-and-served-capture.stdout",
+      "sha256": "36d11193089f7c7848d5d8041dc759ee148d820449e5f2cfdf2c3089b2fea093"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/02-caller-and-served-capture.stderr",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/02-caller-and-served-capture.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/03-typecheck.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/03-typecheck.json",
+      "sha256": "207f17573f456fb4c13a3e89914e47a2d2544e85618047167d78ee5b8ce6d5e9"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/03-typecheck.stdout",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/03-typecheck.stdout",
+      "sha256": "396901319daac4a4413b23478852db3c572014f86c71d148273565f0f3332696"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/03-typecheck.stderr",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/03-typecheck.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/04-scoped-unit.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/04-scoped-unit.json",
+      "sha256": "4575b491d5e691ba4ed9d95d2c0d8b0812f600a144bfa696b4b5442769da6f90"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/04-scoped-unit.stdout",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/04-scoped-unit.stdout",
+      "sha256": "3c3b89631598ad886f56a11acfd93c1f902913a649a46708df4010b296bac8df"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/04-scoped-unit.stderr",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/04-scoped-unit.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/05-scoped-integration.json",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/05-scoped-integration.json",
+      "sha256": "803213654d545260f5263acb856437fc0e6d708f365978153065287676cfdeaf"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/05-scoped-integration.stdout",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/05-scoped-integration.stdout",
+      "sha256": "5bd5b999c3cd7c61398fbe11626a5a267a18d5350e4e63cbe7b952e2115f803d"
+    },
+    {
+      "source": "/home/orca/.tmp/743ci-20261108/capture/05-scoped-integration.stderr",
+      "committedPath": "docs/evidence/syzygy-bpyt-6-20/current-integration-20261108/capture/05-scoped-integration.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "retainedExternalArtifacts": [
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/ATTEMPTS.json",
+      "bytes": 2432,
+      "sha256": "027ec2c2632921b6484801d6f62d41fbf87192efcfb3eab3f6c259e8923baeb8"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/caller-differential.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/caller-differential.stdout",
+      "bytes": 95,
+      "sha256": "3dc6c0864134fe7a089f6a88d94e5c148e564a57caf314532f22a80b4189a076"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/differential/bin/fake-git.mjs",
+      "bytes": 735,
+      "sha256": "020789636e582a9582e0abda85ca3dba2acf6e76687920c2ca76c4d1e571933f"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/differential/bin/git",
+      "bytes": 151,
+      "sha256": "71008b47dccaf087146f4c71b98416c625018e5f8a761a87fa5b23e17e6b0aba"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/differential/new.mjs",
+      "bytes": 916940,
+      "sha256": "061d9721b6872f6c5ed6e21f371a7498c8058f64120718ed5bdb2431d74590c6"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/differential/old.mjs",
+      "bytes": 916501,
+      "sha256": "e3e1a9dab3c916e90bdd3ebee098aa72deaa7cba29195dea01927383438bdf53"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/differential/transport-child.mjs",
+      "bytes": 1322,
+      "sha256": "4a79a1ce4d7f1e993b7df4b2872791856c6ec1d1b77ac4f001301971f0dfeb92"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/differential/transport-differential.json",
+      "bytes": 388,
+      "sha256": "ab1913397722d4fc794045a6bb87272160d0c249daad32a8d94e4a4c262a6892"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-new-api-poc.json",
+      "bytes": 157069,
+      "sha256": "0383afd66b2b52a304676c3a9be205125efabce6962040fb2fa1e05ac3e7fc1c"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-new-orrery.html",
+      "bytes": 46660,
+      "sha256": "9cba398a31cbc3b4e8e8630941bc0e869b14ef12319904a164576e768d6c8d04"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-new-polaris.html",
+      "bytes": 215526,
+      "sha256": "5ae81e3a81dee5621c59563dd570874e64a6ac81df36113a674cc14158fcd0cb"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-new-trajectory.html",
+      "bytes": 32511,
+      "sha256": "c9e592ef8f737a60bbd90a6e30ba67d79a461feba3c3dd8675bc566df32da813"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-old-api-poc.json",
+      "bytes": 157069,
+      "sha256": "0383afd66b2b52a304676c3a9be205125efabce6962040fb2fa1e05ac3e7fc1c"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-old-orrery.html",
+      "bytes": 46660,
+      "sha256": "9cba398a31cbc3b4e8e8630941bc0e869b14ef12319904a164576e768d6c8d04"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-old-polaris.html",
+      "bytes": 215526,
+      "sha256": "5ae81e3a81dee5621c59563dd570874e64a6ac81df36113a674cc14158fcd0cb"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-host-old-trajectory.html",
+      "bytes": 32511,
+      "sha256": "c9e592ef8f737a60bbd90a6e30ba67d79a461feba3c3dd8675bc566df32da813"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-new-api-poc.json",
+      "bytes": 157069,
+      "sha256": "0383afd66b2b52a304676c3a9be205125efabce6962040fb2fa1e05ac3e7fc1c"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-new-orrery.html",
+      "bytes": 46660,
+      "sha256": "9cba398a31cbc3b4e8e8630941bc0e869b14ef12319904a164576e768d6c8d04"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-new-polaris.html",
+      "bytes": 215526,
+      "sha256": "5ae81e3a81dee5621c59563dd570874e64a6ac81df36113a674cc14158fcd0cb"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-new-trajectory.html",
+      "bytes": 32511,
+      "sha256": "c9e592ef8f737a60bbd90a6e30ba67d79a461feba3c3dd8675bc566df32da813"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-old-api-poc.json",
+      "bytes": 157069,
+      "sha256": "0383afd66b2b52a304676c3a9be205125efabce6962040fb2fa1e05ac3e7fc1c"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-old-orrery.html",
+      "bytes": 46660,
+      "sha256": "9cba398a31cbc3b4e8e8630941bc0e869b14ef12319904a164576e768d6c8d04"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-old-polaris.html",
+      "bytes": 215526,
+      "sha256": "5ae81e3a81dee5621c59563dd570874e64a6ac81df36113a674cc14158fcd0cb"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-loopback-origin-old-trajectory.html",
+      "bytes": 32511,
+      "sha256": "c9e592ef8f737a60bbd90a6e30ba67d79a461feba3c3dd8675bc566df32da813"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-new-api-poc.json",
+      "bytes": 157069,
+      "sha256": "d7556b6c76ba101a607e8a2fcf710e0d0aa60c80c64c526ebc15d241151615f8"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-new-orrery.html",
+      "bytes": 46750,
+      "sha256": "9061541eb9bde1cc53fe5667f3f380222e0319626dc955f4ac25edd8eb087d35"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-new-polaris.html",
+      "bytes": 215856,
+      "sha256": "63b77384488eeec7cb4b6234dac7030b16e599ff1ea09c6449b35b7805759cfc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-new-trajectory.html",
+      "bytes": 32601,
+      "sha256": "86c26320a2c5e17faa93941dcacb102a143f7075e6fe1221c0ca5e3e154d7482"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-old-api-poc.json",
+      "bytes": 157069,
+      "sha256": "d7556b6c76ba101a607e8a2fcf710e0d0aa60c80c64c526ebc15d241151615f8"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-old-orrery.html",
+      "bytes": 46750,
+      "sha256": "9061541eb9bde1cc53fe5667f3f380222e0319626dc955f4ac25edd8eb087d35"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-old-polaris.html",
+      "bytes": 215856,
+      "sha256": "63b77384488eeec7cb4b6234dac7030b16e599ff1ea09c6449b35b7805759cfc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-baseline-spec-tailnet-origin-old-trajectory.html",
+      "bytes": 32601,
+      "sha256": "86c26320a2c5e17faa93941dcacb102a143f7075e6fe1221c0ca5e3e154d7482"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-new-api-poc.json",
+      "bytes": 152672,
+      "sha256": "9b5c241c8395b2ab836c5d76734265c2bc8550c13c613a3c7c9bf2fd65ab01ad"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-new-orrery.html",
+      "bytes": 46660,
+      "sha256": "2ad8831eec13655a55511a71a4396fee94911892ea6e82efec33020e4bd1c3f2"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-new-polaris.html",
+      "bytes": 209709,
+      "sha256": "d0d2677fcafc84f3b1a5e614807191351838ddb995700ed3a498095a3306089a"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-new-trajectory.html",
+      "bytes": 32511,
+      "sha256": "0759a35007a1952585d21cae272beb5f3386f00b671cae34e473206661c121e0"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-old-api-poc.json",
+      "bytes": 152672,
+      "sha256": "9b5c241c8395b2ab836c5d76734265c2bc8550c13c613a3c7c9bf2fd65ab01ad"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-old-orrery.html",
+      "bytes": 46660,
+      "sha256": "2ad8831eec13655a55511a71a4396fee94911892ea6e82efec33020e4bd1c3f2"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-old-polaris.html",
+      "bytes": 209709,
+      "sha256": "d0d2677fcafc84f3b1a5e614807191351838ddb995700ed3a498095a3306089a"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-host-old-trajectory.html",
+      "bytes": 32511,
+      "sha256": "0759a35007a1952585d21cae272beb5f3386f00b671cae34e473206661c121e0"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-new-api-poc.json",
+      "bytes": 152672,
+      "sha256": "9b5c241c8395b2ab836c5d76734265c2bc8550c13c613a3c7c9bf2fd65ab01ad"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-new-orrery.html",
+      "bytes": 46660,
+      "sha256": "2ad8831eec13655a55511a71a4396fee94911892ea6e82efec33020e4bd1c3f2"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-new-polaris.html",
+      "bytes": 209709,
+      "sha256": "d0d2677fcafc84f3b1a5e614807191351838ddb995700ed3a498095a3306089a"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-new-trajectory.html",
+      "bytes": 32511,
+      "sha256": "0759a35007a1952585d21cae272beb5f3386f00b671cae34e473206661c121e0"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-old-api-poc.json",
+      "bytes": 152672,
+      "sha256": "9b5c241c8395b2ab836c5d76734265c2bc8550c13c613a3c7c9bf2fd65ab01ad"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-old-orrery.html",
+      "bytes": 46660,
+      "sha256": "2ad8831eec13655a55511a71a4396fee94911892ea6e82efec33020e4bd1c3f2"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-old-polaris.html",
+      "bytes": 209709,
+      "sha256": "d0d2677fcafc84f3b1a5e614807191351838ddb995700ed3a498095a3306089a"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-loopback-origin-old-trajectory.html",
+      "bytes": 32511,
+      "sha256": "0759a35007a1952585d21cae272beb5f3386f00b671cae34e473206661c121e0"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-new-api-poc.json",
+      "bytes": 152672,
+      "sha256": "043a756ab7fb1d4cbb5456f30c45669a28e368efcb4ae6fd3fc64b4e7190b170"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-new-orrery.html",
+      "bytes": 46750,
+      "sha256": "cd377e7260f5afa69b9dcf56a6e91ca05a53fe4811cf56169622ba7785ea3e30"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-new-polaris.html",
+      "bytes": 209979,
+      "sha256": "ea76621db5816e93100d01b7b993933392691d93f8df50ff2e700d10b177d509"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-new-trajectory.html",
+      "bytes": 32601,
+      "sha256": "c32c7a28b697e885040cf70c09eaff587d2ef7ba46d4713288695d4bcd51cd42"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-old-api-poc.json",
+      "bytes": 152672,
+      "sha256": "043a756ab7fb1d4cbb5456f30c45669a28e368efcb4ae6fd3fc64b4e7190b170"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-old-orrery.html",
+      "bytes": 46750,
+      "sha256": "cd377e7260f5afa69b9dcf56a6e91ca05a53fe4811cf56169622ba7785ea3e30"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-old-polaris.html",
+      "bytes": 209979,
+      "sha256": "ea76621db5816e93100d01b7b993933392691d93f8df50ff2e700d10b177d509"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-normal-tailnet-origin-old-trajectory.html",
+      "bytes": 32601,
+      "sha256": "c32c7a28b697e885040cf70c09eaff587d2ef7ba46d4713288695d4bcd51cd42"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-new-api-poc.json",
+      "bytes": 150100,
+      "sha256": "467c92bd50e8c70df75fc0a7aa451ad460f8037ccda7b97a0ac0e74cf7c7e3e8"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-new-orrery.html",
+      "bytes": 46660,
+      "sha256": "cfd373dca3757056c1eb43d064906c1ca06363b30f8c57463e39a312cfed4e90"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-new-polaris.html",
+      "bytes": 213789,
+      "sha256": "a62926f40433ed09de1c1585247f04b2c2eda61c8c32213d8d85935498fd41ca"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-new-trajectory.html",
+      "bytes": 32511,
+      "sha256": "7bcdc392b1a084607e1fbff9e58d86e1c63e47182347bed4d85b732a7e63301d"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-old-api-poc.json",
+      "bytes": 150100,
+      "sha256": "467c92bd50e8c70df75fc0a7aa451ad460f8037ccda7b97a0ac0e74cf7c7e3e8"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-old-orrery.html",
+      "bytes": 46660,
+      "sha256": "cfd373dca3757056c1eb43d064906c1ca06363b30f8c57463e39a312cfed4e90"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-old-polaris.html",
+      "bytes": 213789,
+      "sha256": "a62926f40433ed09de1c1585247f04b2c2eda61c8c32213d8d85935498fd41ca"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-host-old-trajectory.html",
+      "bytes": 32511,
+      "sha256": "7bcdc392b1a084607e1fbff9e58d86e1c63e47182347bed4d85b732a7e63301d"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-new-api-poc.json",
+      "bytes": 150100,
+      "sha256": "467c92bd50e8c70df75fc0a7aa451ad460f8037ccda7b97a0ac0e74cf7c7e3e8"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-new-orrery.html",
+      "bytes": 46660,
+      "sha256": "cfd373dca3757056c1eb43d064906c1ca06363b30f8c57463e39a312cfed4e90"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-new-polaris.html",
+      "bytes": 213789,
+      "sha256": "a62926f40433ed09de1c1585247f04b2c2eda61c8c32213d8d85935498fd41ca"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-new-trajectory.html",
+      "bytes": 32511,
+      "sha256": "7bcdc392b1a084607e1fbff9e58d86e1c63e47182347bed4d85b732a7e63301d"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-old-api-poc.json",
+      "bytes": 150100,
+      "sha256": "467c92bd50e8c70df75fc0a7aa451ad460f8037ccda7b97a0ac0e74cf7c7e3e8"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-old-orrery.html",
+      "bytes": 46660,
+      "sha256": "cfd373dca3757056c1eb43d064906c1ca06363b30f8c57463e39a312cfed4e90"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-old-polaris.html",
+      "bytes": 213789,
+      "sha256": "a62926f40433ed09de1c1585247f04b2c2eda61c8c32213d8d85935498fd41ca"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-loopback-origin-old-trajectory.html",
+      "bytes": 32511,
+      "sha256": "7bcdc392b1a084607e1fbff9e58d86e1c63e47182347bed4d85b732a7e63301d"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-new-api-poc.json",
+      "bytes": 150100,
+      "sha256": "6ddab075eeed36742675a670a41267b36b4bcb6cd75c84595ca19a3abd6bd02c"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-new-orrery.html",
+      "bytes": 46750,
+      "sha256": "012e44ceb9e057df2eb9e4523ef330bfc2d9402028de7158d95c05b07b7c4fa5"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-new-polaris.html",
+      "bytes": 214059,
+      "sha256": "0f87ef20a31add02532741881997033a2834281b36cce0eb6a56a938386ab3e0"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-new-trajectory.html",
+      "bytes": 32601,
+      "sha256": "4e8661392682816573d93e5edaff10874b01c77caefd5065a129bd68faa3e8a8"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-old-api-poc.json",
+      "bytes": 150100,
+      "sha256": "6ddab075eeed36742675a670a41267b36b4bcb6cd75c84595ca19a3abd6bd02c"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-old-orrery.html",
+      "bytes": 46750,
+      "sha256": "012e44ceb9e057df2eb9e4523ef330bfc2d9402028de7158d95c05b07b7c4fa5"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-old-polaris.html",
+      "bytes": 214059,
+      "sha256": "0f87ef20a31add02532741881997033a2834281b36cce0eb6a56a938386ab3e0"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/admitted-secret-tailnet-origin-old-trajectory.html",
+      "bytes": 32601,
+      "sha256": "4e8661392682816573d93e5edaff10874b01c77caefd5065a129bd68faa3e8a8"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-new-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-new-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-new-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-old-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-old-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-host-old-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-new-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-new-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-new-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-old-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-old-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-loopback-origin-old-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-new-orrery.html",
+      "bytes": 46672,
+      "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-new-polaris.html",
+      "bytes": 115756,
+      "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-new-trajectory.html",
+      "bytes": 32523,
+      "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-old-orrery.html",
+      "bytes": 46672,
+      "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-old-polaris.html",
+      "bytes": 115756,
+      "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-baseline-spec-tailnet-origin-old-trajectory.html",
+      "bytes": 32523,
+      "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-new-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-new-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-new-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-old-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-old-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-host-old-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-new-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-new-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-new-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-old-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-old-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-loopback-origin-old-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-new-orrery.html",
+      "bytes": 46672,
+      "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-new-polaris.html",
+      "bytes": 115756,
+      "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-new-trajectory.html",
+      "bytes": 32523,
+      "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-old-orrery.html",
+      "bytes": 46672,
+      "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-old-polaris.html",
+      "bytes": 115756,
+      "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-normal-tailnet-origin-old-trajectory.html",
+      "bytes": 32523,
+      "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-new-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-new-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-new-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-old-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-old-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-host-old-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-new-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-new-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-new-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "247ca5f2750932df8ce22bbcbfb0186c89aa6f462d3b9d7b53504738d99b5f88"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-old-orrery.html",
+      "bytes": 46582,
+      "sha256": "57245d6a4220de269887106dac9b4e741250115fd32df20bcc23cf14e19931bc"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-old-polaris.html",
+      "bytes": 115516,
+      "sha256": "90648c7f6a586dc8f9439baf1a8502ef13477dfabc721f74c24aea37d86f2379"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-loopback-origin-old-trajectory.html",
+      "bytes": 32433,
+      "sha256": "3ee290c80f18c29caedca7e52f4b8a278cdfcda6c181436c4b64820b65498625"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-new-api-poc.json",
+      "bytes": 37513,
+      "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-new-orrery.html",
+      "bytes": 46672,
+      "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-new-polaris.html",
+      "bytes": 115756,
+      "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-new-trajectory.html",
+      "bytes": 32523,
+      "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-old-api-poc.json",
+      "bytes": 37513,
+      "sha256": "57dc1bc19581d2f3c1b5514145a9d9926cfda521fb02e74d87d4614a951cd1c7"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-old-orrery.html",
+      "bytes": 46672,
+      "sha256": "d2dc4bac2c21833c4215b35dec1bb657acd7165a48a53df75a894f2e00d63410"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-old-polaris.html",
+      "bytes": 115756,
+      "sha256": "d5d9ad1ad4ebd59e54ff3af52426dd4cf78474c573a7ac8d31081871308849b3"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served/refused-secret-tailnet-origin-old-trajectory.html",
+      "bytes": 32523,
+      "sha256": "10c39e654ee4c64fc28d41fd39d47e7a743ec611470e0ca2a9f34a243acaa73a"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served-differential.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/orca/.tmp/743ci-20261108/inputs/attempt-001/served-differential.stdout",
+      "bytes": 129,
+      "sha256": "598d5c35a0563b2b05dd95e65208e6a3b802628418e4de9197e3dd8f5ea691a7"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/ROOT-BATCH-001-ADMISSION/ADMISSION.json",
+      "bytes": 36347,
+      "sha256": "d79c94819a9e6871127c3c0a298292db9f823407671857b35762707f002dec5c"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/ROOT-BATCH-001.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-743-current-integration-wti3cdgi/ROOT-BATCH-001.stdout",
+      "bytes": 17624,
+      "sha256": "ddf20d42959f985b861debdf559d4fff29ab2c5295149338b3fde635ccf0befe"
+    }
+  ],
+  "qualification": "Artifacts were created externally from inception; none is deleted or moved from the working tree. All144 body bytes now also live in the committed compressed archive. External original bodies/bundles remain indexed local evidence, not protected archive/tag durability. ROOT receipt enumerates the complete179-artifact verification population.",
+  "bodyArchive": {
+    "path": "served-bodies.tar.gz",
+    "manifest": "served-body-archive-manifest.json",
+    "members": 144,
+    "bodyBytes": 12200400
+  }
+}

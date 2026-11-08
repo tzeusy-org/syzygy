@@ -1,0 +1,60 @@
+{
+  "rawTrackedRows": 235,
+  "virtualPreludeRows": 4,
+  "manifestRows": 239,
+  "rows": [
+    {
+      "side": "old",
+      "sourceCommit": "fd08ea62f8b55fb60d7c79628688bc014b40875b",
+      "path": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+      "sha256": "bc2bb22653b985dcadcfb4577bb104c7110263c4ee3fe7176543ff8f84c1cdd0",
+      "role": "virtual parity oracle prelude",
+      "sourceBytes": 48920,
+      "hashMeaning": "full source file before virtual-prelude transformation, not transformed bytes",
+      "transformation": "reviewed onLoad in differential-current.mjs; split at describe marker, remove Vitest/afterEach harness and append fixture exports; governance additionally replaces REPO_ROOT with runtime cwd",
+      "transformedPreludeCapturedSeparately": false,
+      "compiledBundleBinding": "served-differential.json bundles; runtime old.mjs/new.mjs retained externally",
+      "applicabilityReviewRequired": true
+    },
+    {
+      "side": "old",
+      "sourceCommit": "fd08ea62f8b55fb60d7c79628688bc014b40875b",
+      "path": "apps/three-surface-poc/src/governance-inputs.test.ts",
+      "sha256": "107d76bba6641923ce0691f8d5407d7247d31a3af2c5b5fc75fed8303cc2957c",
+      "role": "virtual authority corpus prelude",
+      "sourceBytes": 35601,
+      "hashMeaning": "full source file before virtual-prelude transformation, not transformed bytes",
+      "transformation": "reviewed onLoad in differential-current.mjs; split at describe marker, remove Vitest/afterEach harness and append fixture exports; governance additionally replaces REPO_ROOT with runtime cwd",
+      "transformedPreludeCapturedSeparately": false,
+      "compiledBundleBinding": "served-differential.json bundles; runtime old.mjs/new.mjs retained externally",
+      "applicabilityReviewRequired": true
+    },
+    {
+      "side": "new",
+      "sourceCommit": "5414a20faf3d2deafc576d4eac6dcb72d8042a07",
+      "path": "apps/three-surface-poc/src/polaris-parity-sweep.test.ts",
+      "sha256": "bc2bb22653b985dcadcfb4577bb104c7110263c4ee3fe7176543ff8f84c1cdd0",
+      "role": "virtual parity oracle prelude",
+      "sourceBytes": 48920,
+      "hashMeaning": "full source file before virtual-prelude transformation, not transformed bytes",
+      "transformation": "reviewed onLoad in differential-current.mjs; split at describe marker, remove Vitest/afterEach harness and append fixture exports; governance additionally replaces REPO_ROOT with runtime cwd",
+      "transformedPreludeCapturedSeparately": false,
+      "compiledBundleBinding": "served-differential.json bundles; runtime old.mjs/new.mjs retained externally",
+      "applicabilityReviewRequired": true
+    },
+    {
+      "side": "new",
+      "sourceCommit": "5414a20faf3d2deafc576d4eac6dcb72d8042a07",
+      "path": "apps/three-surface-poc/src/governance-inputs.test.ts",
+      "sha256": "4fb015dc5bf364390c24354ccfb5157f48220cc4a969aad32cb5a5e62d052cf0",
+      "role": "virtual authority corpus prelude",
+      "sourceBytes": 36783,
+      "hashMeaning": "full source file before virtual-prelude transformation, not transformed bytes",
+      "transformation": "reviewed onLoad in differential-current.mjs; split at describe marker, remove Vitest/afterEach harness and append fixture exports; governance additionally replaces REPO_ROOT with runtime cwd",
+      "transformedPreludeCapturedSeparately": false,
+      "compiledBundleBinding": "served-differential.json bundles; runtime old.mjs/new.mjs retained externally",
+      "applicabilityReviewRequired": true
+    }
+  ],
+  "qualification": "ROOT verified 235 raw Git source rows. These four full-source inputs are additionally bound here, but their transformed execution is method-bound, not four additional raw-file execution claims. Independent applicability reviewer must assess the exact transform and relevant oracle."
+}
