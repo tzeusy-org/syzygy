@@ -10,4 +10,4 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-LAUNCH-WRITE-CONSENT-1-RAW.md:4`), over `1a368d04`, round 1; dispositions in the package's `ROUND-1-DISPOSITIONS.md`.
+`CONFIRM WITH EXCEPTIONS` (`R-LAUNCH-WRITE-CONSENT-2-RAW.md:4`), over `3ea65c53`, round 2. Its four exceptions are all notes, so it meets the brief's offer condition, and the notes are carried to the owner unrepaired. Round 1 was `REVISE` (`R-LAUNCH-WRITE-CONSENT-1-RAW.md:4`), over `1a368d04`; its dispositions are in the package's `ROUND-1-DISPOSITIONS.md`.
