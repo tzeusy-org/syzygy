@@ -25,7 +25,7 @@ const GENERATOR_REQUIREMENT = /^REQ-polaris-generation-\d{3}$/;
 
 /** Owner decisions of the local-agent dossier mode, the P-107 waiting-sessions direction its v1.2 cites, and the one-command-run
  * direction; each must be declared by a `Decision ID:` line under decisions/. */
-const DOSSIER_DECISION = /^POLARIS-DOSSIER-(?:LOCAL-AGENT-[A-Z0-9]+(?:-[A-Z0-9]+)*|WAITING-SESSIONS|ONE-COMMAND-RUN)-\d{4}-\d{2}-\d{2}$/;
+const DOSSIER_DECISION = /^POLARIS-DOSSIER-(?:LOCAL-AGENT-[A-Z0-9]+(?:-[A-Z0-9]+)*|WAITING-SESSIONS|ONE-COMMAND-RUN|LAUNCH-CONSENT)-\d{4}-\d{2}-\d{2}$/;
 
 /** A `Decision ID:` declaration line: the id in code ticks, then the line's end or a parenthetical (the waiting-sessions direction names
  * the id's origin that way). Any other trailing text, such as "withdrawn", does not declare. */
@@ -173,10 +173,10 @@ describe('Zero downstream citations of Polaris as authority (PWB-REQ-014)', () =
   });
 
   it('recognizes dossier decision identity syntax without accepting presentation references', () => {
-    for (const value of ['POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05', 'POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05', 'POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08', 'POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14']) {
+    for (const value of ['POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05', 'POLARIS-DOSSIER-LOCAL-AGENT-REVIEW-1-RULINGS-2026-10-05', 'POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08', 'POLARIS-DOSSIER-ONE-COMMAND-RUN-2026-10-14', 'POLARIS-DOSSIER-LAUNCH-CONSENT-2026-11-08']) {
       expect(DOSSIER_DECISION.test(value)).toBe(true);
     }
-    for (const value of ['POLARIS-DOSSIER-LOCAL-AGENT-2026-10-05', 'POLARIS-DOSSIER-LOCAL-AGENT-MODE', 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05/polaris', 'polaris-dossier-local-agent-mode-2026-10-05', 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05 (/polaris)', 'POLARIS-DOSSIER-WAITING-SESSIONS', 'POLARIS-DOSSIER-WAITING-SESSIONS-X-2026-10-08', 'POLARIS-DOSSIER-2026-10-08', 'POLARIS-DOSSIER-ONE-COMMAND-RUN', 'POLARIS-DOSSIER-ONE-COMMAND-RUN-X-2026-10-14']) {
+    for (const value of ['POLARIS-DOSSIER-LOCAL-AGENT-2026-10-05', 'POLARIS-DOSSIER-LOCAL-AGENT-MODE', 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05/polaris', 'polaris-dossier-local-agent-mode-2026-10-05', 'POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05 (/polaris)', 'POLARIS-DOSSIER-WAITING-SESSIONS', 'POLARIS-DOSSIER-WAITING-SESSIONS-X-2026-10-08', 'POLARIS-DOSSIER-2026-10-08', 'POLARIS-DOSSIER-ONE-COMMAND-RUN', 'POLARIS-DOSSIER-ONE-COMMAND-RUN-X-2026-10-14', 'POLARIS-DOSSIER-LAUNCH-CONSENT', 'POLARIS-DOSSIER-LAUNCH-CONSENT-X-2026-11-08']) {
       expect(DOSSIER_DECISION.test(value)).toBe(false);
     }
     for (const value of ['DOSSIER-LOCAL-CLI-SUBPROCESS-2026-10-15', 'DOSSIER-CLI-RUNNER-REPAIR-AND-DISCLOSE-2026-10-15']) {

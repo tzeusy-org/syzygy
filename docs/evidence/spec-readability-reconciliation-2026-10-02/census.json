@@ -599,8 +599,8 @@
       }
     },
     "POLARIS": {
-      "requirements": 36,
-      "scenarios": 270,
+      "requirements": 38,
+      "scenarios": 297,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1050,6 +1050,43 @@
             "Syzygy's reads wait for its start gates",
             "Consequential question asked in-session",
             "Question limit reached"
+          ]
+        },
+        "REQ-polaris-generation-046": {
+          "name": "Launch-time consent",
+          "scenarios": [
+            "First run on a repository asks once and records the consent",
+            "Governed subject records separate consents",
+            "Drawer unknown",
+            "Statement reused across revisions",
+            "Statement widened",
+            "Statement declined for a governed subject",
+            "No terminal or no phrase",
+            "Not declared public",
+            "Records already in force",
+            "Earlier consent revoked",
+            "Re-identified clone",
+            "A changed URL keeps the recorded identity",
+            "Matching records disagree on identity",
+            "Pre-answer classes shown as a preview",
+            "Write consent absent",
+            "Self-observation keeps the trunk tip stable",
+            "Self-observation from the governance home",
+            "Owner placements absent at the pinned revision",
+            "Agent instructions forbid answering",
+            "Launch consent never permits execution"
+          ]
+        },
+        "REQ-polaris-generation-047": {
+          "name": "Trunk-tip revision pinned at launch",
+          "scenarios": [
+            "Existing consent at HEAD keeps today's behaviour",
+            "Fork remote at a consented commit",
+            "Default to the trunk tip",
+            "Trunk named master",
+            "No trunk",
+            "Explicit revision",
+            "HEAD elsewhere"
           ]
         }
       }
