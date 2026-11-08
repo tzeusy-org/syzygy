@@ -8,6 +8,10 @@
 > not offered for signature and goes back to the owner. The repairs below
 > are unreviewed. No review brief for a round 5 is written; whether one runs
 > is the owner's decision.
+> *Owner answer, 2026-11-08, in the Claude Code session: "Round 5, scoped
+> (Recommended)", one more review over these repairs and what they touch,
+> offered only on `CONFIRM` or notes-only; the round-5 brief is now
+> `REVIEW-BRIEF.md`, and the sentence above was true when written.*
 
 | # | Finding (raw) | Disposition | Where |
 |---|---|---|---|
