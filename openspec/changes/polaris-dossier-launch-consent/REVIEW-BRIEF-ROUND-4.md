@@ -13,9 +13,9 @@
 You are an independent reviewer. You did not write these bytes. Read only the
 diff, the files it touches, the round-3 raw, `ROUND-3-DISPOSITIONS.md`, the
 owner's answers (`.syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08.md`)
-and the governing clauses the diff touches (REQ-polaris-generation-033 in
-`openspec/specs/polaris-generation/spec.md` or wherever it is defined, and
-RFC5-12). Do not read observed-repository bodies or dossier outputs, and do
+and the governing clauses the diff touches (REQ-polaris-generation-033, defined in
+`openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md`,
+and RFC5-12). Do not read observed-repository bodies or dossier outputs, and do
 not edit anything except your own raw.
 
 ## Subject
