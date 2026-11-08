@@ -238,8 +238,8 @@ starts before sign-off and the Q3 act.
 - Repository identity (round 2, G1), answered A on 2026-11-08 outside the
   numbered questions: your phrase declares the identity Syzygy proposes; a
   matching record's identity is proposed before a newly derived one; matching
-  records that disagree are refused before asking. A URL change at a commit no
-  record names still splits the identity, a fork at an upstream commit is
+  records that disagree are refused before asking. A URL change at a commit that no
+  record names, and whose parents no record names, still splits the identity, a fork at an upstream commit is
   proposed the upstream identity, and two repositories sharing the last two
   URL segments share one; all are disclosed, labelled Inferred. The refusal when matching records disagree was drafted after your
   answer, as the direction record says it was owed; round 3 accepted it.

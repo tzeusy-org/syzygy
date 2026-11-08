@@ -19,7 +19,7 @@
 - [x] Round 3 confirmation of the repaired bytes per
       `REVIEW-BRIEF-ROUND-3.md`, which the owner left in place by not writing
       "no review".
-- [ ] Round 4, narrow: confirm only the round-3 repairs per
+- [x] Round 4, narrow: confirm only the round-3 repairs per
       `REVIEW-BRIEF-ROUND-4.md` (`ROUND-3-DISPOSITIONS.md`); the last round
       before the sign-off package, whatever it returns.
 - [ ] Build the sign-off package: a version tag under
