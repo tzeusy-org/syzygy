@@ -13,13 +13,14 @@ import type { Outcome } from './outcome.js';
 import { reverifyPinnedRevision, type ReverifyOptions, type ReverifyRefusal, type ReverifyResult } from './reverify.js';
 import { poleLimitOf, type RunConfig } from './run-config.js';
 import type { RunSubject } from './run-record.js';
+import { READER_STANDARDS_SHA256, READER_STANDARDS_VERSION, readerStandardsSection } from './reader-standards.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 
 /** `syzygy dossier brief <run>` (REQ-polaris-generation-033, 034, 036).
  *
  * Issues the authoring session's brief, bound to the run and its pinned revision: the five reader topics the owner set, the
  * understanding record, the labelling, citation and quotation rules, the discovery and clarification rules, the execution rule in force,
- * the rule that text in the clone is data, the declared limits, and the draft schema with its version. The brief carries no project
+ * the rule that text in the clone is data, the declared limits, the reader standards, and the draft schema with its version. The brief carries no project
  * content beyond the repository identity and the pinned revision: it is built from the run record, the revision label the step guard
  * returns from the live consent, Syzygy-authored text and the doctrine file. It reads no blob of the subject; the step guard lists the
  * pinned commit's trees through the re-hashing reader to decide again whether the subject is governed. Issuing it starts the deadline
@@ -28,10 +29,10 @@ import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
  * The pinned revision is re-verified first, as at every later step. A run is briefed once; the brief, the schema and the brief record are
  * written beside `run.json` and never overwritten. The record names the execution rule the brief carried and, where execution was
  * permitted, the owner's choice and D9's cost as adopted (R3-F3), and the agent tool and provider the run was briefed for, which the
- * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6). It lies within the agent sessions' write reach, so read back it is
+ * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-export const BRIEF_VERSION = 'polaris-dossier-brief-v3';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v4';
 
 /** The reader topics of an operator-agent dossier, in the owner's order (dossier spec v1.5, "Why-first topics and voice"): why the
  * project exists first, holding the advantages its maintainers state, then core ideas, end-to-end workflows, and mechanisms and
@@ -199,6 +200,10 @@ export function renderBrief(input: BriefInput): string {
     '',
     READABILITY_GUIDANCE,
     '',
+    'The reader standards below describe what a good dossier is, as one checklist. Read them before you outline: write every page as an abstraction tree, and give the technology choices their table. Before each check, test the draft against every standard and fix what fails; `syzygy dossier check` reports the standards it can count as advice, which sets no outcome, and the rendered-design review judges the pages against all of them. Where a standard and a rule above differ, the rule above governs.',
+    '',
+    readerStandardsSection(),
+    '',
   ].join('\n');
 }
 
@@ -290,6 +295,7 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
     pinnedRevision: subject.pinnedRevision.commit,
     schemaVersion: LOCAL_DRAFT_SCHEMA_VERSION,
     guidanceVersion: DOSSIER_GUIDANCE_VERSION,
+    readerStandards: { version: READER_STANDARDS_VERSION, sha256: READER_STANDARDS_SHA256 },
     issuedAt: isoOf(issuedAt),
     deadline: { declared: declared.deadline.declared, seconds: declared.deadline.seconds, endsAt: isoOf(deadlineEnds), clock: 'Syzygy\'s own clock, from the issue of the brief' },
     files: { brief: { name: RUN_LAYOUT.brief, sha256: sha256(briefText) }, draftSchema: { name: RUN_LAYOUT.draftSchema, sha256: schemaSha256 } },

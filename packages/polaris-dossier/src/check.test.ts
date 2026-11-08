@@ -794,6 +794,20 @@ describe('check: the command', () => {
     expect(read(run, 'checks/rev-0.json')).not.toContain('screenCensus');
   });
 
+  // syzygy-pdja.17: the counted reader standards are advice on the report: they set no outcome and stay out of the stored record.
+  it('reports the counted reader standards as advice on the report alone, never a finding and never in the check record', async () => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => { d.sections[0].title = 'Inside handleRequest'; }));
+    const a = io();
+    expect(await runDossierCli(['check', run, '--json'], a.io, { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN })).toBe(0);
+    const printed = JSON.parse(a.out.join(''));
+    expect(printed).toMatchObject({ outcome: 'passed', findings: [] });
+    expect(printed.readerAdvice.standards).toBe('polaris-reader-standards-v1');
+    expect(printed.readerAdvice.advisories).toContainEqual({ standard: 'RS-13', at: '$.sections[0].title', detail: expect.stringContaining('camelCase') });
+    expect(read(run, 'checks/rev-0.json')).not.toContain('readerAdvice');
+    expect(read(run, 'checks/rev-0.json')).not.toContain('RS-13');
+  });
+
   it('never names a path both a denied-path rule and a secret detector match in screenCensus (round-2 review finding 1)', async () => {
     const run = await briefedRun();
     writeDraft(run, valid());

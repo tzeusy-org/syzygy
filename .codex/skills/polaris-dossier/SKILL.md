@@ -48,7 +48,11 @@ JSON document.
 - Write `understanding` before the argument.
 - Ask at most the brief's question limit; record answers verbatim.
 - Draft to `<run>/drafts/next.json`, `syzygy dossier check <run>`, repair
-  until clean or refused.
+  until clean or refused. Before each check, test the draft against the
+  reader standards (`references/reader-standards.md` beside this skill; the
+  brief carries the same text): every page is an abstraction tree, and the
+  technology choices get their table. The check reports the standards it
+  can count as advice, which sets no outcome.
 - Waiting sessions first: right after `syzygy dossier brief <run>`, run
   `syzygy dossier session-prompt <run> all` and show the operator the three
   terminal commands it prints; the operator starts each in a new terminal.

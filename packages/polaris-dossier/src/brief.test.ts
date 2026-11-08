@@ -23,6 +23,8 @@ import { tempDir } from '@syzygy/test-kit';
 const REAL_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const LIVE = fs.readFileSync(path.join(REAL_ROOT, '.syzygy/governance/doctrine/security.md'), 'utf8').split('\n');
 const lines = (first: number, last: number): string => LIVE.slice(first - 1, last).join('\n');
+/** The reader standards as the Claude Code skill ships them: the bytes the brief must carry. */
+const STANDARDS = fs.readFileSync(path.join(REAL_ROOT, '.claude/skills/polaris-dossier/references/reader-standards.md'), 'utf8');
 const sha = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
 const NOW = Date.UTC(2026, 9, 7, 12, 0, 0);
 const REV = '498ecd0d6d007db11ddb3aea9428552598a78622';
@@ -77,7 +79,7 @@ describe('brief: issued', () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v3', schemaVersion: 'polaris-dossier-local-draft-v4',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v4', schemaVersion: 'polaris-dossier-local-draft-v4',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     const brief = read(run, 'brief.md'), schema = read(run, 'draft.schema.json');
@@ -94,10 +96,16 @@ describe('brief: issued', () => {
       expect(defs[name].oneOf.map((arm: { properties: Record<string, { description?: string }> }) => arm.properties['quotations']?.description ?? null)).toEqual([form, form, null, null]);
     }
     expect(JSON.parse(schema).properties.pinnedRevision.enum).toEqual([REV]);
+    // The reader standards the skill ships, under one heading naming their version and digest, their headings one level down.
+    expect(brief).toContain(`## Polaris dossier reader standards (\`polaris-reader-standards-v1\`, sha256 \`${sha(STANDARDS)}\`)\n\nA good Polaris dossier lets someone open one place`);
+    for (const heading of ['Abstraction tree', 'Technology choices', 'Truth']) expect(brief).toContain(`\n### ${heading}\n`);
+    expect(brief).not.toContain('Version: `polaris-reader-standards-v1`');
+    expect(brief).toContain('Read them before you outline: write every page as an abstraction tree, and give the technology choices their table.');
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
-      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v3', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
+      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v4', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
       schemaVersion: 'polaris-dossier-local-draft-v4', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
+      readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
       files: { brief: { name: 'brief.md', sha256: sha(brief) }, draftSchema: { name: 'draft.schema.json', sha256: sha(schema) } },
       executionRule: { arm: 'sec-3', cites: 'SEC-3', sec3Head: { text: lines(61, 62), startLine: 61, endLine: 62 } },

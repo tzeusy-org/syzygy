@@ -9,6 +9,7 @@ import type { Outcome } from './outcome.js';
 import { type ReverifyRefusal } from './reverify.js';
 import { type DossierScreen, type ScreenExclusion, type ScreenLoader } from './screen.js';
 import { type ScreenCensusReport } from './census.js';
+import type { ReaderAdvice } from './reader-advice.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
@@ -176,6 +177,8 @@ export interface CheckReport extends CheckRecord {
   readonly disclosures: readonly string[];
   /** The path-only census of every file screening withholds at the pinned revision (`census.ts`); on the report, never the record. */
   readonly screenCensus?: ScreenCensusReport;
+  /** The counted reader standards' advice (`reader-advice.ts`); on the report, never the record, and never a finding. */
+  readonly readerAdvice?: ReaderAdvice;
   /** The cited files withheld from the review session, by screening or the class gate (`reviewVisibility`); on the report, never the record. */
   readonly reviewVisibility?: ReviewVisibility;
 }
