@@ -1135,6 +1135,7 @@ def real_packages() -> dict[str, Package]:
     dossier13 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_3")  # noqa: E731
     dossier14 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_4")  # noqa: E731
     dossier15 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_5")  # noqa: E731
+    launch_consent = lambda: _module("build_polaris_dossier_launch_consent")  # noqa: E731
     anchor = lambda: _module("build_pwb_anchor_resolution_amendment")  # noqa: E731
     provenance = lambda: _module("build_three_surface_poc_block_provenance_amendment")  # noqa: E731
     anchor_dir = CANDIDATES / "pwb-anchor-resolution-amendment"
@@ -1576,6 +1577,21 @@ def real_packages() -> dict[str, Package]:
             subject=pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode/"
                                  "specs/polaris-generation/spec.md"),
             subject_bytes=lambda root: dossier15().subject_bytes(root),
+        ),
+        # Launch-time consent (syzygy-pdja.21): a new change whose two ADDED
+        # requirements install like the local-agent mode's v1.0.
+        "polaris-dossier-launch-consent": Package(
+            "polaris-dossier-launch-consent",
+            "Polaris dossier launch-time consent",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-launch-consent",
+            "POLARIS-DOSSIER-LAUNCH-CONSENT",
+            lambda root: launch_consent().check(root),
+            lambda root: launch_consent().apply(root),
+            lambda root: launch_consent().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-launch-consent"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-launch-consent/"
+                                 "proposed/polaris-generation/spec.md"),
         ),
     }
 
