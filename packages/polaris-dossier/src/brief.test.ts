@@ -152,7 +152,7 @@ describe('brief: issued', () => {
       '- A fact is never a judgement.', 'the fidelity review blocks a marked judgement that asserts a fact', 'A `non-normative` block carries no citation and no anchor.',
       // syzygy-pdja.20: the review-reach rule, with no project content, beside the other citation rules.
       '- Syzygy refuses a cited path that names no file at the pinned revision, and a line range beyond the file\'s end.\n- The fidelity review is given a cited span\'s text only when screening admits its file and the run\'s consent covers that file\'s class.',
-      'A block none of whose cited spans the review is given can never be judged supported', '`syzygy dossier check` lists such blocks under `reviewReach`.', 'resubmitting such a block unchanged spends a repair cycle and cannot confirm it.',
+      'An Inferred block none of whose cited spans the review is given cannot be confirmed by a review', '`syzygy dossier check` lists such blocks under `reviewReach`.', 'resubmitting such a block unchanged spends a repair cycle and cannot confirm it.',
       '## Quotation rule', 'A quotation is optional: a claim in your own words, with its citation, is the norm.', 'without elision, joining or alteration',
       '## Discovery', '## Clarifications', 'the consequential questions the clone does not settle: at most 2.',
       '## Execution rule: SEC-3', 'So: do not build or run the observed project outside an explicit, opt-in execution profile.',

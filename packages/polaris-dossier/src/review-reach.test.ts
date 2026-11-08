@@ -35,7 +35,7 @@ describe('citationReach: how one cited span reaches the fidelity review', () => 
     ['an admitted code-content file', 'src/a.c', 1, 2, 'reaches-review'],
     ['a file without a content class', 'README.md', 1, 1, 'withheld'],
     ['a body with active content', 'src/types.ts', 1, 1, 'withheld'],
-    ['a denied path, not in the cited blobs', '.env', 1, 1, 'withheld'],
+    ['an absent path the path screen would exclude (a check finding already)', '.env', 1, 1, 'reaches-review'],
     ['a secret-matching path, recorded without its path', SECRET_PATH, 1, 1, 'withheld'],
     ['a path naming no file (a check finding already)', 'src/gone.c', 1, 1, 'reaches-review'],
     ['a non-string path', 7, 1, 1, 'reaches-review'],
@@ -45,6 +45,12 @@ describe('citationReach: how one cited span reaches the fidelity review', () => 
     ['project documentation, with no statement in force', 'docs/notes.txt', 1, 1, 'class-gated'],
   ])('%s', (_name, path, startLine, endLine, expected) => {
     expect(citationReach(cite('c', path, startLine, endLine), inputs())).toBe(expected);
+  });
+
+  it('reads a secret-matching path as withheld only where check recorded such a blob, never for an absent one (review 1 finding 1)', () => {
+    const absent: ReachInputs = { ...inputs(), citedBlobs: citedBlobs.filter((entry) => entry.path !== null) };
+    expect(citationReach(cite('c', SECRET_PATH), absent)).toBe('reaches-review');
+    expect(citationReach(cite('c', '.env'), absent)).toBe('reaches-review');
   });
 
   it('applies the class gate as the run\'s consent decides it, before any redaction', () => {
@@ -107,5 +113,7 @@ describe('reviewReachAdvice: the claim blocks no verdict can confirm', () => {
     expect(advice.blocks).toEqual([{ at: '$.sections[0].paragraphs[0]', blockId: null, consequence: 'unconfirmable', detail: expect.any(String) }]);
     expect(advice.note).toContain('cite an admitted file that states the same fact, as well or instead, or state it as `unknown`');
     expect(advice.note).toContain('Resubmitting such a block unchanged spends a repair cycle and changes neither.');
+    expect(advice.note).toContain('Each block listed rests only on spans the fidelity review will not be given: every span it cites, or a span it quotes.');
+    expect(advice.note).toContain('A review cannot confirm an `unconfirmable` block');
   });
 });

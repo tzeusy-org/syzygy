@@ -145,5 +145,44 @@
     }
   ],
   "killed": 18,
-  "total": 18
+  "total": 18,
+  "followUp": {
+    "note": "R-PDJA-20-REVIEW-REACH-1 finding 1 repair: the path-screen fallback now answers only for a secret-matching path that check recorded as a blob with no path. The no-path-screen-fallback mutant above ran against the earlier fallback; these three run against the repaired one.",
+    "ranAt": "9f408a15335a21607aed3965b17c92f2f24ec5aa",
+    "ranAtNote": "A work-in-progress commit; a rebase-merge leaves it reachable from no ref, so the digests are the anchor.",
+    "subjectDigests": {
+      "packages/polaris-dossier/src/brief.test.ts": "e4ad0557ac3a54c38cd6c4ce99a72411499670d959500e5724a69245c0dcf271",
+      "packages/polaris-dossier/src/check.test.ts": "559ddf6a4d735d5f02b358ffbafd7f5a143e58fe8e02c266216fe7ab5517ec09",
+      "packages/polaris-dossier/src/cli.test.ts": "c2deed45f17acbbd37f608007603f543615f3940c365e6858c6bcb82632971a9",
+      "packages/polaris-dossier/src/polaris-launch-guidance.test.ts": "a0a574ca22ac6dbe4deb4d6f5051247c3c742bef9c5787a1dca9813538f6e39d",
+      "packages/polaris-dossier/src/review-reach.test.ts": "f05a403cffd4c0c8786c98d8baf0b78349dba645c7d870dbdd6452aa59a3f188",
+      "packages/polaris-dossier/src/review-reach.ts": "684e8f291072a126a034f9fbb1019b245ae30c29bf7b28cae2cfedc0c71ff528"
+    },
+    "command": "npx vitest run packages/polaris-dossier/src/review-reach.test.ts packages/polaris-dossier/src/check.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/polaris-launch-guidance.test.ts packages/polaris-dossier/src/cli.test.ts (each mutant alone, restored after)",
+    "mutants": [
+      {
+        "id": "fallback-for-every-unrecorded-path",
+        "file": "packages/polaris-dossier/src/review-reach.ts",
+        "old": "recorded ?? (inputs.citedBlobs.some((entry) => entry.path === null) && inputs.screen.screenPath(cited) === 'secret-detector-match' ? 'secret-detector-match' : undefined);",
+        "new": "recorded ?? inputs.screen.screenPath(cited);",
+        "outcome": "killed"
+      },
+      {
+        "id": "fallback-without-recorded-secret-blob",
+        "file": "packages/polaris-dossier/src/review-reach.ts",
+        "old": "inputs.citedBlobs.some((entry) => entry.path === null) && inputs.screen.screenPath(cited)",
+        "new": "inputs.screen.screenPath(cited)",
+        "outcome": "killed"
+      },
+      {
+        "id": "no-secret-path-fallback",
+        "file": "packages/polaris-dossier/src/review-reach.ts",
+        "old": "recorded ?? (inputs.citedBlobs.some((entry) => entry.path === null) && inputs.screen.screenPath(cited) === 'secret-detector-match' ? 'secret-detector-match' : undefined);",
+        "new": "recorded;",
+        "outcome": "killed"
+      }
+    ],
+    "killed": 3,
+    "total": 3
+  }
 }

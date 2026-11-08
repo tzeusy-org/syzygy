@@ -20,8 +20,8 @@ import { citationIdsOf, isWithheldItem, type SpanStanding } from './withheld-ite
  *   because the class gate keeps its file from the review. `withheld` does not fit it, so its entry is unresolved and blocks readiness. */
 
 /** How one cited span reaches the review: `withheld` by screening as the withheld-item rule reads it, `class-gated` (screening admits
- * its file but the run's consent does not cover the file's class), or `reaches-review`. A span no check would pass (an absent path, a
- * range past the file's end) counts as `reaches-review` here: `check` reports it as a finding already. */
+ * its file but the run's consent does not cover the file's class), or `reaches-review`. A span no check would pass (an absent path, even
+ * one the path screen would exclude, or a range past the file's end) counts as `reaches-review` here: `check` reports it as a finding already. */
 export type CitationReach = 'reaches-review' | 'withheld' | 'class-gated';
 
 export interface ReachInputs {
@@ -38,8 +38,11 @@ export function citationReach(citation: Readonly<Record<string, unknown>>, input
   const blob = inputs.admitted.get(cited);
   if (blob === undefined) {
     // Excluded whole by path or body screening, or not UTF-8: every such outcome withholds the span. A secret-matching path is in
-    // `citedBlobs` without its path, so the path screen answers for it.
-    const outcome = inputs.citedBlobs.find((entry) => entry.path === cited)?.outcome ?? inputs.screen.screenPath(cited);
+    // `citedBlobs` without its path (`path: null`), so the path screen answers for it, and only for it: any other path missing from
+    // `citedBlobs` names no file at the pinned revision, a span the packet gives outcome `absent`, never withheld (R-PDJA-20-REVIEW-REACH-1
+    // finding 1).
+    const recorded = inputs.citedBlobs.find((entry) => entry.path === cited)?.outcome;
+    const outcome = recorded ?? (inputs.citedBlobs.some((entry) => entry.path === null) && inputs.screen.screenPath(cited) === 'secret-detector-match' ? 'secret-detector-match' : undefined);
     return outcome === undefined || outcome === 'admitted' ? 'reaches-review' : 'withheld';
   }
   // The packet applies the class gate to a body screening admitted, before any redaction.
@@ -67,7 +70,7 @@ export interface ReviewReachAdvice {
   readonly blocks: readonly UnseenBlock[];
 }
 
-const NOTE = 'Advice: it sets no outcome and is not stored in the check record. Each block listed cites only spans the fidelity review will not be given. An `unconfirmable` block can never be judged supported, and its unresolved row blocks readiness: cite an admitted file that states the same fact, as well or instead, or state it as `unknown`. A `withheld-item` block is never judged supported either; it blocks nothing, but it renders Unknown in Syzygy\'s words and none of its text renders. Resubmitting such a block unchanged spends a repair cycle and changes neither.';
+const NOTE = 'Advice: it sets no outcome and is not stored in the check record. Each block listed rests only on spans the fidelity review will not be given: every span it cites, or a span it quotes. A review cannot confirm an `unconfirmable` block, and its unresolved row blocks readiness: cite an admitted file that states the same fact, as well or instead, or state it as `unknown`. A `withheld-item` block is never judged supported; it blocks nothing, but it renders Unknown in Syzygy\'s words and none of its text renders. Resubmitting such a block unchanged spends a repair cycle and changes neither.';
 
 const DETAIL: Readonly<Record<UnseenConsequence, string>> = {
   unconfirmable: 'every span it cites is kept from the review, at least one by the class gate (the run\'s consent does not cover its file\'s class), so the review cannot confirm it and its row stays unresolved, blocking readiness',
