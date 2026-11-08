@@ -96,7 +96,7 @@ and render Unknown (packet Q10).
 
 ## Impact
 
-- Specs: `proposed/polaris-generation/spec.md` (two ADDED requirements). The
+- Specs: proposed/polaris-generation/spec.md (two ADDED requirements). The
   delta is held under `proposed/`, not `specs/`, so no dependency tool counts
   it before an act (the arbitrary-public-repo precedent).
 - Code, after sign-off only: the dossier CLI's `init` and `polaris` paths,

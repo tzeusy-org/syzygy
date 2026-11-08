@@ -20,7 +20,7 @@ dossier outputs, and do not edit anything except your own raw.
 
 ## Subject
 
-- The reviewed subject is `openspec/changes/polaris-dossier-launch-consent/proposed/polaris-generation/spec.md`,
+- The reviewed subject is `openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md` (installed there by the v1.0 sign-off, whose record gives the date; the review read it at openspec/changes/polaris-dossier-launch-consent/proposed/polaris-generation/spec.md),
   hashed from the tree at the commit the lead names.
 - The package bytes are every file under
   `.syzygy/governance/contracts/candidates/polaris-dossier-launch-consent/`

@@ -14,7 +14,7 @@ read observed-repository bodies or dossier outputs, and do not edit anything.
 Every file under `openspec/changes/polaris-dossier-launch-consent/`, and
 `.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-DIRECTION.md`,
 at the commit the lead names when dispatching. Record that commit and the
-SHA-256 of `proposed/polaris-generation/spec.md` at it, computed by script,
+SHA-256 of proposed/polaris-generation/spec.md at it, computed by script,
 in your head.
 
 ## Governing references

@@ -1,7 +1,7 @@
 # Design — Polaris on any repository, with consent asked at launch
 
 > **Candidate — binds nothing.** Review material for
-> `proposed/polaris-generation/spec.md`, revised after round 1
+> proposed/polaris-generation/spec.md, revised after round 1
 > (`docs/reviews/R-POLARIS-LAUNCH-CONSENT-1-RAW.md`, REVISE; dispositions in
 > `ROUND-1-DISPOSITIONS.md`), then narrowed to the owner's answers of
 > 2026-11-08 (`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08.md`) and
