@@ -43,18 +43,35 @@ A policy act without its install turns `main` red, so these land together:
   through a carrier. Anything else, including an unreadable record, is
   private. The carriers are named in the policy. [Observed]
   `packages/polaris-generation-consent/src/package-reader.ts` reads the
-  existing observation consents through a closed list of act forms
+  existing observation consents through a list of act forms
   (`ADMISSION_ACT_FORMS`); its two `consent-observation` forms are the
-  requests and redis public-repository observation acts. The reader states
-  public by form identity, never from the record's title or its
-  `Upstream: … (public; …)` parenthetical, which the reader's regex treats as
-  ignorable. `packages/polaris-dossier/src/gate-sources.ts` reaches them
-  through that reader. Fixtures needed: each existing form reads public; a
-  launch record answering no reads private; a public pair that also holds a
-  private or unreadable record reads private at every commit. [Inferred] A
+  requests and redis public-repository observation acts. [Observed] Only the
+  redis act is recorded. The policy closes the carrier set itself (round 2,
+  finding 2): only those two named act files state public by form, and the
+  reader must hold that list as a pin it compares with the policy, never as
+  a list that may grow. The reader states public by form identity, never
+  from the record's title or its `Upstream: … (public; …)` parenthetical,
+  which the reader's regex treats as ignorable.
+  `packages/polaris-dossier/src/gate-sources.ts` reaches them through that
+  reader. An effective-looking record whose pair cannot be read must refuse
+  every read under the scope and name the record (round 2, finding 3).
+  Fixtures needed: the redis form reads public; a launch record answering no
+  reads private; a public pair that also holds a private, silent or
+  unreadable record reads private at every commit; a record with no readable
+  pair refuses every read. [Inferred] A
   private repository reaches Syzygy only through the launch-consent change's
   generic form, or through a new form drafted as its own package. This
   policy adds neither.
+- **Object ids and sizes** (round 2, finding 1). For a private pair, a blob
+  that any detector matched, on its path or body, keeps its object id and size
+  only in its exclusion record in the run directory. [Observed]
+  `packages/polaris-dossier/src/check-derive.ts` keeps `path` and `objectId`
+  for a cited blob excluded by screening unless the path matched a detector.
+  `packages/polaris-dossier/src/render.ts` writes the object id on the
+  discovery page row and in the source population. Both must drop the object
+  id and size for such a private blob. Every code-structure egress table must
+  leave them out too. Fixtures needed: a private body-matched blob renders no
+  object id or size, and a public one renders them as today.
 - **Egress.** Syzygy's provider-mode egress check must refuse a private pair's
   content, target-metadata included, unless an egress consent names the pair
   and states it private. [Observed] The egress consents present are titled
@@ -160,7 +177,11 @@ Version 8 is such a successor and keeps `renderCondition`, so that clause
 reads the same.
 
 `openspec/changes/polaris-dossier-arbitrary-public-repo/` (the standing
-public-observation consent) is public-only by its own text and is unaffected.
+public-observation consent) is public-only by its own text. It is unaffected
+while it stays a candidate. [Inferred] If it is adopted with standing records
+that are neither of the two named carriers, its repositories read private
+under this version (fail closed), and a later policy version would have to
+name its form.
 
 ## Not affected
 

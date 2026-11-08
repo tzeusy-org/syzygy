@@ -20,11 +20,15 @@ as for a public repository or stricter.
   give at launch. Nothing else admits one.
 - **Private is the default.** A repository counts as public only when every
   consent record it has says so: your yes to "is it public?" at launch, or
-  the existing requests and redis consents, which are public by their form.
-  Anything else makes it private, labelled Inferred. Syzygy does not check
-  the host. If you launch a private fork at a commit of a public repository,
-  it shares that repository's identity, and the whole repository then counts
-  as private, its public runs included.
+  the existing redis consent, which is public by its form. Anything else
+  makes it private, labelled Inferred, including a launch record that says
+  nothing or cannot be read. Syzygy does not check the host. If you launch a
+  private fork at a commit of a public repository, it shares that
+  repository's identity, and the whole repository then counts as private,
+  its public runs included. Those runs lose partial redaction and the fetch,
+  and your public-target egress consent stops covering the repository. A
+  consent record whose repository cannot be read at all stops every run
+  until it is fixed or revoked.
 - **Syzygy fetches nothing for a private repository and uses no credential
   for it.** It reads only the clone you already have.
 - **No partial redaction for private repositories.** For a public repository,
@@ -35,7 +39,11 @@ as for a public repository or stricter.
 - **Syzygy's own sends to a provider** (the provider mode, not your local
   agent) need an egress consent that names the repository and says it is
   private. Your existing public-target egress consent never covers one.
-- **Every detector, class rule, placement and storage rule stays as it is.**
+- **A withheld private file's fingerprint stays out of pages and sends.**
+  For a private repository, the Git object id and size of a file a secret
+  detector matched are not shown on any page and not sent anywhere. Public
+  repositories keep showing them, as today.
+- **Every detector, placement and storage rule stays as it is.**
 
 ## The one question
 
@@ -64,11 +72,16 @@ gets looser for anyone.
 - **More withheld files.** A private repository's documentation with any
   secret-looking line is withheld whole, so its dossier can show more Unknown
   than a public one would.
-- **Withholding a whole file does not hide everything.** Its fingerprint (a
-  digest) is still recorded, as the rules require. If someone knows the rest
-  of the file, for example a private fork that differs from the public
-  original by one secret line, the fingerprint lets them confirm a guess at
-  that line. The fingerprint stays in the run directory.
+- **Withholding a whole file does not hide everything.** Two fingerprints of
+  the whole file exist: the digest the rules require Syzygy to record, and
+  the file's Git object id. If someone knows the rest of the file, for
+  example a private fork that differs from the public original by one secret
+  line, either fingerprint lets them confirm a guess at that line, and the
+  file's size narrows the guess. Today, version 7 shows the Git object id on
+  dossier pages and counts it, with the size, as content an egress consent
+  may send. Version 8 stops both for a private file a detector matched.
+  What remains: anyone who can read the run directory, or your clone (which
+  holds every object id), can still check a guess.
 - **The label is your word.** If a private repository is declared public, it
   gets the public rules: partial redaction, an upstream fetch in the provider
   mode, and coverage by your public-target egress consent if that consent

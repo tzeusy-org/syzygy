@@ -11,13 +11,15 @@ builder takes the policy on disk when it hashes to that row, or recovers it by r
 the disk is this package's row.
 
 One variant, `pv`, one manifest row. Inside `publicSourceScope` it adds one key, `sourceVisibility`, directly after
-`observedRepositories`, and makes six text replacements, listed in EDITS: `purpose`, `observedRepositories`, the first
-route of `accessBoundary.networkEgressRoutes`, two sentences of `secretRedaction.appliesTo` and the end of
-`rawBodyHandling.rule`. Every edit admits private sources or makes a rule stricter for them; none relaxes a rule for
+`observedRepositories`, and makes seven text replacements, listed in EDITS: `purpose`, `observedRepositories`, the
+first route of `accessBoundary.networkEgressRoutes`, two sentences of `secretRedaction.appliesTo`, the end of
+`rawBodyHandling.rule` and the end of the code-structure class rule (round-2 finding 1). Every edit admits private sources or makes a rule stricter for them; none relaxes a rule for
 a public source. `policyVersion` is the only other value that changes. Nothing else may change, and
 `semantic_findings` undoes each edit and requires the version-7 scope back exactly. Independently of EDITS it pins
-the number of edits (EDIT_COUNT) and the scope paths the change may touch (CHANGED_PATHS), so a seventh edit fails
-even when EDITS is extended to undo it (round-1 review, finding 6).
+the number of edits (EDIT_COUNT), the number per path (EDITS_PER_PATH) and the scope paths the change may touch
+(CHANGED_PATHS), so an extra edit fails even when EDITS is extended to undo it, at a new path or a pinned one (round-1
+finding 6, round-2 finding 4). The pins live in this file beside EDITS, so they hold against an appended entry, not
+against an author who changes both; the manifest digest binds the bytes either way.
 
   --write             regenerate the patch and the manifest
   --check             verify the package against the policy on disk
@@ -86,6 +88,13 @@ EDITS: tuple[tuple[tuple[str | int, ...], str, str], ...] = (
      "and only under a separate egress consent for the pair; for a repository whose visibility is private, an egress "
      "consent covers its content, target-metadata included, only when its record names that pair and states that the "
      "repository is private, so a public-target egress consent, or one that does not state it, never covers it"),
+    (("contentClassification", "rules", 1, "rule"),
+     "normalized repository-relative paths, object ids and sizes of admitted snapshot entries, taken from Git tree "
+     "metadata, with no body",
+     "normalized repository-relative paths, object ids and sizes of admitted snapshot entries, taken from Git tree "
+     "metadata, with no body; except that, for a repository whose visibility is private (sourceVisibility), the object "
+     "id and size of a blob that any detector matched, on its path or its body, are not code-structure: they stay only "
+     "in that blob's exclusion record in the run directory (RFC5-17), and are never rendered or carried in any egress"),
 )
 
 SOURCE_VISIBILITY = {
@@ -101,25 +110,31 @@ SOURCE_VISIBILITY = {
         "pair private. The carriers, and the only ones: for a launch consent record, the operator's declaration "
         "whether the repository is public that REQ-polaris-generation-046 requires the record to carry, which states "
         "public only when it is the affirmative answer, read by the generic launch form as one of exactly two values; "
-        "for a record made by an owner act of one of the forms that the consent package's closed list types "
-        "consent-observation (ADMISSION_ACT_FORMS in packages/polaris-generation-consent/src/package-reader.ts, each "
-        "titled as a public-repository observation consent, today PUBLIC-REPO-ADMISSION-REQUESTS-OBSERVATION-ACT.md "
-        "and PUBLIC-REPO-ADMISSION-REDIS-OBSERVATION-ACT.md under .syzygy/governance/decisions/), the form itself, which "
-        "states public. No other text of a record, its title or prose included, is a carrier. The statement is the "
+        "for a record made by the owner act recorded at .syzygy/governance/decisions/"
+        "PUBLIC-REPO-ADMISSION-REDIS-OBSERVATION-ACT.md or at .syzygy/governance/decisions/"
+        "PUBLIC-REPO-ADMISSION-REQUESTS-OBSERVATION-ACT.md, and by no other act, that act's form itself, which states "
+        "public; a further act states public by its form only when a later version of this policy names it, never "
+        "because a code list of act forms grows. No other text of a record, its title or prose included, is a carrier. "
+        "An effective-looking observation consent record whose pair cannot be read could concern any pair, so while "
+        "one exists every read under this scope is refused, with that record named, until it is read or revoked; "
+        "this scope does not instead guess its pair or turn every pair private. The statement is the "
         "operator's or the owner's declaration and is labelled Inferred wherever it is shown: Syzygy makes no network "
         "request and uses no credential to learn or verify it. admitted lists the visibilities this scope admits; a "
         "repository of a visibility it does not list is not in observedRepositories"),
     "privateSourceRules": (
         "a private repository is admitted under the same observation consent as a public one, and every rule of this "
-        "scope applies to it as to a public one, except three, each written at its own site and each stricter: "
+        "scope applies to it as to a public one, except four, each written at its own site and each stricter: "
         "accessBoundary.networkEgressRoutes (Syzygy fetches nothing and uses no credential for the repository's host), "
         "secretRedaction.appliesTo (no body is retained as redacted-span: a detector match excludes the whole body in "
         "every class) and rawBodyHandling.rule (an egress consent covers the repository's content only when its record "
-        "names the pair and states that the repository is private). No rule of this scope is relaxed for a private "
+        "names the pair and states that the repository is private) and contentClassification's code-structure rule (the "
+        "object id and size of a blob a detector matched are not code-structure, are never rendered and never leave "
+        "the run directory). No rule of this scope is relaxed for a private "
         "repository, and no rule for a public repository changes"),
     "unchanged": (
         "every detector and scopeDetectors, matchAction, unclassifiableExclusion, sourceAdmission and its denied paths, "
-        "contentClassification and its owner placements, instructionTextRule, targetMetadataRule, runProfileRule, "
+        "contentClassification and its owner placements (except the code-structure rule above), instructionTextRule, "
+        "targetMetadataRule, runProfileRule, "
         "activeContent and both of its exemptions, ingestBoundaries and ingestBoundaryRule, rawBodyHandling's storage "
         "(run-directory-only), logging (never), rendering (a generated editorial draft, never published) and "
         "machineResponse (never), inheritedRules, selfReferenceRule and prerequisite apply to a private repository "
@@ -142,13 +157,17 @@ SOURCE_VISIBILITY = {
         "reason for the redaction rule: a retained redacted-span body shows every line but the withheld ones, and the "
         "whole body's content digest and Git object id stay recorded (RFC5-17), so a guess at a short withheld line "
         "can be confirmed against them offline; for a public repository the body is published already and this adds "
-        "nothing, for a private one it would. A residual remains after whole exclusion: an excluded private body's "
-        "content digest and path stay recorded (RFC5-17) and its Git object id is in the clone, so where a guesser "
+        "nothing, for a private one it would. Whole exclusion does not close the guess either: the content digest, and "
+        "the Git object id, which is itself a digest of the whole body, are a confirmation oracle wherever a guesser "
         "knows the rest of the body (a private fork of a public upstream whose file differs by one secret line, a "
-        "template, earlier public history) a digest confirms a guessed secret offline. Whole exclusion does not close "
-        "that; this scope keeps such digests in the run directory only and states nothing more about who can read "
-        "them. A pair that a private fork's record joins becomes private, so its public upstream's runs get the "
-        "stricter rules too"),
+        "template, earlier public history), and the size narrows the secret's length. For a public repository the "
+        "object id and size are code-structure, rendered on the dossier's pages and carried by an egress consent that "
+        "lists code-structure. For a private repository this version withholds them for every blob a detector matched: "
+        "they stay only in its exclusion record in the run directory (RFC5-17), and are never rendered or sent. The "
+        "residual left is the run directory itself and the operator's clone, which holds every object id; whoever can "
+        "read either can still confirm a guess. A pair that a private fork's record joins, or that holds a record "
+        "stating nothing or unreadable, becomes private, so its public upstream's runs get the stricter rules too, its "
+        "public-target egress consent among them"),
     "consentRecordMetadata": (
         "[Inferred] a launch consent record carries the repository's declared identity and normalised URL and is "
         "committed into the observing project's own governance repository, on a dedicated reference Syzygy never "
@@ -266,13 +285,19 @@ def base_bytes(root: pathlib.Path = ROOT) -> tuple[str, str]:
                      "the base is unknown")
 
 
-#: Pinned independently of EDITS: the number of edits and every scope path the change may touch. A seventh edit,
+#: Phrases sourceVisibility.rule must keep; each has its own selftest mutation.
+RULE_PHRASES = ("is private for every rule of this scope", "labelled Inferred", "or cannot be read",
+                "every other effective observation consent record of the same pair", "No other text of a record",
+                "and by no other act", "every read under this scope is refused")
+
+#: Pinned independently of EDITS: the number of edits and every scope path the change may touch. An extra edit,
 #: or an edit anywhere else, fails here even if EDITS itself was extended.
-EDIT_COUNT = 6
-CHANGED_PATHS = frozenset({
-    ("purpose",), ("observedRepositories",), (NEW_KEY,), ("accessBoundary", "networkEgressRoutes", 0),
-    ("secretRedaction", "appliesTo"), ("rawBodyHandling", "rule"),
-})
+EDIT_COUNT = 7
+EDITS_PER_PATH = {
+    ("purpose",): 1, ("observedRepositories",): 1, ("accessBoundary", "networkEgressRoutes", 0): 1,
+    ("secretRedaction", "appliesTo"): 2, ("rawBodyHandling", "rule"): 1, ("contentClassification", "rules", 1, "rule"): 1,
+}
+CHANGED_PATHS = frozenset({(NEW_KEY,), *EDITS_PER_PATH})
 
 
 def _leaves(obj, path=()):
@@ -301,6 +326,11 @@ def semantic_findings(base_text: str, proposed_text: str, edits=None) -> list[st
     findings: list[str] = []
     if len(edits) != EDIT_COUNT:
         findings.append(f"the change declares {len(edits)} edits, not {EDIT_COUNT}")
+    per_path: dict = {}
+    for where, _old, _new in edits:
+        per_path[tuple(where)] = per_path.get(tuple(where), 0) + 1
+    if per_path != EDITS_PER_PATH:
+        findings.append(f"the edits per path are {per_path}, not the pinned {EDITS_PER_PATH}")
     base, proposed = json.loads(base_text), json.loads(proposed_text)
     changed = [k for k in base if base[k] != proposed.get(k)]
     if sorted(changed) != sorted(["policyVersion", SCOPE_KEY]) or list(base) != list(proposed):
@@ -335,9 +365,7 @@ def semantic_findings(base_text: str, proposed_text: str, edits=None) -> list[st
     for term in ("public visibility exempts nothing",):
         if term not in scope.get("detectors", ""):
             findings.append(f"detectors lost {term!r}")
-    for term in ("is private for every rule of this scope", "labelled Inferred", "or cannot be read",
-                 "every other effective observation consent record of the same pair", "No other text of a record",
-                 "ADMISSION_ACT_FORMS"):
+    for term in RULE_PHRASES:
         if term not in visibility.get("rule", ""):
             findings.append(f"{NEW_KEY}.rule lost {term!r}")
     return findings
@@ -491,15 +519,27 @@ def selftest() -> int:
                 d[scope][NEW_KEY][key] = "x" if isinstance(d[scope][NEW_KEY][key], str) else ["public"]
             results.append((f"a gutted {NEW_KEY}.{key} is found", finds(gut, "not the declared value")))
 
-        # A seventh edit that relaxes detectors while keeping the pinned phrase: extending EDITS must not hide it.
+        # An extra (eighth) edit that relaxes detectors while keeping the pinned phrase: extending EDITS must not hide it.
         relax = (("detectors",), "applies unchanged to every body under this scope",
                  "applies to some bodies under this scope")
         relaxed = copy.deepcopy(doc)
         relaxed[scope]["detectors"] = relaxed[scope]["detectors"].replace(relax[1], relax[2], 1)
         got = semantic_findings(base, json.dumps(relaxed), EDITS + (relax,))
-        results.append(("a seventh edit is refused by count", any("not 6" in f for f in got)))
-        results.append(("a seventh edit is refused by path", any("outside the pinned paths" in f for f in got)))
+        results.append(("an extra edit is refused by count", any(f"not {EDIT_COUNT}" in f for f in got)))
+        results.append(("an extra edit is refused by path", any("outside the pinned paths" in f for f in got)))
         results.append(("the edit count is pinned", len(EDITS) == EDIT_COUNT))
+
+        same = (("rawBodyHandling", "rule"), "only for content this scope classifies", "for any content")
+        loosened = copy.deepcopy(doc)
+        loosened[scope]["rawBodyHandling"]["rule"] = loosened[scope]["rawBodyHandling"]["rule"].replace(
+            same[1], same[2], 1)
+        got = semantic_findings(base, json.dumps(loosened), EDITS[:-1] + (same,))
+        results.append(("an extra edit at a pinned path, count kept, is refused per path",
+                        any("edits per path" in f for f in got)))
+        for phrase in RULE_PHRASES:
+            def drop(d, phrase=phrase):
+                d[scope][NEW_KEY]["rule"] = d[scope][NEW_KEY]["rule"].replace(phrase, "", 1)
+            results.append((f"a rule without {phrase!r} is found", finds(drop, f"lost {phrase!r}")))
 
     failed = [name for name, passed in results if not passed]
     for name in failed:

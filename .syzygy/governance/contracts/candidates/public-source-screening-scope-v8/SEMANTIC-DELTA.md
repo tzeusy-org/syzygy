@@ -50,23 +50,32 @@ and renaming it would change every reader for no change in meaning.
      public through a carrier. Anything else (a record stating private,
      stating nothing, or unreadable) makes the repository private at every
      commit. A fork that a record places in an upstream's pair is part of that
-     pair, so its private record makes the whole pair private.
+     pair, so its private record makes the whole pair private. (Round 2,
+     finding 3.) An effective-looking record whose pair cannot be read could
+     concern any pair. While one exists, every read under the scope is
+     refused, with that record named, until it is read or revoked. The scope
+     does not guess the record's pair or turn every pair private: a refusal
+     names the fault, while a silent private reading would change the rules
+     for every repository without saying why.
    - **The carriers, and the only ones.** A launch consent record states it by
      the operator's declaration whether the repository is public, which
      REQ-polaris-generation-046 already requires the record to carry. It is
      public only when that answer is affirmative, and the generic launch form
-     reads it as one of exactly two values. A record made by an owner act of a
-     form the consent package's closed list types `consent-observation`
-     (`ADMISSION_ACT_FORMS` in
-     `packages/polaris-generation-consent/src/package-reader.ts`; today the
-     requests and redis public-repository observation acts) states public by
-     the form itself. No title or prose is a carrier. So the admitted public
-     repositories stay public, by form, with no prose parsed. The statement
-     stays the operator's or owner's declaration, labelled Inferred.
+     reads it as one of exactly two values. (Round 2, finding 2.) The other
+     carrier is closed in the policy bytes. A record made by the owner act
+     recorded at `.syzygy/governance/decisions/PUBLIC-REPO-ADMISSION-REDIS-OBSERVATION-ACT.md`,
+     or at the requests act's file of the same family, and by no other act,
+     states public by that act's form. A further act states public by form
+     only when a later policy version names it, never because a code list of
+     act forms grows. [Observed] Only the redis act is recorded today; the
+     requests form in `ADMISSION_ACT_FORMS` names an act file that does not
+     exist. No title or prose is a carrier. So redis stays public, by form,
+     with no prose parsed. The statement stays the operator's or owner's
+     declaration, labelled Inferred.
    - `privateSourceRules`, `unchanged`, `agentSessions`, `consequence`,
      `consentRecordMetadata`: say in one place what differs for a private
      repository, what does not, what the policy cannot reach, and what it
-     costs. They state rules written at the three sites below and add none of
+     costs. They state rules written at the four sites below and add none of
      their own.
 4. **`accessBoundary.networkEgressRoutes[0]`** (the shallow by-commit fetch
    from the upstream) applies to a public repository only. For a private
@@ -81,13 +90,22 @@ and renaming it would change every reader for no change in meaning.
    record names that pair and states that the repository is private. A
    public-target egress consent, or one that does not state it, never covers
    it.
+7. **`contentClassification.rules[1].rule` (code-structure)**, added after
+   round 2, finding 1. For a private repository, the object id and size of a
+   blob that any detector matched, on its path or its body, are not
+   code-structure. They stay only in that blob's exclusion record in the run
+   directory (RFC5-17), and are never rendered or carried in any egress.
+   Public repositories keep today's reading.
 
-`scripts/build_public_source_screening_scope_v8.py` holds the six edits as
+`scripts/build_public_source_screening_scope_v8.py` holds the seven edits as
 literal (old, new) pairs and the new key as a literal value. `--check` undoes
 each edit, drops the key and requires the version-7 scope back byte for byte.
-Independently of that list it pins the number of edits (six) and the set of
-scope paths the change may touch, so a seventh edit fails even when the list
-is extended to undo it.
+Beside that list it pins the number of edits (seven), the number per path, and
+the set of scope paths the change may touch. An extra edit therefore fails even
+when the list is extended to undo it, whether it lands at a new path or at one
+already pinned. The pins sit in the same file as the list, so they catch an
+appended entry, not an author who edits both. The manifest digest binds the
+bytes either way.
 
 ## Every consequence of private content, and the decision taken
 
@@ -103,7 +121,7 @@ cost, the cost is in the owner packet.
 | **SEC-2, the operator-agent mode's agent sends** | **Not decidable by this policy.** Named in `agentSessions` | [Observed] REQ-polaris-generation-033: neither the statement's classes nor the screening policies bind the agent's reads or sends, and a non-governed subject needs no statement. See open question 1 |
 | **SEC-5, detectors** | Unchanged: every detector runs on every body, and a match excludes or redacts exactly as for a public repository | [Observed] `detectors` already says "public visibility exempts nothing". [Inferred] A private repository is likelier to hold live secrets, because the host's public push protection and secret scanning did not apply to it. That changes nothing in the detectors, which already run on all content |
 | **SEC-5, redacted-span retention** | **Off for private repositories:** any match excludes the whole body | [Observed] `withheldLines`: the whole body's content digest and Git object id stay recorded (RFC5-17), "so a guess at short withheld lines can be checked against them". [Inferred] For a public repository the guess gains nothing, because the body is published. For a private one, rendering every other line turns the digest into an offline oracle for the withheld line. [Observed] `secretRedaction.consequence` also says a secret next to a match but beyond the guard line is admitted, which matters more where secrets are live |
-| **Digests of excluded private bodies** | Unchanged (RFC5-17 requires them). **A residual, disclosed in `sourceVisibility.consequence`** | [Inferred] Whole exclusion does not close the oracle. The content digest and path stay recorded (RFC5-17), and the Git object id is in the clone. Where a guesser knows the rest of the body (a private fork of a public upstream whose file differs by one secret line, a template, earlier public history), the digest confirms a guessed secret offline. The scope keeps such digests in the run directory only. [Unknown] Who else can read them is not stated |
+| **Digests, object ids and sizes of detector-matched private blobs** | **Withheld from pages and from every egress** (edit 7). They stay only in the exclusion record in the run directory, as RFC5-17 requires. The residual is disclosed in `sourceVisibility.consequence` | [Observed] Version 7 makes object ids and sizes code-structure (the class rule, and the indeterminate rule: "Its path, object id and size remain code-structure"). Code-structure can leave under an egress consent that lists it. The dossier renders the object id of a body excluded on a secret match (`packages/polaris-dossier/src/check-derive.ts`, which keeps it unless the path matched; `packages/polaris-dossier/src/render.ts`, the discovery row and the source population). [Inferred] A Git object id is a digest of the whole body. Where a guesser knows the rest of the body (a private fork of a public upstream whose file differs by one secret line, a template, earlier public history), it confirms a guessed secret offline, and the size narrows the secret's length. Withholding them from pages and egress closes those routes. Whoever can read the run directory or the operator's clone, which holds every object id, can still confirm a guess. That residual is stated, not removed. Alternative not taken: disclosing the residual and leaving the ids rendered and egressable |
 | **Excluded sources' metadata** | Unchanged | [Observed] `targetMetadataRule`: an excluded source's id is opaque, its path is not carried, and no body or digest is carried |
 | **Storage, logging, rendering, retention** | Unchanged: run directory only, never logged, a generated editorial draft never published, no machine response | [Observed] `rawBodyHandling`. [Unknown] No retention period is stated for a run directory under either visibility, and this version adds none (open question 3) |
 | **Agent review packets and page sinks** | Unchanged: the exemptions' `egress` rule governs what reaches an agent session | [Observed] `activeContent.codeContentExemption.egress`. [Inferred] A review packet that Syzygy writes for the operator's agent session is not an external egress Syzygy makes, because in that mode Syzygy makes no provider call (REQ-polaris-generation-033). So `rawBodyHandling.rule`'s stated-private condition does not reach it. If a review role uses a different provider from the author, that provider receives the content on the operator's act. Open question 1 covers it |
@@ -113,21 +131,29 @@ cost, the cost is in the owner packet.
 ## What this keeps
 
 - Every detector, placement, class rule, exemption, denied path and limit.
-- Every rule for a public repository is unchanged in effect, with one
-  exception. The admitted public repositories (requests, redis) state public
-  by their act form, so they keep the upstream fetch, partial redaction and
-  their public-target egress coverage. The exception: once a record stating
-  private joins a public pair (a private fork launched at an upstream commit),
-  the whole pair reads private.
+- Every rule for a public repository is unchanged in effect, with two
+  exceptions, both fail-closed. The admitted public repository (redis)
+  states public by its act form, so it keeps the upstream fetch, partial
+  redaction and its public-target egress coverage. The exceptions:
+  - A public pair reads private once any other effective record of the pair
+    states private (a private fork launched at an upstream commit), states
+    nothing, or cannot be read (for example, a launch record whose
+    declaration the generic form cannot read as one of its two values). It
+    then loses partial redaction, the fetch, the rendering of detector-matched
+    object ids, and its public-target egress coverage.
+  - An effective-looking record whose pair cannot be read refuses every read
+    under the scope, public pairs included, until it is read or revoked.
 - The policy confers no consent and admits no repository.
 
 ## Mechanical and judged halves
 
-- Mechanical: `--check` pins the six edits, their count, the scope paths
-  they may touch, the key and its place, the admitted list, every text of the
-  key, the carrier and pair wording, and the detectors' "exempts nothing"
-  sentence. `--selftest` (34 cases: 4 controls and 30 mutations)
-  reverts each edit, guts each text of the key, and adds a seventh edit.
+- Mechanical: `--check` pins the seven edits, their count, their count per
+  path, the scope paths they may touch, the key and its place, the admitted
+  list, every text of the key, seven required phrases of the rule (carrier,
+  pair, refusal and default wording), and the detectors' "exempts nothing"
+  sentence. `--selftest` has 43 cases: 4 controls and 39 mutations. It
+  reverts each edit, guts each text of the key, drops each required phrase,
+  and adds an extra edit both at a new path and at a pinned one.
 - Judged: whether the decisions above are the conservative ones, and whether
   a consequence is missing. The carrier question is decided in the package
   (above), not left to the owner.
