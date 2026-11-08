@@ -96,8 +96,8 @@ EDITS: tuple[tuple[tuple[str | int, ...], str, str], ...] = (
      "metadata, with no body; except that, for a repository whose visibility is private (sourceVisibility), the object "
      "id and size of a blob that is excluded or withheld on any ground (a denied path, an indeterminate or "
      "unclassifiable blob, a detector match on its path or its body, active content, a strict-UTF-8, NUL or resource-"
-     "limit failure, or any other exclusion) are not code-structure: they stay only in that blob's exclusion record in "
-     "the run directory (RFC5-17), and are never rendered or carried in any egress"),
+     "limit failure, or any other exclusion) are not code-structure: they are kept only in the run directory's check "
+     "records and its local review packets, and are never rendered or carried in any egress"),
     (("contentClassification", "indeterminate"),
      "Its path, object id and size remain code-structure",
      "Its path, object id and size remain code-structure, except that, for a repository whose visibility is private "
@@ -122,11 +122,13 @@ SOURCE_VISIBILITY = {
         "PUBLIC-REPO-ADMISSION-REQUESTS-OBSERVATION-ACT.md, and by no other act, that act's form itself, which states "
         "public; a further act states public by its form only when a later version of this policy names it, never "
         "because a code list of act forms grows. No other text of a record, its title or prose included, is a carrier. "
-        "An observation consent record whose effectiveness or pair cannot be read, meaning any record not shown to "
-        "be revoked or superseded whose pair is not read, including one that cannot be read at all, could concern any "
-        "pair, so while one exists every read under this scope is refused, with that record named, until it is read "
-        "or revoked; this scope does not instead ignore it, guess its pair or turn every pair private. The statement is "
-        "the "
+        "Every file at a location where observation consent records are read counts as a possible one: for launch consent "
+        "records, every file at the launch records' location on the dedicated reference, a drawer or provider statement "
+        "included; for the act forms, each act file named above. Any such file not shown to be revoked or superseded "
+        "whose kind cannot be read, or that reads as an observation consent record whose effectiveness or pair cannot "
+        "be read, including one that cannot be read at all, could be a record of any pair, so while one exists every "
+        "read under this scope is refused, with that file named, until it is read or revoked; this scope does not "
+        "instead ignore it, guess its kind or pair or turn every pair private. The statement is the "
         "operator's or the owner's declaration and is labelled Inferred wherever it is shown: Syzygy makes no network "
         "request and uses no credential to learn or verify it. admitted lists the visibilities this scope admits; a "
         "repository of a visibility it does not list is not in observedRepositories"),
@@ -141,7 +143,8 @@ SOURCE_VISIBILITY = {
         "code-structure, are never rendered and never leave the run directory). No rule of this scope is relaxed for a "
         "private repository. No rule for a public repository changes, except in two ways, both fail closed: a public "
         "repository reads private while any other effective record of its pair states private, states nothing or "
-        "cannot be read, and a record whose effectiveness or pair cannot be read refuses every read under this scope, "
+        "cannot be read, and a file that could be a record of any pair (its kind, effectiveness or pair unread) refuses "
+        "every read under this scope, "
         "public repositories included"),
     "unchanged": (
         "every detector and scopeDetectors, matchAction, unclassifiableExclusion, sourceAdmission and its denied paths, "
@@ -176,14 +179,18 @@ SOURCE_VISIBILITY = {
         "template, earlier public history), and the size narrows the secret's length. For a public repository the "
         "object id and size are code-structure, rendered on the dossier's pages and carried by an egress consent that "
         "lists code-structure. For a private repository this version withholds them for every blob excluded or "
-        "withheld on any ground, a denied path, an indeterminate blob and a detector match among them: they stay only in "
-        "its exclusion record in the run directory (RFC5-17), and are never rendered or sent. What is left: the run "
-        "directory itself and the operator's clone, which holds every object id, so whoever can read either can still "
-        "confirm a guess; and a secret no detector matches in a body this scope admits, which is admitted and rendered "
-        "under either visibility (SEC-5's general residual, unchanged here). A pair that a private fork's record joins, "
+        "withheld on any ground, a denied path, an indeterminate blob and a detector match among them: they are kept only "
+        "in the run directory's check records and its local review packets, and are never rendered or sent. What is "
+        "left: the run directory itself and the operator's clone, which holds every object id, so whoever can read "
+        "either can still confirm a guess; the pinned commit id, rendered on every discovery row and recorded in the "
+        "launch record, which is a digest of the commit header and the root tree and so of every object id in it, the "
+        "withheld blob's included, a narrower confirmation oracle open only to a guesser who also knows the commit "
+        "header (its author, dates, message and parent) and the rest of the tree, and one this scope cannot withhold; "
+        "and a secret no detector matches in a body this scope admits, which is admitted and rendered under either "
+        "visibility (SEC-5's general residual, unchanged here). A pair that a private fork's record joins, "
         "or that holds a record stating nothing or unreadable, becomes private, so its public upstream's runs get the "
         "stricter rules too, its public-target egress consent among them. Launch consent records lie within the agent "
-        "sessions' write reach, so one malformed record written there refuses every read under this scope, every "
+        "sessions' write reach, so one malformed or unreadable file written there refuses every read under this scope, every "
         "public repository's included, until it is read or revoked: a cost to availability, never to exposure"),
     "consentRecordMetadata": (
         "[Inferred] a launch consent record carries the repository's declared identity and normalised URL and is "
@@ -306,7 +313,8 @@ def base_bytes(root: pathlib.Path = ROOT) -> tuple[str, str]:
 RULE_PHRASES = ("is private for every rule of this scope", "labelled Inferred", "or cannot be read",
                 "every other effective observation consent record of the same pair", "No other text of a record",
                 "and by no other act", "every read under this scope is refused",
-                "whose effectiveness or pair cannot be read", "including one that cannot be read at all")
+                "whose effectiveness or pair cannot be read", "including one that cannot be read at all",
+                "a drawer or provider statement included", "whose kind cannot be read", "with that file named")
 
 #: Pinned independently of EDITS: the number of edits and every scope path the change may touch. An extra edit,
 #: or an edit anywhere else, fails here even if EDITS itself was extended.
@@ -538,7 +546,7 @@ def selftest() -> int:
                 d[scope][NEW_KEY][key] = "x" if isinstance(d[scope][NEW_KEY][key], str) else ["public"]
             results.append((f"a gutted {NEW_KEY}.{key} is found", finds(gut, "not the declared value")))
 
-        # An extra (eighth) edit that relaxes detectors while keeping the pinned phrase: extending EDITS must not hide it.
+        # An extra (ninth) edit that relaxes detectors while keeping the pinned phrase: extending EDITS must not hide it.
         relax = (("detectors",), "applies unchanged to every body under this scope",
                  "applies to some bodies under this scope")
         relaxed = copy.deepcopy(doc)

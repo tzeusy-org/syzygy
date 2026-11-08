@@ -43,7 +43,9 @@ as for a public repository or stricter.
   For a private repository, the Git object id and size of every file that
   is withheld, for any reason, are not shown on any page and not sent
   anywhere. That covers a secret-detector match, a denied path such as
-  `.env` or a key file, and a file of a kind the policy cannot classify.
+  `.env` or a key file, a file of a kind the policy cannot classify, and a
+  file whose kind your consent does not cover. They stay only in the run
+  directory's check records and its review packets.
   Public repositories keep showing them, as today.
 - **Every detector, placement and storage rule stays as it is.**
 
@@ -83,12 +85,19 @@ screening rule gets looser for anyone.
   dossier pages and counts it, with the size, as content an egress consent
   may send. Version 8 stops both for every withheld private file. What
   remains: anyone who can read the run directory, or your clone (which holds
-  every object id), can still check a guess. A secret that no detector
+  every object id), can still check a guess. The commit id, shown on every
+  page's file rows and kept in the launch record, also covers every file in
+  the commit, so someone who knows the rest of the tree and the commit's
+  author, dates, message and parent can check a guess against it. That is a
+  narrower check than the object id, and the commit id cannot be withheld. A
+  secret that no detector
   recognises, in a file the policy admits, is shown as before, for public
   and private repositories alike.
-- **One broken consent record stops every run.** If a consent record cannot
-  be read, Syzygy cannot tell which repository it concerns, so it refuses
-  every run, public ones included, until the record is fixed or revoked.
+- **One broken consent record stops every run.** If a file where consent
+  records are kept cannot be read, Syzygy cannot tell whether it is a
+  consent record or which repository it concerns, so it refuses every run,
+  public ones included, until the file is fixed or revoked. That includes
+  any file there that should be a drawer or provider statement.
   Launch records sit where your agent could write, so one malformed record
   there would stop everything. It never exposes anything; it only stops.
 - **The label is your word.** If a private repository is declared public, it
@@ -111,8 +120,9 @@ screening rule gets looser for anyone.
 
 ## Questions you have answered
 
-You answered all three on the owner questionnaire 2026-11-08T12:24:33Z. The
-answers are recorded here as you gave them. None of them changes this
+You answered all three on the owner questionnaire 2026-11-08T12:24:33Z,
+recorded in .syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08-2.md
+(it lands with PR #798). Each answer below quotes that record. None of them changes this
 policy's bytes.
 
 1. **Should every private repository need a per-project provider statement
@@ -128,16 +138,19 @@ policy's bytes.
    cannot tell your own repositories from ones you hold under a duty of
    confidence. Each launch record also writes the repository's name, URL and
    commit into Syzygy's own repository, on a branch Syzygy never pushes.
-   **Your answer (item `syzygy-pdja.23-confidence`, C):** only the warning
-   that the name goes onto that branch, with no confirmation that you may
-   disclose the repository. The warning is drafted into launch-consent spec
+   **Your answer (item `syzygy-pdja.23-confidence`, C): "Only the
+   name-on-branch warning".** The warning covers the repository's name and
+   URL going onto that branch, with no confirmation that you may disclose
+   the repository. The warning is drafted into launch-consent spec
    version 1.1, and version 8 does not take effect before 1.1 is signed.
    Nothing asks you to confirm a duty of confidence; that stays your own
    judgement at each launch.
 3. **Retention.** No run directory has a retention period today, public or
    private.
-   **Your answer (A):** no retention rule for now. A private repository's
-   run directory is kept like any other until you delete it.
+   **Your answer (item `syzygy-pdja.23-retention`, A): "No retention rule
+   for now; revisit after the first private runs".** A private repository's
+   run directory is kept like any other until you delete it, and the
+   question comes back after the first private runs.
 
 ## If you decline
 

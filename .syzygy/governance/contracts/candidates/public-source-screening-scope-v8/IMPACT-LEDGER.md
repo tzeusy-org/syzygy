@@ -41,7 +41,8 @@ A policy act without its install turns `main` red, so these land together:
   read. It returns public only when the record admitting that commit, and
   every other effective observation record of the same pair, state public
   through a carrier. Anything else, including an unreadable record, is
-  private. The carriers are named in the policy. [Observed]
+  private, and an unreadable record also refuses every read (below), so in
+  practice it is refused, not read private. The carriers are named in the policy. [Observed]
   `packages/polaris-generation-consent/src/package-reader.ts` reads the
   existing observation consents through a list of act forms
   (`ADMISSION_ACT_FORMS`); its two `consent-observation` forms are the
@@ -53,34 +54,62 @@ A policy act without its install turns `main` red, so these land together:
   from the record's title or its `Upstream: … (public; …)` parenthetical,
   which the reader's regex treats as ignorable.
   `packages/polaris-dossier/src/gate-sources.ts` reaches them through that
-  reader. A record whose effectiveness or pair cannot be read, including one
-  that cannot be read at all, must refuse every read under the scope and
-  name the record (round 2, finding 3; round 3, finding 4).
+  reader. Every file at a location where observation consent records are
+  read counts as a possible record: every file at the launch records'
+  location on the dedicated reference, a drawer or provider statement
+  included, and each named act file. Such a file whose kind cannot be read,
+  or that reads as an observation consent record whose effectiveness or pair
+  cannot be read, including one that cannot be read at all, must refuse every
+  read under the scope and name the file (round 2, finding 3; round 3,
+  finding 4; round 4, E1).
   Fixtures needed: the redis form reads public; a launch record answering no
   reads private; a public pair that also holds a private, silent or
   unreadable record reads private at every commit; a record with no readable
-  pair refuses every read. [Inferred] A
+  pair refuses every read; an unparseable file, and a drawer or provider
+  statement of unreadable kind, at the launch records' location each refuse
+  every read; a drawer or provider statement that reads as its own kind does
+  not. [Inferred] A
   private repository reaches Syzygy only through the launch-consent change's
   generic form, or through a new form drafted as its own package. This
   policy adds neither.
 - **Object ids and sizes** (round 2, finding 1; widened in round 3, finding
-  1). For a private pair, a blob excluded or withheld on any ground keeps its
-  object id and size only in its exclusion record in the run directory. The
-  grounds are a denied path, an indeterminate or unclassifiable blob, a
-  detector match on path or body, active content, and a strict-UTF-8, NUL or
-  resource-limit failure. [Observed]
+  1; sites added in round 4, E2 and E3). For a private pair, a blob excluded
+  or withheld on any ground keeps its object id and size only in the run
+  directory's check records and its local review packets. The grounds are a
+  denied path, an indeterminate or unclassifiable blob, a detector match on
+  path or body, active content, a strict-UTF-8, NUL or resource-limit
+  failure, and the class gate's withholding of a body screening admitted but
+  whose class the consent does not name (`body-not-retained-for-generation`).
+  The exclusion records gain no field: their retained fields stay as
+  `matchAction` and `unclassifiableExclusion` state them. [Observed]
   `packages/polaris-dossier/src/check-derive.ts` keeps `path` and `objectId`
   for a cited blob excluded by screening unless the path matched a detector,
   so `denied-path` and `unknown-extraction-class` outcomes keep them.
   [Observed] `packages/polaris-dossier/src/screen.ts`
   returns `denied-path` before any detector runs.
   `packages/polaris-dossier/src/render.ts` writes the object id on the
-  discovery page row and in the source population. Both must drop the object
-  id and size for every excluded private blob, whatever the outcome. Every
+  discovery page row and in the source population, for a screening exclusion
+  and for a class-gate withholding alike: the source-population row at
+  `render.ts:392` (reason `body-not-retained-for-generation`) and `:395`, and
+  the discovery row's `object <algorithm>:<id>` detail at `:679`. Each must
+  drop the object id and size for every excluded or withheld private blob,
+  whatever the ground. [Observed] The fidelity review packet keeps the
+  object id of a class-gate-withheld span
+  (`packages/polaris-dossier/src/review-packet.ts:133`) and of an excluded
+  span, a `denied-path` one included (`:150`; the fixture at
+  `packages/polaris-dossier/src/review.test.ts:206` expects `.env`'s). The
+  packet is a run-directory record handed to the operator's agent session,
+  which already reads the clone without restriction (`agentSessions`), so
+  the policy keeps the values there as a stated place, not an install site;
+  the check record's `citedBlobs`
+  (`packages/polaris-dossier/src/check.ts:115`) is the other. Every
   code-structure egress table must leave them out too, and the indeterminate
   reading must follow edit 8. Fixtures needed: a private denied-path blob, a
-  private indeterminate blob and a private body-matched blob each render no
-  object id or size; their public counterparts render them as today.
+  private indeterminate blob, a private body-matched blob and a private
+  class-gate-withheld blob each render no object id or size, on the
+  discovery row or in the source population; their public counterparts
+  render them as today; and the review packet's spans keep the object id for
+  both visibilities (the existing `.env` fixture unchanged).
 - **Egress.** Syzygy's provider-mode egress check must refuse a private pair's
   content, target-metadata included, unless an egress consent names the pair
   and states it private. [Observed] The egress consents present are titled

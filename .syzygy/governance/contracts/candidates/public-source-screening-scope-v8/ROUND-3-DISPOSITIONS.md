@@ -6,6 +6,8 @@
 > was the last round under the stopping rule set before it, so these repairs
 > are unreviewed. The coordinator will ask the owner whether a round 4 runs.
 > No review brief for a round 4 is written.
+> *Stale 2026-11-08: the owner then ordered round 4, and the round-4 brief
+> was written in `0f2767d2`; the sentence above was true when written.*
 
 | # | Finding (raw) | Disposition | Where |
 |---|---|---|---|
