@@ -3666,15 +3666,23 @@ def _activate_launch_write_consent_copy_registry():
     """The launch-consent write-consent manifest carries its one argument as a row.
 
     Existence-gated candidate registration; the performed record joins the
-    aggregate with the act. A round notes record is registered when it
-    exists, so a digest ever quoted there is checked.
+    aggregate with the act. A round notes record is registered only while
+    it quotes the act phrase: a record that quotes no digest (a REVISE
+    round's) carries no copy to keep current, and CG-7d still checks any
+    phrase-linked digest wherever it is quoted.
     """
     labels = tuple(label for label, _subject in LAUNCH_WRITE_CONSENT_ACTS)
     if os.path.isfile(os.path.join(ROOT, LAUNCH_WRITE_CONSENT_MANIFEST)):
         ACT_DIGEST_COPY_FILES[LAUNCH_WRITE_CONSENT_MANIFEST] = labels
         for path in sorted(os.listdir(os.path.join(ROOT, LAUNCH_WRITE_CONSENT_DIR))):
-            if re.fullmatch(r"ROUND-\d+-DISPOSITIONS\.md", path):
-                ACT_DIGEST_COPY_FILES[f"{LAUNCH_WRITE_CONSENT_DIR}/{path}"] = labels
+            if not re.fullmatch(r"ROUND-\d+-DISPOSITIONS\.md", path):
+                continue
+            rel = f"{LAUNCH_WRITE_CONSENT_DIR}/{path}"
+            with open(os.path.join(ROOT, rel), encoding="utf-8") as fh:
+                text = fh.read()
+            carried = tuple(label for label in labels if label in text)
+            if carried:
+                ACT_DIGEST_COPY_FILES[rel] = carried
 
 
 _activate_launch_write_consent_copy_registry()

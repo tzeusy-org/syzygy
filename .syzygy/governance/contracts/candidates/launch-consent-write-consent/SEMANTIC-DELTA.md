@@ -131,8 +131,27 @@ How the record meets each:
   recording commits apart. Telling them apart is the implementation's job
   under REQ-polaris-generation-046's attribution rule, not this record's.
 - **Implementation**: REQ-polaris-generation-046's write path checks this
-  record's effect before asking anything. No implementation is authorized by
-  this record; it is a consent, not a direction.
+  record's effect before asking anything. It must make every write with the
+  governance home's hooks disabled: a reference move would otherwise run a
+  `reference-transaction` hook, which is execution the record does not grant
+  (round 1, finding 3). It must make a recording commit's parent the tip it
+  read, and move the reference only if the tip is still that commit. No
+  implementation is authorized by this record; it is a consent, not a
+  direction.
+
+## Spec note for a later launch-consent version (not a change here)
+
+Round 1, finding 6 [Inferred]: REQ-polaris-generation-047 accepts with
+`--revision` "a reference the clone holds" (spec line 176), so every branch
+of any clone may be pinned, and spec line 23's "SHALL NOT be … any reference
+a run may pin" cannot be met by any branch as written. Spec line 27 refuses
+a run on the governance home's own working tree or Git directory, so
+`refs/heads/launch-consent-records` itself is never pinned; a separate clone
+made from the governance home carries it only as a remote-tracking
+reference. No byte of the spec is edited here. A later launch-consent
+version could read "SHALL NOT be the trunk, the current branch or the
+reference a trunk-default pin resolves to", or refuse `--revision` naming
+the dedicated reference, for the owner to choose.
 
 ## Choices this draft makes [Inferred]
 
@@ -143,21 +162,35 @@ change is a regenerated record and a new review round):
    so it cannot collide with a branch named `syzygy` (Git refuses a branch
    `a` beside `a/b`), and it names what it holds.
 2. **The location**, `.syzygy/governance/decisions/launch-consent/`: a
-   subdirectory of the home the spec requires, so the records do not mingle
-   with the trunk's decision records if the branch is ever started from a
-   trunk commit, and screening scope 8's population has a narrow home.
+   subdirectory of the home the spec requires, so screening scope 8's
+   population has a narrow home of its own.
    [Inferred] "under `.syzygy/governance/decisions/`" (line 23) includes a
    subdirectory; the reviewer is asked to confirm it.
 3. **The subject's identity**, `repository:tzeusy-org-syzygy`: what
    REQ-polaris-generation-046's proposal rule derives from the `origin` URL
-   `https://github.com/tzeusy-org/syzygy`, so a self-observation launch
-   proposes the same identity. No earlier record gives Syzygy's own
+   `https://github.com/tzeusy-org/syzygy`. A self-observation launch
+   (from a separate clone, spec line 27) proposes the same identity only
+   when that clone's remote is that GitHub URL. A clone made from the local
+   governance home has a filesystem path as its `origin`, and the rule then
+   derives another identity (the builder's `derived_identity` gives
+   `projects-syzygy` for `/home/orca/orca/projects/syzygy`), so that launch
+   proposes a second identity for the same repository unless the operator
+   gives this one as the identity option. No consent fails either way: this
+   record's subject is the governance home, not the observed clone, and it
+   names no revision or URL a launch matches on (round 1, finding 5). No
+   earlier record gives Syzygy's own
    repository an identity [Observed: a sweep of `.syzygy/` and `openspec/`
    for `repository:` finds three identities, `redis-redis`,
    `butlers-configured-poc` and `psf-requests`].
-4. **The first recording commit's parent** is left open: the scope permits a
-   root commit or a child of any commit, provided the tree difference is
-   add-only. Which one the implementation makes is its own choice.
+4. **The recording commits' parents** are fixed (round 1, finding 1). The
+   branch's first recording commit has no parent; every later one has
+   exactly one, the branch's tip at the moment of the move; no recording
+   commit takes any other commit as a parent, a trunk commit or a commit
+   removed from the branch included. So the branch shares no history with
+   the trunk, and an operator who deletes the branch, or moves it back,
+   really removes the records: no later recording commit can bring a
+   removed commit back onto the branch, which a free parent would have
+   allowed. `--check` refuses a scope without the rule.
 
 ## What it does not do
 

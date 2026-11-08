@@ -50,11 +50,21 @@ recording commit made for one confirmed launch answer, and is exactly:
 - the reference `{{REFERENCE}}`: created when it is absent, pointing at that
   recording commit; otherwise moved from its current tip to a recording
   commit whose only parent is that tip, and in no other way. Git's own log
-  entry for that reference move is part of the same write.
+  entry for that reference move is part of the same write;
+- Git's own transient files for those writes, which the write itself
+  creates and removes: the reference's lock file, and the temporary files
+  an object is written through before it is renamed into place.
 
-Every recording commit has at most one parent. Its tree differs from its
-parent's tree, or from the empty tree when it has no parent, only by files
-it adds at paths under `{{LOCATION}}` that the parent's tree does not hold.
+Every write runs with the repository's hooks disabled, so no hook runs
+(a reference move would otherwise run a `reference-transaction` hook).
+
+The branch's first recording commit has no parent. Every later recording
+commit has exactly one parent: the branch's tip at the moment of the move.
+No recording commit has any other commit as a parent, including a commit
+of the trunk and a commit that was once on the branch and has since been
+removed from it. Its tree differs from its parent's tree, or from the empty
+tree for the first recording commit, only by files it adds at paths under
+`{{LOCATION}}` that the parent's tree does not hold.
 It edits, removes, renames or changes the mode of no file, and adds no file
 outside that location. Each added file is one launch consent record. The
 commit is attributed to Syzygy and the operator.
@@ -95,8 +105,12 @@ provider statement, REQ-polaris-generation-046), the superseding record is a
 new file; the earlier file is never edited or removed. A revocation made by
 any other owner act is that act's own record, which this consent does not
 write. Before any run relies on a recording commit, the
-operator may remove it from `{{REFERENCE}}` with Git; that is the operator's
-own act, outside this consent, and Syzygy never does it.
+operator may remove it from `{{REFERENCE}}` with Git, by moving the branch
+back to an earlier recording commit or by deleting the branch; that is the
+operator's own act, outside this consent, and Syzygy never does it. Because
+a recording commit's parent is only ever the branch's tip at that moment, or
+none, a removed commit never returns: the next recording commit starts from
+the tip the operator left, or, with the branch deleted, from no parent.
 
 ## Withdrawal and change
 

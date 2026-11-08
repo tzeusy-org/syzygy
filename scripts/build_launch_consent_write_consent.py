@@ -28,6 +28,8 @@ Scope predicates, read from the params and the rendered record:
   - the record names the record class, the reference and the location (the
     three things REQ-polaris-generation-046 says the scope must name);
   - the exclusions name the trunk, the current branch and pushing;
+  - the scope fixes every recording commit's parent: none for the branch's
+    first, the branch's tip for every later one, and no other commit;
   - the repository identity equals the one REQ-polaris-generation-046's
     proposal rule derives from the upstream URL.
 
@@ -57,6 +59,9 @@ HEX64 = re.compile(r"[0-9a-f]{64}")
 DISPOSITIONS = re.compile(r"^ROUND-\d+-DISPOSITIONS\.md$")
 DECISIONS = ".syzygy/governance/decisions/"
 RECORD_CLASS_LINE = "Record class written: launch consent records (REQ-polaris-generation-046)"
+PARENT_RULE = ("The branch's first recording commit has no parent. Every later recording\n"
+               "commit has exactly one parent: the branch's tip at the moment of the move.\n"
+               "No recording commit has any other commit as a parent")
 
 
 def sha(data: bytes) -> str:
@@ -139,6 +144,8 @@ def scope_problems(fields: dict, text: str, rel: str) -> list[str]:
                          ("pushing", "pushing")):
         if needle not in excludes:
             out.append(f"{rel}: the exclusions do not name {what}")
+    if PARENT_RULE not in text.partition("## Scope")[2].partition("The scope excludes:")[0]:
+        out.append(f"{rel}: the scope does not fix the recording commits' parent")
     if fields.get("REPOSITORY_ID") != derived_identity(fields.get("UPSTREAM_URL", "")):
         out.append(f"{rel}: the repository identity is not the one the proposal rule derives")
     return out
@@ -208,14 +215,17 @@ def selftest() -> int:
             found = stale(tmp)
             results.append((name, any(needle in f for f in found)))
 
-    def set_field(key, value):
+    def set_fields(**values):
         def mutate(tmp):
             p = tmp / params
             data = json.loads(p.read_text())
-            data["WRITE-CONSENT-LAUNCH-RECORDS.md"]["fields"][key] = value
+            data["WRITE-CONSENT-LAUNCH-RECORDS.md"]["fields"].update(values)
             p.write_text(json.dumps(data, indent=2) + "\n")
             write(tmp)
         return mutate
+
+    def set_field(key, value):
+        return set_fields(**{key: value})
 
     def edit_template(old, new):
         def mutate(tmp):
@@ -246,6 +256,20 @@ def selftest() -> int:
            set_field("REFERENCE", "refs/heads/main"), "the dedicated reference is the trunk")
     caught("master as the dedicated reference refused",
            set_field("REFERENCE", "refs/heads/master"), "the dedicated reference is the trunk")
+    caught("a reference equal to a non-main trunk refused",
+           set_fields(REFERENCE="refs/heads/trunk", TRUNK="refs/heads/trunk"), "the dedicated reference is the trunk")
+    caught("a reference ending in a slash refused",
+           set_field("REFERENCE", "refs/heads/launch-consent-records/"), "not a branch under refs/heads/")
+    caught("a location without its trailing slash refused",
+           set_field("LOCATION", ".syzygy/governance/decisions/launch-consent"), "not a directory under")
+    caught("a scope leaving the first commit's parent open refused",
+           edit_template("The branch's first recording commit has no parent.",
+                         "The branch's first recording commit has any parent."),
+           "does not fix the recording commits' parent")
+    caught("a scope letting a later commit take another parent refused",
+           edit_template("No recording commit has any other commit as a parent",
+                         "A recording commit may have another commit as a parent"),
+           "does not fix the recording commits' parent")
     caught("a tag as the dedicated reference refused",
            set_field("REFERENCE", "refs/tags/launch-consent-records"), "not a branch under refs/heads/")
     caught("a location outside decisions refused",
@@ -299,6 +323,17 @@ def selftest() -> int:
         p.write_text(p.read_text() + "\n{{NOT_A_FIELD}}\n")
     caught("an unfilled field refused", unfilled, "unfilled field NOT_A_FIELD")
 
+    for mode in ("--digests", "--manifest-digest"):
+        with tempfile.TemporaryDirectory() as t:
+            tmp = _fixture(pathlib.Path(t))
+            ok_code, ok_out = run(mode, tmp)
+            p = tmp / RECORD
+            p.write_text(p.read_text() + "x\n")
+            code, out = run(mode, tmp)
+            results.append((f"{mode} refuses while stale",
+                            ok_code == 0 and HEX64.search(ok_out) is not None
+                            and code == 1 and HEX64.search(out) is None and "FAIL" in out))
+
     with tempfile.TemporaryDirectory() as t:
         tmp = _fixture(pathlib.Path(t))
         (tmp / PKG / "ROUND-1-DISPOSITIONS.md").write_text("a" * 64 + "\n")
@@ -322,18 +357,21 @@ def main(argv: list[str]) -> int:
         write(ROOT)
         print(f"wrote the instance record and {MANIFEST_NAME}")
         return 0
-    problems = stale(ROOT)
+    code, out = run(mode, ROOT)
+    print(out, end="")
+    return code
+
+
+def run(mode: str, root: pathlib.Path) -> tuple[int, str]:
+    """--check, --digests or --manifest-digest over `root`: (exit code, output)."""
+    problems = stale(root)
     if problems:
-        for p in problems:
-            print(f"FAIL {p}")
-        return 1
+        return 1, "".join(f"FAIL {p}\n" for p in problems)
     if mode == "--digests":
-        print("".join(line + "\n" for line in manifest_text(ROOT).splitlines() if not line.startswith("#")), end="")
-    elif mode == "--manifest-digest":
-        print(sha((ROOT / PKG / MANIFEST_NAME).read_bytes()))
-    else:
-        print("launch-consent-write-consent: record and manifest current")
-    return 0
+        return 0, "".join(line + "\n" for line in manifest_text(root).splitlines() if not line.startswith("#"))
+    if mode == "--manifest-digest":
+        return 0, sha((root / PKG / MANIFEST_NAME).read_bytes()) + "\n"
+    return 0, "launch-consent-write-consent: record and manifest current\n"
 
 
 if __name__ == "__main__":

@@ -64,7 +64,10 @@ new review round.
 - **Folder on that branch**: `.syzygy/governance/decisions/launch-consent/`.
 - **Syzygy's own repository identity**: `repository:tzeusy-org-syzygy`, the
   identity the launch rule would derive from `github.com/tzeusy-org/syzygy`.
-  Syzygy's repository has never had a recorded identity before.
+  Syzygy's repository has never had a recorded identity before. If you ever
+  run Polaris on Syzygy itself from a clone whose remote is not that GitHub
+  URL (for example a clone made from your local copy), the launch proposes a
+  different identity unless you give this one.
 
 ## What it costs
 
@@ -75,7 +78,8 @@ them; the branch is within agent sessions' write reach". In practice:
 - **No review of what is recorded.** Records land without a pull request or
   the governance checks. A malformed one is found only when a run reads it,
   and under screening scope version 8 one unreadable record stops every run,
-  public ones included, until it is revoked.
+  public ones included, until it is read or revoked. Before any run relies
+  on it, you can also remove the commit that added it from the branch.
 - **The branch is easy to lose.** Delete it, force-move it, or delete the
   clone, and the records are gone from Syzygy's view. Runs that relied on
   them then lack consent and ask again. Nothing outside your machine holds a
@@ -86,6 +90,12 @@ them; the branch is within agent sessions' write reach". In practice:
   branch as easily as Syzygy can. A commit no recording made is not a
   launch record, but [Inferred] Syzygy can only tell them apart by how each
   commit is attributed, and attribution is a stored claim.
+- **The branch starts empty and only grows from its own tip.** Its first
+  commit has no parent, so it shares no history with `main`. Every later
+  commit sits on the branch's current tip and nowhere else. So if you delete
+  the branch, or move it back, the records you removed stay removed: Syzygy's
+  next commit starts from where you left the branch (or from nothing, if you
+  deleted it), and can never bring a removed record back.
 - **One push publishes everything on it.** Repository names, URLs and
   commit ids of every repository you launched on, private ones included,
   are on that branch. Syzygy never pushes it; a push by you or an agent
@@ -101,6 +111,13 @@ them; the branch is within agent sessions' write reach". In practice:
   `apps/` or `packages/` names REQ-polaris-generation-046 yet; building it
   needs its own direction.
 - It changes no specification, policy or contract, and no existing consent.
+
+## Undoing a record
+
+Records are normally ended by a later act of yours naming them. Before any
+run relies on one, you can also undo it yourself with Git: move the branch
+back to before the commit, or delete the branch to undo all of them. Syzygy
+never does this for you, and never brings a removed commit back.
 
 ## Withdrawal
 
