@@ -375,9 +375,6 @@ jobs:
       - name: build_three_surface_poc_readability_successor --check
         run: python3 scripts/build_three_surface_poc_readability_successor.py --check
 
-      - name: build_three_surface_poc_readability_successor --selftest
-        run: python3 scripts/build_three_surface_poc_readability_successor.py --selftest
-
       - name: record_three_surface_poc_readability_successor --check
         run: python3 scripts/record_three_surface_poc_readability_successor.py --check
 
@@ -386,6 +383,9 @@ jobs:
 
       - name: readability_successor --all --check
         run: python3 scripts/readability_successor.py --all --check
+
+      - name: readability_successor --selftest
+        run: python3 scripts/readability_successor.py --selftest
 
       - name: build_polaris_dependency_unions --check
         run: python3 scripts/build_polaris_dependency_unions.py --check
@@ -563,8 +563,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: readability_successor --selftest
-        run: python3 scripts/readability_successor.py --selftest
+      - name: build_three_surface_poc_readability_successor --selftest
+        run: python3 scripts/build_three_surface_poc_readability_successor.py --selftest
 
   # The one required check. Branch protection and the merge queue require a
   # check named `checks`; this job reports it and passes only when every job

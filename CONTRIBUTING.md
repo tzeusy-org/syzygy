@@ -166,7 +166,8 @@ The clock is the slowest job of a workflow, not the sum of its steps.
   the governance battery in one job and three slow selftests
   (`check_spec_reconciliation --selftest`,
   `prepare_three_surface_poc_governedby_reference_recording --selftest`,
-  `readability_successor --selftest`) in a job each; the aggregate job
+  `build_three_surface_poc_readability_successor --selftest`) in a job
+  each; the aggregate job
   `checks` is the required check. The first two selftests run their
   independent cases in forked workers and report in case order
   (`SELFTEST_WORKERS` overrides the worker count; `1` runs
