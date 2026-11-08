@@ -1,7 +1,8 @@
 # Impact ledger — Polaris on any repository, with consent asked at launch
 
 > **Candidate — binds nothing.** Review material, not an authority or an
-> adopted applicability judgment.
+> adopted applicability judgment. Revised after round 1; the sweeps are
+> unchanged (the round-1 reviewer re-ran A and B and matched both).
 
 ## Method
 
@@ -54,6 +55,21 @@ edited.
   Sweep B's code hit, `packages/polaris-dossier/src/state-directory.test.ts`,
   pins the state-directory rule and will need a case for the launch-record
   exception.
+- **The source-acquisition registry entry** (`.syzygy` other). Beyond sweep
+  B's state-directory text, the entry says "to stay within the observation
+  consent's stated fetch form the operator fetches the one consented commit
+  alone" [Observed], presuming consent precedes the clone. Under launch
+  consent the clone precedes it; `design.md` §5 gives the reading under which
+  the entry is unaffected [Inferred], and the remedy if that reading fails (a
+  successor version of the entry, not an edit).
+- **Per-repository code registries** (Code). `STATEMENT_FORMS` and
+  `DRAWER_FORMS` in `packages/polaris-dossier/src/gate-sources.ts` register
+  forms per repository [Observed]. They are not edited; after sign-off one
+  generic launch consent form is added beside them (design §7, slice 2), and
+  REQ-046 forbids per-repository registration for launch records.
+- **The screening policy's owner placements** (`.syzygy` other). One
+  placement names `repository:redis-redis` at one commit [Observed]. Not
+  edited; packet Q10 offers a successor.
 - **Other (C, D, F, G).** Docs and skills: the `/polaris-dossier` skill (both
   `.claude` and `.codex` copies, sweep G) must gain the never-answer rule and
   the trunk default after sign-off.

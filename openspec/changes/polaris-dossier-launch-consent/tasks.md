@@ -8,12 +8,14 @@
 
 - [x] Draft the change, the owner packet, the review brief and the direction
       record (`syzygy-pdja.21`, 2026-11-08).
-- [ ] Round 1 fresh-context review per `REVIEW-BRIEF.md` (dispatched by the
-      lead, not by the drafting session); raw retained verbatim under
-      `docs/reviews/` with its campaign file.
-- [ ] Owner answers Q1 to Q8 in `OWNER-PACKET.md`; narrow REQ-046 and
+- [x] Round 1 fresh-context review per `REVIEW-BRIEF.md` (REVISE), retained
+      as `docs/reviews/R-POLARIS-LAUNCH-CONSENT-1-RAW.md`; repaired per
+      `ROUND-1-DISPOSITIONS.md`.
+- [ ] Round 2 confirmation per `REVIEW-BRIEF-ROUND-2.md` (dispatched by the
+      lead); the last round before the packet goes to the owner.
+- [ ] Owner answers Q1 to Q10 in `OWNER-PACKET.md`; narrow REQ-046 and
       REQ-047 to the answers.
-- [ ] Package the write-consent act (Q3) as its own reviewed instance and
+- [ ] Package the write-consent act (Q3), naming the dedicated reference, as its own reviewed instance and
       owner-act record; register its phrase per the recorder notes.
 - [ ] Decide the sign-off route: a new package version tag under
       `OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md`, or a

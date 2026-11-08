@@ -4,8 +4,9 @@
 > `POLARIS-DOSSIER-LAUNCH-CONSENT-2026-11-08`. It is not adopted, performs no
 > act, records no consent and grants no read, write, egress or execution.
 > Effect comes only from owner acts over exact reviewed bytes;
-> `OWNER-PACKET.md` in this directory lists them. No fresh-context review
-> has run yet. Tracking bead: `syzygy-pdja.21`.
+> `OWNER-PACKET.md` in this directory lists them. Round 1 of fresh-context
+> review returned REVISE; this revision repairs it
+> (`ROUND-1-DISPOSITIONS.md`). Tracking bead: `syzygy-pdja.21`.
 
 **The owner should be able to point Polaris at any repository whose source
 they hold and get a dossier, with nothing prepared for that repository
@@ -36,40 +37,49 @@ observation consent for every observed repository, and SEC-2 requires a
 per-project statement before a governed project's content reaches a model
 provider. Neither clause says when or through what ceremony the owner gives
 it. [Inferred] Asking at launch therefore needs no doctrine or contract
-amendment; `design.md` §1 sets out the clause-by-clause reading a reviewer
-should test.
+amendment; `design.md` §1 sets out the clause-by-clause reading; the round-1
+reviewer tested it (`ROUND-1-DISPOSITIONS.md`).
 
 ## What changes
 
 - **REQ-polaris-generation-046, launch-time consent.** When a run starts
-  without the consents it needs, Syzygy asks the owner in the terminal,
-  states exactly what each consent covers, and on the exact confirmation
-  writes an observation consent record naming the one pinned revision, and
-  for a governed subject a separate per-project statement. Each is an
-  owner-act record binding its own digest, revocable by a later act like
-  any other. An agent must never answer; Syzygy cannot tell, so who answered
-  is disclosed as the operator's declaration, labelled Inferred.
-- **REQ-polaris-generation-047, trunk-tip revision.** Absent `--revision`, a
-  run pins the commit the clone's trunk points to (remote default branch,
-  else `main`, else `master`), with no fetch, and states that it did not
-  fetch.
-- **Self-observation** is permitted from a separate checkout; a run whose
-  clone is the governance home's own working tree is refused with the
-  command that makes one.
+  without the consents it needs, Syzygy reads only the pinned commit and its
+  file listing (never a file's contents), then asks the owner in the
+  terminal. An exact owner phrase naming the repository and the commit
+  records, each as its own owner-act record: an observation consent for that
+  one revision; a drawer statement, when the owner states no kernel evidence
+  drawer exists; and, for a governed subject, a provider statement, one per
+  subject and provider, reused across revisions. Records are committed by
+  Syzygy to a dedicated reference of its governance home that is never the
+  trunk, so recording never moves the trunk tip. An agent must never answer;
+  an agent-typed phrase is not an owner act, and who answered is disclosed
+  as the operator's declaration, labelled Inferred.
+- **REQ-polaris-generation-047, trunk-tip revision.** A run that no existing
+  consent covers pins the commit the clone's trunk points to (remote default
+  branch, else `main`, else `master`), with no fetch. A clone whose HEAD an
+  existing consent names keeps REQ-033's behaviour exactly.
+- **Self-observation** is permitted from a separate clone; a run whose clone
+  shares the governance home's working tree or Git directory is refused with
+  the command that makes one.
 - **One displacement** of REQ-polaris-generation-033: its rule that Syzygy
   writes only to the run's state directory gains one exception, the launch
-  records, written only where the owner's write consent permits.
+  consent records and their recording commit, written only where the owner's
+  write consent permits.
 
 ## What it needs from the owner, besides sign-off
 
 - **A write consent for Syzygy's own repository** (RFC5-12's write class,
-  SEC-4), naming the launch records and their location. Without it Syzygy
-  may not write a consent record into its own governance home. This is a
-  one-time owner act, not an amendment (packet Q3).
-- Answers to the packet's questions: public repositories only or private
-  too, the record location and commit practice, the residual that an agent
-  could type the answer, the statement's content classes, and whether
-  "latest" means the clone's tip or a fetched one.
+  SEC-4), naming the launch consent records, the dedicated reference and
+  their location. A one-time owner act, not an amendment (packet Q3).
+- Answers to the packet's questions (Q1 to Q10), among them: public
+  repositories only or private too, the drawer statement at launch, and
+  whether screening placements should follow the trunk.
+
+## What still needs preparation
+
+Screening placements are per repository and per commit. A repository with
+none still runs; the files a placement would have let through are withheld
+and render Unknown (packet Q10).
 
 ## What it does not change
 
@@ -90,6 +100,6 @@ should test.
   delta is held under `proposed/`, not `specs/`, so no dependency tool counts
   it before an act (the arbitrary-public-repo precedent).
 - Code, after sign-off only: the dossier CLI's `init` and `polaris` paths,
-  the consent package's readers (one new record family), the skill and agent
+  the consent package's readers (one generic record family, no per-repository code), the skill and agent
   texts. `design.md` §7 outlines the slices.
 - Governance: one owner write-consent act; one pending-register row (P-118).
