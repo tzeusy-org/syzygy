@@ -10,6 +10,7 @@ import { type ReverifyRefusal } from './reverify.js';
 import { type DossierScreen, type ScreenExclusion, type ScreenLoader } from './screen.js';
 import { type ScreenCensusReport } from './census.js';
 import type { ReaderAdvice } from './reader-advice.js';
+import type { ReviewReachAdvice } from './review-reach.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
@@ -179,6 +180,8 @@ export interface CheckReport extends CheckRecord {
   readonly screenCensus?: ScreenCensusReport;
   /** The counted reader standards' advice (`reader-advice.ts`); on the report, never the record, and never a finding. */
   readonly readerAdvice?: ReaderAdvice;
+  /** The claim blocks the fidelity review can never confirm (`review-reach.ts`); on the report, never the record, and never a finding. */
+  readonly reviewReach?: ReviewReachAdvice;
   /** The cited files withheld from the review session, by screening or the class gate (`reviewVisibility`); on the report, never the record. */
   readonly reviewVisibility?: ReviewVisibility;
 }

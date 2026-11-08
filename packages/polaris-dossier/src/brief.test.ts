@@ -79,7 +79,7 @@ describe('brief: issued', () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v4', schemaVersion: 'polaris-dossier-local-draft-v4',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v5', schemaVersion: 'polaris-dossier-local-draft-v4',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     const brief = read(run, 'brief.md'), schema = read(run, 'draft.schema.json');
@@ -103,7 +103,7 @@ describe('brief: issued', () => {
     expect(brief).toContain('Read them before you outline: write every page as an abstraction tree, and give the technology choices their table.');
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
-      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v4', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
+      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v5', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
       schemaVersion: 'polaris-dossier-local-draft-v4', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
       readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
@@ -150,6 +150,9 @@ describe('brief: issued', () => {
       '## Labelling rules', 'Never label a claim `observed`',
       '## Citation rules', '- Cite every `inferred` block: Syzygy strongly encourages it', 'Mark it `judgement: true`. It stays `inferred`, may cite nothing',
       '- A fact is never a judgement.', 'the fidelity review blocks a marked judgement that asserts a fact', 'A `non-normative` block carries no citation and no anchor.',
+      // syzygy-pdja.20: the review-reach rule, with no project content, beside the other citation rules.
+      '- Syzygy refuses a cited path that names no file at the pinned revision, and a line range beyond the file\'s end.\n- The fidelity review is given a cited span\'s text only when screening admits its file and the run\'s consent covers that file\'s class.',
+      'A block none of whose cited spans the review is given can never be judged supported', '`syzygy dossier check` lists such blocks under `reviewReach`.', 'resubmitting such a block unchanged spends a repair cycle and cannot confirm it.',
       '## Quotation rule', 'A quotation is optional: a claim in your own words, with its citation, is the norm.', 'without elision, joining or alteration',
       '## Discovery', '## Clarifications', 'the consequential questions the clone does not settle: at most 2.',
       '## Execution rule: SEC-3', 'So: do not build or run the observed project outside an explicit, opt-in execution profile.',

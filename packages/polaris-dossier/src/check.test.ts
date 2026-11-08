@@ -808,6 +808,36 @@ describe('check: the command', () => {
     expect(read(run, 'checks/rev-0.json')).not.toContain('RS-13');
   });
 
+  // syzygy-pdja.20: the claim blocks no fidelity verdict can confirm are advice on the report, never a finding and never in the record.
+  it('lists on the report the blocks the review can never confirm, and leaves the outcome, the findings and the record as they were', async () => {
+    const run = await briefedRun();
+    writeDraft(run, mutate((d) => {
+      d.sections[0].paragraphs[0].children[2].citations = [cite('c-p1c', 'README.md', 1, 1)];
+      d.sections[0].paragraphs[0].children[0].citations = [cite('c-p1a', 'docs/notes.txt', 1, 1)];
+    }));
+    // The run relies on no statement, so a class other than code-content is withheld from review: docs/notes.txt is such a class here.
+    const gated = { ...SCREEN_OK, contentClass: (p: string) => (p === 'docs/notes.txt' ? 'project-documentation' as const : SCREEN_OK.contentClass(p)) };
+    const result = report(await checkDraft(run, {}, deps({ loadScreen: async () => ({ ok: true, screen: gated }) })));
+    expect(result).toMatchObject({ outcome: 'passed', findings: [] });
+    expect(result.reviewReach?.counts).toEqual({ unconfirmable: 1, withheldItems: 1 });
+    expect(result.reviewReach?.blocks.map(({ detail: _d, ...rest }) => rest)).toEqual([
+      { at: '$.sections[0].paragraphs[0].children[2]', blockId: 'p1c', consequence: 'withheld-item' },
+      { at: '$.sections[0].paragraphs[1]', blockId: 'p2', consequence: 'unconfirmable' },
+    ]);
+    const stored = read(run, 'checks/rev-0.json');
+    expect(stored).not.toContain('reviewReach');
+    expect(stored).not.toContain('unconfirmable');
+  });
+
+  it('states zero blocks for a draft every cited span of which reaches the review', async () => {
+    const run = await briefedRun();
+    writeDraft(run, valid());
+    const a = io();
+    expect(await runDossierCli(['check', run, '--json'], a.io, { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN })).toBe(0);
+    const printed = JSON.parse(a.out.join(''));
+    expect(printed.reviewReach).toEqual({ note: expect.stringContaining('sets no outcome'), counts: { unconfirmable: 0, withheldItems: 0 }, blocks: [] });
+  });
+
   it('never names a path both a denied-path rule and a secret detector match in screenCensus (round-2 review finding 1)', async () => {
     const run = await briefedRun();
     writeDraft(run, valid());

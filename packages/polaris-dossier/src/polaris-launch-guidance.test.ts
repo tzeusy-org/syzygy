@@ -51,6 +51,9 @@ describe('the authoring prompt', () => {
     expect(AUTHOR_SELF_CHECK).toContain('every identifier the draft refers to is defined in the draft;');
     expect(AUTHOR_SELF_CHECK).toContain('every path in discovery exists in the clone.');
   });
+  it('warns before a repair cycle is spent on a block check lists under reviewReach (syzygy-pdja.20)', () => {
+    expect(prompt).toContain('If check lists blocks under reviewReach, no review can confirm them as they stand: before you spend a repair cycle, cite an admitted file for the same fact or state it as unknown.');
+  });
   it('addresses the operator only with the brief\'s clarification questions', () => {
     expect(prompt).toContain('Address the operator only with the clarification questions the brief allows; never ask the operator to run, start or tell anything.');
   });

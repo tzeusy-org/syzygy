@@ -1,0 +1,149 @@
+{
+  "subject": "syzygy dossier check: the claim blocks the fidelity review can never confirm, as advice on the report (reviewReach), the brief rule and the launched author prompt (syzygy-pdja.20)",
+  "bead": "syzygy-pdja.20",
+  "date": "2026-11-09",
+  "ranAt": "9a93972e8a1b0fbaf06afb1ec21573835d27f3df",
+  "ranAtNote": "A work-in-progress commit on agent/syzygy-pdja.20-withheld-citation-advice; a rebase-merge leaves it reachable from no ref, so the digests below are the anchor.",
+  "subjectDigests": {
+    "packages/polaris-dossier/src/brief.test.ts": "d4639571707f1dcaa144f49c187272c585792096ba9bc1fea6479224db2a5842",
+    "packages/polaris-dossier/src/brief.ts": "9cf449fe47e409dce4d7f8fd49317a074ffa59a9648222010159897749b64081",
+    "packages/polaris-dossier/src/check.test.ts": "559ddf6a4d735d5f02b358ffbafd7f5a143e58fe8e02c266216fe7ab5517ec09",
+    "packages/polaris-dossier/src/check.ts": "bb8934a46acb5175a154100aa7e6f744a325c654e0936faf4969fa6b1e4ebc9d",
+    "packages/polaris-dossier/src/cli.test.ts": "c2deed45f17acbbd37f608007603f543615f3940c365e6858c6bcb82632971a9",
+    "packages/polaris-dossier/src/polaris-launch-guidance.test.ts": "a0a574ca22ac6dbe4deb4d6f5051247c3c742bef9c5787a1dca9813538f6e39d",
+    "packages/polaris-dossier/src/polaris.ts": "526e5b51efb2454bdab5111f339774ee26ae84c3266eee5fc57c43c5bc975f45",
+    "packages/polaris-dossier/src/review-reach.test.ts": "1de0e2777dd77f8c2efc24503862f3d322a56a8d1fa820e34769d731c62e7418",
+    "packages/polaris-dossier/src/review-reach.ts": "5e9b52a16d02677c8269339d12bb3dc181f5ac360eec67c103325167206d9d15"
+  },
+  "command": "npx vitest run packages/polaris-dossier/src/review-reach.test.ts packages/polaris-dossier/src/check.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/polaris-launch-guidance.test.ts packages/polaris-dossier/src/cli.test.ts (each mutant alone, restored after)",
+  "mutants": [
+    {
+      "id": "every-to-some",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "cited.every((id) => reach.get(id) === 'withheld' || reach.get(id) === 'class-gated')",
+      "new": "cited.some((id) => reach.get(id) === 'withheld' || reach.get(id) === 'class-gated')",
+      "outcome": "killed"
+    },
+    {
+      "id": "no-inferred-guard",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "block.value['label'] === 'inferred' && cited.length > 0",
+      "new": "cited.length > 0",
+      "outcome": "killed"
+    },
+    {
+      "id": "no-cited-length-guard",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "block.value['label'] === 'inferred' && cited.length > 0 && ",
+      "new": "block.value['label'] === 'inferred' && ",
+      "outcome": "killed"
+    },
+    {
+      "id": "class-gated-counts-as-withheld-only",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "reach.get(id) === 'withheld' || reach.get(id) === 'class-gated'",
+      "new": "reach.get(id) === 'withheld'",
+      "outcome": "killed"
+    },
+    {
+      "id": "no-withheld-item-class",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "isWithheldItem(block.value, standing) ? 'withheld-item'",
+      "new": "false ? 'withheld-item'",
+      "outcome": "killed"
+    },
+    {
+      "id": "class-gated-stands-withheld",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "return value === 'withheld' ? 'withheld' : value === 'reaches-review' ? 'admitted' : 'other';",
+      "new": "return value === 'withheld' || value === 'class-gated' ? 'withheld' : value === 'reaches-review' ? 'admitted' : 'other';",
+      "outcome": "killed"
+    },
+    {
+      "id": "understanding-items-included",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "if (block.textKey !== 'text') continue;",
+      "new": "",
+      "outcome": "killed"
+    },
+    {
+      "id": "no-class-gate",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "if (unconsentedClass(inputs.screen.contentClass(cited), inputs.consented) !== undefined) return 'class-gated';",
+      "new": "",
+      "outcome": "killed"
+    },
+    {
+      "id": "class-gate-after-redaction",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "  if (unconsentedClass(inputs.screen.contentClass(cited), inputs.consented) !== undefined) return 'class-gated';\n  if (blob.withheld === undefined || blob.retainedLines === undefined) return 'reaches-review';",
+      "new": "  if (blob.withheld === undefined || blob.retainedLines === undefined) { if (unconsentedClass(inputs.screen.contentClass(cited), inputs.consented) !== undefined) return 'class-gated'; return 'reaches-review'; }",
+      "outcome": "killed"
+    },
+    {
+      "id": "no-redacted-line-touch",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "if (spanTouchesWithheld(blob.withheld, startLine, endLine)) return 'withheld';",
+      "new": "",
+      "outcome": "killed"
+    },
+    {
+      "id": "no-retained-span-detector",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "=== 'secret-detector-match' ? 'withheld' : 'reaches-review';",
+      "new": "=== 'secret-detector-match' ? 'reaches-review' : 'reaches-review';",
+      "outcome": "killed"
+    },
+    {
+      "id": "excluded-reaches-review",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "return outcome === undefined || outcome === 'admitted' ? 'reaches-review' : 'withheld';",
+      "new": "return 'reaches-review';",
+      "outcome": "killed"
+    },
+    {
+      "id": "no-path-screen-fallback",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "?.outcome ?? inputs.screen.screenPath(cited);",
+      "new": "?.outcome;",
+      "outcome": "killed"
+    },
+    {
+      "id": "counts-swapped",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "counts: { unconfirmable: blocks.filter((b) => b.consequence === 'unconfirmable').length, withheldItems: blocks.filter((b) => b.consequence === 'withheld-item').length }",
+      "new": "counts: { unconfirmable: blocks.filter((b) => b.consequence === 'withheld-item').length, withheldItems: blocks.filter((b) => b.consequence === 'unconfirmable').length }",
+      "outcome": "killed"
+    },
+    {
+      "id": "report-no-reach",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "...(reach === undefined ? {} : { reviewReach: reach }),",
+      "new": "",
+      "outcome": "killed"
+    },
+    {
+      "id": "reach-no-consent",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "consented: checked.contentClasses }) : undefined;",
+      "new": "consented: ['code-content', 'project-documentation'] }) : undefined;",
+      "outcome": "killed"
+    },
+    {
+      "id": "brief-no-rule",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": "    `- ${REVIEW_REACH_RULE}`,\n",
+      "new": "",
+      "outcome": "killed"
+    },
+    {
+      "id": "prompt-no-warning",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": " If check lists blocks under reviewReach, no review can confirm them as they stand: before you spend a repair cycle, cite an admitted file for the same fact or state it as unknown.",
+      "new": "",
+      "outcome": "killed"
+    }
+  ],
+  "killed": 18,
+  "total": 18
+}
