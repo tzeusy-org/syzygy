@@ -1,9 +1,15 @@
 # Owner packet — Polaris on any repository, consent asked at launch
 
-> **Candidate — binds nothing.** Questions for you, each with a
-> recommendation. Nothing here is decided, no consent is recorded, and no act
-> is offered until a fresh-context review confirms these bytes. Revised after
-> round 1 asked for changes (`ROUND-1-DISPOSITIONS.md`).
+> **Candidate — binds nothing.** **Answered 2026-11-08.** You answered every
+> question through a questionnaire that regrouped them, recorded in
+> `.syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08.md`;
+> each question below carries its answer. The answers sign nothing and record
+> no consent: the change is narrowed to them, a fresh-context review confirms
+> the repaired bytes, and only then is the sign-off package offered to you.
+> Revised after round 1 asked for changes (`ROUND-1-DISPOSITIONS.md`).
+>
+> *Text below as drafted before the answers; Q10 was drafted with no
+> recommendation.*
 
 ## What you asked for, and what it takes
 
@@ -65,6 +71,8 @@ withheld file can block an inventory entry's readiness. Q10.
 
 ### Q1. Approve the launch-consent design?
 
+**Answered: A** — with a third reading you accepted: the content classes shown before you answer are a preview of the screening policy's classification once the repository is admitted (round 2, G3).
+
 Ask at launch, in the terminal, after reading only the commit and its file
 listing; record the observation consent per repository and commit, the
 drawer statement per repository, and the provider statement per repository
@@ -78,6 +86,8 @@ and provider.
 
 ### Q2. Public repositories only, or private too?
 
+**Answered: B** — private too. A launch on a repository not declared public stays refused until you perform a screening-policy successor admitting non-public sources; that successor is drafted separately.
+
 The screening policy's public-source scope admits public repositories only.
 Syzygy's own repository is public [Observed, 2026-11-08].
 
@@ -87,6 +97,8 @@ Syzygy's own repository is public [Observed, 2026-11-08].
   sources, with its own review and act; drafted as a separate item.
 
 ### Q3. The write consent for Syzygy's own repository
+
+**Answered: A** — the write-consent instance is drafted, reviewed and offered as its own act; this answer grants nothing.
 
 One owner act, recorded once: Syzygy may commit launch consent records, and
 only those, as new files on one named dedicated branch of its own repository.
@@ -99,6 +111,8 @@ only those, as new files on one named dedicated branch of its own repository.
   terminal; under that reading the recorder scripts need none either.
 
 ### Q4. Where the records live
+
+**Answered: A** — a dedicated branch, never the trunk.
 
 RFC3-16 keeps an owner act as the exact phrase, its digest, the act record
 and the recording commit, so a record must be committed before it counts.
@@ -116,6 +130,8 @@ and the recording commit, so a record must be committed before it counts.
 
 ### Q5. The phrase must be yours, but an agent could type it
 
+**Answered: A.**
+
 Syzygy cannot tell who typed it. If an agent did, the result is not an act
 of yours: the contract calls accepting it an unauthorized effect and a
 trust-floor violation. Disclosure on every page makes the risk visible; it
@@ -129,12 +145,16 @@ does not cure it.
 
 ### Q6. How long a launch consent lasts
 
+**Answered: A.**
+
 - **A (recommended).** Until you revoke it. A later run at the same commit
   reuses it without asking, and re-rendering an old dossier keeps working.
 - **B.** It expires when its run closes. Every run asks again; re-rendering a
   closed run is refused once expired.
 
 ### Q7. What a governed repository's provider statement covers
+
+**Answered: A.**
 
 Your agent reads the whole clone whatever the statement lists (already
 disclosed under REQ-033).
@@ -147,12 +167,16 @@ disclosed under REQ-033).
 
 ### Q8. "Latest trunk commit": your clone's tip, or fetched at launch?
 
+**Answered: A.**
+
 - **A (recommended).** Your clone's tip, no network request; the launch
   prints the commit date and the command to update the clone.
 - **B.** Fetch at launch. Needs a source-acquisition registry act covering a
   fetch for this route, which no act now does for `init`.
 
 ### Q9. The drawer statement at launch
+
+**Answered: A.**
 
 A kernel evidence drawer is Syzygy's evidence store for a project. A
 repository whose drawer status nobody has stated counts as governed, and so
@@ -166,6 +190,8 @@ repository.
   provider statement, which the same question then asks for.
 
 ### Q10. Should screening placements follow the trunk?
+
+**Answered: A** — placements stay per commit.
 
 Placements name one repository at one commit. A trunk-tip run of Redis at a
 newer commit gets none of them, and a new repository has none. No
@@ -209,8 +235,12 @@ starts before sign-off and the Q3 act.
 
 - No project declaration lists observed repositories (RFC3-7's "referenced
   from the declaration"); Redis has the same gap. Flagged, not repaired.
-- The repository's identity comes from the clone's remote URL, which an agent
-  could change; a re-identified clone would not show an earlier revoked
-  consent. Disclosed on the page, labelled Inferred.
+- Repository identity (round 2, G1), answered A on 2026-11-08 outside the
+  numbered questions: your phrase declares the identity Syzygy proposes; a
+  matching record's identity is proposed before a newly derived one; matching
+  records that disagree are refused before asking. A URL change at a commit no
+  record names still splits the identity, a fork at an upstream commit is
+  proposed the upstream identity, and two repositories sharing the last two
+  URL segments share one; all are disclosed, labelled Inferred.
 - Reconstructed motivations and comparisons (the parked REQ-038/039) are
   separate.

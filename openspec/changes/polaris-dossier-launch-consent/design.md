@@ -3,7 +3,9 @@
 > **Candidate — binds nothing.** Review material for
 > `proposed/polaris-generation/spec.md`, revised after round 1
 > (`docs/reviews/R-POLARIS-LAUNCH-CONSENT-1-RAW.md`, REVISE; dispositions in
-> `ROUND-1-DISPOSITIONS.md`). Labels follow the project's discipline:
+> `ROUND-1-DISPOSITIONS.md`), then narrowed to the owner's answers of
+> 2026-11-08 (`OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-08.md`) and
+> repaired for round 2's findings G1 to G3. Labels follow the project's discipline:
 > [Observed] was read this session from the file named, [Inferred] is the
 > drafter's reading, [Unknown] was not established.
 
@@ -15,6 +17,9 @@ Each clause is quoted from its defining file (verification rule 8).
 |---|---|---|---|
 | RFC5-12 (`RFC-0005/consent-egress-secrets.md`) | "**Observation consent** — per repository: Syzygy may read and index it"; "Absent: no observation"; "Every consent record names its class, subject, scope, granting principal, grant instant, and revocation state." | One record per repository and revision, naming all six. Before the answer Syzygy reads references, one commit object (tree, parents, committer date only) and the tree listing, never a blob | No [Inferred]. The clause fixes granularity and fields, not ceremony or timing. The pre-answer metadata read is read as preparing the act the clause requires (naming its scope and the classes the statement must name), not as observation: nothing from it is indexed, stored or rendered beyond the question and the records. A reviewer should test this reading; the packet puts it to the owner under Q1 |
 | RFC5-12, write class | "**Write consent** — per repository: Syzygy may write its two namespaces and reach declared adapter effects (SEC-4). Absent: read-only." | Recording a launch consent record is a write into Syzygy's own repository; REQ-046 requires an in-force write consent naming the record class, the dedicated reference and the location | No amendment; **one owner act** (packet Q3) |
+| RFC1-2 (`RFC-0001-project-graph-identity-state-planes.md`) | "Repository identity is a declared identity in the project declaration, never a remote URL or path — URLs and default branches change; identity must not." | The identity is declared by the owner's phrase. Syzygy proposes it: the identity matching records already carry, else one derived from the remote URL; the URL is recorded only as a locator hint. Matching records that disagree are refused, never resolved by precedence | No [Inferred]. Reading to test: a proposal confirmed by the owner's phrase is a declared identity, and keeping the matched records' identity across a URL change is what "identity must not [change]" asks. No project declaration lists the repository (§5); the residual split for a URL change at an unnamed commit, fork inheritance and the two-segment collision are disclosed (REQ-046) |
+| RFC3-6 (`RFC-0003/manifests-and-namespace.md`) | "Repository identity is the declared opaque identifier — never a URL, path, or branch (RFC1-2); locator hints may change without touching identity." | The derived string is a proposal, not the URL; once declared it is opaque, and a later URL change proposes the recorded identity rather than a new one | No [Inferred], on the same reading as RFC1-2 |
+| Classification policy, public-source scope (`POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json`) | `observedRepositories`: "exactly the repository ids named by an effective public-repository observation consent record … the policy admits no repository" | Before the answer no consent admits the repository, so the content classes shown are a preview: the policy's classification as it would apply once the consent admits it. REQ-046 labels them a preview everywhere they appear | No [Inferred]. The owner accepted this reading with Q1 A on 2026-11-08 |
 | RFC3-7 (`RFC-0003/manifests-and-namespace.md`) | "**Consent records** are governance acts stored in `.syzygy/governance/decisions/`"; observation consent's "subject is the pair *(observing Project, repository)* … Every observed repository requires one, governed root or not"; egress consent: "**One record per *(Project, provider)* pair, naming the permitted set**" | Records sit under `.syzygy/governance/decisions/` in the tree of the dedicated reference's commits. One provider statement per (subject, provider), not per revision, reused while its classes cover the run; a wider set supersedes it by a recorded act | No [Inferred]. Two readings to test: that "stored in `.syzygy/governance/decisions/`" is met by that path in commits of a dedicated reference rather than the trunk; and that RFC3-7's one-per-pair rule, written for egress consent, is honoured by the statement even though REQ-033 says the statement is not an egress record. "Referenced — never embedded — from the declaration": §5 |
 | RFC3-16(a) trust premise (`RFC-0003/governance-homes-and-owner-acts.md`) | "A machine may prepare an act for owner attendance; it may not mint, impersonate, approve, widen, revoke or reinterpret one. If an implementation accepts a forged record as an act, the resulting effect is unauthorized and is a trust-floor violation" | Syzygy prepares the question; only the owner's phrase makes the act. An agent-typed phrase is an unauthorized effect, which disclosure makes visible and does not cure (§3) | No |
 | RFC3-16(c)(1) | State (1) is "preserved as the **exact owner phrase**, **exact content digest**, act record and **recording commit/tag**"; "after A1 exists, the act must explicitly select state (1)" | The phrase is exact and stored; the digest is bound; the act record is the record; the recording commit is Syzygy's commit on the dedicated reference, made before the record is relied on. While no A1 mechanism is in force the state is (1); once one is, the question asks the owner to select | No [Inferred]: every one of the four is present before the record counts |
@@ -71,21 +76,23 @@ accepts an agent-typed phrase produces "an unauthorized effect" and "a
 trust-floor violation". Disclosure makes the possibility visible; the
 prohibition in every skill and agent text, and the owner's attendance, are
 the only controls. The existing execution choice has the same exposure. The
-stronger design is an out-of-band answer (a channel the agent cannot reach),
-offered in packet Q5.
+stronger design is an out-of-band answer (a channel the agent cannot reach);
+the owner chose the typed phrase (Q5 A, 2026-11-08), and an out-of-band
+answer would be its own change.
 
 ## 4. The revision
 
 REQ-047 resolves "latest trunk commit" against the clone, with no network
 request, because no act in force covers Syzygy fetching for this route and
-REQ-040 says Syzygy makes no clone or fetch. [Inferred] The owner's "always
-default to latest" may mean upstream's latest; packet Q8 asks whether to
-fetch. A HEAD that differs from the pinned revision is refused with the
+REQ-040 says Syzygy makes no clone or fetch. The owner chose the clone's tip with no fetch (Q8 A, 2026-11-08); that the
+tip is the upstream's latest stays Inferred and is disclosed. A HEAD that differs from the pinned revision is refused with the
 command to fix it, so REQ-033's HEAD check holds unchanged.
 
 A run whose HEAD is already a revision an in-force consent names keeps
 REQ-033's behaviour exactly: it pins HEAD and asks nothing. [Observed] Redis's
-consent names fixed commits; a Redis clone at one of them runs as today.
+consent names fixed commits; a Redis clone at one of them runs as today,
+whatever remote URL the clone carries, since REQ-047's first branch asks only
+that an in-force consent names HEAD (round 2, G2).
 
 [Observed] The prototype `syzygy polaris` (`packages/polaris-dossier/src/polaris.ts`)
 currently defaults `--revision` to "the first preflight names". After sign-off
@@ -118,18 +125,33 @@ directory.
   Syzygy project declaration lists the observed repositories. Redis's
   consent has the same gap. [Inferred] Pre-existing and orthogonal; flagged,
   not repaired.
-- **Repository identity is derived from the clone's configuration.** The
-  derivation (REQ-046) is fixed so an oracle can reproduce it and matches
-  Redis's existing `repository:redis-redis` for its upstream URL [Inferred].
-  The configuration lies within the agent sessions' write reach, and a clone
-  re-identified under another URL at an unnamed commit escapes the
-  revoked-record listing; both are disclosed, labelled Inferred.
+- **Repository identity is proposed from records and the clone's
+  configuration.** The proposal rule (REQ-046) is fixed so an oracle can
+  reproduce it; the derivation matches Redis's existing
+  `repository:redis-redis` for its upstream URL [Inferred]. The owner chose
+  this rule over identifying a repository by its root commits (identity
+  answer A, 2026-11-08). Its residuals are disclosed, labelled Inferred: the
+  configuration lies within the agent sessions' write reach; a clone
+  re-identified under another URL at an unnamed commit takes a second
+  identity and escapes the revoked-record listing; a fork or mirror at an
+  upstream commit is proposed the upstream identity and relies on its
+  statements unless the operator gives another; and two repositories sharing
+  the last two URL segments derive one identity. When matching records carry
+  different identities, the run is refused before asking rather than resolved
+  by a precedence, so the owner always sees which repository's records the
+  run attaches to.
 - **Private repositories.** The classification policy's public-source scope
   admits "exactly the repository ids named by an effective public-repository
   observation consent record" [Observed:
   `.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json`,
-  `publicSourceScope.observedRepositories`]. A repository not declared public
-  is refused until a policy successor admits it (packet Q2). [Observed]
+  `publicSourceScope.observedRepositories`]. The owner wants
+  private repositories reachable too (Q2 B, 2026-11-08). Until a
+  screening-policy successor admitting non-public sources is performed, a
+  repository not declared public is refused, naming that successor; the
+  successor is drafted, reviewed and offered separately. [Inferred] A
+  successor admitting them through the same observation consent record needs
+  no change to REQ-046; one that asks more of the record or the question
+  needs REQ-046 amended alongside it. [Observed]
   Syzygy's own repository is public (`gh repo view`, 2026-11-08).
 - **Owner placements are per repository and per commit.** The same scope's
   `contentClassification` (its `rules[3].ownerPlacements`) holds an entry for
@@ -141,8 +163,9 @@ directory.
   cost something: `OWNER-DIRECTION-REDIS-SCREENING-NEXT-2026-11-03.md`
   records that an inventory entry citing only withheld files "can block
   readiness for good" [Observed]. A trunk-tip run of a repository whose
-  placements name an older commit loses them. Packet Q10 drafts an option to
-  carry placements forward; it is not decided here.
+  placements name an older commit loses them. The owner chose to leave
+  placements per commit (Q10 A, 2026-11-08); carrying them forward would be
+  its own screening-policy successor.
 - **The source-acquisition registry entry.** The installed entry
   (`declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`)
   says "to stay within the observation consent's stated fetch form the

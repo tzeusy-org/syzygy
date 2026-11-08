@@ -2,7 +2,10 @@
 
 > **Candidate — binds nothing.** Review material, not an authority or an
 > adopted applicability judgment. Revised after round 1; the sweeps are
-> unchanged (the round-1 reviewer re-ran A and B and matched both).
+> unchanged (the round-1 reviewer re-ran A and B and matched both). The
+> 2026-11-08 narrowing to the owner's answers adds no new identifier and
+> edits no file outside this change, the direction record and the register,
+> so no sweep was re-run for it.
 
 ## Method
 
@@ -69,7 +72,7 @@ edited.
   REQ-046 forbids per-repository registration for launch records.
 - **The screening policy's owner placements** (`.syzygy` other). One
   placement names `repository:redis-redis` at one commit [Observed]. Not
-  edited; packet Q10 offers a successor.
+  edited; the owner chose to leave placements per commit (Q10 A, 2026-11-08).
 - **Other (C, D, F, G).** Docs and skills: the `/polaris-dossier` skill (both
   `.claude` and `.codex` copies, sweep G) must gain the never-answer rule and
   the trunk default after sign-off.
@@ -80,6 +83,14 @@ None before sign-off. After sign-off: the skill texts, the dossier CLI, the
 consent package, `state-directory.test.ts`, and `docs/polaris-generation/`
 runbooks naming `--revision` (sweep G, Other). Each is implementation and
 moves with design §7's slices.
+
+## Owner-chosen follow-on acts (not edits of this change)
+
+- A write-consent instance for Syzygy's own repository (Q3 A), drafted and
+  offered as its own act.
+- A screening-policy successor admitting non-public sources (Q2 B), drafted
+  and offered as its own act. If it asks more of the launch record or the
+  question than REQ-046 now gives, REQ-046 is amended alongside it.
 
 ## Undecidable impact (CC-IMPACT-4)
 
