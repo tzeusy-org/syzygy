@@ -674,3 +674,50 @@ describe('PWB-REQ-022 — failed state (2) never downgrades; history is append-o
     expect(history).toHaveLength(1);
   });
 });
+
+
+// GP-B2 Q6 A: the Date clock accepts every valid control; the Expires
+// clock precedes every control and every engine-rolled impossible date.
+describe('PWB-REQ-022 calendar read-back', () => {
+  it('refuses impossible Date and Expires values without carrying a verdict, preserving valid calendar controls', () => {
+    const dates = [
+      ['2026-02-29', false], ['2026-02-30', false], ['2026-02-31', false],
+      ['2026-04-31', false], ['2026-02-32', false], ['2026-13-01', false],
+      ['2026-00-10', false], ['2026-02-28', true], ['2028-02-29', true],
+      ['2026-04-30', true], ['2026-03-01', true],
+    ] as const;
+    for (const field of ['Date:', 'Expires:'] as const) {
+      const expected = {
+        ...expectations(),
+        governingActInstant: '2025-01-01',
+        evaluationInstant: field === 'Date:' ? '2029-01-01T00:00:00Z' : '2026-01-02T00:00:00Z',
+      };
+      const baseline: Fixture = { record: { set: { 'Date:': '2026-01-01' } }, expectations: expected };
+      expect(evaluateWalkthroughJudgment(inputs(baseline)).outcome.kind, `${field}/baseline`).toBe('lawful');
+      for (const [date, valid] of dates) {
+        const id = `judgment/${field}/${date}`;
+        const record = field === 'Date:'
+          ? { set: { 'Date:': date } }
+          : { set: { 'Date:': '2026-01-01' }, extraHead: [`Expires: ${date}`] };
+        const outcome = evaluateWalkthroughJudgment(inputs({ ...baseline, record })).outcome;
+        expect.soft(outcome.kind, id).toBe(valid ? 'lawful' : 'unlawful');
+        if (valid) {
+          expect.soft(outcome.kind === 'lawful' && outcome.provenance, id).toBe('state-1');
+          expect.soft(outcome.kind === 'lawful' && outcome.stateLabel, id).toBe('owner-adopted (bootstrap, uncorrelated)');
+          expect.soft(outcome.kind === 'lawful' && outcome.verdict.value, id).toBe('met');
+          expect.soft(outcome.criterion, id).toBe('owner-verdict-carried');
+        } else {
+          const caseId = field === 'Date:' ? 'act-instant-malformed' : 'expired';
+          expect.soft(outcome.kind === 'unlawful' && outcome.caseId, id).toBe(caseId);
+          expect.soft(outcome.kind === 'unlawful' && outcome.detail, id).toBe(field === 'Date:'
+            ? 'RFC3-16(b) item 6 is not a date'
+            : 'act declares an expiry that has passed or cannot be read');
+          expect.soft(outcome.kind === 'unlawful' && outcome.recorded, id).toBe('verdict-unlawful');
+          expect.soft(outcome.criterion, id).toBe('unknown-never-met');
+          expect.soft(outcome.verdict, id).toBeUndefined();
+          expect.soft(outcome.kind === 'unlawful' && outcome.contradiction.clause, id).toBe('RFC3-16(a)');
+        }
+      }
+    }
+  });
+});

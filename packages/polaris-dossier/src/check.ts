@@ -9,9 +9,10 @@ import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reade
 import { isoOf } from './iso-of.js';
 import type { Outcome } from './outcome.js';
 import { reverifyPinnedRevision } from './reverify.js';
-import type { RunConfig } from './run-config.js';
+import { poleLimitOf, type RunConfig } from './run-config.js';
 import { placementSubjectOf, screenLoaderOf } from './screen.js';
 import { REVISION_FILE, RUN_ID, RUN_LAYOUT } from './state-directory.js';
+import { readerAdvice, type ReaderAdvice } from './reader-advice.js';
 import { screenCensusReport, withheldCensus, type ScreenCensusReport } from './census.js';
 import { BRIEF_JSON_LIMITS, CHECK_RECORD_FORMAT, type CheckCommand, type CheckDeps, type CheckFinding, type CheckRecord, type CheckRefusal, type CheckRequest, type CheckResult, type CheckStage, type CitedBlob, DEFAULT_DRAFT, DISCLOSURES, DRAFT_JSON_LIMITS, DRAFT_MAX_BYTES, type ExcludedQuotation, type ReviewVisibility, STEP_LOG_FORMAT, type VerifiedQuotation, errno, reviewVisibility, text } from './check-model.js';
 import { type Derived, type SubjectRules, deriveFindings, draftRules } from './check-derive.js';
@@ -84,8 +85,9 @@ export interface SubjectPlan<R extends object, G> {
   readonly disclosures: readonly string[];
 }
 
-/** `screenCensus` is on `check`'s report only (`census.ts`): advice to the author, never written to the check record. */
-export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly reviewVisibility?: ReviewVisibility };
+/** `screenCensus` (`census.ts`) and `readerAdvice` (`reader-advice.ts`) are on `check`'s report only: advice to the author, never written
+ * to the check record and never a finding. */
+export type SubjectReport<R extends object> = R & { readonly command: CheckCommand; readonly run: string; readonly checkFile: string; readonly disclosures: readonly string[]; readonly screenCensus?: ScreenCensusReport; readonly readerAdvice?: ReaderAdvice; readonly reviewVisibility?: ReviewVisibility };
 export type SubjectResult<R extends object> = Outcome<SubjectReport<R>, CheckRefusal>;
 
 const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
@@ -94,7 +96,7 @@ const DRAFT_PLAN: SubjectPlan<CheckRecord, null> = {
   frozenDir: RUN_LAYOUT.drafts,
   checksDir: RUN_LAYOUT.checks,
   defaultFile: (run) => path.join(run, RUN_LAYOUT.drafts, DEFAULT_DRAFT),
-  rules: (pinned, declared) => draftRules(pinned, declared.maxQuestions),
+  rules: (pinned, declared) => draftRules(pinned, declared.maxQuestions, poleLimitOf(declared)),
   gate: () => ({ ok: true, found: null }),
   record: (checked, _found, declared) => ({
     format: CHECK_RECORD_FORMAT,
@@ -257,7 +259,11 @@ export async function checkSubject<R extends object, G>(runDir: string, file: st
   log({ outcome, revision, findings: findings.length });
   const disclosures = credential.required ? [...plan.disclosures, CREDENTIAL_CHECK_DISCLOSURE] : plan.disclosures;
   const visibility = reviewVisibility(citedBlobs, screen.contentClass, checked.contentClasses);
-  return { ok: true, report: { command: plan.command, run, checkFile, ...record, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }), ...(visibility === null ? {} : { reviewVisibility: visibility }) } };
+  const advice = plan.command === 'check' && parseFault === null ? readerAdvice(doc) : undefined;
+  return { ok: true, report: {
+    command: plan.command, run, checkFile, ...record, disclosures, ...(screenCensus === undefined ? {} : { screenCensus }),
+    ...(advice === undefined ? {} : { readerAdvice: advice }), ...(visibility === null ? {} : { reviewVisibility: visibility }),
+  } };
 }
 
 /** The instant the brief record states it was issued, or why the run counts as not briefed. */

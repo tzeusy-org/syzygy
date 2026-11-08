@@ -18,7 +18,20 @@ import { EXECUTION_SCOPES } from './execution-flags.js';
  * revision, and the execution marking against the executions list are `check`'s, over the frozen revision. */
 
 /** v2: an execution's `workingDirectory` is optional and it may state its `scope` (v1.1, N6). */
-export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v2';
+export const LOCAL_DRAFT_SCHEMA_VERSION_V2 = 'polaris-dossier-local-draft-v2';
+/** v3: a section's or deep dive's `paragraphs` may also hold the rich elements of v1.3 (tables, callouts, steps, definitions, cards and
+ * collapsible details; syzygy-mea.10.5). A v2 draft still checks: v3 only adds forms. */
+export const LOCAL_DRAFT_SCHEMA_VERSION_V3 = 'polaris-dossier-local-draft-v3';
+/** v4 (dossier spec v1.5): an Inferred block may carry `judgement: true`, and only so marked may it cite nothing; a list element (steps,
+ * definitions or cards) may name, in `repeatsDiagram`, a diagram of its section that it repeats; and the draft may divide its sections
+ * into `poles`, naming in `whySection` the section that answers why the project exists. A v2 or v3 draft still checks, and in one every
+ * Inferred block still cites, since only v4 has the mark. */
+export const LOCAL_DRAFT_SCHEMA_VERSION = 'polaris-dossier-local-draft-v4';
+export const LOCAL_DRAFT_SCHEMA_VERSIONS = Object.freeze([LOCAL_DRAFT_SCHEMA_VERSION_V2, LOCAL_DRAFT_SCHEMA_VERSION_V3, LOCAL_DRAFT_SCHEMA_VERSION] as const);
+/** The fields only a v4 draft may carry, each a finding in an earlier version. */
+export const V4_FIELDS = Object.freeze(['judgement', 'repeatsDiagram', 'poles', 'whySection'] as const);
+/** The tones a callout takes; each renders with its visible name. */
+export const CALLOUT_TONES = Object.freeze(['note', 'tip', 'caution', 'important'] as const);
 
 /** The understanding record's items, in REQ-polaris-generation-002's order. */
 export const UNDERSTANDING_ITEMS = Object.freeze([
@@ -55,6 +68,8 @@ const repoPath: DraftSchema = { type: 'string', minLength: 1, maxLength: 1024, p
 const line: DraftSchema = { type: 'integer', minimum: 1, maximum: 10_000_000 };
 const citations = (minItems: number): DraftSchema => list(ref('citation'), minItems, 50);
 const reason = ref('unknownReason');
+/** A short presentation label: a caption, column, title, term, card label or summary. */
+const presentationLabel: DraftSchema = { type: 'string', minLength: 1, maxLength: 120 };
 
 /** The one form a quotation takes, stated in a brief and in its schema's `quotations` description alike. `check` and `inventory-check`
  * count only this form; quoted text without the lead-in is the agent's prose. */
@@ -70,16 +85,23 @@ const sessionId: DraftSchema = { type: 'string', minLength: 1, maxLength: 200, p
 export const SESSION_ID_RULE = (subject: 'draft' | 'inventory'): string => `Put this session's own identifier in \`sessionId\` (letters, digits and \`._:-\`, starting with a letter or digit): the identifier your agent tool gives this session, or, where it shows none, one you choose now and keep for every revision. ${subject === 'draft' ? 'The inventory and review sessions declare theirs, and Syzygy refuses one that equals yours' : 'Syzygy refuses an inventory whose identifier equals the authoring session\'s'}; every identifier is a session's own declaration, labelled Inferred.`;
 
 const quotationRefs = (description: string): DraftSchema => ({ ...refs(0, 20), description });
+const repeatsDiagram: DraftSchema = { ...handle, description: 'The id of a diagram in this list\'s own section that the list repeats in words; the list then renders collapsed under it. Omit it when the list adds what the diagram does not show.' };
 const packetSha256: DraftSchema = { type: 'string', minLength: 64, maxLength: 64, pattern: '^[0-9a-f]{64}$' };
 
-/** The four claim forms. `quotations` lists, in order, the citation each `The project states: "…"` span in `text` is taken from. */
-function claimForms(extra: Record<string, DraftSchema>): DraftSchema {
+/** The judgement mark (v4): the block is the authoring session's own assessment of the project and asserts no fact about it. */
+export const JUDGEMENT_DESCRIPTION = 'Set true only on an Inferred block that is your own assessment of the project, such as that a design is sound or a trade-off is worth making, and asserts no fact about its rules, behaviour, structure, status, history or decisions. Only a block so marked may cite nothing; a fact with no citation is Unknown, never a judgement. A cited block may carry the mark too.';
+const judgement: DraftSchema = { type: 'boolean', description: JUDGEMENT_DESCRIPTION };
+
+/** The four claim forms. `quotations` lists, in order, the citation each `The project states: "…"` span in `text` is taken from. An
+ * Inferred form's citations may be empty in the schema: whether it must cite (every version but v4, and in v4 any block without the
+ * judgement mark) is `check`'s, which names the rule. */
+function claimForms(extra: Record<string, DraftSchema>, optional: readonly string[]): DraftSchema {
   const quotations = quotationRefs(QUOTATION_FORM);
   return { oneOf: [
-    object({ id: handle, label: one('inferred'), basis: one('source'), text, citations: citations(1), quotations, ...extra }),
-    object({ id: handle, label: one('inferred'), basis: one('execution'), executionIds: refs(1, 20), text, citations: citations(1), quotations, ...extra }),
-    object({ id: handle, label: one('unknown'), reason, text, citations: citations(0), ...extra }),
-    object({ id: handle, label: one('non-normative'), text, ...extra }),
+    object({ id: handle, label: one('inferred'), basis: one('source'), text, citations: citations(0), quotations, judgement, ...extra }, ['judgement', ...optional]),
+    object({ id: handle, label: one('inferred'), basis: one('execution'), executionIds: refs(1, 20), text, citations: citations(0), quotations, judgement, ...extra }, ['judgement', ...optional]),
+    object({ id: handle, label: one('unknown'), reason, text, citations: citations(0), ...extra }, optional),
+    object({ id: handle, label: one('non-normative'), text, ...extra }, optional),
   ] };
 }
 // One level of nesting, as in the provider draft: the parent summarizes its children.
@@ -99,8 +121,23 @@ const pathReason = object({ path: repoPath, reason: text });
 const DEFS: Readonly<Record<string, DraftSchema>> = Object.freeze({
   citation: object({ id: handle, path: repoPath, startLine: line, endLine: line }),
   unknownReason: choice(UNKNOWN_REASONS),
-  paragraph: claimForms({}),
-  block: claimForms({ children: list(ref('paragraph'), 0, 12) }),
+  paragraph: claimForms({}, []),
+  block: claimForms({ children: list(ref('paragraph'), 0, 12) }, []),
+  // v1.3 rich elements. Their labels (caption, columns, title, term, label, summary) are presentation, never a claim or a quotation;
+  // every text-bearing cell or item is a claim form, checked, reviewed and rendered as a block is.
+  table: object({ kind: one('table'), id: handle, caption: presentationLabel, columns: list(presentationLabel, 1, 8), rowHeaders: { type: 'boolean' },
+    rows: list(object({ id: handle, cells: list({ oneOf: [ref('paragraph'), object({ kind: one('empty') })] }, 1, 8) }), 1, 40) }),
+  callout: object({ kind: one('callout'), id: handle, tone: choice(CALLOUT_TONES), title: presentationLabel, children: list(ref('block'), 1, 12) }),
+  // A list may name, in `repeatsDiagram` (v4), a diagram of its own section that it repeats: it renders collapsed under it.
+  steps: object({ kind: one('steps'), id: handle, items: list(ref('paragraph'), 2, 20), repeatsDiagram }, ['repeatsDiagram']),
+  definitions: object({ kind: one('definitions'), id: handle, entries: list(object({ term: presentationLabel, definition: ref('paragraph') }), 1, 40), repeatsDiagram }, ['repeatsDiagram']),
+  cards: object({ kind: one('cards'), id: handle, items: list(object({ label: presentationLabel, body: ref('paragraph') }), 2, 6), repeatsDiagram }, ['repeatsDiagram']),
+  details: object({ kind: one('details'), id: handle, summary: presentationLabel, elements: list(ref('detailContent'), 1, 30) }),
+  // A code excerpt names one citation of 1 to 60 lines; Syzygy renders the lines from its own read, never from the draft. `language` is
+  // a presentation hint (v1.3 note 5): where it is absent the renderer derives one from the path.
+  code: object({ kind: one('code'), id: handle, language: presentationLabel, citation: ref('citation') }, ['language']),
+  detailContent: { oneOf: [ref('block'), ref('table'), ref('callout'), ref('steps'), ref('definitions'), ref('cards'), ref('code')] },
+  content: { oneOf: [ref('block'), ref('table'), ref('callout'), ref('steps'), ref('definitions'), ref('cards'), ref('code'), ref('details')] },
   disposition,
   understandingItem,
   pathReason,
@@ -117,20 +154,20 @@ export function localDraftSchema(parameters: DraftSchemaParameters): DraftSchema
   requirePinnedRevision(parameters.pinnedRevision);
   if (!Number.isSafeInteger(parameters.maxQuestions) || parameters.maxQuestions < 0) throw new Error('draft-schema: the question limit is not a nonnegative integer');
   return { defs: DEFS, root: object({
-    schemaVersion: one(LOCAL_DRAFT_SCHEMA_VERSION),
+    schemaVersion: choice(LOCAL_DRAFT_SCHEMA_VERSIONS),
     pinnedRevision: one(parameters.pinnedRevision),
     sessionId,
     title: text,
     introduction: ref('paragraph'),
     understanding: object(Object.fromEntries(UNDERSTANDING_ITEMS.map((item) => [item, list(ref('understandingItem'), 1, 100)]))),
-    sections: list(object({ id: handle, title: text, paragraphs: list(ref('block'), 1, 30), disposition: ref('disposition') }), 1, 30),
+    sections: list(object({ id: handle, title: text, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 1, 30),
     diagrams: list(object({
       id: handle, title: text, sectionId: handle, kind: choice(DIAGRAM_KINDS), relationship: text,
       nodes: list(object({ id: handle, label: text, epistemic, citations: citations(1) }), 1, 40),
       edges: list(object({ id: handle, from: handle, to: handle, label: text, epistemic, citations: citations(1) }), 1, 80),
       disposition: ref('disposition'),
     }), 0, 20),
-    deepDives: list(object({ id: handle, title: text, sectionId: handle, paragraphs: list(ref('block'), 1, 30), disposition: ref('disposition') }), 0, 30),
+    deepDives: list(object({ id: handle, title: text, sectionId: handle, paragraphs: list(ref('content'), 1, 30), disposition: ref('disposition') }), 0, 30),
     unresolved: list(object({ id: handle, question: text, reason: text, citations: citations(0) }), 0, 100),
     discovery: object({
       inspected: list(repoPath, 0, 10_000),
@@ -148,7 +185,11 @@ export function localDraftSchema(parameters: DraftSchemaParameters): DraftSchema
     // REQ-polaris-generation-033 (v1.1, N6): a command is admitted whether or not it carries its working directory and scope; where
     // execution was permitted, Syzygy flags one without them or outside the clone or scope (execution-flags.ts), and refuses nothing.
     executions: list(object({ id: handle, command: text, workingDirectory: text, scope: choice(EXECUTION_SCOPES), purpose: text }, ['workingDirectory', 'scope']), 0, 500),
-  }) };
+    // Poles (v4, dossier spec v1.5): page boundaries that carry no claim, each a short label and its sections. The run's Pole limit, an
+    // empty Pole and a section in no Pole or two are repair findings with their own wording, so the schema bounds only the shape.
+    poles: list(object({ label: presentationLabel, sections: refs(0, 30) }), 1, 30),
+    whySection: handle,
+  }, ['poles', 'whySection']) };
 }
 
 /** The schema as the JSON Schema document written to `draft.schema.json`. The internal form already uses JSON Schema's keywords. */
@@ -199,7 +240,13 @@ export function inventorySchemaDocument(parameters: { readonly pinnedRevision: s
  * packet's digest, its own session identifier, coverage of every inventory entry by the draft, support of every claim block by the
  * packet's spans, the accuracy of every inventory entry against those spans, and every finding with its severity and its deficient
  * subject. A quotation in a `reason` or `message` takes the lead-in form and names, in `quotations`, the packet span it is taken from. */
-export const LOCAL_FIDELITY_VERDICT_SCHEMA_VERSION = 'polaris-dossier-local-fidelity-verdict-v1';
+export const LOCAL_FIDELITY_VERDICT_SCHEMA_VERSION_V1 = 'polaris-dossier-local-fidelity-verdict-v1';
+/** v2 (dossier spec v1.5): a row may be `withheld`, for a withheld item or an inventory entry whose every cited span is withheld, or, in
+ * `blockSupport`, `advisory`, for an uncited judgement block. Neither is an accuracy or support judgment, and neither blocks readiness.
+ * A v1 verdict still validates; the values are the same rows' widened set. */
+export const LOCAL_FIDELITY_VERDICT_SCHEMA_VERSION = 'polaris-dossier-local-fidelity-verdict-v2';
+export const WITHHELD_ENTRY = 'withheld';
+export const ADVISORY_ENTRY = 'advisory';
 export const DEFICIENT_SUBJECTS = Object.freeze(['discovery', 'understanding', 'clarification', 'argument', 'prose', 'asset', 'rendering'] as const);
 export const VERDICT_QUOTATION_FORM = `Write each quotation in a \`reason\` or \`message\` with the lead-in and straight double quotes, exactly: ${QUOTE_LEAD_IN} "Each command runs to completion before the next one starts." The row's \`quotations\` names, in order, the packet span each such quotation is taken from. Quoted text without the lead-in is your prose, not a quotation.`;
 
@@ -207,16 +254,16 @@ export function localVerdictSchema(parameters: { readonly pinnedRevision: string
   requirePinnedRevision(parameters.pinnedRevision);
   const quotations = quotationRefs(VERDICT_QUOTATION_FORM);
   return { defs: {}, root: object({
-    schemaVersion: one(LOCAL_FIDELITY_VERDICT_SCHEMA_VERSION),
+    schemaVersion: choice([LOCAL_FIDELITY_VERDICT_SCHEMA_VERSION_V1, LOCAL_FIDELITY_VERDICT_SCHEMA_VERSION]),
     pinnedRevision: one(parameters.pinnedRevision),
     packetSha256,
     sessionId,
     inventoryCoverage: list(object({
-      entryId: handle, disposition: choice(['represented', 'justified-omission', 'unsupported', 'unresolved']), blockIds: refs(0, 5000), reason: text, quotations,
+      entryId: handle, disposition: choice(['represented', 'justified-omission', 'unsupported', 'unresolved', WITHHELD_ENTRY]), blockIds: refs(0, 5000), reason: text, quotations,
     }), 1, 5000),
-    inventoryAccuracy: list(object({ entryId: handle, accuracy: choice(['accurate', 'inaccurate', 'unresolved']), spanIds: refs(0, 200), reason: text, quotations }), 1, 5000),
+    inventoryAccuracy: list(object({ entryId: handle, accuracy: choice(['accurate', 'inaccurate', 'unresolved', WITHHELD_ENTRY]), spanIds: refs(0, 200), reason: text, quotations }), 1, 5000),
     blockSupport: list(object({
-      blockId: handle, verdict: choice(['supported', 'anchor-does-not-support', 'unresolved']), spanIds: refs(0, 200), reason: text, quotations,
+      blockId: handle, verdict: choice(['supported', 'anchor-does-not-support', 'unresolved', WITHHELD_ENTRY, ADVISORY_ENTRY]), spanIds: refs(0, 200), reason: text, quotations,
     }), 1, 5000),
     findings: list(object({ severity: choice(['blocking', 'advisory']), subject: choice(DEFICIENT_SUBJECTS), target: handle, message: text, quotations }), 0, 1000),
     readiness: choice(['ready', 'not-ready']),

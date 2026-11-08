@@ -441,3 +441,32 @@ which the census had not yet read (`syzygy-5oqc`).
   R7 pass; R6 reports the two PWB pins of §10, unchanged. Mutants: the
   `cap1-overlay-*` rows of
   [`selftest-witnesses.json`](selftest-witnesses.json).
+
+
+## 14. The dossier local-agent v1.4 sign-off — 2026-11-06
+
+[Observed] The [dedicated record](../../../.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md)
+owns the actual owner selection, the exact reviewed package and the version
+binding. The existing recorder applied the three reviewed spec, design and
+proposal patches over signed v1.3 and wrote the dedicated record and
+aggregate block. Predecessor records and reviewed candidate bytes remain
+unchanged. The inherited Version 1.3 design/proposal navigation headings
+remain as disclosed in the [two retained notes](../../reviews/R-MEA10-10-V14-59768e6f-FINAL-NOTES.md);
+the controlling specification and binding name version 1.4.
+
+[Observed] `check_spec_reconciliation.py --regenerate` wrote the local-agent
+addition's generated `GOVERNING-DEPENDENCIES.md` and [census.json](census.json).
+The effective Polaris composition is 36 requirements and 257 scenarios;
+REQ-polaris-generation-034 gains three scenarios, with requirement identities
+unchanged. The generated union adds the already recorded P115 later-signed-input
+owner direction from the reviewed warrants. Signed base and understanding
+unions are untouched. The checker continues to derive the populations by
+its two independent methods; this entry records regeneration, not a
+clean-battery verdict.
+
+[Observed] Version 1.4's recording authorizes no runtime implementation,
+source read, provider, consent or broader recorder-binding change. The
+installed runtime's empty-cell rendering and other separately tracked
+implementation residuals retain their own owners. P115's accepted
+classification cost remains, without re-signing its act. Installed-commit
+verification is separate evidence bound to the commit it actually checks.

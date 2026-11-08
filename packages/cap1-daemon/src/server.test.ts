@@ -124,10 +124,11 @@ describe('RT3 — credential-classed admission at the transport', () => {
   // syzygy-bpyt.7.14: each Unknown population the host lists keeps its
   // breach line and reason; any other reason is free text and withholds
   // the whole diagnostic.
-  it('logs a 503 breach diagnostic for each listed Unknown population and withholds an unlisted one', async () => {
+  it('logs a 503 breach diagnostic for each listed Unknown population and withholds unlisted ones', async () => {
     // syzygy-bpyt.7.16: the list is matched exactly, so a case variant of a
-    // listed reason is unlisted too.
-    const reasons = ['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed', 'project shape unlisted-sentinel', 'Project shape not-admitted'];
+    // listed reason is unlisted too. syzygy-bpyt.32: so is a reason that
+    // merely begins with a listed reason.
+    const reasons = ['project shape not-evaluated', 'project shape not-admitted', 'project shape observation-failed', 'project shape unlisted-sentinel', 'Project shape not-admitted', 'project shape not-admitted unlisted-sentinel'];
     const routes: Route[] = reasons.map((reason, index) => ({
       method: 'GET',
       path: `/breach-${index}`,
@@ -165,7 +166,7 @@ describe('RT3 — credential-classed admission at the transport', () => {
         evaluation: { inputsDigest: 'c'.repeat(64), asOf: '2026-10-27T00:00:00Z' },
         limit: 'maxHumanResponseBytes', declared: 5, observed: 6, population: { kind: 'unknown', reason }, sequence: index + 1,
       })),
-      ...['/breach-3', '/breach-4'].map(route => ({
+      ...['/breach-3', '/breach-4', '/breach-5'].map(route => ({
         kind: 'daemon-http-outcome', method: 'GET', route, status: 503, reason: 'route-non-success', contentType: 'application/json',
       })),
     ]);

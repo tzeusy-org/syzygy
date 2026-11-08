@@ -1,0 +1,865 @@
+{
+  "schema": "consent-port-worker-results/1",
+  "observed": {
+    "fullM0ActualTool": {
+      "path": "scripts/differential_consent_act_families.mjs",
+      "sha256": "13b079994f3f01324f7feb0e754af3bd564408f6aad4c1fa9bc75be2d847a6c7"
+    },
+    "fullM0ActualSubjects": [
+      {
+        "role": "old",
+        "commit": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+        "clean": true,
+        "sha256": {
+          "packageReaderTs": "e8bcdfa1670842dc9e80e4435d1be8d83fca3a0fce6c73760c3d82913acd875b",
+          "packageReaderJs": "20a5399988bc286990c41e042e57b8799694376753af37f1ceb7826b1f257f62",
+          "gateSourcesTs": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+          "gateSourcesJs": "83e72a5739b2351eb4f039284cb86c16864ba740fe32552fd2be1f77c1c7bce5",
+          "testingJs": "db5352f363e93cc0bc7893b8cbfb9195046e7e34314e66ea3c2beafe091afb14",
+          "consentPortsTs": "b9713073670b9e69efcd6bc591af92d10ca928e7501ae87f2cf12efebae937ca",
+          "consentPortsJs": "6dc4ae14ad645ed76b7b6824255a3aef8783e48d6b77d2a2286db05460bba0c6",
+          "inForceTs": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+          "inForceJs": "2e3730701c98abd576738375f20a94dff9a2999db19420513d1116ad05660b0b",
+          "consentIndexJs": "456640b1b2202d39afa32aa5d532d79a7fe1ce2aca2b3e8f2c9df71a8e5ab44f",
+          "consentLiveTs": "2aa268d84e4ba20f851e15334da5c792621acd25090b6d36674b41b39e53289c",
+          "consentLiveJs": "b814165715ec9d1059143f9b7c767bc6d02db85346a8db0874c4da49562120c6",
+          "screenTs": "aa3c2f9b8e0c9ab3ebd46c302b9b79d0ed0887b4d985fb730881f8ac9bf01ce3",
+          "screenJs": "a2a4fd0eb0f29173b6101cf4a29b71540d3c7b438ecfe7287dff18878db32886"
+        },
+        "dossierResolvesConsentInsideTree": true,
+        "consentEntry": "packages/polaris-generation-consent/dist/live.js",
+        "liveResolvesInsideTree": true,
+        "liveValuesAreRootObjects": true
+      },
+      {
+        "role": "new",
+        "commit": "134a8c5ba16dda1f3e3935aa1b565166f3b3583f",
+        "clean": true,
+        "sha256": {
+          "packageReaderTs": "e8bcdfa1670842dc9e80e4435d1be8d83fca3a0fce6c73760c3d82913acd875b",
+          "packageReaderJs": "20a5399988bc286990c41e042e57b8799694376753af37f1ceb7826b1f257f62",
+          "gateSourcesTs": "1c6e4ab8988e835adbcf23708c154fce6fad5ae14d96afd0d3ae56ad596ff822",
+          "gateSourcesJs": "83e72a5739b2351eb4f039284cb86c16864ba740fe32552fd2be1f77c1c7bce5",
+          "testingJs": "db5352f363e93cc0bc7893b8cbfb9195046e7e34314e66ea3c2beafe091afb14",
+          "consentPortsTs": "b9713073670b9e69efcd6bc591af92d10ca928e7501ae87f2cf12efebae937ca",
+          "consentPortsJs": "6dc4ae14ad645ed76b7b6824255a3aef8783e48d6b77d2a2286db05460bba0c6",
+          "inForceTs": "afcf1c2dc0a727460f3ca3a3623fd8a62ac3d739c87f2923187125422ab191dc",
+          "inForceJs": "2e3730701c98abd576738375f20a94dff9a2999db19420513d1116ad05660b0b",
+          "consentIndexJs": "456640b1b2202d39afa32aa5d532d79a7fe1ce2aca2b3e8f2c9df71a8e5ab44f",
+          "consentLiveTs": "2aa268d84e4ba20f851e15334da5c792621acd25090b6d36674b41b39e53289c",
+          "consentLiveJs": "b814165715ec9d1059143f9b7c767bc6d02db85346a8db0874c4da49562120c6",
+          "screenTs": "aa3c2f9b8e0c9ab3ebd46c302b9b79d0ed0887b4d985fb730881f8ac9bf01ce3",
+          "screenJs": "a2a4fd0eb0f29173b6101cf4a29b71540d3c7b438ecfe7287dff18878db32886"
+        },
+        "dossierResolvesConsentInsideTree": true,
+        "consentEntry": "packages/polaris-generation-consent/dist/live.js",
+        "liveResolvesInsideTree": true,
+        "liveValuesAreRootObjects": true
+      }
+    ],
+    "fullM0Binding": {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/M0-full.json",
+      "bytes": 50835496,
+      "sha256": "cfe9e4c7dc36a5212f7357e0dce692897c2930fe554a4968ca09e968b567bc7e"
+    },
+    "finalToolCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+    "finalToolClosure": {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/EXACT-DELTA-CLOSURE-RESULT.json",
+      "bytes": 1279,
+      "sha256": "3b7216a94f1fca10eba3712c688ebcd9ffa531f280545e3f24901df9777dab64"
+    },
+    "generatedAndSelected": {
+      "generated": {
+        "worlds": 5403,
+        "byKind": {
+          "base": 4,
+          "base-reduced": 4,
+          "line": 3056,
+          "named": 535,
+          "record": 17,
+          "artifact": 24,
+          "pin": 8,
+          "probe": 1541,
+          "real-file": 197,
+          "edited-between-reads": 11,
+          "policy-bytes": 5,
+          "observation-successor": 1
+        }
+      },
+      "selected": {
+        "worlds": 5403,
+        "byKind": {
+          "base": 4,
+          "base-reduced": 4,
+          "line": 3056,
+          "named": 535,
+          "record": 17,
+          "artifact": 24,
+          "pin": 8,
+          "probe": 1541,
+          "real-file": 197,
+          "edited-between-reads": 11,
+          "policy-bytes": 5,
+          "observation-successor": 1
+        }
+      }
+    },
+    "totals": {
+      "worlds": 5403,
+      "answersCompared": 70999,
+      "mismatches": 0,
+      "distinctAnswerVectors": 644,
+      "distinctLabelVectors": 265,
+      "worldsWithDistinctVector": 586
+    },
+    "perLogicalReader": {
+      "admission": {
+        "worlds": 3040,
+        "steps": 3062,
+        "answers": 3062,
+        "mismatches": 0,
+        "byInstant": {
+          "untimed": 3062
+        },
+        "byStep": {
+          "1": 3040,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "policy-reader": {
+        "worlds": 3814,
+        "steps": 3836,
+        "answers": 3836,
+        "mismatches": 0,
+        "byInstant": {
+          "untimed": 3836
+        },
+        "byStep": {
+          "1": 3814,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "policy-chain": {
+        "worlds": 3814,
+        "steps": 3836,
+        "answers": 5901,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 2065,
+          "2026-10-22T12:00:00Z": 3836
+        },
+        "byStep": {
+          "1": 5879,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "class-act": {
+        "worlds": 2012,
+        "steps": 2034,
+        "answers": 2297,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 263,
+          "2026-10-22T12:00:00Z": 2034
+        },
+        "byStep": {
+          "1": 2275,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "in-force-egress": {
+        "worlds": 1757,
+        "steps": 1779,
+        "answers": 1787,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 8,
+          "2026-10-22T12:00:00Z": 1779
+        },
+        "byStep": {
+          "1": 1765,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "registry-git-source": {
+        "worlds": 2032,
+        "steps": 2054,
+        "answers": 2337,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 283,
+          "2026-10-22T12:00:00Z": 2054
+        },
+        "byStep": {
+          "1": 2315,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "local-agent-signoff": {
+        "worlds": 1763,
+        "steps": 1785,
+        "answers": 1798,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 13,
+          "2026-10-22T12:00:00Z": 1785
+        },
+        "byStep": {
+          "1": 1776,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "dossier-d9": {
+        "worlds": 1763,
+        "steps": 1785,
+        "answers": 1798,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 13,
+          "2026-10-22T12:00:00Z": 1785
+        },
+        "byStep": {
+          "1": 1776,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "dossier-rfc7-20": {
+        "worlds": 1763,
+        "steps": 1785,
+        "answers": 1798,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 13,
+          "2026-10-22T12:00:00Z": 1785
+        },
+        "byStep": {
+          "1": 1776,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "dossier-drawer": {
+        "worlds": 1757,
+        "steps": 1779,
+        "answers": 1787,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 8,
+          "2026-10-22T12:00:00Z": 1779
+        },
+        "byStep": {
+          "1": 1765,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "dossier-statement-v1": {
+        "worlds": 1768,
+        "steps": 1790,
+        "answers": 1808,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 18,
+          "2026-10-22T12:00:00Z": 1790
+        },
+        "byStep": {
+          "1": 1786,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "dossier-provider-v2": {
+        "worlds": 1768,
+        "steps": 1790,
+        "answers": 1808,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 18,
+          "2026-10-22T12:00:00Z": 1790
+        },
+        "byStep": {
+          "1": 1786,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "port": {
+        "worlds": 3045,
+        "steps": 3067,
+        "answers": 4363,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 1296,
+          "2026-10-22T12:00:00Z": 3067
+        },
+        "byStep": {
+          "1": 4341,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "gate-port": {
+        "worlds": 3045,
+        "steps": 3067,
+        "answers": 4363,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 1296,
+          "2026-10-22T12:00:00Z": 3067
+        },
+        "byStep": {
+          "1": 4341,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "gate-d9": {
+        "worlds": 1757,
+        "steps": 1779,
+        "answers": 1787,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 8,
+          "2026-10-22T12:00:00Z": 1779
+        },
+        "byStep": {
+          "1": 1765,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "gate-rfc7-20": {
+        "worlds": 1757,
+        "steps": 1779,
+        "answers": 1787,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 8,
+          "2026-10-22T12:00:00Z": 1779
+        },
+        "byStep": {
+          "1": 1765,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "gate-registry-entry": {
+        "worlds": 1757,
+        "steps": 1779,
+        "answers": 1787,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 8,
+          "2026-10-22T12:00:00Z": 1779
+        },
+        "byStep": {
+          "1": 1765,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "gate-drawer:redis-redis": {
+        "worlds": 1757,
+        "steps": 1779,
+        "answers": 1787,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 8,
+          "2026-10-22T12:00:00Z": 1779
+        },
+        "byStep": {
+          "1": 1765,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "gate-statements:redis-redis": {
+        "worlds": 1757,
+        "steps": 1779,
+        "answers": 1787,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 8,
+          "2026-10-22T12:00:00Z": 1779
+        },
+        "byStep": {
+          "1": 1765,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "in-force": {
+        "worlds": 3040,
+        "steps": 3062,
+        "answers": 4353,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 1291,
+          "2026-10-22T12:00:00Z": 3062
+        },
+        "byStep": {
+          "1": 4331,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "consent-ports": {
+        "worlds": 3040,
+        "steps": 3062,
+        "answers": 4353,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 1291,
+          "2026-10-22T12:00:00Z": 3062
+        },
+        "byStep": {
+          "1": 4331,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "screen": {
+        "worlds": 4069,
+        "steps": 4091,
+        "answers": 6411,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 2320,
+          "2026-10-22T12:00:00Z": 4091
+        },
+        "byStep": {
+          "1": 6389,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "policy-chain-disk": {
+        "worlds": 3814,
+        "steps": 3836,
+        "answers": 5901,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 2065,
+          "2026-10-22T12:00:00Z": 3836
+        },
+        "byStep": {
+          "1": 5879,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "class-act-disk": {
+        "worlds": 2012,
+        "steps": 2034,
+        "answers": 2297,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:30:00Z": 263,
+          "2026-10-22T12:00:00Z": 2034
+        },
+        "byStep": {
+          "1": 2275,
+          "2": 11,
+          "3": 11
+        }
+      },
+      "successor-record-port": {
+        "worlds": 1,
+        "steps": 1,
+        "answers": 3,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:29:59.999Z": 1,
+          "2026-10-08T09:30:00.000Z": 1,
+          "2026-10-08T09:30:00.001Z": 1
+        },
+        "byStep": {
+          "1": 3
+        }
+      },
+      "successor-gate-port": {
+        "worlds": 1,
+        "steps": 1,
+        "answers": 3,
+        "mismatches": 0,
+        "byInstant": {
+          "2026-10-08T09:29:59.999Z": 1,
+          "2026-10-08T09:30:00.000Z": 1,
+          "2026-10-08T09:30:00.001Z": 1
+        },
+        "byStep": {
+          "1": 3
+        }
+      }
+    },
+    "materialization": {
+      "pairs": 16396,
+      "expectedPairs": 16396,
+      "differing": 0,
+      "differences": [],
+      "materializedLeftOver": 0,
+      "created": 4091,
+      "removed": 4091
+    },
+    "rule6Totals": {
+      "killed": 35,
+      "survived": 0,
+      "errored": 0
+    },
+    "classifierControls": [
+      {
+        "id": "zero-comparisons",
+        "actual": "errored",
+        "same": true
+      },
+      {
+        "id": "reporter-empty",
+        "actual": "errored",
+        "same": true
+      },
+      {
+        "id": "surviving-valid-control",
+        "actual": "survived",
+        "same": true
+      },
+      {
+        "id": "import-error",
+        "actual": "errored",
+        "same": true
+      },
+      {
+        "id": "timeout",
+        "actual": "errored",
+        "same": true
+      }
+    ],
+    "semanticControls": [
+      {
+        "id": "supersession",
+        "subjectCommit": "a6d98d326b7e33ec10399c462f259dc912e86e53",
+        "perReader": {
+          "successor-record-port": {
+            "worlds": 1,
+            "steps": 1,
+            "answers": 3,
+            "mismatches": 2,
+            "byInstant": {
+              "2026-10-08T09:29:59.999Z": 1,
+              "2026-10-08T09:30:00.000Z": 1,
+              "2026-10-08T09:30:00.001Z": 1
+            },
+            "byStep": {
+              "1": 3
+            }
+          },
+          "successor-gate-port": {
+            "worlds": 1,
+            "steps": 1,
+            "answers": 3,
+            "mismatches": 2,
+            "byInstant": {
+              "2026-10-08T09:29:59.999Z": 1,
+              "2026-10-08T09:30:00.000Z": 1,
+              "2026-10-08T09:30:00.001Z": 1
+            },
+            "byStep": {
+              "1": 3
+            }
+          }
+        },
+        "success": true
+      },
+      {
+        "id": "blunt",
+        "subjectCommit": "67577c20103b393a93e1feed390c9dad067b86e9",
+        "perReader": {
+          "port": {
+            "worlds": 8,
+            "steps": 8,
+            "answers": 16,
+            "mismatches": 4,
+            "byInstant": {
+              "2026-10-08T09:30:00Z": 8,
+              "2026-10-22T12:00:00Z": 8
+            },
+            "byStep": {
+              "1": 16
+            }
+          },
+          "gate-port": {
+            "worlds": 8,
+            "steps": 8,
+            "answers": 16,
+            "mismatches": 4,
+            "byInstant": {
+              "2026-10-08T09:30:00Z": 8,
+              "2026-10-22T12:00:00Z": 8
+            },
+            "byStep": {
+              "1": 16
+            }
+          }
+        },
+        "success": true
+      },
+      {
+        "id": "unrelated",
+        "subjectCommit": "2a318e4104caf7a1a59400f092cc9685bdbd5be7",
+        "perReader": {
+          "port": {
+            "worlds": 4,
+            "steps": 4,
+            "answers": 8,
+            "mismatches": 0,
+            "byInstant": {
+              "2026-10-08T09:30:00Z": 4,
+              "2026-10-22T12:00:00Z": 4
+            },
+            "byStep": {
+              "1": 8
+            }
+          }
+        },
+        "success": true
+      }
+    ],
+    "toolSelftestCases": 44,
+    "toolSelftestComputedComparisons": 5,
+    "VitestDelta": {
+      "+": 0,
+      "~": 0,
+      "-": 0
+    },
+    "npmCheck": {
+      "unitFiles": 169,
+      "unitTests": 3793,
+      "typecheck": "passed"
+    },
+    "focusedIntegration": {
+      "files": 2,
+      "tests": 433
+    },
+    "freshness": {
+      "schema": "consent-port-freshness-recount/1",
+      "nativeSha256": "cfe9e4c7dc36a5212f7357e0dce692897c2930fe554a4968ca09e968b567bc7e",
+      "worlds": [
+        {
+          "id": "863e7c14da01d84919f1ec5227b6f7b226843976d61373615786d3d953841fbf",
+          "comparisons": 72,
+          "quietRestored": true,
+          "middleChangedReaders": [
+            "admission",
+            "consent-ports",
+            "gate-port",
+            "in-force",
+            "in-force-egress",
+            "port"
+          ]
+        },
+        {
+          "id": "5a4dab97f7411313292b0988b1b1e5818f0c8078bca5908bd5cb94f6ddbb66e5",
+          "comparisons": 72,
+          "quietRestored": true,
+          "middleChangedReaders": [
+            "gate-port",
+            "policy-chain",
+            "policy-chain-disk",
+            "policy-reader",
+            "port",
+            "screen"
+          ]
+        },
+        {
+          "id": "0ff23e72ba417d20aaa9345ff961e9e824dc2064ad5ced96ae8797fce1438365",
+          "comparisons": 72,
+          "quietRestored": true,
+          "middleChangedReaders": [
+            "admission",
+            "class-act",
+            "class-act-disk",
+            "consent-ports",
+            "gate-port",
+            "in-force",
+            "in-force-egress",
+            "port"
+          ]
+        },
+        {
+          "id": "595a964e544e2ff9aa951d63f160f4ea348c3e3cfafab764af25308a3c4295c8",
+          "comparisons": 72,
+          "quietRestored": true,
+          "middleChangedReaders": [
+            "registry-git-source"
+          ]
+        },
+        {
+          "id": "c8056b2d7a3639842869165fe74672831a923af385b1a96c0eefde7d43260379",
+          "comparisons": 72,
+          "quietRestored": true,
+          "middleChangedReaders": [
+            "dossier-d9",
+            "gate-d9"
+          ]
+        },
+        {
+          "id": "1dd738fe9989f25907c39c3782962d4be31aa54db43e1665cabe76020e99641b",
+          "comparisons": 72,
+          "quietRestored": true,
+          "middleChangedReaders": [
+            "dossier-rfc7-20",
+            "gate-rfc7-20"
+          ]
+        },
+        {
+          "id": "6d36811a4514b43f09d123337835e2c1fe6ffe2d0b38060034ab673f42b46f27",
+          "comparisons": 72,
+          "quietRestored": true,
+          "middleChangedReaders": [
+            "dossier-drawer",
+            "gate-drawer:redis-redis"
+          ]
+        },
+        {
+          "id": "9f79043871e9425e37c2239e4d651625e53393bfd6778ed1a30de19aa953c6ab",
+          "comparisons": 72,
+          "quietRestored": true,
+          "middleChangedReaders": [
+            "dossier-statement-v1"
+          ]
+        },
+        {
+          "id": "da3a085e88f785fa2cb26981be0c211fb842edcbb7bb662f82660d845c94c4d0",
+          "comparisons": 72,
+          "quietRestored": true,
+          "middleChangedReaders": [
+            "dossier-provider-v2",
+            "gate-statements:redis-redis"
+          ]
+        },
+        {
+          "id": "64aece2f03284e406361c2d13044261a591e1651c17e61ed5785f233a2d5fbfc",
+          "comparisons": 72,
+          "quietRestored": true,
+          "middleChangedReaders": [
+            "gate-statements:redis-redis"
+          ]
+        },
+        {
+          "id": "5bcd17e2b21a409507e4a0cab6e76efe8b22ce9498f3a528287ee85d2ee71737",
+          "comparisons": 72,
+          "quietRestored": true,
+          "middleChangedReaders": [
+            "gate-registry-entry",
+            "local-agent-signoff"
+          ]
+        }
+      ],
+      "quietRestored": 11,
+      "changedMiddle": 11,
+      "denominator": 11
+    },
+    "projectionControls": {
+      "schema": "consent-port-projection-controls/1",
+      "nativeSha256": "731005f8f074169a59584a0cd171ca343b599c33896679016b6fead3ac336731",
+      "cases": [
+        {
+          "id": "missing-world",
+          "executedComparisons": 268,
+          "classification": "killed",
+          "errors": [
+            "executed world population",
+            "complete comparison denominator"
+          ]
+        },
+        {
+          "id": "missing-matrix-row",
+          "executedComparisons": 273,
+          "classification": "killed",
+          "errors": [
+            "exact full matrix binding",
+            "complete comparison denominator"
+          ]
+        },
+        {
+          "id": "paired-value-key",
+          "executedComparisons": 274,
+          "classification": "killed",
+          "errors": [
+            "exact full matrix binding",
+            "paired value presence"
+          ]
+        },
+        {
+          "id": "native-binding",
+          "executedComparisons": 274,
+          "classification": "killed",
+          "errors": [
+            "native byte binding"
+          ]
+        },
+        {
+          "id": "missing-value",
+          "executedComparisons": 274,
+          "classification": "killed",
+          "errors": [
+            "complete value commitment population",
+            "exact value byte binding"
+          ]
+        },
+        {
+          "id": "value-byte-length",
+          "executedComparisons": 274,
+          "classification": "killed",
+          "errors": [
+            "exact value byte binding"
+          ]
+        },
+        {
+          "id": "identity-ordinal",
+          "executedComparisons": 274,
+          "classification": "killed",
+          "errors": [
+            "identity ordinal/hash binding"
+          ]
+        }
+      ],
+      "success": true,
+      "scope": "Projection fidelity only; full normal tool and semantic controls have separate gates."
+    }
+  },
+  "inferred": {
+    "classes": [
+      1,
+      4,
+      6
+    ],
+    "otherClassesAssessed": [
+      2,
+      3,
+      5,
+      7
+    ],
+    "allSevenFloorsApply": true
+  },
+  "unknownAtPublicationPreparation": [
+    "Final integrated clean-clone checkall",
+    "Independent exact-head reviewer verdict/classes/floors/full AC and raw/projection review",
+    "Hosted CI",
+    "ROOT cycle-report route and lawful landing"
+  ],
+  "limitations": [
+    "Actual full normal execution used tool134; final2a adds only ROOT-verified comment/usage/selftest delta and has separately retained bounded all12-kind274-answer targeted execution and byte closure. Never relabelled full execution as final2a.",
+    "File parser refuses observation successor form. Typed reader and actual compiled gate-forwarding fixtures are separately named and do not establish accepted file-world successor coverage.",
+    "Second-method recount and packaging checks are author computed; independent actor review remains pending.",
+    "Git publication has complete matrix and exact serialized-value commitments, not complete raw values. Native outputs retained privately with packet binding; full review needs raw packet."
+  ],
+  "scope": "Whole canonical description/comment/13 AC, with ROOT review/notice/landing still explicitly open"
+}

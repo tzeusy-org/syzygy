@@ -1,0 +1,429 @@
+{
+  "schema": "syzygy-mea10-7-mutation-followup/1",
+  "label": "Observed execution receipts; additive unbound development evidence, no owner verdict or adoption",
+  "capturedAt": "2026-11-04T22:33:23.700382+00:00",
+  "bead": "syzygy-mea.10.7",
+  "sourceCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+  "subjects": {
+    "packages/polaris-dossier/src/check-derive.ts": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15",
+    "packages/polaris-dossier/src/check.test.ts": "9a96ec30cb1954f6bb41428d4d61a620459203bcf38df29333a032acc4b5fa2f"
+  },
+  "provenance": {
+    "historicalRecord": "docs/evidence/syzygy-mea-10/rich-elements-mutants-2026-11-04.json",
+    "historicalRecordSha256": "4d390190d82f879ed66d1ffab88a0ccebe74021f9b3a921973de3be419d1f99c",
+    "baseCommit": "672da889be40c2544d09f24f6baf492eb7f4990b",
+    "subjects": {
+      "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "c422f134d577b824b7bfe88b479d2e3450c43d586e5c4b31fd43456bb6bd2413",
+      "packages/polaris-generation-core/src/closed-schema.ts": "2e11a3f07c17cc1a00be0eead09f60004d680edb1b9b883481617160f7cd5d4d",
+      "packages/polaris-dossier/src/draft-schema.ts": "53d82622c63820f76da89b9e84beca13bc241cdeb8b27235334956a771020a05",
+      "packages/polaris-dossier/src/brief.ts": "b964af8e2b4a08c764cf9c6440a6381e2e59ad28d85a48e55f87b5727e51d0c1",
+      "packages/polaris-dossier/src/render.ts": "3b64a1c63df3ac4e42779922d6a94f9c1ab340dc9dc91542165587ceeb2959ba",
+      "packages/polaris-dossier/src/check-derive.ts": "8762582ee38e993fa6a6f38f346fd69b5fb52935551e3544c598c3a79e1ff533",
+      "packages/polaris-dossier/src/review-packet.ts": "5c657df19c0724325c1121385548663a892977698287b79795d27de7312a46e9"
+    },
+    "carriedMutants": [
+      {
+        "subject": "packages/polaris-dossier/src/check-derive.ts",
+        "id": "label-no-curly",
+        "old": "const LABEL_QUOTATION = /[\"\\u201C\\u201D\\u201E\\u00AB\\u00BB]|",
+        "new": "const LABEL_QUOTATION = /[\"]|",
+        "outcome": "survived",
+        "disposition": "test gap, carried: curly quotation marks alone in a label are unpinned (the fixture pairs them with a lead-in); follow-up bead, not repaired after the round-3 confirmation (stopping rule, rule 10)"
+      },
+      {
+        "subject": "packages/polaris-dossier/src/check-derive.ts",
+        "id": "excluded-range-all-citations",
+        "old": "    if (state.state === 'excluded' && at.endsWith('.citation') && state.lines !== undefined && end > state.lines) {",
+        "new": "    if (state.state === 'excluded' && state.lines !== undefined && end > state.lines) {",
+        "outcome": "survived",
+        "disposition": "test gap, carried: that block citations of a read-then-excluded body are not range-checked is unpinned; this is R-MEA10-RICH-ELEMENTS-9a7a-3 note 3, follow-up bead"
+      }
+    ],
+    "round3Raw": "docs/reviews/R-MEA10-RICH-ELEMENTS-9a7a-3-RAW.md",
+    "round3RawSha256": "fd0011fd4b8e49857012465284118a99faa29b57ee6a73b7978c95896e67ac6c",
+    "round3SourceCommit": "9a7a7b944848ea0b78ac6cee3446cb104fa7e465",
+    "round3M4": {
+      "old": "outcome: 'not-utf8-text', lines: lineCount(Buffer.from(blob.bytes).toString('latin1')) }",
+      "new": "outcome: 'not-utf8-text' }",
+      "historicalOutcome": "survived (95 passed)"
+    }
+  },
+  "authority": {
+    "signedVersion": "polaris-dossier-local-agent-mode-v1.3",
+    "check": "python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.3",
+    "requirement": "REQ-polaris-generation-034",
+    "quotedPredicate": "every cited path names a blob at the pinned revision, and every cited line range lies within that blob",
+    "excludedFindingRule": "A repair finding SHALL carry no excluded bytes.",
+    "reviewConsumer": "REQ-polaris-generation-035",
+    "ownerDirection": "OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04"
+  },
+  "sourceOwnership": {
+    "priorPR": 740,
+    "state": "MERGED",
+    "mergedAt": "2026-11-04T20:31:28Z",
+    "mergeCommit": "1cac7e344f193f5691dfd4ab2671de230d284faf"
+  },
+  "tests": {
+    "before": 95,
+    "after": 110,
+    "added": 15,
+    "extended": 3,
+    "removed": 0,
+    "plannedIncrement": "12-16",
+    "actualAddedCases": {
+      "isolatedNonStraightQuotationMarks": 5,
+      "invalidUtf8CodeBoundaries": 2,
+      "ordinaryExcludedBodyBoundariesByBodyAndCollectorList": 8
+    },
+    "ordinaryLocations": [
+      "introduction.citations",
+      "understanding.purpose.citations",
+      "callout.children.citations",
+      "clarifications.evidence"
+    ],
+    "existingControls": "range-invalid, absent-path, admitted-body boundaries and >60 excerpt controls reused; path-excluded reader requests and apostrophe/plain-label control strengthened"
+  },
+  "fixture": {
+    "bytesHex": "ff610a620a",
+    "validUtf8": false,
+    "lines": 2,
+    "committedIn": "beforeAll synthetic Git origin; pinned-object reader reads committed blob, not working tree"
+  },
+  "semanticDisposition": "The historical excluded-range-all-citations mutation is the required correction, not a killed or equivalent mutant. Old predicate fails four required ordinary-citation cases; exact correction passes 110. Its inverse restriction is killed on corrected code. No owner amendment is needed to enforce existing REQ-034.",
+  "runs": [
+    {
+      "id": "current-control",
+      "sourceCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "testCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "subject": "packages/polaris-dossier/src/check-derive.ts",
+      "subjectSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15",
+      "testSha256": "9a96ec30cb1954f6bb41428d4d61a620459203bcf38df29333a032acc4b5fa2f",
+      "old": null,
+      "new": null,
+      "preimageCount": 0,
+      "mutatedSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "exit": 0,
+      "failedTests": [],
+      "denominator": "110 passed (110)",
+      "log": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/final-current-control.log",
+      "logSha256": "01e8e42cfac957826b6f8033b81cf904af0a2c37e1ba626cffde1022bb257ba7",
+      "startedAt": "2026-11-04T22:31:35.609294+00:00",
+      "disposition": "passing unmutated control",
+      "restoredSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15"
+    },
+    {
+      "id": "historical-required-ordinary-control",
+      "sourceCommit": "672da889be40c2544d09f24f6baf492eb7f4990b",
+      "testCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "subject": "packages/polaris-dossier/src/check-derive.ts",
+      "subjectSha256": "8762582ee38e993fa6a6f38f346fd69b5fb52935551e3544c598c3a79e1ff533",
+      "testSha256": "9a96ec30cb1954f6bb41428d4d61a620459203bcf38df29333a032acc4b5fa2f",
+      "old": null,
+      "new": null,
+      "preimageCount": 0,
+      "mutatedSha256": "8762582ee38e993fa6a6f38f346fd69b5fb52935551e3544c598c3a79e1ff533",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "exit": 1,
+      "failedTests": [
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/types.ts (active-content) ending at 3 throughout citations",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/invalid.c (not-utf8-text) ending at 3 throughout citations",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/types.ts (active-content) ending at 3 throughout evidence",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/invalid.c (not-utf8-text) ending at 3 throughout evidence"
+      ],
+      "denominator": "4 failed | 106 passed (110)",
+      "log": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/final-historical-required-ordinary-control.log",
+      "logSha256": "a95b06fbf04062190fb0c1066305b9b8f69167a4dd792af0a881712290d3093d",
+      "startedAt": "2026-11-04T22:31:42.490314+00:00",
+      "disposition": "old predicate fails required ordinary-citation behavior; baseline failure is not a mutant kill",
+      "restoredSha256": "8762582ee38e993fa6a6f38f346fd69b5fb52935551e3544c598c3a79e1ff533"
+    },
+    {
+      "id": "historical-label-no-curly",
+      "sourceCommit": "672da889be40c2544d09f24f6baf492eb7f4990b",
+      "testCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "subject": "packages/polaris-dossier/src/check-derive.ts",
+      "subjectSha256": "8762582ee38e993fa6a6f38f346fd69b5fb52935551e3544c598c3a79e1ff533",
+      "testSha256": "9a96ec30cb1954f6bb41428d4d61a620459203bcf38df29333a032acc4b5fa2f",
+      "old": "const LABEL_QUOTATION = /[\"\\u201C\\u201D\\u201E\\u00AB\\u00BB]|",
+      "new": "const LABEL_QUOTATION = /[\"]|",
+      "preimageCount": 1,
+      "mutatedSha256": "db420655e285564f0009de908ee19d142be4e6384acfa040987903ae82378261",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "exit": 1,
+      "failedTests": [
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > reports an isolated non-straight quotation mark U+201c in a label",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > reports an isolated non-straight quotation mark U+201d in a label",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > reports an isolated non-straight quotation mark U+201e in a label",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > reports an isolated non-straight quotation mark U+ab in a label",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > reports an isolated non-straight quotation mark U+bb in a label",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/types.ts (active-content) ending at 3 throughout citations",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/invalid.c (not-utf8-text) ending at 3 throughout citations",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/types.ts (active-content) ending at 3 throughout evidence",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/invalid.c (not-utf8-text) ending at 3 throughout evidence"
+      ],
+      "denominator": "9 failed | 101 passed (110)",
+      "log": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/final-historical-label-no-curly.log",
+      "logSha256": "e365560792eaba23c30aef49e131dcfff11295d1bd60ea4a83717ba35347e487",
+      "startedAt": "2026-11-04T22:31:49.719683+00:00",
+      "disposition": "isolated quotation assertions fail in addition to known ordinary baseline failures",
+      "restoredSha256": "8762582ee38e993fa6a6f38f346fd69b5fb52935551e3544c598c3a79e1ff533"
+    },
+    {
+      "id": "historical-excluded-range-all-citations",
+      "sourceCommit": "672da889be40c2544d09f24f6baf492eb7f4990b",
+      "testCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "subject": "packages/polaris-dossier/src/check-derive.ts",
+      "subjectSha256": "8762582ee38e993fa6a6f38f346fd69b5fb52935551e3544c598c3a79e1ff533",
+      "testSha256": "9a96ec30cb1954f6bb41428d4d61a620459203bcf38df29333a032acc4b5fa2f",
+      "old": "    if (state.state === 'excluded' && at.endsWith('.citation') && state.lines !== undefined && end > state.lines) {",
+      "new": "    if (state.state === 'excluded' && state.lines !== undefined && end > state.lines) {",
+      "preimageCount": 1,
+      "mutatedSha256": "2e5a8776f367e9e7ff43f8abf06ad5a678eb3ee7d12136ae2decfcaf2099c48e",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "exit": 0,
+      "failedTests": [],
+      "denominator": "110 passed (110)",
+      "log": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/final-historical-excluded-range-all-citations.log",
+      "logSha256": "b1cbb3a5bf362abc76582ab3c8ecf09b71214f51c41595c663e5913f162d35c7",
+      "startedAt": "2026-11-04T22:31:56.802885+00:00",
+      "disposition": "corrective change: passes required ordinary-citation behavior; neither killed nor equivalent",
+      "restoredSha256": "8762582ee38e993fa6a6f38f346fd69b5fb52935551e3544c598c3a79e1ff533"
+    },
+    {
+      "id": "inverse-code-only-restriction",
+      "sourceCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "testCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "subject": "packages/polaris-dossier/src/check-derive.ts",
+      "subjectSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15",
+      "testSha256": "9a96ec30cb1954f6bb41428d4d61a620459203bcf38df29333a032acc4b5fa2f",
+      "old": "    if (state.state === 'excluded' && state.lines !== undefined && end > state.lines) {",
+      "new": "    if (state.state === 'excluded' && at.endsWith('.citation') && state.lines !== undefined && end > state.lines) {",
+      "preimageCount": 1,
+      "mutatedSha256": "1c68c08376e0a10005b88f2eac7215e8d85aabfabd1fba4b88d41cc7538056b8",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "exit": 1,
+      "failedTests": [
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/types.ts (active-content) ending at 3 throughout citations",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/invalid.c (not-utf8-text) ending at 3 throughout citations",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/types.ts (active-content) ending at 3 throughout evidence",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/invalid.c (not-utf8-text) ending at 3 throughout evidence"
+      ],
+      "denominator": "4 failed | 106 passed (110)",
+      "log": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/final-inverse-code-only-restriction.log",
+      "logSha256": "44db976c3fb1747cfcf52acce8fd8f86952584ef72a7195617d514e9a2c8c053",
+      "startedAt": "2026-11-04T22:32:03.690083+00:00",
+      "disposition": "killed by required ordinary citations and evidence boundaries",
+      "restoredSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15"
+    },
+    {
+      "id": "invalid-utf8-lines-removal",
+      "sourceCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "testCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "subject": "packages/polaris-dossier/src/check-derive.ts",
+      "subjectSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15",
+      "testSha256": "9a96ec30cb1954f6bb41428d4d61a620459203bcf38df29333a032acc4b5fa2f",
+      "old": "outcome: 'not-utf8-text', lines: lineCount(Buffer.from(blob.bytes).toString('latin1')) }",
+      "new": "outcome: 'not-utf8-text' }",
+      "preimageCount": 1,
+      "mutatedSha256": "c8ea7246a3c16a29f68678335730375156236f3bb1450c227841897ae9f68058",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "exit": 1,
+      "failedTests": [
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks invalid-UTF-8 excerpt ending at line 3 without disclosing its body or length",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/invalid.c (not-utf8-text) ending at 3 throughout citations",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/invalid.c (not-utf8-text) ending at 3 throughout evidence"
+      ],
+      "denominator": "3 failed | 107 passed (110)",
+      "log": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/final-invalid-utf8-lines-removal.log",
+      "logSha256": "6ef3e9bb473bff3a48bdfd4b02d5d8062325db90a6c02954d96e3c254403b53d",
+      "startedAt": "2026-11-04T22:32:10.919562+00:00",
+      "disposition": "round-3 M4 exact old/new; killed at real decoder/reader seam",
+      "restoredSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15"
+    },
+    {
+      "id": "excluded-boundary-greater-or-equal",
+      "sourceCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "testCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "subject": "packages/polaris-dossier/src/check-derive.ts",
+      "subjectSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15",
+      "testSha256": "9a96ec30cb1954f6bb41428d4d61a620459203bcf38df29333a032acc4b5fa2f",
+      "old": "state.lines !== undefined && end > state.lines",
+      "new": "state.lines !== undefined && end >= state.lines",
+      "preimageCount": 1,
+      "mutatedSha256": "75b5ba0deb40a8ab2ccf80d28d263fd6a6786abed1e2855ac8c659dea35701d7",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "exit": 1,
+      "failedTests": [
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > reports no range finding for an excerpt of a file screening read and excluded, within its lines, nor for a path-excluded file it never reads",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks invalid-UTF-8 excerpt ending at line 2 without disclosing its body or length",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/types.ts (active-content) ending at 2 throughout citations",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/invalid.c (not-utf8-text) ending at 2 throughout citations",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/types.ts (active-content) ending at 2 throughout evidence",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/invalid.c (not-utf8-text) ending at 2 throughout evidence",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: a quotation from an excluded file > renders its block Unknown (excluded-content) for a file whose body holds active content, with no finding and none of its bytes"
+      ],
+      "denominator": "7 failed | 103 passed (110)",
+      "log": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/final-excluded-boundary-greater-or-equal.log",
+      "logSha256": "d8fafb986b518ad0c4a8b9ed8df3502da9af4fa3962b5245838278eef8590f4e",
+      "startedAt": "2026-11-04T22:32:18.300384+00:00",
+      "disposition": "killed at last-line boundary",
+      "restoredSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15"
+    },
+    {
+      "id": "excluded-detail-length-disclosure",
+      "sourceCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "testCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "subject": "packages/polaris-dossier/src/check-derive.ts",
+      "subjectSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15",
+      "testSha256": "9a96ec30cb1954f6bb41428d4d61a620459203bcf38df29333a032acc4b5fa2f",
+      "old": "the range ends past the last line of ${pathLabel(cited)} at the pinned revision",
+      "new": "the range ends past the last line of ${pathLabel(cited)} at the pinned revision; ${state.lines} lines",
+      "preimageCount": 1,
+      "mutatedSha256": "7f321f1ca58a8a47321555c8325da1314a83cb2498fa3ff78ffe112f580d1251",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "exit": 1,
+      "failedTests": [
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks invalid-UTF-8 excerpt ending at line 3 without disclosing its body or length",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/types.ts (active-content) ending at 3 throughout citations",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/invalid.c (not-utf8-text) ending at 3 throughout citations",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/types.ts (active-content) ending at 3 throughout evidence",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > checks read-then-excluded src/invalid.c (not-utf8-text) ending at 3 throughout evidence"
+      ],
+      "denominator": "5 failed | 105 passed (110)",
+      "log": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/final-excluded-detail-length-disclosure.log",
+      "logSha256": "37c7e1c13b3515408e1631e2719f158bb449557f4a48dcd7e10df9ad6a7a0bfd",
+      "startedAt": "2026-11-04T22:32:25.178454+00:00",
+      "disposition": "killed by literal safe detail assertion",
+      "restoredSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15"
+    },
+    {
+      "id": "current-label-no-curly",
+      "sourceCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "testCommit": "f76bb05b3de6997a60709611e5c45c8756bad381",
+      "subject": "packages/polaris-dossier/src/check-derive.ts",
+      "subjectSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15",
+      "testSha256": "9a96ec30cb1954f6bb41428d4d61a620459203bcf38df29333a032acc4b5fa2f",
+      "old": "const LABEL_QUOTATION = /[\"\\u201C\\u201D\\u201E\\u00AB\\u00BB]|",
+      "new": "const LABEL_QUOTATION = /[\"]|",
+      "preimageCount": 1,
+      "mutatedSha256": "e2dc36cdb130822d9e3b4e4439f313d3376da684417f9ed8ba59bee3ea908ccc",
+      "command": [
+        "npx",
+        "vitest",
+        "run",
+        "--project",
+        "integration",
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "exit": 1,
+      "failedTests": [
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > reports an isolated non-straight quotation mark U+201c in a label",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > reports an isolated non-straight quotation mark U+201d in a label",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > reports an isolated non-straight quotation mark U+201e in a label",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > reports an isolated non-straight quotation mark U+ab in a label",
+        "|integration| packages/polaris-dossier/src/check.test.ts > check: each rule refuses its own violation > reports an isolated non-straight quotation mark U+bb in a label"
+      ],
+      "denominator": "5 failed | 105 passed (110)",
+      "log": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/final-current-label-no-curly.log",
+      "logSha256": "70d4ba7c42f5c01619558d05c9ac696806d2e8b4d9f6a753c66889d7b8f8babe",
+      "startedAt": "2026-11-04T22:32:32.741233+00:00",
+      "disposition": "killed: five isolated quotation assertions fail on corrected head",
+      "restoredSha256": "cc966ce4a360e245a30b43bd766ff8d2f85cb7b31673dd0bdbac3695fd934d15"
+    }
+  ],
+  "earlierAttempts": [
+    {
+      "path": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/targeted-first.log",
+      "sha256": "0d0e0f30b5a0cb621f927bd277facbb5f3a71a315d6b732f5a312be38ac91ed1",
+      "disposition": "fixture/expectation failure: 6 failed, 104 passed; missing required arrays and wrong content-screen outcome; no mutant kill"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/check-working.log",
+      "sha256": "202913c529e086d4678652a5e8929807362044f8193f4baff1b3514ec1bb446d",
+      "disposition": "failed typecheck on too-broad new case tuple annotation; overlapped one scratch label mutation, so supplies no exact-tree passing claim"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/check-working-corrected.log",
+      "sha256": "0b80ae15b8c8a3fb71bcfe389dd55b5a94c9c25128091b6a08acbe2f0311047b",
+      "disposition": "corrected tuple annotation; typecheck passed, 169 unit files and 3785 tests passed; no concurrent mutation"
+    }
+  ],
+  "priorMutationRunsets": [
+    {
+      "path": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/mutation-runs-pre-type-correction.json",
+      "sha256": "92e60e6d291ae2ff1b27f1dc94569dff3748010c7065c0377b0e56fc79d2b39d",
+      "note": "Retained prior source/test binding before type-only annotation correction; final runs above bind the corrected test bytes."
+    }
+  ],
+  "containment": {
+    "adapter": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/isolated.py",
+    "sha256": "b4e997ac2d9d50385f6ba937a192e7ea3fc490d5054bc3c229b9d9d1c3d1f14d",
+    "commands": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/isolation-commands.jsonl",
+    "probe": "/home/orca/.tmp/syzygy-mea10-7-implementation-20261105/containment-probe.log",
+    "probeSha256": "4a1f3552d0195c78be3e2393a2bbcbfece1886284a569ebbb7cd1d469a330ecf",
+    "boundary": "real bwrap filesystem, PID and network namespaces; synthetic /etc files; private /proc and /dev; standard runtime binaries read-only; only owned scratch writable; clearenv; no host fixture targets"
+  },
+  "fullGate": "Separate frozen-head npm run check:all receipt under owned full/frozen-plan.json and full/full-result.json; canonical PROJECT-STATUS battery read by unchanged runner. This mutation record does not claim a later aggregate outcome.",
+  "limits": [
+    "Synthetic Git fixtures only; no real-project body or provider call.",
+    "No schema, policy, signed/raw review, held app/core path or v1.4 change.",
+    "Worker-captured receipts are report facts until independently inspected; no owner acceptance asserted."
+  ]
+}

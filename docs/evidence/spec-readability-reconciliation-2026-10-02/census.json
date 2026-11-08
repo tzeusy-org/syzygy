@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 36,
-      "scenarios": 248,
+      "scenarios": 270,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -999,8 +999,28 @@
             "Quotation altered, elided or outside its range",
             "Cited path absent at the pinned revision",
             "Quotation from an excluded file",
+            "Judgement with no citation",
+            "Claim with only withheld citations",
+            "Mixed block and a partly redacted file",
+            "Reading view keeps every marking",
+            "Disclosure placed in the appendix",
+            "Poles within and over the limit",
+            "Script rule follows the screening act",
+            "Permitted script adds behaviour only",
+            "Repository that states no reason",
+            "List repeating a diagram",
+            "Invalid Pole limit",
             "Agent labels its own claim Observed",
-            "Repair loop counted"
+            "Repair loop counted",
+            "Claim inside a presentation element checked as a block",
+            "Short label carries no claim",
+            "Code excerpt rendered from Syzygy's read",
+            "Code excerpt over its limit",
+            "Code excerpt of an excluded file",
+            "Presentation element rendered inert",
+            "Empty table cell states nothing",
+            "Path-excluded code excerpt left unread",
+            "Collapsed section discloses Unknown claims"
           ]
         },
         "REQ-polaris-generation-035": {
@@ -1013,6 +1033,8 @@
             "Independence and completeness disclosed as Inferred",
             "Design review survives its status region",
             "Inventory omission blocks readiness",
+            "Withheld and advisory verdict entries",
+            "Rendered-design packet carries its questions",
             "Waiting session started before its packet",
             "Packet delivered to a waiting session",
             "Printed pre-approval for a waiting session",

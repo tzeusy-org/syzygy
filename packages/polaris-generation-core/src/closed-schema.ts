@@ -10,8 +10,8 @@ import { SOURCE_ID_MAX_LENGTH, SOURCE_ID_MIN_LENGTH, SOURCE_ID_PATTERN } from '.
 export type Schema =
   | { readonly type: 'object'; readonly properties: Readonly<Record<string, Schema>>; readonly required: readonly string[]; readonly additionalProperties: false }
   | { readonly type: 'array'; readonly items: Schema; readonly minItems: number; readonly maxItems: number; readonly uniqueItems?: boolean; readonly description?: string }
-  | { readonly type: 'string'; readonly minLength: number; readonly maxLength: number; readonly pattern?: string; readonly enum?: readonly string[] }
-  | { readonly type: 'boolean' }
+  | { readonly type: 'string'; readonly minLength: number; readonly maxLength: number; readonly pattern?: string; readonly enum?: readonly string[]; readonly description?: string }
+  | { readonly type: 'boolean'; readonly description?: string }
   | { readonly type: 'number'; readonly minimum: number; readonly maximum: number }
   | { readonly type: 'integer'; readonly minimum: number; readonly maximum: number }
   | { readonly oneOf: readonly Schema[] }
@@ -107,7 +107,15 @@ function visit(walk: Walk, reference: Schema, value: unknown, at: string): void 
     // Report against the form the value names by its single-valued fields (label, basis, kind), or say it names none.
     const named = attempts.filter((attempt) => discriminatorsMatch(attempt.arm, value));
     if (named.length === 1) { for (const failure of named[0]!.found) fail(walk, failure.code, failure.path, failure.detail); return; }
-    fail(walk, 'invalid-disposition', at, `matches none of the permitted forms (${schema.oneOf.map(describeForm).join('; ')})`);
+    // A value naming no form, beside exactly one form that has no discriminator (the plain block among the v1.3 rich elements,
+    // syzygy-mea.10.5), is that form when it carries none of the other forms' discriminating keys: report against it.
+    const unnamed = attempts.filter((attempt) => singleValued(attempt.arm).length === 0);
+    const keys = new Set(attempts.flatMap((attempt) => singleValued(attempt.arm).map(([key]) => key)));
+    if (named.length === 0 && unnamed.length === 1 && keys.size > 0 && carriesNone(value, keys)) {
+      for (const failure of unnamed[0]!.found) fail(walk, failure.code, failure.path, failure.detail);
+      return;
+    }
+    fail(walk, 'invalid-disposition', at, `matches none of the permitted forms (${schema.oneOf.map((arm) => describeForm(resolve(walk.defs, arm))).join('; ')})`);
     return;
   }
   if (schema.type === 'string') {
@@ -177,6 +185,11 @@ function singleValued(arm: Schema): [string, string][] {
   if (!('type' in arm) || arm.type !== 'object') return [];
   return Object.entries(arm.properties).flatMap(([key, field]) =>
     'type' in field && field.type === 'string' && field.enum?.length === 1 ? [[key, field.enum[0]!] as [string, string]] : []);
+}
+
+function carriesNone(value: unknown, keys: ReadonlySet<string>): boolean {
+  if (typeof value !== 'object' || value === null || Array.isArray(value) || types.isProxy(value)) return false;
+  return [...keys].every((key) => Object.getOwnPropertyDescriptor(value, key) === undefined);
 }
 
 function discriminatorsMatch(arm: Schema, value: unknown): boolean {

@@ -1,0 +1,475 @@
+{
+  "schema": "consent-port-publication-token-census/1",
+  "recognizer": {
+    "recognizerPath": "scripts/check_governance.py",
+    "recognizerSha256": "c6cd81da1b26e0032fd12c0e9263135e00fd84ee3eca64c54e31490e1ab18ae9",
+    "performedRecordPath": ".syzygy/governance/decisions/ACCEPTANCE-ACT-RECORD.md",
+    "performedRecordSha256": "3995ada0da277419807a6a802db4e92e5f4bb824269d7f39e5578d8ae21abcfc",
+    "argumentTokens": 66,
+    "ceremonyTokens": 54
+  },
+  "files": [
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/0079b53eebd952f4c2174356180914a02f43032f8f9bd8e4832785f662530f2b.txt",
+      "bytes": 24047,
+      "sha256": "51dc3eb99f979c0d8e040316b152355271f24fd20caeaf2051cc71b3522ee31f",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/11a468ca633663bf4da252140ec6e93216f11bd1c2793f1a3cc4a598d65e4035.txt",
+      "bytes": 654,
+      "sha256": "5849bcd3916e29801a3d756e5bef30df31703001ba18852e452de1f932a1fd36",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/19ab0bed3ed63913f65e215ca661fd5592cc99e8fe1dac09732401d1b55fb7be.txt",
+      "bytes": 2601,
+      "sha256": "b552380a4fd8ce6efc5728934be3906efbd68c1a1085172d53bc2cead3cc31d4",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/2da9072072cb8792a428c6e2cceee1ae1b2ad855449cabe104d1a13daf2369b0.txt",
+      "bytes": 48831,
+      "sha256": "bfd6f608d90c908b9cb1847fd49fd7ea8ece02d2c09de9fb957d3677b023a19f",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/398d07e9dde47c2a23ad5265b9f343218dd278498994bb8df07cfb1999d13ff2.txt",
+      "bytes": 1658,
+      "sha256": "9cdf2bbca6f36695cede8660054bc44575584a9318f87743bab4756f818b8b10",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/471a90a37f29b0d83f20bce92716cd547ce84e45ddd6aefb952f5df6dd50b8ec.txt",
+      "bytes": 1279,
+      "sha256": "3b7216a94f1fca10eba3712c688ebcd9ffa531f280545e3f24901df9777dab64",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/491cb7595f10c1a67151bc2ceb255ca4743152547cf194b05718c563fb742b48.txt",
+      "bytes": 2410110,
+      "sha256": "8e9fbf7b87eb89932da9b8f6795e7453c78a5a4113ccd0fa45c158457d8e2eb5",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/4fb53edf70b6ac60abac2a663a71368d0ce5dd71f561926f3b96ee825e4df6c8.txt",
+      "bytes": 9142,
+      "sha256": "80338449b0e841eec23d9f090cf22bffe473a3d4b8644368defff3b94cab4d71",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/52a9a116c4cb1383a2e1cabd099fa72f4517c957ffafed8844403124e8fcb734.txt",
+      "bytes": 4517,
+      "sha256": "214763e065e733e2cf4306686c64b272f74fad85a13d9a2afe0fe3f061d8fd37",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/586133b2d403970196056bd5de3844fd8e20d36fd76802f5d564b457c7c8e330.txt",
+      "bytes": 81876,
+      "sha256": "cd28a4d2ee0916b02c0421bcd6a35fc41b91aa821dd023d31f29e817fa308250",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/5c359e7e4d341df6f9bdb928deb945ec73b20aab1b118330bf17112c2f3210d9.txt",
+      "bytes": 8895,
+      "sha256": "b0c3cd23e0c31339c738a22153b8c9914d1f3dda30843139a3b9ec4c7b7aadfa",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/64d3191e161c61bee8c7605396dac9aa03851f7bd4f88b83bedd721c1747fa45.txt",
+      "bytes": 3663,
+      "sha256": "13316188af248d56e09b2d1fd77bc96db02b85181441b7894247cbcea5baf3e0",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/6d05ef860da3c91cdb1a89434438570e3535844644c04354a9342ca48d6ea0d0.txt",
+      "bytes": 2539097,
+      "sha256": "b3dbcfdce6d871374a2b86e4d51b49e57df56aead5497897eca32f4ecbf61865",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/7bd38d4afd2aada67284c2824d7c5e3fad79773907a18414080c8b444d32b2b9.txt",
+      "bytes": 8383,
+      "sha256": "c63a8f8d5904adf01a95457146e4c06285852dd94189b5ca6bf52e32df62ae2b",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/7ea2cd34ea75bb4a0049f31e1d0fe6e1f365ad959dd053de35d0b90abec4d4a5.txt",
+      "bytes": 9260,
+      "sha256": "837e06f6de4a5ff04850c171a887b6f556af178ca45743a6c4475c73deb7b730",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/8331a107d760e3a8832c42177b15c797ce8582f642da71e224dc9bb2bbb9d579.txt",
+      "bytes": 88899,
+      "sha256": "580df4d957d4c1261ac5453101a4cf0a0fdb292ad16dd03b6518dca632e1094f",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/8bc7f3e4836ea995680a9d24a7093a0140a49afffe7bc5a739429a05863aa33a.txt",
+      "bytes": 1798,
+      "sha256": "a303a3b78e1d0a4ec28903c32f522f15e9af127888abd3b8accf3489dd930119",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/95a3366bccf66d18ae78f2796abfce9b6a7109a862af5f5b34e098c9b243b0c9.txt",
+      "bytes": 8655,
+      "sha256": "20e20f0b95db656872f22164656eb31d1089f37c6f2564fc0b6e4e92f39cb662",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/98abdbc17f61433ddbcd2d442774509dff5e29f0f6471322c4907b033ed6aa09.txt",
+      "bytes": 23127,
+      "sha256": "363bc875f022d541f698778ecb5612f5282f6050dfe5eb87aa628338725942ff",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/9ac53d02cdb544e61584d8f7e903d45456abcf57bc74a344f03667d006268f03.txt",
+      "bytes": 5140,
+      "sha256": "598652fca2decaa93ed86385ba365b9eefe38ba0675d0f6317bd2360c0e79c13",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/9c4ecc7434d1688ada03748dcf423b060184daa20a3c250a94920c3eef9809dc.txt",
+      "bytes": 2476230,
+      "sha256": "ea834740dfde1084a0c3b12e569dd089121232cf5ece71d71c75141ae6ddc5b7",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/9dbf99e8ca979937abec683369cdfa229e389e5124cc6d7649379f666bab97ec.txt",
+      "bytes": 2548028,
+      "sha256": "147e2aae7a36eb2609649d8e443547348024cc21e9b0edb93f1c6b7eb68117ad",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/9e75dfb5c97f339759ea99b62fe83174f0bdaf906bb0f4b56d7cd123c09d758c.txt",
+      "bytes": 1832,
+      "sha256": "d98d543fa162ccaaf1cb06603ed2020a9beb49cbbaf4d85116df25510a5275e5",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/a4e5cded66261b68d429c62aee6f7b6a1ef37ec39d4dc49bbb06b145950ffa4e.txt",
+      "bytes": 3095,
+      "sha256": "5b10d1ce9c795ba5bb4f2718ac746a8578c97eb2c15846d229c851e9158ff482",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/a95b85d743836d5f1b4dca5273c8482537e0eff513171567c3bb1bafb72c8ee6.txt",
+      "bytes": 30258863,
+      "sha256": "419e61e1090e302a0ad30b304841ee0bb78d9389bb1909e84d328c93435ca7a9",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/ae61ef558e67bc40a33ee7b7b4326a50014a8d81e16cf1aa195464850fd1d0ba.txt",
+      "bytes": 2852,
+      "sha256": "da7fd652953354f06f14fe2f314d26975e3a2ee9fce759f16bf574f07193d8bc",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/b2cef8ed2dfbc0692a18c96f5380868afb74fb9ce1b1ee98a60345545376aa7e.txt",
+      "bytes": 2539097,
+      "sha256": "99212fc804b2d477136e10b3f64d83f96cb631f802aa6a329c9ae2eba6f5d2e7",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5.txt",
+      "bytes": 9260,
+      "sha256": "d3a3311e1a2099dcfea2a120a1c92c76614e49fa695a2808d71c5fd7af3c19ae",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/bbae72a9f5fe38a87419886a6651fdbc265f57f99642de2f9f852e66c2832221.txt",
+      "bytes": 1658,
+      "sha256": "cd4156bd18b8217eb6410833107da9cab2f0baff8d1efe84b1def8c84717b980",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/bf578fbecd27aa6e027a42ecc9d34f00a57c98b964b0e046ae8c858ea23842ef.txt",
+      "bytes": 1899,
+      "sha256": "4e3d54882e1e76e25efd8861b819f79bd5b3ed821e21ac19d8233870a9eb906c",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/c666717a2b0a8578950d5f347df90129cd4fd73f2de40c2756184810d025cd89.txt",
+      "bytes": 1312,
+      "sha256": "fc771a89ff05d546c16a1daf325694c578a563db713ec882c47b523ce8f09e41",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/cbd4d59726887ed902936e75166f3183f095ecbe90b00fcefe73c360ba5687c0.txt",
+      "bytes": 14764,
+      "sha256": "75b69af15791c70b2c34222c5ddb923e39a0c41f614555a24a5ca26c84fd663b",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/cc8412826602fa21a6c2b494ee27283cd6b3d1f6770169526c7948c57f0bec02.txt",
+      "bytes": 2824,
+      "sha256": "45e021217d097a74295291eff968e65c4fa0fc1c079e18650d7982bda1b1afff",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/d446d6ba68b234c49b8908bb5d5b1a3c6bf2507b4c4512deb50737e4d011d6b6.txt",
+      "bytes": 5656,
+      "sha256": "3d9370b9d638e0b70e0a269fae2e1ad36155fda9a09f9b9632e53ecee153f62f",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/d4b7481989745cb8a69f48cc76305f197e2efbefbb562854b518e745cda037e1.txt",
+      "bytes": 500,
+      "sha256": "e64a635142a5dc22e1554f2ec4ccf5df99755d7b339975f5e6d6bb1090462645",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/d51ab927849662d1674566515dcf9cfa6e1feebe113219de24021089aa86211e.txt",
+      "bytes": 2539096,
+      "sha256": "fd8b3f51a53fa0f218ebf3d9c1f60f9bdf817d481b14e2d85c1dc17d9412e757",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/e1770fc873b98a689990ead6600e405956153d087a14fcdac63844719b31862e.txt",
+      "bytes": 1598,
+      "sha256": "efb13a38406fe265d5c684668d122af06f151842805082f3572cb2f7cd2d300b",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/publication-scan/ff795e05c2022a00d4b0c730500fa1c9445375dab55db040b1fde1e155d444eb.txt",
+      "bytes": 6005,
+      "sha256": "5ee06e8c5692a1cc27ab073d291f8ea401f25bf30e7be252f935e1e4dfb35bd4",
+      "occurrenceGroups": [],
+      "occurrences": 0
+    }
+  ],
+  "filesWithOccurrences": 0,
+  "totalOccurrences": 0,
+  "noTokenValuesPublished": true,
+  "payloadBindings": [
+    {
+      "path": "CACHE-PREPARATION.json",
+      "bytes": 48831,
+      "sha256": "bfd6f608d90c908b9cb1847fd49fd7ea8ece02d2c09de9fb957d3677b023a19f"
+    },
+    {
+      "path": "COUNT-REPRODUCTION-RESULT.json",
+      "bytes": 654,
+      "sha256": "5849bcd3916e29801a3d756e5bef30df31703001ba18852e452de1f932a1fd36"
+    },
+    {
+      "path": "CYCLE-NOTICE.md",
+      "bytes": 1798,
+      "sha256": "a303a3b78e1d0a4ec28903c32f522f15e9af127888abd3b8accf3489dd930119"
+    },
+    {
+      "path": "EXACT-DELTA-CLOSURE-PROPOSAL.json",
+      "bytes": 9260,
+      "sha256": "837e06f6de4a5ff04850c171a887b6f556af178ca45743a6c4475c73deb7b730"
+    },
+    {
+      "path": "EXACT-DELTA-CLOSURE-RESULT.json",
+      "bytes": 1279,
+      "sha256": "3b7216a94f1fca10eba3712c688ebcd9ffa531f280545e3f24901df9777dab64"
+    },
+    {
+      "path": "FRESHNESS-RECOUNT.json",
+      "bytes": 3095,
+      "sha256": "5b10d1ce9c795ba5bb4f2718ac746a8578c97eb2c15846d229c851e9158ff482"
+    },
+    {
+      "path": "M0-FIRST-GATE.json",
+      "bytes": 3663,
+      "sha256": "13316188af248d56e09b2d1fd77bc96db02b85181441b7894247cbcea5baf3e0"
+    },
+    {
+      "path": "M0-full-recount.json",
+      "bytes": 8895,
+      "sha256": "b0c3cd23e0c31339c738a22153b8c9914d1f3dda30843139a3b9ec4c7b7aadfa"
+    },
+    {
+      "path": "M0-full.json.commitments.json.gz",
+      "bytes": 1018502,
+      "sha256": "3463e59089897f42682975af21ab111bc20a705d41c739efe271372a8a20cf8f"
+    },
+    {
+      "path": "MUTATION-SPECS.json",
+      "bytes": 14764,
+      "sha256": "75b69af15791c70b2c34222c5ddb923e39a0c41f614555a24a5ca26c84fd663b"
+    },
+    {
+      "path": "NC-blunt.json.commitments.json.gz",
+      "bytes": 272346,
+      "sha256": "2c3f95fb126b1469cff81f182ddd09e9d8f5ff1c104d8459dc83a5afdbe17def"
+    },
+    {
+      "path": "NC-supersession.json.commitments.json.gz",
+      "bytes": 266306,
+      "sha256": "1c2b9918e45eb417c12e50f5a67c172bcbce23952ae3c5a9ef09b8592552197a"
+    },
+    {
+      "path": "NC-unrelated.json.commitments.json.gz",
+      "bytes": 269891,
+      "sha256": "5ab2281cca8bb2830753af8499f65813f6083124b4c6689e125fa335f8bf5b5c"
+    },
+    {
+      "path": "PROJECTION-CONTROLS.json",
+      "bytes": 1658,
+      "sha256": "9cdf2bbca6f36695cede8660054bc44575584a9318f87743bab4756f818b8b10"
+    },
+    {
+      "path": "PROJECTION-RESULTS.json",
+      "bytes": 2824,
+      "sha256": "45e021217d097a74295291eff968e65c4fa0fc1c079e18650d7982bda1b1afff"
+    },
+    {
+      "path": "RAW-PACKET-INDEX.json",
+      "bytes": 81876,
+      "sha256": "cd28a4d2ee0916b02c0421bcd6a35fc41b91aa821dd023d31f29e817fa308250"
+    },
+    {
+      "path": "README.md",
+      "bytes": 9260,
+      "sha256": "d3a3311e1a2099dcfea2a120a1c92c76614e49fa695a2808d71c5fd7af3c19ae"
+    },
+    {
+      "path": "RESULTS.json",
+      "bytes": 24047,
+      "sha256": "51dc3eb99f979c0d8e040316b152355271f24fd20caeaf2051cc71b3522ee31f"
+    },
+    {
+      "path": "ROOT-CLOSURE-DISPOSITION.json",
+      "bytes": 1832,
+      "sha256": "d98d543fa162ccaaf1cb06603ed2020a9beb49cbbaf4d85116df25510a5275e5"
+    },
+    {
+      "path": "RULE6-RESULT.json",
+      "bytes": 88899,
+      "sha256": "580df4d957d4c1261ac5453101a4cf0a0fdb292ad16dd03b6518dca632e1094f"
+    },
+    {
+      "path": "SEMANTIC-CONTROL-RESULT.json",
+      "bytes": 6005,
+      "sha256": "5ee06e8c5692a1cc27ab073d291f8ea401f25bf30e7be252f935e1e4dfb35bd4"
+    },
+    {
+      "path": "WORKER-QUALIFICATION.json",
+      "bytes": 500,
+      "sha256": "e64a635142a5dc22e1554f2ec4ccf5df99755d7b339975f5e6d6bb1090462645"
+    },
+    {
+      "path": "final-targeted-M0.json.commitments.json.gz",
+      "bytes": 275130,
+      "sha256": "a3595750cfbb1734d1680e17747871c1286b20800d3dfdb849e6f7c29a8ac0a7"
+    },
+    {
+      "path": "final-targeted-recount.json",
+      "bytes": 8383,
+      "sha256": "c63a8f8d5904adf01a95457146e4c06285852dd94189b5ca6bf52e32df62ae2b"
+    },
+    {
+      "path": "qualification-final-parallel.json.commitments.json.gz",
+      "bytes": 275125,
+      "sha256": "2b14017d3a3f02f57be5263c453df9bdd5cb11b210ceae4280246e2248ef1821"
+    },
+    {
+      "path": "qualification-final-serial.json.commitments.json.gz",
+      "bytes": 275126,
+      "sha256": "ec865875ad84f1c7ea1bd318328390c6f88202d5d0839c9ccc25294a70961b32"
+    },
+    {
+      "path": "scope-and-ac-map.json",
+      "bytes": 23127,
+      "sha256": "363bc875f022d541f698778ecb5612f5282f6050dfe5eb87aa628338725942ff"
+    },
+    {
+      "path": "tools/capture.py",
+      "bytes": 1312,
+      "sha256": "fc771a89ff05d546c16a1daf325694c578a563db713ec882c47b523ce8f09e41"
+    },
+    {
+      "path": "tools/capture_inside.py",
+      "bytes": 1658,
+      "sha256": "cd4156bd18b8217eb6410833107da9cab2f0baff8d1efe84b1def8c84717b980"
+    },
+    {
+      "path": "tools/isolated.py",
+      "bytes": 2601,
+      "sha256": "b552380a4fd8ce6efc5728934be3906efbd68c1a1085172d53bc2cead3cc31d4"
+    },
+    {
+      "path": "tools/literal-expectations.json",
+      "bytes": 4517,
+      "sha256": "214763e065e733e2cf4306686c64b272f74fad85a13d9a2afe0fe3f061d8fd37"
+    },
+    {
+      "path": "tools/prepare_cache.py",
+      "bytes": 1899,
+      "sha256": "4e3d54882e1e76e25efd8861b819f79bd5b3ed821e21ac19d8233870a9eb906c"
+    },
+    {
+      "path": "tools/project_evidence.py",
+      "bytes": 5140,
+      "sha256": "598652fca2decaa93ed86385ba365b9eefe38ba0675d0f6317bd2360c0e79c13"
+    },
+    {
+      "path": "tools/publication_guard.py",
+      "bytes": 2852,
+      "sha256": "da7fd652953354f06f14fe2f314d26975e3a2ee9fce759f16bf574f07193d8bc"
+    },
+    {
+      "path": "tools/recount.py",
+      "bytes": 8655,
+      "sha256": "20e20f0b95db656872f22164656eb31d1089f37c6f2564fc0b6e4e92f39cb662"
+    },
+    {
+      "path": "tools/run_rule6.py",
+      "bytes": 9142,
+      "sha256": "80338449b0e841eec23d9f090cf22bffe473a3d4b8644368defff3b94cab4d71"
+    },
+    {
+      "path": "tools/run_semantic_controls.py",
+      "bytes": 5656,
+      "sha256": "3d9370b9d638e0b70e0a269fae2e1ad36155fda9a09f9b9632e53ecee153f62f"
+    },
+    {
+      "path": "tools/verify_projection_controls.py",
+      "bytes": 1598,
+      "sha256": "efb13a38406fe265d5c684668d122af06f151842805082f3572cb2f7cd2d300b"
+    }
+  ],
+  "scope": "Every published file, decompressed where applicable; artifact-own fingerprints only. Indexes/census scanned in final publication verification."
+}

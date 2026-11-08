@@ -1132,6 +1132,9 @@ def real_packages() -> dict[str, Package]:
     git_source = lambda: _module("build_public_git_source_acquisition_local_agent")  # noqa: E731
     dossier11 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_1")  # noqa: E731
     dossier12 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_2")  # noqa: E731
+    dossier13 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_3")  # noqa: E731
+    dossier14 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_4")  # noqa: E731
+    dossier15 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_5")  # noqa: E731
     anchor = lambda: _module("build_pwb_anchor_resolution_amendment")  # noqa: E731
     provenance = lambda: _module("build_three_surface_poc_block_provenance_amendment")  # noqa: E731
     anchor_dir = CANDIDATES / "pwb-anchor-resolution-amendment"
@@ -1526,6 +1529,53 @@ def real_packages() -> dict[str, Package]:
             subject=pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode/"
                                  "specs/polaris-generation/spec.md"),
             subject_bytes=lambda root: dossier12().subject_bytes(root),
+        ),
+        # Version 1.3 (presentation elements) patches the installed, signed
+        # v1.2 the same way, and offers no option.
+        "polaris-dossier-local-agent-mode@1.3": Package(
+            "polaris-dossier-local-agent-mode",
+            "Polaris dossier local-agent mode",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-local-agent-mode-v1-3",
+            "POLARIS-DOSSIER-LOCAL-AGENT-MODE",
+            lambda root: dossier13().check(root),
+            lambda root: dossier13().apply(root),
+            lambda root: dossier13().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode/"
+                                 "specs/polaris-generation/spec.md"),
+            subject_bytes=lambda root: dossier13().subject_bytes(root),
+        ),
+        # Version 1.4 extends the signed v1.3 layer without changing the
+        # recorder's existing review-binding or candidate-drift semantics.
+        "polaris-dossier-local-agent-mode@1.4": Package(
+            "polaris-dossier-local-agent-mode",
+            "Polaris dossier local-agent mode",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-local-agent-mode-v1-4",
+            "POLARIS-DOSSIER-LOCAL-AGENT-MODE",
+            lambda root: dossier14().check(root),
+            lambda root: dossier14().apply(root),
+            lambda root: dossier14().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode/"
+                                 "specs/polaris-generation/spec.md"),
+            subject_bytes=lambda root: dossier14().subject_bytes(root),
+        ),
+        # Version 1.5 extends the signed v1.4 layer the same way.
+        "polaris-dossier-local-agent-mode@1.5": Package(
+            "polaris-dossier-local-agent-mode",
+            "Polaris dossier local-agent mode",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-local-agent-mode-v1-5",
+            "POLARIS-DOSSIER-LOCAL-AGENT-MODE",
+            lambda root: dossier15().check(root),
+            lambda root: dossier15().apply(root),
+            lambda root: dossier15().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode/"
+                                 "specs/polaris-generation/spec.md"),
+            subject_bytes=lambda root: dossier15().subject_bytes(root),
         ),
     }
 
@@ -3000,6 +3050,67 @@ def selftest() -> int:
                     and real12.candidate == v12.CANDIDATE and real12.subject == v12.SPEC
                     and real12.subject_bytes is not None and real12.options == ()
                     and real12.apply_with is None and real12.applied_options is None))
+    real13 = packages["polaris-dossier-local-agent-mode@1.3"]
+    v13 = _module("build_polaris_dossier_local_agent_mode_v1_3")
+    results.append(("the real v1.3 entry shares v1.0's key and record stem, binds the computed "
+                    "subject in its own candidate directory and offers no option",
+                    package_for(packages, real.key, "1.3") is real13
+                    and real13.key == real.key and real13.record_stem == real.record_stem
+                    and real13.candidate == v13.CANDIDATE and real13.subject == v13.SPEC
+                    and real13.subject_bytes is not None and real13.options == ()
+                    and real13.apply_with is None and real13.applied_options is None))
+    real14 = packages["polaris-dossier-local-agent-mode@1.4"]
+    v14 = _module("build_polaris_dossier_local_agent_mode_v1_4")
+    with tempfile.TemporaryDirectory() as temporary:
+        import contextlib
+        import io
+        fixture_root = pathlib.Path(temporary)
+        v14._fixture(fixture_root)
+        expected_subject = v14.subject_bytes(fixture_root)
+        try:
+            routed = (real14.check(fixture_root) == []
+                      and real14.subject_bytes(fixture_root) == expected_subject
+                      and not real14.applied(fixture_root))
+            with contextlib.redirect_stdout(io.StringIO()):
+                routed = routed and real14.apply(fixture_root) == 0
+            routed = (routed and real14.applied(fixture_root)
+                      and (fixture_root / v14.SPEC).read_bytes() == expected_subject
+                      and v14.FIVE_LINKS in (fixture_root / v14.STATUS).read_text())
+        except ValueError:
+            routed = False  # A predecessor subject callback cannot apply to this layer.
+    results.append(("the real v1.4 entry extends the existing no-option spec-binding route",
+                    package_for(packages, real.key, "1.4") is real14
+                    and real14.key == real.key and real14.record_stem == real.record_stem
+                    and real14.candidate == v14.CANDIDATE and real14.subject == v14.SPEC
+                    and real14.subject_bytes is not None and real14.options == ()
+                    and real14.apply_with is None and real14.applied_options is None
+                    and routed))
+    real15 = packages["polaris-dossier-local-agent-mode@1.5"]
+    v15 = _module("build_polaris_dossier_local_agent_mode_v1_5")
+    with tempfile.TemporaryDirectory() as temporary:
+        import contextlib
+        import io
+        fixture_root = pathlib.Path(temporary)
+        v15._fixture(fixture_root)
+        expected_subject = v15.subject_bytes(fixture_root)
+        try:
+            routed = (real15.check(fixture_root) == []
+                      and real15.subject_bytes(fixture_root) == expected_subject
+                      and not real15.applied(fixture_root))
+            with contextlib.redirect_stdout(io.StringIO()):
+                routed = routed and real15.apply(fixture_root) == 0
+            routed = (routed and real15.applied(fixture_root)
+                      and (fixture_root / v15.SPEC).read_bytes() == expected_subject
+                      and v15.SIX_LINKS in (fixture_root / v15.STATUS).read_text())
+        except ValueError:
+            routed = False  # A predecessor subject callback cannot apply to this layer.
+    results.append(("the real v1.5 entry extends the existing no-option spec-binding route",
+                    package_for(packages, real.key, "1.5") is real15
+                    and real15.key == real.key and real15.record_stem == real.record_stem
+                    and real15.candidate == v15.CANDIDATE and real15.subject == v15.SPEC
+                    and real15.subject_bytes is not None and real15.options == ()
+                    and real15.apply_with is None and real15.applied_options is None
+                    and routed))
     taken: list[frozenset[str]] = []
 
     def apply_with(root, options):

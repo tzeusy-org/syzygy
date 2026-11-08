@@ -39,6 +39,11 @@ import { isRecord, sha256 } from '@syzygy/support';
  * the active-content scan when `screenBody` or `screenTargetBody` is given its path (`projectDocumentationExemption`), under the same
  * render condition `render.ts` confirms for the code-content exemption. Agent text, given no path, is still scanned whole.
  *
+ * Under version 6 (variant `p`, approved 2026-11-05): the owner's placements add `redis.conf` (same repository, same commit), and the
+ * scope adds a fourth detector, `config-secret-directive`, which runs wherever the other scope detectors run. It is not a whole-artifact
+ * detector, so a project-documentation body it matches has the matched and guard lines withheld, and a body of any other class (code
+ * content included) is excluded whole; agent text quoting a line that opens with such a directive is refused (`screenBody`).
+ *
  * TODO(syzygy-qkea.17): these rules are a copy of the app's; move them into one shared package that both import. Until then
  * `screen.test.ts` builds both screens from the same policy and fails if they disagree on any path or body of its population. */
 

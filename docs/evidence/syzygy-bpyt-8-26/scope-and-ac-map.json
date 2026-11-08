@@ -1,0 +1,340 @@
+{
+  "schema": "full-original-ac-artifact-map/1",
+  "bead": "syzygy-bpyt.8.26",
+  "scopePreserved": {
+    "originalDescription": "From lane B's PR #512 report (syzygy-bpyt.8.20), 2026-10-22. [Observed, lane-reported] scripts/differential_consent_act_families.mjs compares the records port in 11 worlds only (the 8 base worlds and the 3 policy-bytes worlds), while the admission reader that the port composes runs in 3,016 worlds. Extend the port comparison to the probe and real-file worlds when the runtime allows, and record the world count beside the result.",
+    "canonicalComment": [
+      {
+        "id": "5f6669f5-1985-5d17-8009-8a808ce0484d",
+        "issue_id": "syzygy-bpyt.8.26",
+        "author": "Tzeusy",
+        "text": "From the CC-REV-1 review of PR #517 (syzygy-bpyt.8.19), note N1 (docs/reviews/R-GP-IMPL-CONSENT-LIVE-MODULE-1-RAW.md; dispositions docs/evidence/consent-live-module-round-1-dispositions-2026-10-24.md). [Observed by the reviewer] scripts/differential_consent_act_families.mjs has no reader that calls the gate sources' repositoryIdsFor, consentAbsenceFor, consentedRevisionsFor, observationConsentFor or screeningPolicy, the methods that reach the in-force rules through createPackageAdmissionRecordsPort; its port reader gives 22 of 56,781 answers, none in an altered-prose world, and the recorded negative control moves 0 of its 14 port answers although its controlNote expects mismatches there. Add to this bead: (1) fold the reviewer's gate-port reader and port into the shared script's ADMISSION readers (fragments in docs/evidence/consent-live-module-review-2026-10-24/tools/make_reviewer_differential.py); (2) one world where an observation record has a successor that took effect; (3) make a negative control's controlNote expectation a checked predicate (per reader, mismatches > 0). The reviewer's gp-diff.json, gp-nc1.json and gp-nc2.json in that directory are the current evidence (0 of 2,765; a blunt in-force mutant moves 25 of 30 gate-port answers).",
+        "created_at": "2026-10-24T14:51:06Z"
+      }
+    ],
+    "acceptanceCriteriaVerbatim": "1. Preserve the complete original description and the one canonical Tzeusy comment, title/metadata/dependency identities and empty original AC prefix. Deliver the whole records-port differential expansion, the reviewer's five-method gate-port, ADMISSION propagation, observation-successor world and checked per-reader negative controls; do not substitute shaping, a bounded supplemental subset, historical PR512/517 evidence or another sibling's result. Keep 8.25/8.28/8.29/8.31/8.43/1.24 and existing graph/owner questions separate and unchanged.\n2. Before implementation root records a fixed real base, actual primary authority applicability for this exact tool schema/exit contract and one accountable script/fixture writer. Refresh live main, open PR file sets and local-worker custody. PR640's package-reader.ts/tests/README and PR514's recorder-template.ts/tests require a complete serial handoff before touching those files; a script-only fixed-base allocation does not adopt either PR. Any actual product acceptance/refusal, scope, security/privacy/retention or normative schema/specification change stops before dependent code and returns through a concrete fresh-reviewed same-child offering and its actual governing owner act. No new owner answer or drafting-permission request is inferred or sent during FIRST.\n3. Add the shared script's gate-port using actual createPackageGateSources methods repositoryIdsFor, consentAbsenceFor, consentedRevisionsFor, observationConsentFor for both repositories, and screeningPolicy. Compare their complete exact values/throws from each tree; assert the expected current optional-method presence so a missing method is not silently hidden. Preserve the direct port's existing complete questions and the actual ./live/root identity and in-tree build-binding checks.\n4. ADMISSION includes port and gate-port for admission/class altered lines/prose/records/artifacts/pins. Execute port and gate-port through the complete selected probe, real-file and edited-between-reads corpus and relevant policy-byte worlds; retain existing readers, full decision-file corpus, operators, pins, reduced/full bases, PR500 altered prose and materialization controls. Store a complete world→reader→step→instant execution matrix and exact paired key sets, so unequal keys/omissions cannot pass via positional comparison. No changed product answer is permitted in the actual old/new equivalence run.\n5. Add the effective observation-successor world at the existing validated AdmissionRecordReader/createAdmissionRecordsPort boundary, including before/at/after instants and independently literal expected consent/revision/id/absence outcomes when the successor omits the predecessor's revision. Exercise the actual compiled gate-source forwarding methods through a digest-bound, fixture-only import adapter that invokes the real createAdmissionRecordsPort, and label that mode separately from actual file-backed package-port/gate-port worlds. Retain original gate module bytes, exact import substitution, adapter and record digests. Never widen parseInstance, invent an adopted observation-successor form, replace real file-world factories, synthesize expected answers in the adapter or count egress-only/direct-port-only proof as this whole obligation. If the faithful fixture route fails, preserve its exact subject/attempt and keep the full obligation blocked.\n6. Every result and count-only output names generated and selected world totals/by-kind and per-reader distinct-world, executed-step/instant-answer and mismatch denominators, beside the result. --kinds uses the identical selected population for count and execution; three steps are one world and three steps, and instants are answers. Bind old/new committed subjects, source and compiled-file digests, tool/corpus/fixture hashes, Node/workers/time limits/actual wall time, reader-key pairing, materialization and cleanup populations. Independently recount retained rows/matrix using a second method; enumerate remainders and never emit missing execution as zero. A necessary evidence-schema/CLI compatibility change is explicit and does not silently relabel historical bytes.\n7. Negative controls carry a nonempty structured unique known expected-reader list corresponding to controlNote. The tool succeeds for a control only when each declared logical reader actually ran and has mismatch count > 0; total or unrelated-reader mismatches cannot satisfy it. Missing/unknown demanded readers, absent expectations, empty selection/answers, unequal reader key sets and unmet expectations fail with retained explicit diagnostics. Normal differential success requires its complete expected population, zero changed answers and successful materialization/owned cleanup.\n8. Retain an M0-first run of the exact new tool and subjects with nonzero executed populations and literal successor outcomes before any scoring. Run meaningful separate supersession and blunt in-force controls so the observation-successor direct/injected gate readers and actual file-backed gate-port are each demonstrably sensitive. Run the false-positive control in which only an unrelated reader changes while port is demanded and require failure. Apply a rule-6 mutant to each actual new/changed selection/count/identity/reader-expectation/empty-input/fixture/cleanup predicate; retain exact unique old/new fragments, reachable subject commit, original/mutated digests, commands, logs and executed denominators. Import/compile/fragment/reporter/filter failure, zero comparisons/tests or timeout is errored/inconclusive, never a semantic kill. A failed M0 stops scoring, and author-only outside-code classification clears nothing.\n9. Complete the expanded whole corpus on separately installed/built clean Syzygy clones with private fixture/home/cache/short tmp boundaries, exact public lockfile cache before offline install, one owned build target and finite retained limits. npm ci inside each checkout precedes NodeNext. Record actual runtime/load/worker qualification; a bounded shard strategy must prove a frozen disjoint complete union with no missing/duplicated world-reader-step-instant comparison. Preserve every failed/stopped attempt and exact remainder; runtime infeasibility keeps the original outcome open/blocked rather than narrowing its population or inventing a current 3,016-world promise. No observed repository body/code, provider/credential, external act, target write, release or deployment is used.\n10. Extend the existing script's executable small fixture/selftest mode for its new evidence-tool predicates, with an old-tool failing reproduction for the unchecked-per-reader control and selection/count gap. Use one behavior-executing gate species per invariant; add no duplicate source-grep guard or product suite. The nearest existing product tests remain package-reader.test.ts's injected-port/revision cases, consent-ports.test.ts's observation-successor and not-in-force cases, and start-gates.test.ts's actual gate factory cases. Expected Vitest delta is +0 ~0 -0, with tool cases reported separately; any genuinely necessary product regression extension names the existing seam, actual custody/authority and measured Tests +N ~N -N instead of manufacturing test growth.\n11. Update only the current script's usage/header and new .26 evidence/README needed to explain the exact commands, output/control contract, actual counts, fixture-versus-file boundaries and limitations. Keep acts, raw reviews, signed/frozen predecessors and prior generated evidence immutable. Intended adopted spec/RFC/doctrine/policy impact is none because product behavior stays unchanged; any invalidation follows CC-REV-2 and cannot be called editorial. Record the actual class assessment for all seven CC-REV-1 classes (initial 1 and 4, others assessed explicitly) and all seven CC-BAR-5 floors; reviewer confirms or reclassifies them. No short-diff/none-class claim waives floors or review.\n12. Retain focused evidence-tool/selftest/differential/control outputs, proportional existing tier checks, npm run check and npm run check:all from a clean clone at the exact subject, with the canonical governance battery read from PROJECT-STATUS.md and broad driver serialized under the shared lock. Read outputs and denominators, diagnose before justified retry, keep actual test delta and all attempts. Obtain a fresh independent default-model CC-REV-1 review of the frozen exact artifact/subject+digest with governing references and these complete AC; raw is unchanged, verdict exact, all findings dispositioned, author/emitter reports distinguished from independent byte capture/execution and hosted CI. A semantic reviewer fix or later subject change gets fresh independent review. Prepare the GP-Q0 non-blocking cycle notice naming actual classes, new coverage, controls and remaining Unknowns; root records it in the cycle-report route without inventing owner adoption.\n13. At lawful landing refresh fixed-base/custody/authority and exact PR/head checks, retain the full original AC→artifact map, source/build/tool/fixture digests, complete population/negative-control evidence, independent review/capture, actual test delta and frozen hash manifest. Apply the sole Nov3 item4 hold only to merges touching apps/three-surface-poc/src or packages/three-surface-poc-core/src and require BOTH actual 1z3.22 owner judgment and 1z3.25 report there; authorized/static preparation remains allowed. FIRST is packet preparation only, Tests +0 ~0 -0, with no install/runtime/source mutation/BD write/commit/push/merge/question/adoption. Root verifies/applies design+AC once and alone owns lifecycle; whole .26 closure waits for implementation, complete proof, fresh review, notice and permitted landing, never this proposal.",
+    "canonicalSourceBinding": {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/CANONICAL.json",
+      "bytes": 53519,
+      "sha256": "4d485b4bb92cb380af074d5f335bb31db3a33d6d3d45ffc43754ee084f37a6ef"
+    },
+    "commentsSourceBinding": {
+      "path": "/home/orca/.tmp/syzygy-bpyt8-26-full-outcome-20261106/COMMENTS.json",
+      "bytes": 2020,
+      "sha256": "d3dc98fa655c9cc4318d1b00b8b673d34556d9277045bbf56650ed3b2d87f48a"
+    },
+    "enrollmentBinding": "/home/orca/.tmp/syzygy-826-execution-enrollment-20261106/SUCCESS.json"
+  },
+  "authoringTestDelta": {
+    "Vitest": {
+      "+": 0,
+      "~": 0,
+      "-": 0
+    },
+    "toolSelftestCases": 44,
+    "toolComputedAnswerComparisons": 5
+  },
+  "map": [
+    {
+      "criterion": 1,
+      "topic": "Complete original scope/comment and sibling separation",
+      "intendedArtifacts": [
+        "scope-and-ac-map.json",
+        "ROOT-ALLOCATION-PROPOSAL.json"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "scope-and-ac-map.json",
+        "ROOT-ALLOCATION-PROPOSAL.json"
+      ]
+    },
+    {
+      "criterion": 2,
+      "topic": "Fixed source, actual authority and one writer",
+      "intendedArtifacts": [
+        "ROOT-RELEASE.json",
+        "ROOT-CLOSURE-DISPOSITION.json",
+        "CUSTODY.json"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "ROOT-CLOSURE-DISPOSITION.json"
+      ]
+    },
+    {
+      "criterion": 3,
+      "topic": "Actual five-method gate reader and direct port",
+      "intendedArtifacts": [
+        "scripts/differential_consent_act_families.mjs",
+        "M0-full.json",
+        "final-targeted-M0.json"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "scripts/differential_consent_act_families.mjs",
+        "M0-full.json.commitments.json.gz",
+        "final-targeted-M0.json.commitments.json.gz"
+      ]
+    },
+    {
+      "criterion": 4,
+      "topic": "Complete selected file/probe/altered-prose/edited corpus and exact keys",
+      "intendedArtifacts": [
+        "M0-full.json",
+        "M0-full-recount.json"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "M0-full.json.commitments.json.gz",
+        "M0-full-recount.json"
+      ]
+    },
+    {
+      "criterion": 5,
+      "topic": "Typed successor plus actual compiled gate fixture",
+      "intendedArtifacts": [
+        "final-targeted-M0.json",
+        "tools/literal-expectations.json",
+        "NC-supersession.json"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "final-targeted-M0.json.commitments.json.gz",
+        "tools/literal-expectations.json",
+        "NC-supersession.json.commitments.json.gz"
+      ]
+    },
+    {
+      "criterion": 6,
+      "topic": "Generated/selected and per-reader populations/digests",
+      "intendedArtifacts": [
+        "M0-full.json",
+        "M0-full-recount.json",
+        "new-count-selected.stdout",
+        "WORKER-QUALIFICATION.json"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "M0-full.json.commitments.json.gz",
+        "M0-full-recount.json",
+        "WORKER-QUALIFICATION.json"
+      ]
+    },
+    {
+      "criterion": 7,
+      "topic": "Checked per-reader controls, unknown/empty/key/cleanup refusal",
+      "intendedArtifacts": [
+        "RULE6-RESULT.json",
+        "SEMANTIC-CONTROL-RESULT.json",
+        "selftest-final-committed.stdout"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "RULE6-RESULT.json",
+        "SEMANTIC-CONTROL-RESULT.json"
+      ]
+    },
+    {
+      "criterion": 8,
+      "topic": "M0-first meaningful controls and predicate mutations",
+      "intendedArtifacts": [
+        "M0-FIRST-GATE.json",
+        "RULE6-RESULT.json",
+        "SEMANTIC-CONTROL-RESULT.json",
+        "semantic-mutants.bundle"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "M0-FIRST-GATE.json",
+        "RULE6-RESULT.json",
+        "SEMANTIC-CONTROL-RESULT.json"
+      ]
+    },
+    {
+      "criterion": 9,
+      "topic": "Complete corpus private installs/builds/limits and actual attempts",
+      "intendedArtifacts": [
+        "CACHE-PREPARATION.json",
+        "ATTEMPTS.jsonl",
+        "isolation-commands.jsonl",
+        "M0-full.json"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "CACHE-PREPARATION.json",
+        "M0-full.json.commitments.json.gz"
+      ]
+    },
+    {
+      "criterion": 10,
+      "topic": "One executable tool gate species and actual test delta",
+      "intendedArtifacts": [
+        "selftest-final-committed.stdout",
+        "MUTATION-SPECS.json",
+        "RULE6-RESULT.json"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "MUTATION-SPECS.json",
+        "RULE6-RESULT.json"
+      ]
+    },
+    {
+      "criterion": 11,
+      "topic": "Current usage/evidence docs and all classes/floors",
+      "intendedArtifacts": [
+        "README.md",
+        "EXACT-DELTA-CLOSURE-RESULT.json",
+        "scope-and-ac-map.json"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [
+        "Fresh reviewer confirms or reclassifies all seven classes and all seven floors"
+      ],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "README.md",
+        "EXACT-DELTA-CLOSURE-RESULT.json",
+        "scope-and-ac-map.json"
+      ]
+    },
+    {
+      "criterion": 12,
+      "topic": "Focused/current checks, clean integrated checkall, fresh review and notice",
+      "intendedArtifacts": [
+        "logs/focused-integration.stdout",
+        "logs/npm-check-lifetime.log",
+        "FINAL-CHECKALL.json",
+        "CYCLE-NOTICE.md"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [
+        "One final committed clean-clone checkall pending at publication preparation",
+        "ROOT fresh independent exact-head review, hosted gates and cycle-report route pending"
+      ],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "CYCLE-NOTICE.md"
+      ]
+    },
+    {
+      "criterion": 13,
+      "topic": "Frozen full-scope handoff with exact PR/head and lawful landing",
+      "intendedArtifacts": [
+        "TERMINAL.json",
+        "MANIFEST.json",
+        "scope-and-ac-map.json"
+      ],
+      "authorStatus": "implemented and locally evidenced; independent review pending",
+      "remaining": [
+        "ROOT lawful landing/custody refresh, independent capture/review and Beads lifecycle pending"
+      ],
+      "nativeLookup": "RAW-PACKET-INDEX.json; each native record remains in frozen OWN archive with exact byte hash",
+      "publishedArtifacts": [
+        "MANIFEST.json",
+        "scope-and-ac-map.json"
+      ]
+    }
+  ],
+  "noSiblingClosure": true,
+  "mergeOrAdoptionAuthorized": false,
+  "sourceToolCommit": "2a4695aa0603241b47e5f599bdf5bcd9c0bdcdd5",
+  "normalFullRunActualSubject": "134a8c5ba16dda1f3e3935aa1b565166f3b3583f",
+  "normalToolClosureDisposition": "/home/orca/.tmp/syzygy-826-final-tool-closure-root-disposition-20261106/ROOT-DISPOSITION.json",
+  "publicationDisposition": "/home/orca/.tmp/syzygy-826-raw-publication-root-disposition-20261106/ROOT-DISPOSITION.json",
+  "publicationBoundary": "Complete native /3 values and identity bodies are retained unchanged in the frozen private packet. Git contains complete matrices and exact-byte commitments, not complete raw values. Fresh independent review must inspect/recount the raw packet and verify projection fidelity for the whole 13 AC.",
+  "classes": [
+    {
+      "class": 1,
+      "authorAssessment": "applicable",
+      "independentReview": "pending"
+    },
+    {
+      "class": 2,
+      "authorAssessment": "not intended to change",
+      "independentReview": "pending"
+    },
+    {
+      "class": 3,
+      "authorAssessment": "not intended to change",
+      "independentReview": "pending"
+    },
+    {
+      "class": 4,
+      "authorAssessment": "applicable",
+      "independentReview": "pending"
+    },
+    {
+      "class": 5,
+      "authorAssessment": "not intended to change",
+      "independentReview": "pending"
+    },
+    {
+      "class": 6,
+      "authorAssessment": "applicable",
+      "independentReview": "pending"
+    },
+    {
+      "class": 7,
+      "authorAssessment": "not intended to change",
+      "independentReview": "pending"
+    }
+  ],
+  "floors": [
+    {
+      "floor": 1,
+      "applies": true,
+      "independentReview": "pending"
+    },
+    {
+      "floor": 2,
+      "applies": true,
+      "independentReview": "pending"
+    },
+    {
+      "floor": 3,
+      "applies": true,
+      "independentReview": "pending"
+    },
+    {
+      "floor": 4,
+      "applies": true,
+      "independentReview": "pending"
+    },
+    {
+      "floor": 5,
+      "applies": true,
+      "independentReview": "pending"
+    },
+    {
+      "floor": 6,
+      "applies": true,
+      "independentReview": "pending"
+    },
+    {
+      "floor": 7,
+      "applies": true,
+      "independentReview": "pending"
+    }
+  ]
+}

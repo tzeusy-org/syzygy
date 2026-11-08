@@ -1,0 +1,84 @@
+{
+ "subject": "scripts/prepare_three_surface_poc_governedby_reference_recording.py later_signed_input and its integration",
+ "rule": "AGENTS.md verification rule 6",
+ "oracle": "later_signed_selftest(): count of failing fixtures; killed when nonzero",
+ "commit": "20c5b1b5767ae4512667801e360ad533ea6f4e2e",
+ "mutants": [
+  {
+   "mutant": "no-chain-default-true",
+   "old": "    if name is None:\n        return False\n    try:",
+   "new": "    if name is None:\n        return True\n    try:",
+   "failingFixtures": "1",
+   "killed": true
+  },
+  {
+   "mutant": "earlier-any-version",
+   "old": "for v in versions[:-1]}:",
+   "new": "for v in versions}:",
+   "failingFixtures": "0",
+   "killed": false,
+   "equivalence": "Survives by design: admitting the latest version too only differs when the frozen digest equals the latest reviewed digest, and the check passes then only if the current bytes hash to it, i.e. equal the frozen bytes, which governing_input_findings never asks about (it calls later_signed_input only when the bytes differ)."
+  },
+  {
+   "mutant": "earlier-check-dropped",
+   "old": "        if frozen not in {reviewed(v) for v in versions[:-1]}:\n            return False\n",
+   "new": "",
+   "failingFixtures": "1",
+   "killed": true
+  },
+  {
+   "mutant": "current-bytes-unchecked",
+   "old": "        if digest((root / path).read_bytes()) != reviewed(versions[-1]):\n            return False\n",
+   "new": "",
+   "failingFixtures": "1",
+   "killed": true
+  },
+  {
+   "mutant": "chain-check-dropped",
+   "old": "        return not chain.signed_findings(root)",
+   "new": "        return True",
+   "failingFixtures": "5",
+   "killed": true
+  },
+  {
+   "mutant": "errors-pass",
+   "old": "    except Exception:  # noqa: BLE001 - fail closed on any chain error\n        return False",
+   "new": "    except Exception:  # noqa: BLE001 - fail closed on any chain error\n        return True",
+   "failingFixtures": "1",
+   "killed": true
+  },
+  {
+   "mutant": "integration-dropped",
+   "old": "if digest(target.read_bytes()) != sha and not later_signed_input(root, path, sha):",
+   "new": "if digest(target.read_bytes()) != sha:",
+   "failingFixtures": "1",
+   "killed": true
+  },
+  {
+   "mutant": "integration-unconditional",
+   "old": "if digest(target.read_bytes()) != sha and not later_signed_input(root, path, sha):",
+   "new": "if False:",
+   "failingFixtures": "1",
+   "killed": true
+  },
+  {
+   "mutant": "snapshot-reviews-dropped",
+   "old": "                    paths.add(review.as_posix())",
+   "new": "                    pass",
+   "failingFixtures": "1",
+   "killed": true
+  },
+  {
+   "mutant": "snapshot-globs-dropped",
+   "old": "    paths |= later_signed_inputs(root)\n",
+   "new": "",
+   "failingFixtures": "1",
+   "killed": true
+  }
+ ],
+ "tally": {
+  "mutants": 10,
+  "killed": 9,
+  "survivedEquivalent": 1
+ }
+}

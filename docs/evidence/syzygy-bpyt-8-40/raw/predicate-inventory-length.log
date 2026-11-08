@@ -1,0 +1,43 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject
+
+ ❯ |unit| packages/polaris-generation-core/src/island-boundary.test.ts (9 tests | 1 failed) 3166ms
+   × the live Node entries and the parked provider island > lists twenty-four island modules, each a file in the tree 10ms
+     → expected [ …(25) ] to have a length of 24 but got 25
+   ✓ the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder  1768ms
+   ✓ the live Node entries and the parked provider island > resolves every workspace import both entries reach, dynamic ones included  612ms
+   ✓ the live Node entries and the parked provider island > reaches no island module from either live entry  618ms
+   ✓ the live Node entries and the parked provider island > reaches the island from the consent package root, which neither live entry imports 152ms
+   ✓ the live Node entries and the parked provider island > refuses computed import arguments, including template expressions 1ms
+   ✓ the live Node entries and the parked provider island > refuses require calls and import-equals loaders 1ms
+   ✓ the live Node entries and the parked provider island > refuses createRequire calls, including imported aliases and module properties 2ms
+   ✓ the live Node entries and the parked provider island > follows a no-substitution template and the existing static, type and literal dynamic forms 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-generation-core/src/island-boundary.test.ts > the live Node entries and the parked provider island > lists twenty-four island modules, each a file in the tree
+AssertionError: expected [ …(25) ] to have a length of 24 but got 25
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 24[39m
+[31m+ 25[39m
+
+ ❯ packages/polaris-generation-core/src/island-boundary.test.ts:166:20
+    164|   it('lists twenty-four island modules, each a file in the tree', () =…
+    165|     expect(new Set(ISLAND).size).toBe(24);
+    166|     expect(ISLAND).toHaveLength(24);
+       |                    ^
+    167|     expect(ISLAND.filter(path => !isFile(path))).toEqual([]);
+    168|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  16:14:29
+   Duration  3.99s (transform 84ms, setup 27ms, collect 485ms, tests 3.17s, environment 0ms, prepare 56ms)
+
+JSON report written to /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-inventory-length.vitest.json

@@ -1,9 +1,9 @@
 # Design: the operator-agent mode and the `syzygy dossier` commands
 
-> **Version 1.2.** Explains the requirements in
+> **Version 1.5.** Explains the requirements in
 > specs/polaris-generation/spec.md; version 1.0 was signed off by the owner
-> on 2026-10-06 and version 1.1 on 2026-10-07, and this text binds only by
-> the owner's sign-off of version 1.2. It is not an
+> on 2026-10-06, version 1.1 on 2026-10-07 and version 1.2 on 2026-10-14,
+> and this text binds only by the owner's sign-off of version 1.5. It is not an
 > implementation. It contains no code. The command surface below is a design
 > for implementation after the owner's sign-off (direction item 5); the
 > requirements are the controlling text, and doctrine, accepted contracts,
@@ -328,7 +328,7 @@ usage error, and since version 1.2, 3 when `await` is still waiting.
 | `syzygy dossier inventory-brief <run>` / `inventory-check <run> --inventory <file>` | inventory session | Brief without the draft; checks and freezes the inventory like a draft; refuses an inventory declared under the authoring session's identifier | as `brief` / `check`; `ProviderInventory` types | inventory schema with path + line-range citations |
 | `syzygy dossier review-packet <run> --kind fidelity\|design` | operator or review session | Builds the packet (frozen subject, frozen inventory, cited spans as Syzygy read them, criteria, verdict schema) and prints its digest | `ProviderReview` shape (`inventoryCoverage`, `blockSupport`, `findings`) | packet assembly and digest; the design packet holds the rendered pages |
 | `syzygy dossier review-check <run> --verdict <file>` | review session | Re-checks the pinned revision against the consent, rebuilds the packet and validates schema, packet digest, pinned revision, completeness, entry accuracy, quotations, consistency and session-identifier distinctness; records the verdict as refused, or as counting once its launch form is recorded | `reviewVerdict` (`provider-draft.ts`) | digest binding; session-identifier rule; subject list from 006 |
-| `syzygy dossier render <run>` | agent or operator | Re-reads and re-hashes every object, re-locates every quotation, re-runs the checks and rebuilds the review packets, then renders the multi-page site from the latest checked revision; source pages only for screened blobs Syzygy read and verified; disclosure block on every page, including the reported commands and the Inferred integrity of stored records; draft layer only when the three conditions of the owner's RFC7-20 reading hold | `renderDossier` / `writeDossierRun` (`apps/three-surface-poc/src/polaris-generation/dossier-render.ts`, `dossier-render-main.ts`); `sourceRoute` | an adapter from the local draft to the renderer's input (today a `PipelineResult`); RFC7-10 anchors of class evidence artifact identifier with integrity digest, from the recomputed object id, byte range and revision; the disclosure block; the two discovery populations |
+| `syzygy dossier render <run>` | agent or operator | Re-reads and re-hashes every object, re-locates every quotation, re-runs the checks and rebuilds the review packets, then renders the multi-page site from the latest checked revision; source pages only for screened blobs Syzygy read and verified; the one sentence on every page, with the full disclosure, including the reported commands and the Inferred integrity of stored records, in the appendix; draft layer only when the three conditions of the owner's RFC7-20 reading hold | `renderDossier` / `writeDossierRun` (`apps/three-surface-poc/src/polaris-generation/dossier-render.ts`, `dossier-render-main.ts`); `sourceRoute` | an adapter from the local draft to the renderer's input (today a `PipelineResult`); RFC7-10 anchors of class evidence artifact identifier with integrity digest, from the recomputed object id, byte range and revision; the disclosure block; the two discovery populations |
 | `syzygy dossier evaluate <run>` | operator | Optional measurement of the rendered dossier | `evaluateDossier`, `resolveQuote` (`dossier-evaluation.ts`); `poc:dossier-evaluation` | none beyond wiring |
 | `syzygy dossier close <run> [--usage-tokens N] [--usage-turns N]` | agent, on the operator's answer | Records operator-declared usage and closes the run record | — | the record |
 | `syzygy dossier status <run>` | anyone | Prints the run's state, limits spent, open findings and reviews still required | — | — |
@@ -372,8 +372,9 @@ The existing `ProviderDraft` (title, introduction, sections, diagrams,
 deepDives, unresolved) with three changes: each paragraph cites
 `{path, startLine, endLine}` instead of `sourceIds`; each block carries
 `label` (`inferred` | `unknown` | `non-normative`) and, for `unknown`, a
-`reason` from RFC2-24; an `inferred` block cites at least one source, an
-`unknown` block cites what it considered or nothing, and a `non-normative`
+`reason` from RFC2-24; an `inferred` block should cite a source and, in
+schema v4, may cite none when it carries `judgement: true`, which is counted
+in the appendix and which a review may overturn; an `unknown` block cites what it considered or nothing, and a `non-normative`
 block cites nothing. Four new top-level sections: `understanding` (purpose,
 beneficiary, proposition, capabilities, components, choices, tradeOffs,
 limits, terminology, contradictions, openQuestions, each item with
@@ -385,6 +386,149 @@ working directory and purpose). A claim the agent marks as resting on
 execution carries `basis: execution` and the identifiers of the executions
 it rests on. Quotations keep the existing lead-in form (`QUOTE_LEAD_IN`),
 and each names its citation.
+
+Since version 1.3 the schema is `polaris-dossier-local-draft-v3`, and Syzygy
+still accepts a `polaris-dossier-local-draft-v2` draft, which uses no
+element. Version 1.4 changes no schema field or identifier: v2 stays
+element-free, and both accepted versions retain every claim, quotation,
+citation and review obligation. Version 3 adds presentation elements (owner direction
+`OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04`). They sit in the existing
+`paragraphs` arrays of sections and deep dives, whose name stays. An entry
+without `kind` is the existing block. An entry with `kind` is one of the
+seven elements below. "Claim form" means every field of the existing
+block except `children`: `id`, `label`, `basis` or `reason`, the execution
+identifiers of a claim resting on execution, `text`, `citations` and
+`quotations`. "Block" means the existing block, with its own `children`.
+
+| `kind` | Fields | Limits | Renders as |
+|---|---|---|---|
+| `table` | `id`, `caption`, `columns` (column labels), `rowHeaders` (boolean), `rows`, each `{id, cells}`; a cell is a claim form or `{kind: "empty"}`, which states nothing and renders the marker "-" (U+002D), meaning only that the cell states nothing in this dossier | 1 to 8 columns; 1 to 40 rows; each row has exactly one cell per column | a `table` with its `caption`; each column label is a header cell scoped to its column, and with `rowHeaders` each row's first cell is a header cell scoped to its row |
+| `callout` | `id`, `tone` (`note`, `tip`, `caution` or `important`), `title`, `children` (blocks) | 1 to 12 children | an `aside` whose tone is written as a word beside the title, with its colour as a second cue only |
+| `steps` | `id`, `items` (blocks without children) | 2 to 20 items | an `ol` |
+| `definitions` | `id`, `entries`, each `{term, definition}`; the definition is a claim form | 1 to 40 entries | a `dl` |
+| `cards` | `id`, `items`, each `{label, body}`; the body is a claim form | 2 to 6 items | a list whose items are each headed by their label |
+| `details` | `id`, `summary`, `elements` (blocks, or any element but `details`) | 1 to 30 elements | `details` with its `summary` and a derived count of its Unknown claims visible while collapsed, holding no fragment target |
+| `code` | `id`, optional `language` (a short label), `citation` (`{id, path, startLine, endLine}`) | 1 to 60 lines | `pre` and `code`, the lines as Syzygy read them at the pinned revision, with their anchor |
+
+The short labels are `caption`, each column label, `title`, `term`, `label`,
+`summary` and `language`. Each is plain text of at most 120 Unicode code points, never
+a quotation, and carries no citation and no markup (no `<`, `&` or backtick
+character, and no Markdown link, image or paired emphasis mark). Every claim form inside an element is
+checked as a claim block is: its label, its citations, its quotations and,
+for `unknown`, its RFC2-24 reason. Each counts in the fidelity verdict's
+`blockSupport` by its own `id`, and each renders with its marking. A table
+cell is judged with its row and column labels. Callout tone and step
+order are presentation within the same agent-reported, independently
+reviewed residual as short labels; neither may introduce an unlabelled
+fact. The collapsed Unknown count is a derived disclosure beside the
+agent summary, not part of its 120-code-point limit. Element
+`id`s, row `id`s and the code citation's `id` share the draft's one space of
+identities.
+
+A `code` element is not a claim: the agent supplies only the citation and
+an optional language presentation hint, never a verified fact about the file.
+When the hint is absent, Syzygy derives a language label from the path where
+one can be determined. Syzygy renders admitted cited lines from the blob it
+verified, byte for byte as text with HTML text escaping, as an Observed
+excerpt with the RFC7-10 anchor a verified quotation has.
+
+REQ-polaris-generation-034's path-and-range check applies to the excerpt.
+For an existing path excluded before any body read, Syzygy leaves the body
+unread and performs no body-end check; missing/non-blob paths, malformed or
+reversed ranges and citations of more than 60 lines still cause findings.
+For a body actually read and then excluded by content screening or invalid
+UTF-8, the check retains the line boundaries obtainable from that read and
+reports an out-of-range citation without excluded bytes or the blob's line
+count. Since version 1.5 the no-read exception reaches any citation of a
+path-excluded blob, whose range then stays agent-supplied and unverified.
+
+For an excluded or invalid-UTF-8 blob, the excerpt renders Unknown with
+`excluded-content` and no blob bytes; its exclusion is not a finding. Any
+displayed submitted range is disclosed within that Unknown presentation as
+agent-supplied and unverified, never as the blob's length or a verified range.
+A `code` element has no `blockSupport` entry of its own; its admitted span
+is one of the cited spans the fidelity packet carries.
+
+Every element renders as static HTML that reads and navigates completely
+with scripts off. Since version 1.5 a page carries no script until an owner
+act puts screening scope version 7 or a successor in force, and then only the
+script that scope describes; it adds behaviour only, such as collapsible
+navigation and hash handling. No meaning is carried by colour alone.
+
+## Reading view and evidence view (version 1.5)
+
+The owner's 2026-11-06 review found that the markings the contract requires
+had become the text a reader reads. Version 1.5 keeps every marking and moves
+where it shows. RFC7-33 requires each marking as a machine attribute and
+RFC7-34 requires it recoverable by label, text or structure, so colour and
+hover alone are not enough.
+
+- The reading view is what a narrative page opens to. A legend explains the
+  marks once per page: a numbered citation mark, `judgement`, `framing`, a
+  set-off quotation, `Not established`, and `†` with a number on a citation,
+  counting the lines of that file screening withheld. Syzygy writes no label token or
+  file-and-line aside into a block's visible text; the agent's own prose is
+  not examined, so ordinary uses of a word such as "unknown" are not findings.
+- The evidence view is the same claims with each RFC7-33 distinction visible.
+  It is reachable from every narrative page, with scripts off. The same values
+  stay in DOM text that plain-text extraction reads.
+- Every page keeps its machine disclosure whole. Its human form is one
+  sentence and a link to the appendix, which holds the full disclosure and the
+  open questions. An Unknown affecting a passage stays explicit at the passage.
+- Other pages (appendix, review, understanding, discovery, source) keep labels.
+- A test reads visible text by `innerText` on a clone with the elements carrying
+  the renderer's visually-hidden class removed, and recoverable text by
+  `textContent` and the accessibility tree, opening collapsed sections first.
+  `hidden` and `display:none` take text out of the accessibility tree, so they
+  are not used.
+
+## Why-first topics and voice (version 1.5)
+
+The brief orders the reader topics: why the project exists first, then core
+ideas, end-to-end workflows, and mechanisms and trade-offs; the advantages the
+maintainers state now sit inside the first topic. A repository that states no why produces Unknown there, never an
+invented purpose. Voice rules sit in the brief and the review criteria and
+are not mechanical checks, because no check can tell whether a page reads like
+a person. An illustration, drawn from no repository: before, "This section
+describes the component's role as established by the cited documents"; after,
+"The cache keeps recent answers so the database is asked less often".
+
+## Citations, withheld spans and judgement (version 1.5)
+
+RFC7-2 defines a load-bearing claim as one asserting a fact about the project.
+A judgement, as this version defines it, asserts none, so RFC7-9's anchor rule
+does not reach it, and it stays Inferred with its inference provenance. A flat
+project fact with no citation is not a judgement: doctrine says missing
+evidence never makes a claim Inferred, so the mark does not excuse it, and the
+fidelity review treats it as a blocking finding. A quotation is optional and,
+when used, stays one contiguous verified span.
+
+A withheld span is one whose blob is excluded whole, is not valid UTF-8, or whose
+range touches a redacted line; a span a run's class gate keeps from agent-bound
+artifacts is a different thing and keeps its treatment. A claim block,
+understanding item or diagram element citing only withheld spans renders Unknown
+with `excluded-content` (RFC5-17) in Syzygy's words, with its count on the item.
+The agent read the clone without restriction, so its text could derive from what
+was withheld, and that text does not render (RFC2-23). A short label over only
+such content becomes `Withheld item`. A path a secret detector matches is counted
+and never named. The verdict's entry is `withheld`, so the review has a lawful
+answer and the run does not stop. A citation to a blob missing at the pinned
+revision still fails. A block that quotes a withheld file is a withheld item whatever else
+it cites. Any other block with both admitted and withheld spans keeps today's
+rules and shows the count.
+
+## Poles (version 1.5)
+
+Schema `polaris-dossier-local-draft-v4` adds an optional top-level `poles`
+array of `{label, sections}` with `whySection` naming the section that answers
+why the project exists, a `judgement` flag on a block, a `repeatsDiagram` field
+on a list, and `run.json`'s optional `poleLimit`, defaulting to five. A
+Pole is a page boundary and carries no claim. The landing page holds the
+title, the why and a map of the Poles, which orders the altitudes by the
+owner's ruling under RFC7-13; a draft with no Poles keeps schema v3's page
+division.
+Syzygy still accepts `polaris-dossier-local-draft-v2` and `-v3` drafts; in those,
+every Inferred block still cites, since only v4 has the `judgement` field.
 
 ## What remains open in the implementation
 

@@ -1,0 +1,145 @@
+{
+  "schema": "owned-to-repository-artifact-map/1",
+  "files": [
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/hook-core-positive-control-v2.json",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/hook-core-positive-control-v2.json",
+      "sha256": "bb848bea6560e749db5b5ed46e6a5473796c12fad63dd0d9ce0ea284e4df0bd8"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/WITNESS-VERIFICATION.json",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/WITNESS-VERIFICATION.json",
+      "sha256": "48846f763bc0b894978f916547d4608121b85dd5c432014ee2e4e3365a86b519"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/WITNESS-RECOUNT.json",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/WITNESS-RECOUNT.json",
+      "sha256": "d28682c2c58c738571bb8e0dd641c053b968d9690c45ecb07677f661b037eb32"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/WITNESS-NATIVE-SHA256SUM.txt",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/WITNESS-NATIVE-SHA256SUM.txt",
+      "sha256": "6e9987e3a39ea0ebf739bc3b610fcc716ee22ea88be4eae529363f93d73d64a4"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/CACHE-INTEGRITY.json",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/CACHE-INTEGRITY.json",
+      "sha256": "98930dbf5be6e810ebe3a70ff89a9ae90dae08897c26d46b5d044baed3fecb6e"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/ADAPTER-PROVENANCE.json",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/ADAPTER-PROVENANCE.json",
+      "sha256": "84b9cafbe8c987ed918a469306abe7ae55db77228dbb69112ee89a9ebd122ea6"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/core_hook_witness_v2.py",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/core_hook_witness_v2.py.txt",
+      "sha256": "ab961b356e3f4a35627d0c8a6faa6dc82f42bd42a36e67132a176c3ef2eba27e"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/verify_witness.py",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/verify_witness.py.txt",
+      "sha256": "23b4493f12427702f7fbbca1b0293914718339991c9219aff135476598745ebe"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/isolated.py",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/isolated.py.txt",
+      "sha256": "cc3e60d6961356b1dd6f891c9e009d22a48bae70503766f9991bc187707e3435"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/capture_inside.py",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/capture_inside.py.txt",
+      "sha256": "5315151d0bc1caab413ff47f149fb864d05a330914f8fcacc4e7629f6c1e2cb9"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/capture-battery.py",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/capture-battery.py.txt",
+      "sha256": "902701a4624fed443a69e9efc18f1d4a71b9db0be99fd16e11690137659166b3"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/final_gate.py",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/final_gate.py.txt",
+      "sha256": "2434c8a65b5d2dde194785372a0630e54c0dda0be1aabc6e67c56917a58c1d0a"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/hook-core-positive-control-v2/before/control-build.log",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/raw/before/control-build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/hook-core-positive-control-v2/before/control.json",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/raw/before/control.json",
+      "sha256": "f3a6ec947aebeb4491401341fe0212778c3647a7a50f39b3005628d1edd308ca"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/hook-core-positive-control-v2/before/control.log",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/raw/before/control.log",
+      "sha256": "94e5d3f8e6b17439a28121626980a11cf580caf7de88e38a6e2d8ab03226b083"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/hook-core-positive-control-v2/mutant/H-core-island-blind-build.log",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/raw/mutant/H-core-island-blind-build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/hook-core-positive-control-v2/mutant/H-core-island-blind.json",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/raw/mutant/H-core-island-blind.json",
+      "sha256": "66d946832841920a0d24936cd73cc8da601d903941931a612e38c38a1c187bda"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/hook-core-positive-control-v2/mutant/H-core-island-blind.log",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/raw/mutant/H-core-island-blind.log",
+      "sha256": "7b70871f1b858808006f04dd6c16006458121e1a879fd96f471f0761cd439c8a"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/hook-core-positive-control-v2/restored/control-build.log",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/raw/restored/control-build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/hook-core-positive-control-v2/restored/control.json",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/raw/restored/control.json",
+      "sha256": "db53a5eb2bfe673f746435ef602add00ada3b684a6cff1eeab83caa411609d37"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/hook-core-positive-control-v2/restored/control.log",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/raw/restored/control.log",
+      "sha256": "2ac03caa494927057307c9f87600e96e2515610e169c0950a75a8f3b1a4a64c0"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/hook-core-positive-control-v2/restored/final-restoration-build.log",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/raw/restored/final-restoration-build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/logs/core-hook-witness-v2.log",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/execution/core-hook-witness-v2.log",
+      "sha256": "ee0746d128712ed8945e9c03f8bfea4b92a39af21a8f734995aab91605e54f98"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/logs/core-hook-witness-v2.json",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/execution/core-hook-witness-v2.json",
+      "sha256": "92b8b85f0a31c7bc00aebe399c5793e34d4b042535857a51134100bf898de952"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/logs/verify-witness.log",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/execution/verify-witness.log",
+      "sha256": "1c6e004ac5ba0ed6d52953fedccab12f4b0c58b933bedc28f7c881a4498ccf7b"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/logs/verify-witness.json",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/execution/verify-witness.json",
+      "sha256": "772290dc245b731051961170b51bb95718d433f7dac37a57908cbb2013c230f7"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/logs/worktree-offline-npm-ci.json",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/execution/worktree-offline-npm-ci.json",
+      "sha256": "dc8cc463e7d85121c120b762239d8414f7ada78060d7fc06f1886dd0dec26c7b"
+    },
+    {
+      "ownedPath": "/home/orca/.tmp/syzygy-pr770-f1-correction-20261106/logs/subject-offline-npm-ci.json",
+      "repositoryPath": "docs/evidence/syzygy-bpyt-43/correction-f1/execution/subject-offline-npm-ci.json",
+      "sha256": "9413d8501148d06907977ced68e01e2fa6a9423ef8b640e5468c72fa25ca05aa"
+    }
+  ]
+}

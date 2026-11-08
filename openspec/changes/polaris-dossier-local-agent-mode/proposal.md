@@ -1,6 +1,17 @@
 # Polaris dossier local-agent mode
 
-> **Version 1.2.** Drafted 2026-10-05 under the owner direction
+> **Version 1.5 changes.** The owner reviewed a Redis dossier on 2026-11-06 and
+> found it hard to read. This version opens with why a project exists, gives
+> the brief voice rules, allows a marked judgement with no citation, makes
+> quotations optional, lets a claim that rests only on withheld spans render
+> Unknown in Syzygy's words instead of blocking readiness, moves human-form
+> disclosure to one sentence and an appendix, separates a reading view from an
+> evidence view, and allows Poles and, once a screening act allows it, a script.
+> A fact still needs a citation or stays Unknown. Labels leave a narrative
+> page's visible text and stay recoverable in the evidence view, DOM text and
+> machine form; no verified count grows. It binds only by the owner's sign-off.
+
+> **Version 1.3.** Drafted 2026-10-05 under the owner direction
 > `POLARIS-DOSSIER-LOCAL-AGENT-MODE-2026-10-05`
 > (`.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-DIRECTION.md`),
 > which authorizes drafting and review only, and relies on the owner's
@@ -17,8 +28,14 @@
 > D9 the same day, and version 1.1 on 2026-10-07; version 1.2 adds the
 > waiting sessions of the owner direction
 > `POLARIS-DOSSIER-WAITING-SESSIONS-2026-10-08`
-> (`.syzygy/governance/decisions/POLARIS-DOSSIER-WAITING-SESSIONS-DIRECTION.md`).
-> These bytes bind only by the owner's sign-off of version 1.2 (VIS-4). It grants no read, egress, write or execution beyond what
+> (`.syzygy/governance/decisions/POLARIS-DOSSIER-WAITING-SESSIONS-DIRECTION.md`),
+> signed off on 2026-10-14; version 1.3 adds the presentation elements of the
+> owner direction `OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04`
+> (`.syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04.md`).
+> Version 1.4 adds the empty-cell marker "-", explicit unread-path
+> excerpt handling and the carried v1.3 review notes. Version 1.4 is the
+> predecessor of version 1.5.
+> These bytes bind only by the owner's sign-off of version 1.5 (VIS-4). It grants no read, egress, write or execution beyond what
 > its requirements state.
 
 **A Polaris dossier can be written by the operator's own Claude Code or Codex
@@ -165,6 +182,26 @@ through one reviewed CC-REV-2 delta.
   One review session may go on to review later revisions, and the review
   page discloses it. Syzygy and the authoring session still start, resume
   and signal no session.
+- **Presentation elements.** Since version 1.3 a draft may lay out its
+  argument with tables, callouts, numbered steps, definition lists, cards,
+  collapsible sections and code excerpts, rendered as inert static HTML. Every
+  claim an element holds is checked, reviewed and marked as any claim block
+  is; table cells are read with their headings. Empty cells show "-" and
+  state nothing, while an absence or negative remains a labelled claim.
+  Short labels, callout tone and step order carry no claim, which Syzygy
+  checks in part and the reviews judge. Short-label limits count Unicode
+  code points; collapsed summaries disclose their Unknown-claim count.
+  A code excerpt is escaped text from Syzygy's verified read, never the
+  agent's copy, with a path-derived language label when the agent gives
+  none and one can be determined; an agent value is only a presentation
+  hint. A path excluded before reading stays unread, with no excerpt
+  body-end check; missing paths, malformed/reversed ranges and citations
+  over 60 lines still fail. Bodies read and then excluded retain possible
+  range checks without disclosing bytes or length. Excluded or invalid-
+  UTF-8 excerpts render Unknown; any displayed submitted range is stated
+  as agent-supplied and unverified. Ordinary-block citation obligations
+  remain as written in REQ-polaris-generation-034. These changes retain
+  v2/v3 schema compatibility.
 - **What the agent ran is its report.** Commands the agent says it ran are
   recorded as its report, labelled Inferred; Syzygy cannot observe them.
 - **No new permission.** This is not permission to read, egress, write,

@@ -9,6 +9,7 @@ import type { Outcome } from './outcome.js';
 import { type ReverifyRefusal } from './reverify.js';
 import { type DossierScreen, type ScreenExclusion, type ScreenLoader } from './screen.js';
 import { type ScreenCensusReport } from './census.js';
+import type { ReaderAdvice } from './reader-advice.js';
 import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 
 /** The check's record formats, finding and result types, and the small shared readers; split out of `check.ts` unchanged. */
@@ -26,7 +27,11 @@ export type CheckFindingKind =
   | 'path-absent' | 'range-invalid' | 'range-beyond-blob'
   | 'quotation-count' | 'quotation-citation' | 'quotation-in-unquotable-block' | 'lead-in-without-quote' | 'quotation-unterminated'
   | 'quotation-empty' | 'quotation-elided' | 'quotation-not-in-cited-file' | 'quotation-outside-range'
-  | 'discovery-path-absent' | 'adapter-credential-readable';
+  | 'discovery-path-absent' | 'adapter-credential-readable'
+  // v1.3 presentation elements (syzygy-mea.10.5).
+  | 'code-excerpt-too-long' | 'label-markup' | 'label-quotation' | 'element-version'
+  // v1.5 (schema v4): a v4 field in an earlier draft, a judgement mark off an Inferred block, a list's repeated diagram not in its section.
+  | 'field-version' | 'judgement-mark' | 'repeats-diagram' | 'pole';
 
 /** A repair finding: the kind of failure, where to repair it (a JSON path into the draft), and the block and citation it concerns. It
  * never carries quoted text or any byte of a blob. */
@@ -172,6 +177,8 @@ export interface CheckReport extends CheckRecord {
   readonly disclosures: readonly string[];
   /** The path-only census of every file screening withholds at the pinned revision (`census.ts`); on the report, never the record. */
   readonly screenCensus?: ScreenCensusReport;
+  /** The counted reader standards' advice (`reader-advice.ts`); on the report, never the record, and never a finding. */
+  readonly readerAdvice?: ReaderAdvice;
   /** The cited files withheld from the review session, by screening or the class gate (`reviewVisibility`); on the report, never the record. */
   readonly reviewVisibility?: ReviewVisibility;
 }

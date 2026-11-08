@@ -1,0 +1,72 @@
+{
+  "workingCheck": {
+    "name": "check-working",
+    "startedAt": "2026-11-06T07:12:31.829824+00:00",
+    "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.59",
+    "argv": [
+      "npm",
+      "run",
+      "check"
+    ],
+    "head": "edd92ae4c5c41859ecdb94829e144ad49c7290f5",
+    "exitCode": 0,
+    "finishedAt": "2026-11-06T07:13:19.294972+00:00",
+    "elapsedSeconds": 47.46079074399313,
+    "streams": {
+      "check-working.stdout": {
+        "bytes": 1261272,
+        "sha256": "b028e1f7b094a047edb71cb5938742406c94553d4769677a69b57112ab8fb506"
+      },
+      "check-working.stderr": {
+        "bytes": 519,
+        "sha256": "f0fd67ba9e5790fad722ec58cc6dd016aadce58ef78d0572a21dcd32e38cfa86"
+      }
+    }
+  },
+  "inputStability": "INCONCLUSIVE",
+  "reason": "Working npm run check acquired external lock while a separately launched targeted source-equality mutation sequence was running in W. Mutant helper bytes existed during 07:13:12\u201315Z inside working check 07:12:31\u201307:13:19Z. Exit0 does not establish a clean-subject check.",
+  "nativeReported": {
+    "filesPassed": 169,
+    "testsPassed": 3796,
+    "failed": 0,
+    "skipped": 0,
+    "cleanup": "native complete"
+  },
+  "mutantAttempt": {
+    "name": "committed-equality-mutant",
+    "startedAt": "2026-11-06T07:13:12.393920+00:00",
+    "cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.59",
+    "argv": [
+      "npx",
+      "--no-install",
+      "vitest",
+      "run",
+      "--project",
+      "unit",
+      "packages/three-surface-poc-core/src/body-read-authority.test.ts",
+      "packages/three-surface-poc-core/src/walkthrough-judgment.test.ts",
+      "-t",
+      "calendar read-back",
+      "--reporter=json",
+      "--outputFile=/home/orca/.tmp/syzygy-bpyt59-full-outcome-20261106/committed-equality-mutant-vitest.json"
+    ],
+    "head": "edd92ae4c5c41859ecdb94829e144ad49c7290f5",
+    "exitCode": 1,
+    "finishedAt": "2026-11-06T07:13:15.041302+00:00",
+    "elapsedSeconds": 2.641165658016689,
+    "streams": {
+      "committed-equality-mutant.stdout": {
+        "bytes": 113,
+        "sha256": "8196ea5e54d40d57f4e5ca7e5eb74524d6baf5b1c8b9f32b66ed3d432c0557c2"
+      },
+      "committed-equality-mutant.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "restoredSourceSha256": "ebcb903cd241068fb64bc4de9548ac9c99d83ff6ad5b6bed1d9f2a5cc21872f2",
+  "committedSourceEqual": true,
+  "claim": "Attempt retained, not a valid clean-input gate; no author waiver. Final clean-clone gate still mandatory and will run without any source mutation.",
+  "rootNotified": true
+}

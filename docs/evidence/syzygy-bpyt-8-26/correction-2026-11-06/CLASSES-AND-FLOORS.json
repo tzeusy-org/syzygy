@@ -1,0 +1,91 @@
+{
+  "subject": "6c6e22bcde6e63d841e548adad418e50eaef7454",
+  "classes": [
+    {
+      "class": 1,
+      "name": "authority boundaries",
+      "touched": true,
+      "assessment": "Evidence fixture exercises typed admission/gate authority boundaries and must preserve their semantics; production authority code unchanged."
+    },
+    {
+      "class": 2,
+      "name": "graph identity",
+      "touched": false,
+      "assessment": "New private corpus IDs identify evidence worlds; no entity minting/continuity/split/merge changes."
+    },
+    {
+      "class": 3,
+      "name": "deterministic observation",
+      "touched": false,
+      "assessment": "Corpus bookkeeping is evidence-tool identity, with no product snapshot/evaluation composition or deterministic/inferred seam change."
+    },
+    {
+      "class": 4,
+      "name": "security",
+      "touched": true,
+      "assessment": "Consent/security assurance and credentials/network isolation are directly involved even though security decisions remain unchanged."
+    },
+    {
+      "class": 5,
+      "name": "data migration",
+      "touched": false,
+      "assessment": "No governed schema/store migration or identity-affecting persistence change."
+    },
+    {
+      "class": 6,
+      "name": "public interface",
+      "touched": true,
+      "assessment": "Machine-readable tool /3 JSON and checked-negative-control exit contract intentionally change under the explicit owner comment warrant."
+    },
+    {
+      "class": 7,
+      "name": "certificate logic",
+      "touched": false,
+      "assessment": "No certificate logic; post-V1 deferred scope unchanged."
+    }
+  ],
+  "mandatoryClasses": [
+    1,
+    4,
+    6
+  ],
+  "allFloorsApply": true,
+  "floors": [
+    {
+      "floor": 1,
+      "name": "truth",
+      "assessment": "Complete corrected world-reader-step-instant populations reconcile; file gate asks all four methods for both repositories plus one policy method. No product truth/link/legend/secret behavior changes."
+    },
+    {
+      "floor": 2,
+      "name": "evidence",
+      "assessment": "Corrected count output binds committed tree/source/build/tool/corpus/fixture subjects; complete native values and public commitment fidelity are retained. External review and landing gates remain Unknown."
+    },
+    {
+      "floor": 3,
+      "name": "inference",
+      "assessment": "This author class/floor assessment is Inferred. ROOT dispositions and custody are not runtime authentication; emitted test outcomes and deterministic recounts are separately identified. Fresh independent corrected-head review remains required."
+    },
+    {
+      "floor": 4,
+      "name": "write",
+      "assessment": "Only operator-authorized tool/evidence and private fixture writes; no Syzygy-autonomous implementation or governed write."
+    },
+    {
+      "floor": 5,
+      "name": "sign-off",
+      "assessment": "Fixture grants no accepted form, policy, scope or adoption. Explicit owner work warrant supports evidence CLI/control changes only; escalation remains for actual product posture/normative change."
+    },
+    {
+      "floor": 6,
+      "name": "security",
+      "assessment": "SEC1-5 remain; unchanged product auth/consent/secret decisions, no target bodies/provider/credentials/egress. Own commands clear environment and run private offline namespace."
+    },
+    {
+      "floor": 7,
+      "name": "identity",
+      "assessment": "No durable kernel identity/schema migration; evidence-world IDs do not re-mint product entities."
+    }
+  ],
+  "actor": "Inferred author assessment; independent reviewer may reclassify"
+}

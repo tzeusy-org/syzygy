@@ -1,0 +1,1469 @@
+{
+  "schema": "syzygy-bpyt-43-successor/1",
+  "bead": "syzygy-bpyt.43",
+  "subject": {
+    "commit": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+    "sourceInputs": {
+      "apps/syzygy/src/main.ts": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+      "packages/polaris-dossier/src/state-directory.ts": "d7de7e04e24afb4ec6f2f6da8695cb60620ee3fbcef010a0d29d8a761e613db1",
+      "packages/http-host/src/shutdown.ts": "88969cdbd489e03018a76ec90187ea7ac58db08962f4b89c2d49795ac13641dd",
+      "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts": "b629e399a2c4b72e00c3a764181f1b938985d6a992c44ffcb320af3bebebec69"
+    },
+    "diffFromBaselineSha256": "011fa413d6fad5971d30af47fe87d927d64d1ffee55cf5b874477c0130afe0d8"
+  },
+  "predecessor": {
+    "path": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json",
+    "sha256": "ab7ce20b7219f11a1d919a12429d0c0140e6905cf541755a31d93d53e26e1bfb",
+    "subject": {
+      "base": "c104771ff90f47ffd070f2339c36010458679c71",
+      "main": "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+      "evidenceCommit": "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+      "testFiles": [
+        {
+          "path": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts",
+          "sha256": "a70f825e873925d0b4b1bbc652dc8ba5309f5514309a57d98fc6597d0919d3ff"
+        },
+        {
+          "path": "apps/three-surface-poc/src/main.test.ts",
+          "sha256": "2e04bb219f7bef50b345e85149015ad8b767059e9e1152cd0909496b75844190"
+        },
+        {
+          "path": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts",
+          "sha256": "5744d214aca18003ff3ab1c6700758686af697b3d40fbc0301ab504939b6e219"
+        },
+        {
+          "path": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts",
+          "sha256": "9f4fbe00e9d4935ac824c6453bc9da4e9d702f34b7c8e221cbd918a43b84e4ae"
+        },
+        {
+          "path": "packages/cap1-system/src/daemon-entry-unchanged.system.test.ts",
+          "sha256": "a05821cb1115018c7a92f38b50709f99a9bad344805760da8c5a70a416cb02bd"
+        },
+        {
+          "path": "packages/polaris-dossier/src/git-object-reader.test.ts",
+          "sha256": "1c4f7fd74241f85d166c909c63568c7610f7a8c0b8ff60df62b3014fa97e45c9"
+        },
+        {
+          "path": "packages/polaris-generation-core/src/dossier-evaluation.test.ts",
+          "sha256": "d550f85ef32f34f7213487151fa51f7eb9672a0bf8611f94a9eb29a8b1fee812"
+        },
+        {
+          "path": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+          "sha256": "f813c4e3f0bb72b5bce754bd7e567e001c3c33c3805c4209296a3cdd9d657b3b"
+        },
+        {
+          "path": "packages/polaris-generation-core/src/excerpt.test.ts",
+          "sha256": "9b91fbc8f4b8f28fcc3f466d611b6c484ad5bcba32e0b5b93cf2d7ab7da129dd"
+        },
+        {
+          "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+          "sha256": "b3b4cd4e4467a4d65542f222116de2d68dccb1556c3e25864e1ae78179f11b4b"
+        }
+      ],
+      "testDiffSha256": "4903d2370d178e5357df683d664299627e3bc9ef8e9aeeeeb8caa785c3f1a9d0",
+      "note": "The test files are the subject; no product file differs between base and the evidence commit."
+    },
+    "role": "historical; immutable; never relabeled as this landing subject"
+  },
+  "predecessorMap": {
+    "subject": {
+      "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/subject",
+      "to": "#/predecessor/subject",
+      "disposition": "historical identity retained; current source subject is separate"
+    },
+    "sites": [
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/sites/0",
+        "site": "apps/three-surface-poc/src/capture-test-artifact-main.test.ts:381 (base)",
+        "to": null,
+        "disposition": "unchanged historical test-clock disposition; no present execution claim"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/sites/1",
+        "site": "apps/three-surface-poc/src/main.test.ts:547 (base)",
+        "to": null,
+        "disposition": "unchanged historical test-clock disposition; no present execution claim"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/sites/2",
+        "site": "packages/polaris-dossier/src/git-object-reader.test.ts:581 (base) and the refusedWithin call sites (refusedWithinCallSites)",
+        "to": null,
+        "disposition": "unchanged historical test-clock disposition; no present execution claim"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/sites/3",
+        "site": "packages/polaris-generation-core/src/dossier-profile.test.ts:167 (base)",
+        "to": "#/historicalCpuValidation/bounds/EDGE_TRIM_CPU_MS",
+        "disposition": "historical two-arm figures revalidated"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/sites/4",
+        "site": "packages/polaris-generation-core/src/excerpt.test.ts:262 (base), 2 cases",
+        "to": "#/historicalCpuValidation/bounds/HOSTILE_LINE_CPU_MS",
+        "disposition": "historical two-arm figures revalidated"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/sites/5",
+        "site": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts:96 (base), 3 cases",
+        "to": "#/historicalCpuValidation/bounds/TAG_SCAN_CPU_MS",
+        "disposition": "historical two-arm figures revalidated"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/sites/6",
+        "site": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts:103 (base)",
+        "to": "#/historicalCpuValidation/bounds/ATTRIBUTE_SCAN_CPU_MS",
+        "disposition": "historical two-arm figures revalidated"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/sites/7",
+        "site": "packages/polaris-generation-core/src/dossier-evaluation.test.ts:107-113,127-131 (base)",
+        "to": null,
+        "disposition": "unchanged historical test-clock disposition; no present execution claim"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/sites/8",
+        "site": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts:137 (base)",
+        "to": null,
+        "disposition": "unchanged historical test-clock disposition; no present execution claim"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/sites/9",
+        "site": "apps/three-surface-poc/src/polaris-generation/self-corpus.test.ts:11 (base), PINNED_MAIN",
+        "to": null,
+        "disposition": "unchanged historical test-clock disposition; no present execution claim"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/sites/10",
+        "site": "apps/three-surface-poc/src/polaris-generation/redis-shaped-discovery.test.ts:152,159 (base), the two [Observed] rows",
+        "to": null,
+        "disposition": "unchanged historical test-clock disposition; no present execution claim"
+      }
+    ],
+    "daemonRows": [
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/daemon-entry-head.json#/results",
+        "to": "daemon-entry-head.json#/results",
+        "currentRows": 57,
+        "disposition": "new full population on common current inputs; each selected test-copy identity is separate"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/daemon-entry-base-test.json#/results",
+        "to": "daemon-entry-base-test.json#/results",
+        "currentRows": 57,
+        "disposition": "new full population on common current inputs; each selected test-copy identity is separate"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/daemon-entry-prior-test.json#/results",
+        "to": "daemon-entry-prior-test.json#/results",
+        "currentRows": 57,
+        "disposition": "new full population on common current inputs; each selected test-copy identity is separate"
+      },
+      {
+        "from": "docs/evidence/syzygy-bpyt-4-5/daemon-entry-round1-test.json#/results",
+        "to": "daemon-entry-round1-test.json#/results",
+        "currentRows": 57,
+        "disposition": "new full population on common current inputs; each selected test-copy identity is separate"
+      }
+    ],
+    "oldAssertions": {
+      "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/daemonEntry",
+      "to": "#/daemonEntry/attribution",
+      "disposition": "actual new per-row outcomes supersede old pin-alone Y/type-only/C1/residual statements for this subject only"
+    },
+    "emit": {
+      "from": "docs/evidence/syzygy-bpyt-4-5/bounds-and-pins.json#/files",
+      "to": "#/emitClaim",
+      "disposition": "historical observation retained; present claim explicitly limited"
+    }
+  },
+  "historicalCpuValidation": {
+    "timings": "historical",
+    "currentTiming": "Unknown",
+    "args": [
+      "c104771ff90f47ffd070f2339c36010458679c71",
+      "d38d7a3ce632a34c2a41bdb77ad323ba0b05b777",
+      "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+      "447d9f083fb120c14ddd8da646c03675f3ce7bc7",
+      "9e00252ae134accc4a42604445a4db66f68d5100",
+      "4b28caccc115ab7e4ac89800120d54d816f9ff3f"
+    ],
+    "bounds": {
+      "EDGE_TRIM_CPU_MS": {
+        "file": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+        "boundMs": 1900,
+        "headRuns": 10,
+        "headMaxMs": 64.686,
+        "headLoad1": [
+          29.31,
+          32.31
+        ],
+        "mutants": [
+          {
+            "id": "edge-backtracking-regex",
+            "title": "trims a long run of spaces in linear time",
+            "runs": 3,
+            "cappedRuns": 3,
+            "minMs": 60066.3,
+            "reached": true
+          }
+        ],
+        "mutantMinMs": 60066.3,
+        "mutantMinIsLowerBound": true,
+        "boundOverHeadMax": 29.4,
+        "mutantMinOverBound": 31.6,
+        "geometricMeanNowMs": 1900,
+        "underProcessCpuFallback": {
+          "node": "v22.18.0",
+          "cpuSource": "process",
+          "headRuns": 10,
+          "headMaxMs": 88.331,
+          "mutantMinMs": 60019.1,
+          "mutantMinIsLowerBound": true,
+          "boundOverHeadMax": 21.5,
+          "mutantMinOverBound": 31.6,
+          "geometricMeanNowMs": 2300
+        }
+      },
+      "HOSTILE_LINE_CPU_MS": {
+        "file": "packages/polaris-generation-core/src/excerpt.test.ts",
+        "boundMs": 140,
+        "headRuns": 10,
+        "headMaxMs": 2.042,
+        "headLoad1": [
+          25.44,
+          26.85
+        ],
+        "mutants": [
+          {
+            "id": "excerpt-no-cap-quadratic-pattern",
+            "title": "stays linear on one 100k line of spaces after an identifier",
+            "runs": 10,
+            "cappedRuns": 0,
+            "minMs": 15327.977,
+            "reached": true
+          }
+        ],
+        "mutantMinMs": 15327.977,
+        "mutantMinIsLowerBound": false,
+        "boundOverHeadMax": 68.6,
+        "mutantMinOverBound": 109.5,
+        "geometricMeanNowMs": 170,
+        "underProcessCpuFallback": {
+          "node": "v22.18.0",
+          "cpuSource": "process",
+          "headRuns": 10,
+          "headMaxMs": 1.631,
+          "mutantMinMs": 17314.492,
+          "mutantMinIsLowerBound": false,
+          "boundOverHeadMax": 85.8,
+          "mutantMinOverBound": 123.7,
+          "geometricMeanNowMs": 160
+        }
+      },
+      "TAG_SCAN_CPU_MS": {
+        "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+        "boundMs": 1500,
+        "headRuns": 10,
+        "headMaxMs": 66.144,
+        "headLoad1": [
+          37.15,
+          42.58
+        ],
+        "mutants": [
+          {
+            "id": "junit-tag-regex",
+            "title": "scans unterminated opening tags at the ceiling",
+            "runs": 3,
+            "cappedRuns": 3,
+            "minMs": 60021.3,
+            "reached": true
+          },
+          {
+            "id": "junit-tag-regex",
+            "title": "scans unterminated plural tags at the ceiling",
+            "runs": 3,
+            "cappedRuns": 3,
+            "minMs": 60038.6,
+            "reached": true
+          },
+          {
+            "id": "junit-tag-regex",
+            "title": "scans near-miss tag names at the ceiling",
+            "runs": 10,
+            "cappedRuns": 0,
+            "minMs": 16.378,
+            "reached": false
+          }
+        ],
+        "mutantMinMs": 60021.3,
+        "mutantMinIsLowerBound": true,
+        "boundOverHeadMax": 22.7,
+        "mutantMinOverBound": 40.0,
+        "geometricMeanNowMs": 1900,
+        "underProcessCpuFallback": {
+          "node": "v22.18.0",
+          "cpuSource": "process",
+          "headRuns": 10,
+          "headMaxMs": 64.521,
+          "mutantMinMs": 60007.8,
+          "mutantMinIsLowerBound": true,
+          "boundOverHeadMax": 23.2,
+          "mutantMinOverBound": 40.0,
+          "geometricMeanNowMs": 1900
+        }
+      },
+      "ATTRIBUTE_SCAN_CPU_MS": {
+        "file": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+        "boundMs": 3000,
+        "headRuns": 10,
+        "headMaxMs": 148.918,
+        "headLoad1": [
+          23.25,
+          26.44
+        ],
+        "mutants": [
+          {
+            "id": "junit-attr-regex",
+            "title": "scans one tag body that is a single word run at the ceiling",
+            "runs": 3,
+            "cappedRuns": 3,
+            "minMs": 60001.8,
+            "reached": true
+          }
+        ],
+        "mutantMinMs": 60001.8,
+        "mutantMinIsLowerBound": true,
+        "boundOverHeadMax": 20.1,
+        "mutantMinOverBound": 20.0,
+        "geometricMeanNowMs": 2900,
+        "underProcessCpuFallback": {
+          "node": "v22.18.0",
+          "cpuSource": "process",
+          "headRuns": 10,
+          "headMaxMs": 191.092,
+          "mutantMinMs": 60008.8,
+          "mutantMinIsLowerBound": true,
+          "boundOverHeadMax": 15.7,
+          "mutantMinOverBound": 20.0,
+          "geometricMeanNowMs": 3300
+        }
+      }
+    },
+    "note": "Stronger checks validate retained populations and margins at their recorded subjects. They do not establish present CPU behavior."
+  },
+  "timedPopulations": {
+    "historical": {
+      "commit": "ba9d990a2b80b9aa5b3d78801b938280ee9988d7",
+      "testFiles": 256,
+      "testPathsSha256": "f0a1beb981de7147e2f44c3258ae88e357459a11106881e8f26854501e175fec",
+      "rows": [
+        {
+          "path": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+          "line": 182,
+          "bound": "EDGE_TRIM_CPU_MS"
+        },
+        {
+          "path": "packages/polaris-generation-core/src/excerpt.test.ts",
+          "line": 273,
+          "bound": "HOSTILE_LINE_CPU_MS"
+        },
+        {
+          "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+          "line": 111,
+          "bound": "TAG_SCAN_CPU_MS"
+        },
+        {
+          "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+          "line": 118,
+          "bound": "ATTRIBUTE_SCAN_CPU_MS"
+        }
+      ]
+    },
+    "current": {
+      "commit": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+      "testFiles": 286,
+      "testPathsSha256": "0b9a08d1750c62f2e4d7779ac2c3579a6e22db67e960886ba072d22824d8ece9",
+      "rows": [
+        {
+          "path": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+          "line": 194,
+          "bound": "EDGE_TRIM_CPU_MS"
+        },
+        {
+          "path": "packages/polaris-generation-core/src/excerpt.test.ts",
+          "line": 273,
+          "bound": "HOSTILE_LINE_CPU_MS"
+        },
+        {
+          "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+          "line": 189,
+          "bound": "FLOOD_CPU_MS"
+        },
+        {
+          "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+          "line": 103,
+          "bound": "TAG_SCAN_CPU_MS"
+        },
+        {
+          "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+          "line": 110,
+          "bound": "ATTRIBUTE_SCAN_CPU_MS"
+        },
+        {
+          "path": "packages/three-surface-poc-core/src/unsafe-url-equivalence.test.ts",
+          "line": 146,
+          "bound": "TWO_KB_CPU_MS"
+        },
+        {
+          "path": "packages/three-surface-poc-core/src/unsafe-url-equivalence.test.ts",
+          "line": 159,
+          "bound": "TWENTY_KB_CPU_MS"
+        }
+      ]
+    },
+    "additionalCurrentSites": [
+      {
+        "path": "packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+        "line": 189,
+        "bound": "FLOOD_CPU_MS"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/unsafe-url-equivalence.test.ts",
+        "line": 146,
+        "bound": "TWO_KB_CPU_MS"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/unsafe-url-equivalence.test.ts",
+        "line": 159,
+        "bound": "TWENTY_KB_CPU_MS"
+      }
+    ],
+    "sourceMoves": [
+      {
+        "path": "packages/polaris-generation-core/src/dossier-profile.test.ts",
+        "historicalSha256": "f813c4e3f0bb72b5bce754bd7e567e001c3c33c3805c4209296a3cdd9d657b3b",
+        "currentSha256": "ac0884cef8123eaba628152e99c7c97334fe98e5452561588602bef92c4e662a"
+      },
+      {
+        "path": "packages/polaris-generation-core/src/excerpt.test.ts",
+        "historicalSha256": "9b91fbc8f4b8f28fcc3f466d611b6c484ad5bcba32e0b5b93cf2d7ab7da129dd",
+        "currentSha256": "9b91fbc8f4b8f28fcc3f466d611b6c484ad5bcba32e0b5b93cf2d7ab7da129dd"
+      },
+      {
+        "path": "packages/three-surface-poc-core/src/test-artifact-verification.test.ts",
+        "historicalSha256": "b3b4cd4e4467a4d65542f222116de2d68dccb1556c3e25864e1ae78179f11b4b",
+        "currentSha256": "88f6a008b406df4cb457e0761f85edb34657216ee8a33d9a9c6a59fadb8d3135"
+      }
+    ],
+    "currentTiming": "Unknown",
+    "note": "Current whole population is emitted, including later .52/rmax bounds; none is silently declared measured by the historical four-site separation."
+  },
+  "sourceApplicability": {
+    "path": "source-applicability.json",
+    "sha256": "d36c2114277f83f372ff7de52a423bda5575a677b29f693da99cf92510558978",
+    "closureMoves": [
+      {
+        "from": "722231fe0365eccd0239fb63edee92e7c5239531",
+        "to": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "files": [
+          {
+            "path": "packages/polaris-generation-core/src/closed-schema.ts",
+            "historicalSha256": "8592fb3e41e312da0da6bb48ac4bfdacb28b4ecbcf2ab929634b3a0cb44fe6fe",
+            "currentSha256": "2e11a3f07c17cc1a00be0eead09f60004d680edb1b9b883481617160f7cd5d4d"
+          },
+          {
+            "path": "packages/polaris-generation-core/src/dossier-profile.ts",
+            "historicalSha256": "4a316ae452ab16a5cec6051810ce562af2ab988af63ff1212c237b19e5f356df",
+            "currentSha256": "8550ba40643cfed9f0e72cde31d3afa7938564fc54ba162ecfbbe46c18e9224f"
+          },
+          {
+            "path": "packages/polaris-generation-core/src/draft-model.ts",
+            "historicalSha256": "0c64dd7330a52676f2ae46e520cc97ee021cfdb1ab50ccf91e39902596c5b42a",
+            "currentSha256": "ea2ba2fa6e88feb552c9b0adb20df51ca828e4a540d5eb187b9c3580f212aeed"
+          },
+          {
+            "path": "packages/polaris-generation-core/src/generation-source.ts",
+            "historicalSha256": "3ff111820b63f4f198f8cef20d0cd88312881ef5c73d10a0ca7a471aea25a069",
+            "currentSha256": "c3a392d23c6ab5cf4632b2ecca60cdbedbfbdeff7a0a1b305d688835481bee74"
+          },
+          {
+            "path": "packages/polaris-generation-core/src/local-render.ts",
+            "historicalSha256": null,
+            "currentSha256": "f08119b4053d297062f78942742b7bbd3681fccaf02f3158cad9f643710a4b6f"
+          },
+          {
+            "path": "packages/polaris-generation-core/src/public-source-classification.ts",
+            "historicalSha256": "5d3cb7538eec7e90b6a711eb741cb7a59d401029365c72b8c13ec2c56fcba32c",
+            "currentSha256": "af0515077b6234ba6dbdbca76c198cae500ba8ab1c4bea692f0bf8b3896644af"
+          },
+          {
+            "path": "packages/polaris-generation-core/src/secret-redaction.ts",
+            "historicalSha256": "6567b00948e88e5b222d6c734061c473ff16f1a5bf17b0aa117117dfa2d4e1c2",
+            "currentSha256": "6aba0786ad977294329c65dc2623a34959b1400b07623578895cefb6e95221e8"
+          },
+          {
+            "path": "packages/support/src/decode-utf8.ts",
+            "historicalSha256": null,
+            "currentSha256": "f57863901787c528672976af4efd285d6daf8d3895df9d332c28724ac435ca27"
+          },
+          {
+            "path": "packages/support/src/deep-freeze.ts",
+            "historicalSha256": null,
+            "currentSha256": "ea3f83d840561f130ec91080d8066359a52d61dad2b089f1fe82677f37d85149"
+          },
+          {
+            "path": "packages/support/src/index.ts",
+            "historicalSha256": null,
+            "currentSha256": "d6a036d587831989bc650646ff0222828ebbcd947f667a2d616980fd40fdd853"
+          },
+          {
+            "path": "packages/support/src/is-record.ts",
+            "historicalSha256": null,
+            "currentSha256": "c0474de8efc9374f8707a40dcc62af68ddddf7d10e6bd94fedb6c7c7134d1e97"
+          },
+          {
+            "path": "packages/support/src/sha256.ts",
+            "historicalSha256": null,
+            "currentSha256": "9fb34e4cf7b60fa9ba45ac06bab0a95fbb3a0c1c629a38ad24e1ec05e3c765f1"
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+            "historicalSha256": "095b6f52d59c48741aa4dca053ab86f58d8dc3071f3b9adf70477f9952ac9da8",
+            "currentSha256": "5d5cf4fd8601178882613cf69b8e2903ecb910ab3a5855c6ad480bb03adb9700"
+          }
+        ]
+      },
+      {
+        "from": "bb5df68080b00a08557f64156c9bf3b4d9d25ed4",
+        "to": "4b28caccc115ab7e4ac89800120d54d816f9ff3f",
+        "files": [
+          {
+            "path": "packages/polaris-generation-core/src/closed-schema.ts",
+            "historicalSha256": "8592fb3e41e312da0da6bb48ac4bfdacb28b4ecbcf2ab929634b3a0cb44fe6fe",
+            "currentSha256": "2e11a3f07c17cc1a00be0eead09f60004d680edb1b9b883481617160f7cd5d4d"
+          },
+          {
+            "path": "packages/polaris-generation-core/src/dossier-profile.ts",
+            "historicalSha256": "4a316ae452ab16a5cec6051810ce562af2ab988af63ff1212c237b19e5f356df",
+            "currentSha256": "8550ba40643cfed9f0e72cde31d3afa7938564fc54ba162ecfbbe46c18e9224f"
+          },
+          {
+            "path": "packages/polaris-generation-core/src/draft-model.ts",
+            "historicalSha256": "0c64dd7330a52676f2ae46e520cc97ee021cfdb1ab50ccf91e39902596c5b42a",
+            "currentSha256": "ea2ba2fa6e88feb552c9b0adb20df51ca828e4a540d5eb187b9c3580f212aeed"
+          },
+          {
+            "path": "packages/polaris-generation-core/src/generation-source.ts",
+            "historicalSha256": "3ff111820b63f4f198f8cef20d0cd88312881ef5c73d10a0ca7a471aea25a069",
+            "currentSha256": "c3a392d23c6ab5cf4632b2ecca60cdbedbfbdeff7a0a1b305d688835481bee74"
+          },
+          {
+            "path": "packages/polaris-generation-core/src/local-render.ts",
+            "historicalSha256": null,
+            "currentSha256": "f08119b4053d297062f78942742b7bbd3681fccaf02f3158cad9f643710a4b6f"
+          },
+          {
+            "path": "packages/polaris-generation-core/src/public-source-classification.ts",
+            "historicalSha256": "5d3cb7538eec7e90b6a711eb741cb7a59d401029365c72b8c13ec2c56fcba32c",
+            "currentSha256": "af0515077b6234ba6dbdbca76c198cae500ba8ab1c4bea692f0bf8b3896644af"
+          },
+          {
+            "path": "packages/polaris-generation-core/src/secret-redaction.ts",
+            "historicalSha256": "6567b00948e88e5b222d6c734061c473ff16f1a5bf17b0aa117117dfa2d4e1c2",
+            "currentSha256": "6aba0786ad977294329c65dc2623a34959b1400b07623578895cefb6e95221e8"
+          },
+          {
+            "path": "packages/support/src/decode-utf8.ts",
+            "historicalSha256": null,
+            "currentSha256": "f57863901787c528672976af4efd285d6daf8d3895df9d332c28724ac435ca27"
+          },
+          {
+            "path": "packages/support/src/deep-freeze.ts",
+            "historicalSha256": null,
+            "currentSha256": "ea3f83d840561f130ec91080d8066359a52d61dad2b089f1fe82677f37d85149"
+          },
+          {
+            "path": "packages/support/src/index.ts",
+            "historicalSha256": null,
+            "currentSha256": "d6a036d587831989bc650646ff0222828ebbcd947f667a2d616980fd40fdd853"
+          },
+          {
+            "path": "packages/support/src/is-record.ts",
+            "historicalSha256": null,
+            "currentSha256": "c0474de8efc9374f8707a40dcc62af68ddddf7d10e6bd94fedb6c7c7134d1e97"
+          },
+          {
+            "path": "packages/support/src/sha256.ts",
+            "historicalSha256": null,
+            "currentSha256": "9fb34e4cf7b60fa9ba45ac06bab0a95fbb3a0c1c629a38ad24e1ec05e3c765f1"
+          },
+          {
+            "path": "packages/three-surface-poc-core/src/test-artifact-verification.ts",
+            "historicalSha256": "095b6f52d59c48741aa4dca053ab86f58d8dc3071f3b9adf70477f9952ac9da8",
+            "currentSha256": "5d5cf4fd8601178882613cf69b8e2903ecb910ab3a5855c6ad480bb03adb9700"
+          }
+        ]
+      }
+    ],
+    "currentTiming": "Unknown"
+  },
+  "daemonEntry": {
+    "inheritedNoteQualification": "The X2 case retains its historical residual note verbatim; its current kind and actual hook failure show the repaired coverage. R7 remains a finite static-loader refusal, not runtime execution of that flagged path.",
+    "campaigns": {
+      "head": {
+        "commit": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "testFileFrom": "the tree",
+        "rows": 57,
+        "sha256": "096d35cd73987299831b7e55004a972dea8476e9a51716362bd52b82e58cb9fb"
+      },
+      "base-test": {
+        "commit": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "testFileFrom": "c104771ff90f47ffd070f2339c36010458679c71",
+        "rows": 57,
+        "sha256": "3532e85f980ca696a914920df11ca074df32620ebc9c1e5b9d95bbc09fbd4bdb"
+      },
+      "prior-test": {
+        "commit": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "testFileFrom": "447d9f083fb120c14ddd8da646c03675f3ce7bc7",
+        "rows": 57,
+        "sha256": "cd78ef5771456eac266f59c07f0cc43cb1345877fd0f306bbfa7f05115ccc134"
+      },
+      "round1-test": {
+        "commit": "7b9dc83a315e32e98549f3c1cb1cdfde25ae2984",
+        "testFileFrom": "9e00252ae134accc4a42604445a4db66f68d5100",
+        "rows": 57,
+        "sha256": "13a7c42a3eb2590cd7b75ec6b5becfcea077a9eb8dd6f522f203598530e16336"
+      }
+    },
+    "attribution": [
+      {
+        "id": "control",
+        "kind": "control",
+        "failedRows": [],
+        "rowKinds": [],
+        "passed": 17,
+        "staticFailed": []
+      },
+      {
+        "id": "P-static",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "hook",
+          "pin",
+          "text"
+        ],
+        "passed": 14,
+        "staticFailed": []
+      },
+      {
+        "id": "P-before-branches",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "hook",
+          "pin",
+          "text"
+        ],
+        "passed": 14,
+        "staticFailed": []
+      },
+      {
+        "id": "P-daemon-dynamic",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "hook",
+          "pin",
+          "text"
+        ],
+        "passed": 14,
+        "staticFailed": []
+      },
+      {
+        "id": "P-help-branch",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "hook",
+          "pin",
+          "text"
+        ],
+        "passed": 14,
+        "staticFailed": []
+      },
+      {
+        "id": "P-invalid-branch",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "hook",
+          "pin",
+          "text"
+        ],
+        "passed": 14,
+        "staticFailed": []
+      },
+      {
+        "id": "P-start-failure",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "P-entry-read",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does"
+        ],
+        "rowKinds": [
+          "hook"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "X1-close-failed-callback-in-main",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "X3-shutdown-in-http-host",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does"
+        ],
+        "rowKinds": [
+          "hook"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "X2-close-failure-in-http-host",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does"
+        ],
+        "rowKinds": [
+          "hook"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "P-transitive",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does"
+        ],
+        "rowKinds": [
+          "hook"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "R1-flag-between-branches",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "R2-flag-createRequire-before-daemon",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "R3-runtime-hook",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "E-type-only-import",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "E-comment-in-branch",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "E-renamed-binding",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "S1-else-if-flag-after-dossier",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "S2-same-line-if-after-dossier",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "S3-else-if-flag-after-polaris",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "S4-else-runtime-hook-after-dossier",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "S5-else-createRequire-flag-after-polaris",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "S6-misindented-close-after-dossier",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "S7-else-split-specifier-after-dossier",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path"
+        ],
+        "rowKinds": [
+          "text"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "C1-comment-outside-branches",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "L1-else-if-chain",
+        "kind": "equivalent",
+        "failedRows": [],
+        "rowKinds": [],
+        "passed": 17,
+        "staticFailed": []
+      },
+      {
+        "id": "L2-nested-function-in-dossier",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "L3-nested-try-in-polaris",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "Y1-dossier-serve-falls-through",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "Y2-dossier-serve-reenters-main",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "Y3-flag-rewrites-argv-into-dossier",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "Y4-polaris-labelled-break",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "Y5-dossier-serve-callback-after-branch",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "E-branch-swap",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "H-hook-blind",
+        "kind": "hook",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does"
+        ],
+        "rowKinds": [
+          "hook"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "H-no-preload",
+        "kind": "hook",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does"
+        ],
+        "rowKinds": [
+          "hook"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "Y1b-dossier-serve-falls-through-no-new-mention",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path"
+        ],
+        "rowKinds": [
+          "text"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "G1-allman-brace-and-wrapped-import",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "G2-commented-else-if-chain",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "G3-else-if-order-swap",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "G4-trailing-comments-and-return-await",
+        "kind": "equivalent",
+        "failedRows": [],
+        "rowKinds": [],
+        "passed": 17,
+        "staticFailed": []
+      },
+      {
+        "id": "G5-double-quoted-condition",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "G6-unspaced-condition",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "G7-parenthesised-condition",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "R7-island-computed-flag",
+        "kind": "static-defect",
+        "failedRows": [],
+        "rowKinds": [],
+        "passed": 17,
+        "staticFailed": [
+          "the live Node entries and the parked provider island admits transitive island ingress only from the island and exact parked remainder",
+          "the live Node entries and the parked provider island resolves every workspace import both entries reach, dynamic ones included"
+        ]
+      },
+      {
+        "id": "P-machine-transitive",
+        "kind": "defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does"
+        ],
+        "rowKinds": [
+          "hook"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "D-wrong-operator",
+        "kind": "predicate-defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "D-wrong-index",
+        "kind": "predicate-defect",
+        "failedRows": [
+          "daemon entry: every invocation but `dossier` is unchanged [\"--help\",\"dossier\"] prints the usage and exits 0",
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "hook",
+          "pin",
+          "text"
+        ],
+        "passed": 10,
+        "staticFailed": []
+      },
+      {
+        "id": "D-wrong-name",
+        "kind": "predicate-defect",
+        "failedRows": [
+          "daemon entry: every invocation but `dossier` is unchanged [\"Dossier\"] is refused with exit 1 and the same message",
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "hook",
+          "pin",
+          "text"
+        ],
+        "passed": 10,
+        "staticFailed": []
+      },
+      {
+        "id": "D-duplicate-branch",
+        "kind": "predicate-defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does"
+        ],
+        "rowKinds": [
+          "hook",
+          "text"
+        ],
+        "passed": 12,
+        "staticFailed": []
+      },
+      {
+        "id": "D-missing-branch",
+        "kind": "predicate-defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app, and the `dossier render` branch does",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "hook",
+          "pin",
+          "text"
+        ],
+        "passed": 11,
+        "staticFailed": []
+      },
+      {
+        "id": "D-unexpected-else",
+        "kind": "predicate-defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path"
+        ],
+        "rowKinds": [
+          "text"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "D-fallthrough-without-argv-write",
+        "kind": "predicate-defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier render <missing>` reaches the run with the renderer injected, and starts no daemon",
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier status <missing>` is a dossier refusal (exit 1) and starts no daemon",
+          "daemon entry: the one changed input, `dossier` as the first argument `dossier` alone is a dossier usage error (exit 2), not the daemon's refusal",
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path"
+        ],
+        "rowKinds": [
+          "text"
+        ],
+        "passed": 13,
+        "staticFailed": []
+      },
+      {
+        "id": "E-multiline-type-only-import",
+        "kind": "equivalent",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      },
+      {
+        "id": "D-after-daemon",
+        "kind": "predicate-defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path",
+          "daemon entry: the one changed input, `dossier` as the first argument the daemon path never loads the POC app: each import is dynamic and inside the `dossier` or `polaris` branch"
+        ],
+        "rowKinds": [
+          "pin",
+          "text"
+        ],
+        "passed": 15,
+        "staticFailed": []
+      },
+      {
+        "id": "D-mutable-argv-binding",
+        "kind": "predicate-defect",
+        "failedRows": [
+          "daemon entry: the one changed input, `dossier` as the first argument every mention of the POC app in main.ts lies inside the `dossier` or the `polaris` branch, whose only else is the other, before the daemon path"
+        ],
+        "rowKinds": [
+          "text"
+        ],
+        "passed": 16,
+        "staticFailed": []
+      }
+    ],
+    "pinFalseRefusals": [
+      "E-comment-in-branch",
+      "E-renamed-binding",
+      "E-branch-swap",
+      "L2-nested-function-in-dossier",
+      "L3-nested-try-in-polaris",
+      "G1-allman-brace-and-wrapped-import",
+      "G2-commented-else-if-chain",
+      "G3-else-if-order-swap",
+      "G5-double-quoted-condition",
+      "G6-unspaced-condition",
+      "G7-parenthesised-condition"
+    ]
+  },
+  "emitClaim": {
+    "proves": "Equality of masked TypeScript-transpiled JavaScript for named files under the recorded compiler/options only.",
+    "limits": [
+      "leading runner pragmas",
+      "runner config/environment",
+      "imported modules",
+      "actual region CPU"
+    ],
+    "counterexamples": [
+      "@vitest-/@jest-environment pragma",
+      "transitive region-module busy loop"
+    ]
+  },
+  "tools": [
+    {
+      "name": "build_record.py",
+      "sha256": "ca3f323834584ec5b5f8fbe18f83c5d7a19251942d778d91dcfc65a77a41a978"
+    },
+    {
+      "name": "build_record_mutants.py",
+      "sha256": "e3794b2ba75f41327b33bd61780f70b8179a363a4b403b9c5cdbbfb9396bc392"
+    },
+    {
+      "name": "daemon-case-population.json",
+      "sha256": "b1478f7a0b656f1905f183824a279b221a0b6f38458f4b08945457623cb09ebf"
+    },
+    {
+      "name": "daemon_entry_probe.py",
+      "sha256": "6dd80b245fcbf3c413cdc021aad402f351cc4df8ba32ddd73ece85cbe011aff0"
+    },
+    {
+      "name": "emit_equal.mjs",
+      "sha256": "8dbb1261675a8c1ac2c661fbc9421fb51e6587d845ee8a07ccb1c9d611280356"
+    },
+    {
+      "name": "historical_record.py",
+      "sha256": "d5c1a197c5a23724eb1d7c91c66696b3a780abfa8f61d6e4e88488c95606657f"
+    },
+    {
+      "name": "r3_variants.py",
+      "sha256": "9e4e0fd3be2221b3d7a1c6098029d6e940425a8581dcd95cf509bd13a03cb536"
+    },
+    {
+      "name": "row_delta.py",
+      "sha256": "e4d943faf959403e2c64501a6bacc68a16e181ee3cbd8dec71fdd5c181e7b106"
+    },
+    {
+      "name": "source_applicability.mjs",
+      "sha256": "c4621be9855910a902eb60d0c2720aa1e25601fe3c66a4e45602b66b1b255507"
+    },
+    {
+      "name": "timing_census.py",
+      "sha256": "79aad9c52e1a11f8887d8fe5475a86e93bd742ac8aec436089a69cb098840f48"
+    }
+  ]
+}

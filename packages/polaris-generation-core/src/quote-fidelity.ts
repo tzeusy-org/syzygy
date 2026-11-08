@@ -174,7 +174,10 @@ function curlySpan(text: string, open: number): { inner: string; end: number } |
   return undefined;
 }
 
-/** Every quoted span of `text`: a lead-in quotation runs to the last straight quote before the next lead-in, any other span takes the reading that verifies when one exists. */
+/** Every quoted span of `text`: a lead-in quotation runs to the last straight quote before the next lead-in, any other span takes the
+ * reading that verifies when one exists. This broader checker walks left-to-right: an earlier ordinary quotation can consume a
+ * literal lead-in. It is not the local-agent citation-ordinal reader in quote-locate.ts. The local checker and renderer use that
+ * reader together; they do not use this one interchangeably (README.md "Quotation reader domains"). */
 function quotedSpans(text: string, leadIn: string, verifies: (inner: string) => boolean): { inner: string; ok: boolean; terminated: boolean; end: number }[] {
   const out: { inner: string; ok: boolean; terminated: boolean; end: number }[] = [];
   for (let i = 0; i < text.length; i++) {

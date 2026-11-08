@@ -52,8 +52,11 @@ authority and no model yet called on the current path.
     [dossier local-agent addition](openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.1.md);
-    [v1.2 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md)), and
-    36 requirements and 248 scenarios in the effective composition with it.
+    [v1.2 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md);
+    [v1.3 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md);
+    [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
+    [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md)), and
+    36 requirements and 270 scenarios in the effective composition with it.
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
     design carry present-tense status since the 2026-09-29
     [readability successor](.syzygy/governance/decisions/POLARIS-UNDERSTANDING-READABILITY-SUCCESSOR-ACT.md).
@@ -234,6 +237,7 @@ visibility**. Its contract prerequisite is **Waves A + B only**.
 | PWB observer-registry currency and briefing amendment | **PERFORMED 2026-09-30 — one superseding `adopt-registry-entry` act, state (1), bound to the entry's own SHA-256.** The registry entry moves to version `1.2.0-candidate.1`: 13 declared per-class currency bounds under one closed semantics block (an undeclared class stays Unknown; an out-of-bound assessment is a typed result), and one further response ceiling, `maxBriefingResponseBytes`, for single-claim briefing views. Supersedes the 2026-09-05 registry adoption for the registry role only. No code consumes the new fields until a separate continuation direction *(marked 2026-10-21: given for the currency bounds and semantics block only, as `decisions/PWB-M2-SLICE-5-IMPLEMENTATION-CONTINUATION-DIRECTION.md` states; `maxBriefingResponseBytes` stays unread)*; no briefing route is served before its machine-view specification is signed off. Itself superseded for the registry role on 2026-10-02 by the behaviour-contract re-pin. | `decisions/PWB-OBSERVER-REGISTRY-CURRENCY-BRIEFING-AMENDMENT-ACT.md`; `decisions/ACCEPTANCE-ACT-RECORD.md`; `contracts/candidates/pwb-registry-currency-briefing-amendment/` |
 | PWB behaviour-contract re-pin, secret policy and registry entry (`syzygy-jloi`) | **PERFORMED 2026-10-02 — two separate superseding state-(1) acts, each bound to its artifact's own SHA-256, plus plain continuation direction C.** The secret-classification policy (`approve-policy`, superseding the 2026-09-05 approval) and the observer registry entry (`adopt-registry-entry`, superseding the 2026-09-30 adoption) now pin `governingBehaviorContract` to the PWB `spec.md` signed as `pwb-readability-successor-v1.0`, and name that sign-off; nothing else in either file moves, and no version label changes. Given by one option selection ("A + B + C now"), not typed phrases; the question's garbled parenthetical is disclosed and the binding is to the manifest rows. By direction C the body-read gate evaluates the two new acts; no new field is read. Bound to the round-1 notes-only `CONFIRM WITH EXCEPTIONS`. | `decisions/PWB-SECRET-CLASSIFICATION-POLICY-BEHAVIOR-CONTRACT-REPIN-ACT.md`; `decisions/PWB-OBSERVER-REGISTRY-BEHAVIOR-CONTRACT-REPIN-ACT.md`; `decisions/OWNER-INSTRUCTIONS-2026-10-02-PWB-BEHAVIOR-CONTRACT-REPIN.md`; `decisions/ACCEPTANCE-ACT-RECORD.md`; `contracts/candidates/pwb-behavior-contract-repin/` |
 | Public-source screening scope v4, span (P-110) | [Observed] **PERFORMED 2026-10-20 — a superseding state-(1) `approve-policy` act.** The selected span policy and bounded installation travel together; the five round-4 notes remain in their preserved dispositions. The separate owner direction owns the installation scope. Existing consent and source gates continue to decide reads; act recording alone is not verification of runtime effect. | `decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V4-ACT.md`; `decisions/OWNER-DIRECTION-SCREENING-V4-SPAN-INSTALL-2026-10-20.md`; `decisions/ACCEPTANCE-ACT-RECORD.md`; `docs/evidence/p110-span-install-corrections-2026-10-21.md` |
+| Public-source screening scope v7, script (`syzygy-pdja.5`) | [Observed] **PERFORMED 2026-11-06 — a superseding state-(1) `approve-policy` act**, recorded at `.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md`, with its install. A page's policy is a closed directive set and pages may carry renderer-written hash-allowed scripts. [Observed] The pinned hash set is empty, so no page carries a script yet: that takes a signed dossier spec version and its implementation. | Recorded with its install; the carried exceptions' storage and `window.open` tests wait for a script (`syzygy-pdja.3`). |
 | Observer registry machine ceiling (P-114) | [Observed] **PERFORMED 2026-10-20 — a superseding state-(1) `adopt-registry-entry` act.** The owner selected `pwb-registry-machine-ceiling-amendment-v1.0` together with exact Ask 2 items 1–5. The one registry ceiling and matching implementation constant are 16 MiB; all other registry bytes, the reviewed proposal and predecessor acts are preserved. This supersedes the registry role of the 2026-10-02 re-pin only. Recorded approval and source implementation establish no runtime-admission result; the separate owner direction owns installation scope. | `decisions/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md`; `decisions/OWNER-DIRECTION-MACHINE-CEILING-INSTALL-2026-10-20.md`; `decisions/ACCEPTANCE-ACT-RECORD.md`; `docs/evidence/p114-machine-ceiling-install-2026-10-21.md` |
 | Polaris understanding dependency-union successor (`syzygy-c51h`) | **PERFORMED 2026-10-02 — one digest-bound successor act over one file.** The amendment's generated `GOVERNING-DEPENDENCIES.md` is regenerated from its specification's warrants blocks: the policies class gains `CC-REV-8`, which REQ-polaris-generation-004 already declared. No other byte of the amendment moves; it supersedes the 2026-09-29 understanding readability act for that one file only. Given by one option selection ("Sign off"), late on 2026-10-02 local time, recorded 2026-10-03; act instant 2026-10-02 UTC. Bound to the round-1 notes-only `CONFIRM WITH EXCEPTIONS`. Grants no implementation or other permission. | `decisions/POLARIS-UNDERSTANDING-DEPENDENCY-UNION-SUCCESSOR-ACT.md`; `decisions/OWNER-INSTRUCTIONS-2026-10-02-POLARIS-UNDERSTANDING-DEPENDENCY-UNION.md`; `decisions/ACCEPTANCE-ACT-RECORD.md`; `contracts/candidates/polaris-understanding-dependency-union-successor/` |
 | Response-ceiling reading under compression (P-77 Q2) | **Issued 2026-09-30 — plain owner direction.** Each "final encoded HTTP body" response ceiling measures the body before any HTTP content coding, including ceilings adopted later; gzip may ship only when it shrinks the body, so bytes sent never exceed bytes checked. No ceiling value, route or specification byte changes. Unblocks M10 slice 4b. | `decisions/POLARIS-RESPONSE-CEILING-READING-DIRECTION.md`; `decisions/POLARIS-RESPONSE-CEILING-READING-DECISION-PACKET.md` |
@@ -408,6 +412,9 @@ python3 scripts/record_versioned_signoff.py --check cap1-trusted-bootstrap-conse
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.0   # dossier local-agent sign-off, v1.0 2026-10-06: record, aggregate block and applied tree
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.1   # dossier local-agent sign-off, v1.1 2026-10-07: record, options, aggregate block and applied tree
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.2   # dossier local-agent sign-off, v1.2 2026-10-14 (waiting sessions): record, aggregate block and applied tree
+python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.3   # dossier local-agent sign-off, v1.3 2026-11-04 (presentation elements): record, aggregate block and applied tree
+python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.4   # dossier local-agent sign-off, v1.4 2026-11-06: record, aggregate block and applied tree
+python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.5   # dossier local-agent sign-off, v1.5 2026-11-07 (owner's review of the Redis dossier): record, aggregate block and applied tree
 # Lane B and its RFC-0007 successor are declined (decisions/POLARIS-LANE-B-DECLINED-AND-TARGET-REVISED-DIRECTION.md); their checks left the battery.
 python3 scripts/record_pwb_behavior_amendment_acts.py --check render-mode 527be5ac3732619608355ae9658c92cee45341e831521bc526398481dd915785 --date 2026-10-02   # render-mode act, performed 2026-10-02: record, aggregate block and applied tree
 python3 scripts/record_pwb_behavior_amendment_acts.py --check machine-view acabc7915e4461186b5878ce40cc0c62ed7cf91eadd7eead1cb179c80f672e72 --date 2026-10-02   # machine-view act, performed 2026-10-02: record, aggregate block and applied tree
@@ -428,6 +435,12 @@ python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --check   # dossi
 python3 scripts/build_polaris_dossier_local_agent_mode_v1_1.py --selftest   # dossier v1.1 builder fixtures, including the signed-bytes check
 python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --check   # dossier v1.2 package: absent, unapplied or applied over the signed v1.1 bytes, and signed or not
 python3 scripts/build_polaris_dossier_local_agent_mode_v1_2.py --selftest   # dossier v1.2 builder fixtures, including the signed-bytes check
+python3 scripts/build_polaris_dossier_local_agent_mode_v1_3.py --check   # dossier v1.3 package: absent, unapplied or applied over the signed v1.2 bytes, and signed or not
+python3 scripts/build_polaris_dossier_local_agent_mode_v1_3.py --selftest   # dossier v1.3 builder fixtures, including the signed-bytes check
+python3 scripts/build_polaris_dossier_local_agent_mode_v1_4.py --check   # dossier v1.4: signed layer over v1.3, applied subject and predecessor checks
+python3 scripts/build_polaris_dossier_local_agent_mode_v1_4.py --selftest   # dossier v1.4 successor-layer and signed-bytes fixtures
+python3 scripts/build_polaris_dossier_local_agent_mode_v1_5.py --check   # dossier v1.5: signed layer over v1.4, applied subject and predecessor checks
+python3 scripts/build_polaris_dossier_local_agent_mode_v1_5.py --selftest   # dossier v1.5 successor-layer and signed-bytes fixtures
 python3 scripts/record_pwb_behavior_amendment_acts.py --check opening-band 7f80cb05f644dd1e4f49e7b212d6972ee4754e40682450e59a6c3245546d5c46 --date 2026-10-01   # opening-band act, performed 2026-10-01: record, aggregate block and applied subjects regenerate exactly
 python3 scripts/build_pwb_registry_currency_briefing_amendment.py --check   # registry amendment, performed 2026-09-30, superseded 2026-10-02: the re-pinned subject reverses to its proposed bytes
 python3 scripts/build_pwb_registry_currency_briefing_amendment.py --selftest
@@ -440,8 +453,8 @@ python3 scripts/build_pwb_registry_machine_ceiling_amendment.py --check   # P-11
 python3 scripts/record_pwb_registry_machine_ceiling_act.py --builder-selftest   # P-114 frozen builder: actual 22 predicates in pre-install tree with v4 installed
 python3 scripts/record_pwb_registry_machine_ceiling_act.py --check   # P-114 paired version/Ask-2 act, exact registry row and aggregate block
 python3 scripts/record_pwb_registry_machine_ceiling_act.py --selftest   # P-114 recorder predicates and filesystem rollback fixtures
-python3 scripts/record_public_source_screening_scope_v5_act.py --check e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b --date 2026-11-03 --owner-words 'Sign screening scope version 5, variant bcd'   # screening-scope v5 policy act: record, aggregate block and applied subject
-python3 scripts/record_public_source_screening_scope_v5_act.py --selftest
+python3 scripts/record_public_source_screening_scope_v7_act.py --check 626be0cadc248b9ca9b3165d51f97d39aec552eb3a97b8b7df21d2446fc233da --date 2026-11-06 --owner-words 'Sign screening scope version 7, variant s'   # screening-scope v7 policy act: record, aggregate block and applied subject
+python3 scripts/record_public_source_screening_scope_v7_act.py --selftest
 python3 scripts/check_polaris_response_ceiling_reading.py --check   # P-77 Q2 reading: quotes intact, compression only under the 2026-09-30 direction
 python3 scripts/check_polaris_response_ceiling_reading.py --selftest
 python3 scripts/build_contract_readability_restyle.py --check   # restyle package: manifest = exact regeneration, applied
@@ -469,6 +482,7 @@ python3 scripts/check_quotations.py     # a quotation beside a path:line locator
 python3 scripts/check_quotations.py --selftest
 python3 scripts/check_docs_review_campaign_partition.py --check   # every docs/reviews/ file in exactly one docs/review-campaigns/ fragment
 python3 scripts/check_docs_review_campaign_partition.py --selftest
+python3 scripts/check_surface_freeze.py --selftest   # the surface merge freeze's fixtures; hosted CI also runs it against each change's base
 python3 scripts/build_evidence_index.py --selftest   # the on-demand docs/evidence/ index's fixtures (syzygy-bpyt.9.1)
 DR=.syzygy/governance/contracts/candidates/round-2026-08f/fixtures/DRY-RUN-ADMINISTRATION.json
 python3 scripts/validate_launch_administration.py $DR
@@ -485,7 +499,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and sixteen checks above are the same one hundred and sixteen the hosted workflow runs
+The one hundred and twenty-six checks above are the same one hundred and twenty-six the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

@@ -1,0 +1,2021 @@
+{
+  "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+  "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+  "capture": "Author-emitter execution records; raw reports retained. Independent capture/execution/review remains a separate gate.",
+  "corpus": {
+    "subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+    "rows": [
+      {
+        "id": "baseline",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": null,
+        "operation": "none",
+        "old": "",
+        "new": "",
+        "base_source_sha256": null,
+        "mutated_source_sha256": null,
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-baseline-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-baseline-old.log",
+        "raw_sha256": "10bc9d77ec4ae4d1fce30271a75a24ac85c96d49ca7d1b8df63267378048c0a5",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-baseline-old.vitest.json",
+        "json_sha256": "0079b290f67152798d633500d1cc915c6a7ff3e85f354b7ef1e9fc1b42d0781c",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-baseline-old.log"
+      },
+      {
+        "id": "baseline",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": null,
+        "operation": "none",
+        "old": "",
+        "new": "",
+        "base_source_sha256": null,
+        "mutated_source_sha256": null,
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-baseline-new.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 9,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-baseline-new.log",
+        "raw_sha256": "1a48f664441a66c9f68812ac2c174f06dd84ea5d8213cfcc9a785f91be387439",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-baseline-new.vitest.json",
+        "json_sha256": "93e8b9e4e678081e36abff1104cec67e28dcfb858006460628ba7ee1250cae48",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-baseline-new.log"
+      },
+      {
+        "id": "live-to-dossier-trigger",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/main.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nimport '../../three-surface-poc/src/polaris-generation/dossier-trigger.js';\n",
+        "base_source_sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+        "mutated_source_sha256": "3886f7631f2f1999ca9abf21f7622b7ff6876da630205a3097ee4c312ee13ad9",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-live-to-dossier-trigger-old.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 7,
+          "numFailedTests": 1,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "reaches no island module from either live entry",
+            "failureMessages": [
+              "AssertionError: apps/syzygy/src/main.ts: first path into the parked island\napps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts): expected [ \u2026(12) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:125:103\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-live-to-dossier-trigger-old.log",
+        "raw_sha256": "425e6b4bed79b30c9d4a18f5a54fc91eda43e87e206efb9522c438847f8d429e",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-live-to-dossier-trigger-old.vitest.json",
+        "json_sha256": "daa16634adcb0c96dea94e6f9e633a0d2b4f5e30035c34aebdd31272ec34d5a0",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-live-to-dossier-trigger-old.log"
+      },
+      {
+        "id": "live-to-dossier-trigger",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/main.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nimport '../../three-surface-poc/src/polaris-generation/dossier-trigger.js';\n",
+        "base_source_sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+        "mutated_source_sha256": "3886f7631f2f1999ca9abf21f7622b7ff6876da630205a3097ee4c312ee13ad9",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-live-to-dossier-trigger-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 7,
+          "numFailedTests": 2,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 280 production sources: unlisted transitive ingress\napps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:190:122\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          },
+          {
+            "title": "reaches no island module from either live entry",
+            "failureMessages": [
+              "AssertionError: apps/syzygy/src/main.ts: first path into the parked island\napps/syzygy/src/main.ts -> apps/syzygy/src/main.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts): expected [ \u2026(12) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:208:103\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-live-to-dossier-trigger-new.log",
+        "raw_sha256": "55199d6d5d4399e16098c5ea7841796ac551d180f5ac8c7ef70065191e39390e",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-live-to-dossier-trigger-new.vitest.json",
+        "json_sha256": "4a36cc74bda46d91f2faae7759f6acf4d84a205883d32981567b5804822b493c",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-live-to-dossier-trigger-new.log"
+      },
+      {
+        "id": "disconnected-old-member",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "import '../../three-surface-poc/src/polaris-generation/dossier-trigger.js';\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "1afd20a8213aba98a8720f524b743319e9426f11af50107895cdbe709dd1eff6",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-old-member-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-old-member-old.log",
+        "raw_sha256": "913e30eaf1546512bcc8e397034921a35d0cf11a6a5f77dd5fc8741d64cca120",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-old-member-old.vitest.json",
+        "json_sha256": "fe38201e51cb7713c99176abd844f12b49fac88d727d744b2e10d6ea6cc761c1",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-disconnected-old-member-old.log"
+      },
+      {
+        "id": "disconnected-old-member",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "import '../../three-surface-poc/src/polaris-generation/dossier-trigger.js';\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "1afd20a8213aba98a8720f524b743319e9426f11af50107895cdbe709dd1eff6",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-old-member-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 8,
+          "numFailedTests": 1,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 281 production sources: unlisted transitive ingress\napps/syzygy/src/bpyt-island-fixture.ts -> apps/syzygy/src/bpyt-island-fixture.ts imports ../../three-surface-poc/src/polaris-generation/dossier-trigger.js (apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:190:122\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-old-member-new.log",
+        "raw_sha256": "c51df8524a2d9868cace858bbb46f4d02fa83ea1dbc2d69f856424e3e4e85710",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-old-member-new.vitest.json",
+        "json_sha256": "a253e5c2d113965632e57e79427591f4e39ce4e25f35d293cfc280692b3efb56",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-disconnected-old-member-new.log"
+      },
+      {
+        "id": "disconnected-new-member",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "import '@syzygy/three-surface-poc-app/dossier-render';\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "36c57c4a073a592adac14c3b6d87b283e65eb3146e17943c6e35a0a56e0c91b3",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-new-member-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-new-member-old.log",
+        "raw_sha256": "9103b3a31a62375d56b6e6eac9fb396a8c720a8cc98874c898dd3363011d5440",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-new-member-old.vitest.json",
+        "json_sha256": "ef9ff44cef49a36ecde0227bf35b7d51577747dbc0a449875fae6b352571bd37",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-disconnected-new-member-old.log"
+      },
+      {
+        "id": "disconnected-new-member",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "import '@syzygy/three-surface-poc-app/dossier-render';\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "36c57c4a073a592adac14c3b6d87b283e65eb3146e17943c6e35a0a56e0c91b3",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-new-member-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 8,
+          "numFailedTests": 1,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 281 production sources: unlisted transitive ingress\napps/syzygy/src/bpyt-island-fixture.ts -> apps/syzygy/src/bpyt-island-fixture.ts imports @syzygy/three-surface-poc-app/dossier-render (apps/three-surface-poc/src/polaris-generation/dossier-render.ts): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:190:122\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-new-member-new.log",
+        "raw_sha256": "c2c66248343405d67127604b54b75d59c1317579cf3e68c04c05981918bdfb02",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-new-member-new.vitest.json",
+        "json_sha256": "6461dcc2375b72d9fc70134253e9d9d406f7af744f6024c560e0411b11af121a",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-disconnected-new-member-new.log"
+      },
+      {
+        "id": "disconnected-via-core-root",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "import '@syzygy/polaris-generation-core';\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "b5942d57122e85f6a59120eda0e158ad1788ac99085248b892c770bfd36dd59b",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-core-root-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-core-root-old.log",
+        "raw_sha256": "d61934b28bc7c0f3148dba11f510e55a5632d50693717522bdf1f90936f67c86",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-core-root-old.vitest.json",
+        "json_sha256": "2c43133876064cc876aca8e2aedfc198d5e694f1b1cc2c485dfef8dd47d182df",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-disconnected-via-core-root-old.log"
+      },
+      {
+        "id": "disconnected-via-core-root",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "import '@syzygy/polaris-generation-core';\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "b5942d57122e85f6a59120eda0e158ad1788ac99085248b892c770bfd36dd59b",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-core-root-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 8,
+          "numFailedTests": 1,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 281 production sources: unlisted transitive ingress\napps/syzygy/src/bpyt-island-fixture.ts -> apps/syzygy/src/bpyt-island-fixture.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./admitted-input.js (packages/polaris-generation-core/src/admitted-input.ts): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:190:122\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-core-root-new.log",
+        "raw_sha256": "1e350e1905b252632349b19e74d6fec9202f6d7083aa812f21ac7c62fbe080f8",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-core-root-new.vitest.json",
+        "json_sha256": "a52a76e3a25433b94e73665344b5fa0d94b682548fbf7db4cff2cc03d3f43ddd",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-disconnected-via-core-root-new.log"
+      },
+      {
+        "id": "disconnected-via-parked-exception",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "import '../../three-surface-poc/src/polaris-generation/run-key.js';\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "516594feb89343781a93353242bbec8909173fbf0aa372437a0389fd1e701dcd",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-parked-exception-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-parked-exception-old.log",
+        "raw_sha256": "9d996fdd0976b421bf149ba059a488fc74c6b194652f36c0dc38b57dfdf3efdf",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-parked-exception-old.vitest.json",
+        "json_sha256": "e6f12fdd923b4e213a44733539c8f0e7a1e5729a24751fdb792695856b15e7cd",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-disconnected-via-parked-exception-old.log"
+      },
+      {
+        "id": "disconnected-via-parked-exception",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "import '../../three-surface-poc/src/polaris-generation/run-key.js';\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "516594feb89343781a93353242bbec8909173fbf0aa372437a0389fd1e701dcd",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-parked-exception-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 8,
+          "numFailedTests": 1,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 281 production sources: unlisted transitive ingress\napps/syzygy/src/bpyt-island-fixture.ts -> apps/syzygy/src/bpyt-island-fixture.ts imports ../../three-surface-poc/src/polaris-generation/run-key.js (apps/three-surface-poc/src/polaris-generation/run-key.ts) -> apps/three-surface-poc/src/polaris-generation/run-key.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./admitted-input.js (packages/polaris-generation-core/src/admitted-input.ts): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:190:122\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-parked-exception-new.log",
+        "raw_sha256": "b55e9cb0a9e300f39f0fb4fe5830a5725914124bd2edfcdb8b2f2fc71dc12ce1",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-parked-exception-new.vitest.json",
+        "json_sha256": "3b9875affdb932ab187a48eb40c08803edabb9a9300112204157aa36797e2c85",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-disconnected-via-parked-exception-new.log"
+      },
+      {
+        "id": "disconnected-unresolved",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "import '@syzygy/bpyt-missing';\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "6db4283e550f024ac536645dd139ac455ffedee30ae10d375ad443712c362789",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unresolved-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unresolved-old.log",
+        "raw_sha256": "8e3eac9d7b6ae0fe693bdda5452cf5cdd9ffb5049c412a0ed55d29b918471ea8",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unresolved-old.vitest.json",
+        "json_sha256": "6e8de441efa04fb04ac4aa0c30bf8a4a1559d5b989881046f629864db626ebf9",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-disconnected-unresolved-old.log"
+      },
+      {
+        "id": "disconnected-unresolved",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "import '@syzygy/bpyt-missing';\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "6db4283e550f024ac536645dd139ac455ffedee30ae10d375ad443712c362789",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unresolved-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 8,
+          "numFailedTests": 1,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 281 production sources: unresolved workspace edges: expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:189:109\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unresolved-new.log",
+        "raw_sha256": "544ef34684a70cea92407360bdba183fc6ed6d9f6663b65ffff78c6de1c67e69",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unresolved-new.vitest.json",
+        "json_sha256": "e26778ae5b877a855b2550f2d7b6e0fcf40b3ff40ea4349faf33006c96e43107",
+        "elapsed_seconds": null,
+        "reused_existing_attempt1_capture": true,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-disconnected-unresolved-new.log"
+      },
+      {
+        "id": "disconnected-unsupported",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "const target = \"node:module\"; import(target);\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "3b0cd4ba2201eda8d763ad6b81666e9fb6c08264c1a16a361152a49ab371a964",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unsupported-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unsupported-old.log",
+        "raw_sha256": "d8b1e1deaf6b9a611ba33ab9a14d5dd78332745ac2ddd4cb43a7c94db01181b9",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unsupported-old.vitest.json",
+        "json_sha256": "85fa2f8a57ae3fac2372d9534d95f50c0df4fdbe49a06cf9b538f470862bf47f",
+        "elapsed_seconds": 3.2855156830046326,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-disconnected-unsupported-old.log"
+      },
+      {
+        "id": "disconnected-unsupported",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "const target = \"node:module\"; import(target);\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "3b0cd4ba2201eda8d763ad6b81666e9fb6c08264c1a16a361152a49ab371a964",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unsupported-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 8,
+          "numFailedTests": 1,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 281 production sources: unsupported loaders: expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:188:103\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unsupported-new.log",
+        "raw_sha256": "77c4b91919936814c6fec7977dcc4c7dd72411978a1c9945c49418e6102cf29c",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-unsupported-new.vitest.json",
+        "json_sha256": "9b43f7447cab67f81762f7fc88e401febacf2d8c96c654864ba72c9e54ff475b",
+        "elapsed_seconds": 4.92288672097493,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-disconnected-unsupported-new.log"
+      },
+      {
+        "id": "exact-dynamic-node-module-entry-0",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/main.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nconst { createRequire: auditMake } = await import(\"node:module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+        "base_source_sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+        "mutated_source_sha256": "e34a29498b304da8d485955d864f932f00b0391fcf93801963a1ed72cda85936",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-exact-dynamic-node-module-entry-0-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-exact-dynamic-node-module-entry-0-old.log",
+        "raw_sha256": "12953205bc5195e1409c2dac67728e9ede1870f16aa96ff7878bca018312d0ea",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-exact-dynamic-node-module-entry-0-old.vitest.json",
+        "json_sha256": "fad724bb881a6639d51a9124c73fdae65faafa1fbac6d7083169447f811b6e49",
+        "elapsed_seconds": 3.233201780007221,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-exact-dynamic-node-module-entry-0-old.log"
+      },
+      {
+        "id": "exact-dynamic-node-module-entry-0",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/main.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nconst { createRequire: auditMake } = await import(\"node:module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+        "base_source_sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+        "mutated_source_sha256": "e34a29498b304da8d485955d864f932f00b0391fcf93801963a1ed72cda85936",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-exact-dynamic-node-module-entry-0-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 7,
+          "numFailedTests": 2,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 280 production sources: unsupported loaders: expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:188:103\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          },
+          {
+            "title": "resolves every workspace import both entries reach, dynamic ones included",
+            "failureMessages": [
+              "AssertionError: apps/syzygy/src/main.ts: unsupported loader forms\napps/syzygy/src/main.ts: apps/syzygy/src/main.ts:271:85 require/createRequire call: auditMake(import.meta.url): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:196:92\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-exact-dynamic-node-module-entry-0-new.log",
+        "raw_sha256": "f4524a43f6efbd0855f3b4309b03337cb67d9d324326713e2a11c53596f1f745",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-exact-dynamic-node-module-entry-0-new.vitest.json",
+        "json_sha256": "af91083ae3466bec367d68c18bb5609d99c8b02f002fa6fcc7f1def5f283f8f4",
+        "elapsed_seconds": 4.740681172988843,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-exact-dynamic-node-module-entry-0-new.log"
+      },
+      {
+        "id": "dynamic-module-entry-0",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/main.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nconst { createRequire: auditMake } = await import(\"module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+        "base_source_sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+        "mutated_source_sha256": "4e602c5178054c1da584ad834defa2874a7f13d5c6394c0fe44d876a4a99f197",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-0-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-0-old.log",
+        "raw_sha256": "78542fc3f9bb2b3ca6e78c492385e80cc8c03d782a4e4d39cad4b5f036e2b301",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-0-old.vitest.json",
+        "json_sha256": "ea8eefd43856f4916a32c935c59fe97e90040113450e4bdd8b841ec6eac34af7",
+        "elapsed_seconds": 3.0192538219853304,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-dynamic-module-entry-0-old.log"
+      },
+      {
+        "id": "dynamic-module-entry-0",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/main.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nconst { createRequire: auditMake } = await import(\"module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+        "base_source_sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+        "mutated_source_sha256": "4e602c5178054c1da584ad834defa2874a7f13d5c6394c0fe44d876a4a99f197",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-0-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 7,
+          "numFailedTests": 2,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 280 production sources: unsupported loaders: expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:188:103\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          },
+          {
+            "title": "resolves every workspace import both entries reach, dynamic ones included",
+            "failureMessages": [
+              "AssertionError: apps/syzygy/src/main.ts: unsupported loader forms\napps/syzygy/src/main.ts: apps/syzygy/src/main.ts:271:80 require/createRequire call: auditMake(import.meta.url): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:196:92\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-0-new.log",
+        "raw_sha256": "2cb697f144fa507717619b0db5056aab3c0e95a540383f0ce6245b3a686e58b0",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-0-new.vitest.json",
+        "json_sha256": "ea824ce4df8b1ab052fde66950780fe6c994315a1b874f0ee931ffd387b4a433",
+        "elapsed_seconds": 5.0767540680244565,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-dynamic-module-entry-0-new.log"
+      },
+      {
+        "id": "static-alias-entry-0",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/main.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nimport { createRequire as auditMake } from \"node:module\"; const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+        "base_source_sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+        "mutated_source_sha256": "c3868f1b85a5c0e77925d03f2eab7014ff4c4321e5fe7eb79ad6e240195d387f",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-static-alias-entry-0-old.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 7,
+          "numFailedTests": 1,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "resolves every workspace import both entries reach, dynamic ones included",
+            "failureMessages": [
+              "AssertionError: apps/syzygy/src/main.ts: unsupported loader forms\napps/syzygy/src/main.ts: apps/syzygy/src/main.ts:271:77 require/createRequire call: auditMake(import.meta.url): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:113:92\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-static-alias-entry-0-old.log",
+        "raw_sha256": "a0c429002f60eebfce91fe1ae9d97f5402ac73664560993cfb3666998acf39e5",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-static-alias-entry-0-old.vitest.json",
+        "json_sha256": "65c7cd180b9519c55c893a3bba995b8702ce2c26e01f776fc4980ebf9eed037b",
+        "elapsed_seconds": 3.1050243100035004,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-static-alias-entry-0-old.log"
+      },
+      {
+        "id": "static-alias-entry-0",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/main.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nimport { createRequire as auditMake } from \"node:module\"; const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+        "base_source_sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+        "mutated_source_sha256": "c3868f1b85a5c0e77925d03f2eab7014ff4c4321e5fe7eb79ad6e240195d387f",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-static-alias-entry-0-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 7,
+          "numFailedTests": 2,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 280 production sources: unsupported loaders: expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:188:103\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          },
+          {
+            "title": "resolves every workspace import both entries reach, dynamic ones included",
+            "failureMessages": [
+              "AssertionError: apps/syzygy/src/main.ts: unsupported loader forms\napps/syzygy/src/main.ts: apps/syzygy/src/main.ts:271:77 require/createRequire call: auditMake(import.meta.url): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:196:92\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-static-alias-entry-0-new.log",
+        "raw_sha256": "3cfd68eb31f833a7d149a0cb0a1414eb2617273b0668aadd7cdb53cf5f4bd798",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-static-alias-entry-0-new.vitest.json",
+        "json_sha256": "c25ce97c38e5b01ccd050e99d9cf76cf4d505e461aec32b441f0a1bb90f49b9e",
+        "elapsed_seconds": 5.086379851039965,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-static-alias-entry-0-new.log"
+      },
+      {
+        "id": "ordinary-destructuring-entry-0",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/main.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\n// altered prose: require createRequire auditMake are only words.\nconst auditProse = \"require createRequire await import(unknown)\";\nconst { createInterface: ordinary } = await import(\"node:readline/promises\"); ordinary();\nconst { createRequire: auditMake } = await import(\"node:readline/promises\"); auditMake();\n",
+        "base_source_sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+        "mutated_source_sha256": "f14a2e0f84e8d55349d71d6454715f57fb89cfe76f9f58950a2ded0f61708be6",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-ordinary-destructuring-entry-0-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-ordinary-destructuring-entry-0-old.log",
+        "raw_sha256": "69fdc28b17b75e32651827bc53217eeba407fdb17c3863d94d64782f0240634c",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-ordinary-destructuring-entry-0-old.vitest.json",
+        "json_sha256": "cf5ae309502db1a6bea3739865f153598c970e36dd205e66c0b19c7046ed8a94",
+        "elapsed_seconds": 2.9935466480092146,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-ordinary-destructuring-entry-0-old.log"
+      },
+      {
+        "id": "ordinary-destructuring-entry-0",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/main.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\n// altered prose: require createRequire auditMake are only words.\nconst auditProse = \"require createRequire await import(unknown)\";\nconst { createInterface: ordinary } = await import(\"node:readline/promises\"); ordinary();\nconst { createRequire: auditMake } = await import(\"node:readline/promises\"); auditMake();\n",
+        "base_source_sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+        "mutated_source_sha256": "f14a2e0f84e8d55349d71d6454715f57fb89cfe76f9f58950a2ded0f61708be6",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-ordinary-destructuring-entry-0-new.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 9,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-ordinary-destructuring-entry-0-new.log",
+        "raw_sha256": "416eee827783bff8164d22ba5a683f7d4111cbbf0b8db56d0d25454e9feceb86",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-ordinary-destructuring-entry-0-new.vitest.json",
+        "json_sha256": "6396f4fda37a921e09c7adc822778d87bb1ee28d80b8c5b2ef9bfd8f36d69c3f",
+        "elapsed_seconds": 4.858099498029333,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-ordinary-destructuring-entry-0-new.log"
+      },
+      {
+        "id": "template-entry-0",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/main.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nawait import(`node:module`);\n",
+        "base_source_sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+        "mutated_source_sha256": "34524edd2c54db208df92ab96fea13d0d0e3b43d8ffc6c1fa337801479a09ff8",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-0-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-0-old.log",
+        "raw_sha256": "ceb732d1f58961bbffb2152b38d40e3e87367026a2d287d1f03f7f12f251bc68",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-0-old.vitest.json",
+        "json_sha256": "14b267805ab5112e8af59832c089d3dac131d2f72b743d2416af13bbace71c2e",
+        "elapsed_seconds": 2.8539051659754477,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-template-entry-0-old.log"
+      },
+      {
+        "id": "template-entry-0",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/main.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nawait import(`node:module`);\n",
+        "base_source_sha256": "4dd828fb30f13f8dd36a6d91e286f445fc4b7cbfccae7cb578a8d6d5934d4297",
+        "mutated_source_sha256": "34524edd2c54db208df92ab96fea13d0d0e3b43d8ffc6c1fa337801479a09ff8",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-0-new.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 9,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-0-new.log",
+        "raw_sha256": "0a6c4e40836ff022f7b6b2e39d3a940a0f6a9fc5bf433e9ea1fa0270442bec92",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-0-new.vitest.json",
+        "json_sha256": "1e34a9ae47d2bda012b36ac3865f45dc24a785314e1d8ecadb684cf22a9f61e0",
+        "elapsed_seconds": 4.810476422018837,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-template-entry-0-new.log"
+      },
+      {
+        "id": "exact-dynamic-node-module-entry-1",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "packages/polaris-dossier/src/broker-client.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nconst { createRequire: auditMake } = await import(\"node:module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+        "base_source_sha256": "7853bd22cf01d41429678275703476da10b6d7b08b1c941fc6309d50bf3294c7",
+        "mutated_source_sha256": "6917712a07cbedae861ab81bb71df096d0b143f1d7a902a8782c9ea9910a8403",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-exact-dynamic-node-module-entry-1-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-exact-dynamic-node-module-entry-1-old.log",
+        "raw_sha256": "f0dc416303f43c22d3ef93072164ed2fa6b457d4115c4d25682943b024414e4a",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-exact-dynamic-node-module-entry-1-old.vitest.json",
+        "json_sha256": "b9816dc5a608139d8b973f67b20b13897acab657898d77879dc7a38bf2d2b051",
+        "elapsed_seconds": 3.3850431939936243,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-exact-dynamic-node-module-entry-1-old.log"
+      },
+      {
+        "id": "exact-dynamic-node-module-entry-1",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "packages/polaris-dossier/src/broker-client.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nconst { createRequire: auditMake } = await import(\"node:module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+        "base_source_sha256": "7853bd22cf01d41429678275703476da10b6d7b08b1c941fc6309d50bf3294c7",
+        "mutated_source_sha256": "6917712a07cbedae861ab81bb71df096d0b143f1d7a902a8782c9ea9910a8403",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-exact-dynamic-node-module-entry-1-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 7,
+          "numFailedTests": 2,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 280 production sources: unsupported loaders: expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:188:103\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          },
+          {
+            "title": "resolves every workspace import both entries reach, dynamic ones included",
+            "failureMessages": [
+              "AssertionError: packages/polaris-dossier/src/broker-client.ts: unsupported loader forms\npackages/polaris-dossier/src/broker-client.ts: packages/polaris-dossier/src/broker-client.ts:43:85 require/createRequire call: auditMake(import.meta.url): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:196:92\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-exact-dynamic-node-module-entry-1-new.log",
+        "raw_sha256": "721350f7d22e0e8d7bb0b952bd5a922e9239aac229fe1eef7d1fc881eb81efa6",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-exact-dynamic-node-module-entry-1-new.vitest.json",
+        "json_sha256": "57f995b76047462fef2dd53bbbb2ef54fc1fbeb6253f99c2f1a352013115be65",
+        "elapsed_seconds": 4.901489664975088,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-exact-dynamic-node-module-entry-1-new.log"
+      },
+      {
+        "id": "dynamic-module-entry-1",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "packages/polaris-dossier/src/broker-client.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nconst { createRequire: auditMake } = await import(\"module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+        "base_source_sha256": "7853bd22cf01d41429678275703476da10b6d7b08b1c941fc6309d50bf3294c7",
+        "mutated_source_sha256": "b38e11f4e5d756a171901e46d2506074cfb46ff027f74dd963c16d5dcc05e944",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-1-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-1-old.log",
+        "raw_sha256": "5809c65f42bdd2ee884f8b50658a5d7bc0eee24e1e9536351e71ec55ef53a30f",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-1-old.vitest.json",
+        "json_sha256": "cae9a5e6256e48b33f943336fd498b1731f490202a59b01f124578dd9c707300",
+        "elapsed_seconds": 3.156137062003836,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-dynamic-module-entry-1-old.log"
+      },
+      {
+        "id": "dynamic-module-entry-1",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "packages/polaris-dossier/src/broker-client.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nconst { createRequire: auditMake } = await import(\"module\"); const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+        "base_source_sha256": "7853bd22cf01d41429678275703476da10b6d7b08b1c941fc6309d50bf3294c7",
+        "mutated_source_sha256": "b38e11f4e5d756a171901e46d2506074cfb46ff027f74dd963c16d5dcc05e944",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-1-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 7,
+          "numFailedTests": 2,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 280 production sources: unsupported loaders: expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:188:103\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          },
+          {
+            "title": "resolves every workspace import both entries reach, dynamic ones included",
+            "failureMessages": [
+              "AssertionError: packages/polaris-dossier/src/broker-client.ts: unsupported loader forms\npackages/polaris-dossier/src/broker-client.ts: packages/polaris-dossier/src/broker-client.ts:43:80 require/createRequire call: auditMake(import.meta.url): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:196:92\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-1-new.log",
+        "raw_sha256": "42193aa9c81c2eb34921e56320f278987de6027006e40ada7d275c24ae9658f4",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-dynamic-module-entry-1-new.vitest.json",
+        "json_sha256": "3a75f2d1b58776b234fe8d4eeac58cef5d0064eaa0abdde210700b000bfbf9fe",
+        "elapsed_seconds": 5.197458978043869,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-dynamic-module-entry-1-new.log"
+      },
+      {
+        "id": "static-alias-entry-1",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "packages/polaris-dossier/src/broker-client.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nimport { createRequire as auditMake } from \"node:module\"; const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+        "base_source_sha256": "7853bd22cf01d41429678275703476da10b6d7b08b1c941fc6309d50bf3294c7",
+        "mutated_source_sha256": "8871903243e7da7c57146e7bde0df344818b0855adf850a2e3315efd32af5383",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-static-alias-entry-1-old.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 7,
+          "numFailedTests": 1,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "resolves every workspace import both entries reach, dynamic ones included",
+            "failureMessages": [
+              "AssertionError: packages/polaris-dossier/src/broker-client.ts: unsupported loader forms\npackages/polaris-dossier/src/broker-client.ts: packages/polaris-dossier/src/broker-client.ts:43:77 require/createRequire call: auditMake(import.meta.url): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:113:92\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-static-alias-entry-1-old.log",
+        "raw_sha256": "b055a96816f1cf2042dc10c1f463d97c00024b73853ea720e90dee2142241ef1",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-static-alias-entry-1-old.vitest.json",
+        "json_sha256": "c6043f1f0b1a9a1cc2ed66797f224daa482d03581e0c837aa5c442ded677736f",
+        "elapsed_seconds": 2.997922345006373,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-static-alias-entry-1-old.log"
+      },
+      {
+        "id": "static-alias-entry-1",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "packages/polaris-dossier/src/broker-client.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nimport { createRequire as auditMake } from \"node:module\"; const auditLoad = auditMake(import.meta.url); auditLoad(\"@syzygy/polaris-generation-core\");\n",
+        "base_source_sha256": "7853bd22cf01d41429678275703476da10b6d7b08b1c941fc6309d50bf3294c7",
+        "mutated_source_sha256": "8871903243e7da7c57146e7bde0df344818b0855adf850a2e3315efd32af5383",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-static-alias-entry-1-new.vitest.json"
+        ],
+        "exit": 1,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 7,
+          "numFailedTests": 2,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 280 production sources: unsupported loaders: expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:188:103\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          },
+          {
+            "title": "resolves every workspace import both entries reach, dynamic ones included",
+            "failureMessages": [
+              "AssertionError: packages/polaris-dossier/src/broker-client.ts: unsupported loader forms\npackages/polaris-dossier/src/broker-client.ts: packages/polaris-dossier/src/broker-client.ts:43:77 require/createRequire call: auditMake(import.meta.url): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:196:92\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-static-alias-entry-1-new.log",
+        "raw_sha256": "b03ef5fc605eea0d720a71d75868b25efaf7c8a241feef49e22b8a1e350682dd",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-static-alias-entry-1-new.vitest.json",
+        "json_sha256": "5405eab8595d3bdd917f57800360e73f5320eaf3ae4257d06ec9e2d2ecd6b2b6",
+        "elapsed_seconds": 5.354780302965082,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-static-alias-entry-1-new.log"
+      },
+      {
+        "id": "ordinary-destructuring-entry-1",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "packages/polaris-dossier/src/broker-client.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\n// altered prose: require createRequire auditMake are only words.\nconst auditProse = \"require createRequire await import(unknown)\";\nconst { createInterface: ordinary } = await import(\"node:readline/promises\"); ordinary();\nconst { createRequire: auditMake } = await import(\"node:readline/promises\"); auditMake();\n",
+        "base_source_sha256": "7853bd22cf01d41429678275703476da10b6d7b08b1c941fc6309d50bf3294c7",
+        "mutated_source_sha256": "535b0cd783d2643049daaaea128f79fc07a359deb39cd011178ee311a3dbeabf",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-ordinary-destructuring-entry-1-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-ordinary-destructuring-entry-1-old.log",
+        "raw_sha256": "84cfd73f360d86f92aea126bf5b5dae6e2f4d3068a3f81692df4d309593a1b38",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-ordinary-destructuring-entry-1-old.vitest.json",
+        "json_sha256": "46c72c09f78864707596221a1a2951f0563bc8a36b27576e8353da80e2452083",
+        "elapsed_seconds": 3.1655071079730988,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-ordinary-destructuring-entry-1-old.log"
+      },
+      {
+        "id": "ordinary-destructuring-entry-1",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "packages/polaris-dossier/src/broker-client.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\n// altered prose: require createRequire auditMake are only words.\nconst auditProse = \"require createRequire await import(unknown)\";\nconst { createInterface: ordinary } = await import(\"node:readline/promises\"); ordinary();\nconst { createRequire: auditMake } = await import(\"node:readline/promises\"); auditMake();\n",
+        "base_source_sha256": "7853bd22cf01d41429678275703476da10b6d7b08b1c941fc6309d50bf3294c7",
+        "mutated_source_sha256": "535b0cd783d2643049daaaea128f79fc07a359deb39cd011178ee311a3dbeabf",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-ordinary-destructuring-entry-1-new.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 9,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-ordinary-destructuring-entry-1-new.log",
+        "raw_sha256": "8bf829fec53af977a291aecbaace27c34d5d19a6c5fdcd9f722c43d544c7aa0a",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-ordinary-destructuring-entry-1-new.vitest.json",
+        "json_sha256": "cf224c3114e539dca9ba005f00897312906c42ff47cf4a71b63b0be0eebad59d",
+        "elapsed_seconds": 5.218404944986105,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-ordinary-destructuring-entry-1-new.log"
+      },
+      {
+        "id": "template-entry-1",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "packages/polaris-dossier/src/broker-client.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nawait import(`node:module`);\n",
+        "base_source_sha256": "7853bd22cf01d41429678275703476da10b6d7b08b1c941fc6309d50bf3294c7",
+        "mutated_source_sha256": "4278a0da60b8d827184cea0709dc7af99545a2214b3bc1164869f49752a2927e",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-1-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-1-old.log",
+        "raw_sha256": "3b78fe93e57009e5faacf8fe242fa1ccd462e9516a1f71bb56b86f768293fa17",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-1-old.vitest.json",
+        "json_sha256": "caad4a2a20d331876839333e0b18e732d6ef02ff27639be9e6edc48ff6c0fe75",
+        "elapsed_seconds": 3.0173689679941162,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-template-entry-1-old.log"
+      },
+      {
+        "id": "template-entry-1",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "packages/polaris-dossier/src/broker-client.ts",
+        "operation": "append",
+        "old": "",
+        "new": "\nawait import(`node:module`);\n",
+        "base_source_sha256": "7853bd22cf01d41429678275703476da10b6d7b08b1c941fc6309d50bf3294c7",
+        "mutated_source_sha256": "4278a0da60b8d827184cea0709dc7af99545a2214b3bc1164869f49752a2927e",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-1-new.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 9,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-1-new.log",
+        "raw_sha256": "dbc833d3c1721d491d321f85fa3aed21794c9a738110998661c41c28bcb8084a",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-template-entry-1-new.vitest.json",
+        "json_sha256": "f031e689f0b07e02a77e9fe959acd40f1bda761afa812cda016b0a83e384495d",
+        "elapsed_seconds": 4.953913272998761,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": false,
+        "retained_raw": "raw/corpus-template-entry-1-new.log"
+      },
+      {
+        "id": "altered-prose-only",
+        "version": "old",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "a178422cc45e620e98cfbabb465ee424e83bc3bfab38004d3de1ee9e3f44ab4e",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "/* createRequire(import.meta.url); require(\"island\"); import(variable); */\nexport const prose = \"const { createRequire: auditMake } = await import(unknown)\";\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "5213e189faa95e43529f563396ea82ce5f155cb4da63110cb51532c9d4fd6540",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-altered-prose-only-old.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 8,
+          "numPassedTests": 8,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-altered-prose-only-old.log",
+        "raw_sha256": "f5078f5226b5d5c9f9006d42f9b33abd9d71b628dfb38cae2d5e104568e0b2fb",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-altered-prose-only-old.vitest.json",
+        "json_sha256": "a8a027ff7dbb046879541191d4f9635ee60670dd15dafb384f66ce43e3c020d9",
+        "elapsed_seconds": 3.3411858640029095,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-altered-prose-only-old.log"
+      },
+      {
+        "id": "altered-prose-only",
+        "version": "new",
+        "source_subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "guard_path": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "guard_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "path": "apps/syzygy/src/bpyt-island-fixture.ts",
+        "operation": "create",
+        "old": "",
+        "new": "/* createRequire(import.meta.url); require(\"island\"); import(variable); */\nexport const prose = \"const { createRequire: auditMake } = await import(unknown)\";\n",
+        "base_source_sha256": null,
+        "mutated_source_sha256": "5213e189faa95e43529f563396ea82ce5f155cb4da63110cb51532c9d4fd6540",
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-altered-prose-only-new.vitest.json"
+        ],
+        "exit": 0,
+        "tests": {
+          "numTotalTests": 9,
+          "numPassedTests": 9,
+          "numFailedTests": 0,
+          "numPendingTests": 0
+        },
+        "failed_assertions": [],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-altered-prose-only-new.log",
+        "raw_sha256": "eee18588b718f389ca31e9cc771066d4241c6a6d1ded20a8c2da8c476b49c35e",
+        "json": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-altered-prose-only-new.vitest.json",
+        "json_sha256": "0a132affe2c12f26b6576880004d003bb250fa6c3fbcf2b25fde488a8599a493",
+        "elapsed_seconds": 4.978120948013384,
+        "reused_existing_attempt1_capture": false,
+        "source_executed": false,
+        "disconnected_control": true,
+        "retained_raw": "raw/corpus-altered-prose-only-new.log"
+      }
+    ],
+    "cases": 19,
+    "executions": 38,
+    "scope": "Finite old/new structural-guard differential; modified source is parsed, never imported/executed. Product source bytes equal after restoration; no assertion of universal JS loader closure."
+  },
+  "predicate_mutants": {
+    "subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+    "mutants": [
+      {
+        "id": "inventory-unique",
+        "subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "source": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "source_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "mutated_sha256": "a495a57921d5db530bc911d009a524bf732cc142dfa84a465133075ed677edca",
+        "old": "  'apps/three-surface-poc/src/polaris-generation/dossier-main.ts',\n",
+        "new": "  'apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts',\n",
+        "fragment_occurrences": 1,
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-inventory-unique.vitest.json"
+        ],
+        "exit": 1,
+        "executed_tests": 9,
+        "failed_tests": 2,
+        "intended_assertion": "lists twenty-four island modules, each a file in the tree",
+        "failed_assertions": [
+          {
+            "title": "lists twenty-four island modules, each a file in the tree",
+            "failureMessages": [
+              "AssertionError: expected 23 to be 24 // Object.is equality\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:164:34\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          },
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 280 production sources: unlisted transitive ingress\napps/three-surface-poc/src/polaris-generation/dossier-main.ts -> apps/three-surface-poc/src/polaris-generation/dossier-main.ts imports ./dossier-render.js (apps/three-surface-poc/src/polaris-generation/dossier-render.ts): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:190:122\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-inventory-unique.log",
+        "raw_sha256": "fb25276a60b616f83ed89ab1855862a51bd3d164f9a3c5e0bacbb972dc91f0d9",
+        "report": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-inventory-unique.vitest.json",
+        "report_sha256": "5428c7908625109c9e72590b2c7152f8d6f3f66e9e3e25374a5b5e00566bed45",
+        "elapsed_seconds": 4.979484394949395,
+        "retained_raw": "raw/predicate-inventory-unique.log"
+      },
+      {
+        "id": "inventory-length",
+        "subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "source": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "source_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "mutated_sha256": "571e8de43826a5123a3bb04c83299f8fe8574949bbc0a92466235689f3ed77ab",
+        "old": "  'apps/three-surface-poc/src/polaris-generation/dossier-main.ts',\n",
+        "new": "  'apps/three-surface-poc/src/polaris-generation/dossier-main.ts',\n  'apps/three-surface-poc/src/polaris-generation/dossier-main.ts',\n",
+        "fragment_occurrences": 1,
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-inventory-length.vitest.json"
+        ],
+        "exit": 1,
+        "executed_tests": 9,
+        "failed_tests": 1,
+        "intended_assertion": "lists twenty-four island modules, each a file in the tree",
+        "failed_assertions": [
+          {
+            "title": "lists twenty-four island modules, each a file in the tree",
+            "failureMessages": [
+              "AssertionError: expected [ \u2026(25) ] to have a length of 24 but got 25\n    at Proxy.<anonymous> (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/chai/index.js:1686:25)\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:166:20\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-inventory-length.log",
+        "raw_sha256": "376924bfee4c86a3aba17be8d05167621ae86a994630fbb1603b91855e8799ff",
+        "report": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-inventory-length.vitest.json",
+        "report_sha256": "4aa23d937d7510c5da70a66431d22656aa4e46ba03e07472490eca7de2547d5a",
+        "elapsed_seconds": 4.705969076021574,
+        "retained_raw": "raw/predicate-inventory-length.log"
+      },
+      {
+        "id": "inventory-existence",
+        "subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "source": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "source_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "mutated_sha256": "69761f8881e1159b87f49ee29069a8e2e5fbff2036396acdf8c9ae29f1f6b86a",
+        "old": "  'apps/three-surface-poc/src/polaris-generation/dossier-main.ts',\n",
+        "new": "  'apps/three-surface-poc/src/polaris-generation/bpyt-missing-island-member.ts',\n",
+        "fragment_occurrences": 1,
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-inventory-existence.vitest.json"
+        ],
+        "exit": 1,
+        "executed_tests": 9,
+        "failed_tests": 2,
+        "intended_assertion": "lists twenty-four island modules, each a file in the tree",
+        "failed_assertions": [
+          {
+            "title": "lists twenty-four island modules, each a file in the tree",
+            "failureMessages": [
+              "AssertionError: expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:166:50\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          },
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: 280 production sources: unlisted transitive ingress\napps/three-surface-poc/src/polaris-generation/dossier-main.ts -> apps/three-surface-poc/src/polaris-generation/dossier-main.ts imports ./dossier-render.js (apps/three-surface-poc/src/polaris-generation/dossier-render.ts): expected [ Array(1) ] to deeply equal []\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:190:122\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-inventory-existence.log",
+        "raw_sha256": "a4b4744e9492c2cd0217c0491e06bc79031efab2941a7ca95ffc8183c4117aab",
+        "report": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-inventory-existence.vitest.json",
+        "report_sha256": "9d938288addc3ae1b111bf0a013cbd67579aa11cead20088ae1fd476982769d1",
+        "elapsed_seconds": 5.390099372016266,
+        "retained_raw": "raw/predicate-inventory-existence.log"
+      },
+      {
+        "id": "population-nonempty",
+        "subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "source": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "source_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "mutated_sha256": "53df0cab7904cc7202af813a2018e9886b0b2e107eda46a1455286e399cf529a",
+        "old": "return files.sort();",
+        "new": "return [];",
+        "fragment_occurrences": 1,
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-population-nonempty.vitest.json"
+        ],
+        "exit": 1,
+        "executed_tests": 9,
+        "failed_tests": 1,
+        "intended_assertion": "admits transitive island ingress only from the island and exact parked remainder",
+        "failed_assertions": [
+          {
+            "title": "admits transitive island ingress only from the island and exact parked remainder",
+            "failureMessages": [
+              "AssertionError: production-source enumeration must not be empty: expected 0 to be greater than 0\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:187:82\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-population-nonempty.log",
+        "raw_sha256": "910800696a5c0c1d6ea4408696940aa2a3625574e1d90b40f1b08bab8347aafb",
+        "report": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-population-nonempty.vitest.json",
+        "report_sha256": "73687fe1577f4e5c14d95cf076096f86c0099b1c5e8ee878860b879c653e8fc1",
+        "elapsed_seconds": 3.5856225779862143,
+        "retained_raw": "raw/predicate-population-nonempty.log"
+      },
+      {
+        "id": "dynamic-alias-provenance",
+        "subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "source": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "source_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "mutated_sha256": "3fffb6b14ead6be2ad43894e30d0ad7789043f602e380bc959c18d058de356e8",
+        "old": "createRequireNames.add(binding.name.text);",
+        "new": "void binding.name.text;",
+        "fragment_occurrences": 1,
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-dynamic-alias-provenance.vitest.json"
+        ],
+        "exit": 1,
+        "executed_tests": 9,
+        "failed_tests": 1,
+        "intended_assertion": "refuses createRequire calls, including imported aliases and module properties",
+        "failed_assertions": [
+          {
+            "title": "refuses createRequire calls, including imported aliases and module properties",
+            "failureMessages": [
+              "AssertionError: const { createRequire: auditMake } = await import('node:module'); const auditLoad = auditMake(import.meta.url); auditLoad('@syzygy/polaris-generation-core');: expected [] to have a length of 1 but got +0\n    at Proxy.<anonymous> (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/expect/dist/index.js:1257:20)\n    at Proxy.<anonymous> (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/expect/dist/index.js:1029:14)\n    at Proxy.methodWrapper (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/chai/index.js:1686:25)\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:245:33\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-dynamic-alias-provenance.log",
+        "raw_sha256": "932ad0b4154fe63eb6febc3242d8e19e5c7f2f7b7521dffb29a0f173fbdb8a60",
+        "report": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-dynamic-alias-provenance.vitest.json",
+        "report_sha256": "0de7743c8d417f08ee1141af7923af7ba025ce68b0fbf3a1eb9c04d970199a7b",
+        "elapsed_seconds": 5.444121566019021,
+        "retained_raw": "raw/predicate-dynamic-alias-provenance.log"
+      },
+      {
+        "id": "unrelated-dynamic-binding-control",
+        "subject": "ce29892804998bc6f330f0fb55678dfd518a971e",
+        "source": "packages/polaris-generation-core/src/island-boundary.test.ts",
+        "source_sha256": "93a4b56edda38cfd7a070f67e0218640367893d5b6048e30b4db19341858f443",
+        "mutated_sha256": "715615e245f249b0312ce600022e97c3ae3f7756d079567ea3ff25c48b5ff45d",
+        "old": "&& ['node:module', 'module'].includes(argument.text))",
+        "new": "&& argument.text.length > 0)",
+        "fragment_occurrences": 1,
+        "command": [
+          "npx",
+          "--offline",
+          "vitest",
+          "run",
+          "--project",
+          "unit",
+          "packages/polaris-generation-core/src/island-boundary.test.ts",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile=/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-unrelated-dynamic-binding-control.vitest.json"
+        ],
+        "exit": 1,
+        "executed_tests": 9,
+        "failed_tests": 1,
+        "intended_assertion": "refuses createRequire calls, including imported aliases and module properties",
+        "failed_assertions": [
+          {
+            "title": "refuses createRequire calls, including imported aliases and module properties",
+            "failureMessages": [
+              "AssertionError: expected { specifiers: [ \u2026(2) ], \u2026(1) } to deeply equal { specifiers: [ \u2026(2) ], \u2026(1) }\n    at /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/packages/polaris-generation-core/src/island-boundary.test.ts:254:20\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runFiles (file:///home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)"
+            ]
+          }
+        ],
+        "raw": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-unrelated-dynamic-binding-control.log",
+        "raw_sha256": "5b10b1d291d9eba8092d8eea2f7f413b3edeaecb5a6eda665d4c053696e9863f",
+        "report": "/home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/predicate-unrelated-dynamic-binding-control.vitest.json",
+        "report_sha256": "6c7491635f1ef1af5d657482112ff1e1d69caa684c7c18a3fcc54ab32c709ad5",
+        "elapsed_seconds": 4.976996000041254,
+        "retained_raw": "raw/predicate-unrelated-dynamic-binding-control.log"
+      }
+    ],
+    "capture": "author-emitter report; raw retained for independent capture/re-execution"
+  }
+}

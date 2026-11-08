@@ -60,13 +60,18 @@ With a URL (the author, driving the loop):
    the answer. The choice covers this one run at its pinned revision: never
    reuse one from an earlier run. Then `syzygy dossier brief <run>`; read `brief.md` and
    `draft.schema.json`.
-5. Explore the clone for the five reader topics. Keep `discovery`: what you
-   inspected and selected, what you left out and why, and why you stopped.
+5. Explore the clone for the brief's reader topics, why the project exists
+   first. Keep `discovery`: what you inspected and selected, what you left
+   out and why, and why you stopped.
    Write `understanding` before the argument.
 6. Ask the consequential questions, at most the brief's limit, with
    AskUserQuestion; record each with the operator's exact answer.
 7. Write `<run>/drafts/next.json`; `syzygy dossier check <run>`; repair every
-   finding and re-run until clean or refused.
+   finding and re-run until clean or refused. Before each check, test the
+   draft against the reader standards (`references/reader-standards.md`
+   beside this skill; the brief carries the same text): every page is an
+   abstraction tree, and the technology choices get their table. The check
+   reports the standards it can count as advice, which sets no outcome.
 8. The inventory, the fidelity review and the design review each run in
    a session the operator starts. Waiting sessions first: right after
    `syzygy dossier brief <run>`, run `syzygy dossier session-prompt <run> all`

@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-06T04:39:01.730333+00:00",
+  "bead": "syzygy-bpyt.58",
+  "head": "740279435178a882f1c2d526a2a7ea0bf2b52cbc",
+  "permanent_paths": [
+    "packages/polaris-generation-core/src/workspace-reach.test.ts",
+    "packages/polaris-generation-core/src/workspace-reach.testkit.ts",
+    "docs/evidence/syzygy-bpyt-58/**",
+    "docs/reviews/R-GP-IMPL-WORKSPACE-PRECONDITIONS-1-RAW.md"
+  ],
+  "runtime_released": true,
+  "proposal_sha256": "5e87bb4a7cc65e74601dc8289ab3a8b0b2acb7c5a48e31507faccfc099c1cdac",
+  "open_prs": 16,
+  "path_memberships": 161,
+  "no_custody_overlap": true,
+  "fields_edges_preserved": true,
+  "adapter_source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/isolated.py",
+  "capture_source": "/home/orca/.tmp/syzygy-bpyt4-41-full-outcome-20261106/capture_inside.py"
+}

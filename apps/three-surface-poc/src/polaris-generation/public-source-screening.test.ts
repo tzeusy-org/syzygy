@@ -451,7 +451,12 @@ describe('the code-content exemption (screening scope version 3)', () => {
   beforeAll(async () => {
     const py = `import json, sys; sys.path.insert(0, 'scripts')
 import build_public_source_screening_scope_v2 as b2, build_public_source_screening_scope_v3 as b, build_public_source_screening_scope_v4 as b4, build_public_source_screening_scope_v5 as b5
-v4_span, _mode = b5.base_bytes()
+import build_public_source_screening_scope_v6 as b6
+import build_public_source_screening_scope_v7 as b7
+v6_p, _mode = b7.base_bytes()
+v5_bcd = b2.reverse_patch((b6.ROOT / b6.patch_path('p')).read_text(), v6_p)
+v4_span = b2.reverse_patch((b5.ROOT / b5.patch_path(b6.V5_BASE_VARIANT)).read_text(), v5_bcd)
+assert b5.sha(v4_span) == b5.v4.manifest_rows(b5.ROOT)[b5.V4_BASE_VARIANT] and b5.propose(v4_span, b6.V5_BASE_VARIANT) == v5_bcd
 v3_all = b2.reverse_patch((b4.ROOT / b4.patch_path(b5.V4_BASE_VARIANT)).read_text(), v4_span)
 assert b4.sha(v3_all) == b4.v3.manifest_rows(b4.ROOT)[b4.V3_BASE_VARIANT] and b4.propose(v3_all, b5.V4_BASE_VARIANT) == v4_span
 base = b2.reverse_patch((b.ROOT / b.patch_path('all')).read_text(), v3_all)

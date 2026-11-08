@@ -36,11 +36,13 @@ Options:
   --clone <dir>            use this one-commit clone instead of making one
   --revision <label|sha>   the consented revision to clone (default: the first preflight names)
   --state-root <dir>       state root (default $${STATE_ROOT_ENV}, else ~/.local/state/syzygy-dossier)
-  --deadline <ISO dur>     run deadline from the brief (default PT24H)
+  --deadline <ISO dur>     run deadline from the brief, e.g. PT24H
   --audience <text>        who the dossier is for (asked if absent)
   --model <id>             model for every session (default claude-opus-5-5)
-  --repair-cycles <n>      default 6      --questions <n>  default 3
-  --token-budget <n>       default 30000000   --turn-budget <n>  default 1000
+  --repair-cycles <n>      repair-cycle limit   --questions <n>  clarification-question limit
+  --token-budget <n>       agent token budget   --turn-budget <n>  agent turn budget
+                           Run limits have no default: any not given is asked in one question before
+                           anything else, and a run with no terminal to ask is refused.
   --operator <name>        default the login name
   --author-skip-permissions  start the authoring session with --dangerously-skip-permissions
                            (it still runs inside its view)
@@ -60,11 +62,58 @@ const POLL_MS = 3000;
  * three cycles on drafts its own check refused and stopped after one repair a review asked for (syzygy-1z8m.1). */
 export const DEFAULT_REPAIR_CYCLES = 6;
 
+/** The run limits of REQ-polaris-generation-033, in the order the one question lists them, with the value it suggests. The signed
+ * local-agent spec gives them no default, and the one-command candidate takes an absent one "from one question the command asks
+ * before anything else" (syzygy-1z8m.7): a suggestion is declared only when the operator accepts it. */
+export const RUN_LIMITS = [
+  { flag: '--deadline', suggested: 'PT24H' }, { flag: '--repair-cycles', suggested: String(DEFAULT_REPAIR_CYCLES) },
+  { flag: '--questions', suggested: '3' }, { flag: '--token-budget', suggested: '30000000' }, { flag: '--turn-budget', suggested: '1000' },
+] as const;
+export type RunLimitFlag = (typeof RUN_LIMITS)[number]['flag'];
+
+/** Seconds in an ISO 8601 duration of days, hours, minutes and seconds, or null when it is not one or is zero. */
+export function isoSeconds(duration: string): number | null {
+  const m = /^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/.exec(duration);
+  if (m === null || duration === 'P' || duration.endsWith('T')) return null;
+  const seconds = Number(m[1] ?? 0) * 86400 + Number(m[2] ?? 0) * 3600 + Number(m[3] ?? 0) * 60 + Number(m[4] ?? 0);
+  return seconds > 0 ? seconds : null;
+}
+
+/** Why a declared limit value is refused, or null when it is valid. */
+export function limitFault(flag: RunLimitFlag, value: string): string | null {
+  if (flag === '--deadline') return isoSeconds(value) === null ? `${flag} takes a positive ISO 8601 duration such as PT24H` : null;
+  if (!/^[0-9]+$/.test(value)) return `${flag} takes a whole number`;
+  if ((flag === '--token-budget' || flag === '--turn-budget') && Number(value) === 0) return `${flag} must be positive`;
+  return null;
+}
+
+/** The one question for the limits the operator did not give. */
+export function limitsQuestion(missing: readonly RunLimitFlag[]): string {
+  const rows = RUN_LIMITS.filter((l) => missing.includes(l.flag));
+  return `Run limits not given: ${rows.map((l) => l.flag).join(' ')}.\nPress Enter to declare the suggested values [${rows.map((l) => l.suggested).join(' ')}], or type yours in that order, separated by spaces: `;
+}
+
+/** The operator's answer to the limits question as explicit options, or why it is refused. */
+export function limitsAnswer(missing: readonly RunLimitFlag[], answer: string): string[] | string {
+  const rows = RUN_LIMITS.filter((l) => missing.includes(l.flag));
+  const words = answer.trim() === '' ? rows.map((l) => l.suggested) : answer.trim().split(/\s+/);
+  if (words.length !== rows.length) return `give ${rows.length} value(s), one for each of ${rows.map((l) => l.flag).join(' ')}`;
+  const out: string[] = [];
+  for (const [i, row] of rows.entries()) {
+    const fault = limitFault(row.flag, words[i]!);
+    if (fault !== null) return fault;
+    out.push(row.flag, words[i]!);
+  }
+  return out;
+}
+
 interface Options {
   readonly url?: string; readonly clone?: string; readonly revision?: string; readonly stateRoot: string; readonly deadline: string;
   readonly audience?: string; readonly model: string; readonly repairCycles: number; readonly questions: number; readonly tokenBudget: number;
   readonly turnBudget: number; readonly operator: string; readonly authorSkipPermissions: boolean; readonly attach: boolean;
   readonly mode: 'start' | 'attach' | 'stop' | 'resume' | 'supervise'; readonly run?: string; readonly tmuxSession?: string;
+  /** Run limits the operator gave no value for; their fields hold placeholders that no run may use. */
+  readonly missingLimits: readonly RunLimitFlag[];
 }
 
 export interface SessionPlan {
@@ -106,6 +155,13 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
     if (Date.now() >= state.briefIssuedAt + state.deadlineSeconds * 1000) return refuse(`run ${state.runId} is past its deadline`);
     if (tmuxHas(state.tmuxSession)) return attach({ ...options, run: state.runId });
   }
+  let limits: string[] = [];
+  if (options.mode === 'start' && options.missingLimits.length > 0) {
+    if (!process.stdin.isTTY) return refuse(`run limits are required when there is no terminal to ask: give ${options.missingLimits.join(' ')}`);
+    const answered = limitsAnswer(options.missingLimits, await ask(limitsQuestion(options.missingLimits)));
+    if (typeof answered === 'string') return refuse(answered);
+    limits = answered;
+  }
   let audience = options.audience;
   if (options.mode === 'start' && audience === undefined) {
     if (!process.stdin.isTTY) return refuse('--audience is required when there is no terminal to ask');
@@ -113,7 +169,7 @@ export async function runPolarisCli(argv: readonly string[], ports: CliPorts = {
     if (audience.trim() === '') return refuse('an audience is required');
   }
   const name = options.mode === 'resume' ? readState(options.stateRoot, options.run!)!.tmuxSession : `polaris-${Date.now().toString(36)}`;
-  const forward = [...argv.filter((arg) => arg !== '--no-attach'), ...(audience !== undefined && options.audience === undefined ? ['--audience', audience] : []), '--supervise', '--tmux-session', name];
+  const forward = [...argv.filter((arg) => arg !== '--no-attach'), ...limits, ...(audience !== undefined && options.audience === undefined ? ['--audience', audience] : []), '--supervise', '--tmux-session', name];
   // A running tmux server gives a new session its own global environment, not this process's, so what the supervisor needs is passed
   // with -e: the state root, PATH (to find the agent tool), the runtime directory, and every SYZYGY_ variable (a stand-in agent included).
   const passed: Record<string, string> = { [STATE_ROOT_ENV]: options.stateRoot };
@@ -142,13 +198,15 @@ function parseArgs(argv: readonly string[]): Options | string {
   if (isArgvFault(read)) return read.fault === 'missing-value' ? `${read.arg} requires a value` : `unknown option ${read.arg}`;
   const { values, flags, positional } = read;
   if (flags.has('--help') || flags.has('-h')) { process.stdout.write(POLARIS_USAGE); process.exit(0); }
-  const int = (name: string, fallback: number): number | string => {
-    const raw = values.get(name);
-    if (raw === undefined) return fallback;
-    return /^[0-9]+$/.test(raw) ? Number(raw) : `${name} takes a whole number`;
-  };
-  const numbers = { repairCycles: int('--repair-cycles', DEFAULT_REPAIR_CYCLES), questions: int('--questions', 3), tokenBudget: int('--token-budget', 30_000_000), turnBudget: int('--turn-budget', 1000) };
-  for (const value of Object.values(numbers)) if (typeof value === 'string') return value;
+  const missingLimits: RunLimitFlag[] = [];
+  for (const { flag } of RUN_LIMITS) {
+    const raw = values.get(flag);
+    if (raw === undefined) { missingLimits.push(flag); continue; }
+    const fault = limitFault(flag, raw);
+    if (fault !== null) return fault;
+  }
+  const int = (name: string): number => Number(values.get(name) ?? Number.NaN);
+  const numbers = { repairCycles: int('--repair-cycles'), questions: int('--questions'), tokenBudget: int('--token-budget'), turnBudget: int('--turn-budget') };
   const stateRoot = path.resolve(values.get('--state-root') ?? process.env[STATE_ROOT_ENV] ?? path.join(os.homedir(), '.local/state/syzygy-dossier'));
   const runRef = values.get('--attach') ?? values.get('--stop') ?? values.get('--resume');
   const mode = flags.has('--supervise') ? 'supervise' : values.has('--attach') ? 'attach' : values.has('--stop') ? 'stop' : values.has('--resume') ? 'resume' : 'start';
@@ -156,9 +214,9 @@ function parseArgs(argv: readonly string[]): Options | string {
   const runId = runRef === undefined ? undefined : path.basename(path.resolve(runRef));
   return {
     ...(positional[0] ? { url: positional[0] } : {}), ...(values.has('--clone') ? { clone: path.resolve(values.get('--clone')!) } : {}),
-    ...(values.has('--revision') ? { revision: values.get('--revision')! } : {}), stateRoot, deadline: values.get('--deadline') ?? 'PT24H',
+    ...(values.has('--revision') ? { revision: values.get('--revision')! } : {}), stateRoot, deadline: values.get('--deadline') ?? '',
     ...(values.has('--audience') ? { audience: values.get('--audience')! } : {}), model: values.get('--model') ?? 'claude-opus-5-5',
-    repairCycles: numbers.repairCycles as number, questions: numbers.questions as number, tokenBudget: numbers.tokenBudget as number, turnBudget: numbers.turnBudget as number,
+    ...numbers, missingLimits,
     operator: values.get('--operator') ?? os.userInfo().username, authorSkipPermissions: flags.has('--author-skip-permissions'), attach: !flags.has('--no-attach'),
     mode, ...(runId ? { run: runId } : {}), ...(values.has('--tmux-session') ? { tmuxSession: values.get('--tmux-session')! } : {}),
   };
@@ -239,6 +297,7 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
     delete state.stopped;
     screen.event(`resuming ${state.runId}`);
   } else {
+    if (options.missingLimits.length > 0) return fail(`run limits not declared: ${options.missingLimits.join(' ')}; start the run with syzygy polaris, which asks for them`);
     const set = await setUp(options, ports, screen);
     if (typeof set === 'string') return fail(set);
     state = set;
@@ -314,16 +373,11 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
     sessions.push({ role: s.role === 'inventory' ? 'inventory' : (s.kind as ViewRole), session: s.session, directory: s.directory, prompt: s.prompt, promptSha256: s.promptSha256, allowedTools: s.commands.allowedTools ?? null });
   }
   const seconds = isoSeconds(options.deadline);
+  if (seconds === null) return `--deadline ${options.deadline} is not a positive ISO 8601 duration`;
   return {
     format: 'polaris-supervisor/1', run, runId, tmuxSession: options.tmuxSession!, clone, url, model: options.model, authorSkipPermissions: options.authorSkipPermissions,
     briefIssuedAt, deadlineSeconds: seconds, sessions, fidelityDeliveredFor: [], designDeliveredFor: [], notified: [], siteFor: {}, launches: [],
   };
-}
-
-function isoSeconds(duration: string): number {
-  const m = /^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/.exec(duration);
-  if (m === null) return 24 * 3600;
-  return Number(m[1] ?? 0) * 86400 + Number(m[2] ?? 0) * 3600 + Number(m[3] ?? 0) * 60 + Number(m[4] ?? 0);
 }
 
 /** Said to the author before its first check: each draft revision after the first is a repair cycle, refused or not. */

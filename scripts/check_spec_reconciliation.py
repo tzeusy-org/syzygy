@@ -170,6 +170,8 @@ Usage:
   python3 scripts/check_spec_reconciliation.py --selftest [--witnesses FILE]
 """
 import argparse
+import multiprocessing
+import os
 import hashlib
 import json
 from pathlib import Path
@@ -613,7 +615,7 @@ def bytes_at(root, path, after):
         found = package_patches(root, later["proposed"]).get(path, [])
         if body is not None and len(found) == 1:
             reference = later.get("package") == poc_reference().KEY
-            if reference and not poc_reference().is_signed(root):
+            if reference and not reference_signed(root):
                 return None
             body = reverse_apply(root, found[0], path, body, zero_context=reference)
     return body
@@ -703,7 +705,7 @@ def check_outcomes(root, report):
                 expected = [p.as_posix() for p in poc_reference().SUBJECTS]
                 if [p for _sha, p in ROW.findall(lmanifest.decode())] != expected:
                     r2.append(f"{ltag}: manifest is not exactly the six P115 subjects")
-                if not poc_reference().is_signed(root):
+                if not reference_signed(root):
                     r1.append(f"{ltag}: incomplete or invalid exact P115 sign-off transaction")
                     continue
             if later.get("kind", "digest") == "versioned":
@@ -1332,7 +1334,7 @@ def check_census(root, report):
     pop, findings = census(root)
     examined = 0
     p_req, p_scen, p_ids = polaris_expected(root, findings)
-    signed_reference = poc_reference().is_signed(root)
+    signed_reference = reference_signed(root)
     totals = dict(EXPECTED_TOTALS, POLARIS=(p_req, p_scen))
     if signed_reference:
         totals["POC"] = (26, 34)
@@ -1666,14 +1668,35 @@ def check_unions(root, report):
                 "a change to a signed union needs a signed successor")
 
 
+# Within one run() the tree is only read, so whether its P115 transaction is
+# signed cannot change between the predicates that ask; it was asked twelve
+# times per run (~4,200 git calls, syzygy-b6dp). The memo lives for one run()
+# call only: a later run, or a caller between runs, asks afresh.
+_SIGNED_MEMO = None
+
+
+def reference_signed(root):
+    if _SIGNED_MEMO is None:
+        return poc_reference().is_signed(root)
+    key = str(Path(root).resolve())
+    if key not in _SIGNED_MEMO:
+        _SIGNED_MEMO[key] = poc_reference().is_signed(root)
+    return _SIGNED_MEMO[key]
+
+
 def run(root):
+    global _SIGNED_MEMO
     report = Report()
-    check_outcomes(root, report)
-    pop = check_census(root, report)
-    check_generated(root, pop, report)
-    check_routes(root, pop, report)
-    check_pins(root, report)
-    check_unions(root, report)
+    _SIGNED_MEMO = {}
+    try:
+        check_outcomes(root, report)
+        pop = check_census(root, report)
+        check_generated(root, pop, report)
+        check_routes(root, pop, report)
+        check_pins(root, report)
+        check_unions(root, report)
+    finally:
+        _SIGNED_MEMO = None
     return report
 
 
@@ -2356,101 +2379,21 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
              + [(added, with_addition, m)
                 for m in addition_mutants()]
              + [(adopted, with_adopted, m) for m in adopted_mutants()])
-    for start, clean, (name, rel, mutate, expect) in cases:
-        tree = Path(tmp) / name
-        shutil.copytree(start, tree)
-        rels = rel if isinstance(rel, tuple) else (rel,)
-        unchanged, applied = False, False
-        for one in rels:
-            target = tree / one
-            before = target.read_text(encoding="utf-8")
-            if mutate is None:
-                target.unlink()
-                old, new = "<file present>", "<file deleted>"
-                continue
-            after = mutate(before)
-            if after == before and "=0" in expect:
-                old, new = "<already applied>", "<already applied>"
-                continue
-            applied = True
-            if after == before:
-                unchanged = True
-                break
-            target.write_text(after, encoding="utf-8")
-            old, new = _fragment(before, after)
-        if unchanged:
-            failures.append(f"{name}: mutation changed nothing")
-            continue
-        rel = " + ".join(rels)
-        got = run(tree)
-        if ":" in expect:
-            # The predicate must fail with this finding, not another.
-            # `&` joins needles that must each be found (both methods).
-            rid, _sep, needles = expect.partition(":")
-            caught = all(any(n in f for f in got.findings.get(rid, []))
-                         for n in needles.split("&"))
-        elif expect.endswith("~"):
-            rid = expect[:-1]
-            caught = got.findings.get(rid) != clean.findings.get(rid)
-        elif "=0" in expect:
-            # Strict: the report-only predicate examined its population
-            # and reports exactly zero findings. Nothing else fails, except
-            # the predicates named after `|`, which must fail exactly when
-            # the mutant applied new bytes (a later act over a signed
-            # subject fails R2 by design until the reconciliation is
-            # re-derived); once the tree already carries the bytes they
-            # may only be a subset.
-            head, _sep, tail = expect.partition("|")
-            rid = head[:-2]
-            allowed = set(filter(None, tail.split(",")))
-            failed_ok = (got.failed == allowed if applied
-                         else got.failed <= allowed)
-            if name == "pins-after-repin-acts" and applied:
-                reference = poc_reference()
-                if reference.transaction_present(start):
-                    original_pwb = (start / FAMILY_SPECS["PWB"]).read_bytes()
-                    replayed_pwb = (tree / FAMILY_SPECS["PWB"]).read_bytes()
-                    if not reference.is_signed(start):
-                        failed_ok = False
-                    elif replayed_pwb != original_pwb:
-                        # Rewinding this governing input must invalidate
-                        # P115, with exactly this refusal and no other R1.
-                        required = allowed | {"R1"}
-                        expect = f"{rid}=0|" + ",".join(sorted(required))
-                        expected_r1 = [
-                            "poc (syzygy-73e.5.2) successor "
-                            "THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-"
-                            "AMENDMENT-SIGNOFF-v1.0.md: incomplete or "
-                            "invalid exact P115 sign-off transaction"]
-                        failed_ok = (
-                            got.failed == required
-                            and got.findings.get("R1") == expected_r1
-                            and reference.binding_findings(tree) == [
-                                "current P115 governing input differs: "
-                                + FAMILY_SPECS["PWB"]])
-                        if failed_ok:
-                            # The early input refusal can hide a second
-                            # record defect. Restoring only PWB must make
-                            # the complete signed transaction valid again.
-                            target = tree / FAMILY_SPECS["PWB"]
-                            try:
-                                target.write_bytes(original_pwb)
-                                failed_ok = reference.is_signed(tree)
-                            finally:
-                                target.write_bytes(replayed_pwb)
-            caught = (got.findings.get(rid) == [] and failed_ok
-                      and any(int(m.group(1)) > 0 for m in (
-                          re.match(rf"OK +{rid}  .* — (\d+) examined", line)
-                          for line in got.lines) if m))
-        else:
-            caught = expect in got.failed
-        witnesses.append({"mutant": name, "path": rel, "old": old,
-                          "new": new, "expected": expect,
-                          "failed": sorted(got.failed),
-                          "outcome": "killed" if caught else "SURVIVED"})
-        if not caught:
-            failures.append(f"{name}: expected {expect} to fail, got "
-                            f"{sorted(got.failed) or 'nothing'}")
+    # Each case copies its own tree, so the cases are independent: they run
+    # in forked workers (which inherit the selftest's patched globals and the
+    # unpicklable mutation closures) and report in case order, so the
+    # witness record is the same as a serial run's (syzygy-j5m0).
+    global _CASE_STATE
+    _CASE_STATE = (tmp, cases)
+    try:
+        results = _map_cases(len(cases))
+    finally:
+        _CASE_STATE = None
+    for witness, failure in results:
+        if witness is not None:
+            witnesses.append(witness)
+        if failure is not None:
+            failures.append(failure)
     # Two cases a one-file mutation cannot express. A second record of the
     # same version fails R1 by its own finding; --regenerate refuses an
     # unsigned addition and writes nothing.
@@ -2503,6 +2446,123 @@ def _selftest_cases(tmp, commit, witnesses, failures, witness_path, base, clean,
           f"{len(witnesses)} mutants killed by their expected predicate "
           f"(commit {commit[:12]})")
     return 0
+
+
+_CASE_STATE = None
+
+
+def _selftest_workers():
+    raw = os.environ.get("SELFTEST_WORKERS", "")
+    if raw.isdigit() and int(raw) > 0:
+        return int(raw)
+    return max(1, min(os.cpu_count() or 1, 8))
+
+
+def _map_cases(count):
+    """Run every case, in parallel under fork, returning results in order."""
+    workers = _selftest_workers()
+    if workers == 1 or "fork" not in multiprocessing.get_all_start_methods():
+        return [_run_case(i) for i in range(count)]
+    with multiprocessing.get_context("fork").Pool(workers) as pool:
+        return pool.map(_run_case, range(count), chunksize=1)
+
+
+def _run_case(index):
+    tmp, cases = _CASE_STATE
+    start, clean, (name, rel, mutate, expect) = cases[index]
+    tree = Path(tmp) / name
+    shutil.copytree(start, tree)
+    rels = rel if isinstance(rel, tuple) else (rel,)
+    unchanged, applied = False, False
+    for one in rels:
+        target = tree / one
+        before = target.read_text(encoding="utf-8")
+        if mutate is None:
+            target.unlink()
+            old, new = "<file present>", "<file deleted>"
+            continue
+        after = mutate(before)
+        if after == before and "=0" in expect:
+            old, new = "<already applied>", "<already applied>"
+            continue
+        applied = True
+        if after == before:
+            unchanged = True
+            break
+        target.write_text(after, encoding="utf-8")
+        old, new = _fragment(before, after)
+    if unchanged:
+        return None, f"{name}: mutation changed nothing"
+    rel = " + ".join(rels)
+    got = run(tree)
+    if ":" in expect:
+        # The predicate must fail with this finding, not another.
+        # `&` joins needles that must each be found (both methods).
+        rid, _sep, needles = expect.partition(":")
+        caught = all(any(n in f for f in got.findings.get(rid, []))
+                     for n in needles.split("&"))
+    elif expect.endswith("~"):
+        rid = expect[:-1]
+        caught = got.findings.get(rid) != clean.findings.get(rid)
+    elif "=0" in expect:
+        # Strict: the report-only predicate examined its population
+        # and reports exactly zero findings. Nothing else fails, except
+        # the predicates named after `|`, which must fail exactly when
+        # the mutant applied new bytes (a later act over a signed
+        # subject fails R2 by design until the reconciliation is
+        # re-derived); once the tree already carries the bytes they
+        # may only be a subset.
+        head, _sep, tail = expect.partition("|")
+        rid = head[:-2]
+        allowed = set(filter(None, tail.split(",")))
+        failed_ok = (got.failed == allowed if applied
+                     else got.failed <= allowed)
+        if name == "pins-after-repin-acts" and applied:
+            reference = poc_reference()
+            if reference.transaction_present(start):
+                original_pwb = (start / FAMILY_SPECS["PWB"]).read_bytes()
+                replayed_pwb = (tree / FAMILY_SPECS["PWB"]).read_bytes()
+                if not reference.is_signed(start):
+                    failed_ok = False
+                elif replayed_pwb != original_pwb:
+                    # Rewinding this governing input must invalidate
+                    # P115, with exactly this refusal and no other R1.
+                    required = allowed | {"R1"}
+                    expect = f"{rid}=0|" + ",".join(sorted(required))
+                    expected_r1 = [
+                        "poc (syzygy-73e.5.2) successor "
+                        "THREE-SURFACE-POC-GOVERNEDBY-REFERENCE-"
+                        "AMENDMENT-SIGNOFF-v1.0.md: incomplete or "
+                        "invalid exact P115 sign-off transaction"]
+                    failed_ok = (
+                        got.failed == required
+                        and got.findings.get("R1") == expected_r1
+                        and reference.binding_findings(tree) == [
+                            "current P115 governing input differs: "
+                            + FAMILY_SPECS["PWB"]])
+                    if failed_ok:
+                        # The early input refusal can hide a second
+                        # record defect. Restoring only PWB must make
+                        # the complete signed transaction valid again.
+                        target = tree / FAMILY_SPECS["PWB"]
+                        try:
+                            target.write_bytes(original_pwb)
+                            failed_ok = reference.is_signed(tree)
+                        finally:
+                            target.write_bytes(replayed_pwb)
+        caught = (got.findings.get(rid) == [] and failed_ok
+                  and any(int(m.group(1)) > 0 for m in (
+                      re.match(rf"OK +{rid}  .* — (\d+) examined", line)
+                      for line in got.lines) if m))
+    else:
+        caught = expect in got.failed
+    witness = {"mutant": name, "path": rel, "old": old, "new": new,
+               "expected": expect, "failed": sorted(got.failed),
+               "outcome": "killed" if caught else "SURVIVED"}
+    if not caught:
+        return witness, (f"{name}: expected {expect} to fail, got "
+                         f"{sorted(got.failed) or 'nothing'}")
+    return witness, None
 
 
 def _fragment(before, after):

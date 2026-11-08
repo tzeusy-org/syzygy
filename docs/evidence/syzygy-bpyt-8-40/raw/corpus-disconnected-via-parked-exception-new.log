@@ -1,0 +1,47 @@
+
+ RUN  v3.2.7 /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/subject
+
+ ❯ |unit| packages/polaris-generation-core/src/island-boundary.test.ts (9 tests | 1 failed) 3448ms
+   ✓ the live Node entries and the parked provider island > lists twenty-four island modules, each a file in the tree 3ms
+   × the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder 1884ms
+     → 281 production sources: unlisted transitive ingress
+apps/syzygy/src/bpyt-island-fixture.ts -> apps/syzygy/src/bpyt-island-fixture.ts imports ../../three-surface-poc/src/polaris-generation/run-key.js (apps/three-surface-poc/src/polaris-generation/run-key.ts) -> apps/three-surface-poc/src/polaris-generation/run-key.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./admitted-input.js (packages/polaris-generation-core/src/admitted-input.ts): expected [ Array(1) ] to deeply equal []
+   ✓ the live Node entries and the parked provider island > resolves every workspace import both entries reach, dynamic ones included  665ms
+   ✓ the live Node entries and the parked provider island > reaches no island module from either live entry  699ms
+   ✓ the live Node entries and the parked provider island > reaches the island from the consent package root, which neither live entry imports 179ms
+   ✓ the live Node entries and the parked provider island > refuses computed import arguments, including template expressions 13ms
+   ✓ the live Node entries and the parked provider island > refuses require calls and import-equals loaders 1ms
+   ✓ the live Node entries and the parked provider island > refuses createRequire calls, including imported aliases and module properties 2ms
+   ✓ the live Node entries and the parked provider island > follows a no-substitution template and the existing static, type and literal dynamic forms 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| packages/polaris-generation-core/src/island-boundary.test.ts > the live Node entries and the parked provider island > admits transitive island ingress only from the island and exact parked remainder
+AssertionError: 281 production sources: unlisted transitive ingress
+apps/syzygy/src/bpyt-island-fixture.ts -> apps/syzygy/src/bpyt-island-fixture.ts imports ../../three-surface-poc/src/polaris-generation/run-key.js (apps/three-surface-poc/src/polaris-generation/run-key.ts) -> apps/three-surface-poc/src/polaris-generation/run-key.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./admitted-input.js (packages/polaris-generation-core/src/admitted-input.ts): expected [ Array(1) ] to deeply equal []
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "apps/syzygy/src/bpyt-island-fixture.ts -> apps/syzygy/src/bpyt-island-fixture.ts imports ../../three-surface-poc/src/polaris-generation/run-key.js (apps/three-surface-poc/src/polaris-generation/run-key.ts) -> apps/three-surface-poc/src/polaris-generation/run-key.ts imports @syzygy/polaris-generation-core (packages/polaris-generation-core/src/index.ts) -> packages/polaris-generation-core/src/index.ts imports ./admitted-input.js (packages/polaris-generation-core/src/admitted-input.ts)",[39m
+[31m+ ][39m
+
+ ❯ packages/polaris-generation-core/src/island-boundary.test.ts:190:122
+    188|     expect([...new Set(unsupported)], `${population.length} production…
+    189|     expect([...new Set(unresolved)], `${population.length} production …
+    190|     expect(violations, `${population.length} production sources: unlis…
+       |                                                                                                                          ^
+    191|   });
+    192| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  16:09:41
+   Duration  4.30s (transform 73ms, setup 27ms, collect 480ms, tests 3.45s, environment 0ms, prepare 60ms)
+
+JSON report written to /home/orca/.tmp/syzygy-bpyt8-40-existing-guard-implementation-20261105/logs/corpus-disconnected-via-parked-exception-new.vitest.json

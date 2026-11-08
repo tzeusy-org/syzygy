@@ -14,6 +14,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -343,6 +344,77 @@ def governing_inputs(root: Path) -> tuple[tuple[str, str], ...]:
     return rows
 
 
+#: Governing inputs whose own sign-off chain can say which bytes are signed,
+#: and the builder module whose ``signed_findings()`` says it. Owner direction
+#: OWNER-DIRECTION-P115-LATER-SIGNED-INPUTS-2026-11-04, item 1: an input whose
+#: current bytes differ from the frozen digest passes only as a recorded,
+#: reviewed, signed later version of that input. Every other input, and every
+#: failure of the chain's own check, fails closed.
+LATER_SIGNED_INPUTS = {
+    "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md":
+        "build_polaris_dossier_local_agent_mode_v1_1",
+}
+#: Files the dossier chain's signed check reads, beyond the change directory.
+LATER_SIGNED_INPUT_GLOBS = (
+    ".syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v*.md",
+    ".syzygy/governance/contracts/candidates/polaris-dossier-local-agent-mode-v1-*/**/*",
+)
+# Only the implemented layers of the supported chain; unknown later versions
+# still fail the chain's signed check rather than gaining snapshot support.
+LATER_SIGNED_INPUT_BUILDERS = (
+    "build_polaris_dossier_local_agent_mode_v1_1",
+    "build_polaris_dossier_local_agent_mode_v1_2",
+    "build_polaris_dossier_local_agent_mode_v1_3",
+)
+
+
+def later_signed_input(root: Path, path: str, frozen: str) -> bool:
+    """Whether ``path``'s current bytes are a signed later version of the frozen ones.
+
+    True only when all hold: the input has a chain builder; the frozen digest
+    is the reviewed digest of a recorded version earlier than the latest one;
+    the current bytes hash to the latest record's reviewed digest; and the
+    chain's own signed check reports no finding. Any error is False.
+    """
+    name = LATER_SIGNED_INPUTS.get(path)
+    if name is None:
+        return False
+    try:
+        chain = importlib.import_module(name)
+        versions = chain.recorded_versions(root)
+
+        def reviewed(version):
+            return chain.review_digest(root, chain.DECISIONS
+                                       / f"{chain.RECORD_STEM}-SIGNOFF-v{version[0]}.{version[1]}.md")
+
+        if frozen not in {reviewed(v) for v in versions[:-1]}:
+            return False
+        if digest((root / path).read_bytes()) != reviewed(versions[-1]):
+            return False
+        return not chain.signed_findings(root)
+    except Exception:  # noqa: BLE001 - fail closed on any chain error
+        return False
+
+
+def later_signed_inputs(root: Path) -> set[str]:
+    """The files ``later_signed_input`` reads, for reconciliation's snapshots."""
+    paths: set[str] = set()
+    for name in LATER_SIGNED_INPUT_BUILDERS:
+        paths.update(target.as_posix() for target in importlib.import_module(name).TARGETS)
+    for pattern in LATER_SIGNED_INPUT_GLOBS:
+        for found in root.glob(pattern):
+            if found.is_file() and not found.is_symlink():
+                paths.add(found.relative_to(root).as_posix())
+    for rel in list(paths):
+        if "/decisions/" in rel:
+            values = re.findall(r"^Review: (.+)$", (root / rel).read_text(encoding="utf-8"), re.M)
+            for value in values[:1]:
+                review = Path(value.strip())
+                if not review.is_absolute() and ".." not in review.parts and (root / review).is_file():
+                    paths.add(review.as_posix())
+    return paths
+
+
 def governing_input_findings(root: Path, *, proposed_poc: bool = False) -> list[str]:
     """Current evidence only; a byte match never establishes owner authority.
 
@@ -366,7 +438,7 @@ def governing_input_findings(root: Path, *, proposed_poc: bool = False) -> list[
                     raise ValueError("parent is not a nonsymlink directory")
             if not stat.S_ISREG(target.lstat().st_mode):
                 raise ValueError("not a regular nonsymlink file")
-            if digest(target.read_bytes()) != sha:
+            if digest(target.read_bytes()) != sha and not later_signed_input(root, path, sha):
                 findings.append(f"current P115 governing input differs: {path}")
         except (OSError, ValueError) as error:
             findings.append(f"current P115 governing input unavailable: {path}: {error}")
@@ -482,6 +554,7 @@ def validation_inputs(root: Path) -> set[str]:
         raise ValueError("P115 validation snapshot refuses a nonregular reserved-family entry")
     paths = {(RECORD.parent / name).as_posix() for name in population["files"]}
     paths |= {path for path, _sha in governing_inputs(root)}
+    paths |= later_signed_inputs(root)
     paths |= set(core_paths(root)) | {RECORD.as_posix(), AGGREGATE.as_posix(),
         BASE_RECORD.as_posix(),
         ".syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md",
@@ -625,7 +698,11 @@ def recording_failure_selftest(root: Path, expect) -> None:
             "Synthetic recording failure fixtures; no owner action")
         _current, proposed = load_frozen(template).collect()
         proposed = {Path(p): body for p, body in proposed.items()}
-        for name in cases:
+        # Cases report into `found`, which each forked case sends back.
+        outer_expect, found = expect, []
+        def expect(case_name, passed):
+            found.append((case_name, passed))
+        def one_case(name):
             tree = Path(temp) / name
             if name.startswith("linked-worktree-"):
                 git(template, "-c", "core.hooksPath=/dev/null", "worktree", "add", "--quiet",
@@ -1458,6 +1535,11 @@ def recording_failure_selftest(root: Path, expect) -> None:
             if name == "R6-15":
                 output.close()
             shutil.rmtree(tree)
+        # Each case clones its own tree from the template, so the cases run in
+        # forked workers; their cases and logs come back in case order.
+        for case_results in fork_map([lambda name=name: one_case(name) for name in cases], found):
+            for case_name, passed in case_results:
+                outer_expect(case_name, passed)
 
 
 def recovery_native_selftest(root: Path, expect) -> None:
@@ -2454,7 +2536,23 @@ exclusion of the acts in force stands.
                         "disposition": disposition, "oldRecord": before_record, "newRecord": after_record,
                         "oldAggregate": before_aggregate, "newAggregate": after_aggregate,
                         "passed": before_record == after_record and before_aggregate == after_aggregate})
-        passed = (set(keys) == set(packages) - {KEY} == set(historical_packages) - {KEY}
+        # Packages the recorder gained after the frozen historical recorder:
+        # a closed list, so any other new package still fails the census.
+        later = {"polaris-dossier-local-agent-mode@1.3", "polaris-dossier-local-agent-mode@1.4",
+                 "polaris-dossier-local-agent-mode@1.5"}
+        def closed_census(current_packages, prior_packages):
+            return (set(keys) == set(prior_packages) - {KEY}
+                    and set(current_packages) - {KEY} == set(keys) | later)
+
+        unexpected = "synthetic-unlisted-package@9.9"
+        required = keys[0]
+        expect("T17 census rejects an unlisted package in either population",
+               not closed_census(set(packages) | {unexpected}, historical_packages)
+               and not closed_census(packages, set(historical_packages) | {unexpected}))
+        expect("T17 census rejects a missing required package in either population",
+               not closed_census(set(packages) - {required}, historical_packages)
+               and not closed_census(packages, set(historical_packages) - {required}))
+        passed = (closed_census(packages, historical_packages)
                   and len(controls) == 38 and all(row["passed"] for row in controls))
         expect("T17 all non-P115 full historical record and aggregate outputs", passed)
         print("P115-RENDER-EVIDENCE " + json.dumps({"case": "T17", "syntheticOnly": True,
@@ -2464,6 +2562,238 @@ exclusion of the acts in force stands.
             "controls": controls, "passed": passed}, sort_keys=True))
     finally:
         sys.modules.pop(old.__name__, None)
+
+
+def later_signed_selftest() -> list[tuple[str, bool]]:
+    """One fixture per predicate of ``later_signed_input``, over the dossier
+    builders' own fixture trees (v1.0 to v1.2 signed, v1.3 applied)."""
+    import build_polaris_dossier_local_agent_mode_v1_3 as v13
+    import build_polaris_dossier_local_agent_mode_v1_2 as v12
+    import build_polaris_dossier_local_agent_mode_v1_1 as v11
+    spec = v13.SPEC.as_posix()
+    results: list[tuple[str, bool]] = []
+
+    def tree(*, apply_v13=True, record_v13=True):
+        tmp = tempfile.TemporaryDirectory(prefix="p115-later-signed-")
+        root = Path(tmp.name)
+        with contextlib.redirect_stdout(io.StringIO()):
+            v13._fixture(root)
+            frozen = v11.review_digest(root, v12.V12_RECORD)
+            if apply_v13:
+                assert v13.apply(root) == 0
+            if record_v13:
+                v13._record_v13(root)
+        return tmp, root, frozen
+
+    tmp, root, frozen = tree()
+    with tmp:
+        results.append(("signed later version passes", later_signed_input(root, spec, frozen)))
+        results.append(("an input with no chain builder fails",
+                        not later_signed_input(root, "openspec/changes/other/specs/x/spec.md", frozen)))
+        results.append(("a frozen digest no earlier record reviewed fails",
+                        not later_signed_input(root, spec, "0" * 64)))
+        snapshot = later_signed_inputs(root)
+        results.append(("snapshot inputs name the records, their reviews and the packages",
+                        v13.V13_RECORD.as_posix() in snapshot and "docs/reviews/R-V13-RAW.md" in snapshot
+                        and (v13.PROPOSED / "spec.md.patch").as_posix() in snapshot))
+        body = (root / spec).read_bytes()
+        (root / spec).write_bytes(body + b"\nEdited after v1.3.\n")
+        results.append(("current bytes edited after the latest signed version fail",
+                        not later_signed_input(root, spec, frozen)))
+        (root / spec).write_bytes(body)
+        v13._record_v13(root, digest="f" * 64)
+        results.append(("a latest review digest that is not the current bytes fails",
+                        not later_signed_input(root, spec, frozen)))
+        v13._record_v13(root)
+        v12._record_v12(root, digest="e" * 64)
+        results.append(("the frozen digest no longer an earlier reviewed digest fails",
+                        not later_signed_input(root, spec, frozen)))
+        v12._record_v12(root, digest=frozen)
+        results.append(("restored: passes again", later_signed_input(root, spec, frozen)))
+        (root / v13.PROPOSED / "proposal.md.patch").unlink()
+        results.append(("the chain's own signed check failing fails",
+                        bool(v11.signed_findings(root)) and not later_signed_input(root, spec, frozen)))
+    tmp, root, frozen = tree(record_v13=False)
+    with tmp:
+        results.append(("later bytes with no later record fail", not later_signed_input(root, spec, frozen)))
+    tmp, root, frozen = tree(apply_v13=False, record_v13=False)
+    with tmp:
+        (root / v13.V13_RECORD).write_text("# v1.3\n\nReview: docs/reviews/R-V12-RAW.md\n")
+        results.append(("a later record whose review is the frozen one fails",
+                        not later_signed_input(root, spec, frozen)))
+
+    # Each predicate alone, against a stub chain whose own signed check passes.
+    import types
+    stub = types.ModuleType("p115_later_signed_stub")
+    stub.DECISIONS, stub.RECORD_STEM = Path("d"), "S"
+    state = {}
+    stub.recorded_versions = lambda root: state["versions"]
+    stub.review_digest = lambda root, record: state["digests"].get(record.name)
+    stub.signed_findings = lambda root: state.get("findings", [])
+    sys.modules[stub.__name__] = stub
+    saved = dict(LATER_SIGNED_INPUTS)
+    LATER_SIGNED_INPUTS["x/spec.md"] = stub.__name__
+    try:
+        with tempfile.TemporaryDirectory(prefix="p115-later-stub-") as temp:
+            root = Path(temp)
+            (root / "x").mkdir()
+            (root / "x/spec.md").write_bytes(b"later\n")
+            later, old = digest(b"later\n"), "a" * 64
+            def probe(versions, digests, findings=()):
+                state.update(versions=versions, digests=digests, findings=list(findings))
+                return later_signed_input(root, "x/spec.md", old)
+            two = [(1, 0), (1, 1)]
+            results.append(("stub: earlier frozen, latest current, chain clean passes",
+                            probe(two, {"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": later})))
+            results.append(("stub: frozen digest only on the latest record fails",
+                            not probe(two, {"S-SIGNOFF-v1.0.md": "b" * 64, "S-SIGNOFF-v1.1.md": old})))
+            results.append(("stub: a single recorded version fails",
+                            not probe([(1, 0)], {"S-SIGNOFF-v1.0.md": old})))
+            results.append(("stub: current bytes other than the latest reviewed fail",
+                            not probe(two, {"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": "c" * 64})))
+            results.append(("stub: a chain finding fails",
+                            not probe(two, {"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": later}, ["x"])))
+            stub.signed_findings = lambda root: (_ for _ in ()).throw(OSError("chain unreadable"))
+            results.append(("stub: a chain error fails closed",
+                            not probe(two, {"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": later})))
+            stub.signed_findings = lambda root: state.get("findings", [])
+            # Through governing_input_findings, the reader binding_findings uses.
+            saved_inputs = globals()["governing_inputs"]
+            globals()["governing_inputs"] = lambda root: (("x/spec.md", old),)
+            try:
+                state.update(versions=two, digests={"S-SIGNOFF-v1.0.md": old, "S-SIGNOFF-v1.1.md": later},
+                             findings=[])
+                passes = governing_input_findings(root) == []
+                state["findings"] = ["x"]
+                fails = governing_input_findings(root) == ["current P115 governing input differs: x/spec.md"]
+            finally:
+                globals()["governing_inputs"] = saved_inputs
+            results.append(("governing_input_findings admits a signed later version", passes))
+            results.append(("governing_input_findings refuses it once the chain check fails", fails))
+    finally:
+        LATER_SIGNED_INPUTS.clear()
+        LATER_SIGNED_INPUTS.update(saved)
+        sys.modules.pop(stub.__name__, None)
+    # Copy only the declared validation inputs: no .git and no independent
+    # tracked-openspec population may rescue an incomplete chain snapshot.
+    from unittest import mock
+    tmp, root, frozen = tree()
+    # Bind this synthetic chain's earlier digest, rather than the real dossier
+    # digest in P115's frozen source-return record. The other seven rows stay
+    # literal frozen inputs; both source and snapshot use the same rows.
+    inputs = tuple((rel, frozen if rel == spec else sha) for rel, sha in governing_inputs(ROOT))
+    with tmp, tempfile.TemporaryDirectory(prefix="p115-later-snapshot-") as temp, \
+            mock.patch.dict(globals(), governing_inputs=lambda source: inputs):
+        snapshot = Path(temp)
+        # Keep the synthetic v1.3 chain closed over its own inputs; do not
+        # import real later-version records or packages into that fixture.
+        for rel in validation_inputs(ROOT) - later_signed_inputs(ROOT):
+            target = root / rel
+            if not target.exists():
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(ROOT / rel, target)
+        # The other seven inputs retain their frozen bytes in this synthetic
+        # source fixture; the dossier alone exercises the later-signed branch.
+        for rel, _sha in governing_inputs(root):
+            if rel != spec:
+                (root / rel).write_bytes(git(ROOT, "show", f"{BASE}:{rel}"))
+        for rel in validation_inputs(root):
+            target = snapshot / rel
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(root / rel, target)
+        positive = (not (snapshot / ".git").exists()
+                    and later_signed_input(root, spec, frozen)
+                    and later_signed_input(snapshot, spec, frozen)
+                    and governing_input_findings(root) == governing_input_findings(snapshot) == [])
+        negatives = []
+        for rel in (v13.CHANGE / "design.md", v13.CHANGE / "proposal.md"):
+            for edited in (False, True):
+                original = (root / rel).read_bytes()
+                for subject in (root, snapshot):
+                    if edited:
+                        (subject / rel).write_bytes(original + b"\nUnreviewed fixture edit.\n")
+                    else:
+                        (subject / rel).unlink(missing_ok=True)
+                expected = [f"current P115 governing input differs: {spec}"]
+                negatives.append(not later_signed_input(root, spec, frozen)
+                                 and not later_signed_input(snapshot, spec, frozen)
+                                 and governing_input_findings(root)
+                                 == governing_input_findings(snapshot) == expected)
+                for subject in (root, snapshot):
+                    (subject / rel).write_bytes(original)
+        results.append(("validation-only Git-free snapshot preserves signed and missing/edited target results",
+                        positive and len(negatives) == 4 and all(negatives)))
+    return results
+
+
+def _selftest_workers() -> int:
+    raw = os.environ.get("SELFTEST_WORKERS", "")
+    if raw.isdigit() and int(raw) > 0:
+        return int(raw)
+    return max(1, min(os.cpu_count() or 1, 8))
+
+
+def fork_map(tasks, cases: list) -> list:
+    """Run zero-argument tasks in forked children; return each one's cases, in order.
+
+    A task reports through `expect`, which appends to `cases`; each child starts
+    from an empty list and sends back what it appended. Its stdout and stderr
+    are replayed in task order after all finish, so the log reads as a serial
+    run's (syzygy-j5m0). Plain os.fork rather than a Pool, so a task may fork
+    its own cases. SELFTEST_WORKERS=1, or no fork, runs the tasks in-process.
+    """
+    if cases:
+        raise ValueError("forked tasks must start from an empty case list")
+    workers = _selftest_workers()
+    if workers == 1 or not hasattr(os, "fork"):
+        found = []
+        for task in tasks:
+            task()
+            found.append(list(cases))
+            del cases[:]
+        return found
+    with tempfile.TemporaryDirectory(prefix="p115-selftest-fork-") as temp:
+        running, results = {}, [None] * len(tasks)
+        def reap():
+            pid, status = os.wait()
+            index = running.pop(pid)
+            log = Path(temp, f"{index}.log").read_bytes()
+            result = Path(temp, f"{index}.json")
+            if status != 0 or not result.exists():
+                os.write(2, log)
+                raise RuntimeError(f"selftest task {index} failed in its worker (status {status})")
+            results[index] = (json.loads(result.read_text()), log)
+        for index, task in enumerate(tasks):
+            while len(running) >= workers:
+                reap()
+            sys.stdout.flush(); sys.stderr.flush()
+            pid = os.fork()
+            if pid == 0:  # child: never returns into the caller
+                code = 1
+                try:
+                    fd = os.open(Path(temp, f"{index}.log"), os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+                    os.dup2(fd, 1); os.dup2(fd, 2); os.close(fd)
+                    task()
+                    sys.stdout.flush(); sys.stderr.flush()
+                    Path(temp, f"{index}.json").write_text(json.dumps(cases))
+                    code = 0
+                except BaseException:
+                    import traceback
+                    traceback.print_exc()
+                finally:
+                    try:
+                        sys.stdout.flush(); sys.stderr.flush()
+                    finally:
+                        os._exit(code)
+            running[pid] = index
+        while running:
+            reap()
+    out = []
+    for found, log in results:
+        sys.stdout.flush()
+        os.write(1, log)
+        out.append([(name, passed) for name, passed in found])
+    return out
 
 
 def selftest(root: Path) -> int:
@@ -2483,8 +2813,14 @@ def selftest(root: Path) -> int:
         "record_pwb_behavior_amendment_acts.py", "check_spec_reconciliation.py",
         "check_governance.py", "build_three_surface_poc_readability_successor.py",
         "build_three_surface_poc_vocabulary_epistemic_amendment.py",
-    )
+    ) + tuple(name + ".py" for name in LATER_SIGNED_INPUT_BUILDERS)
     if transaction_present(root):
+        later = later_signed_selftest()
+        for name, passed in later:
+            print(f"P115 later-signed selftest: {name}: {'ok' if passed else 'FAILED'}")
+        if not all(passed for _name, passed in later):
+            print(f"P115 later-signed selftest: {sum(not p for _n, p in later)} of {len(later)} failed")
+            return 1
         findings, state = check_state(root)
         if findings:
             print("P115 signed selftest REFUSED: " + " | ".join(findings))
@@ -2536,227 +2872,231 @@ def selftest(root: Path) -> int:
             return not report.failed()
         finally:
             governance.ROOT = saved
-    with tempfile.TemporaryDirectory(prefix="p115-recording-selftest-") as temp:
-        tree = Path(temp) / "tree"
-        subprocess.run(["git", "clone", "--quiet", "--no-hardlinks", "--no-checkout",
-                        str(root), str(tree)], check=True, capture_output=True)
-        git(tree, "checkout", "--quiet", "--detach", CORE_COMMIT)
-        # Exercise current preparation/reader bytes in the frozen core tree.
-        for name in current_tools:
-            shutil.copyfile(root / "scripts" / name, tree / "scripts" / name)
-        expect("candidate checks real BASE subjects", candidate_findings(tree) == [])
-        expect("no record supplies no signed successor", not is_signed(tree))
-        expect("preview never invents a review/owner answer", not preview(tree)["recordingReady"])
-        expect("recording gate follows frozen impact disposition",
-               bool(recording_findings(tree)) == bool(consumption_unknowns(tree)))
-        expect("candidate does not add a reconciliation successor",
-               not any(later.get("package") == KEY for later in
-                       reconciliation.successors_for(tree, next(c for c in reconciliation.CHILDREN if c["key"] == "poc"))))
-        # The frozen core census predates the CAP1 consent overlay's
-        # composition (syzygy-5oqc, CAP1 42 / 47 -> 42 / 57). Only that family
-        # may differ from the current checker's regeneration; every other
-        # family's frozen bytes must still match before it is regenerated.
-        population, report = census_report(tree)
-        frozen = json.loads((tree / reconciliation.CENSUS).read_text())["families"]
-        current = json.loads(reconciliation.census_json(population))["families"]
-        expect("baseline census differs from the frozen core in CAP1 alone",
-               {k for k in current if current[k] != frozen.get(k)} <= {"CAP1"}
-               and set(current) == set(frozen)
-               and report.findings.get("R3", []) in (
-                   [], [f"`{reconciliation.CENSUS}` differs from regeneration "
-                        "(a name or scenario title moved)"]))
-        (tree / reconciliation.CENSUS).write_text(reconciliation.census_json(population))
-        expect("candidate reconciliation and baseline census pass",
-               not outcomes(tree).failed and not census_report(tree)[1].failed)
-        expect("candidate bootstrap history passes", bootstrap_ok(tree))
-        pkg = recorder.real_packages()[KEY]
-        expect("manifest-backed POC registration", pkg.subject == MANIFEST and not pkg.package_digest
-               and pkg.extension == recorder.POC_EXTENSION_REL and pkg.installed is None)
-        before = {rel: (tree / rel).read_bytes() for rel in SUBJECTS}
-        earlier = readability.installed_bytes_at(tree)
-        raw = "docs/reviews/R-P115-SELFTEST-RAW.md"
-        (tree / raw).write_text(f"# Synthetic review — {KEY}\nReviewed commit: {CORE_COMMIT}\n"
-                               f"Manifest SHA-256: {MANIFEST_SHA256}\nVerdict: CONFIRM\n\n"
-                               "## Findings\n\nNo findings. Synthetic fixture only; no owner action.\n")
-        ready = preview(tree, raw)
-        expect("preview checks a synthetic raw without collecting authority",
-               ready["reviewReady"] and ready["recordingReady"] == (consumption_unknowns(tree) == 0)
-               and ready["ownerSelection"] == "not collected by this tool")
-        confirm_raw = (tree / raw).read_bytes()
-        notes = confirm_raw.replace(b"Verdict: CONFIRM\n", b"Verdict: CONFIRM WITH EXCEPTIONS\n")
-        notes = notes.replace(b"No findings.", "**Finding 1 — fixture note** (note)\n".encode())
-        (tree / raw).write_bytes(notes)
-        expect("notes-only raw needs a matching disposition", preview(tree, raw)["reviewError"] is not None)
-        disposition = (CANDIDATE / "ROUND-999-DISPOSITIONS.md").as_posix()
-        (tree / disposition).write_text(f"Reviewed record: {raw}\n\n**Finding 1 — fixture note**\nRetained.\n")
-        expect("notes-only raw with matching sibling disposition parses",
-               preview(tree, raw, disposition)["reviewReady"])
-        (tree / disposition).unlink()
-        (tree / raw).write_bytes(confirm_raw)
-        # The actual P115 apply/record path admits only a clean checkout.
-        git(tree, "add", "--all")
-        git(tree, "-c", "user.name=P115 synthetic fixture", "-c", "user.email=fixture@invalid",
-            "-c", "core.hooksPath=/dev/null", "commit", "--quiet", "-m",
-            "Synthetic P115 preparation fixture; no owner action")
-        _current, proposed = load_frozen(tree).collect()
-        reference = recorder._module(Path(__file__).stem)
-        bad_patch = tree / CANDIDATE / "proposed/spec.md.patch"
-        saved_patch = bad_patch.read_bytes()
-        from unittest import mock
-        native_run = recorder.subprocess.run
-        def corrupt_at_preflight(argv, *args, **kwargs):
-            if argv[:2] == ["git", "apply"] and "--check" in argv:
-                # The real strict gate already passed; only own captured
-                # private bytes mutate at this native preflight boundary.
-                Path(argv[-1]).write_text("--- a/p115-no-such-subject\n+++ b/p115-no-such-subject\n"
-                                         "@@ -1 +1 @@\n-missing\n+bad\n")
-            return native_run(argv, *args, **kwargs)
-        capture = io.StringIO()
-        with mock.patch.object(recorder.subprocess, "run", corrupt_at_preflight), contextlib.redirect_stdout(capture):
-            bad_code = pkg.apply(tree)
-        expect("one bad-patch preflight leaves all six subjects unchanged",
-               bad_code != 0 and "P115 preflight refused:" in capture.getvalue()
-               and {rel: (tree / rel).read_bytes() for rel in SUBJECTS} == before)
-        with contextlib.redirect_stdout(io.StringIO()):
-            applied = pkg.apply(tree)
-        expect("P115-only five-patch batch installs exact synthetic subjects",
-               applied == 0 and applied_rows_match(tree)
-               and all((tree / rel).read_bytes() == body for rel, body in proposed.items()))
-        expect("unsigned installed proposal is refused", bool(check_state(tree)[0]) and not is_signed(tree))
-        expect("unsigned proposed census and bootstrap remain failures",
-               "R3" in census_report(tree)[1].failed and not bootstrap_ok(tree))
-        quote = "Synthetic fixture selection; no owner action"
-        record = recorder.render_record(pkg, VERSION, "2026-10-21", quote, raw,
-                                         CORE_COMMIT, "CONFIRM", None)
-        aggregate = (tree / AGGREGATE).read_text()
-        block = recorder.render_aggregate(pkg, VERSION, "2026-10-21", raw, "CONFIRM", None)
-        (tree / RECORD).write_text(record)
-        (tree / AGGREGATE).write_text(aggregate.rstrip("\n") + "\n\n" + block)
-        expect("exact signed synthetic transaction recognized", is_signed(tree))
-        expect("earlier readability rows reconstruct exactly", readability.installed_bytes_at(tree) == earlier)
-        p108 = recorder.real_packages()["three-surface-poc-vocabulary-epistemic-amendment"]
-        expect("earlier recorder rows accept only signed successor", p108.applied(tree))
-        expect("signed six-row reconciliation chain reverses exactly", not outcomes(tree).failed)
-        population, report = census_report(tree)
-        expect("signed census requires regeneration", "R3" in report.failed)
-        (tree / reconciliation.CENSUS).write_text(reconciliation.census_json(population))
-        expect("signed census admits exactly 26 requirements and 34 scenarios",
-               not census_report(tree)[1].failed
-               and len(population["POC"]) == 26
-               and sum(len(row["scenarios"]) for row in population["POC"].values()) == 34
-               and len(population["POC"]["POC-REQ-014"]["scenarios"]) == 8)
-        expect("signed bootstrap current rows are recognized", bootstrap_ok(tree))
-        route_report = reconciliation.Report()
-        reconciliation.check_routes(tree, population, route_report)
-        expect("signed route activation requires root-owned terminal entries",
-               any(RECORD.name in finding for finding in route_report.findings.get("R5", ())))
-        snapshot = Path(temp) / "snapshot"
-        reconciliation.scratch(tree, snapshot)
-        expect("read-only snapshot retains signed proof and exact chain",
-               is_signed(snapshot) and not outcomes(snapshot).failed)
-        # One predicate per mutation, restoring exact bytes after each case.
-        unresolved = json.loads((tree / CANDIDATE / "REQUIREMENT-CONSUMPTION.json").read_text())
-        unresolved["entries"][0]["classification"] = "undecidable"
-        mutations = [
-            ("record-only is partial", AGGREGATE, aggregate.encode()),
-            ("aggregate-only is partial", RECORD, None),
-            ("duplicate aggregate block", AGGREGATE, (aggregate + block + block).encode()),
-            ("wrong recorded version", RECORD, record.replace("Version: 1.0", "Version: 2.0").encode()),
-            ("wrong review binding", Path(raw), (tree / raw).read_bytes().replace(MANIFEST_SHA256.encode(), b"0" * 64)),
-            ("wrong reviewed core", Path(raw), (tree / raw).read_bytes().replace(CORE_COMMIT.encode(), BASE.encode())),
-            ("escaping review path", RECORD, record.replace(f"Review: {raw}", "Review: ../outside-RAW.md").encode()),
-            ("missing review", Path(raw), None),
-            ("wrong manifest hash", MANIFEST, (tree / MANIFEST).read_bytes() + b"\n"),
-            ("current subject drift", SUBJECTS[-1], (tree / SUBJECTS[-1]).read_bytes() + b"\n"),
-            ("rollback to predecessor is refused", SUBJECTS[-1], before[SUBJECTS[-1]]),
-            ("wrong patch bytes", CANDIDATE / "proposed/spec.md.patch",
-             (tree / CANDIDATE / "proposed/spec.md.patch").read_bytes() + b"\n"),
-            ("unresolved consumption entry", CANDIDATE / "REQUIREMENT-CONSUMPTION.json",
-             json.dumps(unresolved).encode()),
-        ]
-        for name, path, changed in mutations:
-            target = tree / path
-            saved = target.read_bytes()
-            if changed is None:
-                target.unlink()
-            else:
-                target.write_bytes(changed)
-            expect(name, not is_signed(tree))
-            mutation_receipt(tree, name, {path: saved}, {path: changed}, "signed recognition refuses exact mutation")
-            if name == "unresolved consumption entry":
-                expect("unresolved consumption trips its own signed predicate",
-                       "signed recognition remains gated by 1 undecidable requirement-consumption entries"
-                       in signed_findings(tree))
-            if name == "record-only is partial":
-                expect("partial transaction cannot explain predecessor rows",
-                       not p108.applied(tree) and not bootstrap_ok(tree)
-                       and "R1" in outcomes(tree).failed)
-            target.write_bytes(saved)
-        end = recorder.block_markers(pkg, VERSION)[1]
-        signed_aggregate = (tree / AGGREGATE).read_bytes()
-        chain_mutations = [
-            ("P115 block before all predecessors", {AGGREGATE: (block + aggregate).encode()}),
-            ("P115 backdated before predecessors", {
-                RECORD: record.replace("Date: 2026-10-21", "Date: 2026-01-01").encode(),
-                AGGREGATE: signed_aggregate.replace(b"recorded 2026-10-21", b"recorded 2026-01-01")}),
-            ("P115 duplicate closing delimiter", {AGGREGATE: signed_aggregate + end.encode() + b"\n"}),
-            ("P115 orphan closing is present", {RECORD: None, AGGREGATE: aggregate.encode() + end.encode() + b"\n"}),
-            ("P115 invalid calendar date", {
-                RECORD: record.replace("Date: 2026-10-21", "Date: 2026-02-30").encode(),
-                AGGREGATE: signed_aggregate.replace(b"recorded 2026-10-21", b"recorded 2026-02-30")}),
-        ]
-        predecessor = recorder.real_packages()[PREDECESSORS[-1]]
-        pred_start, pred_end = recorder.block_markers(predecessor, VERSION)
-        # Preserve the predecessor start position but break its complete block.
-        chain_mutations.append(("P115 nested inside predecessor block", {AGGREGATE:
-            (aggregate.replace(pred_end, block + pred_end)).encode()}))
-        chain_mutations.append(("predecessor orphan closing delimiter", {AGGREGATE:
-            signed_aggregate + pred_end.encode() + b"\n"}))
-        pred_record = recorder.record_rel(predecessor, VERSION)
-        chain_mutations.append(("predecessor duplicate date", {pred_record:
-            (tree / pred_record).read_bytes() + b"\nDate: 2026-10-15\n"}))
-        predecessor_fields = recorder.parse_record((tree / pred_record).read_text())
-        predecessor_block = recorder.render_aggregate(predecessor, VERSION,
-            predecessor_fields["Date"], predecessor_fields["Review"], predecessor_fields["Review verdict"],
-            None if predecessor_fields["Disposition"] == "none" else predecessor_fields["Disposition"])
-        chain_mutations.append(("predecessor block in fenced example", {AGGREGATE:
-            signed_aggregate.replace(predecessor_block.encode(),
-                ("```text\n" + predecessor_block + "```\n").encode())}))
-        for name, changes in chain_mutations:
-            saved = {path: (tree / path).read_bytes() for path in changes}
-            for path, body in changes.items():
-                (tree / path).unlink() if body is None else (tree / path).write_bytes(body)
-            findings = signed_findings(tree)
-            expect(name, transaction_present(tree) and not is_signed(tree) and bool(findings)
-                   and (name != "predecessor block in fenced example"
-                        or any("operative standalone line" in finding for finding in findings)))
-            mutation_receipt(tree, name, saved, changes, "leaf complete-chain dates/order/unique balanced delimiters")
-            for path, body in saved.items():
-                (tree / path).write_bytes(body)
-        expect("mutations restore the signed fixture", is_signed(tree))
-        binding_failure_selftest(root, tree, expect)
-        family_failure_selftest(root, tree, expect, before, earlier)
-        governing_source_selftest(root, tree, expect, before)
-        findings, output = historical_run(tree, "--selftest")
-        expect("signed replay runs frozen selftest, not current subjects", not findings and "Preparation selftest:" in output)
-        # Probe the actual signed/replay path with unavailable frozen objects.
-        saved_commit = CORE_COMMIT
-        try:
-            CORE_COMMIT = "0" * 40
-            expect("missing frozen history refuses signed recognition", not is_signed(tree))
+    def core_phase(root, expect):
+        global CORE_COMMIT
+        with tempfile.TemporaryDirectory(prefix="p115-recording-selftest-") as temp:
+            tree = Path(temp) / "tree"
+            subprocess.run(["git", "clone", "--quiet", "--no-hardlinks", "--no-checkout",
+                            str(root), str(tree)], check=True, capture_output=True)
+            git(tree, "checkout", "--quiet", "--detach", CORE_COMMIT)
+            # Exercise current preparation/reader bytes in the frozen core tree.
+            for name in current_tools:
+                shutil.copyfile(root / "scripts" / name, tree / "scripts" / name)
+            expect("candidate checks real BASE subjects", candidate_findings(tree) == [])
+            expect("no record supplies no signed successor", not is_signed(tree))
+            expect("preview never invents a review/owner answer", not preview(tree)["recordingReady"])
+            expect("recording gate follows frozen impact disposition",
+                   bool(recording_findings(tree)) == bool(consumption_unknowns(tree)))
+            expect("candidate does not add a reconciliation successor",
+                   not any(later.get("package") == KEY for later in
+                           reconciliation.successors_for(tree, next(c for c in reconciliation.CHILDREN if c["key"] == "poc"))))
+            # The frozen core census predates the CAP1 consent overlay's
+            # composition (syzygy-5oqc, CAP1 42 / 47 -> 42 / 57). Only that family
+            # may differ from the current checker's regeneration; every other
+            # family's frozen bytes must still match before it is regenerated.
+            population, report = census_report(tree)
+            frozen = json.loads((tree / reconciliation.CENSUS).read_text())["families"]
+            current = json.loads(reconciliation.census_json(population))["families"]
+            expect("baseline census differs from the frozen core in CAP1 alone",
+                   {k for k in current if current[k] != frozen.get(k)} <= {"CAP1"}
+                   and set(current) == set(frozen)
+                   and report.findings.get("R3", []) in (
+                       [], [f"`{reconciliation.CENSUS}` differs from regeneration "
+                            "(a name or scenario title moved)"]))
+            (tree / reconciliation.CENSUS).write_text(reconciliation.census_json(population))
+            expect("candidate reconciliation and baseline census pass",
+                   not outcomes(tree).failed and not census_report(tree)[1].failed)
+            expect("candidate bootstrap history passes", bootstrap_ok(tree))
+            pkg = recorder.real_packages()[KEY]
+            expect("manifest-backed POC registration", pkg.subject == MANIFEST and not pkg.package_digest
+                   and pkg.extension == recorder.POC_EXTENSION_REL and pkg.installed is None)
+            before = {rel: (tree / rel).read_bytes() for rel in SUBJECTS}
+            earlier = readability.installed_bytes_at(tree)
+            raw = "docs/reviews/R-P115-SELFTEST-RAW.md"
+            (tree / raw).write_text(f"# Synthetic review — {KEY}\nReviewed commit: {CORE_COMMIT}\n"
+                                   f"Manifest SHA-256: {MANIFEST_SHA256}\nVerdict: CONFIRM\n\n"
+                                   "## Findings\n\nNo findings. Synthetic fixture only; no owner action.\n")
+            ready = preview(tree, raw)
+            expect("preview checks a synthetic raw without collecting authority",
+                   ready["reviewReady"] and ready["recordingReady"] == (consumption_unknowns(tree) == 0)
+                   and ready["ownerSelection"] == "not collected by this tool")
+            confirm_raw = (tree / raw).read_bytes()
+            notes = confirm_raw.replace(b"Verdict: CONFIRM\n", b"Verdict: CONFIRM WITH EXCEPTIONS\n")
+            notes = notes.replace(b"No findings.", "**Finding 1 — fixture note** (note)\n".encode())
+            (tree / raw).write_bytes(notes)
+            expect("notes-only raw needs a matching disposition", preview(tree, raw)["reviewError"] is not None)
+            disposition = (CANDIDATE / "ROUND-999-DISPOSITIONS.md").as_posix()
+            (tree / disposition).write_text(f"Reviewed record: {raw}\n\n**Finding 1 — fixture note**\nRetained.\n")
+            expect("notes-only raw with matching sibling disposition parses",
+                   preview(tree, raw, disposition)["reviewReady"])
+            (tree / disposition).unlink()
+            (tree / raw).write_bytes(confirm_raw)
+            # The actual P115 apply/record path admits only a clean checkout.
+            git(tree, "add", "--all")
+            git(tree, "-c", "user.name=P115 synthetic fixture", "-c", "user.email=fixture@invalid",
+                "-c", "core.hooksPath=/dev/null", "commit", "--quiet", "-m",
+                "Synthetic P115 preparation fixture; no owner action")
+            _current, proposed = load_frozen(tree).collect()
+            reference = recorder._module(Path(__file__).stem)
+            bad_patch = tree / CANDIDATE / "proposed/spec.md.patch"
+            saved_patch = bad_patch.read_bytes()
+            from unittest import mock
+            native_run = recorder.subprocess.run
+            def corrupt_at_preflight(argv, *args, **kwargs):
+                if argv[:2] == ["git", "apply"] and "--check" in argv:
+                    # The real strict gate already passed; only own captured
+                    # private bytes mutate at this native preflight boundary.
+                    Path(argv[-1]).write_text("--- a/p115-no-such-subject\n+++ b/p115-no-such-subject\n"
+                                             "@@ -1 +1 @@\n-missing\n+bad\n")
+                return native_run(argv, *args, **kwargs)
+            capture = io.StringIO()
+            with mock.patch.object(recorder.subprocess, "run", corrupt_at_preflight), contextlib.redirect_stdout(capture):
+                bad_code = pkg.apply(tree)
+            expect("one bad-patch preflight leaves all six subjects unchanged",
+                   bad_code != 0 and "P115 preflight refused:" in capture.getvalue()
+                   and {rel: (tree / rel).read_bytes() for rel in SUBJECTS} == before)
+            with contextlib.redirect_stdout(io.StringIO()):
+                applied = pkg.apply(tree)
+            expect("P115-only five-patch batch installs exact synthetic subjects",
+                   applied == 0 and applied_rows_match(tree)
+                   and all((tree / rel).read_bytes() == body for rel, body in proposed.items()))
+            expect("unsigned installed proposal is refused", bool(check_state(tree)[0]) and not is_signed(tree))
+            expect("unsigned proposed census and bootstrap remain failures",
+                   "R3" in census_report(tree)[1].failed and not bootstrap_ok(tree))
+            quote = "Synthetic fixture selection; no owner action"
+            record = recorder.render_record(pkg, VERSION, "2026-10-21", quote, raw,
+                                             CORE_COMMIT, "CONFIRM", None)
+            aggregate = (tree / AGGREGATE).read_text()
+            block = recorder.render_aggregate(pkg, VERSION, "2026-10-21", raw, "CONFIRM", None)
+            (tree / RECORD).write_text(record)
+            (tree / AGGREGATE).write_text(aggregate.rstrip("\n") + "\n\n" + block)
+            expect("exact signed synthetic transaction recognized", is_signed(tree))
+            expect("earlier readability rows reconstruct exactly", readability.installed_bytes_at(tree) == earlier)
+            p108 = recorder.real_packages()["three-surface-poc-vocabulary-epistemic-amendment"]
+            expect("earlier recorder rows accept only signed successor", p108.applied(tree))
+            expect("signed six-row reconciliation chain reverses exactly", not outcomes(tree).failed)
+            population, report = census_report(tree)
+            expect("signed census requires regeneration", "R3" in report.failed)
+            (tree / reconciliation.CENSUS).write_text(reconciliation.census_json(population))
+            expect("signed census admits exactly 26 requirements and 34 scenarios",
+                   not census_report(tree)[1].failed
+                   and len(population["POC"]) == 26
+                   and sum(len(row["scenarios"]) for row in population["POC"].values()) == 34
+                   and len(population["POC"]["POC-REQ-014"]["scenarios"]) == 8)
+            expect("signed bootstrap current rows are recognized", bootstrap_ok(tree))
+            route_report = reconciliation.Report()
+            reconciliation.check_routes(tree, population, route_report)
+            expect("signed route activation requires root-owned terminal entries",
+                   any(RECORD.name in finding for finding in route_report.findings.get("R5", ())))
+            snapshot = Path(temp) / "snapshot"
+            reconciliation.scratch(tree, snapshot)
+            expect("read-only snapshot retains signed proof and exact chain",
+                   is_signed(snapshot) and not outcomes(snapshot).failed)
+            # One predicate per mutation, restoring exact bytes after each case.
+            unresolved = json.loads((tree / CANDIDATE / "REQUIREMENT-CONSUMPTION.json").read_text())
+            unresolved["entries"][0]["classification"] = "undecidable"
+            mutations = [
+                ("record-only is partial", AGGREGATE, aggregate.encode()),
+                ("aggregate-only is partial", RECORD, None),
+                ("duplicate aggregate block", AGGREGATE, (aggregate + block + block).encode()),
+                ("wrong recorded version", RECORD, record.replace("Version: 1.0", "Version: 2.0").encode()),
+                ("wrong review binding", Path(raw), (tree / raw).read_bytes().replace(MANIFEST_SHA256.encode(), b"0" * 64)),
+                ("wrong reviewed core", Path(raw), (tree / raw).read_bytes().replace(CORE_COMMIT.encode(), BASE.encode())),
+                ("escaping review path", RECORD, record.replace(f"Review: {raw}", "Review: ../outside-RAW.md").encode()),
+                ("missing review", Path(raw), None),
+                ("wrong manifest hash", MANIFEST, (tree / MANIFEST).read_bytes() + b"\n"),
+                ("current subject drift", SUBJECTS[-1], (tree / SUBJECTS[-1]).read_bytes() + b"\n"),
+                ("rollback to predecessor is refused", SUBJECTS[-1], before[SUBJECTS[-1]]),
+                ("wrong patch bytes", CANDIDATE / "proposed/spec.md.patch",
+                 (tree / CANDIDATE / "proposed/spec.md.patch").read_bytes() + b"\n"),
+                ("unresolved consumption entry", CANDIDATE / "REQUIREMENT-CONSUMPTION.json",
+                 json.dumps(unresolved).encode()),
+            ]
+            for name, path, changed in mutations:
+                target = tree / path
+                saved = target.read_bytes()
+                if changed is None:
+                    target.unlink()
+                else:
+                    target.write_bytes(changed)
+                expect(name, not is_signed(tree))
+                mutation_receipt(tree, name, {path: saved}, {path: changed}, "signed recognition refuses exact mutation")
+                if name == "unresolved consumption entry":
+                    expect("unresolved consumption trips its own signed predicate",
+                           "signed recognition remains gated by 1 undecidable requirement-consumption entries"
+                           in signed_findings(tree))
+                if name == "record-only is partial":
+                    expect("partial transaction cannot explain predecessor rows",
+                           not p108.applied(tree) and not bootstrap_ok(tree)
+                           and "R1" in outcomes(tree).failed)
+                target.write_bytes(saved)
+            end = recorder.block_markers(pkg, VERSION)[1]
+            signed_aggregate = (tree / AGGREGATE).read_bytes()
+            chain_mutations = [
+                ("P115 block before all predecessors", {AGGREGATE: (block + aggregate).encode()}),
+                ("P115 backdated before predecessors", {
+                    RECORD: record.replace("Date: 2026-10-21", "Date: 2026-01-01").encode(),
+                    AGGREGATE: signed_aggregate.replace(b"recorded 2026-10-21", b"recorded 2026-01-01")}),
+                ("P115 duplicate closing delimiter", {AGGREGATE: signed_aggregate + end.encode() + b"\n"}),
+                ("P115 orphan closing is present", {RECORD: None, AGGREGATE: aggregate.encode() + end.encode() + b"\n"}),
+                ("P115 invalid calendar date", {
+                    RECORD: record.replace("Date: 2026-10-21", "Date: 2026-02-30").encode(),
+                    AGGREGATE: signed_aggregate.replace(b"recorded 2026-10-21", b"recorded 2026-02-30")}),
+            ]
+            predecessor = recorder.real_packages()[PREDECESSORS[-1]]
+            pred_start, pred_end = recorder.block_markers(predecessor, VERSION)
+            # Preserve the predecessor start position but break its complete block.
+            chain_mutations.append(("P115 nested inside predecessor block", {AGGREGATE:
+                (aggregate.replace(pred_end, block + pred_end)).encode()}))
+            chain_mutations.append(("predecessor orphan closing delimiter", {AGGREGATE:
+                signed_aggregate + pred_end.encode() + b"\n"}))
+            pred_record = recorder.record_rel(predecessor, VERSION)
+            chain_mutations.append(("predecessor duplicate date", {pred_record:
+                (tree / pred_record).read_bytes() + b"\nDate: 2026-10-15\n"}))
+            predecessor_fields = recorder.parse_record((tree / pred_record).read_text())
+            predecessor_block = recorder.render_aggregate(predecessor, VERSION,
+                predecessor_fields["Date"], predecessor_fields["Review"], predecessor_fields["Review verdict"],
+                None if predecessor_fields["Disposition"] == "none" else predecessor_fields["Disposition"])
+            chain_mutations.append(("predecessor block in fenced example", {AGGREGATE:
+                signed_aggregate.replace(predecessor_block.encode(),
+                    ("```text\n" + predecessor_block + "```\n").encode())}))
+            for name, changes in chain_mutations:
+                saved = {path: (tree / path).read_bytes() for path in changes}
+                for path, body in changes.items():
+                    (tree / path).unlink() if body is None else (tree / path).write_bytes(body)
+                findings = signed_findings(tree)
+                expect(name, transaction_present(tree) and not is_signed(tree) and bool(findings)
+                       and (name != "predecessor block in fenced example"
+                            or any("operative standalone line" in finding for finding in findings)))
+                mutation_receipt(tree, name, saved, changes, "leaf complete-chain dates/order/unique balanced delimiters")
+                for path, body in saved.items():
+                    (tree / path).write_bytes(body)
+            expect("mutations restore the signed fixture", is_signed(tree))
+            binding_failure_selftest(root, tree, expect)
+            family_failure_selftest(root, tree, expect, before, earlier)
+            governing_source_selftest(root, tree, expect, before)
+            findings, output = historical_run(tree, "--selftest")
+            expect("signed replay runs frozen selftest, not current subjects", not findings and "Preparation selftest:" in output)
+            # Probe the actual signed/replay path with unavailable frozen objects.
+            saved_commit = CORE_COMMIT
             try:
-                historical_run(tree, "--check")
-            except subprocess.CalledProcessError:
-                expect("missing frozen history refuses replay", True)
-            else:
-                expect("missing frozen history refuses replay", False)
-        finally:
-            CORE_COMMIT = saved_commit
-    marker_context_selftest(root, expect)
-    recording_failure_selftest(root, expect)
-    recording_render_selftest(root, expect)
-    recovery_native_selftest(root, expect)
-    process_diagnostic_selftest(root, expect)
+                CORE_COMMIT = "0" * 40
+                expect("missing frozen history refuses signed recognition", not is_signed(tree))
+                try:
+                    historical_run(tree, "--check")
+                except subprocess.CalledProcessError:
+                    expect("missing frozen history refuses replay", True)
+                else:
+                    expect("missing frozen history refuses replay", False)
+            finally:
+                CORE_COMMIT = saved_commit
+    # The six phases build their own scratch clones and share nothing but the
+    # read-only checkout, so they run in forked workers (fork_map).
+    phases = (core_phase, marker_context_selftest, recording_failure_selftest,
+              recording_render_selftest, recovery_native_selftest,
+              process_diagnostic_selftest)
+    for phase_cases in fork_map([lambda phase=phase: phase(root, expect) for phase in phases], cases):
+        cases.extend(phase_cases)
     for name, passed in cases:
         print(f"P115 selftest: {name}: {'ok' if passed else 'FAILED'}")
     failed = sum(not passed for _name, passed in cases)
