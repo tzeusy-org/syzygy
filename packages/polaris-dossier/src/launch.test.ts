@@ -16,15 +16,17 @@ import { fixtureClasses, fullClone, gitIn, listing, makeHome, makeUpstream, noOt
 const NOW = Date.parse('2026-11-09T12:00:00Z');
 const URL_RR = 'https://github.com/redis/redis.git';
 
-interface Captured { readonly calls: string[] }
+/** `answers`: what each `storedType` call resolved to, or `refused <reason>`, so a header answer is told from a refused full read. */
+interface Captured { readonly calls: string[]; readonly answers: string[] }
 function readLog(): { readonly open: (o: PinnedObjectReaderOptions) => PinnedObjectReader; readonly log: Captured } {
-  const log: Captured = { calls: [] };
+  const log: Captured = { calls: [], answers: [] };
   return {
     log,
     open: o => {
       const r = openPinnedObjectReader(o);
       const wrap = <K extends keyof PinnedObjectReader>(k: K) => ((...args: unknown[]) => { log.calls.push(`${String(k)} ${o.revision}`); return (r[k] as (...a: unknown[]) => unknown)(...args); }) as PinnedObjectReader[K];
-      return { revision: r.revision, algorithm: r.algorithm, tree: wrap('tree'), readBlobs: wrap('readBlobs'), listTree: wrap('listTree'), inventory: wrap('inventory'), commitHead: wrap('commitHead'), storedType: wrap('storedType') };
+      return { revision: r.revision, algorithm: r.algorithm, tree: wrap('tree'), readBlobs: wrap('readBlobs'), listTree: wrap('listTree'), inventory: wrap('inventory'), commitHead: wrap('commitHead'),
+        storedType: () => wrap('storedType')().then(t => { log.answers.push(t); return t; }, (e: unknown) => { log.answers.push(`refused ${(e as { reason?: string }).reason}`); throw e; }) };
     },
   };
 }
@@ -296,6 +298,7 @@ describe('REQ-polaris-generation-047 against real clones', () => {
       command: `git -C '${clone}' checkout --detach ${up.commits[1]}` } });
     expect(listing(clone)).toEqual(before);
     expect(s.reads.log.calls).toEqual([`storedType ${up.commits[1]}`, `tree ${up.commits[1]}`]);   // the pinned commit's header, then the commit re-hashed, before the refusal
+    expect(s.reads.log.answers).toEqual(['commit']);
   });
 
   it('an annotated tag or a blob named by --revision refuses from its header alone; its body is never read (syzygy-pdja.30)', async () => {
@@ -315,6 +318,7 @@ describe('REQ-polaris-generation-047 against real clones', () => {
       expect(await run(clone, s), revision).toEqual({ kind: 'refused', refusal: { stage: 'revision', missing: [], recorded: false,
         reason: `--revision ${revision} resolves to ${id}, which is not a commit the clone's store holds` } });
       expect(s.reads.log.calls, revision).toEqual([`storedType ${id}`]);
+      expect(s.reads.log.answers, revision).toEqual([revision === 'v1' ? 'tag' : 'blob']);   // answered from the header, not a refused full read
     }
   });
 
