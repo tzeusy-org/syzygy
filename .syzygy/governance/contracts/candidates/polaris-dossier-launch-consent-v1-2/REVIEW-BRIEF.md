@@ -1,15 +1,18 @@
-# Review brief — Polaris dossier launch-time consent, version 1.2, round 3
+# Review brief — Polaris dossier launch-time consent, version 1.2, round 4
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
-> verdict. Rounds 1 and 2 returned `REVISE`; this brief is for round 3,
-> the last before the stopping rule sends the package to the owner. The
-> stopping rule, set before round 1, is unchanged:
->
-> - at most three rounds;
-> - `CONFIRM`, or `CONFIRM WITH EXCEPTIONS` with notes only, clears the
->   bytes;
-> - a third `REVISE` goes to the owner with all three raws.
+> verdict. Rounds 1 to 3 returned `REVISE` on a design in which Syzygy read
+> the pinned commit in place in the operator's full clone. After round 3 the
+> owner chose a redesign: Syzygy copies the pinned commit from the
+> operator's clone into a one-commit clone of its own over Git's local file
+> transport, and the signed read rules apply to the copy. Round 4 is a
+> **fresh review of that redesign**, not a check of repairs: read the
+> post-apply spec as a whole. The earlier raws and dispositions are given as
+> history, so the reviewer can test whether any of their concerns survives.
+> `CONFIRM`, or `CONFIRM WITH EXCEPTIONS` with notes only, clears the bytes.
+> The stopping rule for the redesign is the coordinating session's to set
+> with the owner before dispatch; this brief does not set it.
 
 ## What the reviewer is given, and nothing else
 
@@ -20,7 +23,9 @@ references and the acceptance criteria. Run on the default model.
 no `gh api` contents, no raw URLs, no clone, no web access. The only network
 use allowed is `git fetch` of this repository. Fixture clones you build
 yourself with `git init` and local commits in a scratch directory are
-allowed; delete them afterwards.
+allowed, including fixtures that test how Git behaves when it fetches
+from a local clone over `file://` (hooks, configuration, partial clones,
+alternates); delete them afterwards.
 
 **The artifact under review.** In
 `.syzygy/governance/contracts/candidates/polaris-dossier-launch-consent-v1-2/`:
@@ -28,11 +33,12 @@ allowed; delete them afterwards.
 - `proposed/spec.md.patch` (the subject);
 - `SEMANTIC-DELTA.md`, `IMPACT-LEDGER.md`, `OWNER-SIGNOFF.md`,
   `PROPOSED-SUBJECTS.json`, `ROUND-1-DISPOSITIONS.md`,
-  `ROUND-2-DISPOSITIONS.md` and this brief;
-- the round-1 and round-2 raws,
-  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md` and
-  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-2-RAW.md`, whose findings
-  the dispositions answer;
+  `ROUND-2-DISPOSITIONS.md`, `ROUND-3-DISPOSITIONS.md` and this brief;
+- the round-1, round-2 and round-3 raws,
+  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md`,
+  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-2-RAW.md` and
+  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-3-RAW.md`, whose findings
+  the dispositions answer (round 3's as superseded by the redesign);
 - the builder `scripts/build_polaris_dossier_launch_consent_v1_2.py`;
 - the peel-and-delegate change to
   `scripts/build_polaris_dossier_launch_consent_v1_1.py`;
@@ -50,8 +56,9 @@ then `git apply`). Read the post-apply spec beside the v1.1 bytes;
 
 - The owner direction
   `.syzygy/governance/decisions/OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md`.
-  It holds both of its sections: the two first selections, and the four
-  rulings on the draft's points.
+  It holds three sections: the two first selections, the four rulings on
+  the draft's points, and the redesign of 2026-11-10, which supersedes
+  rulings 1 and 2 for this design.
 - The v1.1 sign-off record
   `.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md`
   and the review it names.
@@ -60,6 +67,9 @@ then `git apply`). Read the post-apply spec beside the v1.1 bytes;
 - The source-acquisition registry entry
   `.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`,
   `typedAuthority.readAuthority` and `typedAuthority.fetch`.
+- The clone-shape check `packages/polaris-dossier/src/clone-shape.ts`,
+  whose form the copy must equal (read only; it is product code, not under
+  review).
 - The redis observation consent
   `.syzygy/governance/contracts/candidates/public-repo-admission/instances/redis/OBSERVATION-CONSENT.md`
   (its Scope) and review `docs/reviews/R-POLARIS-DOSSIER-CLONE-SHAPE-1-RAW.md`.
@@ -86,94 +96,104 @@ messages to the lead, or any signal of a desired verdict.
 Each is a yes/no question with the evidence that settles it.
 
 1. **Is the change the owner's answers, and only those?**
-   - Every hunk maps to one of the two first selections or the four rulings.
+   - Every hunk maps to one of the two first selections, rulings 3 and 4,
+     or the redesign selection.
    - A hunk that maps to none is blocking. So is a hunk that grants a read,
-     egress, write or execution beyond v1.1, or that admits a local path.
-2. **Does each ruling land as selected?**
-   - (1) Delta bases are input only, and the run discloses it.
-   - (2) Disclosure only: no pinned-tree copy, and the delta records that
-     the owner chose this over the recommended copy.
+     egress, write or execution beyond v1.1 and the redesign, or that admits
+     a local path.
+2. **Does each selection land as made?**
+   - The redesign: the copy over the local file transport, no network,
+     Git's reads of the operator's clone (delta bases included) disclosed,
+     the signed read rules applied to the copy, the agents working in the
+     copy.
+   - Does the delta say plainly that the redesign supersedes the in-place
+     design and ruling 2 ("Disclose only"), and that the owner chose the
+     copy after declining it on 2026-11-09?
    - (3) Two segments for every host, with the shared-records consequence
      stated plainly.
    - (4) Remote derivation keeps v1.1's `http` and `git` normalisation.
-   - D6 now admits typed `http://` and `git://` URLs as v1.1 does,
-     credentials refused, on a reading it labels Inferred and attributes to
-     the coordinating session, not the owner. Is that attribution stated
-     plainly, and is the point put to the owner on the sign-off page?
-3. **Is the closed read list closed?**
-   - Can a conforming implementation of REQ-047's list read history, another
-     reference's objects, the working tree, the index or any other file of
-     the Git directory?
-   - Can it honour the clone's configuration, or start a process in the
-     clone?
-   - Is the delta-base allowance bounded to rebuilding in-scope objects,
-     and do the question, the launch output and the launch observation
-     consent's recorded scope state it?
-   - Do REQ-046's pre-answer list and REQ-047's closed list name the same
-     launch reads, and is every read either an object read under REQ-033 or
-     a launch read that reads no content?
-4. **Is REQ-046's derivation byte-for-byte v1.1?**
+   - D6 admits typed `http://` and `git://` URLs as v1.1 does, credentials
+     refused, on a reading it labels Inferred and attributes to the
+     coordinating session. Is that stated plainly, and put to the owner?
+3. **Is the copy step exact and safe?**
+   - Is the Git invocation class fixed: an empty directory and repository of
+     Syzygy's own (never derived from the clone's path), an empty template,
+     the pinned commit alone by full identifier at depth one, no tags, no
+     submodules, a detached checkout?
+   - Does every Git process run with system and global configuration off,
+     no other Git variable, only the file transport, lazy fetching off and
+     no hook path? Can a conforming implementation make a network request?
+   - Does the copy's required form equal the one `clone-shape.ts` checks,
+     and is it checked before the question?
+   - Is a missing object (a partial clone's included) refused with nothing
+     fetched elsewhere? Are alternates and reftable refused before any Git
+     process starts?
+   - Can a hook or a code-running setting of the operator's clone run? Is
+     the residual stated, labelled Inferred, and is D2's fixture evidence
+     reproducible?
+   - Is the copy removed when the run ends before its brief?
+4. **Is Syzygy's list of reads of the operator's clone closed and small?**
+   - Can a conforming implementation read an object, the working tree, the
+     index or any other Git-directory file of the operator's clone in a run
+     that makes a copy? Can it honour the clone's configuration?
+   - Does the trunk tip get chosen with no Git process in the operator's
+     clone before the copy?
+   - Do REQ-046's pre-answer list, REQ-047's list, both falsifiers, the
+     scenarios and the question's copy statements name the same reads?
+5. **Which runs make a copy, and do the populations agree?**
+   - Every run REQ-047 pins makes one unless another act's consent names its
+     pinned revision. Does that run keep that consent's stated form and the
+     v1.1 HEAD refusal?
+   - Does the preamble's no-question run agree with REQ-047's exempt run?
+   - Do the copy rules bind a run that ends in a refusal or a decline?
+6. **After the copy, do the signed rules apply unchanged?** Is the copy the
+   clone REQ-033 to 036 name, with no edit to their bytes? Does REQ-046's
+   write reading extend to the copy's directory, and is that the only write?
+7. **Is the registry conflict stated honestly?** Does D9 quote the entry's
+   `fetch` and `readAuthority` exactly, and is the conclusion (a signed
+   successor is needed before v1.2 can be used) put first on the owner
+   page? Is any other signed byte the redesign contradicts left unnamed?
+8. **Is REQ-046's derivation byte-for-byte v1.1?**
    - Compare the derivation sentence before and after.
    - Does the added reading (every host, the two-segment floor) change any
      identity v1.1 derived for a path of two or more segments?
-   - Do the records' identities in force (`repository:redis-redis`,
-     `repository:psf-requests`, `repository:tzeusy-org-syzygy`) still
-     derive?
-5. **Does the match by `Upstream:` behave as D7 says?**
-   - Does the spec state what the match grants?
-   - Does it only add to REQ-046's matching and REQ-047's revision branch,
-     never restricting either?
-   - Is the claim that a consent is not matched for a same-named repository
-     on another host bounded to the URL match?
-6. **Is the trunk rule consistent with v1.1 and the implemented reading?**
-   - The remote-tracking default, `origin` first.
-   - The several-remotes refusal.
-   - Local branches not consulted for the pin while a default is recorded.
-   - `--revision`: ambiguity decided without reading objects; a non-commit
-     reference refused after reading at most its type.
-7. **Are credentials kept out of every output?**
-   - Refused when typed.
-   - Stripped and disclosed, never printed, when found in a remote.
-   - A remote URL that is not a locator is never printed, stored or
-     recorded.
-8. **Is every quotation exact?**
-   - Re-extract by script each quotation in `SEMANTIC-DELTA.md`,
-     `IMPACT-LEDGER.md` and `OWNER-SIGNOFF.md` of the owner's words, the
-     records, the registry entry and the v1.1 spec, and compare.
-   - Check the delta's exact blocks against `git diff` of the applied patch.
-9. **Is the rule-9 sweep reproducible?** Re-run its predicates over the
-   populations it names at the commit it names, and compare every row and
-   the identity counts.
-10. **Can each new scenario be falsified as written?**
-    - One WHEN/THEN pair each.
-    - An independent oracle under the requirement's form.
-    - A falsifier arm a wrong implementation would trip.
-11. **Is the change one coherent category, overlapping no other change?**
+   - Do `repository:redis-redis`, `repository:psf-requests` and
+     `repository:tzeusy-org-syzygy` still derive?
+9. **Does the match by `Upstream:` behave as D7 says?** Does it only add to
+   REQ-046's matching and REQ-047's revision branch, and is the other-host
+   claim bounded to the URL match?
+10. **Is the trunk rule consistent with v1.1 and the implemented reading?**
+    The remote-tracking default, `origin` first; the several-remotes
+    refusal; local branches not consulted while a default is recorded;
+    `--revision` ambiguity from names alone; a non-commit refused once the
+    copy shows its type, never followed.
+11. **Are credentials kept out of every output?** Refused when typed;
+    stripped and disclosed when found in a remote; a remote URL that is not
+    a locator never printed, stored or recorded; the copy's file URL never
+    recorded as a locator.
+12. **Is every quotation exact?** Re-extract by script each quotation in
+    `SEMANTIC-DELTA.md`, `IMPACT-LEDGER.md`, `OWNER-SIGNOFF.md` and the
+    dispositions of the owner's words, the records, the registry entry and
+    the specs, and compare. Check the delta's exact blocks against
+    `git diff` of the applied patch.
+13. **Is the rule-9 sweep reproducible?** Re-run its predicates over the
+    populations it names at the commit it names.
+14. **Can each new scenario be falsified as written?** One WHEN/THEN pair
+    each, an independent oracle under the requirement's form, and a
+    falsifier arm a wrong implementation would trip.
+15. **Is the change one coherent category, overlapping no other change?**
     Is the change class (Normative) right?
-12. **Is the owner page fair and plain?** Does it state the question, the
-    version and the option label exactly, and name the shared-records,
-    agent-reach and dirty-tree costs? Does "Before you sign" put the typed
-    `http`/`git` reading, the port-and-case merge and the registry readings
-    to the owner plainly?
-13. **Does the tooling hold?**
-    - `--check` and `--selftest` of the v1.0, v1.1 and v1.2 builders pass.
-    - Each predicate has a mutation fixture that fails it (verification
-      rule 6).
-    - The v1.0 builder's `--check` fails on v1.2 bytes that no v1.2 record
-      covers.
-    - The recorder's selftest passes.
-14. **Does each round-1 disposition hold?** For each of the twelve sections
-    of `ROUND-1-DISPOSITIONS.md`, is the quoted clause in the post-apply
-    bytes, and does it do what the section says? Is each carried or
-    declined note given a reason?
-15. **Does each round-2 disposition hold, and does it open no new gap?**
-    For each of the six sections of `ROUND-2-DISPOSITIONS.md`, is the
-    quoted clause in the post-apply bytes? Do REQ-046's pre-answer list,
-    REQ-047's closed list, both falsifiers, the scenarios and the
-    question's statement of what Syzygy reads beyond the pinned tree
-    name the same reads? Do the clone-form, read and statement rules
-    bind every launch-consented run, a repeat run at a consented HEAD
-    included, and no other run?
+16. **Is the owner page fair and plain?** The question, the version and the
+    option label exactly; the shared-records, pre-answer copy, Git-reads,
+    hooks residual and agent-reach costs; the registry successor, the typed
+    `http`/`git` reading and the port-and-case merge under "Before you
+    sign".
+17. **Does the tooling hold?** `--check` and `--selftest` of the v1.0, v1.1
+    and v1.2 builders pass; each predicate has a mutation fixture that
+    fails it (verification rule 6); the recorder's selftest passes.
+18. **Does any earlier concern survive?** For each finding of rounds 1 to 3,
+    is it answered by the redesigned text or by its disposition? A concern
+    the redesign re-opens in a new place is a finding.
 
 ## Output
 

@@ -101,3 +101,45 @@ verbatim.
 
 These rulings shape the draft. Like the rest of this record, they authorize
 drafting only: no implementation, no sign-off and no act-bound edit.
+
+## Redesign after review round 3, 2026-11-10
+
+[Observed by the coordinating Claude Code session, bead `syzygy-pdja.29`.]
+Round 3 of the amendment's review returned `REVISE`
+(`docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-3-RAW.md`, line 4), the last
+round before the stopping rule. On 2026-11-10 the owner was asked, verbatim:
+
+> Launch-consent v1.2 (full clones + any https/ssh URL) failed review round 3 with 3 required fixes, so the stopping rule brings it to you. Each round has fixed the last gaps and opened new ones in the same place: the closed list of what Syzygy may read inside your full clone (delta bases, refusal reads, which runs the rules bind). The URL half has held since round 1. How should we proceed?
+
+The owner selected:
+
+> Redesign: copy trunk tip locally (Recommended) — Syzygy makes its usual one-commit clone from your full clone over git's local file transport, with no network. The signed read rules then apply unchanged and the closed list goes away. git reads your packs (delta bases included), which is disclosed. Agents then work in that copy rather than your clone. Redraft and fresh review.
+
+The other options, not chosen, were "One more repair round", "Split: URLs
+now, clones later" and "Pause v1.2".
+
+- [Inferred] That the person answering is the owner.
+
+What the selection changes:
+
+1. **It supersedes the full-clone reading design.** The draft's design in
+   which Syzygy read the pinned commit's objects in place in the operator's
+   clone, with its closed list of permitted reads (decision D2 of the
+   semantic delta reviewed in rounds 1 to 3), is withdrawn. Syzygy instead
+   makes its usual one-commit clone from the operator's clone, and the
+   signed read rules apply to that copy.
+2. **Ruling 1 above (delta bases) changes subject.** Syzygy no longer
+   decompresses delta bases itself; Git does, when it makes the copy, and
+   the run discloses that.
+3. **Agent reach changes.** The author and review agent sessions work in
+   Syzygy's copy, not in the operator's clone. This replaces ruling 2 above,
+   "Disclose only", for this design.
+4. **The owner chose the copy here after declining it earlier.** On
+   2026-11-09 the owner declined a pinned-tree copy for the agent sessions,
+   then offered as the recommended separate option under ruling 2. In this
+   selection the owner chose a copy.
+5. **The URL half is unchanged.** Rulings 3 and 4 above stand.
+
+Like the rest of this record, this section authorizes drafting only: the
+redraft and a fresh review. It authorizes no implementation, no sign-off and
+no act-bound edit.

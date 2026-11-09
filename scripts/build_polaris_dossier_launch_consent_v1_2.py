@@ -83,7 +83,7 @@ V11_LINKS = v11.BOTH_LINKS
 THREE_LINKS = (f"([v1.0 sign-off]({V10_RECORD.as_posix()});\n"
                f"    [v1.1 sign-off]({V11_RECORD.as_posix()});\n"
                f"    [v1.2 sign-off]({V12_RECORD.as_posix()}))")
-#: The scenarios v1.2 adds: ten to REQ-polaris-generation-046, ten to 047.
+#: The scenarios v1.2 adds: ten to REQ-polaris-generation-046, twelve to 047.
 V12_SCENARIOS = tuple(f"#### Scenario: {name}\n" for name in (
     "Locator on another host over ssh",
     "GitHub identities keep their form",
@@ -95,15 +95,17 @@ V12_SCENARIOS = tuple(f"#### Scenario: {name}\n" for name in (
     "Locator not admitted",
     "Remote URL that is not a locator",
     "Visibility on another host",
+    "HEAD elsewhere with no copy",
     "Existing full clone at the trunk tip",
+    "Repeat run at a launch-consented HEAD",
     "Several remote defaults",
     "Local branch ahead of the remote default",
-    "Detached HEAD and uncommitted changes",
     "Partial clone missing an object",
+    "Clone with an alternate",
+    "Configuration and hooks of the operator's clone",
     "Revision naming an annotated tag",
     "Ambiguous abbreviation",
     "References in the reftable backend",
-    "Repeat run on a full clone at a launch-consented HEAD",
     "A consent that states the clone's form",
 ))
 SUBJECTS = CANDIDATE / "PROPOSED-SUBJECTS.json"

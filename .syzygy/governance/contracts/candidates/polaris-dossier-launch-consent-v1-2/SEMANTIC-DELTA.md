@@ -1,39 +1,43 @@
-# Semantic delta LAUNCH-CONSENT-V1-2 — existing full clones and any https or ssh locator
+# Semantic delta LAUNCH-CONSENT-V1-2 — existing full clones, copied at the trunk tip, and any https or ssh locator
 
 > **Candidate — binds nothing.** [Inferred] Agent-authored proposal for
-> `polaris-dossier-launch-consent` version 1.2. No review, owner selection,
-> installation, tag or product change is claimed here.
+> `polaris-dossier-launch-consent` version 1.2, redrafted after round 3 to
+> the owner's selection "Redesign: copy trunk tip locally". No review, owner
+> sign-off, installation, tag or product change is claimed here.
 
 **Artifact:** `proposed/spec.md.patch`, applied to
 `openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md`
 at version 1.1.
-**Stable IDs affected:** REQ-polaris-generation-046 and 047, amended in place.
+**Stable IDs affected:** REQ-polaris-generation-046 and 047, amended in place,
+and one sentence of the change's preamble.
 
+- **Preamble:** the run that keeps every predecessor meaning is named by a
+  condition known at launch (no question is asked), not by what it records.
 - **046:**
-  - the pre-answer read list, made to agree with 047's closed list;
-  - two statements added to the question (the agent sessions' reach, and
-    delta bases);
-  - the observation consent's recorded scope qualified for delta bases;
+  - the pre-answer read list, scoped to the clones and naming the copy;
+  - one statement added to the question (the copy), carried to the run
+    record and pages;
+  - the launch observation consent's scope held in the copy;
+  - the write reading extended to the copy;
   - one sentence group added after the identity rule, whose derivation keeps
     its v1.1 bytes (every host, the last two path segments, and `https`,
     `http`, `ssh`, `git` and scp-form remotes);
   - the identity residuals rewritten;
   - two new paragraphs (locator forms; visibility), the first also giving
     the effect of a match by `Upstream:` URL;
-  - the history-reach statement added to the run record and pages;
   - ten scenarios;
   - its case, oracle and falsifier;
   - one `warrants.decisions` entry.
 - **047:**
   - the consented-HEAD branch's "changes nothing else" narrowed to the pin;
   - the trunk rule made exact for remote-tracking references, and
-    `--revision` resolution made exact for annotated tags and
-    abbreviations;
-  - the HEAD paragraph (detached HEAD and the checkout warning);
-  - one new paragraph group (clone forms, what Syzygy reads in them and
-    under which rule, the delta-base statement, the reftable refusal, and
-    the instruction to every agent session);
-  - ten scenarios;
+    `--revision` resolution for abbreviations and non-commits;
+  - "did not fetch" becomes "made no network request";
+  - the HEAD paragraph replaced: which runs make a copy, how the copy is
+    made, what Git and what Syzygy read of the operator's clone, and the
+    refusals;
+  - twelve scenarios, and one v1.1 scenario ("HEAD elsewhere") and the
+    first scenario's WHEN amended;
   - its case, observable, oracle independence and falsifier;
   - one `warrants.decisions` entry.
 
@@ -41,7 +45,7 @@ No requirement is added, removed or renamed; no other requirement's bytes
 change.
 **Change class:** Normative; the whole package takes the normative review floor.
 **Author:** Claude, for `syzygy-pdja.29` (epic `syzygy-pdja`).
-**Date:** 2026-11-09.
+**Date:** 2026-11-09; redrafted 2026-11-10.
 
 ## Warrant
 
@@ -63,8 +67,8 @@ local path.
 
 [Observed] The same record's section "Rulings on the draft's four points"
 quotes four further selections, made after the first draft of this package
-had put four points to the owner. They decide D2's disclosure, D5, D6 and
-D7 below, and each decision quotes its ruling.
+had put four points to the owner. They decided D2's disclosure and D5 of the
+reviewed drafts, and decide D6 and D7 below, which quote their rulings.
 
 [Observed] Round 1 of review (`docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md`,
 verdict `REVISE` at line 4) returned three revise findings and nine notes.
@@ -75,8 +79,24 @@ the owner, and is labelled so in D6 and on the sign-off page.
 
 [Observed] Round 2 (`docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-2-RAW.md`,
 verdict `REVISE` at line 4) returned three revise findings and three
-editorial notes. The repairs are in `ROUND-2-DISPOSITIONS.md`; D1, D2, D3, D5
-and "What does not change" below carry them.
+editorial notes. The repairs are in `ROUND-2-DISPOSITIONS.md`; the sections
+that carried them were redrafted after round 3.
+
+[Observed] Round 3 (`docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-3-RAW.md`,
+verdict `REVISE` at line 4) returned three revise findings and three notes,
+all in the full-clone reading design. Under the stopping rule the
+coordinating session put the package to the owner, who selected, as the
+direction record's dated section of 2026-11-10 quotes:
+
+> Redesign: copy trunk tip locally (Recommended) — Syzygy makes its usual one-commit clone from your full clone over git's local file transport, with no network. The signed read rules then apply unchanged and the closed list goes away. git reads your packs (delta bases included), which is disclosed. Agents then work in that copy rather than your clone. Redraft and fresh review.
+
+[Inferred] That the person answering is the owner. This selection supersedes
+the full-clone reading design (the old D2 and its closed list) and the
+"Disclose only" ruling for this design: the agent sessions now work in the
+copy. The owner had declined a pinned-tree copy as a separate option on
+2026-11-09 and chose the copy here. `ROUND-3-DISPOSITIONS.md` says where each
+round-3 concern lands. The URL half (D6 to D8) is unchanged by the
+redesign.
 
 ## Where the two limits live today (rule 9 sweep)
 
@@ -196,7 +216,8 @@ requirement, so the code could drop both without one. The amendment is still
 needed, because the launch-consent requirements describe reads, references
 and locators for a clone that held one commit. They say nothing about:
 
-- what Syzygy may touch in a clone that holds history;
+- how a clone that holds history becomes the one-commit clone the signed
+  rules read, and what Syzygy and Git read of it on the way;
 - which locator forms are admitted;
 - how a locator carrying credentials is handled.
 
@@ -206,272 +227,217 @@ nobody signed.
 ## One change, not a split
 
 [Inferred] Every edit lands in REQ-polaris-generation-046 and 047 of
-`polaris-dossier-launch-consent`, and governs launch-consented runs. It has
-one stated reach beyond them: an observation consent made by another act
-also matches a launch by its normalised `Upstream:` URL. That match adds to
-REQ-046's matching and REQ-047's revision branch and removes nothing from
-either, so every consent a run could rely on before still serves it.
+`polaris-dossier-launch-consent`, and governs the runs REQ-047 pins. It has
+two stated reaches beyond launch-consented runs:
+
+- an observation consent made by another act also matches a launch by its
+  normalised `Upstream:` URL. That match adds to REQ-046's matching and
+  REQ-047's revision branch and removes nothing from either, so every
+  consent a run could rely on before still serves it;
+- a run REQ-047 pins that records nothing, by a refusal or a decline, still
+  makes and removes the copy under its rules (D1), so REQ-046's write
+  reading covers the copy's directory for every run that makes one.
 
 The category is one: what a launch accepts as its input, the clone and its
 locator. It overlaps no other change. The local-agent mode keeps its bytes:
 its REQ-033 already requires object reads by identifier at the pinned
 revision and refuses alternates, replacements and local configuration, and
-nothing here edits it. Its design table's `parseGithubUrl` citation names
-the code `init` was built from and goes stale at implementation, as a
-history sentence. It is not patched, so that the signed local-agent bytes
+the copy is a clone those rules read unchanged. Its registry entry is another
+matter: D9 flags a conflict that needs an owner-signed successor. Its
+design table's `parseGithubUrl` citation names the code `init` was built
+from and goes stale at implementation, as a history sentence. It is not patched, so that the signed local-agent bytes
 and this change stay apart.
 
 **Recommendation:** one package, launch-consent version 1.2.
 
 ## The decisions, each with its reasoning
 
-### D1. Which clones a launch accepts
+D1 to D5 were redrafted on 2026-11-10 to the owner's redesign selection
+(see the warrant). They replace the full-clone reading design reviewed in
+rounds 1 to 3, whose closed list of in-place reads is gone.
 
-**Decided:** for a launch-consented run, any clone that holds the pinned
-revision: a full clone with history, branches, tags, remote-tracking
-references, stash and reflogs, a one-commit clone, or anything between.
-Syzygy never refuses it for holding more, and never fetches, prunes or
-repacks it.
-
-**Why:** the owner's selection. A launch consent record's scope is already
-"the pinned revision's commit object and the tree and blob objects reachable
-from its root tree, and nothing else, held in the operator's own clone, with
-no fetch by Syzygy" (REQ-046). It states no form in which the clone was
-made, so a full clone is within it as far as Syzygy's reads go.
-
-**What does not move:** a run that relies on another act's consent whose
-record states the clone's form keeps it, whether or not the run also relies
-on or records a launch consent record. The redis consent says the operator
-fetches each admitted commit alone; that is a performed act's byte, and this
-version does not reach it. A scenario pins this.
-
-**Which runs these rules bind.** [Observed, round 2 finding 1] REQ-047's
-first branch pins a HEAD any in-force consent names and, in v1.1, "changes
-nothing else for it". Left unchanged, that sentence would have exempted every
-repeat launch run from D1, D2, D4 and D5. This version narrows it to the pin
-("changes nothing else in how the revision of such a run is pinned") and
-states that the clone-form, read and statement rules bind every
-launch-consented run, whichever branch pinned it, and no other run. A run
-that neither relies on nor records a launch consent record keeps every
-predecessor's meaning, as the change's preamble says.
-
-[Inferred] For the mixed case, a run at a HEAD the redis consent names that
-also records a launch drawer or provider statement, this version takes the
-first of the two ways round 2 offered: the redis consent's stated form binds
-it. The other way, letting that form yield once a launch record exists,
-would reach a performed act's stated scope and is the owner's alone; it is
-not drafted.
-
-### D2. What Syzygy may touch in a full clone
-
-**Decided**, as a closed list in REQ-047:
-
-**Two kinds of read, under two rules.** [Observed, round 1 finding 1] The
-first draft said these reads "stay those REQ-polaris-generation-033 and
-REQ-polaris-generation-046 permit", but REQ-033 permits only object reads by
-identifier, and the reference and configuration reads are not that. This
-version names them apart. The object reads are REQ-033's object reads. The
-reference, configuration and Git-directory reads are launch reads, made only
-to pin the revision, compare HEAD with it and propose the identity, which
-read no repository content; REQ-033's object-read rule governs every read of
-content. REQ-046's pre-answer list now names the same launch reads, so the
-two lists agree. Round 2 (finding 3) found one read neither list named, the
-type read a `--revision` refusal needs; both lists now name it, beside the
-listing of stored object names that resolves an abbreviation.
-
-- **Objects:** the pinned commit, its root tree and what is reachable below
-  it, walked down, from the loose object files, the pack files and the pack
-  indexes under `objects/`. No parent commit object; nothing reached only
-  from another commit, branch, tag, stash, reflog or note. Parent
-  identifiers are used only as REQ-046's record matching uses them, never
-  resolved.
-- **Pack storage:** a delta's base may be read solely to rebuild an
-  in-scope object, which is then re-hashed.
-  - The base is never used, classified, stored, quoted, given a recorded
-    digest, rendered or sent.
-  - The question, the launch output, the run record and every page state
-    that objects of the pinned tree may have been rebuilt from delta bases
-    outside it, never read as content; the launch observation consent's
-    recorded scope says the same in its "nothing else" clause (round 1
-    finding 3).
-  - The statement is unconditional. Syzygy cannot learn a base's identity
-    without hashing it, which would read the base as an object.
-- **References:** the names of the clone's references, and the values only
-  of `HEAD` and the reference it names, the references the trunk rule names,
-  the local branch of the remote default's name (for the comparison D3
-  states), and the one `--revision` names, read as file data from loose
-  reference files and `packed-refs`. Reading `packed-refs` also reads the
-  bytes of other references' values, which are used for nothing (round 2
-  note 5). A clone that stores its references in the reftable backend is
-  refused before the question.
-- **Type:** where a `--revision` name resolves to one stored object that is
-  not a commit, that object's type, from its header and, for a packed
-  delta, the headers of its base chain, used only for the refusal (round 2
-  finding 3).
-- **Configuration:** the clone's own configuration file, read as text for
-  remote names and URLs only, never honoured. No include, URL rewrite, hook
-  path, object format or other setting changes a read. Also the files that
-  locate the Git directory and the common Git directory.
-- **Nothing else:** no other file of the Git directory, no working tree, no
-  index. No process is started that reads or acts on the clone, wherever it
-  runs (a Git command given the clone's Git directory from elsewhere
-  included), so no hook or filter runs.
-- **Missing objects:** an object needing an alternate, a replacement or a
-  fetch, a partial clone's missing blob included, refuses the step as
-  REQ-033 says. Nothing is fetched.
-
-**Why the reftable refusal.** [Inferred] Round 1 found the text silent on a
-clone whose references live in the reftable backend, which has no loose
-reference files and no `packed-refs`. Reading reftable would be a read the
-closed list does not name, and admitting it unread would leave the pin
-undefined. Refusing is the fail-closed choice, and the operator can convert
-or re-clone. Whether the implementation refuses it today is [Unknown]; no
-code was run for this package.
-
-**Why:** "history stays unread", in the owner's words. Walking down from
-the commit, as REQ-033 and the installed registry entry already require
-("walked down from the commit and never to a parent"), never reaches
-history. Configuration is read but not honoured because REQ-046's identity
-rule needs the remote URLs, and REQ-033 forbids honouring repository-local
-configuration. Reading the working tree, even to detect changes, would be a
-read of files the consent does not name.
-
-**The owner's ruling on delta bases.** The first draft put the delta-base
-read to the owner, since history's stored bytes may be inflated to rebuild a
-trunk-tip object. The owner selected:
-
-> Allow, as delta input only (Recommended) — Old bytes are used only to rebuild trunk-tip objects, never shown or sent, and the run discloses it. Most full clones work.
-
-The disclosure that option promises was not in the first draft. It is now
-the statement in the second sub-bullet above, with its scenario arm and
-falsifier arm. The strict alternative, refusing any object whose delta chain
-leaves the pinned tree, is not drafted. How many clones it would have
-refused stays [Unknown].
-
-### D3. How "trunk tip" is chosen in an existing clone
-
-**Decided:** REQ-047's rule stands (the remote's default, else `main`, else
-`master`, else refuse), made exact for a clone with remote-tracking
-references:
-
-- the remote's default is the commit that the remote-tracking branch named
-  by `refs/remotes/<remote>/HEAD` points to;
-- the remote is `origin` when it records one, else the one remote that does;
-- where several remotes record one and none is `origin`, Syzygy refuses,
-  naming `--revision`;
-- `main` and `master` are the local `refs/heads/main` and `refs/heads/master`;
-- while a remote default is recorded, no local branch is consulted for the
-  pin. Where a local branch of that name points elsewhere, the launch output
-  states both identifiers and that a local commit is not the trunk default,
-  which is why that branch's value is on D2's list.
-
-**`--revision` in a full clone.** [Observed, round 1 note 6] A full clone
-holds annotated tags and many objects, and the v1.1 sentence ("a name that
-resolves to no commit, or to more than one, SHALL be refused") leaves open how
-Syzygy tells. This version states it: an abbreviation is ambiguous when more
-than one stored identifier begins with it, decided from the loose object file
-names and the pack indexes without reading those objects; a reference naming
-a non-commit, an annotated tag included, is refused after Syzygy reads at
-most that one object's type, and is never followed. Round 2 (finding 3)
-showed that this type read was in neither closed list and tripped both
-falsifiers. It is now a listed launch read: the one object's type, from its
-header and, for a packed delta, the headers of its base chain, inflating
-nothing beyond a header, used only for the refusal; it covers an identifier
-as well as a reference that resolves to a non-commit, and both falsifier
-arms carve it out. [Observed] The
-implementation already refuses a non-commit (`launch-revision.ts:99`,
-`ports.isCommit`) and treats a shared prefix as ambiguous without reading,
-as the round-1 reviewer reports. Two scenarios pin it.
-
-**Why:** the owner's standing rule, "Revision should always default to
-latest trunk commit (eg main/master)". In a full clone, the latest trunk
-commit the clone knows is the remote-tracking branch, as of the operator's
-last fetch. A local branch can carry unpublished local commits, which are
-not the trunk.
-
-[Observed] The implemented trunk rule
-(`packages/polaris-dossier/src/launch-revision.ts`) already reads it this
-way. It labels the several-remotes refusal Inferred, because the clause says
-"its remote's default" in the singular; this version states that refusal.
-
-Syzygy still does not fetch. That the clone's remote-tracking branch is the
-upstream's latest stays Inferred. The update command REQ-047 already prints
-is the operator's way to refresh it.
-
-### D4. A dirty or detached checkout
+### D1. Which clones a launch accepts, and which runs make a copy
 
 **Decided:**
 
-- **Detached HEAD:** accepted. HEAD may be detached or name a branch; only
-  the commit it resolves to is compared with the pinned revision. A HEAD
-  elsewhere is refused as today, and the printed checkout command now warns
-  that a checkout carries uncommitted changes over.
-- **Uncommitted or untracked changes:** not detected, because detecting them
-  means reading the working tree or the index, which Syzygy may not do. The
-  launch output, the run record and every page say the working tree was not
-  inspected and may differ from the pinned revision. The launch output
-  prints `git -C <clone> status --short` for the operator to run.
+- **Accepted clones.** Any clone of the operator's that holds the pinned
+  commit and every object reachable from its root tree: a full clone with
+  history, branches, tags, stash and reflogs, a one-commit clone, or
+  anything between. Syzygy never refuses a clone for holding more, and never
+  fetches into, prunes, repacks, checks out in or writes to it.
+- **Who copies.** Every run REQ-047 pins makes a copy, the repeat run at a
+  launch-consented HEAD included, unless an in-force observation consent
+  made by another act names its pinned revision.
+- **The run that makes no copy.** A run whose pinned revision another act's
+  consent names (today, the redis consent) works in the operator's own clone
+  as v1.1 does: that consent's stated form binds it, whether or not the run
+  also records a launch consent record, and a HEAD elsewhere is refused with
+  the checkout command, as before.
 
-**Why:** refusing a dirty checkout would need a read outside the consent.
-REQ-033 already guarantees that "an uncommitted change in the clone's working
-tree never reaches a check, a quotation or a source page", since every read
-is an object read. What remains is that the agent sessions read the
-checked-out files, so a claim might rest on uncommitted text. Disclosure and
-the operator's own command are the honest limit.
+**Why:** the owner's selection. The copy is the clone the signed rules
+already describe, so REQ-033 to 036 apply to it unchanged. The no-copy case
+keeps a performed act's stated form out of reach: the redis consent says
+the operator fetches each admitted commit alone, and this version does not
+override it.
 
-### D5. The agent sessions' reach in a full clone
+**Which runs keep every predecessor meaning.** [Observed, round 3 finding 2]
+The preamble used to name that run by what it "relies on or records", which
+is only known after the question. It now names it by a condition known at
+launch: its HEAD is a revision another act's consent names, and the
+in-force records already hold everything REQ-033 requires, so no question
+is asked. REQ-047's first branch still "changes nothing else in how the
+revision of such a run is pinned".
 
-**Decided:** disclosure, and an instruction that binds nothing.
+### D2. The copy step
 
-- The launch question states, before the answer:
-  - that the agent sessions can read everything the clone holds, history,
-    branches, tags, stash, reflogs and working tree included;
-  - that no consent covers what lies beyond the pinned revision as content;
-  - that Syzygy reads none of it as content, and what it does read beyond
-    the pinned tree: the reference names and values, the stored object
-    names, the configuration lines and Git-directory files REQ-047 lists,
-    the type of a `--revision` object, and delta-base bytes inflated only to
-    rebuild the pinned tree. The first draft said "Syzygy reads none of it",
-    which round 2 (finding 2) showed the closed list contradicts.
-- The run record and every page carry the same history-reach statement
-  (round 1 note 8: the ruling says "the run discloses", not only the
-  question).
-- Every brief and packet Syzygy issues to an agent session of a
-  launch-consented run, authoring and review sessions alike, tells that
-  session to rest no claim on any commit but the pinned revision, and not to
-  read the clone's history or other references. The first draft told only the
-  authoring agent; the ruling's question named "the author and review agent
-  sessions", and a review session reads the same clone.
-- A session's compliance is its own report, labelled Inferred.
+**Decided**, in REQ-047, before the question:
 
-**The owner's ruling, and the trade-off it keeps.** The first draft put this
-to the owner. Two options were offered:
+1. Syzygy creates an empty directory of its own for the copy, never derived
+   from the operator's clone's path, and in it an empty repository with an
+   empty template (`git init --template=`).
+2. It fetches from the operator's clone over Git's local file transport the
+   pinned commit alone, by its full object identifier, at depth one, with no
+   tags and no submodules, then checks the commit out detached. This is the
+   form `clone-shape.ts` already checks for the redis consent, with the
+   operator's clone in place of the upstream.
+3. Every Git process for the copy runs with:
+   - the system and global configuration disabled;
+   - no other Git variable of the operator's environment;
+   - every transport but the local file transport refused;
+   - lazy fetching of missing objects disabled;
+   - no hook path.
+4. Syzygy checks the copy's form before the question, as the clone-shape
+   check does, and refuses a copy that departs from it.
+5. Where the run ends before its brief, by a refusal or a decline, Syzygy
+   removes the copy and says so.
 
-- a pinned-tree copy for the agent sessions, which was the recommended one;
-- disclosure only.
+The file URL of the operator's clone is not a locator; it is never recorded
+or rendered as one. REQ-046's write reading is extended to the copy's
+directory, which Syzygy creates and removes; this applies to every run that
+makes a copy, launch-consented or not.
 
-The owner selected the second:
+**What Git reads in the operator's clone, disclosed.** To serve the copy,
+Git reads the operator's clone's configuration, its references and its
+object store, including the stored bytes of delta bases outside the pinned
+commit's objects. Syzygy uses nothing Git read but the copy. The question,
+the run record and every page say so. This replaces ruling 1's arrangement,
+in which Syzygy itself decompressed delta bases.
 
-> Disclose only — Agents work in your clone; the run discloses that they could read history, and whether they stayed at the pinned commit is Inferred.
+**Hooks and configuration that could run code.** [Observed, 2026-11-10, Git
+2.53.0, a scratch fixture under `/home/orca/.tmp/`, outside the repository,
+with no network.] With the environment above:
 
-So the owner chose disclosure over a copy that would have bounded the
-agents' reach to the pinned tree. The cost stands as the owner accepted it:
+- the fetch of an unadvertised commit by full identifier over `file://`
+  worked, and the copy held one commit and the form above;
+- a `pre-upload-pack`-style hook in the source's hooks directory, a
+  repository-level `uploadpack.packObjectsHook` and `core.fsmonitor` set to
+  commands in the source's configuration did not run;
+- an unknown identifier was refused ("not our ref");
+- a blobless partial source with lazy fetching disabled failed the fetch;
+- a source made with `git clone --shared` was served through its alternates.
+  That is why an alternates file is refused before any Git process starts.
 
-- a full clone lets the author and review sessions read history no consent
-  names, and send it to their provider as the operator's own act;
-- nothing Syzygy does prevents that;
-- "history stays unread" holds for Syzygy by rule, and for the agents only
-  by the brief's request, which is Inferred.
+[Inferred] Git's serving side reads the source's own configuration, so a
+setting there could change how it serves; Git ignores
+`uploadpack.packObjectsHook` from a repository's own configuration by
+design, and the hooks directory is not consulted by the serving side of a
+local fetch. Whether command-line configuration reaches the serving process
+is version behaviour. The residual is stated in the run record, labelled
+Inferred: Syzygy relies on Git starting no program that the operator's
+clone's configuration or hooks name while it serves the copy.
 
-The pinned-tree copy is not drafted. It would be a later version's change,
-if the owner asks for it.
+**Refusals.** A clone that lacks the pinned commit or an object reachable
+from it, including a partial clone's missing object, fails the copy, and
+Syzygy refuses with the reason and fetches nothing elsewhere. A clone with
+an alternates file, or with references in the reftable backend, is refused
+before any Git process starts.
 
-**Why the disclosure is needed:** REQ-033 already says the agent "reads the
-clone without restriction", and the agent's reads are the operator's own
-act. A single-commit clone bounded that reach physically, and the
-clone-shape check existed for that reason ("your agent reads whatever the
-clone holds", in the packet that review quotes). A full clone removes the
-bound, so the question must say so.
+### D3. How "trunk tip" is chosen, and what Syzygy reads before the copy
+
+**Decided:** REQ-047's rule stands (the remote's default, else `main`, else
+`master`, else refuse), made exact for remote-tracking references:
+
+- the remote's default is the commit the remote-tracking branch named by
+  `refs/remotes/<remote>/HEAD` points to;
+- the remote is `origin` when it records one, else the one remote that does;
+  where several record one and none is `origin`, Syzygy refuses, naming
+  `--revision`;
+- `main` and `master` are the local `refs/heads/main` and `refs/heads/master`;
+- while a remote default is recorded, no local branch is consulted. Where a
+  local branch of that name points elsewhere, the launch output states both
+  identifiers and that a local commit is not the trunk default.
+
+**No Git process chooses the tip.** Syzygy reads the references as file
+data, so no Git process runs in the operator's clone until the copy. Its own
+reads of the operator's clone are a short closed list in REQ-047:
+
+- the `.git` file or directory and the files that locate the Git directory
+  and the common directory;
+- reference names, and the values of `HEAD` and its target, the trunk-rule
+  references, the local branch of the remote default's name and the
+  `--revision` reference, from loose reference files and `packed-refs`
+  (other values in `packed-refs` are read with it and used for nothing);
+- the configuration file, as text, for remote names and URLs, never
+  honoured;
+- whether `objects/info/alternates` exists;
+- for an abbreviated `--revision` only, the identifiers in loose object file
+  names and pack indexes.
+
+For a run that makes a copy, Syzygy reads no object of the operator's
+clone. Every object read, including the pinned commit object and the
+governance-home check REQ-046 makes before the answer, is made in the copy
+under the signed rules. A run that makes no copy keeps the object reads
+REQ-033 and REQ-046 state, in the operator's clone, as v1.1 does.
+
+**`--revision`.** An abbreviation is ambiguous when more than one
+identifier in the operator's clone begins with it, decided from names alone.
+A reference naming a non-commit, an annotated tag included, is refused once
+the copy shows the object's type, and is never followed.
+
+**Why the copy precedes the question, and what that costs.** The question
+needs the pinned commit's date and the governance home, which are object
+reads. Made in the operator's clone, they bring back the in-place reads and
+delta bases the redesign removes. Made in the copy, they are the signed
+reads. The cost: before the answer, the copy holds the pinned tree's blobs,
+checked-out files included. Syzygy reads none of them as content before the
+answer, the question says so, and a decline removes the copy.
+
+**Why the rule:** the owner's standing rule, "Revision should always default
+to latest trunk commit (eg main/master)". The latest trunk commit a clone
+knows is its remote-tracking branch, as of the operator's last fetch; that
+it is the upstream's latest stays Inferred, and the printed update command
+is the operator's way to refresh it. [Observed] The implemented rule
+(`packages/polaris-dossier/src/launch-revision.ts`) already reads it this
+way.
+
+### D4. The operator's checkout
+
+**Decided:** for a run that makes a copy, the operator's HEAD, branch,
+detached state, index and uncommitted changes do not matter. The copy is
+checked out at the pinned revision, so none of them reaches a check, a
+quotation, a page or an agent session. The v1.1 refusal of a HEAD elsewhere
+stays for the run that makes no copy.
+
+**Why:** the drafts reviewed in rounds 1 to 3 had to disclose that the
+working tree was not inspected and might differ. The copy removes that
+residual for every run that makes one.
+
+### D5. The agent sessions' reach
+
+**Decided:** every brief and packet Syzygy issues to an agent session of a
+run with a copy, authoring and review alike, names the copy as the clone to
+work in and tells the session not to read the operator's clone. A session's
+compliance is its own report, labelled Inferred. The question, the run
+record and every page say that agents are directed to the copy while the
+operator's clone stays on the host.
+
+**The owner's ruling, and what it changes.** On 2026-11-09 the owner
+declined a pinned-tree copy for the agents and chose "Disclose only". On
+2026-11-10 the owner chose the copy as part of the redesign. This version
+follows the later selection. The trade-off that remains: the operator's
+clone is still on the same host, so a session that ignores its brief can
+read history. The copy bounds what the session is given, not what it can
+reach.
 
 ### D6. The locator forms admitted
 
@@ -636,9 +602,10 @@ apply". Syzygy makes no network request, so it cannot learn a host's
 visibility. An ssh URL is no evidence either way: public GitHub repositories
 are routinely cloned over ssh.
 
-### D9. Whether a signed policy or the write act names GitHub-only identities
+### D9. Signed policies, the write act and the registry entry
 
-**Decided: no escalation is needed for either.**
+**Decided: no escalation is needed for the policies or the write act; the
+registry entry needs one (below).**
 
 - **Screening scope v8**, selected and held, plus the installed policy.
   [Observed] Neither names a host, a scheme or a `github:` identity (sweep
@@ -652,56 +619,63 @@ are routinely cloned over ssh.
   dedicated reference and the location in Syzygy's own tree, and it says
   nothing about observed repositories' hosts.
 
-**Registry readings to test.** [Observed] The installed source-acquisition
-registry entry carries two sentences this version leans on:
+**The registry entry conflicts with the copy. Flagged for the owner.**
+[Observed] The installed source-acquisition registry entry for the
+local-agent mode
+(`.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`)
+says, in its `fetch` field, "none: Syzygy fetches nothing. The operator
+prepares the clone with their own tools", and in its `readAuthority`,
+"Objects are read in process from the loose objects and version-2 packs of
+the operator's clone's .git directory; no ref, … repository-local
+configuration, … alternates file, … shallow file … is read, and no process
+is started".
 
-- Its fetch sentence says "to stay within the observation consent's stated
-  fetch form the operator fetches the one consented commit alone (git fetch
-  --depth=1 <upstream> <commit>)". Version 1.0's design §5 read this as
-  guidance for consents that state a fetch form, which a launch record does
-  not, and asked a reviewer to test that reading. This version relies on the
-  same reading.
-- Its `readAuthority` says "the pinned commit, its root tree and the trees
-  and blobs reachable from it ... from the loose objects and version-2
-  packs". This version reads it as admitting a delta base read solely to
-  rebuild an in-scope packed object, which the owner allowed (D2).
-- The same `readAuthority` says no ref, staging index or repository-local
-  configuration is read. This version reads that as scoped to the adapter's
-  object reads: D2's reference and configuration reads are launch reads,
-  which the spec now says are not observer object reads (round 1 finding 1).
+[Inferred] The redesign conflicts with each of these:
 
-[Inferred] The round-1 reviewer read all three the same way (finding 4,
-a note for the owner), and noted that the narrow readings have some
-purchase: the word "only", a `REF_DELTA` base looked up "by object
-identifier", and an entry signed when every base lay in scope. The owner
-may want a later registry version to say so explicitly; the sign-off page
-asks. If the owner or a reviewer rejects a reading, the entry needs an
-owner-signed successor version first, and this package waits for it.
+- Syzygy starts Git processes and makes a local fetch;
+- Syzygy reads references and remote URLs of the operator's clone;
+- the copy, whose objects Syzygy then reads, is prepared by Syzygy rather
+  than by the operator's own tools, and it holds a `shallow` file.
+
+No reading of "fetches nothing" or "no process is started" admits a
+Syzygy-run `git fetch`. So this version cannot take effect under the entry
+as signed. It needs an owner-signed successor version of the registry entry
+that admits the copy step, its environment and the pre-copy reads D3 lists.
+That successor is its own question for the owner; this package does not
+draft it.
+
+The earlier readings this section asked a reviewer to test (that
+`readAuthority` admits delta-base reads, and that its "no ref" covers only
+object reads) are withdrawn with the in-place design. The fetch-form reading
+of version 1.0's design §5 still governs the run that makes no copy.
 
 ## What does not change
 
 - These keep their bytes:
   - REQ-polaris-generation-033 to 036, 040 and every other requirement;
   - REQ-046's identity derivation;
-  - the local-agent mode;
+  - the local-agent mode's specification;
   - the screening policy (installed v7 and held v8);
   - the write consent;
-  - the registry entry;
+  - the registry entry, which D9 says needs a successor before this
+    version can take effect;
   - the redis consent and every record.
-- A run that neither relies on nor records a launch consent record keeps
-  every predecessor requirement's bytes and meaning, as the preamble says,
-  and the clone form its consent states still binds it.
-- A run that asks REQ-046's question gains one thing: a consent made by
-  another act now also matches it by its normalised `Upstream:` URL (D7).
-  That adds a match and removes none, so every consent that matched such a
-  run under v1.1 still matches, by identity or by revision, and REQ-047's
+- The signed read rules: from the copy on, every read, re-hash, HEAD check
+  and refusal REQ-033 to 036 state applies to the copy unchanged.
+- A run whose HEAD another act's consent names, and for which no question is
+  asked, keeps every predecessor requirement's bytes and meaning and makes no
+  copy, as the preamble says, and the clone form its consent states binds it.
+- A run that asks REQ-046's question gains one thing beyond the copy: a
+  consent made by another act now also matches it by its normalised
+  `Upstream:` URL (D7). That adds a match and removes none, and REQ-047's
   revision branch is unchanged.
 - Also unchanged:
   - the phrase and the records' fields, save that the launch observation
-    consent's recorded scope now carries the delta-base allowance (D2);
-  - the dedicated reference and the write rules;
+    consent's recorded scope now says the commit is held in the copy;
+  - the dedicated reference and the write rules, read as also permitting the
+    copy's directory;
   - the trunk default for clones without remote-tracking references;
-  - the did-not-fetch statement.
+  - the URL half: D6, D7 and D8, and the owner's http and git ruling.
 
 ## Exact blocks
 
@@ -711,7 +685,21 @@ patch's hunks follow. A paragraph the patch inserts has no current text; the
 paragraph it follows is named. The blocks were generated by script from the
 installed and the patched bytes.
 
-### Change 1 (replace), in "Launch-time consent"
+### Change 1 (replace), in "head"
+
+**Current:**
+
+~~~~text
+Candidate exact behavioral delta; not adopted, binds nothing. This change applies to the existing polaris-generation capability. It adds two requirements to the operator-agent mode of REQ-polaris-generation-033 to 036: the consents and statements a run needs are asked for, answered by the owner and recorded when the run starts (046), and a run that no existing consent covers pins the repository's trunk tip (047). It edits no byte of any predecessor requirement or scenario. For a launch-consented run, meaning a run that relies on or records any launch consent record (an observation consent, a drawer statement or a provider statement recorded at launch), it reads, and in one place displaces, the predecessor text each requirement names, and only that text. A run whose clone's HEAD is a revision that an in-force observation consent made by any other act names, and that neither relies on nor records a launch consent record, keeps every predecessor requirement's bytes and meaning. It grants no consent itself: every consent and statement it describes is the owner's answer, recorded as its own act.
+~~~~
+
+**Proposed:**
+
+~~~~text
+Candidate exact behavioral delta; not adopted, binds nothing. This change applies to the existing polaris-generation capability. It adds two requirements to the operator-agent mode of REQ-polaris-generation-033 to 036: the consents and statements a run needs are asked for, answered by the owner and recorded when the run starts (046), and a run that no existing consent covers pins the repository's trunk tip (047). It edits no byte of any predecessor requirement or scenario. For a launch-consented run, meaning a run that relies on or records any launch consent record (an observation consent, a drawer statement or a provider statement recorded at launch), it reads, and in one place displaces, the predecessor text each requirement names, and only that text. A run whose clone's HEAD is a revision that an in-force observation consent made by any other act names, and for which the in-force records already hold every consent and statement REQ-polaris-generation-033 requires, so that no question is asked, keeps every predecessor requirement's bytes and meaning. It grants no consent itself: every consent and statement it describes is the owner's answer, recorded as its own act.
+~~~~
+
+### Change 2 (replace), in "Launch-time consent"
 
 **Current:**
 
@@ -724,12 +712,12 @@ Syzygy SHALL ask only through the terminal the command was started from, as an i
 **Proposed:**
 
 ~~~~text
-In the operator-agent mode, when a run is started with `syzygy dossier init`, or with the one command of REQ-polaris-generation-040 where that requirement is in force, and the in-force records do not already hold every consent and statement REQ-polaris-generation-033 requires for the repository at the run's pinned revision (REQ-polaris-generation-047), Syzygy SHALL ask the owner for the missing ones at that moment, before it reads any blob of the repository and before it issues a brief. Before the answer Syzygy SHALL read only what the question needs, and only these: the launch reads that REQ-polaris-generation-047 lists, which are not observer object reads and read no repository content, namely the names of the clone's references and the values that requirement lists, read as file data, the clone's configuration file, read as text only for its remotes' names and URLs, the files that locate the Git directory and the common Git directory, the loose object file names and pack indexes from which a `--revision` name is resolved and objects are located, and the type read that requirement permits for a `--revision` name that resolves to an object other than a commit; and, as Git objects by object identifier, each rebuilt from a delta base only as REQ-polaris-generation-047 permits, the pinned commit object, of which it SHALL use only the root tree identifier, the parent identifiers and the committer date, never the message or any author or committer identity; and the tree objects reachable from that root tree, of which it SHALL use only entry names, modes and object identifiers. It SHALL read no blob, and SHALL store nothing from these reads except in the question, the launch output and, after a confirmed answer, the launch consent records. From the tree listing alone it SHALL decide the governed conditions of REQ-polaris-generation-033 that a path listing exposes, and the content classes its path classification assigns at the pinned revision. Those classes are a preview: the effective classification policy's classification as it would apply once an observation consent admits the repository, computed while the policy's scope that admits sources by observation consent (today its public-source scope) admits no repository for it. The preview label describes only how the classes were computed before the answer; it does not make the owner's answer, or a provider statement naming those classes, provisional. The question, the launch output and every record that names them SHALL label them a preview, and a confirmed answer SHALL NOT be read as the policy having admitted the repository before the answer.
+In the operator-agent mode, when a run is started with `syzygy dossier init`, or with the one command of REQ-polaris-generation-040 where that requirement is in force, and the in-force records do not already hold every consent and statement REQ-polaris-generation-033 requires for the repository at the run's pinned revision (REQ-polaris-generation-047), Syzygy SHALL ask the owner for the missing ones at that moment, before it reads any blob of the repository and before it issues a brief. Before the answer Syzygy SHALL read of the clones only what the question needs, and only these: of the operator's clone, the reads REQ-polaris-generation-047 lists; of the copy that requirement makes, the files of its Git directory that the copy's form check reads, and the type of the object `--revision` names; and, as Git objects by object identifier in the run's clone, which is the copy where REQ-polaris-generation-047 makes one and otherwise the operator's clone, the pinned commit object, of which it SHALL use only the root tree identifier, the parent identifiers and the committer date, never the message or any author or committer identity; and the tree objects reachable from that root tree, of which it SHALL use only entry names, modes and object identifiers. It SHALL read no blob, and SHALL store nothing from these reads except in the question, the launch output and, after a confirmed answer, the launch consent records. From the tree listing alone it SHALL decide the governed conditions of REQ-polaris-generation-033 that a path listing exposes, and the content classes its path classification assigns at the pinned revision. Those classes are a preview: the effective classification policy's classification as it would apply once an observation consent admits the repository, computed while the policy's scope that admits sources by observation consent (today its public-source scope) admits no repository for it. The preview label describes only how the classes were computed before the answer; it does not make the owner's answer, or a provider statement naming those classes, provisional. The question, the launch output and every record that names them SHALL label them a preview, and a confirmed answer SHALL NOT be read as the policy having admitted the repository before the answer.
 
-Syzygy SHALL ask only through the terminal the command was started from, as an interactive question that the operator answers by typing, and SHALL refuse, naming the missing consents and the command to run, when standard input is not a terminal, when an answer is not given, or when the answer is anything but the exact owner phrase the question names. The phrase SHALL name the consent, the repository identity and the first twelve hexadecimal digits of the pinned revision. The question SHALL state, before the answer is asked for: the proposed repository identity, how it was proposed (derived, taken from a matching record, or given by the operator) and that it is Inferred, and that the phrase declares it; the pinned revision in full and how it was chosen; that the observation consent covers that one revision only; what the observation consent permits Syzygy to read, including that objects of the pinned tree may be rebuilt from delta bases stored outside it, whose stored bytes Syzygy inflates only for that and never reads as content; the operator's declaration whether the repository is public, asked for in the question; the drawer question below; for a subject that is governed or whose drawer status is unknown, the agent provider and content classes the statement below would name, the classes labelled a preview, and that the agent sessions read the clone without restriction whatever classes the statement names; that the agent sessions can read everything the clone holds, its history, branches, tags, stash, reflogs and working tree included, that no consent covers what the clone holds beyond the pinned revision as content, and that Syzygy reads none of it as content: beyond the pinned commit and the trees and blobs reachable from its root tree, Syzygy reads only the reference names and values, the loose object file names and pack indexes, the configuration lines and the Git-directory files that REQ-polaris-generation-047 lists, the type of an object a `--revision` name resolves to, and delta-base bytes inflated only to rebuild objects of the pinned tree; every existing record for the same repository identity, its state and its act; that each consent and statement is the owner's own act, revocable only by a later owner act naming it; and that only the owner may answer, never an agent. Where the operator does not declare the repository public, whether the declaration is that it is not public or no declaration is given, the question SHALL also state, before the answer is asked for, that a confirmed answer records the repository identity and its normalised URL in the launch consent records, which Syzygy commits on the dedicated reference below, in the observing project's own repository; that Syzygy never pushes that reference; and that one push of it would publish them. That statement is a warning only: the question SHALL ask for no confirmation of it, and it adds no answer, phrase or record field to those this requirement lists.
+Syzygy SHALL ask only through the terminal the command was started from, as an interactive question that the operator answers by typing, and SHALL refuse, naming the missing consents and the command to run, when standard input is not a terminal, when an answer is not given, or when the answer is anything but the exact owner phrase the question names. The phrase SHALL name the consent, the repository identity and the first twelve hexadecimal digits of the pinned revision. The question SHALL state, before the answer is asked for: the proposed repository identity, how it was proposed (derived, taken from a matching record, or given by the operator) and that it is Inferred, and that the phrase declares it; the pinned revision in full and how it was chosen; that the observation consent covers that one revision only; what the observation consent permits Syzygy to read; the operator's declaration whether the repository is public, asked for in the question; the drawer question below; for a subject that is governed or whose drawer status is unknown, the agent provider and content classes the statement below would name, the classes labelled a preview, and that the agent sessions read the clone without restriction whatever classes the statement names; for a run that makes a copy, that the run's clone is a copy of the pinned commit alone, which Syzygy made from the operator's clone with Git over the local file transport and no network request, that Git read the operator's clone's configuration, references and object store, the stored bytes of delta bases outside the pinned commit's objects included, to make it, that Syzygy used nothing Git read but the copy it produced and itself read of the operator's clone only the references, remote names and URLs and other files REQ-polaris-generation-047 lists, and that the agent sessions are directed to work in the copy while the operator's clone stays on the host, so that a session's staying in the copy is its own report; and that the copy, its checked-out files included, was made before the answer, that Syzygy has read none of its blobs, and that it is removed if the answer confirms nothing; every existing record for the same repository identity, its state and its act; that each consent and statement is the owner's own act, revocable only by a later owner act naming it; and that only the owner may answer, never an agent. Where the operator does not declare the repository public, whether the declaration is that it is not public or no declaration is given, the question SHALL also state, before the answer is asked for, that a confirmed answer records the repository identity and its normalised URL in the launch consent records, which Syzygy commits on the dedicated reference below, in the observing project's own repository; that Syzygy never pushes that reference; and that one push of it would publish them. That statement is a warning only: the question SHALL ask for no confirmation of it, and it adds no answer, phrase or record field to those this requirement lists.
 ~~~~
 
-### Change 2 (replace), in "Launch-time consent"
+### Change 3 (replace), in "Launch-time consent"
 
 **Current:**
 
@@ -748,24 +736,28 @@ A URL the operator gives as a locator (`--url` or the upstream option) SHALL be 
 
 Whether the repository is public is the operator's declaration alone, for every host and form. Syzygy SHALL NOT infer it from the host, the scheme, a user name or whether the operator's clone needed a credential, SHALL make no request to learn it, and the question SHALL NOT suggest an answer. A repository that the operator does not declare public is not public under the effective screening policy, whatever its host.
 
-A confirmed answer SHALL create, in the observing project's governance home at the location the owner's write consent names (below), one observation consent record for the pair (`project:syzygy`, the repository identity), as RFC5-12 and RFC3-7 define it: class observation; subject that pair; scope the pinned revision's commit object and the tree and blob objects reachable from its root tree, and nothing else, save that the stored bytes of a delta base outside that scope may be inflated solely to rebuild an object within it, as REQ-polaris-generation-047 states, held in the operator's own clone, with no fetch by Syzygy; granting principal the owner, as declared by the operator; grant instant Syzygy's clock at the answer; revocation state none. It SHALL carry the declared identity, how it was proposed, the normalised URL as a locator hint, the operator's declaration whether the repository is public, and their Inferred labels. Every launch consent record SHALL be an owner-act record binding the exact digest of its content (RFC3-16) and preserving the exact owner phrase. While no A1 audit mechanism is in force, its provenance state SHALL be `owner-adopted (bootstrap, uncorrelated)` with its A1 audit-record identity explicitly absent; once one is in force, the question SHALL ask the owner to select the state explicitly (RFC3-16(c)(1)), and Syzygy SHALL refuse to record without a selection. Each record SHALL record its ceremony: the question in full, the phrase, the terminal it came from and the operator's declaration above.
+A confirmed answer SHALL create, in the observing project's governance home at the location the owner's write consent names (below), one observation consent record for the pair (`project:syzygy`, the repository identity), as RFC5-12 and RFC3-7 define it: class observation; subject that pair; scope the pinned revision's commit object and the tree and blob objects reachable from its root tree, and nothing else, held in the copy that REQ-polaris-generation-047 makes from the operator's own clone, with no network request by Syzygy; granting principal the owner, as declared by the operator; grant instant Syzygy's clock at the answer; revocation state none. It SHALL carry the declared identity, how it was proposed, the normalised URL as a locator hint, the operator's declaration whether the repository is public, and their Inferred labels. Every launch consent record SHALL be an owner-act record binding the exact digest of its content (RFC3-16) and preserving the exact owner phrase. While no A1 audit mechanism is in force, its provenance state SHALL be `owner-adopted (bootstrap, uncorrelated)` with its A1 audit-record identity explicitly absent; once one is in force, the question SHALL ask the owner to select the state explicitly (RFC3-16(c)(1)), and Syzygy SHALL refuse to record without a selection. Each record SHALL record its ceremony: the question in full, the phrase, the terminal it came from and the operator's declaration above.
 ~~~~
 
-### Change 3 (replace), in "Launch-time consent"
+### Change 4 (replace), in "Launch-time consent"
 
 **Current:**
 
 ~~~~text
+For a launch-consented run, this requirement displaces exactly this predecessor text: in REQ-polaris-generation-033, the words "Syzygy SHALL write only to its own state directory for the run, never to a location derived from the clone's path", read as permitting, besides the run's state directory, the launch consent records and their recording commit on the dedicated reference, and only those, written before the run's state directory is created; the rest of that sentence, and the prohibition on writing to a location derived from the clone's path, are unchanged. It reads, and does not change: REQ-polaris-generation-033's requirement that the clone's HEAD equal a revision the in-force observation consent names, which a launch consent record meets by naming the pinned revision; its per-project statement and its drawer condition, which launch consent records provide; and its rule that every record Syzygy reads for its gates lies within the agent sessions' write reach and is disclosed so, which applies to the launch consent records as to every other.
+
 The run record and every rendered page SHALL disclose, in human and machine form: that the consents were recorded at launch, with each record's identity and its recording commit; the repository identity, its normalised URL, their source and their Inferred label; the operator's declaration whether the repository is public, labelled Inferred; how the identity was proposed and the identity residuals above; the pinned revision and how it was chosen; the drawer statement relied on, if any; that who answered rests on the operator's declaration, labelled Inferred; and, for the provider statement, the citation REQ-polaris-generation-033 requires, not restated.
 ~~~~
 
 **Proposed:**
 
 ~~~~text
-The run record and every rendered page SHALL disclose, in human and machine form: that the consents were recorded at launch, with each record's identity and its recording commit; the repository identity, its normalised URL, their source and their Inferred label; the operator's declaration whether the repository is public, labelled Inferred; how the identity was proposed and the identity residuals above; that the agent sessions could read everything the clone holds beyond the pinned revision, its history, branches, tags, stash, reflogs and working tree included, which no consent covers as content and of which Syzygy read none as content, with the statement the question gives of what Syzygy reads beyond the pinned tree; the pinned revision and how it was chosen; the drawer statement relied on, if any; that who answered rests on the operator's declaration, labelled Inferred; and, for the provider statement, the citation REQ-polaris-generation-033 requires, not restated.
+For a launch-consented run, this requirement displaces exactly this predecessor text: in REQ-polaris-generation-033, the words "Syzygy SHALL write only to its own state directory for the run, never to a location derived from the clone's path", read as permitting, besides the run's state directory, the launch consent records and their recording commit on the dedicated reference, and only those, written before the run's state directory is created; the rest of that sentence, and the prohibition on writing to a location derived from the clone's path, are unchanged. For every run that makes the copy that REQ-polaris-generation-047 states, whether or not it is launch-consented, the same words are read as also permitting that copy, in a directory Syzygy creates for it and removes as that requirement states. It reads, and does not change: REQ-polaris-generation-033's requirement that the clone's HEAD equal a revision the in-force observation consent names, which a launch consent record meets by naming the pinned revision; its per-project statement and its drawer condition, which launch consent records provide; and its rule that every record Syzygy reads for its gates lies within the agent sessions' write reach and is disclosed so, which applies to the launch consent records as to every other.
+
+The run record and every rendered page SHALL disclose, in human and machine form: that the consents were recorded at launch, with each record's identity and its recording commit; the repository identity, its normalised URL, their source and their Inferred label; the operator's declaration whether the repository is public, labelled Inferred; how the identity was proposed and the identity residuals above; for a run that makes a copy, the copy statements the question gives and the copy's location; the pinned revision and how it was chosen; the drawer statement relied on, if any; that who answered rests on the operator's declaration, labelled Inferred; and, for the provider statement, the citation REQ-polaris-generation-033 requires, not restated.
 ~~~~
 
-### Change 4 (insert), in "Launch-time consent"
+### Change 5 (insert), in "Launch-time consent"
 
 **Current:**
 
@@ -827,7 +819,7 @@ The run record and every rendered page SHALL disclose, in human and machine form
 - **THEN** the question suggests no answer, Syzygy makes no request to learn the repository's visibility, and the repository is not public under the effective screening policy
 ~~~~
 
-### Change 5 (replace), in "Launch-time consent"
+### Change 6 (replace), in "Launch-time consent"
 
 **Current:**
 
@@ -857,7 +849,7 @@ warrants:
 - **Observable:** The question text, the phrase asked for, refusals and their reasons, the objects read before and after the answer, the commits on the dedicated reference and their trees, every other reference, working tree and index of the governance home before and after, each record's fields and bound digest, the brief's execution rule, withheld files, and the human and machine disclosures.
 - **Oracle:** Expected questions, phrases, refusals, identities, normalised URLs, record sets, field values and withheld files derived from the fixture homes, clones and placements by an independent `git` reading, prepared before the run; each record's digest recomputed independently from its bytes.
 - **Oracle independence:** Fixture homes, clones and expected outcomes are written outside the code under test. Object reads are captured by an instrumented object store, a fixture clone served through a read-logging layer outside the code under test that records each object identifier and type read, never by Syzygy's own record. Commits, references, working trees and indexes are compared by an independent listing before and after.
-- **Falsifier:** A blob is read, or any commit field other than the root tree, parents and committer date is used, before a confirmed phrase or in-force records; anything from a pre-answer read is stored outside the question, launch output and records; before the answer Syzygy reads anything the pre-answer list does not name, or reads the configuration for anything but its remotes' names and URLs; the question or the launch output omits that objects of the pinned tree may be rebuilt from delta bases outside it; the question omits any statement this requirement lists, including that only the owner may answer and the existing records with their states; a record is created without the exact phrase, without a terminal, without the write consent, without a declaration whether the repository is public, or, once an A1 mechanism is in force, without a state selection; one record carries two of observation consent, drawer statement and provider statement; a provider statement is created for a non-governed subject, or a second one for a subject and provider whose in-force statement covers the classes; a drawer statement is created on any answer but that none exists; a record names more than the pinned revision; a file is edited or removed, a working tree, index or reference other than the dedicated one changes, or the trunk tip moves; Syzygy pushes the dedicated reference; the proposed identity differs from the proposal rule, or is presented as Observed; a launch whose matching records carry more than one identity, with no identity option, is not refused before asking; the URL is recorded or rendered as the identity; an operator-given URL not in an admitted form is admitted, a remote URL that is not a remote locator derives anything, or a URL carrying credentials, or its user information, is printed, stored or recorded; an identity is derived other than from the last two path segments, or from a path of fewer than two; Syzygy makes a network request for a locator or applies a rewriting of it; a remote URL that is not a remote locator is printed, stored or recorded; an observation consent made by another act matches by URL other than by its normalised `Upstream:` URL equalling the derived URL, or does not match when they are equal, or the URL match prevents a match by identity or revision, or the pin of a consented HEAD; visibility is inferred from the host, scheme, a user name or a credential, or the question suggests an answer; the question omits that the agent sessions can read everything the clone holds beyond the pinned revision; the question, the run record or a page states that Syzygy reads nothing beyond the pinned revision, or its statement of what Syzygy reads beyond the pinned tree omits a read REQ-polaris-generation-047 permits; the pre-answer classes are not labelled a preview; a matching revoked record is not named; a run on the governance home's working tree or Git directory is not refused; an in-force record set is not reused; a disclosure this requirement lists is missing from the run record or a page; a file a placement would have placed renders other than Unknown; for a repository the operator does not declare public, the answer is asked for before the question states that the repository identity and its normalised URL are recorded on the dedicated reference in the observing project's own repository, which Syzygy never pushes and one push of which would publish them, or the question asks for a confirmation of that statement or adds an answer, phrase or record field for it; an execution choice is asked for or recorded; or who answered is presented as Observed.
+- **Falsifier:** A blob is read, or any commit field other than the root tree, parents and committer date is used, before a confirmed phrase or in-force records; anything from a pre-answer read is stored outside the question, launch output and records; before the answer Syzygy reads anything of a clone that the pre-answer list does not name; for a run that makes a copy, the question, the run record or a page omits a copy statement; the question omits any statement this requirement lists, including that only the owner may answer and the existing records with their states; a record is created without the exact phrase, without a terminal, without the write consent, without a declaration whether the repository is public, or, once an A1 mechanism is in force, without a state selection; one record carries two of observation consent, drawer statement and provider statement; a provider statement is created for a non-governed subject, or a second one for a subject and provider whose in-force statement covers the classes; a drawer statement is created on any answer but that none exists; a record names more than the pinned revision; a file is edited or removed, a working tree, index or reference other than the dedicated one changes, or the trunk tip moves; Syzygy pushes the dedicated reference; the proposed identity differs from the proposal rule, or is presented as Observed; a launch whose matching records carry more than one identity, with no identity option, is not refused before asking; the URL is recorded or rendered as the identity; an operator-given URL not in an admitted form is admitted, a remote URL that is not a remote locator derives anything, or a URL carrying credentials, or its user information, is printed, stored or recorded; an identity is derived other than from the last two path segments, or from a path of fewer than two; Syzygy makes a network request for a locator or applies a rewriting of it; a remote URL that is not a remote locator is printed, stored or recorded; an observation consent made by another act matches by URL other than by its normalised `Upstream:` URL equalling the derived URL, or does not match when they are equal, or the URL match prevents a match by identity or revision, or the pin of a consented HEAD; visibility is inferred from the host, scheme, a user name or a credential, or the question suggests an answer; the pre-answer classes are not labelled a preview; a matching revoked record is not named; a run on the governance home's working tree or Git directory is not refused; an in-force record set is not reused; a disclosure this requirement lists is missing from the run record or a page; a file a placement would have placed renders other than Unknown; for a repository the operator does not declare public, the answer is asked for before the question states that the repository identity and its normalised URL are recorded on the dedicated reference in the observing project's own repository, which Syzygy never pushes and one push of which would publish them, or the question asks for a confirmation of that statement or adds an answer, phrase or record field for it; an execution choice is asked for or recorded; or who answered is presented as Observed.
 
 ```yaml
 warrants:
@@ -871,61 +863,105 @@ warrants:
 ```
 ~~~~
 
-### Change 6 (replace), in "Trunk-tip revision pinned at launch"
-
-**Current:**
-
-~~~~text
-In the operator-agent mode, a run started without `--revision` whose clone's HEAD is a revision that an in-force observation consent names, whatever that consent's subject identity and whichever act made it, SHALL pin that HEAD exactly as REQ-polaris-generation-033 states, and this requirement changes nothing else for it. Every other run SHALL pin exactly one revision at launch, before the question of REQ-polaris-generation-046 is asked, and that revision SHALL NOT change within the run. Absent `--revision`, it SHALL be the commit the repository's trunk points to in the operator's clone: the branch the clone records as its remote's default (the remote's `HEAD` reference), or, where it records none, the clone's `main` branch, or, where there is none, its `master` branch. Where none of these exists, Syzygy SHALL refuse, naming `--revision`. With `--revision`, the pinned revision SHALL be the commit the operator names, given as a full or unambiguous abbreviated object identifier or a reference the clone holds, resolved once to a full object identifier; a name that resolves to no commit, or to more than one, SHALL be refused.
-~~~~
-
-**Proposed:**
-
-~~~~text
-In the operator-agent mode, a run started without `--revision` whose clone's HEAD is a revision that an in-force observation consent names, whatever that consent's subject identity and whichever act made it, SHALL pin that HEAD exactly as REQ-polaris-generation-033 states, and this requirement changes nothing else in how the revision of such a run is pinned. The rules below on the clone's form, on Syzygy's reads of the clone and on the statements they require bind every launch-consented run, whichever of these branches pinned its revision, and bind no other run. Every other run SHALL pin exactly one revision at launch, before the question of REQ-polaris-generation-046 is asked, and that revision SHALL NOT change within the run. Absent `--revision`, it SHALL be the commit the repository's trunk points to in the operator's clone: the branch the clone records as its remote's default (the remote's `HEAD` reference), or, where it records none, the clone's `main` branch, or, where there is none, its `master` branch. Where none of these exists, Syzygy SHALL refuse, naming `--revision`. The remote's default is the commit that the remote-tracking branch named by the symbolic reference `refs/remotes/<remote>/HEAD` points to, where the remote is `origin` when it records one, or else the one remote that records one; where several remotes record one and none is `origin`, the clone records no single remote default, and Syzygy SHALL refuse, naming `--revision`. `main` and `master` are the local branches `refs/heads/main` and `refs/heads/master`. While a remote default is recorded, no local branch is consulted for the pin: where a local branch of the same name points elsewhere, the launch output SHALL state both identifiers and that a local commit is not the trunk default. With `--revision`, the pinned revision SHALL be the commit the operator names, given as a full or unambiguous abbreviated object identifier or a reference the clone holds, resolved once to a full object identifier; a name that resolves to no commit, or to more than one, SHALL be refused. An abbreviated identifier resolves to more than one when more than one object identifier the clone stores begins with it, decided from the loose object file names and the pack indexes alone, without reading those objects. A name that resolves to one stored object other than a commit, a reference naming an annotated tag included, SHALL be refused, naming `--revision`, after Syzygy makes at most the type read listed below, and SHALL NOT be followed to the object it names.
-~~~~
-
 ### Change 7 (replace), in "Trunk-tip revision pinned at launch"
 
 **Current:**
 
 ~~~~text
+In the operator-agent mode, a run started without `--revision` whose clone's HEAD is a revision that an in-force observation consent names, whatever that consent's subject identity and whichever act made it, SHALL pin that HEAD exactly as REQ-polaris-generation-033 states, and this requirement changes nothing else for it. Every other run SHALL pin exactly one revision at launch, before the question of REQ-polaris-generation-046 is asked, and that revision SHALL NOT change within the run. Absent `--revision`, it SHALL be the commit the repository's trunk points to in the operator's clone: the branch the clone records as its remote's default (the remote's `HEAD` reference), or, where it records none, the clone's `main` branch, or, where there is none, its `master` branch. Where none of these exists, Syzygy SHALL refuse, naming `--revision`. With `--revision`, the pinned revision SHALL be the commit the operator names, given as a full or unambiguous abbreviated object identifier or a reference the clone holds, resolved once to a full object identifier; a name that resolves to no commit, or to more than one, SHALL be refused.
+
+Syzygy SHALL make no network request to choose or verify the revision: the trunk tip is the one the operator's clone holds at launch, and whether it is the upstream's latest commit is Inferred. The launch output and the run record SHALL state the pinned revision in full, the reference it came from, the commit's committer date as the commit object records it, and that Syzygy did not fetch; they SHALL print the operator's own command to update the clone before a later run.
+
 Syzygy SHALL NOT change the clone's checkout. Where the clone's HEAD is not the pinned revision, Syzygy SHALL refuse before asking for consent, and SHALL print the one command that checks out the pinned revision, so that REQ-polaris-generation-033's HEAD check holds at the brief. The pinned revision is the revision the launch consent names; REQ-polaris-generation-033's rules for it apply unchanged.
 ~~~~
 
 **Proposed:**
 
 ~~~~text
-Syzygy SHALL NOT change the clone's checkout. HEAD may be detached or name a branch; only the commit it resolves to is compared with the pinned revision. Where the clone's HEAD is not the pinned revision, Syzygy SHALL refuse before asking for consent, and SHALL print the one command that checks out the pinned revision, so that REQ-polaris-generation-033's HEAD check holds at the brief, with the warning that a checkout carries uncommitted changes over. The pinned revision is the revision the launch consent names; REQ-polaris-generation-033's rules for it apply unchanged.
+In the operator-agent mode, a run started without `--revision` whose clone's HEAD is a revision that an in-force observation consent names, whatever that consent's subject identity and whichever act made it, SHALL pin that HEAD exactly as REQ-polaris-generation-033 states, and this requirement changes nothing else in how the revision of such a run is pinned. Every other run SHALL pin exactly one revision at launch, before the question of REQ-polaris-generation-046 is asked, and that revision SHALL NOT change within the run. Absent `--revision`, it SHALL be the commit the repository's trunk points to in the operator's clone: the branch the clone records as its remote's default (the remote's `HEAD` reference), or, where it records none, the clone's `main` branch, or, where there is none, its `master` branch. Where none of these exists, Syzygy SHALL refuse, naming `--revision`. The remote's default is the commit that the remote-tracking branch named by the symbolic reference `refs/remotes/<remote>/HEAD` points to, where the remote is `origin` when it records one, or else the one remote that records one; where several remotes record one and none is `origin`, the clone records no single remote default, and Syzygy SHALL refuse, naming `--revision`. `main` and `master` are the local branches `refs/heads/main` and `refs/heads/master`. While a remote default is recorded, no local branch is consulted for the pin: where a local branch of the same name points elsewhere, the launch output SHALL state both identifiers and that a local commit is not the trunk default. With `--revision`, the pinned revision SHALL be the commit the operator names, given as a full or unambiguous abbreviated object identifier or a reference the clone holds, resolved once to a full object identifier; a name that resolves to no commit, or to more than one, SHALL be refused. An abbreviated identifier resolves to more than one when more than one object identifier the operator's clone names in its loose object file names and pack indexes begins with it. Where `--revision` names an object that is not a commit, an annotated tag included, Syzygy SHALL refuse, naming `--revision`, once the copy shows that object's type, and SHALL NOT follow it to the object it names.
 
-For a launch-consented run, Syzygy SHALL accept the operator's clone in whatever form holds the pinned revision: a full clone with its history, branches, tags, remote-tracking references, stash and reflogs, a clone made by fetching one commit alone, or any form between, save that where the run relies on an observation consent made by another act whose record states the clone's form, that stated form binds the run, whether or not the run also relies on or records a launch consent record. Except as such a stated form requires, Syzygy SHALL NOT refuse the clone for holding commits, objects or references beyond the pinned revision; it SHALL NOT fetch, prune, repack or otherwise change it. Whatever the clone holds, Syzygy's reads of it for the run are only these. The object reads are Git object reads by object identifier, as REQ-polaris-generation-033 and REQ-polaris-generation-046 state them. The reference, configuration, Git-directory and type reads, and the listing of stored object names in the loose object files and pack indexes that resolves a `--revision` name, are launch reads, not observer object reads: Syzygy makes them only to pin the revision, to compare HEAD with it and to propose the identity, and they read no repository content, so REQ-polaris-generation-033's object-read rule governs every read of content:
+Syzygy SHALL make no network request to choose or verify the revision: the trunk tip is the one the operator's clone holds at launch, and whether it is the upstream's latest commit is Inferred. The launch output and the run record SHALL state the pinned revision in full, the reference it came from, the commit's committer date as the commit object records it, and that Syzygy made no network request; they SHALL print the operator's own command to update the clone before a later run.
 
-- objects: the pinned commit object, its root tree and the trees and blobs reachable from it, reached by walking down from the commit, from the loose object files, the pack files and the pack indexes under `objects/`; save the type read below, Syzygy SHALL read no parent commit object and no object reached only from another commit, a branch, a tag, the stash, a reflog or a note, and SHALL use the pinned commit's parent identifiers only as REQ-polaris-generation-046 uses them, never resolving one;
-- pack storage: where a pack stores an object of that scope as a delta, Syzygy MAY read the stored bytes of the delta's base, whichever object they belong to, solely to reconstruct that object, which it then re-hashes as REQ-polaris-generation-033 requires; it SHALL NOT use a base reached this way for anything else, and SHALL NOT classify, store, quote, record a digest of, render or send it, and the launch output, the run record and every page SHALL state that objects of the pinned tree may have been rebuilt from delta bases outside it, whose stored bytes were inflated only for that and never read as content;
-- references: the names of the clone's references, and the values only of `HEAD` and the reference it names, the references the trunk rule above names, the local branch of the remote default's name, and the reference `--revision` names, each read as file data from the loose reference files and `packed-refs`, where reading `packed-refs` also reads the bytes of other references' values, which Syzygy SHALL use for nothing; a clone that stores its references otherwise (the reftable backend) SHALL be refused before asking for consent, naming the reason;
-- type: where a `--revision` identifier or reference resolves to one stored object that is not a commit, an annotated tag included, that one object's type, read from its header and, where a pack stores it as a delta, from the headers of the entries of its base chain, inflating no more of any of them than its header, used for nothing but the refusal, and never classified, stored, quoted, recorded, rendered or sent;
-- configuration: the clone's own configuration file, read as text only for its remotes' names and URLs and never honoured, so no include, URL rewrite, hook path, object format or other setting it states changes a read; and the files that locate the Git directory and the common Git directory;
-- nothing else in the Git directory, and nothing in the working tree or the index. Syzygy SHALL NOT read either to learn whether the checkout holds uncommitted or untracked changes, and SHALL start no process that reads or acts on the clone, wherever that process runs (a Git command given the clone's Git directory from elsewhere included), so no hook or filter runs.
+Syzygy SHALL NOT change the operator's clone: it SHALL NOT fetch into, prune, repack, check out in or write to it. Every run this requirement pins, the run its first sentence pins included, SHALL run on a copy unless an in-force observation consent made by another act names its pinned revision. A run that such a consent covers makes no copy: its clone is the operator's own, as REQ-polaris-generation-033 and that consent state, any form that consent's record states for the clone binds it whether or not the run also relies on or records a launch consent record, and where the clone's HEAD is not the pinned revision, Syzygy SHALL refuse before asking for consent and print the one command that checks out the pinned revision. The pinned revision is the revision the launch consent names; REQ-polaris-generation-033's rules for it apply unchanged.
 
-A clone whose objects of that scope cannot be read without an alternate, a replacement object or a fetch, a partial clone missing one included, SHALL be refused as REQ-polaris-generation-033 states, and Syzygy SHALL NOT fetch the missing object. Because Syzygy reads no working tree, it cannot tell whether the checked-out files differ from the pinned revision, while the agent sessions read them: the launch output, the run record and every page SHALL state that the working tree was not inspected and may differ from the pinned revision, and the launch output SHALL print the operator's own command that lists such changes (`git -C <clone> status --short`). Every brief and packet Syzygy issues to an agent session of a launch-consented run, the authoring and the review sessions alike, SHALL tell that session to rest no claim on any commit but the pinned revision and not to read the clone's history or other references; that a session complied is its own report, labelled Inferred. A run that neither relies on nor records a launch consent record is bound by none of these rules on the clone's form, Syzygy's reads and the statements, and whatever form its observation consent record states for the clone still binds it.
+Before the question, Syzygy SHALL make the copy as follows and in no other way. It SHALL create an empty directory of its own for the copy, never derived from the operator's clone's path, and in it an empty repository made with an empty template. It SHALL fetch into that repository, from the operator's clone over Git's local file transport, the pinned commit alone, named by its full object identifier, at a depth of one, with no tags and no submodules, and SHALL then check that commit out detached. Every Git process it starts for the copy SHALL run with the system and global Git configuration disabled, with no other Git variable of the operator's environment, with every transport but the local file transport refused, with lazy fetching of missing objects disabled and with no hook path, so that no network request is made and no hook of the copy runs. The file URL of the operator's clone is not a locator, and is never recorded or rendered as one. The operator's HEAD need not be the pinned revision, and the copy's HEAD is the pinned revision. The copy SHALL hold the pinned commit and the trees and blobs reachable from its root tree alone, in the form that one commit fetched alone into an empty repository and checked out detached leaves, and Syzygy SHALL check that form before the question and refuse a copy that departs from it. Where the run ends before its brief, by a refusal or an answer that confirms nothing, Syzygy SHALL remove the copy, and the launch output SHALL say so.
+
+To make the copy, Git reads the operator's clone: its configuration, which Git's serving side honours, its references, and its object store, the stored bytes of delta bases outside the pinned commit's objects included. Syzygy uses nothing Git read but the copy it produced. Syzygy's own reads of the operator's clone, for every run save one whose HEAD an in-force observation consent made by another act names and for which the in-force records already hold every consent and statement, so that no question is asked, SHALL be only these, and, for a run that makes no copy, the object reads REQ-polaris-generation-033 and REQ-polaris-generation-046 state:
+
+- the `.git` file or directory and the files that locate the Git directory and the common Git directory;
+- the names of its references, and the values of `HEAD` and the reference it names, of the references the trunk rule above names, of the local branch of the remote default's name and of the reference `--revision` names, each read as file data from the loose reference files and `packed-refs`, where reading `packed-refs` also reads the bytes of other references' values, which Syzygy SHALL use for nothing; a clone that stores its references otherwise (the reftable backend) SHALL be refused before any Git process starts;
+- its configuration file, read as text only for its remotes' names and URLs and never honoured;
+- whether `objects/info/alternates` exists, and, where the run makes a copy, a clone where it does SHALL be refused before any Git process starts;
+- for an abbreviated `--revision` alone, the object identifiers its loose object file names and pack indexes give.
+
+A clone that lacks the pinned commit or an object reachable from it, a partial clone's missing object included, fails the copy, and Syzygy SHALL refuse, naming the reason, and fetch nothing from anywhere else. From the copy on, the copy is the clone that REQ-polaris-generation-033 to 036 name and the run's clone REQ-polaris-generation-046 reads objects from, and every read, re-hash, HEAD check and refusal they state applies to it unchanged; REQ-polaris-generation-046's identity rule, its check of the governance home and its statement about the clone's configuration concern the operator's clone. Every brief and packet Syzygy issues to an agent session of a run with a copy SHALL name the copy as the clone to work in and tell the session not to read the operator's clone; that a session complied is its own report, labelled Inferred. The run record SHALL state, labelled Inferred, that Syzygy relies on Git starting no program that the operator's clone's own configuration or hooks name while it serves the copy.
 ~~~~
 
-### Change 8 (insert), in "Trunk-tip revision pinned at launch"
+### Change 8 (replace), in "Trunk-tip revision pinned at launch"
 
 **Current:**
 
-(nothing: inserted after the paragraph that begins "- **WHEN** the pinned revision is the trunk tip and the clone's HEAD is another commit that no in-fo")
+~~~~text
+- **WHEN** the clone's HEAD is a revision an in-force observation consent made by an earlier act names, the trunk tip is another commit, and no `--revision` is given
+- **THEN** Syzygy pins HEAD exactly as REQ-polaris-generation-033 states, asks nothing, and does not refuse for the trunk tip
+~~~~
 
 **Proposed:**
 
 ~~~~text
+- **WHEN** the clone's HEAD is a revision an in-force observation consent made by an earlier act other than a launch names, the trunk tip is another commit, and no `--revision` is given
+- **THEN** Syzygy pins HEAD exactly as REQ-polaris-generation-033 states, makes no copy, asks nothing, and does not refuse for the trunk tip
+~~~~
+
+### Change 9 (replace), in "Trunk-tip revision pinned at launch"
+
+**Current:**
+
+~~~~text
+- **WHEN** the operator starts a run with no `--revision` on a clone whose HEAD no in-force consent names, whose remote default branch is `main` and whose HEAD is the tip of `main`
+- **THEN** Syzygy pins the commit `main` points to, and states it in full with its reference and committer date
+- **AND** states that it did not fetch and prints the command to update the clone
+~~~~
+
+**Proposed:**
+
+~~~~text
+- **WHEN** the operator starts a run with no `--revision` on a clone whose HEAD no in-force consent names, whose remote default branch is `main` and whose HEAD is the tip of `main`
+- **THEN** Syzygy pins the commit `main` points to, and states it in full with its reference and committer date
+- **AND** states that it made no network request and prints the command to update the clone
+~~~~
+
+### Change 10 (replace), in "Trunk-tip revision pinned at launch"
+
+**Current:**
+
+~~~~text
+- **WHEN** the pinned revision is the trunk tip and the clone's HEAD is another commit that no in-force consent names
+- **THEN** Syzygy refuses before asking for consent, changes nothing in the clone, and prints the command that checks out the pinned revision
+~~~~
+
+**Proposed:**
+
+~~~~text
+- **WHEN** the pinned revision is the trunk tip, which no in-force observation consent made by another act names, and the operator's clone's HEAD is another commit, on a branch with uncommitted changes
+- **THEN** Syzygy makes the copy at the pinned revision and does not refuse, and the operator's checkout, branch and uncommitted changes are unchanged and absent from the copy
+
+#### Scenario: HEAD elsewhere with no copy
+
+- **WHEN** `--revision` names a commit an in-force observation consent made by another act names, and the operator's clone's HEAD is another commit
+- **THEN** Syzygy makes no copy, refuses before asking for consent, changes nothing in the clone, and prints the command that checks out the pinned revision
+
 #### Scenario: Existing full clone at the trunk tip
 
-- **WHEN** the operator starts a run with no `--revision` on a full clone whose `refs/remotes/origin/HEAD` names `refs/remotes/origin/main`, whose HEAD is the commit that branch points to, and whose pinned commit no in-force consent names
-- **THEN** Syzygy pins that commit, asks the question, and does not refuse the clone for its history, branches, tags or other references
-- **AND** the objects read are the pinned commit, its root tree and the trees and blobs reachable from it, with no parent commit object, and no delta base reached in a pack is classified, stored, quoted, recorded, rendered or sent
-- **AND** the launch output, the run record and every page state that objects of the pinned tree may have been rebuilt from delta bases outside it, never read as content
-- **AND** Syzygy fetches nothing, starts no process in the clone and reads neither its working tree nor its index
+- **WHEN** the operator starts a run with no `--revision` on a full clone with history, branches, tags, stash and reflogs, whose `refs/remotes/origin/HEAD` names `refs/remotes/origin/main` and whose trunk tip no in-force consent names
+- **THEN** Syzygy pins the commit `refs/remotes/origin/main` points to and makes the copy before the question, one commit fetched at depth one over the local file transport, and does not refuse the operator's clone for its history
+- **AND** Syzygy reads no object of the operator's clone, changes nothing in it, and makes no network request
+- **AND** the question, the run record and every page state the copy statements, and every brief and packet names the copy as the clone to work in
+
+#### Scenario: Repeat run at a launch-consented HEAD
+
+- **WHEN** a run with no `--revision` starts on a full clone whose HEAD is a revision only an in-force launch observation consent names
+- **THEN** Syzygy pins that HEAD, makes the copy, and asks nothing, and the run record and every page state the copy statements
 
 #### Scenario: Several remote defaults
 
@@ -937,45 +973,43 @@ A clone whose objects of that scope cannot be read without an alternate, a repla
 - **WHEN** `refs/remotes/origin/HEAD` names `refs/remotes/origin/main` and the local `refs/heads/main` points to a later local commit
 - **THEN** Syzygy pins the commit `refs/remotes/origin/main` points to and the launch output states both identifiers and that a local commit is not the trunk default
 
-#### Scenario: Detached HEAD and uncommitted changes
-
-- **WHEN** the clone's HEAD is detached at the pinned revision and its working tree holds uncommitted and untracked changes
-- **THEN** Syzygy proceeds without reading the working tree or the index, and the launch output, the run record and every page state that the working tree was not inspected and may differ from the pinned revision
-- **AND** the launch output prints `git -C <clone> status --short` for the operator, and no uncommitted change reaches a check, a quotation or a page
-
 #### Scenario: Partial clone missing an object
 
-- **WHEN** a blob reachable from the pinned commit's root tree is absent from the clone and only a promisor remote or an alternate could supply it
-- **THEN** the step that needs it is refused with its reason, and Syzygy fetches nothing and follows no alternate
+- **WHEN** a blob reachable from the pinned commit's root tree is absent from the operator's clone and only a promisor remote could supply it
+- **THEN** the copy fails, Syzygy refuses with its reason, makes no network request, and removes the copy
+
+#### Scenario: Clone with an alternate
+
+- **WHEN** the operator's clone has an `objects/info/alternates` file
+- **THEN** Syzygy refuses before any Git process starts, naming the reason
+
+#### Scenario: Configuration and hooks of the operator's clone
+
+- **WHEN** the operator's clone's own configuration sets `uploadpack.packObjectsHook` and `core.fsmonitor` to commands, and its hooks directory holds executable hooks
+- **THEN** the copy is made and none of those commands or hooks runs
 
 #### Scenario: Revision naming an annotated tag
 
 - **WHEN** the operator gives `--revision v1.0` and `refs/tags/v1.0` names an annotated tag object
-- **THEN** Syzygy refuses before asking for consent, naming `--revision`, having read no more of that object than the type read lists, and does not follow it to the commit it names
+- **THEN** Syzygy refuses before asking for consent, naming `--revision`, does not follow the tag to the commit it names, and removes the copy
 
 #### Scenario: Ambiguous abbreviation
 
-- **WHEN** the operator gives `--revision` as an abbreviation that two stored object identifiers begin with
-- **THEN** Syzygy refuses it as ambiguous, deciding so from the loose object file names and pack indexes without reading either object
+- **WHEN** the operator gives `--revision` as an abbreviation that two object identifiers of the operator's clone begin with
+- **THEN** Syzygy refuses it as ambiguous before any Git process starts
 
 #### Scenario: References in the reftable backend
 
-- **WHEN** the clone stores its references in the reftable backend, with no loose reference files and no `packed-refs`
-- **THEN** Syzygy refuses before asking for consent, naming the reason
-
-#### Scenario: Repeat run on a full clone at a launch-consented HEAD
-
-- **WHEN** a run with no `--revision` starts on a full clone whose HEAD is a revision an in-force launch observation consent names
-- **THEN** Syzygy pins that HEAD and asks nothing, and its reads of the clone are only those this requirement lists
-- **AND** the launch output, the run record and every page carry the delta-base and working-tree statements, and every brief and packet issued to an agent session carries the history instruction
+- **WHEN** the operator's clone stores its references in the reftable backend
+- **THEN** Syzygy refuses before any Git process starts, naming the reason
 
 #### Scenario: A consent that states the clone's form
 
-- **WHEN** a run relies on an observation consent made by another act whose record states that the operator fetches the consented commit alone, whether or not it also relies on or records a launch consent record
-- **THEN** that stated form still binds the run, and this requirement admits no other clone form for it
+- **WHEN** an in-force observation consent made by another act, whose record states that the operator fetches the consented commit alone, names the pinned revision, whether or not the run also relies on or records a launch consent record
+- **THEN** Syzygy makes no copy, and that stated form binds the run
 ~~~~
 
-### Change 9 (replace), in "Trunk-tip revision pinned at launch"
+### Change 11 (replace), in "Trunk-tip revision pinned at launch"
 
 **Current:**
 
@@ -1001,11 +1035,11 @@ warrants:
 **Proposed:**
 
 ~~~~text
-- **Case:** Start runs against controlled clones and fixture consent records, varying the clone's form (full with history, branches, tags, stash and reflogs; one commit alone; partial with a missing object; with an alternates file; packed with deltas whose bases lie outside the pinned tree; references in the reftable backend), `--revision` naming an annotated tag or an abbreviation shared by two stored objects, the remotes recording a default and their names, a local branch that differs from the remote default, uncommitted and untracked changes, a detached or attached HEAD, the remote default reference, the presence of `main` and `master`, HEAD, whether an in-force consent names HEAD, whether the clone's remote derives that consent's subject identity or another (a fork or mirror remote), and `--revision` (full, abbreviated, ambiguous, unknown, a reference), with network access captured.
-- **Observable:** The pinned revision, its stated reference and date, the did-not-fetch statement and update command, refusals and the point at which each is made, the objects, references and files read in the clone, the processes started, the working-tree and delta-base statements and status command, the history instruction in each brief and packet, the clone's references and working tree before and after, and captured network effects.
+- **Case:** Start runs against controlled clones and fixture consent records, varying the operator's clone's form (full with history, branches, tags, stash and reflogs; one commit alone; partial with a missing object; with an alternates file; references in the reftable backend; a configuration and hooks naming commands), whether an observation consent made by another act names the pinned revision, the remotes recording a default and their names, a local branch that differs from the remote default, uncommitted changes, the remote default reference, the presence of `main` and `master`, HEAD, whether an in-force consent names HEAD, whether the clone's remote derives that consent's subject identity or another (a fork or mirror remote), and `--revision` (full, abbreviated, ambiguous, unknown, a reference), with network access captured.
+- **Observable:** The pinned revision, its stated reference and date, the no-network statement and update command, refusals and the point at which each is made, the operator's clone's references, configuration, object store and working tree before and after, Syzygy's reads of it, the copy's location and form, the processes started and their configuration and environment, the copy statements, and captured network effects.
 - **Oracle:** Expected pins, statements and refusals derived by an independent `git` reading of each fixture clone and the fixture records, prepared before the run.
-- **Oracle independence:** Fixture clones, records and expected pins are built outside the code under test; network effects come from an independent capture; object, reference and file reads come from a read-logging layer outside the code under test, as for REQ-polaris-generation-046.
-- **Falsifier:** A run pins a commit other than the rule's; a run whose HEAD an in-force consent names, whatever the identity its remote derives, is pinned elsewhere or refused for the trunk tip; the pin changes within a run; a HEAD mismatch is not refused, or is refused only after the question; the launch output or run record lacks the full revision, its reference, the committer date, the did-not-fetch statement or the update command; Syzygy fetches, contacts a host, or changes the clone's checkout or references; or the trunk tip is presented as the upstream's latest as Observed; a launch-consented run that relies on no consent stating the clone's form refuses a clone for holding history, branches, tags or other references; Syzygy reads a parent commit object, an object reached only from another commit or reference other than by the type read this requirement lists, the working tree, the index, or a file of the Git directory this requirement does not list, honours a setting of the clone's configuration, or starts a process in the clone; a delta base reached in a pack is used for anything but reconstructing the in-scope object, or is classified, stored, quoted, recorded, rendered or sent, or the delta-base statement is missing from the launch output, the run record or a page; a missing object is fetched or taken from an alternate; a local branch is consulted while a remote default is recorded, or several remote defaults with none `origin` are not refused; an abbreviation is judged ambiguous by reading objects, a name resolving to a non-commit is followed or more of it or its base chain is read than the type read this requirement lists, or a reftable clone is read; a process is started that reads or acts on the clone; the working-tree statement, the status command, or the history instruction in any brief or packet issued to an agent session is missing; or a run relying on another act's consent that states the clone's form is admitted in another form, whether or not it relies on or records a launch consent record; or a launch-consented run whose HEAD an in-force consent names lacks a read limit or a statement this requirement sets for launch-consented runs.
+- **Oracle independence:** Fixture clones, records and expected pins are built outside the code under test; network effects come from an independent capture; Syzygy's reads of the operator's clone come from a read-logging layer outside the code under test, and processes and their effects from an independent process and file capture.
+- **Falsifier:** A run pins a commit other than the rule's; a run whose HEAD an in-force consent names, whatever the identity its remote derives, is pinned elsewhere or refused for the trunk tip; the pin changes within a run; for a run that makes no copy, a HEAD mismatch is not refused, or is refused only after the question; a run that makes a copy is refused for the operator's HEAD; the launch output or run record lacks the full revision, its reference, the committer date, the no-network statement or the update command; Syzygy makes a network request, fetches from anywhere but the operator's clone into the copy, or changes the operator's clone; a run that an observation consent made by another act covers makes a copy, or one no such consent covers runs without one; the copy is made other than as this requirement states, holds more than the pinned commit and what its root tree reaches, or departs from its form unrefused; a Git process for the copy runs with the system or global configuration, another transport, lazy fetching or a hook path, or a hook or a command the operator's clone's configuration names runs; a reftable clone or a clone with an alternates file is not refused before any Git process starts, or a failed copy is not refused or is completed from elsewhere; Syzygy reads of the operator's clone anything this requirement does not list, or honours its configuration; a non-commit `--revision` is followed; the copy is not removed when the run ends before its brief; a brief or packet does not name the copy; the copy statements are missing; or the trunk tip is presented as the upstream's latest as Observed.
 
 ```yaml
 warrants:

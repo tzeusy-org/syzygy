@@ -1,37 +1,55 @@
 # Owner sign-off — Polaris dossier launch consent, version 1.2
 
-> **Candidate — binds nothing.** [Observed] Rounds 1 and 2 of review
-> returned `REVISE`; these bytes are the round-2 repair, and no review has
-> read them yet. This
-> page may be offered only after a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS`
-> with notes only, over them. The install tooling is
-> `scripts/build_polaris_dossier_launch_consent_v1_2.py`. Nothing here records
-> a choice; only your selection after review binds this version.
+> **Candidate — binds nothing.** [Observed] Rounds 1 to 3 of review returned
+> `REVISE`. On 2026-11-10 you chose a redesign, and these bytes are that
+> redesign; no review has read them yet. This page may be offered only after
+> a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
+> install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
+> Nothing here records a choice; only your selection after review binds this
+> version.
 
 ## The one question
 
-Do you sign version 1.2? It lets a launch read your existing full clone at
-the trunk tip with no fetch, and accepts any https or ssh repository URL on
-any host. It carries your four rulings of 2026-11-09. Three points below,
-under "Before you sign", are yours to settle, and one of them rests on a
-reading no one has asked you about.
+Do you sign version 1.2? A launch then takes your existing full clone,
+copies the trunk-tip commit from it into a one-commit clone of Syzygy's own
+with no network, and runs on that copy. It also accepts any https or ssh
+repository URL on any host. It carries your rulings 3 and 4 of 2026-11-09
+and your redesign of 2026-11-10. Three points below, under "Before you
+sign", are yours to settle; the first must be settled before this version
+can be used.
 
 - **Option:** "Sign launch-consent spec version 1.2"
 
 ## What it does
 
-- **Your clone as it is.** A launched run takes a normal clone, history,
-  branches and tags included. Syzygy reads only the pinned trunk-tip commit
-  and what lies below it, as Git objects. To pin the commit and propose the
-  identity it also reads reference names and a few reference values, and the
-  remote names and URLs in the clone's configuration; none of that is
-  content. It never reads a parent commit, another branch, your working tree
-  or your index, runs nothing against the clone, and fetches nothing. A clone
-  whose references are in Git's newer reftable format is refused.
-- **Older bytes as delta input only.** Rebuilding a trunk-tip file may
-  unpack an older version's stored bytes. They are never read as content,
-  shown or sent. The question, the launch output, the run record, the pages
-  and the consent's recorded scope say so (your ruling 1).
+- **Your clone as it is, copied.** A launched run takes a normal clone,
+  history, branches and tags included. Syzygy asks Git to copy the pinned
+  commit alone from it, over Git's local file transport, into a fresh
+  directory of Syzygy's own, and checks the copy out at that commit. Git runs
+  with your system and global Git settings off, every network transport
+  refused, no hooks and no fetching of missing objects. Syzygy checks that
+  the copy holds one commit and nothing else, the same check it makes on the
+  clones it makes today.
+- **Then the signed rules, unchanged.** Every read, re-hash and refusal the
+  signed local-agent rules state applies to the copy. Your clone is never
+  fetched into, repacked, checked out or written to.
+- **What Syzygy itself reads of your clone.** To pick the commit and propose
+  the identity: the reference names and a few reference values, read as
+  files; the remote names and URLs in the configuration, as text; whether an
+  alternates file exists; and, for a short `--revision`, the stored object
+  names. No object, no working tree, no index.
+- **What Git reads of your clone.** To make the copy, Git reads your clone's
+  configuration, references and object store, including older stored bytes
+  it unpacks to rebuild the trunk-tip files. Syzygy uses nothing of that but
+  the copy. The question, the run record and the pages say so.
+- **Refused:** a clone missing an object the pinned commit needs (a partial
+  clone, for example); a clone that borrows objects through an alternates
+  file; a clone whose references are in Git's newer reftable format.
+- **Your checkout does not matter.** Your branch, a detached HEAD or
+  uncommitted changes are left alone and never reach the run.
+- **The agents work in the copy** (your redesign). Every brief and review
+  packet names the copy as the clone to work in and tells the session not to
+  read yours.
 - **Trunk tip.** This is the commit your clone's `origin/HEAD` points to, as
   of your last fetch. With no `origin` default, it is the one other remote
   that records a default; where several do and none is `origin`, the launch
@@ -61,6 +79,10 @@ reading no one has asked you about.
   guesses it, and a repository not declared public stays private under the
   screening policy.
 
+The redis consent, which says its clone holds one commit alone, keeps that
+rule: a run at a commit it names makes no copy and works in your clone as
+today, and a HEAD elsewhere is refused with the checkout command.
+
 ## What it costs
 
 - **Same-named repositories share records** (your ruling 3). For example,
@@ -71,28 +93,33 @@ reading no one has asked you about.
   - It then relies on the first one's drawer and provider statements.
   - The question names those records before you answer. Consents for
     specific commits never carry across.
-- **Your agents can see history** (your ruling 2).
-  - Syzygy reads none of it as content. Beyond the pinned commit it reads
-    only reference names and values, the stored object names, the remote
-    lines of the configuration, the Git-directory files, the type of an
-    object a `--revision` names, and delta-base bytes unpacked only to
-    rebuild the pinned tree. The agent sessions can read everything in a
-    full clone.
-  - You chose disclosure over the recommended pinned-tree copy. The question,
-    the run record and the pages say so, and every brief and review packet
-    asks the session to stay at the pinned commit.
-  - Whether it does is Inferred.
-- **No dirty-checkout check.** Checking would mean reading your working
-  tree. The launch output says the tree was not inspected and prints
-  `git status` for you to run.
-
-The redis consent, which says its clone holds one commit alone, keeps that
-rule for every run made under it, including one that also records a
-launch statement.
+- **The copy exists before you answer.** The question needs the commit's
+  date and the governance home, which Syzygy reads from the copy. So the
+  copy, files included, is made before the question. Syzygy reads none of
+  its file contents before your answer, and a decline removes it.
+- **Git, not Syzygy, reads your packs.** Git reads your clone's object
+  store, older stored bytes included, to build the copy. Syzygy relies on
+  Git starting no program your clone's own settings or hooks name while it
+  does; a test on Git 2.53.0 ran none, and the run record states it as
+  Inferred.
+- **The agents are told, not prevented.** Your clone stays on the same
+  machine, so a session that ignores its brief could still read your
+  history. Whether it stayed in the copy is Inferred.
+- **Disk.** Each run keeps one commit's files in Syzygy's state directory.
 
 ## Before you sign
 
-1. **Typed `http://` and `git://` URLs: kept, on a reading you have not
+1. **The registry entry must change first.** The signed source-acquisition
+   registry entry for the local-agent mode says "Syzygy fetches nothing",
+   that the operator prepares the clone with their own tools, that no
+   reference or configuration is read, and that "no process is started".
+   The redesign starts Git, makes a local fetch, and reads your references
+   and remote URLs. [Inferred] No reading of that wording admits it, so
+   version 1.2 cannot be used until you sign a successor version of the
+   entry that does. That successor is a separate package and question; it is
+   not drafted here. Signing version 1.2 alone settles the specification,
+   not the entry.
+2. **Typed `http://` and `git://` URLs: kept, on a reading you have not
    given.** The draft first refused them, reading your ruling 4 ("Keep
    proposing for http/git") as about a clone's remotes only. The reviewer
    showed that version 1.1 already accepts them when typed. The coordinating
@@ -101,7 +128,7 @@ launch statement.
    [Inferred] That reading is the coordinating session's, not yours. If you
    want typed `http://` and `git://` refused, say so; it is a small change
    to one paragraph and three scenarios, and needs a review round.
-2. **Port and case merge two repositories into one.** The identity rule,
+3. **Port and case merge two repositories into one.** The identity rule,
    unchanged from version 1.1, drops any port and lowercases the host and
    path. So two servers on one host at different ports, or two repositories
    on a case-sensitive host whose names differ only in case, get one
@@ -112,14 +139,3 @@ launch statement.
    and does not list it among the disclosed residuals. You may accept it as
    it is, ask for it to be disclosed as a fourth residual (the rule's bytes
    unchanged), or ask for a rule that keeps the port or the case.
-3. **The registry entry's wording.** The signed source-acquisition registry
-   entry lists the objects Syzygy may read "only", and says no reference or
-   configuration is read. This version, and the reviewer, read the first as
-   allowing a packed object's delta base to be unpacked to rebuild it, and
-   the second as covering Syzygy's object reads, not the launch's reference
-   and configuration reads. One more read lies outside the entry's list:
-   when `--revision` names something that is not a commit, such as an
-   annotated tag, Syzygy reads that one object's type, from its header
-   only, to refuse it. If you read the entry more narrowly, it needs a
-   signed successor before this version can be used; if you agree, you may
-   still want a later registry version to say so in words.

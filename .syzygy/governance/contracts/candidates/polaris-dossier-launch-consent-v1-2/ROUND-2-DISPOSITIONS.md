@@ -3,8 +3,8 @@
 > **Candidate — binds nothing.** [Observed] Round 2 (`docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-2-RAW.md`) read commit
 > `82399c9b` and returned `REVISE` (line 4): three revise findings and three
 > editorial notes. This page says how each was disposed. Every quotation
-> below is copied by script from the post-apply spec of the commit that
-> carries this page; the line numbers are that file's. Nothing here is a
+> below is copied by script from the post-apply spec at commit
+> `3ab7c949`, which round 3 read; the line numbers are that file's. Nothing here is a
 > review or a verdict on the repairs; round 3 decides that.
 
 After each repair, every sentence of the post-apply spec naming the changed
