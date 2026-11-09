@@ -14,6 +14,14 @@
 > **Bound to PR #812 at head `de9c1ba8`.** This package restates #812's
 > copy step as that head drafts it. If #812 changes (for example, a round
 > 11), this package is redrafted and reviewed again before it is offered.
+>
+> **These bytes are an unreviewed repair.** Round 4
+> (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md`) returned REVISE,
+> and this page carries the repair of its findings (`ROUND-4-DISPOSITIONS.md`).
+> No round 5 has been dispatched: the same class of finding (reads the
+> code makes against reads the entry names) came up in all four rounds,
+> and #812, to which this package is bound, is stopped awaiting you. If you
+> want a round 5, order it alongside #812's round 11.
 
 ## The question you answer
 
@@ -77,7 +85,11 @@ for a copy, so every run is a no-copy run.
   reference in your clone (tags, every remote branch, the stash), and it
   lists every object name in your clone even for a full-length
   `--revision`. Signing closes those two reads, so the launch code must be
-  narrowed to the list in the same commit ("Before you sign", item 1).
+  narrowed to the list; that is implementation, under its own direction,
+  after the sign-off ("Before you sign", item 1, "When the narrowing
+  lands"). A third read, of a named object's whole body before its type
+  is known, is outside v1.0 already and stays outside (item 2,
+  `syzygy-pdja.30`).
 - **For a run started without launch consent** (the redis run, for
   example), the entry closes no list, just as v1.0 did not. It names in
   words what such a run already reads: the files its clone-form check
@@ -109,18 +121,30 @@ for a copy, so every run is a no-copy run.
      and the object-name listing for a full-length `--revision`. The two
      v1.2-only items also stay out. For any other run it closes nothing, as
      v1.0 did not.
-   - So two code changes must land in the same commit as this sign-off,
-     each under its own implementation authorization, or every local-agent
-     dossier read refuses or reads outside the entry:
+   - Two code changes follow the sign-off:
      - the gate code wired to v1.0 (`IMPACT-LEDGER.md`, items 1 and 1a: the
        reader in `packages/polaris-generation-consent/src/package-reader.ts`,
        its record template, and the tests and scripts that pin v1.0);
      - the launch reads narrowed to the list (`IMPACT-LEDGER.md`, item 1b:
        `packages/polaris-dossier/src/launch-clone.ts` reads only the named
        references' values, and `launch-revision.ts` lists object names for a
-       shortened `--revision` only). Launch-consent v1.2's own ledger already
-       requires this narrowing, so if you sign the two together it lands
-       with v1.2's implementation.
+       shortened `--revision` only).
+   - **When the narrowing lands** (the one statement `IMPACT-LEDGER.md`
+     item 1b also makes). The narrowing is implementation, under the
+     separate implementation direction #812 names; it is not in the
+     sign-off commit. Until it lands, the code reads outside both entries.
+     Launch-consent v1.2's own ledger already requires the same narrowing.
+   - **Whether a run can be made before it lands** [Inferred, from the code
+     at the reviewed commit]. A copy-class run cannot: no code makes a
+     copy. A no-copy run launched with consent can, once the gate code
+     (item 1) accepts v1.1, and it then reads outside the entry. While the
+     gate code still expects v1.0, a recorded v1.1 reads to it as a
+     withdrawal, so every local-agent run refuses. So "no launch-consented
+     run is made until the narrowing lands" is true only if you hold the
+     gate code back until the narrowing. Your choice: move the gate at
+     sign-off and accept runs that read outside the entry until the
+     implementation lands, or hold it and accept that every local-agent run
+     refuses until then.
    - **Your choice on that closed list.** This draft takes option 1.
      - *Option 1 (drafted): keep #812's list as it is, and narrow the
        code.* The entry then admits no more than launch-consent v1.2 does,
@@ -136,10 +160,20 @@ for a copy, so every run is a no-copy run.
    - If v1.2 moves from `de9c1ba8` before you sign, this package is
      redrafted and reviewed again.
 2. **The `tags` field moves, and the version strings do not.** The
-   round-1 reviewer agreed with both (Finding 8). On `tags`: Syzygy still
-   never reads a tag, but Git can now put one into a copy Syzygy made, so
-   the field says what happens to it rather than leaving that to a
-   reading. On the versions: the entry is told apart from v1.0 by its
+   round-1 reviewer agreed with both (Finding 8). On `tags`: Git can now
+   put a tag into a copy Syzygy made, so the field says what happens to it
+   rather than leaving that to a reading. **But the code does not keep
+   `tags` "never read" today, under v1.0 or v1.1.** [Observed] Before it
+   knows that the object a `--revision` or trunk reference names is a
+   commit, the launch reads that object's whole body; when it is an
+   annotated tag (or a blob), that read is outside `tags` and outside the
+   installed REQ-046. v1.1 does not create that gap and does not close it;
+   the code repair is filed for its own repair as `syzygy-pdja.30`
+   (`IMPACT-LEDGER.md`, item 1c). Launch-consent v1.2 says Syzygy tells
+   these cases apart "without reading the object itself"; the round-4
+   reviewer notes that is hard to meet in a no-copy run, where REQ-047 has
+   Syzygy read the named object as a commit object. That sentence is
+   #812's to settle, not this package's. On the versions: the entry is told apart from v1.0 by its
    content digest already, and implementing the copy step will need yet
    another version of the entry anyway (E5).
 3. **One name in the entry is now literally wrong for copy-class runs, and

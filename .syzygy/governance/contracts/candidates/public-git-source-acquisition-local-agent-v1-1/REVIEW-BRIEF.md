@@ -1,4 +1,4 @@
-# Review brief — public Git source acquisition, local-agent version 1.1, round 4
+# Review brief — public Git source acquisition, local-agent version 1.1, round 5 (not dispatched)
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
@@ -12,9 +12,20 @@
 > (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-3-RAW.md`, over `0f1a203d`)
 > returned `REVISE` with one revise finding and four notes;
 > `ROUND-3-DISPOSITIONS.md` says how each was taken and carries the table
-> of every read the launch path makes. Round 4 is a fresh review of the
-> repaired bytes, not a check of the dispositions alone. The drafting lane dispatches no review. Dispatch
-> this round only while PR #812 stands at head `de9c1ba8`, to which this
+> of every read the launch path makes. Round 4
+> (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md`, over `bb89b8cc`)
+> returned `REVISE` with one revise finding and three notes;
+> `ROUND-4-DISPOSITIONS.md` says how each was taken and corrects the
+> round-3 table.
+>
+> **No round 5 is dispatched; the current bytes are an unreviewed
+> repair.** The same class of finding (reads the code makes against reads
+> the entry names) came up in all four rounds, and PR #812, to which this
+> package is bound, is stopped awaiting the owner. The owner orders a
+> round 5 alongside #812's round 11 if they want one; this brief is ready
+> for it. Round 5 would be a fresh review of the repaired bytes, not a
+> check of the dispositions alone. The drafting lane dispatches no review. Dispatch
+> it only while PR #812 stands at head `de9c1ba8`, to which this
 > package is bound: its post-apply launch-consent spec (proposed spec
 > digest printed by #812's builder at that head) is the text every Proposed
 > block restates. If #812 has moved, the package is redrafted first.
@@ -49,10 +60,12 @@ and run no dossier.
   (the subject) and its `.patch` against the installed v1.0 entry;
 - `SEMANTIC-DELTA.md`, `IMPACT-LEDGER.md`, `OWNER-SIGNOFF.md`,
   `PROPOSED-SUBJECTS.json`, `ROUND-1-DISPOSITIONS.md`,
-  `ROUND-2-DISPOSITIONS.md`, `ROUND-3-DISPOSITIONS.md` and this brief;
-- the round-1 to round-3 raws, `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-1-RAW.md`,
-  `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-2-RAW.md` and
-  `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-3-RAW.md`;
+  `ROUND-2-DISPOSITIONS.md`, `ROUND-3-DISPOSITIONS.md`,
+  `ROUND-4-DISPOSITIONS.md` and this brief;
+- the round-1 to round-4 raws, `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-1-RAW.md`,
+  `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-2-RAW.md`,
+  `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-3-RAW.md` and
+  `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md`;
 - **reviewed bytes outside the package directory** (round-2 Finding 4):
   the four texts the signed v1.1 record and aggregate block will carry,
   `GIT_SOURCE_V11_SCOPE`, `GIT_SOURCE_V11_SUPERSESSION`,
@@ -109,26 +122,30 @@ and run no dossier.
    scoped as #812 scopes it, "of the operator's clone and the copy"
    (round-3 Finding 2)? Does the entry claim anything #812 at that head
    does not say?
-2. **The enumeration (round-3 Finding 1).** Check the table in
-   `ROUND-3-DISPOSITIONS.md` against the code: is every read a
-   launch-consented run makes today, of the operator's clone, in a row,
-   and is each row's clause right? Is anything outside the entry that the
-   table maps to a clause, or missing from item 1b? Judge the one row it
-   flags (row 16, the object reader's `lstat` of `objects/info/alternates`).
-3. **The narrowing (item 1b).** Is it named exactly, and is the claim that
-   it lands with the v1.2 implementation labelled and true of #812's
-   ledger at `de9c1ba8`?
-4. **Signed alone.** Do E3's closing paragraph, "Dependency on
-   launch-consent v1.2" and the owner page's "What changes" bullet and
-   "Before you sign" item 1 now say plainly that signing closes reads
-   v1.1's runs make today and that the code narrows to match? Is option 2
-   put to the owner fairly?
-5. **The record texts (round-3 Finding 3).** Are the four
-   `GIT_SOURCE_V11_*` texts true of v1.1 and pinned in full?
-6. **Item 1a (round-3 Finding 4).** Is the list of what pins the v1.0
-   identity now complete? A sweep for both the form constant and the
-   literals is described; re-run it.
-7. **E2 (round-3 Finding 5).** Is the form-check read list complete?
+2. **The enumeration (round-4 Findings 1 and 4).** Check the table in
+   `ROUND-3-DISPOSITIONS.md`, as `ROUND-4-DISPOSITIONS.md` corrects it,
+   against the code: is every read a launch-consented run makes today, of
+   the operator's clone, in a row, and is each row's clause right? Is
+   anything outside the entry that the table maps to a clause, or missing
+   from items 1b and 1c?
+3. **The pre-existing gap (item 1c, round-4 Finding 1).** Is the type
+   test's read of a non-commit object's body stated plainly, in the ledger
+   and the owner page, as a gap against v1.0's `tags` and REQ-046 that
+   v1.1 neither creates nor closes, filed as `syzygy-pdja.30`? Is any
+   sentence left that says the code never reads a tag?
+4. **When the narrowing lands (round-4 Finding 2).** Do the ledger, E3,
+   "Dependency on launch-consent v1.2" and the owner page say one thing:
+   implementation, under the separate direction #812 names, not in the
+   sign-off commit, with the code reading outside both entries until then?
+   Is the labelled answer to whether a launch-consented run can be made
+   before it lands true of the code at the reviewed commit?
+5. **The record texts.** Are the four `GIT_SOURCE_V11_*` texts true of
+   v1.1 and pinned in full?
+6. **Item 1a (round-4 Finding 3).** Is the list of what pins the v1.0
+   identity now complete, the renderer's `'1.0'` pins and `signoffOver`
+   included? Re-run the sweeps it describes.
+7. **E2 and E3 (round-4 Finding 4).** Is E3's quotation of the closed
+   list exact, and is the form-check read list complete?
 8. **Everything else byte-identical.** Confirm the patch touches only the
    five declarations, and the builder's proof of it.
 
@@ -152,7 +169,7 @@ python3 scripts/check_docs_review_campaign_partition.py --check
 
 ## The raw: where it goes and its head
 
-Save the raw as docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md,
+Save the raw as docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-5-RAW.md,
 verbatim (CC-REV-6); the campaign file
 `docs/review-campaigns/git-source-local-agent-v1-1.md` already matches it. The recorder binds it by these predicates, quoted
 from `scripts/record_versioned_signoff.py` (`parse_head_form`,

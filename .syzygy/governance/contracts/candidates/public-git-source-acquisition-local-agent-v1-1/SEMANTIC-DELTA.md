@@ -145,8 +145,11 @@ D9 table at `de9c1ba8`.]
 
 **On `tags`, my judgement.** At `de9c1ba8` Syzygy no longer reads the
 object to learn its type: it tells a non-commit from where the copy's
-detached checkout leaves `HEAD`. So v1.0's "never read" stays true of
-Syzygy. What is new is that Git, in a process Syzygy starts, writes such an
+detached checkout leaves `HEAD`. So, as #812 drafts a copy-class run,
+v1.0's "never read" stays true of Syzygy in that run. It is not true of
+today's code: a no-copy run reads a named non-commit object's whole body
+before refusing (E3, "A gap the narrowing does not close"; IMPACT-LEDGER,
+item 1c; `syzygy-pdja.30`). What is new is that Git, in a process Syzygy starts, writes such an
 object into a clone Syzygy made, and the run then refuses on it. `tags`
 says nothing of that, so the field moves by one appended clause rather than
 resting on a reading. Leaving it byte-identical is offered to the reviewer
@@ -210,7 +213,8 @@ It closes the list where #812 closes it, and only there. #812's REQ-047 at
 `de9c1ba8`: "For every launch-consented run, the reads Syzygy itself makes,
 in process, of the operator's clone SHALL be only these". The entry: "In a
 launch-consented run (REQ-polaris-generation-046 and 047), besides the
-object reads, Syzygy reads only the following". Round 2's Finding 1 chose
+object reads, Syzygy reads of the operator's clone and the copy only the
+following". Round 2's Finding 1 chose
 between this scoping and admitting the HEAD-check reads for every run under
 a list closed for every run; the scoping was taken, because it makes the
 entry claim no more than the spec does. The HEAD-check reads of a run that
@@ -263,12 +267,23 @@ admits the values of named references only, and read (5) the listing for
 an abbreviated `--revision` alone, and the bound "only what the
 launch-consent requirements in force name" can only narrow them. So once
 this version is signed, with or without v1.2, those reads lie outside the
-entry, and the code must narrow in the same commit (IMPACT-LEDGER, item
-1b). [Observed] #812's own ledger already requires that narrowing for v1.2
-("`init`'s pre-copy reads of the operator's clone become file-data reads
-of the listed references, remote URLs and the alternates file");
-[Inferred] it lands with the v1.2 implementation when the two are signed
-together. The other option, wording reads (2) and (5) broadly enough to
+entry, and the code must narrow (IMPACT-LEDGER, item 1b). The narrowing is
+implementation, under the separate implementation direction #812 names
+([Observed] #812's ledger at `de9c1ba8` places that implementation "After
+sign-off only" and already requires the narrowing for v1.2). It is not in
+the sign-off commit, and until it lands the code reads outside both
+entries; whether a launch-consented run can be made in that window turns
+on when the gate's form moves (IMPACT-LEDGER, "When it lands").
+
+**A gap the narrowing does not close** (round-4 Finding 1). [Observed]
+Before it knows a candidate is a commit, the launch reads the candidate
+object's whole body (`launch-revision.ts:100` → `launch.ts:160` →
+`git-object-reader.ts` `verified`, which reads and inflates the object and
+then compares its type). For a `--revision` or trunk reference naming an
+annotated tag or a blob, that read is outside `tags` ("never read") and
+the installed REQ-046's falsifier. It exists today under v1.0; this
+version does not create it and does not close it. It is filed for its own
+repair as `syzygy-pdja.30` (IMPACT-LEDGER, item 1c). The other option, wording reads (2) and (5) broadly enough to
 admit what the code does today but never wider than #812 once v1.2 is in
 force, is put to the owner ("Before you sign", item 1). Round 3 asked that
 every read the launch path makes today be mapped to a clause or to that
@@ -358,14 +373,19 @@ step of `de9c1ba8`, is signed. Each signed without the other:
     default's name and the alternates-file check, which only v1.2 names.
     It also closes two reads v1.1's runs make today: the value of every
     loose reference, and the store listing for a full `--revision`. Signing
-    closes them, and the launch code must narrow to match in the same
-    commit (IMPACT-LEDGER, item 1b), under its own implementation
-    authorization;
+    closes them, and the launch code must narrow to match, with the
+    implementation under its own direction, not in the sign-off commit
+    (IMPACT-LEDGER, item 1b, "When it lands"). A third read, the type
+    test's read of a non-commit object's body, is outside v1.0 already and
+    stays outside after signing (item 1c, `syzygy-pdja.30`);
   - for a run that is not launch-consented, no closed list, as under v1.0,
     and the HEAD-check and form-check reads named in words (E2).
   The entry's bytes change, so the gate's hard-wired v1.0 form in
-  `package-reader.ts` and the tests that pin it must change in the same
-  commit too (IMPACT-LEDGER, items 1 and 1a).
+  `package-reader.ts` and the tests that pin it must change too
+  (IMPACT-LEDGER, items 1 and 1a). If the form moves in the sign-off
+  commit, a launch-consented run can be made before the narrowing lands,
+  and reads outside the entry; if it waits for the narrowing, every
+  local-agent run refuses until then. Which is the owner's choice.
 - **v1.2 signed, this version not.** v1.2 cannot take effect: D9 says no
   reading of "fetches nothing", "no process is started" or "nothing is
   written to the clone" admits the copy. A copy-class run must refuse, or

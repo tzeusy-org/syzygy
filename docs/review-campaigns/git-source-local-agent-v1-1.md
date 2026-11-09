@@ -10,8 +10,9 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-GIT-SOURCE-LOCAL-AGENT-V1-1-3-RAW.md:4`), over `0f1a203d`, round 3. It has one revise finding and four notes, repaired or taken as `public-git-source-acquisition-local-agent-v1-1/ROUND-3-DISPOSITIONS.md` records, with the table of every read the launch path makes. Round 4 reviews the repaired bytes.
+`REVISE` (`R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md:4`), over `bb89b8cc`, round 4. It has one revise finding and three notes, repaired or taken as `public-git-source-acquisition-local-agent-v1-1/ROUND-4-DISPOSITIONS.md` records. The repaired bytes are unreviewed: no round 5 is dispatched, and the owner orders one alongside #812's round 11 if they want it.
 
 Earlier rounds:
+- Round 3 was `REVISE` (`R-GIT-SOURCE-LOCAL-AGENT-V1-1-3-RAW.md:4`), over `0f1a203d`, with one revise finding and four notes (`ROUND-3-DISPOSITIONS.md`, with the table of every read the launch path makes).
 - Round 2 was `REVISE` (`R-GIT-SOURCE-LOCAL-AGENT-V1-1-2-RAW.md:4`), over `5236223d`, with two revise findings and four notes (`ROUND-2-DISPOSITIONS.md`).
 - Round 1 was `REVISE` (`R-GIT-SOURCE-LOCAL-AGENT-V1-1-1-RAW.md:4`), over `5c939150`, with three revise findings and seven notes (`ROUND-1-DISPOSITIONS.md`).

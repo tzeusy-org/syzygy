@@ -28,11 +28,13 @@ candidate directory and its proposed bytes stay; the v1.1 builder uses the
 v1.0 proposed bytes as its base and checks that they hash to the SHA-256
 the v1.0 record names.
 
-## What must change in the same commit as the sign-off
+## What must change with the sign-off, and when
 
 These are not drafted here, because they are implementation or battery
 changes that only the signing lane may make. Items 1 and 1b change product
-code and need an implementation authorization.
+code and need an implementation authorization. Item 1b is not in the
+sign-off commit: it lands with the implementation (see "When it lands"),
+and item 1c is a pre-existing gap filed for its own repair.
 
 1. **The gate's hard-wired v1.0 form.** [Observed]
    `packages/polaris-generation-consent/src/package-reader.ts`,
@@ -78,9 +80,10 @@ code and need an implementation authorization.
    - `scripts/measure_consent_gate_recognition.mjs:142` names the recorder's
      check key `--version 1.0` for the form's record.
    - **The v1.0 fixture family** (round-3 Finding 4). [Observed, a third
-     sweep of the tracked files under `packages/`, `apps/` and `scripts/`
-     for the literals `local-agent-v1.0` and `LOCAL-AGENT-SIGNOFF-v1.0`: 22
-     lines in 7 files, read one by one.] `gate-acts.test.ts:63` (`world(…,
+     sweep of the 819 tracked files under `packages/`, `apps/` and
+     `scripts/` for the literals `local-agent-v1.0` and
+     `LOCAL-AGENT-SIGNOFF-v1.0`: 22 lines in 6 files, read one by one,
+     re-derived by script in round 4, which corrected "7 files".] `gate-acts.test.ts:63` (`world(…,
      true)`) writes the record at the fixed v1.0 path `SIGNOFF` with
      `renderLocalAgentSignoff`
      (`packages/polaris-generation-consent/src/recorder-fixtures.testkit.ts:162`),
@@ -97,6 +100,15 @@ code and need an implementation authorization.
      v1.0's own withdrawal and register rows; the v1.0 builder, the recorder
      and `package-reader.ts:884`, the form itself) are named for
      completeness.
+   - **The renderer's version pins** (round-4 Finding 3). [Observed, a
+     fourth sweep of the same 819 files for `render_record(pkg, '1.0'` and
+     `record_rel(pkg, '1.0'`: 4 lines in 2 files.]
+     `recorder-fixtures.testkit.ts:71` and `:74`, and its oracle test
+     `recorder-fixtures.testkit.test.ts:53` and `:56`, render the record and
+     its path at version `'1.0'`. `start-gates.test.ts:118-129`
+     (`signoffOver`) writes that v1.0 rendering at `REGISTRY_ACT`, the path
+     the form names, so once the form moves it writes a v1.0-shaped record
+     at the v1.1 path. Each must change with item 1.
 1b. **The launch reads narrowed to the closed list** (round-3 Finding 1;
    the owner's option 1, "Before you sign" item 1). [Observed] For a
    launch-consented run the entry closes the reads of the operator's clone
@@ -114,21 +126,63 @@ code and need an implementation authorization.
      (`HEX_PREFIX = /^[0-9a-f]{4,64}$/`, then `ports.storedIds()`) list the
      store's object identifiers for any hexadecimal `--revision`, a full
      one included. Read (5) admits that listing "for an abbreviated
-     --revision alone"; the listing must be skipped for a full identifier.
-   This change must travel with the sign-off: signed without it, every
-   launch-consented run's implementation reads outside the entry. It needs
-   its own implementation authorization. [Observed] #812's own ledger at
-   `de9c1ba8` ("Implementation impact") already requires the same
+     --revision alone"; the listing must be skipped for a full identifier,
+     judged by the clone's hash: 40 hex digits in a SHA-1 clone, 64 in a
+     SHA-256 clone, where a 40-digit `--revision` is an abbreviation and
+     read (5) admits its listing (round-4 Finding 4).
+
+   **When it lands** (round-4 Finding 2; the one statement the owner page
+   repeats). The narrowing is implementation, under the separate
+   implementation direction #812 names ([Observed] #812's "Implementation
+   impact" at `de9c1ba8` opens "[Inferred] After sign-off only, under a
+   separate implementation direction", and already requires the same
    narrowing for v1.2: "`init`'s pre-copy reads of the operator's clone
    become file-data reads of the listed references, remote URLs and the
    alternates file", and "`--revision` resolution and the reftable refusal
-   follow 047's text". [Inferred] It does not name `launch-clone.ts` or the
-   full-identifier listing, but #812's REQ-047 closes a launch-consented
-   run's reads to the same list, so the v1.2 implementation needs this
-   narrowing in any case, and it lands with that implementation when the
-   two are signed together. Signed alone, this version needs it anyway.
-   The enumeration of every read the launch path makes today, mapped to an
-   entry clause or to this item, is in `ROUND-3-DISPOSITIONS.md`.
+   follow 047's text"). It is not in the sign-off commit. Until it lands,
+   the code reads outside both entries.
+
+   **Can a launch-consented run be made before it lands?** [Inferred, from
+   the code at the reviewed commit] Yes, unless the owner holds the gate:
+   - a copy-class run, no: no code makes a copy
+     (`implementationCoverage.copyStep`);
+   - a launch-consented no-copy run, yes, once item 1 has moved the gate's
+     form to v1.1. `init.ts:117-123` checks only the registry entry's
+     sign-off and the screening policy before `launchConsent`, and the
+     launch code is v1.1's, unnarrowed; such a run reads outside the entry
+     (rows 9 and 14 of the round-3 table);
+   - while item 1 has not landed, no: a recorded v1.1 makes the v1.0 form
+     refuse ([Observed] `package-reader.ts:870-874`: the reader "takes it
+     for a withdrawal of v1.0 and refuses"), so every local-agent run
+     refuses, the redis run included.
+
+   So "no launch-consented run is made until the narrowing lands" holds
+   only if item 1 lands with the narrowing rather than with the sign-off.
+   That is a choice for the owner ("Before you sign", item 1): move the
+   gate at sign-off and accept runs that read outside the entry until the
+   implementation lands, or hold the gate until then and accept that every
+   local-agent run refuses in that window. In the second case the
+   real-tree pins of item 1a (`real-tree.test.ts:43-44`,
+   `gate-acts.test.ts:220` via `:93`) must change in the sign-off commit to
+   expect that refusal.
+1c. **A gap this version does not close: the type test reads a
+   non-commit object's body** (round-4 Finding 1; the owner's choice was
+   the reviewer's second option). [Observed] `launch-revision.ts:100`
+   calls `ports.isCommit(commit)` on the resolved candidate before any
+   HEAD check or answer; that port (`launch.ts:160`) opens the object
+   reader on the candidate and calls `.tree()`, which reaches
+   `store.verified(revision, 'commit')` (`git-object-reader.ts:221`, `:437-443`).
+   `verified` reads the whole object through `raw` (a loose object's whole
+   file, inflated; a packed object's whole entry) and only then compares
+   its type. So a `--revision` or trunk reference naming an annotated tag
+   or a blob has that object's whole body read before the run refuses.
+   That read is outside v1.0's `tags` ("never read", which v1.1 keeps) and
+   outside the installed REQ-046's falsifier ("A blob is read … before a
+   confirmed phrase or in-force records"). It exists today, under v1.0 in
+   force; v1.1 does not create it and does not close it, and item 1b does
+   not cover it. It is filed for its own repair as `syzygy-pdja.30`. The
+   round-3 table's row 15 mapped it to the object-read words; the
+   correction is in `ROUND-4-DISPOSITIONS.md`.
 2. **The battery.** `PROJECT-STATUS.md`, the hosted workflow and the count
    sentence (CG-26) carry `record_versioned_signoff.py --check
    public-git-source-acquisition-local-agent --version 1.0`. The sign-off
@@ -227,10 +281,12 @@ the definition, two re-exports and the readers below).]
 | `real-tree.test.ts:43-44` | the form's record on the real tree, expecting the v1.0 identity | Must change in the same commit (item 1a) |
 | `gate-acts.test.ts:581`, `:596`, `:613` | the form's file name and its template's rendering of the v1.0 record | Must change in the same commit (item 1a) |
 | `gate-acts.test.ts:31`, `:220` (via `:93`) | the v1.0 record's path, by a local constant, expecting the v1.0 identity on the real tree | Must change in the same commit (item 1a) |
-| `start-gates.test.ts:114-115` | the form's installed path and record path, as fixture inputs | [Inferred] follows item 1; the literals at `:191` and `:1036` do not (row above) |
+| `start-gates.test.ts:114-129` | the form's installed path and record path, and `signoffOver`, which writes the v1.0 rendering at the form's path | Must change with item 1 (item 1a); the literals at `:191` and `:1036` too (row above) |
+| `recorder-fixtures.testkit.ts:71`, `:74`; `recorder-fixtures.testkit.test.ts:53`, `:56` | the recorder's rendering and path at version `'1.0'` | Must change with item 1 (item 1a) |
 | `gate-acts.test.ts:63`, `:90`, `:221`, `:230`, `:269`, `:432-443`, `:503`, `:577`, `:612-615`, `:659-668`, and `recorder-fixtures.testkit.ts:162` | the v1.0 record, written by the testkit renderer at the fixed v1.0 path and read back | Must change in the same commit, or be shown to hold (item 1a) |
 | `start-gates.test.ts:191`, `:675`, `:678`, `:1036` | the v1.0 identity as a literal | Must change in the same commit, or be shown to hold (item 1a) |
-| `launch-clone.ts:100-125`, `launch-revision.ts:33`, `:59-61` | the operator's clone, beyond the closed launch-read list | Must narrow in the same commit (item 1b) |
+| `launch-clone.ts:100-125`, `launch-revision.ts:33`, `:59-61` | the operator's clone, beyond the closed launch-read list | Must narrow, with the implementation (item 1b) |
+| `launch-revision.ts:100` → `launch.ts:160` → `git-object-reader.ts:221`, `:437-443` | a non-commit candidate's whole body, before its type is known | Pre-existing gap, not closed by v1.1 (item 1c, `syzygy-pdja.30`) |
 | `scripts/measure_consent_gate_recognition.mjs:100-153` | the form, and the recorder check key `--version 1.0` | The check key must change in the same commit (item 1a) |
 | `scripts/differential_consent_act_families.mjs`, `scripts/differential_line_slot.mjs` | the form, as one reader among many | [Inferred] follow item 1; they read whatever form the constant names |
 | `build_dossier_local_agent_acts.py` | the v1.0 sitting | Unchanged; the sitting manifest rows the v1.0 proposed file, which stays |
