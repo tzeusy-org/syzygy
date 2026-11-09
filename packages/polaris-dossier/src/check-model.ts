@@ -180,7 +180,8 @@ export interface CheckReport extends CheckRecord {
   readonly screenCensus?: ScreenCensusReport;
   /** The counted reader standards' advice (`reader-advice.ts`); on the report, never the record, and never a finding. */
   readonly readerAdvice?: ReaderAdvice;
-  /** The claim blocks the fidelity review can never confirm (`review-reach.ts`); on the report, never the record, and never a finding. */
+  /** The claim blocks the fidelity review can never confirm, and the elements that render with none of their text (`review-reach.ts`); on
+   * the report, never the record, and never a finding. */
   readonly reviewReach?: ReviewReachAdvice;
   /** The cited files withheld from the review session, by screening or the class gate (`reviewVisibility`); on the report, never the record. */
   readonly reviewVisibility?: ReviewVisibility;

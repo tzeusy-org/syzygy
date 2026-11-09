@@ -32,11 +32,11 @@ import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-export const BRIEF_VERSION = 'polaris-dossier-brief-v5';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v6';
 
-/** Which blocks the fidelity review can never confirm (syzygy-pdja.20): the brief's rule, which carries no project content; `check`
- * names the blocks under `reviewReach` (`review-reach.ts`). Advice: no check refuses a draft for it. */
-export const REVIEW_REACH_RULE = 'The fidelity review is given a cited span\'s text only when screening admits its file and the run\'s consent covers that file\'s class. An Inferred block none of whose cited spans the review is given cannot be confirmed by a review: where screening withholds them all, the block renders Unknown and none of its text renders; otherwise its row stays unresolved and blocks readiness. `syzygy dossier check` lists such blocks under `reviewReach`. Before you resubmit, cite an admitted file that states the same fact, as well or instead, or state it as `unknown`: resubmitting such a block unchanged spends a repair cycle and cannot confirm it.';
+/** Which blocks the fidelity review can never confirm (syzygy-pdja.20), and which elements render with none of their text (syzygy-pdja.24):
+ * the brief's rule, which carries no project content; `check` names them under `reviewReach` (`review-reach.ts`). Advice: no check refuses a draft for it. */
+export const REVIEW_REACH_RULE = 'The fidelity review is given a cited span\'s text only when screening admits its file and the run\'s consent covers that file\'s class. An Inferred block none of whose cited spans the review is given cannot be confirmed by a review: where screening withholds them all, the block renders Unknown and none of its text renders; otherwise its row stays unresolved and blocks readiness. `syzygy dossier check` lists such blocks under `reviewReach`, and under its `elements` the understanding items and diagram nodes and edges every cited span of which screening withholds: no review judges those, but each renders Unknown and none of its text renders. Before you resubmit, cite an admitted file that states the same fact, as well or instead, or state it as `unknown`: resubmitting such a block unchanged spends a repair cycle and cannot confirm it.';
 
 /** The reader topics of an operator-agent dossier, in the owner's order (dossier spec v1.5, "Why-first topics and voice"): why the
  * project exists first, holding the advantages its maintainers state, then core ideas, end-to-end workflows, and mechanisms and
@@ -205,7 +205,7 @@ export function renderBrief(input: BriefInput): string {
     '',
     READABILITY_GUIDANCE,
     '',
-    'The reader standards below describe what a good dossier is, as one checklist. Read them before you outline: write every page as an abstraction tree, and give the technology choices their table. Before each check, test the draft against every standard and fix what fails; `syzygy dossier check` reports the standards it can count as advice, which sets no outcome, and the rendered-design review judges the pages against all of them. Where a standard and a rule above differ, the rule above governs.',
+    'The reader standards below describe what a good dossier is, as one checklist. Read them before you outline: write every page as an abstraction tree, and give the technology choices their table. Before each check, test the draft against every standard and fix what fails; `syzygy dossier check` reports the standards it can count as advice, which sets no outcome, and the rendered-design review judges the pages against all of them. Where a standard and a rule above differ, the rule above governs. The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.',
     '',
     readerStandardsSection(),
     '',

@@ -192,10 +192,11 @@ export const READER_STANDARDS = [
 export const READER_STANDARDS_SHA256 = sha256(READER_STANDARDS);
 
 /** The standards as one section of a larger Markdown text: the title becomes a second-level heading naming the version and digest, and
- * every other heading moves one level down, so they nest under the section. */
+ * every other heading moves one level down, so they nest under the section. The digest is the reference file's, which the heading names,
+ * since the carried text is re-levelled and does not hash to it (R-PDJA-17-STANDARDS-1 note 1). */
 export function readerStandardsSection(): string {
   const [title, ...rest] = READER_STANDARDS.trimEnd().split('\n');
-  const heading = `## ${title!.replace(/^# /u, '')} (\`${READER_STANDARDS_VERSION}\`, sha256 \`${READER_STANDARDS_SHA256}\`)`;
+  const heading = `## ${title!.replace(/^# /u, '')} (\`${READER_STANDARDS_VERSION}\`; sha256 of \`references/reader-standards.md\`: \`${READER_STANDARDS_SHA256}\`)`;
   // The version line and the blank line after it give way to the heading, which names the version.
   const body = rest.filter((line, i) => !line.startsWith('Version: ') && !(line === '' && rest[i - 1]?.startsWith('Version: ')));
   return [heading, ...body.map((line) => (line.startsWith('## ') ? `#${line}` : line))].join('\n');

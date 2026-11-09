@@ -319,7 +319,8 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
       const draftFile = values.get('--draft');
       const result = await checkDraft(run!, draftFile === undefined ? {} : { draftFile }, ctx.deps('probe', 'openReader', 'loadScreen'));
       if (!result.ok) return ctx.refused(result.refusal);
-      // `reviewVisibility` and `screenCensus` are on the report already (`checkSubject`), never in the stored record.
+      // `reviewVisibility`, `screenCensus`, `readerAdvice` and `reviewReach` are on the report already (`checkSubject`), never in the stored
+      // record, and the exit code reads the outcome alone.
       return ctx.report(result.report, result.report.outcome === 'passed' ? EXIT.clean : EXIT.refused);
     },
   },

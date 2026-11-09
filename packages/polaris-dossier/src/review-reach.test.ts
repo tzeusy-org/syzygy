@@ -61,11 +61,29 @@ describe('citationReach: how one cited span reaches the fidelity review', () => 
   });
 });
 
-describe('reviewReachAdvice: the claim blocks no verdict can confirm', () => {
+describe('reviewReachAdvice: the claim blocks no verdict can confirm, and the elements that will not render', () => {
   const block = (id: string, citations: unknown[], extra: Record<string, unknown> = {}) => ({ id, label: 'inferred', basis: 'source', text: 'A claim.', citations, quotations: [], ...extra });
   const draft = {
     introduction: block('intro', [cite('i1', 'src/a.c')]),
-    understanding: { purpose: [{ id: 'u1', label: 'inferred', statement: 'S.', scope: 'X.', citations: [cite('u1c', 'README.md')] }] },
+    understanding: {
+      purpose: [{ id: 'u1', label: 'inferred', statement: 'S.', scope: 'X.', citations: [cite('u1c', 'README.md')] }],
+      components: [{ id: 'u-gated', label: 'inferred', statement: 'S.', scope: 'X.', citations: [cite('u2c', 'docs/notes.txt')] }],
+      terminology: [{ id: 'u-mixed', label: 'inferred', statement: 'S.', scope: 'X.', citations: [cite('u3a', 'src/a.c'), cite('u3b', 'README.md')] },
+        { id: 'term', label: 'unknown', reason: 'missing-evidence', statement: 'S.', scope: 'X.', citations: [cite('u4c', 'src/types.ts')] }],
+    },
+    diagrams: [{
+      id: 'd', sectionId: 's', title: 'D', kind: 'flow', relationship: 'R',
+      nodes: [
+        { id: 'n-withheld', label: 'N', epistemic: 'inferred', citations: [cite('n1', 'README.md')] },
+        { id: 'n-gated', label: 'N', epistemic: 'inferred', citations: [cite('n2', 'docs/notes.txt')] },
+        { id: 'n-mixed', label: 'N', epistemic: 'inferred', citations: [cite('n3', 'src/a.c'), cite('n4', 'src/config.c', 1, 1)] },
+        { label: 'N', epistemic: 'inferred', citations: [cite('n5', 'src/config.c', 4, 4)] },
+      ],
+      edges: [
+        { id: 'e-withheld', from: 'n-withheld', to: 'n-gated', label: 'E', epistemic: 'inferred', citations: [cite('e1', 'src/config.c', 1, 2)] },
+        { id: 'e-admitted', from: 'n-gated', to: 'n-mixed', label: 'E', epistemic: 'inferred', citations: [cite('e2', 'src/a.c')] },
+      ],
+    }],
     sections: [{
       id: 's', title: 'S',
       paragraphs: [
@@ -84,7 +102,7 @@ describe('reviewReachAdvice: the claim blocks no verdict can confirm', () => {
   it('lists each block every cited span of which the review is not given, by its consequence, and counts them', () => {
     expect(reviewReachAdvice(draft, inputs())).toEqual({
       note: expect.stringContaining('it sets no outcome and is not stored in the check record'),
-      counts: { unconfirmable: 3, withheldItems: 3 },
+      counts: { unconfirmable: 3, withheldItems: 3, withheldElements: 5 },
       blocks: [
         { at: '$.sections[0].paragraphs[0]', blockId: 'only-withheld', consequence: 'withheld-item', detail: expect.stringContaining('its entry is `withheld`') },
         { at: '$.sections[0].paragraphs[0].children[0]', blockId: 'child-gated', consequence: 'unconfirmable', detail: expect.stringContaining('blocking readiness') },
@@ -93,19 +111,29 @@ describe('reviewReachAdvice: the claim blocks no verdict can confirm', () => {
         { at: '$.sections[0].paragraphs[5]', blockId: 'unknown-withheld', consequence: 'withheld-item', detail: expect.stringContaining('renders Unknown') },
         { at: '$.sections[0].paragraphs[7].rows[0].cells[0]', blockId: 'cell-gated', consequence: 'unconfirmable', detail: expect.stringContaining('the run\'s consent does not cover its file\'s class') },
       ],
+      elements: [
+        { at: '$.understanding.purpose[0]', kind: 'understanding-item', id: 'u1', detail: expect.stringContaining('it renders Unknown on the understanding page and none of its text renders') },
+        { at: '$.understanding.terminology[1]', kind: 'understanding-item', id: 'term', detail: expect.stringContaining('a terminology item is also left out of the glossary') },
+        { at: '$.diagrams[0].nodes[0]', kind: 'diagram-node', id: 'n-withheld', detail: expect.stringContaining('the node renders Unknown and its label does not render') },
+        { at: '$.diagrams[0].nodes[3]', kind: 'diagram-node', id: null, detail: expect.any(String) },
+        { at: '$.diagrams[0].edges[0]', kind: 'diagram-edge', id: 'e-withheld', detail: expect.stringContaining('the edge renders Unknown and its label does not render') },
+      ],
     });
   });
 
   it('lists nothing once the consent covers the gated class, and keeps the screening-withheld blocks', () => {
     const advice = reviewReachAdvice(draft, inputs(['code-content', 'project-documentation']));
-    expect(advice.counts).toEqual({ unconfirmable: 0, withheldItems: 3 });
+    expect(advice.counts).toEqual({ unconfirmable: 0, withheldItems: 3, withheldElements: 5 });
     expect(advice.blocks.map((b) => b.blockId)).toEqual(['only-withheld', 'quotes-withheld', 'unknown-withheld']);
+    // A class-gated element is never a withheld item, so the consent changes nothing among the elements.
+    expect(advice.elements.map((e) => e.id)).toEqual(['u1', 'term', 'n-withheld', null, 'e-withheld']);
   });
 
   it('states zero counts, never omits them, for a draft with nothing to list or one that is not an object', () => {
-    expect(reviewReachAdvice({ introduction: block('intro', [cite('i1', 'src/a.c')]) }, inputs())).toEqual({ note: expect.any(String), counts: { unconfirmable: 0, withheldItems: 0 }, blocks: [] });
-    expect(reviewReachAdvice('x', inputs()).counts).toEqual({ unconfirmable: 0, withheldItems: 0 });
+    expect(reviewReachAdvice({ introduction: block('intro', [cite('i1', 'src/a.c')]) }, inputs())).toEqual({ note: expect.any(String), counts: { unconfirmable: 0, withheldItems: 0, withheldElements: 0 }, blocks: [], elements: [] });
+    expect(reviewReachAdvice('x', inputs()).counts).toEqual({ unconfirmable: 0, withheldItems: 0, withheldElements: 0 });
     expect(reviewReachAdvice(null, inputs()).blocks).toEqual([]);
+    expect(reviewReachAdvice(null, inputs()).elements).toEqual([]);
   });
 
   it('names a block without an identifier as null, and states the advice it carries', () => {
@@ -115,5 +143,24 @@ describe('reviewReachAdvice: the claim blocks no verdict can confirm', () => {
     expect(advice.note).toContain('Resubmitting such a block unchanged spends a repair cycle and changes neither.');
     expect(advice.note).toContain('Each block listed rests only on spans the fidelity review will not be given: every span it cites, or a span it quotes.');
     expect(advice.note).toContain('A review cannot confirm an `unconfirmable` block');
+    expect(advice.note).toContain('Each element listed is an understanding item or a diagram node or edge every span of which it cites, or a span it quotes, is withheld by screening: no review judges it, so it costs no repair cycle, but it renders Unknown and none of its text renders.');
+  });
+});
+
+describe('reviewReachAdvice: a withheld element is told by the rule the render reads (syzygy-pdja.24)', () => {
+  it('lists an element that quotes a withheld span, and skips a diagram or element that is not an object', () => {
+    const doc = {
+      understanding: { limits: [{ id: 'q', label: 'inferred', statement: 'S.', scope: 'X.', citations: [cite('q1', 'src/a.c'), cite('q2', 'README.md')], quotations: ['q2'] }, 7] },
+      diagrams: [null, { nodes: [3, { id: 'only-admitted', citations: [cite('a', 'src/a.c')] }], edges: 'x' }, { id: 'd', nodes: [], edges: [{ id: 'e', citations: [cite('w', 'README.md')] }] }],
+    };
+    expect(reviewReachAdvice(doc, inputs()).elements.map(({ detail: _d, ...rest }) => rest)).toEqual([
+      { at: '$.understanding.limits[0]', kind: 'understanding-item', id: 'q' },
+      { at: '$.diagrams[2].edges[0]', kind: 'diagram-edge', id: 'e' },
+    ]);
+  });
+
+  it('lists no element that cites nothing', () => {
+    const doc = { understanding: { purpose: [{ id: 'none', label: 'unknown', statement: 'S.', scope: 'X.', citations: [] }] }, diagrams: [{ nodes: [{ id: 'bare' }], edges: [] }] };
+    expect(reviewReachAdvice(doc, inputs()).elements).toEqual([]);
   });
 });

@@ -348,6 +348,17 @@ describe('layered left-to-right diagram layout', () => {
       expect(leaderRun(own, label, [], [], [head])!.to).toEqual({ x: 50, y: 40 });
     });
 
+    it('ends a leader 1.5 px from another line\'s arrowhead, and 2 px from it, so the margin refuses no farther end', () => {
+      // The same line and label; the line's nearest point, (50, 50), sits exactly 1.5 px and then 2 px outside the other arrowhead, and the
+      // leader still ends there (syzygy-pdja.16: a wider margin would refuse it and end the leader at (50, 40)).
+      const own = Array.from({ length: 11 }, (_, k) => ({ x: 50, y: k * 10 }));
+      const label = { left: 0, top: 45, right: 30, bottom: 55 };
+      const atMargin = [{ x: 51.5, y: 45 }, { x: 61.5, y: 45 }, { x: 51.5, y: 55 }] as const;
+      const past = [{ x: 52, y: 45 }, { x: 62, y: 45 }, { x: 52, y: 55 }] as const;
+      expect(leaderRun(own, label, [], [], [atMargin])!.to).toEqual({ x: 50, y: 50 });
+      expect(leaderRun(own, label, [], [], [past])!.to).toEqual({ x: 50, y: 50 });
+    });
+
     it('draws no leader on the provider form, or where no label moved', () => {
       const parallel = [edge('ab1', 'a', 'b'), edge('ab2', 'a', 'b')];
       expect(renderDiagramSvg(renderOf(['a', 'b'], parallel, LONG), 0, text => text)).not.toContain('edge-leader');

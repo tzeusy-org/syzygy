@@ -358,6 +358,9 @@ describe('inventory-check', () => {
     expect(fs.readFileSync(path.join(run, 'inventory', 'rev-0.json'), 'utf8')).toBe(text);
     expect(fs.existsSync(path.join(run, 'inventory', 'checks', 'rev-0.json'))).toBe(true);
     expect(listAll(dir)).toEqual(['inventory-brief.md', 'inventory.json']);
+    // The reader standards and the review's reach are a draft's advice, never an inventory's (R-PDJA-17-STANDARDS-1 note 6).
+    expect(report).not.toHaveProperty('readerAdvice');
+    expect(report).not.toHaveProperty('reviewReach');
   });
 
   it('reports a quotation the cited file does not carry, a quotation in an unknown entry and an absent coverage path', async () => {

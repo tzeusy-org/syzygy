@@ -475,6 +475,9 @@ describe('check: each rule refuses its own violation', () => {
     const result = report(await checkDraft(run, {}, deps()));
     expect(result.findings).toEqual([{ kind: 'not-json', at: '$', detail: 'the draft is not one bounded UTF-8 JSON document' }]);
     expect(read(run, 'drafts/rev-0.json')).toBe('{"title": ');
+    // A draft that did not parse gets no advice, of either kind (R-PDJA-17-STANDARDS-1 note 6).
+    expect(result).not.toHaveProperty('readerAdvice');
+    expect(result).not.toHaveProperty('reviewReach');
   });
 
   it('reports schema faults beside every other finding in one submission', async () => {
@@ -814,12 +817,16 @@ describe('check: the command', () => {
     writeDraft(run, mutate((d) => {
       d.sections[0].paragraphs[0].children[2].citations = [cite('c-p1c', 'README.md', 1, 1)];
       d.sections[0].paragraphs[0].children[0].citations = [cite('c-p1a', 'docs/notes.txt', 1, 1)];
+      // syzygy-pdja.24: a diagram node every cited span of which screening withholds, and an edge the class gate alone keeps from review.
+      d.diagrams.push({ ...DIAGRAM, nodes: [{ ...DIAGRAM.nodes[0], citations: [cite('c-n1', 'README.md', 1, 1)] }, DIAGRAM.nodes[1]],
+        edges: [{ ...DIAGRAM.edges[0], citations: [cite('c-x1e', 'docs/notes.txt', 1, 1)] }] });
     }));
     // The run relies on no statement, so a class other than code-content is withheld from review: docs/notes.txt is such a class here.
     const gated = { ...SCREEN_OK, contentClass: (p: string) => (p === 'docs/notes.txt' ? 'project-documentation' as const : SCREEN_OK.contentClass(p)) };
     const result = report(await checkDraft(run, {}, deps({ loadScreen: async () => ({ ok: true, screen: gated }) })));
     expect(result).toMatchObject({ outcome: 'passed', findings: [] });
-    expect(result.reviewReach?.counts).toEqual({ unconfirmable: 1, withheldItems: 1 });
+    expect(result.reviewReach?.counts).toEqual({ unconfirmable: 1, withheldItems: 1, withheldElements: 1 });
+    expect(result.reviewReach?.elements.map(({ detail: _d, ...rest }) => rest)).toEqual([{ at: '$.diagrams[0].nodes[0]', kind: 'diagram-node', id: 'n1' }]);
     expect(result.reviewReach?.blocks.map(({ detail: _d, ...rest }) => rest)).toEqual([
       { at: '$.sections[0].paragraphs[0].children[2]', blockId: 'p1c', consequence: 'withheld-item' },
       { at: '$.sections[0].paragraphs[1]', blockId: 'p2', consequence: 'unconfirmable' },
@@ -827,6 +834,7 @@ describe('check: the command', () => {
     const stored = read(run, 'checks/rev-0.json');
     expect(stored).not.toContain('reviewReach');
     expect(stored).not.toContain('unconfirmable');
+    expect(stored).not.toContain('diagram-node');
   });
 
   it('states zero blocks for a draft every cited span of which reaches the review', async () => {
@@ -835,7 +843,7 @@ describe('check: the command', () => {
     const a = io();
     expect(await runDossierCli(['check', run, '--json'], a.io, { sources: sources(), now: () => LATER, loadScreen: async () => SCREEN })).toBe(0);
     const printed = JSON.parse(a.out.join(''));
-    expect(printed.reviewReach).toEqual({ note: expect.stringContaining('sets no outcome'), counts: { unconfirmable: 0, withheldItems: 0 }, blocks: [] });
+    expect(printed.reviewReach).toEqual({ note: expect.stringContaining('sets no outcome'), counts: { unconfirmable: 0, withheldItems: 0, withheldElements: 0 }, blocks: [], elements: [] });
   });
 
   it('never names a path both a denied-path rule and a secret detector match in screenCensus (round-2 review finding 1)', async () => {
