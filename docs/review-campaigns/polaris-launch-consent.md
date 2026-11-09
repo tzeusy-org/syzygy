@@ -10,7 +10,9 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-9-RAW.md:4`), over `35e46950`, the ninth review of package `polaris-dossier-launch-consent` v1.2 and the sixth of the owner's redesign. It found round 8's findings repaired and has three revise findings and three notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-9-DISPOSITIONS.md`; the recurring class (a statement a refused run cannot make) is repaired at the root by one stage rule. Per the owner's 2026-11-10 instruction the loop continues while rounds converge. The repaired bytes await round 10.
+`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-10-RAW.md:4`), over `faeafa85`, the tenth review of package `polaris-dossier-launch-consent` v1.2 and the seventh of the owner's redesign. It has three revise findings and three notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-10-DISPOSITIONS.md`. One class (a statement a refused run cannot truthfully make) recurred in rounds 6, 7, 9 and 10, so by the coordinating session's stopping rule the repair is made, nothing is dispatched, and the owner decides whether to sign on the repaired bytes or order round 11.
+
+Round 9 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-9-RAW.md:4`), over `35e46950`, the sixth review of the owner's redesign. It found round 8's findings repaired and has three revise findings and three notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-9-DISPOSITIONS.md`; the recurring class (a statement a refused run cannot make) is repaired at the root by one stage rule.
 
 Round 8 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-8-RAW.md:4`), over `f242299f`, the fifth review of the owner's redesign. It found round 7's findings answered and has one revise finding, the wording of one falsifier arm, and four notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-8-DISPOSITIONS.md`.
 

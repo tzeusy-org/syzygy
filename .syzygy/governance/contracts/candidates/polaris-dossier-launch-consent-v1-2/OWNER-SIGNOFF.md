@@ -1,9 +1,12 @@
 # Owner sign-off — Polaris dossier launch consent, version 1.2
 
 > **Candidate — binds nothing.** [Observed] Rounds 1 to 3 of review returned
-> `REVISE`. On 2026-11-10 you chose a redesign. Rounds 4 to 9, its first
+> `REVISE`. On 2026-11-10 you chose a redesign. Rounds 4 to 10, its first
 > reviews, returned `REVISE` on the text's consistency and edge cases; these
-> bytes are the round-9 repair, and no review has read them yet. This page may be offered only after
+> bytes are the round-10 repair, and no review has read them yet. One class
+> of finding (a statement a refused run cannot truthfully make) recurred in
+> rounds 6, 7, 9 and 10, so the coordinating session stopped the loop: no
+> round 11 has been dispatched, and you may sign on these bytes or order one. This page may be offered only after
 > a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
 > install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
 > Nothing here records a choice; only your selection after review binds this
@@ -113,7 +116,14 @@ unchanged.
   Inferred.
 - **The agents are told, not prevented.** Your clone stays on the same
   machine, so a session that ignores its brief could still read your
-  history. Whether it stayed in the copy is Inferred.
+  history. Whether it stayed in the copy is Inferred. Syzygy records only
+  what it did itself (a brief issued, a packet delivered); whether a
+  session started or read it is that session's own report.
+- **A refused run says how far it got.** The run record and pages state
+  each thing only once the run reached it (a revision named, a copy made,
+  the commit pinned, the question asked, a brief issued), and otherwise
+  that it was not reached. A run that works in your own clone says no copy
+  was made.
 - **Disk.** Each completed run leaves one commit's files in a directory of
   Syzygy's own, outside the run's state directory, until you remove it.
 - **The run record keeps what Syzygy read before your answer.** Version
