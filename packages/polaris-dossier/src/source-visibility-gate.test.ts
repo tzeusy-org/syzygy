@@ -37,6 +37,7 @@ describe('pairVisibilityAt', () => {
     ['one of the two named forms missing', [REDIS_FORM]],
     ['a named form swapped for an unnamed one', [REDIS_FORM, THIRD_FORM]],
     ['a named form repeated in place of the other', [REDIS_FORM, REDIS_FORM]],
+    ['both named forms, one of them listed twice', [REDIS_FORM, REQUESTS_FORM, REDIS_FORM]],
     ['no form at all', []],
   ] as const)('refuses every read when the reader\'s forms are %s', async (_name, forms) => {
     expect(actFormsMatchPolicy(forms)).toBe(false);
