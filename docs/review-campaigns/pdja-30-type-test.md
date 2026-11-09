@@ -12,6 +12,8 @@
 
 ## Last verdict of record, and where the findings landed
 
+Round 2 returned `CONFIRM WITH EXCEPTIONS` (`R-PDJA-30-2-RAW.md:4`) over `a85b6c56`, notes only. It found every round-1 finding resolved and re-ran all 13 recorded mutants (13 killed). Its own three mutants survived as notes: V1 (header inflation uncharged; the budget test's name claims a charge no test pins, Finding 5), V2 (pack entry-header byte cap untested but harmless, Finding 7) and V3 (`HEADER_STEP_OUTPUT` unreachable, an equivalent mutant, Finding 6). These are left as notes.
+
 Round 1 returned `REVISE` (`R-PDJA-30-1-RAW.md:4`) over `69d96fcf`.
 
 - **Finding 1 (revise):** the REF_DELTA header path was never exercised. Tests now cover three REF bases, each with its bodies made unreadable:
