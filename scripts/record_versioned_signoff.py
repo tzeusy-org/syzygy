@@ -1151,16 +1151,19 @@ GIT_SOURCE_V11_DOES_NOT = (
     "an observed or external system, and authorizes no implementation. Against\n"
     "version 1.0 it widens, in a copy-class run alone, local execution and a local\n"
     "write: the Git processes the entry's fetch declaration names and the copy's\n"
-    "directory its stateDirectoryWrites declaration names. Every exclusion of the\n"
-    "acts in force stands.\n")
+    "directory its stateDirectoryWrites declaration names; and in that run it reads\n"
+    "that copy in place of the operator's clone. For every launch-consented run it\n"
+    "closes in words the reads Syzygy makes of the operator's clone. Every exclusion\n"
+    "of the acts in force stands.\n")
 GIT_SOURCE_V11_AGGREGATE = (
     "This sign-off approves the registry entry its dedicated record names, at the\n"
     "SHA-256 recorded there, under the Scope A extension the owner's selection\n"
     "names, and supersedes version 1.0. That is one of the separate acts a read\n"
     "needs. It gives no observation consent and widens no network egress; against\n"
     "version 1.0 it widens, in a copy-class run alone, local execution and a local\n"
-    "write, as its record says. It authorizes no implementation, and a later version\n"
-    "of the package is signed separately.")
+    "write, and reads that copy in place of the operator's clone, as its record\n"
+    "says. It authorizes no implementation, and a later version of the package is\n"
+    "signed separately.")
 
 
 def real_packages() -> dict[str, Package]:
@@ -3592,16 +3595,19 @@ def selftest() -> int:
                         "an observed or external system, and authorizes no implementation. Against\n"
                         "version 1.0 it widens, in a copy-class run alone, local execution and a local\n"
                         "write: the Git processes the entry's fetch declaration names and the copy's\n"
-                        "directory its stateDirectoryWrites declaration names. Every exclusion of the\n"
-                        "acts in force stands.\n")
+                        "directory its stateDirectoryWrites declaration names; and in that run it reads\n"
+                        "that copy in place of the operator's clone. For every launch-consented run it\n"
+                        "closes in words the reads Syzygy makes of the operator's clone. Every exclusion\n"
+                        "of the acts in force stands.\n")
                     and real_reg11.record_aggregate_scope == (
                         "This sign-off approves the registry entry its dedicated record names, at the\n"
                         "SHA-256 recorded there, under the Scope A extension the owner's selection\n"
                         "names, and supersedes version 1.0. That is one of the separate acts a read\n"
                         "needs. It gives no observation consent and widens no network egress; against\n"
                         "version 1.0 it widens, in a copy-class run alone, local execution and a local\n"
-                        "write, as its record says. It authorizes no implementation, and a later version\n"
-                        "of the package is signed separately.")
+                        "write, and reads that copy in place of the operator's clone, as its record\n"
+                        "says. It authorizes no implementation, and a later version of the package is\n"
+                        "signed separately.")
                     and real_reg.record_scope is None and real_reg.record_supersession is None
                     and real_reg.record_does_not is None and real_reg.record_aggregate_scope is None
                     and real_reg.replaced_bytes is not None

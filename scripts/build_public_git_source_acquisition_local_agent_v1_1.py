@@ -160,9 +160,9 @@ RA_TAIL_CLAUSES = (
      "The reads of the pinning, identity and clone-form rules are launch reads, made as data and never honoured, "
      "and not object reads. "),
     ("the five launch reads",
-     "In a launch-consented run (REQ-polaris-generation-046 and 047), besides the object reads, Syzygy reads only "
-     "the following: in the operator's clone these five things alone, and of what they list only what the "
-     "launch-consent requirements in force name: "),
+     "In a launch-consented run (REQ-polaris-generation-046 and 047), besides the object reads, Syzygy reads of "
+     "the operator's clone and the copy only the following: in the operator's clone these five things alone, and "
+     "of what they list only what the launch-consent requirements in force name: "),
     ("launch read (1)",
      "(1) the .git file or directory and the files that locate the Git directory and the common Git directory; "),
     ("launch read (2)",
@@ -527,8 +527,12 @@ def selftest() -> int:
                   "force name:", " alone:"), "at the clause 'the five launch reads'"),
         ("(R2 F1) the launch-read list closed for every run, not the launch-consented run alone",
          _replace("readAuthority", "In a launch-consented run (REQ-polaris-generation-046 and 047), besides the "
-                  "object reads, Syzygy reads only the following:", "In every run, besides the object reads, Syzygy "
-                  "reads only the following:"), "at the clause 'the five launch reads'"),
+                  "object reads, Syzygy reads of the operator's clone and the copy only the following:", "In every run, "
+                  "besides the object reads, Syzygy reads of the operator's clone and the copy only the following:"),
+         "at the clause 'the five launch reads'"),
+        ("(R3 F2) the closed list widened past the clones to every read the run makes",
+         _replace("readAuthority", "Syzygy reads of the operator's clone and the copy only the following:",
+                  "Syzygy reads only the following:"), "at the clause 'the five launch reads'"),
         ("(R2 F1) a run that is not launch-consented closed to its HEAD-check reads",
          _replace("readAuthority", "A run that is not launch-consented has no closed list of reads here beyond the "
                   "object reads", "A run that is not launch-consented reads nothing beyond the object reads"),

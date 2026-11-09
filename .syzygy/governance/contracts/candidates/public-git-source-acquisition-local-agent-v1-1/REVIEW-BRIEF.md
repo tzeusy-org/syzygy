@@ -1,4 +1,4 @@
-# Review brief — public Git source acquisition, local-agent version 1.1, round 3
+# Review brief — public Git source acquisition, local-agent version 1.1, round 4
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
@@ -8,8 +8,12 @@
 > notes; `ROUND-1-DISPOSITIONS.md` says how each was taken. Round 2
 > (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-2-RAW.md`, over `5236223d`)
 > returned `REVISE` with two revise findings and four notes;
-> `ROUND-2-DISPOSITIONS.md` says how each was taken. Round 3 is a fresh
-> review of the repaired bytes, not a check of the dispositions alone. The drafting lane dispatches no review. Dispatch
+> `ROUND-2-DISPOSITIONS.md` says how each was taken. Round 3
+> (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-3-RAW.md`, over `0f1a203d`)
+> returned `REVISE` with one revise finding and four notes;
+> `ROUND-3-DISPOSITIONS.md` says how each was taken and carries the table
+> of every read the launch path makes. Round 4 is a fresh review of the
+> repaired bytes, not a check of the dispositions alone. The drafting lane dispatches no review. Dispatch
 > this round only while PR #812 stands at head `de9c1ba8`, to which this
 > package is bound: its post-apply launch-consent spec (proposed spec
 > digest printed by #812's builder at that head) is the text every Proposed
@@ -45,9 +49,10 @@ and run no dossier.
   (the subject) and its `.patch` against the installed v1.0 entry;
 - `SEMANTIC-DELTA.md`, `IMPACT-LEDGER.md`, `OWNER-SIGNOFF.md`,
   `PROPOSED-SUBJECTS.json`, `ROUND-1-DISPOSITIONS.md`,
-  `ROUND-2-DISPOSITIONS.md` and this brief;
-- the round-1 and round-2 raws, `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-1-RAW.md`
-  and `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-2-RAW.md`;
+  `ROUND-2-DISPOSITIONS.md`, `ROUND-3-DISPOSITIONS.md` and this brief;
+- the round-1 to round-3 raws, `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-1-RAW.md`,
+  `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-2-RAW.md` and
+  `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-3-RAW.md`;
 - **reviewed bytes outside the package directory** (round-2 Finding 4):
   the four texts the signed v1.1 record and aggregate block will carry,
   `GIT_SOURCE_V11_SCOPE`, `GIT_SOURCE_V11_SUPERSESSION`,
@@ -67,8 +72,13 @@ and run no dossier.
   selftests;
 - the rule-6 mutation record
   `docs/evidence/syzygy-pdja-29/round-1-repairs-mutation-2026-11-10.json`
-  and its round-2 sibling
-  `docs/evidence/syzygy-pdja-29/round-2-repairs-mutation-2026-11-10.json`;
+  and its round-2 and round-3 siblings
+  `docs/evidence/syzygy-pdja-29/round-2-repairs-mutation-2026-11-10.json`
+  and `docs/evidence/syzygy-pdja-29/round-3-repairs-mutation-2026-11-10.json`;
+- read only, product code the enumeration maps (not under review, and not
+  changed by this package): `packages/polaris-dossier/src/init.ts`,
+  `launch.ts`, `launch-clone.ts`, `launch-revision.ts`, `clone-head.ts`,
+  `clone-shape.ts` and `git-object-reader.ts`;
 - the closed-set line in
   `scripts/prepare_three_surface_poc_governedby_reference_recording.py`.
 
@@ -95,38 +105,32 @@ and run no dossier.
 ## What the reviewer decides
 
 1. **Exactness against the copy step.** Does each Proposed block admit the
-   copy REQ-047 drafts at `de9c1ba8`, and no more? Test, at least: the run
-   classes as the entry defines them; the named identifier; the five launch
-   reads and their bound ("of what they list only what the launch-consent
-   requirements in force name"); the Git environment; the fetch's form; the
-   commit test from the copy's `HEAD`; the object reads moving to the copy;
-   the no-copy form-check reads; the copy's directory, Syzygy's own writes
-   to it and Git's; the non-commit object; the refusals. Does the entry
-   claim anything #812 at that head does not say?
-2. **Where the list is closed (round-2 Finding 1).** Is the launch-read
-   list now closed exactly where #812 closes it, the launch-consented run,
-   and nowhere else? For a run that is not launch-consented, is every read
-   the implementation makes today (`init.ts`, `clone-head.ts`,
-   `clone-shape.ts`) either an object read or named, and is nothing
-   closed that v1.0 left open? Are E2 and the Dependency section true?
-3. **What v1.1 already names (round-2 Finding 2).** Re-derive E3's table
-   against the installed v1.1 spec and #812's post-apply spec. Is each row
-   right, and do E3, "Dependency on launch-consent v1.2" and the owner
-   page's "What changes" and "Before you sign" item 1 say the same?
-4. **Signed alone.** Read the entry as if launch-consent v1.2 were never
-   signed. Does every v1.0 guarantee hold for every run, in the entry's own
-   words, and does every read v1.1's own rules need stay admitted?
-5. **The record texts (round-2 Finding 4).** Are the four
-   `GIT_SOURCE_V11_*` texts true of v1.1, and does the selftest pin them
-   in full? Does v1.0's record still regenerate byte for byte, and does
-   `--check --version 1.0` still guard its SHA-256 line?
-6. **Everything else byte-identical.** Confirm the patch touches only the
-   five declarations, and the builder's proof of it; re-run any coherent
-   mutants you choose.
-7. **The ledger.** Are items 1a and 2 now complete and exact (round-2
-   Findings 3 and 5)?
-8. **The owner page.** Does it put the owner's choices plainly and without
-   leaning on the answer?
+   copy REQ-047 drafts at `de9c1ba8`, and no more? Is the closed list now
+   scoped as #812 scopes it, "of the operator's clone and the copy"
+   (round-3 Finding 2)? Does the entry claim anything #812 at that head
+   does not say?
+2. **The enumeration (round-3 Finding 1).** Check the table in
+   `ROUND-3-DISPOSITIONS.md` against the code: is every read a
+   launch-consented run makes today, of the operator's clone, in a row,
+   and is each row's clause right? Is anything outside the entry that the
+   table maps to a clause, or missing from item 1b? Judge the one row it
+   flags (row 16, the object reader's `lstat` of `objects/info/alternates`).
+3. **The narrowing (item 1b).** Is it named exactly, and is the claim that
+   it lands with the v1.2 implementation labelled and true of #812's
+   ledger at `de9c1ba8`?
+4. **Signed alone.** Do E3's closing paragraph, "Dependency on
+   launch-consent v1.2" and the owner page's "What changes" bullet and
+   "Before you sign" item 1 now say plainly that signing closes reads
+   v1.1's runs make today and that the code narrows to match? Is option 2
+   put to the owner fairly?
+5. **The record texts (round-3 Finding 3).** Are the four
+   `GIT_SOURCE_V11_*` texts true of v1.1 and pinned in full?
+6. **Item 1a (round-3 Finding 4).** Is the list of what pins the v1.0
+   identity now complete? A sweep for both the form constant and the
+   literals is described; re-run it.
+7. **E2 (round-3 Finding 5).** Is the form-check read list complete?
+8. **Everything else byte-identical.** Confirm the patch touches only the
+   five declarations, and the builder's proof of it.
 
 No question is put to the reviewer beyond these.
 
@@ -148,7 +152,7 @@ python3 scripts/check_docs_review_campaign_partition.py --check
 
 ## The raw: where it goes and its head
 
-Save the raw as docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-3-RAW.md,
+Save the raw as docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md,
 verbatim (CC-REV-6); the campaign file
 `docs/review-campaigns/git-source-local-agent-v1-1.md` already matches it. The recorder binds it by these predicates, quoted
 from `scripts/record_versioned_signoff.py` (`parse_head_form`,

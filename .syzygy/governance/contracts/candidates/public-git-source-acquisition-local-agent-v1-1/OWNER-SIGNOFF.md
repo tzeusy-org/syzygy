@@ -73,6 +73,11 @@ for a copy, so every run is a no-copy run.
   (`packed-refs` included), and the object names a shortened `--revision`
   needs. Only two items are asked for by v1.2 alone: the local branch named
   like the remote's default, and whether an alternates file exists.
+  **Today's code reads more than this list.** It reads the value of every
+  reference in your clone (tags, every remote branch, the stash), and it
+  lists every object name in your clone even for a full-length
+  `--revision`. Signing closes those two reads, so the launch code must be
+  narrowed to the list in the same commit ("Before you sign", item 1).
 - **For a run started without launch consent** (the redis run, for
   example), the entry closes no list, just as v1.0 did not. It names in
   words what such a run already reads: the files its clone-form check
@@ -97,16 +102,35 @@ for a copy, so every run is a no-copy run.
 1. **Sign this together with launch-consent v1.2, or not at all.**
    - Signed alone, every run stays a no-copy run, so v1.0's promises hold
      in v1.0's words for every run: nothing fetched, no process started,
-     nothing written outside the state directory. What changes is only
-     that the entry now says in words what Syzygy reads of your clone at
-     launch. For a run launched with consent that is a closed list, and
-     under v1.1 it admits what v1.1 already reads; the two v1.2-only items
-     stay out. For any other run it closes nothing, as v1.0 did not. But
-     the entry's bytes change, so the gate code wired to v1.0 must change in
-     the same commit (`IMPACT-LEDGER.md`, items 1 and 1a: the reader in
-     `packages/polaris-generation-consent/src/package-reader.ts`, its record
-     template, and three test or measurement files), or every local-agent
-     dossier read refuses.
+     nothing written outside the state directory. What changes is that the
+     entry now says in words what Syzygy reads of your clone at launch. For
+     a run launched with consent that is a closed list, and **signing it
+     closes two reads today's code makes**: the value of every reference,
+     and the object-name listing for a full-length `--revision`. The two
+     v1.2-only items also stay out. For any other run it closes nothing, as
+     v1.0 did not.
+   - So two code changes must land in the same commit as this sign-off,
+     each under its own implementation authorization, or every local-agent
+     dossier read refuses or reads outside the entry:
+     - the gate code wired to v1.0 (`IMPACT-LEDGER.md`, items 1 and 1a: the
+       reader in `packages/polaris-generation-consent/src/package-reader.ts`,
+       its record template, and the tests and scripts that pin v1.0);
+     - the launch reads narrowed to the list (`IMPACT-LEDGER.md`, item 1b:
+       `packages/polaris-dossier/src/launch-clone.ts` reads only the named
+       references' values, and `launch-revision.ts` lists object names for a
+       shortened `--revision` only). Launch-consent v1.2's own ledger already
+       requires this narrowing, so if you sign the two together it lands
+       with v1.2's implementation.
+   - **Your choice on that closed list.** This draft takes option 1.
+     - *Option 1 (drafted): keep #812's list as it is, and narrow the
+       code.* The entry then admits no more than launch-consent v1.2 does,
+       and today's broader reads end with the signing commit.
+     - *Option 2: word reads (2) and (5) broadly enough to admit what the
+       code reads today,* so no code has to narrow for this sign-off. They
+       could never be wider than v1.2's list once v1.2 is in force, so the
+       code would have to narrow then anyway; until then the entry would
+       admit reading every reference's value and the full object-name
+       listing. Choosing it means a redraft and another review round.
    - Launch-consent v1.2 signed without this cannot take effect: its copy
      would exceed the entry.
    - If v1.2 moves from `de9c1ba8` before you sign, this package is
@@ -150,7 +174,10 @@ for a copy, so every run is a no-copy run.
   `public-git-source-acquisition-local-agent-v1.1` to create.
 - It does not edit the v1.0 record. The v1.1 record says it supersedes
   version 1.0, and names its own scope and what it widens: local execution
-  and a local write, in a copy-class run alone, and no network egress.
+  and a local write, and reading that copy in place of your clone, in a
+  copy-class run alone, and no network egress. It also says that, for every
+  launch-consented run, it closes in words the reads Syzygy makes of your
+  clone.
 - It is one of the separate acts a read needs. It gives no observation
   consent, adopts no screening policy, and authorizes no implementation.
 
