@@ -10,7 +10,9 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-3-RAW.md:4`), over `3ab7c949`, the third review of package `polaris-dossier-launch-consent` v1.2 (existing full clones and any https or ssh locator, owner direction `OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09`). It has three revise findings and three editorial notes, all in the full-clone reading design. Under the stopping rule the package went to the owner, who chose a redesign (Syzygy copies the trunk-tip commit from the operator's clone over Git's local file transport; the direction record's section of 2026-11-10). The six findings are disposed as superseded in `polaris-dossier-launch-consent-v1-2/ROUND-3-DISPOSITIONS.md`; the redesign awaits a fresh review, round 4.
+`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-4-RAW.md:4`), over `35015c5e`, the fourth review of package `polaris-dossier-launch-consent` v1.2 and the first of the owner's redesign (Syzygy copies the trunk-tip commit from the operator's clone over Git's local file transport; direction record section of 2026-11-10). It has three revise findings and six notes, on the text's consistency, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-4-DISPOSITIONS.md`; notes 7 and 8 are also carried to the owner. The redesign is treated as a fresh sequence: after two more `REVISE` verdicts it goes to the owner. The repaired bytes await round 5.
+
+Round 3 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-3-RAW.md:4`), over `3ab7c949`: three revise findings and three notes on the in-place design. Under the stopping rule the owner chose the redesign, and the findings are disposed as superseded in `ROUND-3-DISPOSITIONS.md`.
 
 Round 2 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-2-RAW.md:4`), over `82399c9b`: three revise findings and three editorial notes, disposed in `ROUND-2-DISPOSITIONS.md`.
 
