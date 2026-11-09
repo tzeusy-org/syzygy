@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import * as zlib from 'node:zlib';
 import { describe, expect, it } from 'vitest';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { launchConsent, type LaunchOutcome, type LaunchPorts, type LaunchRequest } from './launch.js';
@@ -23,7 +24,7 @@ function readLog(): { readonly open: (o: PinnedObjectReaderOptions) => PinnedObj
     open: o => {
       const r = openPinnedObjectReader(o);
       const wrap = <K extends keyof PinnedObjectReader>(k: K) => ((...args: unknown[]) => { log.calls.push(`${String(k)} ${o.revision}`); return (r[k] as (...a: unknown[]) => unknown)(...args); }) as PinnedObjectReader[K];
-      return { revision: r.revision, algorithm: r.algorithm, tree: wrap('tree'), readBlobs: wrap('readBlobs'), listTree: wrap('listTree'), inventory: wrap('inventory'), commitHead: wrap('commitHead') };
+      return { revision: r.revision, algorithm: r.algorithm, tree: wrap('tree'), readBlobs: wrap('readBlobs'), listTree: wrap('listTree'), inventory: wrap('inventory'), commitHead: wrap('commitHead'), storedType: wrap('storedType') };
     },
   };
 }
@@ -294,7 +295,27 @@ describe('REQ-polaris-generation-047 against real clones', () => {
       reason: `the clone's HEAD is ${up.commits[0]}, not the pinned revision ${up.commits[1]} (refs/remotes/origin/HEAD -> refs/remotes/origin/main); Syzygy does not change the checkout`,
       command: `git -C '${clone}' checkout --detach ${up.commits[1]}` } });
     expect(listing(clone)).toEqual(before);
-    expect(s.reads.log.calls.filter(c => !c.startsWith('tree '))).toEqual([]);   // only the pinned commit object, re-hashed, before the refusal
+    expect(s.reads.log.calls).toEqual([`storedType ${up.commits[1]}`, `tree ${up.commits[1]}`]);   // the pinned commit's header, then the commit re-hashed, before the refusal
+  });
+
+  it('an annotated tag or a blob named by --revision refuses from its header alone; its body is never read (syzygy-pdja.30)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    gitIn(up.dir, 'tag', '-a', 'v1', '-m', 'a tag message');
+    const clone = fullClone(up.dir, URL_RR);
+    const tag = gitIn(clone, 'rev-parse', 'v1'), blob = gitIn(clone, 'rev-parse', 'HEAD:a.c');
+    const tagSize = gitIn(clone, 'cat-file', '-s', tag);
+    // Each object's stored bytes become its header, sync-flushed, then bytes no zlib stream continues with: only a header read answers.
+    for (const [id, header] of [[tag, `tag ${tagSize}\0`], [blob, 'blob 2\0']] as const) {
+      const file = path.join(clone, '.git', 'objects', id.slice(0, 2), id.slice(2));
+      fs.rmSync(file, { force: true });
+      fs.writeFileSync(file, Buffer.concat([zlib.deflateSync(Buffer.from(header, 'latin1'), { finishFlush: zlib.constants.Z_SYNC_FLUSH }), Buffer.alloc(4096, 0xff)]));
+    }
+    for (const [revision, id] of [['v1', tag], [blob, blob]] as const) {
+      const s = setup([], { request: { revision } });
+      expect(await run(clone, s), revision).toEqual({ kind: 'refused', refusal: { stage: 'revision', missing: [], recorded: false,
+        reason: `--revision ${revision} resolves to ${id}, which is not a commit the clone's store holds` } });
+      expect(s.reads.log.calls, revision).toEqual([`storedType ${id}`]);
+    }
   });
 
   it('a trunk named master with no remote default; an abbreviated --revision', async () => {

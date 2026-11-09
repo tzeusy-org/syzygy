@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { chmodSync, closeSync, constants as fsConstants, cpSync, existsSync, mkdirSync, openSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { deflateSync } from 'node:zlib';
+import { constants as zlibConstants, deflateSync } from 'node:zlib';
 import { tempDir } from '@syzygy/test-kit';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { GitObjectReadRefusal, hashAlgorithmOf, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
@@ -296,7 +296,7 @@ describe('paths, types, and no state between calls', () => {
       "import { createHash } from 'node:crypto';",
       "import { constants, lstat, open, readdir, type FileHandle } from 'node:fs/promises';",
       "import path from 'node:path';",
-      "import { inflateSync } from 'node:zlib';",
+      "import { constants as zlib, inflateSync } from 'node:zlib';",
     ]);
     expect(source).not.toMatch(/child_process|\bspawn(Sync)?\(|(?<![.\w])exec(File)?(Sync)?\(|\bimport\(|\brequire\(|\bprocess\./);
   });
@@ -802,4 +802,87 @@ describe('paths are at most git\'s core.maxTreeDepth (4,096) segments deep (R-PO
       reason: 'malformed-tree', objectId: trees[1]!.id, path: null, message: `tree ${trees[1]!.id} nests trees deeper than git's core.maxTreeDepth (4096)`,
     });
   }, 240_000);
+});
+
+describe('storedType reads the header alone, never the body (syzygy-pdja.30)', () => {
+  /** A loose object's stored bytes rewritten as its own header, sync-flushed, then bytes no zlib stream continues with: the header
+   * inflates and the body cannot. */
+  const headerThenGarbage = (repo: string, id: string, header: string): void => {
+    const file = looseFile(repo, id);
+    rmSync(file, { force: true });
+    writeFileSync(file, Buffer.concat([deflateSync(Buffer.from(header, 'latin1'), { finishFlush: zlibConstants.Z_SYNC_FLUSH }), Buffer.alloc(4096, 0xff)]));
+  };
+  /** The bytes of the pack entry header at `offset`: the type-and-size varint, then a delta's offset varint or base identifier. */
+  const entryHeaderLength = (pack: Buffer, offset: number): number => {
+    let i = offset, c = pack[i++]!;
+    const kind = (c >> 4) & 7;
+    while (c & 0x80) c = pack[i++]!;
+    if (kind === 6) { c = pack[i++]!; while (c & 0x80) c = pack[i++]!; }
+    if (kind === 7) i += 20;
+    return i - offset;
+  };
+  /** Every byte after each named entry's header, up to the next entry, overwritten: the entry headers stay, every body is gone. */
+  const corruptBodies = (repo: string, ids: readonly string[]): void => {
+    const file = packFile(repo), pack = readFileSync(file), entries = packEntries(repo);
+    const sorted = [...entries.offsets.values()].sort((a, b) => a - b);
+    for (const id of ids) {
+      const offset = entries.offsets.get(id)!, end = sorted.find(o => o > offset) ?? pack.length - 20;
+      pack.fill(0xff, offset + entryHeaderLength(pack, offset), end);
+    }
+    overwrite(file, pack);
+  };
+  /** Each delta entry and its base, from `git verify-pack -v` (fixture inspection only). */
+  const deltaBases = (repo: string): (readonly [string, string])[] => {
+    const dir = path.join(repo, '.git/objects/pack'), idx = readdirSync(dir).find(n => n.endsWith('.idx'))!;
+    return git(repo, ['verify-pack', '-v', path.join(dir, idx)]).split('\n')
+      .map(l => /^([0-9a-f]{40}) blob +\d+ \d+ \d+ \d+ ([0-9a-f]{40})$/.exec(l)).flatMap(m => (m === null ? [] : [[m[1]!, m[2]!] as const]));
+  };
+  const BIG2_ID = '86eba436a1086aacef37e390ddc455d5f7c36d76';
+  const TAG = '64b2aa1848d9e443c24a87aed2a41922a2815c18';   // the annotated tag v1 on C2, dated as below
+  let TAGGED = '';
+  beforeAll(() => {
+    TAGGED = copy(L, 'tagged');
+    git(TAGGED, ['tag', '-a', 'v1', '-m', 'one', C2], at('2026-10-06T00:03:00Z'));
+  });
+
+  it('answers each type from loose objects and both delta forms', async () => {
+    expect(git(TAGGED, ['rev-parse', 'v1'])).toBe(TAG);
+    for (const repo of [L, OFS, REF]) {
+      expect([await reader(repo, C2).storedType(), await reader(repo, TREE2).storedType(), await reader(repo, QUOTED_ID).storedType(), await reader(repo, BIG2_ID).storedType()], repo)
+        .toEqual(['commit', 'tree', 'blob', 'blob']);
+    }
+    expect(await reader(TAGGED, TAG).storedType()).toBe('tag');
+    expect(await reader(S, S2).storedType()).toBe('commit');
+  });
+
+  it('a loose tag or blob whose body cannot inflate past its header still answers its type; a full read refuses', async () => {
+    const repo = copy(TAGGED, 'loose-garbage');
+    const tagSize = Number(git(repo, ['cat-file', '-s', TAG])), blobSize = Buffer.byteLength(QUOTED);
+    headerThenGarbage(repo, TAG, `tag ${tagSize}\0`);
+    headerThenGarbage(repo, QUOTED_ID, `blob ${blobSize}\0`);
+    expect(await reader(repo, TAG).storedType()).toBe('tag');
+    expect(await reader(repo, QUOTED_ID).storedType()).toBe('blob');
+    expect(await refusal(reader(repo, TAG).tree())).toEqual({ reason: 'corrupt-object', objectId: TAG, path: null, message: `loose object ${TAG} does not inflate` });
+    expect(await refusal(reader(repo, C2).readBlobs(['src/quoted.txt']))).toEqual({
+      reason: 'corrupt-object', objectId: QUOTED_ID, path: 'src/quoted.txt', message: `loose object ${QUOTED_ID} does not inflate` });
+  });
+
+  it('a loose header is charged one 64-byte stored read and its inflation: the body is never charged', async () => {
+    expect(await reader(L, BIG2_ID, { maxInflatedBytesPerCall: 128 }).storedType()).toBe('blob');
+    expect(await refusal(reader(L, BIG2_ID, { maxInflatedBytesPerCall: 128 }).tree())).toMatchObject({ reason: 'budget-exceeded' });
+    expect(await refusal(reader(L, BIG2_ID, { maxInflatedBytesPerCall: 40 }).storedType())).toEqual({   // the 64 stored bytes are charged as read
+      reason: 'budget-exceeded', objectId: BIG2_ID, path: null, message: `${BIG2_ID}: this call would inflate or produce more than 40 bytes` });
+  });
+
+  it('a packed tag, and a delta whose every chain entry has its body overwritten, answer from entry headers alone', async () => {
+    const repo = copy(TAGGED, 'packed-garbage');
+    git(repo, ['repack', '-q', '-a', '-d', '-f', '--window=10', '--depth=10']); git(repo, ['prune-packed']);
+    const chain = deltaBases(repo);
+    expect(chain).toHaveLength(1);
+    const [delta, base] = chain[0]!;
+    corruptBodies(repo, [TAG, delta, base]);
+    expect([await reader(repo, TAG).storedType(), await reader(repo, delta).storedType(), await reader(repo, base).storedType()]).toEqual(['tag', 'blob', 'blob']);
+    expect(await refusal(reader(repo, TAG).tree())).toMatchObject({ reason: 'corrupt-object', objectId: TAG });
+    expect(await refusal(reader(repo, delta).tree())).toMatchObject({ reason: 'corrupt-object', objectId: delta });
+  });
 });
