@@ -1939,3 +1939,32 @@ Claude Code CLI (quoted in the dedicated record).
 This sign-off authorizes no implementation, widens no consent, read, write or
 egress, and a later version of the package is signed separately.
 <!-- /versioned-signoff:polaris-dossier-local-agent-mode:v1.6 -->
+
+<!-- PWB-POLICY-SCOPE-V8:BEGIN -->
+## Public-source screening scope version 8 act — approve-policy — performed 2026-11-09
+
+**Phrase the act takes (given by the owner's selected words, not typed as a
+phrase; see the dedicated record):**
+
+```text
+APPROVE POLARIS BUTLERS SECRET-CLASSIFICATION POLICY: 44153bbe210c7a724f224f2bc1c9255db43cf0887b6ad22dd24884514f21bbe8
+```
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Act type / artifact | `approve-policy` / `.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json` |
+| Argument | SHA-256 of the artifact itself: the one row (variant `pv`) of the package manifest, recomputed at recording |
+| Provenance state | `owner-adopted (bootstrap, uncorrelated)` — a state-(1) human act, owner-trusted and never independently verified |
+| A1 audit-record identity | explicitly absent, satisfying RFC3-16(b) item 9 for state (1) |
+| Frozen subject | `f5bfaed7d7f232f040fcabcf95dc99ba33cc0d8d` |
+| Manifest | `.syzygy/governance/contracts/candidates/public-source-screening-scope-v8/PUBLIC-SOURCE-SCREENING-SCOPE-V8-MANIFEST.txt`, SHA-256 `3da4502006c942524287b4a6831a65aac2a8df0f8ce59edb0b753a44cdc94a00` |
+| Review outcome | `docs/reviews/R-SCREENING-SCOPE-V8-6-RAW.md`: `CONFIRM WITH EXCEPTIONS`, its head bound to the manifest file |
+| Owner's words given (UTC date) | `2026-11-08` |
+| Recorded at (UTC) | `2026-11-09T09:27:14Z` |
+| Recording | `.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-ACT.md`; annotated tag `pwb-approve-policy-public-source-scope-v8-signed-2026-11-09` on the commit carrying these records |
+
+Effective status: this one record is **effective owner authority —
+owner-adopted (bootstrap, uncorrelated)** for its own role only. It grants no
+consent, read or egress.
+<!-- PWB-POLICY-SCOPE-V8:END -->
