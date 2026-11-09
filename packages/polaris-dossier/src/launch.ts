@@ -12,7 +12,7 @@ import {
 } from './launch-question.js';
 import { recordIdFor, renderLaunchRecord, type LaunchRecord, type LaunchRecordClass, type PublicDeclaration } from './launch-record.js';
 import { checkoutCommand, defaultRemote, pinLaunchRevision, updateCommand } from './launch-revision.js';
-import { LAUNCH_REF, homeGitDirs, readLaunchRecords, writeLaunchRecords, type StoreRead, type StoredRecord, type WriteResult } from './launch-store.js';
+import { LAUNCH_REF, homeGitDirs, readLaunchRecords, recordingSubject, writeLaunchRecords, type StoreRead, type StoredRecord, type WriteResult } from './launch-store.js';
 import type { WriteConsentState } from './launch-write-consent.js';
 
 /** Launch-time consent (REQ-polaris-generation-046) and the trunk-tip pin (047), in the order the clauses fix.
@@ -311,7 +311,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   });
   const written: WriteResult = (ports.writeStore ?? writeLaunchRecords)(ports.home, {
     records, expectedTip: store.tip, operator: request.operator,
-    message: `launch consent: ${records.map(r => r.recordId).join(', ')}\n\nRecorded by Syzygy at launch for the operator ${request.operator}, on the owner's typed phrases (REQ-polaris-generation-046), under the write consent WRITE-CONSENT-LAUNCH-RECORDS.\n`,
+    message: `${recordingSubject(records.map(r => r.recordId))}\n\nRecorded by Syzygy at launch for the operator ${request.operator}, on the owner's typed phrases (REQ-polaris-generation-046), under the write consent WRITE-CONSENT-LAUNCH-RECORDS.\n`,
   });
   if (!written.ok) return refuse('write', `the records could not be committed: ${written.why}`);
   return {

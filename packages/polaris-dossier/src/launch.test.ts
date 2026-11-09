@@ -191,6 +191,13 @@ describe('refusals before asking, and refusals of the answer, record nothing', (
     expect(s.terminal.prompts).toEqual([]);
   });
 
+  it('an unreadable launch-records reference: refuses before asking, naming why, and records nothing (review F5)', async () => {
+    const { clone } = plain();
+    const s = setup([], { ports: { readStore: () => ({ ok: false, why: 'the commit c0ffee on refs/heads/launch-consent-records has 2 parents' }) } });
+    expect(await run(clone, s)).toMatchObject({ kind: 'refused', refusal: { stage: 'records', reason: 'the launch consent records on refs/heads/launch-consent-records cannot be read: the commit c0ffee on refs/heads/launch-consent-records has 2 parents' } });
+    expect(s.terminal.prompts).toEqual([]);
+  });
+
   it('an A1 mechanism in force: refuses to record without a state selection', async () => {
     const { clone } = plain();
     const s = setup([], { ports: { a1InForce: () => true } });

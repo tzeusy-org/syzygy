@@ -86,20 +86,30 @@ export function readTip(git: GitRun): { readonly tip: string | null } | { readon
   return { tip: oid };
 }
 
-interface CommitHead { readonly tree: string; readonly parents: readonly string[] }
+/** The committer every recording commit carries (REQ-polaris-generation-046: attributed to Syzygy and the operator). */
+export const RECORDING_COMMITTER = 'Syzygy <syzygy@launch-consent.invalid>';
+/** The first line of a recording commit's message: the record IDs it adds, sorted by code unit so writer and reader agree. */
+export const recordingSubject = (recordIds: readonly string[]): string => `launch consent: ${[...recordIds].sort().join(', ')}`;
+
+interface CommitHead { readonly tree: string; readonly parents: readonly string[]; readonly committer: string | null; readonly subject: string }
 function commitHead(git: GitRun, oid: string): CommitHead | null {
   const body = text(git, ['cat-file', 'commit', oid]);
   if (body === null) return null;
-  const header = body.slice(0, body.indexOf('\n\n') < 0 ? body.length : body.indexOf('\n\n')).split('\n');
+  const split = body.indexOf('\n\n');
+  const header = body.slice(0, split < 0 ? body.length : split).split('\n');
   const tree = /^tree ([0-9a-f]+)$/.exec(header[0] ?? '')?.[1];
   if (tree === undefined) return null;
   const parents: string[] = [];
-  for (const line of header.slice(1)) {
-    const m = /^parent ([0-9a-f]+)$/.exec(line);
+  let at = 1;
+  for (; at < header.length; at++) {
+    const m = /^parent ([0-9a-f]+)$/.exec(header[at]!);
     if (m === null) break;
     parents.push(m[1]!);
   }
-  return { tree, parents };
+  const committerLine = header.find(line => line.startsWith('committer '));
+  const committer = committerLine === undefined ? null : /^committer (.+) \d+ [+-]\d{4}$/.exec(committerLine)?.[1] ?? null;
+  const subject = split < 0 ? '' : body.slice(split + 2).split('\n')[0] ?? '';
+  return { tree, parents, committer, subject };
 }
 
 const RECORD_FILE = /^LAUNCH-[A-Z]+-[0-9a-f]{12}-\d{8}T\d{6}Z-[0-9a-f]{8}\.md$/;
@@ -166,7 +176,7 @@ export function readLaunchRecords(home: string, git: GitRun = homeGit(home)): St
   const tipRead = readTip(git);
   if ('why' in tipRead) return { ok: false, why: tipRead.why };
   if (tipRead.tip === null) return { ok: true, tip: null, records: [] };
-  const chain: { commit: string; parent: string | null }[] = [];
+  const chain: { commit: string; parent: string | null; committer: string | null; subject: string }[] = [];
   const visited = new Set<string>();
   for (let at: string | null = tipRead.tip; at !== null;) {
     if (visited.has(at) || chain.length >= MAX_CHAIN) return { ok: false, why: `${LAUNCH_REF} is longer than ${MAX_CHAIN} commits or loops` };
@@ -174,13 +184,17 @@ export function readLaunchRecords(home: string, git: GitRun = homeGit(home)): St
     const head = commitHead(git, at);
     if (head === null) return { ok: false, why: `the commit ${at} on ${LAUNCH_REF} cannot be read` };
     if (head.parents.length > 1) return { ok: false, why: `the commit ${at} on ${LAUNCH_REF} has ${head.parents.length} parents; a recording commit has at most one` };
-    chain.push({ commit: at, parent: head.parents[0] ?? null });
+    chain.push({ commit: at, parent: head.parents[0] ?? null, committer: head.committer, subject: head.subject });
     at = head.parents[0] ?? null;
   }
   const found: Omit<StoredRecord, 'state' | 'stateBy'>[] = [];
-  for (const { commit, parent } of chain.reverse()) {
+  for (const { commit, parent, committer, subject } of chain.reverse()) {
     const added = addedFiles(git, commit, parent);
     if ('why' in added) return { ok: false, why: added.why };
+    // Attribution is a stored claim any writer of the reference can copy. Checking it refuses commits that do not even claim to be
+    // Syzygy's recording commits (an agent's or an operator's own); a commit that copies the claim is read (the write consent's residual).
+    if (committer !== RECORDING_COMMITTER) return { ok: false, why: `the commit ${commit} on ${LAUNCH_REF} is not attributed to Syzygy as committer (${JSON.stringify((committer ?? 'none').slice(0, 120))}), so it is not a recording commit` };
+    const firstFound = found.length;
     for (const file of added.files) {
       const body = git(['cat-file', 'blob', file.blob]);
       if (body.status !== 0) return { ok: false, why: `the record ${file.path} cannot be read` };
@@ -191,6 +205,8 @@ export function readLaunchRecords(home: string, git: GitRun = homeGit(home)): St
       if (path.posix.basename(file.path) !== recordFileFor(parsed.record.recordId)) return { ok: false, why: `the file ${file.path} holds the record ${parsed.record.recordId}, which is not its name` };
       found.push({ record: parsed.record, digest: parsed.digest, file: file.path, commit });
     }
+    const ids = found.slice(firstFound).map(f => f.record.recordId);
+    if (subject !== recordingSubject(ids)) return { ok: false, why: `the commit ${commit} on ${LAUNCH_REF} does not carry a recording commit's message for the records it adds` };
   }
   const ids = new Set(found.map(f => f.record.recordId));
   if (ids.size !== found.length) return { ok: false, why: `${LAUNCH_REF} holds two records with one record ID` };

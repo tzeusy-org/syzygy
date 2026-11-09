@@ -1,9 +1,11 @@
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { GIT_ENV } from '@syzygy/test-kit';
 import { describe, expect, it } from 'vitest';
 import { recordIdFor, renderLaunchRecord, type LaunchRecord } from './launch-record.js';
-import { LAUNCH_REF, readLaunchRecords, writeLaunchRecords } from './launch-store.js';
+import { LAUNCH_REF, homeGit, readLaunchRecords, recordingSubject, writeLaunchRecords, type GitRun } from './launch-store.js';
 import { gitIn, listing, makeHome, writeFiles } from './launch.testkit.js';
 
 /** The write consent's scope (WRITE-CONSENT-LAUNCH-RECORDS, `Scope`) and REQ-polaris-generation-046 line 23 (records read only from the
@@ -21,7 +23,7 @@ const record = (instant: string, more: Partial<LaunchRecord> = {}): { recordId: 
   return { recordId: r.recordId, text: renderLaunchRecord(r) };
 };
 const write = (home: string, records: readonly { recordId: string; text: string }[], expectedTip: string | null) =>
-  writeLaunchRecords(home, { records, expectedTip, operator: 'Op Erator', message: 'launch consent: test\n' });
+  writeLaunchRecords(home, { records, expectedTip, operator: 'Op Erator', message: `${recordingSubject(records.map(r => r.recordId))}\n` });
 const tipOf = (home: string): string => gitIn(home, 'rev-parse', LAUNCH_REF);
 
 describe('the recording commit', () => {
@@ -59,6 +61,26 @@ describe('the recording commit', () => {
     expect(gitIn(home, 'rev-list', '--parents', '-n', '1', LAUNCH_REF)).toBe(`${tipOf(home)} ${first}`);
     expect(gitIn(home, 'diff-tree', '-r', '--name-status', first, LAUNCH_REF)).toBe(`A\t.syzygy/governance/decisions/launch-consent/${b.recordId}.md`);
     expect(write(home, [a], tipOf(home))).toEqual({ ok: false, why: `.syzygy/governance/decisions/launch-consent/${a.recordId}.md already exists; a recording commit adds new files only` });
+  });
+
+  it('refuses when the reference moves between the tip read and update-ref, leaving the other writer\'s tip (review F5)', () => {
+    const home = makeHome();
+    expect(write(home, [record('2026-11-09T10:00:00Z')], null).ok).toBe(true);
+    const first = tipOf(home);
+    // Another writer's commit, made by plain git: the tip the old-value check must protect.
+    const other = gitIn(home, 'commit-tree', gitIn(home, 'rev-parse', `${first}^{tree}`), '-p', first, '-m', 'another writer');
+    const racing = (identity: { readonly author: string; readonly committer: string }): GitRun => {
+      const real = homeGit(home, identity);
+      return (args, input) => {
+        if (args[0] === 'update-ref') gitIn(home, 'update-ref', LAUNCH_REF, other);
+        return real(args, input);
+      };
+    };
+    const b = record('2026-11-09T11:00:00Z');
+    const w = writeLaunchRecords(home, { records: [b], expectedTip: first, operator: 'Op Erator', message: `${recordingSubject([b.recordId])}\n` }, racing);
+    expect(w.ok).toBe(false);
+    if (!w.ok) expect(w.why).toMatch(new RegExp(`^${LAUNCH_REF} could not be moved from ${first} \\(it may have moved\\); the recording commit [0-9a-f]{40} is on no reference$`));
+    expect(tipOf(home)).toBe(other);
   });
 
   it('writes nothing while the dedicated reference is the current branch of a worktree', () => {
@@ -123,6 +145,48 @@ describe('the reader counts only files a recording commit on the dedicated refer
     const read = readLaunchRecords(home);
     expect(read.ok).toBe(false);
     if (!read.ok) expect(read.why).toMatch(pattern);
+  });
+
+  /** A commit that adds one well-formed record file on top of the tip, made by plain git outside the code under test, with the
+   * committer and message given. Returns the added record's ID. */
+  const forge = (home: string, committer: { name: string; email: string }, message: (id: string) => string): string => {
+    const r = record('2026-11-09T13:00:00Z');
+    const wt = fs.mkdtempSync(path.join(path.dirname(home), 'forge-'));
+    gitIn(home, 'worktree', 'add', '-q', '--detach', wt, LAUNCH_REF);
+    writeFiles(wt, { [`.syzygy/governance/decisions/launch-consent/${r.recordId}.md`]: r.text });
+    gitIn(wt, 'add', '-A');
+    execFileSync('git', ['-C', wt, 'commit', '-q', '-m', message(r.recordId)], { env: { ...GIT_ENV, GIT_AUTHOR_NAME: 'Op Erator', GIT_AUTHOR_EMAIL: 'op@example.invalid', GIT_COMMITTER_NAME: committer.name, GIT_COMMITTER_EMAIL: committer.email } });
+    gitIn(home, 'update-ref', LAUNCH_REF, gitIn(wt, 'rev-parse', 'HEAD'));
+    gitIn(home, 'worktree', 'remove', '--force', wt);
+    return r.recordId;
+  };
+  const SYZYGY = { name: 'Syzygy', email: 'syzygy@launch-consent.invalid' };
+
+  it('an add-only commit not attributed to Syzygy as committer makes the reference unreadable (review F1)', () => {
+    const home = makeHome();
+    write(home, [record('2026-11-09T10:00:00Z')], null);
+    forge(home, { name: 'An Agent', email: 'agent@example.invalid' }, id => `launch consent: ${id}`);
+    expect(readLaunchRecords(home)).toEqual({ ok: false, why: `the commit ${tipOf(home)} on ${LAUNCH_REF} is not attributed to Syzygy as committer ("An Agent <agent@example.invalid>"), so it is not a recording commit` });
+  });
+
+  it('an add-only commit attributed to Syzygy without the recording subject makes the reference unreadable (review F1)', () => {
+    const home = makeHome();
+    write(home, [record('2026-11-09T10:00:00Z')], null);
+    forge(home, SYZYGY, id => `add ${id}`);
+    expect(readLaunchRecords(home)).toEqual({ ok: false, why: `the commit ${tipOf(home)} on ${LAUNCH_REF} does not carry a recording commit's message for the records it adds` });
+  });
+
+  it('the residual, pinned: a commit copying the committer and the subject is read, since attribution is a stored claim', () => {
+    const home = makeHome();
+    const a = record('2026-11-09T10:00:00Z');
+    write(home, [a], null);
+    const id = forge(home, SYZYGY, x => `launch consent: ${x}`);
+    const read = readLaunchRecords(home);
+    expect(read.ok && read.records.map(x => x.record.recordId)).toEqual([a.recordId, id]);
+  });
+
+  it('a recording commit\'s subject lists its records sorted, whatever order the writer was given', () => {
+    expect(recordingSubject(['LAUNCH-PROVIDER-b', 'LAUNCH-OBSERVATION-a'])).toBe('launch consent: LAUNCH-OBSERVATION-a, LAUNCH-PROVIDER-b');
   });
 
   it('a decisions file naming a record revokes it; a later record naming it in Supersedes supersedes it', () => {
