@@ -8,7 +8,7 @@ import { runDossierCli, type CliPorts } from './cli.js';
 import { FIXTURE_SCREEN, FIXTURE_URL, LATER, NOW, REAL_ROOT, designVerdict, draft, fidelityVerdict, fixtureSources, inventory, makeClone, type Doc } from './full-run.testkit.js';
 import type { GateSources, ProviderStatementRecord } from './gate-sources.js';
 import type { DossierRenderer } from './render.js';
-import { deliverToWaiting, readStdinBytes, resolveSessionDirectory, sessionDirectoryRefusal, signoffRecordHolds, specNamesVersion, waitModeRefusal, waitModeSignedIn, waitModeStatus, waitingReviewSession } from './waiting-sessions.js';
+import { deliverToWaiting, deliveryUsageNote, readStdinBytes, resolveSessionDirectory, sessionDirectoryRefusal, signoffRecordHolds, specNamesVersion, waitModeRefusal, waitModeSignedIn, waitModeStatus, waitingReviewSession } from './waiting-sessions.js';
 import { tempDir } from '@syzygy/test-kit';
 
 // Only directory enumeration is controllable, to verify candidate eligibility in both orders at the filesystem boundary.
@@ -963,6 +963,83 @@ describe('delivery to a waiting review session', () => {
     expect(fresh.doc).toMatchObject({ outcome: 'issued', role: 'review', kind: 'fidelity', session: 2 });
     expect(fs.readdirSync(path.join(h.sessions, 'fidelity-2')).sort()).toEqual(['packet.json', 'packet.sha256']);
     expect(fs.existsSync(path.join(h.sessions, 'fidelity-1', 'round-1'))).toBe(false);
+  });
+});
+
+// syzygy-pdja.19: each delivery says what it adds to the session's reading, in bytes Syzygy built, and never a token figure.
+describe('the per-round usage note of a delivery', () => {
+  it('states round 1\'s packet size as the delivered file\'s bytes, and records it (mutant: count UTF-16 code units, or drop the record field)', async () => {
+    const h = await harness();
+    await readyForReview(h);
+    const delivered = (await h.cli(['session-prompt', h.run, 'review', '--kind', 'fidelity'])).doc;
+    const size = fs.statSync(path.join(h.sessions, 'fidelity-1', 'round-1', 'packet.json')).size;
+    expect(delivered['packetBytes']).toBe(size);
+    expect(readJson(path.join(h.run, 'reviews', 'fidelity-session-1.delivery-1.json'))['packetBytes']).toBe(size);
+    expect(delivered['usageNote']).toContain(`Round 1 packet: ${size} bytes (Observed: Syzygy built and wrote them at this step). A packet carries the whole frozen subject (REQ-polaris-generation-035), so each round is a whole-packet review.`);
+    expect(delivered['usageNote']).not.toContain('earlier round');
+    expect(delivered['usageNote']).toContain('Syzygy cannot observe the session\'s token use');
+    expect(delivered['usageNote']).toContain('add --fresh');
+  });
+
+  it('states what a continuing session already holds, as Inferred, from the earlier delivery records (mutant: omit the earlier rounds)', async () => {
+    const h = await harness();
+    await readyForReview(h);
+    await reviewRound(h, 1);
+    const first = fs.statSync(path.join(h.sessions, 'fidelity-1', 'round-1', 'packet.json')).size;
+    write(path.join(h.run, 'drafts', 'next.json'), { ...draft(h.commit), title: 'Kestrel, repaired' });
+    expect((await h.cli(['check', h.run])).exit).toBe(0);
+    const { delivered } = await reviewRound(h, 2);
+    const second = fs.statSync(path.join(h.sessions, 'fidelity-1', 'round-2', 'packet.json')).size;
+    expect(delivered['usageNote']).toContain(`Round 2 packet: ${second} bytes`);
+    expect(delivered['usageNote']).toContain(`Syzygy delivered 1 earlier round to this session (${first} bytes over them, as Syzygy's delivery records state (Inferred: those records lie within the agent sessions' write reach)). [Inferred] A continuing session keeps them in its context, and each model call it makes may read that context again.`);
+  });
+
+  it('says Unknown, never zero, for an earlier round whose record states no size (mutant: sum a missing size as 0)', async () => {
+    const h = await harness();
+    await readyForReview(h);
+    await reviewRound(h, 1);
+    const file = path.join(h.run, 'reviews', 'fidelity-session-1.delivery-1.json');
+    const { packetBytes: _dropped, ...older } = readJson(file);
+    write(file, older);
+    write(path.join(h.run, 'drafts', 'next.json'), { ...draft(h.commit), title: 'Kestrel, repaired' });
+    expect((await h.cli(['check', h.run])).exit).toBe(0);
+    const { delivered } = await reviewRound(h, 2);
+    expect(delivered['usageNote']).toContain('Syzygy delivered 1 earlier round to this session (1 round whose record states no size (Unknown)).');
+    expect(delivered['usageNote']).not.toContain('0 bytes');
+  });
+
+  it('counts UTF-8 bytes, not code units, for a packet with non-ASCII text (mutant: use the string length)', async () => {
+    const h = await harness();
+    await readyForReview(h);
+    const waiting = waitingReviewSession(h.run, 'fidelity');
+    expect(waiting).not.toBeNull();
+    const bytes = '{"packet":"\u00e9\u{1f600}"}\n';
+    const result = deliverToWaiting(h.run, path.basename(h.run), 'fidelity', waiting!, { bytes, sha256: sha256(bytes) }, {}, NOW);
+    expect(result.ok).toBe(true);
+    const size = fs.statSync(path.join(h.sessions, 'fidelity-1', 'round-1', 'packet.json')).size;
+    expect(size).not.toBe(bytes.length);
+    expect(result.ok && result.report.packetBytes).toBe(size);
+  });
+});
+
+describe('deliveryUsageNote', () => {
+  it('sums the sized rounds and counts the unsized ones apart (mutant: count every earlier round as sized)', () => {
+    const note = deliveryUsageNote('fidelity', 4, 900, [
+      { round: 1, packetSha256: 'a'.repeat(64), packetBytes: 100 },
+      { round: 2, packetSha256: 'b'.repeat(64), packetBytes: null },
+      { round: 3, packetSha256: 'c'.repeat(64), packetBytes: 250 },
+    ]);
+    expect(note).toContain('Round 4 packet: 900 bytes');
+    expect(note).toContain('Syzygy delivered 3 earlier rounds to this session (350 bytes over 2 of them, as Syzygy\'s delivery records state (Inferred: those records lie within the agent sessions\' write reach); 1 round whose record states no size (Unknown)).');
+  });
+
+  it('counts an earlier round with no readable record as Unknown, never omits it (mutant: count only the records read)', () => {
+    const note = deliveryUsageNote('fidelity', 3, 900, [{ round: 2, packetSha256: 'b'.repeat(64), packetBytes: 200 }]);
+    expect(note).toContain('Syzygy delivered 2 earlier rounds to this session (200 bytes over 1 of them, as Syzygy\'s delivery records state (Inferred: those records lie within the agent sessions\' write reach); 1 round whose record Syzygy could not read (Unknown)).');
+  });
+
+  it('names the review kind in its --fresh advice (mutant: hard-code fidelity)', () => {
+    expect(deliveryUsageNote('design', 1, 10, [])).toContain('hand the next design round to a session that holds only its packet, add --fresh');
   });
 });
 

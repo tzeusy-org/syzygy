@@ -9,7 +9,9 @@ This kit grants no source access, provider egress, authorship adoption or releas
 **The proving ground** is a set of open-source repositories, each scored
 against its own human-made site: [targets](TARGETS.md), the working
 [tracker](TRACKER.md), and the [learning log](LEARNING-LOG.md) of what we learn
-about building a great manifesto page.
+about building a great manifesto page. What a launched run's fidelity
+review costs per round, and which ways to cut it need the owner, is in
+[the fidelity delta-review note](fidelity-delta-review-proposal.md).
 
 ## The product we are building
 
