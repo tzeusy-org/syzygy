@@ -1,0 +1,287 @@
+{
+  "subject": "RS-13 reader advice restores four code-symbol classes and ELEMENT_DETAIL names the withheld diagram and section title consequence (syzygy-pdja.25); the zero-bytes oracle of the usage-note test is anchored (syzygy-pdja.28)",
+  "beads": [
+    "syzygy-pdja.25",
+    "syzygy-pdja.28"
+  ],
+  "date": "2026-11-10",
+  "ranAt": "35688fea4f8acb7b2e3265d678a37ec4885dfd51",
+  "ranAtNote": "The branch commit on agent/syzygy-pdja.25-28-advice-and-flake the mutants ran at; a rebase-merge leaves it reachable from no ref, so the digests below are the anchor.",
+  "subjectDigests": {
+    "packages/polaris-dossier/src/reader-advice.ts": "181203cbb34ec803b20ff026061b9d93d50dcec22bd4459d641e2b1bdd8c0be8",
+    "packages/polaris-dossier/src/reader-standards.test.ts": "563f6dcc23c6e02c32275cc3c6cef8daf7506fb15fe4a07fc4cd7a85dc95cc29",
+    "packages/polaris-dossier/src/review-reach.ts": "111d8c6c784f7801fb94bfd91227f748601b906000d500a4ea216192e906d5ef",
+    "packages/polaris-dossier/src/review-reach.test.ts": "f021a750b3a68ae20ec13ea6648bcca9c6f239c4d92a6b4616c3a30056b219e1",
+    "packages/polaris-dossier/src/waiting-sessions.ts": "34e0dfd3fef17422ab781c7af6911dfbdad0542ea113ebf2a89e7775398f92f5",
+    "packages/polaris-dossier/src/waiting-sessions.test.ts": "5134fc385bd82fa56c4ebc1c6629f2d49243c36c892decafce8367605347a8a1"
+  },
+  "method": "Each mutant replaces exactly one occurrence of `old` with `new` in `file` (count asserted to be 1), runs `npx vitest run` on `tests`, and restores the file. Killed means vitest exited non-zero; failedTests are the FAIL lines vitest printed.",
+  "killed": 17,
+  "total": 17,
+  "mutants": [
+    {
+      "id": "pdja28-sum-missing-as-zero",
+      "file": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "old": "const sized = earlier.filter((entry) => entry.packetBytes !== null);\n    const total = sized.reduce((sum, entry) => sum + entry.packetBytes!, 0);",
+      "new": "const sized = earlier;\n    const total = sized.reduce((sum, entry) => sum + (entry.packetBytes ?? 0), 0);",
+      "tests": [
+        "packages/polaris-dossier/src/waiting-sessions.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  3 failed | 131 passed (134)",
+      "failedTests": [
+        "|integration| packages/polaris-dossier/src/waiting-sessions.test.ts > deliveryUsageNote > reads a zero-byte claim, and only a zero-byte claim, as one (syzygy-pdja.28: a size ending in 0 is no such claim)",
+        "|integration| packages/polaris-dossier/src/waiting-sessions.test.ts > deliveryUsageNote > sums the sized rounds and counts the unsized ones apart (mutant: count every earlier round as sized)",
+        "|integration| packages/polaris-dossier/src/waiting-sessions.test.ts > the per-round usage note of a delivery > says Unknown, never zero, for an earlier round whose record states no size (mutant: sum a missing size as 0)"
+      ]
+    },
+    {
+      "id": "pdja28-oracle-unanchored",
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "old": "const ZERO_BYTES = /(?<![\\d.,])\\b0 bytes\\b/u;",
+      "new": "const ZERO_BYTES = /0 bytes/u;",
+      "tests": [
+        "packages/polaris-dossier/src/waiting-sessions.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  1 failed | 133 passed (134)",
+      "failedTests": [
+        "|integration| packages/polaris-dossier/src/waiting-sessions.test.ts > deliveryUsageNote > reads a zero-byte claim, and only a zero-byte claim, as one (syzygy-pdja.28: a size ending in 0 is no such claim)"
+      ]
+    },
+    {
+      "id": "pdja28-oracle-anchor-without-lookbehind",
+      "file": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "old": "const ZERO_BYTES = /(?<![\\d.,])\\b0 bytes\\b/u;",
+      "new": "const ZERO_BYTES = /\\b0 bytes\\b/u;",
+      "tests": [
+        "packages/polaris-dossier/src/waiting-sessions.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  1 failed | 133 passed (134)",
+      "failedTests": [
+        "|integration| packages/polaris-dossier/src/waiting-sessions.test.ts > deliveryUsageNote > reads a zero-byte claim, and only a zero-byte claim, as one (syzygy-pdja.28: a size ending in 0 is no such claim)"
+      ]
+    },
+    {
+      "id": "pascal-three-parts",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "const PASCAL_WORD = /\\b(?:[A-Z][a-z0-9]+){2,}\\w*/gu;",
+      "new": "const PASCAL_WORD = /\\b(?:[A-Z][a-z0-9]+){3,}\\w*/gu;",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  6 failed | 76 passed (82)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the two-part PascalCase type in \"A ByteBuffer grows\": it holds a PascalCase identifier",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the two-part PascalCase type in \"How HttpServer accepts\": it holds a PascalCase identifier",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the two-part PascalCase type in \"Inside RedisModule\": it holds a PascalCase identifier",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the two-part PascalCase type in \"The EventLoop\": it holds a PascalCase identifier",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the two-part PascalCase type in \"What ClientState holds\": it holds a PascalCase identifier",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the two-part PascalCase type in \"Where GitHub calls WebhookHandler\": it holds a PascalCase identifier"
+      ]
+    },
+    {
+      "id": "pascal-drop-product-list",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "!PRODUCT_NAMES.has(word) && !SURNAME.test(word)",
+      "new": "!SURNAME.test(word)",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  8 failed | 74 passed (82)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the listed product or surname in \"Builds on GitLab\" alone",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the listed product or surname in \"GitHub Actions\" alone",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the listed product or surname in \"The YouTube embed\" alone",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the listed product or surname in \"TypeScript types\" alone",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the listed product or surname in \"WebSocket transport\" alone",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the listed product or surname in \"Why JavaScript\" alone",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the proper name or prose pair in \"GitHub Actions\" alone",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the proper name or prose pair in \"Why JavaScript\" alone"
+      ]
+    },
+    {
+      "id": "pascal-drop-surname",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "!PRODUCT_NAMES.has(word) && !SURNAME.test(word)",
+      "new": "!PRODUCT_NAMES.has(word)",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  1 failed | 81 passed (82)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the listed product or surname in \"What McCarthy proposed\" alone"
+      ]
+    },
+    {
+      "id": "path-drop-head-rule",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": " || PATH_HEAD.test(title)) return 'it names a path';",
+      "new": ") return 'it names a path';",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  3 failed | 79 passed (82)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the single-slash source path in \"How net/http serves\": it names a path",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the single-slash source path in \"Inside src/server\": it names a path",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the single-slash source path in \"What lib/utils offers\": it names a path"
+      ]
+    },
+    {
+      "id": "path-any-lowercase-head",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "(?:src|lib|libs|pkg|cmd|internal|include|vendor|deps|tests|bin|scripts|packages|apps|crates|modules|examples|net|os|io)\\/",
+      "new": "[a-z]+\\/",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  2 failed | 80 passed (82)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the prose pair in \"Input/output and/or errors\" alone",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the prose pair in \"The client/server split\" alone"
+      ]
+    },
+    {
+      "id": "path-head-case-insensitive",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "|net|os|io)\\/[\\w.-]/u;",
+      "new": "|net|os|io)\\/[\\w.-]/iu;",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  1 failed | 81 passed (82)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the prose pair in \"Running on OS/2\" alone"
+      ]
+    },
+    {
+      "id": "jsfile-drop-stem-list",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (stem === undefined || JS_FILE_STEMS.has(stem)) return false;",
+      "new": "if (stem === undefined) return false;",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  3 failed | 79 passed (82)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the capitalised .js file in \"Inside App.js\": it names a file",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the capitalised .js file in \"The Index.js entry\": it names a file",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the capitalised .js file in \"What Server.js starts\": it names a file"
+      ]
+    },
+    {
+      "id": "jsfile-drop-two-part-stem",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "return !/^(?:[A-Z][a-z0-9]+){2,}/u.test(stem) || PRODUCT_NAMES.has(stem);",
+      "new": "return true;",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  1 failed | 81 passed (82)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the capitalised .js file in \"The UserList.js view\": it names a file"
+      ]
+    },
+    {
+      "id": "jsfile-drop-lowercase-projects",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "if (LOWERCASE_JS_PROJECTS.has(name)) return true;",
+      "new": "",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  2 failed | 80 passed (82)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the JavaScript project name in \"Charts with d3.js\" alone",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the JavaScript project name in \"Scenes in three.js\" alone"
+      ]
+    },
+    {
+      "id": "initialism-drop-rule",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "  if ([...title.matchAll(INITIALISM_WORD)].some(([word]) => !INITIALISM_PRODUCT_NAMES.has(word))) return 'it holds a camelCase identifier';\n",
+      "new": "",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  4 failed | 78 passed (82)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the camelCase identifier ending in an initialism in \"Setting innerHTML\": it holds a camelCase identifier",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the camelCase identifier ending in an initialism in \"What parseURL accepts\": it holds a camelCase identifier",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the camelCase identifier ending in an initialism in \"Where getID reads\": it holds a camelCase identifier",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > flags the camelCase identifier ending in an initialism in \"Why toJSON exists\": it holds a camelCase identifier"
+      ]
+    },
+    {
+      "id": "initialism-drop-product-list",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "([word]) => !INITIALISM_PRODUCT_NAMES.has(word))",
+      "new": "() => true)",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  4 failed | 78 passed (82)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the product name in \"Builds for macOS\" alone",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the product name in \"Packages for openSUSE\" alone",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the product name in \"Running on tvOS and watchOS\" alone",
+        "|unit| packages/polaris-dossier/src/reader-standards.test.ts > reader advice: the counted standards > leaves the proper name or prose pair in \"Builds for macOS\" alone"
+      ]
+    },
+    {
+      "id": "element-detail-drop-edge-consequence",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "its label does not render; ${DIAGRAM_TITLE_CONSEQUENCE}`,\n};",
+      "new": "its label does not render`,\n};",
+      "tests": [
+        "packages/polaris-dossier/src/review-reach.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  1 failed | 19 passed (20)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/review-reach.test.ts > reviewReachAdvice: the claim blocks no verdict can confirm, and the elements that will not render > tells a withheld node or edge what else renders as Withheld item, and an understanding item nothing of the kind"
+      ]
+    },
+    {
+      "id": "element-detail-drop-node-consequence",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "the node renders Unknown and its label does not render; ${DIAGRAM_TITLE_CONSEQUENCE}`",
+      "new": "the node renders Unknown and its label does not render`",
+      "tests": [
+        "packages/polaris-dossier/src/review-reach.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  1 failed | 19 passed (20)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/review-reach.test.ts > reviewReachAdvice: the claim blocks no verdict can confirm, and the elements that will not render > tells a withheld node or edge what else renders as Withheld item, and an understanding item nothing of the kind"
+      ]
+    },
+    {
+      "id": "element-detail-consequence-on-understanding",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "(a terminology item is also left out of the glossary)',",
+      "new": "(a terminology item is also left out of the glossary); ' + DIAGRAM_TITLE_CONSEQUENCE,",
+      "tests": [
+        "packages/polaris-dossier/src/review-reach.test.ts"
+      ],
+      "outcome": "killed",
+      "vitest": "Tests  1 failed | 19 passed (20)",
+      "failedTests": [
+        "|unit| packages/polaris-dossier/src/review-reach.test.ts > reviewReachAdvice: the claim blocks no verdict can confirm, and the elements that will not render > tells a withheld node or edge what else renders as Withheld item, and an understanding item nothing of the kind"
+      ]
+    }
+  ]
+}

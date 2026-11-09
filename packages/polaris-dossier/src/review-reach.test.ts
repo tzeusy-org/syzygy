@@ -121,6 +121,17 @@ describe('reviewReachAdvice: the claim blocks no verdict can confirm, and the el
     });
   });
 
+  // syzygy-pdja.25: render.ts's diagramHeld and containerTitle carry a withheld node or edge to its diagram's and section's titles.
+  it('tells a withheld node or edge what else renders as Withheld item, and an understanding item nothing of the kind', () => {
+    const consequence = 'if every node and edge of its diagram is withheld, the diagram\'s title and relationship render as "Withheld item" too, and so does the title of a section whose paragraphs and diagrams are all withheld';
+    const { elements } = reviewReachAdvice(draft, inputs());
+    const detailOf = (kind: string): readonly string[] => elements.filter((entry) => entry.kind === kind).map((entry) => entry.detail);
+    expect(detailOf('diagram-node')).toEqual([expect.stringContaining(consequence), expect.stringContaining(consequence)]);
+    expect(detailOf('diagram-edge')).toEqual([expect.stringContaining(consequence)]);
+    expect(detailOf('understanding-item')).not.toEqual(expect.arrayContaining([expect.stringContaining('Withheld item')]));
+    expect(detailOf('understanding-item')).toHaveLength(2);
+  });
+
   it('lists nothing once the consent covers the gated class, and keeps the screening-withheld blocks', () => {
     const advice = reviewReachAdvice(draft, inputs(['code-content', 'project-documentation']));
     expect(advice.counts).toEqual({ unconfirmable: 0, withheldItems: 3, withheldElements: 5 });
