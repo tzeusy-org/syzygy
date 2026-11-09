@@ -254,7 +254,7 @@ describe('PWB-REQ-003 — the population survives every fault', () => {
         expect(e.redactionClass).toBe(expected.redactionClass);
         expect(e.repositoryRelativePath).toBe(r.record.path);
         expect(e.policyId).toBe('polaris-butlers-project-shape-secrets');
-        expect(e.policyVersion).toBe('1.8.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s');
+        expect(e.policyVersion).toBe('1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv');
         expect(e.detectorId).toBe(expected.detectorId);
         expect(e.exclusionReason).toBe(expected.exclusionReason);
         expect(e.contentDigest !== undefined, `${r.record.path} digest presence`).toBe(expected.digest);
@@ -285,7 +285,7 @@ describe('PWB-REQ-003 — the population survives every fault', () => {
     expect(result.exclusions).toHaveLength(15);
     expect(new Set(result.exclusions.map((e) => e.redactionClass))).toEqual(new Set(['excluded-artifact', 'unclassifiable-excluded']));
     expect(result.policyId).toBe('polaris-butlers-project-shape-secrets');
-    expect(result.policyVersion).toBe('1.8.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s');
+    expect(result.policyVersion).toBe('1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv');
   });
 
   it('hands a body only to the consumer, and only for classified sources', () => {
@@ -405,7 +405,7 @@ describe('PWB-REQ-003 — classifySource step by step', () => {
           exclusionReason: 'denied-path',
           detail,
           policyId: 'polaris-butlers-project-shape-secrets',
-          policyVersion: '1.8.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s',
+          policyVersion: '1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv',
         });
       }
     }
@@ -473,7 +473,7 @@ describe('PWB-REQ-003 — classifySource step by step', () => {
       contentDigest: `sha256:${sha256Hex(BYTES[member.path] as Uint8Array)}`,
       extractionClasses: ['principle'],
       policyId: 'polaris-butlers-project-shape-secrets',
-      policyVersion: '1.8.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s',
+      policyVersion: '1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv',
       detectorsRun: 4,
       basis: 'body',
     });
@@ -487,7 +487,7 @@ describe('PWB-REQ-003 — classifySource step by step', () => {
         contentDigest: classified.record.contentDigest,
         exclusionReason: 'parse-failure',
         policyId: 'polaris-butlers-project-shape-secrets',
-        policyVersion: '1.8.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s',
+        policyVersion: '1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv',
       },
       unknown: { failureState: 'secretMatchedOrUnclassifiable', degradationState: 'Excluded content', unknownReason: 'excluded-content' },
     });

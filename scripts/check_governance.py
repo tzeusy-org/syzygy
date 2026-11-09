@@ -1999,11 +1999,6 @@ PWB_EFFECT_AMENDMENT_OFFERINGS = {
         f"{CANDIDATES}/public-source-screening-scope-v6/PUBLIC-SOURCE-SCREENING-SCOPE-V6-MANIFEST.txt": "variant-row",
     },
 }
-if os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT_PATH)):
-    # The version-7 screening-scope act was offered the same way (variant row of its manifest).
-    PWB_EFFECT_AMENDMENT_OFFERINGS[f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md"] = {
-        f"{CANDIDATES}/public-source-screening-scope-v7/PUBLIC-SOURCE-SCREENING-SCOPE-V7-MANIFEST.txt": "variant-row",
-    }
 PWB_STATE1_SUBJECTS = tuple(sorted((
     "openspec/changes/polaris-project-wide-butlers-model/.openspec.yaml",
     "openspec/changes/polaris-project-wide-butlers-model/proposal.md",
@@ -2022,6 +2017,11 @@ PWB_STATE1_SUBJECTS = tuple(sorted((
     "openspec/changes/polaris-project-wide-butlers-model/"
     "contract-coverage-matrix/RFC-0007-0009.md",
 )))
+if os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT_PATH)):
+    # The version-7 screening-scope act was offered the same way (variant row of its manifest).
+    PWB_EFFECT_AMENDMENT_OFFERINGS[f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md"] = {
+        f"{CANDIDATES}/public-source-screening-scope-v7/PUBLIC-SOURCE-SCREENING-SCOPE-V7-MANIFEST.txt": "variant-row",
+    }
 #: The truth-and-readiness amendment binds the same closed eleven-path
 #: population as the state-(1) amendment; only the bytes differ.
 PWB_TRUTH_AMENDMENT_SUBJECTS = PWB_STATE1_SUBJECTS
@@ -3870,28 +3870,6 @@ def _activate_public_source_scope_v7_copy_registry():
 
 
 _activate_public_source_scope_v7_copy_registry()
-
-
-#: The public-source screening scope, version 8 (`syzygy-pdja.23`, recorded under
-#: `syzygy-pdja.21`; owner selection OWNER-SELECTION-SCREENING-SCOPE-V8-2026-11-08;
-#: builder `scripts/build_public_source_screening_scope_v8.py`; recorder
-#: `scripts/record_public_source_screening_scope_v8_act.py`): one `approve-policy`
-#: act over the one manifest row (variant `pv`: private sources under stricter
-#: rules). Its packet carries no digest, so the manifest is the only copy. Gated on
-#: the performed record, as for version 7.
-PUBLIC_SOURCE_SCOPE_V8_DIR = f"{CANDIDATES}/public-source-screening-scope-v8"
-PUBLIC_SOURCE_SCOPE_V8_MANIFEST = f"{PUBLIC_SOURCE_SCOPE_V8_DIR}/PUBLIC-SOURCE-SCREENING-SCOPE-V8-MANIFEST.txt"
-PUBLIC_SOURCE_SCOPE_V8_ACT = PUBLIC_SOURCE_SCOPE_V8_ACT_PATH
-
-
-def _activate_public_source_scope_v8_copy_registry():
-    """The version-8 manifest is a current copy of the policy argument once the act exists."""
-    if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT))
-            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_MANIFEST))):
-        ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V8_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
-
-
-_activate_public_source_scope_v8_copy_registry()
 
 
 #: The public-source screening scope, version 8 (`syzygy-pdja.23`, owner direction

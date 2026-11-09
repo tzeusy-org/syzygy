@@ -3,6 +3,7 @@ import { CLASS_NOT_CONSENTED, unconsentedClass } from './class-gate.js';
 import { BLOB_MODES, GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions, type TreeEntry } from './git-object-reader.js';
 import type { PlacementSubject } from '@syzygy/polaris-generation-core/live';
 import { screenLoaderOf, type DossierScreen, type ScreenLoader } from './screen.js';
+import type { VisibilityOf } from './source-visibility-gate.js';
 
 /** The path-only census of what the review session will not see (owner direction OWNER-DIRECTION-REDIS-SCREENING-NEXT-2026-11-03,
  * item 1; bead syzygy-mea.3).
@@ -96,13 +97,15 @@ export interface CensusInput {
 
 export interface CensusDeps {
   readonly loadScreen?: ScreenLoader;
+  /** The visibility decision the default loader asks under version 8 (`screenLoaderOf`); by default it reads the consent records. */
+  readonly visibilityOf?: VisibilityOf;
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
 }
 
 /** Load the screen in force and list the pinned tree, then take the census. A screen that cannot load or a tree that cannot be listed
  * gives the reason, never an empty census. */
 export async function loadCensus(input: CensusInput, deps: CensusDeps): Promise<CensusLoad> {
-  const screenLoad = await screenLoaderOf(deps.loadScreen, input.recordsRoot, input.now)(input.placement);
+  const screenLoad = await screenLoaderOf(deps.loadScreen, input.recordsRoot, input.now, deps.visibilityOf)(input.placement);
   if (!screenLoad.ok) return { ok: false, why: screenLoad.why, consented: input.consented };
   let entries: readonly TreeEntry[];
   try {

@@ -35,22 +35,26 @@ const TRIAL = '498ecd0d6d007db11ddb3aea9428552598a78622';
 const OTHER_REDIS = ['d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7', 'c9d29f6a918c335bc1778d9f68e521c1bbb36a0f', 'e91a340e241cf0abe3c6a0c254214fbe4aa1d95f'];
 const AT_TRIAL = { repository: REDIS, commit: TRIAL };
 
+// Since the version-8 act (variant pv, 2026-11-09) the live bytes carry sourceVisibility: each screen is built for a decided
+// visibility, and these files hold the version-7 rules, which version 8 keeps for a public pair, so every screen here is
+// built public (the Redis pair's consent states public), and the checkout loads take that decision injected, running no git.
+const PUBLIC = async () => ({ ok: true as const, visibility: 'public' as const, carriers: [] });
 type Subject = { readonly repository: string; readonly commit: string } | null;
 type AnyScreen = Pick<DossierScreen, 'screenPath' | 'contentClass' | 'screenBody' | 'screenTargetBody' | 'scopeDetectors'>;
 const APP_SCREENING = path.join(REAL_ROOT, 'apps/three-surface-poc/src/polaris-generation/public-source-screening.ts');
 const appScreen = async (policy: string, classAct: boolean, subject: Subject): Promise<AnyScreen> => {
   const app = await import(APP_SCREENING);
   const port = { read: async () => ({ actRecord: renderPolicyAct(sha(policy), '2026-10-04', '2026-10-04T10:00:00Z'), policy: encode(policy), classActInForce: classAct }) };
-  return app.loadPublicSourceScreen(port, new Uint8Array(32).fill(7), subject);
+  return app.loadPublicSourceScreen(port, new Uint8Array(32).fill(7), subject, 'public');
 };
 const ours = (policy: string, classAct: boolean, subject: Subject): AnyScreen => {
-  const built = buildDossierScreen(encode(policy), classAct, subject);
+  const built = buildDossierScreen(encode(policy), classAct, subject, 'public');
   if (!built.ok) throw new Error(built.why);
   return built.screen;
 };
 const both = async (policy: string = LIVE_TEXT, subject: Subject = AT_TRIAL, classAct = true): Promise<readonly [string, AnyScreen][]> =>
   [['dossier', ours(policy, classAct, subject)], ['app', await appScreen(policy, classAct, subject)]];
-const refusalOf = (policy: string): string => { const built = buildDossierScreen(encode(policy), true, AT_TRIAL); return built.ok ? 'built' : built.why; };
+const refusalOf = (policy: string): string => { const built = buildDossierScreen(encode(policy), true, AT_TRIAL, 'public'); return built.ok ? 'built' : built.why; };
 const appRefusalOf = async (policy: string): Promise<string> => appScreen(policy, true, AT_TRIAL).then(() => 'built', (error: unknown) => (error as Error).message);
 
 type Outcome = readonly unknown[];
@@ -74,8 +78,11 @@ beforeAll(async () => {
 import build_public_source_screening_scope_v6 as b
 import build_public_source_screening_scope_v7 as b7
 
-policy, mode = b7.base_bytes()
-assert mode == 'performed-v7' and b7.propose(policy) == open(str(b.ROOT / b.POLICY)).read()
+import build_public_source_screening_scope_v8 as b8
+v7_s, _m8 = b8.base_bytes()
+assert _m8 == 'performed-v8' and b8.propose(v7_s) == open(str(b8.ROOT / b7.POLICY)).read()
+policy = b7.v2.reverse_patch((b7.ROOT / b7.patch_path('s')).read_text(), v7_s)
+assert b7.propose(policy) == v7_s
 v5 = b.v2.reverse_patch((b.ROOT / b.patch_path('p')).read_text(), policy)
 assert b.propose(v5) == policy
 enc = lambda o: [o[0], sorted(o[1])] if o[0] == 'redacted' else list(o)
@@ -209,28 +216,28 @@ describe('P: the config-secret-directive scope detector', () => {
   });
 });
 
-// The any-repo reader's checkout port reads the act chain, so both loaders put the version-7 bytes in force from this checkout at a time
-// after that act, and neither before it (the version-6 act then in force binds other bytes). Version 7 changed one clause of the
-// renderCondition, so version 6's detector and placement still hold.
-describe('the real checkout after the version-7 act', () => {
-  const V7_VERSION = '1.8.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s';
-  const V7_INSTANT = Date.parse('2026-11-06T14:11:19Z');
-  const AFTER = Date.UTC(2026, 10, 6, 15, 0, 0);
-  it('loads the version-7 policy in both loaders', async () => {
+// The any-repo reader's checkout port reads the act chain, so both loaders put the version-8 bytes in force from this checkout at a time
+// after that act, and neither before it (the version-7 act then in force binds other bytes). Version 8 keeps version 7's rules for a
+// public pair, so version 6's detector and placement still hold; each load is given the pair's visibility, public.
+describe('the real checkout after the version-8 act', () => {
+  const V8_VERSION = '1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv';
+  const V8_INSTANT = Date.parse('2026-11-09T09:27:14Z');
+  const AFTER = Date.UTC(2026, 10, 9, 10, 0, 0);
+  it('loads the version-8 policy in both loaders', async () => {
     const app = await import(APP_SCREENING);
-    const theirs = await app.loadPublicSourceScreen(app.checkoutPolicyActPort(REAL_ROOT, () => AFTER), new Uint8Array(32).fill(7), AT_TRIAL);
-    const loaded = await loadDossierScreen(REAL_ROOT, AFTER, undefined, AT_TRIAL);
+    const theirs = await app.loadPublicSourceScreen(app.checkoutPolicyActPort(REAL_ROOT, () => AFTER), new Uint8Array(32).fill(7), AT_TRIAL, 'public');
+    const loaded = await loadDossierScreen(REAL_ROOT, AFTER, undefined, AT_TRIAL, PUBLIC);
     if (!loaded.ok) throw new Error(loaded.why);
     for (const screen of [loaded.screen, theirs]) {
-      expect([screen.policyVersion, screen.policySha256]).toEqual([V7_VERSION, '626be0cadc248b9ca9b3165d51f97d39aec552eb3a97b8b7df21d2446fc233da']);
+      expect([screen.policyVersion, screen.policySha256]).toEqual([V8_VERSION, '44153bbe210c7a724f224f2bc1c9255db43cf0887b6ad22dd24884514f21bbe8']);
       expect([screen.governanceText, screen.documentationExemption, screen.scopeDetectors, screen.contentClass('redis.conf')]).toEqual([true, true, 4, 'project-documentation']);
     }
   });
-  it('refuses the checkout\'s bytes before the version-7 act\'s instant', async () => {
-    const loaded = await loadDossierScreen(REAL_ROOT, V7_INSTANT - 1_000, undefined, AT_TRIAL);
+  it('refuses the checkout\'s bytes before the version-8 act\'s instant', async () => {
+    const loaded = await loadDossierScreen(REAL_ROOT, V8_INSTANT - 1_000, undefined, AT_TRIAL, PUBLIC);
     expect(loaded.ok).toBe(false);
-    const own = screenLoaderOf(undefined, REAL_ROOT, V7_INSTANT);
+    const own = screenLoaderOf(undefined, REAL_ROOT, V8_INSTANT, PUBLIC);
     const at = await own(AT_TRIAL);
-    expect(at.ok && [at.screen.policyVersion, at.screen.contentClass('redis.conf')]).toEqual([V7_VERSION, 'project-documentation']);
+    expect(at.ok && [at.screen.policyVersion, at.screen.contentClass('redis.conf')]).toEqual([V8_VERSION, 'project-documentation']);
   });
 });
