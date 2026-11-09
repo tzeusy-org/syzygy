@@ -1,9 +1,9 @@
 {
   "subject": "screening scope version 8 reading predicates (sourceVisibility, private-pair rules)",
-  "commit": "b5e3d02f6b7eef742d82eeee0143696055971a01",
+  "commit": "faf3ec2c9c0e4500e9260a44b9a4754a0f0176ef",
   "runner": "scripts/screening_v8_mutations.py",
-  "mutants": 40,
-  "killed": 40,
+  "mutants": 43,
+  "killed": 43,
   "survived": [],
   "results": [
     {
@@ -113,7 +113,7 @@
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 37,
+      "passed": 42,
       "outcome": "killed"
     },
     {
@@ -123,7 +123,7 @@
       "new": "r.record.recordClass",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 2,
-      "passed": 36,
+      "passed": 41,
       "outcome": "killed"
     },
     {
@@ -133,7 +133,7 @@
       "new": "const pairs = observations;",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 37,
+      "passed": 42,
       "outcome": "killed"
     },
     {
@@ -143,7 +143,7 @@
       "new": "pairs.filter(() => true)",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 37,
+      "passed": 42,
       "outcome": "killed"
     },
     {
@@ -153,7 +153,7 @@
       "new": "r.state === 'active');",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 2,
-      "passed": 36,
+      "passed": 41,
       "outcome": "killed"
     },
     {
@@ -163,7 +163,7 @@
       "new": "'public'",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 6,
-      "passed": 32,
+      "passed": 37,
       "outcome": "killed"
     },
     {
@@ -173,7 +173,7 @@
       "new": "r.record.publicDeclaration !== 'not-public' ? 'public'",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 3,
-      "passed": 35,
+      "passed": 40,
       "outcome": "killed"
     },
     {
@@ -243,7 +243,7 @@
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 6,
-      "passed": 32,
+      "passed": 37,
       "outcome": "killed"
     },
     {
@@ -253,7 +253,7 @@
       "new": "  return true || a.length === forms.length && a.length === b.length",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 7,
-      "passed": 31,
+      "passed": 36,
       "outcome": "killed"
     },
     {
@@ -263,7 +263,7 @@
       "new": "  return a.length === b.length",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 37,
+      "passed": 42,
       "outcome": "killed"
     },
     {
@@ -272,8 +272,8 @@
       "old": "  if (unparsed !== undefined) return",
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
-      "failed": 4,
-      "passed": 34,
+      "failed": 8,
+      "passed": 35,
       "outcome": "killed"
     },
     {
@@ -283,7 +283,7 @@
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 37,
+      "passed": 42,
       "outcome": "killed"
     },
     {
@@ -293,7 +293,7 @@
       "new": "  if (false) return `the visibility of repository:${repositoryId} cannot be decided",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 2,
-      "passed": 36,
+      "passed": 41,
       "outcome": "killed"
     },
     {
@@ -303,7 +303,7 @@
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 37,
+      "passed": 42,
       "outcome": "killed"
     },
     {
@@ -313,7 +313,7 @@
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 2,
-      "passed": 36,
+      "passed": 41,
       "outcome": "killed"
     },
     {
@@ -369,11 +369,11 @@
     {
       "predicate": "gate: an unreadable grant instant of any pair refuses",
       "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
-      "old": "observations.find(r => Number.isNaN",
-      "new": "observations.filter(r => r.record.identity === subject.repository).find(r => Number.isNaN",
+      "old": "observations.find(r => !instantIsReadable",
+      "new": "observations.filter(r => r.record.identity === subject.repository).find(r => !instantIsReadable",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
-      "failed": 1,
-      "passed": 37,
+      "failed": 2,
+      "passed": 41,
       "outcome": "killed"
     },
     {
@@ -394,6 +394,36 @@
       "test": "packages/test-kit/src/unified-patch.test.ts",
       "failed": 1,
       "passed": 2,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "gate: a grant instant must name a real calendar instant",
+      "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
+      "old": "observations.find(r => !instantIsReadable(r.record.grantInstant));",
+      "new": "observations.find(r => Number.isNaN(Date.parse(r.record.grantInstant)));",
+      "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
+      "failed": 4,
+      "passed": 39,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "record: an instant reads only as the instant it names",
+      "file": "packages/polaris-dossier/src/launch-record.ts",
+      "old": " && new Date(ms).toISOString() === `${text.slice(0, -1)}.000Z`;",
+      "new": ";",
+      "test": "packages/polaris-dossier/src/launch-record.test.ts",
+      "failed": 7,
+      "passed": 29,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "record: the parser refuses a rolled-over instant",
+      "file": "packages/polaris-dossier/src/launch-record.ts",
+      "old": "  if (!instantIsReadable(grantInstant)) return",
+      "new": "  if (false) return",
+      "test": "packages/polaris-dossier/src/launch-record.test.ts",
+      "failed": 5,
+      "passed": 31,
       "outcome": "killed"
     },
     {
