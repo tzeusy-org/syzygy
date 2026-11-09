@@ -10,7 +10,11 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-SCREENING-V8-IMPL-B-2-RAW.md:4`), over `72528d19`, round 2. Round 1's three required findings are resolved. One new finding requires a change:
-- 1: an unreadable grant instant refuses only reads of its own pair, where the held text refuses every read.
+`REVISE` (`R-SCREENING-V8-IMPL-B-3-RAW.md:4`), over `aa658177`, round 3. Round 2's required finding is resolved. One new finding requires a change:
+- 1: a calendar-invalid grant instant rolls over to a real one, so a private record can drop out of the carriers and its pair read public.
 
-Two notes (2–3). Round 1: `REVISE` (`R-SCREENING-V8-IMPL-B-1-RAW.md:4`), over `0fb18104`, with dispositions in the PR body. Repairs are tracked on the PR and in `syzygy-pdja.21`.
+Two notes (2–3). Earlier rounds:
+- round 1 `REVISE` (`R-SCREENING-V8-IMPL-B-1-RAW.md:4`) over `0fb18104`;
+- round 2 `REVISE` (`R-SCREENING-V8-IMPL-B-2-RAW.md:4`) over `72528d19`.
+
+Dispositions are in the PR body. The stopping rule recorded in `syzygy-pdja.21` applies, so the next step is the owner's.
