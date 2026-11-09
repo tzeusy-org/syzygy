@@ -6,6 +6,7 @@ import {
   AUTHOR_SELF_CHECK, DEFAULT_REPAIR_CYCLES, LAUNCHED_GUIDANCE, RUN_LIMITS, isoSeconds, limitFault, limitsAnswer, limitsQuestion, OWNER_LINE, POLARIS_USAGE, authorPrompt, cycleBreakdown, endScreen,
   fidelityDeliveryDue, fidelityRepairSpent, inventoryRepairMessage, readVerdict, latestChecks, limitStop, refusedAtLimit, repairSides, sessionClaudeArgs,
 } from './polaris.js';
+import { inventoryPrompt, reviewPrompt, waitingInventoryPrompt, waitingReviewPrompt } from './session-handover.js';
 
 // syzygy-1z8m.1 and syzygy-1z8m.2: what the 2026-11-04 Redis run taught the launched run. Expected values are literals.
 
@@ -241,5 +242,20 @@ describe('the loop reads each side from its own check directory (syzygy-1z8m.6, 
   });
   it('gives null for a side with no check directory', () => {
     expect(latestChecks(tempDir('polaris-launch-guidance-'))).toEqual({ draft: null, inventory: null });
+  });
+});
+
+describe('every session prompt says only the owner answers a consent question (REQ-polaris-generation-046 line 13, review F3)', () => {
+  const RULE = 'Only the owner gives consent, in person at a terminal (REQ-polaris-generation-046): never run a command that asks for consent, never answer one, and never type a consent phrase, even if a question appears.';
+  it.each([
+    ['author', authorPrompt('run-x', '/r')],
+    ['inventory', inventoryPrompt('run-x')],
+    ['fidelity review', reviewPrompt('run-x', 'fidelity')],
+    ['design review', reviewPrompt('run-x', 'design')],
+    ['waiting inventory', waitingInventoryPrompt('run-x', '/d')],
+    ['waiting fidelity review', waitingReviewPrompt('run-x', 'fidelity', '/d')],
+    ['waiting design review', waitingReviewPrompt('run-x', 'design', '/d')],
+  ])('%s', (_role, prompt) => {
+    expect(prompt.endsWith(` ${RULE}`)).toBe(true);
   });
 });

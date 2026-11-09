@@ -88,6 +88,9 @@ the round files that running software still reads.
   only, after the implementation's PWB-REQ-005 evaluation).
 - The daemon never executes observed project code or test suites; separate
   operator commands do.
+- Never run a command that asks for consent, never answer one, and never
+  type a consent phrase, even if a question appears: only the owner gives
+  consent, in person at a terminal (REQ-polaris-generation-046).
 - Syzygy never writes implementation code or adopts intent autonomously.
 - Never adopt doctrine, accept contracts, approve policy, or label anything
   accepted on the owner's behalf (VIS-4); never install candidate material
