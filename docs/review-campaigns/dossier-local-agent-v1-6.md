@@ -10,4 +10,10 @@ Candidate v1.6 amendment of `polaris-dossier-local-agent-mode`, package `contrac
 
 ## Last verdict of record, and where the findings landed
 
-Round 1 `REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-6-1-RAW.md:4`) over `701b7d74`: two major findings (1, 2), five minor (3–7), four notes (8–11). Repairs and dispositions are tracked in the package and in `syzygy-pdja.26`. Not signed off.
+Round 2 `REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-6-2-RAW.md:4`) over `a4a181d5`.
+- One major finding: the base-packet rebuild is a chain the text does not state.
+- Four minor findings (2–5) and five notes (6–10).
+
+Round 1 `REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-6-1-RAW.md:4`) over `701b7d74` was dispositioned in the package's `ROUND-1-DISPOSITIONS.md`.
+
+This is the second failed round (CC-REV-4). The stopping rule for round 3 is recorded in `syzygy-pdja.26`. Not signed off.
