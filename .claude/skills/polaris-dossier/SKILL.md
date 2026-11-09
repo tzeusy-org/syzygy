@@ -110,7 +110,13 @@ With a URL (the author, driving the loop):
    with their answer. Resume when the operator says the session has
    finished, and run `syzygy dossier status <run>`.
 9. On a blocking finding, go back to 7: a new draft revision retires the
-   reviews.
+   reviews. Each round re-sends the whole packet, so repair every finding
+   the verdict lists, advisory ones you accept included, in one revision
+   before the next check and delivery, never one finding per round. Read
+   the delivery's usage note: it gives the packet's bytes and what a
+   continuing session already holds. Ask the operator whether the next
+   round should go to a fresh session (`--fresh`, which the operator starts
+   in a new terminal) rather than one that holds every earlier round.
 10. Close before the deadline passes: after it `close` refuses, the run gets
     no Execution Record and its usage is not recorded. Watch the deadline
     the brief states, and if it is near, close rather than start another

@@ -243,8 +243,11 @@ export function waitingReviewSession(run: string, kind: ReviewKind): WaitingSess
   return record !== undefined && record['mode'] === WAITING_MODE ? { session, record } : null;
 }
 
+/** A round delivered to a waiting review session: its packet digest and, where its record states one, the packet's size in bytes. */
+export interface Delivery { readonly round: number; readonly packetSha256: string; readonly packetBytes: number | null }
+
 /** The rounds delivered to a waiting review session, with their packet digests, in order. */
-export function deliveries(run: string, kind: ReviewKind, session: number): readonly { readonly round: number; readonly packetSha256: string }[] {
+export function deliveries(run: string, kind: ReviewKind, session: number): readonly Delivery[] {
   let names: string[];
   try { names = fs.readdirSync(path.join(run, RUN_LAYOUT.reviews)); } catch { return []; }
   const pattern = DELIVERY_RECORD(kind, session);
@@ -253,7 +256,9 @@ export function deliveries(run: string, kind: ReviewKind, session: number): read
     if (match === null) return [];
     const record = readRecord(path.join(run, RUN_LAYOUT.reviews, name));
     const round = Number(match[1]);
-    return record !== undefined && record['round'] === round && typeof record['packetSha256'] === 'string' ? [{ round, packetSha256: record['packetSha256'] }] : [];
+    if (record === undefined || record['round'] !== round || typeof record['packetSha256'] !== 'string') return [];
+    const bytes = record['packetBytes'];
+    return [{ round, packetSha256: record['packetSha256'], packetBytes: Number.isSafeInteger(bytes) && (bytes as number) >= 0 ? bytes as number : null }];
   }).sort((a, b) => a.round - b.round);
 }
 
@@ -269,8 +274,28 @@ export interface DeliveryReport {
   readonly continuing: boolean;
   readonly directory: string;
   readonly packetSha256: string;
+  /** The UTF-8 size of the packet Syzygy built and wrote at this step. */
+  readonly packetBytes: number;
+  /** syzygy-pdja.19: what this round adds to the session's reading, in bytes, with the advice that keeps the next round small. */
+  readonly usageNote: string;
   readonly next: string;
   readonly disclosures: readonly string[];
+}
+
+/** syzygy-pdja.19: the per-round usage note of a delivery. Syzygy observes only the bytes it built; what a continuing session already
+ * holds is read from its delivery records, within the agent sessions' write reach, so Inferred; the session's tokens are not observed. */
+export function deliveryUsageNote(kind: ReviewKind, round: number, packetBytes: number, earlier: readonly Delivery[]): string {
+  const head = `Round ${round} packet: ${packetBytes} bytes, built by Syzygy at this step; the session reads it whole, since a packet carries the whole frozen subject (REQ-polaris-generation-035).`;
+  let held = '';
+  if (earlier.length > 0) {
+    const sized = earlier.filter((entry) => entry.packetBytes !== null);
+    const total = sized.reduce((sum, entry) => sum + entry.packetBytes!, 0);
+    const unsized = earlier.length - sized.length;
+    const known = sized.length === 0 ? '' : `${total} bytes over ${sized.length === earlier.length ? 'them' : `${sized.length} of them`}, as Syzygy's delivery records state (Inferred: those records lie within the agent sessions' write reach)`;
+    const unknown = unsized === 0 ? '' : `${unsized} round${unsized === 1 ? '' : 's'} whose record states no size (Unknown)`;
+    held = ` This session already holds ${earlier.length} earlier round${earlier.length === 1 ? '' : 's'} (${[known, unknown].filter((part) => part !== '').join('; ')}), and each model call it makes reads its whole context again.`;
+  }
+  return `${head}${held} Syzygy cannot observe the session's token use; only the figure the operator declares at close records it, labelled Inferred. To keep the next round small: repair every finding of a verdict in one draft revision before the next check and delivery, and to hand the next ${kind} round to a session that holds only its packet, add --fresh, which the operator starts in a new terminal.`;
 }
 
 export const DELIVERY_DISCLOSURES = [
@@ -296,8 +321,9 @@ export function deliverToWaiting(
   afterCheck();
   const earlier = deliveries(run, kind, session);
   const round = earlier.length === 0 ? 1 : earlier[earlier.length - 1]!.round + 1;
+  const packetBytes = Buffer.byteLength(built.bytes, 'utf8');
   const record = {
-    format: DELIVERY_FORMAT, role: 'review', kind, runId, session, round, packetSha256: built.sha256, packet, deliveredAt: isoOf(now),
+    format: DELIVERY_FORMAT, role: 'review', kind, runId, session, round, packetSha256: built.sha256, packetBytes, packet, deliveredAt: isoOf(now),
     continuing: round > 1, earlierRounds: earlier.map((entry) => entry.round), label: 'Inferred',
   };
   const roundDir = path.join(resolved.real, roundDirName(round));
@@ -316,6 +342,7 @@ export function deliverToWaiting(
   logStep(run, 'session-prompt', now, { outcome: 'delivered', role: 'review', kind, session, round, packetSha256: built.sha256 });
   return { ok: true, report: {
     command: 'session-prompt', outcome: 'delivered', role: 'review', kind, run, session, round, continuing: round > 1, directory, packetSha256: built.sha256,
+    packetBytes, usageNote: deliveryUsageNote(kind, round, packetBytes, earlier),
     next: `Syzygy delivered round ${round} to the waiting ${kind} session ${session}; its \`syzygy dossier await\` returns with it. Start nothing and signal nothing: the session hands its verdict to \`await --submit --stdin\`, and Syzygy writes and checks it. When it has, run \`syzygy dossier status ${run}\` to see whether the review counts.`,
     disclosures: DELIVERY_DISCLOSURES,
   } };
