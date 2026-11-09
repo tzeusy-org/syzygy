@@ -10,9 +10,7 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-SCREENING-V8-IMPL-B-1-RAW.md:4`), over `0fb18104`, round 1. Three findings require a change:
-- 1: the supervisor fetches a private repository from its host;
-- 2: the act-forms-match refusal has no killing test;
-- 3: the provider-mode reader's unreadable-`sourceVisibility` refusal has no killing test.
+`REVISE` (`R-SCREENING-V8-IMPL-B-2-RAW.md:4`), over `72528d19`, round 2. Round 1's three required findings are resolved. One new finding requires a change:
+- 1: an unreadable grant instant refuses only reads of its own pair, where the held text refuses every read.
 
-Four notes (4–7). Repairs are tracked on the PR and in `syzygy-pdja.21`.
+Two notes (2–3). Round 1: `REVISE` (`R-SCREENING-V8-IMPL-B-1-RAW.md:4`), over `0fb18104`, with dispositions in the PR body. Repairs are tracked on the PR and in `syzygy-pdja.21`.
