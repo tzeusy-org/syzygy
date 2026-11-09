@@ -1890,3 +1890,34 @@ Claude Code CLI (quoted in the dedicated record).
 This sign-off authorizes no implementation, widens no consent, read, write or
 egress, and a later version of the package is signed separately.
 <!-- /versioned-signoff:polaris-dossier-launch-consent:v1.1 -->
+
+<!-- LAUNCH-CONSENT-WRITE-CONSENT:BEGIN -->
+## Launch-record write consent act — consent-write — performed 2026-11-08
+
+Act instant: 2026-11-09T03:37:56Z
+
+**Phrase the act takes (given 2026-11-08 by option selection, not typed; see the
+dedicated record):**
+
+```text
+CONSENT TO WRITE LAUNCH CONSENT RECORDS ON THE DEDICATED BRANCH: 53efd343b0ed5302628374fbb503758d2bfe56bf1b27715f0ec616f33b5aa092
+```
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Act type / artifact | `consent-write` / `.syzygy/governance/contracts/candidates/launch-consent-write-consent/instances/syzygy/WRITE-CONSENT-LAUNCH-RECORDS.md` |
+| Scope | launch consent records only, as new files only, on `refs/heads/launch-consent-records`; nothing else |
+| Argument | SHA-256 of the artifact itself: the one row of the package manifest, recomputed at recording |
+| Provenance state | `owner-adopted (bootstrap, uncorrelated)` — a state-(1) human act, owner-trusted and never independently verified |
+| A1 audit-record identity | explicitly absent, satisfying RFC3-16(b) item 9 for state (1) |
+| Frozen subject | `3ea65c5327988d656fa2408cf631cd5216fd69d9` |
+| Manifest | `.syzygy/governance/contracts/candidates/launch-consent-write-consent/LAUNCH-CONSENT-WRITE-CONSENT-MANIFEST.txt`, SHA-256 `7e56696ea4ec8f85c4472febbdb90f122b8b03dfca3f60ced829771638b972bf` |
+| Review outcome | `docs/reviews/R-LAUNCH-WRITE-CONSENT-2-RAW.md`: `CONFIRM WITH EXCEPTIONS`, its head bound to the manifest file |
+| Recorded at (UTC) | `2026-11-09T03:37:56Z` |
+| Recording | `.syzygy/governance/decisions/LAUNCH-CONSENT-WRITE-CONSENT-ACT.md` |
+
+Effective status: this one record is **effective owner authority —
+owner-adopted (bootstrap, uncorrelated)** for its own role only: a write
+consent. It authorizes no implementation.
+<!-- LAUNCH-CONSENT-WRITE-CONSENT:END -->

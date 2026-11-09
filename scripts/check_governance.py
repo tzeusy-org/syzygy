@@ -1840,6 +1840,13 @@ LAUNCH_WRITE_CONSENT_ACTS = (
     ("CONSENT TO WRITE LAUNCH CONSENT RECORDS ON THE DEDICATED BRANCH",
      f"{LAUNCH_WRITE_CONSENT_DIR}/instances/syzygy/WRITE-CONSENT-LAUNCH-RECORDS.md"),
 )
+#: The act's dedicated record, written by
+#: `record_launch_consent_write_consent_act.py` (performed 2026-11-08); it
+#: and the aggregate become copy files once the record exists.
+LAUNCH_WRITE_CONSENT_ACT_RECORDS = {
+    "CONSENT TO WRITE LAUNCH CONSENT RECORDS ON THE DEDICATED BRANCH":
+        f"{DECISIONS}/LAUNCH-CONSENT-WRITE-CONSENT-ACT.md",
+}
 DOSSIER_LOCAL_AGENT_ACT_RECORDS = {
     "STATE NO KERNEL EVIDENCE DRAWER FOR REDIS-REDIS":
         f"{DECISIONS}/DOSSIER-LOCAL-AGENT-REDIS-NO-EVIDENCE-DRAWER-ACT.md",
@@ -3683,6 +3690,14 @@ def _activate_launch_write_consent_copy_registry():
             carried = tuple(label for label in labels if label in text)
             if carried:
                 ACT_DIGEST_COPY_FILES[rel] = carried
+    aggregate = f"{DECISIONS}/ACCEPTANCE-ACT-RECORD.md"
+    for label, record in LAUNCH_WRITE_CONSENT_ACT_RECORDS.items():
+        if not os.path.isfile(os.path.join(ROOT, record)):
+            continue
+        present = ACT_DIGEST_COPY_FILES.get(aggregate, ())
+        if label not in present:
+            ACT_DIGEST_COPY_FILES[aggregate] = present + (label,)
+        ACT_DIGEST_COPY_FILES[record] = (label,)
 
 
 _activate_launch_write_consent_copy_registry()
@@ -11792,6 +11807,8 @@ def _activate_redis_local_agent_battery_copies():
     pairs = list(DOSSIER_LOCAL_AGENT_ACT_RECORDS.items())
     # the provider statement's version-2 recorder line passes its argument too, once performed
     pairs += list(DOSSIER_PROVIDER_V2_ACT_RECORDS.items())
+    # the launch-record write consent's recorder line, once performed (syzygy-pdja.22)
+    pairs += list(LAUNCH_WRITE_CONSENT_ACT_RECORDS.items())
     # the Redis observation consent's line is in node-ci, not here (NODE_CHECKS)
     # the RFC5-14 constants exist only once that act's chain link is installed; the
     # name is split so this text never carries the chain step's install mark
