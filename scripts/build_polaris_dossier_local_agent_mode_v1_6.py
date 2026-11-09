@@ -13,6 +13,7 @@ P115 act, consent, or observed-project execution permission is added.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import pathlib
 import shutil
@@ -134,6 +135,24 @@ def subject_bytes(root: pathlib.Path = ROOT) -> bytes:
 
 # --- checks ------------------------------------------------------------------
 
+SUBJECTS = CANDIDATE / "PROPOSED-SUBJECTS.json"
+
+
+def proposed_subjects(root: pathlib.Path = ROOT) -> str:
+    """PROPOSED-SUBJECTS.json as the builder derives it from the unapplied tree."""
+    after = forward(root)
+    if after is None:
+        raise ValueError(f"the v{VERSION} patches do not apply to the tree")
+    rows = [{"path": rel.as_posix(),
+             "current_sha256": sha((root / rel).read_bytes()),
+             "proposed_sha256": sha(after[rel]),
+             "patch_sha256": sha((root / PROPOSED / name).read_bytes())}
+            for name, rel in MAIN_PATCHES]
+    doc = {"base": "version 1.5 installed bytes; the proposed bytes are the patches applied to them",
+           "subjects": rows}
+    return json.dumps(doc, indent=2) + "\n"
+
+
 def check(root: pathlib.Path = ROOT) -> list[str]:
     current = state(root)
     if current == "absent":
@@ -160,6 +179,9 @@ def check(root: pathlib.Path = ROOT) -> list[str]:
         after = forward(root)
         assert after is not None  # state() applied it
         findings += v11._shape(after[SPEC], f"{SPEC.as_posix()} with the v{VERSION} patches")
+        if (root / SUBJECTS).is_file() and (
+                (root / SUBJECTS).read_text(encoding="utf-8") != proposed_subjects(root)):
+            findings.append(f"{SUBJECTS.as_posix()} is stale; regenerate it with --write-subjects")
     else:
         findings += v11._shape((root / SPEC).read_bytes(), SPEC.as_posix())
     return findings
@@ -290,6 +312,13 @@ def selftest() -> int:
     tmp, root = tree()
     with tmp:
         results.append(("unapplied package verifies", check(root) == []))
+        (root / SUBJECTS).write_text(proposed_subjects(root))
+        results.append(("unapplied: the derived subjects file verifies", check(root) == []))
+        (root / SUBJECTS).write_text(proposed_subjects(root).replace("\"proposed_sha256\": \"",
+                                                                     "\"proposed_sha256\": \"0", 1))
+        results.append(("unapplied: a stale subjects file fails",
+                        any("is stale" in f for f in check(root))))
+        (root / SUBJECTS).unlink()
         results.append(("unapplied: the battery's earlier checks pass", battery(root) == []))
         subject = subject_bytes(root)
         results.append(("subject is the installed spec with the v1.6 patch",
@@ -401,9 +430,18 @@ def main(argv: list[str]) -> int:
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check", action="store_true")
     mode.add_argument("--selftest", action="store_true")
+    mode.add_argument("--write-subjects", action="store_true",
+                      help=f"write {SUBJECTS.as_posix()} from the unapplied tree")
     args = parser.parse_args(argv)
     if args.selftest:
         return selftest()
+    if args.write_subjects:
+        if state(ROOT) != "unapplied":
+            print(f"REFUSED: the package is {state(ROOT)}, not unapplied; nothing written")
+            return 2
+        (ROOT / SUBJECTS).write_text(proposed_subjects(ROOT), encoding="utf-8")
+        print(f"wrote {SUBJECTS.as_posix()}")
+        return 0
     findings = check(ROOT) + signed_findings(ROOT)
     if findings:
         print("FAILED")

@@ -12,7 +12,7 @@
 |---|---|
 | REQ-polaris-generation-033 | Bytes unchanged. Its rebuild-and-compare binding is read, in REQ-035, to rebuild a list-carrying packet from the current and the base frozen subjects |
 | REQ-polaris-generation-034 | None |
-| REQ-polaris-generation-035 | The changed-block list: when a packet carries one, what it lists, how it is derived and rebuilt, that a verdict still covers every entry, its disclosure, the REQ-006 reading; four scenarios added, one THEN line amended, the test form extended |
+| REQ-polaris-generation-035 | The changed-block list: when a packet carries one, what it lists, how it is derived and rebuilt, that a verdict still covers every entry, its disclosure, the REQ-006 reading; four scenarios added, one THEN line amended, the test form extended, one `warrants.decisions` entry added |
 | REQ-polaris-generation-036 | None |
 
 [Observed] Four scenarios are added: the change's spec goes from 76
@@ -37,8 +37,11 @@ patched bytes, 2026-11-09). `PROJECT-STATUS.md`'s effective-composition figure,
 builder (`review-packet`), the waiting-session delivery
 (`session-prompt <run> review`), the rebuild in `review-check` and `render`,
 and the review page's disclosure. No product code changes with this package.
-`tasks.md` is unchanged. `GOVERNING-DEPENDENCIES.md` is generated at install
-from the warrants, which this version leaves unchanged.
+`tasks.md` is unchanged. REQ-polaris-generation-035's `warrants.decisions`
+gains `OWNER-DIRECTION-FIDELITY-REVIEW-ROUNDS-2026-11-09`, so
+`GOVERNING-DEPENDENCIES.md`, generated at install from the warrants
+(`scripts/build_polaris_dependency_unions.py`), changes at install; it is not
+patched here.
 
 ## Dependencies outside this package
 
@@ -55,11 +58,20 @@ from the warrants, which this version leaves unchanged.
 - Anchoring grows. A reviewer told which blocks changed may read the rest less
   closely. The verdict must still judge every entry, and the review page says
   the list was shown, but whether the reviewer read the rest stays Inferred.
-- One more thing can stop a verdict counting: an altered stored base subject
-  makes the rebuild differ. This fails closed, and costs a new round.
+- One more thing can stop a verdict counting: an altered or missing stored
+  base input makes the rebuild fail. This fails closed, and costs a new round.
 - A byte comparison can list a block whose change is trivial, and cannot list a
   block whose meaning changed only because a neighbour did. The second is why
   the verdict must still cover every entry.
+- The list points away from coverage effects. A repair that moves or removes a
+  claim can change whether an inventory entry is covered, or uncover an
+  omission, without changing that entry's bytes or cited spans, so the list
+  never names it. Coverage is judged over the whole draft, and the verdict must
+  still record coverage for every entry, but a reviewer who follows the list
+  can miss it.
+- The list compares only claim blocks, inventory entries and the understanding
+  record. It says so, so an empty list does not mean nothing else changed; the
+  criteria, the verdict schema and the pinned revision are not compared.
 - The full delta, which would save tokens, is not offered: its carry-forward
   rule would weaken "Any revision of the subject or the inventory retires the
   verdicts bound to it" (`SEMANTIC-DELTA.md`, "Which form, and why").

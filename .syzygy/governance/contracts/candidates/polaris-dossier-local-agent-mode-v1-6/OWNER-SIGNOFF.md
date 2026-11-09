@@ -24,7 +24,10 @@ means today, and a revision still throws away the earlier verdict.
 You offered two forms. This is the smaller one. The other, carrying confirmed
 entries forward, is not offered: it cannot be written without weakening the rule
 that a revision retires every verdict on the earlier draft
-(`SEMANTIC-DELTA.md`, "Which form, and why").
+(`SEMANTIC-DELTA.md`, "Which form, and why"). A third form, sending only the
+changed blocks while the reviewer still judges every block, would save tokens
+but means the reviewer no longer holds the whole draft in the round that
+counts; it is described there and not offered.
 
 ## What it costs
 
@@ -34,7 +37,10 @@ that a revision retires every verdict on the earlier draft
 - A reviewer told what changed may look less closely at the rest. The review
   page says the list was shown; whether the reviewer read the rest stays
   Inferred.
-- An altered stored copy of the earlier draft stops the verdict counting, which
-  costs one more round.
+- An altered or missing stored copy of the earlier round stops the verdict
+  counting, which costs one more round.
+- The list cannot show a repair that changed whether an inventory entry is
+  covered without changing that entry, so the reviewer must still check
+  coverage everywhere.
 
 Your `--fresh` answer ("Suggest only") needs no spec change and gets none.
