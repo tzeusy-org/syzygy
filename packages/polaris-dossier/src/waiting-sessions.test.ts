@@ -975,8 +975,8 @@ describe('the per-round usage note of a delivery', () => {
     const size = fs.statSync(path.join(h.sessions, 'fidelity-1', 'round-1', 'packet.json')).size;
     expect(delivered['packetBytes']).toBe(size);
     expect(readJson(path.join(h.run, 'reviews', 'fidelity-session-1.delivery-1.json'))['packetBytes']).toBe(size);
-    expect(delivered['usageNote']).toContain(`Round 1 packet: ${size} bytes, built by Syzygy at this step`);
-    expect(delivered['usageNote']).not.toContain('already holds');
+    expect(delivered['usageNote']).toContain(`Round 1 packet: ${size} bytes (Observed: Syzygy built and wrote them at this step). A packet carries the whole frozen subject (REQ-polaris-generation-035), so each round is a whole-packet review.`);
+    expect(delivered['usageNote']).not.toContain('earlier round');
     expect(delivered['usageNote']).toContain('Syzygy cannot observe the session\'s token use');
     expect(delivered['usageNote']).toContain('add --fresh');
   });
@@ -991,7 +991,7 @@ describe('the per-round usage note of a delivery', () => {
     const { delivered } = await reviewRound(h, 2);
     const second = fs.statSync(path.join(h.sessions, 'fidelity-1', 'round-2', 'packet.json')).size;
     expect(delivered['usageNote']).toContain(`Round 2 packet: ${second} bytes`);
-    expect(delivered['usageNote']).toContain(`This session already holds 1 earlier round (${first} bytes over them, as Syzygy's delivery records state (Inferred`);
+    expect(delivered['usageNote']).toContain(`Syzygy delivered 1 earlier round to this session (${first} bytes over them, as Syzygy's delivery records state (Inferred: those records lie within the agent sessions' write reach)). [Inferred] A continuing session keeps them in its context, and each model call it makes may read that context again.`);
   });
 
   it('says Unknown, never zero, for an earlier round whose record states no size (mutant: sum a missing size as 0)', async () => {
@@ -1004,7 +1004,7 @@ describe('the per-round usage note of a delivery', () => {
     write(path.join(h.run, 'drafts', 'next.json'), { ...draft(h.commit), title: 'Kestrel, repaired' });
     expect((await h.cli(['check', h.run])).exit).toBe(0);
     const { delivered } = await reviewRound(h, 2);
-    expect(delivered['usageNote']).toContain('This session already holds 1 earlier round (1 round whose record states no size (Unknown))');
+    expect(delivered['usageNote']).toContain('Syzygy delivered 1 earlier round to this session (1 round whose record states no size (Unknown)).');
     expect(delivered['usageNote']).not.toContain('0 bytes');
   });
 
@@ -1030,7 +1030,12 @@ describe('deliveryUsageNote', () => {
       { round: 3, packetSha256: 'c'.repeat(64), packetBytes: 250 },
     ]);
     expect(note).toContain('Round 4 packet: 900 bytes');
-    expect(note).toContain('already holds 3 earlier rounds (350 bytes over 2 of them, as Syzygy\'s delivery records state (Inferred: those records lie within the agent sessions\' write reach); 1 round whose record states no size (Unknown))');
+    expect(note).toContain('Syzygy delivered 3 earlier rounds to this session (350 bytes over 2 of them, as Syzygy\'s delivery records state (Inferred: those records lie within the agent sessions\' write reach); 1 round whose record states no size (Unknown)).');
+  });
+
+  it('counts an earlier round with no readable record as Unknown, never omits it (mutant: count only the records read)', () => {
+    const note = deliveryUsageNote('fidelity', 3, 900, [{ round: 2, packetSha256: 'b'.repeat(64), packetBytes: 200 }]);
+    expect(note).toContain('Syzygy delivered 2 earlier rounds to this session (200 bytes over 1 of them, as Syzygy\'s delivery records state (Inferred: those records lie within the agent sessions\' write reach); 1 round whose record Syzygy could not read (Unknown)).');
   });
 
   it('names the review kind in its --fresh advice (mutant: hard-code fidelity)', () => {

@@ -282,18 +282,24 @@ export interface DeliveryReport {
   readonly disclosures: readonly string[];
 }
 
-/** syzygy-pdja.19: the per-round usage note of a delivery. Syzygy observes only the bytes it built; what a continuing session already
- * holds is read from its delivery records, within the agent sessions' write reach, so Inferred; the session's tokens are not observed. */
+/** syzygy-pdja.19: the per-round usage note of a delivery. Syzygy observes the bytes it built and wrote at this step; the earlier rounds
+ * come from its delivery records, within the agent sessions' write reach, so Inferred; a round below this one with no readable record
+ * (one `deliveries` drops) is counted as Unknown; what the session does with its context, and its tokens, are not observed. */
 export function deliveryUsageNote(kind: ReviewKind, round: number, packetBytes: number, earlier: readonly Delivery[]): string {
-  const head = `Round ${round} packet: ${packetBytes} bytes, built by Syzygy at this step; the session reads it whole, since a packet carries the whole frozen subject (REQ-polaris-generation-035).`;
+  const plural = (n: number, word: string): string => `${n} ${word}${n === 1 ? '' : 's'}`;
+  const head = `Round ${round} packet: ${packetBytes} bytes (Observed: Syzygy built and wrote them at this step). A packet carries the whole frozen subject (REQ-polaris-generation-035), so each round is a whole-packet review.`;
   let held = '';
-  if (earlier.length > 0) {
+  if (round > 1) {
     const sized = earlier.filter((entry) => entry.packetBytes !== null);
     const total = sized.reduce((sum, entry) => sum + entry.packetBytes!, 0);
     const unsized = earlier.length - sized.length;
-    const known = sized.length === 0 ? '' : `${total} bytes over ${sized.length === earlier.length ? 'them' : `${sized.length} of them`}, as Syzygy's delivery records state (Inferred: those records lie within the agent sessions' write reach)`;
-    const unknown = unsized === 0 ? '' : `${unsized} round${unsized === 1 ? '' : 's'} whose record states no size (Unknown)`;
-    held = ` This session already holds ${earlier.length} earlier round${earlier.length === 1 ? '' : 's'} (${[known, unknown].filter((part) => part !== '').join('; ')}), and each model call it makes reads its whole context again.`;
+    const unread = Math.max(0, round - 1 - earlier.length);
+    const parts = [
+      sized.length === 0 ? '' : `${total} bytes over ${sized.length === round - 1 ? 'them' : `${sized.length} of them`}, as Syzygy's delivery records state (Inferred: those records lie within the agent sessions' write reach)`,
+      unsized === 0 ? '' : `${plural(unsized, 'round')} whose record states no size (Unknown)`,
+      unread === 0 ? '' : `${plural(unread, 'round')} whose record Syzygy could not read (Unknown)`,
+    ].filter((part) => part !== '');
+    held = ` Syzygy delivered ${plural(round - 1, 'earlier round')} to this session (${parts.join('; ')}). [Inferred] A continuing session keeps them in its context, and each model call it makes may read that context again.`;
   }
   return `${head}${held} Syzygy cannot observe the session's token use; only the figure the operator declares at close records it, labelled Inferred. To keep the next round small: repair every finding of a verdict in one draft revision before the next check and delivery, and to hand the next ${kind} round to a session that holds only its packet, add --fresh, which the operator starts in a new terminal.`;
 }
