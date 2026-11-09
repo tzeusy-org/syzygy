@@ -10,4 +10,6 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-GIT-SOURCE-LOCAL-AGENT-V1-1-1-RAW.md:4`), over `5c939150`, round 1. It has three revise findings and seven notes. The revise findings are repaired and the notes taken or carried to the owner, as `public-git-source-acquisition-local-agent-v1-1/ROUND-1-DISPOSITIONS.md` records. Round 2 reviews the repaired bytes.
+`REVISE` (`R-GIT-SOURCE-LOCAL-AGENT-V1-1-2-RAW.md:4`), over `5236223d`, round 2. It has two revise findings and four notes, repaired or taken as `public-git-source-acquisition-local-agent-v1-1/ROUND-2-DISPOSITIONS.md` records. Round 3 reviews the repaired bytes.
+
+Round 1 was `REVISE` (`R-GIT-SOURCE-LOCAL-AGENT-V1-1-1-RAW.md:4`), over `5c939150`, with three revise findings and seven notes, dispositioned in `ROUND-1-DISPOSITIONS.md`.

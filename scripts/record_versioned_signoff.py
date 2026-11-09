@@ -3573,10 +3573,35 @@ def selftest() -> int:
                     and routed))
     results.append(("the real registry entry v1.1 carries its own scope, supersession and does-not text, "
                     "and v1.0 holds a replaced record to v1.1's base bytes while v1.0 renders the fixed text",
-                    real_reg11.record_scope == GIT_SOURCE_V11_SCOPE
-                    and "supersedes version 1.0" in (real_reg11.record_supersession or "")
-                    and "widens, in a copy-class run alone" in (real_reg11.record_does_not or "")
-                    and "supersedes version 1.0" in (real_reg11.record_aggregate_scope or "")
+                    # Round-2 Finding 4: the four texts the signed record will
+                    # carry, pinned in full as literals, so that no edit to them
+                    # passes unseen; the review brief names them as reviewed bytes.
+                    real_reg11.record_scope == (
+                        "the entry's own subject, read authority, fetch, tags and state-directory\n"
+                        "writes, which for a copy-class run admit the one local copy its fetch\n"
+                        "declaration names; nothing wider")
+                    and real_reg11.record_supersession == (
+                        "supersedes version 1.0 of this entry, whose record\n"
+                        "(PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md) stays the record of\n"
+                        "that version and its bytes; revoked only by a later exact owner act naming it")
+                    and real_reg11.record_does_not == (
+                        "It approves the registry entry named above at exactly the SHA-256 above and\n"
+                        "no other byte: a later edit at that path is unsigned. It is one of the\n"
+                        "separate acts a read needs; it gives no observation consent, adopts no\n"
+                        "classification or screening policy, widens no network egress and no write to\n"
+                        "an observed or external system, and authorizes no implementation. Against\n"
+                        "version 1.0 it widens, in a copy-class run alone, local execution and a local\n"
+                        "write: the Git processes the entry's fetch declaration names and the copy's\n"
+                        "directory its stateDirectoryWrites declaration names. Every exclusion of the\n"
+                        "acts in force stands.\n")
+                    and real_reg11.record_aggregate_scope == (
+                        "This sign-off approves the registry entry its dedicated record names, at the\n"
+                        "SHA-256 recorded there, under the Scope A extension the owner's selection\n"
+                        "names, and supersedes version 1.0. That is one of the separate acts a read\n"
+                        "needs. It gives no observation consent and widens no network egress; against\n"
+                        "version 1.0 it widens, in a copy-class run alone, local execution and a local\n"
+                        "write, as its record says. It authorizes no implementation, and a later version\n"
+                        "of the package is signed separately.")
                     and real_reg.record_scope is None and real_reg.record_supersession is None
                     and real_reg.record_does_not is None and real_reg.record_aggregate_scope is None
                     and real_reg.replaced_bytes is not None

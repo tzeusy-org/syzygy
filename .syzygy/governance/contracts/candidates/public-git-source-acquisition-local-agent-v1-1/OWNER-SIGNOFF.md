@@ -66,13 +66,18 @@ for a copy, so every run is a no-copy run.
   Git directory is; your references' names and the few values the trunk
   rule needs; your remotes' names and URLs from the configuration file;
   whether an alternates file exists; and, for a shortened `--revision`
-  only, object names. Of these five, it may read only the ones the
-  launch-consent rules in force ask for. Some of them only v1.2 asks for:
-  the trunk-rule references, the local branch named like the remote's
-  default, `packed-refs`, whether an alternates file exists, and object
-  names for a shortened `--revision`. Every no-copy run, launched with
-  consent or not, also reads the files its clone-form check needs, as v1.0
-  already allowed by reading.
+  only, object names. For such a run that list is closed, as v1.2 closes
+  it, and Syzygy may read of it only what the launch-consent rules in force
+  ask for. The rules you have already signed (v1.1) ask for most of it:
+  the trunk-rule references, your references however Git stores them
+  (`packed-refs` included), and the object names a shortened `--revision`
+  needs. Only two items are asked for by v1.2 alone: the local branch named
+  like the remote's default, and whether an alternates file exists.
+- **For a run started without launch consent** (the redis run, for
+  example), the entry closes no list, just as v1.0 did not. It names in
+  words what such a run already reads: the files its clone-form check
+  needs, and the check that its `HEAD` is the consented commit (`HEAD`
+  and the reference it names, `packed-refs` included).
 - Nothing is written to your clone, ever.
 
 ## What it costs, and what stays uncertain
@@ -93,9 +98,11 @@ for a copy, so every run is a no-copy run.
    - Signed alone, every run stays a no-copy run, so v1.0's promises hold
      in v1.0's words for every run: nothing fetched, no process started,
      nothing written outside the state directory. What changes is only
-     that the entry now lists, as a closed list, what Syzygy reads of your
-     clone at launch, and only as far as the rules in force ask. But the
-     entry's bytes change, so the gate code wired to v1.0 must change in
+     that the entry now says in words what Syzygy reads of your clone at
+     launch. For a run launched with consent that is a closed list, and
+     under v1.1 it admits what v1.1 already reads; the two v1.2-only items
+     stay out. For any other run it closes nothing, as v1.0 did not. But
+     the entry's bytes change, so the gate code wired to v1.0 must change in
      the same commit (`IMPACT-LEDGER.md`, items 1 and 1a: the reader in
      `packages/polaris-generation-consent/src/package-reader.ts`, its record
      template, and three test or measurement files), or every local-agent

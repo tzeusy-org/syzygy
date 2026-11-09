@@ -157,11 +157,12 @@ FETCH_CLAUSES = (
 RA_TAIL_CLAUSES = (
     ("the object reads bounded", ". Those words bound the object reads. "),
     ("the launch reads as data",
-     "Besides them Syzygy reads, as data and never honoured, only the following, which are the launch reads of "
-     "the pinning, identity and clone-form rules and not object reads. "),
+     "The reads of the pinning, identity and clone-form rules are launch reads, made as data and never honoured, "
+     "and not object reads. "),
     ("the five launch reads",
-     "In a launch-consented run (REQ-polaris-generation-046 and 047) it reads in the operator's clone these five "
-     "things alone, and of them only those the launch-consent requirements in force name: "),
+     "In a launch-consented run (REQ-polaris-generation-046 and 047), besides the object reads, Syzygy reads only "
+     "the following: in the operator's clone these five things alone, and of what they list only what the "
+     "launch-consent requirements in force name: "),
     ("launch read (1)",
      "(1) the .git file or directory and the files that locate the Git directory and the common Git directory; "),
     ("launch read (2)",
@@ -184,7 +185,11 @@ RA_TAIL_CLAUSES = (
      "In every no-copy run (fetch), launch-consented or not, it reads the files of the operator's clone's .git "
      "directory that the form check binding that run reads, the form another act's consent states or the "
      "one-commit form REQ-polaris-generation-047 states, the whole configuration file and the pack indexes "
-     "included, to which (3) yields"),
+     "included, to which (3) yields. "),
+    ("a run that is not launch-consented",
+     "A run that is not launch-consented has no closed list of reads here beyond the object reads, as under "
+     "version 1.0; besides its form-check reads above, REQ-polaris-generation-033's check of its HEAD reads "
+     "HEAD and the reference HEAD names, from the loose reference files and packed-refs"),
 )
 #: tags after v1.0's text.
 TAGS_TAIL_CLAUSES = (
@@ -518,8 +523,16 @@ def selftest() -> int:
                   "(2) the names of its references, and the values of every reference, of HEAD"),
          "at the clause 'launch read (2)'"),
         ("launch reads read whether or not the requirements in force name them",
-         _replace("readAuthority", " alone, and of them only those the launch-consent requirements in force name:",
-                  " alone:"), "at the clause 'the five launch reads'"),
+         _replace("readAuthority", " alone, and of what they list only what the launch-consent requirements in "
+                  "force name:", " alone:"), "at the clause 'the five launch reads'"),
+        ("(R2 F1) the launch-read list closed for every run, not the launch-consented run alone",
+         _replace("readAuthority", "In a launch-consented run (REQ-polaris-generation-046 and 047), besides the "
+                  "object reads, Syzygy reads only the following:", "In every run, besides the object reads, Syzygy "
+                  "reads only the following:"), "at the clause 'the five launch reads'"),
+        ("(R2 F1) a run that is not launch-consented closed to its HEAD-check reads",
+         _replace("readAuthority", "A run that is not launch-consented has no closed list of reads here beyond the "
+                  "object reads", "A run that is not launch-consented reads nothing beyond the object reads"),
+         "at the clause 'a run that is not launch-consented'"),
         ("a clause appended to stateDirectoryWrites",
          _replace("stateDirectoryWrites", "its forks or its tracker", "its forks or its tracker; and any cache"),
          "'added text'"),

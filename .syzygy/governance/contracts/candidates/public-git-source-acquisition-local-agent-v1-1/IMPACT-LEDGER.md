@@ -56,8 +56,9 @@ implementation authorization.
    or the reader refuses the v1.1 record as malformed. That template is
    part of item 1.
 1a. **The tests and scripts that pin the v1.0 form.** [Observed, a sweep of
-   `packages/`, `apps/` and `scripts/` for the constant's name, 33 occurrences in 10
-   files, read one by one; see "Who else reads the entry".] These must
+   `packages/`, `apps/` and `scripts/` for the constant's name, 33
+   occurrences in 10 files, read one by one, and the local `SIGNOFF`
+   constant round 2 found; see "Who else reads the entry".] These must
    change in the same commit as item 1, or they fail once the v1.1 record
    exists:
    - `packages/polaris-generation-consent/src/real-tree.test.ts:43-44`
@@ -66,6 +67,14 @@ implementation authorization.
    - `packages/polaris-dossier/src/gate-acts.test.ts:581`, `:596` and
      `:613` pin the form's file name to the v1.0 record and its template's
      rendering to the v1.0 record's bytes.
+   - `packages/polaris-dossier/src/gate-acts.test.ts:31` defines `SIGNOFF`
+     as the v1.0 record's path, and `:220`, inside `expectFollowsTree`
+     (called on the real tree at `:93`), expects
+     `{ state: 'ok', record: 'public-git-source-acquisition-local-agent-v1.0' }`
+     whenever that file exists. The v1.0 record stays after v1.1 is
+     recorded, so this fails on the real tree once the form moves (round-2
+     Finding 3). It reaches the record through a local constant, not the
+     form; the first sweep, for the v1.0 record name, should have found it.
    - `scripts/measure_consent_gate_recognition.mjs:142` names the recorder's
      check key `--version 1.0` for the form's record.
 2. **The battery.** `PROJECT-STATUS.md`, the hosted workflow and the count
@@ -78,11 +87,15 @@ implementation authorization.
    - `build_public_git_source_acquisition_local_agent_v1_1.py --check`,
      which proves the v1.1 package still verifies against the v1.0 bytes
      the v1.0 record names.
-   The recorder's `--version 1.0` line no longer depends on the second: since
-   this round it holds the v1.0 record's SHA-256 line to the bytes v1.1's
-   builder takes as its base (below). The builder line is still required,
-   because it alone re-checks the v1.1 package's semantic predicates and
-   patch after the sign-off. This draft leaves the CG-26 triple alone, as
+   Since round 1 the recorder's `--version 1.0` line holds the v1.0 record's
+   SHA-256 line to the bytes v1.1's builder takes as its base (below), so a
+   forged record line alone fails it. It does not catch a forged line and a
+   forged base together, rewritten to agree: [Observed by the round-2
+   reviewer] that pair passes the recorder line, and only the builders
+   refuse it (the v1.1 builder: "the patch applied to the v1.0 bytes does
+   not give the proposed bytes"). So the builder line is required for the
+   base too, and it alone re-checks the v1.1 package's semantic predicates
+   and patch after the sign-off (round-2 Finding 5). This draft leaves the CG-26 triple alone, as
    the integration rule requires.
 3. **The implementation of the copy step.** No file implements it
    (`implementationCoverage.copyStep`). It belongs to launch-consent v1.2's
@@ -124,8 +137,14 @@ implementation authorization.
     write in a copy-class run alone, and no network egress or write to an
     observed or external system. The fixed text stays for v1.0 and every
     other package; a selftest pins both.
-  - The rule-6 mutation record for these repairs is retained at
-    `docs/evidence/syzygy-pdja-29/round-1-repairs-mutation-2026-11-10.json`.
+  - The four v1.1 record texts (`GIT_SOURCE_V11_SCOPE`,
+    `_SUPERSESSION`, `_DOES_NOT`, `_AGGREGATE`) are pinned in full, as
+    literals, by the recorder selftest (round-2 Finding 4); they sit
+    outside the package directory, so the review brief names them as
+    reviewed bytes.
+  - The rule-6 mutation records for these repairs are retained at
+    `docs/evidence/syzygy-pdja-29/round-1-repairs-mutation-2026-11-10.json`
+    and `docs/evidence/syzygy-pdja-29/round-2-repairs-mutation-2026-11-10.json`.
 - `scripts/prepare_three_surface_poc_governedby_reference_recording.py`:
   the T17 census closed set admits the new recorder key.
 
@@ -155,6 +174,7 @@ the definition, two re-exports and the readers below).]
 | `gate-sources.ts:511`, the production start gate | the form, through the constant | Follows item 1 by construction |
 | `real-tree.test.ts:43-44` | the form's record on the real tree, expecting the v1.0 identity | Must change in the same commit (item 1a) |
 | `gate-acts.test.ts:581`, `:596`, `:613` | the form's file name and its template's rendering of the v1.0 record | Must change in the same commit (item 1a) |
+| `gate-acts.test.ts:31`, `:220` (via `:93`) | the v1.0 record's path, by a local constant, expecting the v1.0 identity on the real tree | Must change in the same commit (item 1a) |
 | `start-gates.test.ts:114-115` | the form's installed path and record path, as fixture inputs | [Inferred] follows item 1; a run record then names the v1.1 tag |
 | `scripts/measure_consent_gate_recognition.mjs:100-153` | the form, and the recorder check key `--version 1.0` | The check key must change in the same commit (item 1a) |
 | `scripts/differential_consent_act_families.mjs`, `scripts/differential_line_slot.mjs` | the form, as one reader among many | [Inferred] follow item 1; they read whatever form the constant names |
