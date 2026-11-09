@@ -57,11 +57,14 @@ export async function pairVisibilityAt(subject: { readonly repository: string; r
   try { acts = await (options.actRecords ?? (id => actFormRecords(options.root, options.now, id)))(repositoryId); } catch (cause) {
     return { ok: false, why: `an observation consent act record cannot be read, so every read is refused: ${cause instanceof Error ? cause.message : 'unreadable'}` };
   }
-  const pairs = store.records.filter(r => r.state === 'active' && r.record.recordClass === 'observation-consent' && r.record.identity === subject.repository);
-  // A grant instant that does not parse (the record grammar admits a month 13) leaves the record's effectiveness unreadable: refuse it,
-  // never drop it, or a fork's private record could fall out of the carriers.
-  const unparsed = pairs.find(r => Number.isNaN(Date.parse(r.record.grantInstant)));
-  if (unparsed !== undefined) return { ok: false, why: `the launch consent record ${unparsed.record.recordId} has a grant instant that cannot be read (${unparsed.record.grantInstant}), so its effectiveness is unknown and every read is refused` };
+  const observations = store.records.filter(r => r.state === 'active' && r.record.recordClass === 'observation-consent');
+  // An observation record whose effectiveness cannot be read (a grant instant that does not parse: the record grammar admits a month
+  // 13) could be a record of any pair, so every read is refused while it exists, whatever its pair, with its file named. The held text
+  // (SEMANTIC-DELTA.md, edit 2) chose this availability cost: never drop such a record. A record whose kind or pair cannot be read never
+  // reaches here: the store reader refuses the whole store for it, which refuses every read above.
+  const unparsed = observations.find(r => Number.isNaN(Date.parse(r.record.grantInstant)));
+  if (unparsed !== undefined) return { ok: false, why: `the launch consent record ${unparsed.file} has a grant instant that cannot be read (${unparsed.record.grantInstant}), so its effectiveness is unknown, it could be a record of any pair, and every read is refused until it is read or revoked` };
+  const pairs = observations.filter(r => r.record.identity === subject.repository);
   const launched = pairs.filter(r => Date.parse(r.record.grantInstant) <= options.now);
   const carriers = [
     ...acts.map(record => ({ record, carrier: 'public' as const })),

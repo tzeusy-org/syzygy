@@ -28,6 +28,7 @@ RENDER_TEST = f"{DOSSIER}/render.test.ts"
 APP_TEST = f"{APP}/public-source-screening.test.ts"
 TRIGGER_TEST = f"{APP}/dossier-trigger.test.ts"
 CLONE_TEST = f"{DOSSIER}/polaris-clone.test.ts"
+PATCH_TEST = "packages/test-kit/src/unified-patch.test.ts"
 
 MUTANTS = [
     ("visibility: admitted pinned", f"{CORE}/source-visibility.ts", "if (!exactly(sv['admitted'], ['public', 'private'])) return", "if (false) return", VIS_TEST),
@@ -42,9 +43,9 @@ MUTANTS = [
     ("screen: no subject builds private", f"{DOSSIER}/screen.ts", "if (subject === null) visibility = 'private';", "if (subject === null) visibility = 'public';", SCREEN_TEST),
     ("gate: unreadable launch record refuses", f"{DOSSIER}/source-visibility-gate.ts", "  if (!store.ok) return", "  if (false) return", GATE_TEST),
     ("gate: only active records", f"{DOSSIER}/source-visibility-gate.ts", "r.state === 'active' && r.record.recordClass", "r.record.recordClass", GATE_TEST),
-    ("gate: only the pair's records", f"{DOSSIER}/source-visibility-gate.ts", " && r.record.identity === subject.repository);", ");", GATE_TEST),
+    ("gate: only the pair's records", f"{DOSSIER}/source-visibility-gate.ts", "const pairs = observations.filter(r => r.record.identity === subject.repository);", "const pairs = observations;", GATE_TEST),
     ("gate: only records in force", f"{DOSSIER}/source-visibility-gate.ts", "pairs.filter(r => Date.parse(r.record.grantInstant) <= options.now)", "pairs.filter(() => true)", GATE_TEST),
-    ("gate: only observation records", f"{DOSSIER}/source-visibility-gate.ts", "r.record.recordClass === 'observation-consent' && r.record.identity", "r.record.identity", GATE_TEST),
+    ("gate: only observation records", f"{DOSSIER}/source-visibility-gate.ts", "r.state === 'active' && r.record.recordClass === 'observation-consent');", "r.state === 'active');", GATE_TEST),
     ("gate: not-public states private", f"{DOSSIER}/source-visibility-gate.ts", "r.record.publicDeclaration === 'not-public' ? 'private' : 'states-nothing'", "'public'", GATE_TEST),
     ("gate: only the affirmative answer states public", f"{DOSSIER}/source-visibility-gate.ts", "r.record.publicDeclaration === 'public' ? 'public'", "r.record.publicDeclaration !== 'not-public' ? 'public'", GATE_TEST),
     ("render: private excluded object id off the source population", f"{DOSSIER}/render.ts", "objectId: screen.visibility === 'private' ? null : cited.objectId,", "objectId: cited.objectId,", RENDER_TEST),
@@ -67,6 +68,10 @@ MUTANTS = [
     ("trigger: the fetch waits for a public decision", f"{APP}/dossier-trigger.ts", "    if (fetchStop !== null) return", "    if (false) return", TRIGGER_TEST),
     ("trigger: a private pair is not fetched", f"{APP}/dossier-trigger.ts", "  if (decision.visibility !== 'public') return", "  if (false) return", TRIGGER_TEST),
     ("trigger: no decision port fetches nothing", f"{APP}/dossier-trigger.ts", "  if (ports.visibility === undefined) return", "  if (false) return", TRIGGER_TEST),
+    # Round 2 (docs/reviews/R-SCREENING-V8-IMPL-B-2-RAW.md) and its repairs.
+    ("gate: an unreadable grant instant of any pair refuses", f"{DOSSIER}/source-visibility-gate.ts", "observations.find(r => Number.isNaN", "observations.filter(r => r.record.identity === subject.repository).find(r => Number.isNaN", GATE_TEST),
+    ("supervisor: reuse only a clone at the commit", f"{DOSSIER}/polaris.ts", "head.status === 0 && head.stdout.trim() === chosen.commit", "head.status === 0", CLONE_TEST),
+    ("test-kit: a hunk past the end copies only the text's lines", "packages/test-kit/src/unified-patch.ts", "k < Math.min(start, lines.length)", "k < start", PATCH_TEST),
     ("screen: a version-8 screen with no visibility is private", f"{DOSSIER}/screen.ts", "given ?? (visibilityRead.declared ? 'private' : 'public')", "given ?? 'public'", SCREEN_TEST),
 ]
 

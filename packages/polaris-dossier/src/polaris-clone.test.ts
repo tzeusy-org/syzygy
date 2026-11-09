@@ -50,6 +50,12 @@ describe('supervisorClone', () => {
     expect(await supervisorClone(input(decided({ ok: true, visibility: 'private', carriers: [] })), d)).toEqual({ clone: '/clones/o-r-trunk' });
     expect(fetched()).toBe(false);
   });
+  it('refuses a clone at another commit, never reusing it, and fetches nothing', async () => {
+    const { d, fetched } = deps({ status: 0, stdout: `${'b'.repeat(40)}\n` }, true);
+    const out = await supervisorClone(input(decided({ ok: true, visibility: 'public', carriers: [] })), d);
+    expect(out).toBe(`/clones/o-r-trunk exists but is not a clone of ${COMMIT}; remove it or pass --clone`);
+    expect(fetched()).toBe(false);
+  });
   it('refuses a path that holds something else, before asking visibility', async () => {
     const { d, fetched } = deps({ status: 128, stdout: '' }, true);
     let asked = false;

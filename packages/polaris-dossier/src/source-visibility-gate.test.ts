@@ -51,7 +51,16 @@ describe('pairVisibilityAt', () => {
   });
   it.each(['2026-13-01T00:00:00Z', '2026-02-30T25:00:00Z', 'not an instant'])('refuses every read when a pair\'s grant instant does not parse (%s), never drops the record', async instant => {
     expect(await decide(store(launch('L1', 'public'), launch('L2', 'not-public', { grantInstant: instant })), acts())).toEqual({ ok: false,
-      why: `the launch consent record L2 has a grant instant that cannot be read (${instant}), so its effectiveness is unknown and every read is refused` });
+      why: `the launch consent record L2.md has a grant instant that cannot be read (${instant}), so its effectiveness is unknown, it could be a record of any pair, and every read is refused until it is read or revoked` });
+  });
+  it('refuses a read of one pair while another pair\'s observation record has an unreadable grant instant, naming its file', async () => {
+    expect(await decide(store(launch('L1', 'public'), launch('L9', 'public', { identity: 'repository:other', grantInstant: '2026-13-01T00:00:00Z' })), acts('PUBLIC-OBS-X@1'))).toEqual({ ok: false,
+      why: 'the launch consent record L9.md has a grant instant that cannot be read (2026-13-01T00:00:00Z), so its effectiveness is unknown, it could be a record of any pair, and every read is refused until it is read or revoked' });
+  });
+  it('ignores an unreadable grant instant on a revoked record or on a record that is not an observation record', async () => {
+    const bad = { identity: 'repository:other', grantInstant: '2026-13-01T00:00:00Z' };
+    expect(await decide(store(launch('L1', 'public'), launch('L8', 'public', { ...bad, state: 'revoked' }), launch('L9', 'public', { ...bad, recordClass: 'drawer-statement' })), acts()))
+      .toMatchObject({ ok: true, visibility: 'public' });
   });
   it.each([
     ['a launch record answering public', [launch('L1', 'public')], [], 'public'],
