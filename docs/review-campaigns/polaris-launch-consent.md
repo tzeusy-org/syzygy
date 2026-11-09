@@ -10,7 +10,9 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-5-RAW.md:4`), over `e004db00`, the fifth review of package `polaris-dossier-launch-consent` v1.2 and the second of the owner's redesign. It found round 4's findings answered and has two revise findings and seven notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-5-DISPOSITIONS.md`, which also records a self-review table. Per the owner's 2026-11-10 instruction the loop continues past the stopping rule while rounds converge. The repaired bytes await round 6.
+`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-6-RAW.md:4`), over `083ad8c5`, the sixth review of package `polaris-dossier-launch-consent` v1.2 and the third of the owner's redesign. It found round 5's findings answered and has two revise findings, both edge cases, and two notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-6-DISPOSITIONS.md`, with stage and refusal sweeps. Per the owner's 2026-11-10 instruction the loop continues while rounds converge. The repaired bytes await round 7.
+
+Round 5 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-5-RAW.md:4`), over `e004db00`, the second review of the owner's redesign. It found round 4's findings answered and has two revise findings and seven notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-5-DISPOSITIONS.md`, which also records a self-review table.
 
 Round 4 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-4-RAW.md:4`), over `35015c5e`, the first review of the owner's redesign (Syzygy copies the trunk-tip commit from the operator's clone over Git's local file transport; direction record section of 2026-11-10). It has three revise findings and six notes, on the text's consistency, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-4-DISPOSITIONS.md`; notes 7 and 8 are also carried to the owner. The redesign is treated as a fresh sequence, of which round 4 was the first round.
 

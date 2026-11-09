@@ -1,9 +1,9 @@
 # Owner sign-off — Polaris dossier launch consent, version 1.2
 
 > **Candidate — binds nothing.** [Observed] Rounds 1 to 3 of review returned
-> `REVISE`. On 2026-11-10 you chose a redesign. Rounds 4 and 5, its first
-> reviews, returned `REVISE` on the text's consistency; these bytes are the
-> round-5 repair, and no review has read them yet. This page may be offered only after
+> `REVISE`. On 2026-11-10 you chose a redesign. Rounds 4 to 6, its first
+> reviews, returned `REVISE` on the text's consistency and edge cases; these
+> bytes are the round-6 repair, and no review has read them yet. This page may be offered only after
 > a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
 > install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
 > Nothing here records a choice; only your selection after review binds this
@@ -62,7 +62,9 @@ can be used.
   `main`, else `master`. A local branch with unpushed commits is never the
   default; the launch output tells you when it differs.
 - **`--revision`** takes a commit. A tag that is an annotated tag object is
-  refused rather than followed; give the commit it names.
+  refused rather than followed; give the commit it names. If Git cannot
+  check the pinned object out, the launch is refused with Git's reason and
+  says only that the object was not shown to be a commit.
 - **Any https or ssh URL you type**, on any host, including `git@host:path`,
   and `http://` and `git://` URLs as version 1.1 already accepts them.
   - A typed `https://`, `http://` or `git://` URL that carries any user

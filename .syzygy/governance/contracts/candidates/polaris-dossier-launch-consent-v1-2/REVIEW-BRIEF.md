@@ -1,4 +1,4 @@
-# Review brief — Polaris dossier launch-time consent, version 1.2, round 6
+# Review brief — Polaris dossier launch-time consent, version 1.2, round 7
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
@@ -6,9 +6,10 @@
 > the pinned commit in place in the operator's full clone. After round 3 the
 > owner chose a redesign: Syzygy copies the pinned commit from the
 > operator's clone into a one-commit clone of its own over Git's local file
-> transport, and the signed read rules apply to the copy. Rounds 4 and 5,
+> transport, and the signed read rules apply to the copy. Rounds 4 to 6,
 > the first reviews of the redesign, returned `REVISE` on the text's
-> consistency; these bytes are round 5's repair, and round 6 reviews them.
+> consistency and edge cases; these bytes are round 6's repair, and round 7
+> reviews them.
 > Read the post-apply spec as a whole, not only the repaired clauses.
 >
 > **Stopping rule.** The coordinating session treats the redesign as a fresh
@@ -39,10 +40,11 @@ alternates); delete them afterwards.
 - `SEMANTIC-DELTA.md`, `IMPACT-LEDGER.md`, `OWNER-SIGNOFF.md`,
   `PROPOSED-SUBJECTS.json`, `ROUND-1-DISPOSITIONS.md`,
   `ROUND-2-DISPOSITIONS.md`, `ROUND-3-DISPOSITIONS.md`,
-  `ROUND-4-DISPOSITIONS.md`, `ROUND-5-DISPOSITIONS.md` and this brief;
-- the raws of rounds 1 to 5,
+  `ROUND-4-DISPOSITIONS.md`, `ROUND-5-DISPOSITIONS.md`,
+  `ROUND-6-DISPOSITIONS.md` and this brief;
+- the raws of rounds 1 to 6,
   `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md` to
-  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-5-RAW.md`, whose findings
+  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-6-RAW.md`, whose findings
   the dispositions answer (round 3's as superseded by the redesign);
 - the builder `scripts/build_polaris_dossier_launch_consent_v1_2.py`;
 - the peel-and-delegate change to
@@ -145,8 +147,11 @@ Each is a yes/no question with the evidence that settles it.
    - Does every write, removal and file absolute of REQ-046 and REQ-047 hold
      for a conforming copy run, no-copy run and refusal run? Is a non-commit
      `--revision` (blob, tree, annotated tag) refused without Syzygy reading
-     the object, and does the round-5 self-review table in
-     `ROUND-5-DISPOSITIONS.md` hold row by row?
+     the object, and is a failed checkout refused without claiming a
+     cause? Does every launch-output, run-record and page statement hold
+     for a run refused at each stage, and every refusal state only what
+     was observed? Do the round-6 self-review, stage and refusal tables in
+     `ROUND-6-DISPOSITIONS.md` hold row by row?
 4. **Is Syzygy's list of reads of the operator's clone closed and small?**
    - Can a conforming implementation read an object, the working tree, the
      index or any other Git-directory file of the operator's clone in a run
@@ -213,7 +218,7 @@ Each is a yes/no question with the evidence that settles it.
 17. **Does the tooling hold?** `--check` and `--selftest` of the v1.0, v1.1
     and v1.2 builders pass; each predicate has a mutation fixture that
     fails it (verification rule 6); the recorder's selftest passes.
-18. **Does any earlier concern survive?** For each finding of rounds 1 to 5,
+18. **Does any earlier concern survive?** For each finding of rounds 1 to 6,
     is it answered by the redesigned text or by its disposition? A concern
     the redesign re-opens in a new place is a finding.
 
