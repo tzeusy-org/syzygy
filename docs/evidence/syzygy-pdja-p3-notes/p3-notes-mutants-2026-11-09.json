@@ -1,0 +1,397 @@
+{
+  "subject": "Polaris dossier P3 notes: RS-13 narrowing and the reader-standards digest subject (syzygy-pdja.18), the unstroked arrowhead and the leader end margin's upper bound (syzygy-pdja.16), withheld understanding items and diagram nodes and edges in reviewReach (syzygy-pdja.24)",
+  "beads": [
+    "syzygy-pdja.18",
+    "syzygy-pdja.16",
+    "syzygy-pdja.24"
+  ],
+  "date": "2026-11-09",
+  "ranAt": "a1081d269b4b2f5390f173ebcc3f0126106343e5",
+  "ranAtNote": "The implementation commit on agent/syzygy-pdja-p3-notes; a rebase-merge leaves it reachable from no ref, so the digests below are the anchor.",
+  "subjectDigests": {
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts": "8bf69ae77375bb8f05f1e3d49dd11acc78022105e913c8a1149fc282f8f16c8d",
+    "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts": "3dec2402b110b02a074023eb00021345065817d7166b0564b61b6006c2f486ca",
+    "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts": "dab884e4f7ef15258dc2ee8fb8498e9d41bf6fe95c5b46e3c8af8a8345640a2d",
+    "apps/three-surface-poc/src/polaris-generation/dossier-site.ts": "ea6e7642f571e072099e880f3f235dfcbe1a492fe8f41919c581c4d18d24476d",
+    "packages/polaris-dossier/src/brief.test.ts": "92015e6b6fde10b89509fc7fdd4f3153a503b435535f5baf502f490ff0926857",
+    "packages/polaris-dossier/src/brief.ts": "30be28311ed7f3af34e3fca7e7b53294be72e6c5be262bbd50ed2bc02f4206b5",
+    "packages/polaris-dossier/src/check.test.ts": "a83ab6b06a9795df7b0603437e4b4b2f243f9cf11a63631a60ba1af939edcc2f",
+    "packages/polaris-dossier/src/check.ts": "bb8934a46acb5175a154100aa7e6f744a325c654e0936faf4969fa6b1e4ebc9d",
+    "packages/polaris-dossier/src/inventory.test.ts": "798bfc36ea6ed0552b2801ffa34d3e2f821a71bd27ad7e91d24c8a2caaa48342",
+    "packages/polaris-dossier/src/reader-advice.ts": "016d17a42a9d0355c330943c481b2d1893baef6dc48c20d8cee59e4645a5541a",
+    "packages/polaris-dossier/src/reader-standards.test.ts": "4d74d4e0db8158cb00989d31d4bc3505480b9ce93694d786fcec1edd07ec940d",
+    "packages/polaris-dossier/src/reader-standards.ts": "1bd87dafaeed00309ae458812c67017cb2b972049040543c0f6789eb0db61de2",
+    "packages/polaris-dossier/src/review-reach.test.ts": "68bce898d66cd75dd85a00729ecc6a9954a4144ffbed93ecb62f655d3d45afd3",
+    "packages/polaris-dossier/src/review-reach.ts": "4672b8717841a290fdbd39c147f1d1702d17715c9731666f39ed3274cfa71b3f"
+  },
+  "command": "npx vitest run <the mutant's tests> (each mutant alone, its file restored from the bytes read before it, by scratch script)",
+  "mutants": [
+    {
+      "bead": "pdja.16",
+      "id": "marker-stroked",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-site.ts",
+      "old": ".diagram-scroll svg marker path{fill:var(--muted);stroke:none}",
+      "new": ".diagram-scroll svg marker path{fill:var(--muted)}",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/dossier-reading.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.16",
+      "id": "head-margin-4",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "otherHeads.every(head => distanceToTriangle(at, head) >= LEADER_SHARED)",
+      "new": "otherHeads.every(head => distanceToTriangle(at, head) >= 4)",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.16",
+      "id": "head-margin-strict",
+      "file": "apps/three-surface-poc/src/polaris-generation/diagram-layout.ts",
+      "old": "otherHeads.every(head => distanceToTriangle(at, head) >= LEADER_SHARED)",
+      "new": "otherHeads.every(head => distanceToTriangle(at, head) > LEADER_SHARED)",
+      "tests": [
+        "apps/three-surface-poc/src/polaris-generation/diagram-layout.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "heading-no-subject",
+      "file": "packages/polaris-dossier/src/reader-standards.ts",
+      "old": "\\`; sha256 of \\`references/reader-standards.md\\`: \\`",
+      "new": "\\`, sha256 \\`",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": 2,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "brief-no-rehash-sentence",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": " The heading below names the digest of the skill\\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.",
+      "new": "",
+      "tests": [
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "path-one-slash",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "/(?:^|\\s)\\.{0,2}\\/[\\w.-]|[\\w.-]\\/[\\w.-]+\\/|[\\w.-]\\/(?=$|[\\s),.;:!?])/u",
+      "new": "/\\S\\/\\S/u",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "failedTests": 4,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "path-no-leading",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "/(?:^|\\s)\\.{0,2}\\/[\\w.-]|[\\w.-]\\/[\\w.-]+\\/|",
+      "new": "/[\\w.-]\\/[\\w.-]+\\/|",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "failedTests": 2,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "path-no-two",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "[\\w.-]\\/[\\w.-]+\\/|[\\w.-]\\/(?=",
+      "new": "[\\w.-]\\/(?=",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "path-no-trailing",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "|[\\w.-]\\/(?=$|[\\s),.;:!?])/u",
+      "new": "/u",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "file-no-js-exemption",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "[...title.matchAll(SOURCE_FILE)].some(([name]) => !/^[A-Z][A-Za-z0-9]*\\.js$/u.test(name))",
+      "new": "[...title.matchAll(SOURCE_FILE)].length > 0",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "failedTests": 2,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "file-exempt-any-ext",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "!/^[A-Z][A-Za-z0-9]*\\.js$/u.test(name)",
+      "new": "!/^[A-Z][A-Za-z0-9]*\\.\\w+$/u.test(name)",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "file-exempt-whole-title",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "[...title.matchAll(SOURCE_FILE)].some(",
+      "new": "[...title.matchAll(SOURCE_FILE)].every(",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "failedTests": 25,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "camel-one-letter",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "/\\b[a-z]{2,}[A-Z][a-z0-9]/u",
+      "new": "/\\b[a-z]+[A-Z][a-z0-9]/u",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "camel-any-after",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "/\\b[a-z]{2,}[A-Z][a-z0-9]/u",
+      "new": "/\\b[a-z]{2,}[A-Z]/u",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "pascal-two-parts",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "/\\b(?:[A-Z][a-z0-9]+){3,}/u",
+      "new": "/\\b(?:[A-Z][a-z0-9]+){2,}/u",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "failedTests": 2,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "pascal-four-parts",
+      "file": "packages/polaris-dossier/src/reader-advice.ts",
+      "old": "/\\b(?:[A-Z][a-z0-9]+){3,}/u",
+      "new": "/\\b(?:[A-Z][a-z0-9]+){4,}/u",
+      "tests": [
+        "packages/polaris-dossier/src/reader-standards.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "advice-for-inventory",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "const advice = plan.command === 'check' && parseFault === null ? readerAdvice(doc)",
+      "new": "const advice = parseFault === null ? readerAdvice(doc)",
+      "tests": [
+        "packages/polaris-dossier/src/inventory.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "advice-on-parse-fault",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "const advice = plan.command === 'check' && parseFault === null ? readerAdvice(doc)",
+      "new": "const advice = plan.command === 'check' ? readerAdvice(doc)",
+      "tests": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "reach-for-inventory",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "const reach = plan.command === 'check' && parseFault === null\n",
+      "new": "const reach = parseFault === null\n",
+      "tests": [
+        "packages/polaris-dossier/src/inventory.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.18",
+      "id": "reach-on-parse-fault",
+      "file": "packages/polaris-dossier/src/check.ts",
+      "old": "const reach = plan.command === 'check' && parseFault === null\n",
+      "new": "const reach = plan.command === 'check'\n",
+      "tests": [
+        "packages/polaris-dossier/src/check.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.24",
+      "id": "no-understanding-elements",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "        element(block.at, 'understanding-item', block.value);\n",
+      "new": "",
+      "tests": [
+        "packages/polaris-dossier/src/review-reach.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": 3,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.24",
+      "id": "no-edge-elements",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "[['nodes', 'diagram-node'], ['edges', 'diagram-edge']]",
+      "new": "[['nodes', 'diagram-node']]",
+      "tests": [
+        "packages/polaris-dossier/src/review-reach.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": 3,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.24",
+      "id": "no-node-elements",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "[['nodes', 'diagram-node'], ['edges', 'diagram-edge']]",
+      "new": "[['edges', 'diagram-edge']]",
+      "tests": [
+        "packages/polaris-dossier/src/review-reach.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": 3,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.24",
+      "id": "gated-element-withheld",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "if (!isWithheldItem(value, standingIn(reachOf(value, inputs)))) return;",
+      "new": "if (!isWithheldItem(value, (id) => (reachOf(value, inputs).get(id) === 'reaches-review' ? 'admitted' : 'withheld'))) return;",
+      "tests": [
+        "packages/polaris-dossier/src/review-reach.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": 2,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.24",
+      "id": "element-count-zero",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "withheldElements: elements.length,",
+      "new": "withheldElements: 0,",
+      "tests": [
+        "packages/polaris-dossier/src/review-reach.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": 3,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.24",
+      "id": "element-id-null",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "elements.push({ at, kind, id: typeof id === 'string' ? id : null, detail: ELEMENT_DETAIL[kind] });",
+      "new": "elements.push({ at, kind, id: null, detail: ELEMENT_DETAIL[kind] });",
+      "tests": [
+        "packages/polaris-dossier/src/review-reach.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": 4,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.24",
+      "id": "element-detail-node",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": "detail: ELEMENT_DETAIL[kind] });",
+      "new": "detail: ELEMENT_DETAIL['diagram-node'] });",
+      "tests": [
+        "packages/polaris-dossier/src/review-reach.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.24",
+      "id": "note-no-elements",
+      "file": "packages/polaris-dossier/src/review-reach.ts",
+      "old": " Each element listed is an understanding item or a diagram node or edge every span of which it cites, or a span it quotes, is withheld by screening: no review judges it, so it costs no repair cycle, but it renders Unknown and none of its text renders.",
+      "new": "",
+      "tests": [
+        "packages/polaris-dossier/src/review-reach.test.ts",
+        "packages/polaris-dossier/src/check.test.ts",
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    },
+    {
+      "bead": "pdja.24",
+      "id": "brief-rule-no-elements",
+      "file": "packages/polaris-dossier/src/brief.ts",
+      "old": ", and under its `elements` the understanding items and diagram nodes and edges every cited span of which screening withholds: no review judges those, but each renders Unknown and none of its text renders.",
+      "new": ".",
+      "tests": [
+        "packages/polaris-dossier/src/brief.test.ts"
+      ],
+      "failedTests": 1,
+      "outcome": "killed"
+    }
+  ],
+  "killed": 29,
+  "total": 29
+}
