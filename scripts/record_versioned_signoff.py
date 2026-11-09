@@ -1130,6 +1130,7 @@ def real_packages() -> dict[str, Package]:
     tree_framing = lambda: _module("build_pwb_tree_framing_amendment")  # noqa: E731
     dossier = lambda: _module("build_polaris_dossier_local_agent_mode")  # noqa: E731
     git_source = lambda: _module("build_public_git_source_acquisition_local_agent")  # noqa: E731
+    git_source11 = lambda: _module("build_public_git_source_acquisition_local_agent_v1_1")  # noqa: E731
     dossier11 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_1")  # noqa: E731
     dossier12 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_2")  # noqa: E731
     dossier13 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_3")  # noqa: E731
@@ -1496,6 +1497,26 @@ def real_packages() -> dict[str, Package]:
             subject=CANDIDATES / "dossier-local-agent-acts/DOSSIER-LOCAL-AGENT-SITTING-MANIFEST.txt",
             installed=pathlib.Path(".syzygy/governance/declarations/adapter-registry/"
                                    "POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json"),
+        ),
+        # Version 1.1 replaces the installed v1.0 entry (the copy step of
+        # launch-consent v1.2): its own candidate directory and builder, under
+        # the same key, record stem and tag series. The review head binds the
+        # proposed entry's bytes; the selection must again name the Scope A
+        # extension, as every registry-entry sign-off's must.
+        "public-git-source-acquisition-local-agent@1.1": Package(
+            "public-git-source-acquisition-local-agent",
+            "Public Git source acquisition, local-agent version",
+            "registry entry",
+            CANDIDATES / "public-git-source-acquisition-local-agent-v1-1",
+            "PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT",
+            lambda root: git_source11().check(root),
+            lambda root: git_source11().apply(root),
+            lambda root: git_source11().applied(root),
+            subject=CANDIDATES / "public-git-source-acquisition-local-agent-v1-1/proposed/"
+                    "POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+            installed=pathlib.Path(".syzygy/governance/declarations/adapter-registry/"
+                                   "POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json"),
+            review_alias="build_public_git_source_acquisition_local_agent_v1_1.py",
         ),
         # Version 1.1 patches the installed v1.0: its own candidate directory,
         # builder and reviewed bytes, under the same key, record stem and tag
@@ -2015,19 +2036,26 @@ DIRECTION_NOTE = (
 
 INSTANT_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 RECORDED_RE = re.compile(r"^Recorded at \(UTC\): (\S+)$", re.MULTILINE)
+INSTALLED_SHA_LINE_RE = re.compile(r"^Installed entry SHA-256: ([0-9a-f]{64})$", re.MULTILINE)
 
 
-def installed_lines(pkg: Package, root: pathlib.Path | None, instant: str | None) -> str:
+def installed_lines(pkg: Package, root: pathlib.Path | None, instant: str | None,
+                    installed_sha: str | None = None) -> str:
     """For a package that installs a registry entry, the RFC3-16(b) binding set
     the tag alone does not carry: the entry and the SHA-256 of its installed
     bytes (item 3), the act type (4), the instant (6), the scope (7), the
     supersession (8), the provenance state and the explicit A1 absence (9).
     RFC4-7 honours an entry only under RFC3-16(a), and RFC3-16(b) makes a
-    record that omits item 9 invalid."""
+    record that omits item 9 invalid.
+
+    ``installed_sha`` is given only by ``check`` for a version a later
+    recorded version has replaced at the same path: those bytes are no longer
+    on disk, so the record's own SHA-256 is regenerated, and the later
+    version's builder answers for them as its base."""
     if pkg.installed is None:
         return ""
     path = (root or ROOT) / pkg.installed
-    sha = beh.digest(path.read_bytes()) if path.is_file() else "absent"
+    sha = installed_sha or (beh.digest(path.read_bytes()) if path.is_file() else "absent")
     return (f"Recorded at (UTC): {instant}\n\n"
             "Act type: `adopt-registry-entry`\n\n"
             "Project identity: `project:syzygy`\n\n"
@@ -2126,7 +2154,8 @@ def render_record(pkg: Package, version: str, date: str, quote: str, review: str
                   commit: str, verdict: str, disposition: str | None,
                   options: frozenset[str] = frozenset(), *,
                   root: pathlib.Path | None = None, instant: str | None = None,
-                  rows: tuple[tuple[str, str], ...] = ()) -> str:
+                  rows: tuple[tuple[str, str], ...] = (),
+                  installed_sha: str | None = None) -> str:
     return f"""# {pkg.title} — version-tagged sign-off v{version}
 
 Date: {date}
@@ -2151,7 +2180,7 @@ Review verdict: {verdict}
 
 Disposition: {disposition or "none"}
 
-{installed_lines(pkg, root, instant)}{options_line(pkg, options)}{extension_line(pkg)}{DIRECTION_NOTE}
+{installed_lines(pkg, root, instant, installed_sha)}{options_line(pkg, options)}{extension_line(pkg)}{DIRECTION_NOTE}
 
 ## What this records
 
@@ -2339,16 +2368,25 @@ def check(root: pathlib.Path, pkg: Package, version: str) -> int:
             if len(found) != 1:
                 raise ValueError(f"record carries {len(found)} 'Recorded at (UTC)' lines, not 1")
             instant = found[0]
+        versions = recorded_versions(root, pkg)
+        latest = versions[-1] == tuple(int(x) for x in version.split("."))
+        # A registry entry a later recorded version replaced at the same path:
+        # regenerate the record's own SHA-256, since those bytes are no longer
+        # installed; the later version's builder answers for them as its base.
+        replaced_sha = None
+        if pkg.installed is not None and not latest:
+            shas = INSTALLED_SHA_LINE_RE.findall(text)
+            if len(shas) != 1:
+                raise ValueError(f"record carries {len(shas)} 'Installed entry SHA-256' lines, not 1")
+            replaced_sha = shas[0]
         if text != render_record(pkg, version, f["Date"], f["Owner selection"], f["Review"],
                                  commit, verdict, disposition, parse_options(pkg, text),
                                  root=root, instant=instant,
-                                 rows=recorded_rows(pkg, text)):
+                                 rows=recorded_rows(pkg, text), installed_sha=replaced_sha):
             raise ValueError("dedicated record differs from its regeneration")
         block = render_aggregate(pkg, version, f["Date"], f["Review"], verdict, disposition)
         if aggregate_text(root).count(block) != 1:
             raise ValueError("aggregate block differs from its regeneration")
-        versions = recorded_versions(root, pkg)
-        latest = versions[-1] == tuple(int(x) for x in version.split("."))
         if latest and not pkg.applied(root):
             raise ValueError("the latest signed version is not applied to the tree")
         if latest and pkg.applied_options and (
@@ -3393,11 +3431,58 @@ def selftest() -> int:
                         no_extension == 1 and off_date == 1 and wrote == 0 and checked == 0 and drifted == 1))
         results.append(("--check refuses a registry-entry record whose quote no longer names the "
                         "Scope A extension", requoted == 1))
+        # A later version replaces the entry at the same path: v1.0's record
+        # still regenerates (its own SHA-256), and v1.1's binds the new bytes.
+        (tmp / entry).write_text('{"entry": 1}\n')
+
+        def install2(root):
+            (root / entry).write_text('{"entry": 2}\n')
+            return 0
+        reg2 = dataclasses_replace(reg, apply=install2,
+                                   applied=lambda root: (root / entry).read_text() == '{"entry": 2}\n')
+        with contextlib.redirect_stdout(io.StringIO()):
+            wrote2 = record(tmp, reg2, "1.1", "2026-10-03", "Extend Scope A and sign v1.1", STUB_REVIEW,
+                            None, instant="2026-10-03T09:30:00Z")
+            old_ok = check(tmp, reg, "1.0")
+            new_ok = check(tmp, reg2, "1.1")
+            kept = (tmp / record_rel(reg, "1.0")).read_text(encoding="utf-8")
+            (tmp / entry).write_text('{"entry": 3}\n')
+            new_drift = check(tmp, reg2, "1.1")
+        results.append(("a registry entry replaced by a recorded later version keeps its earlier "
+                        "record checkable by that record's own SHA-256, and the later record binds "
+                        "the installed bytes",
+                        wrote2 == 0 and old_ok == 0 and new_ok == 0 and new_drift == 1
+                        and "Installed entry SHA-256: " + beh.digest(b'{"entry": 1}\n') in kept))
     real_reg = real_packages()["public-git-source-acquisition-local-agent"]
     results.append(("the real registry package installs its builder's entry and binds the sitting manifest",
                     real_reg.installed == _module("build_public_git_source_acquisition_local_agent").INSTALLED
                     and real_reg.subject == _module(
                         "build_public_git_source_acquisition_local_agent").SITTING_MANIFEST))
+    all_real = real_packages()
+    real_reg11 = all_real["public-git-source-acquisition-local-agent@1.1"]
+    gs11 = _module("build_public_git_source_acquisition_local_agent_v1_1")
+    with tempfile.TemporaryDirectory() as temporary:
+        import contextlib
+        import io
+        fixture_root = gs11._fixture(pathlib.Path(temporary))
+        try:
+            routed = real_reg11.check(fixture_root) == [] and not real_reg11.applied(fixture_root)
+            with contextlib.redirect_stdout(io.StringIO()):
+                routed = routed and real_reg11.apply(fixture_root) == 0
+            routed = (routed and real_reg11.applied(fixture_root)
+                      and (fixture_root / gs11.INSTALLED).read_bytes()
+                      == (fixture_root / gs11.PROPOSED).read_bytes())
+        except (ValueError, gs11.Refusal):
+            routed = False
+    results.append(("the real registry entry v1.1 shares v1.0's key, record stem and installed path, "
+                    "binds its proposed entry in its own candidate directory and routes to its builder",
+                    package_for(all_real, real_reg.key, "1.1") is real_reg11
+                    and package_for(all_real, real_reg.key, "1.0") is all_real[real_reg.key]
+                    and real_reg11.key == real_reg.key and real_reg11.record_stem == real_reg.record_stem
+                    and real_reg11.installed == real_reg.installed == gs11.INSTALLED
+                    and real_reg11.candidate == gs11.CANDIDATE and real_reg11.subject == gs11.PROPOSED
+                    and real_reg11.subject_bytes is None and real_reg11.options == ()
+                    and routed))
 
     # A declared prior-round recap closes the findings section (P-108's
     # round-2 raw): read before it, and fail closed on anything inside it.
