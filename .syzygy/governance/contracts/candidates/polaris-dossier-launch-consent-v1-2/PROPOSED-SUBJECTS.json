@@ -1,0 +1,11 @@
+{
+  "base": "version 1.1 installed bytes; the proposed bytes are the patch applied to them",
+  "subjects": [
+    {
+      "path": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
+      "current_sha256": "95172020bcae70cbfc6d5f6b9e9ad750b7e8da0e634a60017fe7e96845eee4a7",
+      "proposed_sha256": "db50202d1bd353640789c4775baf6c48d2f28e51bc4d3cb2eb4b2c2ef43a85a2",
+      "patch_sha256": "b9e942169a9bcb7a108b95ce9c827e1bebce5a867ce952be61306a94f041b40e"
+    }
+  ]
+}
