@@ -1,8 +1,9 @@
-# Review brief — Polaris dossier launch-time consent, version 1.2, round 1
+# Review brief — Polaris dossier launch-time consent, version 1.2, round 2
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
-> verdict. The stopping rule is set before round 1:
+> verdict. Round 1 returned `REVISE`; this brief is for round 2. The
+> stopping rule, set before round 1, is unchanged:
 >
 > - at most three rounds;
 > - `CONFIRM`, or `CONFIRM WITH EXCEPTIONS` with notes only, clears the
@@ -25,7 +26,9 @@ allowed; delete them afterwards.
 
 - `proposed/spec.md.patch` (the subject);
 - `SEMANTIC-DELTA.md`, `IMPACT-LEDGER.md`, `OWNER-SIGNOFF.md`,
-  `PROPOSED-SUBJECTS.json` and this brief;
+  `PROPOSED-SUBJECTS.json`, `ROUND-1-DISPOSITIONS.md` and this brief;
+- the round-1 raw, `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md`,
+  whose findings the dispositions answer;
 - the builder `scripts/build_polaris_dossier_launch_consent_v1_2.py`;
 - the peel-and-delegate change to
   `scripts/build_polaris_dossier_launch_consent_v1_1.py`;
@@ -89,15 +92,22 @@ Each is a yes/no question with the evidence that settles it.
    - (3) Two segments for every host, with the shared-records consequence
      stated plainly.
    - (4) Remote derivation keeps v1.1's `http` and `git` normalisation.
-   - Is D6's choice to keep operator-given URLs at https and ssh a fair
-     reading of ruling 4 and the first selection?
+   - D6 now admits typed `http://` and `git://` URLs as v1.1 does,
+     credentials refused, on a reading it labels Inferred and attributes to
+     the coordinating session, not the owner. Is that attribution stated
+     plainly, and is the point put to the owner on the sign-off page?
 3. **Is the closed read list closed?**
    - Can a conforming implementation of REQ-047's list read history, another
      reference's objects, the working tree, the index or any other file of
      the Git directory?
    - Can it honour the clone's configuration, or start a process in the
      clone?
-   - Is the delta-base allowance bounded to rebuilding in-scope objects?
+   - Is the delta-base allowance bounded to rebuilding in-scope objects,
+     and do the question, the launch output and the launch observation
+     consent's recorded scope state it?
+   - Do REQ-046's pre-answer list and REQ-047's closed list name the same
+     launch reads, and is every read either an object read under REQ-033 or
+     a launch read that reads no content?
 4. **Is REQ-046's derivation byte-for-byte v1.1?**
    - Compare the derivation sentence before and after.
    - Does the added reading (every host, the two-segment floor) change any
@@ -105,18 +115,23 @@ Each is a yes/no question with the evidence that settles it.
    - Do the records' identities in force (`repository:redis-redis`,
      `repository:psf-requests`, `repository:tzeusy-org-syzygy`) still
      derive?
-5. **Does lookup by `Upstream:` behave as D7 says?**
-   - A consent made by another act is found only by the whole normalised
-     URL, never by the two segments.
-   - A locator that found such a consent under v1.1 (`https://github.com/...`)
-     still finds it.
+5. **Does the match by `Upstream:` behave as D7 says?**
+   - Does the spec state what the match grants?
+   - Does it only add to REQ-046's matching and REQ-047's revision branch,
+     never restricting either?
+   - Is the claim that a consent is not matched for a same-named repository
+     on another host bounded to the URL match?
 6. **Is the trunk rule consistent with v1.1 and the implemented reading?**
    - The remote-tracking default, `origin` first.
    - The several-remotes refusal.
-   - Local branches not consulted while a default is recorded.
+   - Local branches not consulted for the pin while a default is recorded.
+   - `--revision`: ambiguity decided without reading objects; a non-commit
+     reference refused after reading at most its type.
 7. **Are credentials kept out of every output?**
    - Refused when typed.
    - Stripped and disclosed, never printed, when found in a remote.
+   - A remote URL that is not a locator is never printed, stored or
+     recorded.
 8. **Is every quotation exact?**
    - Re-extract by script each quotation in `SEMANTIC-DELTA.md`,
      `IMPACT-LEDGER.md` and `OWNER-SIGNOFF.md` of the owner's words, the
@@ -133,7 +148,9 @@ Each is a yes/no question with the evidence that settles it.
     Is the change class (Normative) right?
 12. **Is the owner page fair and plain?** Does it state the question, the
     version and the option label exactly, and name the shared-records,
-    agent-reach and dirty-tree costs?
+    agent-reach and dirty-tree costs? Does "Before you sign" put the typed
+    `http`/`git` reading, the port-and-case merge and the registry readings
+    to the owner plainly?
 13. **Does the tooling hold?**
     - `--check` and `--selftest` of the v1.0, v1.1 and v1.2 builders pass.
     - Each predicate has a mutation fixture that fails it (verification
@@ -141,6 +158,10 @@ Each is a yes/no question with the evidence that settles it.
     - The v1.0 builder's `--check` fails on v1.2 bytes that no v1.2 record
       covers.
     - The recorder's selftest passes.
+14. **Does each round-1 disposition hold?** For each of the twelve sections
+    of `ROUND-1-DISPOSITIONS.md`, is the quoted clause in the post-apply
+    bytes, and does it do what the section says? Is each carried or
+    declined note given a reason?
 
 ## Output
 
