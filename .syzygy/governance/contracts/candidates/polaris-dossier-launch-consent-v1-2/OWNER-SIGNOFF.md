@@ -1,9 +1,9 @@
 # Owner sign-off — Polaris dossier launch consent, version 1.2
 
 > **Candidate — binds nothing.** [Observed] Rounds 1 to 3 of review returned
-> `REVISE`. On 2026-11-10 you chose a redesign. Rounds 4 to 6, its first
+> `REVISE`. On 2026-11-10 you chose a redesign. Rounds 4 to 7, its first
 > reviews, returned `REVISE` on the text's consistency and edge cases; these
-> bytes are the round-6 repair, and no review has read them yet. This page may be offered only after
+> bytes are the round-7 repair, and no review has read them yet. This page may be offered only after
 > a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
 > install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
 > Nothing here records a choice; only your selection after review binds this
@@ -87,7 +87,7 @@ can be used.
   screening policy.
 
 The redis consent, which says its clone holds one commit alone, keeps that
-rule: a run at a commit it names makes no copy and works in your clone as
+rule: a run at a commit it names is a no-copy run and works in your clone as
 today, and a HEAD elsewhere is refused with the checkout command. A run at
 such a commit that needs no launch record keeps every earlier rule
 unchanged.

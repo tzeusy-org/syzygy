@@ -13,7 +13,7 @@
 | Requirement | Effect |
 |---|---|
 | REQ-polaris-generation-046 | The preamble sorts runs into two classes at launch, keyed on the pinned revision: the run another act's consent covers with no launch record needed keeps every predecessor meaning; every other run is launch-consented. The pre-answer read list is scoped to the clones: Syzygy's reads of the operator's clone that 047 lists, the copy's form-check files and the `--revision` object's type, and the object reads, made in the copy where one exists (no type read of a `--revision` object); the copy step's Git processes are not Syzygy's reads, the copy lies outside REQ-046's write and removal absolutes, and the blob arm, the pre-answer arm and the oracle attribute reads by process. The question states the copy: one commit, made by Git over the local file transport with no network request; that Git read the operator's clone's configuration, references and object store, delta bases included; that Syzygy used nothing Git read but the copy; that agents are directed to the copy; that it was made before the answer, its blobs unread by Syzygy, and is removed on a decline. The run record and pages carry the same statements and the copy's location. The launch observation consent's scope is held in the copy. The write reading is extended to the copy's directory. The identity derivation keeps its v1.1 bytes: last two segments, every host, `https`, `http`, `ssh`, `git` and scp-form remotes. One sentence group says it applies to every host and adds a two-segment floor. The residuals now name the cross-host and cross-group share. Two paragraphs are added: locator forms (operator-given `https`, `http`, `git`, `ssh` and scp, as v1.1 normalises them, without credentials; remote locators in the same forms once their user information is removed; no URL that fails either rule printed, stored or recorded; an observation consent made by another act matching by its whole normalised `Upstream:` URL, in addition to every v1.1 match) and visibility for every host. Ten scenarios are added; the case, oracle and falsifier are extended; one `warrants.decisions` entry is added |
-| REQ-polaris-generation-047 | The consented-HEAD branch's "changes nothing else" is narrowed to the pin. The trunk rule is made exact for remote-tracking references and several remotes, and `--revision` resolution for abbreviations (from names alone) and non-commits (refused from a `HEAD` other than the named identifier after a successful checkout; a failed checkout refused as "not shown to be a commit"; neither by Syzygy reading the object); the committer date stated only where read, else Unknown; every Git failure for the copy named as Git reported it. "Did not fetch" becomes "made no network request". The HEAD paragraph is replaced: every run this requirement pins makes a copy unless another act's consent, or a launch observation consent recorded with version 1.1's scope, names its pinned revision, in which case the clone is the operator's, that consent's form binds it, a HEAD elsewhere is refused, and under a v1.1-scoped launch consent alone the clone must be in the one-commit form; the copy step (an empty directory and repository of Syzygy's own, a fetch of the pinned commit alone at depth one over the local file transport, a detached checkout, Git run with system and global configuration off, other transports refused, lazy fetching off and no hook path; form checked before the question; removed if the run ends before its brief, otherwise kept after the run until the operator removes it); what Git reads in the operator's clone; Syzygy's own closed list of reads there (locator files, named references as file data, remote names and URLs as text, the alternates file's existence, abbreviation names); refusals of reftable, alternates and a failed copy; from the copy on, REQ-033 to 036 apply to it unchanged; briefs and packets name the copy; the hooks and configuration residual, labelled Inferred. Sixteen scenarios are added, one v1.1 scenario ("HEAD elsewhere") now proceeds with a copy, and the first scenario's WHEN and THEN are amended; the case, observable, oracle independence and falsifier are replaced; one `warrants.decisions` entry is added |
+| REQ-polaris-generation-047 | The consented-HEAD branch's "changes nothing else" is narrowed to the pin. The trunk rule is made exact for remote-tracking references and several remotes, and `--revision` resolution for abbreviations (from names alone) and non-commits (refused from a `HEAD` other than the named identifier after a successful checkout; a failed checkout refused as "not shown to be a commit"; neither by Syzygy reading the object); the committer date stated only where read, else Unknown; every Git failure for the copy named as Git reported it; the terms copy-class run, no-copy run and a run whose copy step started defined once, and a copy-class run refused before its copy step stating only that no copy was made. "Did not fetch" becomes "made no network request". The HEAD paragraph is replaced: every run this requirement pins is a copy-class run unless another act's consent, or a launch observation consent recorded with version 1.1's scope, names its pinned revision, in which case the clone is the operator's, that consent's form binds it, a HEAD elsewhere is refused, and under a v1.1-scoped launch consent alone the clone must be in the one-commit form; the copy step (an empty directory and repository of Syzygy's own, a fetch of the pinned commit alone at depth one over the local file transport, a detached checkout, Git run with system and global configuration off, other transports refused, lazy fetching off and no hook path; form checked before the question; removed if the run ends before its brief, otherwise kept after the run until the operator removes it); what Git reads in the operator's clone; Syzygy's own closed list of reads there (locator files, named references as file data, remote names and URLs as text, the alternates file's existence, abbreviation names); refusals of reftable, alternates and a failed copy; from the copy on, REQ-033 to 036 apply to it unchanged; briefs and packets name the copy; the hooks and configuration residual, labelled Inferred. Sixteen scenarios are added, one v1.1 scenario ("HEAD elsewhere") now proceeds with a copy, and the first scenario's WHEN and THEN are amended; the case, observable, oracle independence and falsifier are replaced; one `warrants.decisions` entry is added |
 | REQ-polaris-generation-001, 025, 033 to 036, 040 | Bytes unchanged. 033's object-read, re-hash and refusal rules apply to the copy unchanged; the copy is a clone of the form they were written for |
 
 [Observed] Twenty-six scenarios are added, ten to 046 and sixteen to 047.
@@ -51,15 +51,14 @@ computed, not yet recounted with the patch applied]. It is recounted by
   [Unknown].
 - **Narrower: SHA-256 clones.** [Observed, round 4 note 7] A SHA-256 clone
   fails the copy (the copy's empty repository has the default object
-  format, and the one-commit form refuses a SHA-256 repository), so a run
-  that makes a copy refuses it. The signed registry entry admits SHA-256
+  format, and the one-commit form refuses a SHA-256 repository), so a copy-class run refuses it. The signed registry entry admits SHA-256
   objects. Carried to the owner.
 - **Narrower: full clones under a launch consent recorded by v1.1.** Such a
   consent's scope holds its revision in the operator's own clone with no
-  fetch by Syzygy, so its runs make no copy and need the one-commit form; a
+  fetch by Syzygy, so its runs are no-copy runs and need the one-commit form; a
   full clone is refused. [Observed, local refs only] No such record is
   known today.
-- **Wider: a HEAD elsewhere.** A run that makes a copy no longer refuses
+- **Wider: a HEAD elsewhere.** A copy-class run no longer refuses
   when the operator's HEAD is another commit, detached or dirty; the copy
   is checked out at the pinned revision. A run whose revision another
   act's consent names still refuses, as before.
@@ -133,7 +132,7 @@ It is not patched here.
   successor version first. This package does not draft it. The reference
   and remote-URL reads are carried from v1.1 as launch reads, not new
   conflicts. The fetch-form reading of version 1.0's design §5 still
-  governs runs that make no copy.
+  governs no-copy runs.
 - **Screening scope v8** (held) and the installed v7 name no host or
   `github:` identity. The visibility carrier is the launch record's
   declaration, which this version leaves to the operator for every host.
@@ -175,7 +174,7 @@ It is not patched here.
   2026-11-10, replacing ruling 2's disclosure. The operator's clone stays on
   the same host, so a session that ignores its brief can still read it;
   compliance is Inferred.
-- **Disk.** Each completed run that makes a copy leaves one commit's
+- **Disk.** Each completed copy-class run leaves one commit's
   objects and checkout in a directory of Syzygy's own, outside the run's
   state directory, until the operator removes it; the launch output names
   it. A run that ends before its brief removes its copy.

@@ -95,7 +95,7 @@ V12_SCENARIOS = tuple(f"#### Scenario: {name}\n" for name in (
     "Locator not admitted",
     "Remote URL that is not a locator",
     "Visibility on another host",
-    "HEAD elsewhere with no copy",
+    "HEAD elsewhere in a no-copy run",
     "Existing full clone at the trunk tip",
     "Repeat run at a launch-consented HEAD",
     "Several remote defaults",

@@ -1,4 +1,4 @@
-# Review brief — Polaris dossier launch-time consent, version 1.2, round 7
+# Review brief — Polaris dossier launch-time consent, version 1.2, round 8
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
@@ -6,9 +6,9 @@
 > the pinned commit in place in the operator's full clone. After round 3 the
 > owner chose a redesign: Syzygy copies the pinned commit from the
 > operator's clone into a one-commit clone of its own over Git's local file
-> transport, and the signed read rules apply to the copy. Rounds 4 to 6,
+> transport, and the signed read rules apply to the copy. Rounds 4 to 7,
 > the first reviews of the redesign, returned `REVISE` on the text's
-> consistency and edge cases; these bytes are round 6's repair, and round 7
+> consistency and edge cases; these bytes are round 7's repair, and round 8
 > reviews them.
 > Read the post-apply spec as a whole, not only the repaired clauses.
 >
@@ -41,10 +41,10 @@ alternates); delete them afterwards.
   `PROPOSED-SUBJECTS.json`, `ROUND-1-DISPOSITIONS.md`,
   `ROUND-2-DISPOSITIONS.md`, `ROUND-3-DISPOSITIONS.md`,
   `ROUND-4-DISPOSITIONS.md`, `ROUND-5-DISPOSITIONS.md`,
-  `ROUND-6-DISPOSITIONS.md` and this brief;
-- the raws of rounds 1 to 6,
+  `ROUND-6-DISPOSITIONS.md`, `ROUND-7-DISPOSITIONS.md` and this brief;
+- the raws of rounds 1 to 7,
   `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md` to
-  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-6-RAW.md`, whose findings
+  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-7-RAW.md`, whose findings
   the dispositions answer (round 3's as superseded by the redesign);
 - the builder `scripts/build_polaris_dossier_launch_consent_v1_2.py`;
 - the peel-and-delegate change to
@@ -150,20 +150,22 @@ Each is a yes/no question with the evidence that settles it.
      the object, and is a failed checkout refused without claiming a
      cause? Does every launch-output, run-record and page statement hold
      for a run refused at each stage, and every refusal state only what
-     was observed? Do the round-6 self-review, stage and refusal tables in
-     `ROUND-6-DISPOSITIONS.md` hold row by row?
+     was observed? Is each of "copy-class run", "no-copy run" and "a run
+     whose copy step started" used where, and only where, its definition
+     (REQ-047) applies, and does a copy-class run refused before its copy
+     step state only that no copy was made? Do the round-7 stage sweep and
+     the occurrence list in `ROUND-7-DISPOSITIONS.md` hold row by row?
 4. **Is Syzygy's list of reads of the operator's clone closed and small?**
    - Can a conforming implementation read an object, the working tree, the
-     index or any other Git-directory file of the operator's clone in a run
-     that makes a copy? Can it honour the clone's configuration?
+     index or any other Git-directory file of the operator's clone in a copy-class run? Can it honour the clone's configuration?
    - Does the trunk tip get chosen with no Git process in the operator's
      clone before the copy?
    - Do REQ-046's pre-answer list, REQ-047's list, both falsifiers, the
      scenarios and the question's copy statements name the same reads?
-5. **Which runs make a copy, and do the populations agree?**
+5. **Which runs are copy-class runs, and do the populations agree?**
    - Do the preamble's two classes partition the runs on conditions known
      at launch, keyed on the pinned revision?
-   - Every run REQ-047 pins makes a copy unless another act's consent, or a
+   - Every run REQ-047 pins is a copy-class run unless another act's consent, or a
      launch observation consent recorded with version 1.1's scope, names its
      pinned revision. Does each no-copy run keep its consent's scope or form
      and the v1.1 HEAD refusal, and is a full clone refused under a
@@ -218,7 +220,7 @@ Each is a yes/no question with the evidence that settles it.
 17. **Does the tooling hold?** `--check` and `--selftest` of the v1.0, v1.1
     and v1.2 builders pass; each predicate has a mutation fixture that
     fails it (verification rule 6); the recorder's selftest passes.
-18. **Does any earlier concern survive?** For each finding of rounds 1 to 6,
+18. **Does any earlier concern survive?** For each finding of rounds 1 to 7,
     is it answered by the redesigned text or by its disposition? A concern
     the redesign re-opens in a new place is a finding.
 
