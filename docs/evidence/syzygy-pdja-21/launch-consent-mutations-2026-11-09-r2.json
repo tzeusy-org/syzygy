@@ -1,0 +1,320 @@
+{
+  "subject": "launch-consent predicates (REQ-polaris-generation-046, 047)",
+  "commit": "008f10eec899306a8475761c3192edb077cb3bfd",
+  "runner": "scripts/launch_consent_mutations.py",
+  "mutants": 31,
+  "killed": 31,
+  "survived": [],
+  "results": [
+    {
+      "predicate": "non-terminal refusal",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "if (!ports.terminal.isTTY) return refuse('terminal'",
+      "new": "if (false) return refuse('terminal'",
+      "test": "packages/polaris-dossier/src/launch.test.ts",
+      "failed": 1,
+      "passed": 23,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "exact phrase",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "if (a === phrase) return 'yes';",
+      "new": "if (a.trim() !== '') return 'yes';",
+      "test": "packages/polaris-dossier/src/launch.test.ts",
+      "failed": 3,
+      "passed": 21,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "write consent absent: ask nothing",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "if (writeConsent.state !== 'ok') return refuse('write-consent'",
+      "new": "if (false) return refuse('write-consent'",
+      "test": "packages/polaris-dossier/src/launch.test.ts",
+      "failed": 1,
+      "passed": 23,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "not declared public: refuse before any record",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "if (!admission.admitted) return refuse('not-public'",
+      "new": "if (false) return refuse('not-public'",
+      "test": "packages/polaris-dossier/src/launch.test.ts",
+      "failed": 1,
+      "passed": 23,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "warning only where non-public is admitted",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "    say(nameOnBranchWarning(identity, proposal.url));\n",
+      "new": "",
+      "test": "packages/polaris-dossier/src/launch.test.ts",
+      "failed": 1,
+      "passed": 23,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "self-observation refusal",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "if (clone === home.top || [home.gitDir, home.common].includes(real(snapshot.gitDir))) {",
+      "new": "if (false) {",
+      "test": "packages/polaris-dossier/src/launch.test.ts",
+      "failed": 1,
+      "passed": 23,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "records in force: ask nothing",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "  if (missing.length === 0) {",
+      "new": "  if (false) {",
+      "test": "packages/polaris-dossier/src/launch.test.ts",
+      "failed": 3,
+      "passed": 21,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "statement reuse needs covering classes",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "pair.find(s => preview.classes.every(c => s.contentClasses.includes(c)))",
+      "new": "pair.find(s => preview.classes.some(c => s.contentClasses.includes(c)))",
+      "test": "packages/polaris-dossier/src/launch.test.ts",
+      "failed": 1,
+      "passed": 23,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "A1 in force refuses",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "if (ports.a1InForce()) return refuse('a1'",
+      "new": "if (false) return refuse('a1'",
+      "test": "packages/polaris-dossier/src/launch.test.ts",
+      "failed": 1,
+      "passed": 23,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "identity disagreement refused",
+      "file": "packages/polaris-dossier/src/launch-identity.ts",
+      "old": "  if (carried.length > 1) {",
+      "new": "  if (false) {",
+      "test": "packages/polaris-dossier/src/launch-identity.test.ts",
+      "failed": 1,
+      "passed": 29,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "identity from matching records",
+      "file": "packages/polaris-dossier/src/launch-identity.ts",
+      "old": "  if (carried.length === 1) return",
+      "new": "  if (false) return",
+      "test": "packages/polaris-dossier/src/launch-identity.test.ts",
+      "failed": 1,
+      "passed": 29,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "normalise: strip leading www.",
+      "file": "packages/polaris-dossier/src/launch-identity.ts",
+      "old": "host = host.replace(/^www\\./i, '');",
+      "new": "host = host;",
+      "test": "packages/polaris-dossier/src/launch-identity.test.ts",
+      "failed": 1,
+      "passed": 29,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "HEAD elsewhere refused",
+      "file": "packages/polaris-dossier/src/launch-revision.ts",
+      "old": "  if (head !== commit) {",
+      "new": "  if (false) {",
+      "test": "packages/polaris-dossier/src/launch-revision.test.ts",
+      "failed": 1,
+      "passed": 7,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "trunk order main before master",
+      "file": "packages/polaris-dossier/src/launch-revision.ts",
+      "old": "if (main !== null) { commit = main; via = 'refs/heads/main'; }\n      else if (master !== null)",
+      "new": "if (master !== null) { commit = master!; via = 'refs/heads/master'; }\n      else if (main !== null)",
+      "test": "packages/polaris-dossier/src/launch-revision.test.ts",
+      "failed": 2,
+      "passed": 6,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "ambiguous revision refused",
+      "file": "packages/polaris-dossier/src/launch-revision.ts",
+      "old": "    if (found.size !== 1) {",
+      "new": "    if (found.size === 0) {",
+      "test": "packages/polaris-dossier/src/launch-revision.test.ts",
+      "failed": 1,
+      "passed": 7,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "reader: at most one parent",
+      "file": "packages/polaris-dossier/src/launch-store.ts",
+      "old": "if (head.parents.length > 1) return",
+      "new": "if (false) return",
+      "test": "packages/polaris-dossier/src/launch-store.test.ts",
+      "failed": 1,
+      "passed": 13,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "reader: additions only",
+      "file": "packages/polaris-dossier/src/launch-store.ts",
+      "old": "if (m === null || m[5] !== 'A' || m[1] !== '000000' ||",
+      "new": "if (m === null ||",
+      "test": "packages/polaris-dossier/src/launch-store.test.ts",
+      "failed": 1,
+      "passed": 13,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "reader: revocation by a decisions file",
+      "file": "packages/polaris-dossier/src/launch-store.ts",
+      "old": "    if (revokedBy !== undefined) return",
+      "new": "    if (false) return",
+      "test": "packages/polaris-dossier/src/launch-store.test.ts",
+      "failed": 1,
+      "passed": 13,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "writer: tip moved",
+      "file": "packages/polaris-dossier/src/launch-store.ts",
+      "old": "if (tipRead.tip !== input.expectedTip) return",
+      "new": "if (false) return",
+      "test": "packages/polaris-dossier/src/launch-store.test.ts",
+      "failed": 1,
+      "passed": 13,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "writer: update-ref old-value check",
+      "file": "packages/polaris-dossier/src/launch-store.ts",
+      "old": "LAUNCH_REF, oid, tipRead.tip ?? zero]);",
+      "new": "LAUNCH_REF, oid]);",
+      "test": "packages/polaris-dossier/src/launch-store.test.ts",
+      "failed": 1,
+      "passed": 13,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "reader: committer is Syzygy",
+      "file": "packages/polaris-dossier/src/launch-store.ts",
+      "old": "if (committer !== RECORDING_COMMITTER) return",
+      "new": "if (false) return",
+      "test": "packages/polaris-dossier/src/launch-store.test.ts",
+      "failed": 1,
+      "passed": 13,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "reader: recording subject",
+      "file": "packages/polaris-dossier/src/launch-store.ts",
+      "old": "if (subject !== recordingSubject(ids)) return",
+      "new": "if (false) return",
+      "test": "packages/polaris-dossier/src/launch-store.test.ts",
+      "failed": 1,
+      "passed": 13,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "unreadable store refused",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "if (!store.ok) return refuse('records'",
+      "new": "if (false) return refuse('records'",
+      "test": "packages/polaris-dossier/src/launch.test.ts",
+      "failed": 1,
+      "passed": 23,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "writer: new files only",
+      "file": "packages/polaris-dossier/src/launch-store.ts",
+      "old": "if (entries.some(e => nameOf(e) === b.name)) return",
+      "new": "if (false) return",
+      "test": "packages/polaris-dossier/src/launch-store.test.ts",
+      "failed": 1,
+      "passed": 13,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "writer: not while the ref is checked out",
+      "file": "packages/polaris-dossier/src/launch-store.ts",
+      "old": "if (worktrees.split('\\n').includes(`branch ${LAUNCH_REF}`)) return",
+      "new": "if (false) return",
+      "test": "packages/polaris-dossier/src/launch-store.test.ts",
+      "failed": 1,
+      "passed": 13,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "writer: hooks disabled",
+      "file": "packages/polaris-dossier/src/launch-store.ts",
+      "old": "['-c', 'core.hooksPath=/dev/null', '-c', 'core.fsmonitor=false',",
+      "new": "['-c', 'core.fsmonitor=false',",
+      "test": "packages/polaris-dossier/src/launch-store.test.ts",
+      "failed": 1,
+      "passed": 13,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "record: digest binding",
+      "file": "packages/polaris-dossier/src/launch-record.ts",
+      "old": "if (sha256(content) !== m[1]) return",
+      "new": "if (false) return",
+      "test": "packages/polaris-dossier/src/launch-record.test.ts",
+      "failed": 1,
+      "passed": 20,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "record: exact form",
+      "file": "packages/polaris-dossier/src/launch-record.ts",
+      "old": "if (again !== text) return",
+      "new": "if (false) return",
+      "test": "packages/polaris-dossier/src/launch-record.test.ts",
+      "failed": 1,
+      "passed": 20,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "write consent: withdrawal sweep",
+      "file": "packages/polaris-dossier/src/launch-write-consent.ts",
+      "old": "if (STEMS.some(stem =>",
+      "new": "if (false && STEMS.some(stem =>",
+      "test": "packages/polaris-dossier/src/launch-write-consent.test.ts",
+      "failed": 1,
+      "passed": 6,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "write consent: scope lines",
+      "file": "packages/polaris-dossier/src/launch-write-consent.ts",
+      "old": "if (missing.length > 0 || !RECORD_CLASS_LINE.test(artifact)) {",
+      "new": "if (false) {",
+      "test": "packages/polaris-dossier/src/launch-write-consent.test.ts",
+      "failed": 1,
+      "passed": 6,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "write consent: instant not after now",
+      "file": "packages/polaris-dossier/src/launch-write-consent.ts",
+      "old": "if (at > options.now) return absent(",
+      "new": "if (false) return absent(",
+      "test": "packages/polaris-dossier/src/launch-write-consent.test.ts",
+      "failed": 1,
+      "passed": 6,
+      "outcome": "killed"
+    }
+  ]
+}
