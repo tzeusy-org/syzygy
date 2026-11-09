@@ -1,9 +1,9 @@
 {
   "subject": "screening scope version 8 reading predicates (sourceVisibility, private-pair rules)",
-  "commit": "6d1ebef21ff974d25519f79c9569ba2d77192ba1",
+  "commit": "1bf4eb46a931d141dd1ab4e086ee818830a01008",
   "runner": "scripts/screening_v8_mutations.py",
-  "mutants": 22,
-  "killed": 22,
+  "mutants": 37,
+  "killed": 37,
   "survived": [],
   "results": [
     {
@@ -73,7 +73,7 @@
       "new": "if (false) return",
       "test": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
       "failed": 1,
-      "passed": 9,
+      "passed": 10,
       "outcome": "killed"
     },
     {
@@ -82,7 +82,7 @@
       "old": "redactionFor(redaction, visibility)",
       "new": "redaction",
       "test": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
-      "failed": 1,
+      "failed": 2,
       "passed": 9,
       "outcome": "killed"
     },
@@ -93,7 +93,7 @@
       "new": "  if (false) {",
       "test": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
       "failed": 3,
-      "passed": 7,
+      "passed": 8,
       "outcome": "killed"
     },
     {
@@ -103,7 +103,7 @@
       "new": "if (subject === null) visibility = 'public';",
       "test": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
       "failed": 1,
-      "passed": 9,
+      "passed": 10,
       "outcome": "killed"
     },
     {
@@ -113,7 +113,7 @@
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 17,
+      "passed": 35,
       "outcome": "killed"
     },
     {
@@ -123,27 +123,27 @@
       "new": "r.record.recordClass",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 17,
+      "passed": 35,
       "outcome": "killed"
     },
     {
       "predicate": "gate: only the pair's records",
       "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
-      "old": " && r.record.identity === subject.repository\n",
-      "new": "\n",
+      "old": " && r.record.identity === subject.repository);",
+      "new": ");",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 17,
+      "passed": 35,
       "outcome": "killed"
     },
     {
       "predicate": "gate: only records in force",
       "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
-      "old": "    && Date.parse(r.record.grantInstant) <= options.now);",
-      "new": "    );",
+      "old": "pairs.filter(r => Date.parse(r.record.grantInstant) <= options.now)",
+      "new": "pairs.filter(() => true)",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 17,
+      "passed": 35,
       "outcome": "killed"
     },
     {
@@ -153,7 +153,7 @@
       "new": "r.record.identity",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 17,
+      "passed": 35,
       "outcome": "killed"
     },
     {
@@ -163,7 +163,7 @@
       "new": "'public'",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 6,
-      "passed": 12,
+      "passed": 30,
       "outcome": "killed"
     },
     {
@@ -173,7 +173,7 @@
       "new": "r.record.publicDeclaration !== 'not-public' ? 'public'",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 3,
-      "passed": 15,
+      "passed": 33,
       "outcome": "killed"
     },
     {
@@ -203,7 +203,7 @@
       "new": "return read.ok ?",
       "test": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
       "failed": 1,
-      "passed": 9,
+      "passed": 10,
       "outcome": "killed"
     },
     {
@@ -213,17 +213,167 @@
       "new": "  if (false) refuse(",
       "test": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
       "failed": 2,
-      "passed": 46,
+      "passed": 48,
       "outcome": "killed"
     },
     {
       "predicate": "provider mode: v8 needs a public decision",
       "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
-      "old": "visibilityRead.declared && visibility !== 'public'",
-      "new": "visibilityRead.declared && visibility === 'private'",
+      "old": "(!visibilityRead.declared || visibility === 'public')",
+      "new": "(!visibilityRead.declared || visibility !== 'private')",
       "test": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
       "failed": 1,
-      "passed": 47,
+      "passed": 49,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "provider mode: malformed sourceVisibility refused",
+      "file": "apps/three-surface-poc/src/polaris-generation/public-source-screening.ts",
+      "old": "  if (!visibilityRead.ok) refuse(`policy ${visibilityRead.why",
+      "new": "  if (false) refuse(`policy ${visibilityRead.why",
+      "test": "apps/three-surface-poc/src/polaris-generation/public-source-screening.test.ts",
+      "failed": 2,
+      "passed": 48,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "gate: act forms must match (the refusal)",
+      "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
+      "old": "  if (!actFormsMatchPolicy(options.observationForms ?? OBSERVATION_ACT_FORM_FILES)) return",
+      "new": "  if (false) return",
+      "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
+      "failed": 6,
+      "passed": 30,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "gate: act forms must match (the comparison)",
+      "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
+      "old": "  return a.length === forms.length && a.length === b.length",
+      "new": "  return true || a.length === forms.length && a.length === b.length",
+      "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
+      "failed": 7,
+      "passed": 29,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "gate: act forms compared without repeats",
+      "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
+      "old": "  return a.length === forms.length && a.length === b.length",
+      "new": "  return a.length === b.length",
+      "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
+      "failed": 1,
+      "passed": 35,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "gate: an unparseable grant instant refuses",
+      "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
+      "old": "  if (unparsed !== undefined) return",
+      "new": "  if (false) return",
+      "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
+      "failed": 3,
+      "passed": 33,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "fetch: a private pair is not fetched",
+      "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
+      "old": "  if (decision.visibility !== 'public') return",
+      "new": "  if (false) return",
+      "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
+      "failed": 1,
+      "passed": 35,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "fetch: an undecidable pair is not fetched",
+      "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
+      "old": "  if (!decision.ok) return `the visibility of repository:${repositoryId} cannot be decided",
+      "new": "  if (false) return `the visibility of repository:${repositoryId} cannot be decided",
+      "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
+      "failed": 2,
+      "passed": 34,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "fetch: no decision port fetches nothing",
+      "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
+      "old": "  if (visibilityOf === undefined) return",
+      "new": "  if (false) return",
+      "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
+      "failed": 1,
+      "passed": 35,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "fetch: no repository named fetches nothing",
+      "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
+      "old": "  if (typeof repositoryId !== 'string' || repositoryId === '') return",
+      "new": "  if (false) return",
+      "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
+      "failed": 2,
+      "passed": 34,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "supervisor: the clone step asks before it fetches",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "  if (refused !== null) return refused;",
+      "new": "  if (false) return refused;",
+      "test": "packages/polaris-dossier/src/polaris-clone.test.ts",
+      "failed": 3,
+      "passed": 6,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "supervisor: injected sources and no decision fetch nothing",
+      "file": "packages/polaris-dossier/src/cli.ts",
+      "old": "(ports.sources === undefined ? (subject",
+      "new": "(true ? (subject",
+      "test": "packages/polaris-dossier/src/polaris-clone.test.ts",
+      "failed": 1,
+      "passed": 8,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "trigger: the fetch waits for a public decision",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts",
+      "old": "    if (fetchStop !== null) return",
+      "new": "    if (false) return",
+      "test": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts",
+      "failed": 4,
+      "passed": 29,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "trigger: a private pair is not fetched",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts",
+      "old": "  if (decision.visibility !== 'public') return",
+      "new": "  if (false) return",
+      "test": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts",
+      "failed": 1,
+      "passed": 32,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "trigger: no decision port fetches nothing",
+      "file": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts",
+      "old": "  if (ports.visibility === undefined) return",
+      "new": "  if (false) return",
+      "test": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts",
+      "failed": 1,
+      "passed": 32,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "screen: a version-8 screen with no visibility is private",
+      "file": "packages/polaris-dossier/src/screen.ts",
+      "old": "given ?? (visibilityRead.declared ? 'private' : 'public')",
+      "new": "given ?? 'public'",
+      "test": "packages/polaris-dossier/src/screen-scope-v8.test.ts",
+      "failed": 1,
+      "passed": 10,
       "outcome": "killed"
     }
   ]
