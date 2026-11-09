@@ -101,6 +101,17 @@ export interface PinnedObjectReader {
   /** What the object store holds beside the pinned revision: the pinned commit's parents, from its re-hashed body, and every
    * identifier the store names that is neither the pinned commit nor a tree or blob under its tree. */
   inventory(): Promise<StoreInventory>;
+  /** The pinned commit's root tree, its parents and its committer date (the line's timestamp and zone only), from its re-hashed body:
+   * the only commit fields a launch reads before consent (REQ-polaris-generation-046). The message, and every author and committer
+   * identity, are never returned. */
+  commitHead(): Promise<CommitHead>;
+}
+
+export interface CommitHead {
+  readonly tree: string;
+  readonly parents: readonly string[];
+  /** `<seconds> <zone>` as the commit object records it, or null when its committer line carries none. */
+  readonly committerDate: string | null;
 }
 
 /** The store's identifiers are the names it gives: each loose object's file name and each pack index entry, counted without reading
@@ -171,7 +182,24 @@ export function openPinnedObjectReader(options: PinnedObjectReaderOptions): Pinn
       const beyond = [...stored].filter(id => !reachable.has(id)).sort();
       return { parents, stored: stored.size, reachable: reachable.size, beyondCount: beyond.length, beyond: beyond.slice(0, 10) };
     }),
+    commitHead: () => step(async walk => ({ tree: await walk.rootTree(), parents: await walk.parents(), committerDate: await walk.committerDate() })),
   };
+}
+
+/** Every identifier the clone's object store names (loose file names and pack index entries), no object read: what an abbreviated
+ * `--revision` is resolved against (REQ-polaris-generation-047). */
+export async function storedIdentifiers(gitDir: string, algorithm: HashAlgorithm): Promise<ReadonlySet<string>> {
+  let store: ObjectStore | null = null;
+  try {
+    store = await ObjectStore.open(gitDir, algorithm, { objectBytes: 2 ** 30, chainDepth: 1_000, callBytes: 2 ** 32, callObjects: 1_000_000 });
+    return await store.ids();
+  } catch (e) {
+    if (e instanceof GitObjectReadRefusal) throw e;
+    const code = errorCode(e);
+    return refuse(typeof code === 'string' && /^E[A-Z0-9]+$/.test(code) ? 'store-unreadable' : 'reader-fault', `the object store could not be listed (${typeof code === 'string' ? code : 'unknown error'})`);
+  } finally {
+    await store?.close().catch(() => undefined);
+  }
 }
 
 const HEX = { sha1: 40, sha256: 64 } as const;
@@ -209,6 +237,17 @@ class Walk {
       out.push(m[1]!);
     }
     return out;
+  }
+
+  /** The committer line's trailing `<seconds> <zone>`, read from the re-hashed header; the identity before it is never returned. */
+  async committerDate(): Promise<string | null> {
+    await this.rootTree();
+    const text = Buffer.from(await this.store.verified(this.revision, 'commit', null)).toString('latin1');
+    const header = text.slice(0, text.indexOf('\n\n') < 0 ? text.length : text.indexOf('\n\n'));
+    const lines = header.split('\n').filter(row => row.startsWith('committer '));
+    if (lines.length !== 1) return null;
+    const m = / (\d{1,15}) ([+-]\d{4})$/.exec(lines[0]!);
+    return m === null ? null : `${m[1]} ${m[2]}`;
   }
 
   /** The pinned commit and each distinct tree and blob under its tree, every tree re-hashed. Submodule entries are left out. */

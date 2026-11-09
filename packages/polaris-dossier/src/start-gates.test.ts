@@ -1141,7 +1141,7 @@ describe('the CLI: preflight and init', () => {
   });
   it.each([
     [['init'], 'init takes exactly one positional argument, the clone directory'],
-    [['init', '/c'], 'init requires --url <url> and --config <run.json>'],
+    [['init', '/c'], 'init requires --config <run.json>'],
     [['init', '/c', '--url'], '--url requires a value'],
     [['init', '/c', '--url', 'u', '--url', 'v'], '--url given more than once'],
     [['init', '/c', '--force'], 'unknown option: --force'],
