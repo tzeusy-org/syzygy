@@ -125,7 +125,7 @@ describe('reader advice: the counted standards', () => {
 
   it.each([['Inside src/server', 'it names a path'], ['How net/http serves', 'it names a path'], ['What lib/utils offers', 'it names a path']])(
     'flags the single-slash source path in %j: %s', (title, why) => { expect(codeSymbolInTitle(title)).toBe(why); });
-  it.each(['Read/write paths', 'I/O scheduling', 'TCP/IP', 'The client/server split', 'Input/output and/or errors'])(
+  it.each(['Read/write paths', 'I/O scheduling', 'TCP/IP', 'The client/server split', 'Input/output and/or errors', 'Running on OS/2'])(
     'leaves the prose pair in %j alone', (title) => { expect(codeSymbolInTitle(title)).toBeUndefined(); });
 
   it.each([['Inside App.js', 'it names a file'], ['What Server.js starts', 'it names a file'], ['The Index.js entry', 'it names a file'], ['The UserList.js view', 'it names a file']])(
