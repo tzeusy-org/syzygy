@@ -7,7 +7,8 @@ import type { CitedBlob } from './check-model.js';
 import type { DossierScreen } from './screen.js';
 import { citationIdsOf, isWithheldItem, type SpanStanding } from './withheld-items.js';
 
-/** Which claim blocks the fidelity review can never confirm, told to the author at check time (syzygy-pdja.20). `reviewVisibility` names
+/** Which claim blocks the fidelity review can never confirm, told to the author at check time (syzygy-pdja.20), and which understanding
+ * items and diagram nodes and edges will render with none of their text (syzygy-pdja.24). `reviewVisibility` names
  * the cited files the review will not see; this names the blocks every cited span of which it will not see, so the author does not spend
  * a repair cycle on a block no verdict can call supported. Advice, like `readerAdvice`: it is on `check`'s report only, never a finding,
  * the outcome, the exit code or the stored check record, and it changes nothing a gate or a verdict's validation accepts. Pure.
@@ -17,7 +18,12 @@ import { citationIdsOf, isWithheldItem, type SpanStanding } from './withheld-ite
  * - `withheld-item`: every cited span is withheld by screening (or the block quotes a withheld span). Its verdict entry is `withheld`,
  *   never `supported`; it renders Unknown with `excluded-content` in Syzygy's words, and none of its text renders.
  * - `unconfirmable`: an `inferred` block that is not a withheld item, every cited span of which the review cannot see, at least one
- *   because the class gate keeps its file from the review. `withheld` does not fit it, so its entry is unresolved and blocks readiness. */
+ *   because the class gate keeps its file from the review. `withheld` does not fit it, so its entry is unresolved and blocks readiness.
+ *
+ * REQ-polaris-generation-034 also makes an understanding item, a diagram node and a diagram edge a withheld item, read by the same rule
+ * (`render.ts` applies it to each, from the item's own citations). No fidelity verdict carries an entry for one, so none costs a repair
+ * cycle or blocks readiness, but each renders Unknown with none of its text: `elements` lists them. One the class gate alone keeps from
+ * the review is not withheld and renders as written, so it is not listed. */
 
 /** How one cited span reaches the review: `withheld` by screening as the withheld-item rule reads it, `class-gated` (screening admits
  * its file but the run's consent does not cover the file's class), or `reaches-review`. A span no check would pass (an absent path, even
@@ -64,34 +70,70 @@ export interface UnseenBlock {
   readonly detail: string;
 }
 
-export interface ReviewReachAdvice {
-  readonly note: string;
-  readonly counts: { readonly unconfirmable: number; readonly withheldItems: number };
-  readonly blocks: readonly UnseenBlock[];
+export type WithheldElementKind = 'understanding-item' | 'diagram-node' | 'diagram-edge';
+
+export interface WithheldElement {
+  /** A JSON path into the draft. */
+  readonly at: string;
+  readonly kind: WithheldElementKind;
+  readonly id: string | null;
+  readonly detail: string;
 }
 
-const NOTE = 'Advice: it sets no outcome and is not stored in the check record. Each block listed rests only on spans the fidelity review will not be given: every span it cites, or a span it quotes. A review cannot confirm an `unconfirmable` block, and its unresolved row blocks readiness: cite an admitted file that states the same fact, as well or instead, or state it as `unknown`. A `withheld-item` block is never judged supported; it blocks nothing, but it renders Unknown in Syzygy\'s words and none of its text renders. Resubmitting such a block unchanged spends a repair cycle and changes neither.';
+export interface ReviewReachAdvice {
+  readonly note: string;
+  readonly counts: { readonly unconfirmable: number; readonly withheldItems: number; readonly withheldElements: number };
+  readonly blocks: readonly UnseenBlock[];
+  /** Understanding items and diagram nodes and edges that are withheld items (syzygy-pdja.24). */
+  readonly elements: readonly WithheldElement[];
+}
+
+const NOTE = 'Advice: it sets no outcome and is not stored in the check record. Each block listed rests only on spans the fidelity review will not be given: every span it cites, or a span it quotes. A review cannot confirm an `unconfirmable` block, and its unresolved row blocks readiness: cite an admitted file that states the same fact, as well or instead, or state it as `unknown`. A `withheld-item` block is never judged supported; it blocks nothing, but it renders Unknown in Syzygy\'s words and none of its text renders. Resubmitting such a block unchanged spends a repair cycle and changes neither. Each element listed is an understanding item or a diagram node or edge every span of which it cites, or a span it quotes, is withheld by screening: no review judges it, so it costs no repair cycle, but it renders Unknown and none of its text renders.';
 
 const DETAIL: Readonly<Record<UnseenConsequence, string>> = {
   unconfirmable: 'every span it cites is kept from the review, at least one by the class gate (the run\'s consent does not cover its file\'s class), so the review cannot confirm it and its row stays unresolved, blocking readiness',
   'withheld-item': 'every span it cites, or a span it quotes, is withheld by screening, so the review cannot confirm it: its entry is `withheld`, it renders Unknown and none of its text renders',
 };
 
+const ELEMENT_DETAIL: Readonly<Record<WithheldElementKind, string>> = {
+  'understanding-item': 'every span it cites, or a span it quotes, is withheld by screening: it renders Unknown on the understanding page and none of its text renders (a terminology item is also left out of the glossary)',
+  'diagram-node': 'every span it cites, or a span it quotes, is withheld by screening: the node renders Unknown and its label does not render',
+  'diagram-edge': 'every span it cites, or a span it quotes, is withheld by screening: the edge renders Unknown and its label does not render',
+};
+
 const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? value : []);
 
-/** The claim blocks of a parsed draft that no fidelity verdict can confirm; a draft that is not an object yields none. */
+/** How each of an item's own citations reaches the review, by citation id. */
+function reachOf(value: Readonly<Record<string, unknown>>, inputs: ReachInputs): ReadonlyMap<unknown, CitationReach> {
+  return new Map(list(value['citations']).filter(isRecord).flatMap((citation) =>
+    (typeof citation['id'] === 'string' ? [[citation['id'], citationReach(citation, inputs)] as const] : [])));
+}
+
+/** A span's standing for the withheld-item rule: a class-gated span is neither withheld nor admitted. */
+const standingIn = (reach: ReadonlyMap<unknown, CitationReach>) => (id: string): SpanStanding => {
+  const value = reach.get(id);
+  return value === 'withheld' ? 'withheld' : value === 'reaches-review' ? 'admitted' : 'other';
+};
+
+/** The claim blocks of a parsed draft that no fidelity verdict can confirm, and the understanding items and diagram nodes and edges that
+ * are withheld items; a draft that is not an object yields none. */
 export function reviewReachAdvice(doc: unknown, inputs: ReachInputs): ReviewReachAdvice {
   const blocks: UnseenBlock[] = [];
+  const elements: WithheldElement[] = [];
+  const element = (at: string, kind: WithheldElementKind, value: Readonly<Record<string, unknown>>): void => {
+    if (!isWithheldItem(value, standingIn(reachOf(value, inputs)))) return;
+    const id = value['id'];
+    elements.push({ at, kind, id: typeof id === 'string' ? id : null, detail: ELEMENT_DETAIL[kind] });
+  };
   if (isRecord(doc)) {
     for (const block of collectBlocks(doc)) {
       // The fidelity verdict carries an entry for each claim block (`textKey` text), not for the understanding record's items.
-      if (block.textKey !== 'text') continue;
-      const reach = new Map(list(block.value['citations']).filter(isRecord).flatMap((citation) =>
-        (typeof citation['id'] === 'string' ? [[citation['id'], citationReach(citation, inputs)] as const] : [])));
-      const standing = (id: string): SpanStanding => {
-        const value = reach.get(id);
-        return value === 'withheld' ? 'withheld' : value === 'reaches-review' ? 'admitted' : 'other';
-      };
+      if (block.textKey !== 'text') {
+        element(block.at, 'understanding-item', block.value);
+        continue;
+      }
+      const reach = reachOf(block.value, inputs);
+      const standing = standingIn(reach);
       const { cited } = citationIdsOf(block.value);
       const consequence: UnseenConsequence | undefined = isWithheldItem(block.value, standing) ? 'withheld-item'
         : block.value['label'] === 'inferred' && cited.length > 0 && cited.every((id) => reach.get(id) === 'withheld' || reach.get(id) === 'class-gated') ? 'unconfirmable'
@@ -100,10 +142,20 @@ export function reviewReachAdvice(doc: unknown, inputs: ReachInputs): ReviewReac
       const id = block.value['id'];
       blocks.push({ at: block.at, blockId: typeof id === 'string' ? id : null, consequence, detail: DETAIL[consequence] });
     }
+    list(doc['diagrams']).forEach((diagram, i) => {
+      if (!isRecord(diagram)) return;
+      for (const [part, kind] of [['nodes', 'diagram-node'], ['edges', 'diagram-edge']] as const) {
+        list(diagram[part]).forEach((value, j) => { if (isRecord(value)) element(`$.diagrams[${i}].${part}[${j}]`, kind, value); });
+      }
+    });
   }
   return {
     note: NOTE,
-    counts: { unconfirmable: blocks.filter((b) => b.consequence === 'unconfirmable').length, withheldItems: blocks.filter((b) => b.consequence === 'withheld-item').length },
+    counts: {
+      unconfirmable: blocks.filter((b) => b.consequence === 'unconfirmable').length, withheldItems: blocks.filter((b) => b.consequence === 'withheld-item').length,
+      withheldElements: elements.length,
+    },
     blocks,
+    elements,
   };
 }

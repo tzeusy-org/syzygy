@@ -30,15 +30,25 @@ const NOTE = `Advice from the counted reader standards (${READER_STANDARDS_VERSI
 const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? value : []);
 const text = (value: unknown): string | undefined => (typeof value === 'string' ? value : undefined);
 
+const SOURCE_FILE = /\b[\w-]+\.(?:c|h|cc|cpp|hpp|rs|go|py|rb|java|kt|js|mjs|ts|tsx|jsx|cs|swift|php|lua|sh|json|ya?ml|toml|md|ini|conf|cfg)\b/giu;
+
 /** Why a title may name a code symbol rather than what it explains, or undefined: a code span, a call, a path, a source file name, or an
- * identifier written in camelCase, PascalCase with an inner capital, snake_case or SCREAMING_CASE. */
+ * identifier written in camelCase, PascalCase, snake_case or SCREAMING_CASE.
+ *
+ * Each shape is narrowed to where prose and product names do not write it (R-PDJA-17-STANDARDS-1 note 2):
+ * - a path has a leading or trailing separator, or two: one slash between two words is how prose writes a pair (read/write, I/O, TCP/IP);
+ * - a file name is not a capitalised name ending `.js`, which is how JavaScript projects name themselves (Node.js, Next.js);
+ * - a camelCase identifier starts with two or more lowercase letters and has a lowercase letter after its inner capital, where a brand
+ *   starts with one (iPhone, gRPC, eBPF) or ends in an initialism (macOS);
+ * - a PascalCase identifier has three or more capitalised parts: a name of two is also how products are written (GitHub, JavaScript),
+ *   and a capital run is an initialism (PostgreSQL). */
 export function codeSymbolInTitle(title: string): string | undefined {
   if (title.includes('`')) return 'it holds a code span';
   if (/\w\(/u.test(title)) return 'it names a call';
-  if (/\S\/\S/u.test(title)) return 'it names a path';
-  if (/\b[\w-]+\.(?:c|h|cc|cpp|hpp|rs|go|py|rb|java|kt|js|mjs|ts|tsx|jsx|cs|swift|php|lua|sh|json|ya?ml|toml|md|ini|conf|cfg)\b/iu.test(title)) return 'it names a file';
-  if (/\b[a-z]+[A-Z][A-Za-z0-9]*\b/u.test(title)) return 'it holds a camelCase identifier';
-  if (/\b[A-Z][a-z0-9]+[A-Z][A-Za-z0-9]*\b/u.test(title)) return 'it holds a PascalCase identifier';
+  if (/(?:^|\s)\.{0,2}\/[\w.-]|[\w.-]\/[\w.-]+\/|[\w.-]\/(?=$|[\s),.;:!?])/u.test(title)) return 'it names a path';
+  if ([...title.matchAll(SOURCE_FILE)].some(([name]) => !/^[A-Z][A-Za-z0-9]*\.js$/u.test(name))) return 'it names a file';
+  if (/\b[a-z]{2,}[A-Z][a-z0-9]/u.test(title)) return 'it holds a camelCase identifier';
+  if (/\b(?:[A-Z][a-z0-9]+){3,}/u.test(title)) return 'it holds a PascalCase identifier';
   if (/\b[A-Za-z0-9]+_[A-Za-z0-9_]+\b/u.test(title)) return 'it holds a snake_case identifier';
   return undefined;
 }

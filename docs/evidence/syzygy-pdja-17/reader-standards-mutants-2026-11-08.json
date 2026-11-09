@@ -5,17 +5,21 @@
   "ranAt": "9b108eabbd3cd004bc395bc022650e618bd707ad",
   "ranAtNote": "A work-in-progress commit on agent/syzygy-pdja.17-reader-standards; a rebase-merge leaves it reachable from no ref, so the digests below are the anchor.",
   "subjectDigests": {
+    ".claude/skills/polaris-dossier/SKILL.md": "8cc792777af8d347d2108ea6e02e05e7ce1b8b9e3c8f53cb2ea2535a1efa57bc",
     ".claude/skills/polaris-dossier/references/reader-standards.md": "ede073f11ee7eaf5832cba4b8c7addd0bb9ae1cb3b058b7f0ef502aefb7e9555",
+    ".codex/skills/polaris-dossier/SKILL.md": "37202d92959eb06562964fac6613074cf07ef32e85249c417c38db8889a05edc",
     ".codex/skills/polaris-dossier/references/reader-standards.md": "ede073f11ee7eaf5832cba4b8c7addd0bb9ae1cb3b058b7f0ef502aefb7e9555",
     "packages/polaris-dossier/src/brief.test.ts": "1fe91212c6739f68715f8d1bb023f10d71be2f4d2674c87c4f2c5300116e33c9",
     "packages/polaris-dossier/src/brief.ts": "f454eead177bb2947b3ac9c8e1b04faeeb14d4ea0e66999c1b655f9fb6a17fb0",
     "packages/polaris-dossier/src/check.test.ts": "6ae91b9d86889ab89e17f86f7fe15abc05c9b1dfb903b95e8107baf9beda147d",
     "packages/polaris-dossier/src/check.ts": "f0aa4f976644c69fe326416c9601237a11c4a4e0284b314638bbf26c084f9f61",
+    "packages/polaris-dossier/src/cli.test.ts": "6f4d79cd184afc6294496d417dfb669a3c4c9253e4e54ee4c49d54396af89143",
     "packages/polaris-dossier/src/design-review.ts": "3a9f588b09792f6eeb2c3dffe85b82603fb8aad35c8fa9a0080fad789500b3e9",
     "packages/polaris-dossier/src/reader-advice.ts": "1efd9dc8617b8350a648b5ba804006187afefa146dd19fabc735f2842625017d",
     "packages/polaris-dossier/src/reader-standards.test.ts": "1d4cdc26466e1144fe8e8af915a25fc6b86277273044514711069b54f052e13d",
     "packages/polaris-dossier/src/reader-standards.ts": "e869391c2e96ca8aa13b85255faeb351b2a8aead9e3672f35af8e489e639b2d8"
   },
+  "subjectDigestsNote": "R-PDJA-17-STANDARDS-1 note 5 (syzygy-pdja.18, 2026-11-09): cli.test.ts, named in the command, and both SKILL.md files were added by script, hashed from the bytes at ranAt; the ten recorded before were re-checked against ranAt and db185da4 by the same script and are unchanged.",
   "command": "npx vitest run packages/polaris-dossier/src/{reader-standards,brief,check,cli,design-review}.test.ts (each mutant alone, restored after)",
   "mutants": [
     {

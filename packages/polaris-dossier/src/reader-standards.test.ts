@@ -30,7 +30,7 @@ describe('reader standards: one text', () => {
 
   it('nests under one heading naming the version and digest when carried in a larger text', () => {
     const section = readerStandardsSection();
-    expect(section.split('\n').slice(0, 3)).toEqual([`## Polaris dossier reader standards (\`polaris-reader-standards-v1\`, sha256 \`${sha(READER_STANDARDS)}\`)`, '', 'A good Polaris dossier lets someone open one place and understand what a']);
+    expect(section.split('\n').slice(0, 3)).toEqual([`## Polaris dossier reader standards (\`polaris-reader-standards-v1\`; sha256 of \`references/reader-standards.md\`: \`${sha(READER_STANDARDS)}\`)`, '', 'A good Polaris dossier lets someone open one place and understand what a']);
     expect(section.split('\n').filter((line) => /^#{1,2} /u.test(line))).toHaveLength(1);
     expect(section.split('\n').filter((line) => line.startsWith('### '))).toHaveLength(9);
     expect(section).not.toContain('Version: ');
@@ -94,12 +94,22 @@ describe('reader advice: the counted standards', () => {
   });
 
   it.each([
-    ['How `run()` starts', 'it holds a code span'], ['What dispatch() hands on', 'it names a call'], ['Inside src/server', 'it names a path'],
-    ['The config.toml keys', 'it names a file'], ['Inside processCommand', 'it holds a camelCase identifier'],
-    ['The RedisModule hooks', 'it holds a PascalCase identifier'], ['What max_clients limits', 'it holds a snake_case identifier'],
+    ['How `run()` starts', 'it holds a code span'], ['What dispatch() hands on', 'it names a call'],
+    ['Inside src/server/networking', 'it names a path'], ['What src/ holds', 'it names a path'], ['The /etc/redis tree', 'it names a path'],
+    ['Running ./configure first', 'it names a path'],
+    ['The config.toml keys', 'it names a file'], ['Inside App.tsx', 'it names a file'], ['The loader.js hook', 'it names a file'],
+    ['Where Node.js reads server.js', 'it names a file'],
+    ['Inside processCommand', 'it holds a camelCase identifier'], ['What toString returns', 'it holds a camelCase identifier'],
+    ['The RedisModuleCtx hooks', 'it holds a PascalCase identifier'], ['What max_clients limits', 'it holds a snake_case identifier'],
     ['Where MAX_CLIENTS applies', 'it holds a snake_case identifier'],
   ])('flags %j: %s', (title, why) => { expect(codeSymbolInTitle(title)).toBe(why); });
 
   it.each(['How a write reaches the replicas', 'Why the project exists', 'Trade-offs (and their costs)', 'Persistence: snapshots and the log', 'Version 7.2 and later'])(
     'leaves %j alone', (title) => { expect(codeSymbolInTitle(title)).toBeUndefined(); });
+
+  // R-PDJA-17-STANDARDS-1 note 2: the reviewer's proper names and prose pairs, each a title the advice once flagged.
+  it.each([
+    'Node.js and Deno', 'Next.js rendering', 'Why PostgreSQL', 'GitHub Actions', 'The iPhone client', 'gRPC transport', 'Read/write paths',
+    'I/O scheduling', 'TCP/IP', 'Builds for macOS', 'Why JavaScript',
+  ])('leaves the proper name or prose pair in %j alone', (title) => { expect(codeSymbolInTitle(title)).toBeUndefined(); });
 });

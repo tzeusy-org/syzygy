@@ -299,6 +299,11 @@ describe('glossary terms in agent prose', () => {
     expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll path.edge-echo{display:none;fill:none;stroke:var(--cyan);stroke-width:3;pointer-events:none}.diagram-scroll g.edge-text:hover path.edge-echo{display:inline}');
   });
 
+  it('fills an arrowhead and never strokes it, so it is drawn as the leader rule models it', () => {
+    // `.diagram-scroll svg path` strokes every path; the marker's own rule outranks it (syzygy-pdja.16).
+    expect(DOSSIER_THEME_CSS).toContain('.diagram-scroll svg path{stroke:var(--muted)}.diagram-scroll svg marker path{fill:var(--muted);stroke:none}');
+  });
+
   it('opens an entry at once on hover and on focus, from its block, closes it a moment later, and dims a withheld marker', () => {
     expect(DOSSIER_THEME_CSS).toContain('a.term:hover>.term-pop,a.term:focus>.term-pop{visibility:visible;transition-delay:0s}');
     expect(DOSSIER_THEME_CSS).toContain('transition:visibility 0s .35s}');
