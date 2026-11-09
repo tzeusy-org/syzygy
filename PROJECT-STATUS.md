@@ -505,13 +505,14 @@ python3 scripts/record_dossier_agent_provider_v2_act.py --selftest   # agent-pro
 python3 scripts/build_launch_consent_write_consent.py --check   # launch-record write consent builder --check
 python3 scripts/build_launch_consent_write_consent.py --selftest   # launch-record write consent builder --selftest
 python3 scripts/record_launch_consent_write_consent_act.py --check 53efd343b0ed5302628374fbb503758d2bfe56bf1b27715f0ec616f33b5aa092 --date 2026-11-08 --selection-quote 'Sign the write consent for launch consent records? (structured question, Claude Code session) — selected option "Sign the launch-record write consent"'   # launch-record write consent act --check
+python3 scripts/record_launch_consent_write_consent_act.py --selftest   # launch-record write-consent recorder fixtures
 python3 scripts/record_dossier_local_agent_acts.py --check d9-in-force 41fdfaea8cbde4cd8220910113fb5b376c7834a470d8c2d9badd9ab0fec9ac66 --date 2026-10-07 --question-opening 'Do you sign the D9 in-force record at its row of the dossier local-agent acts manifest?' --selection-label 'Sign it' --selection-description 'Binds D9 to the current security.md and v1.md bytes; it runs nothing until a choice for one run is recorded.'   # d9-in-force --check
 python3 scripts/record_dossier_local_agent_acts.py --check rfc7-20-reading-in-force f0725a204b6e6ccbccb211441e26e139502ef42a6447d0f4a40df2d09062f3d9 --date 2026-10-07 --question-opening 'Do you sign the RFC7-20 reading in-force record at its row of the dossier local-agent acts manifest?' --selection-label 'Sign it' --selection-description 'The agent draft renders as an editorial draft; it binds item 1 of the direction, whole-file.'   # rfc7-20-reading-in-force --check
 python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 --question-opening 'Do you adopt the non-governed narrative profile, requirement 032, at its row of the profile manifest?' --selection-label 'Adopt as recommended' --selection-description 'O1 to O7 as the packet recommends; Scope A is not read to cover it; the two known limitations stand.'   # narrative profile --check
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and thirty-five checks above are the same one hundred and thirty-five the hosted workflow runs
+The one hundred and thirty-six checks above are the same one hundred and thirty-six the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

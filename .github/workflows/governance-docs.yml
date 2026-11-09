@@ -525,6 +525,9 @@ jobs:
       - name: launch-record write consent act --check
         run: python3 scripts/record_launch_consent_write_consent_act.py --check 53efd343b0ed5302628374fbb503758d2bfe56bf1b27715f0ec616f33b5aa092 --date 2026-11-08 --selection-quote 'Sign the write consent for launch consent records? (structured question, Claude Code session) — selected option "Sign the launch-record write consent"'
 
+      - name: record_launch_consent_write_consent_act --selftest
+        run: python3 scripts/record_launch_consent_write_consent_act.py --selftest
+
       - name: d9-in-force --check
         run: python3 scripts/record_dossier_local_agent_acts.py --check d9-in-force 41fdfaea8cbde4cd8220910113fb5b376c7834a470d8c2d9badd9ab0fec9ac66 --date 2026-10-07 --question-opening 'Do you sign the D9 in-force record at its row of the dossier local-agent acts manifest?' --selection-label 'Sign it' --selection-description 'Binds D9 to the current security.md and v1.md bytes; it runs nothing until a choice for one run is recorded.'
 
