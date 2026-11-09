@@ -393,5 +393,26 @@
     }
   ],
   "killed": 29,
-  "total": 29
+  "total": 29,
+  "carried": {
+    "note": "R-PDJA-P3-NOTES-1 finding 2: the two mutants R-PDJA-8-LABELS-5 reported as surviving against diagram-layout.ts (docs/reviews/R-PDJA-8-LABELS-5-RAW.md:23-24) are carried as accepted-equivalent mutants. No test is added for them and they were not re-run here; neither is in the 29 counted above.",
+    "mutants": [
+      {
+        "bead": "syzygy-pdja.16",
+        "id": "drop-base-side",
+        "source": "docs/reviews/R-PDJA-8-LABELS-5-RAW.md:23",
+        "mutation": "the base side left out of distanceToTriangle's outside distance",
+        "outcome": "survived; accepted as equivalent",
+        "differsWhen": "a leader end lies inside or near another arrowhead's base side; the reviewer's four populations held 0 such ends"
+      },
+      {
+        "bead": "syzygy-pdja.16",
+        "id": "heads-by-index",
+        "source": "docs/reviews/R-PDJA-8-LABELS-5-RAW.md:24",
+        "mutation": "j !== i in place of the d comparison that selects the other edges' arrowheads",
+        "outcome": "survived; accepted as equivalent",
+        "differsWhen": "parallel edges with identical paths, where the twin's arrowhead coincides with the edge's own"
+      }
+    ]
+  }
 }
