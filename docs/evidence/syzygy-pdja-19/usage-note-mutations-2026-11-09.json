@@ -1,0 +1,63 @@
+{
+  "bead": "syzygy-pdja.19",
+  "kind": "rule-6 mutation record",
+  "ranAt": "184a7a2a5934b2cbf8a8e1297d32bdebd35cc5a6",
+  "subjects": [
+    {
+      "path": "packages/polaris-dossier/src/waiting-sessions.ts",
+      "sha256": "fd0c0e99e0539c8b6c9818ccb39096d37c9822a498912ac8aa29a08251c8b21a"
+    },
+    {
+      "path": "packages/polaris-dossier/src/waiting-sessions.test.ts",
+      "sha256": "dba3e66d7d66a695665ba432df0022e97f61a477389970706fc877bce16746e1"
+    }
+  ],
+  "command": "npx vitest run packages/polaris-dossier/src/waiting-sessions.test.ts -t 'usage note|deliveryUsageNote|continues across|delivery to a waiting'",
+  "population": "every mutant listed; each applied alone to waiting-sessions.ts, the file restored after each",
+  "mutants": [
+    {
+      "id": "M1-utf16-length",
+      "old": "Buffer.byteLength(built.bytes, 'utf8')",
+      "new": "built.bytes.length",
+      "outcome": "killed",
+      "exit": 1
+    },
+    {
+      "id": "M2-drop-record-field",
+      "old": "packetSha256: built.sha256, packetBytes, packet, deliveredAt",
+      "new": "packetSha256: built.sha256, packet, deliveredAt",
+      "outcome": "killed",
+      "exit": 1
+    },
+    {
+      "id": "M3-omit-earlier-rounds",
+      "old": "  if (earlier.length > 0) {\n    const sized",
+      "new": "  if (earlier.length < 0) {\n    const sized",
+      "outcome": "killed",
+      "exit": 1
+    },
+    {
+      "id": "M4-missing-size-as-zero",
+      "old": "(bytes as number) >= 0 ? bytes as number : null }]",
+      "new": "(bytes as number) >= 0 ? bytes as number : 0 }]",
+      "outcome": "killed",
+      "exit": 1
+    },
+    {
+      "id": "M5-every-round-sized",
+      "old": "const sized = earlier.filter((entry) => entry.packetBytes !== null);",
+      "new": "const sized = earlier.filter(() => true);",
+      "outcome": "killed",
+      "exit": 1
+    },
+    {
+      "id": "M6-hard-code-fidelity",
+      "old": "hand the next ${kind} round",
+      "new": "hand the next fidelity round",
+      "outcome": "killed",
+      "exit": 1
+    }
+  ],
+  "killed": 6,
+  "total": 6
+}
