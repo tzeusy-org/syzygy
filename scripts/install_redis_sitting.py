@@ -138,6 +138,9 @@ V6_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V6-A
 V7_PKG = f"{CAND}/public-source-screening-scope-v7"
 V7_MANIFEST = f"{V7_PKG}/PUBLIC-SOURCE-SCREENING-SCOPE-V7-MANIFEST.txt"
 V7_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md"
+V8_PKG = f"{CAND}/public-source-screening-scope-v8"
+V8_MANIFEST = f"{V8_PKG}/PUBLIC-SOURCE-SCREENING-SCOPE-V8-MANIFEST.txt"
+V8_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-ACT.md"
 V1_SCRIPT = "record_public_source_screening_scope_act"
 V2_SCRIPT = "record_public_source_screening_scope_v2_act"
 V3_SCRIPT = "record_public_source_screening_scope_v3_act"
@@ -145,8 +148,9 @@ V4_SCRIPT = "record_public_source_screening_scope_v4_act"
 V5_SCRIPT = "record_public_source_screening_scope_v5_act"
 V6_SCRIPT = "record_public_source_screening_scope_v6_act"
 V7_SCRIPT = "record_public_source_screening_scope_v7_act"
+V8_SCRIPT = "record_public_source_screening_scope_v8_act"
 #: The scope recorders in chain order; the battery carries only the final act's.
-SCOPE_SCRIPTS = (V1_SCRIPT, V2_SCRIPT, V3_SCRIPT, V4_SCRIPT, V5_SCRIPT, V6_SCRIPT, V7_SCRIPT)
+SCOPE_SCRIPTS = (V1_SCRIPT, V2_SCRIPT, V3_SCRIPT, V4_SCRIPT, V5_SCRIPT, V6_SCRIPT, V7_SCRIPT, V8_SCRIPT)
 REPIN_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-BEHAVIOR-CONTRACT-REPIN-ACT.md"
 AMENDMENT_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-AMENDMENT-ACT.md"
 POLICY_JSON = ".syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json"
@@ -986,8 +990,56 @@ def policy_cg_v7_edits(text: str, v6_arg: str) -> str:
     return add_exemptions(text, V7_EXEMPTION)
 
 
+#: The version-8 hunks, as the version-8 recorder change wrote them (`syzygy-pdja.21`, PR #807): each
+#: gated on the act record existing, so on the live file the install finds them all and changes nothing.
+#: The chain block and the offering are module-level `if` blocks, placed by anchor (the offering after
+#: the state-(1) subjects, so the offerings dict still closes right before them); the version-7 manifest
+#: gate is read as a precondition, as version 7 reads version 6's.
+V8_CHAIN_ANCHOR = "#: For a chained amendment row, the package that offered the predecessor\n"
+V8_OFFERING_ANCHOR = "#: The truth-and-readiness amendment binds the same closed eleven-path\n"
+V8_CHAIN_BLOCK = ('#: The version-8 screening-scope act (syzygy-pdja.21, variant pv, private sources) supersedes the\n'
+                  '#: version-7 act for the policy subject. Registered with the recorder and gated on the performed\n'
+                  "#: record: the link, and the version-7 manifest's pinning as history, exist only once the act does.\n"
+                  'PUBLIC_SOURCE_SCOPE_V8_ACT_PATH = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-ACT.md"\n'
+                  'if os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT_PATH)):\n'
+                  '    PWB_EFFECT_AMENDMENT_ACTS = PWB_EFFECT_AMENDMENT_ACTS + (\n'
+                  '        (PWB_EFFECT_ACTS[1][0], PWB_EFFECT_ACTS[1][1],\n'
+                  '         f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md",\n'
+                  '         PUBLIC_SOURCE_SCOPE_V8_ACT_PATH,\n')
+V8_OFFERING = ('if os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT_PATH)):\n'
+               '    # The version-7 screening-scope act was offered the same way (variant row of its manifest).\n'
+               '    PWB_EFFECT_AMENDMENT_OFFERINGS[f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md"] = {\n'
+               '        f"{CANDIDATES}/public-source-screening-scope-v7/PUBLIC-SOURCE-SCREENING-SCOPE-V7-MANIFEST.txt": "variant-row",\n'
+               '    }\n')
+V7_MANIFEST_GATE = ('            # once the version-8 act exists the version-7 manifest is history (pinned by the amendment registries)\n'
+                    '            and not os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT_PATH))):\n')
+V8_EXEMPTION = '    (PUBLIC_SOURCE_SCOPE_V8_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V8_MANIFEST,\n'
+
+
+def policy_cg_v8_edits(text: str, v7_arg: str) -> str:
+    """The version-8 act supersedes the version-7 act for the policy subject. Applies on top of
+    `policy_cg_v7_edits`, with the three hunks the version-8 recorder change wrote, all or none; the
+    version-7 manifest gate must already be there."""
+    block = f'{V8_CHAIN_BLOCK}         "{v7_arg}"),\n    )\n'
+    present = [V8_CHAIN_BLOCK in text, V8_OFFERING in text, V8_EXEMPTION in text]
+    if all(present):
+        if block not in text:
+            raise Refusal("the version-8 chain block quotes another argument than the version-7 act's")
+        return text
+    if any(present):
+        raise Refusal(f"check_governance.py carries part of the version-8 install only ({present})")
+    if V7_CHAIN_ROW not in text:
+        raise Refusal("the version-8 chain block needs the version-7 install first (policy_cg_v7_edits)")
+    once(text, V7_MANIFEST_GATE, "version-7 manifest registration gated on the version-8 act")
+    i = once(text, V8_CHAIN_ANCHOR, "chained-amendment offerings comment")
+    text = text[:i] + block + text[i:]
+    i = once(text, V8_OFFERING_ANCHOR, "truth-and-readiness subjects comment")
+    text = text[:i] + V8_OFFERING + text[i:]
+    return add_exemptions(text, V8_EXEMPTION)
+
+
 def battery_lines_v4(record: str, new_arg: str, date: str, script: str = V4_SCRIPT) -> tuple[str, str]:
-    """Version 4's recorder, and versions 5's, 6's and 7's, take the owner's words, which the record quotes on one `> ` line."""
+    """Version 4's recorder, and versions 5's to 8's, take the owner's words, which the record quotes on one `> ` line."""
     words = re.findall(r"^> (.+)$", record, re.M)
     if len(words) != 1:
         raise Refusal(f"the {script} act record quotes {len(words)} owner-word lines, expected one")
@@ -1149,7 +1201,7 @@ def read_policy_act(root: pathlib.Path, key: str, path: str, script: str, manife
 
 
 def policy_acts(root: pathlib.Path) -> list[PolicyAct]:
-    """The policy acts in force, in order: version 1, then versions 2 to 7 when each exists.
+    """The policy acts in force, in order: version 1, then versions 2 to 8 when each exists.
     Each later version needs the one before it. Refuses an order or a pair the records themselves
     contradict, so the wrong order is never installed."""
     v1 = read_policy_act(root, "v1", SCOPE_ACT, V1_SCRIPT, SCOPE_MANIFEST, REPIN_ACT)
@@ -1159,7 +1211,8 @@ def policy_acts(root: pathlib.Path) -> list[PolicyAct]:
                                            ("v4", V4_ACT, V4_SCRIPT, V4_MANIFEST, 4),
                                            ("v5", V5_ACT, V5_SCRIPT, V5_MANIFEST, 5),
                                            ("v6", V6_ACT, V6_SCRIPT, V6_MANIFEST, 6),
-                                           ("v7", V7_ACT, V7_SCRIPT, V7_MANIFEST, 7)):
+                                           ("v7", V7_ACT, V7_SCRIPT, V7_MANIFEST, 7),
+                                           ("v8", V8_ACT, V8_SCRIPT, V8_MANIFEST, 8)):
         if not (root / path).is_file():
             continue
         prev = acts[-1]
@@ -1210,6 +1263,11 @@ REGISTRY_CEILING_SENTENCE = ("The registry machine-ceiling act supersedes its\n"
 
 def gate_comment(acts: list[PolicyAct]) -> str:
     final = acts[-1]
+    if final.key == "v8":
+        chosen = re.findall(r"^Chosen variant: `([a-z-]+)`", final.text, re.M)
+        variant = f" (variant {chosen[0]})" if len(chosen) == 1 else ""
+        return (f"// The policy act is the {final.date} public-source screening-scope version 8 act{variant}, superseding the\n"
+                f"// {acts[6].date} version-7 act. {REGISTRY_CEILING_SENTENCE}")
     if final.key == "v7":
         chosen = re.findall(r"^Chosen variant: `([a-z-]+)`", final.text, re.M)
         variant = f" (variant {chosen[0]})" if len(chosen) == 1 else ""
@@ -1252,18 +1310,20 @@ def step_policy(root: pathlib.Path, write: bool) -> bool:
     cg = root / CG
     text = cg.read_text()
     new_text = policy_cg_edits(text, repin_arg)
-    if final.key in ("v2", "v3", "v4", "v5", "v6", "v7"):
+    if final.key in ("v2", "v3", "v4", "v5", "v6", "v7", "v8"):
         new_text = policy_cg_v2_edits(new_text, acts[0].arg)
-    if final.key in ("v3", "v4", "v5", "v6", "v7"):
+    if final.key in ("v3", "v4", "v5", "v6", "v7", "v8"):
         new_text = policy_cg_v3_edits(new_text, acts[1].arg)
-    if final.key in ("v4", "v5", "v6", "v7"):
+    if final.key in ("v4", "v5", "v6", "v7", "v8"):
         new_text = policy_cg_v4_edits(new_text, acts[2].arg)
-    if final.key in ("v5", "v6", "v7"):
+    if final.key in ("v5", "v6", "v7", "v8"):
         new_text = policy_cg_v5_edits(new_text, acts[3].arg)
-    if final.key in ("v6", "v7"):
+    if final.key in ("v6", "v7", "v8"):
         new_text = policy_cg_v6_edits(new_text, acts[4].arg)
-    if final.key == "v7":
+    if final.key in ("v7", "v8"):
         new_text = policy_cg_v7_edits(new_text, acts[5].arg)
+    if final.key == "v8":
+        new_text = policy_cg_v8_edits(new_text, acts[6].arg)
     if new_text != text:
         changed = True
         if write:
@@ -1305,15 +1365,15 @@ def step_policy(root: pathlib.Path, write: bool) -> bool:
 
 def final_battery_lines(final: PolicyAct) -> tuple[str, str]:
     """The status battery's two lines for the final act's recorder: its --check line and its --selftest line."""
-    return (battery_lines_v4(final.text, final.arg, final.date, final.script) if final.key in ("v4", "v5", "v6", "v7")
+    return (battery_lines_v4(final.text, final.arg, final.date, final.script) if final.key in ("v4", "v5", "v6", "v7", "v8")
             else battery_lines(final.text, final.arg, final.date, final.script))
 
 
 def evaluation_instant(final: PolicyAct) -> str:
     """The instant the read gate's test evaluates at. Version 5's owner words came at 06:17:55Z, so
     midnight of its date is before the act: from version 5 the test evaluates at the record's own
-    instant (versions 6's and 7's too); earlier versions at midnight of their date, as they were installed."""
-    return final.instant if final.key in ("v5", "v6", "v7") else f"{final.date}T00:00:00Z"
+    instant (versions 6's to 8's too); earlier versions at midnight of their date, as they were installed."""
+    return final.instant if final.key in ("v5", "v6", "v7", "v8") else f"{final.date}T00:00:00Z"
 
 
 STEPS = (("registrations", step_registrations), ("rfc5", step_rfc5), ("policy", step_policy), ("profile", step_profile),
@@ -1657,6 +1717,22 @@ def policy_selftests() -> list[tuple[str, bool]]:
         v4_live_arg = "319e404ee413220550d65644f6c93db096ed1cda431760baec70a1e190adb0bd"
         v5_live_arg = "e8a2f4f375fcf3ce1db753a5a30f77dbf961fab2115185946e8067f64ae5fe2b"
         v6_live_arg = "c44058c02c244e8460c1e33ab01f0343ed0612043d7bf53e0d36410c9f9ebfa2"
+        v7_live_arg = "626be0cadc248b9ca9b3165d51f97d39aec552eb3a97b8b7df21d2446fc233da"
+        pre8 = (live.replace(f'{V8_CHAIN_BLOCK}         "{v7_live_arg}"),\n    )\n', "", 1).replace(V8_OFFERING, "", 1)
+                .replace(V8_EXEMPTION, "", 1))
+        ok.append(("chain edits: version 8 reproduces the live install byte for byte and is idempotent on it",
+                   pre8 != live and policy_cg_v8_edits(pre8, v7_live_arg) == live
+                   and policy_cg_v8_edits(live, v7_live_arg) == live))
+        ok.append(("chain edits: an installed version-8 block quoting another argument is refused",
+                   refused(lambda: policy_cg_v8_edits(live, "e" * 64))))
+        for k, hunk in enumerate((V8_CHAIN_BLOCK, V8_OFFERING, V8_EXEMPTION)):
+            ok.append((f"chain edits: a partial version-8 install (hunk {k + 1} missing) is refused",
+                       hunk in live and refused(lambda: policy_cg_v8_edits(live.replace(hunk, "", 1), v7_live_arg))))
+        ok.append(("chain edits: version 8 without the version-7 manifest gate is refused",
+                   refused(lambda: policy_cg_v8_edits(pre8.replace(V7_MANIFEST_GATE, "):\n", 1), v7_live_arg))))
+        ok.append(("chain edits: version 8 without the version-7 install is refused",
+                   refused(lambda: policy_cg_v8_edits(pre8.replace(V7_CHAIN_ROW, "", 1), v7_live_arg))))
+        live = pre8
         pre7 = (live.replace(f'{V7_CHAIN_ROW}     "{v6_live_arg}"),\n', "", 1).replace(V7_OFFERING, "", 1)
                 .replace(V7_EXEMPTION, "", 1))
         ok.append(("chain edits: version 7 reproduces the live install byte for byte and is idempotent on it",
@@ -1687,7 +1763,7 @@ def policy_selftests() -> list[tuple[str, bool]]:
                     shutil.copyfile(ROOT / rel, scratch / rel)
                 live_clean = not step_policy(scratch, write=False)
                 (scratch / CG).write_text(pre6)
-                ok.append(("step policy: over the live inputs it has nothing to do, and with the version-6 and 7 hunks undone it would install them",
+                ok.append(("step policy: over the live inputs it has nothing to do, and with the version-6 to 8 hunks undone it would install them",
                            live_clean and step_policy(scratch, write=False)))
         base4 = base5
         if V5_CHAIN_ROW in base5:
@@ -1797,6 +1873,15 @@ def policy_selftests() -> list[tuple[str, bool]]:
     ok.append(("evaluation instant: version 5 at its record's instant, version 4 at midnight of its date",
                evaluation_instant(PolicyAct("v5", V5_ACT, "", "", "", "", "2026-11-03", "2026-11-03T06:58:26Z", V5_SCRIPT, V4_ACT, "")) == "2026-11-03T06:58:26Z"
                and evaluation_instant(PolicyAct("v4", V4_ACT, "", "", "", "", "2026-10-20", "2026-10-20T10:00:00Z", V4_SCRIPT, V3_ACT, "")) == "2026-10-20T00:00:00Z"))
+    acts_v7 = acts_v6 + [PolicyAct("v7", V7_ACT, "Chosen variant: `s`; its manifest row's digest is the exact digest above.\n",
+                                   "", "", "", "2026-11-06", "", V7_SCRIPT, V6_ACT, "")]
+    acts_v8 = acts_v7 + [PolicyAct("v8", V8_ACT, "Chosen variant: `pv`; its manifest row's digest is the exact digest above.\n",
+                                   "", "", "", "2026-11-09", "", V8_SCRIPT, V7_ACT, "")]
+    ok.append(("gate comment: version 8 names version 7's date, the chosen variant and the registry sentence",
+               gate_comment(acts_v8) == ("// The policy act is the 2026-11-09 public-source screening-scope version 8 act (variant pv), superseding the\n"
+                                         "// 2026-11-06 version-7 act. " + REGISTRY_CEILING_SENTENCE)))
+    ok.append(("evaluation instant: version 8 at its record's instant",
+               evaluation_instant(PolicyAct("v8", V8_ACT, "", "", "", "", "2026-11-09", "2026-11-09T09:27:14Z", V8_SCRIPT, V7_ACT, "")) == "2026-11-09T09:27:14Z"))
     # The live read gate follows the final act; the comment it carries is that act's, over the recorded dates.
     live6 = ROOT / V6_ACT
     if live6.is_file():
@@ -1804,7 +1889,7 @@ def policy_selftests() -> list[tuple[str, bool]]:
         live_check, live_selftest = final_battery_lines(live_acts[-1])
         status_text = (ROOT / STATUS).read_text()
         ok.append(("battery lines: the final act's recorder lines are the live status battery's",
-                   live_acts[-1].script == V7_SCRIPT and f"{V7_SCRIPT}.py --check " in live_check
+                   live_acts[-1].script == V8_SCRIPT and f"{V8_SCRIPT}.py --check " in live_check
                    and live_check in status_text and live_selftest in status_text))
         ok.append(("evaluation instant: the live read-gate test evaluates at the final act's",
                    f"const EVALUATION_INSTANT = '{evaluation_instant(live_acts[-1])}';" in (ROOT / INPUTS_TEST).read_text()))
@@ -2061,9 +2146,17 @@ def selftest() -> int:
     ok.append(("battery line carries version 6's owner words with its own recorder",
                cmd6 == f"python3 scripts/{V6_SCRIPT}.py --check {'a' * 64} --date 2026-11-05 --owner-words 'Sign it, variant p'"
                and st6 == f"python3 scripts/{V6_SCRIPT}.py --selftest"))
-    # The battery carries the final act's recorder only: version 7's, once its record exists.
+    # The battery carries the final act's recorder only: version 8's, once its record exists (version 7's before).
+    live8 = ROOT / V8_ACT
+    if live8.is_file():
+        rec8 = live8.read_text()
+        arg8 = grab(r"^Exact digest \(SHA-256\): `([0-9a-f]{64})`$", rec8, "v8 digest")
+        c, _s = battery_lines_v4(rec8, arg8, "2026-11-09", V8_SCRIPT)
+        ok.append(("battery line for the live version-8 record is the status battery's line",
+                   c in (ROOT / STATUS).read_text() and c in (ROOT / WORKFLOW).read_text()
+                   and V7_SCRIPT not in (ROOT / STATUS).read_text() + (ROOT / WORKFLOW).read_text()))
     live7 = ROOT / V7_ACT
-    if live7.is_file():
+    if live7.is_file() and not live8.is_file():
         rec7 = live7.read_text()
         arg7 = grab(r"^Exact digest \(SHA-256\): `([0-9a-f]{64})`$", rec7, "v7 digest")
         c, _s = battery_lines_v4(rec7, arg7, "2026-11-06", V7_SCRIPT)

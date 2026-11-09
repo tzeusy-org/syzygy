@@ -108,9 +108,11 @@ const stringList = (value: unknown): value is readonly string[] => Array.isArray
 
 /** The run's repository and pinned commit as the owner-placement rule compares them: `repository:<id>`, the consent subject form. */
 /** A step's screen loader: the one injected, or else the checkout's own policy in force at `now`, loaded for the placement subject the
- * step calls it with. One function for every step, so no step's own default can drop the subject. */
-export const screenLoaderOf = (injected: ScreenLoader | undefined, recordsRoot: string, now: number): ScreenLoader =>
-  injected ?? ((placement) => loadDossierScreen(recordsRoot, now, undefined, placement));
+ * step calls it with. One function for every step, so no step's own default can drop the subject. `visibilityOf`, when given, is the
+ * version-8 visibility decision `loadDossierScreen` asks (by default `pairVisibilityAt`, which reads the launch consent records). */
+export const screenLoaderOf = (injected: ScreenLoader | undefined, recordsRoot: string, now: number,
+  visibilityOf?: (subject: PlacementSubject) => Promise<VisibilityDecision>): ScreenLoader =>
+  injected ?? ((placement) => loadDossierScreen(recordsRoot, now, undefined, placement, visibilityOf));
 
 export const placementSubjectOf = (subject: { readonly repository: { readonly repositoryId: string }; readonly pinnedRevision: { readonly commit: string } }): PlacementSubject =>
   ({ repository: `repository:${subject.repository.repositoryId}`, commit: subject.pinnedRevision.commit });

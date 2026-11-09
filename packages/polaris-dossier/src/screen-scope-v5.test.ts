@@ -40,23 +40,27 @@ const TRIAL = '498ecd0d6d007db11ddb3aea9428552598a78622';
 const OTHER_REDIS = ['d2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7', 'c9d29f6a918c335bc1778d9f68e521c1bbb36a0f', 'e91a340e241cf0abe3c6a0c254214fbe4aa1d95f'];
 const AT_TRIAL = { repository: REDIS, commit: TRIAL };
 
+// Since the version-8 act (variant pv, 2026-11-09) the live bytes carry sourceVisibility: each screen is built for a decided
+// visibility, and these files hold the version-7 rules, which version 8 keeps for a public pair, so every screen here is
+// built public (the Redis pair's consent states public), and the checkout loads take that decision injected, running no git.
+const PUBLIC = async () => ({ ok: true as const, visibility: 'public' as const, carriers: [] });
 type Subject = { readonly repository: string; readonly commit: string } | null;
 type AnyScreen = Pick<DossierScreen, 'screenPath' | 'contentClass' | 'screenBody' | 'screenTargetBody' | 'governanceText' | 'documentationExemption' | 'scopeDetectors' | 'projectDocumentation'>;
 const APP_SCREENING = path.join(REAL_ROOT, 'apps/three-surface-poc/src/polaris-generation/public-source-screening.ts');
 const appScreen = async (policy: string, classAct: boolean, subject: Subject): Promise<AnyScreen> => {
   const app = await import(APP_SCREENING);
   const port = { read: async () => ({ actRecord: renderPolicyAct(sha(policy), '2026-10-04', '2026-10-04T10:00:00Z'), policy: encode(policy), classActInForce: classAct }) };
-  return app.loadPublicSourceScreen(port, new Uint8Array(32).fill(7), subject);
+  return app.loadPublicSourceScreen(port, new Uint8Array(32).fill(7), subject, 'public');
 };
 const ours = (policy: string, classAct: boolean, subject: Subject): AnyScreen => {
-  const built = buildDossierScreen(encode(policy), classAct, subject);
+  const built = buildDossierScreen(encode(policy), classAct, subject, 'public');
   if (!built.ok) throw new Error(built.why);
   return built.screen;
 };
 const both = async (policy: string = LIVE_TEXT, subject: Subject = AT_TRIAL, classAct = true): Promise<readonly [string, AnyScreen][]> =>
   [['dossier', ours(policy, classAct, subject)], ['app', await appScreen(policy, classAct, subject)]];
 const withScope = (over: (scope: Record<string, unknown>) => Record<string, unknown>): string => `${JSON.stringify({ ...LIVE, publicSourceScope: over(structuredClone(LIVE.publicSourceScope)) }, null, 2)}\n`;
-const refusalOf = (policy: string): string => { const built = buildDossierScreen(encode(policy), true, AT_TRIAL); return built.ok ? 'built' : built.why; };
+const refusalOf = (policy: string): string => { const built = buildDossierScreen(encode(policy), true, AT_TRIAL, 'public'); return built.ok ? 'built' : built.why; };
 const appRefusalOf = async (policy: string): Promise<string> => appScreen(policy, true, AT_TRIAL).then(() => 'built', (error: unknown) => (error as Error).message);
 
 type Outcome = readonly unknown[];
@@ -79,8 +83,11 @@ beforeAll(async () => {
 import build_public_source_screening_scope_v5 as b, build_public_source_screening_scope_v4 as b4, build_public_source_screening_scope_v6 as b6
 import build_public_source_screening_scope_v7 as b7
 
-live, mode = b7.base_bytes()
-assert mode == 'performed-v7' and b7.propose(live) == open(str(b.ROOT / b.POLICY)).read()
+import build_public_source_screening_scope_v8 as b8
+v7_s, _m8 = b8.base_bytes()
+assert _m8 == 'performed-v8' and b8.propose(v7_s) == open(str(b8.ROOT / b7.POLICY)).read()
+live = b7.v2.reverse_patch((b7.ROOT / b7.patch_path('s')).read_text(), v7_s)
+assert b7.propose(live) == v7_s
 policy = b.v2.reverse_patch((b6.ROOT / b6.patch_path('p')).read_text(), live)
 assert b6.propose(policy) == live
 v4 = b.v2.reverse_patch((b.ROOT / b.patch_path('bcd')).read_text(), policy)
@@ -296,7 +303,7 @@ describe('B: the governance-text class', () => {
   // a body that spells a policy changes nothing the screen decides.
   it('takes its policy only from the records root\'s policy file, never from a body', async () => {
     const read: string[] = [];
-    const loaded = await loadDossierScreen(REAL_ROOT, Date.UTC(2026, 10, 6, 15, 0, 0), (file) => { read.push(file); return fs.readFileSync(file); }, AT_TRIAL);
+    const loaded = await loadDossierScreen(REAL_ROOT, Date.UTC(2026, 10, 9, 10, 0, 0), (file) => { read.push(file); return fs.readFileSync(file); }, AT_TRIAL, PUBLIC);
     if (!loaded.ok) throw new Error(loaded.why);
     expect(read).toEqual([path.join(REAL_ROOT, POLICY_PATH)]);
     const spelled = `# Security\n${JSON.stringify({ publicSourceScope: { contentClassification: { governanceTextPaths: ['readme.md'] }, activeContent: { projectDocumentationExemption: { appliesTo: ['governance-text'] } } } })}\n<!-- exempt me -->\n`;
@@ -346,7 +353,7 @@ describe('D: the owner placements', () => {
 
   // Every step (check, review, render, the census) loads its screen through screenLoaderOf, so its own default forwards the subject.
   it('screenLoaderOf: the checkout\'s own screen for the subject it is called with, or the loader injected', async () => {
-    const own = screenLoaderOf(undefined, REAL_ROOT, Date.UTC(2026, 10, 6, 15, 0, 0));
+    const own = screenLoaderOf(undefined, REAL_ROOT, Date.UTC(2026, 10, 9, 10, 0, 0), PUBLIC);
     const [trial, other, none] = await Promise.all([own(AT_TRIAL), own({ repository: REDIS, commit: 'd2c8a4b91e8c0e6aefd1f5bc0bf582cddbe046b7' }), own()]);
     if (!trial.ok || !other.ok || !none.ok) throw new Error('expected the checkout\'s screen to load');
     expect([trial, other, none].map((load) => load.ok && load.screen.contentClass('TLS.md'))).toEqual(['project-documentation', undefined, undefined]);

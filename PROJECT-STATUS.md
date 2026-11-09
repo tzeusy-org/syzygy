@@ -466,9 +466,8 @@ python3 scripts/build_pwb_registry_machine_ceiling_amendment.py --check   # P-11
 python3 scripts/record_pwb_registry_machine_ceiling_act.py --builder-selftest   # P-114 frozen builder: actual 22 predicates in pre-install tree with v4 installed
 python3 scripts/record_pwb_registry_machine_ceiling_act.py --check   # P-114 paired version/Ask-2 act, exact registry row and aggregate block
 python3 scripts/record_pwb_registry_machine_ceiling_act.py --selftest   # P-114 recorder predicates and filesystem rollback fixtures
-python3 scripts/record_public_source_screening_scope_v7_act.py --check 626be0cadc248b9ca9b3165d51f97d39aec552eb3a97b8b7df21d2446fc233da --date 2026-11-06 --owner-words 'Sign screening scope version 7, variant s'   # screening-scope v7 policy act: record, aggregate block and applied subject
-python3 scripts/record_public_source_screening_scope_v7_act.py --selftest
-python3 scripts/record_public_source_screening_scope_v8_act.py --selftest   # screening-scope v8 recorder fixtures (its --check joins at the act)
+python3 scripts/record_public_source_screening_scope_v8_act.py --check 44153bbe210c7a724f224f2bc1c9255db43cf0887b6ad22dd24884514f21bbe8 --date 2026-11-09 --owner-words 'Sign screening scope version 8, variant pv'   # screening-scope v8 policy act: record, aggregate block and applied bytes
+python3 scripts/record_public_source_screening_scope_v8_act.py --selftest
 python3 scripts/check_polaris_response_ceiling_reading.py --check   # P-77 Q2 reading: quotes intact, compression only under the 2026-09-30 direction
 python3 scripts/check_polaris_response_ceiling_reading.py --selftest
 python3 scripts/build_contract_readability_restyle.py --check   # restyle package: manifest = exact regeneration, applied
@@ -517,7 +516,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and forty checks above are the same one hundred and forty the hosted workflow runs
+The one hundred and thirty-nine checks above are the same one hundred and thirty-nine the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

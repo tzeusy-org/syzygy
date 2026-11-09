@@ -205,10 +205,11 @@ const APP_SCREENING = path.join(REAL_ROOT, 'apps/three-surface-poc/src/polaris-g
 type AppScreen = { screenPath: (p: string) => string | undefined; screenBody: (b: string, p?: string) => string | undefined; contentClass: (p: string) => string | undefined; projectDocumentation: boolean };
 // The app's port states whether the class act is in force; `classAct` gives it the same answer the dossier's screen is built with.
 // `checkoutAppScreen` instead lets the app's own checkout port decide it from a records root at `now`, as the dossier's loader does.
-const appScreen = async (policy: string, classAct = false): Promise<AppScreen> => {
+// `visibility` is the pair's decided visibility, which a version-8 policy (sourceVisibility) needs and an earlier one ignores.
+const appScreen = async (policy: string, classAct = false, visibility?: 'public' | 'private'): Promise<AppScreen> => {
   const app = await import(APP_SCREENING);
   const port = { read: async () => ({ actRecord: renderPolicyAct(sha(policy), '2026-10-04', '2026-10-04T10:00:00Z'), policy: encode(policy), classActInForce: classAct }) };
-  return app.loadPublicSourceScreen(port, new Uint8Array(32).fill(7));
+  return app.loadPublicSourceScreen(port, new Uint8Array(32).fill(7), null, visibility);
 };
 const checkoutAppScreen = async (root: string, now: number): Promise<AppScreen> => {
   const app = await import(APP_SCREENING);
@@ -307,7 +308,11 @@ describe('the code-content exemption of screening scope version 3', () => {
 import build_public_source_screening_scope_v2 as b2, build_public_source_screening_scope_v3 as b, build_public_source_screening_scope_v4 as b4, build_public_source_screening_scope_v5 as b5
 import build_public_source_screening_scope_v6 as b6
 import build_public_source_screening_scope_v7 as b7
-v6_p, _mode = b7.base_bytes()
+import build_public_source_screening_scope_v8 as b8
+v7_s, _m8 = b8.base_bytes()
+assert _m8 == 'performed-v8' and b8.propose(v7_s) == open(str(b8.ROOT / b7.POLICY)).read()
+v6_p = b7.v2.reverse_patch((b7.ROOT / b7.patch_path('s')).read_text(), v7_s)
+assert b7.propose(v6_p) == v7_s
 v5_bcd = b2.reverse_patch((b6.ROOT / b6.patch_path('p')).read_text(), v6_p)
 v4_span = b2.reverse_patch((b5.ROOT / b5.patch_path(b6.V5_BASE_VARIANT)).read_text(), v5_bcd)
 assert b5.sha(v4_span) == b5.v4.manifest_rows(b5.ROOT)[b5.V4_BASE_VARIANT] and b5.propose(v4_span, b6.V5_BASE_VARIANT) == v5_bcd
@@ -397,7 +402,11 @@ describe('the secret redaction of screening scope version 4', () => {
   beforeAll(async () => {
     const py = `import json, sys; sys.path.insert(0, 'scripts'); import build_public_source_screening_scope_v4 as b, build_public_source_screening_scope_v5 as b5, build_public_source_screening_scope_v6 as b6, build_public_source_screening_scope_v7 as b7
 policy = open(str(b.ROOT / b.POLICY)).read()
-v6_p, _mode = b7.base_bytes()
+import build_public_source_screening_scope_v8 as b8
+v7_s, _m8 = b8.base_bytes()
+assert _m8 == 'performed-v8' and b8.propose(v7_s) == open(str(b8.ROOT / b7.POLICY)).read()
+v6_p = b7.v2.reverse_patch((b7.ROOT / b7.patch_path('s')).read_text(), v7_s)
+assert b7.propose(v6_p) == v7_s
 v5_bcd = b5.v2.reverse_patch((b6.ROOT / b6.patch_path('p')).read_text(), v6_p)
 v4 = b5.v2.reverse_patch((b5.ROOT / b5.patch_path(b6.V5_BASE_VARIANT)).read_text(), v5_bcd)
 assert b5.sha(v4) == b5.v4.manifest_rows(b5.ROOT)[b5.V4_BASE_VARIANT]
@@ -407,11 +416,12 @@ sys.stdout.write(json.dumps({'body': [{'name': n, 'body': body, 'oracle': srt(b.
   'v4Scope': json.loads(v4)[b.SCOPE_KEY]}))`;
     fixtures = JSON.parse((await execFileAsync('python3', ['-c', py], { cwd: REAL_ROOT })).stdout) as typeof fixtures;
   });
+  // Since the version-8 act the live scope redacts a public pair's bodies only (sourceVisibility), so both screens are built public.
   const both = async (scope: unknown = LIVE.publicSourceScope): Promise<readonly [TargetScreen, TargetScreen]> => {
     const policy = policyOf(scope);
-    const ours = buildDossierScreen(encode(policy), true);
+    const ours = buildDossierScreen(encode(policy), true, null, 'public');
     if (!ours.ok) throw new Error(ours.why);
-    return [ours.screen, (await appScreen(policy, true)) as unknown as TargetScreen];
+    return [ours.screen, (await appScreen(policy, true, 'public')) as unknown as TargetScreen];
   };
   const withheldOf = (got: { kind: string; withheld?: readonly number[] }): readonly number[] | null => (got.kind === 'redacted' ? got.withheld! : got.kind === 'admitted' ? [] : null);
 

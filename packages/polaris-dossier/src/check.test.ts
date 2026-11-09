@@ -490,15 +490,18 @@ describe('check: each rule refuses its own violation', () => {
 
 // P-110 (syzygy-3sjj): a body screening retains as redacted-span (policy version 4). The fixture policy carries the live secretRedaction
 // with code-content as its redacted class (and, since version 5, the scope detectors its wholeArtifactDetectors names), so src/config.c (a password on line 1) is retained with lines 1 and 2 withheld.
+// Since version 8 the live appliesTo names a public pair (sourceVisibility), so the fixture carries the live sourceVisibility and is
+// built for a public pair.
 describe('check: a quotation from a body retained as redacted-span', () => {
   const REDACTING = buildDossierScreen(new TextEncoder().encode(JSON.stringify({
     policyId: 'fixture-public-source', policyVersion: '4', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
     publicSourceScope: {
       contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.c', '.h', '.ts', '.txt'] }] },
       scopeDetectors: LIVE_POLICY.publicSourceScope.scopeDetectors,
+      sourceVisibility: LIVE_POLICY.publicSourceScope.sourceVisibility,
       secretRedaction: { ...LIVE_POLICY.publicSourceScope.secretRedaction, redactedClasses: ['code-content'] },
     },
-  })));
+  })), false, null, 'public');
   const withQuote = async (quote: string, lineNo: number, file = 'src/config.c') => {
     const run = await briefedRun();
     writeDraft(run, mutate((d) => {
