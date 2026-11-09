@@ -112,4 +112,31 @@ describe('reader advice: the counted standards', () => {
     'Node.js and Deno', 'Next.js rendering', 'Why PostgreSQL', 'GitHub Actions', 'The iPhone client', 'gRPC transport', 'Read/write paths',
     'I/O scheduling', 'TCP/IP', 'Builds for macOS', 'Why JavaScript',
   ])('leaves the proper name or prose pair in %j alone', (title) => { expect(codeSymbolInTitle(title)).toBeUndefined(); });
+
+  // syzygy-pdja.25 (R-PDJA-P3-NOTES-1 finding 1): the four classes of real code symbols the pdja.18 narrowing stopped flagging, each
+  // flagged again where a named list tells it from a product name or a prose pair, and the names each list keeps unflagged.
+  it.each([
+    ['Inside RedisModule', 'it holds a PascalCase identifier'], ['How HttpServer accepts', 'it holds a PascalCase identifier'],
+    ['The EventLoop', 'it holds a PascalCase identifier'], ['What ClientState holds', 'it holds a PascalCase identifier'],
+    ['A ByteBuffer grows', 'it holds a PascalCase identifier'], ['Where GitHub calls WebhookHandler', 'it holds a PascalCase identifier'],
+  ])('flags the two-part PascalCase type in %j: %s', (title, why) => { expect(codeSymbolInTitle(title)).toBe(why); });
+  it.each(['GitHub Actions', 'Why JavaScript', 'TypeScript types', 'The YouTube embed', 'Builds on GitLab', 'WebSocket transport', 'What McCarthy proposed', 'Why PostgreSQL'])(
+    'leaves the listed product or surname in %j alone', (title) => { expect(codeSymbolInTitle(title)).toBeUndefined(); });
+
+  it.each([['Inside src/server', 'it names a path'], ['How net/http serves', 'it names a path'], ['What lib/utils offers', 'it names a path']])(
+    'flags the single-slash source path in %j: %s', (title, why) => { expect(codeSymbolInTitle(title)).toBe(why); });
+  it.each(['Read/write paths', 'I/O scheduling', 'TCP/IP', 'The client/server split', 'Input/output and/or errors'])(
+    'leaves the prose pair in %j alone', (title) => { expect(codeSymbolInTitle(title)).toBeUndefined(); });
+
+  it.each([['Inside App.js', 'it names a file'], ['What Server.js starts', 'it names a file'], ['The Index.js entry', 'it names a file'], ['The UserList.js view', 'it names a file']])(
+    'flags the capitalised .js file in %j: %s', (title, why) => { expect(codeSymbolInTitle(title)).toBe(why); });
+  it.each(['Node.js and Deno', 'Next.js rendering', 'Charts with d3.js', 'Scenes in three.js', 'Vue.js components'])(
+    'leaves the JavaScript project name in %j alone', (title) => { expect(codeSymbolInTitle(title)).toBeUndefined(); });
+
+  it.each([
+    ['What parseURL accepts', 'it holds a camelCase identifier'], ['Why toJSON exists', 'it holds a camelCase identifier'],
+    ['Where getID reads', 'it holds a camelCase identifier'], ['Setting innerHTML', 'it holds a camelCase identifier'],
+  ])('flags the camelCase identifier ending in an initialism in %j: %s', (title, why) => { expect(codeSymbolInTitle(title)).toBe(why); });
+  it.each(['Builds for macOS', 'Running on tvOS and watchOS', 'Packages for openSUSE', 'The iOS client', 'gRPC transport'])(
+    'leaves the product name in %j alone', (title) => { expect(codeSymbolInTitle(title)).toBeUndefined(); });
 });
