@@ -16,7 +16,7 @@ This is a plain owner direction in the sense of `PROCESS-GLOSSARY.md`.
 
 Before each third round, the coordinating session set a stopping rule (CC-REV-4: "Two failed review rounds signal upstream ambiguity"). If the third round was not `CONFIRM`, or `CONFIRM WITH EXCEPTIONS` with notes only, no further round would be dispatched and the owner would decide. The rule is recorded in the comments of `syzygy-pdja.26` and `syzygy-pdja.21`. Both third rounds returned `REVISE`:
 - `docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-6-3-RAW.md`
-- `docs/reviews/R-SCREENING-V8-IMPL-B-3-RAW.md`
+- R-SCREENING-V8-IMPL-B-3-RAW.md, retained under docs/reviews on PR #807's branch
 
 ## The owner's words
 
