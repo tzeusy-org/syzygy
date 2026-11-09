@@ -13,14 +13,14 @@
 | Requirement | Effect |
 |---|---|
 | REQ-polaris-generation-046 | The pre-answer read list names the launch reads of references, configuration and Git-directory files, as 047's closed list does, apart from the object reads. The question states the agent sessions' reach in a full clone and that objects may be rebuilt from delta bases outside the pinned tree; the launch observation consent's recorded scope carries the same allowance. The run record and pages state the history reach. The identity derivation keeps its v1.1 bytes: last two segments, every host, `https`, `http`, `ssh`, `git` and scp-form remotes. One sentence group says it applies to every host and adds a two-segment floor. The residuals now name the cross-host and cross-group share. Two paragraphs are added: locator forms (operator-given `https`, `http`, `git`, `ssh` and scp, as v1.1 normalises them, without credentials; remote locators in the same forms once their user information is removed; no URL that fails either rule printed, stored or recorded; an observation consent made by another act matching by its whole normalised `Upstream:` URL, in addition to every v1.1 match) and visibility for every host. Ten scenarios are added; the case, oracle and falsifier are extended; one `warrants.decisions` entry is added |
-| REQ-polaris-generation-047 | The trunk rule is made exact for remote-tracking references and several remotes, and `--revision` resolution for annotated tags and abbreviations. The HEAD paragraph admits a detached HEAD and warns about the checkout. One paragraph group is added: the clone forms a launch-consented run accepts; the closed list of what Syzygy reads in them, with the object reads under REQ-033's rule and the launch reads named apart; the delta-base statement in the launch output, run record and pages; the reftable refusal; missing objects; the working-tree disclosure; the history instruction in every brief and packet issued to an agent session. Nine scenarios are added; the case, observable, oracle independence and falsifier are extended; one `warrants.decisions` entry is added |
+| REQ-polaris-generation-047 | The consented-HEAD branch's "changes nothing else" is narrowed to the pin, so the rules below bind every launch-consented run, a repeat run included, and no other run; a consent of another act that states the clone's form binds every run relying on it. The trunk rule is made exact for remote-tracking references and several remotes, and `--revision` resolution for annotated tags and abbreviations. The HEAD paragraph admits a detached HEAD and warns about the checkout. One paragraph group is added: the clone forms a launch-consented run accepts; the closed list of what Syzygy reads in them, with the object reads under REQ-033's rule and the launch reads named apart; the delta-base statement in the launch output, run record and pages; the `--revision` type read; the reftable refusal; missing objects; the working-tree disclosure; the history instruction in every brief and packet issued to an agent session. Ten scenarios are added; the case, observable, oracle independence and falsifier are extended; one `warrants.decisions` entry is added |
 | REQ-polaris-generation-001, 025, 033 to 036, 040 | Bytes unchanged. 033's object-read, re-hash and refusal rules are read, never displaced: a full clone's content reads are the same object reads, and the launch reads 046 and 047 name read no content |
 
-[Observed] Nineteen scenarios are added, ten to 046 and nine to 047. The
-change's spec goes from 28 `#### Scenario:` headings to 47, counted by
+[Observed] Twenty scenarios are added, ten to 046 and ten to 047. The
+change's spec goes from 28 `#### Scenario:` headings to 48, counted by
 `grep -c` over the installed and the patched bytes on 2026-11-09.
 `PROJECT-STATUS.md`'s effective-composition figure is 38 requirements and
-302 scenarios today (`status_figure()`), so 321 after install [Inferred:
+302 scenarios today (`status_figure()`), so 322 after install [Inferred:
 computed, not yet recounted with the patch applied]. It is recounted by
 `apply()` at install, and `check_spec_reconciliation.py
 --regenerate` follows.
@@ -103,7 +103,9 @@ It is not patched here.
   - Its `readAuthority` is read as admitting a delta base read solely to
     rebuild an in-scope packed object, as the owner allowed, and its "no
     ref ... repository-local configuration" as scoped to the adapter's
-    object reads, not to the launch reads.
+    object reads, not to the launch reads. The `--revision` type read
+    (round 2 finding 3) touches one object outside the entry's list, its
+    header only, to refuse it; that reading goes to the owner too.
   - If the owner or a reviewer rejects a reading, the entry needs an
     owner-signed successor version first. The round-1 reviewer took the
     same readings and left the choice to the owner (finding 4).

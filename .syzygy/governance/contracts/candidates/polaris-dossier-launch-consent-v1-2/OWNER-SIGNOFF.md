@@ -1,7 +1,8 @@
 # Owner sign-off — Polaris dossier launch consent, version 1.2
 
-> **Candidate — binds nothing.** [Observed] Round 1 of review returned
-> `REVISE`; these bytes are the repair, and no review has read them yet. This
+> **Candidate — binds nothing.** [Observed] Rounds 1 and 2 of review
+> returned `REVISE`; these bytes are the round-2 repair, and no review has
+> read them yet. This
 > page may be offered only after a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS`
 > with notes only, over them. The install tooling is
 > `scripts/build_polaris_dossier_launch_consent_v1_2.py`. Nothing here records
@@ -71,7 +72,11 @@ reading no one has asked you about.
   - The question names those records before you answer. Consents for
     specific commits never carry across.
 - **Your agents can see history** (your ruling 2).
-  - Syzygy reads none of it, but the agent sessions can read everything in a
+  - Syzygy reads none of it as content. Beyond the pinned commit it reads
+    only reference names and values, the stored object names, the remote
+    lines of the configuration, the Git-directory files, the type of an
+    object a `--revision` names, and delta-base bytes unpacked only to
+    rebuild the pinned tree. The agent sessions can read everything in a
     full clone.
   - You chose disclosure over the recommended pinned-tree copy. The question,
     the run record and the pages say so, and every brief and review packet
@@ -82,7 +87,8 @@ reading no one has asked you about.
   `git status` for you to run.
 
 The redis consent, which says its clone holds one commit alone, keeps that
-rule for runs made under it.
+rule for every run made under it, including one that also records a
+launch statement.
 
 ## Before you sign
 
@@ -111,6 +117,9 @@ rule for runs made under it.
    configuration is read. This version, and the reviewer, read the first as
    allowing a packed object's delta base to be unpacked to rebuild it, and
    the second as covering Syzygy's object reads, not the launch's reference
-   and configuration reads. If you read the entry more narrowly, it needs a
+   and configuration reads. One more read lies outside the entry's list:
+   when `--revision` names something that is not a commit, such as an
+   annotated tag, Syzygy reads that one object's type, from its header
+   only, to refuse it. If you read the entry more narrowly, it needs a
    signed successor before this version can be used; if you agree, you may
    still want a later registry version to say so in words.

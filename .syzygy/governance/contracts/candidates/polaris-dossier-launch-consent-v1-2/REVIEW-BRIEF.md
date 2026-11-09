@@ -1,8 +1,9 @@
-# Review brief — Polaris dossier launch-time consent, version 1.2, round 2
+# Review brief — Polaris dossier launch-time consent, version 1.2, round 3
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
-> verdict. Round 1 returned `REVISE`; this brief is for round 2. The
+> verdict. Rounds 1 and 2 returned `REVISE`; this brief is for round 3,
+> the last before the stopping rule sends the package to the owner. The
 > stopping rule, set before round 1, is unchanged:
 >
 > - at most three rounds;
@@ -26,9 +27,12 @@ allowed; delete them afterwards.
 
 - `proposed/spec.md.patch` (the subject);
 - `SEMANTIC-DELTA.md`, `IMPACT-LEDGER.md`, `OWNER-SIGNOFF.md`,
-  `PROPOSED-SUBJECTS.json`, `ROUND-1-DISPOSITIONS.md` and this brief;
-- the round-1 raw, `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md`,
-  whose findings the dispositions answer;
+  `PROPOSED-SUBJECTS.json`, `ROUND-1-DISPOSITIONS.md`,
+  `ROUND-2-DISPOSITIONS.md` and this brief;
+- the round-1 and round-2 raws,
+  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md` and
+  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-2-RAW.md`, whose findings
+  the dispositions answer;
 - the builder `scripts/build_polaris_dossier_launch_consent_v1_2.py`;
 - the peel-and-delegate change to
   `scripts/build_polaris_dossier_launch_consent_v1_1.py`;
@@ -162,6 +166,14 @@ Each is a yes/no question with the evidence that settles it.
     of `ROUND-1-DISPOSITIONS.md`, is the quoted clause in the post-apply
     bytes, and does it do what the section says? Is each carried or
     declined note given a reason?
+15. **Does each round-2 disposition hold, and does it open no new gap?**
+    For each of the six sections of `ROUND-2-DISPOSITIONS.md`, is the
+    quoted clause in the post-apply bytes? Do REQ-046's pre-answer list,
+    REQ-047's closed list, both falsifiers, the scenarios and the
+    question's statement of what Syzygy reads beyond the pinned tree
+    name the same reads? Do the clone-form, read and statement rules
+    bind every launch-consented run, a repeat run at a consented HEAD
+    included, and no other run?
 
 ## Output
 

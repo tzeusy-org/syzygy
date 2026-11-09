@@ -10,7 +10,9 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md:4`), over `bec95fd4`, the first review of package `polaris-dossier-launch-consent` v1.2 (existing full clones and any https or ssh locator, owner direction `OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09`). It has three revise findings and nine notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-1-DISPOSITIONS.md`; the repaired bytes await a second round.
+`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-2-RAW.md:4`), over `82399c9b`, the second review of package `polaris-dossier-launch-consent` v1.2 (existing full clones and any https or ssh locator, owner direction `OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09`). It has three revise findings and three editorial notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-2-DISPOSITIONS.md`; the repaired bytes await round 3, the last before the stopping rule sends the package to the owner.
+
+Round 1 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md:4`), over `bec95fd4`: three revise findings and nine notes, disposed in `ROUND-1-DISPOSITIONS.md`.
 
 Version 1.1's review was `CONFIRM WITH EXCEPTIONS` (`R-POLARIS-LAUNCH-CONSENT-V1-1-1-RAW.md:4`), over `8ee0eec0`, the first review of package `polaris-dossier-launch-consent` v1.1 (the name-on-branch warning, owner answer `syzygy-pdja.23-confidence` C). It has six notes and none requires a change, so v1.1 may be offered for sign-off. The notes are carried unrepaired in `polaris-dossier-launch-consent-v1-1/ROUND-1-DISPOSITIONS.md`.
 

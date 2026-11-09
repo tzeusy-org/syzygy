@@ -4,7 +4,9 @@
 > `bec95fd4` and the post-apply digest its head names, and returned `REVISE`
 > (line 4): three revise findings and nine notes. This page says how each
 > was disposed. Every quotation below is copied by script from the
-> post-apply spec of this commit; the line numbers are that file's.
+> post-apply spec of commit `82399c9b`, which round 2 read; the line numbers
+> are that file's. Round 2's repairs (`ROUND-2-DISPOSITIONS.md`) changed some
+> of these clauses since.
 > Nothing here is a review or a verdict on the repairs; a fresh round
 > decides that.
 
