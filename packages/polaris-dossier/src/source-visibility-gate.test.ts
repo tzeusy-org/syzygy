@@ -49,13 +49,22 @@ describe('pairVisibilityAt', () => {
   it('reads the pair with the two named forms injected', async () => {
     expect(await decide(store(launch('L1', 'public')), acts(), PAIR, [REQUESTS_FORM, REDIS_FORM])).toMatchObject({ ok: true, visibility: 'public' });
   });
-  it.each(['2026-13-01T00:00:00Z', '2026-02-30T25:00:00Z', 'not an instant'])('refuses every read when a pair\'s grant instant does not parse (%s), never drops the record', async instant => {
+  // Each is refused although `Date.parse` reads the last three: a 31 November, a 30 February at a valid hour, and an hour 24 roll over.
+  it.each(['2026-13-01T00:00:00Z', '2026-02-30T25:00:00Z', 'not an instant', '2026-11-31T00:00:00Z', '2026-02-30T10:00:00Z', '2026-11-09T24:00:00Z'])('refuses every read when a pair\'s grant instant is not a real calendar instant (%s), never drops the record', async instant => {
     expect(await decide(store(launch('L1', 'public'), launch('L2', 'not-public', { grantInstant: instant })), acts())).toEqual({ ok: false,
       why: `the launch consent record L2.md has a grant instant that cannot be read (${instant}), so its effectiveness is unknown, it could be a record of any pair, and every read is refused until it is read or revoked` });
   });
   it('refuses a read of one pair while another pair\'s observation record has an unreadable grant instant, naming its file', async () => {
     expect(await decide(store(launch('L1', 'public'), launch('L9', 'public', { identity: 'repository:other', grantInstant: '2026-13-01T00:00:00Z' })), acts('PUBLIC-OBS-X@1'))).toEqual({ ok: false,
       why: 'the launch consent record L9.md has a grant instant that cannot be read (2026-13-01T00:00:00Z), so its effectiveness is unknown, it could be a record of any pair, and every read is refused until it is read or revoked' });
+  });
+  it('refuses a read of one pair while another pair\'s record names a rolled-over date (31 November), naming its file', async () => {
+    expect(await decide(store(launch('L1', 'public'), launch('L9', 'not-public', { identity: 'repository:other', grantInstant: '2026-11-31T00:00:00Z' })), acts('PUBLIC-OBS-X@1'))).toEqual({ ok: false,
+      why: 'the launch consent record L9.md has a grant instant that cannot be read (2026-11-31T00:00:00Z), so its effectiveness is unknown, it could be a record of any pair, and every read is refused until it is read or revoked' });
+  });
+  it('reads a real instant, the last second of a month included', async () => {
+    expect(await decide(store(launch('L1', 'public', { grantInstant: '2026-02-28T23:59:59Z' }), launch('L2', 'public', { grantInstant: '2024-02-29T00:00:00Z' })), acts()))
+      .toMatchObject({ ok: true, visibility: 'public' });
   });
   it('ignores an unreadable grant instant on a revoked record or on a record that is not an observation record', async () => {
     const bad = { identity: 'repository:other', grantInstant: '2026-13-01T00:00:00Z' };

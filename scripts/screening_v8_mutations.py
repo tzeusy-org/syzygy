@@ -29,6 +29,7 @@ APP_TEST = f"{APP}/public-source-screening.test.ts"
 TRIGGER_TEST = f"{APP}/dossier-trigger.test.ts"
 CLONE_TEST = f"{DOSSIER}/polaris-clone.test.ts"
 PATCH_TEST = "packages/test-kit/src/unified-patch.test.ts"
+RECORD_TEST = f"{DOSSIER}/launch-record.test.ts"
 
 MUTANTS = [
     ("visibility: admitted pinned", f"{CORE}/source-visibility.ts", "if (!exactly(sv['admitted'], ['public', 'private'])) return", "if (false) return", VIS_TEST),
@@ -69,9 +70,13 @@ MUTANTS = [
     ("trigger: a private pair is not fetched", f"{APP}/dossier-trigger.ts", "  if (decision.visibility !== 'public') return", "  if (false) return", TRIGGER_TEST),
     ("trigger: no decision port fetches nothing", f"{APP}/dossier-trigger.ts", "  if (ports.visibility === undefined) return", "  if (false) return", TRIGGER_TEST),
     # Round 2 (docs/reviews/R-SCREENING-V8-IMPL-B-2-RAW.md) and its repairs.
-    ("gate: an unreadable grant instant of any pair refuses", f"{DOSSIER}/source-visibility-gate.ts", "observations.find(r => Number.isNaN", "observations.filter(r => r.record.identity === subject.repository).find(r => Number.isNaN", GATE_TEST),
+    ("gate: an unreadable grant instant of any pair refuses", f"{DOSSIER}/source-visibility-gate.ts", "observations.find(r => !instantIsReadable", "observations.filter(r => r.record.identity === subject.repository).find(r => !instantIsReadable", GATE_TEST),
     ("supervisor: reuse only a clone at the commit", f"{DOSSIER}/polaris.ts", "head.status === 0 && head.stdout.trim() === chosen.commit", "head.status === 0", CLONE_TEST),
     ("test-kit: a hunk past the end copies only the text's lines", "packages/test-kit/src/unified-patch.ts", "k < Math.min(start, lines.length)", "k < start", PATCH_TEST),
+    # Round 3 (docs/reviews/R-SCREENING-V8-IMPL-B-3-RAW.md) and its repairs.
+    ("gate: a grant instant must name a real calendar instant", f"{DOSSIER}/source-visibility-gate.ts", "observations.find(r => !instantIsReadable(r.record.grantInstant));", "observations.find(r => Number.isNaN(Date.parse(r.record.grantInstant)));", GATE_TEST),
+    ("record: an instant reads only as the instant it names", f"{DOSSIER}/launch-record.ts", " && new Date(ms).toISOString() === `${text.slice(0, -1)}.000Z`;", ";", RECORD_TEST),
+    ("record: the parser refuses a rolled-over instant", f"{DOSSIER}/launch-record.ts", "  if (!instantIsReadable(grantInstant)) return", "  if (false) return", RECORD_TEST),
     ("screen: a version-8 screen with no visibility is private", f"{DOSSIER}/screen.ts", "given ?? (visibilityRead.declared ? 'private' : 'public')", "given ?? 'public'", SCREEN_TEST),
 ]
 

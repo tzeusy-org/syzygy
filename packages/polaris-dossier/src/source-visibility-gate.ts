@@ -1,5 +1,6 @@
 import { ADMISSION_ACT_FORMS, DECISIONS_DIR, createPackageAdmissionReader, inForceRecords } from '@syzygy/polaris-generation-consent/live';
 import { pairVisibility, PUBLIC_BY_FORM_ACTS, type SourceVisibility, type VisibilityCarrier } from '@syzygy/polaris-generation-core/live';
+import { instantIsReadable } from './launch-record.js';
 import { readLaunchRecords, type StoreRead } from './launch-store.js';
 
 /** A pair's visibility at a commit (public-source screening scope version 8, `sourceVisibility.rule`), from every effective observation
@@ -58,11 +59,11 @@ export async function pairVisibilityAt(subject: { readonly repository: string; r
     return { ok: false, why: `an observation consent act record cannot be read, so every read is refused: ${cause instanceof Error ? cause.message : 'unreadable'}` };
   }
   const observations = store.records.filter(r => r.state === 'active' && r.record.recordClass === 'observation-consent');
-  // An observation record whose effectiveness cannot be read (a grant instant that does not parse: the record grammar admits a month
-  // 13) could be a record of any pair, so every read is refused while it exists, whatever its pair, with its file named. The held text
+  // An observation record whose effectiveness cannot be read (a grant instant that is not a real calendar instant: the record grammar
+  // admits a month 13, a 31 November or an hour 24, and `Date.parse` rolls the last two over) could be a record of any pair, so every read is refused while it exists, whatever its pair, with its file named. The held text
   // (SEMANTIC-DELTA.md, edit 2) chose this availability cost: never drop such a record. A record whose kind or pair cannot be read never
   // reaches here: the store reader refuses the whole store for it, which refuses every read above.
-  const unparsed = observations.find(r => Number.isNaN(Date.parse(r.record.grantInstant)));
+  const unparsed = observations.find(r => !instantIsReadable(r.record.grantInstant));
   if (unparsed !== undefined) return { ok: false, why: `the launch consent record ${unparsed.file} has a grant instant that cannot be read (${unparsed.record.grantInstant}), so its effectiveness is unknown, it could be a record of any pair, and every read is refused until it is read or revoked` };
   const pairs = observations.filter(r => r.record.identity === subject.repository);
   const launched = pairs.filter(r => Date.parse(r.record.grantInstant) <= options.now);
