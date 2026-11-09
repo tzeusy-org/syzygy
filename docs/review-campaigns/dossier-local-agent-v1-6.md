@@ -16,7 +16,7 @@ Round 4 `CONFIRM WITH EXCEPTIONS` (`R-DOSSIER-LOCAL-AGENT-V1-6-4-RAW.md:4`) over
 
 Earlier rounds:
 - Round 3 `REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-6-3-RAW.md:4`) over `a3d3f326`;
-- Round 2 `REVISE` (`-2-RAW.md:4`) over `a4a181d5`;
-- Round 1 `REVISE` (`-1-RAW.md:4`) over `701b7d74`.
+- Round 2 `REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-6-2-RAW.md:4`) over `a4a181d5`;
+- Round 1 `REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-6-1-RAW.md:4`) over `701b7d74`.
 
 Each earlier round is dispositioned in the package's `ROUND-N-DISPOSITIONS.md`. Not signed off.
