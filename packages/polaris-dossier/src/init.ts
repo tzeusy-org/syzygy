@@ -11,6 +11,8 @@ import { parseRunConfig, type RunConfigRefusal } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { createRunDirectory, stateRootViolation, type RunPorts } from './state-directory.js';
 import { isoOf } from './iso-of.js';
+import { launchConsent, pinStatement, type LaunchOutcome, type LaunchPorts, type LaunchRefusal } from './launch.js';
+import { withLaunchRecords } from './launch-sources.js';
 
 /** `syzygy dossier init <clone> --url <url> --config <run.json> --state-root <dir>` (REQ-polaris-generation-033, 036).
  *
@@ -23,7 +25,7 @@ import { isoOf } from './iso-of.js';
  * under the state root, never inside or around the clone, and holds only `run.json`, which records the clone's real path as the one
  * location every later step reads objects from. */
 
-export type InitStage = 'url' | 'config' | 'state-root' | 'repository' | 'start-gates' | 'head' | 'revision' | 'clone-shape' | 'listing' | 'statement' | 'write';
+export type InitStage = 'launch' | 'url' | 'config' | 'state-root' | 'repository' | 'start-gates' | 'head' | 'revision' | 'clone-shape' | 'listing' | 'statement' | 'write';
 
 export interface InitRefusal {
   readonly command: 'init';
@@ -35,6 +37,8 @@ export interface InitRefusal {
   readonly consentedRevisions?: readonly { readonly label: string; readonly commit: string }[];
   readonly objectRead?: ReturnType<GitObjectReadRefusal['toJSON']>;
   readonly governed?: GovernedDecision;
+  /** A launch refusal (REQ-polaris-generation-046, 047): what is missing and the command the operator runs next. */
+  readonly launch?: LaunchRefusal;
   /** Whether any repository object was read before the refusal (the path listing, by object identifier). */
   readonly objectsRead: boolean;
   readonly disclosures: readonly string[];
@@ -55,7 +59,14 @@ export type InitResult = Outcome<InitReport, InitRefusal>;
 
 export interface InitRequest {
   readonly clone: string;
-  readonly url: string;
+  /** The repository URL that finds an observation consent made by another act. Absent, or naming no consent for the clone's HEAD, the
+   * run is a launch (REQ-polaris-generation-046) where the launch port is given. */
+  readonly url?: string;
+  readonly revision?: string;
+  readonly identity?: string;
+  readonly upstream?: string;
+  /** The command line the operator ran, which a launch refusal names. */
+  readonly command?: string;
   readonly configText: string;
   readonly stateRoot: string;
 }
@@ -65,6 +76,9 @@ export interface InitPorts extends RunPorts {
   readonly now: () => number;
   /** The object reader; the default is the re-hashing in-process reader. Injected only to observe that no read precedes the gates. */
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
+  /** The launch's ports (terminal, governance home, write consent). Absent, `init` takes the observation consent another act made only,
+   * as before launch consent existed. */
+  readonly launch?: Omit<LaunchPorts, 'sources' | 'now' | 'openReader'>;
 }
 
 const DISCLOSURES = [
@@ -79,22 +93,69 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
   const refuse = (stage: InitStage, reason: string, extra: Partial<InitRefusal> = {}): InitResult =>
     ({ ok: false, refusal: { command: 'init', outcome: 'refused', stage, reason, ...extra, objectsRead, disclosures: DISCLOSURES } });
 
-  const url = dossierRepositoryUrl(request.url);
-  if (!url.ok) return refuse('url', url.reason);
+  if (request.url !== undefined) {
+    const given = dossierRepositoryUrl(request.url);
+    if (!given.ok) return refuse('url', given.reason);
+  }
   const config = parseRunConfig(request.configText);
   if (!config.ok) return refuse('config', 'the run configuration is refused; there is no default', { refusals: config.refusals });
   const violation = stateRootViolation(request.stateRoot, request.clone);
   if (violation !== null) return refuse('state-root', violation);
 
-  const ids = await ports.sources.repositoryIdsFor(url.url);
+  let sources = ports.sources;
+  let launched: Exclude<LaunchOutcome, { kind: 'refused' } | { kind: 'head-consented' }> | null = null;
+  let urlText = request.url;
+  // REQ-polaris-generation-047's first branch: no --revision, and an observation consent another act made names the clone's HEAD.
+  let headConsentedElsewhere = false;
+  if (urlText !== undefined && request.revision === undefined) {
+    const parsed = dossierRepositoryUrl(urlText);
+    if (!parsed.ok) return refuse('url', parsed.reason);
+    const ids = await sources.repositoryIdsFor(parsed.url);
+    const head = resolveCloneHead(request.clone);
+    headConsentedElsewhere = ids.length === 1 && head.ok && (await sources.observationConsentFor(ids[0]!, head.commit)).satisfied;
+  }
+  if (!headConsentedElsewhere && ports.launch !== undefined) {
+    const startGates = await Promise.all([sources.registryEntry(), sources.screeningPolicy()]);
+    if (startGates[0].state !== 'ok' || startGates[1].state !== 'ok') {
+      const [registryEntry, screeningPolicy] = startGates;
+      const why = [registryEntry.state === 'ok' ? null : `source-acquisition registry entry: ${registryEntry.why}`,
+        screeningPolicy.state === 'ok' ? null : `classification and screening policy: ${screeningPolicy.why}`].filter((w): w is string => w !== null);
+      return refuse('start-gates', `a start gate is not in force: ${why.join('; ')}`, { startGates: { registryEntry, screeningPolicy } });
+    }
+    const outcome = await launchConsent({
+      clone: request.clone, ...(request.revision === undefined ? {} : { revision: request.revision }),
+      ...(request.identity === undefined ? {} : { identity: request.identity }), ...(request.upstream === undefined ? {} : { upstream: request.upstream }),
+      agentTool: config.config.agentTool, agentProvider: config.config.agentProvider, operator: config.config.operator,
+      headConsentedElsewhere: false, command: request.command ?? 'syzygy dossier init <clone> --config <run.json> --state-root <dir>',
+    }, { ...ports.launch, sources, now: ports.now, ...(ports.openReader === undefined ? {} : { openReader: ports.openReader }) });
+    if (outcome.kind === 'refused') {
+      objectsRead = outcome.refusal.stage !== 'clone' && outcome.refusal.stage !== 'self-observation' && outcome.refusal.stage !== 'records' && outcome.refusal.stage !== 'revision' && outcome.refusal.stage !== 'head';
+      return refuse('launch', outcome.refusal.reason, { launch: outcome.refusal });
+    }
+    if (outcome.kind !== 'head-consented') {
+      launched = outcome;
+      const https = dossierRepositoryUrl(`https://${outcome.subject.url}`);
+      if (!https.ok) return refuse('url', `the launch recorded ${outcome.subject.url}, but a run record carries a public https://github.com/<owner>/<repo> URL only: ${https.reason}`);
+      urlText = https.url;
+      sources = withLaunchRecords(ports.sources, { home: ports.launch.home, now: ports.now });
+    }
+  }
+  if (urlText === undefined) return refuse('url', 'no --url names an observation consent made by another act, and no launch is possible here');
+  const url = dossierRepositoryUrl(urlText);
+  if (!url.ok) return refuse('url', url.reason);
+
+  const ids = await sources.repositoryIdsFor(url.url);
   if (ids.length !== 1) {
     return refuse('repository', ids.length === 0
-      ? `no observation consent in force names ${url.url} as its Upstream${ports.sources.consentAbsenceFor === undefined ? '' : `: ${await ports.sources.consentAbsenceFor(url.url)}`}`
+      ? `no observation consent in force names ${url.url} as its Upstream${sources.consentAbsenceFor === undefined ? '' : `: ${await sources.consentAbsenceFor(url.url)}`}`
       : `${ids.length} observation consents in force name ${url.url} (${ids.join(', ')}); which one governs is ambiguous`);
   }
   const repositoryId = ids[0]!;
+  if (launched !== null && repositoryId !== launched.subject.identity.slice('repository:'.length)) {
+    return refuse('repository', `the launch declared ${launched.subject.identity}, but the consent in force for ${url.url} names repository:${repositoryId}`);
+  }
 
-  const [registryEntry, screeningPolicy] = await Promise.all([ports.sources.registryEntry(), ports.sources.screeningPolicy()]);
+  const [registryEntry, screeningPolicy] = await Promise.all([sources.registryEntry(), sources.screeningPolicy()]);
   if (registryEntry.state !== 'ok' || screeningPolicy.state !== 'ok') {
     const why = [registryEntry.state === 'ok' ? null : `source-acquisition registry entry: ${registryEntry.why}`,
       screeningPolicy.state === 'ok' ? null : `classification and screening policy: ${screeningPolicy.why}`].filter((w): w is string => w !== null);
@@ -107,8 +168,8 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
   try { clonePath = fs.realpathSync(path.resolve(request.clone)); } catch (cause) {
     return refuse('head', `the clone's real path cannot be resolved (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})`);
   }
-  const revisions = (await ports.sources.consentedRevisionsFor(repositoryId)).map(r => ({ label: r.label, commit: r.commitId }));
-  const consent = await ports.sources.observationConsentFor(repositoryId, head.commit);
+  const revisions = (await sources.consentedRevisionsFor(repositoryId)).map(r => ({ label: r.label, commit: r.commitId }));
+  const consent = await sources.observationConsentFor(repositoryId, head.commit);
   const pinned = revisions.find(r => r.commit === head.commit);
   if (!consent.satisfied || pinned === undefined) {
     return refuse('revision', `the clone's HEAD ${head.commit} (${head.via}) is not a revision the in-force observation consent for ${repositoryId} names${consent.satisfied ? '' : `: ${consent.why}`}`, { consentedRevisions: revisions });
@@ -129,10 +190,10 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
     throw cause;
   }
 
-  const governed = governedSubject(await ports.sources.projectInput.drawerFor(repositoryId), paths);
+  const governed = governedSubject(await sources.projectInput.drawerFor(repositoryId), paths);
   let providerStatement: string | null = null;
   if (governed.statementRequired) {
-    const statement = providerStatementGate(await ports.sources.providerStatements.statementsFor(repositoryId), config.config.agentTool, config.config.agentProvider, ports.now());
+    const statement = providerStatementGate(await sources.providerStatements.statementsFor(repositoryId), config.config.agentTool, config.config.agentProvider, ports.now());
     if (statement.state !== 'ok') {
       return refuse('statement', `the subject is ${governed.kind} and the per-project statement is missing: ${statement.why}`, { governed });
     }
@@ -162,10 +223,24 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
       governed,
       disclosures: [
         ...DISCLOSURES,
+        ...(launched === null ? [] : launchDisclosures(launched)),
         governed.kind === 'non-governed'
           ? 'the subject is non-governed, so no per-project statement is required; the agent sessions\' sends to their provider are the operator\'s own act'
           : `the subject is ${governed.kind}; the run relies on the per-project statement ${providerStatement}, a consent record and not an egress record; neither the content classes it names nor the screening policies bind what the agent reads or sends`,
       ],
     },
   };
+}
+
+/** What `init` discloses of a launch (REQ-polaris-generation-046, line 33; 047, line 184). */
+function launchDisclosures(l: Exclude<LaunchOutcome, { kind: 'refused' } | { kind: 'head-consented' }>): readonly string[] {
+  return [
+    pinStatement(l.pin),
+    l.kind === 'recorded' && l.records.length > 0
+      ? `the consents were recorded at launch: ${l.records.join(', ')}, in the recording commit ${l.commit}`
+      : `the run rests on launch consent records already in force: ${l.relied.join('; ')}`,
+    `the repository identity ${l.subject.identity} and its normalised URL ${l.subject.url} are Inferred, from ${l.subject.urlSource}; the identity was proposed by the rule (${l.subject.identitySource}) and declared by the owner's phrase`,
+    `the operator's declaration whether the repository is public: ${l.subject.publicDeclaration ?? 'as the records state'} [Inferred]`,
+    'who answered rests on the operator\'s declaration that the owner answered in person [Inferred]',
+  ];
 }

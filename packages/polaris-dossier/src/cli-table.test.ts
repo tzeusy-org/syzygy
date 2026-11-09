@@ -9,7 +9,7 @@ import { DOSSIER_COMMANDS, DOSSIER_USAGE, runDossierCli } from './cli.js';
 /** Each command's usage line up to its description, in usage order. `help` is the one command outside the table. */
 const SYNOPSES = [
   'preflight <url>',
-  'init <clone> --url <url> --config <run.json> [--state-root <dir>]',
+  'init <clone> [--url <url>] --config <run.json> [--state-root <dir>] [--revision <rev>] [--identity <id>] [--upstream <url>]',
   'brief <run>',
   'allow-execution <run> --revision <pinned> --declare owner-started-session,owners-own-host,owner-attends',
   'check <run> [--draft <file>]',

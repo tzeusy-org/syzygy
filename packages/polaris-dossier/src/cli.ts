@@ -8,7 +8,9 @@ import { createCredentialProbe, credentialListFromEnv } from './credential-probe
 import { DECLARATIONS, RUN_DIRECTORY_CHOICES, allowExecution } from './execution-choice.js';
 import { PERMITTING_ARM_ENABLED } from './execution-rule.js';
 import { createPackageGateSources, type GateSources } from './gate-sources.js';
-import { initRun } from './init.js';
+import { initRun, type InitPorts } from './init.js';
+import { processLaunchPorts } from './launch-cli.js';
+import { withLaunchRecords } from './launch-sources.js';
 import { launchedMarkerState } from './launched.js';
 import { checkInventory, inventoryBrief } from './inventory.js';
 import { preflight } from './preflight.js';
@@ -42,11 +44,14 @@ Commands:
                       in force for the repository, the revisions the consent names,
                       any per-project statement, and whether D9 and the RFC7-20
                       reading are in force; the URL is parsed, never fetched
-  init <clone> --url <url> --config <run.json> [--state-root <dir>]
+  init <clone> [--url <url>] --config <run.json> [--state-root <dir>] [--revision <rev>] [--identity <id>] [--upstream <url>]
                       check the start gates, pin the clone's HEAD to a consented
                       revision, decide whether the subject is governed, and make the
                       run directory under the state root (or $${STATE_ROOT_ENV});
-                      there is no default state root
+                      there is no default state root. Where no consent covers the
+                      revision, pin the trunk tip (or --revision) and ask the owner,
+                      in person at this terminal, for the missing consents; only
+                      the owner answers, never an agent
   brief <run>         re-verify the pinned revision and issue the authoring brief
                       (brief.md) and the draft schema (draft.schema.json) in the run
                       directory, starting the deadline clock; a run is briefed once.
@@ -175,13 +180,21 @@ export interface CliPorts {
   readonly sleep?: (ms: number) => Promise<void>;
   /** Standard input, read whole as bytes, for `await --submit --stdin`; null past `maxBytes`. The process's own by default. */
   readonly readStdin?: (maxBytes: number) => Promise<Uint8Array | null>;
+  /** The launch ports `init` asks through (REQ-polaris-generation-046). By default the process's terminal and this checkout's records,
+   * but only where the gate sources are this checkout's too; with injected sources and no launch ports, `init` takes another act's
+   * consent only. */
+  readonly launch?: InitPorts['launch'];
 }
 
 /** The Syzygy checkout this package belongs to: packages/polaris-dossier/{src,dist} → the repository root. */
 const RECORDS_ROOT = fileURLToPath(new URL('../../..', import.meta.url));
 
 /** The gate sources the commands read: the injected ones, or the records in this Syzygy checkout. */
-export const cliGateSources = (ports: CliPorts): GateSources => ports.sources ?? createPackageGateSources({ root: RECORDS_ROOT, now: ports.now ?? Date.now });
+export const cliGateSources = (ports: CliPorts): GateSources => ports.sources
+  ?? withLaunchRecords(createPackageGateSources({ root: RECORDS_ROOT, now: ports.now ?? Date.now }), { home: RECORDS_ROOT, now: ports.now ?? Date.now });
+/** The launch ports `init` uses: the injected ones, or the process's own where the sources are this checkout's. */
+const cliLaunchPorts = (ports: CliPorts): InitPorts['launch'] =>
+  ports.launch ?? (ports.sources === undefined ? processLaunchPorts(RECORDS_ROOT, ports.now ?? Date.now) : undefined);
 
 /** How a command reads its arguments. `one`: exactly one argument and no option. `options`: `--name value` options (each at most
  * once, its value never starting with `-`) among positional arguments, of which there must be exactly one when `noun` names it; a
@@ -218,6 +231,7 @@ function commandContext(json: boolean, io: CliIo, ports: CliPorts) {
   return {
     json, now, env, io, probe,
     sources: (): GateSources => cliGateSources(ports),
+    launch: (): InitPorts['launch'] => cliLaunchPorts(ports),
     /** The gate sources and the clock, then each part named that the ports hold, in one fixed order. */
     deps: <K extends keyof StepPorts>(...parts: readonly K[]): StepDeps<K> => {
       const wants = (part: keyof StepPorts): boolean => (parts as readonly (keyof StepPorts)[]).includes(part);
@@ -269,18 +283,23 @@ export const DOSSIER_COMMANDS: Readonly<Record<string, DossierCommand>> = Object
     },
   },
   init: {
-    synopsis: 'init <clone> --url <url> --config <run.json> [--state-root <dir>]',
-    args: { kind: 'options', options: ['--url', '--config', '--state-root'], noun: 'the clone directory' },
+    synopsis: 'init <clone> [--url <url>] --config <run.json> [--state-root <dir>] [--revision <rev>] [--identity <id>] [--upstream <url>]',
+    args: { kind: 'options', options: ['--url', '--config', '--state-root', '--revision', '--identity', '--upstream'], noun: 'the clone directory' },
     run: async ({ positional: [clone], values }, ctx) => {
       const url = values.get('--url'), configPath = values.get('--config');
-      if (url === undefined || configPath === undefined) return ctx.usageError('init requires --url <url> and --config <run.json>');
+      if (configPath === undefined) return ctx.usageError('init requires --config <run.json>');
       const stateRoot = values.get('--state-root') ?? ctx.env[STATE_ROOT_ENV];
       if (stateRoot === undefined || stateRoot === '') {
         return ctx.refused({ command: 'init', outcome: 'refused', stage: 'state-root', reason: `no state root: pass --state-root <dir> or set ${STATE_ROOT_ENV}; there is no default, and none is derived from the clone`, objectsRead: false });
       }
       const configText = readBounded(configPath, RUN_CONFIG_JSON_LIMITS.maxBytes);
       if (typeof configText !== 'string') return ctx.refused({ command: 'init', outcome: 'refused', stage: 'config', reason: configText.reason, objectsRead: false });
-      const result = await initRun({ clone: clone!, url, configText, stateRoot }, ctx.deps());
+      const optional = (name: string, key: string) => (values.get(name) === undefined ? {} : { [key]: values.get(name)! });
+      const command = ['syzygy dossier init', clone!, ...['--url', '--config', '--state-root', '--revision', '--identity', '--upstream'].flatMap(o => (values.get(o) === undefined ? [] : [o, values.get(o)!]))].join(' ');
+      const launch = ctx.launch();
+      const result = await initRun({ clone: clone!, ...(url === undefined ? {} : { url }), configText, stateRoot, command,
+        ...optional('--revision', 'revision'), ...optional('--identity', 'identity'), ...optional('--upstream', 'upstream') },
+      { ...ctx.deps(), ...(launch === undefined ? {} : { launch }) });
       return result.ok ? ctx.report(result.report, EXIT.clean) : ctx.refused(result.refusal);
     },
   },

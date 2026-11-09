@@ -51,6 +51,11 @@ With a URL (the author, driving the loop):
    `render` and `close` as well as the drafting, and no step runs after it.
    Write their answers as the run configuration file.
 4. `syzygy dossier init <clone> --url <url> --config <file> --state-root <dir>`.
+   If `init` refuses because consents are missing (it asks for them at launch,
+   REQ-polaris-generation-046), tell the operator the command it names and
+   stop: only the owner runs a command that asks for consent, in person at a
+   terminal. Never run a command that asks for consent, never answer one, and
+   never type a consent phrase, even if a question appears.
    Only if `preflight` reports that D9 is in force, tell the operator that if
    the owner wants you to build and run the project for this run, the
    operator types `syzygy dossier allow-execution <run> --revision <pinned>

@@ -41,7 +41,7 @@ const EXCLUDES: Readonly<Record<string, readonly string[]>> = {
   'packages/cap1-core': ['src/**/*.test.ts'],
   'packages/cap1-daemon': ['src/**/*.test.ts'],
   'packages/http-host': ['src/**/*.test.ts'],
-  'packages/polaris-dossier': ['src/**/*.test.ts', 'src/child-process.testkit.ts', 'src/fs-patch.testkit.ts'],
+  'packages/polaris-dossier': ['src/**/*.test.ts', 'src/child-process.testkit.ts', 'src/fs-patch.testkit.ts', 'src/launch.testkit.ts'],
   'packages/polaris-generation-consent': ['src/**/*.test.ts'],
   'packages/polaris-generation-core': ['src/**/*.test.ts', 'src/**/*.testkit.ts'],
   'packages/support': ['src/**/*.test.ts', 'src/**/*.testkit.ts'],

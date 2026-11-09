@@ -186,7 +186,7 @@ describe('agent texts (S11)', () => {
     expect([...SYNOPSES.keys()].sort()).toEqual(['allow-execution', 'await', 'brief', 'check', 'close', 'init', 'inventory-brief', 'inventory-check', 'launch-form', 'preflight', 'render', 'review-check', 'review-packet', 'session-prompt', 'status']);
     expect(SYNOPSES.get('session-prompt')!.positional).toEqual(['<run>', 'inventory|review|all']);
     expect(SYNOPSES.get('await')!.positional).toEqual(['<session-dir>/']);
-    expect(SYNOPSES.get('init')).toEqual({ positional: ['<clone>'], required: new Set(['--url', '--config']), options: new Map([['--url', null], ['--config', null], ['--state-root', null]]) });
+    expect(SYNOPSES.get('init')).toEqual({ positional: ['<clone>'], required: new Set(['--config']), options: new Map([['--url', null], ['--config', null], ['--state-root', null], ['--revision', null], ['--identity', null], ['--upstream', null]]) });
     expect(SYNOPSES.get('launch-form')!.positional).toEqual(['<run>', 'inventory|review', 'terminal|bang']);
     expect(SYNOPSES.get('allow-execution')!.required).toEqual(new Set(['--revision', '--declare']));
     expect(SYNOPSES.get('review-check')!.options.get('--kind')).toEqual(['fidelity', 'design']);
