@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { drawerPhrase, nameOnBranchWarning, observationPhrase, providerPhrase, questionOpening, statementText } from './launch-question.js';
-import { parseLaunchRecord, recordIdFor, renderLaunchRecord, type LaunchRecord } from './launch-record.js';
+import { instantIsReadable, parseLaunchRecord, recordIdFor, renderLaunchRecord, type LaunchRecord } from './launch-record.js';
 
 /** REQ-polaris-generation-046, line 17 (record fields, digest binding, provenance, ceremony), line 21 (three separate records), line 11
  * (the phrase and the question's statements, the warning). Expected values are literals; each digest is recomputed with node:crypto,
@@ -74,6 +74,19 @@ describe('the record', () => {
     const extraField = text.replace('Revocation state: none\n', 'Revocation state: none\n\nExecution choice: build\n');
     const reboundField = `${extraField.slice(0, extraField.lastIndexOf('Content digest'))}Content digest (SHA-256): \`${digestOf(extraField)}\`\n`;
     expect(parseLaunchRecord(reboundField)).toEqual({ ok: false, why: 'the record is not exactly what the launch record form writes from its own fields' });
+  });
+});
+
+describe('the grant instant names a real calendar instant', () => {
+  it.each(['2026-11-31T00:00:00Z', '2026-02-30T10:00:00Z', '2026-11-09T24:00:00Z', '2026-13-01T00:00:00Z', '2026-11-09T10:00:60Z'])('refuses a record whose instant is %s, even with a consistent ID and digest', instant => {
+    const text = renderLaunchRecord({ ...base, grantInstant: instant, recordId: recordIdFor('observation-consent', REV, instant, 'repository:redis-redis') });
+    expect(parseLaunchRecord(text)).toEqual({ ok: false, why: `its grant instant ${instant} is not a real calendar instant` });
+  });
+  it.each(['2026-11-09T10:00:00Z', '2024-02-29T23:59:59Z', '2026-12-31T00:00:00Z'])('reads %s', instant => {
+    expect(instantIsReadable(instant)).toBe(true);
+  });
+  it.each(['2026-11-31T00:00:00Z', '2026-02-30T10:00:00Z', '2026-11-09T24:00:00Z', '2025-02-29T00:00:00Z', '2026-11-09T10:00:00.000Z', '2026-11-09T10:00:00+00:00', ''])('does not read %j', instant => {
+    expect(instantIsReadable(instant)).toBe(false);
   });
 });
 

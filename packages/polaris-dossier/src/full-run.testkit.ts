@@ -81,7 +81,7 @@ const LIVE_POLICY = JSON.parse(fs.readFileSync(path.join(REAL_ROOT, '.syzygy/gov
 export const FIXTURE_SCREEN = buildDossierScreen(new TextEncoder().encode(JSON.stringify({
   policyId: 'fixture-public-source', policyVersion: '1', detectors: LIVE_POLICY.detectors, sourceAdmission: LIVE_POLICY.sourceAdmission,
   publicSourceScope: { contentClassification: { rules: [{ class: 'code-content', sourceExtensions: ['.c', '.txt'] }] } },
-})));
+})), false, null, 'public');
 
 export function fixtureSources(commit: string): GateSources {
   const ok = { state: 'ok', record: 'FIXTURE-ACT' } as const;

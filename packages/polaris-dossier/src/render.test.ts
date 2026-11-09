@@ -658,6 +658,20 @@ describe('render', () => {
     expect(inputs[0]!.local.blocks.get('p2')).toMatchObject({ marking: 'unknown', unknownReason: 'excluded-content', basis: `a quotation it rests on is from a project-documentation file, ${why.replace(/^withheld/u, 'which is withheld')}, so the quotation is not shown` });
   });
 
+  // Screening scope version 8: a private repository's class-gate-withheld blob keeps its object id off every page and out of the source
+  // population; the public counterpart (the test above) keeps it.
+  it('version 8, private: a class-gate-withheld blob is rendered with no object id, on the discovery row or in the source population', async () => {
+    const run = await prepared(draft(), false);
+    const { renderer, inputs } = capturing();
+    if (!DOC_SCREEN.ok) throw new Error(DOC_SCREEN.why);
+    const result = await renderRun(run, renderDeps({ loadScreen: async () => ({ ok: true, screen: { ...DOC_SCREEN.screen, visibility: 'private' } }), renderer }));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    expect(inputs[0]!.sources.filter((source) => source.path === 'docs/notes.txt').map((source) => [source.exclusion, source.objectId])).toEqual([[{ excluded: true, reason: 'body-not-retained-for-generation' }, null]]);
+    const pages = [...readSite(result.report.site).values()].join('\n');
+    expect(pages).not.toContain(objectIds['docs/notes.txt']);
+    expect(pages).toContain(objectIds['src/kestrel.c']);   // an admitted blob's object id stays code-structure
+  });
+
   it('quotes a project-documentation body once the statement the run relies on lists the class', async () => {
     statementClasses = ['code-content', 'project-documentation'];
     const run = await prepared(draft(), false);
@@ -1254,6 +1268,21 @@ describe('rendered-design review (S9b)', () => {
     expect(first.report.sources.excluded).toBe(1);
     expect(outside(readSite(second.report.site))).toEqual(outside(readSite(first.report.site)));
     expect(second.report.designReview.packetSha256).toBe(first.report.designReview.packetSha256);
+  });
+
+  it.each([['public', true], ['private', false]] as const)('version 8, %s: an excluded cited blob\'s object id is on the pages and in the source population: %s', async (visibility, shown) => {
+    const doc = draft();
+    doc.sections[0].paragraphs[1] = { id: 'p2', label: 'inferred', basis: 'source', text: 'The project states: "Deploy notes."', citations: [cite('c-p2', 'docs/deploy.md', 1, 1)], quotations: ['c-p2'], children: [] };
+    const run = await prepared(doc, false);
+    const { renderer, inputs } = capturing();
+    if (!SCREEN.ok) throw new Error(SCREEN.why);
+    const result = await renderRun(run, renderDeps({ loadScreen: async () => ({ ok: true, screen: { ...SCREEN.screen, visibility } }), renderer }));
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const excluded = inputs[0]!.sources.filter((source) => source.exclusion.excluded);
+    expect(excluded.map((source) => [source.path, source.objectId])).toEqual([['docs/deploy.md', shown ? objectIds['docs/deploy.md'] : null]]);
+    const discovery = readSite(result.report.site).get('discovery.html')!;
+    expect(discovery.includes(objectIds['docs/deploy.md']!)).toBe(shown);
+    expect(discovery.includes(objectIds['src/kestrel.c']!)).toBe(true);
   });
 
   it('keys an excluded cited file by the run, the pinned revision and its path alone, never its body or object', async () => {

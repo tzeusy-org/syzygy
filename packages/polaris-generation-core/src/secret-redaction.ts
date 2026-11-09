@@ -45,6 +45,10 @@ const REDACTION_TEXTS = {
   unchanged: ['74f0bc88dc1c99324bcfdbc554234c011b0131627adb9eb37d9c34792ea79bdb', 'e00788b3ee20697408b02a984c5f5a93a3ad100909e1b8fe93367e08fa08fd4c'],
   consequence: 'fbccac9121d61a3cf617a26dfc4b54f378753a22b9c5b7f431ba13447ffb6566',
 } as const;
+/** sha256 of the version-8 `appliesTo` (variant `pv`): the version-4 rule for a public repository; a private repository's body is
+ * excluded whole on any detector match in every class, never retained as redacted-span. The screen applies it by passing no redaction
+ * to `redactBody` for a private repository (`redactionFor`). */
+const APPLIES_TO_V8 = 'f326b181686b52640e825595317eeaec066838558b5393cc79b003e02e0e6117';
 const REDACTION_KEYS = ['appliesTo', 'redactedClasses', 'redactionClass', 'wholeArtifactDetectors', 'wholeArtifactLinePattern', 'wholeArtifactFragments',
   'guardLines', 'rule', 'withheldLines', 'citedSpanRule', 'provenance', 'unchanged', 'consequence'] as const;
 const KNOWN_CLASSES: readonly PublicSourceContentClass[] = ['project-documentation', 'code-content'];
@@ -76,8 +80,11 @@ export function readSecretRedaction(scope: unknown, detectorIds: readonly string
   if (!isRecord(red)) return refuse('is not an object');
   const keys = Object.keys(red);
   if (keys.length !== REDACTION_KEYS.length || REDACTION_KEYS.some(key => !keys.includes(key))) return refuse(`carries the fields ${keys.join(', ')}, not exactly ${REDACTION_KEYS.join(', ')}`);
-  for (const key of Object.keys(REDACTION_TEXTS) as (keyof typeof REDACTION_TEXTS)[]) {
-    const value = red[key], accepted: string | readonly string[] = REDACTION_TEXTS[key];
+  // Version 8 (`sourceVisibility`) restricts `appliesTo` to public repositories; its text is read only beside that key, and the
+  // version-4 text only without it, so each text has one reading.
+  const texts = { ...REDACTION_TEXTS, appliesTo: Object.hasOwn(scope, 'sourceVisibility') ? APPLIES_TO_V8 : REDACTION_TEXTS.appliesTo };
+  for (const key of Object.keys(texts) as (keyof typeof texts)[]) {
+    const value = red[key], accepted: string | readonly string[] = texts[key];
     if (typeof value !== 'string' || !(typeof accepted === 'string' ? [accepted] : accepted).includes(sha256(value))) return refuse(`${key} is not the text this screen implements`);
   }
   if (red['redactionClass'] !== 'redacted-span') return refuse('redactionClass is not redacted-span');
@@ -98,6 +105,11 @@ export function readSecretRedaction(scope: unknown, detectorIds: readonly string
     wholeArtifactLinePattern: pattern, wholeArtifactFragments: Object.freeze([...fragments]), guardLines: guard,
   }) };
 }
+
+/** The redaction a body of a repository of `visibility` is screened under: the scope's for a public one; none for a private one, so any
+ * detector match excludes the body whole (version 8, `secretRedaction.appliesTo`). */
+export const redactionFor = (redaction: SecretRedaction | null, visibility: 'public' | 'private'): SecretRedaction | null =>
+  (visibility === 'private' ? null : redaction);
 
 /** The version-5 scope's own detectors (`publicSourceScope.scopeDetectors`, approved 2026-11-03): added to the policy's detectors for this
  * scope only, so the public-source screens run them wherever they run the policy's (paths, bodies, the every-offset scan, retained text

@@ -45,6 +45,14 @@ export interface LaunchRecordCommon {
 export interface ProviderFields { readonly agentTool: string; readonly provider: string; readonly contentClasses: readonly string[] }
 export type LaunchRecord = LaunchRecordCommon & { readonly provider?: ProviderFields };
 
+/** Whether a grant instant names a real calendar instant, exactly as written: `Date.parse` alone rolls a day past its month's end or an
+ * hour 24 over into another instant (`2026-11-31` is read as 1 December), so the instant must also print back to itself. `T24:00:00Z`
+ * is refused (owner's choice): a record's instant is read only as the instant it names. */
+export function instantIsReadable(text: string): boolean {
+  const ms = Date.parse(text);
+  return !Number.isNaN(ms) && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/u.test(text) && new Date(ms).toISOString() === `${text.slice(0, -1)}.000Z`;
+}
+
 /** `LAUNCH-<CLASS>-<12 hex of the revision>-<instant>-<8 hex of the identity's sha256>`: two launches in one second at one revision for two
  * identities get two names, and no name carries the identity itself. */
 export const recordIdFor = (recordClass: LaunchRecordClass, revision: string, instant: string, identity: string): string =>
@@ -136,6 +144,7 @@ export function parseLaunchRecord(text: string): ParsedLaunchRecord {
     || publicDeclaration === null || revision === null || grantInstant === null || supersedesRaw === null || terminal === null || phrase === null || question === null) {
     return { ok: false, why: 'the record does not carry exactly one of each field the launch record form writes' };
   }
+  if (!instantIsReadable(grantInstant)) return { ok: false, why: `its grant instant ${grantInstant} is not a real calendar instant` };
   let provider: ProviderFields | undefined;
   if (recordClass === 'provider-statement') {
     const agentTool = one(text, /^Agent tool: `([^`\n]+)`$/gm), name = one(text, /^Agent provider: `([^`\n]+)`$/gm);
