@@ -1,5 +1,13 @@
 # Polaris dossier local-agent mode
 
+> **Version 1.6 changes.** By the owner direction
+> `OWNER-DIRECTION-FIDELITY-REVIEW-ROUNDS-2026-11-09`, a fidelity packet delivered
+> into a review session's directory as a later round also carries a list,
+> written by Syzygy, of the claim blocks and inventory entries that changed
+> since the latest earlier round with a recorded verdict there. The packet
+> stays whole, the verdict still covers every entry, and a revision still
+> retires the earlier verdict. It binds only by the owner's sign-off.
+
 > **Version 1.5 changes.** The owner reviewed a Redis dossier on 2026-11-06 and
 > found it hard to read. This version opens with why a project exists, gives
 > the brief voice rules, allows a marked judgement with no citation, makes
@@ -34,8 +42,8 @@
 > (`.syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04.md`).
 > Version 1.4 adds the empty-cell marker "-", explicit unread-path
 > excerpt handling and the carried v1.3 review notes. Version 1.4 is the
-> predecessor of version 1.5.
-> These bytes bind only by the owner's sign-off of version 1.5 (VIS-4). It grants no read, egress, write or execution beyond what
+> predecessor of version 1.5, and version 1.5 of version 1.6.
+> These bytes bind only by the owner's sign-off of version 1.6 (VIS-4). It grants no read, egress, write or execution beyond what
 > its requirements state.
 
 **A Polaris dossier can be written by the operator's own Claude Code or Codex

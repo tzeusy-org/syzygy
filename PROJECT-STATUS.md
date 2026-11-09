@@ -55,8 +55,9 @@ authority and no model yet called on the current path.
     [v1.2 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.2.md);
     [v1.3 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.3.md);
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
-    [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md)), and
-    38 requirements and 298 scenarios in the effective composition with it and with the signed-off
+    [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
+    [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
+    38 requirements and 302 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md)).
@@ -418,6 +419,7 @@ python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.3   # dossier local-agent sign-off, v1.3 2026-11-04 (presentation elements): record, aggregate block and applied tree
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.4   # dossier local-agent sign-off, v1.4 2026-11-06: record, aggregate block and applied tree
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.5   # dossier local-agent sign-off, v1.5 2026-11-07 (owner's review of the Redis dossier): record, aggregate block and applied tree
+python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.6   # dossier local-agent sign-off, v1.6 2026-11-09 (changed-block list for later fidelity rounds): record, aggregate block and applied tree
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-launch-consent --version 1.0   # dossier launch-consent sign-off, v1.0 2026-11-08: record, aggregate block and applied tree
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-launch-consent --version 1.1   # dossier launch-consent sign-off, v1.1 2026-11-08: record, aggregate block and applied tree
 # Lane B and its RFC-0007 successor are declined (decisions/POLARIS-LANE-B-DECLINED-AND-TARGET-REVISED-DIRECTION.md); their checks left the battery.
@@ -446,6 +448,8 @@ python3 scripts/build_polaris_dossier_local_agent_mode_v1_4.py --check   # dossi
 python3 scripts/build_polaris_dossier_local_agent_mode_v1_4.py --selftest   # dossier v1.4 successor-layer and signed-bytes fixtures
 python3 scripts/build_polaris_dossier_local_agent_mode_v1_5.py --check   # dossier v1.5: signed layer over v1.4, applied subject and predecessor checks
 python3 scripts/build_polaris_dossier_local_agent_mode_v1_5.py --selftest   # dossier v1.5 successor-layer and signed-bytes fixtures
+python3 scripts/build_polaris_dossier_local_agent_mode_v1_6.py --check   # dossier v1.6: signed layer over v1.5, applied subject and predecessor checks
+python3 scripts/build_polaris_dossier_local_agent_mode_v1_6.py --selftest   # dossier v1.6 successor-layer and signed-bytes fixtures
 python3 scripts/build_polaris_dossier_launch_consent.py --check   # dossier launch-consent package: absent, unapplied or applied, and its status figure
 python3 scripts/build_polaris_dossier_launch_consent.py --selftest   # dossier launch-consent builder fixtures
 python3 scripts/build_polaris_dossier_launch_consent_v1_1.py --check   # dossier launch-consent v1.1 package: unapplied or applied
@@ -513,7 +517,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and thirty-seven checks above are the same one hundred and thirty-seven the hosted workflow runs
+The one hundred and forty checks above are the same one hundred and forty the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.
