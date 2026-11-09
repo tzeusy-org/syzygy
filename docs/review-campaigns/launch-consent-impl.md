@@ -10,11 +10,9 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-LAUNCH-CONSENT-IMPL-A-1-RAW.md:4`), over `257238a1`, round 1. Five findings require a change:
-- 1: the reader does not check recording-commit attribution;
-- 2: 047's HEAD-consented branch is skipped without `--url`;
-- 3: shipped agent texts lack the owner-only line;
-- 4: 047 line 184's run-record statement is neither built nor disclosed;
-- 5: two predicates have no killing test.
+`CONFIRM WITH EXCEPTIONS` (`R-LAUNCH-CONSENT-IMPL-A-2-RAW.md:4`), over `4b7e04df`, round 2. Round 1 (`REVISE`, `R-LAUNCH-CONSENT-IMPL-A-1-RAW.md:4`, over `257238a1`) required five changes. Round 2 found:
+- 1, 3 and 5: built;
+- 2 and 4: disclosed in the PR body;
+- five new notes, no required change.
 
-Four notes (6–9). Repairs are tracked on the PR and in `syzygy-pdja.21`.
+Notes 1, 2 and 4 are answered in the PR body. Notes 3 and 5 are carried in `syzygy-pdja.21`.
