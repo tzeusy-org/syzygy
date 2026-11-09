@@ -26,6 +26,8 @@ GATE_TEST = f"{DOSSIER}/source-visibility-gate.test.ts"
 SCREEN_TEST = f"{DOSSIER}/screen-scope-v8.test.ts"
 RENDER_TEST = f"{DOSSIER}/render.test.ts"
 APP_TEST = f"{APP}/public-source-screening.test.ts"
+TRIGGER_TEST = f"{APP}/dossier-trigger.test.ts"
+CLONE_TEST = f"{DOSSIER}/polaris-clone.test.ts"
 
 MUTANTS = [
     ("visibility: admitted pinned", f"{CORE}/source-visibility.ts", "if (!exactly(sv['admitted'], ['public', 'private'])) return", "if (false) return", VIS_TEST),
@@ -40,8 +42,8 @@ MUTANTS = [
     ("screen: no subject builds private", f"{DOSSIER}/screen.ts", "if (subject === null) visibility = 'private';", "if (subject === null) visibility = 'public';", SCREEN_TEST),
     ("gate: unreadable launch record refuses", f"{DOSSIER}/source-visibility-gate.ts", "  if (!store.ok) return", "  if (false) return", GATE_TEST),
     ("gate: only active records", f"{DOSSIER}/source-visibility-gate.ts", "r.state === 'active' && r.record.recordClass", "r.record.recordClass", GATE_TEST),
-    ("gate: only the pair's records", f"{DOSSIER}/source-visibility-gate.ts", " && r.record.identity === subject.repository\n", "\n", GATE_TEST),
-    ("gate: only records in force", f"{DOSSIER}/source-visibility-gate.ts", "    && Date.parse(r.record.grantInstant) <= options.now);", "    );", GATE_TEST),
+    ("gate: only the pair's records", f"{DOSSIER}/source-visibility-gate.ts", " && r.record.identity === subject.repository);", ");", GATE_TEST),
+    ("gate: only records in force", f"{DOSSIER}/source-visibility-gate.ts", "pairs.filter(r => Date.parse(r.record.grantInstant) <= options.now)", "pairs.filter(() => true)", GATE_TEST),
     ("gate: only observation records", f"{DOSSIER}/source-visibility-gate.ts", "r.record.recordClass === 'observation-consent' && r.record.identity", "r.record.identity", GATE_TEST),
     ("gate: not-public states private", f"{DOSSIER}/source-visibility-gate.ts", "r.record.publicDeclaration === 'not-public' ? 'private' : 'states-nothing'", "'public'", GATE_TEST),
     ("gate: only the affirmative answer states public", f"{DOSSIER}/source-visibility-gate.ts", "r.record.publicDeclaration === 'public' ? 'public'", "r.record.publicDeclaration !== 'not-public' ? 'public'", GATE_TEST),
@@ -49,7 +51,23 @@ MUTANTS = [
     ("render: private excluded object id off the discovery row", f"{DOSSIER}/render.ts", "cited.objectId === null || (screen.visibility === 'private' && (cited.outcome !== 'admitted' || (cited.path !== null && withheldClass.has(cited.path))))", "cited.objectId === null", RENDER_TEST),
     ("launch: non-public admitted only by v8", f"{DOSSIER}/launch-cli.ts", "return read.ok && read.admitsPrivate ?", "return read.ok ?", SCREEN_TEST),
     ("provider mode: private refused", f"{APP}/public-source-screening.ts", "  if (visibility === 'private') refuse(", "  if (false) refuse(", APP_TEST),
-    ("provider mode: v8 needs a public decision", f"{APP}/public-source-screening.ts", "visibilityRead.declared && visibility !== 'public'", "visibilityRead.declared && visibility === 'private'", APP_TEST),
+    ("provider mode: v8 needs a public decision", f"{APP}/public-source-screening.ts", "(!visibilityRead.declared || visibility === 'public')", "(!visibilityRead.declared || visibility !== 'private')", APP_TEST),
+    # Round 1 (docs/reviews/R-SCREENING-V8-IMPL-B-1-RAW.md) and its repairs.
+    ("provider mode: malformed sourceVisibility refused", f"{APP}/public-source-screening.ts", "  if (!visibilityRead.ok) refuse(`policy ${visibilityRead.why", "  if (false) refuse(`policy ${visibilityRead.why", APP_TEST),
+    ("gate: act forms must match (the refusal)", f"{DOSSIER}/source-visibility-gate.ts", "  if (!actFormsMatchPolicy(options.observationForms ?? OBSERVATION_ACT_FORM_FILES)) return", "  if (false) return", GATE_TEST),
+    ("gate: act forms must match (the comparison)", f"{DOSSIER}/source-visibility-gate.ts", "  return a.length === forms.length && a.length === b.length", "  return true || a.length === forms.length && a.length === b.length", GATE_TEST),
+    ("gate: act forms compared without repeats", f"{DOSSIER}/source-visibility-gate.ts", "  return a.length === forms.length && a.length === b.length", "  return a.length === b.length", GATE_TEST),
+    ("gate: an unparseable grant instant refuses", f"{DOSSIER}/source-visibility-gate.ts", "  if (unparsed !== undefined) return", "  if (false) return", GATE_TEST),
+    ("fetch: a private pair is not fetched", f"{DOSSIER}/source-visibility-gate.ts", "  if (decision.visibility !== 'public') return", "  if (false) return", GATE_TEST),
+    ("fetch: an undecidable pair is not fetched", f"{DOSSIER}/source-visibility-gate.ts", "  if (!decision.ok) return `the visibility of repository:${repositoryId} cannot be decided", "  if (false) return `the visibility of repository:${repositoryId} cannot be decided", GATE_TEST),
+    ("fetch: no decision port fetches nothing", f"{DOSSIER}/source-visibility-gate.ts", "  if (visibilityOf === undefined) return", "  if (false) return", GATE_TEST),
+    ("fetch: no repository named fetches nothing", f"{DOSSIER}/source-visibility-gate.ts", "  if (typeof repositoryId !== 'string' || repositoryId === '') return", "  if (false) return", GATE_TEST),
+    ("supervisor: the clone step asks before it fetches", f"{DOSSIER}/polaris.ts", "  if (refused !== null) return refused;", "  if (false) return refused;", CLONE_TEST),
+    ("supervisor: injected sources and no decision fetch nothing", f"{DOSSIER}/cli.ts", "(ports.sources === undefined ? (subject", "(true ? (subject", CLONE_TEST),
+    ("trigger: the fetch waits for a public decision", f"{APP}/dossier-trigger.ts", "    if (fetchStop !== null) return", "    if (false) return", TRIGGER_TEST),
+    ("trigger: a private pair is not fetched", f"{APP}/dossier-trigger.ts", "  if (decision.visibility !== 'public') return", "  if (false) return", TRIGGER_TEST),
+    ("trigger: no decision port fetches nothing", f"{APP}/dossier-trigger.ts", "  if (ports.visibility === undefined) return", "  if (false) return", TRIGGER_TEST),
+    ("screen: a version-8 screen with no visibility is private", f"{DOSSIER}/screen.ts", "given ?? (visibilityRead.declared ? 'private' : 'public')", "given ?? 'public'", SCREEN_TEST),
 ]
 
 
