@@ -64,8 +64,8 @@ SHALL retire dependent review evidence." REQ-035 displaces neither.
 
 | Option | Lawful now? | Clauses it would change | Expected saving [Inferred] | Risk to what a confirmation means |
 |---|---|---|---|---|
-| A. Per-round usage note to the operator | Yes; implemented | None: the note goes to the session that ran `session-prompt`, never into the packet | None by itself; it makes the cost visible per round so the next two options get used | None. It states bytes Syzygy built (Observed) and never a token figure |
-| B. Batch repairs: every finding of a verdict in one revision | Yes; skill guidance | None: REQ-034 counts each resubmission; nothing requires one per finding | Fewer rounds. Six rounds cut to two or three roughly halves the review's spend | None. Each round is still a whole-packet review |
+| A. Per-round usage note to the operator | Yes; implemented | None: the note goes to the session that ran `session-prompt`, never into the packet | None by itself; it makes the cost visible per round so the next two options get used | None. It labels the packet's bytes Observed (Syzygy built and wrote them at that step), the earlier rounds' bytes Inferred (from delivery records within the agent sessions' write reach) and an unreadable or unsized record Unknown, and gives no token figure |
+| B. Batch repairs: every finding of a verdict in one revision | Yes; skill guidance | None: REQ-034 counts each resubmission; nothing requires one per finding | Fewer rounds. In a continuing session the packets read grow as 1+2+...+n, so six rounds (21 packet-reads) cut to two or three (3 to 6) is a cut of about 70-85%, not half | None. Each round is still a whole-packet review |
 | C. A fresh session for a later round (`--fresh`) | Yes; already built | None: REQ-035 lets one session continue ("MAY"), never requires it | The context holds one packet, not every earlier one; for round n the saving approaches (n-1)/n of the carried context | Lowers one: a fresh reviewer has not seen its own earlier verdict, which REQ-035 says "may anchor this one". It costs the operator a new terminal per round, so the run stops being walk-away |
 | D. Delta packet carrying confirmed rows forward | No | REQ-035 packet contents and "nothing else"; its completeness rule; "Any revision ... retires the verdicts bound to it"; REQ-033's rebuild-and-compare binding; REQ-006's "confirm the frozen bundle" and "A revision SHALL retire dependent review evidence" (needs its own displacement sentence); REQ-034's retirement of "dependent review evidence" | Largest per round when repairs are local: a packet of the changed blocks, their spans and the inventory entries they touch | High; see below |
 
@@ -113,8 +113,12 @@ effort, not tokens read, so it does not answer this bead's measurement.
 ## Recommendation
 
 Use A, B and C now and measure one more launched run before deciding D:
-[Inferred] B and C attack the quadratic term that dominated `run-ffe579c7`,
-and D's saving is mostly on the linear term. If the owner still wants D, it
+[Inferred] B and C attack the growth that dominated `run-ffe579c7`: B cuts
+the number of rounds, C stops a session carrying earlier rounds. D shrinks
+every packet after the first, and in a continuing session that shrinks the
+carried context as well, so D also cuts the growing term; with C in use its
+saving is the size of each later packet. Measuring B and C first shows how
+much is left for D to save. If the owner still wants D, it
 is a CC-REV-2 change to REQ-polaris-generation-035 and the REQ-006 reading,
 drafted as a v1-6 candidate package, reviewed and signed before any code.
 
