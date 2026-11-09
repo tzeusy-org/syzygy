@@ -2539,8 +2539,8 @@ exclusion of the acts in force stands.
         # Packages the recorder gained after the frozen historical recorder:
         # a closed list, so any other new package still fails the census.
         later = {"polaris-dossier-local-agent-mode@1.3", "polaris-dossier-local-agent-mode@1.4",
-                 "polaris-dossier-local-agent-mode@1.5", "polaris-dossier-launch-consent",
-                 "polaris-dossier-launch-consent@1.1"}
+                 "polaris-dossier-local-agent-mode@1.5", "polaris-dossier-local-agent-mode@1.6",
+                 "polaris-dossier-launch-consent", "polaris-dossier-launch-consent@1.1"}
         def closed_census(current_packages, prior_packages):
             return (set(keys) == set(prior_packages) - {KEY}
                     and set(current_packages) - {KEY} == set(keys) | later)

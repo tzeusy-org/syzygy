@@ -207,6 +207,9 @@ jobs:
       - name: record_versioned_signoff --check polaris-dossier-local-agent-mode v1.5
         run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.5
 
+      - name: record_versioned_signoff --check polaris-dossier-local-agent-mode v1.6
+        run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.6
+
       - name: record_versioned_signoff --check polaris-dossier-launch-consent
         run: python3 scripts/record_versioned_signoff.py --check polaris-dossier-launch-consent --version 1.0
 
@@ -300,6 +303,13 @@ jobs:
 
       - name: build_polaris_dossier_local_agent_mode_v1_5 --selftest
         run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_5.py --selftest
+
+      # Signed v1.6 layer: verify applied subject and preserved signed predecessors.
+      - name: build_polaris_dossier_local_agent_mode_v1_6 --check
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_6.py --check
+
+      - name: build_polaris_dossier_local_agent_mode_v1_6 --selftest
+        run: python3 scripts/build_polaris_dossier_local_agent_mode_v1_6.py --selftest
 
       # Signed launch-consent v1.0: verify the applied subject and its status figure.
       - name: build_polaris_dossier_launch_consent --check

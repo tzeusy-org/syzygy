@@ -600,7 +600,7 @@
     },
     "POLARIS": {
       "requirements": 38,
-      "scenarios": 298,
+      "scenarios": 302,
       "members": {
         "REQ-polaris-generation-001": {
           "name": "Admitted project input",
@@ -1038,7 +1038,11 @@
             "Waiting session started before its packet",
             "Packet delivered to a waiting session",
             "Printed pre-approval for a waiting session",
-            "Continuing reviewer disclosed"
+            "Continuing reviewer disclosed",
+            "Later round carries a changed-block list",
+            "Changed-block list confirms nothing",
+            "Changed-block list rebuilt with its packet",
+            "Changed-block list disclosed"
           ]
         },
         "REQ-polaris-generation-036": {
