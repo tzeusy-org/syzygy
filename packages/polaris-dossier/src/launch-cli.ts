@@ -1,5 +1,9 @@
 import * as fs from 'node:fs';
+import * as path from 'node:path';
 import * as readline from 'node:readline';
+import { POLICY_PATH, readPolicyActChain } from '@syzygy/polaris-generation-consent/live';
+import { readSourceVisibility } from '@syzygy/polaris-generation-core/live';
+import { isRecord, sha256 } from '@syzygy/support';
 import type { LaunchPorts, LaunchTerminal, NonPublicAdmission } from './launch.js';
 import { readWriteConsent } from './launch-write-consent.js';
 import { loadDossierScreen } from './screen.js';
@@ -32,7 +36,24 @@ export function processTerminal(): LaunchTerminal {
   };
 }
 
-export function processLaunchPorts(root: string, now: () => number, nonPublic: () => Promise<NonPublicAdmission> = async () => ({ admitted: false, successor: NON_PUBLIC_SUCCESSOR })): Omit<LaunchPorts, 'sources' | 'now' | 'openReader'> {
+/** Whether the screening policy in force at `now` admits non-public sources: its act chain is in force over the bytes on disk, and those
+ * bytes declare the version-8 `sourceVisibility` with `private` admitted. Anything else, an unreadable policy included, admits none. */
+export async function policyAdmitsNonPublic(root: string, now: number): Promise<NonPublicAdmission> {
+  const none: NonPublicAdmission = { admitted: false, successor: NON_PUBLIC_SUCCESSOR };
+  const chain = await readPolicyActChain({ root, now });
+  if (chain.state !== 'ok') return none;
+  let doc: unknown;
+  try {
+    const bytes = fs.readFileSync(path.join(root, POLICY_PATH));
+    if (sha256(bytes) !== chain.final.digest) return none;
+    doc = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
+  } catch { return none; }
+  if (!isRecord(doc)) return none;
+  const read = readSourceVisibility(doc['publicSourceScope']);
+  return read.ok && read.admitsPrivate ? { admitted: true, successor: NON_PUBLIC_SUCCESSOR } : none;
+}
+
+export function processLaunchPorts(root: string, now: () => number, nonPublic: () => Promise<NonPublicAdmission> = () => policyAdmitsNonPublic(root, now())): Omit<LaunchPorts, 'sources' | 'now' | 'openReader'> {
   return {
     home: root,
     terminal: processTerminal(),

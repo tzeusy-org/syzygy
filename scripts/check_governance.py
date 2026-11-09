@@ -1935,6 +1935,17 @@ PWB_EFFECT_AMENDMENT_ACTS = (
      f"{DECISIONS}/PWB-OBSERVER-REGISTRY-MACHINE-CEILING-ACT.md",
      "ad9cd6769bffbb1a3ef94625c73226dec133fb7c9f1e0bc40186b09b15e165fa"),
 )
+#: The version-8 screening-scope act (syzygy-pdja.21, variant pv, private sources) supersedes the
+#: version-7 act for the policy subject. Registered with the recorder and gated on the performed
+#: record: the link, and the version-7 manifest's pinning as history, exist only once the act does.
+PUBLIC_SOURCE_SCOPE_V8_ACT_PATH = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-ACT.md"
+if os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT_PATH)):
+    PWB_EFFECT_AMENDMENT_ACTS = PWB_EFFECT_AMENDMENT_ACTS + (
+        (PWB_EFFECT_ACTS[1][0], PWB_EFFECT_ACTS[1][1],
+         f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md",
+         PUBLIC_SOURCE_SCOPE_V8_ACT_PATH,
+         "626be0cadc248b9ca9b3165d51f97d39aec552eb3a97b8b7df21d2446fc233da"),
+    )
 #: For a chained amendment row, the package that offered the predecessor
 #: amendment: its files hold the predecessor's argument as history once the
 #: later link is performed ("row" = manifest row, "phrase" = phrase line).
@@ -1988,6 +1999,11 @@ PWB_EFFECT_AMENDMENT_OFFERINGS = {
         f"{CANDIDATES}/public-source-screening-scope-v6/PUBLIC-SOURCE-SCREENING-SCOPE-V6-MANIFEST.txt": "variant-row",
     },
 }
+if os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT_PATH)):
+    # The version-7 screening-scope act was offered the same way (variant row of its manifest).
+    PWB_EFFECT_AMENDMENT_OFFERINGS[f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-ACT.md"] = {
+        f"{CANDIDATES}/public-source-screening-scope-v7/PUBLIC-SOURCE-SCREENING-SCOPE-V7-MANIFEST.txt": "variant-row",
+    }
 PWB_STATE1_SUBJECTS = tuple(sorted((
     "openspec/changes/polaris-project-wide-butlers-model/.openspec.yaml",
     "openspec/changes/polaris-project-wide-butlers-model/proposal.md",
@@ -3847,11 +3863,35 @@ PUBLIC_SOURCE_SCOPE_V7_ACT = f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBL
 def _activate_public_source_scope_v7_copy_registry():
     """The version-7 manifest is a current copy of the policy argument once the act exists."""
     if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V7_ACT))
-            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V7_MANIFEST))):
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V7_MANIFEST))
+            # once the version-8 act exists the version-7 manifest is history (pinned by the amendment registries)
+            and not os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT_PATH))):
         ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V7_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
 
 
 _activate_public_source_scope_v7_copy_registry()
+
+
+#: The public-source screening scope, version 8 (`syzygy-pdja.23`, recorded under
+#: `syzygy-pdja.21`; owner selection OWNER-SELECTION-SCREENING-SCOPE-V8-2026-11-08;
+#: builder `scripts/build_public_source_screening_scope_v8.py`; recorder
+#: `scripts/record_public_source_screening_scope_v8_act.py`): one `approve-policy`
+#: act over the one manifest row (variant `pv`: private sources under stricter
+#: rules). Its packet carries no digest, so the manifest is the only copy. Gated on
+#: the performed record, as for version 7.
+PUBLIC_SOURCE_SCOPE_V8_DIR = f"{CANDIDATES}/public-source-screening-scope-v8"
+PUBLIC_SOURCE_SCOPE_V8_MANIFEST = f"{PUBLIC_SOURCE_SCOPE_V8_DIR}/PUBLIC-SOURCE-SCREENING-SCOPE-V8-MANIFEST.txt"
+PUBLIC_SOURCE_SCOPE_V8_ACT = PUBLIC_SOURCE_SCOPE_V8_ACT_PATH
+
+
+def _activate_public_source_scope_v8_copy_registry():
+    """The version-8 manifest is a current copy of the policy argument once the act exists."""
+    if (os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_ACT))
+            and os.path.isfile(os.path.join(ROOT, PUBLIC_SOURCE_SCOPE_V8_MANIFEST))):
+        ACT_DIGEST_COPY_FILES[PUBLIC_SOURCE_SCOPE_V8_MANIFEST] = (PUBLIC_SOURCE_SCOPE_V2_LABEL,)
+
+
+_activate_public_source_scope_v8_copy_registry()
 
 
 #: The public-source screening scope, version 8 (`syzygy-pdja.23`, owner direction
@@ -4182,6 +4222,7 @@ BARE_DIGEST_HEADING_MANIFEST_EXEMPTIONS = {
     (f"{DECISIONS}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V5-ACT.md", "manifest"): f"{CANDIDATES}/public-source-screening-scope-v5/PUBLIC-SOURCE-SCREENING-SCOPE-V5-MANIFEST.txt",
     (PUBLIC_SOURCE_SCOPE_V6_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V6_MANIFEST,
     (PUBLIC_SOURCE_SCOPE_V7_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V7_MANIFEST,
+    (PUBLIC_SOURCE_SCOPE_V8_ACT, "manifest"): PUBLIC_SOURCE_SCOPE_V8_MANIFEST,
 }
 
 

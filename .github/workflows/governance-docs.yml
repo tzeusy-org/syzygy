@@ -357,6 +357,9 @@ jobs:
       - name: record_public_source_screening_scope_v7_act --selftest
         run: python3 scripts/record_public_source_screening_scope_v7_act.py --selftest
 
+      - name: record_public_source_screening_scope_v8_act --selftest
+        run: python3 scripts/record_public_source_screening_scope_v8_act.py --selftest
+
       - name: check_polaris_response_ceiling_reading --check
         run: python3 scripts/check_polaris_response_ceiling_reading.py --check
 

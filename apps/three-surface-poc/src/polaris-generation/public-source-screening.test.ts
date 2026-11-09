@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { tempDir } from '@syzygy/test-kit';
+import { applyUnifiedPatch, tempDir } from '@syzygy/test-kit';
 
 import { withConsent, POLICY_ACT_FORMS, type AdmissionRecord } from '@syzygy/polaris-generation-consent';
 import { DEFAULT_DISCOVERY_BUDGET, discoverAndSelect, excludedSourceId, generationSourceIdentity, generationSourcesForBody, gitBlobObjectId, runGenerationPipeline, stageSchema, validateGenerationSources, validateStage, reviewVerdict, type GenerationSource, type PipelinePorts, type PipelineResult } from '@syzygy/polaris-generation-core';
@@ -609,5 +609,38 @@ describe('the version-5 owner placements through the corpus reader', () => {
     ['another repository', 'repository:other', () => [placed.commit]],
   ])('withholds it for %s', async (_name, repository, commits) => {
     expect(await paths(placing(repository, commits()))).toEqual(['src/a.c']);
+  });
+});
+
+// Screening scope version 8 (variant `pv`): the provider mode's reader reads only when its caller gives the pair's visibility, and only a
+// public one; a private pair is refused (no egress consent stating a private pair, and the acquisition fetches). The bytes are the
+// package's patch over the version-7 policy on disk, refused unless they hash to the package manifest's one row.
+describe('the provider-mode reader under screening scope version 8', () => {
+  const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../../..');
+  const POLICY = '.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json';
+  const PATCH = '.syzygy/governance/contracts/candidates/public-source-screening-scope-v8/proposed/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json.pv.patch';
+  const ROW = '44153bbe210c7a724f224f2bc1c9255db43cf0887b6ad22dd24884514f21bbe8';
+  const disk = readFileSync(join(REPO_ROOT, POLICY), 'utf8');
+  const v8 = new TextEncoder().encode(sha(new TextEncoder().encode(disk)) === ROW ? disk : applyUnifiedPatch(disk, readFileSync(join(REPO_ROOT, PATCH), 'utf8')));
+  const v8Port = port(actRecord(sha(v8)), v8);
+  const subject = { repository: 'repository:redis-redis', commit: '498ecd0d6d007db11ddb3aea9428552598a78622' };
+  it('the fixture is the manifest row', () => {
+    expect(sha(v8)).toBe(ROW);
+  });
+  it('reads a public pair', async () => {
+    const screen = await loadPublicSourceScreen(v8Port, Buffer.alloc(32, 1), subject, 'public');
+    expect(screen.policyVersion).toBe('1.9.0-public-source-candidate.1.none.code-all.redact-span.v5-bcd.v6-p.v7-s.v8-pv');
+  });
+  it.each([
+    ['no decision', undefined, 'public-source-policy: policy version 8 decides each pair\'s visibility from its observation consent records, launch consent records included, and this reader was given no decision'],
+    ['a private pair', 'private' as const, 'public-source-policy: the pair is private; the provider mode reads no private repository (no egress consent stating a private pair is in force, and it fetches from an upstream)'],
+  ])('refuses %s', async (_name, visibility, message) => {
+    await expect(loadPublicSourceScreen(v8Port, Buffer.alloc(32, 1), subject, visibility)).rejects.toThrow(message);
+  });
+  it('refuses a private pair under a policy without sourceVisibility too', async () => {
+    await expect(loadPublicSourceScreen(goodPort, Buffer.alloc(32, 1), subject, 'private')).rejects.toThrow('public-source-policy: the pair is private');
+  });
+  it('reads a policy without sourceVisibility given no decision, as before', async () => {
+    await expect(loadPublicSourceScreen(goodPort, Buffer.alloc(32, 1), subject)).resolves.toMatchObject({ policyVersion: '9.9.0-fixture.1' });
   });
 });

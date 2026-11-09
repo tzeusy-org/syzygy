@@ -373,6 +373,13 @@ export const POLICY_ACT_FORMS: readonly PolicyActForm[] = Object.freeze([Object.
   title: '# Owner act — Polaris Butlers secret-classification policy approval (public-source screening scope, version 7)',
   identity: (date: string) => `PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V7-APPROVAL-${date}`,
   ...APPROVE_POLICY,
+}), Object.freeze({
+  // scripts/record_public_source_screening_scope_v8_act.py (`syzygy-pdja.21`, variant pv, private sources): it supersedes version 7 the
+  // same way, from its own instant, once recorded. Until then no record of this form exists and the chain ends at version 7.
+  file: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-ACT.md',
+  title: '# Owner act — Polaris Butlers secret-classification policy approval (public-source screening scope, version 8)',
+  identity: (date: string) => `PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-APPROVAL-${date}`,
+  ...APPROVE_POLICY,
 })]);
 export const POLICY_ACT_FILE = POLICY_ACT_FORMS[0]!.file;
 /** Earlier acts that name the same policy file for its Butlers-only content, pinned by name and digest: they bind other bytes
@@ -463,9 +470,9 @@ async function strict<T>(read: () => Promise<ActState<T>>): Promise<ActState<T>>
 /** The screening-scope policy act chain at `now`. `final` is the act the chain puts in force then (the latest version whose instant
  * has passed); `ok` only when it binds exactly the on-disk policy bytes and that policy declares a `publicSourceScope` object, which is
  * exactly when the port's public-source-policy check is satisfied. `absent` before the first act's instant. `acts` is every recorded
- * version in chain order; `v1` to `v7` name them by version. */
+ * version in chain order; `v1` to `v8` name them by version. */
 export type PolicyActChain = {
-  readonly v1: ParsedAct | null; readonly v2: ParsedAct | null; readonly v3: ParsedAct | null; readonly v4: ParsedAct | null; readonly v5: ParsedAct | null; readonly v6: ParsedAct | null; readonly v7: ParsedAct | null; readonly acts: readonly ParsedAct[];
+  readonly v1: ParsedAct | null; readonly v2: ParsedAct | null; readonly v3: ParsedAct | null; readonly v4: ParsedAct | null; readonly v5: ParsedAct | null; readonly v6: ParsedAct | null; readonly v7: ParsedAct | null; readonly v8: ParsedAct | null; readonly acts: readonly ParsedAct[];
   readonly final: ParsedAct; readonly policyDigest: string;
 };
 export function readPolicyActChain(options: StrictReadOptions): Promise<ActState<PolicyActChain>> {
@@ -475,7 +482,7 @@ export function readPolicyActChain(options: StrictReadOptions): Promise<ActState
     const final = policyActAt(acts, options.now);
     if (final === null) return { state: 'absent', why: 'no screening-scope policy act is in force yet' };
     const why = policyMismatch(final, policy, scope);
-    return why === null ? { state: 'ok', v1: acts[0] ?? null, v2: acts[1] ?? null, v3: acts[2] ?? null, v4: acts[3] ?? null, v5: acts[4] ?? null, v6: acts[5] ?? null, v7: acts[6] ?? null, acts, final, policyDigest: sha256(policy) } : { state: 'refused', why };
+    return why === null ? { state: 'ok', v1: acts[0] ?? null, v2: acts[1] ?? null, v3: acts[2] ?? null, v4: acts[3] ?? null, v5: acts[4] ?? null, v6: acts[5] ?? null, v7: acts[6] ?? null, v8: acts[7] ?? null, acts, final, policyDigest: sha256(policy) } : { state: 'refused', why };
   });
 }
 

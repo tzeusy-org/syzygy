@@ -68,7 +68,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { POLICY_ACT_FORMS, readClassActState, readPolicyActChain } from '@syzygy/polaris-generation-consent';
-import { codeContentExempt, compileEveryOffsetMatcher, documentationExempt, publicSourceContentClass, readCodeContentExemption, readGovernanceTextRule, readProjectDocumentationExemption, readProjectDocumentationRule, readScopeDetectors, readSecretRedaction, redactBody, type PipelinePorts, type PlacementSubject, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core';
+import { codeContentExempt, compileEveryOffsetMatcher, documentationExempt, publicSourceContentClass, readCodeContentExemption, readGovernanceTextRule, readProjectDocumentationExemption, readProjectDocumentationRule, readScopeDetectors, readSecretRedaction, readSourceVisibility, redactBody, type PipelinePorts, type SourceVisibility, type PlacementSubject, type PublicSourceContentClass, type RedactionDetector } from '@syzygy/polaris-generation-core';
 import { compileDetectors, deniedPathReason, detectSecrets, scanActiveContent, type DeniedPathRules, type SecretDetector } from '@syzygy/three-surface-poc-core';
 import { sha256 } from '@syzygy/support';
 
@@ -153,7 +153,7 @@ const stringList = (value: unknown): value is readonly string[] => Array.isArray
  * (its consent identity, `repository:<id>`, which the reader config already carries) and the admitted commit it is read at, which the
  * version-5 owner placements compare; null places nothing. */
 export async function loadPublicSourceScreen(port: PublicSourcePolicyActPort = checkoutPolicyActPort(), runKey: Uint8Array = newGenerationRunKey(),
-  subject: PlacementSubject | null = null): Promise<PublicSourceScreen> {
+  subject: PlacementSubject | null = null, visibility?: SourceVisibility): Promise<PublicSourceScreen> {
   if (runKey.byteLength < 32) refuse('run key shorter than 32 bytes');
   const { actRecord, why, policy, classActInForce } = await port.read();
   if (actRecord === undefined) refuse(`no screening-scope policy act is in force${why === undefined ? '' : ` (${why})`}`);
@@ -173,6 +173,14 @@ export async function loadPublicSourceScreen(port: PublicSourcePolicyActPort = c
   const scope = doc.publicSourceScope, admission = doc.sourceAdmission as Record<string, unknown> | undefined;
   if (scope === null || typeof scope !== 'object' || Array.isArray(scope)) refuse('policy carries no publicSourceScope');
   if (typeof doc.policyId !== 'string' || typeof doc.policyVersion !== 'string') refuse('policy identity unreadable');
+  // Version 8 (`sourceVisibility`): visibility is decided per commit from every effective observation consent record of the pair, launch
+  // consent records included, which this reader does not read, so it reads only when its caller gives the decision, and only a public
+  // one. A private pair is refused here: this reader is the provider mode's, whose sends need an egress consent naming the pair as
+  // private (none is in force), and whose acquisition fetches from an upstream, which version 8 forbids for a private repository.
+  const visibilityRead = readSourceVisibility(scope);
+  if (!visibilityRead.ok) refuse(`policy ${visibilityRead.why.replace(/^its /u, '')}`);
+  if (visibility === 'private') refuse('the pair is private; the provider mode reads no private repository (no egress consent stating a private pair is in force, and it fetches from an upstream)');
+  if (visibilityRead.ok && visibilityRead.declared && visibility !== 'public') refuse('policy version 8 decides each pair\'s visibility from its observation consent records, launch consent records included, and this reader was given no decision');
   if (admission === null || typeof admission !== 'object' || !stringList(admission.deniedPathBasenames) || !stringList(admission.deniedPathPrefixes)
     || !stringList(admission.deniedPathSuffixes)) refuse('policy denied-path rules unreadable');
   const classification = (scope as Record<string, unknown>).contentClassification as Record<string, unknown> | undefined;
@@ -247,9 +255,9 @@ export async function loadPublicSourceScreen(port: PublicSourcePolicyActPort = c
 /** The any-repo reader with the public-source screen in force: the policy act
  * is verified before the admission port is asked or the repository touched. */
 export async function readScreenedRepoCorpus(repoRoot: string, config: Pick<ReaderConfig, 'repositoryId' | 'revision' | 'include' | 'exclude' | 'oversize'>,
-  ports: Omit<RepoCorpusPorts, 'screen'> & { readonly policyAct?: PublicSourcePolicyActPort; readonly runKey?: Buffer } = {}): Promise<RepoCorpus> {
+  ports: Omit<RepoCorpusPorts, 'screen'> & { readonly policyAct?: PublicSourcePolicyActPort; readonly runKey?: Buffer; readonly visibility?: SourceVisibility } = {}): Promise<RepoCorpus> {
   const runKey = ports.runKey ?? newGenerationRunKey();
-  const screen = await loadPublicSourceScreen(ports.policyAct, runKey, { repository: config.repositoryId, commit: config.revision });
+  const screen = await loadPublicSourceScreen(ports.policyAct, runKey, { repository: config.repositoryId, commit: config.revision }, ports.visibility);
   return readRepoCorpus(repoRoot, config, { ...(ports.admission === undefined ? {} : { admission: ports.admission }), ...(ports.readBlobs === undefined ? {} : { readBlobs: ports.readBlobs }), screen, runKey });
 }
 
@@ -257,7 +265,7 @@ export async function readScreenedRepoCorpus(repoRoot: string, config: Pick<Read
  * original Git blobs by the pinned identifiers, verifies their hashes, and screens them again. Returned JSON projections never verify
  * themselves: the pipeline compares the complete request population against this newly produced population before dispatch. */
 export function screenedRepoCorpusVerifier(repoRoot: string, config: Pick<ReaderConfig, 'repositoryId' | 'revision' | 'include' | 'exclude' | 'oversize'>,
-  ports: Omit<RepoCorpusPorts, 'screen'> & { readonly policyAct?: PublicSourcePolicyActPort; readonly runKey?: Buffer } = {}): PipelinePorts['verifySources'] {
+  ports: Omit<RepoCorpusPorts, 'screen'> & { readonly policyAct?: PublicSourcePolicyActPort; readonly runKey?: Buffer; readonly visibility?: SourceVisibility } = {}): PipelinePorts['verifySources'] {
   return async request => {
     if (request.sources.some(source => source.repositoryId !== config.repositoryId || source.revision !== config.revision)) return false;
     try { return (await readScreenedRepoCorpus(repoRoot, config, ports)).sources; } catch { return false; }
