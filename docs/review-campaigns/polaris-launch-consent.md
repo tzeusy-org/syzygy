@@ -10,7 +10,9 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-8-RAW.md:4`), over `f242299f`, the eighth review of package `polaris-dossier-launch-consent` v1.2 and the fifth of the owner's redesign. It found round 7's findings answered and has one revise finding, the wording of one falsifier arm, and four notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-8-DISPOSITIONS.md`. Per the owner's 2026-11-10 instruction the loop continues while rounds converge. The repaired bytes await round 9.
+`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-9-RAW.md:4`), over `35e46950`, the ninth review of package `polaris-dossier-launch-consent` v1.2 and the sixth of the owner's redesign. It found round 8's findings repaired and has three revise findings and three notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-9-DISPOSITIONS.md`; the recurring class (a statement a refused run cannot make) is repaired at the root by one stage rule. Per the owner's 2026-11-10 instruction the loop continues while rounds converge. The repaired bytes await round 10.
+
+Round 8 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-8-RAW.md:4`), over `f242299f`, the fifth review of the owner's redesign. It found round 7's findings answered and has one revise finding, the wording of one falsifier arm, and four notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-8-DISPOSITIONS.md`.
 
 Round 7 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-7-RAW.md:4`), over `33309d11`, the fourth review of the owner's redesign. It found round 6's findings answered and has one revise finding and three notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-7-DISPOSITIONS.md`.
 

@@ -1,9 +1,9 @@
 # Owner sign-off — Polaris dossier launch consent, version 1.2
 
 > **Candidate — binds nothing.** [Observed] Rounds 1 to 3 of review returned
-> `REVISE`. On 2026-11-10 you chose a redesign. Rounds 4 to 8, its first
+> `REVISE`. On 2026-11-10 you chose a redesign. Rounds 4 to 9, its first
 > reviews, returned `REVISE` on the text's consistency and edge cases; these
-> bytes are the round-8 repair, and no review has read them yet. This page may be offered only after
+> bytes are the round-9 repair, and no review has read them yet. This page may be offered only after
 > a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
 > install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
 > Nothing here records a choice; only your selection after review binds this
@@ -116,6 +116,13 @@ unchanged.
   history. Whether it stayed in the copy is Inferred.
 - **Disk.** Each completed run leaves one commit's files in a directory of
   Syzygy's own, outside the run's state directory, until you remove it.
+- **The run record keeps what Syzygy read before your answer.** Version
+  1.0 kept the results of Syzygy's pre-answer reads to the question, the
+  launch output and the records a confirmed answer makes; its review
+  carried this to you as note G5. Version 1.2 also stores them in the run
+  record, as the statements it requires there (the pinned revision, its
+  date, the identity and URL), because a refused run must still say what
+  it reached. The run record stays in the run's state directory.
 
 ## Before you sign
 
