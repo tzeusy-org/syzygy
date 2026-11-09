@@ -25,7 +25,7 @@
    "title": "Honest close and a review loop on every revision",
    "owner_value": 5,
    "build_cost": 2,
-   "prereq": "spec amendment",
+   "prereq": "spec amendment; sequenced after dossier spec v1.6 (syzygy-pdja.26, PR #808) or folded into it; travels with P3+P5",
    "merges": [
     "E1-M1",
     "E1-M6",
@@ -49,7 +49,7 @@
    "title": "The record tells the truth about credentials",
    "owner_value": 5,
    "build_cost": 2,
-   "prereq": "none",
+   "prereq": "slice 1 none; slice 2 waits on P-117 Q1 (syzygy-bpyt.8.15)",
    "merges": [
     "E1-M2"
    ],
@@ -65,7 +65,7 @@
    "title": "Thesis-first landing and a spine",
    "owner_value": 5,
    "build_cost": 2,
-   "prereq": "none",
+   "prereq": "spec amendment (local-agent-mode spec lines 247, 259); travels with P1+P5",
    "merges": [
     "D1-M1",
     "I2-M1",
@@ -106,7 +106,7 @@
    "title": "Show, then tell",
    "owner_value": 5,
    "build_cost": 2,
-   "prereq": "none",
+   "prereq": "spec amendment (landing and quotation clauses); travels with P1+P3",
    "merges": [
     "D1-M2",
     "I3-M3",
@@ -272,7 +272,7 @@
    "title": "Wayfinding and line-precise evidence",
    "owner_value": 4,
    "build_cost": 1,
-   "prereq": "none",
+   "prereq": "none, subject to a check that no signed clause is touched",
    "merges": [
     "D4-M1",
     "D2-M2",
@@ -2671,5 +2671,10 @@
     }
    ]
   }
- ]
+ ],
+ "packet_review": {
+  "round1": "packet-reviewer: release Revise/Revise, creds Revise/Revise; corrections applied (gate mechanics, v1.6 overlap, P3/P5 amendment status, P-117 Q1 overlap, session .key files, doctrine cites, external 777 widening)",
+  "round2": "release Scope Revise ('stays closed' inverted) / Rec Pass; creds Revise/Revise (shell-snapshots, session-env, mode scope, evidence depth)",
+  "round3": "both items Pass/Pass; no material corrections"
+ }
 }

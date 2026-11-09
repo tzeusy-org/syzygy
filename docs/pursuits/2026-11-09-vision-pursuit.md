@@ -144,7 +144,7 @@ act), then how many lanes converged. Ids are P1…P15, so they cannot be confuse
 Where a move continues an open bead, it says so. Full slices, merged agent moves and evidence
 are under `.ranked_moves[]`.
 
-**P1 — Honest close and a review loop on every revision (truth; 5/2; spec amendment).**
+**P1 — Honest close and a review loop on every revision (truth; 5/2; spec amendment, sequenced after dossier spec v1.6).**
 - Render each checked revision; rendering is deterministic and cheap.
 - Run a mechanical design pre-pass before the fidelity repairs are spent.
 - Give fidelity and design separate repair budgets.
@@ -152,16 +152,20 @@ are under `.ranked_moves[]`.
   record field comes from, and how the run ended. `close` refuses, or labels as such, a run
   whose latest passed draft is newer than its site.
 - Re-stamp the review-status region of every page.
-- Merges E1-M1, E1-M6, D2-M1, I7-M1 and S-M1. Relates to `syzygy-pdja.26` and `syzygy-1z8m`.
+- Merges E1-M1, E1-M6, D2-M1, I7-M1 and S-M1. Relates to `syzygy-1z8m`.
+- It amends the same spec as v1.6 (`syzygy-pdja.26`, PR #808), so it follows that sign-off or folds into it. Overlapping OpenSpec changes are prohibited.
+- It travels with P3 and P5 as one coordinated delta.
 
-**P2 — The record tells the truth about credentials (truth, security; 5/2; none).**
+**P2 — The record tells the truth about credentials (truth, security; 5/2; slice 1 none, slice 2 waits on P-117 Q1).**
 - Choose record sentences by launch mode.
 - Delete every agent-home credential copy at stop and close, or hand the credential over
   through the broker.
 - Refuse a state root wider than 0700.
-- Merges E1-M2. Cleaning up the existing copies is owner item `creds`.
+- Merges E1-M2.
+- Slice 2's remedy, deletion or broker hand-over, is the question already open as P-117 Q1 (`syzygy-bpyt.8.15`).
+- Cleaning up the existing files is owner item `creds`.
 
-**P3 — Thesis-first landing and a spine (comprehension; 5/2; none).**
+**P3 — Thesis-first landing and a spine (comprehension; 5/2; spec amendment).**
 - The renderer owns the landing order: title, then a one-sentence thesis (what, for whom, why),
   then the hero artifact (P5), with no apparatus above it.
 - The schema gains `thesis` and 3–5 `pillars`. Each pillar names its cost and the Pole that
@@ -170,6 +174,8 @@ are under `.ranked_moves[]`.
   ribbon.
 - The brief stops pasting rules and then reversing them.
 - Merges D1-M1, I2-M1, I2-M5, D4-M2 and S-M3.
+- It changes signed clauses: the landing composition (local-agent-mode spec line 259) and the legend (line 247).
+- It travels with P1 and P5 as one coordinated delta.
 
 **P4 — Make the reader explicit (comprehension; 5/2; none).**
 - Put the declared audience into the brief and into RS-2. This first slice is bug-sized.
@@ -179,13 +185,14 @@ are under `.ranked_moves[]`.
 - Optional persona lenses over the same content.
 - Merges I5-M1, I5-M2, I5-M3 and S-M2.
 
-**P5 — Show, then tell (comprehension; 5/2; none).**
+**P5 — Show, then tell (comprehension; 5/2; spec amendment).**
 - A `hero` slot: a verified, screened excerpt of code, a CLI session or a usage transcript,
   byte-checked like a quote, placed right after the thesis.
 - Annotated code walks: Syzygy renders the cited lines, and the author writes cited margin
   notes.
 - `check` advises when a dossier has no hero artifact.
 - Merges D1-M2, I3-M3 and the S-M7 hero half.
+- The hero slot changes the signed landing and quotation clauses, so it travels with P1 and P3.
 
 **P6 — Rendered reader probe: give readiness pixels (comprehension, truth; 5/3; spec
 amendment).**
@@ -253,7 +260,7 @@ required diagrams).**
   fallback unchanged.
 - Merges I3-M1, D3-M1…M4, I3-M5 and the S-M7 diagram half.
 
-**P13 — Wayfinding and line-precise evidence (comprehension; 4/1; none).**
+**P13 — Wayfinding and line-precise evidence (comprehension; 4/1; none, subject to a check that it touches no signed clause).**
 - Source pages with line numbers and a per-line id. Citations link to `#L<a>-L<b>` with a
   `:target` highlight, and no script.
 - A sticky sidebar with `aria-current`, plus previous and next links on every page.
@@ -291,16 +298,14 @@ record sentence.
 
 ### Retained, not ranked
 
-- I3-M2: a parser-derived structure index rendered as `Observed`. It needs an RFC 0007 label
-  amendment, which is a contract question, so it was not drafted this run.
-- I7-M5: publishing an accepted dossier into the observed repository. It needs a new
-  write-consent class.
-- I2-M3: consented history mining (a timeline of how the project got here). It is an owner act
-  under REQ-038's history option.
-- I6-M4: an understanding cache. I4-M5: per-archetype reader budgets, an owner act that should
-  follow P6's first measurements.
-- D6-M3 and D6-M4: the type-scale pass and the print stylesheet. They overlap
-  `syzygy-dov.16.6` and should travel with P13.
+These are in `.units[]`:
+- I3-M2, parser-derived `Observed` structure: needs an RFC 0007 label amendment.
+- I7-M5, publishing into the observed repository: needs a new write-consent class.
+- I2-M3, consented history mining: an owner act under REQ-038.
+- I6-M4, an understanding cache.
+- I4-M5, per-archetype reader budgets: should follow P6's first measurements.
+- D6-M3 and D6-M4, the type scale and print style: travel with P13, overlapping
+  `syzygy-dov.16.6`.
 
 ## Corrections applied by the orchestrator
 
@@ -326,8 +331,15 @@ served. The packet lives at `~/.tmp/user-questionnaire/syzygy-2026-11-09-pursuit
 - `pursuit-2026-11-09-creds`: what to do with the 20 credential copies that already exist (P2
   fixes the code going forward).
 
-The spec amendments that P1, P6, P7, P8, P11 and P12 carry are not questions here. They enter
-the feature-request funnel after release and reach the owner as CC-REV-2 deltas.
+An independent reviewer returned Revise on both items in rounds 1 and 2, and Pass/Pass in round
+3. The corrections are applied in the packet:
+- Closing the gate releases all fifteen moves, so a partial release means ungated slice beads.
+- P1, P3 and P5 amend the spec v1.6 is amending.
+- P2's remedy, and the credential question as a whole, already sit with P-117 Q1.
+- The cleanup population includes session `.key` files.
+
+The spec amendments that P1, P3, P5, P6, P7, P8, P11 and P12 carry are not questions here. They
+enter the feature-request funnel after release and reach the owner as CC-REV-2 deltas.
 
 ## Gated epic
 
@@ -337,10 +349,9 @@ owner's move, and it releases the children.**
 
 ## Known ledger and deviations
 
-- **Deduped against** 70 open or in-flight rows: `syzygy-pdja.*`, `syzygy-mea.*`,
-  `syzygy-u05.*`, `syzygy-1z8m`, `syzygy-zwja`, `syzygy-cnwp`, `syzygy-bpyt.5.*`/`.8`,
-  `syzygy-wrih`, `syzygy-die7` and `syzygy-7yad`. Also LEARNING-LOG L1–L13 and the Redis gap
-  list. L8 (generality unmeasured) persists and is carried by P9 and P7.
+- **Deduped against** 70 open or in-flight Polaris rows (`syzygy-pdja`, `-mea`, `-u05`,
+  `-1z8m`, `-bpyt.5`/`.8` and others), LEARNING-LOG L1–L13 and the Redis gap list. L8, which
+  says generality is unmeasured, persists.
 - **Retention deviation.** The deliverables rule keeps only the two newest data files.
   `2026-09-13-vision-pursuit-data.json` has live citers under `docs/evidence/` (9 files), so it
   was not pruned. The cap is exceeded by one file, deliberately.
