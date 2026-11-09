@@ -147,6 +147,19 @@ describe('refusals before asking, and refusals of the answer, record nothing', (
     noBlobRead(s.reads.log);
   });
 
+  it.each([
+    ['the phrase in lower case', (r12: string) => `consent to observe repository:redis-redis at ${r12}`],
+    ['the phrase with a trailing space', (r12: string) => `CONSENT TO OBSERVE repository:redis-redis AT ${r12} `],
+    ['the phrase naming another identity', (r12: string) => `CONSENT TO OBSERVE repository:redis-other AT ${r12}`],
+  ])('an observation answer that is %s, before an exact drawer phrase: refused, no record exists afterwards', async (_name, answer) => {
+    const { up, clone } = plain();
+    const r12 = up.commits[0]!.slice(0, 12);
+    const s = setup(['public', 'none', answer(r12), `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`]);
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'answer', recorded: false, reason: 'the answer was not the exact phrase for the observation consent; nothing was recorded. The owner runs, in person at a terminal:' } });
+    expect(gitIn(s.home, 'for-each-ref', LAUNCH_REF)).toBe('');
+  });
+
   it('not declared public while no policy admits non-public sources: refused before any record, naming the successor', async () => {
     const { clone } = plain();
     for (const declaration of ['not public', '']) {
