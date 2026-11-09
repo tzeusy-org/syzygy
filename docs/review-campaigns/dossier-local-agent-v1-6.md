@@ -10,6 +10,8 @@ Candidate v1.6 amendment of `polaris-dossier-local-agent-mode`, package `contrac
 
 ## Last verdict of record, and where the findings landed
 
+Round 6 `CONFIRM WITH EXCEPTIONS` (`R-DOSSIER-LOCAL-AGENT-V1-6-6-RAW.md:4`) over `b2f30f14`, the same package bytes in the finding form the recorder reads. It has eight notes, dispositioned in `R-DOSSIER-LOCAL-AGENT-V1-6-6-NOTES.md`, and the sign-off is recorded on it.
+
 Round 5 `CONFIRM WITH EXCEPTIONS` (`R-DOSSIER-LOCAL-AGENT-V1-6-5-RAW.md:4`) over `b4bdcd08`. It is a confirmation read of round 4's bytes, made because round 4's head quoted an abbreviated commit. It has ten notes, dispositioned in `R-DOSSIER-LOCAL-AGENT-V1-6-5-NOTES.md`, and the sign-off is recorded on it.
 
 Round 4 `CONFIRM WITH EXCEPTIONS` (`R-DOSSIER-LOCAL-AGENT-V1-6-4-RAW.md:4`) over `e9d50e3c`.
