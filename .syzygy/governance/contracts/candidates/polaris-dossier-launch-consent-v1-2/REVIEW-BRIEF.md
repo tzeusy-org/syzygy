@@ -1,4 +1,4 @@
-# Review brief — Polaris dossier launch-time consent, version 1.2, round 8
+# Review brief — Polaris dossier launch-time consent, version 1.2, round 9
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
@@ -6,9 +6,9 @@
 > the pinned commit in place in the operator's full clone. After round 3 the
 > owner chose a redesign: Syzygy copies the pinned commit from the
 > operator's clone into a one-commit clone of its own over Git's local file
-> transport, and the signed read rules apply to the copy. Rounds 4 to 7,
+> transport, and the signed read rules apply to the copy. Rounds 4 to 8,
 > the first reviews of the redesign, returned `REVISE` on the text's
-> consistency and edge cases; these bytes are round 7's repair, and round 8
+> consistency and edge cases; these bytes are round 8's repair, and round 9
 > reviews them.
 > Read the post-apply spec as a whole, not only the repaired clauses.
 >
@@ -41,10 +41,11 @@ alternates); delete them afterwards.
   `PROPOSED-SUBJECTS.json`, `ROUND-1-DISPOSITIONS.md`,
   `ROUND-2-DISPOSITIONS.md`, `ROUND-3-DISPOSITIONS.md`,
   `ROUND-4-DISPOSITIONS.md`, `ROUND-5-DISPOSITIONS.md`,
-  `ROUND-6-DISPOSITIONS.md`, `ROUND-7-DISPOSITIONS.md` and this brief;
-- the raws of rounds 1 to 7,
+  `ROUND-6-DISPOSITIONS.md`, `ROUND-7-DISPOSITIONS.md`,
+  `ROUND-8-DISPOSITIONS.md` and this brief;
+- the raws of rounds 1 to 8,
   `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md` to
-  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-7-RAW.md`, whose findings
+  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-8-RAW.md`, whose findings
   the dispositions answer (round 3's as superseded by the redesign);
 - the builder `scripts/build_polaris_dossier_launch_consent_v1_2.py`;
 - the peel-and-delegate change to
@@ -153,8 +154,11 @@ Each is a yes/no question with the evidence that settles it.
      was observed? Is each of "copy-class run", "no-copy run" and "a run
      whose copy step started" used where, and only where, its definition
      (REQ-047) applies, and does a copy-class run refused before its copy
-     step state only that no copy was made? Do the round-7 stage sweep and
-     the occurrence list in `ROUND-7-DISPOSITIONS.md` hold row by row?
+     step state only that no copy was made? Does every falsifier arm and scenario
+     line state the class rule only in the defined terms, pronouns
+     included, and does an arm cover every launch-output copy statement?
+     Do the round-8 stage sweep and pronoun table in
+     `ROUND-8-DISPOSITIONS.md` hold row by row?
 4. **Is Syzygy's list of reads of the operator's clone closed and small?**
    - Can a conforming implementation read an object, the working tree, the
      index or any other Git-directory file of the operator's clone in a copy-class run? Can it honour the clone's configuration?
@@ -220,7 +224,7 @@ Each is a yes/no question with the evidence that settles it.
 17. **Does the tooling hold?** `--check` and `--selftest` of the v1.0, v1.1
     and v1.2 builders pass; each predicate has a mutation fixture that
     fails it (verification rule 6); the recorder's selftest passes.
-18. **Does any earlier concern survive?** For each finding of rounds 1 to 7,
+18. **Does any earlier concern survive?** For each finding of rounds 1 to 8,
     is it answered by the redesigned text or by its disposition? A concern
     the redesign re-opens in a new place is a finding.
 

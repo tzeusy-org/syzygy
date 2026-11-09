@@ -1,9 +1,9 @@
 # Owner sign-off — Polaris dossier launch consent, version 1.2
 
 > **Candidate — binds nothing.** [Observed] Rounds 1 to 3 of review returned
-> `REVISE`. On 2026-11-10 you chose a redesign. Rounds 4 to 7, its first
+> `REVISE`. On 2026-11-10 you chose a redesign. Rounds 4 to 8, its first
 > reviews, returned `REVISE` on the text's consistency and edge cases; these
-> bytes are the round-7 repair, and no review has read them yet. This page may be offered only after
+> bytes are the round-8 repair, and no review has read them yet. This page may be offered only after
 > a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
 > install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
 > Nothing here records a choice; only your selection after review binds this

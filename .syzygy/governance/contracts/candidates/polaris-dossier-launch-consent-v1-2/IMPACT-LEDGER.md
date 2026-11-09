@@ -84,7 +84,7 @@ computed, not yet recounted with the patch applied]. It is recounted by
 
 [Inferred] After sign-off only, under a separate implementation direction:
 
-- `init` makes the copy for every run that 047 says makes one: a directory
+- `init` makes the copy for every copy-class run: a directory
   and empty repository of Syzygy's own, a local fetch of the pinned commit
   alone, a detached checkout, in the stated Git environment; it then
   applies the existing single-commit clone-shape check
