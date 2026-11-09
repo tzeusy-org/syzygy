@@ -4,7 +4,7 @@ import { DECISIONS_DIR, POLICY_PATH } from '@syzygy/polaris-generation-consent';
 import { loadRecorderForms, renderPolicyAct } from '@syzygy/polaris-generation-consent/testing';
 import { sha256 } from '@syzygy/support';
 import { tempDir } from '@syzygy/test-kit';
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import { NON_PUBLIC_SUCCESSOR, policyAdmitsNonPublic } from './launch-cli.js';
 import { buildDossierScreen, loadDossierScreen, type DossierScreen } from './screen.js';
 import { V7, V8 } from './screening-v8.testkit.js';
@@ -37,7 +37,9 @@ const BODIES: readonly [string, string][] = [
 ];
 
 describe.runIf(V7 !== null)('a public repository under version 8 is screened exactly as under version 7', () => {
-  const before = screenOf(V7!, 'public'), after = screenOf(V8, 'public');
+  // Built in beforeAll: describe.runIf still runs this body at collection, and V7 is null once the act applies version 8.
+  let before: DossierScreen, after: DossierScreen;
+  beforeAll(() => { before = screenOf(V7!, 'public'); after = screenOf(V8, 'public'); });
   it('every path, its class, and every body of the population', () => {
     expect(PATHS.map(p => [p, after.screenPath(p), after.contentClass(p)])).toEqual(PATHS.map(p => [p, before.screenPath(p), before.contentClass(p)]));
     expect(BODIES.map(([p, b]) => after.screenTargetBody(b, p))).toEqual(BODIES.map(([p, b]) => before.screenTargetBody(b, p)));
