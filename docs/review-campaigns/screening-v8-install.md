@@ -10,4 +10,6 @@
 
 ## Last verdict of record, and where the findings landed
 
-Round 1: `CONFIRM WITH EXCEPTIONS` (`R-SCREENING-V8-INSTALL-1-RAW.md:4`), over `5d583b2b`. Finding 1 is tagged revise: `PROJECT-STATUS.md` had no v8 row. It is repaired with a v8 row and a dated mark on the v7 sentence. Notes 2–5 are dispositioned in the PR body, and the pre-existing substring test from note 2 has its own bead.
+Round 2: `REVISE` (`R-SCREENING-V8-INSTALL-2-RAW.md:4`), over `01d5a2e2`. Finding 1: the new v8 row said public pairs screen exactly as under version 7, and left out the refuse-every-read outcome. The row now quotes the act for both. Notes 2–4 are repaired: the act's wording on object ids, the role qualifier on the v7 mark, and this paragraph.
+
+Round 1: `CONFIRM WITH EXCEPTIONS` (`R-SCREENING-V8-INSTALL-1-RAW.md:4`), over `5d583b2b`. Its Finding 1 is tagged revise under a notes-only verdict, so the PR treated it as revise and repaired it: `PROJECT-STATUS.md` had no v8 row. Notes 2–5 are dispositioned in the PR body. Note 2's pre-existing substring test has its own bead.
