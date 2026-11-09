@@ -1,9 +1,9 @@
 {
   "subject": "screening scope version 8 reading predicates (sourceVisibility, private-pair rules)",
-  "commit": "1bf4eb46a931d141dd1ab4e086ee818830a01008",
+  "commit": "b5e3d02f6b7eef742d82eeee0143696055971a01",
   "runner": "scripts/screening_v8_mutations.py",
-  "mutants": 37,
-  "killed": 37,
+  "mutants": 40,
+  "killed": 40,
   "survived": [],
   "results": [
     {
@@ -113,7 +113,7 @@
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 35,
+      "passed": 37,
       "outcome": "killed"
     },
     {
@@ -122,18 +122,18 @@
       "old": "r.state === 'active' && r.record.recordClass",
       "new": "r.record.recordClass",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
-      "failed": 1,
-      "passed": 35,
+      "failed": 2,
+      "passed": 36,
       "outcome": "killed"
     },
     {
       "predicate": "gate: only the pair's records",
       "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
-      "old": " && r.record.identity === subject.repository);",
-      "new": ");",
+      "old": "const pairs = observations.filter(r => r.record.identity === subject.repository);",
+      "new": "const pairs = observations;",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 35,
+      "passed": 37,
       "outcome": "killed"
     },
     {
@@ -143,17 +143,17 @@
       "new": "pairs.filter(() => true)",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 35,
+      "passed": 37,
       "outcome": "killed"
     },
     {
       "predicate": "gate: only observation records",
       "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
-      "old": "r.record.recordClass === 'observation-consent' && r.record.identity",
-      "new": "r.record.identity",
+      "old": "r.state === 'active' && r.record.recordClass === 'observation-consent');",
+      "new": "r.state === 'active');",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
-      "failed": 1,
-      "passed": 35,
+      "failed": 2,
+      "passed": 36,
       "outcome": "killed"
     },
     {
@@ -163,7 +163,7 @@
       "new": "'public'",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 6,
-      "passed": 30,
+      "passed": 32,
       "outcome": "killed"
     },
     {
@@ -173,7 +173,7 @@
       "new": "r.record.publicDeclaration !== 'not-public' ? 'public'",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 3,
-      "passed": 33,
+      "passed": 35,
       "outcome": "killed"
     },
     {
@@ -243,7 +243,7 @@
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 6,
-      "passed": 30,
+      "passed": 32,
       "outcome": "killed"
     },
     {
@@ -253,7 +253,7 @@
       "new": "  return true || a.length === forms.length && a.length === b.length",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 7,
-      "passed": 29,
+      "passed": 31,
       "outcome": "killed"
     },
     {
@@ -263,7 +263,7 @@
       "new": "  return a.length === b.length",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 35,
+      "passed": 37,
       "outcome": "killed"
     },
     {
@@ -272,8 +272,8 @@
       "old": "  if (unparsed !== undefined) return",
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
-      "failed": 3,
-      "passed": 33,
+      "failed": 4,
+      "passed": 34,
       "outcome": "killed"
     },
     {
@@ -283,7 +283,7 @@
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 35,
+      "passed": 37,
       "outcome": "killed"
     },
     {
@@ -293,7 +293,7 @@
       "new": "  if (false) return `the visibility of repository:${repositoryId} cannot be decided",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 2,
-      "passed": 34,
+      "passed": 36,
       "outcome": "killed"
     },
     {
@@ -303,7 +303,7 @@
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 1,
-      "passed": 35,
+      "passed": 37,
       "outcome": "killed"
     },
     {
@@ -313,7 +313,7 @@
       "new": "  if (false) return",
       "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
       "failed": 2,
-      "passed": 34,
+      "passed": 36,
       "outcome": "killed"
     },
     {
@@ -323,7 +323,7 @@
       "new": "  if (false) return refused;",
       "test": "packages/polaris-dossier/src/polaris-clone.test.ts",
       "failed": 3,
-      "passed": 6,
+      "passed": 7,
       "outcome": "killed"
     },
     {
@@ -333,7 +333,7 @@
       "new": "(true ? (subject",
       "test": "packages/polaris-dossier/src/polaris-clone.test.ts",
       "failed": 1,
-      "passed": 8,
+      "passed": 9,
       "outcome": "killed"
     },
     {
@@ -364,6 +364,36 @@
       "test": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts",
       "failed": 1,
       "passed": 32,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "gate: an unreadable grant instant of any pair refuses",
+      "file": "packages/polaris-dossier/src/source-visibility-gate.ts",
+      "old": "observations.find(r => Number.isNaN",
+      "new": "observations.filter(r => r.record.identity === subject.repository).find(r => Number.isNaN",
+      "test": "packages/polaris-dossier/src/source-visibility-gate.test.ts",
+      "failed": 1,
+      "passed": 37,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "supervisor: reuse only a clone at the commit",
+      "file": "packages/polaris-dossier/src/polaris.ts",
+      "old": "head.status === 0 && head.stdout.trim() === chosen.commit",
+      "new": "head.status === 0",
+      "test": "packages/polaris-dossier/src/polaris-clone.test.ts",
+      "failed": 1,
+      "passed": 9,
+      "outcome": "killed"
+    },
+    {
+      "predicate": "test-kit: a hunk past the end copies only the text's lines",
+      "file": "packages/test-kit/src/unified-patch.ts",
+      "old": "k < Math.min(start, lines.length)",
+      "new": "k < start",
+      "test": "packages/test-kit/src/unified-patch.test.ts",
+      "failed": 1,
+      "passed": 2,
       "outcome": "killed"
     },
     {
