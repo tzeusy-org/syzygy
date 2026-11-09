@@ -230,6 +230,21 @@ class Package:
     #: The opening of a prior-round recap that closes the raw's findings
     #: section (``split_recap``); findings are read before it only.
     findings_end: str | None = None
+    #: For a registry entry: the record's scope, supersession, "does not" and
+    #: aggregate-closing text where the fixed text would be false for this
+    #: version (a version that widens what the entry admits, or supersedes an
+    #: earlier one). None keeps the fixed text, so every record written before
+    #: these fields existed regenerates byte for byte.
+    record_scope: str | None = None
+    record_supersession: str | None = None
+    record_does_not: str | None = None
+    record_aggregate_scope: str | None = None
+    #: For a registry entry a later version may replace at the same path: the
+    #: bytes that later version's builder takes as its base. Once the later
+    #: version is recorded, ``--check`` of this version holds the record's
+    #: "Installed entry SHA-256" line to them, so the line is never checked
+    #: against itself alone; a replaced version without it fails ``--check``.
+    replaced_bytes: Callable[[pathlib.Path], bytes] | None = None
 
 
 def _module(name: str):
@@ -1121,6 +1136,33 @@ def patch_package_applied(root: pathlib.Path, proposed: pathlib.Path,
         cwd=root, capture_output=True).returncode == 0 for patch in patches)
 
 
+GIT_SOURCE_V11_SCOPE = ("the entry's own subject, read authority, fetch, tags and state-directory\n"
+                        "writes, which for a copy-class run admit the one local copy its fetch\n"
+                        "declaration names; nothing wider")
+GIT_SOURCE_V11_SUPERSESSION = (
+    "supersedes version 1.0 of this entry, whose record\n"
+    "(PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md) stays the record of\n"
+    "that version and its bytes; revoked only by a later exact owner act naming it")
+GIT_SOURCE_V11_DOES_NOT = (
+    "It approves the registry entry named above at exactly the SHA-256 above and\n"
+    "no other byte: a later edit at that path is unsigned. It is one of the\n"
+    "separate acts a read needs; it gives no observation consent, adopts no\n"
+    "classification or screening policy, widens no network egress and no write to\n"
+    "an observed or external system, and authorizes no implementation. Against\n"
+    "version 1.0 it widens, in a copy-class run alone, local execution and a local\n"
+    "write: the Git processes the entry's fetch declaration names and the copy's\n"
+    "directory its stateDirectoryWrites declaration names. Every exclusion of the\n"
+    "acts in force stands.\n")
+GIT_SOURCE_V11_AGGREGATE = (
+    "This sign-off approves the registry entry its dedicated record names, at the\n"
+    "SHA-256 recorded there, under the Scope A extension the owner's selection\n"
+    "names, and supersedes version 1.0. That is one of the separate acts a read\n"
+    "needs. It gives no observation consent and widens no network egress; against\n"
+    "version 1.0 it widens, in a copy-class run alone, local execution and a local\n"
+    "write, as its record says. It authorizes no implementation, and a later version\n"
+    "of the package is signed separately.")
+
+
 def real_packages() -> dict[str, Package]:
     missing = lambda: _module("build_pwb_missing_currency_disclosure_scenario")  # noqa: E731
     dismissal = lambda: _module("build_pwb_dismissal_expiry_amendment")  # noqa: E731
@@ -1497,6 +1539,9 @@ def real_packages() -> dict[str, Package]:
             subject=CANDIDATES / "dossier-local-agent-acts/DOSSIER-LOCAL-AGENT-SITTING-MANIFEST.txt",
             installed=pathlib.Path(".syzygy/governance/declarations/adapter-registry/"
                                    "POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json"),
+            # Once v1.1 is recorded, v1.0's record SHA-256 line is held to the
+            # bytes v1.1's builder takes as its base (round-1 Finding 3).
+            replaced_bytes=lambda root: (root / git_source11().BASE).read_bytes(),
         ),
         # Version 1.1 replaces the installed v1.0 entry (the copy step of
         # launch-consent v1.2): its own candidate directory and builder, under
@@ -1517,6 +1562,13 @@ def real_packages() -> dict[str, Package]:
             installed=pathlib.Path(".syzygy/governance/declarations/adapter-registry/"
                                    "POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json"),
             review_alias="build_public_git_source_acquisition_local_agent_v1_1.py",
+            # The fixed scope, supersession and "does not" text is false for
+            # this version (round-1 Finding 2): it admits, in a copy-class run,
+            # Git processes and the copy's directory, and it replaces v1.0.
+            record_scope=GIT_SOURCE_V11_SCOPE,
+            record_supersession=GIT_SOURCE_V11_SUPERSESSION,
+            record_does_not=GIT_SOURCE_V11_DOES_NOT,
+            record_aggregate_scope=GIT_SOURCE_V11_AGGREGATE,
         ),
         # Version 1.1 patches the installed v1.0: its own candidate directory,
         # builder and reviewed bytes, under the same key, record stem and tag
@@ -2039,6 +2091,10 @@ RECORDED_RE = re.compile(r"^Recorded at \(UTC\): (\S+)$", re.MULTILINE)
 INSTALLED_SHA_LINE_RE = re.compile(r"^Installed entry SHA-256: ([0-9a-f]{64})$", re.MULTILINE)
 
 
+SCOPE_FIXED = "the entry's own subject and read authority, nothing wider"
+SUPERSESSION_FIXED = "supersedes nothing; revoked only by a later\nexact owner act naming it"
+
+
 def installed_lines(pkg: Package, root: pathlib.Path | None, instant: str | None,
                     installed_sha: str | None = None) -> str:
     """For a package that installs a registry entry, the RFC3-16(b) binding set
@@ -2061,12 +2117,11 @@ def installed_lines(pkg: Package, root: pathlib.Path | None, instant: str | None
             "Project identity: `project:syzygy`\n\n"
             f"Installed entry: {pkg.installed.as_posix()}\n\n"
             f"Installed entry SHA-256: {sha}\n\n"
-            "Scope: the entry's own subject and read authority, nothing wider\n\n"
+            f"Scope: {pkg.record_scope or SCOPE_FIXED}\n\n"
             f"Scope A extension: the owner's selection quoted above names it "
             f"(\"{SCOPE_A_EXTENSION}\"); the extension is a plain owner direction "
             "and this record is its only record\n\n"
-            "Supersession / revocation: supersedes nothing; revoked only by a later\n"
-            "exact owner act naming it\n\n"
+            f"Supersession / revocation: {pkg.record_supersession or SUPERSESSION_FIXED}\n\n"
             "Provenance state: `owner-adopted (bootstrap, uncorrelated)` — state (1),\n"
             "the owner's option selection quoted above\n\n"
             "A1 audit-record identity (RFC3-16(b) item 9): **explicitly absent**\n\n")
@@ -2077,6 +2132,8 @@ def does_not(pkg: Package) -> str:
         return ("It authorizes no implementation of the signed semantics, widens no consent,\n"
                 "read, write or egress, and approves no registry or policy byte. Every\n"
                 "exclusion of the acts in force stands.\n")
+    if pkg.record_does_not is not None:
+        return pkg.record_does_not
     return ("It approves the registry entry named above at exactly the SHA-256 above and\n"
             "no other byte: a later edit at that path is unsigned. It is one of the\n"
             "separate acts a read needs; it gives no observation consent, adopts no\n"
@@ -2204,6 +2261,8 @@ def aggregate_scope(pkg: Package) -> str:
     if pkg.installed is None:
         return ("This sign-off authorizes no implementation, widens no consent, read, write or\n"
                 "egress, and a later version of the package is signed separately.")
+    if pkg.record_aggregate_scope is not None:
+        return pkg.record_aggregate_scope
     return ("This sign-off approves the registry entry its dedicated record names, at the\n"
             "SHA-256 recorded there, under the Scope A extension the owner's selection\n"
             "names. That is one of the separate acts a read needs. It gives no observation\n"
@@ -2379,6 +2438,12 @@ def check(root: pathlib.Path, pkg: Package, version: str) -> int:
             if len(shas) != 1:
                 raise ValueError(f"record carries {len(shas)} 'Installed entry SHA-256' lines, not 1")
             replaced_sha = shas[0]
+            if pkg.replaced_bytes is None:
+                raise ValueError("a later version replaced this entry, and this package names no "
+                                 "bytes to hold the record's SHA-256 to")
+            if beh.digest(pkg.replaced_bytes(root)) != replaced_sha:
+                raise ValueError("the record's installed SHA-256 is not the SHA-256 of the bytes the "
+                                 "later version takes as its base")
         if text != render_record(pkg, version, f["Date"], f["Owner selection"], f["Review"],
                                  commit, verdict, disposition, parse_options(pkg, text),
                                  root=root, instant=instant,
@@ -3438,14 +3503,26 @@ def selftest() -> int:
         def install2(root):
             (root / entry).write_text('{"entry": 2}\n')
             return 0
+        reg = dataclasses_replace(reg, replaced_bytes=lambda root: b'{"entry": 1}\n')
         reg2 = dataclasses_replace(reg, apply=install2,
-                                   applied=lambda root: (root / entry).read_text() == '{"entry": 2}\n')
+                                   applied=lambda root: (root / entry).read_text() == '{"entry": 2}\n',
+                                   record_scope="SCOPE-V11", record_supersession="SUPERSEDES-V10",
+                                   record_does_not="DOES-NOT-V11\n", record_aggregate_scope="AGG-V11")
         with contextlib.redirect_stdout(io.StringIO()):
             wrote2 = record(tmp, reg2, "1.1", "2026-10-03", "Extend Scope A and sign v1.1", STUB_REVIEW,
                             None, instant="2026-10-03T09:30:00Z")
             old_ok = check(tmp, reg, "1.0")
             new_ok = check(tmp, reg2, "1.1")
             kept = (tmp / record_rel(reg, "1.0")).read_text(encoding="utf-8")
+            v11_text = (tmp / record_rel(reg2, "1.1")).read_text(encoding="utf-8")
+            v11_block = render_aggregate(reg2, "1.1", "2026-10-03", STUB_REVIEW, "CONFIRM", None)
+            # Round-1 Finding 3, probe B: a forged SHA-256 line in the replaced
+            # record, regenerated consistently, must fail.
+            rec10 = tmp / record_rel(reg, "1.0")
+            rec10.write_text(kept.replace(beh.digest(b'{"entry": 1}\n'), "0" * 64), encoding="utf-8")
+            forged = check(tmp, reg, "1.0")
+            rec10.write_text(kept, encoding="utf-8")
+            unheld = check(tmp, dataclasses_replace(reg, replaced_bytes=None), "1.0")
             (tmp / entry).write_text('{"entry": 3}\n')
             new_drift = check(tmp, reg2, "1.1")
         results.append(("a registry entry replaced by a recorded later version keeps its earlier "
@@ -3453,6 +3530,17 @@ def selftest() -> int:
                         "the installed bytes",
                         wrote2 == 0 and old_ok == 0 and new_ok == 0 and new_drift == 1
                         and "Installed entry SHA-256: " + beh.digest(b'{"entry": 1}\n') in kept))
+        results.append(("a replaced version's record with a forged SHA-256 line fails --check, held to "
+                        "the later version's base bytes; one naming no such bytes fails closed",
+                        forged == 1 and unheld == 1))
+        results.append(("a version's own scope, supersession and does-not text replace the fixed lines "
+                        "in its record and aggregate, and the fixed lines stay for a version naming none",
+                        "Scope: SCOPE-V11\n" in v11_text and "Supersession / revocation: SUPERSEDES-V10\n" in v11_text
+                        and "DOES-NOT-V11\n" in v11_text and "nothing wider" not in v11_text
+                        and "supersedes nothing" not in v11_text and "widens no egress, write" not in v11_text
+                        and "AGG-V11" in v11_block and "widens no write, egress" not in v11_block
+                        and "nothing wider" in kept and "supersedes nothing" in kept
+                        and "widens no egress, write or execution" in kept))
     real_reg = real_packages()["public-git-source-acquisition-local-agent"]
     results.append(("the real registry package installs its builder's entry and binds the sitting manifest",
                     real_reg.installed == _module("build_public_git_source_acquisition_local_agent").INSTALLED
@@ -3483,6 +3571,16 @@ def selftest() -> int:
                     and real_reg11.candidate == gs11.CANDIDATE and real_reg11.subject == gs11.PROPOSED
                     and real_reg11.subject_bytes is None and real_reg11.options == ()
                     and routed))
+    results.append(("the real registry entry v1.1 carries its own scope, supersession and does-not text, "
+                    "and v1.0 holds a replaced record to v1.1's base bytes while v1.0 renders the fixed text",
+                    real_reg11.record_scope == GIT_SOURCE_V11_SCOPE
+                    and "supersedes version 1.0" in (real_reg11.record_supersession or "")
+                    and "widens, in a copy-class run alone" in (real_reg11.record_does_not or "")
+                    and "supersedes version 1.0" in (real_reg11.record_aggregate_scope or "")
+                    and real_reg.record_scope is None and real_reg.record_supersession is None
+                    and real_reg.record_does_not is None and real_reg.record_aggregate_scope is None
+                    and real_reg.replaced_bytes is not None
+                    and real_reg.replaced_bytes(ROOT) == (ROOT / gs11.BASE).read_bytes()))
 
     # A declared prior-round recap closes the findings section (P-108's
     # round-2 raw): read before it, and fail closed on anything inside it.
