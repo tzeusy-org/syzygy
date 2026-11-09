@@ -1,9 +1,9 @@
 # Owner sign-off — Polaris dossier launch consent, version 1.2
 
 > **Candidate — binds nothing.** [Observed] Rounds 1 to 3 of review returned
-> `REVISE`. On 2026-11-10 you chose a redesign. Round 4, its first review,
-> returned `REVISE` on the text's consistency; these bytes are the round-4
-> repair, and no review has read them yet. This page may be offered only after
+> `REVISE`. On 2026-11-10 you chose a redesign. Rounds 4 and 5, its first
+> reviews, returned `REVISE` on the text's consistency; these bytes are the
+> round-5 repair, and no review has read them yet. This page may be offered only after
 > a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
 > install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
 > Nothing here records a choice; only your selection after review binds this
@@ -29,8 +29,8 @@ can be used.
   directory of Syzygy's own, and checks the copy out at that commit. Git runs
   with your system and global Git settings off, every network transport
   refused, no hooks and no fetching of missing objects. Syzygy checks that
-  the copy holds one commit and nothing else, the same check it makes on the
-  clones it makes today. The copy lives in a directory of Syzygy's own,
+  the copy holds one commit and nothing else, the same check it makes today
+  on one-commit clones the operator prepares. The copy lives in a directory of Syzygy's own,
   outside your clone; a run that is refused or declined removes it, and a
   completed run keeps it, naming where, until you remove it.
 - **Then the signed rules, unchanged.** Every read, re-hash and refusal the
@@ -125,12 +125,14 @@ unchanged.
      is started" (`readAuthority`);
    - that Syzygy writes only to the run's state directory and "nothing is
      written to the clone" (`stateDirectoryWrites`);
-   - that tags are "never read" (`tags`).
+   - that tags are "never read" (`tags`);
+   - that it has no write surface (`writeSurface`, an empty list).
 
    The redesign starts Git, makes a local fetch, reads objects from the
    copy, writes the copy outside the run's state directory and keeps it,
-   and may bring an annotated tag into the copy to refuse it. [Inferred] No
-   reading of the first three admits that, and the fourth is arguable, so
+   and may bring an annotated tag into the copy before refusing it.
+   [Inferred] No reading of the first three admits that, and the last two
+   are arguable, so
    version 1.2 cannot be used until you sign a successor version of the
    entry. That successor is a separate package and question; it is not
    drafted here. Signing version 1.2 alone settles the specification, not
