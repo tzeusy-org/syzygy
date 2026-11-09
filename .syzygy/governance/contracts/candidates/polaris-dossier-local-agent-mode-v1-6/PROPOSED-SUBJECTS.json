@@ -1,0 +1,23 @@
+{
+  "base": "version 1.5 installed bytes, commit b229e170e43e7e2f874062674fb19d83778718c5",
+  "subjects": [
+    {
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
+      "current_sha256": "d7cf76a823abef4a9a603e17b9df37a3e35412b4d2d317b59d252b6c2aa00ea0",
+      "proposed_sha256": "210086071a61d56389d51016c09073b740785d26b0a55a43f1a15fa6fdc15298",
+      "patch_sha256": "f88cfc407bfa64e60dc6c2c6de306c2ce86f281fe36b360ee4161f18dcdda902"
+    },
+    {
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/design.md",
+      "current_sha256": "62758e0368e1545a0e3f0287f58fb938ae84a9f1f5f7c1af0fd15059d17cab8b",
+      "proposed_sha256": "16774d7fcb03b0e678f5f4c9d434b73f0ab4d73167b253b25ee080b2e70d0d69",
+      "patch_sha256": "05b47b09a6337fc851dd9b2e5d7702360f13742ef42c3bf0bb0af5402e5bdf35"
+    },
+    {
+      "path": "openspec/changes/polaris-dossier-local-agent-mode/proposal.md",
+      "current_sha256": "38b77894bed3a8c95a1abaff38f9e7a1276f28acd98eeeb965eac386b19a44bb",
+      "proposed_sha256": "1f72927bbd192fc40c64b59810251c5cb7f95f841d3284845c12ef97694599fe",
+      "patch_sha256": "1e77343f80570ee3dac073c3e12183d28fddd50d73cad64dac6666b4270a0ecb"
+    }
+  ]
+}

@@ -1135,6 +1135,7 @@ def real_packages() -> dict[str, Package]:
     dossier13 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_3")  # noqa: E731
     dossier14 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_4")  # noqa: E731
     dossier15 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_5")  # noqa: E731
+    dossier16 = lambda: _module("build_polaris_dossier_local_agent_mode_v1_6")  # noqa: E731
     launch_consent = lambda: _module("build_polaris_dossier_launch_consent")  # noqa: E731
     launch_consent11 = lambda: _module("build_polaris_dossier_launch_consent_v1_1")  # noqa: E731
     anchor = lambda: _module("build_pwb_anchor_resolution_amendment")  # noqa: E731
@@ -1578,6 +1579,21 @@ def real_packages() -> dict[str, Package]:
             subject=pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode/"
                                  "specs/polaris-generation/spec.md"),
             subject_bytes=lambda root: dossier15().subject_bytes(root),
+        ),
+        # Version 1.6 extends the signed v1.5 layer the same way.
+        "polaris-dossier-local-agent-mode@1.6": Package(
+            "polaris-dossier-local-agent-mode",
+            "Polaris dossier local-agent mode",
+            "specification delta",
+            CANDIDATES / "polaris-dossier-local-agent-mode-v1-6",
+            "POLARIS-DOSSIER-LOCAL-AGENT-MODE",
+            lambda root: dossier16().check(root),
+            lambda root: dossier16().apply(root),
+            lambda root: dossier16().applied(root),
+            also=(pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode"),),
+            subject=pathlib.Path("openspec/changes/polaris-dossier-local-agent-mode/"
+                                 "specs/polaris-generation/spec.md"),
+            subject_bytes=lambda root: dossier16().subject_bytes(root),
         ),
         # Launch-time consent (syzygy-pdja.21): a new change whose two ADDED
         # requirements install like the local-agent mode's v1.0.
@@ -3145,6 +3161,32 @@ def selftest() -> int:
                     and real15.candidate == v15.CANDIDATE and real15.subject == v15.SPEC
                     and real15.subject_bytes is not None and real15.options == ()
                     and real15.apply_with is None and real15.applied_options is None
+                    and routed))
+    real16 = packages["polaris-dossier-local-agent-mode@1.6"]
+    v16 = _module("build_polaris_dossier_local_agent_mode_v1_6")
+    with tempfile.TemporaryDirectory() as temporary:
+        import contextlib
+        import io
+        fixture_root = pathlib.Path(temporary)
+        v16._fixture(fixture_root)
+        expected_subject = v16.subject_bytes(fixture_root)
+        try:
+            routed = (real16.check(fixture_root) == []
+                      and real16.subject_bytes(fixture_root) == expected_subject
+                      and not real16.applied(fixture_root))
+            with contextlib.redirect_stdout(io.StringIO()):
+                routed = routed and real16.apply(fixture_root) == 0
+            routed = (routed and real16.applied(fixture_root)
+                      and (fixture_root / v16.SPEC).read_bytes() == expected_subject
+                      and v16.SEVEN_LINKS in (fixture_root / v16.STATUS).read_text())
+        except ValueError:
+            routed = False  # A predecessor subject callback cannot apply to this layer.
+    results.append(("the real v1.6 entry extends the existing no-option spec-binding route",
+                    package_for(packages, real.key, "1.6") is real16
+                    and real16.key == real.key and real16.record_stem == real.record_stem
+                    and real16.candidate == v16.CANDIDATE and real16.subject == v16.SPEC
+                    and real16.subject_bytes is not None and real16.options == ()
+                    and real16.apply_with is None and real16.applied_options is None
                     and routed))
     real_lc = packages["polaris-dossier-launch-consent"]
     real_lc11 = packages["polaris-dossier-launch-consent@1.1"]
