@@ -29,11 +29,18 @@ export interface VisibilityReadOptions {
   readonly readStore?: (home: string) => StoreRead;
   /** The act-form observation records of the pair, for a test: by record id. */
   readonly actRecords?: (repositoryId: string) => Promise<readonly string[]>;
+  /** The observation act form files the admission reader reads, for a test; by default those of `ADMISSION_ACT_FORMS`. */
+  readonly observationForms?: readonly string[];
 }
 
-const formFiles = ADMISSION_ACT_FORMS.filter(form => form.type === 'consent-observation').map(form => `${DECISIONS_DIR}/${form.file}`).sort();
-/** Whether the admission reader's observation forms are exactly the acts the policy names as public by form. */
-export const ACT_FORMS_MATCH_POLICY = formFiles.length === PUBLIC_BY_FORM_ACTS.length && [...PUBLIC_BY_FORM_ACTS].sort().every((file, i) => file === formFiles[i]);
+/** The observation act form files the admission reader reads (`consent-observation` forms of `ADMISSION_ACT_FORMS`), by path. */
+export const OBSERVATION_ACT_FORM_FILES: readonly string[] = Object.freeze(ADMISSION_ACT_FORMS.filter(form => form.type === 'consent-observation').map(form => `${DECISIONS_DIR}/${form.file}`));
+/** Whether `forms` are exactly the acts the policy names as public by form (`named`), as sets: one missing, one extra or one repeated is a
+ * mismatch. */
+export function actFormsMatchPolicy(forms: readonly string[], named: readonly string[] = PUBLIC_BY_FORM_ACTS): boolean {
+  const a = [...new Set(forms)].sort(), b = [...new Set(named)].sort();
+  return a.length === forms.length && a.length === b.length && a.every((file, i) => file === b[i]);
+}
 
 async function actFormRecords(root: string, now: number, repositoryId: string): Promise<readonly string[]> {
   const records = await createPackageAdmissionReader({ root }).read();
@@ -42,7 +49,7 @@ async function actFormRecords(root: string, now: number, repositoryId: string): 
 
 export async function pairVisibilityAt(subject: { readonly repository: string; readonly commit: string }, options: VisibilityReadOptions): Promise<VisibilityDecision> {
   if (!subject.repository.startsWith('repository:')) return { ok: false, why: `the subject ${subject.repository} is not a repository pair` };
-  if (!ACT_FORMS_MATCH_POLICY) return { ok: false, why: 'the observation act forms the reader reads are not exactly the acts the policy names as public by form' };
+  if (!actFormsMatchPolicy(options.observationForms ?? OBSERVATION_ACT_FORM_FILES)) return { ok: false, why: 'the observation act forms the reader reads are not exactly the acts the policy names as public by form' };
   const repositoryId = subject.repository.slice('repository:'.length);
   const store = (options.readStore ?? readLaunchRecords)(options.root);
   if (!store.ok) return { ok: false, why: `a launch consent record cannot be read, so it could be a record of any pair and every read is refused until it is read or revoked: ${store.why}` };
@@ -50,11 +57,34 @@ export async function pairVisibilityAt(subject: { readonly repository: string; r
   try { acts = await (options.actRecords ?? (id => actFormRecords(options.root, options.now, id)))(repositoryId); } catch (cause) {
     return { ok: false, why: `an observation consent act record cannot be read, so every read is refused: ${cause instanceof Error ? cause.message : 'unreadable'}` };
   }
-  const launched = store.records.filter(r => r.state === 'active' && r.record.recordClass === 'observation-consent' && r.record.identity === subject.repository
-    && Date.parse(r.record.grantInstant) <= options.now);
+  const pairs = store.records.filter(r => r.state === 'active' && r.record.recordClass === 'observation-consent' && r.record.identity === subject.repository);
+  // A grant instant that does not parse (the record grammar admits a month 13) leaves the record's effectiveness unreadable: refuse it,
+  // never drop it, or a fork's private record could fall out of the carriers.
+  const unparsed = pairs.find(r => Number.isNaN(Date.parse(r.record.grantInstant)));
+  if (unparsed !== undefined) return { ok: false, why: `the launch consent record ${unparsed.record.recordId} has a grant instant that cannot be read (${unparsed.record.grantInstant}), so its effectiveness is unknown and every read is refused` };
+  const launched = pairs.filter(r => Date.parse(r.record.grantInstant) <= options.now);
   const carriers = [
     ...acts.map(record => ({ record, carrier: 'public' as const })),
     ...launched.map(r => ({ record: r.record.recordId, carrier: (r.record.publicDeclaration === 'public' ? 'public' : r.record.publicDeclaration === 'not-public' ? 'private' : 'states-nothing') as VisibilityCarrier })),
   ];
   return { ok: true, visibility: pairVisibility(carriers.map(c => c.carrier)), carriers };
+}
+
+export type VisibilityOf = (subject: { readonly repository: string; readonly commit: string }) => Promise<VisibilityDecision>;
+
+/** The supervisor's guard before it fetches a pair from its URL (`syzygy polaris` with no `--clone`). Version 8, edit 4: for a private
+ * repository Syzygy fetches nothing, uses no credential for its host, and reads only a clone the operator holds. So the fetch is made only
+ * for a pair the visibility decision reads public. A private pair, an undecidable one, a decision that throws, or no decision port at all
+ * refuses, naming `--clone`. Returns the refusal, or null when the fetch may go ahead. */
+export async function fetchRefusal(repositoryId: unknown, commit: string, visibilityOf: VisibilityOf | undefined): Promise<string | null> {
+  const clone = 'make a one-commit clone yourself (an empty repository, a depth-1 fetch of the commit, a detached checkout) and pass --clone <dir>';
+  if (typeof repositoryId !== 'string' || repositoryId === '') return `the preflight names no repository, so its visibility cannot be decided and Syzygy fetches nothing; ${clone}`;
+  if (visibilityOf === undefined) return `no visibility decision is wired for repository:${repositoryId}, so Syzygy fetches nothing; ${clone}`;
+  let decision: VisibilityDecision;
+  try { decision = await visibilityOf({ repository: `repository:${repositoryId}`, commit }); } catch (cause) {
+    decision = { ok: false, why: cause instanceof Error ? cause.message : 'the visibility read failed' };
+  }
+  if (!decision.ok) return `the visibility of repository:${repositoryId} cannot be decided (${decision.why}), so Syzygy fetches nothing; ${clone}`;
+  if (decision.visibility !== 'public') return `repository:${repositoryId} is private at this commit: Syzygy fetches no private repository and uses no credential for its host; ${clone}`;
+  return null;
 }

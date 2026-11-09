@@ -6,12 +6,13 @@ import { fileURLToPath } from 'node:url';
 import { isRecord, sha256 } from '@syzygy/support';
 import { isArgvFault, readArgv } from './argv.js';
 import { authorRule, awaitRule, startBroker, type Broker, type BrokerResponse } from './broker.js';
-import { cliGateSources, runDossierCli, STATE_ROOT_ENV, type CliPorts } from './cli.js';
+import { cliGateSources, cliVisibilityOf, runDossierCli, STATE_ROOT_ENV, type CliPorts } from './cli.js';
 import { INVENTORY_CHECKS, inventoryOfRecord, launchRecordName } from './inventory.js';
 import { writeLaunchRecord, writeLaunchedMarker } from './launched.js';
 import { reviewLaunchRecordName, REVIEW_CHECKS } from './review.js';
 import { CONSENT_RULE, WAITING_DENIED_TOOLS, WAITING_TOOLS } from './session-handover.js';
 import { bwrapArgs, viewFor, viewProbeRefusal, viewSha256, type ViewRole } from './session-view.js';
+import { fetchRefusal, type VisibilityOf } from './source-visibility-gate.js';
 import { REVISION_FILE, RUN_LAYOUT } from './state-directory.js';
 import { isoOf } from './iso-of.js';
 
@@ -320,6 +321,42 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
   return loop(options, ports, state, screen);
 }
 
+/** What the supervisor's clone step runs, injectable for a test: git, and the file system around the clone path. */
+export interface CloneDeps {
+  readonly git: (args: readonly string[]) => { readonly status: number | null; readonly stdout: string; readonly stderr: string };
+  readonly exists: (file: string) => boolean;
+  readonly mkdir: (dir: string) => void;
+  readonly event: (line: string) => void;
+}
+const PROCESS_CLONE_DEPS: Omit<CloneDeps, 'event'> = {
+  git: args => spawnSync('git', [...args], { encoding: 'utf8' }),
+  exists: file => fs.existsSync(file),
+  mkdir: dir => { fs.mkdirSync(dir, { recursive: true }); },
+};
+
+/** The supervisor's one-commit clone when no `--clone` is given: reuse the clone already at the commit, or else fetch the commit from the
+ * URL, but only after `fetchRefusal` reads the pair public (screening scope version 8, edit 4: for a private repository Syzygy fetches
+ * nothing). Returns the clone directory, or the refusal. */
+export async function supervisorClone(input: {
+  readonly url: string; readonly repositoryId: unknown; readonly chosen: { readonly label: string; readonly commit: string };
+  readonly clonesRoot: string; readonly visibilityOf: VisibilityOf | undefined;
+}, deps: CloneDeps): Promise<{ readonly clone: string } | string> {
+  const { url, chosen } = input;
+  const clone = path.join(input.clonesRoot, `${String(input.repositoryId ?? 'repo')}-${chosen.label}`);
+  const head = deps.git(['-C', clone, 'rev-parse', 'HEAD']);
+  if (head.status === 0 && head.stdout.trim() === chosen.commit) { deps.event(`reusing clone ${clone}`); return { clone }; }
+  if (deps.exists(clone)) return `${clone} exists but is not a clone of ${chosen.commit}; remove it or pass --clone`;
+  const refused = await fetchRefusal(input.repositoryId, chosen.commit, input.visibilityOf);
+  if (refused !== null) return refused;
+  deps.event(`cloning ${chosen.label} (${chosen.commit.slice(0, 12)}) into ${clone}`);
+  deps.mkdir(path.dirname(clone));
+  for (const args of [['init', '-q', clone], ['-C', clone, 'fetch', '-q', '--depth=1', url, chosen.commit], ['-C', clone, 'checkout', '-q', '--detach', 'FETCH_HEAD']]) {
+    const r = deps.git(args);
+    if (r.status !== 0) return `git ${args.join(' ')} failed: ${r.stderr.trim()}`;
+  }
+  return { clone };
+}
+
 /** Preflight, clone, init, marker, brief and the waiting sessions; returns the supervisor state or the refusal. */
 async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise<SupervisorState | string> {
   const url = options.url!;
@@ -329,22 +366,12 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
   const revisions = (pre.doc['consentedRevisions'] as { label: string; commit: string }[] | undefined) ?? [];
   const chosen = options.revision === undefined ? revisions[0] : revisions.find((r) => r.label === options.revision || r.commit === options.revision);
   if (chosen === undefined) return `no consented revision matches ${options.revision ?? '(none named)'}`;
-  let clone = options.clone;
-  if (clone === undefined) {
-    const repoId = String((pre.doc['repository'] as Record<string, unknown> | undefined)?.['repositoryId'] ?? 'repo');
-    clone = path.join(os.homedir(), '.local/state/syzygy-polaris-clones', `${repoId}-${chosen.label}`);
-    const head = spawnSync('git', ['-C', clone, 'rev-parse', 'HEAD'], { encoding: 'utf8' });
-    if (head.status === 0 && head.stdout.trim() === chosen.commit) screen.event(`reusing clone ${clone}`);
-    else {
-      if (fs.existsSync(clone)) return `${clone} exists but is not a clone of ${chosen.commit}; remove it or pass --clone`;
-      screen.event(`cloning ${chosen.label} (${chosen.commit.slice(0, 12)}) into ${clone}`); screen.draw(['Cloning one commit…']);
-      fs.mkdirSync(path.dirname(clone), { recursive: true });
-      for (const args of [['init', '-q', clone], ['-C', clone, 'fetch', '-q', '--depth=1', url, chosen.commit], ['-C', clone, 'checkout', '-q', '--detach', 'FETCH_HEAD']]) {
-        const r = spawnSync('git', args, { encoding: 'utf8' });
-        if (r.status !== 0) return `git ${args.join(' ')} failed: ${r.stderr.trim()}`;
-      }
-    }
-  }
+  const acquired = options.clone !== undefined ? { clone: options.clone } : await supervisorClone({
+    url, repositoryId: (pre.doc['repository'] as Record<string, unknown> | undefined)?.['repositoryId'], chosen,
+    clonesRoot: path.join(os.homedir(), '.local/state/syzygy-polaris-clones'), visibilityOf: cliVisibilityOf(ports),
+  }, { ...PROCESS_CLONE_DEPS, event: line => { screen.event(line); if (line.startsWith('cloning ')) screen.draw(['Cloning one commit…']); } });
+  if (typeof acquired === 'string') return acquired;
+  const clone = acquired.clone;
   const version = spawnSync(claudeExecutable(), ['--version'], { encoding: 'utf8' }).stdout.trim().split(/\s+/)[0] ?? 'unknown';
   const config = {
     operator: options.operator, agentTool: 'claude-code', agentToolVersion: version, agentProvider: 'anthropic', model: options.model,

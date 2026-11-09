@@ -439,7 +439,7 @@ async function measure(options) {
   const v3Found = findByDigest(candidates, v3Digests[0]);
   if (v3Found === undefined) throw new Error('no commit of this checkout holds the policy bytes the retained packets name');
   const classAct = await readClassActState({ root: ROOT, now });
-  const v3Load = buildDossierScreen(new Uint8Array(v3Found.bytes), classAct.state === 'ok');
+  const v3Load = buildDossierScreen(new Uint8Array(v3Found.bytes), classAct.state === 'ok', null, 'public');   // Redis is public by its act's form
   if (!v3Load.ok) throw new Error(`the version-3 screen does not build: ${v3Load.why}`);
   const v4Load = await loadDossierScreen(ROOT, now);
   if (!v4Load.ok) return { exit: 3, texts: [], record: { ...header, gate: { call: 'openRun', ok: true }, screenInForce: { ok: false, why: v4Load.why }, measured: false, bodiesRead: 0 } };

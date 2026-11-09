@@ -16,6 +16,8 @@ const scratch = (): string => tempDir('syzygy-trigger-');
 /** The id the observation record carries; deliberately not the spelling the trigger derives from the URL. */
 const ids = async (): Promise<readonly string[]> => ['fixture-record-id'];
 const all: AdmissionRecordsPort = { source: 'fixture store', repositoryIdsFor: ids, check: async r => ({ satisfied: true, record: `fixture/${r.kind}` }) };
+/** The pair-visibility decision of a public pair (screening scope version 8). */
+const PUBLIC_PAIR: NonNullable<TriggerPorts['visibility']> = async () => ({ ok: true, visibility: 'public' });
 
 describe('github url and revision pinning', () => {
   it('accepts public github urls and rejects everything else', () => {
@@ -102,7 +104,7 @@ describe('with every record satisfied', () => {
   const finished = (request: PipelineRequest): PipelineResult => ({ status: 'awaiting-rendered-review', draft: draftFor(request), inventory: null, review: null, quoteFindings: [], receipts: [], artifacts: [] });
   const stoppedResult: PipelineResult = { status: 'stopped', reason: 'budget-exhausted', receipts: [], artifacts: [] };
   const render: NonNullable<TriggerPorts['render']> = ({ result, sources }) => ({ files: new Map([['index.html', `<p>${result.status} ${sources.length}</p>`], ['pages/core.html', '<p>core</p>']]) });
-  const base = (extra: TriggerPorts = {}): TriggerPorts => ({ lsRemote: ls, records: all, materialize: async () => repo, ...extra });
+  const base = (extra: TriggerPorts = {}): TriggerPorts => ({ lsRemote: ls, records: all, visibility: PUBLIC_PAIR, materialize: async () => repo, ...extra });
 
 
   it('reads the pinned commit, discovers, clarifies and writes the site and a run record outside git', async () => {
@@ -194,6 +196,31 @@ describe('with every record satisfied', () => {
     await runDossierTrigger('https://github.com/fixture/repo', base({ outDir: join(scratch(), 'run'), discoveryReceipt: async () => undefined, discovery: { map: allowed } }));
     expect(allowed).toHaveBeenCalled();
     expect(allowed.mock.calls[0]![0].readerQuestions).toEqual(expect.arrayContaining([expect.stringContaining('core ideas')]));
+  });
+
+  describe('the fetch is made only for a pair that reads public (screening scope version 8, edit 4)', () => {
+    const cases: readonly [string, TriggerPorts['visibility'], string][] = [
+      ['a private pair', async () => ({ ok: true, visibility: 'private' }), 'repository:fixture-record-id is private at'],
+      ['an undecidable pair', async () => ({ ok: false, why: 'a launch consent record cannot be read' }), 'cannot be decided (a launch consent record cannot be read)'],
+      ['a decision that throws', async () => { throw new Error('boom'); }, 'could not be read'],
+      ['no decision port', undefined, 'no visibility decision is wired for repository:fixture-record-id'],
+    ];
+    for (const [name, visibility, detail] of cases) {
+      it(`${name}: nothing is fetched and nothing is read`, async () => {
+        const materialize = vi.fn(async () => repo), runPipeline = vi.fn(), seen = vi.fn();
+        const ports = { ...base({ outDir: join(scratch(), 'run'), materialize, runPipeline }), visibility: visibility === undefined ? undefined : async (subject: { repository: string; commit: string }) => { seen(subject); return visibility(subject); } };
+        const outcome = await runDossierTrigger('https://github.com/fixture/repo', ports);
+        expect(outcome).toMatchObject({ state: 'generation-unavailable', detail: expect.stringContaining(detail) });
+        expect(materialize).not.toHaveBeenCalled();
+        expect(runPipeline).not.toHaveBeenCalled();
+        if (visibility !== undefined) expect(seen).toHaveBeenCalledWith({ repository: 'repository:fixture-record-id', commit: expect.stringMatching(/^[0-9a-f]{40}$/u) });
+      });
+    }
+    it('a public pair is fetched', async () => {
+      const materialize = vi.fn(async () => repo);
+      await runDossierTrigger('https://github.com/fixture/repo', base({ outDir: join(scratch(), 'run'), materialize }));
+      expect(materialize).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('removes its scratch checkout and an unused default run directory, even when the run fails', async () => {
@@ -367,7 +394,7 @@ describe('command', () => {
     const p = { id: 'intro', text: 'Claim.', sourceIds: [first!.sourceId], children: [] };
     return { status: 'awaiting-rendered-review', draft: { title: 't', introduction: p, sections: [], diagrams: [], deepDives: [], unresolved: [] }, inventory: null, review: null, quoteFindings: [], receipts: [], artifacts: [] };
   };
-  const wired = (extra: TriggerPorts = {}): TriggerPorts => ({ lsRemote: () => `${commit}\tHEAD\n`, records: all, materialize: async () => repo, ...extra });
+  const wired = (extra: TriggerPorts = {}): TriggerPorts => ({ lsRemote: () => `${commit}\tHEAD\n`, records: all, visibility: PUBLIC_PAIR, materialize: async () => repo, ...extra });
 
   it('renders a page from a pipeline that exhausts its usage budget mid-run: completed stages show, every other requested asset is Unknown deferred-by-budget, exit 7', async () => {
     const out = vi.spyOn(process.stdout, 'write').mockReturnValue(true);

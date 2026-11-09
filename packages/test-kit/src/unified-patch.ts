@@ -13,7 +13,7 @@ export function applyUnifiedPatch(text: string, patch: string): string {
     if (m === null) throw new Error(`malformed hunk header: ${rows[i]}`);
     const start = Number(m[1]) - 1;
     if (start < at) throw new Error('hunks overlap or are out of order');
-    out.push(...lines.slice(at, start));
+    for (let k = at; k < Math.min(start, lines.length); k++) out.push(lines[k]!);
     at = start;
     i++;
     for (; i < rows.length && !rows[i]!.startsWith('@@'); i++) {
@@ -28,6 +28,6 @@ export function applyUnifiedPatch(text: string, patch: string): string {
       else if (row !== '\\ No newline at end of file') throw new Error(`malformed hunk line: ${row.slice(0, 40)}`);
     }
   }
-  out.push(...lines.slice(at));
+  for (let k = at; k < lines.length; k++) out.push(lines[k]!);
   return out.join('\n');
 }

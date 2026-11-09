@@ -119,7 +119,7 @@ export const placementSubjectOf = (subject: { readonly repository: { readonly re
  * `classActInForce` says whether the RFC5-14 project-documentation class amendment is confirmed in force; when it is not, the class's
  * rule is still read (a malformed one refuses) but classifies nothing, so its paths are indeterminate. `subject` is the repository the
  * blobs are read from and the admitted commit they are read at, which the version-5 owner placements compare; null places nothing. */
-export function buildDossierScreen(policy: Uint8Array, classActInForce = false, subject: PlacementSubject | null = null, visibility: SourceVisibility = 'public'): ScreenLoad {
+export function buildDossierScreen(policy: Uint8Array, classActInForce = false, subject: PlacementSubject | null = null, given?: SourceVisibility): ScreenLoad {
   const refuse = (why: string): ScreenLoad => ({ ok: false, why: `the screening policy cannot be applied: ${why}` });
   let doc: unknown;
   try { doc = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(policy)); } catch { return refuse('it is not UTF-8 JSON'); }
@@ -128,6 +128,9 @@ export function buildDossierScreen(policy: Uint8Array, classActInForce = false, 
   if (!isRecord(scope)) return refuse('it carries no publicSourceScope');
   const visibilityRead = readSourceVisibility(scope);
   if (!visibilityRead.ok) return refuse(visibilityRead.why);
+  // No visibility given: a policy without `sourceVisibility` admits public repositories only, so public; a version-8 policy, the
+  // stricter private, so a caller that forgets the decision never gets partial redaction or a rendered object id.
+  const visibility: SourceVisibility = given ?? (visibilityRead.declared ? 'private' : 'public');
   if (visibility === 'private' && !visibilityRead.admitsPrivate) return refuse('the repository is not public at this commit (no effective observation consent record of its pair states public through its carrier for every record), and this policy admits public repositories only');
   if (!isRecord(admission) || !stringList(admission['deniedPathBasenames']) || !stringList(admission['deniedPathPrefixes']) || !stringList(admission['deniedPathSuffixes'])) {
     return refuse('its denied-path rules are unreadable');

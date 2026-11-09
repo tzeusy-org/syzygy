@@ -64,6 +64,10 @@ describe('a private repository under version 8', () => {
     expect(screen.screenPath('.env')).toBe('denied-path');
     expect(screen.screenPath('src/server.c')).toBeUndefined();
   });
+  it('is what a version-8 screen built with no visibility gives: private, never the looser public', () => {
+    const load = buildDossierScreen(encode(V8), true, { repository: 'repository:o-r', commit: 'a'.repeat(40) });
+    expect(load.ok && [load.screen.visibility, load.screen.screenTargetBody(CREDENTIAL, 'README.md')]).toEqual(['private', { kind: 'excluded', outcome: 'secret-detector-match' }]);
+  });
 });
 
 describe.runIf(V7 !== null)('a policy without sourceVisibility (version 7)', () => {

@@ -637,6 +637,19 @@ describe('the provider-mode reader under screening scope version 8', () => {
   ])('refuses %s', async (_name, visibility, message) => {
     await expect(loadPublicSourceScreen(v8Port, Buffer.alloc(32, 1), subject, visibility)).rejects.toThrow(message);
   });
+  // A malformed sourceVisibility under a bound act: the reader's own refusal, whatever decision it is given.
+  const malformed = (mutate: (sv: Record<string, unknown>) => void): Uint8Array => {
+    const doc = JSON.parse(new TextDecoder().decode(v8)) as { publicSourceScope: { sourceVisibility: Record<string, unknown> } };
+    mutate(doc.publicSourceScope.sourceVisibility);
+    return new TextEncoder().encode(`${JSON.stringify(doc, null, 2)}\n`);
+  };
+  it.each([
+    ['values not exactly public, private', (sv: Record<string, unknown>) => { sv['values'] = ['public']; }, 'public-source-policy: policy source visibility values is not exactly public, private'],
+    ['an altered rule text', (sv: Record<string, unknown>) => { sv['rule'] = `${String(sv['rule'])} `; }, 'public-source-policy: policy source visibility rule is not the text this screen implements'],
+  ])('refuses a malformed sourceVisibility (%s), even given a public decision', async (_name, mutate, message) => {
+    const bytes = malformed(mutate);
+    await expect(loadPublicSourceScreen(port(actRecord(sha(bytes)), bytes), Buffer.alloc(32, 1), subject, 'public')).rejects.toThrow(message);
+  });
   it('refuses a private pair under a policy without sourceVisibility too', async () => {
     await expect(loadPublicSourceScreen(goodPort, Buffer.alloc(32, 1), subject, 'private')).rejects.toThrow('public-source-policy: the pair is private');
   });

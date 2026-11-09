@@ -180,7 +180,8 @@ export async function loadPublicSourceScreen(port: PublicSourcePolicyActPort = c
   const visibilityRead = readSourceVisibility(scope);
   if (!visibilityRead.ok) refuse(`policy ${visibilityRead.why.replace(/^its /u, '')}`);
   if (visibility === 'private') refuse('the pair is private; the provider mode reads no private repository (no egress consent stating a private pair is in force, and it fetches from an upstream)');
-  if (visibilityRead.ok && visibilityRead.declared && visibility !== 'public') refuse('policy version 8 decides each pair\'s visibility from its observation consent records, launch consent records included, and this reader was given no decision');
+  // Fail closed on its own, not only behind the refusal above: read only a readable scope, and under version 8 only a public decision.
+  if (!(visibilityRead.ok && (!visibilityRead.declared || visibility === 'public'))) refuse('policy version 8 decides each pair\'s visibility from its observation consent records, launch consent records included, and this reader was given no decision');
   if (admission === null || typeof admission !== 'object' || !stringList(admission.deniedPathBasenames) || !stringList(admission.deniedPathPrefixes)
     || !stringList(admission.deniedPathSuffixes)) refuse('policy denied-path rules unreadable');
   const classification = (scope as Record<string, unknown>).contentClassification as Record<string, unknown> | undefined;
