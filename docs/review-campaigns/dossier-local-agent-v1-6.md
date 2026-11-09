@@ -10,16 +10,13 @@ Candidate v1.6 amendment of `polaris-dossier-local-agent-mode`, package `contrac
 
 ## Last verdict of record, and where the findings landed
 
-Round 3 `REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-6-3-RAW.md:4`) over `a3d3f326`.
-- The reviewer found the chain removed and the normative REQ-035 text sound.
-- Three minor findings require a change. Each is a restatement outside the requirement that still describes the round-2 design, or says "shown" where the spec says "delivered":
-  - SEMANTIC-DELTA item 4;
-  - the REQ-033 reading bullet;
-  - design.md and the ledger.
-- Six notes (4–9).
+Round 4 `CONFIRM WITH EXCEPTIONS` (`R-DOSSIER-LOCAL-AGENT-V1-6-4-RAW.md:4`) over `e9d50e3c`.
+- Nine notes, none requiring a change. The bytes are cleared for the owner's sign-off.
+- Round 4's scope was wording only, the owner's choice after the stopping rule fired.
 
 Earlier rounds:
-- Round 2 `REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-6-2-RAW.md:4`) over `a4a181d5`;
-- Round 1 `REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-6-1-RAW.md:4`) over `701b7d74`.
+- Round 3 `REVISE` (`R-DOSSIER-LOCAL-AGENT-V1-6-3-RAW.md:4`) over `a3d3f326`;
+- Round 2 `REVISE` (`-2-RAW.md:4`) over `a4a181d5`;
+- Round 1 `REVISE` (`-1-RAW.md:4`) over `701b7d74`.
 
-Both are dispositioned in the package. The stopping rule recorded in `syzygy-pdja.26` applies, so the next step is the owner's. Not signed off.
+Each earlier round is dispositioned in the package's `ROUND-N-DISPOSITIONS.md`. Not signed off.
