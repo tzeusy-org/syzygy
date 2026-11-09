@@ -4,9 +4,10 @@
 > reviewer is given and what they decide. It is not a review and carries no
 > verdict. `CONFIRM`, or `CONFIRM WITH EXCEPTIONS` with notes only, clears
 > the bytes. No review has been dispatched by the drafting lane. Dispatch
-> this round only against a launch-consent v1.2 head whose copy step this
-> package's Proposed blocks still match (drafted against PR #812 head
-> `e004db00`); if v1.2 has moved, the package is redrafted first.
+> this round only while PR #812 stands at head `de9c1ba8`, to which this
+> package is bound: its post-apply launch-consent spec (proposed spec
+> digest printed by #812's builder at that head) is the text every Proposed
+> block restates. If #812 has moved, the package is redrafted first.
 
 ## Route
 
@@ -53,9 +54,11 @@ and run no dossier.
   `.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`
   and its record `decisions/PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md`.
 - `decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md`.
-- On PR #812's branch: the post-apply launch-consent spec's
-  REQ-polaris-generation-047 (apply `proposed/spec.md.patch` of
-  `polaris-dossier-launch-consent-v1-2` in a scratch worktree), its
+- On PR #812's branch at `de9c1ba8`: the post-apply launch-consent
+  spec's REQ-polaris-generation-046 and 047 (apply `proposed/spec.md.patch`
+  of `polaris-dossier-launch-consent-v1-2` to the v1.1 spec in a scratch
+  worktree of that commit; `sha256sum` it and compare with that package's
+  `PROPOSED-SUBJECTS.json`), its
   `SEMANTIC-DELTA.md` decisions D2, D3 and D9, the owner direction
   OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md (section "Redesign
   after review round 3") and the round-4 raw
@@ -68,11 +71,14 @@ and run no dossier.
 ## What the reviewer decides
 
 1. **Exactness against the copy step.** Does each Proposed block admit the
-   copy REQ-047 drafts, and no more? Test, at least: the five launch reads;
-   the Git environment; the fetch's form; the object reads moving to the
-   copy; the copy's directory and its keeping; the tag object; the
-   refusals.
-2. **The run that makes no copy.** Is every v1.0 meaning kept for it,
+   copy REQ-047 drafts at `de9c1ba8`, and no more? Test, at least: the
+   copy-class and no-copy classes; the named identifier; the five launch
+   reads; the Git environment; the fetch's form; the commit test from the
+   copy's `HEAD`; the object reads moving to the copy; the no-copy run's
+   form-check reads; the copy's directory and its keeping; the non-commit
+   object; the refusals. Does the entry claim anything #812 at that head
+   does not say?
+2. **The no-copy run.** Is every v1.0 meaning kept for it,
    "no process is started" included? Is anything it may do widened?
 3. **The launch-reads sentence (E3).** Does it state the reading v1.0 and
    v1.1 rest on, or does it widen it? Is the list closed?
@@ -89,11 +95,11 @@ and run no dossier.
 
 **Questions put to the reviewer** (answer each; a note is enough):
 
-- Q1. Should `tags` stay byte-identical, with the type read argued as
-  v1.0's own (E1), rather than move?
+- Q1. Should `tags` stay byte-identical, since Syzygy reads no part of
+  a non-commit object at `de9c1ba8` (E1), rather than move?
 - Q2. Must `registryVersion` and `observerVersion` move (E5)?
-- Q3. Must the `git-object-database` identity scheme move for a copy run
-  (E6)?
+- Q3. Must the `git-object-database` identity scheme move for a
+  copy-class run (E6)?
 
 ## Commands
 

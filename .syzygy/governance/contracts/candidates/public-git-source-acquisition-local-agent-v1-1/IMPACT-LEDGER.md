@@ -5,6 +5,13 @@
 > quotes no digest; `PROPOSED-SUBJECTS.json` and the builder's `--digests`
 > carry them.
 
+## Binding
+
+This package is bound to PR #812 at head `de9c1ba8`: its Proposed blocks
+restate the copy step, the classes of run and the launch reads of the
+post-apply launch-consent spec at that head. If #812 moves, this ledger and
+the package are redrafted.
+
 ## What the sign-off writes
 
 [Observed, from `scripts/record_versioned_signoff.py` and the builder.]

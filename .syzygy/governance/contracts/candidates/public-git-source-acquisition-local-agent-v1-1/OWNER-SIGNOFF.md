@@ -10,16 +10,20 @@
 > independent review (`REVIEW-BRIEF.md`) returns `CONFIRM` or a notes-only
 > `CONFIRM WITH EXCEPTIONS`. It is not offered to you until that review has
 > returned, and it should be offered together with launch-consent v1.2.
+>
+> **Bound to PR #812 at head `de9c1ba8`.** This package restates #812's
+> copy step as that head drafts it. If #812 changes (for example, a round
+> 11), this package is redrafted and reviewed again before it is offered.
 
 ## The question you answer
 
 > Extend Scope A to version 1.1 of the source-acquisition registry entry
 > for the local-agent mode (`public-git-source-acquisition-local-agent`)
-> and sign it? It lets a run that makes a copy read your clone's references
-> and remote URLs as data, copy the pinned commit from your clone into a
-> one-commit clone of Syzygy's own with one local Git fetch, and read
-> objects from that copy only. A run that makes no copy keeps every v1.0
-> rule.
+> and sign it? It lets a copy-class run copy the object its named
+> identifier names from your clone into a one-commit clone of Syzygy's own
+> with one local Git fetch, and read objects from that copy only. It bounds
+> the reads Syzygy makes of your clone at launch to a closed list. A
+> no-copy run keeps every v1.0 rule.
 
 - **Option to select:** "Extend Scope A and sign source-acquisition entry
   v1.1". The recorder refuses a selection that does not carry the words
@@ -30,62 +34,73 @@
 
 ## What changes, in plain words
 
+#812 sorts runs into two classes. A **copy-class run** works in a copy
+Syzygy makes. A **no-copy run** works in your own clone: one whose commit
+another act's consent names (the redis run, for example), or one covered by
+a launch consent recorded under version 1.1 whose scope holds the commit "in the operator's own clone"
+scope.
+
 - **Today (v1.0)** the entry says Syzygy fetches nothing, starts no
-  process, and reads objects only from your clone. Launch-consent v1.2's
-  copy breaks all three.
-- **Version 1.1** keeps those words for a run that makes no copy (the redis
-  run, for example) and adds, for a run that makes a copy:
-  - before the copy, Syzygy reads five things in your clone as plain data
-    and obeys none of them: where the Git directory is; your references'
-    names and the few values the trunk rule needs; your remotes' names and
-    URLs from the configuration file; whether an alternates file exists;
-    and, for a shortened `--revision` only, object names;
+  process, and reads objects only from your clone. #812's copy breaks all
+  three.
+- **Version 1.1** keeps those words for a no-copy run and adds, for a
+  copy-class run:
   - the copy itself: a new empty directory, `git init --template=`, then
-    one fetch of the pinned commit alone over `file://`, depth one, no tags,
-    no submodules, with your global and system Git configuration off, only
-    the file transport allowed, lazy fetching off and no hooks;
+    one fetch over `file://` of the object the run's named identifier
+    names, alone, at depth one, with no tags and no submodules, your global
+    and system Git configuration off, only the file transport allowed, lazy
+    fetching off and no hooks;
   - from then on every object read is made in the copy; Syzygy reads no
     object of your clone;
+  - Syzygy tells whether the named object is a commit from where the
+    copy's checkout leaves `HEAD`, never by reading that object. An
+    annotated tag may land in the copy; Syzygy reads none of it, follows
+    it nowhere, and refuses;
   - the copy's directory is the one new place Syzygy writes. It is removed
-    if the run ends early, and otherwise kept after the run until you
-    remove it; the launch output says where it is;
-  - an annotated tag named by `--revision` may land in the copy; Syzygy
-    reads only its type, refuses, and removes the copy.
+    if the run ends before its brief, and otherwise kept after the run
+    until you remove it; the launch output says where it is.
+- **For every launch-consented run**, the entry now names the five things
+  Syzygy reads in your clone as plain data, obeying none of them: where the
+  Git directory is; your references' names and the few values the trunk
+  rule needs; your remotes' names and URLs from the configuration file;
+  whether an alternates file exists; and, for a shortened `--revision`
+  only, object names. A no-copy run also reads the files its clone-form
+  check needs.
 - Nothing is written to your clone, ever.
-- The entry also says, in words, what v1.0 and v1.1 runs already rely on:
-  reading references and remote URLs to pin a revision and propose an
-  identity is a launch read, not an object read, and these reads are now a
-  closed list.
 
 ## What it costs, and what stays uncertain
 
 - [Inferred] Git, when it serves the copy, reads your clone's
   configuration, references and packs, including stored bytes of objects
-  outside the pinned commit. Syzygy uses nothing Git read but the copy. The
-  entry says so.
+  outside the named object's. Syzygy uses nothing Git read but the copy.
+  The entry says so.
 - [Inferred] Syzygy relies on Git not starting any program your clone's
   configuration or hooks name while it serves the copy. A scratch test with
   Git 2.53.0 found none ran (PR #812, D2); this is not checked per run.
-- [Observed] No code implements the copy yet. Until it is implemented, and
-  authorized, no run makes a copy.
+- [Observed] No code implements the copy step yet, and no authorization
+  covers it.
 
 ## Before you sign
 
 1. **Sign this together with launch-consent v1.2, or not at all.**
-   - Signed alone, it changes nothing a run does today, but the entry's
-     bytes change, so the gate code that is wired to v1.0 must change in
-     the same commit (`IMPACT-LEDGER.md`, item 1), or every local-agent
-     dossier read refuses.
+   - Signed alone, its copy clauses do nothing, but the entry's bytes
+     change. So the gate code wired to v1.0
+     (`packages/polaris-generation-consent/src/package-reader.ts`) must
+     change in the same commit (`IMPACT-LEDGER.md`, item 1), or every
+     local-agent dossier read refuses.
    - Launch-consent v1.2 signed without this cannot take effect: its copy
      would exceed the entry.
-   - If v1.2 changes again before you sign, this package is redrafted and
-     reviewed again.
-2. **The `tags` field moves.** Review round 4 called it arguably
-   contradicted; I judged it should say so rather than rest on a reading
+   - If v1.2 moves from `de9c1ba8` before you sign, this package is
+     redrafted and reviewed again.
+2. **The `tags` field moves.** #812's D9 calls it arguably contradicted; I
+   judged it should say so rather than rest on a reading
    (`SEMANTIC-DELTA.md`, E1).
-3. **The version strings do not move** (E5), and the object-database
-   identity scheme still says "operator-declared clone" (E6). Both are
-   offered to the reviewer as questions.
+3. **`writeSurface` stays empty**, and `stateDirectoryWrites` now says why:
+   the copy's directory is Syzygy's own local write, not a write to an
+   observed or external system.
+4. **The version strings do not move** (E5), and the object-database
+   identity scheme still says `repository-id-plus-operator-declared-clone-git-dir`
+   (E6). Both are offered to the reviewer as questions.
 
 ## What signing does
 

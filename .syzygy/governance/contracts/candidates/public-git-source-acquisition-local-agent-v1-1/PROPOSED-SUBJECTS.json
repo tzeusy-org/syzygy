@@ -4,8 +4,8 @@
     {
       "path": ".syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
       "current_sha256": "917aecc766f01133d5a29c1ee8b3e575332ad48d04308a1b62c68217e48d254b",
-      "proposed_sha256": "56a4bca93d66af7857ddd039e2dae6ab01410ead1527a6b609328b9ae23815bb",
-      "patch_sha256": "94f9f6ef6b5e8be68a9ebd915940783ea7d496cd4a7a12011e5d2a0cd8e49477"
+      "proposed_sha256": "d7bac9a99ac761ea7eb7eae65230968a0d0d5b6a812144b388683568f3a5af8c",
+      "patch_sha256": "bebaa29457cfe189511959023d401a5a76bac25d507adeb68f45d5f0c2e475cc"
     }
   ]
 }

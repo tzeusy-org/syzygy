@@ -5,11 +5,11 @@ Package `contracts/candidates/public-git-source-acquisition-local-agent-v1-1/`:
 the successor of the signed, installed v1.0 entry
 (`declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`).
 It admits the one-commit copy that launch-consent v1.2 drafts (REQ-polaris-generation-047,
-PR #812): in a launch-consented run Syzygy reads five named things of the
-operator's clone as data; in a run that makes a copy it then copies the pinned
-commit from that clone into a clone of its own with one local fetch, and reads
-objects from the copy alone. A run that makes no copy keeps v1.0's object-read
-words, "no process is started" included.
+PR #812, bound to its head de9c1ba8): in a launch-consented run Syzygy reads
+five named things of the operator's clone as data; in a copy-class run it then
+copies the object the named identifier names from that clone into a clone of
+its own with one local fetch, and reads objects from the copy alone. A no-copy
+run keeps v1.0's object-read words, "no process is started" included.
 
 Five declarations move, and nothing else: `typedAuthority.fetch`,
 `typedAuthority.readAuthority`, `typedAuthority.tags`,
@@ -21,7 +21,7 @@ Five declarations move, and nothing else: `typedAuthority.fetch`,
 - with those five declarations set aside, the proposed entry equals the v1.0
   signed entry, key order included, and the proposed bytes are the v1.0 bytes
   with exactly the patch applied (`proposed/*.json.patch`, `git apply`);
-- each moved declaration keeps its v1.0 words for the run that makes no copy,
+- each moved declaration keeps its v1.0 words for the no-copy run,
   and names every part of the copy the owner's selection describes;
 - the v1.0 bytes are the bytes the v1.0 sign-off record names;
 - `PROPOSED-SUBJECTS.json` states the three digests the files hash to;
@@ -76,16 +76,17 @@ INSTALLED_SHA_RE = re.compile(r"^Installed entry SHA-256: ([0-9a-f]{64})$", re.M
 MOVED = ((("typedAuthority",), "fetch"), (("typedAuthority",), "readAuthority"),
          (("typedAuthority",), "tags"), (("typedAuthority",), "stateDirectoryWrites"),
          (("implementationCoverage",), "copyStep"))
-NO_COPY = "in a run that makes no copy"
-#: Each part of the copy step the owner's selection and REQ-047 (v1.2 draft) name.
-FETCH_TERMS = ("In a run that makes a copy", "REQ-polaris-generation-047", "git init --template=",
-               "local file transport", "file://", "from nowhere else", "the pinned commit alone",
+NO_COPY = "in a no-copy run"
+#: Each part of the copy step the owner's selection and REQ-047 (#812 at de9c1ba8) name.
+FETCH_TERMS = ("In a copy-class run", "REQ-polaris-generation-047", "git init --template=",
+               "local file transport", "file://", "from nowhere else", "the object the run's named identifier names alone",
                "full object identifier", "depth of one", "no tags and no submodules", "detached",
                "system and global Git configuration disabled", "no other Git variable",
                "every transport but the file transport refused",
                "lazy fetching of missing objects disabled", "no hook path",
                "no other process is started", "alternates file", "reftable",
-               "never at a location derived from its path", "delta bases",
+               "never at a location derived from its path", "delta bases", "before the copy step starts",
+               "execute nothing of the observed repository", "as Git reported it",
                "uses nothing Git read but the copy", "Inferred", "not a locator")
 #: The five launch reads, in order, by a phrase each must carry.
 FIVE_READS = ("(1) the .git file or directory", "(2) the names of its references",
@@ -93,9 +94,9 @@ FIVE_READS = ("(1) the .git file or directory", "(2) the names of its references
               "(5) for an abbreviated --revision alone")
 #: readAuthority's two v1.0 sentences that change, each by one clause.
 RA_EDITS = (("of the operator's clone's .git directory; ",
-             "of the .git directory of the operator's clone, or, in a run that makes a copy (fetch), of the copy; "),
+             "of the .git directory of the operator's clone, or, in a copy-class run (fetch), of the copy; "),
             ("commit-graph is read, and no process is started. ",
-             "commit-graph is read, and no process is started, save, in a run that makes a copy, the Git "
+             "commit-graph is read, and no process is started, save, in a copy-class run, the Git "
              "processes fetch names. "))
 
 
@@ -133,7 +134,7 @@ def declaration_findings(new: dict, old: dict) -> list[str]:
     fetch, ofetch = str(nta.get("fetch", "")), ota["fetch"]
     keep = ofetch.replace("none:", f"none {NO_COPY}:", 1) + ". "
     if not fetch.startswith(keep):
-        out.append("fetch does not open with v1.0's words for the run that makes no copy")
+        out.append("fetch does not open with v1.0's words for the no-copy run")
     for term in FETCH_TERMS:
         if term not in fetch:
             out.append(f"fetch does not name {term!r}")
@@ -144,7 +145,7 @@ def declaration_findings(new: dict, old: dict) -> list[str]:
     if not kept or not ra.startswith(kept + ". "):
         out.append("readAuthority does not keep v1.0's text, the copy's two clauses aside")
     if "and no process is started" not in ra:
-        out.append("readAuthority drops 'no process is started' for the run that makes no copy")
+        out.append("readAuthority drops 'no process is started' for the no-copy run")
     tail = ra[len(kept):] if kept else ""
     if ("never honoured" not in tail or "these five things alone" not in tail
             or "not object reads" not in tail):
@@ -153,11 +154,15 @@ def declaration_findings(new: dict, old: dict) -> list[str]:
     if -1 in positions or positions != sorted(positions) or "(6)" in tail:
         out.append("readAuthority does not list the five launch reads, in order, and no sixth")
     if "reads no object of the operator's clone" not in tail:
-        out.append("readAuthority lets a run that makes a copy read the operator's clone's objects")
+        out.append("readAuthority lets a copy-class run read the operator's clone's objects")
+    if "never by reading that object or from reference data" not in tail:
+        out.append("readAuthority lets Syzygy tell a commit by reading the named object or reference data")
+    if "In a no-copy run it also reads the files" not in tail or "to which (3) yields" not in tail:
+        out.append("readAuthority does not bound a no-copy run's form-check reads")
     tags, otags = str(nta.get("tags", "")), ota["tags"]
-    if not tags.startswith(otags + "; in a run that makes a copy") or "only its type is read" not in tags \
-            or "never followed" not in tags:
-        out.append("tags does not keep v1.0's words and bound the copy's tag object to a type read")
+    if not tags.startswith(otags + "; in a copy-class run") or "Syzygy reads none of it" not in tags \
+            or "never follows it" not in tags or "uses it for nothing beyond" not in tags:
+        out.append("tags does not keep v1.0's words and keep the copy's non-commit object unread and unused")
     sdw, osdw = str(nta.get("stateDirectoryWrites", "")), ota["stateDirectoryWrites"]
     first = osdw.split("; ", 1)[0] + "; "
     if not sdw.startswith(first):
@@ -312,7 +317,7 @@ def selftest() -> int:
     with tempfile.TemporaryDirectory() as t:
         results.append(("the shipped package verifies unapplied", check(_fixture(pathlib.Path(t))) == []))
     mutants = (
-        ("a fetch that drops v1.0's no-copy words", _replace("fetch", "none in a run that makes no copy:",
+        ("a fetch that drops v1.0's no-copy words", _replace("fetch", "none in a no-copy run:",
                                                              "none:"), "v1.0's words"),
         ("a fetch over the network transport", _replace("fetch", "every transport but the file transport refused",
                                                         "the https transport allowed"), "every transport"),
@@ -334,11 +339,22 @@ def selftest() -> int:
          "keep v1.0's text"),
         ("launch reads not set apart from object reads",
          _replace("readAuthority", "not object reads", "object reads"), "apart from object reads"),
-        ("a tag object followed", _replace("tags", "never followed", "followed"), "tags does not keep"),
+        ("a tag object followed", _replace("tags", "never follows it", "follows it"), "tags does not keep"),
         ("tags dropping v1.0's words", _replace("tags", "never read; ", "read; "), "tags does not keep"),
+        ("a tag object read", _replace("tags", "Syzygy reads none of it", "Syzygy reads its type"),
+         "tags does not keep"),
+        ("a commit told from reference data",
+         _replace("readAuthority", "never by reading that object or from reference data", "from packed-refs"),
+         "reference data"),
+        ("an unbounded no-copy form check", _replace("readAuthority", ", to which (3) yields", ""),
+         "form-check reads"),
+        ("an alternates clone refused only after the copy step starts",
+         _replace("fetch", "before the copy step starts", "when the copy fails"), "before the copy step starts"),
+        ("a Git failure refused with an unobserved cause",
+         _replace("fetch", "as Git reported it", "with its likely cause"), "as Git reported it"),
         ("a copy kept with no named location",
          _replace("stateDirectoryWrites", "launch output names", "run chooses"), "its keeping"),
-        ("a sixth pre-copy read", _replace("readAuthority", "pack indexes give", "pack indexes give; (6) the index"), "no sixth"),
+        ("a sixth launch read", _replace("readAuthority", "pack indexes give", "pack indexes give; (6) the index"), "no sixth"),
         ("a launch read dropped", _replace("readAuthority", "(4) whether objects/info/alternates exists; ", ""),
          "five launch reads"),
         ("honoured configuration", _replace("readAuthority", "never honoured", "honoured"), "as data"),
