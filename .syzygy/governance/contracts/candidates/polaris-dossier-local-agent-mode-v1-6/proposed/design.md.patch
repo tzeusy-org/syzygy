@@ -12,20 +12,23 @@
  > implementation. It contains no code. The command surface below is a design
  > for implementation after the owner's sign-off (direction item 5); the
  > requirements are the controlling text, and doctrine, accepted contracts,
-@@ -184,7 +184,20 @@
+@@ -184,7 +184,23 @@
     lets one reviewer continue across revisions: the cost, that it has seen
     its own earlier verdict, is disclosed on the review page for every
     counted verdict, from the delivery records and from repeated session
 -   identifiers, both Inferred. The printed Claude Code command pre-approves
 +   identifiers, both Inferred. Since version 1.6 (owner direction
 +   `OWNER-DIRECTION-FIDELITY-REVIEW-ROUNDS-2026-11-09`) a fidelity packet delivered as a later
-+   round into a session directory also carries a changed-block list when
-+   Syzygy recorded a verdict written there for an earlier round (counted,
-+   failed or refused): the base round's packet digest, rebuilt rather than
-+   copied, the claim blocks and inventory entries added, removed or changed
-+   in bytes or cited spans since that round, and whether the understanding
-+   record changed, found by comparing bytes; it says it compares nothing
-+   else. It points the reviewer at the repairs and nothing more: the packet
++   round into a session directory also carries a changed-block list when,
++   before that delivery, Syzygy recorded a verdict written there for an
++   earlier round (counted, failed or refused); the base round is chosen and
++   recorded at delivery. The list holds the base core digest (the base
++   round's packet rebuilt without a list, from that round's inputs alone,
++   so no rebuild chains back further), the claim blocks and inventory
++   entries added, removed or changed in bytes or cited spans since that
++   round, and whether the understanding record changed, found by comparing
++   bytes; it says it compares nothing else, diagram elements and section
++   titles included. It points the reviewer at the repairs and nothing more: the packet
 +   is still whole, the verdict still covers every entry, a revision still
 +   retires the earlier verdict, and the review page says the reviewer was
 +   shown the list. It saves reviewer attention, not tokens read. A packet

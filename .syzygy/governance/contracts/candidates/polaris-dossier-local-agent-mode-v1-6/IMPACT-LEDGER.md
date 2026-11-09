@@ -59,7 +59,10 @@ patched here.
   closely. The verdict must still judge every entry, and the review page says
   the list was shown, but whether the reviewer read the rest stays Inferred.
 - One more thing can stop a verdict counting: an altered or missing stored
-  base input makes the rebuild fail. This fails closed, and costs a new round.
+  input of a base round, or of the base choice recorded with a delivery,
+  makes that packet's rebuild fail. It costs one round's verdict, the verdict
+  on the packet whose base it is, and a new round. No later round depends on
+  it, since each list names its base's core digest, rebuilt without a list. This fails closed, and costs a new round.
 - A byte comparison can list a block whose change is trivial, and cannot list a
   block whose meaning changed only because a neighbour did. The second is why
   the verdict must still cover every entry.
@@ -70,8 +73,10 @@ patched here.
   still record coverage for every entry, but a reviewer who follows the list
   can miss it.
 - The list compares only claim blocks, inventory entries and the understanding
-  record. It says so, so an empty list does not mean nothing else changed; the
-  criteria, the verdict schema and the pinned revision are not compared.
+  record. It says so, so an empty list does not mean nothing else changed: draft
+  content outside claim blocks (diagram nodes and edges, sections and their
+  titles), the criteria, the verdict schema and the pinned revision are not
+  compared.
 - The full delta, which would save tokens, is not offered: its carry-forward
   rule would weaken "Any revision of the subject or the inventory retires the
   verdicts bound to it" (`SEMANTIC-DELTA.md`, "Which form, and why").

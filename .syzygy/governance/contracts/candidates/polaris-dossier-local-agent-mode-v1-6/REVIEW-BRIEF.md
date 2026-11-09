@@ -1,4 +1,4 @@
-# Review brief — Polaris dossier local-agent mode, version 1.6, round 2
+# Review brief — Polaris dossier local-agent mode, version 1.6, round 3
 
 > **Candidate — binds nothing.** Instructions for a fresh review.
 
@@ -8,9 +8,12 @@ under `openspec/changes/polaris-dossier-local-agent-mode/`
 (`PROPOSED-SUBJECTS.json`, which
 `scripts/build_polaris_dossier_local_agent_mode_v1_6.py --check` verifies).
 
-Round 1 returned `REVISE` (`docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-6-1-RAW.md`).
-Judge the repairs listed in `ROUND-1-DISPOSITIONS.md` against that raw, and
-what they touch. Every repair edits the subject, so read REQ-polaris-generation-035
+Rounds 1 and 2 returned `REVISE` (`docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-6-1-RAW.md`,
+`docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-6-2-RAW.md`). Judge the repairs listed in
+`ROUND-2-DISPOSITIONS.md` against the round-2 raw, and what they touch; read
+`ROUND-1-DISPOSITIONS.md` for what round 2 already accepted. This is the last
+round before the owner: a verdict other than `CONFIRM`, or `CONFIRM WITH
+EXCEPTIONS` with notes only, sends the package to the owner as it stands. Every repair edits the subject, so read REQ-polaris-generation-035
 as proposed in full, not only the changed lines. Report anything you notice
 elsewhere in the package, graded as usual: there is no lesser grade for an
 out-of-scope finding. Say where each finding sits, and state what you read and
@@ -28,7 +31,7 @@ Read the governing clauses themselves:
   `.syzygy/governance/decisions/OWNER-DIRECTION-FIDELITY-REVIEW-ROUNDS-2026-11-09.md`;
 - the design note `docs/polaris-generation/fidelity-delta-review-proposal.md`.
 
-Add a section `## Repair questions`. For each finding in `ROUND-1-DISPOSITIONS.md`, answer three questions, each with one reason:
+Add a section `## Repair questions`. For each finding in `ROUND-2-DISPOSITIONS.md`, answer three questions, each with one reason:
 - Does the repair resolve the finding? Answer yes, no or partly.
 - Does it change a rule's meaning, an owner ruling or a label? Answer yes, no or unsure.
 - Does it introduce a new defect? Answer yes, no or unsure.
@@ -36,11 +39,11 @@ Add a section `## Repair questions`. For each finding in `ROUND-1-DISPOSITIONS.m
 Criteria:
 
 1. A confirmation keeps its meaning. No sentence may let a verdict count with an entry missing, let an entry of an earlier verdict count for a later revision, or revive a retired verdict. Name any sentence that does.
-2. REQ-polaris-generation-035's binding is not weakened. The list is inside the packet and its digest. The rebuild at validation and at render covers the list and its named base inputs, and fails closed on a missing input. Quote REQ-polaris-generation-033's "rebuilding the review packet from the frozen subject" and test the reading against it.
+2. REQ-polaris-generation-035's binding is not weakened. The list is inside the packet and its digest. The rebuild at validation and at render covers the list and its named base inputs, and fails closed on a missing input. Test that the base core digest removes every chain: that no packet's rebuild needs the inputs of any round but its own and its base round's, including with three or more rounds in one directory. Quote REQ-polaris-generation-033's "rebuilding the review packet from the frozen subject" and test the reading against it.
 3. Each "contract reading" in the delta holds against the clause, quoted.
 4. The list is fully determined by bytes and records:
    - which packets carry it;
-   - its base round, keyed by session directory, with failed and refused verdicts treated as stated;
+   - its base round, keyed by session directory, chosen and recorded at delivery from verdicts recorded before it, with failed and refused verdicts treated as stated;
    - what it lists, and what it says it does not compare;
    - that no judgement of materiality enters it.
 5. Requirements and scenarios agree. Each change has a scenario and a falsifier, each scenario can be tested, and every label is VIS-2 correct. That includes nothing Observed resting on a stored record.
@@ -60,7 +63,7 @@ Verdict: <CONFIRM | CONFIRM WITH EXCEPTIONS | REVISE>
 In this brief, `Manifest SHA-256` means the digest of the proposed `spec.md` bytes:
 - Reconstruct those bytes by applying `proposed/spec.md.patch` to the installed spec. The result is the `proposed_sha256` of the spec row in `PROPOSED-SUBJECTS.json`; re-derive it yourself.
 - The recorder binds your review to that digest, read from the first four non-blank lines, and to no other file's digest.
-- It is not the digest of the patch file or of this directory, and it differs from round 1's.
+- It is not the digest of the patch file or of this directory, and it differs from rounds 1 and 2.
 
 Name the other two subject digests in the body.
 

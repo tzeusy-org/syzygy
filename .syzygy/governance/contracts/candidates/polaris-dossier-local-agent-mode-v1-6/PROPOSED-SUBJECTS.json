@@ -4,14 +4,14 @@
     {
       "path": "openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md",
       "current_sha256": "d7cf76a823abef4a9a603e17b9df37a3e35412b4d2d317b59d252b6c2aa00ea0",
-      "proposed_sha256": "e0805b07e328dcd423e55b3f5b5cd44f47871190de3f67ae71a3bbe32e738531",
-      "patch_sha256": "4d3448b1da72d47eb9672375b4b8f6af495b48820740942937f70440edd27b2c"
+      "proposed_sha256": "2dbf5fc5378fa4e0cdcb90b4f9261f6b34882403bf20048948bd58c495490d4e",
+      "patch_sha256": "1834e4367f9d3b0a6a84b4e237b6f63803931faa6c78ddff63a20e95097e8643"
     },
     {
       "path": "openspec/changes/polaris-dossier-local-agent-mode/design.md",
       "current_sha256": "62758e0368e1545a0e3f0287f58fb938ae84a9f1f5f7c1af0fd15059d17cab8b",
-      "proposed_sha256": "97fb99e62f5a504102b75e04acd7abb10d760427184bf2e88fddc9d1f337b45f",
-      "patch_sha256": "3f65b06f934c187cd1614b8597552de02fec9b6efd714216bc9c16153e1e918e"
+      "proposed_sha256": "62c8ec32a155270622c705a5bd11f6c8d3f4c7a6045def4a0136b62d822d8402",
+      "patch_sha256": "cb0aaefded1a7ab6ba6a8a811e682bed553884dda926ee76e01e6dd061092910"
     },
     {
       "path": "openspec/changes/polaris-dossier-local-agent-mode/proposal.md",
