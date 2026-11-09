@@ -10,7 +10,7 @@
 
 Do you sign version 1.2? It lets a launch read your existing full clone at
 the trunk tip with no fetch, and accepts any https or ssh repository URL on
-any host.
+any host. It carries your four rulings of 2026-11-09.
 
 - **Option:** "Sign launch-consent spec version 1.2"
 
@@ -21,40 +21,48 @@ any host.
   and what lies below it, as Git objects. It never reads a parent commit,
   another branch, your working tree or your index, runs nothing in the
   clone, and fetches nothing.
+- **Older bytes as delta input only.** Rebuilding a trunk-tip file may
+  unpack an older version's stored bytes. They are never read as content,
+  shown or sent, and the run says so (your ruling 1).
 - **Trunk tip.** This is the commit your clone's `origin/HEAD` points to, as
   of your last fetch, else `main`, else `master`. A local branch with
   unpushed commits is never the default; the launch output tells you when it
   differs.
-- **Any https or ssh URL**, on any host, including `git@host:path`.
-  - A URL that carries a password or token is refused. One found in the
-    clone's own remote is dropped, never stored, and the launch output
-    flags it.
-  - `http`, `git://`, `file://` and local paths are not accepted.
-- **Identities.** GitHub repositories keep the identities they have today
-  (`repository:redis-redis`). Other hosts get the host in the identity
-  (`repository:git.example.org-team-tool`), so a mirror elsewhere does not
-  silently share a GitHub repository's records.
+- **Any https or ssh URL you type**, on any host, including `git@host:path`.
+  - A typed URL that carries a password or token is refused.
+  - A clone whose own remote is `http://` or `git://` still gets an
+    identity proposed, as today (your ruling 4).
+  - Credentials found in a remote are dropped, never stored, and flagged.
+- **Identities: two segments for every host** (your ruling 3).
+  - `repository:<owner>-<repo>`, as GitHub repositories have today.
+  - A GitLab subgroup path `group/sub/project` becomes
+    `repository:sub-project`.
 - **Public or not** is still your declaration, on every host. Syzygy never
   guesses it, and a repository not declared public stays private under the
   screening policy.
 
 ## What it costs
 
-- **Your agent can see history.** Syzygy reads none of it, but the agent
-  sessions can read everything in a full clone. The question says so before
-  you answer, and the brief asks the agent to stay at the pinned commit;
-  whether it does is Inferred.
-- **"History stays unread" holds for content, not for every byte.** Git
-  stores many files as differences from other versions. To rebuild a
-  trunk-tip file Syzygy may have to unpack an older version's stored bytes,
-  which it then discards unread. The strict alternative refuses such files,
-  and how often that would bite is not measured (`SEMANTIC-DELTA.md`, owner
-  point 1).
+- **Same-named repositories share records** (your ruling 3). For example,
+  `github.com/a/b` and `gitlab.com/a/b`, or two subgroups ending
+  `sub/project`.
+  - Unless you give another identity, the second one launched is proposed
+    the first one's identity.
+  - It then relies on the first one's drawer and provider statements.
+  - The question names those records before you answer. Consents for
+    specific commits never carry across.
+- **Your agents can see history** (your ruling 2).
+  - Syzygy reads none of it, but the agent sessions can read everything in a
+    full clone.
+  - You chose disclosure over the recommended pinned-tree copy. The question
+    says so before you answer, and the brief asks the agent to stay at the
+    pinned commit.
+  - Whether it does is Inferred.
 - **No dirty-checkout check.** Checking would mean reading your working
   tree. The launch output says the tree was not inspected and prints
   `git status` for you to run.
-- **Narrower than v1.1 in one place.** A clone whose remote is `http://` or
-  `git://` no longer proposes an identity; you give one.
+- **Typed `http://` or `git://` URLs are refused.** You type an https or
+  ssh URL only when your clone has no usable remote.
 
 The redis consent, which says its clone holds one commit alone, keeps that
 rule for runs made under it.

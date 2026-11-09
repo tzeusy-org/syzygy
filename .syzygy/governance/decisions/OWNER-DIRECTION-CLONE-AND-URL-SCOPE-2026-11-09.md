@@ -62,3 +62,42 @@ Drafting only:
 - A local-path locator, which the owner did not choose.
 - A dossier run, a body read of any observed repository, a fetch, or a
   provider call by an agent.
+
+## Rulings on the draft's four points, 2026-11-09
+
+[Observed by the coordinating Claude Code session, bead `syzygy-pdja.29`.]
+Later on 2026-11-09 the owner answered four structured questions put after
+the first draft of the amendment. Each question and the selection follow,
+verbatim.
+
+1. **Q:** "Full clones: git stores many files as deltas against older
+   versions. To rebuild the trunk-tip files, Syzygy may have to decompress
+   older objects' bytes, use them only as delta bases, and discard them; it
+   never reads them as content. Allow that?"
+
+   > Allow, as delta input only (Recommended) — Old bytes are used only to rebuild trunk-tip objects, never shown or sent, and the run discloses it. Most full clones work.
+
+2. **Q:** "In a full clone the author and review agent sessions could read
+   git history, which no consent covers; the brief can only ask them not
+   to. How should that be handled?"
+
+   > Disclose only — Agents work in your clone; the run discloses that they could read history, and whether they stayed at the pinned commit is Inferred.
+
+   The other option, a pinned-tree copy for the agent sessions, was the
+   recommended one and was not chosen.
+
+3. **Q:** "How should repositories outside GitHub be named? GitHub keeps
+   `repository:<owner>-<repo>` byte for byte either way."
+
+   > Two segments for every host — `repository:<owner>-<repo>` everywhere. Simpler, but a same-named repo on two hosts would share consent records.
+
+4. **Q:** "With only https and ssh admitted, a clone whose remote is http://
+   or git:// would no longer get a proposed identity; you would type one.
+   Accept that narrowing?"
+
+   > Keep proposing for http/git — Derive identities from http:// and git:// remotes too, as REQ-046 normalises today.
+
+- [Inferred] That the person answering is the owner.
+
+These rulings shape the draft. Like the rest of this record, they authorize
+drafting only: no implementation, no sign-off and no act-bound edit.

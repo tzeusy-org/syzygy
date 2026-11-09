@@ -8,25 +8,38 @@
 `openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md`
 at version 1.1.
 **Stable IDs affected:** REQ-polaris-generation-046 and 047, amended in place.
-046: one statement added to the question, the identity rule (admitted forms
-and a host-qualified identity off `github.com`), the identity residuals, two
-new paragraphs (locator forms; visibility), six scenarios, its case, oracle
-and falsifier, and one `warrants.decisions` entry. 047: the trunk rule made
-exact for remote-tracking references, the HEAD paragraph (detached HEAD and
-the checkout warning), one new paragraph group (clone forms and what Syzygy
-reads in them), six scenarios, its case, observable, oracle independence and
-falsifier, and one `warrants.decisions` entry. No requirement is added,
-removed or renamed; no other requirement's bytes change.
+
+- **046:**
+  - one statement added to the question;
+  - one sentence group added after the identity rule, whose derivation keeps
+    its v1.1 bytes (every host, the last two path segments, and `https`,
+    `http`, `ssh`, `git` and scp-form remotes);
+  - the identity residuals rewritten;
+  - two new paragraphs (locator forms; visibility);
+  - eight scenarios;
+  - its case, oracle and falsifier;
+  - one `warrants.decisions` entry.
+- **047:**
+  - the trunk rule made exact for remote-tracking references;
+  - the HEAD paragraph (detached HEAD and the checkout warning);
+  - one new paragraph group (clone forms, what Syzygy reads in them, the
+    delta-base statement);
+  - six scenarios;
+  - its case, observable, oracle independence and falsifier;
+  - one `warrants.decisions` entry.
+
+No requirement is added, removed or renamed; no other requirement's bytes
+change.
 **Change class:** Normative; the whole package takes the normative review floor.
-**Author:** Claude, for epic `syzygy-pdja`.
+**Author:** Claude, for `syzygy-pdja.29` (epic `syzygy-pdja`).
 **Date:** 2026-11-09.
 
 ## Warrant
 
 [Observed] The owner direction `OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09`
 (`.syzygy/governance/decisions/OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md`),
-a plain direction recorded from two structured questions answered on
-2026-11-09. It authorizes drafting only. The owner's selections, quoted from
+a plain direction recorded from structured questions answered on 2026-11-09.
+It authorizes drafting only. The owner's first two selections, quoted from
 that record:
 
 - "Accept full clones (Recommended) — Reads only the pinned trunk-tip commit
@@ -38,6 +51,11 @@ that record:
 
 The owner did not choose the local-path option, and this version admits no
 local path.
+
+[Observed] The same record's section "Rulings on the draft's four points"
+quotes four further selections, made after the first draft of this package
+had put four points to the owner. They decide D2's disclosure, D5, D6 and
+D7 below, and each decision quotes its ruling.
 
 ## Where the two limits live today (rule 9 sweep)
 
@@ -61,7 +79,7 @@ Two further texts, outside those populations, were read because the code
 cites them:
 
 - [Observed] The clone-shape check (`packages/polaris-dossier/src/clone-shape.ts`)
-  rests on the redis observation consent, a performed act's record, whose
+  rests on the redis observation consent, a performed act's record. Its
   scope says "The operator fetches each admitted commit alone into a local
   repository used only for the run (`git fetch --depth=1 <upstream>
   <commit>`), so no ancestor commit is transferred". Review
@@ -78,35 +96,49 @@ cites them:
 `openspec/`, 0 carry a `github:<owner>:<repo>` identity, by both passes. The
 form exists only as `repositoryId` in `github-url.ts` and the provider-mode
 trigger, and no record uses it. Every recorded identity has the
-`repository:` form REQ-046 derives or a declared one: `repository:redis-redis`
-(22 files), `repository:psf-requests` (9), `repository:tzeusy-org-syzygy` (4)
-and the declared `repository:butlers-configured-poc` (15). So the
-compatibility that matters is with the `repository:<owner>-<repo>` identities
-derived from `github.com`, and this version keeps that form for `github.com`.
+`repository:` form REQ-046 derives or a declared one:
+
+| Identity | Files |
+|---|---|
+| `repository:redis-redis` | 22 |
+| `repository:psf-requests` | 9 |
+| `repository:tzeusy-org-syzygy` | 4 |
+| `repository:butlers-configured-poc` (declared) | 15 |
+
+So the compatibility that matters is with the `repository:<owner>-<repo>`
+identities. This version keeps REQ-046's derivation byte for byte, so every
+one of them is derived as before.
 
 **What needs a spec change, then.** [Inferred] Neither limit is a signed
 requirement, so the code could drop both without one. The amendment is still
-needed: the launch-consent requirements describe reads, references and
-locators for a clone that held one commit, and say nothing about what Syzygy
-may touch in a clone that holds history, nor which locator forms are
-admitted and how one carrying credentials is handled. Without the
-amendment, each of those would be an implementation choice nobody signed.
+needed, because the launch-consent requirements describe reads, references
+and locators for a clone that held one commit. They say nothing about:
+
+- what Syzygy may touch in a clone that holds history;
+- which locator forms are admitted;
+- how a locator carrying credentials is handled.
+
+Without the amendment, each of those would be an implementation choice
+nobody signed.
 
 ## One change, not a split
 
 [Inferred] Every edit lands in REQ-polaris-generation-046 and 047 of
-`polaris-dossier-launch-consent`, and governs launch-consented runs, with one
-stated reach beyond them: an observation consent made by another act is found
-by its normalised `Upstream:` URL, which finds every consent today's
-`https://github.com` form finds. The category is one: what a launch accepts
-as its input, the clone and its locator. It overlaps no other change. The
-local-agent mode keeps its bytes: its REQ-033 already requires object reads
-by identifier at the pinned revision and refuses alternates, replacements and
-local configuration, and nothing here edits it. Its design table's
-`parseGithubUrl` citation names the code `init` was built from and goes stale
-at implementation, as a history sentence; it is not patched, so that the
-signed local-agent bytes and this change stay apart. **Recommendation:** one
-package, launch-consent version 1.2.
+`polaris-dossier-launch-consent`, and governs launch-consented runs. It has
+one stated reach beyond them: an observation consent made by another act is
+found by its normalised `Upstream:` URL. That finds every consent today's
+`https://github.com` form finds.
+
+The category is one: what a launch accepts as its input, the clone and its
+locator. It overlaps no other change. The local-agent mode keeps its bytes:
+its REQ-033 already requires object reads by identifier at the pinned
+revision and refuses alternates, replacements and local configuration, and
+nothing here edits it. Its design table's `parseGithubUrl` citation names
+the code `init` was built from and goes stale at implementation, as a
+history sentence. It is not patched, so that the signed local-agent bytes
+and this change stay apart.
+
+**Recommendation:** one package, launch-consent version 1.2.
 
 ## The decisions, each with its reasoning
 
@@ -137,10 +169,14 @@ version does not reach it. A scenario pins this.
   it, walked down. No parent commit object; nothing reached only from
   another commit, branch, tag, stash, reflog or note. Parent identifiers are
   used only as REQ-046's record matching uses them, never resolved.
-- **Pack storage:** a delta's base may be read solely to rebuild an in-scope
-  object, which is then re-hashed. The base is never used, classified,
-  stored, quoted, given a recorded digest or rendered. See the owner point
-  below.
+- **Pack storage:** a delta's base may be read solely to rebuild an
+  in-scope object, which is then re-hashed.
+  - The base is never used, classified, stored, quoted, given a recorded
+    digest, rendered or sent.
+  - The run record and every page state that objects of the pinned tree may
+    have been rebuilt from delta bases outside it, never read as content.
+  - The statement is unconditional. Syzygy cannot learn a base's identity
+    without hashing it, which would read the base as an object.
 - **References:** the names of the clone's references, and the values only
   of `HEAD`, the references the trunk rule names and the one `--revision`
   names, read as file data from loose reference files and `packed-refs`.
@@ -162,6 +198,18 @@ rule needs the remote URLs, and REQ-033 forbids honouring repository-local
 configuration. Reading the working tree, even to detect changes, would be a
 read of files the consent does not name.
 
+**The owner's ruling on delta bases.** The first draft put the delta-base
+read to the owner, since history's stored bytes may be inflated to rebuild a
+trunk-tip object. The owner selected:
+
+> Allow, as delta input only (Recommended) — Old bytes are used only to rebuild trunk-tip objects, never shown or sent, and the run discloses it. Most full clones work.
+
+The disclosure that option promises was not in the first draft. It is now
+the statement in the second sub-bullet above, with its scenario arm and
+falsifier arm. The strict alternative, refusing any object whose delta chain
+leaves the pinned tree, is not drafted. How many clones it would have
+refused stays [Unknown].
+
 ### D3. How "trunk tip" is chosen in an existing clone
 
 **Decided:** REQ-047's rule stands (the remote's default, else `main`, else
@@ -179,16 +227,19 @@ references:
   identifiers and that a local commit is not the trunk default.
 
 **Why:** the owner's standing rule, "Revision should always default to
-latest trunk commit (eg main/master)". In a full clone the latest trunk
+latest trunk commit (eg main/master)". In a full clone, the latest trunk
 commit the clone knows is the remote-tracking branch, as of the operator's
 last fetch. A local branch can carry unpublished local commits, which are
-not the trunk. [Observed] The implemented trunk rule
+not the trunk.
+
+[Observed] The implemented trunk rule
 (`packages/polaris-dossier/src/launch-revision.ts`) already reads it this
-way, and labels the several-remotes refusal Inferred because the clause says
-"its remote's default" in the singular; this version states it. Syzygy still
-does not fetch. That the clone's remote-tracking branch is the upstream's
-latest stays Inferred, and the update command REQ-047 already prints is the
-operator's way to refresh it.
+way. It labels the several-remotes refusal Inferred, because the clause says
+"its remote's default" in the singular; this version states that refusal.
+
+Syzygy still does not fetch. That the clone's remote-tracking branch is the
+upstream's latest stays Inferred. The update command REQ-047 already prints
+is the operator's way to refresh it.
 
 ### D4. A dirty or detached checkout
 
@@ -207,117 +258,164 @@ operator's way to refresh it.
 **Why:** refusing a dirty checkout would need a read outside the consent.
 REQ-033 already guarantees that "an uncommitted change in the clone's working
 tree never reaches a check, a quotation or a source page", since every read
-is an object read. What remains is that the agent sessions read the checked-out
-files, so a claim might rest on uncommitted text. Disclosure and the
-operator's own command are the honest limit.
+is an object read. What remains is that the agent sessions read the
+checked-out files, so a claim might rest on uncommitted text. Disclosure and
+the operator's own command are the honest limit.
 
 ### D5. The agent sessions' reach in a full clone
 
-**Decided:** the launch question states, before the answer, that the agent
-sessions can read everything the clone holds, history, branches, tags,
-stash, reflogs and working tree included; that no consent covers what lies
-beyond the pinned revision; and that Syzygy reads none of it. The brief of
-a launch-consented run tells the authoring agent to rest no claim on any
-commit but the pinned revision and not to read the clone's history or other
-references. Its compliance is its own report, labelled Inferred.
+**Decided:** disclosure, and an instruction that binds nothing.
 
-**Why:** REQ-033 already says the agent "reads the clone without
-restriction", and the agent's reads are the operator's own act. A single-commit clone
-bounded that reach physically, and the clone-shape check existed for that
-reason ("your agent reads whatever the clone holds", the packet that review
-quotes). A full clone removes the bound. "History stays unread" therefore
-holds for Syzygy by rule and for the agent only by instruction; the question
-must say so. See the owner point below.
+- The launch question states, before the answer:
+  - that the agent sessions can read everything the clone holds, history,
+    branches, tags, stash, reflogs and working tree included;
+  - that no consent covers what lies beyond the pinned revision;
+  - that Syzygy reads none of it.
+- The brief of a launch-consented run tells the authoring agent to rest no
+  claim on any commit but the pinned revision, and not to read the clone's
+  history or other references.
+- The agent's compliance is its own report, labelled Inferred.
+
+**The owner's ruling, and the trade-off it keeps.** The first draft put this
+to the owner. Two options were offered:
+
+- a pinned-tree copy for the agent sessions, which was the recommended one;
+- disclosure only.
+
+The owner selected the second:
+
+> Disclose only — Agents work in your clone; the run discloses that they could read history, and whether they stayed at the pinned commit is Inferred.
+
+So the owner chose disclosure over a copy that would have bounded the
+agents' reach to the pinned tree. The cost stands as the owner accepted it:
+
+- a full clone lets the author and review sessions read history no consent
+  names, and send it to their provider as the operator's own act;
+- nothing Syzygy does prevents that;
+- "history stays unread" holds for Syzygy by rule, and for the agents only
+  by the brief's request, which is Inferred.
+
+The pinned-tree copy is not drafted. It would be a later version's change,
+if the owner asks for it.
+
+**Why the disclosure is needed:** REQ-033 already says the agent "reads the
+clone without restriction", and the agent's reads are the operator's own
+act. A single-commit clone bounded that reach physically, and the
+clone-shape check existed for that reason ("your agent reads whatever the
+clone holds", in the packet that review quotes). A full clone removes the
+bound, so the question must say so.
 
 ### D6. The locator forms admitted
 
-**Decided:** three forms:
+**Decided.** Two populations, kept apart.
+
+**URLs the operator gives** (`--url` or the upstream option) must be in one
+of three admitted forms:
 
 - `https://host[:port]/path`;
 - `ssh://[user@]host[:port]/path`;
 - the scp form `[user@]host:path`, where the host holds no `/` and the path
   does not begin with `//`.
 
-The normalised path must hold at least one segment. These are refused or
-derive nothing:
+An `https://` URL with any user information, and any URL whose user
+information holds a `:`, is refused. An ssh or scp user name alone is
+admitted. A refused URL names the rule it fails and is never printed,
+stored or recorded.
 
-- `http`, `git`, `file` and every other transport;
+**URLs read from the clone's remotes** are remote locators when they are in
+an admitted form, or are `http://` or `git://` URLs. REQ-046's v1.1
+derivation normalises all of these unchanged. Their user information,
+whatever it holds, is removed before anything is derived. Where it was
+present, the launch output says so without printing it, and nothing records
+it. A remote in no remote-locator form derives nothing, as for a clone with
+no remote.
+
+**Neither population:**
+
+- `file://` and every other transport;
 - a local path;
 - a query or a fragment;
-- percent-encoding in the user information or the host;
-- any URL no form matches.
+- percent-encoding in the user information or the host.
 
-**Credentials:**
+Syzygy makes no network request for a locator and applies no rewrite from
+Git or SSH configuration. An SSH host alias is the host it names.
 
-- an `https://` URL with any user information is not admitted, since a
-  token is commonly carried as the user name;
-- a URL whose user information holds a `:` is not admitted;
-- an ssh or scp user name alone is admitted and dropped by normalisation.
+**The owner's ruling.** The first draft narrowed REQ-046 so that `http://`
+and `git://` remotes derived nothing. The owner selected:
 
-**Refusals:**
+> Keep proposing for http/git — Derive identities from http:// and git:// remotes too, as REQ-046 normalises today.
 
-- an operator-given URL that is not admitted is refused, naming the rule,
-  and the URL is never printed, stored or recorded;
-- a remote URL that is not admitted derives nothing, as for a clone with no
-  remote, so the operator gives the identity and upstream options;
-- where the remote URL carried user information, the launch output says so
-  and never prints it.
+So the remote derivation keeps its v1.1 bytes.
 
-**Network and configuration:** Syzygy makes no network request for a
-locator and applies no rewrite from Git or SSH configuration. An SSH host
-alias is therefore the host it names.
+**Why operator-given URLs stay at https and ssh.** [Inferred] The ruling
+speaks of identities derived "from http:// and git:// remotes", a clone's
+remotes, and of REQ-046's derivation "today". It does not speak of a URL the
+operator types. The owner's first answer, "Any https or ssh git URL", is
+what the operator-given form follows. Keeping them apart costs the operator
+only this: a clone whose remote is `http://` still works, but a clone with
+no remote must be given an https or ssh upstream.
 
-**Why:** the owner chose "any https or ssh git URL" and declined local
-paths. REQ-046 as signed normalises `http` and `git` remotes too. This version
-narrows the derivation to the two transports chosen, so a remote over an
-unauthenticated transport is not recorded as a locator without the operator
-giving one. Refusing, rather than silently stripping, an operator-typed
-credential keeps it out of every record. Stripping it from a remote URL Syzygy
-reads keeps an existing clone usable, and the launch output points out the
-credential sitting in the operator's configuration.
+This reading is a choice. The other reading, admitting typed `http://` and
+`git://` too, is lawful, and a reviewer or the owner may prefer it.
+
+**Credentials:** refused when typed, stripped and disclosed when found in a
+remote, as the ruling's brief asks.
 
 ### D7. The normalisation rule and the identity form
 
-**Decided:**
+**Decided: two segments for every host,** the owner's ruling:
 
-- **Normalisation:** REQ-046's rule, unchanged except for the schemes it
-  names, which are now `https`, `ssh` and the scp form.
-- **Identity:** for `github.com`, `repository:<owner>-<repo>` as today. For
-  any other host, `repository:` followed by the host and every path
-  segment, joined by `-`, with the same character replacement. So
-  `git@git.example.org:team/sub/tool.git` proposes
-  `repository:git.example.org-team-sub-tool`.
-- **Locator:** the normalised URL, `host/path`, is what launch records, the
-  run record and every page carry, for every host.
-- **Other acts' consents:** a consent made by another act is found when its
-  `Upstream:` URL, normalised the same way, equals the locator's.
+> Two segments for every host — `repository:<owner>-<repo>` everywhere. Simpler, but a same-named repo on two hosts would share consent records.
 
-**Why:**
+- **The derivation is unchanged.** REQ-046's derivation keeps its v1.1
+  bytes. The identity is `repository:` followed by the last two segments of
+  the normalised path, joined by `-`. This version adds only a stated
+  reading and a floor.
+- **The reading:** the rule applies to every host, so the host and every
+  earlier path segment take no part in the identity. A GitLab subgroup path
+  `group/sub/project` proposes `repository:sub-project`, and
+  `git@git.example.org:team/sub/tool.git` proposes `repository:sub-tool`.
+- **The floor:** a normalised path of fewer than two segments derives no
+  identity, and the operator gives the identity option.
+- **The locator:** the normalised URL, the whole `host/path`, is what launch
+  records, the run record and every page carry, for every host.
 
-- **Compatibility.** Every identity in force is `github.com`-derived or
-  declared, and the `github.com` form is unchanged byte for byte, so redis,
-  requests and Syzygy's own records still read and still match.
-  [Inferred] A launch record that an earlier build wrote for a non-GitHub
-  host, before its `init` refused, keeps its identity, because REQ-046 takes
-  the identity every matching record carries, and such a record still
-  matches by URL.
-- **Why the host joins the identity off GitHub.** The two-segment rule
-  applied to every host would give a GitLab mirror of `redis/redis` the
-  identity `repository:redis-redis`. That identity would then match redis's
-  records by identity, and the mirror would inherit redis's drawer and
-  provider statements. With the host in the identity, a cross-host copy
-  shares records only by commit, which REQ-046's revision and parent
-  matching already discloses. Nested groups (`group/sub/project`) are common
-  off GitHub, so every segment is kept.
-- **The cost.** Collisions remain where the rule replaces or joins
-  characters (`a-b/c` and `a/b-c`), for a host and a GitHub owner of the
-  same name, and between ports on one host. The residual sentence now names
-  them, replacing the `x/sub/name` example, which the GitHub rule cannot
-  produce. The identity stays a proposal that the owner's phrase declares.
+**The shared-records consequence, plainly.** Two repositories derive one
+identity when their last two segments agree, whether on one host or on two:
 
-The alternative, the two-segment form for every host, is lawful and simpler.
-It is not chosen because of the mirror case above. A reviewer or the owner
-may prefer it.
+- `github.com/a/b` and `gitlab.com/a/b`;
+- `group1/sub/project` and `group2/sub/project` on one host;
+- `a-b/c` and `a/b-c` after joining.
+
+Absent the identity option, the second repository to be launched is
+proposed the first one's identity. It matches the first one's records by
+identity, and on a confirmed answer it relies on the first one's drawer
+statement and agent-provider statements. That includes a provider statement
+the owner made for a different repository. The question names each matching
+record and how it matched, and the residual is disclosed. Avoiding the share
+takes the owner seeing it in the question and giving another identity.
+
+An observation consent names revisions, so it covers only the commits it
+names and does not carry across. Launch observation consents still match by
+identity, by URL or by revision. Since a different repository is at
+different commits, its consent is a new record under the shared identity.
+
+**How this interacts with lookup by `Upstream:`.** An observation consent
+made by another act is found by its `Upstream:` URL, normalised by the same
+rule, equalling the locator's normalised URL: the host and the whole path,
+never the identity's two segments. So such a consent is never found for a
+same-named repository on another host, or under another group, by URL.
+
+The share above comes only through the launch records' identity match, and
+REQ-046 already makes that match visible. A consent made by another act for
+`github.com/redis/redis` is therefore found for that locator alone. A
+`gitlab.com/redis/redis` launch is proposed `repository:redis-redis`, and
+the question names the redis records as matching by identity. Its own
+`Upstream:` lookup finds nothing.
+
+**Compatibility:** every identity in force is derived by the same bytes as
+before, so redis, requests and Syzygy's own records still read and still
+match.
 
 ### D8. Visibility on other hosts
 
@@ -345,70 +443,53 @@ are routinely cloned over ssh.
   pattern.
 - **The performed write consent.** [Observed] It names only the observing
   project's own identity, `repository:tzeusy-org-syzygy`, derived from
-  `github.com/tzeusy-org/syzygy`, which this version leaves unchanged. Its
-  scope is the dedicated reference and the location in Syzygy's own tree,
-  and it says nothing about observed repositories' hosts.
+  `github.com/tzeusy-org/syzygy` by the unchanged rule. Its scope is the
+  dedicated reference and the location in Syzygy's own tree, and it says
+  nothing about observed repositories' hosts.
 
-**One registry sentence to test.** [Observed] The installed
-source-acquisition registry entry says "to stay within the observation
-consent's stated fetch form the operator fetches the one consented commit
-alone (git fetch --depth=1 <upstream> <commit>)". Version 1.0's design §5
-read this as guidance for consents that state a fetch form, which a launch
-record does not, and asked a reviewer to test that reading. This version
-relies on the same reading. If a reviewer rejects it, the entry needs a
-successor version, owner-signed, and this package must wait for it. Its
-`readAuthority` ("the pinned commit, its root tree and the trees and blobs
-reachable from it ... from the loose objects and version-2 packs") is read
-here as admitting a delta base read solely to rebuild an in-scope packed
-object. That reading also goes to the owner (below).
+**Registry readings to test.** [Observed] The installed source-acquisition
+registry entry carries two sentences this version leans on:
 
-## Points for the owner before review
+- Its fetch sentence says "to stay within the observation consent's stated
+  fetch form the operator fetches the one consented commit alone (git fetch
+  --depth=1 <upstream> <commit>)". Version 1.0's design §5 read this as
+  guidance for consents that state a fetch form, which a launch record does
+  not, and asked a reviewer to test that reading. This version relies on the
+  same reading.
+- Its `readAuthority` says "the pinned commit, its root tree and the trees
+  and blobs reachable from it ... from the loose objects and version-2
+  packs". This version reads it as admitting a delta base read solely to
+  rebuild an in-scope packed object, which the owner allowed (D2).
 
-1. **Delta bases in a full clone's packs.** [Inferred] Git commonly stores a
-   trunk-tip blob as a delta against another object, which may be a
-   historical one. To read the pinned tree at all, Syzygy must read that
-   base's stored bytes. D2 admits that read solely as decompression input,
-   never as content. Literally, "history stays unread" is then false at the
-   byte level: history is never read as content, but its stored bytes may be
-   inflated to rebuild a trunk-tip object. The strict alternative refuses
-   any object whose delta chain leaves the pinned tree. How many full clones
-   that would refuse is [Unknown]; it was not measured, because measuring it
-   means opening observed repositories' packs. A third option, which needs
-   no spec change, keeps the one-commit form for the clone Syzygy reads: the
-   operator makes a second, one-commit clone from the full one. It is less
-   convenient, and it is not what the owner selected.
-2. **The agent's reach (D5).** A full clone lets the agent sessions read
-   history the consent does not name. The brief can ask the agent not to;
-   it cannot make it.
-3. **The identity form off GitHub (D7)**, host-qualified, versus the
-   simpler two-segment form for every host.
-4. **Narrowing REQ-046's derivation** to https and ssh (D6). A clone whose
-   only remote is `http://` or `git://` no longer proposes an identity, and
-   the operator gives one.
-
-None of these needs a signed policy or act byte edited. Point 1 may need a
-registry-entry successor if a reviewer reads the entry's `readAuthority` more
-narrowly.
+If a reviewer rejects either reading, the entry needs an owner-signed
+successor version, and this package waits for it.
 
 ## What does not change
 
-- REQ-polaris-generation-033 to 036, 040 and every other requirement keep
-  their bytes. So do the local-agent mode, the screening policy (installed
-  v7 and held v8), the write consent, the registry entry, the redis consent
-  and every record.
+- These keep their bytes:
+  - REQ-polaris-generation-033 to 036, 040 and every other requirement;
+  - REQ-046's identity derivation;
+  - the local-agent mode;
+  - the screening policy (installed v7 and held v8);
+  - the write consent;
+  - the registry entry;
+  - the redis consent and every record.
 - A run that relies on no launch consent record keeps every predecessor
   requirement's bytes and meaning. Its locator is still found as before, and
   the clone form its consent states still binds it.
-- The phrase, the records' fields, the dedicated reference, the write rules,
-  the trunk default for clones without remote-tracking references, and the
-  did-not-fetch statement.
+- Also unchanged:
+  - the phrase and the records' fields;
+  - the dedicated reference and the write rules;
+  - the trunk default for clones without remote-tracking references;
+  - the did-not-fetch statement.
 
 ## Exact blocks
 
 Each block is the exact text of the paragraphs the patch changes, current
 then proposed, with the paragraphs split at blank lines, the same split the
 patch's hunks follow. A paragraph the patch inserts has no current text; the
-paragraph it follows is named.
+paragraph it follows is named. The blocks were generated by script from the
+installed and the patched bytes.
 
 ### Change 1 (replace), in "Launch-time consent"
 
@@ -435,9 +516,9 @@ The repository identity is declared by the owner's phrase; Syzygy only proposes 
 **Proposed:**
 
 ~~~~text
-The repository identity is declared by the owner's phrase; Syzygy only proposes it, and SHALL propose it by the rule below, never choosing one by any other means. The derived identity is taken from the URL of the clone's remote whose default reference REQ-polaris-generation-047 reads, or else the remote named `origin`, or else the clone's only remote, where that URL is in an admitted locator form (below), normalised by removing the scheme (`https`, `ssh` or the scp form `user@host:path`), the user information, any port and a leading `www.` from the host, then a trailing `/` and then a trailing `.git`, and case-folding the host and the path. Where the normalised host is `github.com`, the identity is `repository:` followed by the last two path segments of the normalised URL joined by `-`; for any other host it is `repository:` followed by the host and every path segment of the normalised URL, joined by `-`; in both, every character outside `a` to `z`, `0` to `9`, `.`, `_` and `-` is replaced by `-`. Where the clone has no remote, or the URL that rule selects is not in an admitted locator form, the operator SHALL give the identity and upstream URL as options, and they are normalised the same way; the operator may give the identity option on any launch. The identity and normalised URL SHALL be labelled Inferred, attributed to their source, and disclosed with the statement that the clone's configuration lies within the agent sessions' write reach. An existing record, in any state, matches the run when its subject identity equals the derived identity, its recorded normalised URL equals the derived URL, or it names the pinned revision or a parent of the pinned commit. The proposed identity SHALL be: the identity the operator gives as an option, where given; otherwise, where every matching record carries one and the same identity, that identity, so a repository whose URL has changed keeps the identity its records already carry; otherwise, where no record matches, the derived identity. Where matching records carry more than one identity and the operator gives none, Syzygy SHALL propose none and SHALL refuse before asking, naming each matching record with its identity and how it matched, and the identity option; it SHALL NOT pick one by any precedence, because a guess would attach the run to another repository's records and statements without the owner seeing the choice. Where the operator gives an identity that a matching record does not carry, the question SHALL name every such record. The URL, recorded and derived, is a locator hint and never the identity. Three residuals SHALL be disclosed beside the record list, each labelled Inferred: a clone re-identified under another URL, at a commit no record names and whose parents no record names, matches no earlier record, so the repository takes a second identity and a revoked or withdrawn record for it goes unnamed; a fork or mirror at a commit an upstream record names, or at a child of one, is proposed the upstream's identity and so relies on the upstream's drawer and provider statements unless the operator gives another identity; and two repositories whose normalised URLs differ only in a port, or only in characters the rule replaces by or joins with `-` (`a-b/c` and `a/b-c`, or a host and a GitHub owner of the same name), derive one identity and, absent another match, share its records.
+The repository identity is declared by the owner's phrase; Syzygy only proposes it, and SHALL propose it by the rule below, never choosing one by any other means. The derived identity is taken from the URL of the clone's remote whose default reference REQ-polaris-generation-047 reads, or else the remote named `origin`, or else the clone's only remote, normalised by removing the scheme (`https`, `http`, `ssh`, `git` or the scp form `user@host:path`), the user information, any port and a leading `www.` from the host, then a trailing `/` and then a trailing `.git`, and case-folding the host and the path; the identity is `repository:` followed by the last two path segments of the normalised URL joined by `-`, with every character outside `a` to `z`, `0` to `9`, `.`, `_` and `-` replaced by `-`. Where the clone has no remote, the operator SHALL give the identity and upstream URL as options, and they are normalised the same way; the operator may give the identity option on any launch. The rule takes the last two path segments for every host, so the host and every earlier path segment (a group above a subgroup, for example) take no part in the identity; a normalised path of fewer than two segments derives no identity, and the operator SHALL give the identity option. The identity and normalised URL SHALL be labelled Inferred, attributed to their source, and disclosed with the statement that the clone's configuration lies within the agent sessions' write reach. An existing record, in any state, matches the run when its subject identity equals the derived identity, its recorded normalised URL equals the derived URL, or it names the pinned revision or a parent of the pinned commit. The proposed identity SHALL be: the identity the operator gives as an option, where given; otherwise, where every matching record carries one and the same identity, that identity, so a repository whose URL has changed keeps the identity its records already carry; otherwise, where no record matches, the derived identity. Where matching records carry more than one identity and the operator gives none, Syzygy SHALL propose none and SHALL refuse before asking, naming each matching record with its identity and how it matched, and the identity option; it SHALL NOT pick one by any precedence, because a guess would attach the run to another repository's records and statements without the owner seeing the choice. Where the operator gives an identity that a matching record does not carry, the question SHALL name every such record. The URL, recorded and derived, is a locator hint and never the identity. Three residuals SHALL be disclosed beside the record list, each labelled Inferred: a clone re-identified under another URL, at a commit no record names and whose parents no record names, matches no earlier record, so the repository takes a second identity and a revoked or withdrawn record for it goes unnamed; a fork or mirror at a commit an upstream record names, or at a child of one, is proposed the upstream's identity and so relies on the upstream's drawer and provider statements unless the operator gives another identity; and two repositories whose normalised URLs share their last two path segments, on one host or on two (`x/sub/name` and `y/sub/name`, or `github.com/a/b` and `gitlab.com/a/b`), or differ only in characters the rule replaces by or joins with `-` (`a-b/c` and `a/b-c`), derive one identity and, absent another match, share its records: a record made for either matches the other by identity, so the question names it and how it matched, and a confirmed answer under that identity relies on its drawer and provider statements, while an observation consent, which names revisions, covers only the commits it names.
 
-A URL Syzygy takes as a locator, whether the operator gives it (`--url` or the upstream option) or Syzygy reads it from the clone's remote configuration, SHALL be in one of three admitted locator forms: `https://` followed by a host, an optional port and a path; `ssh://` followed by an optional user name and `@`, a host, an optional port and a path; or the scp form, an optional user name and `@`, a host holding no `/`, `:` and a path that does not begin with `//`. The normalised path SHALL hold at least one segment. An admitted locator carries no credentials: an `https://` URL carrying any user information, and any URL whose user information holds a `:`, is not admitted; an `ssh://` or scp-form user name alone is admitted, and normalisation removes it. A URL carrying a query or a fragment, or a percent-encoded character in its user information or host, a URL of any other scheme or transport (`http`, `git`, `file` and every other transport Git accepts), a local path, and a URL no form matches are not admitted. Syzygy SHALL refuse an operator-given URL that is not admitted, naming the rule it fails, and SHALL NOT print, store or record that URL. A remote URL that is not admitted derives nothing, as for a clone with no remote; where a remote URL carried user information, the launch output SHALL say so, and Syzygy SHALL NOT print, store or record that user information. Syzygy SHALL make no network request to resolve, check or reach a locator, and SHALL apply no rewriting of it from Git or SSH configuration (a URL rewrite rule or an SSH host alias), so an alias is the host it names. The normalised URL is the locator every launch consent record, the run record and every page carry, for every host. An observation consent made by any other act is found for a locator when that record's `Upstream:` URL, normalised by the same rule, equals the locator's normalised URL; a locator that found such a consent before this rule still finds it.
+A URL the operator gives as a locator (`--url` or the upstream option) SHALL be in one of three admitted locator forms: `https://` followed by a host, an optional port and a path; `ssh://` followed by an optional user name and `@`, a host, an optional port and a path; or the scp form, an optional user name and `@`, a host holding no `/`, `:` and a path that does not begin with `//`. An operator-given URL carries no credentials: an `https://` URL carrying any user information, and any URL whose user information holds a `:`, is not admitted; an `ssh://` or scp-form user name alone is admitted. A URL Syzygy reads from the clone's remote configuration is a remote locator when it is in an admitted locator form or is an `http://` or `git://` URL of a host, an optional port and a path, as the derivation above normalises them; its user information, whatever it holds, is removed before anything is derived from it. A URL carrying a query or a fragment, or a percent-encoded character in its user information or host, a URL of any other scheme or transport (`file` and every other transport Git accepts), and a local path are neither admitted nor remote locators, nor is an operator-given `http://` or `git://` URL admitted. Syzygy SHALL refuse an operator-given URL that is not admitted, naming the rule it fails, and SHALL NOT print, store or record that URL. A remote URL that is not a remote locator derives nothing, as for a clone with no remote; where a remote URL carried user information, the launch output SHALL say so, and Syzygy SHALL NOT print, store or record that user information. Syzygy SHALL make no network request to resolve, check or reach a locator, and SHALL apply no rewriting of it from Git or SSH configuration (a URL rewrite rule or an SSH host alias), so an alias is the host it names. The normalised URL is the locator every launch consent record, the run record and every page carry, for every host. An observation consent made by any other act is found for a locator when that record's `Upstream:` URL, normalised by the same rule, equals the locator's normalised URL, host and whole path, never by the identity's two segments: a consent is never found for a same-named repository on another host or under another group, and a locator that found such a consent before this rule still finds it.
 
 Whether the repository is public is the operator's declaration alone, for every host and form. Syzygy SHALL NOT infer it from the host, the scheme, a user name or whether the operator's clone needed a credential, SHALL make no request to learn it, and the question SHALL NOT suggest an answer. A repository that the operator does not declare public is not public under the effective screening policy, whatever its host.
 ~~~~
@@ -454,13 +535,24 @@ Whether the repository is public is the operator's declaration alone, for every 
 #### Scenario: Locator on another host over ssh
 
 - **WHEN** the clone's `origin` remote is `git@git.example.org:team/sub/tool.git` and no record matches the run
-- **THEN** the question proposes the identity `repository:git.example.org-team-sub-tool` and the normalised URL `git.example.org/team/sub/tool`, each labelled Inferred
+- **THEN** the question proposes the identity `repository:sub-tool` and the normalised URL `git.example.org/team/sub/tool`, each labelled Inferred
 - **AND** a confirmed answer records that normalised URL, and the run record and every page carry it
 
 #### Scenario: GitHub identities keep their form
 
 - **WHEN** the clone's `origin` remote is `ssh://git@github.com/redis/redis.git` or `https://github.com/redis/redis`
 - **THEN** the proposed identity is `repository:redis-redis` and the normalised URL `github.com/redis/redis`, as before this rule
+
+#### Scenario: Same-named repository on two hosts
+
+- **WHEN** an in-force record carries `repository:a-b` for `github.com/a/b`, and a clone of `gitlab.com/a/b`, at a commit that record does not name and whose parents it does not name, is launched with no identity option
+- **THEN** the question proposes `repository:a-b`, names that record as matching by identity, and discloses the shared-identity residual
+- **AND** no observation consent made by another act whose `Upstream:` is `github.com/a/b` is found for the `gitlab.com/a/b` locator
+
+#### Scenario: Remote over http or git
+
+- **WHEN** the clone's `origin` remote is `git://git.example.org/a/b.git` or `http://git.example.org/a/b`
+- **THEN** the question proposes `repository:a-b` and the normalised URL `git.example.org/a/b`, as before this rule
 
 #### Scenario: Credentials in a given URL
 
@@ -469,8 +561,8 @@ Whether the repository is public is the operator's declaration alone, for every 
 
 #### Scenario: Credentials in a remote URL
 
-- **WHEN** the clone's `origin` remote URL carries user information on `https://` and the operator gives no upstream option
-- **THEN** that URL derives nothing, the launch output says the remote URL carried user information without printing it, and Syzygy asks for the identity and upstream options as for a clone with no remote
+- **WHEN** the clone's `origin` remote URL carries user information on `https://` or `http://`
+- **THEN** the user information is removed before the identity and URL are derived, the launch output says the remote URL carried user information without printing it, and it appears in no record or page
 
 #### Scenario: Locator not admitted
 
@@ -509,11 +601,11 @@ warrants:
 **Proposed:**
 
 ~~~~text
-- **Case:** Start operator-agent runs against controlled clones and fixture governance homes, varying independently: whether standard input is a terminal; the answer (exact phrase, other text, none, each record accepted or declined, each drawer answer, public declared, declined or not given); the tree's governed conditions and assigned classes; the clone's remotes and URLs, in each admitted locator form and in forms not admitted, on `github.com` and other hosts, with and without user information; the identity option given or not; existing records matching by identity, URL, pinned revision or parent, in each state, carrying one identity or several, including an in-force statement with and without covering classes; the write consent's presence, effect, reference and location; an A1 mechanism present or absent; whether the clone's working tree, Git directory or common Git directory is the governance home's; owner placements at and away from the pinned revision; and whether an execution choice was recorded.
+- **Case:** Start operator-agent runs against controlled clones and fixture governance homes, varying independently: whether standard input is a terminal; the answer (exact phrase, other text, none, each record accepted or declined, each drawer answer, public declared, declined or not given); the tree's governed conditions and assigned classes; the clone's remotes and URLs, in each admitted and remote locator form and in forms neither admits, on `github.com` and other hosts, with paths of one, two and more segments, with and without user information; the identity option given or not; existing records matching by identity, URL, pinned revision or parent, in each state, carrying one identity or several, including an in-force statement with and without covering classes; the write consent's presence, effect, reference and location; an A1 mechanism present or absent; whether the clone's working tree, Git directory or common Git directory is the governance home's; owner placements at and away from the pinned revision; and whether an execution choice was recorded.
 - **Observable:** The question text, the phrase asked for, refusals and their reasons, the objects read before and after the answer, the commits on the dedicated reference and their trees, every other reference, working tree and index of the governance home before and after, each record's fields and bound digest, the brief's execution rule, withheld files, and the human and machine disclosures.
 - **Oracle:** Expected questions, phrases, refusals, identities, normalised URLs, record sets, field values and withheld files derived from the fixture homes, clones and placements by an independent `git` reading, prepared before the run; each record's digest recomputed independently from its bytes.
 - **Oracle independence:** Fixture homes, clones and expected outcomes are written outside the code under test. Object reads are captured by an instrumented object store, a fixture clone served through a read-logging layer outside the code under test that records each object identifier and type read, never by Syzygy's own record. Commits, references, working trees and indexes are compared by an independent listing before and after.
-- **Falsifier:** A blob is read, or any commit field other than the root tree, parents and committer date is used, before a confirmed phrase or in-force records; anything from a pre-answer read is stored outside the question, launch output and records; the question omits any statement this requirement lists, including that only the owner may answer and the existing records with their states; a record is created without the exact phrase, without a terminal, without the write consent, without a declaration whether the repository is public, or, once an A1 mechanism is in force, without a state selection; one record carries two of observation consent, drawer statement and provider statement; a provider statement is created for a non-governed subject, or a second one for a subject and provider whose in-force statement covers the classes; a drawer statement is created on any answer but that none exists; a record names more than the pinned revision; a file is edited or removed, a working tree, index or reference other than the dedicated one changes, or the trunk tip moves; Syzygy pushes the dedicated reference; the proposed identity differs from the proposal rule, or is presented as Observed; a launch whose matching records carry more than one identity, with no identity option, is not refused before asking; the URL is recorded or rendered as the identity; a locator not in an admitted form is admitted, or a URL carrying credentials, or its user information, is printed, stored or recorded; a `github.com` locator derives an identity other than the two-segment form, or another host's an identity without its host and every path segment; Syzygy makes a network request for a locator or applies a rewriting of it; an observation consent made by another act is not found by its normalised `Upstream:` URL; visibility is inferred from the host, scheme, a user name or a credential, or the question suggests an answer; the question omits that the agent sessions can read everything the clone holds beyond the pinned revision; the pre-answer classes are not labelled a preview; a matching revoked record is not named; a run on the governance home's working tree or Git directory is not refused; an in-force record set is not reused; a disclosure this requirement lists is missing from the run record or a page; a file a placement would have placed renders other than Unknown; for a repository the operator does not declare public, the answer is asked for before the question states that the repository identity and its normalised URL are recorded on the dedicated reference in the observing project's own repository, which Syzygy never pushes and one push of which would publish them, or the question asks for a confirmation of that statement or adds an answer, phrase or record field for it; an execution choice is asked for or recorded; or who answered is presented as Observed.
+- **Falsifier:** A blob is read, or any commit field other than the root tree, parents and committer date is used, before a confirmed phrase or in-force records; anything from a pre-answer read is stored outside the question, launch output and records; the question omits any statement this requirement lists, including that only the owner may answer and the existing records with their states; a record is created without the exact phrase, without a terminal, without the write consent, without a declaration whether the repository is public, or, once an A1 mechanism is in force, without a state selection; one record carries two of observation consent, drawer statement and provider statement; a provider statement is created for a non-governed subject, or a second one for a subject and provider whose in-force statement covers the classes; a drawer statement is created on any answer but that none exists; a record names more than the pinned revision; a file is edited or removed, a working tree, index or reference other than the dedicated one changes, or the trunk tip moves; Syzygy pushes the dedicated reference; the proposed identity differs from the proposal rule, or is presented as Observed; a launch whose matching records carry more than one identity, with no identity option, is not refused before asking; the URL is recorded or rendered as the identity; an operator-given URL not in an admitted form is admitted, a remote URL that is not a remote locator derives anything, or a URL carrying credentials, or its user information, is printed, stored or recorded; an identity is derived other than from the last two path segments, or from a path of fewer than two; Syzygy makes a network request for a locator or applies a rewriting of it; an observation consent made by another act is found by anything but its normalised `Upstream:` URL equalling the locator's, or is not found by it; visibility is inferred from the host, scheme, a user name or a credential, or the question suggests an answer; the question omits that the agent sessions can read everything the clone holds beyond the pinned revision; the pre-answer classes are not labelled a preview; a matching revoked record is not named; a run on the governance home's working tree or Git directory is not refused; an in-force record set is not reused; a disclosure this requirement lists is missing from the run record or a page; a file a placement would have placed renders other than Unknown; for a repository the operator does not declare public, the answer is asked for before the question states that the repository identity and its normalised URL are recorded on the dedicated reference in the observing project's own repository, which Syzygy never pushes and one push of which would publish them, or the question asks for a confirmation of that statement or adds an answer, phrase or record field for it; an execution choice is asked for or recorded; or who answered is presented as Observed.
 
 ```yaml
 warrants:
@@ -557,7 +649,7 @@ Syzygy SHALL NOT change the clone's checkout. HEAD may be detached or name a bra
 For a launch-consented run, Syzygy SHALL accept the operator's clone in whatever form holds the pinned revision: a full clone with its history, branches, tags, remote-tracking references, stash and reflogs, a clone made by fetching one commit alone, or any form between. It SHALL NOT refuse the clone for holding commits, objects or references beyond the pinned revision, and SHALL NOT fetch, prune, repack or otherwise change it. Whatever the clone holds, Syzygy's reads for the run stay those REQ-polaris-generation-033 and REQ-polaris-generation-046 permit, and are only these:
 
 - objects: the pinned commit object, its root tree and the trees and blobs reachable from it, reached by walking down from the commit; Syzygy SHALL read no parent commit object and no object reached only from another commit, a branch, a tag, the stash, a reflog or a note, and SHALL use the pinned commit's parent identifiers only as REQ-polaris-generation-046 uses them, never resolving one;
-- pack storage: where a pack stores an object of that scope as a delta, Syzygy MAY read the stored bytes of the delta's base, whichever object they belong to, solely to reconstruct that object, which it then re-hashes as REQ-polaris-generation-033 requires; it SHALL NOT use a base reached this way for anything else, and SHALL NOT classify, store, quote, record a digest of or render it;
+- pack storage: where a pack stores an object of that scope as a delta, Syzygy MAY read the stored bytes of the delta's base, whichever object they belong to, solely to reconstruct that object, which it then re-hashes as REQ-polaris-generation-033 requires; it SHALL NOT use a base reached this way for anything else, and SHALL NOT classify, store, quote, record a digest of, render or send it, and the run record and every page SHALL state that objects of the pinned tree may have been rebuilt from delta bases outside it, whose stored bytes were inflated only for that and never read as content;
 - references: the names of the clone's references, and the values only of `HEAD`, the references the trunk rule above names and the reference `--revision` names, each read as file data from the loose reference files and `packed-refs`;
 - configuration: the clone's own configuration file, read as text only for its remotes' names and URLs and never honoured, so no include, URL rewrite, hook path, object format or other setting it states changes a read; and the files that locate the Git directory and the common Git directory;
 - nothing else in the Git directory, and nothing in the working tree or the index. Syzygy SHALL NOT read either to learn whether the checkout holds uncommitted or untracked changes, and SHALL start no process in the clone, so no hook or filter runs.
@@ -578,7 +670,8 @@ A clone whose objects of that scope cannot be read without an alternate, a repla
 
 - **WHEN** the operator starts a run with no `--revision` on a full clone whose `refs/remotes/origin/HEAD` names `refs/remotes/origin/main`, whose HEAD is the commit that branch points to, and whose pinned commit no in-force consent names
 - **THEN** Syzygy pins that commit, asks the question, and does not refuse the clone for its history, branches, tags or other references
-- **AND** the objects read are the pinned commit, its root tree and the trees and blobs reachable from it, with no parent commit object, and no delta base reached in a pack is classified, stored, quoted, recorded or rendered
+- **AND** the objects read are the pinned commit, its root tree and the trees and blobs reachable from it, with no parent commit object, and no delta base reached in a pack is classified, stored, quoted, recorded, rendered or sent
+- **AND** the run record and every page state that objects of the pinned tree may have been rebuilt from delta bases outside it, never read as content
 - **AND** Syzygy fetches nothing, starts no process in the clone and reads neither its working tree nor its index
 
 #### Scenario: Several remote defaults
@@ -638,7 +731,7 @@ warrants:
 - **Observable:** The pinned revision, its stated reference and date, the did-not-fetch statement and update command, refusals and the point at which each is made, the objects, references and files read in the clone, the working-tree statement and status command, the brief's history instruction, the clone's references and working tree before and after, and captured network effects.
 - **Oracle:** Expected pins, statements and refusals derived by an independent `git` reading of each fixture clone and the fixture records, prepared before the run.
 - **Oracle independence:** Fixture clones, records and expected pins are built outside the code under test; network effects come from an independent capture; object, reference and file reads come from a read-logging layer outside the code under test, as for REQ-polaris-generation-046.
-- **Falsifier:** A run pins a commit other than the rule's; a run whose HEAD an in-force consent names, whatever the identity its remote derives, is pinned elsewhere or refused for the trunk tip; the pin changes within a run; a HEAD mismatch is not refused, or is refused only after the question; the launch output or run record lacks the full revision, its reference, the committer date, the did-not-fetch statement or the update command; Syzygy fetches, contacts a host, or changes the clone's checkout or references; or the trunk tip is presented as the upstream's latest as Observed; a launch-consented run refuses a clone for holding history, branches, tags or other references; Syzygy reads a parent commit object, an object reached only from another commit or reference, the working tree, the index, or a file of the Git directory this requirement does not list, honours a setting of the clone's configuration, or starts a process in the clone; a delta base reached in a pack is used for anything but reconstructing the in-scope object, or is classified, stored, quoted, recorded or rendered; a missing object is fetched or taken from an alternate; a local branch is consulted while a remote default is recorded, or several remote defaults with none `origin` are not refused; the working-tree statement, the status command or the brief's history instruction is missing; or a run relying on another act's consent that states the clone's form is admitted in another form.
+- **Falsifier:** A run pins a commit other than the rule's; a run whose HEAD an in-force consent names, whatever the identity its remote derives, is pinned elsewhere or refused for the trunk tip; the pin changes within a run; a HEAD mismatch is not refused, or is refused only after the question; the launch output or run record lacks the full revision, its reference, the committer date, the did-not-fetch statement or the update command; Syzygy fetches, contacts a host, or changes the clone's checkout or references; or the trunk tip is presented as the upstream's latest as Observed; a launch-consented run refuses a clone for holding history, branches, tags or other references; Syzygy reads a parent commit object, an object reached only from another commit or reference, the working tree, the index, or a file of the Git directory this requirement does not list, honours a setting of the clone's configuration, or starts a process in the clone; a delta base reached in a pack is used for anything but reconstructing the in-scope object, or is classified, stored, quoted, recorded, rendered or sent, or the delta-base statement is missing; a missing object is fetched or taken from an alternate; a local branch is consulted while a remote default is recorded, or several remote defaults with none `origin` are not refused; the working-tree statement, the status command or the brief's history instruction is missing; or a run relying on another act's consent that states the clone's form is admitted in another form.
 
 ```yaml
 warrants:
