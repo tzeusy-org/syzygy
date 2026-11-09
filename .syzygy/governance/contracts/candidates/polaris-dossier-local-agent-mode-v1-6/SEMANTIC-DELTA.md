@@ -127,7 +127,8 @@ this version makes the review page say so too.
    it recorded a verdict written there, whether that verdict counted, failed
    validation or was refused. Session identity is the directory, not a declared
    identifier, and the predicate is over Syzygy's delivery and verdict records.
-   Only a verdict recorded before the later round's delivery counts; the base
+   Only a verdict recorded before the later round's delivery makes a round
+   eligible as the base; the base
    is chosen at delivery and recorded with it, so a later verdict cannot move
    it.
 2. The list names the base core digest (the digest of the base round's
@@ -145,11 +146,14 @@ this version makes the review page say so too.
    by the design), not one whose earlier rounds have no recorded verdict, not a
    rendered-design packet.
 4. The list is inside the packet and its digest. Syzygy rebuilds it at
-   validation and at render from the current frozen subject and the base
-   round's recorded inputs: its frozen draft with the understanding record, its
-   frozen inventory and its pinned revision, with its cited spans re-read from
-   the blobs Syzygy verified. The base packet's digest is re-derived by
-   rebuilding the base packet, never copied. A verdict that names the digest of
+   validation and at render from the current frozen subject, the base round
+   recorded with the delivery, and that round's recorded inputs: its frozen
+   draft with the understanding record, its frozen inventory, its pinned
+   revision, and the criteria and verdict schema its packet carried, with its
+   cited spans re-read from the blobs Syzygy verified. The base core digest is
+   re-derived by rebuilding, from those inputs alone, the packet the base round
+   would carry without a changed-block list, never copied, so no rebuild reads
+   the inputs of any round but its own and its base round's. A verdict that names the digest of
    a packet with a different list, or a base input that is altered or missing,
    leaves the verdict uncounted. An altered copy in the session's directory is
    caught, as in version 1.5, only by the waiting command's re-hash; that the
@@ -189,8 +193,9 @@ reads one REQ-033 phrase, below.
 - REQ-polaris-generation-033 re-derives "every verdict's binding, by rebuilding
   the review packet from the frozen subject and comparing its digest to the one
   the verdict names". This version reads "the frozen subject", for a packet that
-  carries a list, as the current frozen subject and the base packet's, and says
-  so in REQ-035 rather than editing REQ-033.
+  carries a list, as the current frozen subject and the base round's recorded
+  inputs, from which the base core packet, the base round's packet without its
+  own list, is rebuilt, and says so in REQ-035 rather than editing REQ-033.
 - REQ-polaris-generation-006 (as the understanding amendment states it): "A
   draft SHALL become ready for owner review only after independent fidelity and
   rendered-design reviews confirm the frozen bundle", "Reviewers SHALL receive
@@ -694,8 +699,8 @@ Proposed:
 >    bytes; it says it compares nothing else, diagram elements and section
 >    titles included. It points the reviewer at the repairs and nothing more: the packet
 >    is still whole, the verdict still covers every entry, a revision still
->    retires the earlier verdict, and the review page says the reviewer was
->    shown the list. It saves reviewer attention, not tokens read. A packet
+>    retires the earlier verdict, and the review page says the session was
+>    delivered the list. It saves reviewer attention, not tokens read. A packet
 >    into a directory with no earlier round, as for a `--fresh` session, has
 >    no base round and gets no list. The printed Claude Code command pre-approves
 >    only reading its directory (the inventory also reads the clone) and its

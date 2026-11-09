@@ -57,7 +57,7 @@ patched here.
   all re-read context); batching repairs and `--fresh` remain the token levers.
 - Anchoring grows. A reviewer told which blocks changed may read the rest less
   closely. The verdict must still judge every entry, and the review page says
-  the list was shown, but whether the reviewer read the rest stays Inferred.
+  the list was delivered, but whether the reviewer read the rest stays Inferred.
 - One more thing can stop a verdict counting: an altered or missing stored
   input of a base round, or of the base choice recorded with a delivery,
   makes that packet's rebuild fail. It costs one round's verdict, the verdict

@@ -10,8 +10,8 @@
     {
       "path": "openspec/changes/polaris-dossier-local-agent-mode/design.md",
       "current_sha256": "62758e0368e1545a0e3f0287f58fb938ae84a9f1f5f7c1af0fd15059d17cab8b",
-      "proposed_sha256": "62c8ec32a155270622c705a5bd11f6c8d3f4c7a6045def4a0136b62d822d8402",
-      "patch_sha256": "cb0aaefded1a7ab6ba6a8a811e682bed553884dda926ee76e01e6dd061092910"
+      "proposed_sha256": "4e6d2d51d955811add41295d533ca7b7bd0a0088b019f1d9a197a98a08420ebb",
+      "patch_sha256": "52637750edb41934e78efd7ff24b1e9205fbeb4e39b9b05de5ff2220e1098eb7"
     },
     {
       "path": "openspec/changes/polaris-dossier-local-agent-mode/proposal.md",

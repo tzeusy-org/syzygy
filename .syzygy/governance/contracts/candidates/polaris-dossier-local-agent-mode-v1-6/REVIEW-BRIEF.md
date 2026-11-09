@@ -1,4 +1,4 @@
-# Review brief — Polaris dossier local-agent mode, version 1.6, round 3
+# Review brief — Polaris dossier local-agent mode, version 1.6, round 4
 
 > **Candidate — binds nothing.** Instructions for a fresh review.
 
@@ -8,13 +8,16 @@ under `openspec/changes/polaris-dossier-local-agent-mode/`
 (`PROPOSED-SUBJECTS.json`, which
 `scripts/build_polaris_dossier_local_agent_mode_v1_6.py --check` verifies).
 
-Rounds 1 and 2 returned `REVISE` (`docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-6-1-RAW.md`,
-`docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-6-2-RAW.md`). Judge the repairs listed in
-`ROUND-2-DISPOSITIONS.md` against the round-2 raw, and what they touch; read
-`ROUND-1-DISPOSITIONS.md` for what round 2 already accepted. This is the last
-round before the owner: a verdict other than `CONFIRM`, or `CONFIRM WITH
-EXCEPTIONS` with notes only, sends the package to the owner as it stands. Every repair edits the subject, so read REQ-polaris-generation-035
-as proposed in full, not only the changed lines. Report anything you notice
+Rounds 1, 2 and 3 returned `REVISE` (`docs/reviews/R-DOSSIER-LOCAL-AGENT-V1-6-1-RAW.md`,
+`-2-RAW.md` and `-3-RAW.md`). After round 3 the owner chose "Fix wording, one last
+round (Recommended)": this round 4 is the last before the owner, and its scope is
+round 3's three required findings, repaired in prose only. Judge the repairs listed
+in `ROUND-3-DISPOSITIONS.md` against the round-3 raw, and what they touch; earlier
+dispositions say what earlier rounds accepted. The proposed `spec.md` is unchanged
+from round 3: its digest is the one the round-3 raw's head carries, and you
+re-derive it. design.md changes; proposal.md does not. Read REQ-polaris-generation-035
+as proposed in full only as far as you need to judge whether the delta, the ledger and
+design.md now agree with it. Report anything you notice
 elsewhere in the package, graded as usual: there is no lesser grade for an
 out-of-scope finding. Say where each finding sits, and state what you read and
 what you did not.
@@ -31,7 +34,7 @@ Read the governing clauses themselves:
   `.syzygy/governance/decisions/OWNER-DIRECTION-FIDELITY-REVIEW-ROUNDS-2026-11-09.md`;
 - the design note `docs/polaris-generation/fidelity-delta-review-proposal.md`.
 
-Add a section `## Repair questions`. For each finding in `ROUND-2-DISPOSITIONS.md`, answer three questions, each with one reason:
+Add a section `## Repair questions`. For each finding in `ROUND-3-DISPOSITIONS.md`, answer three questions, each with one reason:
 - Does the repair resolve the finding? Answer yes, no or partly.
 - Does it change a rule's meaning, an owner ruling or a label? Answer yes, no or unsure.
 - Does it introduce a new defect? Answer yes, no or unsure.
@@ -63,7 +66,7 @@ Verdict: <CONFIRM | CONFIRM WITH EXCEPTIONS | REVISE>
 In this brief, `Manifest SHA-256` means the digest of the proposed `spec.md` bytes:
 - Reconstruct those bytes by applying `proposed/spec.md.patch` to the installed spec. The result is the `proposed_sha256` of the spec row in `PROPOSED-SUBJECTS.json`; re-derive it yourself.
 - The recorder binds your review to that digest, read from the first four non-blank lines, and to no other file's digest.
-- It is not the digest of the patch file or of this directory, and it differs from rounds 1 and 2.
+- It is not the digest of the patch file or of this directory, and it equals round 3's.
 
 Name the other two subject digests in the body.
 
