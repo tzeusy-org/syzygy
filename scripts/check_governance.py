@@ -1828,6 +1828,25 @@ DOSSIER_PROVIDER_V2_ACT_RECORDS = {
     "CONSENT TO ANTHROPIC AGENT PROVIDER VERSION 2 FOR REDIS":
         f"{DECISIONS}/DOSSIER-AGENT-PROVIDER-V2-REDIS-ANTHROPIC-ACT.md",
 }
+#: The launch-consent write consent (`syzygy-pdja.22`): one state-(1) act over
+#: the one row of its manifest, a write consent (RFC5-12; SEC-4) letting Syzygy
+#: add launch consent records on one dedicated, non-trunk branch. Registered
+#: before its packet exists so a stale argument copy fails CG-7d and CG-7e;
+#: existence-gated on the manifest. The performed record, any chain link and
+#: the recorder arrive with the act.
+LAUNCH_WRITE_CONSENT_DIR = f"{CANDIDATES}/launch-consent-write-consent"
+LAUNCH_WRITE_CONSENT_MANIFEST = f"{LAUNCH_WRITE_CONSENT_DIR}/LAUNCH-CONSENT-WRITE-CONSENT-MANIFEST.txt"
+LAUNCH_WRITE_CONSENT_ACTS = (
+    ("CONSENT TO WRITE LAUNCH CONSENT RECORDS ON THE DEDICATED BRANCH",
+     f"{LAUNCH_WRITE_CONSENT_DIR}/instances/syzygy/WRITE-CONSENT-LAUNCH-RECORDS.md"),
+)
+#: The act's dedicated record, written by
+#: `record_launch_consent_write_consent_act.py` (performed 2026-11-08); it
+#: and the aggregate become copy files once the record exists.
+LAUNCH_WRITE_CONSENT_ACT_RECORDS = {
+    "CONSENT TO WRITE LAUNCH CONSENT RECORDS ON THE DEDICATED BRANCH":
+        f"{DECISIONS}/LAUNCH-CONSENT-WRITE-CONSENT-ACT.md",
+}
 DOSSIER_LOCAL_AGENT_ACT_RECORDS = {
     "STATE NO KERNEL EVIDENCE DRAWER FOR REDIS-REDIS":
         f"{DECISIONS}/DOSSIER-LOCAL-AGENT-REDIS-NO-EVIDENCE-DRAWER-ACT.md",
@@ -2738,6 +2757,11 @@ def _act_subjects():
             if not any(l == label for l, _rel, _pat in out):
                 out.append((label, subject, re.compile(
                     re.escape(label) + r"\s*:\s*`?([0-9a-f]{64})")))
+    if os.path.isfile(os.path.join(ROOT, LAUNCH_WRITE_CONSENT_MANIFEST)):
+        for label, subject in LAUNCH_WRITE_CONSENT_ACTS:
+            if not any(l == label for l, _rel, _pat in out):
+                out.append((label, subject, re.compile(
+                    re.escape(label) + r"\s*:\s*`?([0-9a-f]{64})")))
     return tuple(out)
 
 
@@ -3643,6 +3667,40 @@ def _activate_dossier_provider_v2_copy_registry():
 
 
 _activate_dossier_provider_v2_copy_registry()
+
+
+def _activate_launch_write_consent_copy_registry():
+    """The launch-consent write-consent manifest carries its one argument as a row.
+
+    Existence-gated candidate registration; the performed record joins the
+    aggregate with the act. A round notes record is registered only while
+    it quotes the act phrase: a record that quotes no digest (a REVISE
+    round's) carries no copy to keep current, and CG-7d still checks any
+    phrase-linked digest wherever it is quoted.
+    """
+    labels = tuple(label for label, _subject in LAUNCH_WRITE_CONSENT_ACTS)
+    if os.path.isfile(os.path.join(ROOT, LAUNCH_WRITE_CONSENT_MANIFEST)):
+        ACT_DIGEST_COPY_FILES[LAUNCH_WRITE_CONSENT_MANIFEST] = labels
+        for path in sorted(os.listdir(os.path.join(ROOT, LAUNCH_WRITE_CONSENT_DIR))):
+            if not re.fullmatch(r"ROUND-\d+-DISPOSITIONS\.md", path):
+                continue
+            rel = f"{LAUNCH_WRITE_CONSENT_DIR}/{path}"
+            with open(os.path.join(ROOT, rel), encoding="utf-8") as fh:
+                text = fh.read()
+            carried = tuple(label for label in labels if label in text)
+            if carried:
+                ACT_DIGEST_COPY_FILES[rel] = carried
+    aggregate = f"{DECISIONS}/ACCEPTANCE-ACT-RECORD.md"
+    for label, record in LAUNCH_WRITE_CONSENT_ACT_RECORDS.items():
+        if not os.path.isfile(os.path.join(ROOT, record)):
+            continue
+        present = ACT_DIGEST_COPY_FILES.get(aggregate, ())
+        if label not in present:
+            ACT_DIGEST_COPY_FILES[aggregate] = present + (label,)
+        ACT_DIGEST_COPY_FILES[record] = (label,)
+
+
+_activate_launch_write_consent_copy_registry()
 
 
 #: The public-source screening scope, version 2 (sitting row 12): one state-(1)
@@ -11749,6 +11807,8 @@ def _activate_redis_local_agent_battery_copies():
     pairs = list(DOSSIER_LOCAL_AGENT_ACT_RECORDS.items())
     # the provider statement's version-2 recorder line passes its argument too, once performed
     pairs += list(DOSSIER_PROVIDER_V2_ACT_RECORDS.items())
+    # the launch-record write consent's recorder line, once performed (syzygy-pdja.22)
+    pairs += list(LAUNCH_WRITE_CONSENT_ACT_RECORDS.items())
     # the Redis observation consent's line is in node-ci, not here (NODE_CHECKS)
     # the RFC5-14 constants exist only once that act's chain link is installed; the
     # name is split so this text never carries the chain step's install mark
