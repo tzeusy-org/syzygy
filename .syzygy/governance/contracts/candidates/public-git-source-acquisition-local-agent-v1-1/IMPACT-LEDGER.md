@@ -7,9 +7,10 @@
 
 ## Binding
 
-This package is bound to PR #812 at head `054a4f11` (redrafted from
+This package is bound to PR #812 at head `155f9c49` (redrafted from
 `de9c1ba8` after the owner's rulings of 2026-11-10, then rebound to #812's
-round-11 and round-12 repairs): its Proposed blocks
+round-11 and round-12 repairs, and last to `155f9c49`, the bytes #812's
+round 17 confirmed with exceptions): its Proposed blocks
 restate the copy step, the classes of run and the launch reads of the
 post-apply launch-consent spec at that head. If #812 moves, this ledger and
 the package are redrafted.
@@ -170,7 +171,7 @@ Both windows are the owner's ruled trades, not open points.
      judged by the clone's hash: 40 hex digits in a SHA-1 clone, 64 in a
      SHA-256 clone, where a 40-digit `--revision` is an abbreviation and
      read (5) admits its listing (round-4 Finding 4). [Observed] #812 at
-     `054a4f11` now states the width rule in its read (5): "at the width of
+     `155f9c49` states the width rule in its read (5): "at the width of
      the object format its configuration records (`extensions.objectFormat`,
      SHA-1 where it records none), a mismatch failing closed". The narrowing
      judges "full" by that width; the entry's read (3) already admits the
@@ -180,7 +181,7 @@ Both windows are the owner's ruled trades, not open points.
    **When it lands** (round-4 Finding 2; the one statement the owner page
    repeats). The narrowing is implementation, under the separate
    implementation direction #812 names ([Observed] #812's "Implementation
-   impact" at `054a4f11` opens "[Inferred] After sign-off only, under a
+   impact" at `155f9c49` opens "[Inferred] After sign-off only, under a
    separate implementation direction", and already requires the same
    narrowing for v1.2: "`init`'s pre-copy reads of the operator's clone
    become file-data reads of the listed references, remote URLs and the

@@ -11,12 +11,13 @@
 > `CONFIRM WITH EXCEPTIONS`. It is not offered to you until that review has
 > returned, and it should be offered together with launch-consent v1.2.
 >
-> **Bound to PR #812 at head `054a4f11`.** This package restates #812's
+> **Bound to PR #812 at head `155f9c49`.** This package restates #812's
 > copy step as that head drafts it, after your rulings of 2026-11-10 (SHA-256
 > clones copied in their own object format; launch consents recorded under
 > v1.1 now copy too). It was redrafted from `de9c1ba8`, then rebound to
 > #812's round-11 and round-12 repairs (`ROUND-5-REDRAFT.md`,
-> `ROUND-5-DISPOSITIONS.md`). If #812 changes again, this package is redrafted
+> `ROUND-5-DISPOSITIONS.md`), and last to `155f9c49`, the bytes #812's
+> round 17 confirmed with exceptions. If #812 changes again, this package is redrafted
 > and reviewed again before it is offered.
 >
 > **Review.** Round 4 (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md`)
@@ -56,9 +57,13 @@ for a copy, so every run is a no-copy run.
   three.
 - **Version 1.1** keeps those words for a no-copy run and adds, for a
   copy-class run:
-  - the copy itself: a new empty directory, `git init --template=` in
-    your clone's object format (SHA-1 or SHA-256; no clone is refused for
-    it), then
+  - the copy itself: a new empty directory, never inside any working tree
+    (linked worktrees included), Git directory or common Git directory of
+    your clone's repository or the governance home's, a run that would put
+    it there being refused; `git init --template=` in your clone's object
+    format (SHA-1 or SHA-256; no clone is refused for it, except that a
+    format Git does not support fails `git init`, which refuses the run),
+    then
     one fetch over `file://` of the object the run's named identifier
     names, alone, at depth one, with no tags and no submodules, your global
     and system Git configuration off, only the file transport allowed, lazy
@@ -70,15 +75,19 @@ for a copy, so every run is a no-copy run.
     annotated tag may land in the copy; Syzygy reads none of it, follows
     it nowhere, and refuses;
   - the copy's directory is the one new place Syzygy writes. Syzygy itself
-    creates it and, if the run ends before its brief, removes it; Git
-    writes what is inside it. Otherwise it is kept after the run until you
+    creates it and, if the run ends before its brief, removes it, or, if
+    that removal fails, keeps it and the launch output names it and the
+    failure; Git writes what is inside it. Otherwise it is kept after the run until you
     remove it; the launch output says where it is.
 - **For every launch-consented run**, the entry now names the five things
   Syzygy reads in your clone as plain data, obeying none of them: where the
-  Git directory is; your references' names and the few values the trunk
+  Git directory is and, in its common Git directory, the files that
+  locate your linked worktrees; your references' names and the few values the trunk
   rule needs; your remotes' names and URLs from the configuration file
   and its object format (which v1.2 alone asks for; a copy is made in
-  that format);
+  that format) and, to find your working trees, `core.bare` and
+  `core.worktree` (v1.2 alone asks for these and the worktree files, to
+  keep the copy out of them);
   whether an alternates file exists; and, for a shortened `--revision`
   only, object names. For such a run that list is closed, as v1.2 closes
   it, and Syzygy may read of it only what the launch-consent rules in force
@@ -184,7 +193,7 @@ for a copy, so every run is a no-copy run.
        listing. Choosing it means a redraft and another review round.
    - Launch-consent v1.2 signed without this cannot take effect: its copy
      would exceed the entry.
-   - If v1.2 moves from `054a4f11` before you sign, this package is
+   - If v1.2 moves from `155f9c49` before you sign, this package is
      redrafted and reviewed again.
 2. **The `tags` field moves, and the version strings do not.** The
    round-1 reviewer agreed with both (Finding 8). On `tags`: Git can now

@@ -5,7 +5,7 @@ Package `contracts/candidates/public-git-source-acquisition-local-agent-v1-1/`:
 the successor of the signed, installed v1.0 entry
 (`declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`).
 It admits the one-commit copy that launch-consent v1.2 drafts (REQ-polaris-generation-047,
-PR #812, bound to its head 054a4f11): in a launch-consented run Syzygy reads
+PR #812, bound to its head 155f9c49): in a launch-consented run Syzygy reads
 five named things of the operator's clone as data; in a copy-class run it then
 copies the object the named identifier names from that clone into a clone of
 its own with one local fetch, and reads objects from the copy alone. A no-copy
@@ -84,7 +84,7 @@ MOVED = ((("typedAuthority",), "fetch"), (("typedAuthority",), "readAuthority"),
          (("typedAuthority",), "tags"), (("typedAuthority",), "stateDirectoryWrites"),
          (("implementationCoverage",), "copyStep"))
 NO_COPY = ", save in a copy-class run"
-#: Each part of the copy step the owner's selection and REQ-047 (#812 at 054a4f11) name.
+#: Each part of the copy step the owner's selection and REQ-047 (#812 at 155f9c49) name.
 FETCH_TERMS = ("In a copy-class run", "REQ-polaris-generation-047", "git init --template=",
                "local file transport", "file://", "from nowhere else", "the object the run's named identifier names alone",
                "full object identifier", "depth of one", "no tags and no submodules", "detached",
@@ -97,8 +97,9 @@ FETCH_TERMS = ("In a copy-class run", "REQ-polaris-generation-047", "git init --
                "uses nothing Git read but the copy", "Inferred", "not a locator",
                "the object format the operator's clone's configuration records",
                "never refused for its object format", "of the same object format",
-               "never inside the governance home's working tree, Git directory or common Git directory",
-               "refused before its copy step starts")
+               "never inside any working tree of the governance home's repository, its linked worktrees included",
+               "any working tree of its repository, its linked worktrees included",
+               "refused before its copy step starts", "an object format Git does not support fails the copy's init")
 #: The five launch reads, in order, by a phrase each must carry.
 FIVE_READS = ("(1) the .git file or directory", "(2) the names of its references",
               "(3) its configuration file, as text", "(4) whether objects/info/alternates exists",
@@ -125,12 +126,12 @@ FETCH_CLAUSES = (
      "where no question is asked: "),
     ("the copy's directory",
      "Syzygy creates an empty directory of its own for the copy, outside the operator's clone and never at a "
-     "location derived from its path, and never inside the governance home's working tree, Git directory or "
-     "common Git directory, a run for which it would create it there being refused before its copy step starts; "
-     "and in it an empty repository with an empty template (git init "
-     "--template=) and with the object format the operator's clone's configuration records, SHA-1 where it "
-     "records none, so that a SHA-1 clone and a SHA-256 clone are each copied; a clone is never refused for its "
-     "object format; "),
+     "location derived from its path, and never inside any working tree of the governance home's repository, its linked worktrees included, nor inside its Git directory or common Git directory, and never inside the operator's clone's working tree, Git directory or common Git directory, or any working tree of its repository, its linked worktrees included, a run for which it would create it in any of "
+     "these being refused before its copy step starts; and in it an empty repository with an empty template "
+     "(git init --template=) and with the object format the operator's clone's configuration records, SHA-1 "
+     "where it records none, so that a SHA-1 clone and a SHA-256 clone are each copied; a clone is never refused "
+     "for its object format, except that an object format Git does not support fails the copy's init, which "
+     "refuses as every failure of a Git process for the copy does; "),
     ("the source and the object",
      "it fetches into that repository, from the operator's clone over Git's local file transport (a file:// URL) "
      "and from nowhere else, the object the run's named identifier names alone, by its full object identifier, "
@@ -173,15 +174,17 @@ RA_TAIL_CLAUSES = (
      "the operator's clone and the copy only the following: in the operator's clone these five things alone, and "
      "of what they list only what the launch-consent requirements in force name: "),
     ("launch read (1)",
-     "(1) the .git file or directory and the files that locate the Git directory and the common Git directory; "),
+     "(1) the .git file or directory and the files that locate the Git directory and the common Git directory, "
+     "and the files of its common Git directory that locate its linked worktrees; "),
     ("launch read (2)",
      "(2) the names of its references, and the values of HEAD and the reference it names, of the references "
      "REQ-polaris-generation-047's trunk rule names, of the local branch of the remote default's name and of the "
      "reference --revision names, each from the loose reference files and packed-refs, where reading packed-refs "
      "also reads other references' values, which are used for nothing; "),
     ("launch read (3)",
-     "(3) its configuration file, as text, for its remotes' names and URLs and its object format "
-     "(extensions.objectFormat) alone; "),
+     "(3) its configuration file, as text, for its remotes' names and URLs, its object format "
+     "(extensions.objectFormat) and, to locate its repository's working trees, core.bare and core.worktree "
+     "alone; "),
     ("launch read (4)", "(4) whether objects/info/alternates exists; "),
     ("launch read (5)",
      "(5) for an abbreviated --revision alone, the object identifiers its loose object file names and pack "
@@ -218,11 +221,11 @@ SDW_CLAUSES = (
      "clone's path; "),
     ("the copy's directory and where it lies",
      "in a copy-class run (fetch), also the copy's directory, outside the run's state directory and outside the "
-     "operator's clone and never at a location derived from the operator's clone's path, and never inside the "
-     "governance home's working tree, Git directory or common Git directory: "),
+     "operator's clone and never at a location derived from the operator's clone's path, and never inside any working tree of the governance home's repository, its linked worktrees included, nor inside its Git directory or common Git directory, and never inside the operator's clone's working tree, Git directory or common Git directory, or any working tree of its repository, its linked worktrees included: "),
     ("Syzygy's own writes to it",
      "Syzygy itself creates it, which starts the copy step, removes it with its contents where the run ends "
-     "before its brief, and otherwise keeps it after the run, until the operator removes it, at a location the "
+     "before its brief, or, where that removal fails, keeps it, the launch output naming its location and the "
+     "removal's failure, and otherwise keeps it after the run, until the operator removes it, at a location the "
      "launch output names, "),
     ("Git's writes to it",
      "and writes its contents only through the Git processes fetch names. "),
@@ -517,8 +520,8 @@ def selftest() -> int:
                   "requires to run on a copy of the operator's clone; every other run is a no-copy run, and while "
                   "no version in force requires a copy every run is a no-copy run. ", ""), "define the run classes"),
         ("(F5 M1) launch read (3) widened to include paths",
-         _replace("readAuthority", "for its remotes' names and URLs and its object format",
-                  "for its remotes' names, URLs, include paths and its object format"),
+         _replace("readAuthority", "for its remotes' names and URLs, its object format",
+                  "for its remotes' names, URLs, include paths, its object format"),
          "at the clause 'launch read (3)'"),
         ("(F5 M2) launch read (5) widened to object headers",
          _replace("readAuthority", "the object identifiers its loose object file names and pack indexes give",

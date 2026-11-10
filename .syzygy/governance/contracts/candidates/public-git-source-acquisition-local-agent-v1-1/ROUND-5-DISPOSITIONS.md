@@ -117,3 +117,59 @@ which no longer excepts a file of the copy. None touches the entry.
 three mutants of the subject (the placement and refusal dropped from
 `fetch`; the placement dropped from `stateDirectoryWrites`; the refusal
 alone dropped), each killed by the builder's `--check`.
+
+## Rebind to #812 at 155f9c49 (2026-11-11)
+
+[Observed] `054a4f11..155f9c49` is four commits; #812's round 17,
+`R-POLARIS-LAUNCH-CONSENT-V1-2-17`, returned `CONFIRM WITH EXCEPTIONS` over
+`155f9c49` (by the coordinating session's message), so these are #812's
+final bytes. The post-apply spec at `155f9c49` hashes to the digest #812's
+`PROPOSED-SUBJECTS.json` states there, re-derived by script. Its
+sentence-level diff from `054a4f11` has 22 hunks, judged against the entry:
+
+- **The placement** (REQ-047): the directory is now never inside "any
+  working tree of the governance home's repository, its linked worktrees
+  included, nor inside its Git directory or common Git directory, and never
+  inside the operator's clone's working tree, Git directory or common Git
+  directory, or any working tree of its repository, its linked worktrees
+  included", a run for which Syzygy would create it "in any of these" being
+  refused before its copy step starts. **The entry moves:** `fetch` ("the
+  copy's directory") and `stateDirectoryWrites` ("the copy's directory and
+  where it lies") carry the same placement, and `fetch` the refusal.
+- **Reads (1) and (3)** (REQ-047's list): read (1) adds "the files of its
+  common Git directory that locate its linked worktrees", and read (3) adds,
+  "to locate its repository's working trees, `core.bare` and
+  `core.worktree`". **The entry moves:** its reads (1) and (3) say the same,
+  so that the reads the placement needs lie inside the entry. Under v1.1
+  alone the bound "of what they list only what the launch-consent
+  requirements in force name" keeps both out. Today's code makes neither
+  read of the operator's clone (SEMANTIC-DELTA, E3, "The worktree-locating
+  reads"), so the read-to-clause enumeration of `ROUND-5-REDRAFT.md` is
+  unchanged.
+- **A failed removal keeps the copy** (REQ-047): where removal fails, the
+  launch output says the copy was not removed, names its location and the
+  failure, and says it is kept until the operator removes it. **The entry
+  moves:** `stateDirectoryWrites` ("Syzygy's own writes to it") says that
+  where that removal fails Syzygy keeps it, the launch output naming its
+  location and the removal's failure. Without it the entry would say the
+  copy is removed in a case where #812 keeps it.
+- **An unsupported object format fails `init`** (REQ-047): "a clone is
+  never refused for its object format, except that an object format Git
+  does not support fails the copy's `init`, and the run is refused". **The
+  entry moves:** `fetch` carries the same exception, so its "never refused
+  for its object format" is no wider than #812's.
+- **No move:** the partial-copy statements keyed to "Syzygy started the
+  fetch process" (statements of the run record, not a read, fetch or
+  write); the per-brief rule ("each brief Syzygy issued ... directed its
+  session to work in the copy") and the review packet keeping REQ-035's
+  contents (the entry names no brief or packet content); the storage list
+  adding "the artifacts REQ-polaris-generation-033 requires to name the
+  pinned revision" (storage of statements); the write falsifier now
+  excepting "the making, keeping or removal of a copy", which the entry's
+  `stateDirectoryWrites` already bounds; and scenarios and falsifiers
+  restating the four moves above.
+
+Rule 6:
+`docs/evidence/syzygy-pdja-29/round-6-rebind-155f9c49-mutation-2026-11-11.json`,
+seven mutants of the subject, one per new clause or phrase, each killed by
+the builder's `--check`.
