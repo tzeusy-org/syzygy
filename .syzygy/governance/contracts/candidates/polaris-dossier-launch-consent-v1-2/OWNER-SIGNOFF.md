@@ -20,8 +20,10 @@
 > worktree of the governance home. Its repair was read by round 14, under
 > your ruling "Fixes-only rounds until clean", which returned `REVISE` on one
 > point: a run that issued one brief and not the other had to say both
-> sessions were directed. These bytes are its repair
-> (`ROUND-14-DISPOSITIONS.md`); no review has read them yet. This page may be
+> sessions were directed. Its repair was read by round 15, which returned
+> `REVISE` on one point: a run whose copy step ended before Git read your
+> clone had to say what Git read of it. These bytes are its repair
+> (`ROUND-15-DISPOSITIONS.md`); no review has read them yet. This page may be
 > offered only after
 > a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
 > install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
@@ -50,8 +52,9 @@ four others you ruled on 2026-11-10 are recorded under "Ruled".
   refused, no hooks and no fetching of missing objects. Syzygy checks that
   the copy holds one commit and nothing else, the same check it makes today
   on one-commit clones the operator prepares. The copy lives in a directory of Syzygy's own,
-  outside your clone; a run that is refused or declined removes it, and a
-  completed run keeps it, naming where, until you remove it.
+  outside your clone; a run that is refused or declined removes it (if the
+  removal fails, the launch output says so and names where the copy is), and
+  a completed run keeps it, naming where, until you remove it.
 - **Then the signed rules, unchanged.** Every read, re-hash and refusal the
   signed local-agent rules state applies to the copy. Your clone is never
   fetched into, repacked, checked out or written to.
@@ -65,18 +68,23 @@ four others you ruled on 2026-11-10 are recorded under "Ruled".
   it unpacks to rebuild the trunk-tip files. Those are Git's reads, not
   Syzygy's: Syzygy uses nothing of them but the copy, and the rule that
   Syzygy reads no file contents before your answer is about Syzygy's own
-  reads. The question, the run record and the pages say so.
+  reads. The question, the run record and the pages say so. A run whose
+  copy step ended early says where it ended instead, and, if Git never read
+  your clone, that Git read nothing of it.
 - **Refused:** a clone missing an object the pinned commit needs (a partial
   clone, for example); a clone that borrows objects through an alternates
   file; a clone whose references are in Git's newer reftable format.
 - **SHA-1 or SHA-256, as your clone is** (your ruling of 2026-11-10). The
   copy is made with the object format your clone's configuration records,
   SHA-1 where it records none, and the one-commit check expects that
-  format's settings. No clone is refused for its object format.
+  format's settings. No clone is refused for its object format, except that
+  a format your Git does not support fails the copy, and the run is refused.
 - **Consents recorded under version 1.1 get a copy too** (your ruling of
   2026-11-10, "Copy anyway"). A run that only such a consent covers runs on
   a copy like any other, so a full clone works for it. Its run record says
-  that the copy goes beyond that consent's "no fetch by Syzygy" wording.
+  that the copy goes beyond that consent's "no fetch by Syzygy" wording, or,
+  where the copy step ended before Git read your clone, that no fetch was
+  made.
 - **Your checkout does not matter.** Your branch, a detached HEAD or
   uncommitted changes are left alone and never reach the run.
 - **The agents work in the copy** (your redesign). The authoring and
@@ -86,8 +94,8 @@ four others you ruled on 2026-11-10 are recorded under "Ruled".
 - **The copy never sits in the governance home or in your clone.** Its
   directory is never inside any working tree of the governance home's
   repository, linked worktrees included, nor inside its Git directories, and
-  never inside your clone's working tree or Git directories, or any other
-  worktree of your clone's repository. A run that would
+  never inside your clone's working tree or Git directories, or any working
+  tree of your clone's repository, linked worktrees included. A run that would
   put it there is refused before any copy is made.
 - **Trunk tip.** This is the commit your clone's `origin/HEAD` points to, as
   of your last fetch. With no `origin` default, it is the one other remote

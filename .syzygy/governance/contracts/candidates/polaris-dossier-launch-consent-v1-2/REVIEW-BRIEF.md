@@ -1,31 +1,36 @@
-# Review brief — Polaris dossier launch-time consent, version 1.2, round 15 (scoped)
+# Review brief — Polaris dossier launch-time consent, version 1.2, round 16 (scoped)
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
-> verdict. Round 14 (`docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-14-RAW.md`,
-> `REVISE` at line 4), scoped to the round-13 repair under the owner's
-> "Fixes-only rounds until clean", found one revise finding and seven notes.
-> These bytes are their repair (`ROUND-14-DISPOSITIONS.md`). Not dispatched
-> from the drafting session.
+> verdict. Round 15 (`docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-15-RAW.md`,
+> `REVISE` at line 4), scoped to the round-14 repair, found one revise
+> finding and seven notes. These bytes are their repair
+> (`ROUND-15-DISPOSITIONS.md`). Not dispatched from the drafting session.
 >
-> **Scope.** Fixes only: the three changed lines below, the clauses each
-> touches, and the 12-unit sweep in `ROUND-14-DISPOSITIONS.md`. The scope may
-> change if the owner orders otherwise.
+> **Scope.** Fixes only: the eight changed lines below, the clauses each
+> touches, and the copy-step sub-step matrix in `ROUND-15-DISPOSITIONS.md`.
+> The scope may change if the owner orders otherwise.
 >
 > **Stopping rule.** `CONFIRM`, or `CONFIRM WITH EXCEPTIONS` with notes only,
-> clears the bytes. A `REVISE` leads to another fixes-only round under the
-> owner's ruling.
+> clears the bytes. [Observed, by the coordinating session's message] This
+> is to be the last round under the owner's ruling; after a `REVISE` the
+> owner decides what follows.
 
 ## Changed blocks under review
 
 Post-apply spec lines. The word-level change is the `git diff` between the
-round-14 post-apply spec (commit `67dd3554`) and this one.
+round-15 post-apply spec (commit `acefcdd4`) and this one.
 
 | Line | Requirement | Change | Touches |
 |---|---|---|---|
-| 37 | 046, disclosures | "that each brief Syzygy issued, of the authoring brief and the inventory brief, directed its session to work in the copy" | line 11; line 244 (stage rule); line 258; REQ-034 and REQ-035 (when each brief is issued); arms 046.4, 047.25 |
-| 248 | 047, copy step | operator side: "the operator's clone's working tree, Git directory or common Git directory, or any linked worktree of its repository"; an unsupported object format "is refused as every failure of a Git process for the copy is refused below" | lines 242, 256, 258; arms 046.12, 047.15, 047.18 |
-| 396 | 047, falsifier | arm 047.15 widened as line 248 | line 248 |
+| 11 | 046, the question | "that it is removed if the run ends before its brief, or named with the removal's failure where its removal fails" | line 248; arms 047.21, 047.22 |
+| 37 | 046, disclosures | round 15's option (a) verbatim; "or, where it ended after Git began to read the operator's clone and before the copy passed its form check, that the copy step used the method the question states, where it ended, and that the copy had not passed its form check"; "or, where its removal failed, that it was not removed" | lines 11, 242, 244, 248, 250, 258; arms 046.4, 047.25 |
+| 187 | 046, scenario "Write consent absent" | "or names as not removed where its removal fails" | line 248 |
+| 223 | 046, falsifier | arm 046.5: "or, where its copy step ended before Git read the operator's clone, that no fetch was made" | line 242 |
+| 242 | 047, v1.1 consent | the same form, where no fetch was made | arms 046.5, 047.16 |
+| 248 | 047, copy step | operator side: "or any working tree of its repository, its linked worktrees included"; "and the run is refused as every failure of a Git process for the copy is refused below"; the launch output where the copy's removal fails | lines 242, 256, 258; arms 046.12, 047.15, 047.18, 047.21, 047.22 |
+| 252 | 047, read list | "and the files of its common Git directory that locate its linked worktrees" | line 248; the arm on reads of the operator's clone |
+| 396 | 047, falsifier | arm 047.15 as line 248; arm 047.16 as line 242; arms 047.21 and 047.22 for a failed removal | lines 242, 248 |
 
 ## What the reviewer is given, and nothing else
 
@@ -53,10 +58,11 @@ alternates); delete them afterwards.
   `ROUND-9-DISPOSITIONS.md`,
   `ROUND-10-DISPOSITIONS.md`, `ROUND-11-PREP.md`,
   `ROUND-11-DISPOSITIONS.md`, `ROUND-12-DISPOSITIONS.md`,
-  `ROUND-13-DISPOSITIONS.md`, `ROUND-14-DISPOSITIONS.md` and this brief;
-- the raws of rounds 1 to 14,
+  `ROUND-13-DISPOSITIONS.md`, `ROUND-14-DISPOSITIONS.md`,
+  `ROUND-15-DISPOSITIONS.md` and this brief;
+- the raws of rounds 1 to 15,
   `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md` to
-  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-14-RAW.md`, whose findings
+  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-15-RAW.md`, whose findings
   the dispositions answer (round 3's as superseded by the redesign);
 - the builder `scripts/build_polaris_dossier_launch_consent_v1_2.py`;
 - the peel-and-delegate change to
@@ -117,34 +123,34 @@ Each is a yes/no question with the evidence that settles it. Read the
 changed lines above and what their "Touches" column names, unless a question
 needs more.
 
-1. **Does each round-14 repair land as disposed?** Is the wording
-   `ROUND-14-DISPOSITIONS.md` quotes at the line it names, verbatim?
-2. **Is line 37 true at every stage it binds?** Take a copy-class run that
-   issued the authoring brief only, the inventory brief only, both, or a
-   review packet after both. Does the statement make a run say anything
-   false, or does it let a run leave out a brief it issued? Do arms 046.4
-   and 047.25 agree with it?
-3. **Does the sweep hold?** Re-run the selection over these bytes.
-   - Is the population 12 units?
-   - Is any row wrong?
-   - Does any statement naming more than one artifact or session still bind
-     a run that issued one item and not the other?
-4. **Is the placement rule symmetric and closed?**
-   - Do line 248 and arm 047.15 name the same places on both sides?
-   - Can a conforming copy change any worktree, Git directory or common Git
-     directory of either repository?
-   - Does arm 046.12's exemption let a forbidden placement pass?
-5. **Is the object-format refusal cited exactly?** Does "as every failure of
-   a Git process for the copy is refused below" point at one clause, and
-   does arm 047.18 agree?
-6. **Is the owner page fair?** Does it state the "governing criteria"
-   reading with the consent instruction conditional, and the widened
-   placement in plain words?
+1. **Does each round-15 repair land as disposed?** Is the wording
+   `ROUND-15-DISPOSITIONS.md` quotes at the line it names, verbatim?
+2. **Is every copy statement true after every sub-step of the copy step?**
+   Take a conforming copy-class run refused right after each sub-step:
+   directory created, `init`, the configuration `init` writes, fetch,
+   checkout, form check, removal (including a removal that fails).
+   - Does any statement the spec requires of it (the question, the run
+     record and pages, the v1.1 consent statement, the launch output, the
+     refusals) say anything false, or can it not be made?
+   - Is the matrix's population complete, and is any cell wrong?
+3. **Do the new branches of line 37 partition the runs?** Does every
+   copy-class run whose copy step started fall under exactly one of: the
+   question's statement, "ended before Git read", "ended after Git began to
+   read and before the copy passed its form check"? Do arms 046.4 and
+   047.25 agree?
+4. **Is the failed-removal rule honest and closed?** Do lines 11, 37, 187,
+   248 and arms 047.21 and 047.22 state the same thing, and does any of them
+   let a copy stay without the launch output naming it?
+5. **Is the placement rule symmetric?** Do line 248 and arm 047.15 now name
+   the same places on both sides, and does the owner page match them?
+6. **Does the read list cover how Syzygy finds the linked worktrees?** Does
+   line 252's first item admit the read the placement check needs, and no
+   more than it needs?
 7. **Do the prose pages and tooling match?**
    - Do the delta's exact blocks match `git diff` of the applied patch?
    - Do `--check` and `--selftest` pass for the three builders, and does the
      recorder's selftest pass?
-8. **Did the fixes re-open anything?** Does any round-1-to-14 finding return
+8. **Did the fixes re-open anything?** Does any round-1-to-15 finding return
    in the changed lines or in what they touch?
 
 ## Output
