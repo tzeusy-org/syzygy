@@ -2,11 +2,14 @@
 
 > **Candidate — binds nothing.** [Observed] Rounds 1 to 3 of review returned
 > `REVISE`. On 2026-11-10 you chose a redesign. Rounds 4 to 10, its first
-> reviews, returned `REVISE` on the text's consistency and edge cases; these
-> bytes are the round-10 repair, and no review has read them yet. One class
-> of finding (a statement a refused run cannot truthfully make) recurred in
-> rounds 6, 7, 9 and 10, so the coordinating session stopped the loop: no
-> round 11 has been dispatched, and you may sign on these bytes or order one. This page may be offered only after
+> reviews, returned `REVISE` on the text's consistency and edge cases. One
+> class of finding (a statement a refused run cannot truthfully make)
+> recurred in rounds 6, 7, 9 and 10, so the coordinating session stopped the
+> loop after round 10. On 2026-11-10 you ruled on the open points and ordered
+> round 11 (`OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md`, section
+> "Rulings after review round 10, 2026-11-10"). These bytes are the round-10
+> repair with those rulings applied (`ROUND-11-PREP.md`); no review has read
+> them yet. This page may be offered only after
 > a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
 > install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
 > Nothing here records a choice; only your selection after review binds this
@@ -18,9 +21,9 @@ Do you sign version 1.2? A launch then takes your existing full clone,
 copies the trunk-tip commit from it into a one-commit clone of Syzygy's own
 with no network, and runs on that copy. It also accepts any https or ssh
 repository URL on any host. It carries your rulings 3 and 4 of 2026-11-09
-and your redesign of 2026-11-10. Five points below, under "Before you
-sign", are yours to settle; the first must be settled before this version
-can be used.
+and your redesign and rulings of 2026-11-10. One point below, under
+"Before you sign", must be settled before this version can be used; the
+four others you ruled on 2026-11-10 are recorded under "Ruled".
 
 - **Option:** "Sign launch-consent spec version 1.2"
 
@@ -53,6 +56,14 @@ can be used.
 - **Refused:** a clone missing an object the pinned commit needs (a partial
   clone, for example); a clone that borrows objects through an alternates
   file; a clone whose references are in Git's newer reftable format.
+- **SHA-1 or SHA-256, as your clone is** (your ruling of 2026-11-10). The
+  copy is made with the object format your clone's configuration records,
+  SHA-1 where it records none, and the one-commit check expects that
+  format's settings. No clone is refused for its object format.
+- **Consents recorded under version 1.1 get a copy too** (your ruling of
+  2026-11-10, "Copy anyway"). A run that only such a consent covers runs on
+  a copy like any other, so a full clone works for it. Its run record says
+  that the copy goes beyond that consent's "no fetch by Syzygy" wording.
 - **Your checkout does not matter.** Your branch, a detached HEAD or
   uncommitted changes are left alone and never reach the run.
 - **The agents work in the copy** (your redesign). Every brief and review
@@ -124,6 +135,15 @@ unchanged.
   the commit pinned, the question asked, a brief issued), and otherwise
   that it was not reached. A run that works in your own clone says no copy
   was made.
+- **Port and case merge repositories** (the fourth disclosed residual).
+  The identity rule, unchanged from version 1.1, drops any port and
+  lowercases the URL, so two servers on one host at different ports, or two
+  repositories whose names differ only in letter case, get one identity and
+  match each other's records, and the second relies on the first one's
+  drawer and provider statements unless you give another identity.
+- **A version 1.1 consent's copy goes beyond its wording.** That consent
+  says "no fetch by Syzygy"; the copy is a local fetch. The run record says
+  so, and the consent is otherwise relied on as recorded.
 - **Disk.** Each completed run leaves one commit's files in a directory of
   Syzygy's own, outside the run's state directory, until you remove it.
 - **The run record keeps what Syzygy read before your answer.** Version
@@ -158,41 +178,25 @@ unchanged.
    the entry. Reading your clone's references and remote URLs is not new:
    version 1.1 already does it, and the entry's "no ref is read" is read as
    about the adapter's object reads, as versions 1.0 and 1.1 read it.
-2. **Typed `http://` and `git://` URLs: kept, on a reading you have not
-   given.** The draft first refused them, reading your ruling 4 ("Keep
-   proposing for http/git") as about a clone's remotes only. The reviewer
-   showed that version 1.1 already accepts them when typed. The coordinating
-   session then read your ruling as a preference against narrowing version
-   1.1, and directed that they stay accepted, credentials still refused.
-   [Inferred] That reading is the coordinating session's, not yours. If you
-   want typed `http://` and `git://` refused, say so; it is a small change
-   to one paragraph and three scenarios, and needs a review round.
-3. **Port and case merge two repositories into one.** The identity rule,
-   unchanged from version 1.1, drops any port and lowercases the host and
-   path. So two servers on one host at different ports, or two repositories
-   on a case-sensitive host whose names differ only in case, get one
-   normalised URL and one identity. Each then matches the other's records,
-   by URL as well as by identity, and the second relies on the first one's
-   drawer and provider statements unless you give another identity. The
-   question names the records it matched. Version 1.2 does not change this
-   and does not list it among the disclosed residuals. You may accept it as
-   it is, ask for it to be disclosed as a fourth residual (the rule's bytes
-   unchanged), or ask for a rule that keeps the port or the case.
-4. **SHA-256 repositories are refused.** Git can store a repository with
-   SHA-256 object names instead of the usual SHA-1. Syzygy's copy is an
-   ordinary SHA-1 repository, and the one-commit check it already runs
-   refuses the settings a SHA-256 copy needs, so a SHA-256 clone fails the
-   copy and the launch is refused. The signed registry entry allows SHA-256
-   objects, so this narrows what a launch accepts. You may accept that, or
-   ask for the copy to take the clone's object format, which also changes
-   the one-commit check and needs a review round.
-5. **Consents recorded under version 1.1 keep their wording.** A launch
-   consent recorded under version 1.1 says the commit is "held in the
-   operator's own clone, with no fetch by Syzygy". A local copy is a fetch,
-   so version 1.2 does not copy for such a consent: a later run at that
-   commit works in your clone, as under version 1.1, and needs a one-commit
-   clone; a full clone at that commit is refused, naming the reason. To use
-   a full clone there, you would make a one-commit clone of that commit, as
-   version 1.1 needed. [Observed, local refs only] No such record exists in
-   this checkout today; this matters only if version 1.1 is used before you
-   sign version 1.2.
+
+## Ruled on 2026-11-10
+
+Recorded in `OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md`, section
+"Rulings after review round 10, 2026-11-10". They are no longer open.
+
+- **Typed `http://` and `git://` URLs stay accepted** ("Keep http/git
+  URLs"), credentials still refused, as drafted.
+- **Port and case merge** ("Port/case merge"), accepted as drafted. It is
+  now disclosed as the fourth residual beside the record list; the identity
+  rule's bytes are unchanged.
+- **SHA-256 clones are copied, not refused.** You left "Refuse SHA-256
+  clones" unticked, so the copy takes your clone's object format. [Observed]
+  On Git 2.53.0 a scratch SHA-256 repository fetched over `file://` into a
+  SHA-256 copy checked out at the named commit with one commit held; into a
+  SHA-1 copy the fetch failed (`ROUND-11-PREP.md`).
+- **Consents recorded under version 1.1** ("Copy anyway (Recommended)"):
+  version 1.2 copies for them too, the run record says the copy goes beyond
+  that consent's "no fetch by Syzygy" wording, and a full clone works. The
+  refusal of a full clone and the one-commit requirement for that case are
+  gone. [Observed, local refs only] No such record exists in this checkout
+  today.

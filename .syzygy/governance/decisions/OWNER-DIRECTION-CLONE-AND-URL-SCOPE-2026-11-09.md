@@ -143,3 +143,41 @@ What the selection changes:
 Like the rest of this record, this section authorizes drafting only: the
 redraft and a fresh review. It authorizes no implementation, no sign-off and
 no act-bound edit.
+
+## Rulings after review round 10, 2026-11-10
+
+[Observed, by the coordinating session's message] On 2026-11-10 the owner
+answered four questions through AskUserQuestion. This record quotes the
+selected labels verbatim, as the coordinating session relayed them. The
+full option descriptions were not relayed, so their wording is [Unknown]
+here.
+
+- [Inferred] That the person answering is the owner.
+
+1. **Review.** Selected: "Final review rounds (Recommended)". This orders
+   round 11 of PR #812 and round 5 of PR #815.
+2. **Typed URLs, and the port and case merge.** Selected: "Keep http/git
+   URLs" and "Port/case merge". Both are accepted as drafted:
+   - typed `http://` and `git://` URLs stay accepted, with credentials still
+     refused;
+   - the identity rule's merge of URLs that differ only in port or case is
+     accepted as it is, and is disclosed as a known residual.
+
+   Both leave the sign-off page's open points and are recorded as ruled.
+3. **SHA-256 clones.** The option "Refuse SHA-256 clones" was left
+   unticked, so SHA-256 clones are not refused. The copy takes the
+   operator's clone's object format. The copy's form check, and every place
+   that assumed SHA-1, change so that a SHA-256 copy passes. The signed
+   registry entry already admits SHA-256 objects.
+4. **Launch consents recorded under version 1.1.** Selected: "Copy anyway
+   (Recommended)".
+   - Version 1.2 copies for these consents too, and a full clone then works
+     for them.
+   - The run record states that the copy goes beyond that consent's "no
+     fetch by Syzygy" wording.
+   - The refusal of a full clone, and the one-commit requirement on the
+     operator's clone, are removed for that case.
+
+Like the rest of this record, this section authorizes drafting and the
+ordered review rounds only. It authorizes no implementation, no sign-off
+and no act-bound edit.

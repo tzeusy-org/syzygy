@@ -1,4 +1,4 @@
-# Review brief — Polaris dossier launch-time consent, version 1.2, round 11 (only if the owner orders one)
+# Review brief — Polaris dossier launch-time consent, version 1.2, round 11
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
@@ -8,8 +8,13 @@
 > operator's clone into a one-commit clone of its own over Git's local file
 > transport, and the signed read rules apply to the copy. Rounds 4 to 10,
 > the first reviews of the redesign, returned `REVISE` on the text's
-> consistency and edge cases; these bytes are round 10's repair. Round 11
-> runs only if the owner orders it.
+> consistency and edge cases. These bytes are round 10's repair with the
+> owner's rulings of 2026-11-10 applied (`ROUND-11-PREP.md`): typed
+> `http://` and `git://` URLs kept, the port-and-case merge accepted and
+> disclosed as a fourth residual, SHA-256 clones copied in their own object
+> format, and runs under a launch consent recorded by version 1.1 copied,
+> their run record saying the copy goes beyond that consent's wording. The
+> owner ordered this round on 2026-11-10.
 > Read the post-apply spec as a whole, not only the repaired clauses.
 >
 > **Stopping rule.** The coordinating session treats the redesign as a fresh
@@ -20,7 +25,10 @@
 > that stopping rule while rounds converge, and goes to the owner when a
 > round stops making progress. After round 10, with one class recurring in
 > rounds 6, 7, 9 and 10, the coordinating session stopped: repair, dispatch
-> nothing, ask the owner.
+> nothing, ask the owner. The owner then selected "Final review rounds
+> (Recommended)", ordering this round. [Inferred, from that label] Round 11
+> is the last round before the package returns to the owner, whatever its
+> verdict.
 
 ## What the reviewer is given, and nothing else
 
@@ -46,7 +54,7 @@ alternates); delete them afterwards.
   `ROUND-6-DISPOSITIONS.md`, `ROUND-7-DISPOSITIONS.md`,
   `ROUND-8-DISPOSITIONS.md`,
   `ROUND-9-DISPOSITIONS.md`,
-  `ROUND-10-DISPOSITIONS.md` and this brief;
+  `ROUND-10-DISPOSITIONS.md`, `ROUND-11-PREP.md` and this brief;
 - the raws of rounds 1 to 10,
   `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md` to
   `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-10-RAW.md`, whose findings
@@ -68,9 +76,10 @@ then `git apply`). Read the post-apply spec beside the v1.1 bytes;
 
 - The owner direction
   `.syzygy/governance/decisions/OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md`.
-  It holds three sections: the two first selections, the four rulings on
-  the draft's points, and the redesign of 2026-11-10, which supersedes
-  rulings 1 and 2 for this design.
+  It holds four sections: the two first selections, the four rulings on
+  the draft's points, the redesign of 2026-11-10, which supersedes rulings
+  1 and 2 for this design, and the rulings after review round 10, also of
+  2026-11-10.
 - The v1.1 sign-off record
   `.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md`
   and the review it names.
@@ -109,7 +118,7 @@ Each is a yes/no question with the evidence that settles it.
 
 1. **Is the change the owner's answers, and only those?**
    - Every hunk maps to one of the two first selections, rulings 3 and 4,
-     or the redesign selection.
+     the redesign selection, or the rulings after review round 10.
    - A hunk that maps to none is blocking. So is a hunk that grants a read,
      egress, write or execution beyond v1.1 and the redesign, or that admits
      a local path.
@@ -125,8 +134,11 @@ Each is a yes/no question with the evidence that settles it.
      stated plainly.
    - (4) Remote derivation keeps v1.1's `http` and `git` normalisation.
    - D6 admits typed `http://` and `git://` URLs as v1.1 does, credentials
-     refused, on a reading it labels Inferred and attributes to the
-     coordinating session. Is that stated plainly, and put to the owner?
+     refused, on a reading first made by the coordinating session and
+     accepted by the owner on 2026-11-10 ("Keep http/git URLs"). Is that
+     history stated plainly?
+   - The rulings after review round 10: is each quoted exactly from the
+     direction record, and does each land as made (criteria 19 to 21)?
 3. **Is the copy step exact and safe?**
    - Is the Git invocation class fixed: an empty directory and repository of
      Syzygy's own (never derived from the clone's path), an empty template,
@@ -135,8 +147,10 @@ Each is a yes/no question with the evidence that settles it.
    - Does every Git process run with system and global configuration off,
      no other Git variable, only the file transport, lazy fetching off and
      no hook path? Can a conforming implementation make a network request?
-   - Does the copy's required form equal the one `clone-shape.ts` checks,
-     and is it checked before the question?
+   - Does the copy's required form equal the one `clone-shape.ts` checks
+     for a SHA-1 copy, with only the repository format version and
+     object-format setting a SHA-256 copy needs added, and is it checked
+     before the question?
    - Is a missing object (a partial clone's included) refused with nothing
      fetched elsewhere? Are alternates and reftable refused before any Git
      process starts?
@@ -169,8 +183,10 @@ Each is a yes/no question with the evidence that settles it.
      apply? Does every statement the stage rule governs name its
      stage and run class, with the other class's form, and does any
      statement claim an agent session's act other than as its own report?
-     Do the round-10 stage × class table and class-qualifier sweep in
-     `ROUND-10-DISPOSITIONS.md` hold row by row?
+     Do the stage × class table and class-qualifier sweep in
+     `ROUND-11-PREP.md` (re-run over these bytes) hold row by row, and does
+     each statement the rulings add or change carry its stage, class and
+     other-class form?
 4. **Is Syzygy's list of reads of the operator's clone closed and small?**
    - Can a conforming implementation read an object, the working tree, the
      index or any other Git-directory file of the operator's clone in a copy-class run? Can it honour the clone's configuration?
@@ -181,11 +197,11 @@ Each is a yes/no question with the evidence that settles it.
 5. **Which runs are copy-class runs, and do the populations agree?**
    - Do the preamble's two classes partition the runs on conditions known
      at launch, keyed on the pinned revision?
-   - Every run REQ-047 pins is a copy-class run unless another act's consent, or a
-     launch observation consent recorded with version 1.1's scope, names its
-     pinned revision. Does each no-copy run keep its consent's scope or form
-     and the v1.1 HEAD refusal, and is a full clone refused under a
-     v1.1-scoped launch consent alone?
+   - Every run REQ-047 pins is a copy-class run unless another act's
+     consent names its named identifier. Does each no-copy run keep its
+     consent's form and the v1.1 HEAD refusal? Is a run that only a launch
+     observation consent recorded with version 1.1's scope covers a
+     copy-class run, never refused for its clone's form or history?
    - Do REQ-047's read list, the copy rule, the scenarios and the falsifier
      name the same populations? Do the rules bind a run that ends in a
      refusal or a decline?
@@ -230,15 +246,43 @@ Each is a yes/no question with the evidence that settles it.
     Is the change class (Normative) right?
 16. **Is the owner page fair and plain?** The question, the version and the
     option label exactly; the shared-records, pre-answer copy, Git-reads,
-    hooks residual and agent-reach costs; the registry successor, the typed
-    `http`/`git` reading, the port-and-case merge, the SHA-256 refusal and
-    the v1.1-recorded consents under "Before you sign".
+    hooks residual, agent-reach, port-and-case and v1.1-wording costs; the
+    registry successor alone under "Before you sign"; the four rulings of
+    2026-11-10 recorded as ruled, each with the owner's label quoted
+    exactly.
 17. **Does the tooling hold?** `--check` and `--selftest` of the v1.0, v1.1
     and v1.2 builders pass; each predicate has a mutation fixture that
     fails it (verification rule 6); the recorder's selftest passes.
 18. **Does any earlier concern survive?** For each finding of rounds 1 to 10,
     is it answered by the redesigned text or by its disposition? A concern
     the redesign re-opens in a new place is a finding.
+19. **Is a SHA-256 clone copied, and only in its own format?**
+    - Is the copy's empty repository made with the object format the
+      operator's clone's configuration records, SHA-1 where it records
+      none, and is no clone refused for its object format?
+    - Is `extensions.objectFormat` the only addition to Syzygy's text read
+      of the operator's configuration, made only in a copy-class run, and
+      do REQ-046's pre-answer list and both falsifiers agree?
+    - Does a falsifier arm catch a clone refused for its format, or a copy
+      whose format differs from the clone's? Does the "SHA-256 clone"
+      scenario have an independent oracle?
+    - Reproduce `ROUND-11-PREP.md`'s Git 2.53.0 fixture (a scratch
+      `git init --object-format=sha256`, fetched over `file://` into a copy
+      of each format): do the observed results hold?
+20. **Are v1.1-scoped launch consents copied, and said to be?**
+    - Is a run that only such a consent covers a copy-class run, with the
+      one-commit requirement and its refusal gone from REQ-047, the
+      scenarios, both falsifiers, the ledger and the owner page?
+    - Does the run record state, once the copy step started and for that
+      run only, that the copy goes beyond that consent's "no fetch by
+      Syzygy" wording, with the stage and class named and the no-copy form
+      given? Is that consent otherwise relied on as recorded?
+    - Does the "Repeat run under a launch consent recorded by version 1.1"
+      scenario say so, and does any sentence anywhere still make such a run
+      a no-copy run?
+21. **Is the fourth residual disclosed as ruled?** Does it state the port
+    and case merge without changing the identity rule's bytes, labelled
+    Inferred, beside the other three, and does the sign-off page match it?
 
 ## Output
 

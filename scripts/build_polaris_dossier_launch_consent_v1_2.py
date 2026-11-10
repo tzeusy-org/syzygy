@@ -83,7 +83,7 @@ V11_LINKS = v11.BOTH_LINKS
 THREE_LINKS = (f"([v1.0 sign-off]({V10_RECORD.as_posix()});\n"
                f"    [v1.1 sign-off]({V11_RECORD.as_posix()});\n"
                f"    [v1.2 sign-off]({V12_RECORD.as_posix()}))")
-#: The scenarios v1.2 adds: ten to REQ-polaris-generation-046, sixteen to 047.
+#: The scenarios v1.2 adds: ten to REQ-polaris-generation-046, seventeen to 047.
 V12_SCENARIOS = tuple(f"#### Scenario: {name}\n" for name in (
     "Locator on another host over ssh",
     "GitHub identities keep their form",
@@ -111,6 +111,7 @@ V12_SCENARIOS = tuple(f"#### Scenario: {name}\n" for name in (
     "Repeat run under a launch consent recorded by version 1.1",
     "Revision naming a blob",
     "Commit whose checkout fails",
+    "SHA-256 clone",
 ))
 SUBJECTS = CANDIDATE / "PROPOSED-SUBJECTS.json"
 SUBJECTS_BASE = "version 1.1 installed bytes; the proposed bytes are the patch applied to them"
