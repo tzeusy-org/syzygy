@@ -11,11 +11,12 @@
 > `CONFIRM WITH EXCEPTIONS`. It is not offered to you until that review has
 > returned, and it should be offered together with launch-consent v1.2.
 >
-> **Bound to PR #812 at head `736d9fcd`.** This package restates #812's
+> **Bound to PR #812 at head `054a4f11`.** This package restates #812's
 > copy step as that head drafts it, after your rulings of 2026-11-10 (SHA-256
 > clones copied in their own object format; launch consents recorded under
 > v1.1 now copy too). It was redrafted from `de9c1ba8`, then rebound to
-> #812's round-11 repair (`ROUND-5-REDRAFT.md`). If #812 changes again, this package is redrafted
+> #812's round-11 and round-12 repairs (`ROUND-5-REDRAFT.md`,
+> `ROUND-5-DISPOSITIONS.md`). If #812 changes again, this package is redrafted
 > and reviewed again before it is offered.
 >
 > **Review.** Round 4 (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md`)
@@ -86,16 +87,20 @@ for a copy, so every run is a no-copy run.
   (`packed-refs` included), and the object names a shortened `--revision`
   needs. Only two items are asked for by v1.2 alone: the local branch named
   like the remote's default, and whether an alternates file exists.
-  **Today's code reads more than this list.** It reads the value of every
+  **Today's code (at this package's branch head) reads more than this
+  list.** It reads the value of every
   reference in your clone (tags, every remote branch, the stash), and it
   lists every object name in your clone even for a full-length
   `--revision`. Signing closes those two reads, so the launch code must be
   narrowed to the list; that is implementation, under its own direction,
   after the sign-off ("Before you sign", item 1, "When the narrowing
   lands"). A third read, of a named object's whole body before its type
-  is known, is outside v1.0 already and stays outside until its repair
-  lands (item 2, `syzygy-pdja.30`). **As you ruled, until those land, a
-  launch may read outside the signed entry.**
+  is known, was outside v1.0 already; its repair (#816) has landed and
+  this branch carries it, so the check now reads the object's type header
+  (item 2). **As you ruled, until the narrowing lands, a launch may read
+  outside the signed entry; and while v1.2 is in force and its copy step
+  is unimplemented, copy-class runs are made without a copy and read your
+  clone outside the entry ("Before you sign", item 1).**
 - **Launch consents recorded under v1.1.** Under v1.2 as you ruled
   ("Copy anyway"), their runs are copy-class runs. The entry needs no
   words of its own for that: it calls a run copy-class whenever a
@@ -127,7 +132,8 @@ for a copy, so every run is a no-copy run.
      nothing written outside the state directory. What changes is that the
      entry now says in words what Syzygy reads of your clone at launch. For
      a run launched with consent that is a closed list, and **signing it
-     closes two reads today's code makes**: the value of every reference,
+     closes two reads the code at this branch's head makes**: the value of
+     every reference,
      and the object-name listing for a full-length `--revision`. The two
      v1.2-only items also stay out. For any other run it closes nothing, as
      v1.0 did not.
@@ -147,14 +153,25 @@ for a copy, so every run is a no-copy run.
    - **Gate timing: ruled, not open.** On 2026-11-10 you chose "Land with
      sign-off" [Observed, as the coordinating session relayed it]. The gate
      code that accepts a v1.1 sign-off (item 1) lands with the sign-off.
-     **So, until the launch-code narrowing (item 1b) and `syzygy-pdja.30`
-     (item 1c) land, a launch may read outside the signed entry**: a no-copy
-     run launched with consent can be made from the sign-off commit, and
-     today's launch code reads every reference's value, the object-name
-     listing for a full-length `--revision`, and the whole body of a named
-     object that is not a commit [Inferred, from the code; no product code
-     changed since round 4]. A copy-class run cannot be made in that window:
-     no code makes a copy.
+     **So, until the launch-code narrowing (item 1b) lands, a launch may
+     read outside the signed entry**: a run launched with consent can be made from the sign-off commit, and the
+     launch code at this package's branch head (which carries #816) reads
+     every reference's value and the object-name listing for a full-length
+     `--revision` [Inferred, from that code]. #816 has landed, so item 1c
+     no longer adds a read here (item 2).
+   - **Copy-class runs without a copy: allowed and disclosed, as you
+     ruled.** On 2026-11-10 you selected "Allow and disclose" [Observed, as
+     the coordinating session relayed it]. "Copy-class" is what the
+     launch-consent version in force requires; "makes a copy" is what the
+     code does, and no code makes one yet. So while v1.2 is in force and
+     its copy step is unimplemented, **every run v1.2 makes copy-class**
+     (your "Copy anyway" runs on consents recorded under v1.1, and every
+     run only a launch consent covers) **is made by today's code without a
+     copy**. Such a run reads your clone's commit and trees before you
+     answer, then its form and its blobs, **all outside the entry**, which
+     says a copy-class run reads no object of your clone [Inferred, from
+     the code]. **This ends with v1.2's implementation of the copy step, not
+     with items 1b and 1c.**
    - **Your choice on that closed list.** This draft takes option 1.
      - *Option 1 (drafted): keep #812's list as it is, and narrow the
        code.* The entry then admits no more than launch-consent v1.2 does,
@@ -167,21 +184,27 @@ for a copy, so every run is a no-copy run.
        listing. Choosing it means a redraft and another review round.
    - Launch-consent v1.2 signed without this cannot take effect: its copy
      would exceed the entry.
-   - If v1.2 moves from `736d9fcd` before you sign, this package is
+   - If v1.2 moves from `054a4f11` before you sign, this package is
      redrafted and reviewed again.
 2. **The `tags` field moves, and the version strings do not.** The
    round-1 reviewer agreed with both (Finding 8). On `tags`: Git can now
    put a tag into a copy Syzygy made, so the field says what happens to it
-   rather than leaving that to a reading. **But the code does not keep
-   `tags` "never read" today, under v1.0 or v1.1.** [Observed] Before it
-   knows that the object a `--revision` or trunk reference names is a
-   commit, the launch reads that object's whole body; when it is an
-   annotated tag (or a blob), that read is outside `tags` and outside the
-   installed REQ-046. v1.1 does not create that gap and does not close it;
+   rather than leaving that to a reading. **Until #816 the code did not
+   keep `tags` "never read", under v1.0 or v1.1.** [Observed, at `bb89b8cc`]
+   Before it knew that the object a `--revision` or trunk reference names
+   was a commit, the launch read that object's whole body; when it was an
+   annotated tag (or a blob), that read was outside `tags` and outside the
+   installed REQ-046. v1.1 did not create that gap and does not close it;
    the code repair is filed for its own repair as `syzygy-pdja.30`
-   (`IMPACT-LEDGER.md`, item 1c). That repair, PR #816, has merged to `main`
-   (the ledger gives its state, labelled); with it the check reads only the
-   object's header. This package's branch predates it. Launch-consent v1.2 says Syzygy tells
+   (`IMPACT-LEDGER.md`, item 1c). That repair, PR #816, has merged to
+   `main`, and this package's branch carries it. [Observed, from the code]
+   The check now reads a loose object's first stored bytes, 64 at a time
+   up to 1024, inflating them until the type header ends (some body bytes
+   are inflated and discarded), or a pack entry's header and, for a delta,
+   the headers of its bases down the chain. The round-5 reviewer's reading
+   [Inferred]: a type test is presupposed by `tags` itself ("any other type
+   refuses"), a header read is the least it can read, so it sits within
+   `tags`, but only by that reading. This package takes that reading. Launch-consent v1.2 says Syzygy tells
    these cases apart "without reading the object itself"; the round-4
    reviewer notes that is hard to meet in a no-copy run, where REQ-047 has
    Syzygy read the named object as a commit object. That sentence is

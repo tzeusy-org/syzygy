@@ -1,34 +1,22 @@
-# Review brief — public Git source acquisition, local-agent version 1.1, round 5
+# Review brief — public Git source acquisition, local-agent version 1.1, round 6 (scoped)
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
 > verdict. `CONFIRM`, or `CONFIRM WITH EXCEPTIONS` with notes only, clears
-> the bytes. Round 1 (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-1-RAW.md`,
-> over `5c939150`) returned `REVISE` with three revise findings and seven
-> notes; `ROUND-1-DISPOSITIONS.md` says how each was taken. Round 2
-> (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-2-RAW.md`, over `5236223d`)
-> returned `REVISE` with two revise findings and four notes;
-> `ROUND-2-DISPOSITIONS.md` says how each was taken. Round 3
-> (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-3-RAW.md`, over `0f1a203d`)
-> returned `REVISE` with one revise finding and four notes;
-> `ROUND-3-DISPOSITIONS.md` says how each was taken and carries the table
-> of every read the launch path makes. Round 4
-> (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md`, over `bb89b8cc`)
-> returned `REVISE` with one revise finding and three notes;
-> `ROUND-4-DISPOSITIONS.md` says how each was taken and corrects the
-> round-3 table.
+> the bytes. Rounds 1 to 5 returned `REVISE`; their raws are
+> `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-1-RAW.md` to
+> `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-5-RAW.md`, and
+> `ROUND-1-DISPOSITIONS.md` to `ROUND-5-DISPOSITIONS.md` (with
+> `ROUND-5-REDRAFT.md`) say how each finding was taken.
 >
-> **Round 5 is ordered by the owner** ("Final review rounds
-> (Recommended)", 2026-11-10), after the redraft against PR #812 that the
-> owner's other rulings of that day required, rebound to #812's round-11
-> repair at `736d9fcd` (`ROUND-5-REDRAFT.md`). It is a fresh review of the redrafted bytes, not a
-> check of the dispositions alone. The drafting lane dispatches no review.
-> Dispatch it only while PR #812 stands at head `736d9fcd`, to which this
-> package is bound: its post-apply launch-consent spec (proposed spec
-> digest printed by #812's builder at that head) is the text every Proposed
-> block restates. A scoped review of #812's round-11 fixes reviews that
-> head. If #812 has moved,
-> the package is redrafted first.
+> **Round 6 is scoped to the fixes**, matching the mode the owner ordered
+> for PR #812's fix reviews. It judges only the changed blocks below,
+> against round 5's raw, the owner's ruling "Allow and disclose" of
+> 2026-11-10, and #812 at `054a4f11`. It does not re-review what round 5
+> confirmed (its decision items 1, 2, 6, 7 and 8), except where a changed
+> block touches it. The drafting lane dispatches no review. Dispatch it
+> only while PR #812 stands at head `054a4f11`, to which this package is
+> bound; if #812 has moved, the package is redrafted first.
 
 ## Route
 
@@ -40,125 +28,74 @@ separately", and the Scope A direction names the registry entry among its
 artifacts. The recorder is `scripts/record_versioned_signoff.py`, package
 key `public-git-source-acquisition-local-agent`, `--version 1.1`.
 
+## What changed since round 5
+
+Reviewed by round 5: `135dac73`. Every change since is listed here; a
+change not listed is a finding.
+
+| # | Block | File and place | Touches | Why |
+|---|---|---|---|---|
+| S1 | `fetch`, clause "the copy's directory" | subject; builder `FETCH_CLAUSES`, `FETCH_TERMS` | Proposed block 1; the patch; `PROPOSED-SUBJECTS.json` | #812 at `054a4f11`: the copy's directory is never inside the governance home, and such a run is refused before its copy step |
+| S2 | `stateDirectoryWrites`, clause "the copy's directory and where it lies" | subject; builder `SDW_CLAUSES` | Proposed block 4; the patch; `PROPOSED-SUBJECTS.json` | the same placement, as a write bound |
+| P1 | the disclosure of the two windows | `IMPACT-LEDGER.md`, first section ("Disclosed, as ruled") | the owner's ruling "Allow and disclose"; round-5 Finding 1 | copy-class versus makes-a-copy; the window ends with v1.2's implementation |
+| P2 | item 1b, "Can a launch-consented run be made before it lands?" and the width rule | `IMPACT-LEDGER.md`, item 1b | round-5 Finding 1; #812's read (5) width rule | the "a copy-class run, no" answer corrected |
+| P3 | item 1c, what #816 reads and the `tags` reading; its table row; a new table row for copy-class runs | `IMPACT-LEDGER.md`, item 1c and "Who else reads the entry" | round-5 Findings 2 and 3 | header-read account against the code |
+| P4 | E1 "On `tags`"; E3's disclosure paragraph and "A gap the narrowing did not close"; "The copy step this version admits", item 2 | `SEMANTIC-DELTA.md` | round-5 Findings 1 to 3; S1 | |
+| P5 | "Dependency on launch-consent v1.2": the "This version signed, v1.2 not" ending, a new bullet "Both signed, v1.2's copy step not yet implemented", and the "v1.2 signed, this version not" bullet | `SEMANTIC-DELTA.md` | round-5 Finding 1 | |
+| P6 | Warrant, a bullet recording "Allow and disclose" | `SEMANTIC-DELTA.md` | the ruling | |
+| P7 | "What changes" (the third read; the scope of "today's code"); "Before you sign" item 1 (gate timing; a new bullet "Copy-class runs without a copy"); item 2 (#816's reads, the `tags` reading) | `OWNER-SIGNOFF.md` | round-5 Findings 1 to 3 | |
+| P8 | the binding head, everywhere | all package prose | #812 at `054a4f11` | quotations re-derived by script |
+| C1 | `origin/main` merged at `a41aa223` | `packages/polaris-dossier/src/git-object-reader.ts`, `launch.ts` and their tests | row 15 of the read enumeration | round-5 Finding 3: "today's code" includes #816 |
+| R1 | `ROUND-5-DISPOSITIONS.md` (new) | package | row 15 re-mapped; the rebind judged | |
+| E1 | `docs/evidence/syzygy-pdja-29/round-6-repairs-mutation-2026-11-10.json` | evidence | S1, S2 | rule 6 |
+
 ## What the reviewer is given, and nothing else
 
 CC-REV-1: a fresh context holding only the artifact, its governing
-references and the acceptance criteria. Run on the default model.
+references and the acceptance criteria. Run on the default model. Do not
+fetch any content of any external or target repository; the only network
+use allowed is `git fetch` of this repository, PR #812's branch included.
+Read no observed-repository body and run no dossier.
 
-**Network.** Do not fetch any content of any external or target repository:
-no `gh api` contents, no raw URLs, no clone, no web access. The only
-network use allowed is `git fetch` of this repository, PR #812's branch
-included. Fixture repositories you build with `git init` and local commits
-in a scratch directory are allowed, including fixtures that test a local
-`file://` fetch; delete them afterwards. Read no observed-repository body
-and run no dossier.
-
-**The artifact under review**, in
-`.syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/`:
-
-- `proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`
-  (the subject) and its `.patch` against the installed v1.0 entry;
-- `SEMANTIC-DELTA.md`, `IMPACT-LEDGER.md`, `OWNER-SIGNOFF.md`,
-  `PROPOSED-SUBJECTS.json`, `ROUND-1-DISPOSITIONS.md`,
-  `ROUND-2-DISPOSITIONS.md`, `ROUND-3-DISPOSITIONS.md`,
-  `ROUND-4-DISPOSITIONS.md`, `ROUND-5-REDRAFT.md` and this brief;
-- the round-1 to round-4 raws, `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-1-RAW.md`,
-  `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-2-RAW.md`,
-  `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-3-RAW.md` and
-  `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md`;
-- **reviewed bytes outside the package directory** (round-2 Finding 4):
-  the four texts the signed v1.1 record and aggregate block will carry,
-  `GIT_SOURCE_V11_SCOPE`, `GIT_SOURCE_V11_SUPERSESSION`,
-  `GIT_SOURCE_V11_DOES_NOT` and `GIT_SOURCE_V11_AGGREGATE` in
-  `scripts/record_versioned_signoff.py`. The recorder's package-unchanged
-  check does not cover them; the selftest pins each in full as a literal.
-  Judge each as part of what is signed;
-- the builder `scripts/build_public_git_source_acquisition_local_agent_v1_1.py`;
-- the deferral added to `scripts/build_public_git_source_acquisition_local_agent.py`;
-- in `scripts/record_versioned_signoff.py`, the package entry
-  `public-git-source-acquisition-local-agent@1.1`, its routing selftest,
-  and the change to `check()` and `installed_lines()` for a registry
-  version a later version replaced, with its selftest; and, from round 1,
-  the `Package` fields `record_scope`, `record_supersession`,
-  `record_does_not`, `record_aggregate_scope` and `replaced_bytes`, the
-  `GIT_SOURCE_V11_*` texts, the v1.0 entry's `replaced_bytes`, and their
-  selftests;
-- the rule-6 mutation record
-  `docs/evidence/syzygy-pdja-29/round-1-repairs-mutation-2026-11-10.json`
-  and its round-2, round-3 and round-5 siblings
-  `docs/evidence/syzygy-pdja-29/round-2-repairs-mutation-2026-11-10.json`,
-  `docs/evidence/syzygy-pdja-29/round-3-repairs-mutation-2026-11-10.json`
-  and `docs/evidence/syzygy-pdja-29/round-5-redraft-mutation-2026-11-10.json`;
-- read only, product code the enumeration maps (not under review, and not
-  changed by this package): `packages/polaris-dossier/src/init.ts`,
-  `launch.ts`, `launch-clone.ts`, `launch-revision.ts`, `clone-head.ts`,
-  `clone-shape.ts` and `git-object-reader.ts`;
-- the closed-set line in
-  `scripts/prepare_three_surface_poc_governedby_reference_recording.py`.
-
-**Governing references.**
-
-- The installed v1.0 entry
-  `.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`
-  and its record `decisions/PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md`.
-- `decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md`.
-- On PR #812's branch at `736d9fcd`: the post-apply launch-consent
-  spec's REQ-polaris-generation-046 and 047 (apply `proposed/spec.md.patch`
-  of `polaris-dossier-launch-consent-v1-2` to the v1.1 spec in a scratch
-  worktree of that commit; `sha256sum` it and compare with that package's
-  `PROPOSED-SUBJECTS.json`), its
-  `SEMANTIC-DELTA.md` decisions D1, D2, D3 and D9, its `IMPACT-LEDGER.md`
-  ("Implementation impact"), the owner direction
-  OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md (sections "Redesign
-  after review round 3" and "Rulings after review round 10, 2026-11-10")
-  and the round-4 raw
-  docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-4-RAW.md, Finding 3.
-- RFC 0004's registry-entry declarations (RFC4-2) and RFC3-16(b), as the
-  v1.0 builder cites them.
-- `packages/polaris-dossier/src/clone-shape.ts`, whose form the copy must
-  equal (read only; product code, not under review).
-- The owner's ruling "Land with sign-off" on this package's gate timing,
-  2026-11-10, which no file on #812's branch records; the ledger and the
-  owner page record it as relayed by the coordinating session.
+- The changed blocks above, and `git diff 135dac73 <reviewed commit>` for
+  every file the table names.
+- `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-5-RAW.md` and
+  `ROUND-5-DISPOSITIONS.md`.
+- On PR #812's branch at `054a4f11`: the post-apply launch-consent spec
+  (apply `polaris-dossier-launch-consent-v1-2/proposed/spec.md.patch` to
+  the v1.1 spec of that commit in a scratch worktree; `sha256sum` it and
+  compare with that package's `PROPOSED-SUBJECTS.json`), REQ-046 and
+  REQ-047, and that package's `IMPACT-LEDGER.md` ("Implementation impact").
+- Read only, the product code the disclosure cites: `init.ts`, `launch.ts`,
+  `launch-revision.ts`, `git-object-reader.ts`, `clone-shape.ts` under
+  `packages/polaris-dossier/src/`, at the reviewed commit.
+- The builder, `scripts/build_public_git_source_acquisition_local_agent_v1_1.py`.
 
 ## What the reviewer decides
 
-1. **Exactness against #812 at `736d9fcd`.** Does each Proposed block
-   admit the copy REQ-047 drafts at that head, and no more? In particular
-   (`ROUND-5-REDRAFT.md`): the copy in the operator's clone's object
-   format, SHA-256 included, and its form's object-format settings; read
-   (3)'s object-format read, in every launch-consented run as #812's
-   round-11 repair has it; and the no-copy form-check
-   clause, which now names the one-commit form in the entry's own words for
-   a run only a launch observation consent covers. Is that clause no wider
-   than #812 with v1.2 in force, and true of today's check with v1.1 alone?
-   Does the entry claim anything #812 at that head does not say? Are runs
-   under v1.1-scoped launch consents copy-class under the entry's own
-   definition?
-2. **Every quotation of #812.** Re-derive each from the post-apply spec,
-   semantic delta, impact ledger and owner direction at `736d9fcd`. Is any
-   left that quotes `de9c1ba8` wording as current?
-3. **The enumeration.** Check the table in `ROUND-3-DISPOSITIONS.md`, as
-   `ROUND-4-DISPOSITIONS.md` corrects it and `ROUND-5-REDRAFT.md` re-maps
-   rows 20-22, against the code: is every read a launch-consented run makes
-   today, of the operator's clone, in a row, and is each row's clause right?
-   Is anything outside the entry that the table maps to a clause, or missing
-   from items 1b and 1c?
-4. **Gate timing, as ruled.** Do the ledger, E3, "Dependency on
-   launch-consent v1.2" and the owner page record "Land with sign-off" as
-   ruled, not open, and disclose plainly that until items 1b and 1c land a
-   launch may read outside the signed entry? Is the labelled account of
-   which runs can be made in that window true of the code at the reviewed
-   commit?
-5. **Item 1c.** Is the type-test gap stated plainly, and is the state of
-   its repair (PR #816) labelled and true when you read it? Is any sentence
-   left that says the code never reads a tag?
-6. **The record texts.** Are the four `GIT_SOURCE_V11_*` texts true of
-   v1.1 and pinned in full?
-7. **Item 1a.** Is the list of what pins the v1.0 identity complete?
-   Re-run the sweeps it describes.
-8. **Everything else byte-identical.** Confirm the patch touches only the
-   five declarations, and the builder's proof of it.
+1. **S1 and S2.** Do `fetch` and `stateDirectoryWrites` now carry #812's
+   placement of the copy's directory and its refusal exactly, and no
+   wider? Is every other clause of the subject byte-identical to round 5's
+   (the subject at `135dac73`)? Confirm by the builder's `--check` and a structural diff.
+2. **The disclosure (P1, P2, P4 to P7).** Is it true of the code at the
+   reviewed commit, labelled, and the same in the ledger, E3, the
+   Dependency section and the owner page? In particular: does it keep
+   "copy-class" (what the version in force requires) apart from "makes a
+   copy" (what the code does) everywhere; say that, while v1.2 is in force
+   and its copy step is unimplemented, every run v1.2 makes copy-class is
+   made without a copy and reads the operator's clone's commit and trees
+   before the answer, its form and its blobs, outside the entry; and say
+   that this window ends with v1.2's implementation, not with items 1b and
+   1c? Is the ruling recorded verbatim and dated?
+3. **Item 1c (P3).** Is the account of what #816's type test reads true of
+   the code at the reviewed commit, and is the `tags` reading given as a
+   labelled reading, on the owner page too?
+4. **"Today's code" (C1, P7).** Is every such sentence true of the
+   reviewed commit, or scoped to a named commit?
+5. **The rebind (P8, R1).** Is every quotation of #812 found at
+   `054a4f11`? Is the rebind's judgement of each #812 change in
+   `ROUND-5-DISPOSITIONS.md` right: the placement moves the entry, and the
+   brief-only rule, the width rule and pages in the storage list do not?
 
 No question is put to the reviewer beyond these.
 
@@ -180,7 +117,7 @@ python3 scripts/check_docs_review_campaign_partition.py --check
 
 ## The raw: where it goes and its head
 
-Save the raw as docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-5-RAW.md,
+Save the raw as docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-6-RAW.md,
 verbatim (CC-REV-6); the campaign file
 `docs/review-campaigns/git-source-local-agent-v1-1.md` already matches it. The recorder binds it by these predicates, quoted
 from `scripts/record_versioned_signoff.py` (`parse_head_form`,

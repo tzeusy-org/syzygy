@@ -7,9 +7,9 @@
 
 ## Binding
 
-This package is bound to PR #812 at head `736d9fcd` (redrafted from
+This package is bound to PR #812 at head `054a4f11` (redrafted from
 `de9c1ba8` after the owner's rulings of 2026-11-10, then rebound to #812's
-round-11 repair): its Proposed blocks
+round-11 and round-12 repairs): its Proposed blocks
 restate the copy step, the classes of run and the launch reads of the
 post-apply launch-consent spec at that head. If #812 moves, this ledger and
 the package are redrafted.
@@ -42,13 +42,39 @@ sign-off, in the sign-off commit, with item 1a. Item 1b is not in the
 sign-off commit: it lands with the implementation (see "When it lands"),
 and item 1c is a pre-existing gap filed for its own repair.
 
-**Disclosed, as ruled: until items 1b and 1c land, a launch may read
-outside the signed entry.** Once the sign-off and item 1 land, a
-launch-consented run can be made, and today's launch code reads the value
-of every loose reference, the store listing for a full `--revision`
-(item 1b), and the whole body of a named object that is not a commit
-(item 1c), none of which the v1.1 entry admits. This is the owner's ruled
-trade, not an open point.
+**Disclosed, as ruled: two windows in which a launch reads outside the
+signed entry.** "Copy-class" is what the launch-consent version in force
+requires of a run; "makes a copy" is what the code does. They differ until
+v1.2's copy step is implemented: no run makes a copy (`copyStep`), yet with
+v1.2 in force runs are copy-class. "Today's code" below is the code at this
+branch's head, which carries #816 (merged from `main` at `a41aa223`).
+[Inferred, from that code]
+
+1. **Until item 1b lands** (ruled "Land with sign-off", 2026-11-10: item 1
+   lands with the sign-off). In every launch-consented run today's code
+   reads the value of every loose reference and, for a full `--revision`,
+   the store's object listing, which the entry does not admit (item 1b).
+2. **While launch-consent v1.2 is in force and its copy step is
+   unimplemented** (ruled "Allow and disclose", 2026-11-10). Every run v1.2
+   makes copy-class (every run whose named identifier no observation
+   consent made by another act names, those under launch consents recorded
+   with version 1.1's scope included) is made by today's code without a
+   copy. Such a run reads, of the operator's clone: the pinned commit and
+   its trees before the answer (`launch.ts:169-173`), after the type test
+   (`isCommit`, which reads the type header); then the HEAD check, the
+   form check and the store inventory (`init.ts:165-187`); then its blobs.
+   All of these are outside the entry, whose copy-class words say "it reads
+   no object of the operator's clone" and read objects "of the copy", and
+   which admits the form-check reads of the operator's clone "In every
+   no-copy run" only. **This window ends with v1.2's implementation of the
+   copy step, not with items 1b and 1c.**
+
+Item 1c opens no window at this branch's head: its repair (#816) is merged
+here, and the type test reads the object's header (item 1c gives what that
+read takes, and the round-5 reviewer's reading that it sits within `tags`).
+Both windows are the owner's ruled trades, not open points.
+
+[Observed, by the coordinating session's message; Inferred, that the person answering is the owner] On 2026-11-10 the owner, asked by AskUserQuestion about round-5 Finding 1's copy gap, selected "Allow and disclose": until v1.2's copy step is implemented, runs that v1.2 makes copy-class proceed without a copy.
 
 1. **The gate's hard-wired v1.0 form.** [Observed]
    `packages/polaris-generation-consent/src/package-reader.ts`,
@@ -143,12 +169,18 @@ trade, not an open point.
      --revision alone"; the listing must be skipped for a full identifier,
      judged by the clone's hash: 40 hex digits in a SHA-1 clone, 64 in a
      SHA-256 clone, where a 40-digit `--revision` is an abbreviation and
-     read (5) admits its listing (round-4 Finding 4).
+     read (5) admits its listing (round-4 Finding 4). [Observed] #812 at
+     `054a4f11` now states the width rule in its read (5): "at the width of
+     the object format its configuration records (`extensions.objectFormat`,
+     SHA-1 where it records none), a mismatch failing closed". The narrowing
+     judges "full" by that width; the entry's read (3) already admits the
+     object-format read it needs, and the rule reads nothing more, so the
+     entry does not move for it.
 
    **When it lands** (round-4 Finding 2; the one statement the owner page
    repeats). The narrowing is implementation, under the separate
    implementation direction #812 names ([Observed] #812's "Implementation
-   impact" at `736d9fcd` opens "[Inferred] After sign-off only, under a
+   impact" at `054a4f11` opens "[Inferred] After sign-off only, under a
    separate implementation direction", and already requires the same
    narrowing for v1.2: "`init`'s pre-copy reads of the operator's clone
    become file-data reads of the listed references, remote URLs and the
@@ -157,24 +189,30 @@ trade, not an open point.
    the code reads outside both entries.
 
    **Can a launch-consented run be made before it lands? Yes, as ruled.**
-   [Inferred, from the code at `bb89b8cc`; product code is unchanged at
-   this head] Round 4 found the answer turned on when item 1 lands. The
-   owner chose "Land with sign-off", so:
-   - a copy-class run, no: no code makes a copy
-     (`implementationCoverage.copyStep`);
-   - a launch-consented no-copy run, yes, from the sign-off commit:
-     `init.ts:117-123` checks only the registry entry's sign-off and the
-     screening policy before `launchConsent`, and the launch code is
-     v1.1's, unnarrowed, so such a run reads outside the entry (rows 9 and
-     14 of the round-3 table, and row 15 as round 4 corrected it) until
-     items 1b and 1c land.
+   [Inferred, from the code at this branch's head] Round 4 found the answer
+   turned on when item 1 lands. The owner chose "Land with sign-off", so,
+   from the sign-off commit:
+   - no run makes a copy: no code makes one
+     (`implementationCoverage.copyStep`). That does not mean no copy-class
+     run is made (round-5 Finding 1, corrected here): with v1.2 in force,
+     every run v1.2 makes copy-class is made by today's code without a
+     copy, and reads the operator's clone outside the entry until v1.2's
+     copy step is implemented (the second window above, ruled "Allow and
+     disclose");
+   - a run the version in force makes no-copy, launch-consented, can be
+     made: `init.ts:117-123` checks only the registry entry's sign-off and
+     the screening policy before `launchConsent`, and nothing in the code
+     is gated on the launch-consent version in force (round-5 Finding 1's
+     sweep). The launch code is unnarrowed, so such a run reads outside the
+     entry (rows 9 and 14 of the round-3 table) until item 1b lands.
    [Observed] Before item 1 lands, a recorded v1.1 makes the v1.0 form
    refuse (`package-reader.ts:870-874`: the reader "takes it for a
    withdrawal of v1.0 and refuses"); with item 1 in the sign-off commit,
    no such window opens.
-1c. **A gap this version does not close: the type test reads a
+1c. **A gap this version did not close, since repaired: the type test read a
    non-commit object's body** (round-4 Finding 1; the coordinating session's
-   direction took the reviewer's second option). [Observed] `launch-revision.ts:100`
+   direction took the reviewer's second option). [Observed, at `bb89b8cc`,
+   before #816] `launch-revision.ts:100`
    calls `ports.isCommit(commit)` on the resolved candidate before any
    HEAD check or answer; that port (`launch.ts:160`) opens the object
    reader on the candidate and calls `.tree()`, which reaches
@@ -191,16 +229,40 @@ trade, not an open point.
    round-3 table's row 15 mapped it to the object-read words; the
    correction is in `ROUND-4-DISPOSITIONS.md`.
 
-   **The repair has merged.** [Observed, `gh pr view 816`, 2026-11-10]
-   PR #816, "fix(polaris-dossier): launch type test reads an object's
-   header, never its body [syzygy-pdja.30]", is MERGED to `main` (merge
-   commit `a41aa223`). With it the type test reads only the object's header
-   [Inferred, from that PR's title; its code is not reviewed by this
-   package]. [Observed] This package's branch predates that merge, so the
-   code at this branch's head still reads the whole body. Item 1c's part of
-   the ruled disclosure ends when the sign-off commit carries that merge. Whether a header read of a
-   non-commit object is within `tags` "never read" is a reading this
-   package does not settle; round 5 may judge it.
+   **The repair has merged, here and on `main`.** [Observed, `gh pr view
+   816`, 2026-11-10] PR #816, "fix(polaris-dossier): launch type test reads
+   an object's header, never its body [syzygy-pdja.30]", is MERGED to
+   `main` (merge commit `a41aa223`), and this branch merged `main` at that
+   commit (round-5 Finding 3), so "today's code" here includes it.
+
+   **What the type test reads now** (round-5 Finding 2, corrected against
+   the code; "only the object's header" was the PR title's claim, not the
+   code's). [Observed, `git-object-reader.ts:38-42`, `:480-541`,
+   `launch.ts:161-168`] `isCommit` calls `storedType()` and only for a
+   commit then `tree()`:
+   - a loose object: its stored bytes are read 64 bytes at a time, up to
+     1024, and each prefix is inflated until the `<type> <size>` header
+     ends. One inflate step may produce up to 64 KiB, so some compressed
+     body bytes are read from disk and some inflated body bytes exist in
+     memory; the code's comment says they "are discarded unread";
+   - a pack entry: its entry header is read a byte at a time; for a delta,
+     the entry headers of each base down the chain, which are other
+     objects, possibly outside the pinned tree (for a reference delta, the
+     base's identifier, and the base's loose header where it is loose).
+   [Inferred] That is far narrower than the whole-body read, and narrower
+   than the delta-base reads the commit path has made through `raw()` since
+   v1.0, which the entry has never named either.
+
+   **Whether that sits within `tags` "never read"** (for the owner). The
+   round-5 reviewer's reading [Inferred]: the entry's own `tags` sentence
+   ("the pinned identifier must name a commit object, and any other type
+   refuses") and v1.0's "a wrong type refuses that step" both presuppose a
+   type test, and a header read is the least a type test can read, so a
+   header read with discarded spill-over sits within `tags`, but only by
+   that reading. #812's "Syzygy tells these cases apart without reading the
+   object itself" is not met by it in a no-copy run; that sentence is
+   #812's to settle. This package takes the reviewer's reading and does not
+   move `tags`.
 2. **The battery.** `PROJECT-STATUS.md`, the hosted workflow and the count
    sentence (CG-26) carry `record_versioned_signoff.py --check
    public-git-source-acquisition-local-agent --version 1.0`. The sign-off
@@ -304,7 +366,8 @@ the definition, two re-exports and the readers below).]
 | `gate-acts.test.ts:63`, `:90`, `:221`, `:230`, `:269`, `:432-443`, `:503`, `:577`, `:612-615`, `:659-668`, and `recorder-fixtures.testkit.ts:162` | the v1.0 record, written by the testkit renderer at the fixed v1.0 path and read back | Must change in the same commit, or be shown to hold (item 1a) |
 | `start-gates.test.ts:191`, `:675`, `:678`, `:1036` | the v1.0 identity as a literal | Must change in the same commit, or be shown to hold (item 1a) |
 | `launch-clone.ts:100-125`, `launch-revision.ts:33`, `:59-61` | the operator's clone, beyond the closed launch-read list | Must narrow, with the implementation (item 1b) |
-| `launch-revision.ts:100` → `launch.ts:160` → `git-object-reader.ts:221`, `:437-443` | a non-commit candidate's whole body, before its type is known | Pre-existing gap, not closed by v1.1 (item 1c, `syzygy-pdja.30`) |
+| `launch-revision.ts:100` → `launch.ts:161-168` → `git-object-reader.ts:480-541` (`storedType`) | a candidate's type header (a loose object's first stored bytes, up to 1024; a pack entry's header and its delta bases' headers), before its type is known | Repaired by #816 (item 1c); within `tags` by the round-5 reviewer's reading |
+| `launch.ts:169-173`, `init.ts:165-187` and the blob reads, in a run v1.2 makes copy-class | the operator's clone's commit, trees, form, inventory and blobs, with no copy made | Outside the entry while v1.2 is in force and its copy step unimplemented; ruled "Allow and disclose" (first section) |
 | `scripts/measure_consent_gate_recognition.mjs:100-153` | the form, and the recorder check key `--version 1.0` | The check key must change in the same commit (item 1a) |
 | `scripts/differential_consent_act_families.mjs`, `scripts/differential_line_slot.mjs` | the form, as one reader among many | [Inferred] follow item 1; they read whatever form the constant names |
 | `build_dossier_local_agent_acts.py` | the v1.0 sitting | Unchanged; the sitting manifest rows the v1.0 proposed file, which stays |

@@ -6,9 +6,9 @@
 > builder's `--digests` prints the rows, and `PROPOSED-SUBJECTS.json`
 > carries them.
 >
-> **Bound to PR #812 at head `736d9fcd`** (redrafted from `de9c1ba8` after
+> **Bound to PR #812 at head `054a4f11`** (redrafted from `de9c1ba8` after
 > the owner's rulings of 2026-11-10, then rebound from `e5a37fa1` to #812's
-> round-11 repair). Every quotation of, and reliance on,
+> round-11 repair at `736d9fcd` and its round-12 repair). Every quotation of, and reliance on,
 > launch-consent v1.2 below is to that head: the post-apply spec (v1.1 spec
 > at that commit plus `proposed/spec.md.patch` of
 > `polaris-dossier-launch-consent-v1-2`), its semantic delta, its impact
@@ -60,7 +60,7 @@ rests on are bounded in words.
   version signed separately".
 - [Observed] The owner's rulings of 2026-11-10, quoted in that direction
   record's section "Rulings after review round 10, 2026-11-10" at
-  `736d9fcd`. "Final review rounds (Recommended)" "orders round 11 of PR
+  `054a4f11`. "Final review rounds (Recommended)" "orders round 11 of PR
   #812 and round 5 of PR #815". On SHA-256 clones, "The copy takes the
   operator's clone's object format", and "The signed registry entry already
   admits SHA-256 objects". On launch consents recorded under version 1.1,
@@ -71,6 +71,8 @@ rests on are bounded in words.
   (IMPACT-LEDGER, item 1; "Dependency on launch-consent v1.2"). [Inferred]
   That the person answering is the owner. No record of that ruling is on
   #812's branch; this package records it as relayed.
+- [Observed, by the coordinating session's message; Inferred, that the person answering is the owner]
+  On 2026-11-10 the owner, asked by AskUserQuestion about round-5 Finding 1's copy gap, selected "Allow and disclose": until v1.2's copy step is implemented, runs that v1.2 makes copy-class proceed without a copy.
 
 ## The terms this version uses, and where each is defined
 
@@ -89,7 +91,7 @@ force requires a copy, so every run is a no-copy run and every copy clause
 is inert.
 
 The other terms are #812's, quoted from REQ-polaris-generation-047 of the
-post-apply spec at `736d9fcd`:
+post-apply spec at `054a4f11`:
 
 - **Named identifier.** "The full object identifier a run's pin rule
   gives, before any object is read, is the run's named identifier". It
@@ -108,7 +110,7 @@ post-apply spec at `736d9fcd`:
 
 ## The copy step this version admits
 
-As REQ-047 at `736d9fcd` states it, for a copy-class run:
+As REQ-047 at `054a4f11` states it, for a copy-class run:
 
 1. In every launch-consented run, Syzygy reads five things of the operator's
    clone, in process, as file data, and honours none of them (the entry
@@ -124,7 +126,12 @@ As REQ-047 at `736d9fcd` states it, for a copy-class run:
    Syzygy creates an empty directory of its own and an empty repository in
    it (`git init --template=`), "with the object format the operator's
    clone's configuration records, SHA-1 where it records none"; "a clone is
-   never refused for its object format".
+   never refused for its object format". The directory is "never derived
+   from the operator's clone's path and never inside the governance home's
+   working tree, Git directory or common Git directory", and "a run for
+   which Syzygy would create it there SHALL be refused before its copy step
+   starts" (added at `054a4f11`; the entry's `fetch` and
+   `stateDirectoryWrites` now say the same).
 3. It fetches the object the named identifier names, alone, by full
    identifier, at depth one, with no tags and no submodules, from the
    operator's clone over `file://`, and checks it out detached. Every Git
@@ -142,7 +149,7 @@ As REQ-047 at `736d9fcd` states it, for a copy-class run:
    the copy is the run's clone for the rest of the run and is kept after
    it, outside the run's state directory, until the operator removes it".
 
-A no-copy run makes no copy. At `736d9fcd` a run with a named identifier
+A no-copy run makes no copy. At `054a4f11` a run with a named identifier
 is a no-copy run only where "an in-force observation consent made by
 another act" names that identifier. A run that only a launch observation
 consent recorded with version 1.1's scope covers "runs on a copy too", and
@@ -157,7 +164,7 @@ copy-class run follows whatever a version in force of REQ-047 requires (E4).
 ### E1. Which fields move, field by field
 
 [Inferred, each row read against the copy step above and against PR #812's
-D9 table at `736d9fcd`.]
+D9 table at `054a4f11`.]
 
 | Field | v1.0 says | Under the copy | This version |
 |---|---|---|---|
@@ -169,13 +176,15 @@ D9 table at `736d9fcd`.]
 | `implementationCoverage` | the reader's and the gate's declarations | Would claim the reader implements the copy | Adds `copyStep`: no file implements it yet |
 | `authorityType`, `questions`, `databaseAccess`, `networkAccess`, `executeObservedCode`, `workingTreeRead`, `submodules` | as v1.0 | Not contradicted (D9) | Unchanged |
 
-**On `tags`, my judgement.** At `736d9fcd` Syzygy no longer reads the
+**On `tags`, my judgement.** At `054a4f11` Syzygy no longer reads the
 object to learn its type: it tells a non-commit from where the copy's
 detached checkout leaves `HEAD`. So, as #812 drafts a copy-class run,
-v1.0's "never read" stays true of Syzygy in that run. It is not true of
-today's code: a no-copy run reads a named non-commit object's whole body
-before refusing (E3, "A gap the narrowing does not close"; IMPACT-LEDGER,
-item 1c; `syzygy-pdja.30`, whose repair, PR #816, has merged to `main`). What is new is that Git, in a process Syzygy starts, writes such an
+v1.0's "never read" stays true of Syzygy in that run. Before #816 it was
+not true of the code: a no-copy run read a named non-commit object's whole
+body before refusing. At this branch's head, which carries #816, the type
+test reads the object's type header, which the round-5 reviewer reads as
+within `tags` (E3, "A gap the narrowing does not close"; IMPACT-LEDGER,
+item 1c). What is new is that Git, in a process Syzygy starts, writes such an
 object into a clone Syzygy made, and the run then refuses on it. `tags`
 says nothing of that, so the field moves by one appended clause rather than
 resting on a reading. Leaving it byte-identical is offered to the reviewer
@@ -225,7 +234,7 @@ the launch-consent change's design §5 still governs it.
 
 **Which form binds a no-copy run's form check** (round-5 redraft). At
 `de9c1ba8` the entry named two forms: "the form another act's consent states
-or the one-commit form REQ-polaris-generation-047 states". At `736d9fcd`
+or the one-commit form REQ-polaris-generation-047 states". At `054a4f11`
 REQ-047 states no one-commit form for the operator's clone: its form-check
 read is "the check of the form another act's consent states", because every
 no-copy run is one another act's consent covers. [Observed] Today's code
@@ -255,7 +264,7 @@ of the pinning, identity and clone-form rules are launch reads, made as
 data and never honoured, and not object reads."
 
 It closes the list where #812 closes it, and only there. #812's REQ-047 at
-`736d9fcd`: "For every launch-consented run, the reads Syzygy itself makes,
+`054a4f11`: "For every launch-consented run, the reads Syzygy itself makes,
 in process, of the operator's clone SHALL be only these". The entry: "In a
 launch-consented run (REQ-polaris-generation-046 and 047), besides the
 object reads, Syzygy reads of the operator's clone and the copy only the
@@ -276,7 +285,7 @@ is not launch-consented are still named, as an admission (E2). The list:
   and the pack indexes included", to which the five-read list's
   configuration limit yields, as REQ-047 says.
 
-**The object-format read** (round-5 redraft). #812 at `736d9fcd` widens its
+**The object-format read** (round-5 redraft). #812 at `054a4f11` widens its
 own configuration read, for every launch-consented run since its round-11
 repair: "its configuration file, read as text only for its remotes' names
 and URLs and its object format (`extensions.objectFormat`), and never
@@ -333,31 +342,47 @@ launch-consent requirements in force name" can only narrow them. So once
 this version is signed, with or without v1.2, those reads lie outside the
 entry, and the code must narrow (IMPACT-LEDGER, item 1b). The narrowing is
 implementation, under the separate implementation direction #812 names
-([Observed] #812's ledger at `736d9fcd` places that implementation "After
+([Observed] #812's ledger at `054a4f11` places that implementation "After
 sign-off only" and already requires the narrowing for v1.2). It is not in
 the sign-off commit. **Ruled, not open:** the owner chose "Land with
 sign-off" on 2026-11-10, so the gate code that accepts a v1.1 sign-off
-lands with the sign-off, and until item 1b and `syzygy-pdja.30` land a
-launch may read outside the signed entry (IMPACT-LEDGER, "When it lands").
+lands with the sign-off (IMPACT-LEDGER, "When it lands").
 
-**A gap the narrowing does not close** (round-4 Finding 1). [Observed]
-Before it knows a candidate is a commit, the launch reads the candidate
-object's whole body (`launch-revision.ts:100` → `launch.ts:160` →
+**The disclosure, as ruled** (round-5 Finding 1). "Copy-class" is what
+the launch-consent version in force requires; "makes a copy" is what the
+code does, and no code makes one yet (`copyStep`). [Inferred, from the code
+at this branch's head, which carries #816] Two windows open in which a
+launch reads outside the signed entry: until item 1b lands, every
+launch-consented run reads every loose reference's value and, for a full
+`--revision`, the store listing ("Land with sign-off"); and while v1.2 is
+in force and its copy step is unimplemented, every run v1.2 makes
+copy-class is made by today's code without a copy, and reads the operator's
+clone's commit and trees before the answer, its form and its blobs, all
+outside the entry ("Allow and disclose"). The second window ends with
+v1.2's implementation, not with items 1b and 1c (IMPACT-LEDGER, first
+section).
+
+**A gap the narrowing did not close, since repaired** (round-4 Finding
+1). [Observed, at `bb89b8cc`, before #816] Before it knew a candidate was a
+commit, the launch read the candidate object's whole body (`launch-revision.ts:100` → `launch.ts:160` →
 `git-object-reader.ts` `verified`, which reads and inflates the object and
 then compares its type). For a `--revision` or trunk reference naming an
 annotated tag or a blob, that read is outside `tags` ("never read") and
 the installed REQ-046's falsifier. It exists today under v1.0; this
 version does not create it and does not close it. It is filed for its own
-repair as `syzygy-pdja.30` (IMPACT-LEDGER, item 1c), and that repair, PR
-#816, has merged to `main`; with it the type test reads only the object's
-header (IMPACT-LEDGER, item 1c, for its state).
+repair as `syzygy-pdja.30` (IMPACT-LEDGER, item 1c). That repair, PR
+#816, has merged to `main`, and this branch carries it: the type test now
+reads the object's type header, a few stored bytes and, for a delta, its
+bases' entry headers, with inflated spill-over discarded (IMPACT-LEDGER,
+item 1c, which gives the round-5 reviewer's reading that this sits within
+`tags`).
 
 The other option, wording reads (2) and (5) broadly enough to admit what
 the code does today but never wider than #812 once v1.2 is in force, is put
 to the owner ("Before you sign", item 1). Round 3 asked that every read the
 launch path makes today be mapped to a clause or to that narrowing; the
 table is in `ROUND-3-DISPOSITIONS.md`, corrected by
-`ROUND-4-DISPOSITIONS.md` and re-checked against #812 at `736d9fcd` by
+`ROUND-4-DISPOSITIONS.md` and re-checked against #812 at `054a4f11` by
 `ROUND-5-REDRAFT.md`.
 
 ### E4. "Copy-class run": the entry's definition, REQ-047 unversioned
@@ -366,7 +391,7 @@ The entry defines the classes itself (see "The terms this version uses")
 and names no version of REQ-047: "a version in force of
 REQ-polaris-generation-047". Under REQ-047 as signed today (v1.1) no
 version in force requires a copy, so no run is copy-class and every copy
-clause is inert; under #812 at `736d9fcd` the class is decided at launch
+clause is inert; under #812 at `054a4f11` the class is decided at launch
 from the consents and the named identifier, and a run that only a launch
 observation consent recorded with version 1.1's scope covers is
 copy-class too, which the entry's definition takes up with no change of
@@ -409,7 +434,7 @@ reviewer's Question 2.
   `authorizationModeDerivation` says every read needs "the pair's effective
   observation consent naming the pinned revision", and "every other
   combination refuses before any object is read". The launch reads are made
-  before any consent covers the revision, and REQ-046 at `736d9fcd` reads
+  before any consent covers the revision, and REQ-046 at `054a4f11` reads
   the commit and tree objects of the run's clone before the answer, which in
   a copy-class run is the copy. [Inferred] This tension already stood under
   v1.0 with launch-consent v1.1 signed, and #812's D9 lists neither field.
@@ -435,7 +460,7 @@ reviewer's Question 2.
 ## Dependency on launch-consent v1.2
 
 This version is useful only if launch-consent v1.2 (PR #812), with the copy
-step of `736d9fcd`, is signed. Each signed without the other:
+step of `054a4f11`, is signed. Each signed without the other:
 
 - **This version signed, v1.2 not.** The entry's own definition then makes
   every run a no-copy run (E4), so every copy clause is inert and every
@@ -450,22 +475,33 @@ step of `736d9fcd`, is signed. Each signed without the other:
     closes them, and the launch code must narrow to match, with the
     implementation under its own direction, not in the sign-off commit
     (IMPACT-LEDGER, item 1b, "When it lands"). A third read, the type
-    test's read of a non-commit object's body, is outside v1.0 already and
-    stays outside after signing (item 1c, `syzygy-pdja.30`);
+    test's read of a non-commit object's body, was outside v1.0 already;
+    #816, which this branch carries, reduced it to a header read (item 1c);
   - for a run that is not launch-consented, no closed list, as under v1.0,
     and the HEAD-check and form-check reads named in words (E2).
   The entry's bytes change, so the gate's hard-wired v1.0 form in
   `package-reader.ts` and the tests that pin it must change too
   (IMPACT-LEDGER, items 1 and 1a). **Ruled 2026-11-10, "Land with
   sign-off":** that gate code lands with the sign-off. So, until the
-  launch-code narrowing (item 1b) and `syzygy-pdja.30` (item 1c) land, a
-  launch-consented run can be made and may read outside the signed entry.
+  launch-code narrowing (item 1b) lands, a launch-consented run can be made
+  and reads outside the signed entry.
+- **Both signed, v1.2's copy step not yet implemented.** [Inferred, from
+  the code at this branch's head] Every run v1.2 makes copy-class is made
+  by today's code without a copy: nothing in the code is gated on the
+  launch-consent version in force. Such a run reads the operator's
+  clone's commit and trees before the answer, its form and its blobs, all
+  outside the entry's copy-class words. The owner ruled "Allow and
+  disclose" (2026-11-10): such runs proceed and the package says so. This
+  window ends with v1.2's implementation of the copy step, not with items
+  1b and 1c (IMPACT-LEDGER, first section).
 - **v1.2 signed, this version not.** v1.2 cannot take effect: D9 says no
   reading of "fetches nothing", "no process is started" or "nothing is
   written to the clone" admits the copy. A copy-class run must refuse, or
-  the implementation would act beyond the signed entry.
+  the implementation would act beyond the signed entry. [Inferred] Today's
+  code would not refuse it: it would make the run without a copy, as in
+  the bullet above.
 - **v1.2 changes again before signing.** These Proposed blocks restate the
-  copy step as `736d9fcd` drafts it. Any change to the copy's form, its
+  copy step as `054a4f11` drafts it. Any change to the copy's form, its
   environment, the launch reads, the commit test or the copy's keeping
   needs this package redrafted and reviewed again before both are offered.
 
@@ -485,7 +521,7 @@ none: Syzygy fetches nothing. The operator prepares the clone with their own too
 **Proposed:**
 
 ```text
-none, save in a copy-class run: Syzygy fetches nothing. The operator prepares the clone with their own tools; to stay within the observation consent's stated fetch form the operator fetches the one consented commit alone (git fetch --depth=1 <upstream> <commit>) and checks it out. A copy-class run is a run that a version in force of REQ-polaris-generation-047 requires to run on a copy of the operator's clone; every other run is a no-copy run, and while no version in force requires a copy every run is a no-copy run. In a copy-class run, one local fetch and nothing else, made before the question, or before the brief where no question is asked: Syzygy creates an empty directory of its own for the copy, outside the operator's clone and never at a location derived from its path, and in it an empty repository with an empty template (git init --template=) and with the object format the operator's clone's configuration records, SHA-1 where it records none, so that a SHA-1 clone and a SHA-256 clone are each copied; a clone is never refused for its object format; it fetches into that repository, from the operator's clone over Git's local file transport (a file:// URL) and from nowhere else, the object the run's named identifier names alone, by its full object identifier, at a depth of one, with no tags and no submodules, and checks that object out detached. Every Git process it starts for the copy runs with the system and global Git configuration disabled, with no other Git variable of the operator's environment, with every transport but the file transport refused, with lazy fetching of missing objects disabled and with no hook path, and no other process is started; these processes execute nothing of the observed repository. A clone whose references are stored in the reftable backend is refused before any Git process starts, and a clone with an alternates file before the copy step starts. The copy holds the pinned commit and the trees and blobs reachable from its root tree alone, in the form one commit fetched alone into an empty repository of the same object format and checked out detached leaves, the repository format version and object-format setting that format needs included, and Syzygy checks that form before the question. Every failure of a Git process for the copy refuses, naming that process and its failure as Git reported it; a named identifier not shown to be a commit refuses (tags); a copy that departs from that form refuses; and nothing is then fetched from anywhere else. To serve the copy Git reads the operator's clone's configuration, references and object store, the stored bytes of delta bases outside the named object's objects included; Syzygy uses nothing Git read but the copy. That Git starts no program the operator's clone's own configuration or hooks name while it serves the copy, for every Git process the copy step started, is Inferred, not checked. The file URL of the operator's clone is not a locator and is never recorded or rendered as one
+none, save in a copy-class run: Syzygy fetches nothing. The operator prepares the clone with their own tools; to stay within the observation consent's stated fetch form the operator fetches the one consented commit alone (git fetch --depth=1 <upstream> <commit>) and checks it out. A copy-class run is a run that a version in force of REQ-polaris-generation-047 requires to run on a copy of the operator's clone; every other run is a no-copy run, and while no version in force requires a copy every run is a no-copy run. In a copy-class run, one local fetch and nothing else, made before the question, or before the brief where no question is asked: Syzygy creates an empty directory of its own for the copy, outside the operator's clone and never at a location derived from its path, and never inside the governance home's working tree, Git directory or common Git directory, a run for which it would create it there being refused before its copy step starts; and in it an empty repository with an empty template (git init --template=) and with the object format the operator's clone's configuration records, SHA-1 where it records none, so that a SHA-1 clone and a SHA-256 clone are each copied; a clone is never refused for its object format; it fetches into that repository, from the operator's clone over Git's local file transport (a file:// URL) and from nowhere else, the object the run's named identifier names alone, by its full object identifier, at a depth of one, with no tags and no submodules, and checks that object out detached. Every Git process it starts for the copy runs with the system and global Git configuration disabled, with no other Git variable of the operator's environment, with every transport but the file transport refused, with lazy fetching of missing objects disabled and with no hook path, and no other process is started; these processes execute nothing of the observed repository. A clone whose references are stored in the reftable backend is refused before any Git process starts, and a clone with an alternates file before the copy step starts. The copy holds the pinned commit and the trees and blobs reachable from its root tree alone, in the form one commit fetched alone into an empty repository of the same object format and checked out detached leaves, the repository format version and object-format setting that format needs included, and Syzygy checks that form before the question. Every failure of a Git process for the copy refuses, naming that process and its failure as Git reported it; a named identifier not shown to be a commit refuses (tags); a copy that departs from that form refuses; and nothing is then fetched from anywhere else. To serve the copy Git reads the operator's clone's configuration, references and object store, the stored bytes of delta bases outside the named object's objects included; Syzygy uses nothing Git read but the copy. That Git starts no program the operator's clone's own configuration or hooks name while it serves the copy, for every Git process the copy step started, is Inferred, not checked. The file URL of the operator's clone is not a locator and is never recorded or rendered as one
 ```
 
 ### Change 2 (replace), `entries[0].typedAuthority.readAuthority`
@@ -527,7 +563,7 @@ Syzygy's own state directory for the run, outside the clone and never at a locat
 **Proposed:**
 
 ```text
-Syzygy's own state directory for the run, outside the clone and never at a location derived from the clone's path; in a copy-class run (fetch), also the copy's directory, outside the run's state directory and outside the operator's clone and never at a location derived from the operator's clone's path: Syzygy itself creates it, which starts the copy step, removes it with its contents where the run ends before its brief, and otherwise keeps it after the run, until the operator removes it, at a location the launch output names, and writes its contents only through the Git processes fetch names. That directory is Syzygy's own local write, as the state directory is, and not a write to an observed or external system, so writeSurface stays empty; nothing is written to the operator's clone, the observed repository, its forks or its tracker
+Syzygy's own state directory for the run, outside the clone and never at a location derived from the clone's path; in a copy-class run (fetch), also the copy's directory, outside the run's state directory and outside the operator's clone and never at a location derived from the operator's clone's path, and never inside the governance home's working tree, Git directory or common Git directory: Syzygy itself creates it, which starts the copy step, removes it with its contents where the run ends before its brief, and otherwise keeps it after the run, until the operator removes it, at a location the launch output names, and writes its contents only through the Git processes fetch names. That directory is Syzygy's own local write, as the state directory is, and not a write to an observed or external system, so writeSurface stays empty; nothing is written to the operator's clone, the observed repository, its forks or its tracker
 ```
 
 ### Change 5 (insert), `entries[0].implementationCoverage.copyStep`
