@@ -175,7 +175,7 @@ detached checkout leaves `HEAD`. So, as #812 drafts a copy-class run,
 v1.0's "never read" stays true of Syzygy in that run. It is not true of
 today's code: a no-copy run reads a named non-commit object's whole body
 before refusing (E3, "A gap the narrowing does not close"; IMPACT-LEDGER,
-item 1c; `syzygy-pdja.30`, whose repair PR #816 is merging). What is new is that Git, in a process Syzygy starts, writes such an
+item 1c; `syzygy-pdja.30`, whose repair, PR #816, has merged to `main`). What is new is that Git, in a process Syzygy starts, writes such an
 object into a clone Syzygy made, and the run then refuses on it. `tags`
 says nothing of that, so the field moves by one appended clause rather than
 resting on a reading. Leaving it byte-identical is offered to the reviewer
@@ -349,7 +349,7 @@ annotated tag or a blob, that read is outside `tags` ("never read") and
 the installed REQ-046's falsifier. It exists today under v1.0; this
 version does not create it and does not close it. It is filed for its own
 repair as `syzygy-pdja.30` (IMPACT-LEDGER, item 1c), and that repair, PR
-#816, is merging; once it merges the type test reads only the object's
+#816, has merged to `main`; with it the type test reads only the object's
 header (IMPACT-LEDGER, item 1c, for its state).
 
 The other option, wording reads (2) and (5) broadly enough to admit what

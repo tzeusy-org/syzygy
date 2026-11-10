@@ -179,9 +179,9 @@ for a copy, so every run is a no-copy run.
    annotated tag (or a blob), that read is outside `tags` and outside the
    installed REQ-046. v1.1 does not create that gap and does not close it;
    the code repair is filed for its own repair as `syzygy-pdja.30`
-   (`IMPACT-LEDGER.md`, item 1c). That repair, PR #816, is merging; once it
-   merges the check reads only the object's header (the ledger gives its
-   state, labelled). Launch-consent v1.2 says Syzygy tells
+   (`IMPACT-LEDGER.md`, item 1c). That repair, PR #816, has merged to `main`
+   (the ledger gives its state, labelled); with it the check reads only the
+   object's header. This package's branch predates it. Launch-consent v1.2 says Syzygy tells
    these cases apart "without reading the object itself"; the round-4
    reviewer notes that is hard to meet in a no-copy run, where REQ-047 has
    Syzygy read the named object as a commit object. That sentence is

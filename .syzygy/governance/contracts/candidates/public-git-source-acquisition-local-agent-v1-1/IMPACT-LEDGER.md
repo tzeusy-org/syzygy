@@ -191,12 +191,14 @@ trade, not an open point.
    round-3 table's row 15 mapped it to the object-read words; the
    correction is in `ROUND-4-DISPOSITIONS.md`.
 
-   **The repair is merging.** [Observed, `gh pr view 816` at this
-   redraft] PR #816, "fix(polaris-dossier): launch type test reads an
-   object's header, never its body [syzygy-pdja.30]", is open in the merge
-   queue (`mergeStateStatus` CLEAN, not merged). Once it merges, the type
-   test reads only the object's header [Inferred, from that PR's title; its
-   code is not reviewed by this package]. Whether a header read of a
+   **The repair has merged.** [Observed, `gh pr view 816`, 2026-11-10]
+   PR #816, "fix(polaris-dossier): launch type test reads an object's
+   header, never its body [syzygy-pdja.30]", is MERGED to `main` (merge
+   commit `a41aa223`). With it the type test reads only the object's header
+   [Inferred, from that PR's title; its code is not reviewed by this
+   package]. [Observed] This package's branch predates that merge, so the
+   code at this branch's head still reads the whole body. Item 1c's part of
+   the ruled disclosure ends when the sign-off commit carries that merge. Whether a header read of a
    non-commit object is within `tags` "never read" is a reading this
    package does not settle; round 5 may judge it.
 2. **The battery.** `PROJECT-STATUS.md`, the hosted workflow and the count

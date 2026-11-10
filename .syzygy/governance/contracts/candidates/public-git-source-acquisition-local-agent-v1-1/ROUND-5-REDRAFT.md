@@ -105,10 +105,13 @@ code yet (`implementationCoverage.copyStep`).
 
 ## syzygy-pdja.30
 
-[Observed, `gh pr view 816` at this redraft] PR #816, the repair of the
-type test (round-4 Finding 1, IMPACT-LEDGER item 1c), is open, in the merge
-queue, not merged. Item 1c says so. Once it merges, the type test reads
-only the object's header [Inferred, from that PR's title].
+[Observed, `gh pr view 816` after the 736d9fcd rebind was pushed] PR
+#816, the repair of the type test (round-4 Finding 1, IMPACT-LEDGER item
+1c), is MERGED (2026-11-10T13:45:16Z, merge commit `a41aa223`). At the
+e5a37fa1 redraft it was still in the merge queue. Item 1c says so. With it
+the type test reads only the object's header [Inferred, from that PR's
+title]. This branch does not contain that merge, so the product code a
+reviewer reads at this branch's head is the pre-repair code.
 
 ## Rule 6
 
