@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { chmodSync, closeSync, constants as fsConstants, cpSync, existsSync, mkdirSync, openSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { deflateSync } from 'node:zlib';
+import { constants as zlibConstants, deflateSync } from 'node:zlib';
 import { tempDir } from '@syzygy/test-kit';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { GitObjectReadRefusal, hashAlgorithmOf, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
@@ -296,7 +296,7 @@ describe('paths, types, and no state between calls', () => {
       "import { createHash } from 'node:crypto';",
       "import { constants, lstat, open, readdir, type FileHandle } from 'node:fs/promises';",
       "import path from 'node:path';",
-      "import { inflateSync } from 'node:zlib';",
+      "import { constants as zlib, inflateSync } from 'node:zlib';",
     ]);
     expect(source).not.toMatch(/child_process|\bspawn(Sync)?\(|(?<![.\w])exec(File)?(Sync)?\(|\bimport\(|\brequire\(|\bprocess\./);
   });
@@ -802,4 +802,171 @@ describe('paths are at most git\'s core.maxTreeDepth (4,096) segments deep (R-PO
       reason: 'malformed-tree', objectId: trees[1]!.id, path: null, message: `tree ${trees[1]!.id} nests trees deeper than git's core.maxTreeDepth (4096)`,
     });
   }, 240_000);
+});
+
+describe('storedType reads the header alone, never the body (syzygy-pdja.30)', () => {
+  /** A loose object's stored bytes rewritten as its own header, sync-flushed, then bytes no zlib stream continues with: the header
+   * inflates and the body cannot. */
+  const headerThenGarbage = (repo: string, id: string, header: string): void => {
+    const file = looseFile(repo, id);
+    rmSync(file, { force: true });
+    writeFileSync(file, Buffer.concat([deflateSync(Buffer.from(header, 'latin1'), { finishFlush: zlibConstants.Z_SYNC_FLUSH }), Buffer.alloc(4096, 0xff)]));
+  };
+  /** The bytes of the pack entry header at `offset`: the type-and-size varint, then a delta's offset varint or base identifier. */
+  const entryHeaderLength = (pack: Buffer, offset: number): number => {
+    let i = offset, c = pack[i++]!;
+    const kind = (c >> 4) & 7;
+    while (c & 0x80) c = pack[i++]!;
+    if (kind === 6) { c = pack[i++]!; while (c & 0x80) c = pack[i++]!; }
+    if (kind === 7) i += 20;
+    return i - offset;
+  };
+  /** Every byte after each named entry's header, up to the next entry, overwritten: the entry headers stay, every body is gone. */
+  const corruptBodies = (repo: string, ids: readonly string[]): void => {
+    const file = packFile(repo), pack = readFileSync(file), entries = packEntries(repo);
+    const sorted = [...entries.offsets.values()].sort((a, b) => a - b);
+    for (const id of ids) {
+      const offset = entries.offsets.get(id)!, end = sorted.find(o => o > offset) ?? pack.length - 20;
+      pack.fill(0xff, offset + entryHeaderLength(pack, offset), end);
+    }
+    overwrite(file, pack);
+  };
+  /** Each delta entry and its base, from `git verify-pack -v` (fixture inspection only). */
+  const deltaBases = (repo: string): (readonly [string, string])[] => {
+    const dir = path.join(repo, '.git/objects/pack'), idx = readdirSync(dir).find(n => n.endsWith('.idx'))!;
+    return git(repo, ['verify-pack', '-v', path.join(dir, idx)]).split('\n')
+      .map(l => /^([0-9a-f]{40}) blob +\d+ \d+ \d+ \d+ ([0-9a-f]{40})$/.exec(l)).flatMap(m => (m === null ? [] : [[m[1]!, m[2]!] as const]));
+  };
+  const BIG2_ID = '86eba436a1086aacef37e390ddc455d5f7c36d76';
+  const TAG = '64b2aa1848d9e443c24a87aed2a41922a2815c18';   // the annotated tag v1 on C2, dated as below
+  let TAGGED = '';
+  beforeAll(() => {
+    TAGGED = copy(L, 'tagged');
+    git(TAGGED, ['tag', '-a', 'v1', '-m', 'one', C2], at('2026-10-06T00:03:00Z'));
+  });
+
+  it('answers commit, tree and blob from loose objects and from the offset-delta and reference-delta packs, and a loose tag', async () => {
+    expect(git(TAGGED, ['rev-parse', 'v1'])).toBe(TAG);
+    for (const repo of [L, OFS, REF]) {
+      expect([await reader(repo, C2).storedType(), await reader(repo, TREE2).storedType(), await reader(repo, QUOTED_ID).storedType(), await reader(repo, BIG2_ID).storedType()], repo)
+        .toEqual(['commit', 'tree', 'blob', 'blob']);
+    }
+    expect(await reader(TAGGED, TAG).storedType()).toBe('tag');
+    expect(await reader(S, S2).storedType()).toBe('commit');
+  });
+
+  it('a loose tag or blob whose body cannot inflate past its header still answers its type; a full read refuses', async () => {
+    const repo = copy(TAGGED, 'loose-garbage');
+    const tagSize = Number(git(repo, ['cat-file', '-s', TAG])), blobSize = Buffer.byteLength(QUOTED);
+    headerThenGarbage(repo, TAG, `tag ${tagSize}\0`);
+    headerThenGarbage(repo, QUOTED_ID, `blob ${blobSize}\0`);
+    expect(await reader(repo, TAG).storedType()).toBe('tag');
+    expect(await reader(repo, QUOTED_ID).storedType()).toBe('blob');
+    expect(await refusal(reader(repo, TAG).tree())).toEqual({ reason: 'corrupt-object', objectId: TAG, path: null, message: `loose object ${TAG} does not inflate` });
+    expect(await refusal(reader(repo, C2).readBlobs(['src/quoted.txt']))).toEqual({
+      reason: 'corrupt-object', objectId: QUOTED_ID, path: 'src/quoted.txt', message: `loose object ${QUOTED_ID} does not inflate` });
+  });
+
+  it('a loose header is charged one 64-byte stored read and its inflation: the body is never charged', async () => {
+    expect(await reader(L, BIG2_ID, { maxInflatedBytesPerCall: 128 }).storedType()).toBe('blob');
+    expect(await refusal(reader(L, BIG2_ID, { maxInflatedBytesPerCall: 128 }).tree())).toMatchObject({ reason: 'budget-exceeded' });
+    expect(await refusal(reader(L, BIG2_ID, { maxInflatedBytesPerCall: 40 }).storedType())).toEqual({   // the 64 stored bytes are charged as read
+      reason: 'budget-exceeded', objectId: BIG2_ID, path: null, message: `${BIG2_ID}: this call would inflate or produce more than 40 bytes` });
+  });
+
+  it('a packed tag, and a delta whose every chain entry has its body overwritten, answer from entry headers alone', async () => {
+    const repo = copy(TAGGED, 'packed-garbage');
+    git(repo, ['repack', '-q', '-a', '-d', '-f', '--window=10', '--depth=10']); git(repo, ['prune-packed']);
+    const chain = deltaBases(repo);
+    expect(chain).toHaveLength(1);
+    const [delta, base] = chain[0]!;
+    corruptBodies(repo, [TAG, delta, base]);
+    expect([await reader(repo, TAG).storedType(), await reader(repo, delta).storedType(), await reader(repo, base).storedType()]).toEqual(['tag', 'blob', 'blob']);
+    expect(await refusal(reader(repo, TAG).tree())).toMatchObject({ reason: 'corrupt-object', objectId: TAG });
+    expect(await refusal(reader(repo, delta).tree())).toMatchObject({ reason: 'corrupt-object', objectId: delta });
+  });
+
+  // Reference deltas (R-PDJA-30-1 finding 1): the base is found by identifier, in the same pack, another pack, or loose.
+  const BASE = raw('blob', Buffer.from('abcdefghij')), TARGET = raw('blob', Buffer.from('abcdefghij!!'));
+  const D = Buffer.from([...varint(10), ...varint(12), 0x90, 10, 2, 0x21, 0x21]);   // copy 10 from 0; insert "!!"
+  const refEntry = (baseId: string, delta: Buffer): Buffer => Buffer.concat([entryHead(7, delta.length), Buffer.from(baseId, 'hex'), deflateSync(delta)]);
+  /** The hand-built pack-x of one reference delta: every byte after its entry header and base identifier overwritten. */
+  const corruptHandBuiltDelta = (repo: string, delta: Buffer): void => {
+    const file = path.join(repo, '.git/objects/pack/pack-x.pack'), pack = readFileSync(file);
+    pack.fill(0xff, 12 + entryHead(7, delta.length).length + 20, pack.length - 20);
+    overwrite(file, pack);
+  };
+
+  it('a reference delta in git\'s own pack, its chain\'s bodies overwritten, answers from entry headers alone', async () => {
+    const repo = copy(REF, 'ref-same-pack');
+    const chain = deltaBases(repo);
+    expect(chain).toHaveLength(1);
+    const [delta, base] = chain[0]!;
+    expect((readFileSync(packFile(repo))[packEntries(repo).offsets.get(delta)!]! >> 4) & 7).toBe(7);   // a REF_DELTA entry
+    corruptBodies(repo, [delta, base]);
+    expect([await reader(repo, delta).storedType(), await reader(repo, base).storedType()]).toEqual(['blob', 'blob']);
+    expect(await refusal(reader(repo, delta).tree())).toMatchObject({ reason: 'corrupt-object', objectId: delta });
+  });
+
+  it('a reference delta whose base is loose answers from the base\'s header; with both bodies unreadable it still answers', async () => {
+    const good = handBuilt('ref-loose-base-good', [BASE], [{ id: TARGET.id, entry: refEntry(BASE.id, D) }]);
+    expect(await reader(good, TARGET.id).storedType()).toBe('blob');
+    expect(await refusal(reader(good, TARGET.id).tree())).toEqual({ reason: 'type-mismatch', objectId: TARGET.id, path: null, message: `${TARGET.id} is a blob, not a commit` });
+    const bad = handBuilt('ref-loose-base-bad', [BASE], [{ id: TARGET.id, entry: refEntry(BASE.id, D) }]);
+    headerThenGarbage(bad, BASE.id, 'blob 10\0');
+    corruptHandBuiltDelta(bad, D);
+    expect(await reader(bad, TARGET.id).storedType()).toBe('blob');
+    expect(await refusal(reader(bad, TARGET.id).tree())).toEqual({ reason: 'corrupt-object', objectId: BASE.id, path: null, message: `loose object ${BASE.id} does not inflate` });
+  });
+
+  it('a reference delta whose base is in another pack answers from that pack\'s entry header', async () => {
+    const quoted = Buffer.from(QUOTED), target = raw('blob', Buffer.concat([quoted, Buffer.from('!!')]));
+    const d = Buffer.from([...varint(quoted.length), ...varint(quoted.length + 2), 0x90, quoted.length, 2, 0x21, 0x21]);
+    const second = (repo: string, name: string): void => {
+      const src = handBuilt(name, [], [{ id: target.id, entry: refEntry(QUOTED_ID, d) }]);
+      for (const ext of ['pack', 'idx']) cpSync(path.join(src, `.git/objects/pack/pack-x.${ext}`), path.join(repo, `.git/objects/pack/pack-x.${ext}`));
+    };
+    const good = copy(REF, 'ref-other-pack-good');
+    second(good, 'ref-other-pack-good-src');
+    expect(await reader(good, target.id).storedType()).toBe('blob');
+    expect(await refusal(reader(good, target.id).tree())).toEqual({ reason: 'type-mismatch', objectId: target.id, path: null, message: `${target.id} is a blob, not a commit` });
+    const bad = copy(REF, 'ref-other-pack-bad');
+    corruptBodies(bad, [QUOTED_ID]);
+    second(bad, 'ref-other-pack-bad-src');
+    corruptHandBuiltDelta(bad, d);
+    expect(await reader(bad, target.id).storedType()).toBe('blob');
+    expect(await refusal(reader(bad, target.id).tree())).toMatchObject({ reason: 'corrupt-object', objectId: target.id });
+  });
+});
+
+describe('storedType\'s guards: chain depth and the loose header caps (R-PDJA-30-1 finding 2)', () => {
+  /** An uncompressed, non-final deflate block: its bytes inflate as they arrive. */
+  const storedBlock = (bytes: Buffer): Buffer =>
+    Buffer.concat([Buffer.from([0, bytes.length & 255, bytes.length >> 8, ~bytes.length & 255, (~bytes.length >> 8) & 255]), bytes]);
+  const looseAt = (repo: string, id: string, stored: Buffer): void => {
+    mkdirSync(path.join(repo, '.git/objects', id.slice(0, 2)), { recursive: true });
+    writeFileSync(looseFile(repo, id), stored);
+  };
+
+  it('a reference-delta cycle refuses at the chain depth, before the object budget', async () => {
+    const A = 'a'.repeat(40), B = 'b'.repeat(40);
+    const entry = (base: string): Buffer => Buffer.concat([entryHead(7, 5), Buffer.from(base, 'hex'), Buffer.alloc(8, 0xff)]);
+    const repo = handBuilt('header-ref-cycle', [], [{ id: A, entry: entry(B) }, { id: B, entry: entry(A) }]);
+    expect(await refusal(reader(repo, A, { maxDeltaChainDepth: 5, maxObjectsPerCall: 100 }).storedType())).toEqual({
+      reason: 'budget-exceeded', objectId: A, path: null, message: `${A} has a delta chain longer than 5` });
+  });
+
+  it('a loose stream that has not ended its header within 1024 stored bytes refuses', async () => {
+    const id = 'c'.repeat(40), repo = handBuilt('header-stored-cap', []);
+    looseAt(repo, id, Buffer.concat([Buffer.from([0x78, 0x01]), storedBlock(Buffer.from('blob 1')), ...Array.from({ length: 300 }, () => storedBlock(Buffer.alloc(0)))]));
+    expect(await refusal(reader(repo, id).storedType())).toEqual({
+      reason: 'corrupt-object', objectId: id, path: null, message: `loose object ${id} has no header within its first 1024 stored bytes` });
+  });
+
+  it('a loose stream that inflates past 32 bytes with no NUL refuses as a malformed header', async () => {
+    const id = 'd'.repeat(40), repo = handBuilt('header-length-cap', []);
+    looseAt(repo, id, Buffer.concat([Buffer.from([0x78, 0x01]), storedBlock(Buffer.from('a'.repeat(40)))]));
+    expect(await refusal(reader(repo, id).storedType())).toEqual({
+      reason: 'corrupt-object', objectId: id, path: null, message: `loose object ${id} has a malformed header` });
+  });
 });
