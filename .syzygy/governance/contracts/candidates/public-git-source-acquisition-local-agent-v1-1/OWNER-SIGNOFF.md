@@ -11,11 +11,11 @@
 > `CONFIRM WITH EXCEPTIONS`. It is not offered to you until that review has
 > returned, and it should be offered together with launch-consent v1.2.
 >
-> **Bound to PR #812 at head `e5a37fa1`.** This package restates #812's
+> **Bound to PR #812 at head `736d9fcd`.** This package restates #812's
 > copy step as that head drafts it, after your rulings of 2026-11-10 (SHA-256
 > clones copied in their own object format; launch consents recorded under
-> v1.1 now copy too). It was redrafted from `de9c1ba8`
-> (`ROUND-5-REDRAFT.md`). If #812 changes again, this package is redrafted
+> v1.1 now copy too). It was redrafted from `de9c1ba8`, then rebound to
+> #812's round-11 repair (`ROUND-5-REDRAFT.md`). If #812 changes again, this package is redrafted
 > and reviewed again before it is offered.
 >
 > **Review.** Round 4 (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md`)
@@ -76,7 +76,8 @@ for a copy, so every run is a no-copy run.
   Syzygy reads in your clone as plain data, obeying none of them: where the
   Git directory is; your references' names and the few values the trunk
   rule needs; your remotes' names and URLs from the configuration file
-  (and, in a copy-class run, its object format, so the copy can match it);
+  and its object format (which v1.2 alone asks for; a copy is made in
+  that format);
   whether an alternates file exists; and, for a shortened `--revision`
   only, object names. For such a run that list is closed, as v1.2 closes
   it, and Syzygy may read of it only what the launch-consent rules in force
@@ -166,7 +167,7 @@ for a copy, so every run is a no-copy run.
        listing. Choosing it means a redraft and another review round.
    - Launch-consent v1.2 signed without this cannot take effect: its copy
      would exceed the entry.
-   - If v1.2 moves from `e5a37fa1` before you sign, this package is
+   - If v1.2 moves from `736d9fcd` before you sign, this package is
      redrafted and reviewed again.
 2. **The `tags` field moves, and the version strings do not.** The
    round-1 reviewer agreed with both (Finding 8). On `tags`: Git can now

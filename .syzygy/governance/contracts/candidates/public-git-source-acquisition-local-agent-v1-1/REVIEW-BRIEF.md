@@ -19,14 +19,15 @@
 > round-3 table.
 >
 > **Round 5 is ordered by the owner** ("Final review rounds
-> (Recommended)", 2026-11-10), after the redraft against PR #812 at
-> `e5a37fa1` that the owner's other rulings of that day required
-> (`ROUND-5-REDRAFT.md`). It is a fresh review of the redrafted bytes, not a
+> (Recommended)", 2026-11-10), after the redraft against PR #812 that the
+> owner's other rulings of that day required, rebound to #812's round-11
+> repair at `736d9fcd` (`ROUND-5-REDRAFT.md`). It is a fresh review of the redrafted bytes, not a
 > check of the dispositions alone. The drafting lane dispatches no review.
-> Dispatch it only while PR #812 stands at head `e5a37fa1`, to which this
+> Dispatch it only while PR #812 stands at head `736d9fcd`, to which this
 > package is bound: its post-apply launch-consent spec (proposed spec
 > digest printed by #812's builder at that head) is the text every Proposed
-> block restates. #812's own round 11 reviews that head. If #812 has moved,
+> block restates. A scoped review of #812's round-11 fixes reviews that
+> head. If #812 has moved,
 > the package is redrafted first.
 
 ## Route
@@ -101,7 +102,7 @@ and run no dossier.
   `.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`
   and its record `decisions/PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md`.
 - `decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md`.
-- On PR #812's branch at `e5a37fa1`: the post-apply launch-consent
+- On PR #812's branch at `736d9fcd`: the post-apply launch-consent
   spec's REQ-polaris-generation-046 and 047 (apply `proposed/spec.md.patch`
   of `polaris-dossier-launch-consent-v1-2` to the v1.1 spec in a scratch
   worktree of that commit; `sha256sum` it and compare with that package's
@@ -122,11 +123,12 @@ and run no dossier.
 
 ## What the reviewer decides
 
-1. **Exactness against #812 at `e5a37fa1`.** Does each Proposed block
+1. **Exactness against #812 at `736d9fcd`.** Does each Proposed block
    admit the copy REQ-047 drafts at that head, and no more? In particular
    (`ROUND-5-REDRAFT.md`): the copy in the operator's clone's object
    format, SHA-256 included, and its form's object-format settings; read
-   (3)'s object-format read in a copy-class run; and the no-copy form-check
+   (3)'s object-format read, in every launch-consented run as #812's
+   round-11 repair has it; and the no-copy form-check
    clause, which now names the one-commit form in the entry's own words for
    a run only a launch observation consent covers. Is that clause no wider
    than #812 with v1.2 in force, and true of today's check with v1.1 alone?
@@ -134,7 +136,7 @@ and run no dossier.
    under v1.1-scoped launch consents copy-class under the entry's own
    definition?
 2. **Every quotation of #812.** Re-derive each from the post-apply spec,
-   semantic delta, impact ledger and owner direction at `e5a37fa1`. Is any
+   semantic delta, impact ledger and owner direction at `736d9fcd`. Is any
    left that quotes `de9c1ba8` wording as current?
 3. **The enumeration.** Check the table in `ROUND-3-DISPOSITIONS.md`, as
    `ROUND-4-DISPOSITIONS.md` corrects it and `ROUND-5-REDRAFT.md` re-maps

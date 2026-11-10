@@ -1,0 +1,88 @@
+{
+  "subject": "round-5 redraft of public-git-source-acquisition-local-agent v1.1 against #812 at 736d9fcd (syzygy-pdja.29)",
+  "commit_base": "e95bb5c7f875d1d44e52af0300c34bdbe7277738",
+  "note": "run against the uncommitted working tree on top of commit_base",
+  "file_sha256_restored": {
+    ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json": "6bf87131dd5a9b12663575b0482ac56ea3671a334b4725ab38e49c0b288126ee",
+    "scripts/build_public_git_source_acquisition_local_agent_v1_1.py": "ab08de8c095fe1859f9d98686d1ccbb77ce4b05f6fc521c105ec0e404b37cf9e"
+  },
+  "mutants": [
+    {
+      "id": "R5-a copy's object format dropped",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": " and with the object format the operator's clone's configuration records, SHA-1 where it records none, so that a SHA-1 clone and a SHA-256 clone are each copied; a clone is never refused for its object format;",
+      "new": ";",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL fetch does not name \"the object format the operator's clone's configuration records\"",
+        "FAIL fetch does not name 'never refused for its object format'",
+        "FAIL fetch departs from its exact text at the clause \"the copy's directory\"",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R5-b launch read (3) loses the object-format read",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": "for its remotes' names and URLs and its object format (extensions.objectFormat) alone; ",
+      "new": "for its remotes' names and URLs alone; ",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL readAuthority departs from its exact text at the clause 'launch read (3)'",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to",
+        "public-git-source-acquisition-local-agent v1.1: unapplied, 3 findings"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R5-e launch read (3) object-format read narrowed back to copy-class runs (e5a37fa1 wording)",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": "for its remotes' names and URLs and its object format (extensions.objectFormat) alone; ",
+      "new": "for its remotes' names and URLs alone and, in a copy-class run, its object format (extensions.objectFormat); ",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL readAuthority departs from its exact text at the clause 'launch read (3)'",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to",
+        "public-git-source-acquisition-local-agent v1.1: unapplied, 3 findings"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R5-c copy's form loses the object-format setting",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": "into an empty repository of the same object format and checked out detached leaves, the repository format version and object-format setting that format needs included, and",
+      "new": "into an empty repository and checked out detached leaves, and",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL fetch does not name 'of the same object format'",
+        "FAIL fetch departs from its exact text at the clause \"the copy's form\"",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R5-d no-copy form check reverts to de9c1ba8's one-commit form",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": "or, in a run only a launch observation consent covers, the form one commit fetched alone into an empty repository and checked out detached leaves,",
+      "new": "or the one-commit form REQ-polaris-generation-047 states,",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL readAuthority departs from its exact text at the clause \"a no-copy run's form-check reads\"",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to",
+        "public-git-source-acquisition-local-agent v1.1: unapplied, 3 findings"
+      ],
+      "killed": true
+    }
+  ],
+  "killed": 5,
+  "total": 5
+}

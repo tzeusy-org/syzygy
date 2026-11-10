@@ -5,7 +5,7 @@ Package `contracts/candidates/public-git-source-acquisition-local-agent-v1-1/`:
 the successor of the signed, installed v1.0 entry
 (`declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`).
 It admits the one-commit copy that launch-consent v1.2 drafts (REQ-polaris-generation-047,
-PR #812, bound to its head e5a37fa1): in a launch-consented run Syzygy reads
+PR #812, bound to its head 736d9fcd): in a launch-consented run Syzygy reads
 five named things of the operator's clone as data; in a copy-class run it then
 copies the object the named identifier names from that clone into a clone of
 its own with one local fetch, and reads objects from the copy alone. A no-copy
@@ -84,7 +84,7 @@ MOVED = ((("typedAuthority",), "fetch"), (("typedAuthority",), "readAuthority"),
          (("typedAuthority",), "tags"), (("typedAuthority",), "stateDirectoryWrites"),
          (("implementationCoverage",), "copyStep"))
 NO_COPY = ", save in a copy-class run"
-#: Each part of the copy step the owner's selection and REQ-047 (#812 at e5a37fa1) name.
+#: Each part of the copy step the owner's selection and REQ-047 (#812 at 736d9fcd) name.
 FETCH_TERMS = ("In a copy-class run", "REQ-polaris-generation-047", "git init --template=",
                "local file transport", "file://", "from nowhere else", "the object the run's named identifier names alone",
                "full object identifier", "depth of one", "no tags and no submodules", "detached",
@@ -176,8 +176,8 @@ RA_TAIL_CLAUSES = (
      "reference --revision names, each from the loose reference files and packed-refs, where reading packed-refs "
      "also reads other references' values, which are used for nothing; "),
     ("launch read (3)",
-     "(3) its configuration file, as text, for its remotes' names and URLs alone and, in a copy-class run, "
-     "its object format (extensions.objectFormat); "),
+     "(3) its configuration file, as text, for its remotes' names and URLs and its object format "
+     "(extensions.objectFormat) alone; "),
     ("launch read (4)", "(4) whether objects/info/alternates exists; "),
     ("launch read (5)",
      "(5) for an abbreviated --revision alone, the object identifiers its loose object file names and pack "
@@ -512,8 +512,9 @@ def selftest() -> int:
                   "requires to run on a copy of the operator's clone; every other run is a no-copy run, and while "
                   "no version in force requires a copy every run is a no-copy run. ", ""), "define the run classes"),
         ("(F5 M1) launch read (3) widened to include paths",
-         _replace("readAuthority", "for its remotes' names and URLs alone", "for its remotes' names, URLs and "
-                  "include paths"), "at the clause 'launch read (3)'"),
+         _replace("readAuthority", "for its remotes' names and URLs and its object format",
+                  "for its remotes' names, URLs, include paths and its object format"),
+         "at the clause 'launch read (3)'"),
         ("(F5 M2) launch read (5) widened to object headers",
          _replace("readAuthority", "the object identifiers its loose object file names and pack indexes give",
                   "the object identifiers and object headers its loose object file names and pack indexes give"),
