@@ -7,9 +7,12 @@
 > recurred in rounds 6, 7, 9 and 10, so the coordinating session stopped the
 > loop after round 10. On 2026-11-10 you ruled on the open points and ordered
 > round 11 (`OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md`, section
-> "Rulings after review round 10, 2026-11-10"). These bytes are the round-10
-> repair with those rulings applied (`ROUND-11-PREP.md`); no review has read
-> them yet. This page may be offered only after
+> "Rulings after review round 10, 2026-11-10"), applied in
+> `ROUND-11-PREP.md`. Round 11 returned `REVISE`: three falsifier arms and
+> one agent statement that a conforming run could not meet, and five notes.
+> These bytes are its repair, with every falsifier arm tested
+> (`ROUND-11-DISPOSITIONS.md`); no review has read them yet, and you decide
+> the next review step. This page may be offered only after
 > a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
 > install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
 > Nothing here records a choice; only your selection after review binds this
@@ -142,8 +145,13 @@ unchanged.
   match each other's records, and the second relies on the first one's
   drawer and provider statements unless you give another identity.
 - **A version 1.1 consent's copy goes beyond its wording.** That consent
-  says "no fetch by Syzygy"; the copy is a local fetch. The run record says
-  so, and the consent is otherwise relied on as recorded.
+  says the commit is "held in the operator's own clone, with no fetch by
+  Syzygy". The copy is a local fetch, and after it the run reads the
+  commit from the copy, not from your clone, so it departs from both
+  halves. [Inferred] The objects are the same bytes either way. The run
+  record names only the "no fetch by Syzygy" wording, as your ruling
+  named it; the spec text is left as the ruling made it (round 11 note 5).
+  The consent is otherwise relied on as recorded.
 - **Disk.** Each completed run leaves one commit's files in a directory of
   Syzygy's own, outside the run's state directory, until you remove it.
 - **The run record keeps what Syzygy read before your answer.** Version

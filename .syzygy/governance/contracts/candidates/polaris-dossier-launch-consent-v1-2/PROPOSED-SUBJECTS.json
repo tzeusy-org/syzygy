@@ -4,8 +4,8 @@
     {
       "path": "openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md",
       "current_sha256": "95172020bcae70cbfc6d5f6b9e9ad750b7e8da0e634a60017fe7e96845eee4a7",
-      "proposed_sha256": "8aabbfe394e5ef287718b588c8b1f5b5899a16b18a289940a1e4c36b3447a9ab",
-      "patch_sha256": "dcdb3f818b74f840574cb867d15bef471cf46f2f7783055eaac5918bc9ad8cd6"
+      "proposed_sha256": "088d89787f126bcc8a99ee67f7733ae085af321db4883a853d88e03cf15a8eca",
+      "patch_sha256": "f6b9d72de25993ab2a2cd87d38ad05ceac5d5180486bc9bb0712b1c44acee6e3"
     }
   ]
 }
