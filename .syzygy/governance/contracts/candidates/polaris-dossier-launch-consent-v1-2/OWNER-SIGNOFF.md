@@ -15,9 +15,11 @@
 > REQ-polaris-generation-035's fixed packet contents, and the copy could lie
 > inside the governance home. You then chose "Briefs only (Recommended)" and
 > "One more fixes-only round (Recommended)" (direction record, section
-> "Rulings after review round 12, 2026-11-10"). These bytes are the round-12
-> repair (`ROUND-12-DISPOSITIONS.md`); no review has read them yet. This page
-> may be offered only after
+> "Rulings after review round 12, 2026-11-10"). That fixes-only round 13
+> returned `REVISE` on one point: the copy could still sit in a linked
+> worktree of the governance home. These bytes are its repair
+> (`ROUND-13-DISPOSITIONS.md`); no review has read them yet. This page may be
+> offered only after
 > a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
 > install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
 > Nothing here records a choice; only your selection after review binds this
@@ -78,9 +80,11 @@ four others you ruled on 2026-11-10 are recorded under "Ruled".
   inventory briefs name the copy as the clone to work in and tell the
   session not to read yours. Review packets keep their fixed contents, with
   nothing added for the copy (your ruling "Briefs only (Recommended)").
-- **The copy never sits in the governance home.** Its directory is never
-  inside the governance home's working tree or Git directory; a run that
-  would put it there is refused before any copy is made.
+- **The copy never sits in the governance home or in your clone.** Its
+  directory is never inside any working tree of the governance home's
+  repository, linked worktrees included, nor inside its Git directories, and
+  never inside your clone's working tree or Git directory. A run that would
+  put it there is refused before any copy is made.
 - **Trunk tip.** This is the commit your clone's `origin/HEAD` points to, as
   of your last fetch. With no `origin` default, it is the one other remote
   that records a default; where several do and none is `origin`, the launch
@@ -172,6 +176,17 @@ unchanged.
   it reached. The run record stays in the run's state directory.
 
 ## Before you sign
+
+**A reading you accept by signing** (round 13, note 2). A review packet
+carries exactly the contents REQ-polaris-generation-035 lists: the frozen
+subject, the cited spans, the governing criteria, the verdict schema, the
+pinned revision and the packet's digest. Two older signed rules also put
+text in every packet: REQ-polaris-generation-033's rule against building or
+running your project (SEC-3), and version 1.1's instruction never to run or
+answer a consent question. Version 1.2 counts both as part of the packet's
+"governing criteria". [Observed] The product code already does: its
+fidelity criteria carry the reviewer's operating instructions. The spec is
+not changed for this; signing accepts that reading.
 
 1. **The registry entry must change first.** The signed source-acquisition
    registry entry for the local-agent mode says, among other things:

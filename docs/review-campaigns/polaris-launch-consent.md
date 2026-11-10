@@ -10,7 +10,9 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-12-RAW.md:4`), over `736d9fcd`, the twelfth review of package `polaris-dossier-launch-consent` v1.2, scoped to the round-11 repair. It has two revise findings and five notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-12-DISPOSITIONS.md`, with a sweep of every new artifact duty against the predecessor requirements. The owner then ruled "Briefs only (Recommended)" and "One more fixes-only round (Recommended)" (direction record, section "Rulings after review round 12, 2026-11-10").
+`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-13-RAW.md:4`), over `054a4f11`, the thirteenth review of package `polaris-dossier-launch-consent` v1.2, the fixes-only round the owner ordered after round 12. It has one revise finding (the copy could still sit in a linked worktree of the governance home) and six notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-13-DISPOSITIONS.md`.
+
+Round 12 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-12-RAW.md:4`), over `736d9fcd`, the twelfth review of package `polaris-dossier-launch-consent` v1.2, scoped to the round-11 repair. It has two revise findings and five notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-12-DISPOSITIONS.md`, with a sweep of every new artifact duty against the predecessor requirements. The owner then ruled "Briefs only (Recommended)" and "One more fixes-only round (Recommended)" (direction record, section "Rulings after review round 12, 2026-11-10").
 
 Round 11 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-11-RAW.md:4`), over `e5a37fa1`, ordered by the owner on 2026-11-10. It has three revise findings and five notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-11-DISPOSITIONS.md`, with an arm-by-arm falsifier sweep.
 
