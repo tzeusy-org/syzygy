@@ -10,7 +10,9 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-11-RAW.md:4`), over `e5a37fa1`, the eleventh review of package `polaris-dossier-launch-consent` v1.2 and the eighth of the owner's redesign, ordered by the owner on 2026-11-10 after the rulings recorded in `OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md`. It has three revise findings and five notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-11-DISPOSITIONS.md`, with an arm-by-arm falsifier sweep. The owner decides the next review step.
+`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-12-RAW.md:4`), over `736d9fcd`, the twelfth review of package `polaris-dossier-launch-consent` v1.2, scoped to the round-11 repair. It has two revise findings and five notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-12-DISPOSITIONS.md`, with a sweep of every new artifact duty against the predecessor requirements. The owner then ruled "Briefs only (Recommended)" and "One more fixes-only round (Recommended)" (direction record, section "Rulings after review round 12, 2026-11-10").
+
+Round 11 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-11-RAW.md:4`), over `e5a37fa1`, ordered by the owner on 2026-11-10. It has three revise findings and five notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-11-DISPOSITIONS.md`, with an arm-by-arm falsifier sweep.
 
 Round 10 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-10-RAW.md:4`), over `faeafa85`, the seventh review of the owner's redesign. It has three revise findings and three notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-10-DISPOSITIONS.md`. One class (a statement a refused run cannot truthfully make) recurred in rounds 6, 7, 9 and 10, so the coordinating session stopped and put the open points to the owner, who ruled and ordered round 11.
 

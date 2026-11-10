@@ -10,9 +10,14 @@
 > "Rulings after review round 10, 2026-11-10"), applied in
 > `ROUND-11-PREP.md`. Round 11 returned `REVISE`: three falsifier arms and
 > one agent statement that a conforming run could not meet, and five notes.
-> These bytes are its repair, with every falsifier arm tested
-> (`ROUND-11-DISPOSITIONS.md`); no review has read them yet, and you decide
-> the next review step. This page may be offered only after
+> Its repair, with every falsifier arm tested, was read by a scoped round
+> 12, which returned `REVISE`: the packet duty conflicted with
+> REQ-polaris-generation-035's fixed packet contents, and the copy could lie
+> inside the governance home. You then chose "Briefs only (Recommended)" and
+> "One more fixes-only round (Recommended)" (direction record, section
+> "Rulings after review round 12, 2026-11-10"). These bytes are the round-12
+> repair (`ROUND-12-DISPOSITIONS.md`); no review has read them yet. This page
+> may be offered only after
 > a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
 > install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
 > Nothing here records a choice; only your selection after review binds this
@@ -69,9 +74,13 @@ four others you ruled on 2026-11-10 are recorded under "Ruled".
   that the copy goes beyond that consent's "no fetch by Syzygy" wording.
 - **Your checkout does not matter.** Your branch, a detached HEAD or
   uncommitted changes are left alone and never reach the run.
-- **The agents work in the copy** (your redesign). Every brief and review
-  packet names the copy as the clone to work in and tells the session not to
-  read yours.
+- **The agents work in the copy** (your redesign). The authoring and
+  inventory briefs name the copy as the clone to work in and tell the
+  session not to read yours. Review packets keep their fixed contents, with
+  nothing added for the copy (your ruling "Briefs only (Recommended)").
+- **The copy never sits in the governance home.** Its directory is never
+  inside the governance home's working tree or Git directory; a run that
+  would put it there is refused before any copy is made.
 - **Trunk tip.** This is the commit your clone's `origin/HEAD` points to, as
   of your last fetch. With no `origin` default, it is the one other remote
   that records a default; where several do and none is `origin`, the launch
@@ -189,8 +198,15 @@ unchanged.
 
 ## Ruled on 2026-11-10
 
-Recorded in `OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md`, section
-"Rulings after review round 10, 2026-11-10". They are no longer open.
+Recorded in `OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md`, sections
+"Rulings after review round 10, 2026-11-10" and "Rulings after review round
+12, 2026-11-10". They are no longer open.
+
+- **Packets** ("Briefs only (Recommended)"): only the authoring and
+  inventory briefs name the copy; review packets keep
+  REQ-polaris-generation-035's fixed contents.
+- **Next** ("One more fixes-only round (Recommended)"): one more review
+  round, reading the fixes only.
 
 - **Typed `http://` and `git://` URLs stay accepted** ("Keep http/git
   URLs"), credentials still refused, as drafted.

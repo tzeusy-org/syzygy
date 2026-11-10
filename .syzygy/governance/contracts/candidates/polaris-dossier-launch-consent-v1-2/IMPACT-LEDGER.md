@@ -104,9 +104,12 @@ computed, not yet recounted with the patch applied]. It is recounted by
   - matching of other acts' consents by the whole normalised `Upstream:` URL.
 - The identity derivation (`launch-identity.ts`) keeps its rule and gains
   the two-segment floor.
-- The launch question, the launch output, the run record, the pages, the
-  brief and every review packet gain the statements REQ-046 and 047 add, the
-  copy statements included; briefs and packets name the copy.
+- The launch question, the launch output, the run record and the pages
+  gain the statements REQ-046 and 047 add, the copy statements included; in
+  a copy-class run the authoring and inventory briefs name the copy and tell
+  the session not to read the operator's clone. Review packets are
+  unchanged: they carry exactly REQ-polaris-generation-035's contents (owner
+  ruling "Briefs only (Recommended)", 2026-11-10).
 - `--revision` resolution and the reftable refusal follow 047's text.
 
 No product code changes with this package. `tasks.md` is unchanged.

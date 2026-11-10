@@ -181,3 +181,24 @@ here.
 Like the rest of this record, this section authorizes drafting and the
 ordered review rounds only. It authorizes no implementation, no sign-off
 and no act-bound edit.
+
+## Rulings after review round 12, 2026-11-10
+
+[Observed, by the coordinating session's message] On 2026-11-10 the owner
+answered two questions through AskUserQuestion, after round 12 of PR #812
+(`docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-12-RAW.md`) returned `REVISE`.
+This record quotes the selected labels verbatim, as the coordinating session
+relayed them. The full option descriptions were not relayed, so their
+wording is [Unknown] here.
+
+- [Inferred] That the person answering is the owner.
+
+1. **Packets.** Selected: "Briefs only (Recommended)". Only the authoring
+   and inventory briefs name the copy and tell the session not to read the
+   operator's clone. Review packets keep REQ-polaris-generation-035's fixed
+   contents, with nothing added.
+2. **Next.** Selected: "One more fixes-only round (Recommended)".
+
+Like the rest of this record, this section authorizes drafting and the
+ordered review round only. It authorizes no implementation, no sign-off and
+no act-bound edit.
