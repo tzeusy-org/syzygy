@@ -1,34 +1,31 @@
-# Review brief — Polaris dossier launch-time consent, version 1.2, round 14 (scoped)
+# Review brief — Polaris dossier launch-time consent, version 1.2, round 15 (scoped)
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
-> verdict. Round 13 (`docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-13-RAW.md`,
-> `REVISE` at line 4), the fixes-only round the owner ordered, found one
-> revise finding and six notes. These bytes are their repair
-> (`ROUND-13-DISPOSITIONS.md`). Not dispatched from the drafting session; the
-> owner decides whether round 14 runs.
+> verdict. Round 14 (`docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-14-RAW.md`,
+> `REVISE` at line 4), scoped to the round-13 repair under the owner's
+> "Fixes-only rounds until clean", found one revise finding and seven notes.
+> These bytes are their repair (`ROUND-14-DISPOSITIONS.md`). Not dispatched
+> from the drafting session.
 >
-> **Scope.** Fixes only: the six changed lines below, the clauses each
-> touches, and the 33-unit re-test in `ROUND-13-DISPOSITIONS.md`. The scope
-> may change if the owner orders otherwise.
+> **Scope.** Fixes only: the three changed lines below, the clauses each
+> touches, and the 12-unit sweep in `ROUND-14-DISPOSITIONS.md`. The scope may
+> change if the owner orders otherwise.
 >
 > **Stopping rule.** `CONFIRM`, or `CONFIRM WITH EXCEPTIONS` with notes only,
-> clears the bytes. Whatever the verdict, the package then returns to the
-> owner.
+> clears the bytes. A `REVISE` leads to another fixes-only round under the
+> owner's ruling.
 
 ## Changed blocks under review
 
-Post-apply spec lines; the word-level change is `git diff` between the
-round-13 post-apply spec (commit `054a4f11`) and this one.
+Post-apply spec lines. The word-level change is the `git diff` between the
+round-14 post-apply spec (commit `67dd3554`) and this one.
 
 | Line | Requirement | Change | Touches |
 |---|---|---|---|
-| 9 | 046, pre-answer reads | "and the artifacts REQ-polaris-generation-033 requires to name the pinned revision, as that revision" among the stores | arm 046.2; REQ-033 (local-agent spec line 13) |
-| 11 | 046, question | "that the authoring and inventory sessions are directed, by their briefs, to work in the copy (stage: question asked; copy-class)" | line 258; stage rule, line 244 |
-| 37 | 046, disclosures | "that the authoring and inventory sessions were directed, by their briefs, to work in the copy" | line 258; REQ-035 review sessions |
-| 223 | 046, falsifier | 046.2 as line 9; 046.12 "in either case other than by the making, keeping or removal of a copy that a copy step makes" | lines 27, 33, 35, 220, 248 |
-| 248 | 047, copy step | the copy's directory never inside any working tree of the governance home's repository, linked worktrees included, nor its Git directory or common Git directory, nor the operator's clone's working tree or Git directory, refused before the copy step; an object format Git does not support fails the copy's `init` | lines 31, 35, 242, 244, 258; arms 046.12, 047.15, 047.18 |
-| 396 | 047, falsifier | 047.15 as line 248; 047.18 excepts the unsupported object format | line 248 |
+| 37 | 046, disclosures | "that each brief Syzygy issued, of the authoring brief and the inventory brief, directed its session to work in the copy" | line 11; line 244 (stage rule); line 258; REQ-034 and REQ-035 (when each brief is issued); arms 046.4, 047.25 |
+| 248 | 047, copy step | operator side: "the operator's clone's working tree, Git directory or common Git directory, or any linked worktree of its repository"; an unsupported object format "is refused as every failure of a Git process for the copy is refused below" | lines 242, 256, 258; arms 046.12, 047.15, 047.18 |
+| 396 | 047, falsifier | arm 047.15 widened as line 248 | line 248 |
 
 ## What the reviewer is given, and nothing else
 
@@ -56,10 +53,10 @@ alternates); delete them afterwards.
   `ROUND-9-DISPOSITIONS.md`,
   `ROUND-10-DISPOSITIONS.md`, `ROUND-11-PREP.md`,
   `ROUND-11-DISPOSITIONS.md`, `ROUND-12-DISPOSITIONS.md`,
-  `ROUND-13-DISPOSITIONS.md` and this brief;
-- the raws of rounds 1 to 13,
+  `ROUND-13-DISPOSITIONS.md`, `ROUND-14-DISPOSITIONS.md` and this brief;
+- the raws of rounds 1 to 14,
   `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md` to
-  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-13-RAW.md`, whose findings
+  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-14-RAW.md`, whose findings
   the dispositions answer (round 3's as superseded by the redesign);
 - the builder `scripts/build_polaris_dossier_launch_consent_v1_2.py`;
 - the peel-and-delegate change to
@@ -120,35 +117,34 @@ Each is a yes/no question with the evidence that settles it. Read the
 changed lines above and what their "Touches" column names, unless a question
 needs more.
 
-1. **Does each round-13 repair land as disposed?** Is the wording
-   `ROUND-13-DISPOSITIONS.md` quotes at the line it names, verbatim? Is the
-   present tense at line 11 right for a statement made at "question asked"?
-2. **Is the placement class closed?**
-   - Can a conforming copy-class run place its copy anywhere that changes a
-     working tree, index, reference or file of the governance home's
-     repository (any worktree) or of the operator's clone?
-   - Can arm 046.12, with its exemption, trip on a conforming run, or does
-     the exemption let a forbidden change pass?
-   - Do line 248 and arm 047.15 name the same places?
-3. **Is the refusal placed right under the stage rule?** Its stage (before
-   the copy step), its class (copy-class), and what such a run states.
-4. **Does the re-test hold?** Re-run the selection over these bytes. Is the
-   population 33 units, is any row wrong, and is any clause naming a working
-   tree, the governance home or removal missing?
-5. **Do the notes land?**
-   - Is it now stated, or exempted, that review sessions are directed to no
-     clone?
-   - Does every REQ-033 artifact naming the pinned revision fall inside line
-     9 and arm 046.2?
-   - Is an object format Git does not support refused under the Git-failure
-     rule, and excepted in arm 047.18?
-6. **Is the owner reading on "governing criteria" stated fairly?** Does
-   `OWNER-SIGNOFF.md` state it in plain words, as a reading accepted by
-   signing, with the spec unchanged?
-7. **Do the prose pages and tooling match?** The delta's exact blocks
-   against `git diff` of the applied patch; `--check` and `--selftest` of
-   the three builders; the recorder's selftest.
-8. **Did the fixes re-open anything?** Does any round-1-to-13 finding return
+1. **Does each round-14 repair land as disposed?** Is the wording
+   `ROUND-14-DISPOSITIONS.md` quotes at the line it names, verbatim?
+2. **Is line 37 true at every stage it binds?** Take a copy-class run that
+   issued the authoring brief only, the inventory brief only, both, or a
+   review packet after both. Does the statement make a run say anything
+   false, or does it let a run leave out a brief it issued? Do arms 046.4
+   and 047.25 agree with it?
+3. **Does the sweep hold?** Re-run the selection over these bytes.
+   - Is the population 12 units?
+   - Is any row wrong?
+   - Does any statement naming more than one artifact or session still bind
+     a run that issued one item and not the other?
+4. **Is the placement rule symmetric and closed?**
+   - Do line 248 and arm 047.15 name the same places on both sides?
+   - Can a conforming copy change any worktree, Git directory or common Git
+     directory of either repository?
+   - Does arm 046.12's exemption let a forbidden placement pass?
+5. **Is the object-format refusal cited exactly?** Does "as every failure of
+   a Git process for the copy is refused below" point at one clause, and
+   does arm 047.18 agree?
+6. **Is the owner page fair?** Does it state the "governing criteria"
+   reading with the consent instruction conditional, and the widened
+   placement in plain words?
+7. **Do the prose pages and tooling match?**
+   - Do the delta's exact blocks match `git diff` of the applied patch?
+   - Do `--check` and `--selftest` pass for the three builders, and does the
+     recorder's selftest pass?
+8. **Did the fixes re-open anything?** Does any round-1-to-14 finding return
    in the changed lines or in what they touch?
 
 ## Output
