@@ -11,17 +11,18 @@
 > `CONFIRM WITH EXCEPTIONS`. It is not offered to you until that review has
 > returned, and it should be offered together with launch-consent v1.2.
 >
-> **Bound to PR #812 at head `de9c1ba8`.** This package restates #812's
-> copy step as that head drafts it. If #812 changes (for example, a round
-> 11), this package is redrafted and reviewed again before it is offered.
+> **Bound to PR #812 at head `e5a37fa1`.** This package restates #812's
+> copy step as that head drafts it, after your rulings of 2026-11-10 (SHA-256
+> clones copied in their own object format; launch consents recorded under
+> v1.1 now copy too). It was redrafted from `de9c1ba8`
+> (`ROUND-5-REDRAFT.md`). If #812 changes again, this package is redrafted
+> and reviewed again before it is offered.
 >
-> **These bytes are an unreviewed repair.** Round 4
-> (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md`) returned REVISE,
-> and this page carries the repair of its findings (`ROUND-4-DISPOSITIONS.md`).
-> No round 5 has been dispatched: the same class of finding (reads the
-> code makes against reads the entry names) came up in all four rounds,
-> and #812, to which this package is bound, is stopped awaiting you. If you
-> want a round 5, order it alongside #812's round 11.
+> **Review.** Round 4 (`docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-4-RAW.md`)
+> returned REVISE; its repair is in `ROUND-4-DISPOSITIONS.md`. You chose
+> "Final review rounds (Recommended)" on 2026-11-10, which orders round 5
+> of this package after this redraft, beside #812's round 11. Until round
+> 5 returns, these bytes are unreviewed.
 
 ## The question you answer
 
@@ -54,7 +55,9 @@ for a copy, so every run is a no-copy run.
   three.
 - **Version 1.1** keeps those words for a no-copy run and adds, for a
   copy-class run:
-  - the copy itself: a new empty directory, `git init --template=`, then
+  - the copy itself: a new empty directory, `git init --template=` in
+    your clone's object format (SHA-1 or SHA-256; no clone is refused for
+    it), then
     one fetch over `file://` of the object the run's named identifier
     names, alone, at depth one, with no tags and no submodules, your global
     and system Git configuration off, only the file transport allowed, lazy
@@ -72,7 +75,8 @@ for a copy, so every run is a no-copy run.
 - **For every launch-consented run**, the entry now names the five things
   Syzygy reads in your clone as plain data, obeying none of them: where the
   Git directory is; your references' names and the few values the trunk
-  rule needs; your remotes' names and URLs from the configuration file;
+  rule needs; your remotes' names and URLs from the configuration file
+  (and, in a copy-class run, its object format, so the copy can match it);
   whether an alternates file exists; and, for a shortened `--revision`
   only, object names. For such a run that list is closed, as v1.2 closes
   it, and Syzygy may read of it only what the launch-consent rules in force
@@ -88,8 +92,13 @@ for a copy, so every run is a no-copy run.
   narrowed to the list; that is implementation, under its own direction,
   after the sign-off ("Before you sign", item 1, "When the narrowing
   lands"). A third read, of a named object's whole body before its type
-  is known, is outside v1.0 already and stays outside (item 2,
-  `syzygy-pdja.30`).
+  is known, is outside v1.0 already and stays outside until its repair
+  lands (item 2, `syzygy-pdja.30`). **As you ruled, until those land, a
+  launch may read outside the signed entry.**
+- **Launch consents recorded under v1.1.** Under v1.2 as you ruled
+  ("Copy anyway"), their runs are copy-class runs. The entry needs no
+  words of its own for that: it calls a run copy-class whenever a
+  launch-consent version in force requires the copy.
 - **For a run started without launch consent** (the redis run, for
   example), the entry closes no list, just as v1.0 did not. It names in
   words what such a run already reads: the files its clone-form check
@@ -134,17 +143,17 @@ for a copy, so every run is a no-copy run.
      separate implementation direction #812 names; it is not in the
      sign-off commit. Until it lands, the code reads outside both entries.
      Launch-consent v1.2's own ledger already requires the same narrowing.
-   - **Whether a run can be made before it lands** [Inferred, from the code
-     at the reviewed commit]. A copy-class run cannot: no code makes a
-     copy. A no-copy run launched with consent can, once the gate code
-     (item 1) accepts v1.1, and it then reads outside the entry. While the
-     gate code still expects v1.0, a recorded v1.1 reads to it as a
-     withdrawal, so every local-agent run refuses. So "no launch-consented
-     run is made until the narrowing lands" is true only if you hold the
-     gate code back until the narrowing. Your choice: move the gate at
-     sign-off and accept runs that read outside the entry until the
-     implementation lands, or hold it and accept that every local-agent run
-     refuses until then.
+   - **Gate timing: ruled, not open.** On 2026-11-10 you chose "Land with
+     sign-off" [Observed, as the coordinating session relayed it]. The gate
+     code that accepts a v1.1 sign-off (item 1) lands with the sign-off.
+     **So, until the launch-code narrowing (item 1b) and `syzygy-pdja.30`
+     (item 1c) land, a launch may read outside the signed entry**: a no-copy
+     run launched with consent can be made from the sign-off commit, and
+     today's launch code reads every reference's value, the object-name
+     listing for a full-length `--revision`, and the whole body of a named
+     object that is not a commit [Inferred, from the code; no product code
+     changed since round 4]. A copy-class run cannot be made in that window:
+     no code makes a copy.
    - **Your choice on that closed list.** This draft takes option 1.
      - *Option 1 (drafted): keep #812's list as it is, and narrow the
        code.* The entry then admits no more than launch-consent v1.2 does,
@@ -157,7 +166,7 @@ for a copy, so every run is a no-copy run.
        listing. Choosing it means a redraft and another review round.
    - Launch-consent v1.2 signed without this cannot take effect: its copy
      would exceed the entry.
-   - If v1.2 moves from `de9c1ba8` before you sign, this package is
+   - If v1.2 moves from `e5a37fa1` before you sign, this package is
      redrafted and reviewed again.
 2. **The `tags` field moves, and the version strings do not.** The
    round-1 reviewer agreed with both (Finding 8). On `tags`: Git can now
@@ -169,11 +178,15 @@ for a copy, so every run is a no-copy run.
    annotated tag (or a blob), that read is outside `tags` and outside the
    installed REQ-046. v1.1 does not create that gap and does not close it;
    the code repair is filed for its own repair as `syzygy-pdja.30`
-   (`IMPACT-LEDGER.md`, item 1c). Launch-consent v1.2 says Syzygy tells
+   (`IMPACT-LEDGER.md`, item 1c). That repair, PR #816, is merging; once it
+   merges the check reads only the object's header (the ledger gives its
+   state, labelled). Launch-consent v1.2 says Syzygy tells
    these cases apart "without reading the object itself"; the round-4
    reviewer notes that is hard to meet in a no-copy run, where REQ-047 has
    Syzygy read the named object as a commit object. That sentence is
-   #812's to settle, not this package's. On the versions: the entry is told apart from v1.0 by its
+   #812's to settle, not this package's.
+
+   On the versions: the entry is told apart from v1.0 by its
    content digest already, and implementing the copy step will need yet
    another version of the entry anyway (E5).
 3. **One name in the entry is now literally wrong for copy-class runs, and
@@ -218,8 +231,9 @@ for a copy, so every run is a no-copy run.
 ## What it does not cover
 
 - Launch-consent v1.2 itself, which is its own sign-off.
-- The implementation of the copy step and the gate change, which need their
-  own authorization.
+- The implementation of the copy step and the launch-read narrowing,
+  which need their own authorization. The gate change lands in the
+  sign-off commit, as you ruled ("Land with sign-off").
 - The battery lines for v1.1, which the signing commit must add: the
   recorder's `--check` at `--version 1.1` and the v1.1 builder's `--check`
   (`IMPACT-LEDGER.md`, item 2).

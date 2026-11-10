@@ -7,7 +7,8 @@
 
 ## Binding
 
-This package is bound to PR #812 at head `de9c1ba8`: its Proposed blocks
+This package is bound to PR #812 at head `e5a37fa1` (redrafted from
+`de9c1ba8` after the owner's rulings of 2026-11-10): its Proposed blocks
 restate the copy step, the classes of run and the launch reads of the
 post-apply launch-consent spec at that head. If #812 moves, this ledger and
 the package are redrafted.
@@ -32,9 +33,21 @@ the v1.0 record names.
 
 These are not drafted here, because they are implementation or battery
 changes that only the signing lane may make. Items 1 and 1b change product
-code and need an implementation authorization. Item 1b is not in the
+code and need an implementation authorization. **Ruled 2026-11-10:** the
+owner selected "Land with sign-off" [Observed, by the coordinating
+session's message; Inferred, that the person answering is the owner], so
+item 1, the gate code that accepts a v1.1 sign-off, lands with the
+sign-off, in the sign-off commit, with item 1a. Item 1b is not in the
 sign-off commit: it lands with the implementation (see "When it lands"),
 and item 1c is a pre-existing gap filed for its own repair.
+
+**Disclosed, as ruled: until items 1b and 1c land, a launch may read
+outside the signed entry.** Once the sign-off and item 1 land, a
+launch-consented run can be made, and today's launch code reads the value
+of every loose reference, the store listing for a full `--revision`
+(item 1b), and the whole body of a named object that is not a commit
+(item 1c), none of which the v1.1 entry admits. This is the owner's ruled
+trade, not an open point.
 
 1. **The gate's hard-wired v1.0 form.** [Observed]
    `packages/polaris-generation-consent/src/package-reader.ts`,
@@ -134,7 +147,7 @@ and item 1c is a pre-existing gap filed for its own repair.
    **When it lands** (round-4 Finding 2; the one statement the owner page
    repeats). The narrowing is implementation, under the separate
    implementation direction #812 names ([Observed] #812's "Implementation
-   impact" at `de9c1ba8` opens "[Inferred] After sign-off only, under a
+   impact" at `e5a37fa1` opens "[Inferred] After sign-off only, under a
    separate implementation direction", and already requires the same
    narrowing for v1.2: "`init`'s pre-copy reads of the operator's clone
    become file-data reads of the listed references, remote URLs and the
@@ -142,32 +155,25 @@ and item 1c is a pre-existing gap filed for its own repair.
    follow 047's text"). It is not in the sign-off commit. Until it lands,
    the code reads outside both entries.
 
-   **Can a launch-consented run be made before it lands?** [Inferred, from
-   the code at the reviewed commit] Yes, unless the owner holds the gate:
+   **Can a launch-consented run be made before it lands? Yes, as ruled.**
+   [Inferred, from the code at `bb89b8cc`; product code is unchanged at
+   this head] Round 4 found the answer turned on when item 1 lands. The
+   owner chose "Land with sign-off", so:
    - a copy-class run, no: no code makes a copy
      (`implementationCoverage.copyStep`);
-   - a launch-consented no-copy run, yes, once item 1 has moved the gate's
-     form to v1.1. `init.ts:117-123` checks only the registry entry's
-     sign-off and the screening policy before `launchConsent`, and the
-     launch code is v1.1's, unnarrowed; such a run reads outside the entry
-     (rows 9 and 14 of the round-3 table);
-   - while item 1 has not landed, no: a recorded v1.1 makes the v1.0 form
-     refuse ([Observed] `package-reader.ts:870-874`: the reader "takes it
-     for a withdrawal of v1.0 and refuses"), so every local-agent run
-     refuses, the redis run included.
-
-   So "no launch-consented run is made until the narrowing lands" holds
-   only if item 1 lands with the narrowing rather than with the sign-off.
-   That is a choice for the owner ("Before you sign", item 1): move the
-   gate at sign-off and accept runs that read outside the entry until the
-   implementation lands, or hold the gate until then and accept that every
-   local-agent run refuses in that window. In the second case the
-   real-tree pins of item 1a (`real-tree.test.ts:43-44`,
-   `gate-acts.test.ts:220` via `:93`) must change in the sign-off commit to
-   expect that refusal.
+   - a launch-consented no-copy run, yes, from the sign-off commit:
+     `init.ts:117-123` checks only the registry entry's sign-off and the
+     screening policy before `launchConsent`, and the launch code is
+     v1.1's, unnarrowed, so such a run reads outside the entry (rows 9 and
+     14 of the round-3 table, and row 15 as round 4 corrected it) until
+     items 1b and 1c land.
+   [Observed] Before item 1 lands, a recorded v1.1 makes the v1.0 form
+   refuse (`package-reader.ts:870-874`: the reader "takes it for a
+   withdrawal of v1.0 and refuses"); with item 1 in the sign-off commit,
+   no such window opens.
 1c. **A gap this version does not close: the type test reads a
-   non-commit object's body** (round-4 Finding 1; the owner's choice was
-   the reviewer's second option). [Observed] `launch-revision.ts:100`
+   non-commit object's body** (round-4 Finding 1; the coordinating session's
+   direction took the reviewer's second option). [Observed] `launch-revision.ts:100`
    calls `ports.isCommit(commit)` on the resolved candidate before any
    HEAD check or answer; that port (`launch.ts:160`) opens the object
    reader on the candidate and calls `.tree()`, which reaches
@@ -183,6 +189,15 @@ and item 1c is a pre-existing gap filed for its own repair.
    not cover it. It is filed for its own repair as `syzygy-pdja.30`. The
    round-3 table's row 15 mapped it to the object-read words; the
    correction is in `ROUND-4-DISPOSITIONS.md`.
+
+   **The repair is merging.** [Observed, `gh pr view 816` at this
+   redraft] PR #816, "fix(polaris-dossier): launch type test reads an
+   object's header, never its body [syzygy-pdja.30]", is open in the merge
+   queue (`mergeStateStatus` CLEAN, not merged). Once it merges, the type
+   test reads only the object's header [Inferred, from that PR's title; its
+   code is not reviewed by this package]. Whether a header read of a
+   non-commit object is within `tags` "never read" is a reading this
+   package does not settle; round 5 may judge it.
 2. **The battery.** `PROJECT-STATUS.md`, the hosted workflow and the count
    sentence (CG-26) carry `record_versioned_signoff.py --check
    public-git-source-acquisition-local-agent --version 1.0`. The sign-off

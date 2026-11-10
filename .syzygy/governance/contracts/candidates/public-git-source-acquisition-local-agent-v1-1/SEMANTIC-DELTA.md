@@ -6,12 +6,14 @@
 > builder's `--digests` prints the rows, and `PROPOSED-SUBJECTS.json`
 > carries them.
 >
-> **Bound to PR #812 at head `de9c1ba8`.** Every quotation of, and
-> reliance on, launch-consent v1.2 below is to that head: the post-apply
-> spec (v1.1 spec at that commit plus `proposed/spec.md.patch` of
-> `polaris-dossier-launch-consent-v1-2`), its semantic delta and its owner
-> direction. If #812 moves (for example, an owner-ordered round 11), this
-> package is redrafted against the new head before either is offered.
+> **Bound to PR #812 at head `e5a37fa1`** (redrafted from `de9c1ba8` after
+> the owner's rulings of 2026-11-10). Every quotation of, and reliance on,
+> launch-consent v1.2 below is to that head: the post-apply spec (v1.1 spec
+> at that commit plus `proposed/spec.md.patch` of
+> `polaris-dossier-launch-consent-v1-2`), its semantic delta, its impact
+> ledger and its owner direction, each re-derived by script at that commit.
+> If #812 moves again (its round 11 runs at `e5a37fa1`), this package is
+> redrafted against the new head before either is offered.
 
 **Artifact:** `.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`,
 the source-acquisition registry entry for the local-agent mode, signed as
@@ -55,6 +57,19 @@ rests on are bounded in words.
   conflicts".
 - [Observed] The entry's own supersession clause: "a later edit is a new
   version signed separately".
+- [Observed] The owner's rulings of 2026-11-10, quoted in that direction
+  record's section "Rulings after review round 10, 2026-11-10" at
+  `e5a37fa1`. "Final review rounds (Recommended)" "orders round 11 of PR
+  #812 and round 5 of PR #815". On SHA-256 clones, "The copy takes the
+  operator's clone's object format", and "The signed registry entry already
+  admits SHA-256 objects". On launch consents recorded under version 1.1,
+  "Copy anyway (Recommended)": "Version 1.2 copies for these consents too".
+- [Observed, by the coordinating session's message] On 2026-11-10 the owner
+  also selected "Land with sign-off" for this package's gate timing: the
+  gate code that accepts a v1.1 sign-off lands with the sign-off
+  (IMPACT-LEDGER, item 1; "Dependency on launch-consent v1.2"). [Inferred]
+  That the person answering is the owner. No record of that ruling is on
+  #812's branch; this package records it as relayed.
 
 ## The terms this version uses, and where each is defined
 
@@ -73,7 +88,7 @@ force requires a copy, so every run is a no-copy run and every copy clause
 is inert.
 
 The other terms are #812's, quoted from REQ-polaris-generation-047 of the
-post-apply spec at `de9c1ba8`:
+post-apply spec at `e5a37fa1`:
 
 - **Named identifier.** "The full object identifier a run's pin rule
   gives, before any object is read, is the run's named identifier". It
@@ -92,7 +107,7 @@ post-apply spec at `de9c1ba8`:
 
 ## The copy step this version admits
 
-As REQ-047 at `de9c1ba8` states it, for a copy-class run:
+As REQ-047 at `e5a37fa1` states it, for a copy-class run:
 
 1. In every launch-consented run, Syzygy reads five things of the operator's
    clone, in process, as file data, and honours none of them (the entry
@@ -100,12 +115,15 @@ As REQ-047 at `de9c1ba8` states it, for a copy-class run:
    force name; see E3): the files
    that locate the Git directories; reference names and the values of the
    references the pin rule needs, from loose files and `packed-refs`; the
-   configuration file, as text, for remote names and URLs; whether
+   configuration file, as text, for remote names and URLs and, in a
+   copy-class run, its object format (`extensions.objectFormat`); whether
    `objects/info/alternates` exists; and, for an abbreviated `--revision`
    only, object identifiers from loose object names and pack indexes.
 2. Before the question, or before the brief where no question is asked,
    Syzygy creates an empty directory of its own and an empty repository in
-   it (`git init --template=`).
+   it (`git init --template=`), "with the object format the operator's
+   clone's configuration records, SHA-1 where it records none"; "a clone is
+   never refused for its object format".
 3. It fetches the object the named identifier names, alone, by full
    identifier, at depth one, with no tags and no submodules, from the
    operator's clone over `file://`, and checks it out detached. Every Git
@@ -116,40 +134,47 @@ As REQ-047 at `de9c1ba8` states it, for a copy-class run:
 4. Syzygy tells whether the named identifier is a commit from where the
    copy's detached checkout leaves the copy's `HEAD`. "Syzygy tells these
    cases apart without reading the object itself". It then checks the
-   copy's form, and reads objects from the copy alone under the signed
-   rules.
+   copy's form, "the repository format version and object-format setting
+   that format needs included", and reads objects from the copy alone under
+   the signed rules.
 5. Where the run ends before its brief, Syzygy removes the copy. "Otherwise
    the copy is the run's clone for the rest of the run and is kept after
    it, outside the run's state directory, until the operator removes it".
 
-A no-copy run makes no copy. Where only a launch observation consent of the
-operator's-own-clone scope covers it, REQ-047 binds the operator's clone to
-the one-commit form, checked before asking.
+A no-copy run makes no copy. At `e5a37fa1` a run with a named identifier
+is a no-copy run only where "an in-force observation consent made by
+another act" names that identifier. A run that only a launch observation
+consent recorded with version 1.1's scope covers "runs on a copy too", and
+its run record states that the copy goes beyond that consent's "no fetch by
+Syzygy" wording (the owner's "Copy anyway"). The de9c1ba8 draft's
+one-commit requirement on the operator's clone for that case is gone. The
+entry needs no clause of its own for these runs: its definition of a
+copy-class run follows whatever a version in force of REQ-047 requires (E4).
 
 ## Decisions
 
 ### E1. Which fields move, field by field
 
 [Inferred, each row read against the copy step above and against PR #812's
-D9 table at `de9c1ba8`.]
+D9 table at `e5a37fa1`.]
 
 | Field | v1.0 says | Under the copy | This version |
 |---|---|---|---|
-| `fetch` | "none: Syzygy fetches nothing" | Contradicted: Syzygy runs one local fetch | Keeps v1.0's sentence for the no-copy run; defines the run classes in the entry's own words; adds the copy step, exactly |
-| `readAuthority` | objects read from "the operator's clone's .git directory", "no process is started" | Contradicted: object reads are made in the copy; Git processes start | Keeps every v1.0 word but two clauses; names the copy as the object store and the copy's Git processes as the one exception; bounds the launch reads, the commit test and the form-check reads, as data |
+| `fetch` | "none: Syzygy fetches nothing" | Contradicted: Syzygy runs one local fetch | Keeps v1.0's sentence for the no-copy run; defines the run classes in the entry's own words; adds the copy step, exactly, in the operator's clone's object format |
+| `readAuthority` | objects read from "the operator's clone's .git directory", "no process is started" | Contradicted: object reads are made in the copy; Git processes start | Keeps every v1.0 word but two clauses; names the copy as the object store and the copy's Git processes as the one exception; bounds the launch reads (the configuration read including, in a copy-class run, the object format), the commit test and the form-check reads, as data |
 | `tags` | "never read; ... any other type refuses" | Arguably contradicted (D9): a named identifier naming an annotated tag brings the tag object into a clone Syzygy made | Keeps v1.0's words; adds that Syzygy reads none of such an object, tells it is not a commit from the copy's `HEAD`, never follows it, uses it for nothing beyond the copy step and the refusal, and refuses |
 | `stateDirectoryWrites` | the run's state directory; "nothing is written to the clone" | Contradicted: the copy is written outside the state directory, and kept after the run | Keeps v1.0's state-directory clause; adds the copy's directory, bounded; names Syzygy's own two writes to it (creating it, removing it) apart from Git's writes of its contents (round-1 Finding 6); says why `writeSurface` stays empty; closes the operator's clone by name |
 | `writeSurface` | `[]` | Arguably contradicted (D9), which asks the successor to "say which" | Unchanged; `stateDirectoryWrites` now says which: the copy's directory is Syzygy's own local write, not a write to an observed or external system |
 | `implementationCoverage` | the reader's and the gate's declarations | Would claim the reader implements the copy | Adds `copyStep`: no file implements it yet |
 | `authorityType`, `questions`, `databaseAccess`, `networkAccess`, `executeObservedCode`, `workingTreeRead`, `submodules` | as v1.0 | Not contradicted (D9) | Unchanged |
 
-**On `tags`, my judgement.** At `de9c1ba8` Syzygy no longer reads the
+**On `tags`, my judgement.** At `e5a37fa1` Syzygy no longer reads the
 object to learn its type: it tells a non-commit from where the copy's
 detached checkout leaves `HEAD`. So, as #812 drafts a copy-class run,
 v1.0's "never read" stays true of Syzygy in that run. It is not true of
 today's code: a no-copy run reads a named non-commit object's whole body
 before refusing (E3, "A gap the narrowing does not close"; IMPACT-LEDGER,
-item 1c; `syzygy-pdja.30`). What is new is that Git, in a process Syzygy starts, writes such an
+item 1c; `syzygy-pdja.30`, whose repair PR #816 is merging). What is new is that Git, in a process Syzygy starts, writes such an
 object into a clone Syzygy made, and the run then refuses on it. `tags`
 says nothing of that, so the field moves by one appended clause rather than
 resting on a reading. Leaving it byte-identical is offered to the reviewer
@@ -197,6 +222,25 @@ v1.0 admitted both by reading, not in words (E3). With no list closed for
 that run, this version changes nothing it may do. The fetch-form reading of
 the launch-consent change's design §5 still governs it.
 
+**Which form binds a no-copy run's form check** (round-5 redraft). At
+`de9c1ba8` the entry named two forms: "the form another act's consent states
+or the one-commit form REQ-polaris-generation-047 states". At `e5a37fa1`
+REQ-047 states no one-commit form for the operator's clone: its form-check
+read is "the check of the form another act's consent states", because every
+no-copy run is one another act's consent covers. [Observed] Today's code
+checks one form for every run, launch-consented or not:
+`clone-shape.ts:5` says "The consent's stated form is one consented commit
+fetched alone into an empty repository", and `init.ts:178` applies it
+before any object is read. Under v1.1 in force a run only a launch
+observation consent covers is a no-copy run that the check binds, yet no
+consent states that form for it. So the entry now names it in its own
+words: "the form another act's consent states or, in a run only a launch
+observation consent covers, the form one commit fetched alone into an
+empty repository and checked out detached leaves". [Inferred] With v1.2 in
+force that second branch binds no no-copy run, since such a run is
+copy-class, so the entry admits no more than #812 does; with v1.1 alone it
+names the reads today's check makes for that run.
+
 ### E3. The launch reads, said in words
 
 PR #812's D9 asks that the successor say "in words that the launch reads
@@ -210,7 +254,7 @@ of the pinning, identity and clone-form rules are launch reads, made as
 data and never honoured, and not object reads."
 
 It closes the list where #812 closes it, and only there. #812's REQ-047 at
-`de9c1ba8`: "For every launch-consented run, the reads Syzygy itself makes,
+`e5a37fa1`: "For every launch-consented run, the reads Syzygy itself makes,
 in process, of the operator's clone SHALL be only these". The entry: "In a
 launch-consented run (REQ-polaris-generation-046 and 047), besides the
 object reads, Syzygy reads of the operator's clone and the copy only the
@@ -226,9 +270,24 @@ is not launch-consented are still named, as an admission (E2). The list:
   from the copy's `HEAD`, never by reading the object or from reference
   data; and the copy's form-check files;
 - in every no-copy run, the operator's clone's form-check files, for the
-  form another act's consent states or REQ-047's one-commit form, "the whole
-  configuration file and the pack indexes included", to which the five-read
-  list's configuration limit yields, as REQ-047 says.
+  form another act's consent states or, in a run only a launch observation
+  consent covers, the one-commit form (E2), "the whole configuration file
+  and the pack indexes included", to which the five-read list's
+  configuration limit yields, as REQ-047 says.
+
+**The object-format read** (round-5 redraft). #812 at `e5a37fa1` widens its
+own configuration read: "its configuration file, read as text only for its
+remotes' names and URLs and, in a copy-class run, its object format
+(`extensions.objectFormat`), and never honoured". The entry's read (3) said
+"for its remotes' names and URLs alone", which would have kept that read
+out, so read (3) now adds "and, in a copy-class run, its object format
+(extensions.objectFormat)". It is inert while no run is copy-class, and is
+no wider than #812's. **SHA-256 objects** need no other change. [Observed]
+`readAuthority` keeps v1.0's "The hash algorithm is the one the consented
+identifier is written in (40 hex digits SHA-1, 64 SHA-256)", and nothing in
+the entry refuses a clone for its object format; `fetch` now adds that the
+copy's repository takes the operator's clone's object format and that the
+copy's form includes the settings that format needs, as REQ-047 says.
 
 **Which of the listed reads v1.1 already names** (round-2 Finding 2
 corrected round 1's "v1.1's rules ask for none of them"). #812's D9 lists
@@ -269,11 +328,12 @@ launch-consent requirements in force name" can only narrow them. So once
 this version is signed, with or without v1.2, those reads lie outside the
 entry, and the code must narrow (IMPACT-LEDGER, item 1b). The narrowing is
 implementation, under the separate implementation direction #812 names
-([Observed] #812's ledger at `de9c1ba8` places that implementation "After
+([Observed] #812's ledger at `e5a37fa1` places that implementation "After
 sign-off only" and already requires the narrowing for v1.2). It is not in
-the sign-off commit, and until it lands the code reads outside both
-entries; whether a launch-consented run can be made in that window turns
-on when the gate's form moves (IMPACT-LEDGER, "When it lands").
+the sign-off commit. **Ruled, not open:** the owner chose "Land with
+sign-off" on 2026-11-10, so the gate code that accepts a v1.1 sign-off
+lands with the sign-off, and until item 1b and `syzygy-pdja.30` land a
+launch may read outside the signed entry (IMPACT-LEDGER, "When it lands").
 
 **A gap the narrowing does not close** (round-4 Finding 1). [Observed]
 Before it knows a candidate is a commit, the launch reads the candidate
@@ -283,11 +343,17 @@ then compares its type). For a `--revision` or trunk reference naming an
 annotated tag or a blob, that read is outside `tags` ("never read") and
 the installed REQ-046's falsifier. It exists today under v1.0; this
 version does not create it and does not close it. It is filed for its own
-repair as `syzygy-pdja.30` (IMPACT-LEDGER, item 1c). The other option, wording reads (2) and (5) broadly enough to
-admit what the code does today but never wider than #812 once v1.2 is in
-force, is put to the owner ("Before you sign", item 1). Round 3 asked that
-every read the launch path makes today be mapped to a clause or to that
-narrowing; the table is in `ROUND-3-DISPOSITIONS.md`.
+repair as `syzygy-pdja.30` (IMPACT-LEDGER, item 1c), and that repair, PR
+#816, is merging; once it merges the type test reads only the object's
+header (IMPACT-LEDGER, item 1c, for its state).
+
+The other option, wording reads (2) and (5) broadly enough to admit what
+the code does today but never wider than #812 once v1.2 is in force, is put
+to the owner ("Before you sign", item 1). Round 3 asked that every read the
+launch path makes today be mapped to a clause or to that narrowing; the
+table is in `ROUND-3-DISPOSITIONS.md`, corrected by
+`ROUND-4-DISPOSITIONS.md` and re-checked against #812 at `e5a37fa1` by
+`ROUND-5-REDRAFT.md`.
 
 ### E4. "Copy-class run": the entry's definition, REQ-047 unversioned
 
@@ -295,8 +361,11 @@ The entry defines the classes itself (see "The terms this version uses")
 and names no version of REQ-047: "a version in force of
 REQ-polaris-generation-047". Under REQ-047 as signed today (v1.1) no
 version in force requires a copy, so no run is copy-class and every copy
-clause is inert; under #812 at `de9c1ba8` the class is decided at launch
-from the consents and the named identifier. The copy's form is fixed by the
+clause is inert; under #812 at `e5a37fa1` the class is decided at launch
+from the consents and the named identifier, and a run that only a launch
+observation consent recorded with version 1.1's scope covers is
+copy-class too, which the entry's definition takes up with no change of
+its own words. The copy's form is fixed by the
 entry's own words, so a later REQ-047 version that changed which runs are
 copy-class could not change what a copy may be.
 
@@ -335,7 +404,7 @@ reviewer's Question 2.
   `authorizationModeDerivation` says every read needs "the pair's effective
   observation consent naming the pinned revision", and "every other
   combination refuses before any object is read". The launch reads are made
-  before any consent covers the revision, and REQ-046 at `de9c1ba8` reads
+  before any consent covers the revision, and REQ-046 at `e5a37fa1` reads
   the commit and tree objects of the run's clone before the answer, which in
   a copy-class run is the copy. [Inferred] This tension already stood under
   v1.0 with launch-consent v1.1 signed, and #812's D9 lists neither field.
@@ -361,7 +430,7 @@ reviewer's Question 2.
 ## Dependency on launch-consent v1.2
 
 This version is useful only if launch-consent v1.2 (PR #812), with the copy
-step of `de9c1ba8`, is signed. Each signed without the other:
+step of `e5a37fa1`, is signed. Each signed without the other:
 
 - **This version signed, v1.2 not.** The entry's own definition then makes
   every run a no-copy run (E4), so every copy clause is inert and every
@@ -382,16 +451,16 @@ step of `de9c1ba8`, is signed. Each signed without the other:
     and the HEAD-check and form-check reads named in words (E2).
   The entry's bytes change, so the gate's hard-wired v1.0 form in
   `package-reader.ts` and the tests that pin it must change too
-  (IMPACT-LEDGER, items 1 and 1a). If the form moves in the sign-off
-  commit, a launch-consented run can be made before the narrowing lands,
-  and reads outside the entry; if it waits for the narrowing, every
-  local-agent run refuses until then. Which is the owner's choice.
+  (IMPACT-LEDGER, items 1 and 1a). **Ruled 2026-11-10, "Land with
+  sign-off":** that gate code lands with the sign-off. So, until the
+  launch-code narrowing (item 1b) and `syzygy-pdja.30` (item 1c) land, a
+  launch-consented run can be made and may read outside the signed entry.
 - **v1.2 signed, this version not.** v1.2 cannot take effect: D9 says no
   reading of "fetches nothing", "no process is started" or "nothing is
   written to the clone" admits the copy. A copy-class run must refuse, or
   the implementation would act beyond the signed entry.
 - **v1.2 changes again before signing.** These Proposed blocks restate the
-  copy step as `de9c1ba8` drafts it. Any change to the copy's form, its
+  copy step as `e5a37fa1` drafts it. Any change to the copy's form, its
   environment, the launch reads, the commit test or the copy's keeping
   needs this package redrafted and reviewed again before both are offered.
 
@@ -411,7 +480,7 @@ none: Syzygy fetches nothing. The operator prepares the clone with their own too
 **Proposed:**
 
 ```text
-none, save in a copy-class run: Syzygy fetches nothing. The operator prepares the clone with their own tools; to stay within the observation consent's stated fetch form the operator fetches the one consented commit alone (git fetch --depth=1 <upstream> <commit>) and checks it out. A copy-class run is a run that a version in force of REQ-polaris-generation-047 requires to run on a copy of the operator's clone; every other run is a no-copy run, and while no version in force requires a copy every run is a no-copy run. In a copy-class run, one local fetch and nothing else, made before the question, or before the brief where no question is asked: Syzygy creates an empty directory of its own for the copy, outside the operator's clone and never at a location derived from its path, and in it an empty repository with an empty template (git init --template=); it fetches into that repository, from the operator's clone over Git's local file transport (a file:// URL) and from nowhere else, the object the run's named identifier names alone, by its full object identifier, at a depth of one, with no tags and no submodules, and checks that object out detached. Every Git process it starts for the copy runs with the system and global Git configuration disabled, with no other Git variable of the operator's environment, with every transport but the file transport refused, with lazy fetching of missing objects disabled and with no hook path, and no other process is started; these processes execute nothing of the observed repository. A clone whose references are stored in the reftable backend is refused before any Git process starts, and a clone with an alternates file before the copy step starts. The copy holds the pinned commit and the trees and blobs reachable from its root tree alone, in the form one commit fetched alone into an empty repository and checked out detached leaves, and Syzygy checks that form before the question. Every failure of a Git process for the copy refuses, naming that process and its failure as Git reported it; a named identifier not shown to be a commit refuses (tags); a copy that departs from that form refuses; and nothing is then fetched from anywhere else. To serve the copy Git reads the operator's clone's configuration, references and object store, the stored bytes of delta bases outside the named object's objects included; Syzygy uses nothing Git read but the copy. That Git starts no program the operator's clone's own configuration or hooks name while it serves the copy, for every Git process the copy step started, is Inferred, not checked. The file URL of the operator's clone is not a locator and is never recorded or rendered as one
+none, save in a copy-class run: Syzygy fetches nothing. The operator prepares the clone with their own tools; to stay within the observation consent's stated fetch form the operator fetches the one consented commit alone (git fetch --depth=1 <upstream> <commit>) and checks it out. A copy-class run is a run that a version in force of REQ-polaris-generation-047 requires to run on a copy of the operator's clone; every other run is a no-copy run, and while no version in force requires a copy every run is a no-copy run. In a copy-class run, one local fetch and nothing else, made before the question, or before the brief where no question is asked: Syzygy creates an empty directory of its own for the copy, outside the operator's clone and never at a location derived from its path, and in it an empty repository with an empty template (git init --template=) and with the object format the operator's clone's configuration records, SHA-1 where it records none, so that a SHA-1 clone and a SHA-256 clone are each copied; a clone is never refused for its object format; it fetches into that repository, from the operator's clone over Git's local file transport (a file:// URL) and from nowhere else, the object the run's named identifier names alone, by its full object identifier, at a depth of one, with no tags and no submodules, and checks that object out detached. Every Git process it starts for the copy runs with the system and global Git configuration disabled, with no other Git variable of the operator's environment, with every transport but the file transport refused, with lazy fetching of missing objects disabled and with no hook path, and no other process is started; these processes execute nothing of the observed repository. A clone whose references are stored in the reftable backend is refused before any Git process starts, and a clone with an alternates file before the copy step starts. The copy holds the pinned commit and the trees and blobs reachable from its root tree alone, in the form one commit fetched alone into an empty repository of the same object format and checked out detached leaves, the repository format version and object-format setting that format needs included, and Syzygy checks that form before the question. Every failure of a Git process for the copy refuses, naming that process and its failure as Git reported it; a named identifier not shown to be a commit refuses (tags); a copy that departs from that form refuses; and nothing is then fetched from anywhere else. To serve the copy Git reads the operator's clone's configuration, references and object store, the stored bytes of delta bases outside the named object's objects included; Syzygy uses nothing Git read but the copy. That Git starts no program the operator's clone's own configuration or hooks name while it serves the copy, for every Git process the copy step started, is Inferred, not checked. The file URL of the operator's clone is not a locator and is never recorded or rendered as one
 ```
 
 ### Change 2 (replace), `entries[0].typedAuthority.readAuthority`
@@ -425,7 +494,7 @@ Git object reads by object identifier at the run's pinned revision only: the pin
 **Proposed:**
 
 ```text
-Git object reads by object identifier at the run's pinned revision only: the pinned commit, its root tree and the trees and blobs reachable from it, walked down from the commit and never to a parent. Objects are read in process from the loose objects and version-2 packs of the .git directory of the operator's clone, or, in a copy-class run (fetch), of the copy; no ref, staging index (`.git/index`; the pack indexes under `objects/pack/` are read), working tree, repository-local configuration, hook, alternates file, grafts file, shallow file, replace ref or commit-graph is read, and no process is started, save, in a copy-class run, the Git processes fetch names. The hash algorithm is the one the consented identifier is written in (40 hex digits SHA-1, 64 SHA-256). Every commit, tree and blob on the path to each blob used is re-hashed from the bytes read, at every step that uses it; a mismatch, a missing object (one only an alternate or a replacement could supply included), an undecodable object or a wrong type refuses that step. Those words bound the object reads. The reads of the pinning, identity and clone-form rules are launch reads, made as data and never honoured, and not object reads. In a launch-consented run (REQ-polaris-generation-046 and 047), besides the object reads, Syzygy reads of the operator's clone and the copy only the following: in the operator's clone these five things alone, and of what they list only what the launch-consent requirements in force name: (1) the .git file or directory and the files that locate the Git directory and the common Git directory; (2) the names of its references, and the values of HEAD and the reference it names, of the references REQ-polaris-generation-047's trunk rule names, of the local branch of the remote default's name and of the reference --revision names, each from the loose reference files and packed-refs, where reading packed-refs also reads other references' values, which are used for nothing; (3) its configuration file, as text, for its remotes' names and URLs alone; (4) whether objects/info/alternates exists; (5) for an abbreviated --revision alone, the object identifiers its loose object file names and pack indexes give. In a copy-class run (fetch) it reads no object of the operator's clone, tells whether the named identifier is a commit only from where the copy's detached checkout leaves the copy's HEAD, never by reading that object or from reference data, and reads the files of the copy's .git directory that the form check of fetch reads. In every no-copy run (fetch), launch-consented or not, it reads the files of the operator's clone's .git directory that the form check binding that run reads, the form another act's consent states or the one-commit form REQ-polaris-generation-047 states, the whole configuration file and the pack indexes included, to which (3) yields. A run that is not launch-consented has no closed list of reads here beyond the object reads, as under version 1.0; besides its form-check reads above, REQ-polaris-generation-033's check of its HEAD reads HEAD and the reference HEAD names, from the loose reference files and packed-refs
+Git object reads by object identifier at the run's pinned revision only: the pinned commit, its root tree and the trees and blobs reachable from it, walked down from the commit and never to a parent. Objects are read in process from the loose objects and version-2 packs of the .git directory of the operator's clone, or, in a copy-class run (fetch), of the copy; no ref, staging index (`.git/index`; the pack indexes under `objects/pack/` are read), working tree, repository-local configuration, hook, alternates file, grafts file, shallow file, replace ref or commit-graph is read, and no process is started, save, in a copy-class run, the Git processes fetch names. The hash algorithm is the one the consented identifier is written in (40 hex digits SHA-1, 64 SHA-256). Every commit, tree and blob on the path to each blob used is re-hashed from the bytes read, at every step that uses it; a mismatch, a missing object (one only an alternate or a replacement could supply included), an undecodable object or a wrong type refuses that step. Those words bound the object reads. The reads of the pinning, identity and clone-form rules are launch reads, made as data and never honoured, and not object reads. In a launch-consented run (REQ-polaris-generation-046 and 047), besides the object reads, Syzygy reads of the operator's clone and the copy only the following: in the operator's clone these five things alone, and of what they list only what the launch-consent requirements in force name: (1) the .git file or directory and the files that locate the Git directory and the common Git directory; (2) the names of its references, and the values of HEAD and the reference it names, of the references REQ-polaris-generation-047's trunk rule names, of the local branch of the remote default's name and of the reference --revision names, each from the loose reference files and packed-refs, where reading packed-refs also reads other references' values, which are used for nothing; (3) its configuration file, as text, for its remotes' names and URLs alone and, in a copy-class run, its object format (extensions.objectFormat); (4) whether objects/info/alternates exists; (5) for an abbreviated --revision alone, the object identifiers its loose object file names and pack indexes give. In a copy-class run (fetch) it reads no object of the operator's clone, tells whether the named identifier is a commit only from where the copy's detached checkout leaves the copy's HEAD, never by reading that object or from reference data, and reads the files of the copy's .git directory that the form check of fetch reads. In every no-copy run (fetch), launch-consented or not, it reads the files of the operator's clone's .git directory that the form check binding that run reads, the form another act's consent states or, in a run only a launch observation consent covers, the form one commit fetched alone into an empty repository and checked out detached leaves, the whole configuration file and the pack indexes included, to which (3) yields. A run that is not launch-consented has no closed list of reads here beyond the object reads, as under version 1.0; besides its form-check reads above, REQ-polaris-generation-033's check of its HEAD reads HEAD and the reference HEAD names, from the loose reference files and packed-refs
 ```
 
 ### Change 3 (replace), `entries[0].typedAuthority.tags`

@@ -5,7 +5,7 @@ Package `contracts/candidates/public-git-source-acquisition-local-agent-v1-1/`:
 the successor of the signed, installed v1.0 entry
 (`declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`).
 It admits the one-commit copy that launch-consent v1.2 drafts (REQ-polaris-generation-047,
-PR #812, bound to its head de9c1ba8): in a launch-consented run Syzygy reads
+PR #812, bound to its head e5a37fa1): in a launch-consented run Syzygy reads
 five named things of the operator's clone as data; in a copy-class run it then
 copies the object the named identifier names from that clone into a clone of
 its own with one local fetch, and reads objects from the copy alone. A no-copy
@@ -84,7 +84,7 @@ MOVED = ((("typedAuthority",), "fetch"), (("typedAuthority",), "readAuthority"),
          (("typedAuthority",), "tags"), (("typedAuthority",), "stateDirectoryWrites"),
          (("implementationCoverage",), "copyStep"))
 NO_COPY = ", save in a copy-class run"
-#: Each part of the copy step the owner's selection and REQ-047 (#812 at de9c1ba8) name.
+#: Each part of the copy step the owner's selection and REQ-047 (#812 at e5a37fa1) name.
 FETCH_TERMS = ("In a copy-class run", "REQ-polaris-generation-047", "git init --template=",
                "local file transport", "file://", "from nowhere else", "the object the run's named identifier names alone",
                "full object identifier", "depth of one", "no tags and no submodules", "detached",
@@ -94,7 +94,9 @@ FETCH_TERMS = ("In a copy-class run", "REQ-polaris-generation-047", "git init --
                "no other process is started", "alternates file", "reftable",
                "never at a location derived from its path", "delta bases", "before the copy step starts",
                "execute nothing of the observed repository", "as Git reported it",
-               "uses nothing Git read but the copy", "Inferred", "not a locator")
+               "uses nothing Git read but the copy", "Inferred", "not a locator",
+               "the object format the operator's clone's configuration records",
+               "never refused for its object format", "of the same object format")
 #: The five launch reads, in order, by a phrase each must carry.
 FIVE_READS = ("(1) the .git file or directory", "(2) the names of its references",
               "(3) its configuration file, as text", "(4) whether objects/info/alternates exists",
@@ -122,7 +124,9 @@ FETCH_CLAUSES = (
     ("the copy's directory",
      "Syzygy creates an empty directory of its own for the copy, outside the operator's clone and never at a "
      "location derived from its path, and in it an empty repository with an empty template (git init "
-     "--template=); "),
+     "--template=) and with the object format the operator's clone's configuration records, SHA-1 where it "
+     "records none, so that a SHA-1 clone and a SHA-256 clone are each copied; a clone is never refused for its "
+     "object format; "),
     ("the source and the object",
      "it fetches into that repository, from the operator's clone over Git's local file transport (a file:// URL) "
      "and from nowhere else, the object the run's named identifier names alone, by its full object identifier, "
@@ -137,8 +141,9 @@ FETCH_CLAUSES = (
      "a clone with an alternates file before the copy step starts. "),
     ("the copy's form",
      "The copy holds the pinned commit and the trees and blobs reachable from its root tree alone, in the form "
-     "one commit fetched alone into an empty repository and checked out detached leaves, and Syzygy checks that "
-     "form before the question. "),
+     "one commit fetched alone into an empty repository of the same object format and checked out detached "
+     "leaves, the repository format version and object-format setting that format needs included, and Syzygy "
+     "checks that form before the question. "),
     ("the copy step's refusals",
      "Every failure of a Git process for the copy refuses, naming that process and its failure as Git reported "
      "it; a named identifier not shown to be a commit refuses (tags); a copy that departs from that form "
@@ -171,7 +176,8 @@ RA_TAIL_CLAUSES = (
      "reference --revision names, each from the loose reference files and packed-refs, where reading packed-refs "
      "also reads other references' values, which are used for nothing; "),
     ("launch read (3)",
-     "(3) its configuration file, as text, for its remotes' names and URLs alone; "),
+     "(3) its configuration file, as text, for its remotes' names and URLs alone and, in a copy-class run, "
+     "its object format (extensions.objectFormat); "),
     ("launch read (4)", "(4) whether objects/info/alternates exists; "),
     ("launch read (5)",
      "(5) for an abbreviated --revision alone, the object identifiers its loose object file names and pack "
@@ -183,9 +189,10 @@ RA_TAIL_CLAUSES = (
      "fetch reads. "),
     ("a no-copy run's form-check reads",
      "In every no-copy run (fetch), launch-consented or not, it reads the files of the operator's clone's .git "
-     "directory that the form check binding that run reads, the form another act's consent states or the "
-     "one-commit form REQ-polaris-generation-047 states, the whole configuration file and the pack indexes "
-     "included, to which (3) yields. "),
+     "directory that the form check binding that run reads, the form another act's consent states or, in a run "
+     "only a launch observation consent covers, the form one commit fetched alone into an empty repository and "
+     "checked out detached leaves, the whole configuration file and the pack indexes included, to which (3) "
+     "yields. "),
     ("a run that is not launch-consented",
      "A run that is not launch-consented has no closed list of reads here beyond the object reads, as under "
      "version 1.0; besides its form-check reads above, REQ-polaris-generation-033's check of its HEAD reads "

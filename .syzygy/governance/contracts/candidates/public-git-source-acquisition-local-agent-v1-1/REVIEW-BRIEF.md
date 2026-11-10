@@ -1,4 +1,4 @@
-# Review brief — public Git source acquisition, local-agent version 1.1, round 5 (not dispatched)
+# Review brief — public Git source acquisition, local-agent version 1.1, round 5
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
@@ -18,17 +18,16 @@
 > `ROUND-4-DISPOSITIONS.md` says how each was taken and corrects the
 > round-3 table.
 >
-> **No round 5 is dispatched; the current bytes are an unreviewed
-> repair.** The same class of finding (reads the code makes against reads
-> the entry names) came up in all four rounds, and PR #812, to which this
-> package is bound, is stopped awaiting the owner. The owner orders a
-> round 5 alongside #812's round 11 if they want one; this brief is ready
-> for it. Round 5 would be a fresh review of the repaired bytes, not a
-> check of the dispositions alone. The drafting lane dispatches no review. Dispatch
-> it only while PR #812 stands at head `de9c1ba8`, to which this
+> **Round 5 is ordered by the owner** ("Final review rounds
+> (Recommended)", 2026-11-10), after the redraft against PR #812 at
+> `e5a37fa1` that the owner's other rulings of that day required
+> (`ROUND-5-REDRAFT.md`). It is a fresh review of the redrafted bytes, not a
+> check of the dispositions alone. The drafting lane dispatches no review.
+> Dispatch it only while PR #812 stands at head `e5a37fa1`, to which this
 > package is bound: its post-apply launch-consent spec (proposed spec
 > digest printed by #812's builder at that head) is the text every Proposed
-> block restates. If #812 has moved, the package is redrafted first.
+> block restates. #812's own round 11 reviews that head. If #812 has moved,
+> the package is redrafted first.
 
 ## Route
 
@@ -61,7 +60,7 @@ and run no dossier.
 - `SEMANTIC-DELTA.md`, `IMPACT-LEDGER.md`, `OWNER-SIGNOFF.md`,
   `PROPOSED-SUBJECTS.json`, `ROUND-1-DISPOSITIONS.md`,
   `ROUND-2-DISPOSITIONS.md`, `ROUND-3-DISPOSITIONS.md`,
-  `ROUND-4-DISPOSITIONS.md` and this brief;
+  `ROUND-4-DISPOSITIONS.md`, `ROUND-5-REDRAFT.md` and this brief;
 - the round-1 to round-4 raws, `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-1-RAW.md`,
   `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-2-RAW.md`,
   `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-3-RAW.md` and
@@ -85,9 +84,10 @@ and run no dossier.
   selftests;
 - the rule-6 mutation record
   `docs/evidence/syzygy-pdja-29/round-1-repairs-mutation-2026-11-10.json`
-  and its round-2 and round-3 siblings
-  `docs/evidence/syzygy-pdja-29/round-2-repairs-mutation-2026-11-10.json`
-  and `docs/evidence/syzygy-pdja-29/round-3-repairs-mutation-2026-11-10.json`;
+  and its round-2, round-3 and round-5 siblings
+  `docs/evidence/syzygy-pdja-29/round-2-repairs-mutation-2026-11-10.json`,
+  `docs/evidence/syzygy-pdja-29/round-3-repairs-mutation-2026-11-10.json`
+  and `docs/evidence/syzygy-pdja-29/round-5-redraft-mutation-2026-11-10.json`;
 - read only, product code the enumeration maps (not under review, and not
   changed by this package): `packages/polaris-dossier/src/init.ts`,
   `launch.ts`, `launch-clone.ts`, `launch-revision.ts`, `clone-head.ts`,
@@ -101,51 +101,60 @@ and run no dossier.
   `.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json`
   and its record `decisions/PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md`.
 - `decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md`.
-- On PR #812's branch at `de9c1ba8`: the post-apply launch-consent
+- On PR #812's branch at `e5a37fa1`: the post-apply launch-consent
   spec's REQ-polaris-generation-046 and 047 (apply `proposed/spec.md.patch`
   of `polaris-dossier-launch-consent-v1-2` to the v1.1 spec in a scratch
   worktree of that commit; `sha256sum` it and compare with that package's
   `PROPOSED-SUBJECTS.json`), its
-  `SEMANTIC-DELTA.md` decisions D2, D3 and D9, the owner direction
-  OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md (section "Redesign
-  after review round 3") and the round-4 raw
+  `SEMANTIC-DELTA.md` decisions D1, D2, D3 and D9, its `IMPACT-LEDGER.md`
+  ("Implementation impact"), the owner direction
+  OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md (sections "Redesign
+  after review round 3" and "Rulings after review round 10, 2026-11-10")
+  and the round-4 raw
   docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-4-RAW.md, Finding 3.
 - RFC 0004's registry-entry declarations (RFC4-2) and RFC3-16(b), as the
   v1.0 builder cites them.
 - `packages/polaris-dossier/src/clone-shape.ts`, whose form the copy must
   equal (read only; product code, not under review).
+- The owner's ruling "Land with sign-off" on this package's gate timing,
+  2026-11-10, which no file on #812's branch records; the ledger and the
+  owner page record it as relayed by the coordinating session.
 
 ## What the reviewer decides
 
-1. **Exactness against the copy step.** Does each Proposed block admit the
-   copy REQ-047 drafts at `de9c1ba8`, and no more? Is the closed list now
-   scoped as #812 scopes it, "of the operator's clone and the copy"
-   (round-3 Finding 2)? Does the entry claim anything #812 at that head
-   does not say?
-2. **The enumeration (round-4 Findings 1 and 4).** Check the table in
-   `ROUND-3-DISPOSITIONS.md`, as `ROUND-4-DISPOSITIONS.md` corrects it,
-   against the code: is every read a launch-consented run makes today, of
-   the operator's clone, in a row, and is each row's clause right? Is
-   anything outside the entry that the table maps to a clause, or missing
+1. **Exactness against #812 at `e5a37fa1`.** Does each Proposed block
+   admit the copy REQ-047 drafts at that head, and no more? In particular
+   (`ROUND-5-REDRAFT.md`): the copy in the operator's clone's object
+   format, SHA-256 included, and its form's object-format settings; read
+   (3)'s object-format read in a copy-class run; and the no-copy form-check
+   clause, which now names the one-commit form in the entry's own words for
+   a run only a launch observation consent covers. Is that clause no wider
+   than #812 with v1.2 in force, and true of today's check with v1.1 alone?
+   Does the entry claim anything #812 at that head does not say? Are runs
+   under v1.1-scoped launch consents copy-class under the entry's own
+   definition?
+2. **Every quotation of #812.** Re-derive each from the post-apply spec,
+   semantic delta, impact ledger and owner direction at `e5a37fa1`. Is any
+   left that quotes `de9c1ba8` wording as current?
+3. **The enumeration.** Check the table in `ROUND-3-DISPOSITIONS.md`, as
+   `ROUND-4-DISPOSITIONS.md` corrects it and `ROUND-5-REDRAFT.md` re-maps
+   rows 20-22, against the code: is every read a launch-consented run makes
+   today, of the operator's clone, in a row, and is each row's clause right?
+   Is anything outside the entry that the table maps to a clause, or missing
    from items 1b and 1c?
-3. **The pre-existing gap (item 1c, round-4 Finding 1).** Is the type
-   test's read of a non-commit object's body stated plainly, in the ledger
-   and the owner page, as a gap against v1.0's `tags` and REQ-046 that
-   v1.1 neither creates nor closes, filed as `syzygy-pdja.30`? Is any
-   sentence left that says the code never reads a tag?
-4. **When the narrowing lands (round-4 Finding 2).** Do the ledger, E3,
-   "Dependency on launch-consent v1.2" and the owner page say one thing:
-   implementation, under the separate direction #812 names, not in the
-   sign-off commit, with the code reading outside both entries until then?
-   Is the labelled answer to whether a launch-consented run can be made
-   before it lands true of the code at the reviewed commit?
-5. **The record texts.** Are the four `GIT_SOURCE_V11_*` texts true of
+4. **Gate timing, as ruled.** Do the ledger, E3, "Dependency on
+   launch-consent v1.2" and the owner page record "Land with sign-off" as
+   ruled, not open, and disclose plainly that until items 1b and 1c land a
+   launch may read outside the signed entry? Is the labelled account of
+   which runs can be made in that window true of the code at the reviewed
+   commit?
+5. **Item 1c.** Is the type-test gap stated plainly, and is the state of
+   its repair (PR #816) labelled and true when you read it? Is any sentence
+   left that says the code never reads a tag?
+6. **The record texts.** Are the four `GIT_SOURCE_V11_*` texts true of
    v1.1 and pinned in full?
-6. **Item 1a (round-4 Finding 3).** Is the list of what pins the v1.0
-   identity now complete, the renderer's `'1.0'` pins and `signoffOver`
-   included? Re-run the sweeps it describes.
-7. **E2 and E3 (round-4 Finding 4).** Is E3's quotation of the closed
-   list exact, and is the form-check read list complete?
+7. **Item 1a.** Is the list of what pins the v1.0 identity complete?
+   Re-run the sweeps it describes.
 8. **Everything else byte-identical.** Confirm the patch touches only the
    five declarations, and the builder's proof of it.
 
