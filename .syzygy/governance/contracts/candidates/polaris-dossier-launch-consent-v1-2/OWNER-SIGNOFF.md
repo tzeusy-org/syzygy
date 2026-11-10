@@ -22,8 +22,12 @@
 > point: a run that issued one brief and not the other had to say both
 > sessions were directed. Its repair was read by round 15, which returned
 > `REVISE` on one point: a run whose copy step ended before Git read your
-> clone had to say what Git read of it. These bytes are its repair
-> (`ROUND-15-DISPOSITIONS.md`); no review has read them yet. This page may be
+> clone had to say what Git read of it. Its repair was read by round 16,
+> the last round under your ruling, which returned `REVISE` on one point:
+> four scenarios still required a refused run to remove its copy even where
+> the removal fails. These bytes are its repair
+> (`ROUND-16-DISPOSITIONS.md`); no review has read them yet. Whether a
+> round 17 runs is yours to decide. This page may be
 > offered only after
 > a `CONFIRM`, or a `CONFIRM WITH EXCEPTIONS` with notes only, over them. The
 > install tooling is `scripts/build_polaris_dossier_launch_consent_v1_2.py`.
@@ -62,15 +66,19 @@ four others you ruled on 2026-11-10 are recorded under "Ruled".
   the identity: the reference names and a few reference values, read as
   files; the remote names and URLs in the configuration, as text; whether an
   alternates file exists; and, for a short `--revision`, the stored object
-  names. No object, no working tree, no index.
+  names. To keep the copy out of your clone's working trees: the files that
+  locate its Git directories and its linked worktrees, and the two settings
+  (`core.bare`, `core.worktree`) that say where its main working tree is,
+  read as text. No object, no working tree, no index.
 - **What Git reads of your clone.** To make the copy, Git reads your clone's
   configuration, references and object store, including older stored bytes
   it unpacks to rebuild the trunk-tip files. Those are Git's reads, not
   Syzygy's: Syzygy uses nothing of them but the copy, and the rule that
   Syzygy reads no file contents before your answer is about Syzygy's own
   reads. The question, the run record and the pages say so. A run whose
-  copy step ended early says where it ended instead, and, if Git never read
-  your clone, that Git read nothing of it.
+  copy step ended early says where it ended instead: if Syzygy never
+  started the fetch, that Git read nothing of your clone; if the fetch was
+  started and failed, that it failed, as Git reported.
 - **Refused:** a clone missing an object the pinned commit needs (a partial
   clone, for example); a clone that borrows objects through an alternates
   file; a clone whose references are in Git's newer reftable format.
@@ -83,8 +91,9 @@ four others you ruled on 2026-11-10 are recorded under "Ruled".
   2026-11-10, "Copy anyway"). A run that only such a consent covers runs on
   a copy like any other, so a full clone works for it. Its run record says
   that the copy goes beyond that consent's "no fetch by Syzygy" wording, or,
-  where the copy step ended before Git read your clone, that no fetch was
-  made.
+  where the fetch was started and failed, that it failed, as Git reported,
+  or, where the copy step ended before Syzygy started the fetch, that no
+  fetch was made.
 - **Your checkout does not matter.** Your branch, a detached HEAD or
   uncommitted changes are left alone and never reach the run.
 - **The agents work in the copy** (your redesign). The authoring and

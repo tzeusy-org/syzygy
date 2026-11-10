@@ -1,36 +1,38 @@
-# Review brief — Polaris dossier launch-time consent, version 1.2, round 16 (scoped)
+# Review brief — Polaris dossier launch-time consent, version 1.2, round 17 (scoped; only if the owner orders it)
 
 > **Candidate — binds nothing.** This brief says what an independent
 > reviewer is given and what they decide. It is not a review and carries no
-> verdict. Round 15 (`docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-15-RAW.md`,
-> `REVISE` at line 4), scoped to the round-14 repair, found one revise
-> finding and seven notes. These bytes are their repair
-> (`ROUND-15-DISPOSITIONS.md`). Not dispatched from the drafting session.
+> verdict. Round 16 (`docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-16-RAW.md`,
+> `REVISE` at line 4), scoped to the round-15 repair and the last round
+> under the owner's ruling, found one revise finding and seven notes. These
+> bytes are their repair (`ROUND-16-DISPOSITIONS.md`).
 >
-> **Scope.** Fixes only: the eight changed lines below, the clauses each
-> touches, and the copy-step sub-step matrix in `ROUND-15-DISPOSITIONS.md`.
-> The scope may change if the owner orders otherwise.
+> **Only if the owner orders it.** No ruling in force orders a round 17.
+> This brief is prepared so that one can run if the owner orders it, and is
+> not dispatched from the drafting session.
+>
+> **Scope.** Fixes only: the ten changed lines below, the clauses each
+> touches, the "remov" sweep and the extended matrix in
+> `ROUND-16-DISPOSITIONS.md`. The scope may change if the owner orders
+> otherwise.
 >
 > **Stopping rule.** `CONFIRM`, or `CONFIRM WITH EXCEPTIONS` with notes only,
-> clears the bytes. [Observed, by the coordinating session's message] This
-> is to be the last round under the owner's ruling; after a `REVISE` the
-> owner decides what follows.
+> clears the bytes. After a `REVISE` the owner decides what follows.
 
 ## Changed blocks under review
 
 Post-apply spec lines. The word-level change is the `git diff` between the
-round-15 post-apply spec (commit `acefcdd4`) and this one.
+round-16 post-apply spec (commit `482b1252`) and this one.
 
 | Line | Requirement | Change | Touches |
 |---|---|---|---|
-| 11 | 046, the question | "that it is removed if the run ends before its brief, or named with the removal's failure where its removal fails" | line 248; arms 047.21, 047.22 |
-| 37 | 046, disclosures | round 15's option (a) verbatim; "or, where it ended after Git began to read the operator's clone and before the copy passed its form check, that the copy step used the method the question states, where it ended, and that the copy had not passed its form check"; "or, where its removal failed, that it was not removed" | lines 11, 242, 244, 248, 250, 258; arms 046.4, 047.25 |
-| 187 | 046, scenario "Write consent absent" | "or names as not removed where its removal fails" | line 248 |
-| 223 | 046, falsifier | arm 046.5: "or, where its copy step ended before Git read the operator's clone, that no fetch was made" | line 242 |
-| 242 | 047, v1.1 consent | the same form, where no fetch was made | arms 046.5, 047.16 |
-| 248 | 047, copy step | operator side: "or any working tree of its repository, its linked worktrees included"; "and the run is refused as every failure of a Git process for the copy is refused below"; the launch output where the copy's removal fails | lines 242, 256, 258; arms 046.12, 047.15, 047.18, 047.21, 047.22 |
-| 252 | 047, read list | "and the files of its common Git directory that locate its linked worktrees" | line 248; the arm on reads of the operator's clone |
-| 396 | 047, falsifier | arm 047.15 as line 248; arm 047.16 as line 242; arms 047.21 and 047.22 for a failed removal | lines 242, 248 |
+| 37 | 046, disclosures | early-ended branches keyed on "before Syzygy started the fetch process" and "after Syzygy started the fetch process"; "and, where the fetch failed, that a fetch was started and failed, as Git reported" | lines 242, 244, 248, 258; arms 046.4, 047.25 |
+| 223 | 046, falsifier | arm 046.5: the failed-fetch form; "no fetch was made" only before Syzygy started the fetch process | line 242 |
+| 242 | 047, v1.1 consent | the same three forms | arms 046.5, 047.16; line 258 |
+| 246 | 047, copy statements | "that it was not removed, where its removal failed" | lines 244, 248 |
+| 254 | 047, read list | configuration also read as text for `core.bare` and `core.worktree`, "to locate its repository's working trees" | lines 248, 252; the arm on reads of the operator's clone |
+| 346, 363, 368, 373 | 047, scenarios | "and removes the copy, or names it as not removed where its removal fails" | line 248; line 187; arms 047.21, 047.22 |
+| 396 | 047, falsifier | arm 047.16 as arm 046.5 | line 242 |
 
 ## What the reviewer is given, and nothing else
 
@@ -59,10 +61,10 @@ alternates); delete them afterwards.
   `ROUND-10-DISPOSITIONS.md`, `ROUND-11-PREP.md`,
   `ROUND-11-DISPOSITIONS.md`, `ROUND-12-DISPOSITIONS.md`,
   `ROUND-13-DISPOSITIONS.md`, `ROUND-14-DISPOSITIONS.md`,
-  `ROUND-15-DISPOSITIONS.md` and this brief;
-- the raws of rounds 1 to 15,
+  `ROUND-15-DISPOSITIONS.md`, `ROUND-16-DISPOSITIONS.md` and this brief;
+- the raws of rounds 1 to 16,
   `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-1-RAW.md` to
-  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-15-RAW.md`, whose findings
+  `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-16-RAW.md`, whose findings
   the dispositions answer (round 3's as superseded by the redesign);
 - the builder `scripts/build_polaris_dossier_launch_consent_v1_2.py`;
 - the peel-and-delegate change to
@@ -123,34 +125,32 @@ Each is a yes/no question with the evidence that settles it. Read the
 changed lines above and what their "Touches" column names, unless a question
 needs more.
 
-1. **Does each round-15 repair land as disposed?** Is the wording
-   `ROUND-15-DISPOSITIONS.md` quotes at the line it names, verbatim?
-2. **Is every copy statement true after every sub-step of the copy step?**
-   Take a conforming copy-class run refused right after each sub-step:
-   directory created, `init`, the configuration `init` writes, fetch,
-   checkout, form check, removal (including a removal that fails).
-   - Does any statement the spec requires of it (the question, the run
-     record and pages, the v1.1 consent statement, the launch output, the
-     refusals) say anything false, or can it not be made?
-   - Is the matrix's population complete, and is any cell wrong?
-3. **Do the new branches of line 37 partition the runs?** Does every
-   copy-class run whose copy step started fall under exactly one of: the
-   question's statement, "ended before Git read", "ended after Git began to
-   read and before the copy passed its form check"? Do arms 046.4 and
-   047.25 agree?
-4. **Is the failed-removal rule honest and closed?** Do lines 11, 37, 187,
-   248 and arms 047.21 and 047.22 state the same thing, and does any of them
-   let a copy stay without the launch output naming it?
-5. **Is the placement rule symmetric?** Do line 248 and arm 047.15 now name
-   the same places on both sides, and does the owner page match them?
-6. **Does the read list cover how Syzygy finds the linked worktrees?** Does
-   line 252's first item admit the read the placement check needs, and no
-   more than it needs?
+1. **Does each round-16 repair land as disposed?** Is the wording
+   `ROUND-16-DISPOSITIONS.md` quotes at the line it names, verbatim?
+2. **Does every removal duty survive a failed removal?** Re-run the "remov"
+   sweep over these bytes.
+   - Is the population 50 occurrences on 16 lines, and is any occurrence
+     misclassed?
+   - Does any clause, scenario or arm still require a conforming run to
+     remove its copy, or to say it did, where the removal fails?
+3. **Is the matrix population complete now?** Is any copy statement,
+   scenario or arm that a run refused inside the copy step must meet missing
+   from its 35 rows, and is any cell wrong?
+4. **Can a run tell which early-ended form applies?** Do line 37, line 242
+   and arms 046.5 and 047.16 turn only on whether Syzygy started the fetch
+   process? Does each form agree with line 258's refusal of a failed Git
+   process?
+5. **Is the widened configuration read closed?** Does line 254 admit what
+   locating the operator's repository's working trees needs, and nothing
+   that would let Syzygy honour the configuration?
+6. **Is the owner page fair?** Does it state the failed removal, the
+   early-ended forms and the worktree-locating reads in plain words, and no
+   more than the spec binds?
 7. **Do the prose pages and tooling match?**
    - Do the delta's exact blocks match `git diff` of the applied patch?
    - Do `--check` and `--selftest` pass for the three builders, and does the
      recorder's selftest pass?
-8. **Did the fixes re-open anything?** Does any round-1-to-15 finding return
+8. **Did the fixes re-open anything?** Does any round-1-to-16 finding return
    in the changed lines or in what they touch?
 
 ## Output
