@@ -10,7 +10,9 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-16-RAW.md:4`), over `482b1252`, the sixteenth review of package `polaris-dossier-launch-consent` v1.2, scoped to the round-15 repair and the last round under the owner's ruling. It has one revise finding (four scenarios still required a refused run to remove its copy where the removal fails) and seven notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-16-DISPOSITIONS.md`.
+`CONFIRM WITH EXCEPTIONS` (`R-POLARIS-LAUNCH-CONSENT-V1-2-17-RAW.md:4`), over `155f9c49`, the seventeenth review of package `polaris-dossier-launch-consent` v1.2, scoped to the round-16 repair. It has eight notes and no finding that requires a change, disposed in `R-POLARIS-LAUNCH-CONSENT-V1-2-17-NOTES.md`; notes 4 and 6 and the carried Unknowns are left for a later version.
+
+Round 16 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-16-RAW.md:4`), over `482b1252`, the sixteenth review of package `polaris-dossier-launch-consent` v1.2, scoped to the round-15 repair and the last round under the owner's ruling. It has one revise finding (four scenarios still required a refused run to remove its copy where the removal fails) and seven notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-16-DISPOSITIONS.md`.
 
 Round 15 of v1.2 was `REVISE` (`R-POLARIS-LAUNCH-CONSENT-V1-2-15-RAW.md:4`), over `acefcdd4`, the fifteenth review of package `polaris-dossier-launch-consent` v1.2, scoped to the round-14 repair. It has one revise finding (a run whose copy step ended at `init` had to state what Git read of the operator's clone, and Git read none of it) and seven notes, all disposed in `polaris-dossier-launch-consent-v1-2/ROUND-15-DISPOSITIONS.md`.
 
