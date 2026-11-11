@@ -59,10 +59,11 @@ themselves are outside the repository. Quoted from that page's table:
 - `fnry-19-p13-scope`, choice B: "v1.7 lets every quotation display the
   normalised run the check matched, with the raw span in the evidence view."
 
-[Observed] Option A as offered named P1, P3 and P5. The owner's later choice B
-under `fnry-19-p13-scope` added the quotation display rule; it is in this delta
-because of that choice, not because of option A. The boundary recorded on the
-bead with choice B: no v1.7 sign-off by anyone but the owner, no RFC 0007
+[Observed] The page records choice A as including P13's clause-bound part
+beside P1, P3 and P5; choice B under `fnry-19-p13-scope` then settled that
+part's scope as every quotation, not only Markdown ones. The packets
+themselves, and so the options as offered, are outside the repository. The
+boundary recorded on the bead with choice B: no v1.7 sign-off by anyone but the owner, no RFC 0007
 change, no change to the normalisation (spec line 242 at v1.6), none of P8's
 other quotation work.
 
@@ -99,7 +100,7 @@ the prototype supervisor, implements that order. Each P1 item, sorted:
 |---|---|---|
 | (a) A passed revision may be rendered whatever its reviews say; each render is its own pages | this spec (REQ-034's render paragraph) | yes |
 | (a) The launched run renders each passed revision and delivers the design review before fidelity is ready | one-command-run line 9 | no: finding 1 |
-| (b) Two declared limits, which limit a resubmission counts against, the check refusal | this spec (REQ-033 limits; REQ-034 counting) | yes |
+| (b) Two declared limits, which limit a resubmission counts against, and how checks that report findings and refused checks count | this spec (REQ-033 limits; REQ-034 counting) | yes |
 | (b) How the one command asks for the limits and stops on them | one-command-run lines 9, 11, 27 (by reference to REQ-033) | no: finding 1 (no text change strictly needed) |
 | (c) What close records, the site of record, per-field provenance, end state | this spec (REQ-035, new paragraph) | yes |
 | (d) Close over an unrendered or unreviewed site: closes with a finding, never refuses | this spec | yes |
@@ -133,36 +134,63 @@ the launch-consent change.
 - **(b) Two repair limits.** The run configuration declares a design-repair
   limit beside the repair-cycle limit: required, a nonnegative integer, 0
   allowed, no default, exactly as the other limits. A resubmission counts
-  against exactly one. It is a design-repair revision, counting against the
-  design-repair limit, when, as Syzygy's records stand at its check, the
-  revision before it passed, a counted rendered-design verdict on that
-  revision's pages has an unresolved blocking finding, and no counted fidelity
-  verdict on that revision has one; or when it follows a refused check of a
-  design-repair revision. Every other resubmission counts against the
-  repair-cycle limit. **Check refusals still count** (owner direction
+  against exactly one, decided and recorded at its check, before the new
+  revision retires the verdicts the decision reads (so the decision never
+  has to be re-made from retired evidence). It is a design-repair revision,
+  counting against the design-repair limit, when the revision before it
+  passed, the rendered-design verdict of record on that revision's latest
+  pages has an unresolved blocking finding, and no fidelity verdict of record
+  on that revision has one; or when the revision before it was a
+  design-repair revision whose check reported findings. Every other
+  resubmission counts against the repair-cycle limit. The first revision
+  counts against neither; a check Syzygy refuses (past a limit, past the
+  deadline, not briefed) freezes no revision and counts against nothing, as
+  `check.ts` already does; a resubmission's check is refused once the
+  revisions counted against its limit equal that limit, which is how the
+  repair-cycle limit is enforced today. The verdict of record (the counted
+  verdict of a kind recorded last) decides when several count.
+  **Checks that report findings still count** (owner direction
   `OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-05`, item 3, "Keep the rule;
-  the operator chooses the limit when asked"): a refused check is charged to
-  the limit of the revision it refused. [Observed] That ruling's re-ask
+  the operator chooses the limit when asked"): that direction kept the rule
+  that every checked resubmission counts, a check that reports findings
+  included, and that stays true; what is new is only which limit a design
+  repair counts against. [Observed] That ruling's re-ask
   trigger ("a run ends blocked with most cycles spent repairing check
   failures") was not met by `run-ffe579c7`, per the bead's record, so the
   counting rule is kept, not re-asked. Which limit a revision counted against
   rests on stored verdict records and is Inferred, like the count itself.
 - **(c) What close records.** At close Syzygy decides and records: the latest
-  passed revision; the site of record (the latest pages rendered from that
-  revision, else the latest pages rendered from any revision, named with its
-  revision); for fidelity and for rendered-design, the standing for the site
-  of record (the counted verdict of record, ready or with its unresolved
-  blocking findings, or that none counts); the revision, inventory revision or
-  pages each other recorded value came from; and how the run ended. The
-  standings are decided at close as at render, so they are Observed in close's
-  own output and Inferred wherever shown later from the record.
+  passed revision, or that none passed; the site of record (the latest pages
+  rendered from that revision, else the latest pages rendered from any
+  revision, named with its revision, or that none were rendered); for
+  fidelity and for rendered-design, the standing for the site of record (the
+  verdict of record, defined as the counted verdict of that kind recorded
+  last, ready or with its unresolved blocking findings, or that none counts);
+  the revision, inventory revision or pages each other recorded value came
+  from; and how the run ended. Labels: close can re-derive which revision
+  passed, which pages exist and whether a verdict counts (it names the digest
+  of the packet Syzygy rebuilds), so those are Observed in close's own output.
+  Whether a verdict is ready, or which blocking findings it names, is the
+  review session's assertion in a stored record, so it is Inferred, and so is
+  an end state that rests on it. Every standing or end state shown later from
+  the run record is Inferred.
+- **End states.** "Closed" needs the site rendered from the latest passed
+  revision, both standings ready and no other close finding (such as the
+  credential finding `close.ts` already reports as `closed-with-finding`);
+  anything else, including a run in which no revision passed, is "closed with
+  a finding" naming each condition. A later revision that fails its check
+  leaves the earlier passed one as latest passed; if it was never rendered,
+  close names that as a condition. That is intended: render a passed
+  revision before resubmitting.
 - **(d) Refuse or label.** Answer: label. Close never refuses for an
   unrendered or unreviewed site; it ends "closed with a finding" naming each
   failing condition, and no surface may call the site reviewed or ready while
-  one holds. Reason [Inferred]: a refusal would leave a run that cannot be
-  rendered or reviewed again (deadline or limit spent) with no closed record at
-  all, and the record is where the truth has to be written; the finding makes
-  the same fact visible without that trap. The owner may prefer refusal; see
+  one holds. Reason [Inferred]: a refusal would leave a run whose limits are
+  spent, and which therefore cannot be repaired and reviewed again, with no
+  closed record at all, and the record is where the truth has to be written;
+  the finding makes the same fact visible without that trap. (A run past its
+  deadline cannot close under either answer: REQ-033 refuses any step after
+  the deadline, and this delta does not change that.) The owner may prefer refusal; see
   "For the owner", item 3.
 - **Re-stamp.** At close Syzygy rewrites the named review-status region of
   every page of the site of record with both standings, the end state and the
@@ -170,8 +198,9 @@ the launch-consent change.
   those pages stays counted.
 - **(e) Mechanical design pre-pass.** Answer: advisory only, and stated here.
   With a render Syzygy may report reader advice, its own measurement of its
-  own pages (a page's word count, words above the thesis, a list repeating a
-  diagram, no hero). The advice is labelled as Syzygy's measurement, never
+  own pages (a page's word count, words above the thesis, no hero). Only
+  measurements count as advice; a judgement such as whether a list repeats a
+  diagram stays a rendered-design review question. The advice is labelled as Syzygy's measurement, never
   renders on a page, never enters a review packet, is no repair finding,
   decides no readiness and counts as no review. Because it decides nothing, it
   adds no readiness-deciding step under one-command-run line 13. A pixel probe
@@ -206,8 +235,11 @@ the launch-consent change.
   has a page; whether that Pole substantiates it is a design-review question,
   added to REQ-035's criteria.
 - **Landing composition** (amends v1.6 line 259's composition for v5 only).
-  Title, thesis, then the hero if named, with nothing Syzygy writes above the
-  end of that opening but navigation; then the ribbon, the pillars with costs
+  Title, thesis, then the hero if named. Above the end of that opening
+  Syzygy writes only navigation and what the thesis and hero carry under
+  their own rules (labels, citation marks, the excerpt's caption, any
+  withheld or Unknown presentation); the apparatus (the one sentence, legend,
+  review status) comes after, in the ribbon. Then the ribbon, the pillars with costs
   and links, the why section and the map of the Poles. v3 and v4 drafts keep
   v1.6's landing page.
 - **The ribbon** (amends the legend clause, line 247). Every narrative page
@@ -262,8 +294,21 @@ the launch-consent change.
   expected reading-view text from the fixture's own normalised text.
 - **Anchor.** RFC7-10's anchor is unchanged: same class, identifier, fragment
   (the located span's byte range) and target state, one anchor for both views.
-- **Legend.** Its quotation sentence now says the reading view leaves out the
-  markup the check removes and the exact bytes are in the evidence view.
+- **What the reading view changes.** [Observed] By the normalisation's steps
+  (`QUOTE_NORMALISATION` in `quote-fidelity.ts`): line endings unified;
+  comment leaders (`//`, `#`, `/*`, `*`, `*/`) at line starts and ends
+  dropped; Markdown links and images reduced to their text; character
+  entities decoded; backslash escapes removed; backticks removed; paired `*`
+  and `_` emphasis marks removed, twice, which also drops an identifier's
+  paired underscores (`__init__` reads `init`); curly quotation marks
+  straightened; the ellipsis character spelled as three dots; and every
+  whitespace run, newlines included, made one space, so a multi-line code or
+  YAML quotation reads as one line. The legend now says so in brief, and
+  that the exact bytes are in the evidence view.
+- **Parity.** The machine form carries the located span and the reading view
+  the matched run, so the Oracle compares them per quotation by its one
+  anchor: the reading-view text against the run, the machine-form text
+  against the span.
 - **Not changed:** the normalisation itself (line 242), lead-ins and citation
   marks (P8), line-linked citations (`syzygy-fnry.20`, clause-free).
 
@@ -308,16 +353,23 @@ the launch-consent change.
    read with care, RFC7-12: "For adjudicative material — doctrine rules,
    non-goals, requirement text — the operative text a reader relies on is the
    owned artifact's verbatim text, never a paraphrase in normative position".
-   A reading-view quotation of an observed repository's requirement text loses
-   backticks, emphasis marks and link targets. This delta reads it as no
-   paraphrase (a fixed, mechanical normalisation with no word chosen by
-   anyone) and as RFC7-12's "the target's own text is one step away" (the
-   evidence view, the source page and the anchor). If the owner reads RFC7-12
+   A reading-view quotation loses everything the normalisation removes (the
+   full list is under P13, "What the reading view changes"): markup, comment
+   leaders, escapes, line breaks and repeated spaces, and in code an
+   identifier's paired underscores (`__init__` reads `init`). This delta reads
+   it as no paraphrase (a fixed, mechanical normalisation with no word chosen
+   by anyone) and as RFC7-12's "the target's own text is one step away" (the
+   evidence view, the source page and the anchor). The cost is real for code:
+   a reading-view quotation of code can misspell an identifier. Limiting the
+   display rule to Markdown sources, or to steps that remove only markup,
+   would be a narrower choice than B and is the owner's to make. If the owner reads RFC7-12
    otherwise, the display rule needs an RFC 0007 question first, as the bead's
    stop condition says. No RFC 0007 text is changed here.
 3. **Close: label, not refuse.** Drafted as label (closed with a finding). A
    refusing close is a one-sentence change if the owner prefers it; its cost is
-   a run that can never close when its deadline or limits are spent.
+   a run that can never close once its repair limits are spent. A run past its
+   deadline cannot close under either answer (REQ-033 refuses every step after
+   the deadline); this delta leaves that as it is.
 4. **No decision record for the two selections.** They are recorded on the
    pursuit page and the bead, not under `decisions/`; v1.6's selection had a
    direction record that `warrants.decisions` cites. The sign-off record will
@@ -332,8 +384,9 @@ the launch-consent change.
   the base change and the understanding amendment.
 - The normalisation (line 242), RFC 0007, the anchor form, the code excerpt's
   own rules, the Pole rules for v4 drafts, the v3 and v4 landing pages.
-- Check-refusal counting (kept as ruled 2026-11-05); the requirement that each
-  limit be declared with no default.
+- That every checked resubmission counts, a check that reports findings
+  included (kept as ruled 2026-11-05), and that a refused check freezes no
+  revision; the requirement that each limit be declared with no default.
 - The changed-block list's rules, other than notes 3 and 4.
 - REQ-033 line 27 (the one sentence, the appendix and the machine form), and
   every sentence the launch-consent and one-command-run changes quote.
@@ -358,8 +411,12 @@ the launch-consent change.
 5. REQ-polaris-generation-006 ("A revision SHALL retire dependent review
    evidence"): a design verdict binds to the pages it read; a later
    revision's pages are a new subject, so nothing is carried forward.
-6. VIS-2: every value close shows from a stored record is Inferred; which
-   limit a revision counted against is Inferred.
+6. VIS-2 and REQ-033 ("Syzygy SHALL NOT rest an Observed label on a record
+   it stored"): close labels Observed only what it re-derives (which revision
+   passed, which pages exist, whether a verdict counts); a verdict's
+   readiness, an end state resting on it, and every value shown later from the
+   run record are Inferred; which limit a revision counted against is
+   Inferred.
 
 ## Current and proposed clauses, in full
 
@@ -508,7 +565,7 @@ Each resubmission is a new draft revision with its own identity; it counts again
 Proposed:
 
 ```text
-Each resubmission is a new draft revision with its own identity; it counts against exactly one limit of REQ-polaris-generation-033, and it retires earlier check results and dependent review evidence (REQ-polaris-generation-006). A resubmission is a design-repair revision, and counts against the design-repair limit, when the revision before it is a design-repair revision whose check was refused, or when, as Syzygy's records stand at its check, the revision before it passed its check, a counted rendered-design verdict on pages rendered from that revision has an unresolved blocking finding, and no counted fidelity verdict on that revision has one. Every other resubmission counts against the repair-cycle limit, including one that follows a refused check of a revision that counted against that limit.
+Each resubmission is a new draft revision with its own identity; it counts against exactly one limit of REQ-polaris-generation-033, and it retires earlier check results and dependent review evidence (REQ-polaris-generation-006). Syzygy SHALL decide which limit at the resubmission's check, from its records as they stand before the resubmission retires anything, and SHALL record that decision with the revision; a later step reads the recorded decision and never decides it again. A resubmission is a design-repair revision, and counts against the design-repair limit, when the revision before it is a design-repair revision whose check reported findings, or when the revision before it passed its check, the rendered-design verdict of record (REQ-polaris-generation-035) on the latest pages rendered from that revision has an unresolved blocking finding, and no fidelity verdict of record on that revision has one. Every other resubmission counts against the repair-cycle limit, including one that follows a check that reported findings on a revision that counted against that limit. The first draft revision counts against neither limit, a check Syzygy refuses freezes no revision and counts against no limit, and Syzygy SHALL refuse a resubmission's check when the revisions already counted against its limit equal that limit.
 ```
 
 ### P1b-9 — `spec.md` — REQ-034 scenario "Repair loop counted"
@@ -536,7 +593,7 @@ Syzygy SHALL render a checked draft through the existing multi-page dossier rend
 Proposed:
 
 ```text
-Syzygy SHALL render a checked draft through the existing multi-page dossier renderer. When asked, Syzygy SHALL render the latest checked draft revision if its check passed, whatever the state of any review of it; each render is a new set of pages bound to the one revision it was rendered from, and no review verdict on pages rendered from another revision counts for them (REQ-polaris-generation-035). Rendering decides no readiness and counts as no review. With a render Syzygy MAY report reader advice, which is its own mechanical measurement of the pages it rendered, such as a page's word count, the words above a landing page's thesis, a list that repeats a diagram, or a dossier with no hero excerpt; the advice SHALL be labelled as Syzygy's measurement of its own pages, SHALL NOT render on a page or enter a review packet, and is no repair finding, decides no readiness and counts as no review.
+Syzygy SHALL render a checked draft through the existing multi-page dossier renderer. When asked, Syzygy SHALL render the latest checked draft revision if its check passed, whatever the state of any review of it; each render is a new set of pages bound to the one revision it was rendered from, and no review verdict on pages rendered from another revision counts for them (REQ-polaris-generation-035). Rendering decides no readiness and counts as no review. With a render Syzygy MAY report reader advice, which is its own mechanical measurement of the pages it rendered, such as a page's word count, the words above a landing page's thesis, or a dossier with no hero excerpt; the advice SHALL be labelled as Syzygy's measurement of its own pages, SHALL NOT render on a page or enter a review packet, and is no repair finding, decides no readiness and counts as no review.
 ```
 
 ### P13-1 — `spec.md` — REQ-034: what a rendered quotation shows
@@ -578,7 +635,7 @@ Each narrative page SHALL carry once a Syzygy-written legend: a numbered mark ci
 Proposed:
 
 ```text
-Each narrative page SHALL carry a ribbon: one paragraph holding the one sentence of REQ-polaris-generation-033 with its link to the appendix and the named review-status region of REQ-polaris-generation-035, followed by a details element, closed by default, whose summary is the Syzygy-written words `How to read this page` and whose body holds, once, the page's Syzygy-written legend; no fragment target sits inside the ribbon. On the landing page of a schema-v5 draft the ribbon follows the page's opening, and on every other narrative page it follows the page's title; nothing else Syzygy writes about the run, the draft or its review sits above it. The legend says: a numbered mark cites a source; text with such a mark is the agent's reading of that source; the mark `judgement` is the agent's own assessment; the mark `framing` makes no claim; a set-off quotation is verified against the repository and shows the source's text with the markup the check removes left out, its exact bytes being in the evidence view; `Not established`
+Each narrative page SHALL carry a ribbon: one paragraph holding the one sentence of REQ-polaris-generation-033 with its link to the appendix and the named review-status region of REQ-polaris-generation-035, followed by a details element, closed by default, whose summary is the Syzygy-written words `How to read this page` and whose body holds, once, the page's Syzygy-written legend; no fragment target sits inside the ribbon. On the landing page of a schema-v5 draft the ribbon follows the page's opening, and on every other narrative page it follows the page's title; nothing else Syzygy writes about the run, the draft or its review sits above it. The legend says: a numbered mark cites a source; text with such a mark is the agent's reading of that source; the mark `judgement` is the agent's own assessment; the mark `framing` makes no claim; a set-off quotation is verified against the repository and shows the source's text as the check compares it, with markup, comment markers and escapes left out, entities decoded, quotation marks straightened and each run of whitespace made one space, its exact bytes being in the evidence view; `Not established`
 ```
 
 ### P5-1 — `spec.md` — REQ-034: the presentation elements
@@ -638,7 +695,7 @@ Proposed:
 ```text
 each altitude stays a true coarser account and the verbatim leaf stays reachable.
 
-A draft in schema `polaris-dossier-local-draft-v5` is a schema-v4 draft under every rule this requirement states for one, and SHALL also divide its sections into Poles and carry a thesis and three to five pillars; it MAY name one hero. The thesis is a claim block, under every rule for a claim block, of at most 300 Unicode code points, stating what the project is, for whom and why; whether it is one sentence and says those three things is a review judgement. Each pillar is a claim block under every rule for a claim block, with a short label under the rules for an element's short label, a cost, which is a claim block of its own stating what the pillar's choice costs, and the identity of the one Pole that substantiates it. Syzygy SHALL report a repair finding for a schema-v5 draft without Poles, without a thesis or with one over 300 Unicode code points, with fewer than three or more than five pillars, with a pillar that has no cost, and with a pillar that names no Pole of the draft or names one that has no page of its own; a pillar naming a Pole that has a page is served, and whether that Pole substantiates it is a review judgement. The hero is a code excerpt under every rule for a code excerpt and carries no text of the agent's beyond its language hint. The landing page of a schema-v5 draft SHALL open with, in this order, the title, the thesis and the hero where the draft names one, and nothing Syzygy writes other than the site's navigation SHALL sit above the end of that opening; the ribbon follows it, then the pillars, each with its cost and a link to its Pole's page, then the why section and the map of the Poles as above. A hero whose blob is withheld renders in its place as a withheld code excerpt does. With no hero the opening ends at the thesis, and reader advice MAY say so; a missing hero is no repair finding. The brief for a run whose draft schema is v5 SHALL state these rules. Under the owner's sign-off of this version the thesis, the hero and the pillars open the landing page's altitude, which stays a true coarser account under RFC7-13.
+A draft in schema `polaris-dossier-local-draft-v5` is a schema-v4 draft under every rule this requirement states for one, and SHALL also divide its sections into Poles and carry a thesis and three to five pillars; it MAY name one hero. The thesis is a claim block, under every rule for a claim block, of at most 300 Unicode code points, stating what the project is, for whom and why; whether it is one sentence and says those three things is a review judgement. Each pillar is a claim block under every rule for a claim block, with a short label under the rules for an element's short label, a cost, which is a claim block of its own stating what the pillar's choice costs, and the identity of the one Pole that substantiates it. Syzygy SHALL report a repair finding for a schema-v5 draft without Poles, without a thesis or with one over 300 Unicode code points, with fewer than three or more than five pillars, with a pillar that has no cost, and with a pillar that names no Pole of the draft or names one that has no page of its own; a pillar naming a Pole that has a page is served, and whether that Pole substantiates it is a review judgement. The hero is a code excerpt under every rule for a code excerpt and carries no text of the agent's beyond its language hint. The landing page of a schema-v5 draft SHALL open with, in this order, the title, the thesis and the hero where the draft names one, and above the end of that opening Syzygy SHALL write nothing but the site's navigation and what the thesis and the hero carry under their own rules (their labels, citation marks and caption, and any withheld or Unknown presentation of either); the ribbon follows it, then the pillars, each with its cost and a link to its Pole's page, then the why section and the map of the Poles as above. A hero whose blob is withheld renders in its place as a withheld code excerpt does. With no hero the opening ends at the thesis, and reader advice MAY say so; a missing hero is no repair finding. The brief for a run whose draft schema is v5 SHALL state these rules. Under the owner's sign-off of this version the thesis, the hero and the pillars open the landing page's altitude, which stays a true coarser account under RFC7-13.
 ```
 
 ### S34 — `spec.md` — REQ-034: added scenarios
@@ -658,9 +715,9 @@ Proposed:
 
 #### Scenario: Design repairs drawn from their own limit
 
-- **WHEN** a draft revision passed its check, a counted rendered-design verdict on pages rendered from it has an unresolved blocking finding, no counted fidelity verdict on it has one, and the agent resubmits after the repair-cycle limit is spent
-- **THEN** Syzygy checks the resubmission as a design-repair revision counting against the design-repair limit, and refuses it only when that limit is spent; a resubmission after a refused check of a design-repair revision is also a design-repair revision
-- **AND** a resubmission after a counted fidelity verdict with an unresolved blocking finding, or after a refused check of a revision that counted against the repair-cycle limit, counts against the repair-cycle limit, and each count is labelled Inferred
+- **WHEN** a draft revision passed its check, the rendered-design verdict of record on its latest pages has an unresolved blocking finding, no fidelity verdict of record on it has one, and the agent resubmits after the repair-cycle limit is spent
+- **THEN** Syzygy decides at the check, before anything is retired, that the resubmission is a design-repair revision counting against the design-repair limit, records that with the revision, and refuses the check only when that limit is spent; if that check reports findings, the next resubmission is also a design-repair revision
+- **AND** a resubmission after a fidelity verdict of record with an unresolved blocking finding, or after a check that reported findings on a revision that counted against the repair-cycle limit, counts against the repair-cycle limit, a refused check counts against neither limit, and each count is labelled Inferred
 
 #### Scenario: Every passed revision renders as its own pages
 
@@ -701,7 +758,7 @@ Proposed:
 #### Scenario: Thesis-first landing page
 
 - **WHEN** a schema-v5 draft with a thesis, four pillars each naming a Pole that has a page, and a hero is rendered
-- **THEN** the landing page opens with the title, the thesis and the hero, in that order, with nothing Syzygy writes other than navigation above the hero's end, and then carries the ribbon, the pillars with their costs and links, the why section and the map of the Poles
+- **THEN** the landing page opens with the title, the thesis and the hero, in that order, with nothing Syzygy writes above the hero's end but navigation and the thesis's and the hero's own labels, citation marks and caption, and then carries the ribbon, the pillars with their costs and links, the why section and the map of the Poles
 - **AND** the thesis, each pillar and each cost is checked as a claim block and has its own entry in the fidelity verdict, and the hero renders from Syzygy's read as a code excerpt does
 
 #### Scenario: Thesis and pillars checked
@@ -742,7 +799,7 @@ Expected findings and byte ranges computed from the fixture blobs outside the ch
 Proposed:
 
 ```text
-Expected findings and byte ranges computed from the fixture blobs outside the checker, by an independent byte search over the fixture's own normalised text, with each quotation's expected reading-view text the run of that normalised text the search found;
+Expected findings and byte ranges computed from the fixture blobs outside the checker, by an independent byte search over the fixture's own normalised text, with each quotation's expected reading-view text the run of that normalised text the search found, and the reading view and the machine form compared per quotation by its anchor, the reading-view text against that run and the machine-form text against the located span;
 ```
 
 ### F34-1 — `spec.md` — REQ-034 Falsifier: the quotation disjunct
@@ -770,7 +827,7 @@ a page lacks the one sentence, its link or its machine disclosure; a Pole rule p
 Proposed:
 
 ```text
-a page lacks the one sentence, its link or its machine disclosure; a Pole rule passes when broken; a narrative page lacks its ribbon, carries its legend outside the ribbon's details element or its ribbon below other text Syzygy writes about the run, the draft or its review, or carries a fragment target inside the ribbon; a resubmission counts against a limit other than the one this requirement assigns it, against both or against none, or a design-repair revision is refused while the design-repair limit is unspent; a passed latest revision is refused a render because of the state of a review of it, or a rendered-design verdict on pages of one revision counts for pages of another; reader advice renders on a page, enters a review packet, is a repair finding or changes readiness; a schema-v5 landing page opens otherwise than with the title, the thesis and the named hero in that order, or carries text Syzygy writes, other than navigation, above the end of that opening; a schema-v5 thesis, pillar or cost escapes a check a claim block meets or lacks its fidelity entry; a schema-v5 rule on Poles, thesis length, pillar count, cost or served Pole passes when broken, or a missing hero is a repair finding; a hero or an annotated walk's excerpt renders the agent's text; a margin note renders inside the preformatted code or lacks its fidelity entry, or a walk with no note, or a note whose line range is malformed, reversed or outside its excerpt, passes.
+a page lacks the one sentence, its link or its machine disclosure; a Pole rule passes when broken; a narrative page lacks its ribbon, carries its legend outside the ribbon's details element or its ribbon below other text Syzygy writes about the run, the draft or its review, or carries a fragment target inside the ribbon; a resubmission counts against a limit other than the one this requirement assigns it, against both or against none, or a design-repair revision is refused while the design-repair limit is unspent; a passed latest revision is refused a render because of the state of a review of it, or a rendered-design verdict on pages of one revision counts for pages of another; reader advice renders on a page, enters a review packet, is a repair finding or changes readiness; a schema-v5 landing page opens otherwise than with the title, the thesis and the named hero in that order, or carries text Syzygy writes above the end of that opening other than navigation and what the thesis and the hero carry under their own rules, or lacks one of those; a schema-v5 thesis, pillar or cost escapes a check a claim block meets or lacks its fidelity entry; a schema-v5 rule on Poles, thesis length, pillar count, cost or served Pole passes when broken, or a missing hero is a repair finding; a hero or an annotated walk's excerpt renders the agent's text; a margin note renders inside the preformatted code or lacks its fidelity entry, or a walk with no note, or a note whose line range is malformed, reversed or outside its excerpt, passes.
 ```
 
 ### N3-1 — `spec.md` — REQ-035: the base round is a fidelity round (carried v1.6 note 3)
@@ -842,7 +899,7 @@ Proposed:
 ```text
 and the inventory's completeness over the clone and its preparation from the whole source population. The review page SHALL disclose that distinction.
 
-At close Syzygy SHALL record in the run record, deciding each at close from the records and objects it verifies then, as at render: the latest draft revision whose check passed; the site of record, which is the latest set of pages rendered from that revision or, where none was, the latest set of pages rendered from any revision, named with the revision it was rendered from; for each review kind, fidelity and rendered-design, its standing for the site of record, which is the counted verdict of record on the revision the site was rendered from (fidelity) or on the site's pages (rendered-design), ready or with its unresolved blocking findings, or that none counts; for every other value the record shows, the draft revision, inventory revision or set of pages it was taken from; and how the run ended. A run ends closed when the site of record was rendered from the latest passed revision and both standings are ready, and closed with a finding otherwise, the finding naming each condition that fails: the latest passed revision has no rendered pages, a review kind has no counted verdict for the site of record, or a counted verdict has an unresolved blocking finding. Syzygy SHALL NOT refuse to close for those conditions, and SHALL NOT state or render the site of record as reviewed or ready while one holds. At close Syzygy SHALL rewrite the named review-status region of every page of the site of record to state both standings, how the run ended and the instant close decided them, and SHALL change nothing outside that region, so that a counted rendered-design verdict on those pages stays counted. The standings and the end state are Observed in close's own output as close decides them; wherever a later step or page shows them from the run record they are Inferred, as REQ-polaris-generation-033 requires of a value shown from a stored record.
+At close Syzygy SHALL record in the run record, deciding each at close from the records and objects it verifies then, as at render: the latest draft revision whose check passed, or that none did; the site of record, which is the latest set of pages rendered from that revision or, where none was, the latest set of pages rendered from any revision, named with the revision it was rendered from, or that no pages were rendered; for each review kind, fidelity and rendered-design, its standing for the site of record, which is its verdict of record on the revision the site was rendered from (fidelity) or on the site's pages (rendered-design), ready or with its unresolved blocking findings, or that none counts; for every other value the record shows, the draft revision, inventory revision or set of pages it was taken from; and how the run ended. A review kind's verdict of record on a revision or a set of pages is the counted verdict of that kind on it that Syzygy recorded last. A run ends closed when the site of record was rendered from the latest passed revision, both standings are ready and close reports no other finding, and closed with a finding otherwise, the finding naming each condition that fails: no revision passed its check, the latest passed revision has no rendered pages, a review kind has no counted verdict for the site of record, a verdict of record has an unresolved blocking finding, or close reports another finding this change states. Syzygy SHALL NOT refuse to close for those conditions, and SHALL NOT state or render the site of record as reviewed or ready while one holds. At close Syzygy SHALL rewrite the named review-status region of every page of the site of record to state both standings, how the run ended and the instant close decided them, and SHALL change nothing outside that region, so that a counted rendered-design verdict on those pages stays counted. In close's own output, which revision passed, the site of record, whether a verdict counts for it, and an end state resting on those alone are Observed as close decides them; whether a verdict is ready or names an unresolved blocking finding is what the review session said and is Inferred, as is an end state that rests on it; wherever a later step or page shows a standing or the end state from the run record it is Inferred, as REQ-polaris-generation-033 requires of a value shown from a stored record.
 ```
 
 ### S35 — `spec.md` — REQ-035: added scenarios
@@ -860,13 +917,13 @@ Proposed:
 
 #### Scenario: Close names each review's standing
 
-- **WHEN** a run closes after the latest passed draft revision was rendered, and both the fidelity verdict on that revision and the rendered-design verdict on its pages count and are ready
-- **THEN** the run record names that revision, its pages as the site of record, both standings, the revision or pages each other recorded value was taken from, and that the run ended closed
+- **WHEN** a run closes after the latest passed draft revision was rendered, and both the fidelity verdict of record on that revision and the rendered-design verdict of record on its pages are ready, and close reports no other finding
+- **THEN** the run record names that revision, its pages as the site of record, both standings, the revision or pages each other recorded value was taken from, and that the run ended closed, with each verdict's readiness and the end state labelled Inferred
 - **AND** the review-status region of every page of the site of record states both standings and the instant close decided them, and nothing outside that region changes
 
 #### Scenario: Close over a newer unrendered or unreviewed revision
 
-- **WHEN** a run closes while the latest passed draft revision has no rendered pages, or the site of record has no counted verdict of a review kind, or a counted verdict for it has an unresolved blocking finding
+- **WHEN** a run closes while no draft revision passed its check, or the latest passed draft revision has no rendered pages, or the site of record has no counted verdict of a review kind, or a verdict of record for it has an unresolved blocking finding
 - **THEN** Syzygy closes the run with a finding naming each such condition, and names the site of record with the revision it was rendered from
 - **AND** close is not refused for them, no surface states the site of record as reviewed or ready, and its pages' review-status region names the finding
 ```
@@ -910,7 +967,7 @@ or which round is the base, the session's reading of the list, or the reviewer's
 Proposed:
 
 ```text
-or which round is the base, the session's reading of the list, or the reviewer's consideration of the entries the list does not name, is shown as Observed; a surface presents an entry the list does not name as carried forward or as confirmed by an earlier round; a base round is a round of a packet other than a fidelity packet; close refuses for an unrendered or unreviewed site of record, ends such a run closed rather than closed with a finding, or omits a failing condition from its finding; the site of record is stated or rendered as reviewed or ready while a condition fails; close changes a page outside its review-status region, or leaves a page of the site of record whose region does not state both standings; a recorded value lacks the revision or pages it was taken from; or a standing or end state read from the run record is shown as Observed.
+or which round is the base, the session's reading of the list, or the reviewer's consideration of the entries the list does not name, is shown as Observed; a surface presents an entry the list does not name as carried forward or as confirmed by an earlier round; a base round is a round of a packet other than a fidelity packet; close refuses for an unrendered or unreviewed site of record, ends such a run closed rather than closed with a finding, or omits a failing condition from its finding; the site of record is stated or rendered as reviewed or ready while a condition fails; close changes a page outside its review-status region, or leaves a page of the site of record whose region does not state both standings; a recorded value lacks the revision or pages it was taken from; a run with another close finding ends closed; a verdict other than the one recorded last decides a standing or which limit a resubmission counts against; a verdict's readiness or blocking findings, or an end state resting on them, is shown as Observed; or a standing or end state read from the run record is shown as Observed.
 ```
 
 ### D1 — `design.md` — design.md: version line
@@ -963,26 +1020,32 @@ close sealed pages no counted review had found ready.
   are spent. A design verdict binds to the pages it read and never counts
   for pages of another revision. With a render Syzygy may report reader
   advice: its own measurement of its pages (word counts, words above the
-  thesis, a list repeating a diagram, no hero). Advice decides nothing,
-  appears on no page and enters no packet.
+  thesis, no hero). Advice decides nothing, appears on no page and enters
+  no packet.
 - **Two repair limits.** `run.json` declares a design-repair limit beside
   the repair-cycle limit; both are required and may be 0. A resubmission
-  answering a blocking design verdict, when no fidelity verdict on the same
-  revision blocks, is a design-repair revision and counts against the
-  design-repair limit; a check refusal of a design-repair revision keeps
-  its resubmission there. Every other resubmission, a check refusal's
-  included, counts against the repair-cycle limit as before, so the
-  counting the owner kept on 2026-11-05 is unchanged.
+  answering the blocking design verdict of record, when no fidelity verdict
+  of record on the same revision blocks, is a design-repair revision and
+  counts against the design-repair limit; so is a resubmission after a
+  design-repair revision whose check reported findings. `check` decides
+  and records the limit before the new revision retires anything. Every
+  other resubmission counts against the repair-cycle limit; a refused check
+  freezes no revision and counts against neither. The owner kept on
+  2026-11-05 the rule that every checked resubmission counts, one after a
+  check that reported findings included; that still holds, and only the
+  limit a design repair counts against is new.
 - **An honest close.** `close` names the latest passed revision, the site
   of record, each review kind's standing for it, the revision each recorded
   value came from and how the run ended. It never refuses for an unrendered
   or unreviewed site: it closes with a finding naming each condition, and
   restamps every page's review-status region, which changes nothing a
-  counted design review read.
+  counted design review read. A verdict's readiness is the review session's
+  word and is shown Inferred; that a verdict counts is Syzygy's own.
 - **Thesis first.** Schema `polaris-dossier-local-draft-v5` requires Poles,
   a `thesis` (one claim block, at most 300 code points) and 3-5 `pillars`
   (`{label, block, cost, pole}`), and allows one `hero` code excerpt. The
-  landing page opens title, thesis, hero, with only navigation above; then
+  landing page opens title, thesis, hero, with only navigation and their own
+  labels and caption above; then
   the ribbon, the pillars, the why section and the map of the Poles.
 - **The ribbon.** On narrative pages the one sentence, the appendix link
   and the review-status region form one paragraph, and the legend moves
@@ -995,7 +1058,10 @@ close sealed pages no counted review had found ready.
   locator's offset map at render; the evidence view and machine form keep
   the located bytes, and the RFC7-10 anchor is unchanged. Re-normalising
   the located span alone is not used: a span ending inside a Markdown
-  link's text would keep its `[`.
+  link's text would keep its `[`. The reading view therefore shows the
+  check's normalisation: markup, comment markers, escapes and paired
+  emphasis marks (an identifier's paired underscores among them) dropped,
+  entities decoded, quotation marks straightened and whitespace collapsed.
 
 ## What remains open in the implementation
 ```

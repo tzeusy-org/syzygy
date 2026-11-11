@@ -44,7 +44,7 @@ Line numbers are at the branch base.
 
 | Clause changed | Code it touches | Bead |
 |---|---|---|
-| Two limits (REQ-033), which limit a resubmission counts against (REQ-034) | `packages/polaris-dossier/src/run-config.ts` (`maxRepairCycles`, line 123; a second required limit), `check.ts` (the refusal at lines 173-174 and the `repairCycles` record at line 249), `brief.ts` (line 192) and `inventory.ts` (line 155) limit text, `run-record.ts` | `syzygy-fnry.1` |
+| Two limits (REQ-033), which limit a resubmission counts against (REQ-034) | `packages/polaris-dossier/src/run-config.ts` (`maxRepairCycles`, line 123; a second required limit), `check.ts` (the refusal at lines 173-174 and the `repairCycles` record at line 249; the limit is decided before the freeze and recorded with the revision), `brief.ts` (line 192) and `inventory.ts` (line 155) limit text, `run-record.ts` | `syzygy-fnry.1` |
 | Render of every passed revision (REQ-034) | `render.ts` already requires only that the latest checked revision passed (its head comment); `polaris.ts` renders only when `fidelityState === 'ready'` (lines 739, 746, 756) and stops design repairs on the shared budget (lines 698, 726): that is the launched run's order (finding 1 in `SEMANTIC-DELTA.md`) | `syzygy-fnry.1` |
 | Reader advice (REQ-034) | `reader-advice.ts`, `render.ts` output | `syzygy-fnry.1` (pre-pass), `syzygy-fnry.5` (no-hero advice) |
 | Close record, end state and re-stamp (REQ-035) | `close.ts` (`CloseStage` at line 55 has no render or design stage; `CloseReport.outcome` already has `closed-with-finding`), `render.ts` (the review-status region, lines 188-201), `run-record.ts` | `syzygy-fnry.1` |
@@ -80,19 +80,23 @@ Line numbers are at the branch base.
 - **A second limit to declare.** The run configuration gains a required value
   with no default; an old `run.json` without it is refused, as any missing
   limit is.
-- **A design repair that fails its check stays a design repair.** It cannot
+- **A design repair whose check reports findings stays a design repair.** Its
+  next resubmission counts against the design-repair limit, so it cannot
   borrow from the repair-cycle limit, and a fidelity repair cannot borrow from
-  the design-repair limit.
+  the design-repair limit. A refused check counts against neither.
 - **Close with a finding is weaker than a refusal.** A run can end with an
   unreviewed site of record; the record, the status region and the end state
   say so, and no surface may call it reviewed or ready.
 - **The legend is one click away.** On narrative pages it sits in a closed
   details element. A reader who never opens it relies on the evidence view and
   the appendix.
-- **Reading-view quotations are not byte-exact.** They omit backticks,
-  emphasis, comment leaders and link targets as the check normalises them; the
-  evidence view, the source page and the anchor carry the exact bytes
-  (RFC7-12 reading, finding 2).
+- **Reading-view quotations are not byte-exact.** They show the check's
+  normalisation: markup, comment leaders, escapes and paired emphasis marks
+  dropped (an identifier's paired underscores too, so `__init__` reads
+  `init`), entities decoded, quotation marks straightened and every
+  whitespace run, line breaks included, made one space. The evidence view,
+  the source page and the anchor carry the exact bytes (RFC7-12 reading,
+  "For the owner", item 2).
 - **Schema v5 asks more of the author.** A thesis and three to five pillars
   with costs, each a checked claim block with a fidelity entry, make the
   verdict longer.

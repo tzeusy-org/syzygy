@@ -12,7 +12,7 @@
  > implementation. It contains no code. The command surface below is a design
  > for implementation after the owner's sign-off (direction item 5); the
  > requirements are the controlling text, and doctrine, accepted contracts,
-@@ -546,6 +546,51 @@
+@@ -546,6 +546,60 @@
  Syzygy still accepts `polaris-dossier-local-draft-v2` and `-v3` drafts; in those,
  every Inferred block still cites, since only v4 has the `judgement` field.
  
@@ -27,26 +27,32 @@
 +  are spent. A design verdict binds to the pages it read and never counts
 +  for pages of another revision. With a render Syzygy may report reader
 +  advice: its own measurement of its pages (word counts, words above the
-+  thesis, a list repeating a diagram, no hero). Advice decides nothing,
-+  appears on no page and enters no packet.
++  thesis, no hero). Advice decides nothing, appears on no page and enters
++  no packet.
 +- **Two repair limits.** `run.json` declares a design-repair limit beside
 +  the repair-cycle limit; both are required and may be 0. A resubmission
-+  answering a blocking design verdict, when no fidelity verdict on the same
-+  revision blocks, is a design-repair revision and counts against the
-+  design-repair limit; a check refusal of a design-repair revision keeps
-+  its resubmission there. Every other resubmission, a check refusal's
-+  included, counts against the repair-cycle limit as before, so the
-+  counting the owner kept on 2026-11-05 is unchanged.
++  answering the blocking design verdict of record, when no fidelity verdict
++  of record on the same revision blocks, is a design-repair revision and
++  counts against the design-repair limit; so is a resubmission after a
++  design-repair revision whose check reported findings. `check` decides
++  and records the limit before the new revision retires anything. Every
++  other resubmission counts against the repair-cycle limit; a refused check
++  freezes no revision and counts against neither. The owner kept on
++  2026-11-05 the rule that every checked resubmission counts, one after a
++  check that reported findings included; that still holds, and only the
++  limit a design repair counts against is new.
 +- **An honest close.** `close` names the latest passed revision, the site
 +  of record, each review kind's standing for it, the revision each recorded
 +  value came from and how the run ended. It never refuses for an unrendered
 +  or unreviewed site: it closes with a finding naming each condition, and
 +  restamps every page's review-status region, which changes nothing a
-+  counted design review read.
++  counted design review read. A verdict's readiness is the review session's
++  word and is shown Inferred; that a verdict counts is Syzygy's own.
 +- **Thesis first.** Schema `polaris-dossier-local-draft-v5` requires Poles,
 +  a `thesis` (one claim block, at most 300 code points) and 3-5 `pillars`
 +  (`{label, block, cost, pole}`), and allows one `hero` code excerpt. The
-+  landing page opens title, thesis, hero, with only navigation above; then
++  landing page opens title, thesis, hero, with only navigation and their own
++  labels and caption above; then
 +  the ribbon, the pillars, the why section and the map of the Poles.
 +- **The ribbon.** On narrative pages the one sentence, the appendix link
 +  and the review-status region form one paragraph, and the legend moves
@@ -59,7 +65,10 @@
 +  locator's offset map at render; the evidence view and machine form keep
 +  the located bytes, and the RFC7-10 anchor is unchanged. Re-normalising
 +  the located span alone is not used: a span ending inside a Markdown
-+  link's text would keep its `[`.
++  link's text would keep its `[`. The reading view therefore shows the
++  check's normalisation: markup, comment markers, escapes and paired
++  emphasis marks (an identifier's paired underscores among them) dropped,
++  entities decoded, quotation marks straightened and whitespace collapsed.
 +
  ## What remains open in the implementation
  
