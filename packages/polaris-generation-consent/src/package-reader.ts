@@ -694,7 +694,18 @@ async function findActRecords<F extends { readonly file: string }>(fs: PackageRe
     if (form !== undefined) { records.push({ form, text }); continue; }
     const pinned = family.pins?.get(rel);
     if (pinned !== undefined) { if (sha256(text) !== pinned) refuse(); continue; }
-    if ((family.exempt ?? []).some(exempt => exempt.file === rel && templateFields(exempt.template, text) !== null)) continue;
+    const exempt = (family.exempt ?? []).find(each => each.file === rel);
+    const fields = exempt === undefined ? null : templateFields(exempt.template, text);
+    if (fields !== null) {
+      // Read past only as its recorder writes it (R-PDJA-29-GATE-1 finding 1): the template fixes every literal line, but its slots are
+      // free text, so an owner-selection slot carrying a 64-hex token refuses as `fromTemplate` refuses it, and a slot value naming the
+      // act (a withdrawal written into a slot) names it here as it would anywhere else in the file.
+      if (OWNER_SELECTION_SLOTS.some(slot => /[0-9a-fA-F]{64}/.test(fields[slot] ?? ''))) return refuse();
+      if (namesAct(family.sweep, '', textForms(Object.values(fields).join('\n')))) {
+        return { why: `${DECISIONS_DIR}/${rel} names the act without being its record: a withdrawal or a form this reader does not define`, namedBy: `${DECISIONS_DIR}/${rel}` };
+      }
+      continue;
+    }
     if (namesAct(family.sweep, rel, textForms(await swept(rel, text)))) {
       return { why: `${DECISIONS_DIR}/${rel} names the act without being its record: a withdrawal or a form this reader does not define`, namedBy: `${DECISIONS_DIR}/${rel}` };
     }
@@ -704,9 +715,10 @@ async function findActRecords<F extends { readonly file: string }>(fs: PackageRe
 
 /** The record's slots when it is exactly what `template` renders from them; refuses otherwise, and when an owner-selection slot
  * (`opening`, `label`, `description`, `quote`) carries a 64-hex token, which the recorders never write there. */
+const OWNER_SELECTION_SLOTS = Object.freeze(['opening', 'label', 'description', 'quote']);
 function fromTemplate(template: RecorderTemplate, text: string): Readonly<Record<string, string>> {
   const fields = templateFields(template, text);
-  if (fields === null || ['opening', 'label', 'description', 'quote'].some(slot => /[0-9a-fA-F]{64}/.test(fields[slot] ?? ''))) return refuse();
+  if (fields === null || OWNER_SELECTION_SLOTS.some(slot => /[0-9a-fA-F]{64}/.test(fields[slot] ?? ''))) return refuse();
   return fields;
 }
 
@@ -788,11 +800,31 @@ export interface VersionedSignoffForm {
   /** The record as the recorder renders it (`render_record` with `installed_lines`) for this package, version and installed entry,
    * slots `date`, `quote`, `review`, `commit`, `verdict`, `disposition`, `instant` and `sha`. */
   readonly template: RecorderTemplate;
+  /** Decisions files the sweep reads past only at these exact bytes (file name to SHA-256): the records of this package's earlier
+   * versions, which carry its stems and which a later version supersedes without retiring. The recorder never edits them (`--check`
+   * regenerates each exactly), so one byte sequence is admitted per file; any other bytes there refuse. */
+  readonly pinnedRecords?: ReadonlyMap<string, string>;
 }
 
+/** The fixed text a package's record carries in place of the recorder's defaults (`Package.record_scope`, `record_supersession` and
+ * `record_does_not` in scripts/record_versioned_signoff.py); each is rendered verbatim, its line breaks included. */
+interface RegistrySignoffText { readonly scope: string; readonly supersession: string; readonly doesNot: string }
+const REGISTRY_SIGNOFF_DEFAULT_TEXT: RegistrySignoffText = Object.freeze({
+  scope: "the entry's own subject and read authority, nothing wider",
+  supersession: `supersedes nothing; revoked only by a later
+exact owner act naming it`,
+  doesNot: `It approves the registry entry named above at exactly the SHA-256 above and
+no other byte: a later edit at that path is unsigned. It is one of the
+separate acts a read needs; it gives no observation consent, adopts no
+classification or screening policy, widens no egress, write or execution,
+and authorizes no implementation. Every exclusion of the acts in force
+stands.
+`,
+});
+
 /** scripts/record_versioned_signoff.py `render_record` for a package that installs a registry entry and declares no options. */
-function registrySignoffTemplate(o: { readonly title: string; readonly packageKey: string; readonly version: string; readonly installed: string; readonly candidate: string }): RecorderTemplate {
-  const tag = `${o.packageKey}-v${o.version}`;
+function registrySignoffTemplate(o: { readonly title: string; readonly packageKey: string; readonly version: string; readonly installed: string; readonly candidate: string; readonly text?: RegistrySignoffText }): RecorderTemplate {
+  const tag = `${o.packageKey}-v${o.version}`, text = o.text ?? REGISTRY_SIGNOFF_DEFAULT_TEXT;
   return recorderTemplate(`# ${o.title} — version-tagged sign-off v${o.version}
 
 Date: {date}
@@ -827,12 +859,11 @@ Installed entry: ${o.installed}
 
 Installed entry SHA-256: {sha}
 
-Scope: the entry's own subject and read authority, nothing wider
+Scope: ${text.scope}
 
 Scope A extension: the owner's selection quoted above names it ("Extend Scope A"); the extension is a plain owner direction and this record is its only record
 
-Supersession / revocation: supersedes nothing; revoked only by a later
-exact owner act naming it
+Supersession / revocation: ${text.supersession}
 
 Provenance state: \`owner-adopted (bootstrap, uncorrelated)\` — state (1),
 the owner's option selection quoted above
@@ -856,38 +887,81 @@ new version signed separately; it does not retire this one.
 
 ## What this does not do
 
-It approves the registry entry named above at exactly the SHA-256 above and
-no other byte: a later edit at that path is unsigned. It is one of the
-separate acts a read needs; it gives no observation consent, adopts no
-classification or screening policy, widens no egress, write or execution,
-and authorizes no implementation. Every exclusion of the acts in force
-stands.
-`, { date: SLOT.date, quote: SLOT.line, review: SLOT.line, commit: SLOT.commit, verdict: SLOT.verdict, disposition: SLOT.line, instant: SLOT.instant, sha: SLOT.sha256 });
+${text.doesNot}`, { date: SLOT.date, quote: SLOT.line, review: SLOT.line, commit: SLOT.commit, verdict: SLOT.verdict, disposition: SLOT.line, instant: SLOT.instant, sha: SLOT.sha256 });
 }
 
-/** The local-agent public Git source-acquisition entry, version 1.0 of its package (row 2 of the local-agent Redis sitting).
- *
- * Hard-wired to v1.0: a later sign-off of this package (`…-SIGNOFF-v1.1.md`) carries the `…-signoff` stem, so this reader takes it
- * for a withdrawal of v1.0 and refuses, though the recorder says a new version never retires an earlier one. The commit that records a
- * later version must change this form in the same commit (R-POLARIS-DOSSIER-GATE-SOURCES-2 note 6).
- *
- * The sweep reads the package key (and so the tag, the act's identity, the record's file name and the installed entry's basename), the
- * record's title and the installed entry's path. No decisions file is read past: a line that cites the sign-off before the record exists
- * refuses the gate. */
-export const LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM: VersionedSignoffForm = (() => {
-  const entry = {
-    title: 'Public Git source acquisition, local-agent version', packageKey: 'public-git-source-acquisition-local-agent', version: '1.0',
-    installed: '.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json',
-    candidate: '.syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent',
-  } as const;
+const LOCAL_AGENT_GIT_SOURCE_ENTRY = {
+  title: 'Public Git source acquisition, local-agent version', packageKey: 'public-git-source-acquisition-local-agent',
+  installed: '.syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json',
+} as const;
+// The bare package key carries the tag, both sign-off spellings, the record's file name and the installed entry's basename.
+const LOCAL_AGENT_GIT_SOURCE_STEMS = Object.freeze([LOCAL_AGENT_GIT_SOURCE_ENTRY.packageKey, `${LOCAL_AGENT_GIT_SOURCE_ENTRY.title.toLowerCase()} — version-tagged sign-off`]);
+
+/** The local-agent public Git source-acquisition entry, version 1.0 of its package (row 2 of the local-agent Redis sitting). No longer
+ * the gate's form: version 1.1 superseded it. Kept as the template the v1.1 form reads the v1.0 record past by, and for the tests that
+ * read the v1.0 record as it was signed. */
+export const LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0: VersionedSignoffForm = (() => {
+  const entry = { ...LOCAL_AGENT_GIT_SOURCE_ENTRY, version: '1.0', candidate: '.syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent' } as const;
   return Object.freeze({
     file: 'PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md',
     packageKey: entry.packageKey,
     version: entry.version,
     installed: entry.installed,
-    // The bare package key carries the tag, both sign-off spellings, the record's file name and the installed entry's basename.
-    stems: Object.freeze([entry.packageKey, `${entry.title.toLowerCase()} — version-tagged sign-off`]),
+    stems: LOCAL_AGENT_GIT_SOURCE_STEMS,
     template: registrySignoffTemplate(entry),
+  });
+})();
+
+/** The SHA-256 of the v1.0 sign-off record's bytes as the recorder wrote them (`--check … --version 1.0` regenerates them exactly). */
+export const LOCAL_AGENT_GIT_SOURCE_SIGNOFF_V1_0_RECORD_SHA256 = 'f211248d1175087e9e4961caee2c52de249196a412f8f6f0dcd3de54c130ac45';
+
+/** The local-agent public Git source-acquisition entry, version 1.1 of its package (the copy step of launch-consent v1.2; package
+ * `public-git-source-acquisition-local-agent-v1-1`), the gate's form.
+ *
+ * Its record carries the text the recorder's v1.1 package declares (`GIT_SOURCE_V11_SCOPE`, `GIT_SOURCE_V11_SUPERSESSION`,
+ * `GIT_SOURCE_V11_DOES_NOT` in scripts/record_versioned_signoff.py). The v1.0 record stays beside it and carries the same stems, so
+ * the sweep reads it past only at its recorded bytes (`pinnedRecords`); any other bytes there refuse. A later version's record
+ * (`…-SIGNOFF-v1.2.md`) still carries the stems, so this reader takes it for a withdrawal and refuses: the commit that records a later
+ * version must change this form in the same commit (R-POLARIS-DOSSIER-GATE-SOURCES-2 note 6).
+ *
+ * The sweep reads the package key (and so the tag, the act's identity, the record's file name and the installed entry's basename), the
+ * record's title and the installed entry's path. No other decisions file is read past: a line that cites the sign-off before the record
+ * exists refuses the gate. */
+export const LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM: VersionedSignoffForm = (() => {
+  const entry = { ...LOCAL_AGENT_GIT_SOURCE_ENTRY, version: '1.1', candidate: '.syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1' } as const;
+  return Object.freeze({
+    file: 'PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.1.md',
+    packageKey: entry.packageKey,
+    version: entry.version,
+    installed: entry.installed,
+    stems: LOCAL_AGENT_GIT_SOURCE_STEMS,
+    template: registrySignoffTemplate({
+      ...entry,
+      text: {
+        scope: `the entry's own subject, read authority, fetch, tags and state-directory
+writes, which for a copy-class run admit the one local copy its fetch
+declaration names; nothing wider`,
+        supersession: `supersedes version 1.0 of this entry, whose record
+(PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md) stays the record of
+that version and its bytes; revoked only by a later exact owner act naming it`,
+        doesNot: `It approves the registry entry named above at exactly the SHA-256 above and
+no other byte: a later edit at that path is unsigned. It is one of the
+separate acts a read needs; it gives no observation consent, adopts no
+classification or screening policy, widens no network egress and no write to
+an observed or external system, and authorizes no implementation. Against
+version 1.0 it widens, in a copy-class run alone, local execution and a local
+write: the Git processes the entry's fetch declaration names and the copy's
+directory its stateDirectoryWrites declaration names; and in that run it reads
+that copy in place of the operator's clone. For every launch-consented run it
+closes in words the reads Syzygy makes of the operator's clone. Every exclusion
+of the acts in force stands.
+`,
+      },
+    }),
+    // The v1.0 record as recorded on 2026-10-07 (3409ef5a). The pin admits those bytes alone, so the v1.0 form's own checks (the
+    // template, the 64-hex refusal in the selection, the verdict and disposition pairing) are moot here: the pinned bytes pass all three
+    // under LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0, which gate-acts.test.ts asserts, and no other bytes are read past.
+    pinnedRecords: new Map([[LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0.file, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_V1_0_RECORD_SHA256]]),
   });
 })();
 
@@ -897,7 +971,7 @@ export const LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM: VersionedSignoffForm = (() => 
 export function readVersionedSignoffState(options: StrictReadOptions & { readonly form: VersionedSignoffForm }): Promise<ActState<DigestBoundAct>> {
   return strict<DigestBoundAct>(async () => {
     const fs = options.fs ?? nodeFs, form = options.form;
-    const found = await findActRecords(fs, options.root, { forms: [form], sweep: digestBoundSweep(form, form.installed) });
+    const found = await findActRecords(fs, options.root, { forms: [form], sweep: digestBoundSweep(form, form.installed), ...(form.pinnedRecords === undefined ? {} : { pins: form.pinnedRecords }) });
     if ('why' in found) return { state: 'refused', why: found.why, namedBy: found.namedBy };
     const record = found.records.at(-1);
     if (record === undefined) return { state: 'absent', why: `no owner-act record ${DECISIONS_DIR}/${form.file} exists` };

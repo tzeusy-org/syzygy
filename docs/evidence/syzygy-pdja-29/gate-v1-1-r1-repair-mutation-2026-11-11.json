@@ -1,0 +1,129 @@
+{
+  "subject": "R-PDJA-29-GATE-1 repair on agent/syzygy-pdja-29-gate-v1-1 (syzygy-pdja.29): the v1.0 sign-off record pinned, exempt-record slots swept",
+  "commit_base": "58f890e84ba644bf2cdda942840494116f8ef113",
+  "note": "run against the uncommitted working tree on top of commit_base; package-reader.ts restored byte for byte after each mutant",
+  "file_sha256_restored": "70056818fcc9c862a322991aff0588f28c18f40cdde6cb3b5e82f7d83ead152d",
+  "mutants": [
+    {
+      "id": "M0 baseline (no mutation)",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": null,
+      "new": null,
+      "command": "npx vitest run packages/polaris-dossier/src/gate-acts.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/real-tree.test.ts",
+      "exit": 0,
+      "tests": [
+        "Tests  257 passed (257)"
+      ],
+      "failing": [],
+      "killed": null
+    },
+    {
+      "id": "M1 (reviewer M1, adapted) the slot sweep of an exempt record dropped",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "      if (namesAct(family.sweep, '', textForms(Object.values(fields).join('\\n')))) {",
+      "new": "      if (false) {",
+      "command": "npx vitest run packages/polaris-dossier/src/gate-acts.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/real-tree.test.ts",
+      "exit": 1,
+      "tests": [
+        "Tests  2 failed | 255 passed (257)"
+      ],
+      "failing": [
+        "packages/polaris-dossier/src/gate-acts.test.ts > version 2 of the Anthropic statement > refuses version 1 reading version 2's record, a withdrawal of version 1 in its selection label",
+        "packages/polaris-dossier/src/gate-acts.test.ts > version 2 of the Anthropic statement > refuses version 2 reading version 1's record, a withdrawal of version 2 in its selection label"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M1b the 64-hex refusal in an exempt record's owner-selection slots dropped",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "      if (OWNER_SELECTION_SLOTS.some(slot => /[0-9a-fA-F]{64}/.test(fields[slot] ?? ''))) return refuse();",
+      "new": "      if (false) return refuse();",
+      "command": "npx vitest run packages/polaris-dossier/src/gate-acts.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/real-tree.test.ts",
+      "exit": 1,
+      "tests": [
+        "Tests  2 failed | 255 passed (257)"
+      ],
+      "failing": [
+        "packages/polaris-dossier/src/gate-acts.test.ts > version 2 of the Anthropic statement > fails closed when its act record has a digest in the packet words: version 1 reads withdrawn and version 2 unbound, so the pair has no statement",
+        "packages/polaris-dossier/src/gate-acts.test.ts > version 2 of the Anthropic statement > refuses version 2 reading version 1's record, a 64-hex token in its selection label"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M2 (reviewer M2, adapted) the exemption's file scope dropped",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "    const exempt = (family.exempt ?? []).find(each => each.file === rel);",
+      "new": "    const exempt = (family.exempt ?? []).find(each => templateFields(each.template, text) !== null);",
+      "command": "npx vitest run packages/polaris-dossier/src/gate-acts.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/real-tree.test.ts",
+      "exit": 1,
+      "tests": [
+        "Tests  1 failed | 256 passed (257)"
+      ],
+      "failing": [
+        "packages/polaris-dossier/src/gate-acts.test.ts > version 2 of the Anthropic statement > reads past version 1's exact render only at version 1's own file: a byte-identical copy elsewhere names version 2"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M3 (reviewer M3, adapted) supersession not read: the v1.1 form's pinnedRecords line removed",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "    pinnedRecords: new Map([[LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0.file, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_V1_0_RECORD_SHA256]]),\n",
+      "new": "",
+      "command": "npx vitest run packages/polaris-dossier/src/gate-acts.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/real-tree.test.ts",
+      "exit": 1,
+      "tests": [
+        "Tests  41 failed | 216 passed (257)"
+      ],
+      "failing": [
+        "packages/polaris-dossier/src/gate-acts.test.ts > altered prose in a byte-exact act record (characterization, syzygy-bpyt.8.10) > the registry sign-off: refused once its What-this-records paragraph or its limits change, a withdrawal is appended or its selection drops the Scope A words; other words that keep them count",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the gate forms against the recorders > render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the gate forms against the recorders > render the sign-off record byte for byte as render_record does, from the same fields: CONFIRM WITH EXCEPTIONS",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > pins the v1.0 record to the bytes the recorder wrote, which the v1.0 form itself reads",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > reads a tree holding only the v1.0 sign-off as absent: the gate wants v1.1",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > refuses once the installed entry changes",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > refuses the v1.1 sign-off when the v1.0 record carries A: a withdrawal of v1.1 in the owner-selection slot",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > refuses the v1.1 sign-off when the v1.0 record carries B: a withdrawal of v1.1 in the disposition slot"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M4 the pin dropped for the template exemption the reviewed commit had",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "...(form.pinnedRecords === undefined ? {} : { pins: form.pinnedRecords }) });",
+      "new": "exempt: [{ file: LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0.file, template: LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0.template }] });",
+      "command": "npx vitest run packages/polaris-dossier/src/gate-acts.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/real-tree.test.ts",
+      "exit": 1,
+      "tests": [
+        "Tests  4 failed | 253 passed (257)"
+      ],
+      "failing": [
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > refuses the v1.1 sign-off when the v1.0 record carries A: a withdrawal of v1.1 in the owner-selection slot",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > refuses the v1.1 sign-off when the v1.0 record carries B: a withdrawal of v1.1 in the disposition slot",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > refuses the v1.1 sign-off when the v1.0 record carries G: verdict CONFIRM with a disposition record named",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > refuses the v1.1 sign-off when the v1.0 record carries a withdrawal appended"
+      ],
+      "killed": true
+    },
+    {
+      "id": "M5 the pin's byte comparison dropped (any bytes at the pinned file pass)",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "    if (pinned !== undefined) { if (sha256(text) !== pinned) refuse(); continue; }",
+      "new": "    if (pinned !== undefined) { continue; }",
+      "command": "npx vitest run packages/polaris-dossier/src/gate-acts.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/real-tree.test.ts",
+      "exit": 1,
+      "tests": [
+        "Tests  5 failed | 252 passed (257)"
+      ],
+      "failing": [
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > refuses the v1.1 sign-off when the v1.0 record carries A: a withdrawal of v1.1 in the owner-selection slot",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > refuses the v1.1 sign-off when the v1.0 record carries B: a withdrawal of v1.1 in the disposition slot",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > refuses the v1.1 sign-off when the v1.0 record carries F: a 64-hex token in the owner-selection slot",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > refuses the v1.1 sign-off when the v1.0 record carries G: verdict CONFIRM with a disposition record named",
+        "packages/polaris-dossier/src/gate-acts.test.ts > the registry entry's version-tagged sign-off > refuses the v1.1 sign-off when the v1.0 record carries a withdrawal appended"
+      ],
+      "killed": true
+    }
+  ],
+  "killed": 6,
+  "total": 6
+}

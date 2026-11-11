@@ -139,7 +139,7 @@ const SUBJECTS = [
   { path: at(RFC7_20_RULING_ACT_FORM), family: 'dossier-sitting', model: 'byte-exact', world: 'rfc720', recorder: 'record_dossier_local_agent_acts.py', checkKey: 'rfc7-20-reading-in-force' },
   { path: at(STATEMENT_V1), family: 'dossier-sitting', model: 'byte-exact', world: 'statementV1', recorder: 'record_dossier_local_agent_acts.py', checkKey: 'redis-agent-anthropic' },
   { path: at(PROVIDER_V2_FORM), family: 'provider-v2', model: 'byte-exact', world: 'providerV2', recorder: 'record_dossier_agent_provider_v2_act.py', checkKey: null },
-  { path: at(LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM), family: 'versioned-signoff', model: 'byte-exact', world: 'signoff', recorder: 'record_versioned_signoff.py', checkKey: 'public-git-source-acquisition-local-agent --version 1.0' },
+  { path: at(LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM), family: 'versioned-signoff', model: 'byte-exact', world: 'signoff', recorder: 'record_versioned_signoff.py', checkKey: 'public-git-source-acquisition-local-agent --version 1.1' },
 ];
 
 /** Each family: its recognition model, the act records its forms name (the closed list in code), and which of them exist here. */
