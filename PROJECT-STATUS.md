@@ -48,7 +48,7 @@ authority and no model yet called on the current path.
     and the adopted
     [non-governed narrative profile](openspec/changes/polaris-non-governed-narrative-profile/specs/polaris-generation/spec.md)
     ([adoption record](.syzygy/governance/decisions/POLARIS-NON-GOVERNED-NARRATIVE-PROFILE-ADOPTION.md)):
-    34 requirements and 222 scenarios without the signed-off
+    34 requirements and 249 scenarios without the signed-off
     [dossier local-agent addition](openspec/changes/polaris-dossier-local-agent-mode/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.0.md);
     [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.1.md);
@@ -57,10 +57,11 @@ authority and no model yet called on the current path.
     [v1.4 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.4.md);
     [v1.5 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.5.md);
     [v1.6 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LOCAL-AGENT-MODE-SIGNOFF-v1.6.md)), and
-    38 requirements and 302 scenarios in the effective composition with it and with the signed-off
+    38 requirements and 329 scenarios in the effective composition with it and with the signed-off
     [launch-consent addition](openspec/changes/polaris-dossier-launch-consent/specs/polaris-generation/spec.md)
     ([v1.0 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.0.md);
-    [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md)).
+    [v1.1 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.1.md);
+    [v1.2 sign-off](.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.2.md)).
   - Its `spec.md` keeps its reviewed candidate-era banner; its proposal and
     design carry present-tense status since the 2026-09-29
     [readability successor](.syzygy/governance/decisions/POLARIS-UNDERSTANDING-READABILITY-SUCCESSOR-ACT.md).
@@ -423,6 +424,7 @@ python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-local-agent-mode --version 1.6   # dossier local-agent sign-off, v1.6 2026-11-09 (changed-block list for later fidelity rounds): record, aggregate block and applied tree
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-launch-consent --version 1.0   # dossier launch-consent sign-off, v1.0 2026-11-08: record, aggregate block and applied tree
 python3 scripts/record_versioned_signoff.py --check polaris-dossier-launch-consent --version 1.1   # dossier launch-consent sign-off, v1.1 2026-11-08: record, aggregate block and applied tree
+python3 scripts/record_versioned_signoff.py --check polaris-dossier-launch-consent --version 1.2   # dossier launch-consent sign-off, v1.2 2026-11-11: record, aggregate block and applied tree
 # Lane B and its RFC-0007 successor are declined (decisions/POLARIS-LANE-B-DECLINED-AND-TARGET-REVISED-DIRECTION.md); their checks left the battery.
 python3 scripts/record_pwb_behavior_amendment_acts.py --check render-mode 527be5ac3732619608355ae9658c92cee45341e831521bc526398481dd915785 --date 2026-10-02   # render-mode act, performed 2026-10-02: record, aggregate block and applied tree
 python3 scripts/record_pwb_behavior_amendment_acts.py --check machine-view acabc7915e4461186b5878ce40cc0c62ed7cf91eadd7eead1cb179c80f672e72 --date 2026-10-02   # machine-view act, performed 2026-10-02: record, aggregate block and applied tree
@@ -455,6 +457,8 @@ python3 scripts/build_polaris_dossier_launch_consent.py --check   # dossier laun
 python3 scripts/build_polaris_dossier_launch_consent.py --selftest   # dossier launch-consent builder fixtures
 python3 scripts/build_polaris_dossier_launch_consent_v1_1.py --check   # dossier launch-consent v1.1 package: unapplied or applied
 python3 scripts/build_polaris_dossier_launch_consent_v1_1.py --selftest   # dossier launch-consent v1.1 builder fixtures
+python3 scripts/build_polaris_dossier_launch_consent_v1_2.py --check   # dossier launch-consent v1.2 package: unapplied or applied
+python3 scripts/build_polaris_dossier_launch_consent_v1_2.py --selftest   # dossier launch-consent v1.2 builder fixtures
 python3 scripts/record_pwb_behavior_amendment_acts.py --check opening-band 7f80cb05f644dd1e4f49e7b212d6972ee4754e40682450e59a6c3245546d5c46 --date 2026-10-01   # opening-band act, performed 2026-10-01: record, aggregate block and applied subjects regenerate exactly
 python3 scripts/build_pwb_registry_currency_briefing_amendment.py --check   # registry amendment, performed 2026-09-30, superseded 2026-10-02: the re-pinned subject reverses to its proposed bytes
 python3 scripts/build_pwb_registry_currency_briefing_amendment.py --selftest
@@ -517,7 +521,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and thirty-nine checks above are the same one hundred and thirty-nine the hosted workflow runs
+The one hundred and forty-two checks above are the same one hundred and forty-two the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

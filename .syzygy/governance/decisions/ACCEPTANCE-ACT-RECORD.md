@@ -1968,3 +1968,21 @@ Effective status: this one record is **effective owner authority —
 owner-adopted (bootstrap, uncorrelated)** for its own role only. It grants no
 consent, read or egress.
 <!-- PWB-POLICY-SCOPE-V8:END -->
+
+<!-- versioned-signoff:polaris-dossier-launch-consent:v1.2 -->
+## Versioned sign-off — polaris-dossier-launch-consent — v1.2 — recorded 2026-11-11
+
+The owner signed off version 1.2 by selecting an option in the
+Claude Code CLI (quoted in the dedicated record).
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Kind | specification delta |
+| Review outcome | `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-17-RAW.md`: `CONFIRM WITH EXCEPTIONS`; disposition: `docs/reviews/R-POLARIS-LAUNCH-CONSENT-V1-2-17-NOTES.md` |
+| Recording | `.syzygy/governance/decisions/POLARIS-DOSSIER-LAUNCH-CONSENT-SIGNOFF-v1.2.md`; annotated tag `polaris-dossier-launch-consent-v1.2` on the commit carrying these records and the applied result |
+| Direction | `.syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md` |
+
+This sign-off authorizes no implementation, widens no consent, read, write or
+egress, and a later version of the package is signed separately.
+<!-- /versioned-signoff:polaris-dossier-launch-consent:v1.2 -->
