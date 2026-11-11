@@ -508,6 +508,7 @@ python3 scripts/render_launch_administration.py $DR --check
 git tag --list 'doctrine-*'
 python3 scripts/record_rfc5_project_documentation_act.py --check a69a606cc7c14da5de03ec26aaec435af2fee3fa4c7bfb8a92fc30deefa40c91 --date 2026-10-07 --question-opening 'Do you sign the RFC5-14 project-documentation class amendment at its row of the contract amendment manifest?' --selection-label 'Sign it, at the manifest row; direct the SOURCE-POLICY.md readability successor' --selection-description 'Act form 1, which makes screening scope version 2 performable; the six-class sentence in SOURCE-POLICY.md gets a readability successor.'   # rfc5 --check
 python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --version 1.0   # public-git-source-acquisition-local-agent v1.0 --check
+python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --version 1.1   # public-git-source-acquisition-local-agent v1.1 sign-off 2026-11-11: record, aggregate block and applied entry
 python3 scripts/record_dossier_local_agent_acts.py --check redis-agent-anthropic fbbcd3c0e3d49aab3384a4ab18bf35816dbd8fb952e658d1edbac3d1c50e48a7 --date 2026-10-07 --question-opening 'Which statement do you sign for Redis at its row of the dossier local-agent acts manifest?' --selection-label 'Anthropic provider statement' --selection-description 'Claude Code may receive Redis content even if Redis counts as governed.'   # redis-agent-anthropic --check
 python3 scripts/record_dossier_agent_provider_v2_act.py --check b7a8d099ce108bfd70133b729327534f29806cb0118ee0b3e0f9ca077a946df3 --date 2026-10-08 --question-opening 'Decision 2 (P-106):'' your Redis Anthropic provider statement predates the README/docs class, so Syzygy withholds docs text from the packets it gives your own Claude Code sessions, and README-based claims render Unknown. Version 2 adds `project-documentation` and changes nothing else. Sign it?' --selection-label 'Sign version 2 (Recommended)' --selection-description 'Docs text goes to your own Claude Code sessions, which can already read the whole clone. Phrase:'' "Sign the Redis Anthropic provider statement, version 2".' --packet-words 'Sign the Redis Anthropic provider statement, version 2'   # agent-provider statement version 2 --check
 python3 scripts/record_dossier_agent_provider_v2_act.py --selftest   # agent-provider statement version 2 --selftest
@@ -521,7 +522,7 @@ python3 scripts/record_narrative_profile_adoption.py --check --date 2026-10-07 -
 python3 scripts/record_rfc5_project_documentation_act.py --selftest   # rfc5 --selftest
 ```
 
-The one hundred and forty-two checks above are the same one hundred and forty-two the hosted workflow runs
+The one hundred and forty-three checks above are the same one hundred and forty-three the hosted workflow runs
 (`.github/workflows/governance-docs.yml`), so "hosted CI is green" and "the
 battery is clean" are one claim rather than two a reader conflates. The
 `git tag` line is orientation, not a check — it prints and cannot fail.

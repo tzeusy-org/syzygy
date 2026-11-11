@@ -527,6 +527,9 @@ jobs:
       - name: public-git-source-acquisition-local-agent v1.0 --check
         run: python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --version 1.0
 
+      - name: public-git-source-acquisition-local-agent v1.1 --check
+        run: python3 scripts/record_versioned_signoff.py --check public-git-source-acquisition-local-agent --version 1.1
+
       - name: redis-agent-anthropic --check
         run: python3 scripts/record_dossier_local_agent_acts.py --check redis-agent-anthropic fbbcd3c0e3d49aab3384a4ab18bf35816dbd8fb952e658d1edbac3d1c50e48a7 --date 2026-10-07 --question-opening 'Which statement do you sign for Redis at its row of the dossier local-agent acts manifest?' --selection-label 'Anthropic provider statement' --selection-description 'Claude Code may receive Redis content even if Redis counts as governed.'
 

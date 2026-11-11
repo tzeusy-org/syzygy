@@ -1986,3 +1986,27 @@ Claude Code CLI (quoted in the dedicated record).
 This sign-off authorizes no implementation, widens no consent, read, write or
 egress, and a later version of the package is signed separately.
 <!-- /versioned-signoff:polaris-dossier-launch-consent:v1.2 -->
+
+<!-- versioned-signoff:public-git-source-acquisition-local-agent:v1.1 -->
+## Versioned sign-off — public-git-source-acquisition-local-agent — v1.1 — recorded 2026-11-11
+
+The owner signed off version 1.1 by selecting an option in the
+Claude Code CLI (quoted in the dedicated record).
+
+| | |
+|---|---|
+| Project / owner | `project:syzygy` / Tzeusy |
+| Kind | registry entry |
+| Review outcome | `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-6-RAW.md`: `CONFIRM WITH EXCEPTIONS`; disposition: `docs/reviews/R-GIT-SOURCE-LOCAL-AGENT-V1-1-6-NOTES.md` |
+| Recording | `.syzygy/governance/decisions/PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.1.md`; annotated tag `public-git-source-acquisition-local-agent-v1.1` on the commit carrying these records and the applied result |
+| Direction | `.syzygy/governance/decisions/OWNER-DIRECTION-VERSIONED-SIGNOFF-SCOPE-A-2026-10-02.md` |
+
+This sign-off approves the registry entry its dedicated record names, at the
+SHA-256 recorded there, under the Scope A extension the owner's selection
+names, and supersedes version 1.0. That is one of the separate acts a read
+needs. It gives no observation consent and widens no network egress; against
+version 1.0 it widens, in a copy-class run alone, local execution and a local
+write, and reads that copy in place of the operator's clone, as its record
+says. It authorizes no implementation, and a later version of the package is
+signed separately.
+<!-- /versioned-signoff:public-git-source-acquisition-local-agent:v1.1 -->
