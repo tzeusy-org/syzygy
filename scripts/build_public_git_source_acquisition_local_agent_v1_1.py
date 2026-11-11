@@ -480,9 +480,14 @@ def signed_findings(root: pathlib.Path) -> list[str]:
 # --- selftest ---------------------------------------------------------------
 
 def _fixture(tmp: pathlib.Path) -> pathlib.Path:
-    for rel in (PROPOSED, PATCH, SUBJECTS, BASE, v10.BUTLERS, INSTALLED, V10_RECORD):
+    for rel in (PROPOSED, PATCH, SUBJECTS, BASE, v10.BUTLERS, V10_RECORD):
         (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / rel, tmp / rel)
+    # The fixture is the tree before v1.1 is applied, whatever the real tree
+    # holds: once v1.1 is signed the real installed entry carries the v1.1
+    # bytes, so the installed path takes the v1.0 base instead.
+    (tmp / INSTALLED).parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(ROOT / BASE, tmp / INSTALLED)
     return tmp
 
 
