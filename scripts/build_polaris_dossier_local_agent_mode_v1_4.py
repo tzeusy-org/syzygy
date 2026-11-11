@@ -353,11 +353,11 @@ def selftest() -> int:
                         and any("v1.3 signed bytes" in f for f in check(root))))
         v13._record_v13(root, digest=base_digest)
         results.append(("restored: signed", signed_findings(root) == [] and battery(root) == []))
-        (root / DECISIONS / f"{RECORD_STEM}-SIGNOFF-v1.7.md").write_text("Review: x\n")
+        (root / DECISIONS / f"{RECORD_STEM}-SIGNOFF-v1.8.md").write_text("Review: x\n")
         results.append(("a later version no builder knows fails",
                         any("has no builder" in f for f in signed_findings(root))
                         and any("has no builder" in f for f in v10.check(root))))
-        (root / DECISIONS / f"{RECORD_STEM}-SIGNOFF-v1.7.md").unlink()
+        (root / DECISIONS / f"{RECORD_STEM}-SIGNOFF-v1.8.md").unlink()
         spec = (root / SPEC).read_text()
         (root / SPEC).write_text(spec.replace(V14_MARKER, "#### Scenario: edited after v1.4\n"))
         results.append(("applied and signed, then the spec edited: the tree is neither state",
