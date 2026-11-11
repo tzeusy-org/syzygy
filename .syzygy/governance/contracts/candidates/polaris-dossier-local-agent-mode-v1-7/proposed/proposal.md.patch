@@ -1,0 +1,31 @@
+--- a/openspec/changes/polaris-dossier-local-agent-mode/proposal.md
++++ b/openspec/changes/polaris-dossier-local-agent-mode/proposal.md
+@@ -1,5 +1,16 @@
+ # Polaris dossier local-agent mode
+ 
++> **Version 1.7 changes.** After the owner's review of a Redis run whose close
++> sealed pages no counted review had found ready, `render` takes every passed
++> revision, design repairs get their own declared limit, and `close` records
++> each review's standing for the site it names and closes with a finding
++> rather than as reviewed. A schema-v5 draft opens its landing page with a
++> thesis and an optional verified hero excerpt, carries three to five pillars
++> and may use annotated code walks; narrative pages fold their notice, legend
++> and review status into one ribbon; and a quotation reads as clean text, with
++> its exact bytes in the evidence view. Two v1.6 review notes are carried in.
++> It binds only by the owner's sign-off.
++
+ > **Version 1.6 changes.** By the owner direction
+ > `OWNER-DIRECTION-FIDELITY-REVIEW-ROUNDS-2026-11-09`, a fidelity packet delivered
+ > into a review session's directory as a later round also carries a list,
+@@ -42,8 +53,9 @@
+ > (`.syzygy/governance/decisions/OWNER-DIRECTION-DOSSIER-RICH-ELEMENTS-2026-11-04.md`).
+ > Version 1.4 adds the empty-cell marker "-", explicit unread-path
+ > excerpt handling and the carried v1.3 review notes. Version 1.4 is the
+-> predecessor of version 1.5, and version 1.5 of version 1.6.
+-> These bytes bind only by the owner's sign-off of version 1.6 (VIS-4). It grants no read, egress, write or execution beyond what
++> predecessor of version 1.5, version 1.5 of version 1.6, and version 1.6 of
++> version 1.7.
++> These bytes bind only by the owner's sign-off of version 1.7 (VIS-4). It grants no read, egress, write or execution beyond what
+ > its requirements state.
+ 
+ **A Polaris dossier can be written by the operator's own Claude Code or Codex
