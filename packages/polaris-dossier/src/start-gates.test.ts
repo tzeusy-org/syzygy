@@ -115,7 +115,7 @@ const ENTRY_PATH = LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM.installed;
 const REGISTRY_ACT = `${DECISIONS_DIR}/${LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM.file}`;
 const POLICY_ACT = `${DECISIONS_DIR}/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-ACT.md`;
 
-/** The local-agent entry's v1.0 sign-off record as the recorder renders it over `entry` installed. */
+/** The local-agent entry's v1.1 sign-off record (the gate's version) as the recorder renders it over `entry` installed. */
 const signoffs = new Map<string, string>();
 const signoffOver = (entry: string): string => {
   const hit = signoffs.get(entry);
@@ -188,7 +188,7 @@ describe('init: a run that passes every start gate', () => {
       repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },
       clone: { path: clone, declaredBy: 'operator', label: 'Inferred', use: 'read' },
       pinnedRevision: { commit: commits.A, label: 'fixture-a', consentRecord: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', pinnedAt: '2026-10-07T12:00:00.000Z' },
-      startGates: { registryEntry: 'public-git-source-acquisition-local-agent-v1.0', screeningPolicy: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-APPROVAL-2026-10-04' },
+      startGates: { registryEntry: 'public-git-source-acquisition-local-agent-v1.1', screeningPolicy: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-APPROVAL-2026-10-04' },
       governed: { kind: 'non-governed', because: ['the project input PROJECT-INPUT-REDIS@1 states that no kernel evidence drawer exists, and the pinned tree lists no openspec/ or .syzygy/ path'] },
       providerStatement: null,
       workItem: { identity: null, reason: 'the operator-agent run makes no provider dispatch and no scheduler effect, so no scheduler work item, Proposal or materialization record exists for it; it is rendered as unattributed execution under RFC4-19, never dropped' },
@@ -661,7 +661,7 @@ describe('init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone a
   });
 
   it.each([
-    ['absent', { [REGISTRY_ACT]: null }, /^a start gate is not in force: source-acquisition registry entry: no owner-act record .*PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1\.0\.md exists$/],
+    ['absent', { [REGISTRY_ACT]: null }, /^a start gate is not in force: source-acquisition registry entry: no owner-act record .*PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1\.1\.md exists$/],
     ['ineffective: the entry changed after the sign-off', { [ENTRY_PATH]: ENTRY.replace('0.1.0', '0.2.0') }, /^a start gate is not in force: source-acquisition registry entry: the bytes of .* differ from the SHA-256 the sign-off records$/],
     ['withdrawn: another decisions file names it', { [`${DECISIONS_DIR}/PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-REVOCATION.md`]: 'Revoked.\n' }, /^a start gate is not in force: source-acquisition registry entry: .*names the act without being its record/],
     ['present only as a status word in the entry, no act (F8)', { [REGISTRY_ACT]: null, [ENTRY_PATH]: JSON.stringify({ status: 'in force', entries: [] }) }, /no owner-act record/],
@@ -672,10 +672,10 @@ describe('init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone a
   it('refuses when the signed registry entry names another implementation or no implementation version', async () => {
     const other = ENTRY.replace('"polaris-dossier/git-object-reader"', '"polaris-generation/public-git-source-acquisition"');
     await expectRefused({ root: records({ [ENTRY_PATH]: other, [REGISTRY_ACT]: signoffOver(other) }) },
-      'start-gates', 'a start gate is not in force: source-acquisition registry entry: the registry entry bound by public-git-source-acquisition-local-agent-v1.0 names the implementation "polaris-generation/public-git-source-acquisition", not polaris-dossier/git-object-reader', false);
+      'start-gates', 'a start gate is not in force: source-acquisition registry entry: the registry entry bound by public-git-source-acquisition-local-agent-v1.1 names the implementation "polaris-generation/public-git-source-acquisition", not polaris-dossier/git-object-reader', false);
     const unknown = ENTRY.replace('"0.1.0"', 'null');
     await expectRefused({ root: records({ [ENTRY_PATH]: unknown, [REGISTRY_ACT]: signoffOver(unknown) }) },
-      'start-gates', 'a start gate is not in force: source-acquisition registry entry: the registry entry bound by public-git-source-acquisition-local-agent-v1.0 has no implementation version (Unknown), so RFC4-3 admits no output from it', false);
+      'start-gates', 'a start gate is not in force: source-acquisition registry entry: the registry entry bound by public-git-source-acquisition-local-agent-v1.1 has no implementation version (Unknown), so RFC4-3 admits no output from it', false);
   });
 
   it.each([
@@ -1033,7 +1033,7 @@ describe('preflight', () => {
       url: URL_,
       repository: { repositoryId: 'redis-redis' },
       consentedRevisions: [{ label: 'fixture-a', commit: commits.A }, { label: 'fixture-b', commit: commits.B }, { label: 'fixture-c', commit: commits.C }],
-      startGates: { registryEntry: { state: 'ok', record: 'public-git-source-acquisition-local-agent-v1.0' }, screeningPolicy: { state: 'ok' } },
+      startGates: { registryEntry: { state: 'ok', record: 'public-git-source-acquisition-local-agent-v1.1' }, screeningPolicy: { state: 'ok' } },
       missing: [],
       cloneCommands: [
         'git init <dir>   # fixture-a: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 ${URL_} ${commits.A}`, 'git -C <dir> checkout --detach FETCH_HEAD',
