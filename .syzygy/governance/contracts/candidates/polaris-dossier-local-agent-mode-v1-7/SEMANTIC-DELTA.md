@@ -125,6 +125,14 @@ the launch-consent change.
   `render.ts` already refuses unless the latest checked revision passed, so
   the operator path needs no new refusal. The wait for a ready fidelity
   verdict is the launched order's (finding 1).
+- **The review-status region at render.** Because a page may now be rendered
+  before any review counts, the spec now says what its region states then.
+  Every rendered page carries exactly one region: in the ribbon on a
+  narrative page, at the foot of every other page (where `render.ts` puts it
+  today). At render it states each review kind's standing for those pages as
+  the records stand, "none counts" where none does, labelled as close labels
+  a standing, and never that the pages are reviewed or ready while a standing
+  is not ready. Close rewrites it.
 - **Interaction with REQ-035's "pages published after the rendered-design
   review SHALL be the reviewed pages with only the named review-status region
   changed".** Unchanged. Pages rendered from a later revision are a new
@@ -148,13 +156,22 @@ the launch-consent change.
   `check.ts` already does; a resubmission's check is refused once the
   revisions counted against its limit equal that limit, which is how the
   repair-cycle limit is enforced today. The verdict of record (the counted
-  verdict of a kind recorded last) decides when several count.
+  verdict of a kind recorded last) decides when several count. "Latest",
+  "earlier" and "last" are by the sequence numbers Syzygy assigns as it
+  freezes a revision, renders pages or records a verdict, read from the
+  objects it verifies, never by an instant, so the choice is re-derivable.
+  REQ-033 now says its repair-cycle refusal reaches only a check that counts
+  against that limit, so a design-repair revision is not refused because the
+  repair-cycle limit is spent.
   **Checks that report findings still count** (owner direction
   `OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-05`, item 3, "Keep the rule;
   the operator chooses the limit when asked"): that direction kept the rule
   that every checked resubmission counts, a check that reports findings
   included, and that stays true; what is new is only which limit a design
-  repair counts against. [Observed] That ruling's re-ask
+  repair counts against. That change rests on choice A (P1: "Give fidelity
+  and design separate repair budgets"), not on the 2026-11-05 direction,
+  whose item 3 also recorded "Excluded: no spec text changes"; see "For the
+  owner", item 6. [Observed] That ruling's re-ask
   trigger ("a run ends blocked with most cycles spent repairing check
   failures") was not met by `run-ffe579c7`, per the bead's record, so the
   counting rule is kept, not re-asked. Which limit a revision counted against
@@ -182,6 +199,16 @@ the launch-consent change.
   leaves the earlier passed one as latest passed; if it was never rendered,
   close names that as a condition. That is intended: render a passed
   revision before resubmitting.
+- **Cases the counting rule decides, stated.** An inventory resubmission is
+  never a design repair; it is counted as v1.6 counts it, unchanged. A
+  design-repair revision refused at a spent design-repair limit cannot be
+  followed by a resubmission that counts against the repair-cycle limit
+  instead: the previous revision, and so the class, is unchanged, so the run
+  stops resubmitting even with repair-cycle budget left. The class of a
+  resubmission depends on whether a fidelity verdict on the previous revision
+  is recorded when the check runs, so the same agent action can count against
+  different limits on different records; that is what "as the records stand
+  at its check" means.
 - **(d) Refuse or label.** Answer: label. Close never refuses for an
   unrendered or unreviewed site; it ends "closed with a finding" naming each
   failing condition, and no surface may call the site reviewed or ready while
@@ -239,12 +266,17 @@ the launch-consent change.
   Syzygy writes only navigation and what the thesis and hero carry under
   their own rules (labels, citation marks, the excerpt's caption, any
   withheld or Unknown presentation); the apparatus (the one sentence, legend,
-  review status) comes after, in the ribbon. Then the ribbon, the pillars with costs
+  review status) comes after, in the ribbon. Because the thesis is
+  generated prose above the ribbon, it carries with its label a Syzygy-written
+  mark that it is the agent's draft, so it stays visually distinct as a draft
+  (RFC7-20) before the one sentence. Then the ribbon, the pillars with costs
   and links, the why section and the map of the Poles. v3 and v4 drafts keep
   v1.6's landing page.
 - **The ribbon** (amends the legend clause, line 247). Every narrative page
   carries one paragraph holding the one sentence of REQ-033 (line 27) with its
-  appendix link and the named review-status region, followed by a closed
+  appendix link, any other notice Syzygy writes about the draft (today's
+  "editorial draft — not adopted" notice in `dossier-site.ts`) and the page's
+  named review-status region, followed by a closed
   `How to read this page` details element holding the legend once. It follows
   the landing opening (v5) or the page title. The one sentence and the
   appendix link of line 27 and the scenario "Disclosure placed in the
@@ -281,7 +313,12 @@ the launch-consent change.
   render through the locator's tracked offsets: not the located span
   normalised afresh, which keeps an open `[` when a span ends inside a
   Markdown link's text, and not the agent's copy or a stored record. A
-  quotation that does not re-locate shows nothing in either view.
+  quotation that does not re-locate shows nothing in either view. The
+  rule governs the quotations of claim blocks and inventory entries only: a
+  code excerpt (a hero and a walk's excerpt among them) is still rendered
+  byte for byte in both views, comment leaders, markup and line breaks kept,
+  as the code-excerpt rule at line 253 says, and the spec now says so in the
+  clause.
 - **Why the falsifier changes.** [Observed] The check matches by exact
   substring of normalised texts (`quote-fidelity.ts`, `occursIn` and
   `findPiece`), so the matched run is byte-identical to `normaliseForQuote` of
@@ -303,8 +340,9 @@ the launch-consent change.
   paired underscores (`__init__` reads `init`); curly quotation marks
   straightened; the ellipsis character spelled as three dots; and every
   whitespace run, newlines included, made one space, so a multi-line code or
-  YAML quotation reads as one line. The legend now says so in brief, and
-  that the exact bytes are in the evidence view.
+  YAML quotation reads as one line. The legend now says so in brief,
+  naming the ellipsis and the underscores inside a name, and that the exact
+  bytes are in the evidence view.
 - **Parity.** The machine form carries the located span and the reading view
   the matched run, so the Oracle compares them per quotation by its one
   anchor: the reading-view text against the run, the machine-form text
@@ -362,7 +400,11 @@ the launch-consent change.
    evidence view, the source page and the anchor). The cost is real for code:
    a reading-view quotation of code can misspell an identifier. Limiting the
    display rule to Markdown sources, or to steps that remove only markup,
-   would be a narrower choice than B and is the owner's to make. If the owner reads RFC7-12
+   would be a narrower choice than B and is the owner's to make. Code
+   excerpts are not affected: they keep their bytes. A second reading is
+   RFC7-20's "visually distinct" draft: on a v5 landing page the thesis
+   precedes the one sentence, so the thesis carries its own draft mark; the
+   owner may read RFC7-20 as needing more. If the owner reads RFC7-12
    otherwise, the display rule needs an RFC 0007 question first, as the bead's
    stop condition says. No RFC 0007 text is changed here.
 3. **Close: label, not refuse.** Drafted as label (closed with a finding). A
@@ -377,6 +419,11 @@ the launch-consent change.
 5. **Not in this delta:** the brief compaction (P3 slice 4), reader-intent
    routes (P4), P8's quotation work, and every other move's amendment
    (P6, P7, P8, P11, P12 queue behind this one).
+6. **The 2026-11-05 direction.** Its item 3 kept the counting rule and
+   recorded "Excluded: no spec text changes". This delta reads "the rule" as
+   "every checked resubmission counts", which it keeps, and changes which
+   limit a design repair counts against on the authority of choice A ("Give
+   fidelity and design separate repair budgets"), not of that direction.
 
 ## What does not change
 
@@ -413,10 +460,13 @@ the launch-consent change.
    revision's pages are a new subject, so nothing is carried forward.
 6. VIS-2 and REQ-033 ("Syzygy SHALL NOT rest an Observed label on a record
    it stored"): close labels Observed only what it re-derives (which revision
-   passed, which pages exist, whether a verdict counts); a verdict's
-   readiness, an end state resting on it, and every value shown later from the
-   run record are Inferred; which limit a revision counted against is
-   Inferred.
+   passed, which pages exist, whether a verdict counts, and their order by
+   the sequence numbers Syzygy assigns); a verdict's readiness, an end state
+   resting on it, and every value shown later from the run record are
+   Inferred; which limit a revision counted against is Inferred.
+7. RFC7-20 (generated prose "visually distinct" as a draft): on a v5 landing
+   page the thesis sits above the ribbon and carries its own draft mark; on
+   every other page the ribbon's one sentence and legend carry it as in v1.6.
 
 ## Current and proposed clauses, in full
 
@@ -477,7 +527,7 @@ it SHALL refuse a check or review check beyond the repair-cycle limit and any st
 Proposed:
 
 ```text
-it SHALL refuse a check or review check beyond the repair-cycle limit, a check of a design-repair revision beyond the design-repair limit, a design-repair revision counting against that limit alone (REQ-polaris-generation-034), and any step after the deadline,
+it SHALL refuse a check or review check that counts against the repair-cycle limit (REQ-polaris-generation-034) beyond that limit, a check of a design-repair revision beyond the design-repair limit, and any step after the deadline,
 ```
 
 ### P1b-3 — `spec.md` — REQ-033: values shown from stored records
@@ -565,7 +615,7 @@ Each resubmission is a new draft revision with its own identity; it counts again
 Proposed:
 
 ```text
-Each resubmission is a new draft revision with its own identity; it counts against exactly one limit of REQ-polaris-generation-033, and it retires earlier check results and dependent review evidence (REQ-polaris-generation-006). Syzygy SHALL decide which limit at the resubmission's check, from its records as they stand before the resubmission retires anything, and SHALL record that decision with the revision; a later step reads the recorded decision and never decides it again. A resubmission is a design-repair revision, and counts against the design-repair limit, when the revision before it is a design-repair revision whose check reported findings, or when the revision before it passed its check, the rendered-design verdict of record (REQ-polaris-generation-035) on the latest pages rendered from that revision has an unresolved blocking finding, and no fidelity verdict of record on that revision has one. Every other resubmission counts against the repair-cycle limit, including one that follows a check that reported findings on a revision that counted against that limit. The first draft revision counts against neither limit, a check Syzygy refuses freezes no revision and counts against no limit, and Syzygy SHALL refuse a resubmission's check when the revisions already counted against its limit equal that limit.
+Each resubmission is a new draft revision with its own identity; it counts against exactly one limit of REQ-polaris-generation-033, and it retires earlier check results and dependent review evidence (REQ-polaris-generation-006). Syzygy SHALL decide which limit at the resubmission's check, from its records as they stand before the resubmission retires anything, and SHALL record that decision with the revision; a later step reads the recorded decision and never decides it again. A resubmission is a design-repair revision, and counts against the design-repair limit, when the revision before it is a design-repair revision whose check reported findings, or when the revision before it passed its check, the rendered-design verdict of record (REQ-polaris-generation-035) on the latest pages rendered from that revision has an unresolved blocking finding, and no fidelity verdict of record on that revision has one. Every other resubmission counts against the repair-cycle limit, including one that follows a check that reported findings on a revision that counted against that limit. The first draft revision counts against neither limit, a check Syzygy refuses freezes no revision and counts against no limit, and Syzygy SHALL refuse a resubmission's check when the revisions already counted against its limit equal that limit. Wherever this change says latest, earlier or last of revisions, renders or recorded verdicts, the order is that of the sequence numbers Syzygy assigns to each as it freezes, renders or records it, read from the objects Syzygy verifies, never an instant.
 ```
 
 ### P1b-9 — `spec.md` — REQ-034 scenario "Repair loop counted"
@@ -593,7 +643,7 @@ Syzygy SHALL render a checked draft through the existing multi-page dossier rend
 Proposed:
 
 ```text
-Syzygy SHALL render a checked draft through the existing multi-page dossier renderer. When asked, Syzygy SHALL render the latest checked draft revision if its check passed, whatever the state of any review of it; each render is a new set of pages bound to the one revision it was rendered from, and no review verdict on pages rendered from another revision counts for them (REQ-polaris-generation-035). Rendering decides no readiness and counts as no review. With a render Syzygy MAY report reader advice, which is its own mechanical measurement of the pages it rendered, such as a page's word count, the words above a landing page's thesis, or a dossier with no hero excerpt; the advice SHALL be labelled as Syzygy's measurement of its own pages, SHALL NOT render on a page or enter a review packet, and is no repair finding, decides no readiness and counts as no review.
+Syzygy SHALL render a checked draft through the existing multi-page dossier renderer. When asked, Syzygy SHALL render the latest checked draft revision if its check passed, whatever the state of any review of it; each render is a new set of pages bound to the one revision it was rendered from, and no review verdict on pages rendered from another revision counts for them (REQ-polaris-generation-035). Rendering decides no readiness and counts as no review. Every page Syzygy renders SHALL carry exactly one named review-status region, in the ribbon on a narrative page and at the foot of every other page. At render the region SHALL state, for each review kind, its standing for those pages as Syzygy's records stand at that render, saying that none counts where none does and labelled as close labels a standing (REQ-polaris-generation-035), and SHALL NOT state the pages reviewed or ready while either standing is not ready; close rewrites it. With a render Syzygy MAY report reader advice, which is its own mechanical measurement of the pages it rendered, such as a page's word count, the words above a landing page's thesis, or a dossier with no hero excerpt; the advice SHALL be labelled as Syzygy's measurement of its own pages, SHALL NOT render on a page or enter a review packet, and is no repair finding, decides no readiness and counts as no review.
 ```
 
 ### P13-1 — `spec.md` — REQ-034: what a rendered quotation shows
@@ -607,7 +657,7 @@ Every rendered quotation SHALL be set off as a quotation and SHALL be the span S
 Proposed:
 
 ```text
-Every rendered quotation SHALL be set off as a quotation, and Syzygy SHALL locate it again at render in the blob it read and verified at the pinned revision, never taking a byte range on trust from a stored record. The span Syzygy so located SHALL be the quotation's text in the evidence view and in the machine form, never the agent's copy of it. In the reading view the quotation's text SHALL be the run of the blob's normalised text that the quotation check above matched, taken at that render from the blob's text under that check's normalisation at the offsets Syzygy's locator tracked for the located span; it SHALL NOT be the located span normalised afresh on its own, which can keep markup the check removed (a span that ends inside a Markdown link's text keeps the link's opening `[`), and SHALL NOT be taken from the agent's copy or from a stored record. A quotation that does not re-locate at render SHALL show no text in either view. The anchor below, whose fragment is the located span's byte range, is the same for both views.
+Every rendered quotation SHALL be set off as a quotation, and Syzygy SHALL locate it again at render in the blob it read and verified at the pinned revision, never taking a byte range on trust from a stored record. The span Syzygy so located SHALL be the quotation's text in the evidence view and in the machine form, never the agent's copy of it. In the reading view the quotation's text SHALL be the run of the blob's normalised text that the quotation check above matched, taken at that render from the blob's text under that check's normalisation at the offsets Syzygy's locator tracked for the located span; it SHALL NOT be the located span normalised afresh on its own, which can keep markup the check removed (a span that ends inside a Markdown link's text keeps the link's opening `[`), and SHALL NOT be taken from the agent's copy or from a stored record. A quotation that does not re-locate at render SHALL show no text in either view. The anchor below, whose fragment is the located span's byte range, is the same for both views. This display rule governs the quotations of claim blocks and inventory entries; a code excerpt, a hero and an annotated code walk's excerpt among them, renders in both views byte for byte as the code-excerpt rule below states, its comment leaders, markup and line breaks kept.
 ```
 
 ### P13-2 — `spec.md` — REQ-034 scenario "Quotation verified against the pinned blob"
@@ -635,7 +685,7 @@ Each narrative page SHALL carry once a Syzygy-written legend: a numbered mark ci
 Proposed:
 
 ```text
-Each narrative page SHALL carry a ribbon: one paragraph holding the one sentence of REQ-polaris-generation-033 with its link to the appendix and the named review-status region of REQ-polaris-generation-035, followed by a details element, closed by default, whose summary is the Syzygy-written words `How to read this page` and whose body holds, once, the page's Syzygy-written legend; no fragment target sits inside the ribbon. On the landing page of a schema-v5 draft the ribbon follows the page's opening, and on every other narrative page it follows the page's title; nothing else Syzygy writes about the run, the draft or its review sits above it. The legend says: a numbered mark cites a source; text with such a mark is the agent's reading of that source; the mark `judgement` is the agent's own assessment; the mark `framing` makes no claim; a set-off quotation is verified against the repository and shows the source's text as the check compares it, with markup, comment markers and escapes left out, entities decoded, quotation marks straightened and each run of whitespace made one space, its exact bytes being in the evidence view; `Not established`
+Each narrative page SHALL carry a ribbon: one paragraph holding the one sentence of REQ-polaris-generation-033 with its link to the appendix, any other notice Syzygy writes about the draft (such as that it is an editorial draft, not adopted), and the page's named review-status region, followed by a details element, closed by default, whose summary is the Syzygy-written words `How to read this page` and whose body holds, once, the page's Syzygy-written legend; no fragment target sits inside the ribbon. On the landing page of a schema-v5 draft the ribbon follows the page's opening, and on every other narrative page it follows the page's title; nothing else Syzygy writes about the run, the draft or its review sits above it. The legend says: a numbered mark cites a source; text with such a mark is the agent's reading of that source; the mark `judgement` is the agent's own assessment; the mark `framing` makes no claim; a set-off quotation is verified against the repository and shows the source's text as the check compares it, with markup, comment markers and escapes left out, entities decoded, quotation marks straightened, an ellipsis character spelled as three dots, paired underscores dropped even inside a name, and each run of whitespace made one space, its exact bytes being in the evidence view; `Not established`
 ```
 
 ### P5-1 — `spec.md` — REQ-034: the presentation elements
@@ -695,7 +745,7 @@ Proposed:
 ```text
 each altitude stays a true coarser account and the verbatim leaf stays reachable.
 
-A draft in schema `polaris-dossier-local-draft-v5` is a schema-v4 draft under every rule this requirement states for one, and SHALL also divide its sections into Poles and carry a thesis and three to five pillars; it MAY name one hero. The thesis is a claim block, under every rule for a claim block, of at most 300 Unicode code points, stating what the project is, for whom and why; whether it is one sentence and says those three things is a review judgement. Each pillar is a claim block under every rule for a claim block, with a short label under the rules for an element's short label, a cost, which is a claim block of its own stating what the pillar's choice costs, and the identity of the one Pole that substantiates it. Syzygy SHALL report a repair finding for a schema-v5 draft without Poles, without a thesis or with one over 300 Unicode code points, with fewer than three or more than five pillars, with a pillar that has no cost, and with a pillar that names no Pole of the draft or names one that has no page of its own; a pillar naming a Pole that has a page is served, and whether that Pole substantiates it is a review judgement. The hero is a code excerpt under every rule for a code excerpt and carries no text of the agent's beyond its language hint. The landing page of a schema-v5 draft SHALL open with, in this order, the title, the thesis and the hero where the draft names one, and above the end of that opening Syzygy SHALL write nothing but the site's navigation and what the thesis and the hero carry under their own rules (their labels, citation marks and caption, and any withheld or Unknown presentation of either); the ribbon follows it, then the pillars, each with its cost and a link to its Pole's page, then the why section and the map of the Poles as above. A hero whose blob is withheld renders in its place as a withheld code excerpt does. With no hero the opening ends at the thesis, and reader advice MAY say so; a missing hero is no repair finding. The brief for a run whose draft schema is v5 SHALL state these rules. Under the owner's sign-off of this version the thesis, the hero and the pillars open the landing page's altitude, which stays a true coarser account under RFC7-13.
+A draft in schema `polaris-dossier-local-draft-v5` is a schema-v4 draft under every rule this requirement states for one, and SHALL also divide its sections into Poles and carry a thesis and three to five pillars; it MAY name one hero. The thesis is a claim block, under every rule for a claim block, of at most 300 Unicode code points, stating what the project is, for whom and why; whether it is one sentence and says those three things is a review judgement. Each pillar is a claim block under every rule for a claim block, with a short label under the rules for an element's short label, a cost, which is a claim block of its own stating what the pillar's choice costs, and the identity of the one Pole that substantiates it. Syzygy SHALL report a repair finding for a schema-v5 draft without Poles, without a thesis or with one over 300 Unicode code points, with fewer than three or more than five pillars, with a pillar that has no cost, and with a pillar that names no Pole of the draft or names one that has no page of its own; a pillar naming a Pole that has a page is served, and whether that Pole substantiates it is a review judgement. The hero is a code excerpt under every rule for a code excerpt and carries no text of the agent's beyond its language hint. The landing page of a schema-v5 draft SHALL open with, in this order, the title, the thesis and the hero where the draft names one, and above the end of that opening Syzygy SHALL write nothing but the site's navigation and what the thesis and the hero carry under their own rules (their labels, citation marks and caption, and any withheld or Unknown presentation of either); because the thesis is generated prose above the ribbon, it SHALL carry with its label a Syzygy-written mark that it is the agent's draft, so that it stays visually distinct as a draft (RFC7-20) before the one sentence; the ribbon follows it, then the pillars, each with its cost and a link to its Pole's page, then the why section and the map of the Poles as above. A hero whose blob is withheld renders in its place as a withheld code excerpt does. With no hero the opening ends at the thesis, and reader advice MAY say so; a missing hero is no repair finding. The brief for a run whose draft schema is v5 SHALL state these rules. Under the owner's sign-off of this version the thesis, the hero and the pillars open the landing page's altitude, which stays a true coarser account under RFC7-13.
 ```
 
 ### S34 — `spec.md` — REQ-034: added scenarios
@@ -723,7 +773,7 @@ Proposed:
 
 - **WHEN** a draft revision passes its check while no fidelity verdict on it counts, it is rendered, and a later revision then passes and is rendered
 - **THEN** each render is a new set of pages bound to its own revision, and a rendered-design verdict on the earlier pages does not count for the later pages
-- **AND** rendering neither decides readiness nor counts as a review
+- **AND** rendering neither decides readiness nor counts as a review, and every page of each render carries one review-status region stating each review kind's standing for those pages at that render, that no rendered-design verdict counts for newly rendered pages, and never that they are reviewed or ready
 
 #### Scenario: Reader advice decides nothing
 
@@ -758,8 +808,8 @@ Proposed:
 #### Scenario: Thesis-first landing page
 
 - **WHEN** a schema-v5 draft with a thesis, four pillars each naming a Pole that has a page, and a hero is rendered
-- **THEN** the landing page opens with the title, the thesis and the hero, in that order, with nothing Syzygy writes above the hero's end but navigation and the thesis's and the hero's own labels, citation marks and caption, and then carries the ribbon, the pillars with their costs and links, the why section and the map of the Poles
-- **AND** the thesis, each pillar and each cost is checked as a claim block and has its own entry in the fidelity verdict, and the hero renders from Syzygy's read as a code excerpt does
+- **THEN** the landing page opens with the title, the thesis and the hero, in that order, with nothing Syzygy writes above the hero's end but navigation and the thesis's and the hero's own labels, citation marks, draft mark and caption, and then carries the ribbon, the pillars with their costs and links, the why section and the map of the Poles
+- **AND** the thesis carries its draft mark, the thesis, each pillar and each cost is checked as a claim block and has its own entry in the fidelity verdict, and the hero renders from Syzygy's read as a code excerpt does
 
 #### Scenario: Thesis and pillars checked
 
@@ -770,7 +820,7 @@ Proposed:
 #### Scenario: Annotated code walk
 
 - **WHEN** a schema-v5 draft carries an annotated code walk whose excerpt cites at most 60 lines of an admitted blob and whose notes each name lines within it
-- **THEN** the excerpt renders from Syzygy's read as an Observed quotation, and each note renders after the code as a claim block with its own entry in the fidelity verdict, never inside the preformatted code
+- **THEN** the excerpt renders from Syzygy's read as an Observed quotation byte for byte, its comment leaders and line breaks kept in the reading view as in the evidence view, and each note renders after the code as a claim block with its own entry in the fidelity verdict, never inside the preformatted code
 - **AND** a walk with no note, or a note whose line range is malformed, reversed or outside the excerpt's range, is a repair finding, and the notes of a withheld excerpt render under their own citations with their line ranges marked agent-supplied and unverified
 ```
 
@@ -785,7 +835,21 @@ and varying an uncited block's judgement mark and schema version, a claim block'
 Proposed:
 
 ```text
-and varying an uncited block's judgement mark and schema version, a claim block's or inventory entry's withheld spans, the screening act's presence, a page's scripts on or off, and Pole counts and membership; and varying quotations of commented lines and of Markdown links whose located span ends inside the link text, the blob a quotation re-locates in at render, a schema-v5 draft's thesis, pillars, costs, hero and annotated code walks, which limit each resubmission counts against as the check, fidelity and rendered-design records vary, the review state of each revision rendered, and the reader advice reported.
+and varying an uncited block's judgement mark and schema version, a claim block's or inventory entry's withheld spans, the screening act's presence, a page's scripts on or off, and Pole counts and membership; and varying quotations of commented lines and of Markdown links whose located span ends inside the link text, the blob a quotation re-locates in at render, a schema-v5 draft's thesis, pillars, costs, hero and annotated code walks, code excerpts whose lines carry comment leaders, markup and paired underscores, which limit each resubmission counts against as the check, fidelity and rendered-design records vary, the review state of each revision rendered, and the reader advice reported.
+```
+
+### Ob34 — `spec.md` — REQ-034 Observable
+
+Current:
+
+```text
+the reading view's and evidence view's text, the machine form, the appendix and its counts, and the fidelity verdict's entries.
+```
+
+Proposed:
+
+```text
+the reading view's and evidence view's text, the machine form, the appendix and its counts, and the fidelity verdict's entries; the limit decision recorded with each revision and each check's refusal, every page's review-status region at render, and the reader advice reported.
 ```
 
 ### O34 — `spec.md` — REQ-034 Oracle
@@ -799,7 +863,7 @@ Expected findings and byte ranges computed from the fixture blobs outside the ch
 Proposed:
 
 ```text
-Expected findings and byte ranges computed from the fixture blobs outside the checker, by an independent byte search over the fixture's own normalised text, with each quotation's expected reading-view text the run of that normalised text the search found, and the reading view and the machine form compared per quotation by its anchor, the reading-view text against that run and the machine-form text against the located span;
+Expected findings and byte ranges computed from the fixture blobs outside the checker, by an independent byte search over the fixture's own normalised text, with each quotation's expected reading-view text the run of that normalised text the search found, and the reading view and the machine form compared per quotation by its anchor, the reading-view text against that run and the machine-form text against the located span; each revision's expected limit and each expected refusal, and each page's expected region at render, fixed in the fixture from its check, verdict and render records outside the checker and the renderer;
 ```
 
 ### F34-1 — `spec.md` — REQ-034 Falsifier: the quotation disjunct
@@ -827,7 +891,7 @@ a page lacks the one sentence, its link or its machine disclosure; a Pole rule p
 Proposed:
 
 ```text
-a page lacks the one sentence, its link or its machine disclosure; a Pole rule passes when broken; a narrative page lacks its ribbon, carries its legend outside the ribbon's details element or its ribbon below other text Syzygy writes about the run, the draft or its review, or carries a fragment target inside the ribbon; a resubmission counts against a limit other than the one this requirement assigns it, against both or against none, or a design-repair revision is refused while the design-repair limit is unspent; a passed latest revision is refused a render because of the state of a review of it, or a rendered-design verdict on pages of one revision counts for pages of another; reader advice renders on a page, enters a review packet, is a repair finding or changes readiness; a schema-v5 landing page opens otherwise than with the title, the thesis and the named hero in that order, or carries text Syzygy writes above the end of that opening other than navigation and what the thesis and the hero carry under their own rules, or lacks one of those; a schema-v5 thesis, pillar or cost escapes a check a claim block meets or lacks its fidelity entry; a schema-v5 rule on Poles, thesis length, pillar count, cost or served Pole passes when broken, or a missing hero is a repair finding; a hero or an annotated walk's excerpt renders the agent's text; a margin note renders inside the preformatted code or lacks its fidelity entry, or a walk with no note, or a note whose line range is malformed, reversed or outside its excerpt, passes.
+a page lacks the one sentence, its link or its machine disclosure; a Pole rule passes when broken; a narrative page lacks its ribbon, carries its legend outside the ribbon's details element or its ribbon below other text Syzygy writes about the run, the draft or its review, or carries a fragment target inside the ribbon; a resubmission counts against a limit other than the one this requirement assigns it, against both or against none, or a design-repair revision is refused while the design-repair limit is unspent; a passed latest revision is refused a render because of the state of a review of it, or a rendered-design verdict on pages of one revision counts for pages of another; reader advice renders on a page, enters a review packet, is a repair finding or changes readiness; a schema-v5 landing page opens otherwise than with the title, the thesis and the named hero in that order, or carries text Syzygy writes above the end of that opening other than navigation and what the thesis and the hero carry under their own rules, or lacks one of those, or the thesis lacks its draft mark; a schema-v5 thesis, pillar or cost escapes a check a claim block meets or lacks its fidelity entry; a schema-v5 rule on Poles, thesis length, pillar count, cost or served Pole passes when broken, or a missing hero is a repair finding; a hero or an annotated walk's excerpt renders the agent's text, or any code excerpt renders normalised in either view; a rendered page carries no review-status region or more than one, or its region at render states a standing other than Syzygy's records give or states the pages reviewed or ready while a standing is not ready; a margin note renders inside the preformatted code or lacks its fidelity entry, or a walk with no note, or a note whose line range is malformed, reversed or outside its excerpt, passes.
 ```
 
 ### N3-1 — `spec.md` — REQ-035: the base round is a fidelity round (carried v1.6 note 3)
@@ -956,6 +1020,20 @@ Proposed:
 the printed start commands, the delivery records and the waiting command's outcomes; the run record's close fields and end state, and every page's review-status region before and after close.
 ```
 
+### Or35 — `spec.md` — REQ-035 Oracle
+
+Current:
+
+```text
+computed outside the generator from the fixture's delivery and verdict records and a byte comparison of the two rounds' frozen inputs.
+```
+
+Proposed:
+
+```text
+computed outside the generator from the fixture's delivery and verdict records and a byte comparison of the two rounds' frozen inputs; each expected close record, end state, finding and label, and each page's expected region after close, fixed in the fixture from its check, render and verdict records outside the generator.
+```
+
 ### F35 — `spec.md` — REQ-035 Falsifier: added disjuncts (with carried v1.6 note 4)
 
 Current:
@@ -1045,10 +1123,11 @@ close sealed pages no counted review had found ready.
   a `thesis` (one claim block, at most 300 code points) and 3-5 `pillars`
   (`{label, block, cost, pole}`), and allows one `hero` code excerpt. The
   landing page opens title, thesis, hero, with only navigation and their own
-  labels and caption above; then
+  labels, caption and the thesis's draft mark above; then
   the ribbon, the pillars, the why section and the map of the Poles.
-- **The ribbon.** On narrative pages the one sentence, the appendix link
-  and the review-status region form one paragraph, and the legend moves
+- **The ribbon.** On narrative pages the one sentence, the appendix link,
+  the editorial-draft notice and the review-status region form one
+  paragraph (other pages keep the region at their foot), and the legend moves
   into a closed `How to read this page` details element just after it.
 - **Annotated code walks.** A `codeWalk` element is a code excerpt plus
   margin notes; each note is a claim block placed by a line range of the
@@ -1062,6 +1141,7 @@ close sealed pages no counted review had found ready.
   check's normalisation: markup, comment markers, escapes and paired
   emphasis marks (an identifier's paired underscores among them) dropped,
   entities decoded, quotation marks straightened and whitespace collapsed.
+  Code excerpts, the hero and walk excerpts among them, keep their bytes.
 
 ## What remains open in the implementation
 ```

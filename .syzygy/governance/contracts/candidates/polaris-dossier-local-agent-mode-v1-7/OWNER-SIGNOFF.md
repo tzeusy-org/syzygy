@@ -25,8 +25,9 @@ quotations as clean text?
   naming why, and every page says so. Close never calls it reviewed, and
   shows a review's "ready" as the reviewer's word (Inferred), not its own.
 - **A thesis first** (schema v5). The landing page opens with the title, a
-  one-sentence thesis and, if the draft names one, a short excerpt of the
-  project's own code, rendered by Syzygy from the repository. Then come three
+  one-sentence thesis, marked as the agent's draft, and, if the draft names
+  one, a short excerpt of the project's own code, rendered by Syzygy from the
+  repository. Then come three
   to five pillars, each with its cost and a link to the page that backs it.
   The notice, legend and review status on reading pages fold into one ribbon,
   with the legend behind "How to read this page". On the landing page the
@@ -37,7 +38,8 @@ quotations as clean text?
 - **Clean quotations.** A quotation reads as the text the check matched:
   markup, comment markers and escapes left out, quotation marks straightened
   and line breaks and repeated spaces made one space. The exact bytes stay in
-  the evidence view and behind the same anchor.
+  the evidence view and behind the same anchor. Code excerpts are not
+  cleaned: they keep their exact lines.
 - **Two notes from v1.6's review** are folded in: the base of a changed-block
   list is always a fidelity round, and a falsifier line was missing.
 
@@ -54,7 +56,9 @@ ones. The two v1.6 notes are carried as `syzygy-pdja.27` asked.
   every run configuration (no default, 0 allowed).
 - A design repair whose check reports findings keeps spending design budget,
   not fidelity budget. Every checked resubmission still counts, as you kept on
-  2026-11-05; a refused check counts against neither limit.
+  2026-11-05; a refused check counts against neither limit. The separate
+  budget itself rests on your choice A, not on that direction, which also
+  said "no spec text changes".
 - A run can still end on an unreviewed site: the change is that it can no
   longer look reviewed. If you would rather close refuse, that is a one-line
   change and a new review round.

@@ -12,7 +12,7 @@
  > implementation. It contains no code. The command surface below is a design
  > for implementation after the owner's sign-off (direction item 5); the
  > requirements are the controlling text, and doctrine, accepted contracts,
-@@ -546,6 +546,60 @@
+@@ -546,6 +546,62 @@
  Syzygy still accepts `polaris-dossier-local-draft-v2` and `-v3` drafts; in those,
  every Inferred block still cites, since only v4 has the `judgement` field.
  
@@ -52,10 +52,11 @@
 +  a `thesis` (one claim block, at most 300 code points) and 3-5 `pillars`
 +  (`{label, block, cost, pole}`), and allows one `hero` code excerpt. The
 +  landing page opens title, thesis, hero, with only navigation and their own
-+  labels and caption above; then
++  labels, caption and the thesis's draft mark above; then
 +  the ribbon, the pillars, the why section and the map of the Poles.
-+- **The ribbon.** On narrative pages the one sentence, the appendix link
-+  and the review-status region form one paragraph, and the legend moves
++- **The ribbon.** On narrative pages the one sentence, the appendix link,
++  the editorial-draft notice and the review-status region form one
++  paragraph (other pages keep the region at their foot), and the legend moves
 +  into a closed `How to read this page` details element just after it.
 +- **Annotated code walks.** A `codeWalk` element is a code excerpt plus
 +  margin notes; each note is a claim block placed by a line range of the
@@ -69,6 +70,7 @@
 +  check's normalisation: markup, comment markers, escapes and paired
 +  emphasis marks (an identifier's paired underscores among them) dropped,
 +  entities decoded, quotation marks straightened and whitespace collapsed.
++  Code excerpts, the hero and walk excerpts among them, keep their bytes.
 +
  ## What remains open in the implementation
  
