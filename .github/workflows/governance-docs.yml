@@ -361,11 +361,8 @@ jobs:
       - name: record_pwb_registry_machine_ceiling_act --selftest
         run: python3 scripts/record_pwb_registry_machine_ceiling_act.py --selftest
 
-      - name: record_public_source_screening_scope_v7_act --check
-        run: python3 scripts/record_public_source_screening_scope_v7_act.py --check 626be0cadc248b9ca9b3165d51f97d39aec552eb3a97b8b7df21d2446fc233da --date 2026-11-06 --owner-words 'Sign screening scope version 7, variant s'
-
-      - name: record_public_source_screening_scope_v7_act --selftest
-        run: python3 scripts/record_public_source_screening_scope_v7_act.py --selftest
+      - name: record_public_source_screening_scope_v8_act --check
+        run: python3 scripts/record_public_source_screening_scope_v8_act.py --check 44153bbe210c7a724f224f2bc1c9255db43cf0887b6ad22dd24884514f21bbe8 --date 2026-11-09 --owner-words 'Sign screening scope version 8, variant pv'
 
       - name: record_public_source_screening_scope_v8_act --selftest
         run: python3 scripts/record_public_source_screening_scope_v8_act.py --selftest

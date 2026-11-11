@@ -318,7 +318,8 @@ describe('the policy act gate fails closed', () => {
     const port = checkoutPolicyActPort();
     if (latest === undefined) { await expect(loadPublicSourceScreen(port)).rejects.toThrow(/^Corpus read refused: public-source-policy: no screening-scope policy act is in force/u); return; }
     const argument = /^Exact digest \(SHA-256\): `([0-9a-f]{64})`$/mu.exec(fs.readFileSync(latest, 'utf8'))?.[1];
-    const screen = await loadPublicSourceScreen(port);
+    // A version-8 policy needs the pair's visibility, which an earlier one ignores: given public.
+    const screen = await loadPublicSourceScreen(port, undefined, null, 'public');
     expect(screen.policyId).toBe('polaris-butlers-project-shape-secrets');
     expect(screen.policySha256).toBe(argument);
   });
@@ -453,7 +454,11 @@ describe('the code-content exemption (screening scope version 3)', () => {
 import build_public_source_screening_scope_v2 as b2, build_public_source_screening_scope_v3 as b, build_public_source_screening_scope_v4 as b4, build_public_source_screening_scope_v5 as b5
 import build_public_source_screening_scope_v6 as b6
 import build_public_source_screening_scope_v7 as b7
-v6_p, _mode = b7.base_bytes()
+import build_public_source_screening_scope_v8 as b8
+v7_s, _m8 = b8.base_bytes()
+assert _m8 == 'performed-v8' and b8.propose(v7_s) == open(str(b8.ROOT / b7.POLICY)).read()
+v6_p = b7.v2.reverse_patch((b7.ROOT / b7.patch_path('s')).read_text(), v7_s)
+assert b7.propose(v6_p) == v7_s
 v5_bcd = b2.reverse_patch((b6.ROOT / b6.patch_path('p')).read_text(), v6_p)
 v4_span = b2.reverse_patch((b5.ROOT / b5.patch_path(b6.V5_BASE_VARIANT)).read_text(), v5_bcd)
 assert b5.sha(v4_span) == b5.v4.manifest_rows(b5.ROOT)[b5.V4_BASE_VARIANT] and b5.propose(v4_span, b6.V5_BASE_VARIANT) == v5_bcd
@@ -502,6 +507,8 @@ sys.stdout.write(json.dumps(json.loads(b.propose(base, 'all'))[b.SCOPE_KEY]['act
 });
 
 
+// The live bytes carry sourceVisibility since the version-8 act, so each read through them is given the pair's visibility: public, the
+// visibility under which version 8 keeps these rules.
 describe('the v4 redacted corpus behind the original-object verification boundary', () => {
   const mixed = 'a\rg\ntoken=abcdefghij\nh\nvisible\nlast\n';
   const current = new Uint8Array(readFileSync(new URL('../../../../.syzygy/governance/policies/POLARIS-BUTLERS-SECRET-CLASSIFICATION-POLICY-CANDIDATE.json', import.meta.url)));
@@ -509,7 +516,7 @@ describe('the v4 redacted corpus behind the original-object verification boundar
 
   it('returns only marked retained material with original identity, line coordinates and exact counts', async () => {
     const only = fixtureRepo({ 'docs/mixed.md': mixed, 'src/secret.c': 'token=abcdefghij\n' });
-    const corpus = await readScreenedRepoCorpus(only.root, cfg(only.commit), { admission: allow, policyAct });
+    const corpus = await readScreenedRepoCorpus(only.root, cfg(only.commit), { admission: allow, policyAct, visibility: 'public' });
     expect(corpus.count).toMatchObject({ listed: 2, selected: 2, sourceRows: 2, redactedFiles: 1, withheldLines: 3, secretDetectorMatches: 1 });
     const kept = corpus.sources.find(source => source.path === 'docs/mixed.md')!;
     expect(kept.objectId).toBe(objectIdOf('docs/mixed.md', only.root, only.commit));
@@ -521,22 +528,22 @@ describe('the v4 redacted corpus behind the original-object verification boundar
     expect(JSON.stringify(corpus)).not.toContain('token=');
     expect(validateGenerationSources(corpus.sources)).toHaveLength(2);
     const request = buildPipelineRequest(corpus, { ...cfg(only.commit), budget, readerQuestions: [{ id: 'why', topics: [], text: 'Why?' }], requestedAssets: [] }, Date.now());
-    const fresh = await screenedRepoCorpusVerifier(only.root, cfg(only.commit), { admission: allow, policyAct })(request);
+    const fresh = await screenedRepoCorpusVerifier(only.root, cfg(only.commit), { admission: allow, policyAct, visibility: 'public' })(request);
     expect(Array.isArray(fresh)).toBe(true);
     expect(validateGenerationSources(fresh as readonly GenerationSource[]).find(source => source.path === 'docs/mixed.md')?.body).toBe(kept.body);
   });
 
   it('refuses wrong original bytes before screening and fails replay closed when the fresh object read changes', async () => {
     const only = fixtureRepo({ 'docs/mixed.md': mixed });
-    const corpus = await readScreenedRepoCorpus(only.root, cfg(only.commit), { admission: allow, policyAct });
-    const ports = { admission: allow, policyAct, readBlobs: (_repo: string, objects: readonly string[]) => new Map(objects.map(oid => [oid, Buffer.from('arbitrary safe body\n')])) };
+    const corpus = await readScreenedRepoCorpus(only.root, cfg(only.commit), { admission: allow, policyAct, visibility: 'public' });
+    const ports = { admission: allow, policyAct, visibility: 'public' as const, readBlobs: (_repo: string, objects: readonly string[]) => new Map(objects.map(oid => [oid, Buffer.from('arbitrary safe body\n')])) };
     await expect(readScreenedRepoCorpus(only.root, cfg(only.commit), ports)).rejects.toThrow('corpus-object-mismatch');
     expect(await screenedRepoCorpusVerifier(only.root, cfg(only.commit), ports)(buildPipelineRequest(corpus, { ...cfg(only.commit), budget, readerQuestions: [{ id: 'why', topics: [], text: 'Why?' }], requestedAssets: [] }, Date.now()))).toBe(false);
   });
 
   it('binds the complete mixed population through fresh verification and consent before any provider input', async () => {
     const only = fixtureRepo({ 'docs/mixed.md': mixed, 'src/control.c': 'int ordinary = 7;\n', '.env': 'withheld-fixture\n' });
-    const corpus = await readScreenedRepoCorpus(only.root, cfg(only.commit), { admission: allow, policyAct });
+    const corpus = await readScreenedRepoCorpus(only.root, cfg(only.commit), { admission: allow, policyAct, visibility: 'public' });
     const now = Date.now(), sent: string[] = [];
     const request = buildPipelineRequest(corpus, { ...cfg(only.commit), budget,
       readerQuestions: [{ id: 'why', topics: [], text: 'Why?' }], requestedAssets: [] }, now);
@@ -549,7 +556,7 @@ describe('the v4 redacted corpus behind the original-object verification boundar
       { ...recordBase, recordId: 'fixture-egress', class: 'egress', repositoryId: null, providerId: 'fixture-provider', admittedRevisions: [],
         admittedRepositories: ['repository:fixture'], contentClasses: ['project-documentation', 'code-content'] },
     ];
-    const base: PipelinePorts = { now: () => now, verifySources: screenedRepoCorpusVerifier(only.root, cfg(only.commit), { admission: allow, policyAct }),
+    const base: PipelinePorts = { now: () => now, verifySources: screenedRepoCorpusVerifier(only.root, cfg(only.commit), { admission: allow, policyAct, visibility: 'public' }),
       permissionIdentity: async () => { throw Error('consent must replace this port'); },
       admit: async input => ({ kind: 'reserved', permit: { attemptId: String(input.ordinal), maxUsageUnits: 1, maxOutputBytes: 1_000 } }),
       permitted: async () => true, releaseUnsent: async () => undefined, responseSchema: () => ({ version: 'fixture', schema: {} }),
@@ -599,7 +606,7 @@ describe('the version-5 owner placements through the corpus reader', () => {
   let placed: { root: string; commit: string };
   beforeAll(() => { placed = fixtureRepo({ 'TLS.md': '# TLS\nUse port 6380.\n', 'src/a.c': 'int a;\n' }); });
   const paths = async (policyAct: PublicSourcePolicyActPort): Promise<string[]> =>
-    (await readScreenedRepoCorpus(placed.root, cfg(placed.commit), { admission: allow, policyAct })).sources.filter(source => !source.exclusion.excluded).map(source => source.path).sort();
+    (await readScreenedRepoCorpus(placed.root, cfg(placed.commit), { admission: allow, policyAct, visibility: 'public' })).sources.filter(source => !source.exclusion.excluded).map(source => source.path).sort();
 
   it('admits the placed path for the configured repository at the read revision', async () => {
     expect(await paths(placing('repository:fixture', [placed.commit]))).toEqual(['TLS.md', 'src/a.c']);

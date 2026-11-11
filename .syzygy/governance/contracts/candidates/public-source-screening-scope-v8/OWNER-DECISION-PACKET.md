@@ -1,5 +1,10 @@
 # Owner decision packet — public-source screening scope, version 8 (private sources)
 
+> **PERFORMED 2026-11-09.** The owner selected variant `pv`, and the act is
+> recorded at 2026-11-09T09:27:14Z in
+> `.syzygy/governance/decisions/PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-V8-ACT.md`.
+> The pre-act banner below is the text as drafted and reviewed, left unedited.
+
 > **Candidate — binds nothing.** It carries no digest. Nothing here is a
 > decision, and reading it performs no act. It is offered to you only after a
 > confirming independent review; until then it is not offered.

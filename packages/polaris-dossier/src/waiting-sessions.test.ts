@@ -967,6 +967,9 @@ describe('delivery to a waiting review session', () => {
 });
 
 // syzygy-pdja.19: each delivery says what it adds to the session's reading, in bytes Syzygy built, and never a token figure.
+// A claim of zero bytes, anchored so a size that ends in 0 (`25540 bytes`) never matches it (syzygy-pdja.28).
+const ZERO_BYTES = /(?<![\d.,])\b0 bytes\b/u;
+
 describe('the per-round usage note of a delivery', () => {
   it('states round 1\'s packet size as the delivered file\'s bytes, and records it (mutant: count UTF-16 code units, or drop the record field)', async () => {
     const h = await harness();
@@ -1005,7 +1008,7 @@ describe('the per-round usage note of a delivery', () => {
     expect((await h.cli(['check', h.run])).exit).toBe(0);
     const { delivered } = await reviewRound(h, 2);
     expect(delivered['usageNote']).toContain('Syzygy delivered 1 earlier round to this session (1 round whose record states no size (Unknown)).');
-    expect(delivered['usageNote']).not.toContain('0 bytes');
+    expect(delivered['usageNote']).not.toMatch(ZERO_BYTES);
   });
 
   it('counts UTF-8 bytes, not code units, for a packet with non-ASCII text (mutant: use the string length)', async () => {
@@ -1036,6 +1039,14 @@ describe('deliveryUsageNote', () => {
   it('counts an earlier round with no readable record as Unknown, never omits it (mutant: count only the records read)', () => {
     const note = deliveryUsageNote('fidelity', 3, 900, [{ round: 2, packetSha256: 'b'.repeat(64), packetBytes: 200 }]);
     expect(note).toContain('Syzygy delivered 2 earlier rounds to this session (200 bytes over 1 of them, as Syzygy\'s delivery records state (Inferred: those records lie within the agent sessions\' write reach); 1 round whose record Syzygy could not read (Unknown)).');
+  });
+
+  it('reads a zero-byte claim, and only a zero-byte claim, as one (syzygy-pdja.28: a size ending in 0 is no such claim)', () => {
+    const note = deliveryUsageNote('fidelity', 2, 25540, [{ round: 1, packetSha256: 'a'.repeat(64), packetBytes: null }]);
+    expect(note).toContain('Round 2 packet: 25540 bytes');
+    expect(note).not.toMatch(ZERO_BYTES);
+    expect(deliveryUsageNote('fidelity', 2, 25540, [{ round: 1, packetSha256: 'a'.repeat(64), packetBytes: 0 }])).toMatch(ZERO_BYTES);
+    expect('(10 bytes over them; 2,0 bytes; 1.0 bytes)').not.toMatch(ZERO_BYTES);
   });
 
   it('names the review kind in its --fresh advice (mutant: hard-code fidelity)', () => {

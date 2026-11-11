@@ -157,7 +157,15 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     { clone, snapshot, ...(request.revision === undefined ? {} : { revision: request.revision }), headConsented: request.headConsentedElsewhere || launchNamesHead },
     {
       storedIds: async () => { try { return await storedIdentifiers(snapshot.gitDir, algorithm); } catch { return new Set(); } },
-      isCommit: async oid => { try { await (ports.openReader ?? openPinnedObjectReader)({ gitDir: snapshot.gitDir, revision: oid }).tree(); return true; } catch { return false; } },
+      // The type from the header alone, so a tag or blob is never read past it (046's pre-answer reads); a commit is then re-hashed.
+      isCommit: async oid => {
+        try {
+          const reader = (ports.openReader ?? openPinnedObjectReader)({ gitDir: snapshot.gitDir, revision: oid });
+          if ((await reader.storedType()) !== 'commit') return false;
+          await reader.tree();
+          return true;
+        } catch { return false; }
+      },
     },
   );
   if (!pinned.ok) return refuse(pinned.refusal.stage, pinned.refusal.reason, pinned.refusal.command);

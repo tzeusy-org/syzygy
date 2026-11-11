@@ -32,23 +32,74 @@ const text = (value: unknown): string | undefined => (typeof value === 'string' 
 
 const SOURCE_FILE = /\b[\w-]+\.(?:c|h|cc|cpp|hpp|rs|go|py|rb|java|kt|js|mjs|ts|tsx|jsx|cs|swift|php|lua|sh|json|ya?ml|toml|md|ini|conf|cfg)\b/giu;
 
+/** Product and project names written as two or more capitalised parts, which the PascalCase shape would otherwise flag (syzygy-pdja.25).
+ * An explicit list: a name not on it is flagged, and the advice's detail already tells the author a product or proper name may stay. */
+const PRODUCT_NAMES: ReadonlySet<string> = new Set([
+  'GitHub', 'GitLab', 'BitBucket', 'JavaScript', 'TypeScript', 'CoffeeScript', 'ActionScript', 'PowerShell', 'WebAssembly', 'WebKit',
+  'WebSocket', 'WebSockets', 'YouTube', 'WordPress', 'LinkedIn', 'PayPal', 'DigitalOcean', 'CloudFront', 'CloudWatch', 'CloudFormation',
+  'EventBridge', 'BigQuery', 'ClickHouse', 'OpenStack', 'OpenShift', 'OpenTelemetry', 'OpenSearch', 'OpenTofu', 'LibreOffice',
+  'TensorFlow', 'PyTorch', 'NumPy', 'SciPy', 'SymPy', 'PyPy', 'LangChain', 'HashiCorp', 'JetBrains', 'WebStorm', 'PhpStorm', 'PyCharm',
+  'ReSharper', 'NuGet', 'SonarQube', 'PagerDuty', 'PlanetScale', 'MkDocs', 'DevOps', 'GitOps', 'MacBook', 'AirPods', 'FaceTime',
+  'PlayStation', 'SharePoint', 'OneDrive', 'VirtualBox', 'WireGuard', 'BitTorrent', 'SpriteKit', 'AppKit', 'MicroPython',
+  'CircuitPython', 'DeepMind', 'HuggingFace', 'SoundCloud', 'NeoVim', 'MacPorts', 'RedisInsight', 'CouchBase', 'DragonFly',
+]);
+
+/** A two-part capitalised surname (McCarthy, MacArthur): a proper name, never code. */
+const SURNAME = /^Ma?c[A-Z][a-z]+$/u;
+
+/** camelCase product names that end in an initialism run (macOS), the reason the pdja.18 narrowing stopped flagging that shape. */
+const INITIALISM_PRODUCT_NAMES: ReadonlySet<string> = new Set(['macOS', 'tvOS', 'watchOS', 'visionOS', 'bridgeOS', 'openSUSE', 'phpBB', 'cuDNN', 'cuBLAS']);
+
+/** JavaScript projects that name themselves as a lowercase `.js` file; a capitalised one (Node.js, Next.js) is read by its stem. */
+const LOWERCASE_JS_PROJECTS: ReadonlySet<string> = new Set(['d3.js', 'three.js', 'p5.js', 'ml5.js', 'pixi.js', 'tone.js', 'anime.js', 'paper.js', 'two.js', 'matter.js']);
+
+/** Conventional capitalised stems of a JavaScript source file (App.js, Server.js, Index.js), none of them a JavaScript project's name. */
+const JS_FILE_STEMS: ReadonlySet<string> = new Set([
+  'App', 'Index', 'Main', 'Server', 'Client', 'Router', 'Routes', 'Store', 'Config', 'Utils', 'Helpers', 'Home', 'Layout', 'Header',
+  'Footer', 'Root', 'Page', 'Component', 'Components', 'Api', 'Constants', 'Types', 'Model', 'Models', 'Controller', 'Service', 'Worker',
+]);
+
+/** A path written with one slash that starts at a conventional source directory or a Go standard-library root (src/server, net/http,
+ * lib/utils). Lowercase heads only, so the prose pairs the pdja.18 narrowing silenced (read/write, I/O, TCP/IP, client/server) stay
+ * unflagged. */
+const PATH_HEAD = /(?<![\w./-])(?:src|lib|libs|pkg|cmd|internal|include|vendor|deps|tests|bin|scripts|packages|apps|crates|modules|examples|net|os|io)\/[\w.-]/u;
+
+/** A word that starts with two or more capitalised parts (RedisModule, HttpServer), and a camelCase word whose inner capital starts an
+ * initialism run (toJSON, getID, innerHTML); each match is the whole word, so a listed name is matched exactly. */
+const PASCAL_WORD = /\b(?:[A-Z][a-z0-9]+){2,}\w*/gu;
+const INITIALISM_WORD = /\b[a-z]{2,}[A-Z]{2,}\w*/gu;
+
+/** Whether a source-file-shaped name is a JavaScript project's name rather than a file's: a listed lowercase project, or a capitalised
+ * `.js` name whose stem is neither a conventional file stem nor an unlisted word of two or more capitalised parts. */
+function javaScriptProjectName(name: string): boolean {
+  if (LOWERCASE_JS_PROJECTS.has(name)) return true;
+  const stem = /^([A-Z][A-Za-z0-9]*)\.js$/u.exec(name)?.[1];
+  if (stem === undefined || JS_FILE_STEMS.has(stem)) return false;
+  return !/^(?:[A-Z][a-z0-9]+){2,}/u.test(stem) || PRODUCT_NAMES.has(stem);
+}
+
 /** Why a title may name a code symbol rather than what it explains, or undefined: a code span, a call, a path, a source file name, or an
  * identifier written in camelCase, PascalCase, snake_case or SCREAMING_CASE.
  *
- * Each shape is narrowed to where prose and product names do not write it (R-PDJA-17-STANDARDS-1 note 2):
- * - a path has a leading or trailing separator, or two: one slash between two words is how prose writes a pair (read/write, I/O, TCP/IP);
- * - a file name is not a capitalised name ending `.js`, which is how JavaScript projects name themselves (Node.js, Next.js);
+ * Each shape is narrowed to where prose and product names do not write it (R-PDJA-17-STANDARDS-1 note 2), and widened again where a
+ * named list, not the shape, tells the two apart (syzygy-pdja.25, R-PDJA-P3-NOTES-1 finding 1):
+ * - a path has a leading or trailing separator, or two, or starts at a conventional source directory (src/server, net/http): any other
+ *   single slash between two words is how prose writes a pair (read/write, I/O, TCP/IP, client/server);
+ * - a file name is not a JavaScript project's name: a capitalised `.js` name (Node.js, Next.js) whose stem is not a conventional file
+ *   stem (App.js, Server.js) or an unlisted two-part PascalCase word (UserList.js), or a listed lowercase one (d3.js, three.js);
  * - a camelCase identifier starts with two or more lowercase letters and has a lowercase letter after its inner capital, where a brand
- *   starts with one (iPhone, gRPC, eBPF) or ends in an initialism (macOS);
- * - a PascalCase identifier has three or more capitalised parts: a name of two is also how products are written (GitHub, JavaScript),
- *   and a capital run is an initialism (PostgreSQL). */
+ *   starts with one (iPhone, gRPC, eBPF), or its inner capital starts an initialism run (toJSON, getID) and it is not a listed product
+ *   (macOS, openSUSE);
+ * - a PascalCase identifier has two or more capitalised parts and is not a listed product (GitHub, JavaScript) or a surname (McCarthy);
+ *   a capital run is an initialism, never a part (PostgreSQL). */
 export function codeSymbolInTitle(title: string): string | undefined {
   if (title.includes('`')) return 'it holds a code span';
   if (/\w\(/u.test(title)) return 'it names a call';
-  if (/(?:^|\s)\.{0,2}\/[\w.-]|[\w.-]\/[\w.-]+\/|[\w.-]\/(?=$|[\s),.;:!?])/u.test(title)) return 'it names a path';
-  if ([...title.matchAll(SOURCE_FILE)].some(([name]) => !/^[A-Z][A-Za-z0-9]*\.js$/u.test(name))) return 'it names a file';
+  if (/(?:^|\s)\.{0,2}\/[\w.-]|[\w.-]\/[\w.-]+\/|[\w.-]\/(?=$|[\s),.;:!?])/u.test(title) || PATH_HEAD.test(title)) return 'it names a path';
+  if ([...title.matchAll(SOURCE_FILE)].some(([name]) => !javaScriptProjectName(name))) return 'it names a file';
   if (/\b[a-z]{2,}[A-Z][a-z0-9]/u.test(title)) return 'it holds a camelCase identifier';
-  if (/\b(?:[A-Z][a-z0-9]+){3,}/u.test(title)) return 'it holds a PascalCase identifier';
+  if ([...title.matchAll(INITIALISM_WORD)].some(([word]) => !INITIALISM_PRODUCT_NAMES.has(word))) return 'it holds a camelCase identifier';
+  if ([...title.matchAll(PASCAL_WORD)].some(([word]) => !PRODUCT_NAMES.has(word) && !SURNAME.test(word))) return 'it holds a PascalCase identifier';
   if (/\b[A-Za-z0-9]+_[A-Za-z0-9_]+\b/u.test(title)) return 'it holds a snake_case identifier';
   return undefined;
 }

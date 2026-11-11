@@ -6,6 +6,11 @@ labels `[Observed]`, `[Inferred]` or `[Unknown]` that the lanes gave them. Where
 orchestrator re-derived a claim, it says so. Every finding and move, with its full evidence,
 is in `docs/pursuits/2026-11-09-vision-pursuit-data.json`:
 
+> *Updated 2026-11-09, after the run:* "No bead filed from it can run until the owner closes the gate bead" no longer holds.
+> The owner released five beads that do not depend on the gate, and later decisions moved parts
+> of P8 and P13. The beads under epic `syzygy-fnry` are the current plan; this file records the
+> run. See "Owner decisions after the run".
+
 ```sh
 jq '.units[] | select(.lane=="design" and .unit=="first-screen")' docs/pursuits/2026-11-09-vision-pursuit-data.json
 jq '.ranked_moves[] | {id, title, owner_value, build_cost, prereq}' docs/pursuits/2026-11-09-vision-pursuit-data.json
@@ -154,6 +159,8 @@ are under `.ranked_moves[]`.
 - Re-stamp the review-status region of every page.
 - Merges E1-M1, E1-M6, D2-M1, I7-M1 and S-M1. Relates to `syzygy-1z8m`.
 - It amends the same spec as v1.6 (`syzygy-pdja.26`, PR #808), so it follows that sign-off or folds into it. Overlapping OpenSpec changes are prohibited.
+  *Updated 2026-11-09, after the run:* the owner signed v1.6 and PR #808 merged, so P1 follows it, in the
+  v1.7 delta that `syzygy-fnry.19` drafts.
 - It travels with P3 and P5 as one coordinated delta.
 
 **P2 — The record tells the truth about credentials (truth, security; 5/2; slice 1 none, slice 2 waits on P-117 Q1).**
@@ -220,6 +227,8 @@ amendment).**
   and its basis.
 - Quotation syntax is freed: any lead-in, or a pull quote, with comment markers stripped from
   the displayed text and the raw bytes kept in the evidence view.
+  *Updated 2026-11-09, after the run:* the comment-marker display moved to P13 (`syzygy-fnry.13`) under
+  owner decision `fnry-19-p13-scope`. P8 keeps the free lead-in.
 - A maintainers'-voice strip.
 - Merges D5-M1, I2-M2, D5-M2, I2-M4 and S-M8. Coordinate with `syzygy-cnwp` (REQ-038/039).
 
@@ -268,6 +277,14 @@ required diagrams).**
 - The mobile fix: the digest moves off the per-page aside, plus `overflow-wrap`.
 - Quotes from Markdown sources are shown as clean text.
 - Merges D4-M1, D2-M2, D2-M3, D6-M2 and D1-M3.
+- *Updated 2026-11-09, after the run:* P13 was split in three, and its quotation part is not clause-free.
+  - The sidebar, previous and next links, glossary and mobile fix are released as `syzygy-fnry.18`.
+  - Line-linked citations are released as `syzygy-fnry.20`. The link sits beside the RFC7-10
+    anchor and leaves it unchanged, so no signed clause changes.
+  - Clean-text display changes the signed clause "SHALL be the span Syzygy located" (local-agent-mode
+    spec line 247). The owner chose to widen it from Markdown sources to every quotation: each one
+    displays the normalised run the quote check matched, and the evidence view keeps the raw span.
+    It goes in the v1.7 delta (`syzygy-fnry.19`) and is built by `syzygy-fnry.13`.
 
 **P14 — Engine foundation (momentum; 4/3; none; the E1-M5 retirement of the operator mode is
 an owner act).**
@@ -325,7 +342,7 @@ These are in `.units[]`:
 ## Owner gates this run
 
 There is one packet with two items. It was reviewed by an independent subagent before it was
-served. The packet lives at `~/.tmp/user-questionnaire/syzygy-2026-11-09-pursuit/packet.md`.
+served. (*Updated 2026-11-09, after the run:* a second packet followed; see "Owner decisions after the run".) The packet lives at `~/.tmp/user-questionnaire/syzygy-2026-11-09-pursuit/packet.md`.
 
 - `pursuit-2026-11-09-release`: the release scope for the gated epic.
 - `pursuit-2026-11-09-creds`: what to do with the 20 credential copies that already exist (P2
@@ -340,12 +357,40 @@ An independent reviewer returned Revise on both items in rounds 1 and 2, and Pas
 
 The spec amendments that P1, P3, P5, P6, P7, P8, P11 and P12 carry are not questions here. They
 enter the feature-request funnel after release and reach the owner as CC-REV-2 deltas.
+*Updated 2026-11-09, after the run:* the owner's choice A had P1, P3 and P5, with P13's clause-bound part,
+drafted now as one v1.7 delta (`syzygy-fnry.19`), ahead of release. The other moves' deltas queue
+behind it.
+
+## Owner decisions after the run
+
+The beads are the current plan. These decisions changed it after the report above was written.
+
+| Decision | Choice | What changed |
+|---|---|---|
+| `pursuit-2026-11-09-release` (packet 1) | A, 2026-11-09 | The gate `syzygy-fj2q` stays open. Released without it: `syzygy-fnry.16` (P2 slice 1), `.17` (P4 slice 1), `.18` (P13 wayfinding) and later `.20` (P13 line links). `.19` drafts one v1.7 delta for P1, P3, P5 and P13's clause-bound part. |
+| `pursuit-2026-11-09-creds` (packet 1) | A, 2026-11-09 | The 20 existing credential copies, their session keys, shell snapshots and session environments were removed from closed runs' agent homes. P-117 Q1 is still open. |
+| `fnry-19-p13-scope` (packet 2) | B, 2026-11-09 | v1.7 lets every quotation display the normalised run the check matched, with the raw span in the evidence view. `.13` is widened to all quotations; `.8` drops its comment-marker display. |
+
+Settled without an owner question during the bead passes, and recorded on the beads:
+
+- Line-linked citations need no spec change, so they were released as `syzygy-fnry.20` under
+  choice A.
+- A counted glossary check, which would be a version 2 of the reader standards, is "not now".
+  The decision and the condition for asking again are on `syzygy-fnry.18`.
+- How P1 reaches the one-command run (the candidate `polaris-dossier-one-command-run` change)
+  is asked when v1.7 is offered. Its options are on `syzygy-fnry.19`.
+
+Packets: `~/.tmp/user-questionnaire/syzygy-2026-11-09-pursuit/packet.md` and
+`~/.tmp/user-questionnaire/syzygy-2026-11-09-beads/packet.md`. Neither is in the repository.
+Each decision record is copied onto the beads it changed.
 
 ## Gated epic
 
 The epic and gate ids are recorded on the epic bead. Each child depends on the `[HOLD]` gate,
 and the epic is assigned to the owner so it stays off `bd ready`. **Closing the gate is the
 owner's move, and it releases the children.**
+*Updated 2026-11-09, after the run:* "each child" means the move beads `syzygy-fnry.1` to `.15`. The
+released slices `.16` to `.20` do not depend on the gate.
 
 ## Known ledger and deviations
 

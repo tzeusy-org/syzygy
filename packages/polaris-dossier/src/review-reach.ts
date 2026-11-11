@@ -95,10 +95,15 @@ const DETAIL: Readonly<Record<UnseenConsequence, string>> = {
   'withheld-item': 'every span it cites, or a span it quotes, is withheld by screening, so the review cannot confirm it: its entry is `withheld`, it renders Unknown and none of its text renders',
 };
 
+/** What else a withheld node or edge takes with it, as `render.ts` renders it (syzygy-pdja.25): `diagramHeld` holds a diagram whose
+ * nodes and edges are all withheld, and its title and relationship render `WITHHELD_LABEL`; `containerTitle` renders that label for the
+ * title of a section whose paragraphs and diagrams are all withheld. */
+const DIAGRAM_TITLE_CONSEQUENCE = 'if every node and edge of its diagram is withheld, the diagram\'s title and relationship render as "Withheld item" too, and so does the title of a section whose paragraphs and diagrams are all withheld';
+
 const ELEMENT_DETAIL: Readonly<Record<WithheldElementKind, string>> = {
   'understanding-item': 'every span it cites, or a span it quotes, is withheld by screening: it renders Unknown on the understanding page and none of its text renders (a terminology item is also left out of the glossary)',
-  'diagram-node': 'every span it cites, or a span it quotes, is withheld by screening: the node renders Unknown and its label does not render',
-  'diagram-edge': 'every span it cites, or a span it quotes, is withheld by screening: the edge renders Unknown and its label does not render',
+  'diagram-node': `every span it cites, or a span it quotes, is withheld by screening: the node renders Unknown and its label does not render; ${DIAGRAM_TITLE_CONSEQUENCE}`,
+  'diagram-edge': `every span it cites, or a span it quotes, is withheld by screening: the edge renders Unknown and its label does not render; ${DIAGRAM_TITLE_CONSEQUENCE}`,
 };
 
 const list = (value: unknown): readonly unknown[] => (Array.isArray(value) ? value : []);
