@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DECISIONS_DIR, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0, readDigestBoundActState, type DigestBoundActForm } from '@syzygy/polaris-generation-consent';
+import { DECISIONS_DIR, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_V1_0_RECORD_SHA256, readDigestBoundActState, readVersionedSignoffState, type DigestBoundActForm } from '@syzygy/polaris-generation-consent';
 import { loadRecorderForms, HEAD_FIELD_ALTERATION, PROSE_ALTERATIONS, recorderRecordPaths, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderLocalAgentSignoffV10, renderProviderV2Act, type DossierLocalAgentActKey } from '@syzygy/polaris-generation-consent/testing';
 import { describe, expect, it } from 'vitest';
 import { preflight } from './preflight.js';
@@ -56,15 +56,14 @@ const write = (root: string, rel: string, text: string): void => {
 
 /** A records root holding the real sitting records and the files they bind, with the named acts recorded at INSTANT, and (when
  * `signoff`) the local-agent entry signed off v1.0 and then v1.1 as the recorder leaves it: v1.1's bytes installed, its record beside
- * v1.0's, which still names v1.0's bytes. An unrelated decisions file keeps the directory present. */
+ * the real v1.0 record, byte for byte, which still names v1.0's bytes. An unrelated decisions file keeps the directory present. */
 function world(acts: readonly DossierLocalAgentActKey[], signoff = false, v2 = false): string {
   const root = tempDir('dossier-gate-acts-');
   for (const rel of [...KEYS.map(k => ACTS[k].record), SECURITY, V1, DIRECTION, V2_RECORD]) write(root, rel, real(rel));
   write(root, `${DECISIONS_DIR}/UNRELATED.md`, '# Unrelated\n');
   for (const key of acts) write(root, ACTS[key].file, renderDossierLocalAgentAct(key, sha(real(ACTS[key].record)), DATE, INSTANT));
   if (signoff) {
-    write(root, INSTALLED_ENTRY, real(PROPOSED_ENTRY_V10));
-    write(root, SIGNOFF_V10, renderLocalAgentSignoffV10(root, DATE, INSTANT));
+    write(root, SIGNOFF_V10, real(SIGNOFF_V10));
     write(root, INSTALLED_ENTRY, real(PROPOSED_ENTRY));
     write(root, SIGNOFF, renderLocalAgentSignoff(root, DATE, INSTANT));
   }
@@ -153,8 +152,9 @@ describe('version 2 of the Anthropic statement', () => {
     write(root, V2_ACT, mutated);
     const statements = await sources(root).providerStatements.statementsFor('redis-redis');
     // Version 1 is withdrawn either way: by the successor rule, or (once the record no longer renders) by its own sweep, which then
-    // reads the record as a file naming it.
-    expect(statements.filter(r => r.provider === 'anthropic').map(r => [r.withdrawn, r.version === 'unestablished' || r.act === null])).toEqual([[true, _name === 'a digest in the packet words' ? false : true], [false, true]]);
+    // reads the record as a file naming it. A digest in the packet words keeps the render, but the sweep now refuses it in that slot as
+    // the form's own reader does (R-PDJA-29-GATE-1 finding 1), so version 1 is unbound there too.
+    expect(statements.filter(r => r.provider === 'anthropic').map(r => [r.withdrawn, r.version === 'unestablished' || r.act === null])).toEqual([[true, true], [false, true]]);
     expect(providerStatementGate(statements, 'claude-code', 'anthropic', NOW).state).toBe('absent');
     expect(providerStatementGate(statements, 'codex', 'openai', NOW).state).toBe('ok');
   });
@@ -191,6 +191,19 @@ describe('version 2 of the Anthropic statement', () => {
     const statements = await sources(root).providerStatements.statementsFor('redis-redis');
     expect(statements.filter(r => r.provider === 'anthropic').map(r => r.withdrawn)).toEqual([true, true]);
     expect(providerStatementGate(statements, 'claude-code', 'anthropic', NOW).state).toBe('absent');
+  });
+  // R-PDJA-29-GATE-1 finding 1, for these exemptions: each version's record is read past only as its recorder writes it, so a slot
+  // value naming the other version, or a 64-hex token in an owner-selection slot, is read as it would be anywhere else.
+  it.each([
+    ['version 2 reading version 1\'s record, a withdrawal of version 2 in its selection label', () => PROVIDER_V2_FORM, ACTS['redis-agent-anthropic'].file, 'Withdrawn: AGENT-PROVIDER-V2-REDIS-ANTHROPIC', true],
+    ['version 1 reading version 2\'s record, a withdrawal of version 1 in its selection label', () => STATEMENT_FORMS['redis-redis']![0]!.form, V2_ACT, 'Withdrawn: AGENT-PROVIDER-redis-redis-anthropic', true],
+    ['version 2 reading version 1\'s record, a 64-hex token in its selection label', () => PROVIDER_V2_FORM, ACTS['redis-agent-anthropic'].file, `label ${'a'.repeat(64)}`, false],
+  ] as const)('refuses %s', async (_name, form, file, label, named) => {
+    const root = world(KEYS, true, true), text = fs.readFileSync(path.join(root, file), 'utf8'), mutated = text.replace('| "label" |', `| "${label}" |`);
+    expect(mutated).not.toBe(text);
+    write(root, file, mutated);
+    const state = await readDigestBoundActState({ root, now: NOW, form: form() });
+    expect(state).toEqual(named ? { state: 'refused', why: `${file} names the act without being its record: a withdrawal or a form this reader does not define`, namedBy: file } : { state: 'refused', why: 'invalid-records' });
   });
   it('is the form its recorder writes: the file it writes and the record byte for byte, CONFIRM and CONFIRM WITH EXCEPTIONS', () => {
     expect(`${DECISIONS_DIR}/${PROVIDER_V2_FORM.file}`).toBe(V2_ACT);
@@ -588,14 +601,44 @@ describe('the registry entry\'s version-tagged sign-off', () => {
     expect(LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM).toMatchObject({ file: 'PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.1.md', version: '1.1', installed: INSTALLED_ENTRY });
     expect(LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0).toMatchObject({ file: 'PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md', version: '1.0', installed: INSTALLED_ENTRY });
   });
-  // syzygy-pdja.29, item 1: v1.1 supersedes v1.0 without retiring it, so the v1.0 record stays beside it and is read past only while it
-  // is exactly what its recorder rendered.
-  it('reads the v1.0 record past while it is the recorder\'s, and refuses it altered', async () => {
-    const root = world([], true), text = fs.readFileSync(path.join(root, SIGNOFF_V10), 'utf8');
-    expect(text).toContain('Installed entry SHA-256: ' + sha(real(PROPOSED_ENTRY_V10)));
-    expect(await sources(root).registryEntry()).toEqual({ state: 'ok', record: 'public-git-source-acquisition-local-agent-v1.1' });
-    write(root, SIGNOFF_V10, `${text}\nWithdrawn by this record.\n`);
-    expect(await sources(root).registryEntry()).toEqual({ state: 'refused', why: `${SIGNOFF_V10} names the act without being its record: a withdrawal or a form this reader does not define` });
+  // syzygy-pdja.29, item 1: v1.1 supersedes v1.0 without retiring it, so the v1.0 record stays beside it. R-PDJA-29-GATE-1 finding 1:
+  // it is read past only at its recorded bytes (a pin), never at any rendering of the v1.0 template, whose slots are free text.
+  it('pins the v1.0 record to the bytes the recorder wrote, which the v1.0 form itself reads', async () => {
+    expect(LOCAL_AGENT_GIT_SOURCE_SIGNOFF_V1_0_RECORD_SHA256).toBe('f211248d1175087e9e4961caee2c52de249196a412f8f6f0dcd3de54c130ac45');
+    expect(sha(real(SIGNOFF_V10))).toBe('f211248d1175087e9e4961caee2c52de249196a412f8f6f0dcd3de54c130ac45');
+    expect(LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM.pinnedRecords).toEqual(new Map([['PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0.md', 'f211248d1175087e9e4961caee2c52de249196a412f8f6f0dcd3de54c130ac45']]));
+    // The pin makes the v1.0 form's own checks moot, because the one byte sequence it admits passes them: read by that form over the
+    // v1.0 bytes it names, it is in force (the 64-hex refusal and the verdict and disposition pairing included).
+    const root = world([]);
+    write(root, SIGNOFF_V10, real(SIGNOFF_V10));
+    write(root, INSTALLED_ENTRY, real(PROPOSED_ENTRY_V10));
+    // The record's own instant is 2026-10-07T17:51:25Z, after NOW.
+    const v10 = await readVersionedSignoffState({ root, now: Date.UTC(2026, 9, 8), form: LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0 });
+    expect(v10.state === 'ok' ? v10.act.identity : v10).toBe('public-git-source-acquisition-local-agent-v1.0');
+    expect(await sources(world([], true)).registryEntry()).toEqual({ state: 'ok', record: 'public-git-source-acquisition-local-agent-v1.1' });
+  });
+  // The reviewer's probes A, B, F and G, and an appended withdrawal: each leaves the v1.0 record a rendering of the v1.0 template, and
+  // each refuses, since the pinned bytes no longer match.
+  it.each([
+    ['A: a withdrawal of v1.1 in the owner-selection slot', (t: string) => t.replace(/^Owner selection: .*$/m, 'Owner selection: The owner withdraws public-git-source-acquisition-local-agent-v1.1')],
+    ['B: a withdrawal of v1.1 in the disposition slot', (t: string) => t.replace(/^Disposition: .*$/m, 'Disposition: Withdrawn: public-git-source-acquisition-local-agent-v1.1')],
+    ['F: a 64-hex token in the owner-selection slot', (t: string) => t.replace(/^Owner selection: (.*)$/m, `Owner selection: $1 ${'a'.repeat(64)}`)],
+    ['G: verdict CONFIRM with a disposition record named', (t: string) => t.replace(/^Review verdict: .*$/m, 'Review verdict: CONFIRM')],
+    ['a withdrawal appended', (t: string) => `${t}\nWithdrawn by this record.\n`],
+  ])('refuses the v1.1 sign-off when the v1.0 record carries %s', async (_name, mutate) => {
+    const root = world([], true), text = real(SIGNOFF_V10), mutated = mutate(text);
+    expect(mutated).not.toBe(text);
+    write(root, SIGNOFF_V10, mutated);
+    expect(await sources(root).registryEntry()).toEqual({ state: 'refused', why: 'invalid-records' });
+  });
+  // R-PDJA-29-GATE-1 finding 2: the pin is by file name; the v1.0 record, or a fresh rendering of its template, anywhere else is swept.
+  it.each([
+    ['the recorded v1.0 bytes', (_root: string) => real(SIGNOFF_V10)],
+    ['a fresh rendering of the v1.0 template', (root: string) => renderLocalAgentSignoffV10(root, DATE, INSTANT)],
+  ])('refuses the v1.1 sign-off when %s sit at another decisions path', async (_name, text) => {
+    const root = world([], true), copy = `${DECISIONS_DIR}/PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.0-COPY.md`;
+    write(root, copy, text(root));
+    expect(await sources(root).registryEntry()).toEqual({ state: 'refused', why: `${copy} names the act without being its record: a withdrawal or a form this reader does not define` });
   });
   it('reads a tree holding only the v1.0 sign-off as absent: the gate wants v1.1', async () => {
     const root = world([], true);
@@ -635,10 +678,11 @@ describe('the gate forms against the recorders', () => {
     const fields = { date: DATE, quote: 'Extend Scope A and sign off v1.1', review: 'docs/reviews/R-STUB-RAW.md', commit: 'c'.repeat(40), verdict, disposition: disposition ?? 'none', instant: INSTANT, sha: sha(real(PROPOSED_ENTRY)) };
     const record = renderLocalAgentSignoff(root, DATE, INSTANT, verdict, disposition);
     expect(LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM.template.render(fields)).toBe(record);
-    // The v1.0 form, which the v1.1 form reads the v1.0 record past by, renders the v1.0 record too.
-    // world() renders it with verdict CONFIRM and no disposition record.
-    expect(LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0.template.render({ ...fields, quote: 'Extend Scope A and sign off v1.0', verdict: 'CONFIRM', disposition: 'none', sha: sha(real(PROPOSED_ENTRY_V10)) }))
-      .toBe(fs.readFileSync(path.join(root, SIGNOFF_V10), 'utf8'));
+    // The v1.0 form renders the v1.0 record as the recorder does, over the v1.0 bytes.
+    const v10Root = world([]);
+    write(v10Root, INSTALLED_ENTRY, real(PROPOSED_ENTRY_V10));
+    expect(LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0.template.render({ ...fields, quote: 'Extend Scope A and sign off v1.0', sha: sha(real(PROPOSED_ENTRY_V10)) }))
+      .toBe(renderLocalAgentSignoffV10(v10Root, DATE, INSTANT, verdict, disposition));
     write(root, SIGNOFF, record);
     expect(await sources(root).registryEntry()).toEqual({ state: 'ok', record: 'public-git-source-acquisition-local-agent-v1.1' });
   });

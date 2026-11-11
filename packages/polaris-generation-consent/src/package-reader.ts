@@ -694,7 +694,18 @@ async function findActRecords<F extends { readonly file: string }>(fs: PackageRe
     if (form !== undefined) { records.push({ form, text }); continue; }
     const pinned = family.pins?.get(rel);
     if (pinned !== undefined) { if (sha256(text) !== pinned) refuse(); continue; }
-    if ((family.exempt ?? []).some(exempt => exempt.file === rel && templateFields(exempt.template, text) !== null)) continue;
+    const exempt = (family.exempt ?? []).find(each => each.file === rel);
+    const fields = exempt === undefined ? null : templateFields(exempt.template, text);
+    if (fields !== null) {
+      // Read past only as its recorder writes it (R-PDJA-29-GATE-1 finding 1): the template fixes every literal line, but its slots are
+      // free text, so an owner-selection slot carrying a 64-hex token refuses as `fromTemplate` refuses it, and a slot value naming the
+      // act (a withdrawal written into a slot) names it here as it would anywhere else in the file.
+      if (OWNER_SELECTION_SLOTS.some(slot => /[0-9a-fA-F]{64}/.test(fields[slot] ?? ''))) return refuse();
+      if (namesAct(family.sweep, '', textForms(Object.values(fields).join('\n')))) {
+        return { why: `${DECISIONS_DIR}/${rel} names the act without being its record: a withdrawal or a form this reader does not define`, namedBy: `${DECISIONS_DIR}/${rel}` };
+      }
+      continue;
+    }
     if (namesAct(family.sweep, rel, textForms(await swept(rel, text)))) {
       return { why: `${DECISIONS_DIR}/${rel} names the act without being its record: a withdrawal or a form this reader does not define`, namedBy: `${DECISIONS_DIR}/${rel}` };
     }
@@ -704,9 +715,10 @@ async function findActRecords<F extends { readonly file: string }>(fs: PackageRe
 
 /** The record's slots when it is exactly what `template` renders from them; refuses otherwise, and when an owner-selection slot
  * (`opening`, `label`, `description`, `quote`) carries a 64-hex token, which the recorders never write there. */
+const OWNER_SELECTION_SLOTS = Object.freeze(['opening', 'label', 'description', 'quote']);
 function fromTemplate(template: RecorderTemplate, text: string): Readonly<Record<string, string>> {
   const fields = templateFields(template, text);
-  if (fields === null || ['opening', 'label', 'description', 'quote'].some(slot => /[0-9a-fA-F]{64}/.test(fields[slot] ?? ''))) return refuse();
+  if (fields === null || OWNER_SELECTION_SLOTS.some(slot => /[0-9a-fA-F]{64}/.test(fields[slot] ?? ''))) return refuse();
   return fields;
 }
 
@@ -788,9 +800,10 @@ export interface VersionedSignoffForm {
   /** The record as the recorder renders it (`render_record` with `installed_lines`) for this package, version and installed entry,
    * slots `date`, `quote`, `review`, `commit`, `verdict`, `disposition`, `instant` and `sha`. */
   readonly template: RecorderTemplate;
-  /** Decisions files the sweep reads past while each is exactly what its template renders: the records of this package's earlier
-   * versions, which carry its stems and which a later version supersedes without retiring (the recorder never edits them). */
-  readonly exemptRecords?: readonly ExemptRecord[];
+  /** Decisions files the sweep reads past only at these exact bytes (file name to SHA-256): the records of this package's earlier
+   * versions, which carry its stems and which a later version supersedes without retiring. The recorder never edits them (`--check`
+   * regenerates each exactly), so one byte sequence is admitted per file; any other bytes there refuse. */
+  readonly pinnedRecords?: ReadonlyMap<string, string>;
 }
 
 /** The fixed text a package's record carries in place of the recorder's defaults (`Package.record_scope`, `record_supersession` and
@@ -899,12 +912,15 @@ export const LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0: VersionedSignoffForm = ((
   });
 })();
 
+/** The SHA-256 of the v1.0 sign-off record's bytes as the recorder wrote them (`--check … --version 1.0` regenerates them exactly). */
+export const LOCAL_AGENT_GIT_SOURCE_SIGNOFF_V1_0_RECORD_SHA256 = 'f211248d1175087e9e4961caee2c52de249196a412f8f6f0dcd3de54c130ac45';
+
 /** The local-agent public Git source-acquisition entry, version 1.1 of its package (the copy step of launch-consent v1.2; package
  * `public-git-source-acquisition-local-agent-v1-1`), the gate's form.
  *
  * Its record carries the text the recorder's v1.1 package declares (`GIT_SOURCE_V11_SCOPE`, `GIT_SOURCE_V11_SUPERSESSION`,
  * `GIT_SOURCE_V11_DOES_NOT` in scripts/record_versioned_signoff.py). The v1.0 record stays beside it and carries the same stems, so
- * the sweep reads it past while it is exactly what the v1.0 template renders; any other bytes there refuse. A later version's record
+ * the sweep reads it past only at its recorded bytes (`pinnedRecords`); any other bytes there refuse. A later version's record
  * (`…-SIGNOFF-v1.2.md`) still carries the stems, so this reader takes it for a withdrawal and refuses: the commit that records a later
  * version must change this form in the same commit (R-POLARIS-DOSSIER-GATE-SOURCES-2 note 6).
  *
@@ -942,7 +958,10 @@ of the acts in force stands.
 `,
       },
     }),
-    exemptRecords: Object.freeze([Object.freeze({ file: LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0.file, template: LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0.template })]),
+    // The v1.0 record as recorded on 2026-10-07 (3409ef5a). The pin admits those bytes alone, so the v1.0 form's own checks (the
+    // template, the 64-hex refusal in the selection, the verdict and disposition pairing) are moot here: the pinned bytes pass all three
+    // under LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0, which gate-acts.test.ts asserts, and no other bytes are read past.
+    pinnedRecords: new Map([[LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM_V1_0.file, LOCAL_AGENT_GIT_SOURCE_SIGNOFF_V1_0_RECORD_SHA256]]),
   });
 })();
 
@@ -952,7 +971,7 @@ of the acts in force stands.
 export function readVersionedSignoffState(options: StrictReadOptions & { readonly form: VersionedSignoffForm }): Promise<ActState<DigestBoundAct>> {
   return strict<DigestBoundAct>(async () => {
     const fs = options.fs ?? nodeFs, form = options.form;
-    const found = await findActRecords(fs, options.root, { forms: [form], sweep: digestBoundSweep(form, form.installed), exempt: form.exemptRecords });
+    const found = await findActRecords(fs, options.root, { forms: [form], sweep: digestBoundSweep(form, form.installed), ...(form.pinnedRecords === undefined ? {} : { pins: form.pinnedRecords }) });
     if ('why' in found) return { state: 'refused', why: found.why, namedBy: found.namedBy };
     const record = found.records.at(-1);
     if (record === undefined) return { state: 'absent', why: `no owner-act record ${DECISIONS_DIR}/${form.file} exists` };
