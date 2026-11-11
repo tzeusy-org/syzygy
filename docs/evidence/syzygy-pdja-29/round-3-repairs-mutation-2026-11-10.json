@@ -1,0 +1,68 @@
+{
+  "subject": "round-3 repairs of public-git-source-acquisition-local-agent v1.1 (syzygy-pdja.29)",
+  "commit_base": "0f1a203d3016f1f7a5e72854a07ef415d54035c0",
+  "note": "run against the uncommitted working tree on top of commit_base",
+  "file_sha256_restored": {
+    "scripts/record_versioned_signoff.py": "a2d7f521a95408897f3c925a27552c554e31c90133622c6fad8d29f74815158e",
+    "scripts/build_public_git_source_acquisition_local_agent_v1_1.py": "84017a2425edabe5cd17f9088abbc3222c39f46fbb4e2da37c69da142f3dda87"
+  },
+  "mutants": [
+    {
+      "id": "R3-F3a does-not drops the copy's reads",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "\n    \"directory its stateDirectoryWrites declaration names; and in that run it reads\\n\"\n    \"that copy in place of the operator's clone. For every",
+      "new": "\n    \"directory its stateDirectoryWrites declaration names; and in that run it reads\\n\"\n    \"nothing new. For every",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL the real registry entry v1.1 carries its own scope, supersession and does-not text, and v1.0 holds a replaced record to v1.1's base bytes while v1.0 renders the fixed text"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R3-F3b does-not drops the closure sentence",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "\n    \"closes in words the reads Syzygy makes of the operator's clone. Every exclusion\\n\"",
+      "new": "\n    \"closes nothing. Every exclusion\\n\"",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL the real registry entry v1.1 carries its own scope, supersession and does-not text, and v1.0 holds a replaced record to v1.1's base bytes while v1.0 renders the fixed text"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R3-F3c aggregate drops the copy's reads",
+      "file": "scripts/record_versioned_signoff.py",
+      "old": "\n    \"write, and reads that copy in place of the operator's clone, as its record\\n\"",
+      "new": "\n    \"write, as its record\\n\"",
+      "command": "python3 scripts/record_versioned_signoff.py --selftest",
+      "exit": 1,
+      "summary": "179 fixtures, 1 failing",
+      "failing": [
+        "FAIL the real registry entry v1.1 carries its own scope, supersession and does-not text, and v1.0 holds a replaced record to v1.1's base bytes while v1.0 renders the fixed text"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R3-F2 scoping clause unpinned (exact check off for readAuthority)",
+      "file": "scripts/build_public_git_source_acquisition_local_agent_v1_1.py",
+      "old": "                                 (\"readAuthority\", ra, ((\"v1.0's text\", kept_ra),) + RA_TAIL_CLAUSES),\n",
+      "new": "",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --selftest",
+      "exit": 1,
+      "summary": "selftest: 49 of 56 predicates held",
+      "failing": [
+        "FAIL (F5 M1) launch read (3) widened to include paths refused",
+        "FAIL (F5 M2) launch read (5) widened to object headers refused",
+        "FAIL (F5 M5) every reference's value read refused",
+        "FAIL launch reads read whether or not the requirements in force name them refused"
+      ],
+      "killed": true
+    }
+  ],
+  "killed": 4,
+  "total": 4
+}

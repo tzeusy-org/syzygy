@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
-  fillSlots, loadRecorderForms, recorderRecordPaths, renderClassAct, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderPolicyAct, renderProviderV2Act,
+  fillSlots, loadRecorderForms, recorderRecordPaths, renderClassAct, renderDossierLocalAgentAct, renderLocalAgentSignoff, renderLocalAgentSignoffV10, renderPolicyAct, renderProviderV2Act,
   renderRecorderAct, renderRegistryAct, type DossierLocalAgentActKey, type RecorderActKey,
 } from './recorder-fixtures.testkit.js';
 
@@ -49,11 +49,13 @@ def render(c):
     if f == 'registry':
         return reg.render_act(reg.ACT_BY_KEY['git-source-acquisition'], a, d, 'b'*64, 'c'*40, 'CONFIRM', reg.Selection('opening', 'label', 'description'), 'f'*64, i)
     if f == 'signoff':
-        pkg = vs.real_packages()['public-git-source-acquisition-local-agent']
-        return vs.render_record(pkg, '1.0', d, 'Extend Scope A and sign off v1.0', 'docs/reviews/R-STUB-RAW.md', 'c'*40, c['verdict'], c['disposition'], root=pathlib.Path(c['root']), instant=i)
+        v = c.get('version', '1.1')
+        pkg = vs.real_packages()['public-git-source-acquisition-local-agent' + ('@1.1' if v == '1.1' else '')]
+        return vs.render_record(pkg, v, d, 'Extend Scope A and sign off v' + v, 'docs/reviews/R-STUB-RAW.md', 'c'*40, c['verdict'], c['disposition'], root=pathlib.Path(c['root']), instant=i)
     if f == 'paths':
-        pkg = vs.real_packages()['public-git-source-acquisition-local-agent']
-        return {'acts': {k: x.record.as_posix() for k, x in dla.ACT_BY_KEY.items()}, 'signoff': vs.record_rel(pkg, '1.0').as_posix()}
+        pkgs = vs.real_packages()
+        pkg, pkg11 = pkgs['public-git-source-acquisition-local-agent'], pkgs['public-git-source-acquisition-local-agent@1.1']
+        return {'acts': {k: x.record.as_posix() for k, x in dla.ACT_BY_KEY.items()}, 'signoff': vs.record_rel(pkg11, '1.1').as_posix(), 'signoffV10': vs.record_rel(pkg, '1.0').as_posix()}
     raise ValueError(f)
 def outcome(c):
     if not c.get('raises'): return render(c)
@@ -120,6 +122,10 @@ beforeAll(async () => {
       name: `sign-off, entry ${root === present ? 'installed' : 'absent'}, ${verdict}, disposition ${disposition ?? 'none'}`,
       call: { form: 'signoff', root, verdict, disposition, date: DATE, instant: INSTANT }, kit: () => renderLocalAgentSignoff(root, DATE, INSTANT, verdict, disposition),
     }))),
+    ...[present, absent].flatMap((root) => ([['CONFIRM', null], ['CONFIRM WITH EXCEPTIONS', 'pkg/ROUND-1-DISPOSITIONS.md']] as const).map(([verdict, disposition]) => ({
+      name: `v1.0 sign-off, entry ${root === present ? 'installed' : 'absent'}, ${verdict}, disposition ${disposition ?? 'none'}`,
+      call: { form: 'signoff', version: '1.0', root, verdict, disposition, date: DATE, instant: INSTANT }, kit: () => renderLocalAgentSignoffV10(root, DATE, INSTANT, verdict, disposition),
+    }))),
     { name: 'record paths', call: { form: 'paths' }, kit: () => recorderRecordPaths() },
   ];
   // An entry the process cannot read (mode 000), a directory where the entry should be, and a regular file where one of its parent
@@ -165,7 +171,7 @@ function installedPath(): string {
 
 describe('recorder testkit renders', () => {
   it('fill every form exactly as the recorder renders the same values', () => {
-    expect(cases.length).toBe(4 + 7 + 1 + 1 + 5 + 2 + 1 + 4 + 1);
+    expect(cases.length).toBe(4 + 7 + 1 + 1 + 5 + 2 + 1 + 4 + 4 + 1);
     expect(cases.map(({ name, kit }) => [name, kit()])).toEqual(cases.map(({ name }, index) => [name, expected[index]]));
   });
 

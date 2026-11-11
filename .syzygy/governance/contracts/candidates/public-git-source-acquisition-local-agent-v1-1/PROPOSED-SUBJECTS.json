@@ -1,0 +1,11 @@
+{
+  "base": "version 1.0 installed bytes, as the v1.0 sign-off record names them; the proposed bytes are the patch applied to them",
+  "subjects": [
+    {
+      "path": ".syzygy/governance/declarations/adapter-registry/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "current_sha256": "917aecc766f01133d5a29c1ee8b3e575332ad48d04308a1b62c68217e48d254b",
+      "proposed_sha256": "384f7b603d49ab953a71deb526cdf43e7e65f6e9a7160c3893500b6bd6385f00",
+      "patch_sha256": "b7653b06983827166697e53d57054a1eeaf3b9e894242707dffe01b5f820cdb0"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "subject": "round-6 repair of public-git-source-acquisition-local-agent v1.1, rebound to #812 at 054a4f11 (syzygy-pdja.29)",
+  "commit_base": "1b51e169003e175dfead8365b979279430e40481",
+  "note": "run against the uncommitted working tree on top of commit_base",
+  "file_sha256_restored": {
+    ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json": "40c564f5b1adfd69a6edf1787eeb56ab5f5d7806ecc8cbd1c88bb32cf64c3a75",
+    "scripts/build_public_git_source_acquisition_local_agent_v1_1.py": "0fad2c03ee827a3d05679925185b1c63e557e156fae79258c98806f96d1b8cbe"
+  },
+  "mutants": [
+    {
+      "id": "R6-a fetch drops the governance-home placement and its refusal",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": " and never inside the governance home's working tree, Git directory or common Git directory, a run for which it would create it there being refused before its copy step starts;",
+      "new": "",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL fetch does not name \"never inside the governance home's working tree, Git directory or common Git directory\"",
+        "FAIL fetch does not name 'refused before its copy step starts'",
+        "FAIL fetch departs from its exact text at the clause \"the copy's directory\"",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R6-b stateDirectoryWrites drops the governance-home placement",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": ", and never inside the governance home's working tree, Git directory or common Git directory: ",
+      "new": ": ",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL stateDirectoryWrites departs from its exact text at the clause \"the copy's directory and where it lies\"",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to",
+        "public-git-source-acquisition-local-agent v1.1: unapplied, 3 findings"
+      ],
+      "killed": true
+    },
+    {
+      "id": "R6-c fetch keeps the placement but drops the refusal",
+      "file": ".syzygy/governance/contracts/candidates/public-git-source-acquisition-local-agent-v1-1/proposed/POLARIS-PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-CANDIDATE.json",
+      "old": ", a run for which it would create it there being refused before its copy step starts;",
+      "new": ";",
+      "command": "python3 scripts/build_public_git_source_acquisition_local_agent_v1_1.py --check",
+      "exit": 1,
+      "output": [
+        "FAIL fetch does not name 'refused before its copy step starts'",
+        "FAIL fetch departs from its exact text at the clause \"the copy's directory\"",
+        "FAIL the patch applied to the v1.0 bytes does not give the proposed bytes",
+        "FAIL PROPOSED-SUBJECTS.json does not state the digests the files hash to"
+      ],
+      "killed": true
+    }
+  ],
+  "killed": 3,
+  "total": 3
+}
