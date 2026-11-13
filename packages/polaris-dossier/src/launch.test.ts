@@ -564,8 +564,8 @@ describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone 
     const s = setup([], { isTTY: false, request: { revision: commit.slice(0, 40) } });
     const out = await run(clone, s);
     expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal', copy: { state: 'removed' } } });
-    // A copy-class run: the copy is checked, then its commit and tree are read; nothing of the operator's clone.
-    expect(s.reads.log.calls).toEqual([`inventory ${commit}`, `commitHead ${commit}`, `listTree ${commit}`]);
+    // A copy-class run: the pinned commit is read once pinned, the copy is checked, then its tree is read; nothing of the operator's clone.
+    expect(s.reads.log.calls).toEqual([`commitHead ${commit}`, `inventory ${commit}`, `listTree ${commit}`]);
     expect(s.reads.log.dirs.every(d => d.includes(`${path.sep}copies${path.sep}copy-`))).toBe(true);
   });
 
@@ -631,7 +631,7 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     for (const c of git.calls) expect(c.git).toEqual({ GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: '/dev/null', GIT_ALLOW_PROTOCOL: 'file', GIT_NO_LAZY_FETCH: '1', GIT_TERMINAL_PROMPT: '0', GIT_ATTR_NOSYSTEM: '1' });
     // Syzygy itself reads no object of the operator's clone: every object read is of the copy, and no type test is made.
     expect(s.reads.log.dirs.every(d => d === copy.gitDir)).toBe(true);
-    expect(s.reads.log.calls).toEqual([`inventory ${up.commits[1]}`, `commitHead ${up.commits[1]}`, `listTree ${up.commits[1]}`]);
+    expect(s.reads.log.calls).toEqual([`commitHead ${up.commits[1]}`, `inventory ${up.commits[1]}`, `listTree ${up.commits[1]}`]);
   });
 
   it('no Git variable of the operator\'s environment reaches the copy\'s processes', async () => {
@@ -908,6 +908,10 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
       expect(out.refusal.reason, what).toContain(why);
       if (what === 'an extra object') expect(out.refusal.reason).toContain('nor under its tree (first: 0f2287157f7cb0dd40498c7a92f74b6975fa2d57)');
       expect(fs.existsSync(out.refusal.copy!.location), what).toBe(false);
+      // The copy's checkout pinned the commit before the form or store check failed: its committer date is read from the copy's commit object
+      // and stated (R-PDJA-33-SLICE-D-1 finding 3).
+      expect(out.refusal.statements.find(x => x.id === 'pinned-commit'), what).toEqual({ id: 'pinned-commit', stage: 'commit pinned', runClass: 'both', reached: true, label: 'Inferred',
+        text: `The pinned revision is ${up.commits[0]}; its committer date, as the commit object records it, is 1790812800 +0000.` });
     }
   });
 

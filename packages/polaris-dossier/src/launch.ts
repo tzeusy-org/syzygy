@@ -228,6 +228,8 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     // The class (047): "SHALL run on a copy unless its named identifier is named by an in-force observation consent made by another act".
     copyClass = !(await sources.observationConsentNaming(commit)).satisfied;
     let runGitDir = snapshot.gitDir, copy: LaunchCopy | null = null;
+    // The copy's commit object, read once its checkout pins the commit, for the committer date every later statement states.
+    let pinnedHead: Awaited<ReturnType<PinnedObjectReader['commitHead']>> | null = null;
     if (copyClass) {
       if (snapshot.alternates) return refuse('clone', 'the operator\'s clone has an objects/info/alternates file, and a copy-class run refuses a clone with an alternate before its copy step starts');
       if (ports.copyRoot === undefined) return refuse('copy', 'no location for the copy was given, so the copy step cannot start');
@@ -249,7 +251,18 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
       copyDir = made.dir;
       ports.interrupt?.check();
       if (made.dir !== null) progress = copyProgressOf(made);
-      if (made.ok) pinnedState = { commit, committerDate: 'unread' };
+      if (made.ok) {
+        // The commit is pinned once the copy's checkout leaves the copy's HEAD at the named identifier, and 046 permits reading its commit
+        // object from then on: its committer date is stated even where the copy's form or store check then fails (R-PDJA-33-SLICE-D-1
+        // finding 3). The object is in Syzygy's own copy and is re-hashed as it is read.
+        try {
+          pinnedHead = await (ports.openReader ?? openPinnedObjectReader)({ gitDir: made.gitDir, revision: commit }).commitHead();
+          pinnedState = { commit, committerDate: pinnedHead.committerDate };
+        } catch (cause) {
+          if (!(cause instanceof GitObjectReadRefusal)) throw cause;
+          pinnedState = { commit, committerDate: 'unread' };
+        }
+      }
       if (!made.ok) {
         const f = made.failure, given = request.revision === undefined ? '' : ` (--revision ${request.revision})`;
         const via = naming.named.kind === 'pinned' ? naming.named.via : 'the clone\'s HEAD';
@@ -294,7 +307,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     let paths: readonly string[], parents: readonly string[], committerDate: string | null;
     try {
       const reader = (ports.openReader ?? openPinnedObjectReader)({ gitDir: runGitDir, revision: commit });
-      const head = await reader.commitHead();
+      const head = pinnedHead ?? await reader.commitHead();
       parents = head.parents; committerDate = head.committerDate;
       pinnedState = { commit, committerDate };
       paths = (await reader.listTree()).map(e => e.path);
