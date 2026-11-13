@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { tempDir } from '@syzygy/test-kit';
 import { describe, expect, it } from 'vitest';
-import { installReadLog, sealExcept } from './fs-patch.testkit.js';
+import { installReadLog, patchFs, sealExcept } from './fs-patch.testkit.js';
 import { parseConfig, readCloneSnapshot, type CloneSnapshotRead } from './launch-clone.js';
 
 /** REQ-polaris-generation-047's closed list of launch reads (registry entry v1.1, reads (1) to (4)), against `.git` layouts written by
@@ -159,6 +159,23 @@ describe('REQ-polaris-generation-047: Syzygy\'s own reads of the operator\'s clo
     fs.mkdirSync(path.join(clone, '.git', 'refs', 'heads'), { recursive: true });
     fs.symlinkSync('/etc/hostname', path.join(clone, '.git', 'refs', 'heads', 'main'));
     expect(logged(clone).read).toEqual({ ok: false, reason: `${path.join(clone, '.git', 'refs', 'heads', 'main')} is a symbolic link; it is refused, never followed` });
+  });
+});
+
+describe('a link swapped in after the lstat is still not followed (R-PDJA-33-SLICE-A-1 finding 5)', () => {
+  it('an admitted reference that lstat reports as a regular file but is a symbolic link: the open refuses it, never reading its target', () => {
+    const clone = layout({ HEAD: 'ref: refs/heads/main\n' });
+    const target = path.join(tempDir('syzygy-launch-link-target-'), 'value');
+    fs.writeFileSync(target, `${B}\n`);
+    const link = path.join(clone, '.git', 'refs', 'heads', 'main');
+    fs.mkdirSync(path.dirname(link), { recursive: true });
+    fs.symlinkSync(target, link);
+    // The race, staged: the lstat sees the regular file the link names, as it would had the link been swapped in just after it.
+    const restore = patchFs('lstatSync', lstatSync => ((p: fs.PathLike, ...rest: unknown[]) =>
+      path.resolve(String(p)) === link ? fs.statSync(p) : (lstatSync as (...args: unknown[]) => fs.Stats)(p, ...rest)) as typeof fs.lstatSync);
+    let read: CloneSnapshotRead;
+    try { read = readCloneSnapshot(clone); } finally { restore(); }
+    expect(read).toEqual({ ok: false, reason: `${link} cannot be read (ELOOP)` });
   });
 });
 
