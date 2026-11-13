@@ -194,4 +194,48 @@ describe('the proposal', () => {
     const p = proposeIdentity({ ...base, remotes: [], defaultRemote: null, identityOption: 'x-y', upstreamOption: 'git@h.example:X/Y.git' });
     expect(p).toMatchObject({ ok: true, identity: 'repository:x-y', url: 'h.example/x/y', urlSource: 'the operator\'s --upstream option' });
   });
+
+  it('a remote URL with user information: removed before anything derives, and said so without printing it (scenario "Credentials in a remote URL")', () => {
+    const p = proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'https://bob:hunter2@git.example.org/a/b.git' }] });
+    expect(p).toEqual({ ok: true, identity: 'repository:a-b', source: 'derived', url: 'git.example.org/a/b', urlSource: 'the clone\'s remote origin', matches: [], notCarrying: [],
+      locatorStatements: ['The URL of the clone\'s remote origin carried user information; Syzygy removed it before deriving anything and does not print, store or record it.'] });
+    expect(JSON.stringify(p)).not.toContain('hunter2');
+    expect(JSON.stringify(p)).not.toContain('bob');
+  });
+
+  it('a remote URL that is no remote locator derives nothing, names the remote and the rule, never the URL (scenario "Remote URL that is not a locator")', () => {
+    const remotes = [{ name: 'origin', url: 'https://git.example.org/a/b?private_token=x' }];
+    const p = proposeIdentity({ ...base, remotes });
+    expect(p).toEqual({ ok: false, reason: 'the URL of the clone\'s remote origin is not a remote locator (it carries a query or a fragment), so it derives nothing, as for a clone with no remote; give --identity and --upstream', matches: [] });
+    const given = proposeIdentity({ ...base, remotes, identityOption: 'c-d', upstreamOption: 'https://git.example.org/c/d' });
+    expect(given).toMatchObject({ ok: true, identity: 'repository:c-d', url: 'git.example.org/c/d', urlSource: 'the operator\'s --upstream option',
+      locatorStatements: ['The URL of the clone\'s remote origin is not a remote locator, so it derives nothing: it carries a query or a fragment. Syzygy does not print, store or record it.'] });
+    expect(JSON.stringify(given)).not.toContain('private_token');
+  });
+
+  it('an --upstream that is not admitted is refused by its rule, never printed (scenarios "Credentials in a given URL", "Locator not admitted")', () => {
+    for (const [upstream, rule] of [['https://u:p@git.example.org/a/b', 'an https://, http:// or git:// locator carries no user information'], ['file:///srv/x', 'it is not in an admitted locator form (https://, http://, git:// or ssh:// with a host and a path, or the scp form [user@]host:path); file URLs, other transports and local paths are not admitted']] as const) {
+      const p = proposeIdentity({ ...base, remotes: [], defaultRemote: null, identityOption: 'x-y', upstreamOption: upstream });
+      expect(p).toEqual({ ok: false, reason: `the --upstream URL is not admitted: ${rule}; it is not printed, stored or recorded`, matches: [] });
+    }
+  });
+
+  it('the two-segment floor: a one-segment URL proposes nothing without --identity, whatever the records carry', () => {
+    const remotes = [{ name: 'origin', url: 'https://git.example.org/tool.git' }];
+    expect(proposeIdentity({ ...base, remotes })).toEqual({ ok: false, reason: 'the normalised URL git.example.org/tool has fewer than two path segments, so no identity derives from it; give --identity', matches: [] });
+    const withRecord = proposeIdentity({ ...base, remotes, records: [rec('R1', 'repository:t-t', null, PARENT)] });
+    expect(withRecord.ok).toBe(false);
+    expect(proposeIdentity({ ...base, remotes, identityOption: 'tool' })).toMatchObject({ ok: true, identity: 'repository:tool', url: 'git.example.org/tool' });
+  });
+
+  it('GitHub identities keep their form (scenario), and other hosts take the last two segments (scenario "Locator on another host over ssh")', () => {
+    // A user name alone is user information too (046, line 17: "Where a remote URL carried user information, the launch output SHALL say so").
+    expect(proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'ssh://git@github.com/redis/redis.git' }] })).toMatchObject({ ok: true, identity: 'repository:redis-redis', url: 'github.com/redis/redis',
+      locatorStatements: ['The URL of the clone\'s remote origin carried user information; Syzygy removed it before deriving anything and does not print, store or record it.'] });
+    expect(proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'https://github.com/redis/redis' }] })).toMatchObject({ ok: true, identity: 'repository:redis-redis', url: 'github.com/redis/redis', locatorStatements: [] });
+    expect(proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'git@git.example.org:team/sub/tool.git' }] })).toMatchObject({ ok: true, identity: 'repository:sub-tool', url: 'git.example.org/team/sub/tool' });
+    for (const url of ['git://git.example.org/a/b.git', 'http://git.example.org/a/b']) {
+      expect(proposeIdentity({ ...base, remotes: [{ name: 'origin', url }] })).toMatchObject({ ok: true, identity: 'repository:a-b', url: 'git.example.org/a/b' });
+    }
+  });
 });

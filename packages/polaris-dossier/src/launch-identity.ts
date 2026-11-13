@@ -153,7 +153,7 @@ export function matchRecords(records: readonly MatchableRecord[], derived: { rea
 
 export type IdentityProposal =
   | { readonly ok: true; readonly identity: string; readonly source: IdentitySource; readonly url: string; readonly urlSource: string;
-      readonly matches: readonly RecordMatch[]; readonly notCarrying: readonly RecordMatch[] }
+      readonly matches: readonly RecordMatch[]; readonly notCarrying: readonly RecordMatch[]; readonly locatorStatements: readonly string[] }
   | { readonly ok: false; readonly reason: string; readonly matches: readonly RecordMatch[] };
 
 export interface IdentityInput {
@@ -169,21 +169,38 @@ export interface IdentityInput {
 const describe = (m: RecordMatch): string => `${m.record.recordId} (${m.record.identity}, ${m.record.state}; matched by ${m.by.join(' and ')})`;
 
 export function proposeIdentity(input: IdentityInput): IdentityProposal {
+  // An operator-given URL is refused when it is not admitted, naming the rule and never the URL (046, line 17).
+  let upstream: NormalisedUrl | null = null;
+  if (input.upstreamOption !== undefined) {
+    const given = readLocator(input.upstreamOption, 'operator');
+    if (!given.ok) return { ok: false, reason: `the --upstream URL is not admitted: ${given.rule}; it is not printed, stored or recorded`, matches: [] };
+    upstream = given.url;
+  }
+  // The remote's URL, read as a remote locator: its user information removed whatever it holds, and said so; a URL that is no remote
+  // locator derives nothing, as for a clone with no remote, and the output names the remote and the rule, never the URL.
   const remote = identityRemote(input.remotes, input.defaultRemote);
-  let url: NormalisedUrl | null, urlSource: string;
+  const locatorStatements: string[] = [];
+  let url: NormalisedUrl | null = null, urlSource = '', remoteRule: string | null = null;
   if (remote !== null) {
-    url = normaliseUrl(remote.url);
-    urlSource = `the clone's remote ${remote.name}`;
-    if (url === null) return { ok: false, reason: `the URL of the clone's remote ${remote.name} is not one the identity rule normalises (https, http, ssh, git or user@host:path); give --identity and --upstream`, matches: [] };
-  } else {
-    if (input.upstreamOption === undefined || input.identityOption === undefined) {
-      return { ok: false, reason: input.remotes.length === 0
-        ? 'the clone has no remote, so the operator must give --identity and --upstream'
-        : `the clone has ${input.remotes.length} remotes and none is origin, so no remote is read; give --identity and --upstream`, matches: [] };
+    const read = readLocator(remote.url, 'remote');
+    if (read.ok) {
+      url = read.url;
+      urlSource = `the clone's remote ${remote.name}`;
+      if (read.userInformation) locatorStatements.push(`The URL of the clone's remote ${remote.name} carried user information; Syzygy removed it before deriving anything and does not print, store or record it.`);
+    } else {
+      remoteRule = read.rule;
+      locatorStatements.push(`The URL of the clone's remote ${remote.name} is not a remote locator, so it derives nothing: ${read.rule}. Syzygy does not print, store or record it.`);
     }
-    url = normaliseUrl(input.upstreamOption);
+  }
+  if (url === null) {
+    if (upstream === null || input.identityOption === undefined) {
+      const why = remote !== null ? `the URL of the clone's remote ${remote.name} is not a remote locator (${remoteRule}), so it derives nothing, as for a clone with no remote; give --identity and --upstream`
+        : input.remotes.length === 0 ? 'the clone has no remote, so the operator must give --identity and --upstream'
+          : `the clone has ${input.remotes.length} remotes and none is origin, so no remote is read; give --identity and --upstream`;
+      return { ok: false, reason: why, matches: [] };
+    }
+    url = upstream;
     urlSource = 'the operator\'s --upstream option';
-    if (url === null) return { ok: false, reason: '--upstream is not a URL the identity rule normalises (https, http, ssh, git or user@host:path)', matches: [] };
   }
   const derived = deriveIdentity(url);
   const matches = matchRecords(input.records, { identity: derived, url: url.url }, input.pinned, input.parents);
@@ -191,12 +208,15 @@ export function proposeIdentity(input: IdentityInput): IdentityProposal {
   if (input.identityOption !== undefined) {
     const identity = normaliseIdentityOption(input.identityOption);
     if (identity === null) return { ok: false, reason: '--identity cannot name a repository identity: after normalising it must open with a letter or digit', matches };
-    return { ok: true, identity, source: 'operator-option', url: url.url, urlSource, matches, notCarrying: matches.filter(m => m.record.identity !== identity) };
+    return { ok: true, identity, source: 'operator-option', url: url.url, urlSource, matches, notCarrying: matches.filter(m => m.record.identity !== identity), locatorStatements };
   }
+  // The two-segment floor: "a normalised path of fewer than two segments derives no identity, and the operator SHALL give the identity
+  // option", whatever the matching records carry.
+  if (url.segments.length < 2) return { ok: false, reason: `the normalised URL ${url.url} has fewer than two path segments, so no identity derives from it; give --identity`, matches };
   if (carried.length > 1) {
     return { ok: false, reason: `the matching records carry more than one identity, so Syzygy proposes none: ${matches.map(describe).join('; ')}; give the identity with --identity`, matches };
   }
-  if (carried.length === 1) return { ok: true, identity: carried[0]!, source: 'matching-records', url: url.url, urlSource, matches, notCarrying: [] };
-  if (derived === null) return { ok: false, reason: `the normalised URL ${url.url} has fewer than two path segments, so no identity derives from it; give --identity`, matches };
-  return { ok: true, identity: derived, source: 'derived', url: url.url, urlSource, matches, notCarrying: [] };
+  if (carried.length === 1) return { ok: true, identity: carried[0]!, source: 'matching-records', url: url.url, urlSource, matches, notCarrying: [], locatorStatements };
+  if (derived === null) return { ok: false, reason: `no identity derives from the normalised URL ${url.url}: its last two segments do not open with a letter or digit once joined; give --identity`, matches };
+  return { ok: true, identity: derived, source: 'derived', url: url.url, urlSource, matches, notCarrying: [], locatorStatements };
 }

@@ -371,6 +371,44 @@ async function sealedReads<T extends ReturnType<typeof setup>>(clone: string, re
   return { opened: [...new Set(log.opened)].sort(), examined: [...new Set(log.examined)].sort(), out, s, sealed: seal.sealed };
 }
 
+describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote locator, against real clones', () => {
+  const answersFor = (c: string, id: string) => ['public', 'none', `CONSENT TO OBSERVE ${id} AT ${c.slice(0, 12)}`, `STATE NO KERNEL EVIDENCE DRAWER FOR ${id} AT ${c.slice(0, 12)}`];
+
+  it('a remote URL carrying user information: removed before the identity and URL derive, said so, and in no record, question or output', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, 'https://bob:hunter2@git.example.org/a/b.git');
+    const s = setup(answersFor(up.commits[0]!, 'repository:a-b'));
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'recorded', subject: { identity: 'repository:a-b', url: 'git.example.org/a/b', urlSource: 'the clone\'s remote origin' } });
+    const said = 'The URL of the clone\'s remote origin carried user information; Syzygy removed it before deriving anything and does not print, store or record it.';
+    expect(out.kind === 'recorded' && out.output.split('\n')).toContain(said);
+    expect(s.terminal.printed).toContain(said);
+    const everything = JSON.stringify({ out, printed: s.terminal.printed, prompts: s.terminal.prompts, records: recordsOf(s.home) });
+    expect(everything.includes('hunter2') || everything.includes('bob')).toBe(false);
+  });
+
+  it('a remote URL that is no locator: refused before asking, naming the remote and the rule, the URL in no output', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, 'https://git.example.org/a/b?private_token=x');
+    const s = setup([]);
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'identity',
+      reason: 'the URL of the clone\'s remote origin is not a remote locator (it carries a query or a fragment), so it derives nothing, as for a clone with no remote; give --identity and --upstream' } });
+    expect(s.terminal.prompts).toEqual([]);
+    expect(JSON.stringify({ out, printed: s.terminal.printed }).includes('private_token')).toBe(false);
+  });
+
+  it('an --upstream not admitted is refused before asking, by its rule, and never printed', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    gitIn(clone, 'remote', 'remove', 'origin');
+    const s = setup([], { request: { identity: 'x-y', upstream: 'https://u:secret@git.example.org/a/b' } });
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'identity', reason: 'the --upstream URL is not admitted: an https://, http:// or git:// locator carries no user information; it is not printed, stored or recorded' } });
+    expect(JSON.stringify({ out, printed: s.terminal.printed }).includes('secret')).toBe(false);
+  });
+});
+
 describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone are the closed list (registry entry v1.1, item 1b)', () => {
   it('a full clone with history, branches, tags, stash and a second remote: the values of the listed references alone', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' }, [{ 'b.c': 'y\n' }]);

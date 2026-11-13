@@ -99,6 +99,8 @@ export interface LaunchRefusal {
   readonly copy?: CopyEnd | null;
   /** The launch output's statement of `copy`: removed, not removed (with its location and failure), or that no copy was made. */
   readonly copyStatement?: string;
+  /** What the URL reading said of the clone's remote, where it said anything: its user information removed (046, line 17). */
+  readonly locatorStatements?: readonly string[];
 }
 
 /** The run's class (047), decided at launch from the consents and the named identifier, and a copy-class run's copy. */
@@ -150,10 +152,13 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   const missing: string[] = [];
   // The run's class, once decided, and its copy's directory once the copy step has started: a refusal then removes the copy and says so.
   let copyClass: boolean | null = null, copyDir: string | null = null;
+  // What the URL reading says of the clone's remote, once read (046, line 17), for every outcome after it.
+  let locatorStatements: readonly string[] = [];
   const refuse = (stage: LaunchStage, reason: string, command?: string): LaunchOutcome => {
-    if (copyClass !== true) return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false } };
+    const said = locatorStatements.length === 0 ? {} : { locatorStatements };
+    if (copyClass !== true) return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false, ...said } };
     const end = copyDir === null ? null : removeCopy(copyDir, ports.removeCopy);
-    return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false, copy: end, copyStatement: copyEndStatement(end) } };
+    return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false, ...said, copy: end, copyStatement: copyEndStatement(end) } };
   };
 
   // The closed list of launch reads (047; registry entry v1.1, reads (1) to (4)); a reftable clone is refused here, before any Git process.
@@ -271,10 +276,13 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     records: matchable, pinned: commit, parents,
   });
   if (!proposal.ok) return refuse('identity', proposal.reason);
+  locatorStatements = proposal.locatorStatements;
   const identity = proposal.identity, bare = identity.slice('repository:'.length);
   const via = pinned.named.kind === 'pinned' ? pinned.named.via : 'the clone\'s HEAD, which an in-force launch observation consent names';
   const remoteName = pinned.named.kind === 'pinned' && pinned.named.remote !== null ? pinned.named.remote : (snapshot.remotes.length > 0 ? (snapshot.remotes.find(r => r.name === 'origin') ?? snapshot.remotes[0]!).name : null);
   const pin: LaunchPin = { commit, via, committerDate, fetched: false, updateCommand: updateCommand(clone, remoteName) };
+  // The pin, then what the URL reading says of the remote (046, line 17): user information removed, or a URL that is no locator.
+  const outputHead = [pinStatement(pin), ...proposal.locatorStatements].join('\n');
 
   // What is already in force, by any act.
   const mine = inForce(store.records, identity, now);
@@ -308,7 +316,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   // Records already in force: use them, name them, ask nothing (line 23).
   if (missing.length === 0) {
     const subject: LaunchSubject = { identity, identitySource: proposal.source, url: proposal.url, urlSource: proposal.urlSource, publicDeclaration: launchObs?.record.publicDeclaration ?? null };
-    return { kind: 'covered', subject, pin, relied, copy, output: `${pinStatement(pin)}\nIn-force records the run rests on, nothing asked: ${relied.join('; ')}` };
+    return { kind: 'covered', subject, pin, relied, copy, output: `${outputHead}\nIn-force records the run rests on, nothing asked: ${relied.join('; ')}` };
   }
 
   const writeConsent = await ports.writeConsent();
@@ -324,6 +332,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
 
   const existing = store.records.filter(r => r.record.identity === identity || proposal.matches.some(m => m.record.recordId === r.record.recordId))
     .map(r => ({ recordId: r.record.recordId, recordClass: r.record.recordClass, identity: r.record.identity, state: r.state === 'active' ? 'active' : `${r.state} by ${r.stateBy}`, commit: r.commit }));
+  for (const line of proposal.locatorStatements) say(line);
   say(questionOpening({
     identity, identitySource: proposal.source, url: proposal.url, urlSource: proposal.urlSource, revision: commit, revisionVia: via, committerDate,
     updateCommand: pin.updateCommand, existing, notCarrying: proposal.notCarrying, inForceElsewhere: relied, asks: { observation: needObservation, drawer: needDrawerQuestion },
@@ -378,7 +387,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   }
   const subject: LaunchSubject = { identity, identitySource: proposal.source, url: proposal.url, urlSource: proposal.urlSource, publicDeclaration: declaration };
   if (accepted.length === 0) {
-    return { kind: 'recorded', subject, pin, commit: store.tip ?? '', records: [], relied, statementDeclined, copy, output: `${pinStatement(pin)}\nNothing was recorded: the statement was declined.` };
+    return { kind: 'recorded', subject, pin, commit: store.tip ?? '', records: [], relied, statementDeclined, copy, output: `${outputHead}\nNothing was recorded: the statement was declined.` };
   }
 
   const question = transcript.join('\n');
@@ -399,7 +408,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   if (!written.ok) return refuse('write', `the records could not be committed: ${written.why}`);
   return {
     kind: 'recorded', subject, pin, commit: written.commit, records: records.map(r => r.recordId), relied, statementDeclined, copy,
-    output: `${pinStatement(pin)}\nRecorded ${records.map(r => r.recordId).join(', ')} in ${written.commit} on ${LAUNCH_REF}. Syzygy never pushes ${LAUNCH_REF}.`,
+    output: `${outputHead}\nRecorded ${records.map(r => r.recordId).join(', ')} in ${written.commit} on ${LAUNCH_REF}. Syzygy never pushes ${LAUNCH_REF}.`,
   };
 }
 
