@@ -210,6 +210,25 @@ describe('admission records port', () => {
   });
 });
 
+describe('an observation consent naming a revision, for any repository (REQ-polaris-generation-047\'s class rule)', () => {
+  const port = (files: Record<string, string>, now: number) => createAdmissionRecordsPort({ reader: reader(files), now: () => now });
+  it('is satisfied by any observation record in force whose admitted revisions include it, whatever its repository', async () => {
+    expect(await port(world(), AT).observationConsentNaming!(REDIS_REV)).toEqual({ satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' });
+    expect(await port(world(), AT).observationConsentNaming!(OTHER_REV)).toEqual({ satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' });
+  });
+  it('is unsatisfied for a revision no record admits, before the act, for stale bytes and when the records cannot be read', async () => {
+    expect(await port(world(), AT).observationConsentNaming!('f'.repeat(40))).toEqual({ satisfied: false, why: `no record found: no owner act puts an observation consent naming ${'f'.repeat(40)} in force` });
+    expect((await port(world(), AT - 1).observationConsentNaming!(REDIS_REV)).satisfied).toBe(false);
+    expect((await port(world({ [REDIS_PATH]: obsText() + 'x' }), AT).observationConsentNaming!(REDIS_REV)).satisfied).toBe(false);
+    expect(await port(world({ [`${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-X-WITHDRAWAL.md`]: 'x' }), AT).observationConsentNaming!(REDIS_REV))
+      .toEqual({ satisfied: false, why: 'no record found: the admission act records could not be read' });
+  });
+  it('is not satisfied by an egress record that admits the repository', async () => {
+    const records = [{ recordId: 'E', version: '1', class: 'egress' as const, project: 'project:syzygy', repositoryId: null, providerId: 'anthropic', upstream: null, digest: '1'.repeat(64), inForceAt: 1, withdrawnAt: null, supersedes: null, supersessionAt: null, admittedRevisions: [REDIS_REV], revisionLabels: [], admittedRepositories: ['redis-redis'], contentClasses: [] }];
+    expect((await createAdmissionRecordsPort({ reader: { read: async () => records }, now: () => 5 }).observationConsentNaming!(REDIS_REV)).satisfied).toBe(false);
+  });
+});
+
 describe('consented revisions for a repository', () => {
   const port = (files: Record<string, string>, now: number) => createAdmissionRecordsPort({ reader: reader(files), now: () => now });
   it('returns the owner\'s label and full commit id for each revision of the repository, in force now', async () => {

@@ -4,7 +4,7 @@ import * as zlib from 'node:zlib';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { patchFs } from './fs-patch.testkit.js';
-import { spawnSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { initRun } from './init.js';
 import type { CopyGitRun } from './launch-copy.js';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
@@ -613,6 +613,31 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
       expect(out, what).toMatchObject({ kind: 'refused', refusal: { stage: 'copy', copy: null, copyStatement: 'No copy was made.' } });
       expect(out.kind === 'refused' && out.refusal.reason.includes(`inside ${what}`), what).toBe(true);
       expect(fs.existsSync(root), what).toBe(false);
+    }
+  });
+
+  it('a copy that departs from the clone form after its checkout (an extra ref, an extra object): refused, the copy removed', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const after = (extra: (dir: string) => void): CopyGitRun => {
+      const git = capturingGit();
+      return (args, o) => {
+        const r = git.run(args, o);
+        if (r.status === 0 && args.includes('checkout')) extra(args[3]!);
+        return r;
+      };
+    };
+    for (const [what, extra, why] of [
+      ['an extra ref', (dir: string) => gitIn(dir, 'update-ref', 'refs/heads/extra', up.commits[0]!), 'refs/heads/extra is a ref or not a directory, and the clone may hold no ref but HEAD'],
+      ['an extra object', (dir: string) => { execFileSync('git', ['-C', dir, 'hash-object', '-w', '--stdin'], { input: 'extra\n' }); }, 'the object store names 1 object(s) that are neither '],
+    ] as const) {
+      const out = await run(clone, setup([], { ports: { copyGit: after(extra) } }));
+      expect(out, what).toMatchObject({ kind: 'refused', refusal: { stage: 'copy', copy: { state: 'removed' } } });
+      if (out.kind !== 'refused') continue;
+      expect(out.refusal.reason.startsWith('the copy departs from the form one commit fetched alone and checked out detached leaves: '), what).toBe(true);
+      expect(out.refusal.reason, what).toContain(why);
+      if (what === 'an extra object') expect(out.refusal.reason).toContain('nor under its tree (first: 0f2287157f7cb0dd40498c7a92f74b6975fa2d57)');
+      expect(fs.existsSync(out.refusal.copy!.location), what).toBe(false);
     }
   });
 

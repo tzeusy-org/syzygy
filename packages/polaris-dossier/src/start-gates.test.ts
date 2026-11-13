@@ -1162,3 +1162,12 @@ describe('the CLI: preflight and init', () => {
     expect(missing.stdout).toMatch(/^missing\.0: source-acquisition registry entry: no owner-act record /m);
   });
 });
+
+describe('the package gate sources answer whether another act\'s observation consent names a revision (REQ-polaris-generation-047\'s class rule)', () => {
+  it('answers from the observation records in force, for any repository, and is unsatisfied for an identifier none names', async () => {
+    const sources = createPackageGateSources({ root: records(), now: () => NOW });
+    expect(await sources.observationConsentNaming(commits.A)).toEqual({ satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' });
+    expect((await sources.observationConsentNaming(commits.U)).satisfied).toBe(false);
+    expect((await sources.observationConsentNaming('f'.repeat(40))).satisfied).toBe(false);
+  });
+});
