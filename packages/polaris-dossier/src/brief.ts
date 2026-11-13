@@ -16,6 +16,7 @@ import type { RunSubject } from './run-record.js';
 import { READER_STANDARDS_SHA256, READER_STANDARDS_VERSION, readerStandardsSection } from './reader-standards.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 import { briefCopyLines, briefCopyOf, readLaunchDisclosure, type BriefCopy } from './launch-disclosure.js';
+import { issuedBriefStatement } from './launch-statements.js';
 
 /** `syzygy dossier brief <run>` (REQ-polaris-generation-033, 034, 036).
  *
@@ -315,6 +316,8 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
     agent: { tool: declared.agentTool, provider: declared.agentProvider, declaredBy: 'operator', label: 'Inferred' },
     // A copy-class run's brief names the copy and directs its session not to read the operator's clone; null in any other run.
     copy: copy.copy,
+    // The brief stage's statement, from what this brief said (R-PDJA-33-SLICE-D-1 finding 5): the run record's reached form, which pages read.
+    stageStatement: issuedBriefStatement({ role: 'authoring' }, copy.copy !== null),
     label: 'Inferred',
   };
   try {

@@ -218,6 +218,8 @@ export async function sessionPrompt(runDir: string, request: SessionPromptReques
     commands,
     context,
     executionRule: built.executionRule,
+    // The brief stage's statement, from what this inventory brief said (R-PDJA-33-SLICE-D-1 finding 5).
+    stageStatement: built.stageStatement,
     label: 'Inferred',
   };
   try {
@@ -418,7 +420,7 @@ export async function startSessions(runDir: string, request: Omit<SessionPromptR
   };
   const inventoryDir = sessionDirectory(run, inventorySession);
   add('inventory', undefined, inventorySession, inventoryDir, waitingInventoryPrompt(runId, inventoryDir), [path.resolve(opened.subject.clone.path), inventoryDir],
-    path.join(run, RUN_LAYOUT.inventory, promptRecordName(inventorySession)), { brief: { name: INVENTORY_BRIEF_FILE, sha256: sha256(built.text) }, executionRule: built.executionRule });
+    path.join(run, RUN_LAYOUT.inventory, promptRecordName(inventorySession)), { brief: { name: INVENTORY_BRIEF_FILE, sha256: sha256(built.text) }, executionRule: built.executionRule, stageStatement: built.stageStatement });
   for (const kind of ['fidelity', 'design'] as const) {
     const session = latestReviewSession(run, kind) + 1;
     const directory = reviewSessionDirectory(run, kind, session);

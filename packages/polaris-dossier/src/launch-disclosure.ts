@@ -15,8 +15,9 @@ import { RUN_LAYOUT } from './state-directory.js';
  * if any; that who answered rests on the operator's declaration, labelled Inferred".
  *
  * `init` writes it once (through `createRunDirectory`), as `launch.json` beside `run.json`, for every run it creates: run.json's exact key set is read by every step, so
- * the disclosure is its own file and a run initialised before it existed stays readable. It holds the stages a run reaches by `init`; the
- * brief stage's statement is decided when a brief is issued and is derived from what the run directory holds. The file lies within the agent
+ * the disclosure is its own file and a run initialised before it existed stays readable. It holds the stages a run reaches by `init`, the
+ * brief stage's among them in its not-reached form; each brief Syzygy issues stores its own reached form in its record (`brief.json`, an
+ * inventory session's prompt record), and a page reads those stored statements, never deriving them. The file lies within the agent
  * sessions' write reach, so every value read back is Inferred, and it is re-validated in full. */
 
 export const LAUNCH_DISCLOSURE_FORMAT = 'polaris-dossier-launch-disclosure/1';
@@ -61,7 +62,7 @@ const isTexts = (v: unknown): v is readonly string[] => Array.isArray(v) && v.ev
 const nullOr = <T>(v: unknown, test: (x: unknown) => x is T): boolean => v === null || test(v);
 const exactKeys = (r: Readonly<Record<string, unknown>>, keys: readonly string[]): boolean => Object.keys(r).sort().join(',') === [...keys].sort().join(',');
 
-function isStatement(v: unknown): v is LaunchStatement {
+export function isStatement(v: unknown): v is LaunchStatement {
   if (!isRecord(v) || !exactKeys(v, ['id', 'stage', 'runClass', 'reached', 'label', 'text'])) return false;
   return isText(v['id']) && (v['stage'] === null || STAGES.includes(v['stage'] as LaunchStageName))
     && (v['runClass'] === null || CLASSES.includes(v['runClass'] as StatementClass)) && typeof v['reached'] === 'boolean'
@@ -115,9 +116,21 @@ export function publicDeclarationOf(declaration: 'public' | 'not-public' | 'not-
 export const statementItemId = (s: LaunchStatement): string =>
   `launch/${(s.stage ?? 'no-stage').replace(/ /g, '-')}/${s.runClass ?? 'class-undecided'}/${s.reached ? 'reached' : 'not-reached'}/${s.id}`;
 
-/** The launch disclosure in human form, each item with its id and label, for the init output and every page. `briefs` is the brief stage's
- * statement where the caller decides it (a page, from what the run directory holds); `init` passes none, since no brief exists yet. */
-export function launchDisclosureItems(d: LaunchDisclosure, briefs: LaunchStatement | null): LocalDisclosureItem[] {
+/** A statement as a page item, its id carrying its machine form. */
+export const statementItem = (s: LaunchStatement): LocalDisclosureItem => ({ id: statementItemId(s), text: s.text, label: s.label });
+
+/** The item a page shows for one issued brief: the statement its record stored when Syzygy issued it, or, where the record carries none that
+ * can be read as one, that what the brief directed its session to is Unknown. */
+export function storedBriefItem(record: unknown, which: string, id: string): LocalDisclosureItem {
+  const stored = isRecord(record) ? record['stageStatement'] : undefined;
+  if (isStatement(stored) && stored.stage === 'brief or packet delivered' && stored.reached) return statementItem(stored);
+  return { id: `launch/brief-or-packet-delivered/unknown/${id}`, text: `${which} was issued, and its record carries no brief-stage statement Syzygy can read, so whether it directed its session to a copy is Unknown.`, label: 'Unknown' };
+}
+
+/** The launch disclosure in human form, each item with its id and label, for the init output and every page. `issued` holds an item per brief
+ * Syzygy issued, from each brief's own record (`storedBriefItem`); where there is any, they stand in place of the record's not-reached
+ * brief-stage statement. `init` passes none, since no brief exists yet. */
+export function launchDisclosureItems(d: LaunchDisclosure, issued: readonly LocalDisclosureItem[]): LocalDisclosureItem[] {
   const items: LocalDisclosureItem[] = [];
   const item = (id: string, text: string): void => { items.push({ id: `launch/${id}`, text, label: 'Inferred' }); };
   if (!d.launched) item('consents', 'No consent was recorded at launch: the run was not launched, and rests on the observation consent another act recorded.');
@@ -132,7 +145,8 @@ export function launchDisclosureItems(d: LaunchDisclosure, briefs: LaunchStateme
     item('proposed', `The identity was proposed by the rule (${d.subject.proposedBy}) and declared by the owner's phrase.`);
     IDENTITY_RESIDUALS.forEach((residual, i) => item(`residual-${i + 1}`, residual));
   }
-  for (const s of [...d.statements, ...(briefs === null ? [] : [briefs])]) items.push({ id: statementItemId(s), text: s.text, label: s.label });
+  for (const s of d.statements) if (!(issued.length > 0 && s.id === 'briefs')) items.push(statementItem(s));
+  items.push(...issued);
   item('drawer', d.drawer === null ? 'No drawer statement was relied on.' : `The drawer statement relied on: ${d.drawer}.`);
   const asked = d.statements.some(s => s.id === 'question' && s.reached);
   item('answered', asked

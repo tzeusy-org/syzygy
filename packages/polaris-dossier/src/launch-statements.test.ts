@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { briefStageStatement, questionCopyStatements, stageStatements, type LaunchState } from './launch-statements.js';
+import { BRIEFS_NOT_REACHED, issuedBriefStatement, questionCopyStatements, stageStatements, type LaunchState } from './launch-statements.js';
 
 /** REQ-polaris-generation-047's stage rule over the statements 046 and 047 add: each stage a run reached gets its statement, each it did not
  * reach says so and states nothing of the thing itself, and a no-copy run's form of every copy statement is that no copy was made. Every
@@ -113,14 +113,12 @@ describe('the stage rule over the launch statements (REQ-polaris-generation-047)
 });
 
 describe('the brief stage and the question\'s copy statements', () => {
-  it('names which briefs were issued, by class; a run with none says so', () => {
-    expect(briefStageStatement('copy-class', { authoring: true, inventory: true }).text)
-      .toBe('Each brief Syzygy issued (the authoring brief and the inventory brief) directed its session to work in the copy and not to read the operator\'s clone. Whether a session stayed in the copy is its own report [Inferred].');
-    expect(briefStageStatement('no-copy', { authoring: true, inventory: false }).text)
-      .toBe('The run\'s clone, where the agent sessions are to work, is the operator\'s clone; whether a session worked there is its own report [Inferred]. No copy was made.');
-    expect(briefStageStatement('copy-class', { authoring: false, inventory: true }).text)
-      .toBe('Each brief Syzygy issued (the inventory brief) directed its session to work in the copy and not to read the operator\'s clone. Whether a session stayed in the copy is its own report [Inferred].');
-    expect(briefStageStatement('copy-class', { authoring: false, inventory: false })).toEqual({ id: 'briefs', stage: 'brief or packet delivered', runClass: 'both', reached: false, label: 'Inferred', text: 'Syzygy issued no brief and delivered no packet.' });
+  it('each issued brief\'s statement, from whether that brief named a copy; the not-reached form init records (R-PDJA-33-SLICE-D-1 finding 5)', () => {
+    expect(issuedBriefStatement({ role: 'authoring' }, true)).toEqual({ id: 'briefs/authoring', stage: 'brief or packet delivered', runClass: 'copy-class', reached: true, label: 'Inferred',
+      text: 'The authoring brief Syzygy issued directed its session to work in the copy and not to read the operator\'s clone. Whether the session stayed in the copy is its own report [Inferred].' });
+    expect(issuedBriefStatement({ role: 'inventory', session: 2 }, false)).toEqual({ id: 'briefs/inventory-2', stage: 'brief or packet delivered', runClass: 'no-copy', reached: true, label: 'Inferred',
+      text: 'The inventory brief for session 2 Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' });
+    expect(BRIEFS_NOT_REACHED).toEqual({ id: 'briefs', stage: 'brief or packet delivered', runClass: 'both', reached: false, label: 'Inferred', text: 'Syzygy issued no brief and delivered no packet.' });
   });
 
   it('the question\'s copy statements', () => {

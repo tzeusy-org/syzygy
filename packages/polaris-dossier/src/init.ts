@@ -14,7 +14,7 @@ import { isoOf } from './iso-of.js';
 import { failureText, launchConsent, type LaunchCopy, type LaunchOutcome, type LaunchPorts, type LaunchRefusal } from './launch.js';
 import { copyEndStatement, removeCopy, type CopyEnd } from './launch-copy.js';
 import { LAUNCH_DISCLOSURE_FORMAT, launchDisclosureItems, publicDeclarationOf, type LaunchDisclosure } from './launch-disclosure.js';
-import { stageStatements } from './launch-statements.js';
+import { BRIEFS_NOT_REACHED, stageStatements } from './launch-statements.js';
 import { withLaunchRecords } from './launch-sources.js';
 
 /** `syzygy dossier init <clone> --url <url> --config <run.json> --state-root <dir>` (REQ-polaris-generation-033, 036).
@@ -275,7 +275,7 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
         governed,
         disclosures: [
           ...DISCLOSURES,
-          ...launchDisclosureItems(launch, null).map(item => item.text),
+          ...launchDisclosureItems(launch, []).map(item => item.text),
           governed.kind === 'non-governed'
             ? 'the subject is non-governed, so no per-project statement is required; the agent sessions\' sends to their provider are the operator\'s own act'
             : `the subject is ${governed.kind}; the run relies on the per-project statement ${providerStatement}, a consent record and not an egress record; neither the content classes it names nor the screening policies bind what the agent reads or sends`,
@@ -293,7 +293,8 @@ function launchDisclosure(
 ): LaunchDisclosure {
   const disclosure = (fields: Omit<LaunchDisclosure, 'format' | 'operatorClone' | 'drawer' | 'label'>): LaunchDisclosure => ({
     format: LAUNCH_DISCLOSURE_FORMAT, runClass: fields.runClass, launched: fields.launched, operatorClone: run.operatorClone, copy: fields.copy,
-    consents: fields.consents, subject: fields.subject, drawer: run.drawer, statements: fields.statements, label: 'Inferred',
+    // The brief stage's not-reached form: init issues no brief (R-PDJA-33-SLICE-D-1 finding 5); each brief stores its reached form.
+    consents: fields.consents, subject: fields.subject, drawer: run.drawer, statements: [...fields.statements, BRIEFS_NOT_REACHED], label: 'Inferred',
   });
   if (l === null) {
     return disclosure({

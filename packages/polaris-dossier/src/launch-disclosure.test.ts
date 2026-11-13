@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
-import { launchDisclosureItems, launchDisclosureUnknown, publicDeclarationOf, readLaunchDisclosure, statementItemId, type LaunchDisclosure } from './launch-disclosure.js';
+import { launchDisclosureItems, launchDisclosureUnknown, publicDeclarationOf, readLaunchDisclosure, statementItemId, storedBriefItem, type LaunchDisclosure } from './launch-disclosure.js';
 
 /** The run record's launch disclosure (REQ-polaris-generation-046, line 37): read back fail-closed, and its human form, item by item. Every
  * expected value is a literal. */
@@ -19,6 +19,7 @@ const launched: LaunchDisclosure = {
     statement('copy', 'copy step started', 'copy-class', true, 'Copied.'),
     statement('pinned-commit', 'commit pinned', 'both', true, 'Pinned.'),
     statement('question', 'question asked', 'both', true, 'A question was asked at the terminal.'),
+    statement('briefs', 'brief or packet delivered', 'both', false, 'Syzygy issued no brief and delivered no packet.'),
   ] as LaunchDisclosure['statements'],
   label: 'Inferred',
 };
@@ -70,8 +71,8 @@ describe('reading the run record\'s launch disclosure back (fail-closed)', () =>
 
 describe('the launch disclosure in human form', () => {
   it('a launched run that recorded its consents: each item 046 names, the residuals, the stage statements, the drawer and who answered', () => {
-    const briefs = statement('briefs', 'brief or packet delivered', 'copy-class', true, 'Briefed.') as LaunchDisclosure['statements'][number];
-    expect(launchDisclosureItems(launched, briefs).map(i => [i.id, i.label, i.text.slice(0, 80)])).toEqual([
+    const briefs = statement('briefs/authoring', 'brief or packet delivered', 'copy-class', true, 'Briefed.');
+    expect(launchDisclosureItems(launched, [storedBriefItem({ stageStatement: briefs }, 'The authoring brief', 'authoring')]).map(i => [i.id, i.label, i.text.slice(0, 80)])).toEqual([
       ['launch/consents', 'Inferred', 'The consents were recorded at launch: LAUNCH-OBSERVATION-x, LAUNCH-DRAWER-y, in '],
       ['launch/identity', 'Inferred', 'The repository identity repository:redis-redis and its normalised URL github.com'],
       ['launch/public', 'Inferred', 'The operator\'s declaration whether the repository is public: public [Inferred].'],
@@ -84,12 +85,26 @@ describe('the launch disclosure in human form', () => {
       ['launch/copy-step-started/copy-class/reached/copy', 'Inferred', 'Copied.'],
       ['launch/commit-pinned/both/reached/pinned-commit', 'Inferred', 'Pinned.'],
       ['launch/question-asked/both/reached/question', 'Inferred', 'A question was asked at the terminal.'],
-      ['launch/brief-or-packet-delivered/copy-class/reached/briefs', 'Inferred', 'Briefed.'],
+      ['launch/brief-or-packet-delivered/copy-class/reached/briefs/authoring', 'Inferred', 'Briefed.'],
       ['launch/drawer', 'Inferred', 'The drawer statement relied on: LAUNCH-DRAWER-y.'],
       ['launch/answered', 'Inferred', 'Who answered rests on the operator\'s declaration that the owner answered in pers'],
     ]);
-    expect(launchDisclosureItems(launched, null)[0]!.text).toBe(`The consents were recorded at launch: LAUNCH-OBSERVATION-x, LAUNCH-DRAWER-y, in the recording commit ${R}.`);
-    expect(launchDisclosureItems(launched, null)[1]!.text).toBe('The repository identity repository:redis-redis and its normalised URL github.com/redis/redis are Inferred, from the clone\'s remote origin.');
+    expect(launchDisclosureItems(launched, [])[0]!.text).toBe(`The consents were recorded at launch: LAUNCH-OBSERVATION-x, LAUNCH-DRAWER-y, in the recording commit ${R}.`);
+    expect(launchDisclosureItems(launched, [])[1]!.text).toBe('The repository identity repository:redis-redis and its normalised URL github.com/redis/redis are Inferred, from the clone\'s remote origin.');
+  });
+
+  it('the brief stage: the record\'s not-reached form until a brief is issued; then each brief\'s stored statement, or Unknown where none can be read (R-PDJA-33-SLICE-D-1 findings 5 and 10)', () => {
+    const briefItems = (issued: Parameters<typeof launchDisclosureItems>[1]) => launchDisclosureItems(launched, issued).filter(i => i.id.includes('brief')).map(i => [i.id, i.label, i.text]);
+    expect(briefItems([])).toEqual([['launch/brief-or-packet-delivered/both/not-reached/briefs', 'Inferred', 'Syzygy issued no brief and delivered no packet.']]);
+    const noCopy = statement('briefs/inventory-1', 'brief or packet delivered', 'no-copy', true, 'Sent to the operator\'s clone.');
+    expect(briefItems([storedBriefItem({ stageStatement: noCopy }, 'The inventory brief for session 1', 'inventory-1'), storedBriefItem({ copy: null }, 'The authoring brief', 'authoring')])).toEqual([
+      ['launch/brief-or-packet-delivered/no-copy/reached/briefs/inventory-1', 'Inferred', 'Sent to the operator\'s clone.'],
+      ['launch/brief-or-packet-delivered/unknown/authoring', 'Unknown', 'The authoring brief was issued, and its record carries no brief-stage statement Syzygy can read, so whether it directed its session to a copy is Unknown.'],
+    ]);
+    // A stored statement of another stage, or not reached, is not a brief's statement.
+    for (const bad of [{ ...noCopy, stage: 'question asked' }, { ...noCopy, reached: false }, { ...noCopy, label: 'Observed' }, 'Briefed.']) {
+      expect(storedBriefItem({ stageStatement: bad }, 'The authoring brief', 'authoring').label).toBe('Unknown');
+    }
   });
 
   it('none recorded, no declaration, no drawer, no question', () => {
@@ -98,7 +113,7 @@ describe('the launch disclosure in human form', () => {
       subject: { ...launched.subject, publicDeclaration: null }, drawer: null,
       statements: [...launched.statements.slice(0, 3), statement('question', 'question asked', 'both', false, 'No question was asked.')] as LaunchDisclosure['statements'],
     };
-    const texts = launchDisclosureItems(quiet, null).map(i => i.text);
+    const texts = launchDisclosureItems(quiet, []).map(i => i.text);
     expect(texts[0]).toBe(`No consent was recorded at launch: the run rests on launch consent records already in force: launch observation consent LAUNCH-OBSERVATION-x (${C}).`);
     expect(texts[2]).toBe('The operator made no declaration whether the repository is public [Inferred].');
     expect(texts.slice(-2)).toEqual(['No drawer statement was relied on.', 'No question was asked, so no one answered it.']);

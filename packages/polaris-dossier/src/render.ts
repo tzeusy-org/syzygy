@@ -15,9 +15,8 @@ import { EXECUTION_FLAGS_BASIS, executionFlags, type ExecutionFlags } from './ex
 import type { CredentialProbe } from './execution-rule.js';
 import { RECORDS_WITHIN_REACH } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader } from './git-object-reader.js';
-import { errno, latestInventorySession, logStep, openRun, readRecord, type OpenedRun } from './inventory.js';
-import { launchDisclosureItems, launchDisclosureUnknown, readLaunchDisclosure } from './launch-disclosure.js';
-import { briefStageStatement } from './launch-statements.js';
+import { errno, latestInventorySession, logStep, openRun, promptRecordName, readRecord, type OpenedRun } from './inventory.js';
+import { launchDisclosureItems, launchDisclosureUnknown, readLaunchDisclosure, storedBriefItem } from './launch-disclosure.js';
 import { buildDesignPacket } from './design-review.js';
 import type { Outcome } from './outcome.js';
 import { designReviewOfRecord, latestPassedDraft, reviewOfRecord, type DesignReviewOfRecord, type ReviewDeps, type ReviewOfRecord } from './review.js';
@@ -827,14 +826,17 @@ function disclosureItems(inputs: {
   const brief = readRecord(path.join(run, RUN_LAYOUT.briefRecord));
   const rule = isRecord(brief) && isRecord(brief['executionRule']) ? brief['executionRule'] : {};
   const commands = executionList.map((entry) => clean(text(entry['command']) ?? ''));
-  // The run record's launch disclosure (REQ-polaris-generation-046, line 37), with the brief stage's statement from what the run directory
-  // holds: the authoring brief's record, and an inventory session's prompt record, which names the inventory brief it was handed.
+  // The run record's launch disclosure (REQ-polaris-generation-046, line 37), with the brief stage's statement each issued brief stored in
+  // its own record: the authoring brief's record, and each inventory session's prompt record (R-PDJA-33-SLICE-D-1 findings 5 and 10).
   const launch = readLaunchDisclosure(run);
-  const launchItems = launch.state === 'ok'
-    ? launchDisclosureItems(launch.disclosure, briefStageStatement(launch.disclosure.runClass, {
-      authoring: fs.existsSync(path.join(run, RUN_LAYOUT.briefRecord)), inventory: latestInventorySession(run) > 0,
-    }))
-    : [launchDisclosureUnknown(launch)];
+  const issuedBriefs = [
+    ...(fs.existsSync(path.join(run, RUN_LAYOUT.briefRecord)) ? [storedBriefItem(brief, 'The authoring brief', 'authoring')] : []),
+    ...Array.from({ length: latestInventorySession(run) }, (_, i) => i + 1).flatMap(session => {
+      const file = path.join(run, RUN_LAYOUT.inventory, promptRecordName(session));
+      return fs.existsSync(file) ? [storedBriefItem(readRecord(file), `The inventory brief for session ${session}`, `inventory-${session}`)] : [];
+    }),
+  ];
+  const launchItems = launch.state === 'ok' ? launchDisclosureItems(launch.disclosure, issuedBriefs) : [launchDisclosureUnknown(launch)];
   const items: LocalDisclosureItem[] = [
     { id: 'mode', text: 'Authoring mode: operator-agent. The operator\'s own agent session read the clone and wrote the draft; Syzygy pinned the revision, checked the draft and rendered these pages.', label: null },
     { id: 'agent', text: `Agent tool ${declared.agentTool} ${declared.agentToolVersion}, provider ${declared.agentProvider}, model ${declared.model}${declared.modelVersion === null ? ' (version not shown by the agent tool)' : ` ${declared.modelVersion}`}, as the operator declared them; no provider-reported model version exists in this mode.`, label: 'Inferred' },

@@ -1079,7 +1079,7 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
       consents: { recorded: [], commit: null, relied: 'checked above' },
       subject: { identity: 'repository:redis-redis', url: 'github.com/redis/redis', source: 'the clone\'s remote origin', proposedBy: 'matching-records', publicDeclaration: 'public' },
       drawer: expect.stringMatching(/^LAUNCH-DRAWER-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}$/),
-      statements: [['named-identifier', true], ['copy', true], ['copy-location', true], ['copy-reliance', true], ['pinned-commit', true], ['question', false]],
+      statements: [['named-identifier', true], ['copy', true], ['copy-location', true], ['copy-reliance', true], ['pinned-commit', true], ['question', false], ['briefs', false]],
       label: 'Inferred',
     });
   });

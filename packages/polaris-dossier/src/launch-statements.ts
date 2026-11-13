@@ -156,12 +156,18 @@ function copyStatements(s: LaunchState): readonly LaunchStatement[] {
   return out;
 }
 
-/** The brief-or-packet stage's statement (047; 046, line 37), from what the run directory holds: which briefs Syzygy issued. */
-export function briefStageStatement(runClass: RunClass, issued: { readonly authoring: boolean; readonly inventory: boolean }): LaunchStatement {
-  const STAGE = 'brief or packet delivered' as const;
-  if (!issued.authoring && !issued.inventory) return statement('briefs', STAGE, 'both', false, 'Syzygy issued no brief and delivered no packet.');
-  const which = [issued.authoring ? 'the authoring brief' : null, issued.inventory ? 'the inventory brief' : null].filter((w): w is string => w !== null).join(' and ');
-  return runClass === 'copy-class'
-    ? statement('briefs', STAGE, 'copy-class', true, `Each brief Syzygy issued (${which}) directed its session to work in the copy and not to read the operator's clone. Whether a session stayed in the copy is its own report [Inferred].`)
-    : statement('briefs', STAGE, 'no-copy', true, `The run's clone, where the agent sessions are to work, is the operator's clone; whether a session worked there is its own report [Inferred]. No copy was made.`);
+const BRIEF_STAGE = 'brief or packet delivered' as const;
+
+/** The brief-or-packet stage not reached (047's stage rule): the run record's form from `init`, which issues no brief. */
+export const BRIEFS_NOT_REACHED: LaunchStatement = statement('briefs', BRIEF_STAGE, 'both', false, 'Syzygy issued no brief and delivered no packet.');
+
+/** The statement a brief's own record stores when Syzygy issues it (047; 046, line 37), from what that brief said: a brief that named a copy
+ * directed its session to the copy; one that named none sent it to the operator's clone, and no copy was made (R-PDJA-33-SLICE-D-1
+ * findings 5 and 10). `session` numbers an inventory brief. */
+export function issuedBriefStatement(brief: { readonly role: 'authoring' } | { readonly role: 'inventory'; readonly session: number }, namedCopy: boolean): LaunchStatement {
+  const id = brief.role === 'authoring' ? 'briefs/authoring' : `briefs/inventory-${brief.session}`;
+  const which = brief.role === 'authoring' ? 'The authoring brief' : `The inventory brief for session ${brief.session}`;
+  return namedCopy
+    ? statement(id, BRIEF_STAGE, 'copy-class', true, `${which} Syzygy issued directed its session to work in the copy and not to read the operator's clone. Whether the session stayed in the copy is its own report [Inferred].`)
+    : statement(id, BRIEF_STAGE, 'no-copy', true, `${which} Syzygy issued named the operator's clone as the run's clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.`);
 }

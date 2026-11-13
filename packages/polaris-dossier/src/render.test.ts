@@ -503,11 +503,37 @@ describe('render', () => {
       { id: 'launch/public', label: 'Inferred', text: 'The operator made no declaration whether the repository is public [Inferred].' },
       { id: 'launch/proposed', label: 'Inferred', text: 'The identity was not proposed at launch: it is the one the observation consent another act recorded names.' },
       { id: 'launch/question-asked/both/not-reached/question', label: 'Inferred', text: 'No question was asked.' },
-      { id: 'launch/brief-or-packet-delivered/no-copy/reached/briefs', label: 'Inferred', text: 'The run\'s clone, where the agent sessions are to work, is the operator\'s clone; whether a session worked there is its own report [Inferred]. No copy was made.' },
+      // Each issued brief's own stored statement (R-PDJA-33-SLICE-D-1 findings 5 and 10): the authoring brief's record, and inventory session 1's prompt record.
+      { id: 'launch/brief-or-packet-delivered/no-copy/reached/briefs/authoring', label: 'Inferred', text: 'The authoring brief Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' },
+      { id: 'launch/brief-or-packet-delivered/no-copy/reached/briefs/inventory-1', label: 'Inferred', text: 'The inventory brief for session 1 Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' },
       { id: 'launch/drawer', label: 'Inferred', text: 'No drawer statement was relied on.' },
       { id: 'launch/answered', label: 'Inferred', text: 'No question was asked, so no one answered it.' },
     ]);
     expect(files.get('appendix.html')).toContain('No copy was made.');
+  });
+
+  it('reads each brief\'s stored brief-stage statement, never deriving it from launch.json; a record without one is Unknown (R-PDJA-33-SLICE-D-1 findings 5 and 10)', async () => {
+    const run = await prepared();
+    fs.writeFileSync(path.join(run, 'launch.json'), JSON.stringify({
+      format: 'polaris-dossier-launch-disclosure/1', runClass: 'no-copy', launched: false, operatorClone: '/home/op/kestrel', copy: null,
+      consents: { recorded: [], commit: null, relied: [] },
+      subject: { identity: 'repository:kestrel', url: 'github.com/example/kestrel', source: 'the Upstream of the observation consent another act recorded, which --url names', proposedBy: null, publicDeclaration: null },
+      drawer: null,
+      statements: [{ id: 'briefs', stage: 'brief or packet delivered', runClass: 'both', reached: false, label: 'Inferred', text: 'Syzygy issued no brief and delivered no packet.' }],
+      label: 'Inferred',
+    }));
+    const briefRecord = JSON.parse(fs.readFileSync(path.join(run, 'brief.json'), 'utf8')) as Record<string, unknown>;
+    fs.writeFileSync(path.join(run, 'brief.json'), JSON.stringify({ ...briefRecord, stageStatement: { id: 'briefs/authoring', stage: 'brief or packet delivered', runClass: 'copy-class', reached: true, label: 'Inferred', text: 'STORED-AUTHORING-STATEMENT' } }));
+    const prompt = path.join(run, 'inventory', 'session-1.json');
+    const { stageStatement: _dropped, ...withoutStatement } = JSON.parse(fs.readFileSync(prompt, 'utf8')) as Record<string, unknown>;
+    fs.writeFileSync(prompt, JSON.stringify(withoutStatement));
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const launch = (JSON.parse(readSite(result.report.site).get('machine.json')!).disclosure as { id: string; text: string; label: string }[]).filter(item => item.id.includes('brief'));
+    expect(launch).toEqual([
+      { id: 'launch/brief-or-packet-delivered/copy-class/reached/briefs/authoring', label: 'Inferred', text: 'STORED-AUTHORING-STATEMENT' },
+      { id: 'launch/brief-or-packet-delivered/unknown/inventory-1', label: 'Unknown', text: 'The inventory brief for session 1 was issued, and its record carries no brief-stage statement Syzygy can read, so whether it directed its session to a copy is Unknown.' },
+    ]);
   });
 
   it('carries the one sentence and the machine disclosure on every page, the human disclosure in the appendix, and one review-status region per page holding no claim', async () => {

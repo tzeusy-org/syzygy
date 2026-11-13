@@ -20,6 +20,7 @@ import type { RunSubject } from './run-record.js';
 import { placementSubjectOf } from './screen.js';
 import { REVISION_FILE, RUN_LAYOUT, within } from './state-directory.js';
 import { briefCopyLines, briefCopyOf, readLaunchDisclosure, type BriefCopy } from './launch-disclosure.js';
+import { issuedBriefStatement, type LaunchStatement } from './launch-statements.js';
 import { type OpenedRun, errno, openRun, readRecord, sessionDirectory } from './run-dir.js';
 export { SESSION_DIR, sessionDirName, sessionsRoot, sessionDirectory, sessionsRootViolation, errno, openRun, logStep, readRecord } from './run-dir.js';
 export type { OpenedRun } from './run-dir.js';
@@ -168,7 +169,7 @@ export function renderInventoryBrief(input: InventoryBriefInput): string {
   ].join('\n');
 }
 
-export type InventoryBriefLoad = { readonly ok: true; readonly text: string; readonly executionRule: ExecutionRule } | { readonly ok: false; readonly stage: 'doctrine' | 'launch-record'; readonly reason: string };
+export type InventoryBriefLoad = { readonly ok: true; readonly text: string; readonly executionRule: ExecutionRule; readonly stageStatement: LaunchStatement } | { readonly ok: false; readonly stage: 'doctrine' | 'launch-record'; readonly reason: string };
 
 /** Syzygy's rendering of session `session`'s inventory brief, with the execution rule it carries: always SEC-3's, never the permission. */
 export async function buildInventoryBrief(opened: Extract<OpenedRun, { ok: true }>, session: number, sources: GateSources, now: number, deps: CensusDeps = {}): Promise<InventoryBriefLoad> {
@@ -184,7 +185,7 @@ export async function buildInventoryBrief(opened: Extract<OpenedRun, { ok: true 
   const text = renderInventoryBrief({
     runDir: opened.run, runId: opened.runId, subject: opened.subject, declared: opened.declared, deadlineEnds: opened.deadlineEnds, session, executionRule, census, copy: copy.copy,
   });
-  return { ok: true, text, executionRule };
+  return { ok: true, text, executionRule, stageStatement: issuedBriefStatement({ role: 'inventory', session }, copy.copy !== null) };
 }
 
 const BRIEF_DISCLOSURES = [

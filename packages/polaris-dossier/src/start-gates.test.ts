@@ -207,6 +207,8 @@ describe('init: a run that passes every start gate', () => {
         notLaunchedStatement('copy', 'copy step started', 'no-copy', false, 'No copy was made: this is a no-copy run, whose clone is the operator\'s own.'),
         notLaunchedStatement('pinned-commit', 'commit pinned', 'both', true, `The pinned revision is ${commits.A}.`),
         notLaunchedStatement('question', 'question asked', 'both', false, 'No question was asked.'),
+        // The brief stage, not reached at init: each brief stores its own reached form (R-PDJA-33-SLICE-D-1 finding 5).
+        notLaunchedStatement('briefs', 'brief or packet delivered', 'both', false, 'Syzygy issued no brief and delivered no packet.'),
       ],
       label: 'Inferred',
     });
@@ -219,6 +221,7 @@ describe('init: a run that passes every start gate', () => {
       'No copy was made: this is a no-copy run, whose clone is the operator\'s own.',
       `The pinned revision is ${commits.A}.`,
       'No question was asked.',
+      'Syzygy issued no brief and delivered no packet.',
       'The drawer statement relied on: PROJECT-INPUT-REDIS@1.',
       'No question was asked, so no one answered it.',
     ]);
