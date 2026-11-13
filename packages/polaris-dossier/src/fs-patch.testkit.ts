@@ -18,6 +18,7 @@ interface Patchable {
   copyFile: typeof fs.copyFile;
   cpSync: typeof fs.cpSync;
   cp: typeof fs.cp;
+  openAsBlob: typeof fs.openAsBlob;
   lstatSync: typeof fs.lstatSync;
   statSync: typeof fs.statSync;
   existsSync: typeof fs.existsSync;
@@ -58,7 +59,7 @@ export async function opensOf(file: string, act: () => Promise<unknown>): Promis
 /** Every entry point through which a process reads a file's content, and every one through which it examines a path without reading
  * it, as named in `node:fs` and `node:fs/promises`. A read through any of the first is logged under `opened`, whatever the API; the
  * second under `examined`. Directory listings are neither (a reference's name is listed, never read). */
-const CONTENT_READS = ['openSync', 'open', 'readFileSync', 'readFile', 'createReadStream', 'copyFileSync', 'copyFile', 'cpSync', 'cp'] as const;
+const CONTENT_READS = ['openSync', 'open', 'readFileSync', 'readFile', 'createReadStream', 'copyFileSync', 'copyFile', 'cpSync', 'cp', 'openAsBlob'] as const;
 const EXAMINATIONS = ['lstatSync', 'statSync', 'existsSync', 'accessSync'] as const;
 const PROMISE_READS = ['open', 'readFile', 'copyFile', 'cp'] as const;
 

@@ -198,7 +198,7 @@ describe('read (3): the configuration, as text, for remotes and the object forma
 describe('the read oracle is independent of the API the reader uses (R-PDJA-33-SLICE-A-1 finding 1)', () => {
   it('logs a content read through every entry point, the utf8 fast path and the promise API included', async () => {
     const dir = tempDir('syzygy-read-log-');
-    for (const name of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']) fs.writeFileSync(path.join(dir, name), 'x\n');
+    for (const name of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm']) fs.writeFileSync(path.join(dir, name), 'x\n');
     const out = tempDir('syzygy-read-log-out-');
     const { log, restore } = installReadLog(dir);
     try {
@@ -215,12 +215,13 @@ describe('the read oracle is independent of the API the reader uses (R-PDJA-33-S
       await fs.promises.copyFile(path.join(dir, 'j'), path.join(out, 'j'));
       await fs.promises.cp(path.join(dir, 'k'), path.join(out, 'k'));
       await new Promise<void>((resolve, reject) => fs.copyFile(path.join(dir, 'l'), path.join(out, 'l'), e => (e ? reject(e) : resolve())));
+      await (await fs.openAsBlob(path.join(dir, 'm'))).text();
       fs.lstatSync(path.join(dir, 'a'));
       fs.existsSync(path.join(dir, 'b'));
     } finally {
       restore();
     }
-    expect([...new Set(log.opened)].sort()).toEqual(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']);
+    expect([...new Set(log.opened)].sort()).toEqual(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm']);
     // cpSync examines its source (a stat) before it copies, so 'i' is examined too.
     expect([...new Set(log.examined)].sort()).toEqual(['a', 'b', 'i']);
   });
