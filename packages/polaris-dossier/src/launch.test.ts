@@ -1043,6 +1043,31 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     expect(gitIn(out.report.subject.clone.path, 'rev-parse', '--show-object-format')).toBe('sha256');
   });
 
+  it('init prints the user-information statement on every path: a recorded run, a covered run that asks nothing, and a refusal (R-PDJA-33-SLICE-D-1 finding 6)', async () => {
+    const said = 'The URL of the clone\'s remote origin carried user information; Syzygy removed it before deriving anything and does not print, store or record it.';
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const commit = up.commits[0]!, r12 = commit.slice(0, 12);
+    const home = makeHome();
+    const sources = () => withLaunchRecords(noOtherActs(), { home, now: () => NOW });
+    const withUser = 'https://bob:hunter2@github.com/redis/redis';
+    const recorded = await initWith(fullClone(up.dir, withUser), ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`], { home, sources: sources() }).result;
+    if (!recorded.ok) throw new Error(JSON.stringify(recorded.refusal));
+    expect(recorded.report.disclosures).toContain(said);
+    // Covered: the launch asks nothing, and so prints nothing on the terminal; init's output still says it.
+    const covered = initWith(fullClone(up.dir, withUser), [], { home, sources: sources() });
+    const out = await covered.result;
+    if (!out.ok) throw new Error(JSON.stringify(out.refusal));
+    expect(covered.s.terminal.prompts).toEqual([]);
+    expect(out.report.disclosures).toContain(said);
+    expect(JSON.stringify(out).includes('hunter2')).toBe(false);
+    // A refusal after the URL reading: no terminal to ask at.
+    const refused = await initWith(fullClone(makeUpstream({ 'b.c': 'y\n' }).dir, 'https://bob:hunter2@git.example.org/a/b.git'), [], { isTTY: false }).result;
+    expect(refused).toMatchObject({ ok: false, refusal: { stage: 'launch' } });
+    if (refused.ok) return;
+    expect(refused.refusal.disclosures).toContain(said);
+    expect(JSON.stringify(refused).includes('hunter2')).toBe(false);
+  }, 20_000);
+
   it('a repeat init --url at a HEAD only a launch consent names runs on a copy, with sources wrapped as the CLI wraps them (R-PDJA-33-SLICE-B-1 finding 1)', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' });
     const commit = up.commits[0]!, r12 = commit.slice(0, 12);

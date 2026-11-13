@@ -103,10 +103,14 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
   let copy: LaunchCopy | null = null;
   // What the launch recorded, for a failure after it: its records stay, revertable as 046 states.
   let recordedNote = '';
+  // What the launch's URL reading said of the clone's remote (046, line 17: "Where a remote URL carried user information, the launch output
+  // SHALL say so"), printed in init's output on every path once the launch has said it (R-PDJA-33-SLICE-D-1 finding 6).
+  let locatorLines: readonly string[] = [];
   const refuse = (stage: InitStage, reason: string, extra: Partial<InitRefusal> = {}): InitResult => {
-    if (copy === null) return { ok: false, refusal: { command: 'init', outcome: 'refused', stage, reason, ...extra, objectsRead, disclosures: DISCLOSURES } };
+    const disclosures = [...DISCLOSURES, ...locatorLines];
+    if (copy === null) return { ok: false, refusal: { command: 'init', outcome: 'refused', stage, reason, ...extra, objectsRead, disclosures } };
     const end = removeCopy(copy.dir, ports.launch?.removeCopy);
-    return { ok: false, refusal: { command: 'init', outcome: 'refused', stage, reason, ...extra, copy: end, copyStatement: copyEndStatement(end), objectsRead, disclosures: DISCLOSURES } };
+    return { ok: false, refusal: { command: 'init', outcome: 'refused', stage, reason, ...extra, copy: end, copyStatement: copyEndStatement(end), objectsRead, disclosures } };
   };
 
   // Whether any object was read, decided from the reads themselves (R-PDJA-33-SLICE-B-1 finding 6): the launch's object reads go through
@@ -172,6 +176,7 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
         agentTool: config.config.agentTool, agentProvider: config.config.agentProvider, operator: config.config.operator,
         headConsentedElsewhere: false, command: request.command ?? 'syzygy dossier init <clone> --config <run.json> --state-root <dir>',
       }, { ...ports.launch, sources, now: ports.now, copyRoot: path.join(request.stateRoot, COPY_DIRECTORY), openReader: trackedReader });
+      locatorLines = outcome.kind === 'refused' ? outcome.refusal.locatorStatements ?? [] : outcome.kind === 'head-consented' ? [] : outcome.locatorStatements;
       if (outcome.kind === 'refused') {
         return refuse('launch', outcome.refusal.reason, { launch: outcome.refusal });
       }
@@ -276,6 +281,7 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
         disclosures: [
           ...DISCLOSURES,
           ...launchDisclosureItems(launch, []).map(item => item.text),
+          ...locatorLines,
           governed.kind === 'non-governed'
             ? 'the subject is non-governed, so no per-project statement is required; the agent sessions\' sends to their provider are the operator\'s own act'
             : `the subject is ${governed.kind}; the run relies on the per-project statement ${providerStatement}, a consent record and not an egress record; neither the content classes it names nor the screening policies bind what the agent reads or sends`,
