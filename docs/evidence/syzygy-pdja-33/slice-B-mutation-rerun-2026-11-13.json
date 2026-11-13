@@ -1,0 +1,390 @@
+{
+  "subject": "syzygy-pdja.33 slice B: the copy step of a copy-class run (REQ-polaris-generation-047; registry entry v1.1 ledger item 3), its 25 mutants re-run at the slice-A repair head",
+  "date": "2026-11-13",
+  "rule": "AGENTS.md verification rule 6: mutate the input and confirm the check fails, per predicate",
+  "supersedes": "docs/evidence/syzygy-pdja-33/slice-B-mutation-2026-11-13.json, whose runs were at 1e048034 and e0f81c91, before the slice-A repairs changed the read oracle; that record is left unedited",
+  "method": "Each mutant replaces one exact old fragment (asserted to occur once) with new, runs the two commands with TMPDIR=/home/orca/.tmp/pdja33 in a detached worktree at the commit named, and restores the file. Killed means either command exited non-zero. Old and new fragments are those of the superseded record, unchanged.",
+  "runner": "a scratch Python script, not retained; every input it used is the file, old, new and commit of each entry",
+  "mutants": [
+    {
+      "id": "B1-always-copy",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "copyClass = !(await ports.sources.observationConsentNaming(commit)).satisfied;",
+      "new": "copyClass = true;",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  2 failed | 492 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "30e9ce4607e4eff229ac5d601f7aa7f34ee68801c7482bb4bf1a23fc4d351a6a",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B2-never-copy",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "copyClass = !(await ports.sources.observationConsentNaming(commit)).satisfied;",
+      "new": "copyClass = false;",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  19 failed | 475 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "30e9ce4607e4eff229ac5d601f7aa7f34ee68801c7482bb4bf1a23fc4d351a6a",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B3-no-alternates-refusal",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "    if (snapshot.alternates) return refuse(",
+      "new": "    if (false) return refuse(",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  1 failed | 493 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "30e9ce4607e4eff229ac5d601f7aa7f34ee68801c7482bb4bf1a23fc4d351a6a",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B4-no-location-check",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "    if (violation !== null) return refuse('copy', violation);",
+      "new": "    void violation;",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  1 failed | 493 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "30e9ce4607e4eff229ac5d601f7aa7f34ee68801c7482bb4bf1a23fc4d351a6a",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B5-no-home-linked-worktrees",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "      ...homeWorktrees.dirs.map(d => ({ path: d, what: 'a linked worktree of the governance home\\'s repository' })),",
+      "new": "",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  1 failed | 493 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "30e9ce4607e4eff229ac5d601f7aa7f34ee68801c7482bb4bf1a23fc4d351a6a",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B6-no-allow-protocol",
+      "file": "packages/polaris-dossier/src/launch-copy.ts",
+      "old": "  env['GIT_ALLOW_PROTOCOL'] = 'file';\n",
+      "new": "",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  2 failed | 492 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "1aa5560eda14ec7871f4218dc49566f6c1397a8829eae28f79cb501090c93e53",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B7-git-env-kept",
+      "file": "packages/polaris-dossier/src/launch-copy.ts",
+      "old": "if (!k.startsWith('GIT_') && v !== undefined)",
+      "new": "if (v !== undefined)",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  2 failed | 492 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "1aa5560eda14ec7871f4218dc49566f6c1397a8829eae28f79cb501090c93e53",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B8-lazy-fetch-allowed",
+      "file": "packages/polaris-dossier/src/launch-copy.ts",
+      "old": "  env['GIT_NO_LAZY_FETCH'] = '1';\n",
+      "new": "",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  2 failed | 492 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "1aa5560eda14ec7871f4218dc49566f6c1397a8829eae28f79cb501090c93e53",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B9-hooks-path-kept",
+      "file": "packages/polaris-dossier/src/launch-copy.ts",
+      "old": "['-c', 'core.hooksPath=/dev/null']",
+      "new": "[]",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  3 failed | 491 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "1aa5560eda14ec7871f4218dc49566f6c1397a8829eae28f79cb501090c93e53",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B10-full-depth",
+      "file": "packages/polaris-dossier/src/launch-copy.ts",
+      "old": "'fetch', '-q', '--depth=1', '--no-tags',",
+      "new": "'fetch', '-q', '--no-tags',",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  7 failed | 487 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "1aa5560eda14ec7871f4218dc49566f6c1397a8829eae28f79cb501090c93e53",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B11-tags-fetched",
+      "file": "packages/polaris-dossier/src/launch-copy.ts",
+      "old": "'--depth=1', '--no-tags', '--no-recurse-submodules'",
+      "new": "'--depth=1', '--tags', '--no-recurse-submodules'",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  4 failed | 490 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "1aa5560eda14ec7871f4218dc49566f6c1397a8829eae28f79cb501090c93e53",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B12-no-head-is-commit-check",
+      "file": "packages/polaris-dossier/src/launch-copy.ts",
+      "old": "  if (head !== input.named) return { ok: false, dir, failure: { kind: 'not-commit' } };\n",
+      "new": "",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  1 failed | 493 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "1aa5560eda14ec7871f4218dc49566f6c1397a8829eae28f79cb501090c93e53",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B13-no-form-check",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "    if (!form.ok) return refuse('copy', `the copy departs",
+      "new": "    if (false) return refuse('copy', `the copy departs",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  1 failed | 493 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "30e9ce4607e4eff229ac5d601f7aa7f34ee68801c7482bb4bf1a23fc4d351a6a",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B14-no-store-check",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "      if (!store.ok) return refuse('copy', `the copy departs",
+      "new": "      if (false) return refuse('copy', `the copy departs",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  1 failed | 493 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "30e9ce4607e4eff229ac5d601f7aa7f34ee68801c7482bb4bf1a23fc4d351a6a",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B15-launch-refuse-keeps-copy",
+      "file": "packages/polaris-dossier/src/launch.ts",
+      "old": "    const end = copyDir === null ? null : removeCopy(copyDir, ports.removeCopy);",
+      "new": "    const end = null;",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  8 failed | 486 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "30e9ce4607e4eff229ac5d601f7aa7f34ee68801c7482bb4bf1a23fc4d351a6a",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B16-init-runs-operator-clone",
+      "file": "packages/polaris-dossier/src/init.ts",
+      "old": "  const runClone = copy === null ? request.clone : copy.dir;",
+      "new": "  const runClone = request.clone;",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  3 failed | 491 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "6b5e5c6f16760a038d367bb485acecca387eb4806c1bfe8be5c99f479015699d",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B17-init-refuse-keeps-copy",
+      "file": "packages/polaris-dossier/src/init.ts",
+      "old": "    const end = removeCopy(copy.dir, ports.launch?.removeCopy);",
+      "new": "    const end = { state: 'not-removed' as const, location: copy.dir, failure: 'mutant' };",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  1 failed | 493 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "6b5e5c6f16760a038d367bb485acecca387eb4806c1bfe8be5c99f479015699d",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B18-init-no-sha256-allowance",
+      "file": "packages/polaris-dossier/src/init.ts",
+      "old": "{ objectFormatSetting: copy !== null }",
+      "new": "{ objectFormatSetting: false }",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  1 failed | 493 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "6b5e5c6f16760a038d367bb485acecca387eb4806c1bfe8be5c99f479015699d",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B19-allowance-without-option",
+      "file": "packages/polaris-dossier/src/clone-shape.ts",
+      "old": "bounds.objectFormatSetting === true && commit.length === 64",
+      "new": "commit.length === 64",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  1 failed | 38 passed (39)",
+      "integration": "Tests  494 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "f9648c5072a714e82418de59308160aaa69ef62fa4c1570c1a42724fb6e3f56e",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B20-allowance-any-width",
+      "file": "packages/polaris-dossier/src/clone-shape.ts",
+      "old": "bounds.objectFormatSetting === true && commit.length === 64",
+      "new": "bounds.objectFormatSetting === true",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  1 failed | 38 passed (39)",
+      "integration": "Tests  31 failed | 463 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "f9648c5072a714e82418de59308160aaa69ef62fa4c1570c1a42724fb6e3f56e",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B21-no-copy-head-check-dropped",
+      "file": "packages/polaris-dossier/src/launch-revision.ts",
+      "old": "  if (head !== named.commit) {",
+      "new": "  if (false) {",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  1 failed | 38 passed (39)",
+      "integration": "Tests  1 failed | 493 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "c320a06c8cbc5cc2536613fafb2394c6e103a3321e0bbe4b0830ddbd95feb6c0",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B22-reader-any-revision",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "r.class === 'observation' && r.admittedRevisions.includes(revision)",
+      "new": "r.class === 'observation'",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  2 failed | 492 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "a8ec93e57181cf1fde8d4159ffef72faeaf9f85b554643b9dbe00c5c3171ab69",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B23-reader-any-class",
+      "file": "packages/polaris-generation-consent/src/package-reader.ts",
+      "old": "r.class === 'observation' && r.admittedRevisions.includes(revision)",
+      "new": "r.admittedRevisions.includes(revision)",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  1 failed | 493 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "a8ec93e57181cf1fde8d4159ffef72faeaf9f85b554643b9dbe00c5c3171ab69",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B24-gate-sources-always-satisfied",
+      "file": "packages/polaris-dossier/src/gate-sources.ts",
+      "old": "      return answer.satisfied ? { satisfied: true, record: answer.record } : { satisfied: false, why: answer.why };\n    },\n    registryEntry",
+      "new": "      return { satisfied: true, record: String(answer.satisfied) };\n    },\n    registryEntry",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  1 failed | 493 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "55943cf54eefc73bfbad7028010c5425e064e9f0ba6f6ed3813a8c710e3b71c1",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    },
+    {
+      "id": "B25-init-copy-statement-dropped",
+      "file": "packages/polaris-dossier/src/init.ts",
+      "old": "        ...(copy === null ? [] : [copyKeptStatement(copy.dir)]),",
+      "new": "",
+      "commit": "ad6163f37b28827968b1db6249f684deb2c5042a",
+      "unit": "Tests  39 passed (39)",
+      "integration": "Tests  1 failed | 493 passed (494)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "6b5e5c6f16760a038d367bb485acecca387eb4806c1bfe8be5c99f479015699d",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/clone-shape.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-generation-consent/src/package-reader.test.ts"
+      ]
+    }
+  ],
+  "summary": {
+    "runs": 25,
+    "killed": 25,
+    "survived": []
+  }
+}
