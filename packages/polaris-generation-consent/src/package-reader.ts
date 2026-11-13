@@ -1010,6 +1010,9 @@ export interface AdmissionRecordsPortLike {
    * it, or each that does is withdrawn, superseded, not yet in force, bound by no act, or voided by a byte-different twin. Reporting only;
    * it grants nothing (R-POLARIS-DOSSIER-S3-GATES-1 finding 4). */
   readonly consentAbsenceFor?: (url: string) => Promise<string>;
+  /** An observation record in force now whose admitted revisions include `revision`, for any repository id (REQ-polaris-generation-047's
+   * class rule); from the same records `check` reads, and nothing else. */
+  readonly observationConsentNaming?: (revision: string) => Promise<AdmissionAnswerLike>;
 }
 
 const NOT_IN_FORCE_TEXT: Readonly<Record<NotInForce, string>> = {
@@ -1063,6 +1066,12 @@ export function createAdmissionRecordsPort(options: { readonly reader: Admission
         }
       }
       return Object.freeze([...byLabel.values()].map(pair => Object.freeze({ ...pair })));
+    },
+    observationConsentNaming: async revision => {
+      let live: readonly AdmissionRecord[];
+      try { live = inForceRecords(await options.reader.read(), options.now()); } catch { return { satisfied: false, why: 'no record found: the admission act records could not be read' }; }
+      const hit = live.find(r => r.class === 'observation' && r.admittedRevisions.includes(revision));
+      return hit === undefined ? { satisfied: false, why: `no record found: no owner act puts an observation consent naming ${revision} in force` } : { satisfied: true, record: `${hit.recordId}@${hit.version}` };
     },
     check: async requirement => {
       if (requirement.kind === 'public-source-policy') {

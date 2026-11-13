@@ -9,7 +9,7 @@ const A = 'a'.repeat(40), B = 'b'.repeat(40), C = 'c'.repeat(40), D = 'd'.repeat
 const oid = (o: string): RefValue => ({ kind: 'oid', oid: o });
 const sym = (target: string): RefValue => ({ kind: 'symbolic', target });
 const snap = (head: RefValue, refs: Record<string, RefValue>, more: { names?: readonly string[]; objectFormat?: string } = {}): CloneSnapshot =>
-  ({ gitDir: '/c/.git', head, names: new Set([...Object.keys(refs), ...(more.names ?? [])]), refs: new Map(Object.entries(refs)), remotes: [], objectFormat: more.objectFormat ?? 'sha1', alternates: false });
+  ({ gitDir: '/c/.git', head, names: new Set([...Object.keys(refs), ...(more.names ?? [])]), refs: new Map(Object.entries(refs)), remotes: [], objectFormat: more.objectFormat ?? 'sha1', alternates: false, bare: null, worktree: null });
 let listings = 0;
 const STORED = [A, B, C, D, 'abcd'.repeat(10), `abcd${'e'.repeat(36)}`];
 const ports = { storedIds: async () => { listings += 1; return new Set(STORED); }, isCommit: async (o: string) => o !== D };

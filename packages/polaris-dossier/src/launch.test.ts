@@ -2,7 +2,11 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as zlib from 'node:zlib';
 import { describe, expect, it } from 'vitest';
+import { tempDir } from '@syzygy/test-kit';
 import { patchFs } from './fs-patch.testkit.js';
+import { spawnSync } from 'node:child_process';
+import { initRun } from './init.js';
+import type { CopyGitRun } from './launch-copy.js';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { launchConsent, type LaunchOutcome, type LaunchPorts, type LaunchRequest } from './launch.js';
 import { LAUNCH_REF, readLaunchRecords } from './launch-store.js';
@@ -18,12 +22,13 @@ const NOW = Date.parse('2026-11-09T12:00:00Z');
 const URL_RR = 'https://github.com/redis/redis.git';
 
 /** `answers`: what each `storedType` call resolved to, or `refused <reason>`, so a header answer is told from a refused full read. */
-interface Captured { readonly calls: string[]; readonly answers: string[] }
+interface Captured { readonly calls: string[]; readonly answers: string[]; readonly dirs: string[] }
 function readLog(): { readonly open: (o: PinnedObjectReaderOptions) => PinnedObjectReader; readonly log: Captured } {
-  const log: Captured = { calls: [], answers: [] };
+  const log: Captured = { calls: [], answers: [], dirs: [] };
   return {
     log,
     open: o => {
+      log.dirs.push(o.gitDir);
       const r = openPinnedObjectReader(o);
       const wrap = <K extends keyof PinnedObjectReader>(k: K) => ((...args: unknown[]) => { log.calls.push(`${String(k)} ${o.revision}`); return (r[k] as (...a: unknown[]) => unknown)(...args); }) as PinnedObjectReader[K];
       return { revision: r.revision, algorithm: r.algorithm, tree: wrap('tree'), readBlobs: wrap('readBlobs'), listTree: wrap('listTree'), inventory: wrap('inventory'), commitHead: wrap('commitHead'),
@@ -39,6 +44,7 @@ function setup(answers: readonly (string | null)[], more: { isTTY?: boolean; por
   const ports: LaunchPorts = {
     home, now: () => NOW, terminal, sources: noOtherActs(), writeConsent: async () => ({ state: 'ok', record: 'WRITE-CONSENT-LAUNCH-RECORDS-2026-11-08' }),
     nonPublic: async () => ({ admitted: false, successor: NON_PUBLIC_SUCCESSOR }), previewClasses: fixtureClasses, a1InForce: () => false, openReader: reads.open,
+    copyRoot: path.join(tempDir('syzygy-launch-state-'), 'copies'),
     ...more.ports,
   };
   const request = (clone: string): LaunchRequest => ({ clone, agentTool: 'claude-code', agentProvider: 'anthropic', operator: 'op', headConsentedElsewhere: false, command: 'syzygy dossier init <clone> --config c --state-root s', ...more.request });
@@ -170,7 +176,8 @@ describe('refusals before asking, and refusals of the answer, record nothing', (
       const s = setup([declaration]);
       const out = await run(clone, s);
       expect(out).toEqual({ kind: 'refused', refusal: { stage: 'not-public', recorded: false, missing: expect.any(Array),
-        reason: `the operator did not declare the repository public, and no effective policy admits non-public sources: ${NON_PUBLIC_SUCCESSOR} is missing; nothing was recorded` } });
+        reason: `the operator did not declare the repository public, and no effective policy admits non-public sources: ${NON_PUBLIC_SUCCESSOR} is missing; nothing was recorded`,
+        copy: { state: 'removed', location: expect.stringMatching(/\/copies\/copy-[A-Za-z0-9]{6}$/) }, copyStatement: expect.stringMatching(/^The copy at \S+\/copies\/copy-[A-Za-z0-9]{6} was removed, its directory included\.$/) } });
       expect(gitIn(s.home, 'for-each-ref', LAUNCH_REF)).toBe('');
     }
   });
@@ -288,12 +295,12 @@ describe('records in force, revocation and self-observation', () => {
 });
 
 describe('REQ-polaris-generation-047 against real clones', () => {
-  it('HEAD elsewhere: refused before asking, the clone unchanged, the checkout command printed', async () => {
+  it('HEAD elsewhere in a no-copy run: refused before asking, the clone unchanged, the checkout command printed', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' }, [{ 'b.c': 'y\n' }]);
     const clone = fullClone(up.dir, URL_RR);
     gitIn(clone, 'checkout', '-q', '--detach', up.commits[0]!);
     const before = listing(clone);
-    const s = setup([]);
+    const s = setup([], { ports: { sources: { ...noOtherActs(), observationConsentNaming: async r => (r === up.commits[1] ? { satisfied: true, record: 'OTHER-ACT@1' } : { satisfied: false, why: 'no' }) } } });
     expect(await run(clone, s)).toEqual({ kind: 'refused', refusal: { stage: 'head', missing: [], recorded: false,
       reason: `the clone's HEAD is ${up.commits[0]}, not the pinned revision ${up.commits[1]} (refs/remotes/origin/HEAD -> refs/remotes/origin/main); Syzygy does not change the checkout`,
       command: `git -C '${clone}' checkout --detach ${up.commits[1]}` } });
@@ -302,7 +309,7 @@ describe('REQ-polaris-generation-047 against real clones', () => {
     expect(s.reads.log.answers).toEqual(['commit']);
   });
 
-  it('an annotated tag or a blob named by --revision refuses from its header alone; its body is never read (syzygy-pdja.30)', async () => {
+  it('an annotated tag or a blob named by --revision in a no-copy run refuses from its header alone; its body is never read (syzygy-pdja.30)', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' });
     gitIn(up.dir, 'tag', '-a', 'v1', '-m', 'a tag message');
     const clone = fullClone(up.dir, URL_RR);
@@ -315,7 +322,7 @@ describe('REQ-polaris-generation-047 against real clones', () => {
       fs.writeFileSync(file, Buffer.concat([zlib.deflateSync(Buffer.from(header, 'latin1'), { finishFlush: zlib.constants.Z_SYNC_FLUSH }), Buffer.alloc(4096, 0xff)]));
     }
     for (const [revision, id] of [['v1', tag], [blob, blob]] as const) {
-      const s = setup([], { request: { revision } });
+      const s = setup([], { request: { revision }, ports: { sources: { ...noOtherActs(), observationConsentNaming: async () => ({ satisfied: true, record: 'OTHER-ACT@1' }) } } });
       expect(await run(clone, s), revision).toEqual({ kind: 'refused', refusal: { stage: 'revision', missing: [], recorded: false,
         reason: `--revision ${revision} resolves to ${id}, which is not a commit the clone's store holds` } });
       expect(s.reads.log.calls, revision).toEqual([`storedType ${id}`]);
@@ -408,8 +415,10 @@ describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone 
     const clone = fullClone(dir, URL_RR);
     const s = setup([], { isTTY: false, request: { revision: commit.slice(0, 40) } });
     const out = await run(clone, s);
-    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal' } });
-    expect(s.reads.log.calls[0]).toBe(`storedType ${commit}`);
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal', copy: { state: 'removed' } } });
+    // A copy-class run: the copy is checked, then its commit and tree are read; nothing of the operator's clone.
+    expect(s.reads.log.calls).toEqual([`inventory ${commit}`, `commitHead ${commit}`, `listTree ${commit}`]);
+    expect(s.reads.log.dirs.every(d => d.includes(`${path.sep}copies${path.sep}copy-`))).toBe(true);
   });
 
   it('the width comes from the configuration, not from HEAD: an unborn HEAD in a SHA-256 clone still abbreviates at 64 digits', async () => {
@@ -422,7 +431,241 @@ describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone 
     const clone = fullClone(dir, URL_RR);
     gitIn(clone, 'checkout', '-q', '--orphan', 'unborn');
     const out = await run(clone, setup([], { isTTY: false, request: { revision: commit.slice(0, 12) } }));
-    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'head', reason: `the clone's HEAD is unresolvable, not the pinned revision ${commit} (--revision ${commit.slice(0, 12)}); Syzygy does not change the checkout` } });
+    // Named at 64 digits: a copy-class run, never refused for the operator's HEAD, reaches the question's terminal check.
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal', missing: [`an observation consent for repository:redis-redis at ${commit}`, expect.any(String)] } });
+  });
+});
+
+describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => {
+  const R12 = (c: string) => c.slice(0, 12);
+  const consentAnswers = (c: string) => ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${R12(c)}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${R12(c)}`];
+  /** The real git, with every call's arguments and Git environment recorded: an independent capture of the copy's processes. */
+  function capturingGit(): { readonly run: CopyGitRun; readonly calls: { args: readonly string[]; git: Record<string, string> }[] } {
+    const calls: { args: readonly string[]; git: Record<string, string> }[] = [];
+    return {
+      calls,
+      run: (args, o) => {
+        calls.push({ args, git: Object.fromEntries(Object.entries(o.env).filter(([k]) => k.startsWith('GIT_'))) });
+        const r = spawnSync('git', args, { cwd: o.cwd, env: o.env, encoding: 'utf8' });
+        return { status: r.status ?? -1, stderr: r.stderr ?? '' };
+      },
+    };
+  }
+  const copyOf = (out: LaunchOutcome) => (out.kind === 'covered' || out.kind === 'recorded' ? out.copy : null);
+
+  it('HEAD elsewhere, on a branch with uncommitted changes: a copy at the trunk tip, the operator\'s checkout unchanged and absent from it', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' }, [{ 'b.c': 'y\n' }]);
+    const clone = fullClone(up.dir, URL_RR);
+    gitIn(clone, 'checkout', '-q', '-b', 'topic', up.commits[0]!);
+    fs.writeFileSync(path.join(clone, 'a.c'), 'uncommitted\n');
+    const before = listing(clone);
+    const git = capturingGit();
+    const s = setup(consentAnswers(up.commits[1]!), { ports: { copyGit: git.run } });
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'recorded', pin: { commit: up.commits[1] } });
+    const copy = copyOf(out)!;
+    expect(fs.readFileSync(path.join(copy.gitDir, 'HEAD'), 'utf8')).toBe(`${up.commits[1]}\n`);
+    expect(fs.readFileSync(path.join(copy.dir, 'a.c'), 'utf8')).toBe('x\n');
+    expect(fs.readFileSync(path.join(copy.dir, 'b.c'), 'utf8')).toBe('y\n');
+    expect(listing(clone)).toEqual(before);
+    // Three processes, in the stated environment, fetching the one identifier from the operator's clone over the file transport.
+    expect(git.calls.map(c => c.args)).toEqual([
+      ['-c', 'core.hooksPath=/dev/null', 'init', '-q', '--template=', '--object-format=sha1', copy.dir],
+      ['-c', 'core.hooksPath=/dev/null', '-C', copy.dir, 'fetch', '-q', '--depth=1', '--no-tags', '--no-recurse-submodules', `file://${clone}`, up.commits[1]],
+      ['-c', 'core.hooksPath=/dev/null', '-C', copy.dir, 'checkout', '-q', '--detach', up.commits[1]],
+    ]);
+    for (const c of git.calls) expect(c.git).toEqual({ GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: '/dev/null', GIT_ALLOW_PROTOCOL: 'file', GIT_NO_LAZY_FETCH: '1', GIT_TERMINAL_PROMPT: '0' });
+    // Syzygy itself reads no object of the operator's clone: every object read is of the copy, and no type test is made.
+    expect(s.reads.log.dirs.every(d => d === copy.gitDir)).toBe(true);
+    expect(s.reads.log.calls).toEqual([`inventory ${up.commits[1]}`, `commitHead ${up.commits[1]}`, `listTree ${up.commits[1]}`]);
+  });
+
+  it('no Git variable of the operator\'s environment reaches the copy\'s processes', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const git = capturingGit();
+    const saved = { GIT_CONFIG_PARAMETERS: process.env['GIT_CONFIG_PARAMETERS'], GIT_DIR: process.env['GIT_DIR'] };
+    process.env['GIT_CONFIG_PARAMETERS'] = "'core.hookspath'='/nonexistent'";
+    process.env['GIT_DIR'] = '/nonexistent';
+    try {
+      expect((await run(clone, setup(consentAnswers(up.commits[0]!), { ports: { copyGit: git.run } }))).kind).toBe('recorded');
+    } finally {
+      for (const [k, v] of Object.entries(saved)) if (v === undefined) delete process.env[k]; else process.env[k] = v;
+    }
+    for (const c of git.calls) expect(Object.keys(c.git).sort()).toEqual(['GIT_ALLOW_PROTOCOL', 'GIT_CONFIG_GLOBAL', 'GIT_CONFIG_NOSYSTEM', 'GIT_NO_LAZY_FETCH', 'GIT_TERMINAL_PROMPT']);
+  });
+
+  it('an existing full clone with history, tags, stash and reflogs: the copy holds one commit and what its tree reaches', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' }, [{ 'b.c': 'y\n' }, { 'c.c': 'z\n' }]);
+    gitIn(up.dir, 'tag', '-a', 'old', '-m', 'old', up.commits[0]!);
+    const clone = fullClone(up.dir, URL_RR);
+    fs.writeFileSync(path.join(clone, 'a.c'), 'stashed\n');
+    gitIn(clone, 'stash', '-q');
+    const out = await run(clone, setup(consentAnswers(up.commits[2]!)));
+    const copy = copyOf(out)!;
+    const objects = gitIn(copy.dir, 'cat-file', '--batch-all-objects', '--batch-check=%(objecttype)').split('\n').sort();
+    expect(objects).toEqual(['blob', 'blob', 'blob', 'commit', 'tree']);
+    expect(gitIn(copy.dir, 'for-each-ref')).toBe('');
+    expect(fs.readFileSync(path.join(copy.gitDir, 'shallow'), 'utf8')).toBe(`${up.commits[2]}\n`);
+  });
+
+  it('a configuration and hooks of the operator\'s clone naming commands: the copy is made and none of them runs', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const marks = tempDir('syzygy-launch-marks-');
+    gitIn(clone, 'config', 'core.fsmonitor', `touch ${marks}/fsmonitor`);
+    gitIn(clone, 'config', 'uploadpack.packObjectsHook', `touch ${marks}/packobjects`);
+    for (const hook of ['post-checkout', 'pre-auto-gc', 'reference-transaction', 'post-index-change']) {
+      fs.writeFileSync(path.join(clone, '.git', 'hooks', hook), `#!/bin/sh\ntouch ${marks}/${hook}\n`, { mode: 0o755 });
+    }
+    expect((await run(clone, setup(consentAnswers(up.commits[0]!)))).kind).toBe('recorded');
+    expect(fs.readdirSync(marks)).toEqual([]);
+  });
+
+  it('a SHA-256 clone is copied as a SHA-256 repository', async () => {
+    const parent = tempDir('syzygy-launch-up256-'), dir = path.join(parent, 'up');
+    gitIn(parent, 'init', '-q', '--object-format=sha256', '-b', 'main', dir);
+    writeFiles(dir, { 'a.c': 'x\n' });
+    gitIn(dir, 'add', '-A');
+    gitIn(dir, 'commit', '-q', '-m', 'upstream');
+    const commit = gitIn(dir, 'rev-parse', 'HEAD');
+    const out = await run(fullClone(dir, URL_RR), setup(consentAnswers(commit)));
+    const copy = copyOf(out)!;
+    expect(gitIn(copy.dir, 'rev-parse', '--show-object-format')).toBe('sha256');
+    expect(gitIn(copy.dir, 'rev-parse', 'HEAD')).toBe(commit);
+  });
+
+  it('a repeat run at a launch-consented HEAD: a copy-class run that asks nothing', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const first = setup(consentAnswers(up.commits[0]!));
+    expect((await run(clone, first)).kind).toBe('recorded');
+    const second = setup([], { home: first.home });
+    const out = await run(clone, second);
+    expect(out).toMatchObject({ kind: 'covered', pin: { commit: up.commits[0] } });
+    expect(copyOf(out)).not.toBeNull();
+    expect(second.terminal.prompts).toEqual([]);
+  });
+
+  it('an annotated tag named by --revision: refused as not a commit, never followed, read by Syzygy not at all, and the copy removed', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    gitIn(up.dir, 'tag', '-a', 'v1', '-m', 'a tag message');
+    const clone = fullClone(up.dir, URL_RR);
+    const tag = gitIn(clone, 'rev-parse', 'v1');
+    const s = setup([], { request: { revision: 'v1' } });
+    const out = await run(clone, s);
+    expect(out).toEqual({ kind: 'refused', refusal: { stage: 'revision', missing: [], recorded: false,
+      reason: `--revision v1 names ${tag}, which is not a commit: the copy's detached checkout did not leave the copy's HEAD at it; Syzygy does not follow it`,
+      copy: { state: 'removed', location: expect.any(String) }, copyStatement: expect.stringMatching(/ was removed, its directory included\.$/) } });
+    if (out.kind === 'refused') expect(fs.existsSync(out.refusal.copy!.location)).toBe(false);
+    expect(s.reads.log.calls).toEqual([]);
+    expect(out.kind === 'refused' && out.refusal.reason.includes(up.commits[0]!)).toBe(false);   // the commit the tag names is never stated
+  });
+
+  it('a blob named by --revision: the checkout fails, refused as not shown to be a commit, never as not a commit; the copy removed', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const blob = gitIn(clone, 'rev-parse', 'HEAD:a.c');
+    const s = setup([], { request: { revision: blob } });
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'revision', copy: { state: 'removed' } } });
+    const reason = out.kind === 'refused' ? out.refusal.reason : '';
+    expect(reason.startsWith(`the copy's detached checkout of ${blob} (--revision ${blob}) failed (exit 128): `)).toBe(true);
+    expect(reason.endsWith('; the object was not shown to be a commit: it is either not a commit or a commit that could not be checked out')).toBe(true);
+    expect(s.reads.log.calls).toEqual([]);
+  });
+
+  it('a partial clone missing an object: the fetch fails, refused with Git\'s report, nothing fetched elsewhere, the copy removed', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    gitIn(up.dir, 'config', 'uploadpack.allowFilter', 'true');
+    const parent = tempDir('syzygy-launch-partial-'), clone = path.join(parent, 'clone');
+    gitIn(parent, 'clone', '-q', '--filter=blob:none', '--no-checkout', `file://${up.dir}`, clone);
+    gitIn(clone, 'remote', 'set-url', 'origin', URL_RR);
+    const git = capturingGit();
+    const out = await run(clone, setup([], { ports: { copyGit: git.run } }));
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'copy', copy: { state: 'removed' } } });
+    expect(out.kind === 'refused' && out.refusal.reason.startsWith('git fetch for the copy failed (exit 128): ')).toBe(true);
+    expect(git.calls.map(c => c.args[2] === '-C' ? c.args[4] : c.args[2])).toEqual(['init', 'fetch']);
+  });
+
+  it('a clone with an alternate: refused before the copy step starts, and no copy was made', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    fs.writeFileSync(path.join(clone, '.git', 'objects', 'info', 'alternates'), `${path.join(up.dir, '.git', 'objects')}\n`);
+    const s = setup([]);
+    expect(await run(clone, s)).toEqual({ kind: 'refused', refusal: { stage: 'clone', missing: [], recorded: false,
+      reason: 'the operator\'s clone has an objects/info/alternates file, and a copy-class run refuses a clone with an alternate before its copy step starts',
+      copy: null, copyStatement: 'No copy was made.' } });
+    expect(fs.existsSync(s.ports.copyRoot!)).toBe(false);
+    expect(s.reads.log.calls).toEqual([]);
+  });
+
+  it('a copy root inside the operator\'s clone, or the governance home\'s working tree or a linked worktree: refused before the copy step', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const home = makeHome();
+    const linked = path.join(tempDir('syzygy-launch-linked-'), 'wt');
+    gitIn(home, 'worktree', 'add', '-q', '--detach', linked);
+    for (const [root, what] of [[path.join(clone, 'state', 'copies'), 'the operator\'s clone\'s working tree'], [path.join(home, 'state', 'copies'), 'the governance home\'s working tree'],
+      [path.join(linked, 'copies'), 'a linked worktree of the governance home\'s repository']] as const) {
+      const s = setup([], { home, ports: { copyRoot: root } });
+      const out = await run(clone, s);
+      expect(out, what).toMatchObject({ kind: 'refused', refusal: { stage: 'copy', copy: null, copyStatement: 'No copy was made.' } });
+      expect(out.kind === 'refused' && out.refusal.reason.includes(`inside ${what}`), what).toBe(true);
+      expect(fs.existsSync(root), what).toBe(false);
+    }
+  });
+
+  it('a removal that fails: the copy is named as not removed, with its location and the failure, and kept', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const s = setup([], { isTTY: false, ports: { removeCopy: () => { throw Object.assign(new Error('fixture refusal'), { code: 'EACCES' }); } } });
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal', copy: { state: 'not-removed', failure: 'EACCES: fixture refusal' } } });
+    if (out.kind !== 'refused' || out.refusal.copy?.state !== 'not-removed') return;
+    expect(out.refusal.copyStatement).toBe(`The copy at ${out.refusal.copy.location} was not removed (EACCES: fixture refusal); it is kept until the operator removes it.`);
+    expect(fs.existsSync(out.refusal.copy.location)).toBe(true);
+  });
+});
+
+describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, removing it when the run ends before its brief', () => {
+  const CONFIG = JSON.stringify({
+    operator: 'Tzeusy', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic', model: 'claude-opus-5-5',
+    deadline: 'PT2H', agentTurnBudget: 200, maxRepairCycles: 2, maxQuestions: 3, audience: 'a new contributor', operatorIsOwner: true,
+  });
+  const initWith = (clone: string, answers: readonly (string | null)[], over: { sources?: ReturnType<typeof noOtherActs>; home?: string } = {}) => {
+    const s = setup(answers, over.home === undefined ? {} : { home: over.home });
+    const stateRoot = path.join(tempDir('syzygy-launch-init-'), 'runs');
+    const { sources: _sources, now: _now, openReader: _open, copyRoot: _root, ...launch } = s.ports;
+    return { s, stateRoot, result: initRun({ clone, configText: CONFIG, stateRoot }, { sources: over.sources ?? noOtherActs(), now: () => NOW, openReader: s.reads.open, launch }) };
+  };
+
+  it('a completed init keeps the copy outside the run directory, names it, and records it as the run\'s clone', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' }, [{ 'b.c': 'y\n' }]);
+    const clone = fullClone(up.dir, URL_RR);
+    gitIn(clone, 'checkout', '-q', '--detach', up.commits[0]!);
+    const r12 = up.commits[1]!.slice(0, 12);
+    const { s, stateRoot, result } = initWith(clone, ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`]);
+    const out = await result;
+    if (!out.ok) throw new Error(JSON.stringify(out.refusal));
+    const copyDir = out.report.subject.clone.path;
+    expect(path.dirname(copyDir)).toBe(path.join(fs.realpathSync(stateRoot), 'copies'));
+    expect(path.basename(copyDir)).toMatch(/^copy-[A-Za-z0-9]{6}$/);
+    expect(out.report.subject.pinnedRevision.commit).toBe(up.commits[1]);
+    expect(out.report.disclosures).toContain(`The copy of the pinned commit at ${copyDir} is the run's clone; it is kept after the run, outside the run's state directory, until the operator removes it.`);
+    expect(fs.existsSync(path.join(copyDir, 'b.c'))).toBe(true);
+    expect(s.reads.log.dirs.every(d => d === path.join(copyDir, '.git'))).toBe(true);
+  });
+
+  it('a refusal after the launch removes the copy and says so', async () => {
+    const up = makeUpstream({ 'openspec/x.md': '# x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const r12 = up.commits[0]!.slice(0, 12);
+    // A governed subject whose statement is declined: the launch records the observation consent, and init then refuses for the statement.
+    const { stateRoot, result } = initWith(clone, ['public', 'exists', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, '']);
+    const out = await result;
+    expect(out).toMatchObject({ ok: false, refusal: { stage: 'statement', copy: { state: 'removed' } } });
+    expect(fs.readdirSync(path.join(stateRoot, 'copies'))).toEqual([]);
   });
 });
 

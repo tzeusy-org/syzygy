@@ -62,6 +62,7 @@ const sources = (over: Partial<GateSources> = {}): GateSources => ({
   repositoryIdsFor: async () => ['redis-redis'],
   consentedRevisionsFor: async () => [{ label: '8.10.2', commitId: REV }],
   observationConsentFor: async (_id, revision) => (revision === REV ? { satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' } : { satisfied: false, why: 'not named' }),
+  observationConsentNaming: async revision => (revision === REV ? { satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' } : { satisfied: false, why: 'the consent does not name it' }),
   registryEntry: async () => OK,
   screeningPolicy: async () => OK,
   d9: async () => OK,

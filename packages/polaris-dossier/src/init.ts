@@ -11,7 +11,8 @@ import { parseRunConfig, type RunConfigRefusal } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { createRunDirectory, stateRootViolation, type RunPorts } from './state-directory.js';
 import { isoOf } from './iso-of.js';
-import { launchConsent, pinStatement, type LaunchOutcome, type LaunchPorts, type LaunchRefusal } from './launch.js';
+import { launchConsent, pinStatement, type LaunchCopy, type LaunchOutcome, type LaunchPorts, type LaunchRefusal } from './launch.js';
+import { copyEndStatement, copyKeptStatement, removeCopy, type CopyEnd } from './launch-copy.js';
 import { withLaunchRecords } from './launch-sources.js';
 
 /** `syzygy dossier init <clone> --url <url> --config <run.json> --state-root <dir>` (REQ-polaris-generation-033, 036).
@@ -39,6 +40,9 @@ export interface InitRefusal {
   readonly governed?: GovernedDecision;
   /** A launch refusal (REQ-polaris-generation-046, 047): what is missing and the command the operator runs next. */
   readonly launch?: LaunchRefusal;
+  /** In a copy-class launch whose copy step started: the copy removed, or kept where its removal failed (REQ-polaris-generation-047). */
+  readonly copy?: CopyEnd | null;
+  readonly copyStatement?: string;
   /** Whether any repository object was read before the refusal (the path listing, by object identifier). */
   readonly objectsRead: boolean;
   readonly disclosures: readonly string[];
@@ -78,8 +82,11 @@ export interface InitPorts extends RunPorts {
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
   /** The launch's ports (terminal, governance home, write consent). Absent, `init` takes the observation consent another act made only,
    * as before launch consent existed. */
-  readonly launch?: Omit<LaunchPorts, 'sources' | 'now' | 'openReader'>;
+  readonly launch?: Omit<LaunchPorts, 'sources' | 'now' | 'openReader' | 'copyRoot'>;
 }
+
+/** Where `init` has a copy-class run's copy made (REQ-polaris-generation-047): beside the run directories, outside every run's own. */
+export const COPY_DIRECTORY = 'copies';
 
 const DISCLOSURES = [
   RECORDS_WITHIN_REACH,
@@ -90,8 +97,13 @@ const DISCLOSURES = [
 
 export async function initRun(request: InitRequest, ports: InitPorts): Promise<InitResult> {
   let objectsRead = false;
-  const refuse = (stage: InitStage, reason: string, extra: Partial<InitRefusal> = {}): InitResult =>
-    ({ ok: false, refusal: { command: 'init', outcome: 'refused', stage, reason, ...extra, objectsRead, disclosures: DISCLOSURES } });
+  // A copy-class run's copy, once the launch made it: a refusal after the launch ends the run before its brief and removes it.
+  let copy: LaunchCopy | null = null;
+  const refuse = (stage: InitStage, reason: string, extra: Partial<InitRefusal> = {}): InitResult => {
+    if (copy === null) return { ok: false, refusal: { command: 'init', outcome: 'refused', stage, reason, ...extra, objectsRead, disclosures: DISCLOSURES } };
+    const end = removeCopy(copy.dir, ports.launch?.removeCopy);
+    return { ok: false, refusal: { command: 'init', outcome: 'refused', stage, reason, ...extra, copy: end, copyStatement: copyEndStatement(end), objectsRead, disclosures: DISCLOSURES } };
+  };
 
   if (request.url !== undefined) {
     const given = dossierRepositoryUrl(request.url);
@@ -127,13 +139,14 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
       ...(request.identity === undefined ? {} : { identity: request.identity }), ...(request.upstream === undefined ? {} : { upstream: request.upstream }),
       agentTool: config.config.agentTool, agentProvider: config.config.agentProvider, operator: config.config.operator,
       headConsentedElsewhere: false, command: request.command ?? 'syzygy dossier init <clone> --config <run.json> --state-root <dir>',
-    }, { ...ports.launch, sources, now: ports.now, ...(ports.openReader === undefined ? {} : { openReader: ports.openReader }) });
+    }, { ...ports.launch, sources, now: ports.now, copyRoot: path.join(request.stateRoot, COPY_DIRECTORY), ...(ports.openReader === undefined ? {} : { openReader: ports.openReader }) });
     if (outcome.kind === 'refused') {
       objectsRead = outcome.refusal.stage !== 'clone' && outcome.refusal.stage !== 'self-observation' && outcome.refusal.stage !== 'records' && outcome.refusal.stage !== 'revision' && outcome.refusal.stage !== 'head';
       return refuse('launch', outcome.refusal.reason, { launch: outcome.refusal });
     }
     if (outcome.kind !== 'head-consented') {
       launched = outcome;
+      copy = outcome.copy;
       const https = dossierRepositoryUrl(`https://${outcome.subject.url}`);
       if (!https.ok) return refuse('url', `the launch recorded ${outcome.subject.url}, but a run record carries a public https://github.com/<owner>/<repo> URL only: ${https.reason}`);
       urlText = https.url;
@@ -162,10 +175,12 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
     return refuse('start-gates', `a start gate is not in force: ${why.join('; ')}`, { startGates: { registryEntry, screeningPolicy } });
   }
 
-  const head = resolveCloneHead(request.clone);
+  // The run's clone: in a copy-class run the copy, which REQ-polaris-generation-033 to 036 then name; otherwise the operator's clone.
+  const runClone = copy === null ? request.clone : copy.dir;
+  const head = resolveCloneHead(runClone);
   if (!head.ok) return refuse('head', head.reason);
   let clonePath: string;
-  try { clonePath = fs.realpathSync(path.resolve(request.clone)); } catch (cause) {
+  try { clonePath = fs.realpathSync(path.resolve(runClone)); } catch (cause) {
     return refuse('head', `the clone's real path cannot be resolved (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})`);
   }
   const revisions = (await sources.consentedRevisionsFor(repositoryId)).map(r => ({ label: r.label, commit: r.commitId }));
@@ -175,7 +190,7 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
     return refuse('revision', `the clone's HEAD ${head.commit} (${head.via}) is not a revision the in-force observation consent for ${repositoryId} names${consent.satisfied ? '' : `: ${consent.why}`}`, { consentedRevisions: revisions });
   }
 
-  const gitDirShape = cloneGitDirShape(head.gitDir, head.commit);
+  const gitDirShape = cloneGitDirShape(head.gitDir, head.commit, { objectFormatSetting: copy !== null });
   if (!gitDirShape.ok) return refuse('clone-shape', gitDirShape.reason);
 
   let paths: readonly string[];
@@ -224,6 +239,7 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
       disclosures: [
         ...DISCLOSURES,
         ...(launched === null ? [] : launchDisclosures(launched)),
+        ...(copy === null ? [] : [copyKeptStatement(copy.dir)]),
         governed.kind === 'non-governed'
           ? 'the subject is non-governed, so no per-project statement is required; the agent sessions\' sends to their provider are the operator\'s own act'
           : `the subject is ${governed.kind}; the run relies on the per-project statement ${providerStatement}, a consent record and not an egress record; neither the content classes it names nor the screening policies bind what the agent reads or sends`,

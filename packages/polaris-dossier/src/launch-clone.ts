@@ -45,6 +45,9 @@ export interface CloneSnapshot {
   readonly objectFormat: string;
   /** Whether `objects/info/alternates` exists (read (4)); the file is never opened. */
   readonly alternates: boolean;
+  /** `core.bare` and `core.worktree` as the configuration writes them (read (3)), never honoured; null where unset. */
+  readonly bare: string | null;
+  readonly worktree: string | null;
 }
 
 export type CloneSnapshotRead = { readonly ok: true; readonly snapshot: CloneSnapshot } | { readonly ok: false; readonly reason: string; readonly reftable?: true };
@@ -100,15 +103,21 @@ export function parseRefValue(text: string): RefValue | null {
 export const validRefName = (name: string): boolean =>
   REF_NAME.test(name) && !name.split('/').some(part => part === '.' || part === '..' || part.endsWith('.lock'));
 
-export interface CloneConfig { readonly remotes: readonly CloneRemote[]; readonly objectFormat: string }
+export interface CloneConfig {
+  readonly remotes: readonly CloneRemote[];
+  readonly objectFormat: string;
+  /** `core.bare` and `core.worktree` as written (the last of each), to locate the repository's working trees; null where unset. */
+  readonly bare: string | null;
+  readonly worktree: string | null;
+}
 
 /** Read (3): each remote's url, and `extensions.objectFormat`, from the clone's `config`, as text. Section and key names are matched
  * without regard to case, as Git spells them; a subsection name (the remote's) is matched exactly. A line continued with a backslash,
  * or an include, is not followed (a remote is then read from what the file says on its own lines). No other key is used. */
 export function parseConfig(config: string): CloneConfig {
   const urls = new Map<string, string[]>();
-  let section: { readonly kind: 'remote'; readonly name: string } | { readonly kind: 'extensions' } | null = null;
-  let objectFormat: string | null = null;
+  let section: { readonly kind: 'remote'; readonly name: string } | { readonly kind: 'extensions' } | { readonly kind: 'core' } | null = null;
+  let objectFormat: string | null = null, bare: string | null = null, worktree: string | null = null;
   for (const raw of config.split('\n')) {
     const line = raw.trim();
     if (line.startsWith('[')) {
@@ -116,13 +125,19 @@ export function parseConfig(config: string): CloneConfig {
       if (remote !== null) {
         section = { kind: 'remote', name: remote[1]! };
         if (!urls.has(remote[1]!)) urls.set(remote[1]!, []);
-      } else section = /^\[extensions\]$/i.test(line) ? { kind: 'extensions' } : null;
+      } else section = /^\[extensions\]$/i.test(line) ? { kind: 'extensions' } : /^\[core\]$/i.test(line) ? { kind: 'core' } : null;
       continue;
     }
     if (section === null) continue;
     if (section.kind === 'remote') {
       const kv = /^url\s*=\s*(.*)$/i.exec(line);
       if (kv !== null) urls.get(section.name)!.push(kv[1]!.replace(/^"(.*)"$/, '$1').trim());
+    } else if (section.kind === 'core') {
+      const kv = /^(bare|worktree)\s*=\s*(.*)$/i.exec(line);
+      if (kv !== null) {
+        const value = kv[2]!.replace(/^"(.*)"$/, '$1').trim();
+        if (kv[1]!.toLowerCase() === 'bare') bare = value; else worktree = value;
+      }
     } else {
       const kv = /^objectformat\s*=\s*(.*)$/i.exec(line);
       if (kv !== null) objectFormat = kv[1]!.replace(/^"(.*)"$/, '$1').trim();
@@ -131,6 +146,8 @@ export function parseConfig(config: string): CloneConfig {
   return {
     remotes: [...urls].flatMap(([name, list]) => (list.length === 1 && list[0] !== '' ? [{ name, url: list[0]! }] : [])),
     objectFormat: objectFormat ?? 'sha1',
+    bare,
+    worktree,
   };
 }
 
@@ -252,13 +269,13 @@ export function readCloneSnapshot(clone: string, options: { readonly revision?: 
 
   const config = readBounded(path.join(gitDir, 'config'), MAX_FILE_BYTES);
   if (config !== null && 'reason' in config) return { ok: false, reason: config.reason };
-  const parsed = config === null ? { remotes: [], objectFormat: 'sha1' } : parseConfig(config.text);
+  const parsed: CloneConfig = config === null ? { remotes: [], objectFormat: 'sha1', bare: null, worktree: null } : parseConfig(config.text);
 
   let alternates = false;
   try { fs.lstatSync(path.join(gitDir, 'objects', 'info', 'alternates')); alternates = true; } catch (cause) {
     if (code(cause) !== 'ENOENT') return { ok: false, reason: `${path.join(gitDir, 'objects', 'info', 'alternates')} cannot be examined (${code(cause)})` };
   }
-  return { ok: true, snapshot: { gitDir, head, names, refs, remotes: parsed.remotes, objectFormat: parsed.objectFormat, alternates } };
+  return { ok: true, snapshot: { gitDir, head, names, refs, remotes: parsed.remotes, objectFormat: parsed.objectFormat, alternates, bare: parsed.bare, worktree: parsed.worktree } };
 }
 
 /** A reference resolved to an object identifier from the admitted values alone, following symbolic references at most `depth` times;
@@ -271,3 +288,30 @@ export function resolveRef(snapshot: CloneSnapshot, name: string, depth = 5): st
   }
   return null;
 }
+
+/** Read (1), "the files of its common Git directory that locate its linked worktrees": each `worktrees/<name>/gitdir` file of the common
+ * Git directory, which names the linked worktree's `.git` file; the worktree is that file's directory. Only those files are opened, each
+ * bounded and never through a link. Read only in a copy-class run, to keep the copy's directory out of every working tree. */
+export function linkedWorktrees(commonDir: string): { readonly ok: true; readonly dirs: readonly string[] } | { readonly ok: false; readonly reason: string } {
+  const root = path.join(commonDir, 'worktrees');
+  let names: string[];
+  try {
+    const stats = fs.lstatSync(root);
+    if (!stats.isDirectory()) return { ok: false, reason: `${root} is not a directory; it is refused, never followed` };
+    names = fs.readdirSync(root).sort();
+  } catch (cause) {
+    return code(cause) === 'ENOENT' ? { ok: true, dirs: [] } : { ok: false, reason: `${root} cannot be listed (${code(cause)})` };
+  }
+  if (names.length > MAX_REFS) return { ok: false, reason: `${root} holds more than ${MAX_REFS} entries` };
+  const dirs: string[] = [];
+  for (const name of names) {
+    const text = readBounded(path.join(root, name, 'gitdir'), MAX_REF_BYTES);
+    if (text === null) continue;
+    if ('reason' in text) return { ok: false, reason: text.reason };
+    const line = text.text.replace(/\r?\n$/, '');
+    if (line === '') continue;
+    dirs.push(path.dirname(path.resolve(path.join(root, name), line)));
+  }
+  return { ok: true, dirs };
+}
+

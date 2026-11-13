@@ -90,6 +90,7 @@ export function fixtureSources(commit: string): GateSources {
     repositoryIdsFor: async () => ['redis-redis'],
     consentedRevisionsFor: async () => [{ label: 'fixture', commitId: commit }],
     observationConsentFor: async (_id, revision) => (revision === commit ? { satisfied: true, record: 'PUBLIC-OBS-FIXTURE@1' } : { satisfied: false, why: 'the consent does not name it' }),
+    observationConsentNaming: async revision => (revision === commit ? { satisfied: true, record: 'PUBLIC-OBS-FIXTURE@1' } : { satisfied: false, why: 'the consent does not name it' }),
     registryEntry: async () => ok,
     screeningPolicy: async () => ok,
     d9: async () => ok,

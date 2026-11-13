@@ -4,21 +4,26 @@ import type { GateSources, ProviderStatementRecord } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, storedIdentifiers, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { governedSubject, type DrawerStatement } from './governed.js';
 import { isoOf } from './iso-of.js';
-import { readCloneSnapshot, resolveRef } from './launch-clone.js';
+import { cloneGitDirShape, cloneStoreShape } from './clone-shape.js';
+import { linkedWorktrees, readCloneSnapshot, resolveRef } from './launch-clone.js';
+import { copyEndStatement, copyRootViolation, gitReport, makeCopy, removeCopy, type CopyEnd, type CopyGitRun, type ForbiddenPlace } from './launch-copy.js';
 import { proposeIdentity, type IdentitySource, type MatchableRecord } from './launch-identity.js';
 import {
   DRAWER_QUESTION, PUBLIC_QUESTION, drawerPhrase, nameOnBranchWarning, observationPhrase, providerPhrase, questionOpening, statementText,
   type StatementOffer,
 } from './launch-question.js';
 import { recordIdFor, renderLaunchRecord, type LaunchRecord, type LaunchRecordClass, type PublicDeclaration } from './launch-record.js';
-import { checkoutCommand, defaultRemote, pinLaunchRevision, updateCommand } from './launch-revision.js';
+import { checkNoCopyPin, checkoutCommand, defaultRemote, nameLaunchRevision, updateCommand } from './launch-revision.js';
 import { LAUNCH_REF, homeGitDirs, readLaunchRecords, recordingSubject, writeLaunchRecords, type StoreRead, type StoredRecord, type WriteResult } from './launch-store.js';
 import type { WriteConsentState } from './launch-write-consent.js';
 
 /** Launch-time consent (REQ-polaris-generation-046) and the trunk-tip pin (047), in the order the clauses fix.
  *
  * Before asking, from the clone's references, the pinned commit object (its root tree, parents and committer date only) and the trees
- * under it, never a blob: the revision is pinned once, a HEAD elsewhere is refused with the checkout command, a clone that is the
+ * under it, never a blob: the identifier is named once and the run's class decided (047: a copy-class run unless an observation consent
+ * made by another act names it); a copy-class run makes its copy (launch-copy.ts), is shown its commit by the copy's checkout, checks the
+ * copy's form and reads every object from the copy, and a refusal removes the copy and says so; in a no-copy run a HEAD elsewhere is
+ * refused with the checkout command; a clone that is the
  * governance home's is refused with the separate-clone command, records that disagree on the identity are refused, and, where anything
  * must be asked, an absent write consent or a standard input that is not a terminal is refused, naming what is missing and the command
  * to run. Records already in force are used and named and nothing is asked. Otherwise the question is asked on the terminal, each record
@@ -56,6 +61,12 @@ export interface LaunchPorts {
   readonly readStore?: (home: string) => StoreRead;
   readonly writeStore?: typeof writeLaunchRecords;
   readonly openReader?: (options: PinnedObjectReaderOptions) => PinnedObjectReader;
+  /** Where a copy-class run's copy is made (047): `init` gives `<state root>/copies`. Absent, a copy-class run is refused before its copy
+   * step starts. */
+  readonly copyRoot?: string;
+  /** The Git processes for the copy and its removal; injected only by tests. */
+  readonly copyGit?: CopyGitRun;
+  readonly removeCopy?: (dir: string) => void;
 }
 
 export interface LaunchRequest {
@@ -72,7 +83,7 @@ export interface LaunchRequest {
   readonly command: string;
 }
 
-export type LaunchStage = 'clone' | 'self-observation' | 'revision' | 'head' | 'records' | 'listing' | 'identity' | 'policy' | 'write-consent' | 'terminal' | 'a1' | 'answer' | 'not-public' | 'write';
+export type LaunchStage = 'clone' | 'self-observation' | 'revision' | 'head' | 'copy' | 'records' | 'listing' | 'identity' | 'policy' | 'write-consent' | 'terminal' | 'a1' | 'answer' | 'not-public' | 'write';
 
 export interface LaunchRefusal {
   readonly stage: LaunchStage;
@@ -83,7 +94,15 @@ export interface LaunchRefusal {
   readonly command?: string;
   /** Whether a record was written (always false: a refusal before or at the answer writes nothing). */
   readonly recorded: false;
+  /** In a copy-class run: the copy removed, or kept where its removal failed; null where its copy step never started (047). Absent in a
+   * no-copy run and in a refusal made before the run's class was decided. */
+  readonly copy?: CopyEnd | null;
+  /** The launch output's statement of `copy`: removed, not removed (with its location and failure), or that no copy was made. */
+  readonly copyStatement?: string;
 }
+
+/** The run's class (047), decided at launch from the consents and the named identifier, and a copy-class run's copy. */
+export interface LaunchCopy { readonly dir: string; readonly gitDir: string }
 
 export interface LaunchPin {
   readonly commit: string;
@@ -103,9 +122,9 @@ export interface LaunchSubject {
 
 export type LaunchOutcome =
   | { readonly kind: 'head-consented'; readonly commit: string }
-  | { readonly kind: 'covered'; readonly subject: LaunchSubject; readonly pin: LaunchPin; readonly relied: readonly string[]; readonly output: string }
+  | { readonly kind: 'covered'; readonly subject: LaunchSubject; readonly pin: LaunchPin; readonly relied: readonly string[]; readonly output: string; readonly copy: LaunchCopy | null }
   | { readonly kind: 'recorded'; readonly subject: LaunchSubject; readonly pin: LaunchPin; readonly commit: string; readonly records: readonly string[]; readonly relied: readonly string[];
-      readonly statementDeclined: boolean; readonly output: string }
+      readonly statementDeclined: boolean; readonly output: string; readonly copy: LaunchCopy | null }
   | { readonly kind: 'refused'; readonly refusal: LaunchRefusal };
 
 const real = (p: string): string => { try { return fs.realpathSync(p); } catch { return path.resolve(p); } };
@@ -129,8 +148,13 @@ export function launchStatementRecord(r: StoredRecord): ProviderStatementRecord 
 
 export async function launchConsent(request: LaunchRequest, ports: LaunchPorts): Promise<LaunchOutcome> {
   const missing: string[] = [];
-  const refuse = (stage: LaunchStage, reason: string, command?: string): LaunchOutcome =>
-    ({ kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false } });
+  // The run's class, once decided, and its copy's directory once the copy step has started: a refusal then removes the copy and says so.
+  let copyClass: boolean | null = null, copyDir: string | null = null;
+  const refuse = (stage: LaunchStage, reason: string, command?: string): LaunchOutcome => {
+    if (copyClass !== true) return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false } };
+    const end = copyDir === null ? null : removeCopy(copyDir, ports.removeCopy);
+    return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false, copy: end, copyStatement: copyEndStatement(end) } };
+  };
 
   // The closed list of launch reads (047; registry entry v1.1, reads (1) to (4)); a reftable clone is refused here, before any Git process.
   const read = readCloneSnapshot(request.clone, request.revision === undefined ? {} : { revision: request.revision });
@@ -155,10 +179,60 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   const launchNamesHead = headOid !== null && store.records.some(r => r.record.recordClass === 'observation-consent' && r.state === 'active' && r.record.revision === headOid && Date.parse(r.record.grantInstant) <= now);
   // Read (5)'s width: the object format the configuration records, SHA-1 where it records none, never the length of HEAD's value.
   const algorithm = snapshot.objectFormat === 'sha256' ? 'sha256' : 'sha1';
-  const pinned = await pinLaunchRevision(
-    { clone, snapshot, ...(request.revision === undefined ? {} : { revision: request.revision }), headConsented: request.headConsentedElsewhere || launchNamesHead },
-    {
-      storedIds: async () => { try { return await storedIdentifiers(snapshot.gitDir, algorithm); } catch { return new Set(); } },
+  const storedIds = async () => { try { return await storedIdentifiers(snapshot.gitDir, algorithm); } catch { return new Set<string>(); } };
+  const named = await nameLaunchRevision(
+    { snapshot, ...(request.revision === undefined ? {} : { revision: request.revision }), headConsented: request.headConsentedElsewhere || launchNamesHead },
+    { storedIds },
+  );
+  if (!named.ok) return refuse(named.refusal.stage, named.refusal.reason, named.refusal.command);
+  if (named.named.kind === 'head-consented' && request.headConsentedElsewhere) return { kind: 'head-consented', commit: named.named.commit };
+  const commit = named.named.commit;
+
+  // The class (047): "SHALL run on a copy unless its named identifier is named by an in-force observation consent made by another act".
+  copyClass = !(await ports.sources.observationConsentNaming(commit)).satisfied;
+  let runGitDir = snapshot.gitDir, copy: LaunchCopy | null = null;
+  if (copyClass) {
+    if (snapshot.alternates) return refuse('clone', 'the operator\'s clone has an objects/info/alternates file, and a copy-class run refuses a clone with an alternate before its copy step starts');
+    if (ports.copyRoot === undefined) return refuse('copy', 'no location for the copy was given, so the copy step cannot start');
+    const homeWorktrees = linkedWorktrees(home.common), cloneWorktrees = linkedWorktrees(snapshot.gitDir);
+    if (!homeWorktrees.ok) return refuse('copy', `the governance home's linked worktrees cannot be located: ${homeWorktrees.reason}`);
+    if (!cloneWorktrees.ok) return refuse('copy', `the operator's clone's linked worktrees cannot be located: ${cloneWorktrees.reason}`);
+    const forbidden: ForbiddenPlace[] = [
+      { path: home.top, what: 'the governance home\'s working tree' }, { path: home.gitDir, what: 'the governance home\'s Git directory' },
+      { path: home.common, what: 'the governance home\'s common Git directory' },
+      ...homeWorktrees.dirs.map(d => ({ path: d, what: 'a linked worktree of the governance home\'s repository' })),
+      { path: clone, what: 'the operator\'s clone\'s working tree' }, { path: snapshot.gitDir, what: 'the operator\'s clone\'s Git directory' },
+      ...(snapshot.worktree === null ? [] : [{ path: path.resolve(snapshot.gitDir, snapshot.worktree), what: 'the working tree the operator\'s clone\'s core.worktree names' }]),
+      ...cloneWorktrees.dirs.map(d => ({ path: d, what: 'a linked worktree of the operator\'s clone\'s repository' })),
+    ];
+    const violation = copyRootViolation(ports.copyRoot, forbidden);
+    if (violation !== null) return refuse('copy', violation);
+    const made = makeCopy({ clone, named: commit, objectFormat: snapshot.objectFormat, copyRoot: ports.copyRoot }, ports.copyGit);
+    copyDir = made.dir;
+    if (!made.ok) {
+      const f = made.failure, given = request.revision === undefined ? '' : ` (--revision ${request.revision})`;
+      const via = named.named.kind === 'pinned' ? named.named.via : 'the clone\'s HEAD';
+      if (f.kind === 'directory') return refuse('copy', f.reason);
+      if (f.kind === 'process') return refuse('copy', `git ${f.process} for the copy failed (exit ${f.status}): ${gitReport(f.stderr)}`);
+      if (f.kind === 'checkout') {
+        return refuse('revision', `the copy's detached checkout of ${commit}${given} failed (exit ${f.status}): ${gitReport(f.stderr)}; the object was not shown to be a commit: it is either not a commit or a commit that could not be checked out`);
+      }
+      return refuse('revision', `${via} names ${commit}, which is not a commit: the copy's detached checkout did not leave the copy's HEAD at it; Syzygy does not follow it`);
+    }
+    const form = cloneGitDirShape(made.gitDir, commit, { objectFormatSetting: true });
+    if (!form.ok) return refuse('copy', `the copy departs from the form one commit fetched alone and checked out detached leaves: ${form.reason}`);
+    try {
+      const store = cloneStoreShape(made.gitDir, commit, await (ports.openReader ?? openPinnedObjectReader)({ gitDir: made.gitDir, revision: commit }).inventory());
+      if (!store.ok) return refuse('copy', `the copy departs from the form one commit fetched alone and checked out detached leaves: ${store.reason}`);
+    } catch (cause) {
+      if (cause instanceof GitObjectReadRefusal) return refuse('copy', `the copy's object store could not be checked: ${cause.message}`);
+      throw cause;
+    }
+    copy = { dir: made.dir, gitDir: made.gitDir };
+    runGitDir = made.gitDir;
+  } else {
+    // A no-copy run: the named identifier is read as a commit object, and the operator's HEAD must be it.
+    const checked = await checkNoCopyPin(clone, snapshot, named.named, {
       // The type from the header alone, so a tag or blob is never read past it (046's pre-answer reads); a commit is then re-hashed.
       isCommit: async oid => {
         try {
@@ -168,16 +242,15 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
           return true;
         } catch { return false; }
       },
-    },
-  );
-  if (!pinned.ok) return refuse(pinned.refusal.stage, pinned.refusal.reason, pinned.refusal.command);
-  if (pinned.pinned.kind === 'head-consented' && request.headConsentedElsewhere) return { kind: 'head-consented', commit: pinned.pinned.commit };
-  const commit = pinned.pinned.commit;
+    });
+    if (!checked.ok) return refuse(checked.refusal.stage, checked.refusal.reason, checked.refusal.command);
+  }
+  const pinned = named;
 
   // Pre-answer reads: the pinned commit's tree, parents and committer date, and the trees under it. No blob.
   let paths: readonly string[], parents: readonly string[], committerDate: string | null;
   try {
-    const reader = (ports.openReader ?? openPinnedObjectReader)({ gitDir: snapshot.gitDir, revision: commit });
+    const reader = (ports.openReader ?? openPinnedObjectReader)({ gitDir: runGitDir, revision: commit });
     const head = await reader.commitHead();
     parents = head.parents; committerDate = head.committerDate;
     paths = (await reader.listTree()).map(e => e.path);
@@ -199,8 +272,8 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   });
   if (!proposal.ok) return refuse('identity', proposal.reason);
   const identity = proposal.identity, bare = identity.slice('repository:'.length);
-  const via = pinned.pinned.kind === 'pinned' ? pinned.pinned.via : 'the clone\'s HEAD, which an in-force launch observation consent names';
-  const remoteName = pinned.pinned.kind === 'pinned' && pinned.pinned.remote !== null ? pinned.pinned.remote : (snapshot.remotes.length > 0 ? (snapshot.remotes.find(r => r.name === 'origin') ?? snapshot.remotes[0]!).name : null);
+  const via = pinned.named.kind === 'pinned' ? pinned.named.via : 'the clone\'s HEAD, which an in-force launch observation consent names';
+  const remoteName = pinned.named.kind === 'pinned' && pinned.named.remote !== null ? pinned.named.remote : (snapshot.remotes.length > 0 ? (snapshot.remotes.find(r => r.name === 'origin') ?? snapshot.remotes[0]!).name : null);
   const pin: LaunchPin = { commit, via, committerDate, fetched: false, updateCommand: updateCommand(clone, remoteName) };
 
   // What is already in force, by any act.
@@ -235,7 +308,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   // Records already in force: use them, name them, ask nothing (line 23).
   if (missing.length === 0) {
     const subject: LaunchSubject = { identity, identitySource: proposal.source, url: proposal.url, urlSource: proposal.urlSource, publicDeclaration: launchObs?.record.publicDeclaration ?? null };
-    return { kind: 'covered', subject, pin, relied, output: `${pinStatement(pin)}\nIn-force records the run rests on, nothing asked: ${relied.join('; ')}` };
+    return { kind: 'covered', subject, pin, relied, copy, output: `${pinStatement(pin)}\nIn-force records the run rests on, nothing asked: ${relied.join('; ')}` };
   }
 
   const writeConsent = await ports.writeConsent();
@@ -305,7 +378,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   }
   const subject: LaunchSubject = { identity, identitySource: proposal.source, url: proposal.url, urlSource: proposal.urlSource, publicDeclaration: declaration };
   if (accepted.length === 0) {
-    return { kind: 'recorded', subject, pin, commit: store.tip ?? '', records: [], relied, statementDeclined, output: `${pinStatement(pin)}\nNothing was recorded: the statement was declined.` };
+    return { kind: 'recorded', subject, pin, commit: store.tip ?? '', records: [], relied, statementDeclined, copy, output: `${pinStatement(pin)}\nNothing was recorded: the statement was declined.` };
   }
 
   const question = transcript.join('\n');
@@ -325,7 +398,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   });
   if (!written.ok) return refuse('write', `the records could not be committed: ${written.why}`);
   return {
-    kind: 'recorded', subject, pin, commit: written.commit, records: records.map(r => r.recordId), relied, statementDeclined,
+    kind: 'recorded', subject, pin, commit: written.commit, records: records.map(r => r.recordId), relied, statementDeclined, copy,
     output: `${pinStatement(pin)}\nRecorded ${records.map(r => r.recordId).join(', ')} in ${written.commit} on ${LAUNCH_REF}. Syzygy never pushes ${LAUNCH_REF}.`,
   };
 }

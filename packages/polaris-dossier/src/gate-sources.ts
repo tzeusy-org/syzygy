@@ -54,6 +54,10 @@ export interface GateSources {
   readonly consentAbsenceFor?: (url: string) => Promise<string>;
   readonly consentedRevisionsFor: (repositoryId: string) => Promise<readonly ConsentedRevision[]>;
   readonly observationConsentFor: (repositoryId: string, revision: string) => Promise<ConsentAnswer>;
+  /** Whether an in-force observation consent made by any act of these sources names `revision`, whatever its repository: the class rule of
+   * REQ-polaris-generation-047 ("unless its named identifier is named by an in-force observation consent made by another act"). It reads the
+   * same records as `observationConsentFor` and nothing else. */
+  readonly observationConsentNaming: (revision: string) => Promise<ConsentAnswer>;
   readonly registryEntry: () => Promise<GateState>;
   /** The classification and screening policy that covers public sources: one policy file carries both (the public-source scope of
    * `project:syzygy`'s secret-classification policy), under one act chain. */
@@ -505,6 +509,11 @@ export function createPackageGateSources(options: PackageGateSourceOptions): Gat
     consentedRevisionsFor: repositoryId => port.consentedRevisionsFor(repositoryId),
     observationConsentFor: async (repositoryId, revision) => {
       const answer = await port.check({ kind: 'observation-consent', repositoryId, revision });
+      return answer.satisfied ? { satisfied: true, record: answer.record } : { satisfied: false, why: answer.why };
+    },
+    observationConsentNaming: async revision => {
+      if (port.observationConsentNaming === undefined) return { satisfied: false, why: 'the admission records port cannot answer by revision alone' };
+      const answer = await port.observationConsentNaming(revision);
       return answer.satisfied ? { satisfied: true, record: answer.record } : { satisfied: false, why: answer.why };
     },
     registryEntry: async () => {
