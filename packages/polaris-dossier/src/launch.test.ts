@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import * as zlib from 'node:zlib';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
-import { patchFs } from './fs-patch.testkit.js';
+import { installReadLog, sealExcept } from './fs-patch.testkit.js';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { initRun } from './init.js';
 import type { CopyGitRun } from './launch-copy.js';
@@ -351,20 +351,27 @@ describe('REQ-polaris-generation-047 against real clones', () => {
   });
 });
 
-describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone are the closed list (registry entry v1.1, item 1b)', () => {
-  /** Every file under the clone's `.git` that the launch opened synchronously (the closed list's file-data reads), sorted; the object reads,
-   * which go through the re-hashing reader, are captured by `s.reads` instead. */
-  async function opened(clone: string, act: () => Promise<unknown>): Promise<readonly string[]> {
-    const gitDir = path.join(clone, '.git'), seen: string[] = [];
-    const restore = patchFs('openSync', openSync => ((target: fs.PathLike, ...rest: unknown[]) => {
-      const rel = path.relative(gitDir, path.resolve(String(target)));
-      if (!rel.startsWith('..')) seen.push(rel.split(path.sep).join('/'));
-      return (openSync as (...args: unknown[]) => number)(target, ...rest);
-    }) as typeof fs.openSync);
-    try { await act(); } finally { restore(); }
-    return [...new Set(seen)].sort();
-  }
+/** The launch's in-process reads of the operator's clone, by the API-independent oracle (R-PDJA-33-SLICE-A-1 finding 1): every file
+ * of the clone's `.git` but `readable` is sealed (mode 000) until the copy step's first Git process, which unseals them, since Git, not
+ * Syzygy, then reads the clone; and every content read and path examination under `.git`, by any `node:fs` or `node:fs/promises` entry
+ * point, is logged for the whole run. The object reads of the copy go through the re-hashing reader and are captured by `s.reads`. */
+async function sealedReads<T extends ReturnType<typeof setup>>(clone: string, readable: readonly string[], make: (copyGit: CopyGitRun) => T, inner?: CopyGitRun): Promise<{ readonly opened: readonly string[]; readonly examined: readonly string[]; readonly out: LaunchOutcome; readonly s: T; readonly sealed: readonly string[] }> {
+  const gitDir = path.join(clone, '.git');
+  const seal = sealExcept(gitDir, readable);
+  let unsealed = false;
+  const s = make((args, o) => {
+    if (!unsealed) { seal.unseal(); unsealed = true; }
+    if (inner !== undefined) return inner(args, o);
+    const r = spawnSync('git', args, { cwd: o.cwd, env: o.env, encoding: 'utf8' });
+    return { status: r.status ?? -1, stderr: r.stderr ?? '' };
+  });
+  const { log, restore } = installReadLog(gitDir);
+  let out: LaunchOutcome;
+  try { out = await run(clone, s); } finally { restore(); if (!unsealed) seal.unseal(); }
+  return { opened: [...new Set(log.opened)].sort(), examined: [...new Set(log.examined)].sort(), out, s, sealed: seal.sealed };
+}
 
+describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone are the closed list (registry entry v1.1, item 1b)', () => {
   it('a full clone with history, branches, tags, stash and a second remote: the values of the listed references alone', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' }, [{ 'b.c': 'y\n' }]);
     gitIn(up.dir, 'tag', 'v1', up.commits[0]!);
@@ -376,9 +383,12 @@ describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone 
     fs.writeFileSync(path.join(clone, 'a.c'), 'changed\n');
     gitIn(clone, 'stash', '-q');
     const before = listing(clone);
-    const s = setup([], { isTTY: false });
-    const files = await opened(clone, () => run(clone, s));
-    expect(files).toEqual(['HEAD', 'config', 'packed-refs', 'refs/heads/main', 'refs/remotes/origin/HEAD']);
+    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/main', 'refs/remotes/origin/HEAD'];
+    const r = await sealedReads(clone, expected, copyGit => setup([], { isTTY: false, ports: { copyGit } }));
+    expect(r.out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal', copy: { state: 'removed' } } });
+    expect(r.opened).toEqual(expected);
+    // The sealed population is what makes the second half bite: the unlisted loose references, the stash, and every object file.
+    expect(r.sealed).toEqual(expect.arrayContaining(['refs/heads/topic', 'refs/stash', 'refs/remotes/mirror/main', 'logs/HEAD']));
     expect(listing(clone)).toEqual(before);
   });
 
@@ -386,10 +396,14 @@ describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone 
     const up = makeUpstream({ 'a.c': 'x\n' });
     const clone = fullClone(up.dir, URL_RR);
     gitIn(clone, 'tag', 'pin', up.commits[0]!);
-    expect(await opened(clone, () => run(clone, setup([], { isTTY: false, request: { revision: 'pin' } }))))
-      .toEqual(['HEAD', 'config', 'packed-refs', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/tags/pin']);
-    expect(await opened(clone, () => run(clone, setup([], { isTTY: false, request: { revision: up.commits[0]! } }))))
-      .toEqual(['HEAD', 'config', 'packed-refs', 'refs/heads/main', 'refs/remotes/origin/HEAD']);
+    const pinned = ['HEAD', 'config', 'packed-refs', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/tags/pin'];
+    const byRef = await sealedReads(clone, pinned, copyGit => setup([], { isTTY: false, request: { revision: 'pin' }, ports: { copyGit } }));
+    expect(byRef.out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal' } });
+    expect(byRef.opened).toEqual(pinned);
+    const full = ['HEAD', 'config', 'packed-refs', 'refs/heads/main', 'refs/remotes/origin/HEAD'];
+    const byId = await sealedReads(clone, full, copyGit => setup([], { isTTY: false, request: { revision: up.commits[0]! }, ports: { copyGit } }));
+    expect(byId.out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal' } });
+    expect(byId.opened).toEqual(full);
   });
 
   it('references in the reftable backend: refused before any Git process starts and before any object is read', async () => {
@@ -460,9 +474,14 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     fs.writeFileSync(path.join(clone, 'a.c'), 'uncommitted\n');
     const before = listing(clone);
     const git = capturingGit();
-    const s = setup(consentAnswers(up.commits[1]!), { ports: { copyGit: git.run } });
-    const out = await run(clone, s);
+    // The same API-independent oracle as the closed list's: only the listed files are readable before the copy step, and every
+    // in-process read of the clone's .git is logged, for the whole run.
+    const listed = ['HEAD', 'config', 'packed-refs', 'refs/heads/main', 'refs/heads/topic', 'refs/remotes/origin/HEAD'];
+    const r = await sealedReads(clone, listed, copyGit => setup(consentAnswers(up.commits[1]!), { ports: { copyGit } }), git.run);
+    const { out, s } = r;
     expect(out).toMatchObject({ kind: 'recorded', pin: { commit: up.commits[1] } });
+    expect(r.opened).toEqual(listed);
+    expect(r.examined.some(p => p.startsWith('objects/') && p !== 'objects/info/alternates')).toBe(false);
     const copy = copyOf(out)!;
     expect(fs.readFileSync(path.join(copy.gitDir, 'HEAD'), 'utf8')).toBe(`${up.commits[1]}\n`);
     expect(fs.readFileSync(path.join(copy.dir, 'a.c'), 'utf8')).toBe('x\n');

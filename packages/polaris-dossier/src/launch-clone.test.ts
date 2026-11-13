@@ -2,12 +2,15 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { tempDir } from '@syzygy/test-kit';
 import { describe, expect, it } from 'vitest';
-import { patchFs } from './fs-patch.testkit.js';
+import { installReadLog, sealExcept } from './fs-patch.testkit.js';
 import { parseConfig, readCloneSnapshot, type CloneSnapshotRead } from './launch-clone.js';
 
 /** REQ-polaris-generation-047's closed list of launch reads (registry entry v1.1, reads (1) to (4)), against `.git` layouts written by
- * hand here, outside the code under test. Which files the reader opens is captured by a read-logging layer over `node:fs`'s `openSync`
- * (fs-patch.testkit.ts), outside the code under test; every expected open, name, value and refusal is a literal written from the clause. */
+ * hand here, outside the code under test. The oracle has two halves, neither depending on which API the reader uses
+ * (R-PDJA-33-SLICE-A-1 finding 1): a read-logging layer over every content-read and path-examining entry point of `node:fs` and
+ * `node:fs/promises` (`installReadLog`, fs-patch.testkit.ts), and fixtures whose files outside the expected reads are mode 000
+ * (`sealExcept`), so that any read of one fails whatever makes it. Every expected open, name, value and refusal is a literal written from
+ * the clause. */
 
 const A = 'a'.repeat(40), B = 'b'.repeat(40), C = 'c'.repeat(40), D = 'd'.repeat(40), E = 'e'.repeat(40), F = 'f'.repeat(40);
 
@@ -22,17 +25,15 @@ function layout(files: Readonly<Record<string, string>>): string {
   return clone;
 }
 
-/** The snapshot and every file under the clone's `.git` the reader opened, relative, in sorted order. */
-function logged(clone: string, revision?: string): { readonly read: CloneSnapshotRead; readonly opened: readonly string[] } {
+/** The snapshot, every file under the clone's `.git` whose content the reader asked for (by any API), relative, distinct and sorted,
+ * and every path it examined without reading. With `sealed`, every file under `.git` but those named is first made unreadable. */
+function logged(clone: string, revision?: string, sealed?: readonly string[]): { readonly read: CloneSnapshotRead; readonly opened: readonly string[]; readonly examined: readonly string[] } {
   const gitDir = path.join(clone, '.git');
-  const opened: string[] = [];
-  const restore = patchFs('openSync', openSync => ((target: fs.PathLike, ...rest: unknown[]) => {
-    const rel = path.relative(gitDir, path.resolve(String(target)));
-    if (!rel.startsWith('..')) opened.push(rel.split(path.sep).join('/'));
-    return (openSync as (...args: unknown[]) => number)(target, ...rest);
-  }) as typeof fs.openSync);
+  if (sealed !== undefined) sealExcept(gitDir, sealed);
+  const { log, restore } = installReadLog(gitDir);
   try {
-    return { read: readCloneSnapshot(clone, revision === undefined ? {} : { revision }), opened: opened.sort() };
+    const read = readCloneSnapshot(clone, revision === undefined ? {} : { revision });
+    return { read, opened: [...new Set(log.opened)].sort(), examined: [...new Set(log.examined)].sort() };
   } finally {
     restore();
   }
@@ -58,8 +59,9 @@ const FULL_NAMES = ['refs/heads/feature', 'refs/heads/main', 'refs/heads/other',
 
 describe('REQ-polaris-generation-047: Syzygy\'s own reads of the operator\'s clone are the closed list', () => {
   it('a full clone: every name, and the values of HEAD\'s reference, the remote HEADs, the default and its local branch alone', () => {
-    const { read, opened } = logged(layout(FULL));
-    expect(opened).toEqual(['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD']);
+    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD'];
+    const { read, opened } = logged(layout(FULL), undefined, expected);
+    expect(opened).toEqual(expected);
     if (!read.ok) throw new Error(read.reason);
     expect([...read.snapshot.names].sort()).toEqual(FULL_NAMES);
     expect(Object.fromEntries([...read.snapshot.refs].sort(([a], [b]) => a.localeCompare(b)))).toEqual({
@@ -75,13 +77,17 @@ describe('REQ-polaris-generation-047: Syzygy\'s own reads of the operator\'s clo
   });
 
   it('the reference --revision names is read too, and no other', () => {
-    const { read, opened } = logged(layout(FULL), 'v1');
-    expect(opened).toEqual(['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD', 'refs/tags/v1']);
+    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD', 'refs/tags/v1'];
+    const { read, opened } = logged(layout(FULL), 'v1', expected);
+    expect(opened).toEqual(expected);
     expect(read.ok && read.snapshot.refs.get('refs/tags/v1')).toEqual({ kind: 'oid', oid: D });
   });
 
   it('a hexadecimal --revision names no reference, so it opens nothing more', () => {
-    expect(logged(layout(FULL), D).opened).toEqual(['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD']);
+    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD'];
+    const { read, opened } = logged(layout(FULL), D, expected);
+    expect(read.ok).toBe(true);
+    expect(opened).toEqual(expected);
   });
 
   it('with no remote default, main and master are read; with one, neither is consulted', () => {
@@ -125,9 +131,10 @@ describe('REQ-polaris-generation-047: Syzygy\'s own reads of the operator\'s clo
   });
 
   it('tells whether objects/info/alternates exists without opening it', () => {
-    const { read, opened } = logged(layout({ HEAD: `${A}\n`, 'objects/info/alternates': '/elsewhere/objects\n' }));
+    const { read, opened, examined } = logged(layout({ HEAD: `${A}\n`, 'objects/info/alternates': '/elsewhere/objects\n' }), undefined, ['HEAD']);
     expect(read.ok && read.snapshot.alternates).toBe(true);
     expect(opened).toEqual(['HEAD']);
+    expect(examined.includes('objects/info/alternates')).toBe(true);
   });
 
   it('refuses an admitted reference that is a symbolic link, never following it', () => {
@@ -149,5 +156,44 @@ describe('read (3): the configuration, as text, for remotes and the object forma
   it('a remote\'s url, with the subsection name matched exactly; a remote with two urls is left out', () => {
     expect(parseConfig('[remote "origin"]\n\turl = https://h/a/b\n[remote "two"]\n\turl = x\n\turl = y\n[REMOTE "Up"]\n\tURL = ssh://h/c/d\n').remotes)
       .toEqual([{ name: 'origin', url: 'https://h/a/b' }, { name: 'Up', url: 'ssh://h/c/d' }]);
+  });
+});
+
+describe('the read oracle is independent of the API the reader uses (R-PDJA-33-SLICE-A-1 finding 1)', () => {
+  it('logs a content read through every entry point, the utf8 fast path and the promise API included', async () => {
+    const dir = tempDir('syzygy-read-log-');
+    for (const name of ['a', 'b', 'c', 'd', 'e', 'f', 'g']) fs.writeFileSync(path.join(dir, name), 'x\n');
+    const { log, restore } = installReadLog(dir);
+    try {
+      fs.readFileSync(path.join(dir, 'a'), 'utf8');
+      fs.readFileSync(path.join(dir, 'b'));
+      fs.closeSync(fs.openSync(path.join(dir, 'c'), 'r'));
+      await fs.promises.readFile(path.join(dir, 'd'), 'utf8');
+      await (await fs.promises.open(path.join(dir, 'e'), 'r')).close();
+      await new Promise<void>((resolve, reject) => fs.createReadStream(path.join(dir, 'f')).on('close', resolve).on('error', reject).resume());
+      await new Promise<void>((resolve, reject) => fs.readFile(path.join(dir, 'g'), 'utf8', e => (e ? reject(e) : resolve())));
+      fs.lstatSync(path.join(dir, 'a'));
+      fs.existsSync(path.join(dir, 'b'));
+    } finally {
+      restore();
+    }
+    expect([...new Set(log.opened)].sort()).toEqual(['a', 'b', 'c', 'd', 'e', 'f', 'g']);
+    expect(log.examined).toEqual(['a', 'b']);
+  });
+
+  it('a sealed fixture makes every read of an unlisted file fail, whatever API makes it', () => {
+    const clone = layout(FULL);
+    sealExcept(path.join(clone, '.git'), ['HEAD']);
+    expect(() => fs.readFileSync(path.join(clone, '.git', 'refs', 'stash'), 'utf8')).toThrow(/EACCES/);
+    expect(fs.readFileSync(path.join(clone, '.git', 'HEAD'), 'utf8')).toBe('ref: refs/heads/feature\n');
+  });
+
+  it('the unlisted loose references and the alternates file of a sealed full clone are never read', () => {
+    const clone = layout({ ...FULL, 'objects/info/alternates': '/elsewhere/objects\n' });
+    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD'];
+    const { read, opened } = logged(clone, undefined, expected);
+    if (!read.ok) throw new Error(read.reason);
+    expect(read.snapshot.alternates).toBe(true);
+    expect(opened).toEqual(expected);
   });
 });
