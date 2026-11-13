@@ -983,6 +983,12 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     const out = await result;
     if (!out.ok) throw new Error(JSON.stringify(out.refusal));
     expect(out.report.subject.repository).toEqual({ url: 'git.example.org/team/sub/tool', repositoryId: 'sub-tool' });
+    // The run record's launch disclosure of a run that recorded its consents at launch (046, line 37).
+    const disclosure = JSON.parse(fs.readFileSync(path.join(out.report.run, 'launch.json'), 'utf8')) as { consents: { recorded: string[]; commit: string | null }; subject: Record<string, unknown> };
+    expect(disclosure.subject).toEqual({ identity: 'repository:sub-tool', url: 'git.example.org/team/sub/tool', source: 'the clone\'s remote origin', proposedBy: 'derived', publicDeclaration: 'public' });
+    expect(disclosure.consents.recorded.map(id => id.replace(/[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}$/, '…'))).toEqual(['LAUNCH-OBSERVATION-…', 'LAUNCH-DRAWER-…']);
+    expect(disclosure.consents.commit).toMatch(/^[0-9a-f]{40}$/);
+    expect(out.report.disclosures).toContain('The operator\'s declaration whether the repository is public: public [Inferred].');
   });
 
   it('a SHA-256 copy passes init\'s form check with the object-format setting its initialisation wrote', async () => {

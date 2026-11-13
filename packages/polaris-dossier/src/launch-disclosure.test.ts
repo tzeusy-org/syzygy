@@ -104,9 +104,9 @@ describe('the launch disclosure in human form', () => {
     expect(texts.slice(-2)).toEqual(['No drawer statement was relied on.', 'No question was asked, so no one answered it.']);
   });
 
-  it('the public declaration: as given, none where the operator gave none, the records\' where the launch relied on them', () => {
+  it('the public declaration: as given or recorded, none where the operator gave none or no launch observation consent records one', () => {
     expect([publicDeclarationOf('public'), publicDeclarationOf('not-public'), publicDeclarationOf('not-given'), publicDeclarationOf(null)])
-      .toEqual(['public', 'not-public', null, 'as the launch consent records already in force state it']);
+      .toEqual(['public', 'not-public', null, null]);
   });
 
   it('a statement\'s page id carries its stage, its class and whether it was reached', () => {

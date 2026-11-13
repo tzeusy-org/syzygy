@@ -105,11 +105,10 @@ export function readLaunchDisclosure(runDir: string): LaunchDisclosureRead {
   return { state: 'ok', disclosure: v as unknown as LaunchDisclosure };
 }
 
-/** The run record's form of the operator's public declaration: none made where the operator gave none; the records' own where the launch
- * asked nothing and relied on launch consent records already in force. */
+/** The run record's form of the operator's public declaration: as given, or as the launch observation consent relied on records it; none
+ * made where the operator gave none, or where the launch asked nothing and relies on no launch observation consent. */
 export function publicDeclarationOf(declaration: 'public' | 'not-public' | 'not-given' | null): string | null {
-  if (declaration === null) return 'as the launch consent records already in force state it';
-  return declaration === 'not-given' ? null : declaration;
+  return declaration === 'not-given' || declaration === null ? null : declaration;
 }
 
 /** A statement's id on a page, carrying its machine form: the stage it needs, the run class that requires it, and whether it was reached. */
