@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
-import { launchDisclosureItems, launchDisclosureUnknown, readLaunchDisclosure, statementItemId, type LaunchDisclosure } from './launch-disclosure.js';
+import { launchDisclosureItems, launchDisclosureUnknown, publicDeclarationOf, readLaunchDisclosure, statementItemId, type LaunchDisclosure } from './launch-disclosure.js';
 
 /** The run record's launch disclosure (REQ-polaris-generation-046, line 37): read back fail-closed, and its human form, item by item. Every
  * expected value is a literal. */
@@ -102,6 +102,11 @@ describe('the launch disclosure in human form', () => {
     expect(texts[0]).toBe(`No consent was recorded at launch: the run rests on launch consent records already in force: launch observation consent LAUNCH-OBSERVATION-x (${C}).`);
     expect(texts[2]).toBe('The operator made no declaration whether the repository is public [Inferred].');
     expect(texts.slice(-2)).toEqual(['No drawer statement was relied on.', 'No question was asked, so no one answered it.']);
+  });
+
+  it('the public declaration: as given, none where the operator gave none, the records\' where the launch relied on them', () => {
+    expect([publicDeclarationOf('public'), publicDeclarationOf('not-public'), publicDeclarationOf('not-given'), publicDeclarationOf(null)])
+      .toEqual(['public', 'not-public', null, 'as the launch consent records already in force state it']);
   });
 
   it('a statement\'s page id carries its stage, its class and whether it was reached', () => {

@@ -105,6 +105,13 @@ export function readLaunchDisclosure(runDir: string): LaunchDisclosureRead {
   return { state: 'ok', disclosure: v as unknown as LaunchDisclosure };
 }
 
+/** The run record's form of the operator's public declaration: none made where the operator gave none; the records' own where the launch
+ * asked nothing and relied on launch consent records already in force. */
+export function publicDeclarationOf(declaration: 'public' | 'not-public' | 'not-given' | null): string | null {
+  if (declaration === null) return 'as the launch consent records already in force state it';
+  return declaration === 'not-given' ? null : declaration;
+}
+
 /** A statement's id on a page, carrying its machine form: the stage it needs, the run class that requires it, and whether it was reached. */
 export const statementItemId = (s: LaunchStatement): string =>
   `launch/${(s.stage ?? 'no-stage').replace(/ /g, '-')}/${s.runClass ?? 'class-undecided'}/${s.reached ? 'reached' : 'not-reached'}/${s.id}`;

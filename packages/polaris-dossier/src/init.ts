@@ -13,7 +13,7 @@ import { createRunDirectory, stateRootViolation, type RunPorts } from './state-d
 import { isoOf } from './iso-of.js';
 import { failureText, launchConsent, type LaunchCopy, type LaunchOutcome, type LaunchPorts, type LaunchRefusal } from './launch.js';
 import { copyEndStatement, removeCopy, type CopyEnd } from './launch-copy.js';
-import { LAUNCH_DISCLOSURE_FORMAT, launchDisclosureItems, type LaunchDisclosure } from './launch-disclosure.js';
+import { LAUNCH_DISCLOSURE_FORMAT, launchDisclosureItems, publicDeclarationOf, type LaunchDisclosure } from './launch-disclosure.js';
 import { stageStatements } from './launch-statements.js';
 import { withLaunchRecords } from './launch-sources.js';
 
@@ -298,13 +298,12 @@ function launchDisclosure(
     });
   }
   const recorded = l.kind === 'recorded' ? l.records : [];
-  const declaration = l.subject.publicDeclaration;
   return disclosure({
     runClass: l.copy === null ? 'no-copy' : 'copy-class', launched: true, copy: l.copy === null ? null : l.copy.dir,
     consents: { recorded, commit: recorded.length > 0 && l.kind === 'recorded' ? l.commit : null, relied: l.relied },
     subject: {
       identity: l.subject.identity, url: l.subject.url, source: l.subject.urlSource, proposedBy: l.subject.identitySource,
-      publicDeclaration: declaration === null ? 'as the launch consent records already in force state it' : declaration === 'not-given' ? null : declaration,
+      publicDeclaration: publicDeclarationOf(l.subject.publicDeclaration),
     },
     statements: l.statements,
   });
