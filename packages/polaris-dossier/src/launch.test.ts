@@ -852,8 +852,8 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     operator: 'Tzeusy', agentTool: 'claude-code', agentToolVersion: '2.1.0', agentProvider: 'anthropic', model: 'claude-opus-5-5',
     deadline: 'PT2H', agentTurnBudget: 200, maxRepairCycles: 2, maxQuestions: 3, audience: 'a new contributor', operatorIsOwner: true,
   });
-  const initWith = (clone: string, answers: readonly (string | null)[], over: { sources?: ReturnType<typeof noOtherActs>; home?: string } = {}) => {
-    const s = setup(answers, over.home === undefined ? {} : { home: over.home });
+  const initWith = (clone: string, answers: readonly (string | null)[], over: { sources?: ReturnType<typeof noOtherActs>; home?: string; ports?: Partial<LaunchPorts>; isTTY?: boolean } = {}) => {
+    const s = setup(answers, { ...(over.home === undefined ? {} : { home: over.home }), ...(over.ports === undefined ? {} : { ports: over.ports }), ...(over.isTTY === undefined ? {} : { isTTY: over.isTTY }) });
     const stateRoot = path.join(tempDir('syzygy-launch-init-'), 'runs');
     const { sources: _sources, now: _now, openReader: _open, copyRoot: _root, ...launch } = s.ports;
     return { s, stateRoot, result: initRun({ clone, configText: CONFIG, stateRoot }, { sources: over.sources ?? noOtherActs(), now: () => NOW, openReader: s.reads.open, launch }) };
@@ -943,6 +943,15 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     expect(out).toMatchObject({ ok: false, refusal: { stage: 'failure', reason: 'init failed after the launch made the copy: Error: fixture records failure',
       copy: { state: 'removed' }, copyStatement: expect.stringMatching(/^The copy at \S+\/copies\/copy-[A-Za-z0-9]{6} was removed, its directory included\.$/) } });
     expect(fs.readdirSync(path.join(stateRoot, 'copies'))).toEqual([]);
+  });
+
+  it('objectsRead is decided from the reads: a copy-stage refusal reads none, a refusal after the pre-answer reads read some (R-PDJA-33-SLICE-B-1 finding 6)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const failingInit: CopyGitRun = () => ({ status: 128, stderr: 'fatal: fixture init failure' });
+    const atCopy = await initWith(fullClone(up.dir, URL_RR), [], { ports: { copyGit: failingInit } }).result;
+    expect(atCopy).toMatchObject({ ok: false, refusal: { stage: 'launch', launch: { stage: 'copy', reason: 'git init for the copy failed (exit 128): fatal: fixture init failure' }, objectsRead: false } });
+    const atTerminal = await initWith(fullClone(up.dir, URL_RR), [], { isTTY: false }).result;
+    expect(atTerminal).toMatchObject({ ok: false, refusal: { stage: 'launch', launch: { stage: 'terminal' }, objectsRead: true } });
   });
 
   it('a refusal after the launch removes the copy and says so', async () => {

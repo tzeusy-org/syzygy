@@ -105,6 +105,18 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
     return { ok: false, refusal: { command: 'init', outcome: 'refused', stage, reason, ...extra, copy: end, copyStatement: copyEndStatement(end), objectsRead, disclosures: DISCLOSURES } };
   };
 
+  // Whether any object was read, decided from the reads themselves (R-PDJA-33-SLICE-B-1 finding 6): the launch's object reads go through
+  // this reader, which marks the first call of any of its methods, so a refusal before any (a copy-stage one included) reports false.
+  const trackedReader = (options: PinnedObjectReaderOptions): PinnedObjectReader => {
+    const reader = (ports.openReader ?? openPinnedObjectReader)(options);
+    const marked = <A extends unknown[], R>(f: (...args: A) => R) => (...args: A): R => { objectsRead = true; return f(...args); };
+    return {
+      revision: reader.revision, algorithm: reader.algorithm,
+      tree: marked(reader.tree), readBlobs: marked(reader.readBlobs), listTree: marked(reader.listTree), inventory: marked(reader.inventory),
+      commitHead: marked(reader.commitHead), storedType: marked(reader.storedType),
+    };
+  };
+
   // A thrown error after the launch made a copy ends the run before its brief: the copy is removed and the refusal says so
   // (R-PDJA-33-SLICE-B-1 finding 2).
   try {
@@ -151,9 +163,8 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
         ...(request.identity === undefined ? {} : { identity: request.identity }), ...(request.upstream === undefined ? {} : { upstream: request.upstream }),
         agentTool: config.config.agentTool, agentProvider: config.config.agentProvider, operator: config.config.operator,
         headConsentedElsewhere: false, command: request.command ?? 'syzygy dossier init <clone> --config <run.json> --state-root <dir>',
-      }, { ...ports.launch, sources, now: ports.now, copyRoot: path.join(request.stateRoot, COPY_DIRECTORY), ...(ports.openReader === undefined ? {} : { openReader: ports.openReader }) });
+      }, { ...ports.launch, sources, now: ports.now, copyRoot: path.join(request.stateRoot, COPY_DIRECTORY), openReader: trackedReader });
       if (outcome.kind === 'refused') {
-        objectsRead = outcome.refusal.stage !== 'clone' && outcome.refusal.stage !== 'self-observation' && outcome.refusal.stage !== 'records' && outcome.refusal.stage !== 'revision' && outcome.refusal.stage !== 'head';
         return refuse('launch', outcome.refusal.reason, { launch: outcome.refusal });
       }
       if (outcome.kind !== 'head-consented') {
