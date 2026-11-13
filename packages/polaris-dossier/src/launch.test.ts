@@ -1087,6 +1087,32 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     expect(afterWrite.listenerCount('SIGINT')).toBe(0);
   });
 
+  it('the launch\'s own checks: after the copy step, before the question and before the write, each ends the launch at the failure path', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const real: CopyGitRun = (args, o) => { const r = spawnSync('git', args, { cwd: o.cwd, env: o.env, encoding: 'utf8' }); return { status: r.status ?? -1, stderr: r.stderr ?? '' }; };
+    const FAILURE = 'the launch failed after its copy step started: Interrupted: the run was interrupted (SIGINT)';
+    const consentAnswers = (c: string) => ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${c.slice(0, 12)}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${c.slice(0, 12)}`];
+    // After the copy step, in a run that asks nothing: the launch refuses there, not later.
+    const clone = fullClone(up.dir, URL_RR);
+    const first = setup(consentAnswers(up.commits[0]!));
+    expect((await run(clone, first)).kind).toBe('recorded');
+    const atCopy = new EventEmitter();
+    const covered = await run(clone, setup([], { home: first.home, ports: { interrupt: interruptWatch(atCopy), copyGit: (args, o) => { if (args.includes('fetch')) atCopy.emit('SIGINT'); return real(args, o); } } }));
+    expect(covered).toMatchObject({ kind: 'refused', refusal: { stage: 'failure', reason: FAILURE, copy: { state: 'removed' } } });
+    // During the pre-answer reads: nothing is asked.
+    const atReads = new EventEmitter();
+    const reads = setup(consentAnswers(up.commits[0]!), { ports: { interrupt: interruptWatch(atReads), writeConsent: async () => { atReads.emit('SIGINT'); return { state: 'ok', record: 'WRITE-CONSENT-LAUNCH-RECORDS-2026-11-08' }; } } });
+    expect(await run(fullClone(up.dir, URL_RR), reads)).toMatchObject({ kind: 'refused', refusal: { stage: 'failure', reason: FAILURE, copy: { state: 'removed' } } });
+    expect(reads.terminal.prompts).toEqual([]);
+    // At the last answer: nothing is written.
+    const atAnswer = new EventEmitter();
+    const answering = setup(consentAnswers(up.commits[0]!), { ports: { interrupt: interruptWatch(atAnswer) } });
+    const ask = answering.ports.terminal.ask;
+    const ports: LaunchPorts = { ...answering.ports, terminal: { ...answering.ports.terminal, ask: async prompt => { if (prompt.startsWith('Type exactly: STATE')) atAnswer.emit('SIGINT'); return ask(prompt); } } };
+    expect(await launchConsent(answering.request(fullClone(up.dir, URL_RR)), ports)).toMatchObject({ kind: 'refused', refusal: { stage: 'failure', reason: FAILURE, recorded: false, copy: { state: 'removed' } } });
+    expect(recordsOf(answering.home)).toEqual([]);
+  });
+
   it('the interrupt watch: armed once, a SIGINT is held until a check, and disarming removes its listener', () => {
     const signals = new EventEmitter(), watch = interruptWatch(signals);
     watch.check();
