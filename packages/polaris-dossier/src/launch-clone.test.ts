@@ -117,11 +117,12 @@ describe('REQ-polaris-generation-047: Syzygy\'s own reads of the operator\'s clo
     expect(read.snapshot.refs.has('refs/heads/hidden')).toBe(false);
   });
 
-  it('refuses a reftable clone before reading its HEAD, by its reftable directory', () => {
-    const { read, opened } = logged(layout({ HEAD: 'ref: refs/heads/.invalid\n', 'reftable/tables.list': 'x\n', 'refs/heads': 'this repository uses the reftable format\n' }));
+  it('refuses a reftable clone by its HEAD placeholder alone: its reftable directory is never examined, nor anything in it read', () => {
+    const { read, opened, examined } = logged(layout({ HEAD: 'ref: refs/heads/.invalid\n', 'reftable/tables.list': 'x\n', 'refs/heads': 'this repository uses the reftable format\n' }), undefined, ['HEAD']);
     expect(read).toEqual({ ok: false, reftable: true,
       reason: 'the clone stores its references in the reftable backend; Syzygy reads references only as loose files and packed-refs, so the run is refused before any Git process starts' });
-    expect(opened).toEqual([]);
+    expect(opened).toEqual(['HEAD']);
+    expect(examined.filter(p => p.startsWith('reftable'))).toEqual([]);
   });
 
   it('refuses a reftable clone by the HEAD placeholder Git writes for it, opening nothing past HEAD', () => {

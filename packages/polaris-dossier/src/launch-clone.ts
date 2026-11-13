@@ -24,7 +24,8 @@ import * as path from 'node:path';
  * then the reference `--revision` names. [Inferred] `main` and `master` are read only where the trunk rule consults them: "While a remote
  * default is recorded, no local branch is consulted for the pin". A symbolic value is followed only to a reference whose value is itself
  * admitted. Every file is read with `lstat` first and opened with `O_NOFOLLOW`; a symbolic link is refused, never followed, and each read is
- * bounded. All of this lies within the agent sessions' write reach, so every value read here is a claim: the pinned revision is re-hashed
+ * bounded. A reftable clone is told by the placeholder `ref: refs/heads/.invalid` Git writes to its HEAD, a value read (2) admits; no
+ * other path is examined for it. All of this lies within the agent sessions' write reach, so every value read here is a claim: the pinned revision is re-hashed
  * by the object reader, and the URL is a locator hint labelled Inferred. */
 
 export type RefValue = { readonly kind: 'oid'; readonly oid: string } | { readonly kind: 'symbolic'; readonly target: string };
@@ -181,16 +182,12 @@ export function readCloneSnapshot(clone: string, options: { readonly revision?: 
 
   const reftable = (): CloneSnapshotRead => ({ ok: false, reftable: true,
     reason: 'the clone stores its references in the reftable backend; Syzygy reads references only as loose files and packed-refs, so the run is refused before any Git process starts' });
-  let reftableDir = false;
-  try { fs.lstatSync(path.join(gitDir, 'reftable')); reftableDir = true; } catch (cause) {
-    if (code(cause) !== 'ENOENT') return { ok: false, reason: `${path.join(gitDir, 'reftable')} cannot be examined (${code(cause)})` };
-  }
-  if (reftableDir) return reftable();
-
   const headText = readBounded(path.join(gitDir, 'HEAD'), MAX_REF_BYTES);
   if (headText === null || 'reason' in headText) return { ok: false, reason: headText === null ? 'the clone has no HEAD' : headText.reason };
   const head = parseRefValue(headText.text);
   if (head === null) return { ok: false, reason: 'HEAD is neither a full commit identifier nor a reference' };
+  // A reftable repository is told by the placeholder Git writes to HEAD (a value read (2) admits); no path the list does not name is
+  // examined for it (R-PDJA-33-SLICE-A-1 finding 3).
   if (head.kind === 'symbolic' && head.target === REFTABLE_HEAD) return reftable();
 
   // Names: every packed row's name and every loose file's path. No loose file is opened here.

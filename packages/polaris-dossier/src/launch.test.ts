@@ -411,9 +411,13 @@ describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone 
     const parent = path.dirname(fullClone(up.dir, URL_RR));
     const clone = path.join(parent, 'reftable');
     gitIn(parent, 'clone', '-q', '--ref-format=reftable', up.dir, clone);
-    const s = setup([]);
-    expect(await run(clone, s)).toEqual({ kind: 'refused', refusal: { stage: 'clone', missing: [], recorded: false,
+    const r = await sealedReads(clone, ['HEAD'], copyGit => setup([], { ports: { copyGit } }));
+    const s = r.s;
+    expect(r.out).toEqual({ kind: 'refused', refusal: { stage: 'clone', missing: [], recorded: false,
       reason: 'the clone stores its references in the reftable backend; Syzygy reads references only as loose files and packed-refs, so the run is refused before any Git process starts' } });
+    // Told by HEAD's placeholder alone: the reftable directory is neither examined nor read (R-PDJA-33-SLICE-A-1 finding 3).
+    expect(r.opened).toEqual(['HEAD']);
+    expect(r.examined.filter(p => p.startsWith('reftable'))).toEqual([]);
     expect(s.reads.log.calls).toEqual([]);
     expect(s.terminal.prompts).toEqual([]);
   });
