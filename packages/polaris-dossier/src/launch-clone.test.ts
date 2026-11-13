@@ -58,8 +58,8 @@ const FULL_NAMES = ['refs/heads/feature', 'refs/heads/main', 'refs/heads/other',
   'refs/remotes/up/HEAD', 'refs/remotes/up/trunk', 'refs/stash', 'refs/tags/old', 'refs/tags/v1'];
 
 describe('REQ-polaris-generation-047: Syzygy\'s own reads of the operator\'s clone are the closed list', () => {
-  it('a full clone: every name, and the values of HEAD\'s reference, the remote HEADs, the default and its local branch alone', () => {
-    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD'];
+  it('a full clone: every name, and the values of HEAD\'s reference, origin\'s HEAD, the default and its local branch alone; another remote\'s HEAD is not read while origin records a default', () => {
+    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD'];
     const { read, opened } = logged(layout(FULL), undefined, expected);
     expect(opened).toEqual(expected);
     if (!read.ok) throw new Error(read.reason);
@@ -69,7 +69,6 @@ describe('REQ-polaris-generation-047: Syzygy\'s own reads of the operator\'s clo
       'refs/heads/main': { kind: 'oid', oid: B },
       'refs/remotes/origin/HEAD': { kind: 'symbolic', target: 'refs/remotes/origin/main' },
       'refs/remotes/origin/main': { kind: 'oid', oid: C },
-      'refs/remotes/up/HEAD': { kind: 'symbolic', target: 'refs/remotes/up/trunk' },
     });
     expect(read.snapshot.remotes).toEqual([{ name: 'origin', url: 'https://example.org/group/repo.git' }, { name: 'up', url: 'git@example.org:up/repo.git' }]);
     expect(read.snapshot.objectFormat).toBe('sha1');
@@ -77,14 +76,14 @@ describe('REQ-polaris-generation-047: Syzygy\'s own reads of the operator\'s clo
   });
 
   it('the reference --revision names is read too, and no other', () => {
-    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD', 'refs/tags/v1'];
+    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/tags/v1'];
     const { read, opened } = logged(layout(FULL), 'v1', expected);
     expect(opened).toEqual(expected);
     expect(read.ok && read.snapshot.refs.get('refs/tags/v1')).toEqual({ kind: 'oid', oid: D });
   });
 
   it('a hexadecimal --revision names no reference, so it opens nothing more', () => {
-    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD'];
+    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD'];
     const { read, opened } = logged(layout(FULL), D, expected);
     expect(read.ok).toBe(true);
     expect(opened).toEqual(expected);
@@ -95,6 +94,16 @@ describe('REQ-polaris-generation-047: Syzygy\'s own reads of the operator\'s clo
     expect(none.opened).toEqual(['HEAD', 'refs/heads/main', 'refs/heads/master']);
     const one = logged(layout({ HEAD: `${A}\n`, 'refs/heads/master': `${B}\n`, 'refs/remotes/origin/HEAD': 'ref: refs/remotes/origin/trunk\n', 'refs/remotes/origin/trunk': `${A}\n` }));
     expect(one.opened).toEqual(['HEAD', 'refs/remotes/origin/HEAD', 'refs/remotes/origin/trunk']);
+  });
+
+  it('origin\'s HEAD absent, or not symbolic: the other remotes\' HEADs are read to find the one default', () => {
+    const absent = logged(layout({ HEAD: `${A}\n`, 'refs/remotes/origin/main': `${A}\n`, 'refs/remotes/up/HEAD': 'ref: refs/remotes/up/trunk\n', 'refs/remotes/up/trunk': `${B}\n` }),
+      undefined, ['HEAD', 'refs/remotes/up/HEAD', 'refs/remotes/up/trunk']);
+    expect(absent.opened).toEqual(['HEAD', 'refs/remotes/up/HEAD', 'refs/remotes/up/trunk']);
+    const detached = logged(layout({ HEAD: `${A}\n`, 'refs/remotes/origin/HEAD': `${C}\n`, 'refs/remotes/up/HEAD': 'ref: refs/remotes/up/trunk\n', 'refs/remotes/up/trunk': `${B}\n` }),
+      undefined, ['HEAD', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD', 'refs/remotes/up/trunk']);
+    expect(detached.opened).toEqual(['HEAD', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD', 'refs/remotes/up/trunk']);
+    expect(detached.read.ok && detached.read.snapshot.refs.get('refs/remotes/up/trunk')).toEqual({ kind: 'oid', oid: B });
   });
 
   it('several remote defaults and none origin: no branch value is read past the remote HEADs', () => {
@@ -191,7 +200,7 @@ describe('the read oracle is independent of the API the reader uses (R-PDJA-33-S
 
   it('the unlisted loose references and the alternates file of a sealed full clone are never read', () => {
     const clone = layout({ ...FULL, 'objects/info/alternates': '/elsewhere/objects\n' });
-    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/remotes/up/HEAD'];
+    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD'];
     const { read, opened } = logged(clone, undefined, expected);
     if (!read.ok) throw new Error(read.reason);
     expect(read.snapshot.alternates).toBe(true);

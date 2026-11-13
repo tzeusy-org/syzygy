@@ -19,7 +19,8 @@ import * as path from 'node:path';
  * Read (5), the object identifiers for an abbreviated `--revision` alone, is `launch-revision.ts`'s.
  *
  * Which reference values are admitted is decided in stages, each from what the earlier stages admitted: HEAD; then the reference HEAD
- * names and every `refs/remotes/<remote>/HEAD` (the trunk rule must read each to tell which remotes record a default); then the remote
+ * names and `refs/remotes/origin/HEAD`; where origin records no default (its HEAD absent or not symbolic), every other
+ * `refs/remotes/<remote>/HEAD` (the trunk rule must then read each to tell which remotes record a default); then the remote
  * default's target and the local branch of its name, or, where no remote records a default, `refs/heads/main` and `refs/heads/master`;
  * then the reference `--revision` names. [Inferred] `main` and `master` are read only where the trunk rule consults them: "While a remote
  * default is recorded, no local branch is consulted for the pin". A symbolic value is followed only to a reference whose value is itself
@@ -60,6 +61,7 @@ const OBJECT_ID = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/;
 const REF_NAME = /^refs\/[A-Za-z0-9._-]+(?:\/[A-Za-z0-9._-]+)*$/;
 /** The placeholder Git writes to HEAD in a reftable repository, so that a files-backend reader sees no branch. */
 const REFTABLE_HEAD = 'refs/heads/.invalid';
+const ORIGIN_HEAD = 'refs/remotes/origin/HEAD';
 
 const code = (cause: unknown): string => (cause as NodeJS.ErrnoException).code ?? 'unknown-error';
 
@@ -246,11 +248,14 @@ export function readCloneSnapshot(clone: string, options: { readonly revision?: 
     return null;
   };
 
-  let why = admitAll([
-    ...(head.kind === 'symbolic' ? [head.target] : []),
-    ...[...names].filter(n => /^refs\/remotes\/[^/]+\/HEAD$/.test(n)).sort(),
-  ]);
+  // HEAD's reference, then origin's HEAD; the other remotes' HEADs only where origin records no default, since the trunk rule takes
+  // origin's default "when it records one" and only otherwise asks which remotes record one (R-PDJA-33-SLICE-A-1 finding 2).
+  let why = admitAll([...(head.kind === 'symbolic' ? [head.target] : []), ORIGIN_HEAD]);
   if (why !== null) return { ok: false, reason: why };
+  if (refs.get(ORIGIN_HEAD)?.kind !== 'symbolic') {
+    why = admitAll([...names].filter(n => n !== ORIGIN_HEAD && /^refs\/remotes\/[^/]+\/HEAD$/.test(n)).sort());
+    if (why !== null) return { ok: false, reason: why };
+  }
   const chosen = defaultRemoteOf(refs);
   if ('remote' in chosen) {
     const prefix = `refs/remotes/${chosen.remote}/`;
