@@ -92,7 +92,9 @@ export function readLocator(input: string, kind: LocatorKind): LocatorRead {
   }
   if (!HOST.test(host)) return { ok: false, rule: RULE.host };
   host = host.toLowerCase().replace(/^www\./, '');
-  let pathPart = rest.replace(/^\/+/, '');
+  // No slash is collapsed: a URL's path begins after the authority's one '/', so a leading empty segment (https://h//a/b) is refused as
+  // an inner one is; an scp-form path may begin with one '/' (h:/a/b), its second already refused (R-PDJA-33-SLICE-C-1 finding 2).
+  let pathPart = scheme === 'scp' ? rest.replace(/^\//, '') : rest;
   if (pathPart.endsWith('/')) pathPart = pathPart.slice(0, -1);
   if (pathPart.endsWith('.git')) pathPart = pathPart.slice(0, -4);
   pathPart = pathPart.toLowerCase();
