@@ -9,7 +9,7 @@ import { governedSubject, type GovernedDecision } from './governed.js';
 import type { Outcome } from './outcome.js';
 import { parseRunConfig, type RunConfigRefusal } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
-import { createRunDirectory, stateRootViolation, type RunPorts } from './state-directory.js';
+import { COPY_DIRECTORY, createRunDirectory, stateRootViolation, type RunPorts } from './state-directory.js';
 import { isoOf } from './iso-of.js';
 import { failureText, launchConsent, type LaunchCopy, type LaunchOutcome, type LaunchPorts, type LaunchRefusal } from './launch.js';
 import { copyEndStatement, removeCopy, type CopyEnd } from './launch-copy.js';
@@ -87,8 +87,7 @@ export interface InitPorts extends RunPorts {
   readonly launch?: Omit<LaunchPorts, 'sources' | 'now' | 'openReader' | 'copyRoot'>;
 }
 
-/** Where `init` has a copy-class run's copy made (REQ-polaris-generation-047): beside the run directories, outside every run's own. */
-export const COPY_DIRECTORY = 'copies';
+export { COPY_DIRECTORY } from './state-directory.js';
 
 const DISCLOSURES = [
   RECORDS_WITHIN_REACH,

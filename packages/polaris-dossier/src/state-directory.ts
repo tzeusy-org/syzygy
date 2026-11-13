@@ -10,6 +10,9 @@ import * as path from 'node:path';
  * here too, so nothing Observed rests on a stored file (owner direction
  * `POLARIS-DOSSIER-LOCAL-AGENT-RECORDS-2026-10-05`); every value read back from it is Inferred. */
 
+/** Where `init` has a copy-class run's copy made (REQ-polaris-generation-047): beside the run directories, outside every run's own. */
+export const COPY_DIRECTORY = 'copies';
+
 /** The names the run directory holds. `drafts/`, `checks/` and `reviews/` hold numbered or
  * digest-named files whose forms are fixed here so every later step and `status` agree. */
 export const RUN_LAYOUT = Object.freeze({

@@ -285,7 +285,7 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
   const issued = [RUN_LAYOUT.brief, RUN_LAYOUT.draftSchema, RUN_LAYOUT.briefRecord].filter((name) => fs.existsSync(path.join(run, name)));
   if (issued.length > 0) return refuse('issued-already', `the run already holds ${issued.join(', ')}: a run is briefed once, and its deadline clock has started`);
 
-  const copy = briefCopyOf(readLaunchDisclosure(run), subject.clone.path);
+  const copy = briefCopyOf(readLaunchDisclosure(run), { dir: run, clone: subject.clone.path, pinnedAt: subject.pinnedRevision.pinnedAt });
   if (!copy.ok) return refuse('launch-record', `${copy.reason}; no brief is issued`);
 
   const doctrine = readSec3(deps.sources.recordsRoot);

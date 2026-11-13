@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
-import { launchDisclosureItems, launchDisclosureUnknown, publicDeclarationOf, readLaunchDisclosure, statementItemId, storedBriefItem, type LaunchDisclosure } from './launch-disclosure.js';
+import { briefCopyOf, launchDisclosureItems, launchDisclosureUnknown, publicDeclarationOf, readLaunchDisclosure, statementItemId, storedBriefItem, type LaunchDisclosure } from './launch-disclosure.js';
 
 /** The run record's launch disclosure (REQ-polaris-generation-046, line 37): read back fail-closed, and its human form, item by item. Every
  * expected value is a literal. */
@@ -131,5 +131,40 @@ describe('the launch disclosure in human form', () => {
   it('a run with no readable disclosure renders Unknown, saying why', () => {
     expect(launchDisclosureUnknown({ state: 'absent' })).toEqual({ id: 'launch/unknown', label: 'Unknown', text: 'The run directory holds no launch.json: the run was initialised before Syzygy recorded its launch disclosure, so whether it was launched, its class, whether a copy was made and every launch statement are Unknown.' });
     expect(launchDisclosureUnknown({ state: 'unreadable', why: 'it is not a regular file' })).toEqual({ id: 'launch/unknown', label: 'Unknown', text: 'The run\'s launch.json cannot be read as the record init writes (it is not a regular file), so whether it was launched, its class, whether a copy was made and every launch statement are Unknown.' });
+  });
+});
+
+describe('whether a brief names a copy, decided fail-closed (R-PDJA-33-SLICE-D-1 finding 7)', () => {
+  const root = tempDir('launch-disclosure-root-');
+  const runDir = path.join(root, 'run-0123456789abcdef0123456789abcdef');
+  const copy = path.join(root, 'copies', 'copy-AbC123');
+  fs.mkdirSync(runDir); fs.mkdirSync(copy, { recursive: true });
+  const before = '2026-11-12T23:59:59.000Z', since = '2026-11-13T00:00:00.000Z';
+  const ok = (d: LaunchDisclosure) => ({ state: 'ok' as const, disclosure: d });
+  const own = { ...launched, copy, operatorClone: '/home/op/redis' };
+
+  it('a clone under the state root\'s copies directory: copy-class whatever the disclosure says; absent, unreadable or no-copy refuses', () => {
+    const run = { dir: runDir, clone: copy, pinnedAt: before };
+    expect(briefCopyOf(ok(own), run)).toEqual({ ok: true, copy: { dir: copy, operatorClone: '/home/op/redis' } });
+    const refusal = (why: string) => ({ ok: false, reason: `the run record's clone ${copy} lies under the state root's copies directory, so the run is copy-class, but ${why}, so its brief cannot name the operator's clone it must not read` });
+    // Absent, even for a run record pinned before the disclosure existed.
+    expect(briefCopyOf({ state: 'absent' }, run)).toEqual(refusal('the run directory holds no launch.json'));
+    expect(briefCopyOf({ state: 'unreadable', why: 'it is not a regular file' }, run)).toEqual(refusal('the run\'s launch.json cannot be read as the record init writes (it is not a regular file)'));
+    expect(briefCopyOf(ok({ ...own, runClass: 'no-copy', copy: null }), run)).toEqual(refusal('the run\'s launch.json says it is a no-copy run'));
+  });
+
+  it('a clone elsewhere: absent is a legacy no-copy run only where the run record was pinned before the disclosure existed', () => {
+    const run = { dir: runDir, clone: '/home/op/redis', pinnedAt: before };
+    expect(briefCopyOf({ state: 'absent' }, run)).toEqual({ ok: true, copy: null });
+    expect(briefCopyOf({ state: 'absent' }, { ...run, pinnedAt: since })).toEqual({ ok: false,
+      reason: `the run directory holds no launch.json, and its run record was pinned at ${since}, not before 2026-11-13T00:00:00Z, when init began writing one for every run, so whether the brief must direct its session to a copy cannot be decided` });
+    expect(briefCopyOf({ state: 'unreadable', why: 'x' }, run)).toEqual({ ok: false, reason: 'the run\'s launch.json cannot be read as the record init writes (x), so whether the brief must direct its session to a copy cannot be decided' });
+    expect(briefCopyOf(ok({ ...own, runClass: 'no-copy', copy: null }), { ...run, pinnedAt: since })).toEqual({ ok: true, copy: null });
+    expect(briefCopyOf(ok(own), run)).toEqual({ ok: false, reason: `the run's launch.json names the copy ${copy}, but the run record's clone is /home/op/redis` });
+  });
+
+  it('the copies directory itself, or a sibling of it named alike, is not under it', () => {
+    expect(briefCopyOf({ state: 'absent' }, { dir: runDir, clone: path.join(root, 'copies'), pinnedAt: before })).toEqual({ ok: true, copy: null });
+    expect(briefCopyOf({ state: 'absent' }, { dir: runDir, clone: path.join(root, 'copies-x', 'copy-AbC123'), pinnedAt: before })).toEqual({ ok: true, copy: null });
   });
 });

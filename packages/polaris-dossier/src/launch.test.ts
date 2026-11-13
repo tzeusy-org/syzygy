@@ -15,6 +15,7 @@ import { LAUNCH_REF, readLaunchRecords, writeLaunchRecords } from './launch-stor
 import { parseLaunchRecord, renderLaunchRecord } from './launch-record.js';
 import { withLaunchRecords } from './launch-sources.js';
 import { NON_PUBLIC_SUCCESSOR } from './launch-cli.js';
+import { briefCopyOf, cloneUnderCopies, readLaunchDisclosure } from './launch-disclosure.js';
 import { fixtureClasses, fullClone, gitIn, listing, makeHome, makeUpstream, noOtherActs, scriptedTerminal, writeFiles, type ScriptedTerminal } from './launch.testkit.js';
 
 /** REQ-polaris-generation-046 and 047, conformance by scenario and falsifier arm, against fixture governance homes and clones made by
@@ -1006,6 +1007,12 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     const copyDir = out.report.subject.clone.path;
     expect(path.dirname(copyDir)).toBe(path.join(fs.realpathSync(stateRoot), 'copies'));
     expect(path.basename(copyDir)).toMatch(/^copy-[A-Za-z0-9]{6}$/);
+    // The layout init writes is the one the brief's fail-closed test reads: the run's clone lies under the state root's copy directory, so a
+    // brief decides the run is copy-class whatever launch.json says, and refuses once launch.json is gone (R-PDJA-33-SLICE-D-1 finding 7).
+    expect(cloneUnderCopies(out.report.run, copyDir)).toBe(true);
+    expect(cloneUnderCopies(out.report.run, clone)).toBe(false);
+    fs.rmSync(path.join(out.report.run, 'launch.json'));
+    expect(briefCopyOf(readLaunchDisclosure(out.report.run), { dir: out.report.run, clone: copyDir, pinnedAt: '2026-01-01T00:00:00.000Z' })).toMatchObject({ ok: false });
     expect(out.report.subject.pinnedRevision.commit).toBe(up.commits[1]);
     expect(out.report.disclosures).toContain(`The copy of the pinned commit at ${copyDir} is the run's clone; it is kept after the run, outside the run's state directory, until the operator removes it.`);
     expect(fs.existsSync(path.join(copyDir, 'b.c'))).toBe(true);

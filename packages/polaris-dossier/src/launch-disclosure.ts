@@ -4,7 +4,7 @@ import { BoundedJsonError, parseBoundedJson, type LocalDisclosureItem } from '@s
 import { isRecord } from '@syzygy/support';
 import { IDENTITY_RESIDUALS } from './launch-question.js';
 import type { LaunchStageName, LaunchStatement, RunClass, StatementClass } from './launch-statements.js';
-import { RUN_LAYOUT } from './state-directory.js';
+import { COPY_DIRECTORY, RUN_LAYOUT } from './state-directory.js';
 
 /** The run record's launch disclosure (REQ-polaris-generation-046, line 37, under 047's stage rule).
  *
@@ -168,17 +168,40 @@ export interface BriefCopy { readonly dir: string; readonly operatorClone: strin
 
 export type BriefCopyDecision = { readonly ok: true; readonly copy: BriefCopy | null } | { readonly ok: false; readonly reason: string };
 
-/** Whether the run's briefs name a copy, decided from the launch disclosure: a copy-class run's copy, which must be the run record's clone;
- * none for a no-copy run, or a run initialised before the disclosure was written. A disclosure that cannot be read decides nothing, so no
- * brief is issued: a copy-class run's brief that omitted the copy would send its session to read nothing but what the record names. */
-export function briefCopyOf(read: LaunchDisclosureRead, runClone: string): BriefCopyDecision {
-  if (read.state === 'absent') return { ok: true, copy: null };
-  if (read.state === 'unreadable') {
-    return { ok: false, reason: `the run's ${RUN_LAYOUT.launchDisclosure} cannot be read as the record init writes (${read.why}), so whether the brief must direct its session to a copy cannot be decided` };
+/** The first instant at which `init` writes a launch disclosure for every run it creates. A run record pinned before it predates the
+ * disclosure, and only such a run may lack one (R-PDJA-33-SLICE-D-1 finding 7). */
+export const LAUNCH_DISCLOSURE_SINCE = '2026-11-13T00:00:00Z';
+
+const realOr = (p: string): string => { try { return fs.realpathSync(p); } catch { return path.resolve(p); } };
+
+/** Whether the run record's clone lies under the state root's copy directory, the one place `init` has a copy made: such a run is
+ * copy-class whatever its launch disclosure says. The run directory sits in the state root. */
+export function cloneUnderCopies(runDir: string, runClone: string): boolean {
+  const relative = path.relative(realOr(path.join(path.dirname(runDir), COPY_DIRECTORY)), realOr(runClone));
+  return relative !== '' && !relative.startsWith('..') && !path.isAbsolute(relative);
+}
+
+/** Whether the run's briefs name a copy, decided fail-closed from the run record and the launch disclosure (R-PDJA-33-SLICE-D-1 finding 7):
+ * - a run whose clone lies under the state root's copy directory is copy-class, whatever the disclosure says: its briefs name the copy, and a
+ *   disclosure that is absent, unreadable, says no-copy or names another copy refuses the brief;
+ * - otherwise a copy-class disclosure must name the run record's clone as its copy;
+ * - a disclosure that cannot be read decides nothing, so no brief is issued;
+ * - an absent disclosure is a run initialised before the disclosure was written only where the run record was pinned before
+ *   `LAUNCH_DISCLOSURE_SINCE`; any later run without one is refused.
+ * A copy-class run's brief that omitted the copy would send its session to the operator's clone. */
+export function briefCopyOf(read: LaunchDisclosureRead, run: { readonly dir: string; readonly clone: string; readonly pinnedAt: string }): BriefCopyDecision {
+  const underCopies = cloneUnderCopies(run.dir, run.clone);
+  const undecided = (why: string): BriefCopyDecision => ({ ok: false, reason: underCopies
+    ? `the run record's clone ${run.clone} lies under the state root's ${COPY_DIRECTORY} directory, so the run is copy-class, but ${why}, so its brief cannot name the operator's clone it must not read`
+    : `${why}, so whether the brief must direct its session to a copy cannot be decided` });
+  if (read.state === 'absent') {
+    if (!underCopies && Date.parse(run.pinnedAt) < Date.parse(LAUNCH_DISCLOSURE_SINCE)) return { ok: true, copy: null };
+    return undecided(`the run directory holds no ${RUN_LAYOUT.launchDisclosure}${underCopies ? '' : `, and its run record was pinned at ${run.pinnedAt}, not before ${LAUNCH_DISCLOSURE_SINCE}, when init began writing one for every run`}`);
   }
+  if (read.state === 'unreadable') return undecided(`the run's ${RUN_LAYOUT.launchDisclosure} cannot be read as the record init writes (${read.why})`);
   const d = read.disclosure;
-  if (d.runClass === 'no-copy' || d.copy === null) return { ok: true, copy: null };
-  if (d.copy !== runClone) return { ok: false, reason: `the run's ${RUN_LAYOUT.launchDisclosure} names the copy ${d.copy}, but the run record's clone is ${runClone}` };
+  if (d.runClass === 'no-copy' || d.copy === null) return underCopies ? undecided(`the run's ${RUN_LAYOUT.launchDisclosure} says it is a no-copy run`) : { ok: true, copy: null };
+  if (d.copy !== run.clone) return { ok: false, reason: `the run's ${RUN_LAYOUT.launchDisclosure} names the copy ${d.copy}, but the run record's clone is ${run.clone}` };
   return { ok: true, copy: { dir: d.copy, operatorClone: d.operatorClone } };
 }
 

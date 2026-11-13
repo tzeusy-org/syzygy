@@ -173,7 +173,7 @@ export type InventoryBriefLoad = { readonly ok: true; readonly text: string; rea
 
 /** Syzygy's rendering of session `session`'s inventory brief, with the execution rule it carries: always SEC-3's, never the permission. */
 export async function buildInventoryBrief(opened: Extract<OpenedRun, { ok: true }>, session: number, sources: GateSources, now: number, deps: CensusDeps = {}): Promise<InventoryBriefLoad> {
-  const copy = briefCopyOf(readLaunchDisclosure(opened.run), opened.subject.clone.path);
+  const copy = briefCopyOf(readLaunchDisclosure(opened.run), { dir: opened.run, clone: opened.subject.clone.path, pinnedAt: opened.subject.pinnedRevision.pinnedAt });
   if (!copy.ok) return { ok: false, stage: 'launch-record', reason: `${copy.reason}; no inventory brief is rendered` };
   const doctrine = readSec3(sources.recordsRoot);
   if (!doctrine.ok) return { ok: false, stage: 'doctrine', reason: `SEC-3 cannot be quoted as adopted: ${doctrine.reason}` };
