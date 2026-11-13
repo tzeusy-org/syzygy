@@ -82,6 +82,13 @@ describe('REQ-polaris-generation-047: Syzygy\'s own reads of the operator\'s clo
     expect(read.ok && read.snapshot.refs.get('refs/tags/v1')).toEqual({ kind: 'oid', oid: D });
   });
 
+  it('--revision HEAD reads HEAD and its reference, already admitted, and nothing more', () => {
+    const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD'];
+    const { read, opened } = logged(layout(FULL), 'HEAD', expected);
+    expect(read.ok && read.snapshot.refs.get('refs/heads/feature')).toEqual({ kind: 'oid', oid: A });
+    expect(opened).toEqual(expected);
+  });
+
   it('a hexadecimal --revision names no reference, so it opens nothing more', () => {
     const expected = ['HEAD', 'config', 'packed-refs', 'refs/heads/feature', 'refs/heads/main', 'refs/remotes/origin/HEAD'];
     const { read, opened } = logged(layout(FULL), D, expected);

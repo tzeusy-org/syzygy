@@ -157,9 +157,16 @@ export function parseConfig(config: string): CloneConfig {
 /** Each remote's url (read (3), the remotes alone). */
 export const parseRemotes = (config: string): readonly CloneRemote[] => parseConfig(config).remotes;
 
-/** The candidate references a `--revision` name may be, in the order Git tries a short name. */
-export const revisionRefCandidates = (name: string): readonly string[] =>
-  (name.startsWith('refs/') ? [name] : [`refs/${name}`, `refs/tags/${name}`, `refs/heads/${name}`, `refs/remotes/${name}`, `refs/remotes/${name}/HEAD`]).filter(validRefName);
+/** The candidate references a `--revision` name may be, in the order Git tries a short name. Git's first rule, the name itself in the
+ * Git directory, is taken for `HEAD` alone, whose value read (2) admits (R-PDJA-33-SLICE-A-1 finding 4); no other file there (such as
+ * `FETCH_HEAD` or `ORIG_HEAD`) is a reference the list lets Syzygy read. */
+export const revisionRefCandidates = (name: string): readonly string[] => [
+  ...(name === 'HEAD' ? ['HEAD'] : []),
+  ...(name.startsWith('refs/') ? [name] : [`refs/${name}`, `refs/tags/${name}`, `refs/heads/${name}`, `refs/remotes/${name}`, `refs/remotes/${name}/HEAD`]).filter(validRefName),
+];
+
+/** Whether the clone holds the candidate reference: HEAD always (read (1) refuses a clone without it), any other by its listed name. */
+export const holdsRef = (snapshot: { readonly names: ReadonlySet<string> }, name: string): boolean => name === 'HEAD' || snapshot.names.has(name);
 
 /** The remote whose `HEAD` reference the trunk rule reads, or why there is none to read. */
 export function defaultRemoteOf(refs: ReadonlyMap<string, RefValue>): { readonly remote: string; readonly target: string } | { readonly none: 'none' | 'several'; readonly names: readonly string[] } {
@@ -265,7 +272,7 @@ export function readCloneSnapshot(clone: string, options: { readonly revision?: 
   }
   if (why !== null) return { ok: false, reason: why };
   if (options.revision !== undefined) {
-    const named = revisionRefCandidates(options.revision).find(n => names.has(n));
+    const named = revisionRefCandidates(options.revision).find(n => holdsRef({ names }, n));
     if (named !== undefined) { why = admit(named); if (why !== null) return { ok: false, reason: why }; }
   }
 

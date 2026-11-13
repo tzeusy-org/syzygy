@@ -404,6 +404,10 @@ describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone 
     const byId = await sealedReads(clone, full, copyGit => setup([], { isTTY: false, request: { revision: up.commits[0]! }, ports: { copyGit } }));
     expect(byId.out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal' } });
     expect(byId.opened).toEqual(full);
+    // --revision HEAD: HEAD and its reference, already admitted, and nothing more (R-PDJA-33-SLICE-A-1 finding 4).
+    const byHead = await sealedReads(clone, full, copyGit => setup([], { isTTY: false, request: { revision: 'HEAD' }, ports: { copyGit } }));
+    expect(byHead.out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal', missing: [`an observation consent for repository:redis-redis at ${up.commits[0]}`, expect.any(String)] } });
+    expect(byHead.opened).toEqual(full);
   });
 
   it('references in the reftable backend: refused before any Git process starts and before any object is read', async () => {

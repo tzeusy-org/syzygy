@@ -1,4 +1,4 @@
-import { defaultRemoteOf, resolveRef, revisionRefCandidates, type CloneSnapshot } from './launch-clone.js';
+import { defaultRemoteOf, holdsRef, resolveRef, revisionRefCandidates, type CloneSnapshot } from './launch-clone.js';
 
 /** The revision a launch pins (REQ-polaris-generation-047), decided from the clone's references alone, with no network request.
  *
@@ -55,10 +55,10 @@ export const defaultRemote = (snapshot: CloneSnapshot) => defaultRemoteOf(snapsh
 async function resolveName(snapshot: CloneSnapshot, name: string, ports: Pick<RevisionPorts, 'storedIds'>): Promise<{ readonly found: ReadonlySet<string>; readonly unread?: { readonly ref: string; readonly target: string } }> {
   const out = new Set<string>();
   let unread: { readonly ref: string; readonly target: string } | undefined;
-  const ref = revisionRefCandidates(name).find(n => snapshot.names.has(n));
+  const ref = revisionRefCandidates(name).find(n => holdsRef(snapshot, n));
   if (ref !== undefined) {
     const oid = resolveRef(snapshot, ref);
-    const value = snapshot.refs.get(ref);
+    const value = ref === 'HEAD' ? snapshot.head : snapshot.refs.get(ref);
     if (oid !== null) out.add(oid);
     else if (value?.kind === 'symbolic' && !snapshot.refs.has(value.target)) unread = { ref, target: value.target };
   }

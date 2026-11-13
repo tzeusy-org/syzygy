@@ -52,6 +52,13 @@ describe('REQ-polaris-generation-047', () => {
     expect(await pin(snap(oid(B), { 'refs/tags/v1': oid(B) }), { revision: 'v1' })).toMatchObject({ ok: true, pinned: { commit: B, via: '--revision v1' } });
   });
 
+  it('--revision HEAD names the clone\'s HEAD, detached or through its admitted reference, and lists no store', async () => {
+    expect(await listingsOf(async () => expect(await pin(snap(oid(C), {}), { revision: 'HEAD' })).toMatchObject({ ok: true, pinned: { commit: C, via: '--revision HEAD' } }))).toBe(0);
+    expect(await pin(snap(sym('refs/heads/main'), { 'refs/heads/main': oid(B) }), { revision: 'HEAD' })).toMatchObject({ ok: true, pinned: { commit: B, via: '--revision HEAD' } });
+    // A HEAD whose reference's value is not admitted is refused naming it, as any symbolic --revision is.
+    expect(await pin(snap(sym('refs/heads/gone'), {}, { names: ['refs/heads/gone'] }), { revision: 'HEAD' })).toMatchObject({ ok: false, refusal: { stage: 'revision' } });
+  });
+
   it('refuses a name that resolves to no object identifier, or to more than one', async () => {
     expect(await pin(snap(oid(A), {}), { revision: 'ffff' })).toEqual({ ok: false, refusal: { stage: 'revision', reason: '--revision "ffff" resolves to no object identifier' } });
     expect(await pin(snap(oid(A), {}), { revision: 'abcd' })).toEqual({ ok: false, refusal: { stage: 'revision', reason: '--revision "abcd" is ambiguous: it resolves to 2 objects' } });
