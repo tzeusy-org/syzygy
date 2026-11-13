@@ -682,6 +682,21 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     expect(s.reads.log.dirs.every(d => d === path.join(copyDir, '.git'))).toBe(true);
   });
 
+  it('a SHA-256 copy passes init\'s form check with the object-format setting its initialisation wrote', async () => {
+    const parent = tempDir('syzygy-launch-init256-'), dir = path.join(parent, 'up');
+    gitIn(parent, 'init', '-q', '--object-format=sha256', '-b', 'main', dir);
+    writeFiles(dir, { 'a.c': 'x\n' });
+    gitIn(dir, 'add', '-A');
+    gitIn(dir, 'commit', '-q', '-m', 'upstream');
+    const commit = gitIn(dir, 'rev-parse', 'HEAD');
+    const r12 = commit.slice(0, 12);
+    const { result } = initWith(fullClone(dir, URL_RR), ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`]);
+    const out = await result;
+    if (!out.ok) throw new Error(JSON.stringify(out.refusal));
+    expect(out.report.subject.pinnedRevision.commit).toBe(commit);
+    expect(gitIn(out.report.subject.clone.path, 'rev-parse', '--show-object-format')).toBe('sha256');
+  });
+
   it('a refusal after the launch removes the copy and says so', async () => {
     const up = makeUpstream({ 'openspec/x.md': '# x\n' });
     const clone = fullClone(up.dir, URL_RR);
