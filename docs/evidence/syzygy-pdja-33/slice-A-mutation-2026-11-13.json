@@ -1,0 +1,256 @@
+{
+ "subject": "slice A of launch-consent v1.2 implementation: launch reads of the operator's clone narrowed to the closed list (REQ-polaris-generation-047; registry entry v1.1 impact ledger item 1b) (syzygy-pdja.33)",
+ "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+ "note": "each mutant applied to the file at commit, both test commands run, the file restored byte for byte; a mutant is killed when either command exits non-zero",
+ "file_sha256_at_commit": {
+  "packages/polaris-dossier/src/launch-clone.ts": "a5c36793463ce2ca68c81603efe11f3262b8893e0a5ffcb1ef2a2cf756af6b1b",
+  "packages/polaris-dossier/src/launch-revision.ts": "0b1664a42dd3ee2efc95d3a0dbfc6f12a86fb0986de0a8d9844f0a841b1f82c3",
+  "packages/polaris-dossier/src/launch.ts": "7036a226c5c531ac2a8bd2612c9bac2f6650dd684435f7717be08cca5c19e0d3",
+  "packages/polaris-dossier/src/launch-clone.test.ts": "20ae70ff918e328e1e933c4ca15cc618ef33009b36de5157d3369e6dcea698a5",
+  "packages/polaris-dossier/src/launch-revision.test.ts": "0dc525ae77b3eb1b1b9eb697f02bb1cdbaf0851fcfb06ed116fa2ef7efe8d4e9",
+  "packages/polaris-dossier/src/launch.test.ts": "77483f285ee94a039e787a8ad6140932c7381891ca5de53f09325a565ba05239"
+ },
+ "mutants": [
+  {
+   "id": "M1-admit-every-ref",
+   "file": "packages/polaris-dossier/src/launch-clone.ts",
+   "old": "...[...names].filter(n => /^refs\\/remotes\\/[^/]+\\/HEAD$/.test(n)).sort(),",
+   "new": "...[...names].filter(n => /^refs\\//.test(n)).sort(),",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  7 failed | 21 passed (28)",
+   "integration": "Tests  2 failed | 28 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M2-no-local-branch-of-default",
+   "file": "packages/polaris-dossier/src/launch-clone.ts",
+   "old": "why = admitAll([chosen.target, ...(chosen.target.startsWith(prefix) ? [`refs/heads/${chosen.target.slice(prefix.length)}`] : [])]);",
+   "new": "why = admitAll([chosen.target]);",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  3 failed | 25 passed (28)",
+   "integration": "Tests  30 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M3-main-master-always",
+   "file": "packages/polaris-dossier/src/launch-clone.ts",
+   "old": "  } else if (chosen.none === 'none') {\n    why = admitAll(['refs/heads/main', 'refs/heads/master']);\n  }",
+   "new": "  }\n  if (why === null) {\n    why = admitAll(['refs/heads/main', 'refs/heads/master']);\n  }",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  2 failed | 26 passed (28)",
+   "integration": "Tests  30 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M4-no-reftable-dir-refusal",
+   "file": "packages/polaris-dossier/src/launch-clone.ts",
+   "old": "  if (reftableDir) return reftable();\n",
+   "new": "\n",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  1 failed | 27 passed (28)",
+   "integration": "Tests  30 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M5-no-reftable-head-refusal",
+   "file": "packages/polaris-dossier/src/launch-clone.ts",
+   "old": "  if (head.kind === 'symbolic' && head.target === REFTABLE_HEAD) return reftable();\n",
+   "new": "\n",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  1 failed | 27 passed (28)",
+   "integration": "Tests  30 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M6-alternates-never-seen",
+   "file": "packages/polaris-dossier/src/launch-clone.ts",
+   "old": "fs.lstatSync(path.join(gitDir, 'objects', 'info', 'alternates')); alternates = true;",
+   "new": "fs.lstatSync(path.join(gitDir, 'objects', 'info', 'alternates')); alternates = false;",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  1 failed | 27 passed (28)",
+   "integration": "Tests  30 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M7-object-format-ignored",
+   "file": "packages/polaris-dossier/src/launch-clone.ts",
+   "old": "objectFormat: objectFormat ?? 'sha1',",
+   "new": "objectFormat: 'sha1',",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  1 failed | 27 passed (28)",
+   "integration": "Tests  2 failed | 28 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M8-revision-ref-not-admitted",
+   "file": "packages/polaris-dossier/src/launch-clone.ts",
+   "old": "    if (named !== undefined) { why = admit(named); if (why !== null) return { ok: false, reason: why }; }",
+   "new": "    void named;",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  1 failed | 27 passed (28)",
+   "integration": "Tests  2 failed | 28 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M9-packed-loose-precedence",
+   "file": "packages/polaris-dossier/src/launch-clone.ts",
+   "old": "    if (looseNames.has(name)) {",
+   "new": "    if (looseNames.has(name) && !packedNames.has(name)) {",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  1 failed | 27 passed (28)",
+   "integration": "Tests  30 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M10-symlink-followed",
+   "file": "packages/polaris-dossier/src/launch-clone.ts",
+   "old": "fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW)",
+   "new": "fs.openSync(fs.realpathSync(file), fs.constants.O_RDONLY)",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  28 passed (28)",
+   "integration": "Tests  30 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": false,
+   "note": "[Inferred] equivalent without a race: readBounded lstats the path first and refuses a symbolic link before opening it, so O_NOFOLLOW only guards a link swapped in between the lstat and the open; no test stages that race. The lstat refusal itself is pinned by launch-clone.test.ts \"refuses an admitted reference that is a symbolic link\"."
+  },
+  {
+   "id": "M11-full-id-listed",
+   "file": "packages/polaris-dossier/src/launch-revision.ts",
+   "old": "    else if (name.length >= MIN_ABBREVIATION && name.length < width) {",
+   "new": "    if (name.length >= MIN_ABBREVIATION && name.length <= width) {",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  2 failed | 26 passed (28)",
+   "integration": "Tests  30 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M12-min-abbreviation-dropped",
+   "file": "packages/polaris-dossier/src/launch-revision.ts",
+   "old": "const MIN_ABBREVIATION = 4;",
+   "new": "const MIN_ABBREVIATION = 1;",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  1 failed | 27 passed (28)",
+   "integration": "Tests  30 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M13-width-sha1-fixed",
+   "file": "packages/polaris-dossier/src/launch-revision.ts",
+   "old": "  const width = WIDTH[snapshot.objectFormat];",
+   "new": "  const width = 40;",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  2 failed | 26 passed (28)",
+   "integration": "Tests  2 failed | 28 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M14-unknown-format-as-sha1",
+   "file": "packages/polaris-dossier/src/launch-revision.ts",
+   "old": "  const width = WIDTH[snapshot.objectFormat];",
+   "new": "  const width = WIDTH[snapshot.objectFormat] ?? 40;",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  1 failed | 27 passed (28)",
+   "integration": "Tests  30 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M15-unread-symbolic-not-reported",
+   "file": "packages/polaris-dossier/src/launch-revision.ts",
+   "old": "    if (found.size === 0 && unread !== undefined) {",
+   "new": "    if (false && unread !== undefined) {",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  1 failed | 27 passed (28)",
+   "integration": "Tests  30 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M16-launch-width-from-head",
+   "file": "packages/polaris-dossier/src/launch.ts",
+   "old": "  const algorithm = snapshot.objectFormat === 'sha256' ? 'sha256' : 'sha1';",
+   "new": "  const algorithm = headOid !== null && headOid.length === 64 ? 'sha256' : 'sha1';",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  28 passed (28)",
+   "integration": "Tests  1 failed | 29 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M17-launch-revision-not-passed",
+   "file": "packages/polaris-dossier/src/launch.ts",
+   "old": "  const read = readCloneSnapshot(request.clone, request.revision === undefined ? {} : { revision: request.revision });",
+   "new": "  const read = readCloneSnapshot(request.clone);",
+   "commit": "942ef8b57af6cdf66eba1c42b32526b8a82b84c4",
+   "unit": "Tests  28 passed (28)",
+   "integration": "Tests  2 failed | 28 passed (30)",
+   "commands": [
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "TMPDIR=/home/orca/.tmp/pdja33 npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+   ],
+   "killed": true
+  }
+ ],
+ "killed": 16,
+ "total": 17
+}
