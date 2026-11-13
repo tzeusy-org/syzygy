@@ -120,15 +120,18 @@ function copyStatements(s: LaunchState): readonly LaunchStatement[] {
   const copy = s.copy ?? { reached: 'not-started' as const };
   if (copy.reached === 'not-started') return [statement('copy', STAGE, 'copy-class', false, 'No copy was made: the copy step did not start.')];
   const out: LaunchStatement[] = [];
+  // What was fetched, by the stage the run reached: the named identifier, until the copy's checkout shows it to be a commit (047: "a rule
+  // that acts before it is shown acts on the named identifier"; R-PDJA-33-SLICE-D-1 finding 1).
+  const fetched = s.pinned === null ? 'the named identifier' : 'the pinned commit';
   if (copy.reached === 'formed') out.push(statement('copy', STAGE, 'copy-class', true, COPY_METHOD));
   else if (copy.reached === 'before-fetch') {
     out.push(statement('copy', STAGE, 'copy-class', true, `The copy step started at ${copy.location} and ended there, before Syzygy started the fetch process: Git read nothing of the operator's clone.`));
   } else if (copy.reached === 'fetch-failed') {
     out.push(statement('copy', STAGE, 'copy-class', true,
-      `The copy step used the method a copy is made by: a local fetch of the pinned commit alone from the operator's clone over Git's local file transport, with no network request. A fetch was started and failed, as Git reported: ${copy.report}. The copy had not passed its form check.`));
+      `The copy step used the method a copy is made by: a local fetch of ${fetched} alone from the operator's clone over Git's local file transport, with no network request. A fetch was started and failed, as Git reported: ${copy.report}. The copy had not passed its form check.`));
   } else {
     out.push(statement('copy', STAGE, 'copy-class', true,
-      `The copy step used the method a copy is made by: a local fetch of the pinned commit alone from the operator's clone over Git's local file transport, with no network request. It ended ${copy.where}; the copy had not passed its form check.`));
+      `The copy step used the method a copy is made by: a local fetch of ${fetched} alone from the operator's clone over Git's local file transport, with no network request. It ended ${copy.where}; the copy had not passed its form check.`));
   }
   const end = s.copyEnd;
   out.push(statement('copy-location', STAGE, 'copy-class', true,

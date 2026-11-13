@@ -69,16 +69,19 @@ describe('the stage rule over the launch statements (REQ-polaris-generation-047)
       ['copy-beyond-consent', 'copy step started', 'copy-class', true, 'The launch observation consent this run relies on records its scope in the operator\'s own clone with no fetch by Syzygy; the copy step ended before Syzygy started the fetch process, so no fetch was made.'],
     ]);
     expect(at({ reached: 'fetch-failed', location: '/state/copies/copy-AbC123', report: 'fatal: not our ref' }, true).map(t => t[4])).toEqual([
-      'The copy step used the method a copy is made by: a local fetch of the pinned commit alone from the operator\'s clone over Git\'s local file transport, with no network request. A fetch was started and failed, as Git reported: fatal: not our ref. The copy had not passed its form check.',
+      'The copy step used the method a copy is made by: a local fetch of the named identifier alone from the operator\'s clone over Git\'s local file transport, with no network request. A fetch was started and failed, as Git reported: fatal: not our ref. The copy had not passed its form check.',
       'The copy at /state/copies/copy-AbC123 was removed, its directory included.',
       RELIANCE,
       'The launch observation consent this run relies on records its scope in the operator\'s own clone with no fetch by Syzygy; a fetch was started and failed, as Git reported: fatal: not our ref.',
     ]);
     expect(at({ reached: 'fetched', location: '/state/copies/copy-AbC123', where: 'at its form check' }).map(t => t[4])).toEqual([
-      'The copy step used the method a copy is made by: a local fetch of the pinned commit alone from the operator\'s clone over Git\'s local file transport, with no network request. It ended at its form check; the copy had not passed its form check.',
+      'The copy step used the method a copy is made by: a local fetch of the named identifier alone from the operator\'s clone over Git\'s local file transport, with no network request. It ended at its form check; the copy had not passed its form check.',
       'The copy at /state/copies/copy-AbC123 was removed, its directory included.',
       RELIANCE,
     ]);
+    // Once the copy's checkout pinned the commit, the form check failing after it: the pinned commit.
+    expect(texts({ ...base, copy: { reached: 'fetched', location: '/state/copies/copy-AbC123', where: 'at its form check' }, copyEnd: removed, pinned: { commit: C, committerDate: '1762689600 +0000' }, questionAsked: false })[1]![4])
+      .toBe('The copy step used the method a copy is made by: a local fetch of the pinned commit alone from the operator\'s clone over Git\'s local file transport, with no network request. It ended at its form check; the copy had not passed its form check.');
   });
 
   it('a completed run relying on a version 1.1 launch observation consent: the copy goes beyond its wording', () => {

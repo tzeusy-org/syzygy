@@ -768,7 +768,7 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     const out = await run(clone, setup([], { ports: { copyGit: failingFetch } }));
     if (out.kind !== 'refused') throw new Error(JSON.stringify(out));
     expect(out.refusal.statements.filter(x => x.stage === 'copy step started').map(x => x.text)).toEqual([
-      'The copy step used the method a copy is made by: a local fetch of the pinned commit alone from the operator\'s clone over Git\'s local file transport, with no network request. A fetch was started and failed, as Git reported: fatal: fixture fetch failure. The copy had not passed its form check.',
+      'The copy step used the method a copy is made by: a local fetch of the named identifier alone from the operator\'s clone over Git\'s local file transport, with no network request. A fetch was started and failed, as Git reported: fatal: fixture fetch failure. The copy had not passed its form check.',
       `The copy at ${out.refusal.copy?.location} was removed, its directory included.`,
       'For every Git process the copy step started, Syzygy relies on Git starting no program that the operator\'s clone\'s own configuration or hooks name while it serves the copy.',
     ]);
@@ -785,10 +785,10 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     expect(atInit.refusal.statements.find(x => x.id === 'copy')?.text).toBe(`The copy step started at ${atInit.refusal.copy?.location} and ended there, before Syzygy started the fetch process: Git read nothing of the operator's clone.`);
     const atCheckout = await run(clone, setup([], { ports: { copyGit: throwing('checkout') } }));
     if (atCheckout.kind !== 'refused') throw new Error(JSON.stringify(atCheckout));
-    expect(atCheckout.refusal.statements.find(x => x.id === 'copy')?.text).toBe('The copy step used the method a copy is made by: a local fetch of the pinned commit alone from the operator\'s clone over Git\'s local file transport, with no network request. It ended after the fetch, where it failed: the copy step failed after its directory was made (Error: fixture failure); the copy had not passed its form check.');
+    expect(atCheckout.refusal.statements.find(x => x.id === 'copy')?.text).toBe('The copy step used the method a copy is made by: a local fetch of the named identifier alone from the operator\'s clone over Git\'s local file transport, with no network request. It ended after the fetch, where it failed: the copy step failed after its directory was made (Error: fixture failure); the copy had not passed its form check.');
     const atFetch = await run(clone, setup([], { ports: { copyGit: throwing('fetch') } }));
     if (atFetch.kind !== 'refused') throw new Error(JSON.stringify(atFetch));
-    expect(atFetch.refusal.statements.find(x => x.id === 'copy')?.text).toBe('The copy step used the method a copy is made by: a local fetch of the pinned commit alone from the operator\'s clone over Git\'s local file transport, with no network request. A fetch was started and failed, as Git reported: the copy step failed after its directory was made (Error: fixture failure). The copy had not passed its form check.');
+    expect(atFetch.refusal.statements.find(x => x.id === 'copy')?.text).toBe('The copy step used the method a copy is made by: a local fetch of the named identifier alone from the operator\'s clone over Git\'s local file transport, with no network request. A fetch was started and failed, as Git reported: the copy step failed after its directory was made (Error: fixture failure). The copy had not passed its form check.');
   });
 
   it('a repeat run at a launch-consented HEAD: a copy-class run that asks nothing', async () => {
@@ -816,6 +816,10 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     if (out.kind === 'refused') expect(fs.existsSync(out.refusal.copy!.location)).toBe(false);
     expect(s.reads.log.calls).toEqual([]);
     expect(out.kind === 'refused' && out.refusal.reason.includes(up.commits[0]!)).toBe(false);   // the commit the tag names is never stated
+    // Never pinned: the copy statement names the named identifier, never a pinned commit (R-PDJA-33-SLICE-D-1 finding 1).
+    const statements = out.kind === 'refused' ? out.refusal.statements : [];
+    expect(statements.find(x => x.id === 'copy')?.text).toBe('The copy step used the method a copy is made by: a local fetch of the named identifier alone from the operator\'s clone over Git\'s local file transport, with no network request. It ended at the copy\'s detached checkout, which did not leave the copy\'s HEAD at the named identifier; the copy had not passed its form check.');
+    expect(statements.find(x => x.id === 'pinned-commit')?.text).toBe('The commit was not pinned, and its committer date is Unknown.');
   });
 
   it('a blob named by --revision: the checkout fails, refused as not shown to be a commit, never as not a commit; the copy removed', async () => {
@@ -829,6 +833,9 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     expect(reason.startsWith(`the copy's detached checkout of ${blob} (--revision ${blob}) failed (exit 128): `)).toBe(true);
     expect(reason.endsWith('; the object was not shown to be a commit: it is either not a commit or a commit that could not be checked out')).toBe(true);
     expect(s.reads.log.calls).toEqual([]);
+    const statements = out.kind === 'refused' ? out.refusal.statements : [];
+    expect(statements.find(x => x.id === 'copy')?.text).toBe('The copy step used the method a copy is made by: a local fetch of the named identifier alone from the operator\'s clone over Git\'s local file transport, with no network request. It ended at the copy\'s detached checkout, which failed; the copy had not passed its form check.');
+    expect(statements.some(x => x.text.includes('pinned commit'))).toBe(false);
   });
 
   it('a partial clone missing an object: the fetch fails, refused with Git\'s report, nothing fetched elsewhere, the copy removed', async () => {
