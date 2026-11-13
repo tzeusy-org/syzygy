@@ -18,20 +18,36 @@ import { loadDossierScreen } from './screen.js';
 /** The screening-policy successor a repository not declared public needs (REQ-polaris-generation-046, line 25). */
 export const NON_PUBLIC_SUCCESSOR = 'a screening-policy successor that admits non-public sources (public-source screening scope version 8, OWNER-SELECTION-SCREENING-SCOPE-V8-2026-11-08, performed as its own owner act)';
 
-export function processTerminal(): LaunchTerminal {
-  const input = process.stdin;
+/** An interrupt (Ctrl-C) or the end of input at a question is "an answer is not given" (046, line 11): the question resolves to no answer, so
+ * the launch refuses and, in a copy-class run, removes the copy and says so (047), instead of the process dying with the copy left behind
+ * (R-PDJA-33-SLICE-B-1 finding 2). Once input has ended or been interrupted, every later question has no answer too. `input`, `signals`
+ * and `errors` are injected only by tests. */
+export function processTerminal(
+  input: NodeJS.ReadableStream & { readonly isTTY?: boolean } = process.stdin,
+  signals: Pick<NodeJS.EventEmitter, 'on' | 'removeListener'> = process,
+  errors: Pick<NodeJS.WritableStream, 'write'> = process.stderr,
+): LaunchTerminal {
   const isTTY = input.isTTY === true;
   let name = 'not a terminal';
-  if (isTTY) { try { name = fs.readlinkSync('/proc/self/fd/0'); } catch { name = 'a terminal (name not readable)'; } }
-  let lines: AsyncIterator<string> | null = null;
+  if (isTTY && input === process.stdin) { try { name = fs.readlinkSync('/proc/self/fd/0'); } catch { name = 'a terminal (name not readable)'; } }
+  let rl: readline.Interface | null = null, lines: AsyncIterator<string> | null = null, ended = false;
   return {
     isTTY, name,
-    print: text => { process.stderr.write(`${text}\n`); },
+    print: text => { errors.write(`${text}\n`); },
     ask: async prompt => {
-      process.stderr.write(prompt);
-      lines ??= readline.createInterface({ input, terminal: false, crlfDelay: Infinity })[Symbol.asyncIterator]();
-      const next = await lines.next();
-      return next.done === true ? null : next.value;
+      errors.write(prompt);
+      if (ended) return null;
+      rl ??= readline.createInterface({ input, terminal: false, crlfDelay: Infinity });
+      lines ??= rl[Symbol.asyncIterator]();
+      const interrupt = () => { ended = true; errors.write('\n'); rl?.close(); };
+      signals.on('SIGINT', interrupt);
+      try {
+        const next = await lines.next();
+        if (next.done === true) { ended = true; return null; }
+        return ended ? null : next.value;
+      } finally {
+        signals.removeListener('SIGINT', interrupt);
+      }
     },
   };
 }

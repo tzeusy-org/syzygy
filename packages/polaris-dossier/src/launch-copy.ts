@@ -104,6 +104,13 @@ export function makeCopy(input: { readonly clone: string; readonly named: string
   } catch (cause) {
     return { ok: false, dir: null, failure: { kind: 'directory', reason: `the copy's directory could not be created under ${input.copyRoot} (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` } };
   }
+  // Once the directory exists every outcome returns it, a thrown error included, so the caller can remove it.
+  try { return copyInto(dir, input, run); } catch (cause) {
+    return { ok: false, dir, failure: { kind: 'directory', reason: `the copy step failed after its directory was made (${cause instanceof Error ? `${cause.name}: ${cause.message}` : String(cause)})` } };
+  }
+}
+
+function copyInto(dir: string, input: { readonly clone: string; readonly named: string; readonly objectFormat: string }, run: CopyGitRun): CopyResult {
   const env = copyEnvironment();
   const git = (args: readonly string[]) => run([...COPY_GIT_OPTIONS, ...args], { cwd: dir, env });
   const init = git(['init', '-q', '--template=', `--object-format=${input.objectFormat}`, dir]);

@@ -11,7 +11,7 @@ import { parseRunConfig, type RunConfigRefusal } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { createRunDirectory, stateRootViolation, type RunPorts } from './state-directory.js';
 import { isoOf } from './iso-of.js';
-import { launchConsent, pinStatement, type LaunchCopy, type LaunchOutcome, type LaunchPorts, type LaunchRefusal } from './launch.js';
+import { failureText, launchConsent, pinStatement, type LaunchCopy, type LaunchOutcome, type LaunchPorts, type LaunchRefusal } from './launch.js';
 import { copyEndStatement, copyKeptStatement, removeCopy, type CopyEnd } from './launch-copy.js';
 import { withLaunchRecords } from './launch-sources.js';
 
@@ -26,7 +26,7 @@ import { withLaunchRecords } from './launch-sources.js';
  * under the state root, never inside or around the clone, and holds only `run.json`, which records the clone's real path as the one
  * location every later step reads objects from. */
 
-export type InitStage = 'launch' | 'url' | 'config' | 'state-root' | 'repository' | 'start-gates' | 'head' | 'revision' | 'clone-shape' | 'listing' | 'statement' | 'write';
+export type InitStage = 'failure' | 'launch' | 'url' | 'config' | 'state-root' | 'repository' | 'start-gates' | 'head' | 'revision' | 'clone-shape' | 'listing' | 'statement' | 'write';
 
 export interface InitRefusal {
   readonly command: 'init';
@@ -105,147 +105,158 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
     return { ok: false, refusal: { command: 'init', outcome: 'refused', stage, reason, ...extra, copy: end, copyStatement: copyEndStatement(end), objectsRead, disclosures: DISCLOSURES } };
   };
 
-  // The --url, read as an admitted locator and normalised (046, line 17): refused by its rule, never quoted.
-  let normalisedUrl: string | undefined;
-  if (request.url !== undefined) {
-    const given = dossierLocator(request.url);
-    if (!given.ok) return refuse('url', given.reason);
-    normalisedUrl = given.url;
+  // A thrown error after the launch made a copy ends the run before its brief: the copy is removed and the refusal says so
+  // (R-PDJA-33-SLICE-B-1 finding 2).
+  try {
+    return await steps();
+  } catch (cause) {
+    if (copy === null) throw cause;
+    return refuse('failure', `init failed after the launch made the copy: ${failureText(cause)}`);
   }
-  const config = parseRunConfig(request.configText);
-  if (!config.ok) return refuse('config', 'the run configuration is refused; there is no default', { refusals: config.refusals });
-  const violation = stateRootViolation(request.stateRoot, request.clone);
-  if (violation !== null) return refuse('state-root', violation);
 
-  let sources = ports.sources;
-  let launched: Exclude<LaunchOutcome, { kind: 'refused' } | { kind: 'head-consented' }> | null = null;
-  // REQ-polaris-generation-047's first branch: no --revision, and an observation consent another act made names the clone's HEAD.
-  let headConsentedElsewhere = false;
-  // Decided from the other acts' records alone: a launch consent naming HEAD makes the run copy-class, never this branch.
-  if (normalisedUrl !== undefined && request.revision === undefined) {
-    const elsewhere = otherActsOf(sources);
-    const ids = await elsewhere.repositoryIdsFor(normalisedUrl);
-    const head = resolveCloneHead(request.clone);
-    headConsentedElsewhere = ids.length === 1 && head.ok && (await elsewhere.observationConsentFor(ids[0]!, head.commit)).satisfied;
-  }
-  if (!headConsentedElsewhere && ports.launch !== undefined) {
-    const startGates = await Promise.all([sources.registryEntry(), sources.screeningPolicy()]);
-    if (startGates[0].state !== 'ok' || startGates[1].state !== 'ok') {
-      const [registryEntry, screeningPolicy] = startGates;
+  async function steps(): Promise<InitResult> {
+    // The --url, read as an admitted locator and normalised (046, line 17): refused by its rule, never quoted.
+    let normalisedUrl: string | undefined;
+    if (request.url !== undefined) {
+      const given = dossierLocator(request.url);
+      if (!given.ok) return refuse('url', given.reason);
+      normalisedUrl = given.url;
+    }
+    const config = parseRunConfig(request.configText);
+    if (!config.ok) return refuse('config', 'the run configuration is refused; there is no default', { refusals: config.refusals });
+    const violation = stateRootViolation(request.stateRoot, request.clone);
+    if (violation !== null) return refuse('state-root', violation);
+
+    let sources = ports.sources;
+    let launched: Exclude<LaunchOutcome, { kind: 'refused' } | { kind: 'head-consented' }> | null = null;
+    // REQ-polaris-generation-047's first branch: no --revision, and an observation consent another act made names the clone's HEAD.
+    let headConsentedElsewhere = false;
+    // Decided from the other acts' records alone: a launch consent naming HEAD makes the run copy-class, never this branch.
+    if (normalisedUrl !== undefined && request.revision === undefined) {
+      const elsewhere = otherActsOf(sources);
+      const ids = await elsewhere.repositoryIdsFor(normalisedUrl);
+      const head = resolveCloneHead(request.clone);
+      headConsentedElsewhere = ids.length === 1 && head.ok && (await elsewhere.observationConsentFor(ids[0]!, head.commit)).satisfied;
+    }
+    if (!headConsentedElsewhere && ports.launch !== undefined) {
+      const startGates = await Promise.all([sources.registryEntry(), sources.screeningPolicy()]);
+      if (startGates[0].state !== 'ok' || startGates[1].state !== 'ok') {
+        const [registryEntry, screeningPolicy] = startGates;
+        const why = [registryEntry.state === 'ok' ? null : `source-acquisition registry entry: ${registryEntry.why}`,
+          screeningPolicy.state === 'ok' ? null : `classification and screening policy: ${screeningPolicy.why}`].filter((w): w is string => w !== null);
+        return refuse('start-gates', `a start gate is not in force: ${why.join('; ')}`, { startGates: { registryEntry, screeningPolicy } });
+      }
+      const outcome = await launchConsent({
+        clone: request.clone, ...(request.revision === undefined ? {} : { revision: request.revision }),
+        ...(request.identity === undefined ? {} : { identity: request.identity }), ...(request.upstream === undefined ? {} : { upstream: request.upstream }),
+        agentTool: config.config.agentTool, agentProvider: config.config.agentProvider, operator: config.config.operator,
+        headConsentedElsewhere: false, command: request.command ?? 'syzygy dossier init <clone> --config <run.json> --state-root <dir>',
+      }, { ...ports.launch, sources, now: ports.now, copyRoot: path.join(request.stateRoot, COPY_DIRECTORY), ...(ports.openReader === undefined ? {} : { openReader: ports.openReader }) });
+      if (outcome.kind === 'refused') {
+        objectsRead = outcome.refusal.stage !== 'clone' && outcome.refusal.stage !== 'self-observation' && outcome.refusal.stage !== 'records' && outcome.refusal.stage !== 'revision' && outcome.refusal.stage !== 'head';
+        return refuse('launch', outcome.refusal.reason, { launch: outcome.refusal });
+      }
+      if (outcome.kind !== 'head-consented') {
+        launched = outcome;
+        copy = outcome.copy;
+        // The launch's normalised URL, for every host: the GitHub-only refusal is retired (046, line 17).
+        normalisedUrl = outcome.subject.url;
+        sources = withLaunchRecords(ports.sources, { home: ports.launch.home, now: ports.now });
+      }
+    }
+    if (normalisedUrl === undefined) return refuse('url', 'no --url names an observation consent made by another act, and no launch is possible here');
+    const url = { url: normalisedUrl };
+
+    const ids = await sources.repositoryIdsFor(url.url);
+    if (ids.length !== 1) {
+      return refuse('repository', ids.length === 0
+        ? `no observation consent in force has an Upstream that normalises to ${url.url}${sources.consentAbsenceFor === undefined ? '' : `: ${await sources.consentAbsenceFor(url.url)}`}`
+        : `${ids.length} observation consents in force have an Upstream that normalises to ${url.url} (${ids.join(', ')}); which one governs is ambiguous`);
+    }
+    const repositoryId = ids[0]!;
+    if (launched !== null && repositoryId !== launched.subject.identity.slice('repository:'.length)) {
+      return refuse('repository', `the launch declared ${launched.subject.identity}, but the consent in force for ${url.url} names repository:${repositoryId}`);
+    }
+
+    const [registryEntry, screeningPolicy] = await Promise.all([sources.registryEntry(), sources.screeningPolicy()]);
+    if (registryEntry.state !== 'ok' || screeningPolicy.state !== 'ok') {
       const why = [registryEntry.state === 'ok' ? null : `source-acquisition registry entry: ${registryEntry.why}`,
         screeningPolicy.state === 'ok' ? null : `classification and screening policy: ${screeningPolicy.why}`].filter((w): w is string => w !== null);
       return refuse('start-gates', `a start gate is not in force: ${why.join('; ')}`, { startGates: { registryEntry, screeningPolicy } });
     }
-    const outcome = await launchConsent({
-      clone: request.clone, ...(request.revision === undefined ? {} : { revision: request.revision }),
-      ...(request.identity === undefined ? {} : { identity: request.identity }), ...(request.upstream === undefined ? {} : { upstream: request.upstream }),
-      agentTool: config.config.agentTool, agentProvider: config.config.agentProvider, operator: config.config.operator,
-      headConsentedElsewhere: false, command: request.command ?? 'syzygy dossier init <clone> --config <run.json> --state-root <dir>',
-    }, { ...ports.launch, sources, now: ports.now, copyRoot: path.join(request.stateRoot, COPY_DIRECTORY), ...(ports.openReader === undefined ? {} : { openReader: ports.openReader }) });
-    if (outcome.kind === 'refused') {
-      objectsRead = outcome.refusal.stage !== 'clone' && outcome.refusal.stage !== 'self-observation' && outcome.refusal.stage !== 'records' && outcome.refusal.stage !== 'revision' && outcome.refusal.stage !== 'head';
-      return refuse('launch', outcome.refusal.reason, { launch: outcome.refusal });
+
+    // The run's clone: in a copy-class run the copy, which REQ-polaris-generation-033 to 036 then name; otherwise the operator's clone.
+    const runClone = copy === null ? request.clone : copy.dir;
+    const head = resolveCloneHead(runClone);
+    if (!head.ok) return refuse('head', head.reason);
+    let clonePath: string;
+    try { clonePath = fs.realpathSync(path.resolve(runClone)); } catch (cause) {
+      return refuse('head', `the clone's real path cannot be resolved (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})`);
     }
-    if (outcome.kind !== 'head-consented') {
-      launched = outcome;
-      copy = outcome.copy;
-      // The launch's normalised URL, for every host: the GitHub-only refusal is retired (046, line 17).
-      normalisedUrl = outcome.subject.url;
-      sources = withLaunchRecords(ports.sources, { home: ports.launch.home, now: ports.now });
+    const revisions = (await sources.consentedRevisionsFor(repositoryId)).map(r => ({ label: r.label, commit: r.commitId }));
+    const consent = await sources.observationConsentFor(repositoryId, head.commit);
+    const pinned = revisions.find(r => r.commit === head.commit);
+    if (!consent.satisfied || pinned === undefined) {
+      return refuse('revision', `the clone's HEAD ${head.commit} (${head.via}) is not a revision the in-force observation consent for ${repositoryId} names${consent.satisfied ? '' : `: ${consent.why}`}`, { consentedRevisions: revisions });
     }
-  }
-  if (normalisedUrl === undefined) return refuse('url', 'no --url names an observation consent made by another act, and no launch is possible here');
-  const url = { url: normalisedUrl };
 
-  const ids = await sources.repositoryIdsFor(url.url);
-  if (ids.length !== 1) {
-    return refuse('repository', ids.length === 0
-      ? `no observation consent in force has an Upstream that normalises to ${url.url}${sources.consentAbsenceFor === undefined ? '' : `: ${await sources.consentAbsenceFor(url.url)}`}`
-      : `${ids.length} observation consents in force have an Upstream that normalises to ${url.url} (${ids.join(', ')}); which one governs is ambiguous`);
-  }
-  const repositoryId = ids[0]!;
-  if (launched !== null && repositoryId !== launched.subject.identity.slice('repository:'.length)) {
-    return refuse('repository', `the launch declared ${launched.subject.identity}, but the consent in force for ${url.url} names repository:${repositoryId}`);
-  }
+    const gitDirShape = cloneGitDirShape(head.gitDir, head.commit, { objectFormatSetting: copy !== null });
+    if (!gitDirShape.ok) return refuse('clone-shape', gitDirShape.reason);
 
-  const [registryEntry, screeningPolicy] = await Promise.all([sources.registryEntry(), sources.screeningPolicy()]);
-  if (registryEntry.state !== 'ok' || screeningPolicy.state !== 'ok') {
-    const why = [registryEntry.state === 'ok' ? null : `source-acquisition registry entry: ${registryEntry.why}`,
-      screeningPolicy.state === 'ok' ? null : `classification and screening policy: ${screeningPolicy.why}`].filter((w): w is string => w !== null);
-    return refuse('start-gates', `a start gate is not in force: ${why.join('; ')}`, { startGates: { registryEntry, screeningPolicy } });
-  }
-
-  // The run's clone: in a copy-class run the copy, which REQ-polaris-generation-033 to 036 then name; otherwise the operator's clone.
-  const runClone = copy === null ? request.clone : copy.dir;
-  const head = resolveCloneHead(runClone);
-  if (!head.ok) return refuse('head', head.reason);
-  let clonePath: string;
-  try { clonePath = fs.realpathSync(path.resolve(runClone)); } catch (cause) {
-    return refuse('head', `the clone's real path cannot be resolved (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})`);
-  }
-  const revisions = (await sources.consentedRevisionsFor(repositoryId)).map(r => ({ label: r.label, commit: r.commitId }));
-  const consent = await sources.observationConsentFor(repositoryId, head.commit);
-  const pinned = revisions.find(r => r.commit === head.commit);
-  if (!consent.satisfied || pinned === undefined) {
-    return refuse('revision', `the clone's HEAD ${head.commit} (${head.via}) is not a revision the in-force observation consent for ${repositoryId} names${consent.satisfied ? '' : `: ${consent.why}`}`, { consentedRevisions: revisions });
-  }
-
-  const gitDirShape = cloneGitDirShape(head.gitDir, head.commit, { objectFormatSetting: copy !== null });
-  if (!gitDirShape.ok) return refuse('clone-shape', gitDirShape.reason);
-
-  let paths: readonly string[];
-  try {
-    objectsRead = true;
-    const reader = (ports.openReader ?? openPinnedObjectReader)({ gitDir: head.gitDir, revision: head.commit });
-    const storeShape = cloneStoreShape(head.gitDir, head.commit, await reader.inventory());
-    if (!storeShape.ok) return refuse('clone-shape', storeShape.reason);
-    paths = (await reader.listTree()).map(entry => entry.path);
-  } catch (cause) {
-    if (cause instanceof GitObjectReadRefusal) return refuse('listing', `the pinned tree could not be listed: ${cause.message}`, { objectRead: cause.toJSON() });
-    throw cause;
-  }
-
-  const governed = governedSubject(await sources.projectInput.drawerFor(repositoryId), paths);
-  let providerStatement: string | null = null;
-  if (governed.statementRequired) {
-    const statement = providerStatementGate(await sources.providerStatements.statementsFor(repositoryId), config.config.agentTool, config.config.agentProvider, ports.now());
-    if (statement.state !== 'ok') {
-      return refuse('statement', `the subject is ${governed.kind} and the per-project statement is missing: ${statement.why}`, { governed });
+    let paths: readonly string[];
+    try {
+      objectsRead = true;
+      const reader = (ports.openReader ?? openPinnedObjectReader)({ gitDir: head.gitDir, revision: head.commit });
+      const storeShape = cloneStoreShape(head.gitDir, head.commit, await reader.inventory());
+      if (!storeShape.ok) return refuse('clone-shape', storeShape.reason);
+      paths = (await reader.listTree()).map(entry => entry.path);
+    } catch (cause) {
+      if (cause instanceof GitObjectReadRefusal) return refuse('listing', `the pinned tree could not be listed: ${cause.message}`, { objectRead: cause.toJSON() });
+      throw cause;
     }
-    providerStatement = statement.record;
-  }
 
-  const subject: RunSubject = {
-    repository: { url: url.url, repositoryId },
-    clone: { path: clonePath, declaredBy: 'operator', label: 'Inferred', use: 'read' },
-    pinnedRevision: { commit: head.commit, label: pinned.label, consentRecord: consent.record, pinnedAt: isoOf(ports.now()) },
-    startGates: { registryEntry: registryEntry.record, screeningPolicy: screeningPolicy.record },
-    governed: { kind: governed.kind, because: governed.because },
-    providerStatement,
-    workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
-  };
-  const created = createRunDirectory(request.stateRoot, request.clone, encodeRunRecord(config.config, subject), ports.runId === undefined ? {} : { runId: ports.runId });
-  if (!created.created) return refuse('write', created.detail);
-  return {
-    ok: true,
-    report: {
-      command: 'init',
-      outcome: 'initialized',
-      run: created.runDir,
-      runId: created.runId,
-      label: 'Inferred',
-      subject,
-      governed,
-      disclosures: [
-        ...DISCLOSURES,
-        ...(launched === null ? [] : launchDisclosures(launched)),
-        ...(copy === null ? [] : [copyKeptStatement(copy.dir)]),
-        governed.kind === 'non-governed'
-          ? 'the subject is non-governed, so no per-project statement is required; the agent sessions\' sends to their provider are the operator\'s own act'
-          : `the subject is ${governed.kind}; the run relies on the per-project statement ${providerStatement}, a consent record and not an egress record; neither the content classes it names nor the screening policies bind what the agent reads or sends`,
-      ],
-    },
-  };
+    const governed = governedSubject(await sources.projectInput.drawerFor(repositoryId), paths);
+    let providerStatement: string | null = null;
+    if (governed.statementRequired) {
+      const statement = providerStatementGate(await sources.providerStatements.statementsFor(repositoryId), config.config.agentTool, config.config.agentProvider, ports.now());
+      if (statement.state !== 'ok') {
+        return refuse('statement', `the subject is ${governed.kind} and the per-project statement is missing: ${statement.why}`, { governed });
+      }
+      providerStatement = statement.record;
+    }
+
+    const subject: RunSubject = {
+      repository: { url: url.url, repositoryId },
+      clone: { path: clonePath, declaredBy: 'operator', label: 'Inferred', use: 'read' },
+      pinnedRevision: { commit: head.commit, label: pinned.label, consentRecord: consent.record, pinnedAt: isoOf(ports.now()) },
+      startGates: { registryEntry: registryEntry.record, screeningPolicy: screeningPolicy.record },
+      governed: { kind: governed.kind, because: governed.because },
+      providerStatement,
+      workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
+    };
+    const created = createRunDirectory(request.stateRoot, request.clone, encodeRunRecord(config.config, subject), ports.runId === undefined ? {} : { runId: ports.runId });
+    if (!created.created) return refuse('write', created.detail);
+    return {
+      ok: true,
+      report: {
+        command: 'init',
+        outcome: 'initialized',
+        run: created.runDir,
+        runId: created.runId,
+        label: 'Inferred',
+        subject,
+        governed,
+        disclosures: [
+          ...DISCLOSURES,
+          ...(launched === null ? [] : launchDisclosures(launched)),
+          ...(copy === null ? [] : [copyKeptStatement(copy.dir)]),
+          governed.kind === 'non-governed'
+            ? 'the subject is non-governed, so no per-project statement is required; the agent sessions\' sends to their provider are the operator\'s own act'
+            : `the subject is ${governed.kind}; the run relies on the per-project statement ${providerStatement}, a consent record and not an egress record; neither the content classes it names nor the screening policies bind what the agent reads or sends`,
+        ],
+      },
+    };
+  }
 }
 
 /** What `init` discloses of a launch (REQ-polaris-generation-046, line 33; 047, line 184). */

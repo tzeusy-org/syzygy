@@ -780,6 +780,37 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     }
   });
 
+  it('a port that throws after the copy step started: refused, the copy removed and the removal said (R-PDJA-33-SLICE-B-1 finding 2)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const s = setup([], { ports: { terminal: { isTTY: true, name: '/dev/pts/9', print: () => {}, ask: async () => { throw new Error('fixture terminal failure'); } } } });
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'failure', reason: 'the launch failed after its copy step started: Error: fixture terminal failure', recorded: false,
+      copy: { state: 'removed' }, copyStatement: expect.stringMatching(/^The copy at \S+\/copies\/copy-[A-Za-z0-9]{6} was removed, its directory included\.$/) } });
+    if (out.kind !== 'refused' || out.refusal.copy == null) return;
+    expect(fs.existsSync(out.refusal.copy.location)).toBe(false);
+  });
+
+  it('no answer at the question (an interrupt or the end of input): refused, the copy removed', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const s = setup([null]);
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'refused', refusal: { recorded: false, copy: { state: 'removed' } } });
+    if (out.kind !== 'refused' || out.refusal.copy == null) return;
+    expect(fs.existsSync(out.refusal.copy.location)).toBe(false);
+  });
+
+  it('a Git process for the copy that throws: the copy\'s directory is still returned, removed and said', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const s = setup([], { ports: { copyGit: () => { throw new Error('fixture spawn failure'); } } });
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'copy', reason: 'the copy step failed after its directory was made (Error: fixture spawn failure)', copy: { state: 'removed' } } });
+    if (out.kind !== 'refused' || out.refusal.copy == null) return;
+    expect(fs.existsSync(out.refusal.copy.location)).toBe(false);
+  });
+
   it('a removal that fails: the copy is named as not removed, with its location and the failure, and kept', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' });
     const clone = fullClone(up.dir, URL_RR);
@@ -875,6 +906,19 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     expect(again.report.disclosures.filter(d => d.startsWith('the run rests on'))).toEqual([expect.stringMatching(
       /^the run rests on launch consent records already in force: launch observation consent LAUNCH-OBSERVATION-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8} \([0-9a-f]{40}\); drawer statement LAUNCH-DRAWER-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}$/)]);
     expect(s.reads.log.dirs.every(d => d === path.join(copyDir, '.git'))).toBe(true);
+  });
+
+  it('a port that throws after the launch made the copy: init refuses, removes the copy and says so (R-PDJA-33-SLICE-B-1 finding 2)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const r12 = up.commits[0]!.slice(0, 12);
+    const base = noOtherActs();
+    const throwing = { ...base, consentedRevisionsFor: async () => { throw new Error('fixture records failure'); } };
+    const { stateRoot, result } = initWith(clone, ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`], { sources: throwing });
+    const out = await result;
+    expect(out).toMatchObject({ ok: false, refusal: { stage: 'failure', reason: 'init failed after the launch made the copy: Error: fixture records failure',
+      copy: { state: 'removed' }, copyStatement: expect.stringMatching(/^The copy at \S+\/copies\/copy-[A-Za-z0-9]{6} was removed, its directory included\.$/) } });
+    expect(fs.readdirSync(path.join(stateRoot, 'copies'))).toEqual([]);
   });
 
   it('a refusal after the launch removes the copy and says so', async () => {
