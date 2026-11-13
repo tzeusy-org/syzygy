@@ -42,7 +42,8 @@ const HEX = /^[0-9a-f]+$/;
 const MIN_ABBREVIATION = 4;
 /** The identifier width of each object format; another format has none, and no name is then read as an identifier. */
 const WIDTH: Readonly<Record<string, number>> = { sha1: 40, sha256: 64 };
-const quote = (value: string): string => `'${value.replace(/'/g, `'\\''`)}'`;
+/** One POSIX shell word: the value single-quoted, each `'` written as `'\\''`. */
+export const quote = (value: string): string => `'${value.replace(/'/g, `'\\''`)}'`;
 
 export const checkoutCommand = (clone: string, commit: string): string => `git -C ${quote(clone)} checkout --detach ${commit}`;
 

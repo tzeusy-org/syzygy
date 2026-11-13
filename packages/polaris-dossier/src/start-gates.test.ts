@@ -1066,9 +1066,9 @@ describe('preflight', () => {
       startGates: { registryEntry: { state: 'ok', record: 'public-git-source-acquisition-local-agent-v1.1' }, screeningPolicy: { state: 'ok' } },
       missing: [],
       cloneCommands: [
-        'git init <dir>   # fixture-a: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 ${URL_} ${commits.A}`, 'git -C <dir> checkout --detach FETCH_HEAD',
-        'git init <dir>   # fixture-b: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 ${URL_} ${commits.B}`, 'git -C <dir> checkout --detach FETCH_HEAD',
-        'git init <dir>   # fixture-c: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 ${URL_} ${commits.C}`, 'git -C <dir> checkout --detach FETCH_HEAD',
+        'git init <dir>   # fixture-a: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 'https://github.com/redis/redis' ${commits.A}`, 'git -C <dir> checkout --detach FETCH_HEAD',
+        'git init <dir>   # fixture-b: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 'https://github.com/redis/redis' ${commits.B}`, 'git -C <dir> checkout --detach FETCH_HEAD',
+        'git init <dir>   # fixture-c: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 'https://github.com/redis/redis' ${commits.C}`, 'git -C <dir> checkout --detach FETCH_HEAD',
       ],
     });
     expect(result.report.cloneCommands.some((command) => /\bgit clone\b/u.test(command))).toBe(false);
@@ -1083,7 +1083,9 @@ describe('preflight', () => {
     execFileSync('git', ['clone', '-q', '--bare', '--no-local', origin, upstream], { env: GIT_ENV });
     execFileSync('git', ['-C', upstream, 'config', 'uploadpack.allowAnySHA1InWant', 'true'], { env: GIT_ENV });
     for (const line of result.report.cloneCommands.slice(3, 6)) {
-      const argv = line.replace(/\s+#.*$/u, '').replaceAll('<dir>', dir).replace(URL_, `file://${upstream}`).split(' ');
+      // Split as the shell reads it: the URL is one single-quoted word (R-PDJA-33-SLICE-C-1 finding 7).
+      const command = line.replace(/\s+#.*$/u, '').replaceAll('<dir>', dir).replace(`'${URL_}'`, `'file://${upstream}'`);
+      const argv = [...command.matchAll(/'([^']*)'|(\S+)/g)].map(m => m[1] ?? m[2]!);
       expect(argv[0]).toBe('git');
       execFileSync('git', argv.slice(1), { env: GIT_ENV, stdio: 'pipe' });
     }

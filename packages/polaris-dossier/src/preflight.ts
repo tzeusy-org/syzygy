@@ -1,5 +1,6 @@
 import { RECORDS_WITHIN_REACH, type GateSources, type GateState } from './gate-sources.js';
 import { dossierLocator } from './launch-identity.js';
+import { quote } from './launch-revision.js';
 
 /** `syzygy dossier preflight <url>` (design "Command surface"): whether the records a run needs are in force for the repository,
  * which revisions the consent names, whether a per-project statement is in force, and whether D9 and the RFC7-20 reading are in force.
@@ -74,7 +75,8 @@ export async function preflight(input: string, sources: GateSources, now: number
       // and a full clone would hand it every commit the consent does not name. One block per revision, each in its own new directory.
       cloneCommands: revisions.flatMap(r => [
         `git init <dir>   # ${r.label}: a new, empty directory for this revision alone`,
-        `git -C <dir> fetch --depth=1 ${input} ${r.commitId}`,
+        // The URL single-quoted: the locator rule admits `;`, `$(`, backticks and `|` in a path (R-PDJA-33-SLICE-C-1 finding 7).
+        `git -C <dir> fetch --depth=1 ${quote(input)} ${r.commitId}`,
         'git -C <dir> checkout --detach FETCH_HEAD',
       ]),
       disclosures: [

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { CloneSnapshot, RefValue } from './launch-clone.js';
-import { pinLaunchRevision } from './launch-revision.js';
+import { pinLaunchRevision, quote } from './launch-revision.js';
 
 /** REQ-polaris-generation-047: the pin, from fabricated snapshots of a clone's references (the snapshot reader is exercised against real
  * clones in launch.test.ts). Every expected pin, reference and refusal is a literal written from the clause. */
@@ -112,5 +112,12 @@ describe('REQ-polaris-generation-047', () => {
   it('a reference is found by its name in the names the clone holds, Git\'s short-name order first', async () => {
     const s = snap(oid(A), { 'refs/tags/x': oid(A), 'refs/heads/x': oid(B) });
     expect(await pin(s, { revision: 'x' })).toMatchObject({ ok: true, pinned: { commit: A } });
+  });
+});
+
+describe('the printed commands quote each value as one shell word (R-PDJA-33-SLICE-C-1 finding 7)', () => {
+  it('single-quotes it, closing and reopening around each quote', () => {
+    expect(quote('https://h.example/a/b;$(x)`y`|z')).toBe("'https://h.example/a/b;$(x)`y`|z'");
+    expect(quote("it's")).toBe("'it'\\''s'");
   });
 });
