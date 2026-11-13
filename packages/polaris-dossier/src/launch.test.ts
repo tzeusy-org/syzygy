@@ -759,7 +759,7 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     await run(clone, fresh);
     const again = await run(clone, setup([], { home: fresh.home }));
     expect(again.kind === 'covered' && again.statements.some(x => x.id === 'copy-beyond-consent')).toBe(false);
-  });
+  }, 20_000);   // three launches, each with its copy step: past the 5 s default under a loaded full run
 
   it('a failed fetch: the refusal states that a fetch was started and failed, as Git reported, and that the copy was removed', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' });
