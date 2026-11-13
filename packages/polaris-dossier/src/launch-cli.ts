@@ -5,6 +5,7 @@ import { POLICY_PATH, readPolicyActChain } from '@syzygy/polaris-generation-cons
 import { readSourceVisibility } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
 import type { LaunchPorts, LaunchTerminal, NonPublicAdmission } from './launch.js';
+import { interruptWatch } from './launch-copy.js';
 import { readWriteConsent } from './launch-write-consent.js';
 import { loadDossierScreen } from './screen.js';
 
@@ -73,6 +74,7 @@ export function processLaunchPorts(root: string, now: () => number, nonPublic: (
   return {
     home: root,
     terminal: processTerminal(),
+    interrupt: interruptWatch(),
     writeConsent: () => readWriteConsent({ root, now: now() }),
     nonPublic,
     previewClasses: async (identity, commit, paths) => {

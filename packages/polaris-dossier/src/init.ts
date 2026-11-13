@@ -101,6 +101,8 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
   let objectsRead = false;
   // A copy-class run's copy, once the launch made it: a refusal after the launch ends the run before its brief and removes it.
   let copy: LaunchCopy | null = null;
+  // What the launch recorded, for a failure after it: its records stay, revertable as 046 states.
+  let recordedNote = '';
   const refuse = (stage: InitStage, reason: string, extra: Partial<InitRefusal> = {}): InitResult => {
     if (copy === null) return { ok: false, refusal: { command: 'init', outcome: 'refused', stage, reason, ...extra, objectsRead, disclosures: DISCLOSURES } };
     const end = removeCopy(copy.dir, ports.launch?.removeCopy);
@@ -121,11 +123,15 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
 
   // A thrown error after the launch made a copy ends the run before its brief: the copy is removed and the refusal says so
   // (R-PDJA-33-SLICE-B-1 finding 2).
+  // An interrupt from the copy step until this outcome is a failure too (R-PDJA-33-SLICE-C-1 finding 3): the launch arms the watch when its
+  // copy step starts, init checks it before it writes the run directory, and the default action returns with the outcome.
   try {
     return await steps();
   } catch (cause) {
     if (copy === null) throw cause;
-    return refuse('failure', `init failed after the launch made the copy: ${failureText(cause)}`);
+    return refuse('failure', `init failed after the launch made the copy: ${failureText(cause)}${recordedNote}`);
+  } finally {
+    ports.launch?.interrupt?.disarm();
   }
 
   async function steps(): Promise<InitResult> {
@@ -172,6 +178,7 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
       if (outcome.kind !== 'head-consented') {
         launched = outcome;
         copy = outcome.copy;
+        if (outcome.kind === 'recorded' && outcome.records.length > 0) recordedNote = `; the launch's consent records stay recorded: ${outcome.records.join(', ')}, in the recording commit ${outcome.commit}`;
         // The launch's normalised URL, for every host: the GitHub-only refusal is retired (046, line 17).
         normalisedUrl = outcome.subject.url;
         sources = withLaunchRecords(ports.sources, { home: ports.launch.home, now: ports.now });
@@ -252,6 +259,7 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
       return refuse('head', `the operator's clone's real path cannot be resolved (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})`);
     }
     const launch = launchDisclosure(launched, { operatorClone, url: url.url, repositoryId, head, drawer: governed.drawer.stated ? governed.drawer.record : null });
+    ports.launch?.interrupt?.check();
     const created = createRunDirectory(request.stateRoot, request.clone, encodeRunRecord(config.config, subject), ports.runId === undefined ? {} : { runId: ports.runId },
       { launchDisclosure: `${JSON.stringify(launch, null, 2)}\n` });
     if (!created.created) return refuse('write', created.detail);

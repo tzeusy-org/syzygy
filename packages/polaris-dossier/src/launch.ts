@@ -6,7 +6,7 @@ import { governedSubject, type DrawerStatement } from './governed.js';
 import { isoOf } from './iso-of.js';
 import { cloneGitDirShape, cloneStoreShape } from './clone-shape.js';
 import { linkedWorktrees, readCloneSnapshot, resolveRef } from './launch-clone.js';
-import { copyEndStatement, copyRootViolation, gitReport, makeCopy, removeCopy, type CopyEnd, type CopyGitRun, type ForbiddenPlace } from './launch-copy.js';
+import { copyEndStatement, copyRootViolation, gitReport, makeCopy, removeCopy, type CopyEnd, type CopyGitRun, type ForbiddenPlace, type InterruptWatch } from './launch-copy.js';
 import { normaliseUrl, proposeIdentity, type IdentitySource, type MatchableRecord } from './launch-identity.js';
 import {
   DRAWER_QUESTION, PUBLIC_QUESTION, drawerPhrase, nameOnBranchWarning, observationPhrase, providerPhrase, questionOpening, statementText,
@@ -68,6 +68,8 @@ export interface LaunchPorts {
   /** The Git processes for the copy and its removal; injected only by tests. */
   readonly copyGit?: CopyGitRun;
   readonly removeCopy?: (dir: string) => void;
+  /** The process-level interrupt, armed when the copy step starts (`interruptWatch`); absent, an interrupt takes the default action. */
+  readonly interrupt?: InterruptWatch;
 }
 
 export interface LaunchRequest {
@@ -242,8 +244,10 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
       ];
       const violation = copyRootViolation(ports.copyRoot, forbidden);
       if (violation !== null) return refuse('copy', violation);
+      ports.interrupt?.arm();
       const made = makeCopy({ clone, named: commit, objectFormat: snapshot.objectFormat, copyRoot: ports.copyRoot }, ports.copyGit);
       copyDir = made.dir;
+      ports.interrupt?.check();
       if (made.dir !== null) progress = copyProgressOf(made);
       if (made.ok) pinnedState = { commit, committerDate: 'unread' };
       if (!made.ok) {
@@ -381,6 +385,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
 
     const existing = store.records.filter(r => r.record.identity === identity || proposal.matches.some(m => m.record.recordId === r.record.recordId))
       .map(r => ({ recordId: r.record.recordId, recordClass: r.record.recordClass, identity: r.record.identity, state: r.state === 'active' ? 'active' : `${r.state} by ${r.stateBy}`, commit: r.commit }));
+    ports.interrupt?.check();
     for (const line of proposal.locatorStatements) say(line);
     questionAsked = true;
     say(questionOpening({
@@ -453,6 +458,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
       };
       return { recordId, text: renderLaunchRecord(record) };
     });
+    ports.interrupt?.check();
     const written: WriteResult = (ports.writeStore ?? writeLaunchRecords)(ports.home, {
       records, expectedTip: store.tip, operator: request.operator,
       message: `${recordingSubject(records.map(r => r.recordId))}\n\nRecorded by Syzygy at launch for the operator ${request.operator}, on the owner's typed phrases (REQ-polaris-generation-046), under the write consent WRITE-CONSENT-LAUNCH-RECORDS.\n`,

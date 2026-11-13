@@ -101,6 +101,26 @@ export type CopyResult =
   | { readonly ok: true; readonly dir: string; readonly gitDir: string }
   | { readonly ok: false; readonly dir: string | null; readonly failure: CopyFailure };
 
+/** A process-level interrupt (Ctrl-C) from a copy-class run's copy step to its outcome (R-PDJA-33-SLICE-C-1 finding 3). Armed when the copy
+ * step starts, it records a SIGINT instead of letting the process die with the copy left unremoved and unnamed; each checkpoint the launch
+ * and init pass before asking, before writing and before the run directory throws `Interrupted`, which their failure path turns into a
+ * refusal that removes the copy and says so. Disarmed once the run's outcome is returned, when the default action returns. */
+export interface InterruptWatch { arm(): void; check(): void; disarm(): void }
+
+export class Interrupted extends Error {
+  constructor() { super('the run was interrupted (SIGINT)'); this.name = 'Interrupted'; }
+}
+
+export function interruptWatch(signals: Pick<NodeJS.EventEmitter, 'on' | 'removeListener'> = process): InterruptWatch {
+  let armed = false, hit = false;
+  const onInterrupt = (): void => { hit = true; };
+  return {
+    arm: () => { if (!armed) { armed = true; signals.on('SIGINT', onInterrupt); } },
+    check: () => { if (hit) throw new Interrupted(); },
+    disarm: () => { if (armed) { armed = false; signals.removeListener('SIGINT', onInterrupt); } },
+  };
+}
+
 /** Git's own report, trimmed and bounded, for a refusal to quote. */
 export const gitReport = (stderr: string): string => {
   const text = stderr.trim().replace(/\s+/g, ' ');

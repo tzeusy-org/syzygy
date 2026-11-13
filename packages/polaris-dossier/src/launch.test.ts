@@ -7,7 +7,8 @@ import { tempDir } from '@syzygy/test-kit';
 import { installReadLog, sealExcept } from './fs-patch.testkit.js';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { initRun } from './init.js';
-import type { CopyGitRun } from './launch-copy.js';
+import { EventEmitter } from 'node:events';
+import { interruptWatch, type CopyGitRun } from './launch-copy.js';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { launchConsent, type LaunchOutcome, type LaunchPorts, type LaunchRequest } from './launch.js';
 import { LAUNCH_REF, readLaunchRecords, writeLaunchRecords } from './launch-store.js';
@@ -1055,9 +1056,47 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     const throwing = { ...base, consentedRevisionsFor: async () => { throw new Error('fixture records failure'); } };
     const { stateRoot, result } = initWith(clone, ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`], { sources: throwing });
     const out = await result;
-    expect(out).toMatchObject({ ok: false, refusal: { stage: 'failure', reason: 'init failed after the launch made the copy: Error: fixture records failure',
+    expect(out).toMatchObject({ ok: false, refusal: { stage: 'failure', reason: expect.stringMatching(/^init failed after the launch made the copy: Error: fixture records failure; the launch's consent records stay recorded: LAUNCH-OBSERVATION-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}, LAUNCH-DRAWER-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}, in the recording commit [0-9a-f]{40}$/),
       copy: { state: 'removed' }, copyStatement: expect.stringMatching(/^The copy at \S+\/copies\/copy-[A-Za-z0-9]{6} was removed, its directory included\.$/) } });
     expect(fs.readdirSync(path.join(stateRoot, 'copies'))).toEqual([]);
+  });
+
+  it('an interrupt from the copy step to the outcome removes the copy and says so: during the copy step, and after the records are written (R-PDJA-33-SLICE-C-1 finding 3)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const r12 = up.commits[0]!.slice(0, 12);
+    const answers = ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`];
+    const real: CopyGitRun = (args, o) => { const r = spawnSync('git', args, { cwd: o.cwd, env: o.env, encoding: 'utf8' }); return { status: r.status ?? -1, stderr: r.stderr ?? '' }; };
+    // During the copy step: Ctrl-C while the fetch runs.
+    const duringCopy = new EventEmitter();
+    const atFetch: CopyGitRun = (args, o) => { if (args.includes('fetch')) duringCopy.emit('SIGINT'); return real(args, o); };
+    const copying = initWith(fullClone(up.dir, URL_RR), answers, { ports: { copyGit: atFetch, interrupt: interruptWatch(duringCopy) } });
+    expect(await copying.result).toMatchObject({ ok: false, refusal: { stage: 'launch', launch: { stage: 'failure', reason: 'the launch failed after its copy step started: Interrupted: the run was interrupted (SIGINT)', recorded: false, copy: { state: 'removed' } } } });
+    expect(fs.readdirSync(path.join(copying.stateRoot, 'copies'))).toEqual([]);
+    expect(copying.s.terminal.prompts).toEqual([]);
+    expect(duringCopy.listenerCount('SIGINT')).toBe(0);
+    // After the records are written: init refuses before it writes the run directory, and names the records that stay.
+    const afterWrite = new EventEmitter();
+    const writeStore: typeof writeLaunchRecords = (home, input) => { afterWrite.emit('SIGINT'); return writeLaunchRecords(home, input); };
+    const writing = initWith(fullClone(up.dir, URL_RR), answers, { ports: { writeStore, interrupt: interruptWatch(afterWrite) } });
+    const out = await writing.result;
+    expect(out).toMatchObject({ ok: false, refusal: { stage: 'failure', copy: { state: 'removed' } } });
+    if (out.ok) return;
+    expect(out.refusal.reason).toMatch(/^init failed after the launch made the copy: Interrupted: the run was interrupted \(SIGINT\); the launch's consent records stay recorded: LAUNCH-OBSERVATION-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}, LAUNCH-DRAWER-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}, in the recording commit [0-9a-f]{40}$/);
+    expect(fs.readdirSync(path.join(writing.stateRoot, 'copies'))).toEqual([]);
+    expect(fs.readdirSync(writing.stateRoot)).toEqual(['copies']);
+    expect(afterWrite.listenerCount('SIGINT')).toBe(0);
+  });
+
+  it('the interrupt watch: armed once, a SIGINT is held until a check, and disarming removes its listener', () => {
+    const signals = new EventEmitter(), watch = interruptWatch(signals);
+    watch.check();
+    watch.arm(); watch.arm();
+    expect(signals.listenerCount('SIGINT')).toBe(1);
+    watch.check();
+    signals.emit('SIGINT');
+    expect(() => watch.check()).toThrow('the run was interrupted (SIGINT)');
+    watch.disarm();
+    expect(signals.listenerCount('SIGINT')).toBe(0);
   });
 
   it('objectsRead is decided from the reads: a copy-stage refusal reads none, a refusal after the pre-answer reads read some (R-PDJA-33-SLICE-B-1 finding 6)', async () => {
