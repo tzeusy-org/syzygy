@@ -11,6 +11,7 @@ import type { CopyGitRun } from './launch-copy.js';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { launchConsent, type LaunchOutcome, type LaunchPorts, type LaunchRequest } from './launch.js';
 import { LAUNCH_REF, readLaunchRecords } from './launch-store.js';
+import { withLaunchRecords } from './launch-sources.js';
 import { NON_PUBLIC_SUCCESSOR } from './launch-cli.js';
 import { fixtureClasses, fullClone, gitIn, listing, makeHome, makeUpstream, noOtherActs, scriptedTerminal, writeFiles, type ScriptedTerminal } from './launch.testkit.js';
 
@@ -843,6 +844,37 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     if (!out.ok) throw new Error(JSON.stringify(out.refusal));
     expect(out.report.subject.pinnedRevision.commit).toBe(commit);
     expect(gitIn(out.report.subject.clone.path, 'rev-parse', '--show-object-format')).toBe('sha256');
+  });
+
+  it('a repeat init --url at a HEAD only a launch consent names runs on a copy, with sources wrapped as the CLI wraps them (R-PDJA-33-SLICE-B-1 finding 1)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const commit = up.commits[0]!, r12 = commit.slice(0, 12);
+    const home = makeHome();
+    // As cli.ts wires them: the other acts' sources with the launch records added.
+    const cliSources = () => withLaunchRecords(noOtherActs(), { home, now: () => NOW });
+    const first = await initWith(fullClone(up.dir, URL_RR), ['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`], { home, sources: cliSources() }).result;
+    if (!first.ok) throw new Error(JSON.stringify(first.refusal));
+    // The operator's own clone in the one-commit form (the v1.1-era fetch form), at the launch-consented commit.
+    const parent = tempDir('syzygy-launch-repeat-'), clone = path.join(parent, 'one');
+    gitIn(parent, 'init', '-q', '--template=', clone);
+    gitIn(clone, 'remote', 'add', 'origin', URL_RR);
+    gitIn(clone, 'fetch', '-q', '--depth=1', '--no-tags', `file://${up.dir}`, commit);
+    gitIn(clone, 'checkout', '-q', '--detach', 'FETCH_HEAD');
+    const s = setup([], { home });
+    const stateRoot = path.join(tempDir('syzygy-launch-init-'), 'runs');
+    const { sources: _sources, now: _now, openReader: _open, copyRoot: _root, ...launch } = s.ports;
+    const again = await initRun({ clone, url: 'https://github.com/redis/redis', configText: CONFIG, stateRoot }, { sources: cliSources(), now: () => NOW, openReader: s.reads.open, launch });
+    if (!again.ok) throw new Error(JSON.stringify(again.refusal));
+    const copyDir = again.report.subject.clone.path;
+    expect(path.dirname(copyDir)).toBe(path.join(fs.realpathSync(stateRoot), 'copies'));
+    expect(copyDir).not.toBe(fs.realpathSync(clone));
+    expect(s.terminal.prompts).toEqual([]);
+    expect(fs.readdirSync(path.join(stateRoot, 'copies'))).toEqual([path.basename(copyDir)]);
+    expect(s.reads.log.dirs.length).toBeGreaterThan(0);
+    // The launch's records are named as launch records, once each: none satisfies the launch's "another act" lookups.
+    expect(again.report.disclosures.filter(d => d.startsWith('the run rests on'))).toEqual([expect.stringMatching(
+      /^the run rests on launch consent records already in force: launch observation consent LAUNCH-OBSERVATION-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8} \([0-9a-f]{40}\); drawer statement LAUNCH-DRAWER-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}$/)]);
+    expect(s.reads.log.dirs.every(d => d === path.join(copyDir, '.git'))).toBe(true);
   });
 
   it('a refusal after the launch removes the copy and says so', async () => {

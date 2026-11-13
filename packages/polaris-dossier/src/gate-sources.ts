@@ -72,7 +72,14 @@ export interface GateSources {
   readonly rfc720Ruling: () => Promise<GateState>;
   readonly projectInput: ProjectInputSource;
   readonly providerStatements: ProviderStatementSource;
+  /** These sources without launch consent records, where they were added (`withLaunchRecords`): what "an observation consent made by
+   * another act" is decided from (REQ-polaris-generation-047's first branch and class rule; 046's records "made by any other act").
+   * Absent, these sources hold no launch record. */
+  readonly otherActs?: GateSources;
 }
+
+/** The sources an "another act" decision reads: never a launch consent record (R-PDJA-33-SLICE-B-1 finding 1). */
+export const otherActsOf = (sources: GateSources): GateSources => sources.otherActs ?? sources;
 
 /** The implementation the source-acquisition registry entry must name for the dossier's reads (git-object-reader.ts): the local-agent
  * entry, signed off by version tag (`LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM`), names it with implementation version 1.0.0. */

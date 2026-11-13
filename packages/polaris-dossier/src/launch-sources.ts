@@ -1,4 +1,4 @@
-import type { GateSources } from './gate-sources.js';
+import { otherActsOf, type GateSources } from './gate-sources.js';
 import { launchStatementRecord } from './launch.js';
 import { readLaunchRecords, type StoreRead, type StoredRecord } from './launch-store.js';
 
@@ -23,6 +23,8 @@ export function withLaunchRecords(base: GateSources, options: { readonly home: s
     records().filter(r => r.record.identity === `repository:${identity}` && r.record.recordClass === recordClass);
   return {
     ...base,
+    // The sources an "another act" decision reads, launch records never among them, however often these are wrapped.
+    otherActs: otherActsOf(base),
     repositoryIdsFor: async url => {
       const ids = await base.repositoryIdsFor(url);
       if (ids.length > 0) return ids;

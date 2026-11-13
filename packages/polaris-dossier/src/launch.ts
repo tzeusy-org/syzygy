@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import type { GateSources, ProviderStatementRecord } from './gate-sources.js';
+import { otherActsOf, type GateSources, type ProviderStatementRecord } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, storedIdentifiers, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { governedSubject, type DrawerStatement } from './governed.js';
 import { isoOf } from './iso-of.js';
@@ -149,6 +149,9 @@ export function launchStatementRecord(r: StoredRecord): ProviderStatementRecord 
 }
 
 export async function launchConsent(request: LaunchRequest, ports: LaunchPorts): Promise<LaunchOutcome> {
+  // Every source answer here is another act's: the launch's own records come from its store, so launch records added to the sources
+  // (`withLaunchRecords`) are set aside, and never satisfy an "another act" check (R-PDJA-33-SLICE-B-1 finding 1).
+  const sources = otherActsOf(ports.sources);
   const missing: string[] = [];
   // The run's class, once decided, and its copy's directory once the copy step has started: a refusal then removes the copy and says so.
   let copyClass: boolean | null = null, copyDir: string | null = null;
@@ -194,7 +197,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   const commit = named.named.commit;
 
   // The class (047): "SHALL run on a copy unless its named identifier is named by an in-force observation consent made by another act".
-  copyClass = !(await ports.sources.observationConsentNaming(commit)).satisfied;
+  copyClass = !(await sources.observationConsentNaming(commit)).satisfied;
   let runGitDir = snapshot.gitDir, copy: LaunchCopy | null = null;
   if (copyClass) {
     if (snapshot.alternates) return refuse('clone', 'the operator\'s clone has an objects/info/alternates file, and a copy-class run refuses a clone with an alternate before its copy step starts');
@@ -267,7 +270,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   const chosenRemote = defaultRemote(snapshot);
   // Every existing record, in any state (046, line 15): the launch records, and the observation consents made by other acts, matched by
   // identity, by their `Upstream:` URL normalised by the same rule (host and whole path), by the pinned revision or by a parent (line 17).
-  const others = await ports.sources.observationRecords();
+  const others = await sources.observationRecords();
   if (!others.ok) return refuse('records', `the observation consents made by other acts cannot be read, so the records matching the run are not known: ${others.why}`);
   const matchable: MatchableRecord[] = [
     ...store.records.map((r): MatchableRecord => ({
@@ -297,12 +300,12 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   // What is already in force, by any act.
   const mine = inForce(store.records, identity, now);
   const relied: string[] = [];
-  const elsewhereObs = await ports.sources.observationConsentFor(bare, commit);
+  const elsewhereObs = await sources.observationConsentFor(bare, commit);
   const launchObs = mine.find(r => r.record.recordClass === 'observation-consent' && r.record.revision === commit);
   const needObservation = !elsewhereObs.satisfied && launchObs === undefined;
   if (elsewhereObs.satisfied) relied.push(`observation consent ${elsewhereObs.record}`);
   if (launchObs !== undefined) relied.push(`launch observation consent ${launchObs.record.recordId} (${launchObs.commit})`);
-  const elsewhereDrawer = await ports.sources.projectInput.drawerFor(bare);
+  const elsewhereDrawer = await sources.projectInput.drawerFor(bare);
   const launchDrawer = mine.find(r => r.record.recordClass === 'drawer-statement');
   const drawer: DrawerStatement = elsewhereDrawer.stated ? elsewhereDrawer
     : launchDrawer !== undefined ? { stated: true, drawer: 'absent', record: launchDrawer.record.recordId } : elsewhereDrawer;
@@ -311,7 +314,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
 
   const preview = await ports.previewClasses(identity, commit, paths);
   if ('why' in preview) return refuse('policy', `the content classes cannot be previewed: ${preview.why}`);
-  const statements = [...(await ports.sources.providerStatements.statementsFor(bare)), ...mine.filter(r => r.record.recordClass === 'provider-statement').map(launchStatementRecord)];
+  const statements = [...(await sources.providerStatements.statementsFor(bare)), ...mine.filter(r => r.record.recordClass === 'provider-statement').map(launchStatementRecord)];
   const pair = statements.filter(s => s.agentTool === request.agentTool && s.provider === request.agentProvider && !s.withdrawn && s.act !== null && s.act.inForceAt <= now);
   const covering = pair.find(s => preview.classes.every(c => s.contentClasses.includes(c)));
   const supersedable = covering === undefined && pair.length === 1 ? pair[0]!.recordId : null;

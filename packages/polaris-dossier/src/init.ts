@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { resolveCloneHead } from './clone-head.js';
 import { cloneGitDirShape, cloneStoreShape } from './clone-shape.js';
-import { RECORDS_WITHIN_REACH, providerStatementGate, type GateSources, type GateState } from './gate-sources.js';
+import { RECORDS_WITHIN_REACH, otherActsOf, providerStatementGate, type GateSources, type GateState } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { dossierLocator } from './launch-identity.js';
 import { governedSubject, type GovernedDecision } from './governed.js';
@@ -121,10 +121,12 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
   let launched: Exclude<LaunchOutcome, { kind: 'refused' } | { kind: 'head-consented' }> | null = null;
   // REQ-polaris-generation-047's first branch: no --revision, and an observation consent another act made names the clone's HEAD.
   let headConsentedElsewhere = false;
+  // Decided from the other acts' records alone: a launch consent naming HEAD makes the run copy-class, never this branch.
   if (normalisedUrl !== undefined && request.revision === undefined) {
-    const ids = await sources.repositoryIdsFor(normalisedUrl);
+    const elsewhere = otherActsOf(sources);
+    const ids = await elsewhere.repositoryIdsFor(normalisedUrl);
     const head = resolveCloneHead(request.clone);
-    headConsentedElsewhere = ids.length === 1 && head.ok && (await sources.observationConsentFor(ids[0]!, head.commit)).satisfied;
+    headConsentedElsewhere = ids.length === 1 && head.ok && (await elsewhere.observationConsentFor(ids[0]!, head.commit)).satisfied;
   }
   if (!headConsentedElsewhere && ports.launch !== undefined) {
     const startGates = await Promise.all([sources.registryEntry(), sources.screeningPolicy()]);
