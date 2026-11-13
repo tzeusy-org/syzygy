@@ -127,13 +127,15 @@ export function identityRemote(remotes: readonly { readonly name: string; readon
   return remotes.length === 1 ? remotes[0]! : null;
 }
 
-/** A record as the matching rule reads it: any launch consent record, in any state. */
+/** A record as the matching rule reads it, in any state: a launch consent record, or an observation consent made by another act, whose
+ * normalised URL is its `Upstream:` URL normalised by the same rule (046, line 17) and whose revisions are those it admits. */
 export interface MatchableRecord {
   readonly recordId: string;
   readonly identity: string;
   readonly normalisedUrl: string | null;
-  readonly revision: string | null;
+  readonly revisions: readonly string[];
   readonly state: string;
+  readonly madeBy: 'launch' | 'another act';
 }
 export type MatchKind = 'identity' | 'url' | 'revision' | 'parent';
 export interface RecordMatch { readonly record: MatchableRecord; readonly by: readonly MatchKind[] }
@@ -145,8 +147,8 @@ export function matchRecords(records: readonly MatchableRecord[], derived: { rea
     const by: MatchKind[] = [];
     if (derived.identity !== null && record.identity === derived.identity) by.push('identity');
     if (derived.url !== null && record.normalisedUrl === derived.url) by.push('url');
-    if (record.revision !== null && record.revision === pinned) by.push('revision');
-    if (record.revision !== null && parents.includes(record.revision)) by.push('parent');
+    if (record.revisions.includes(pinned)) by.push('revision');
+    if (record.revisions.some(r => parents.includes(r))) by.push('parent');
     return by.length === 0 ? [] : [{ record, by }];
   });
 }

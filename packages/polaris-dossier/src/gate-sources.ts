@@ -1,7 +1,7 @@
 import {
   LOCAL_AGENT_GIT_SOURCE_SIGNOFF_FORM, createPackageAdmissionRecordsPort, readDigestBoundActState, readPolicyActChain, readVersionedSignoffState,
   DECISIONS_DIR, SLOT, recorderTemplate,
-  type ActState, type ConsentedRevision, type DigestBoundAct, type DigestBoundActForm, type ExemptRecord, type PackageReaderFs, type RecorderTemplate,
+  type ActState, type ConsentedRevision, type DigestBoundAct, type DigestBoundActForm, type ExemptRecord, type ObservationRecordSummary, type PackageReaderFs, type RecorderTemplate,
   type VersionedSignoffForm,
 } from '@syzygy/polaris-generation-consent/live';
 import { readdir } from 'node:fs/promises';
@@ -58,6 +58,10 @@ export interface GateSources {
    * REQ-polaris-generation-047 ("unless its named identifier is named by an in-force observation consent made by another act"). It reads the
    * same records as `observationConsentFor` and nothing else. */
   readonly observationConsentNaming: (revision: string) => Promise<ConsentAnswer>;
+  /** Every observation consent these sources hold, in any state, with its subject, `Upstream:` URL as written and admitted revisions:
+   * the records "made by any other act" that REQ-polaris-generation-046 matches by identity, by normalised `Upstream:` URL, by the pinned
+   * revision or by a parent. Refused, never empty, when the records cannot be read. Grants nothing. */
+  readonly observationRecords: () => Promise<{ readonly ok: true; readonly records: readonly ObservationRecordSummary[] } | { readonly ok: false; readonly why: string }>;
   readonly registryEntry: () => Promise<GateState>;
   /** The classification and screening policy that covers public sources: one policy file carries both (the public-source scope of
    * `project:syzygy`'s secret-classification policy), under one act chain. */
@@ -511,6 +515,8 @@ export function createPackageGateSources(options: PackageGateSourceOptions): Gat
       const answer = await port.check({ kind: 'observation-consent', repositoryId, revision });
       return answer.satisfied ? { satisfied: true, record: answer.record } : { satisfied: false, why: answer.why };
     },
+    observationRecords: async () => (port.observationRecords === undefined
+      ? { ok: false, why: 'the admission records port cannot list its observation records' } : port.observationRecords()),
     observationConsentNaming: async revision => {
       if (port.observationConsentNaming === undefined) return { satisfied: false, why: 'the admission records port cannot answer by revision alone' };
       const answer = await port.observationConsentNaming(revision);

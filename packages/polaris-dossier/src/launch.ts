@@ -7,7 +7,7 @@ import { isoOf } from './iso-of.js';
 import { cloneGitDirShape, cloneStoreShape } from './clone-shape.js';
 import { linkedWorktrees, readCloneSnapshot, resolveRef } from './launch-clone.js';
 import { copyEndStatement, copyRootViolation, gitReport, makeCopy, removeCopy, type CopyEnd, type CopyGitRun, type ForbiddenPlace } from './launch-copy.js';
-import { proposeIdentity, type IdentitySource, type MatchableRecord } from './launch-identity.js';
+import { normaliseUrl, proposeIdentity, type IdentitySource, type MatchableRecord } from './launch-identity.js';
 import {
   DRAWER_QUESTION, PUBLIC_QUESTION, drawerPhrase, nameOnBranchWarning, observationPhrase, providerPhrase, questionOpening, statementText,
   type StatementOffer,
@@ -265,10 +265,20 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   }
 
   const chosenRemote = defaultRemote(snapshot);
-  const matchable: MatchableRecord[] = store.records.map(r => ({
-    recordId: r.record.recordId, identity: r.record.identity, normalisedUrl: r.record.normalisedUrl,
-    revision: r.record.recordClass === 'observation-consent' ? r.record.revision : null, state: r.state,
-  }));
+  // Every existing record, in any state (046, line 15): the launch records, and the observation consents made by other acts, matched by
+  // identity, by their `Upstream:` URL normalised by the same rule (host and whole path), by the pinned revision or by a parent (line 17).
+  const others = await ports.sources.observationRecords();
+  if (!others.ok) return refuse('records', `the observation consents made by other acts cannot be read, so the records matching the run are not known: ${others.why}`);
+  const matchable: MatchableRecord[] = [
+    ...store.records.map((r): MatchableRecord => ({
+      recordId: r.record.recordId, identity: r.record.identity, normalisedUrl: r.record.normalisedUrl,
+      revisions: r.record.recordClass === 'observation-consent' ? [r.record.revision] : [], state: r.state, madeBy: 'launch',
+    })),
+    ...others.records.map((r): MatchableRecord => ({
+      recordId: r.record, identity: `repository:${r.repositoryId}`, normalisedUrl: r.upstream === null ? null : normaliseUrl(r.upstream)?.url ?? null,
+      revisions: r.admittedRevisions, state: r.state, madeBy: 'another act',
+    })),
+  ];
   const proposal = proposeIdentity({
     remotes: snapshot.remotes, defaultRemote: 'remote' in chosenRemote ? chosenRemote.remote : null,
     ...(request.identity === undefined ? {} : { identityOption: request.identity }),
@@ -335,7 +345,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   for (const line of proposal.locatorStatements) say(line);
   say(questionOpening({
     identity, identitySource: proposal.source, url: proposal.url, urlSource: proposal.urlSource, revision: commit, revisionVia: via, committerDate,
-    updateCommand: pin.updateCommand, existing, notCarrying: proposal.notCarrying, inForceElsewhere: relied, asks: { observation: needObservation, drawer: needDrawerQuestion },
+    updateCommand: pin.updateCommand, existing, notCarrying: proposal.notCarrying, matchedElsewhere: proposal.matches.filter(m => m.record.madeBy === 'another act'), inForceElsewhere: relied, asks: { observation: needObservation, drawer: needDrawerQuestion },
   }));
 
   const publicAnswer = await ask(PUBLIC_QUESTION);

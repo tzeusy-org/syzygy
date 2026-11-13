@@ -6,7 +6,7 @@ import { deriveIdentity, identityRemote, matchRecords, normaliseIdentityOption, 
 
 const P = 'a'.repeat(40), Q = 'b'.repeat(40), PARENT = 'c'.repeat(40);
 const rec = (recordId: string, identity: string, normalisedUrl: string | null, revision: string | null, state = 'active'): MatchableRecord =>
-  ({ recordId, identity, normalisedUrl, revision, state });
+  ({ recordId, identity, normalisedUrl, revisions: revision === null ? [] : [revision], state, madeBy: 'launch' });
 
 describe('normalisation (line 15: scheme, user information, port, leading www., trailing / then .git, case folding)', () => {
   it.each([

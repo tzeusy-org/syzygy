@@ -52,6 +52,8 @@ export interface QuestionFacts {
   readonly existing: readonly { readonly recordId: string; readonly recordClass: string; readonly identity: string; readonly state: string; readonly commit: string }[];
   /** Records that match the run but do not carry the operator's identity option. */
   readonly notCarrying: readonly RecordMatch[];
+  /** Observation consents made by other acts that match the run, each with how it matched (046, line 17). */
+  readonly matchedElsewhere?: readonly RecordMatch[];
   /** Consents in force by another act that the run relies on. */
   readonly inForceElsewhere: readonly string[];
   readonly asks: { readonly observation: boolean; readonly drawer: boolean };
@@ -78,7 +80,9 @@ export function questionOpening(f: QuestionFacts): string {
     );
   }
   lines.push('Existing launch consent records for this repository:');
-  if (f.existing.length === 0) lines.push('- none');
+  const elsewhere = f.matchedElsewhere ?? [];
+  if (f.existing.length === 0 && elsewhere.length === 0) lines.push('- none');
+  for (const m of elsewhere) lines.push(`- ${m.record.recordId} (observation consent made by another act, ${m.record.identity}): ${m.record.state}; matches this run by ${m.by.join(' and ')}`);
   for (const r of f.existing) lines.push(`- ${r.recordId} (${r.recordClass}, ${r.identity}): ${r.state}; its act is the record itself, recorded by ${r.commit} on ${LAUNCH_REF}`);
   for (const m of f.notCarrying) lines.push(`- ${m.record.recordId} matches this run (by ${m.by.join(' and ')}) but carries the identity ${m.record.identity}, not ${f.identity}`);
   for (const e of f.inForceElsewhere) lines.push(`- in force by another act: ${e}`);

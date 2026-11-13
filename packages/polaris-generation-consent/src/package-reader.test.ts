@@ -210,6 +210,19 @@ describe('admission records port', () => {
   });
 });
 
+describe('every observation record, in any state, for REQ-polaris-generation-046\'s matching of records made by other acts', () => {
+  const port = (files: Record<string, string>, now: number) => createAdmissionRecordsPort({ reader: reader(files), now: () => now });
+  it('lists the record with its subject, Upstream as written (this fixture states none), admitted revisions and state', async () => {
+    const read = await port(world(), AT).observationRecords!();
+    expect(read).toEqual({ ok: true, records: [{ record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', repositoryId: 'redis-redis', upstream: null, admittedRevisions: [REDIS_REV, OTHER_REV], state: 'in force' }] });
+  });
+  it('names a record not yet in force by its state, and refuses when the records cannot be read', async () => {
+    const early = await port(world(), AT - 1).observationRecords!();
+    expect(early.ok && early.records.map(r => r.state)).toEqual(['is not in force yet']);
+    expect(await port(world({ [`${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-X-WITHDRAWAL.md`]: 'x' }), AT).observationRecords!()).toMatchObject({ ok: false });
+  });
+});
+
 describe('an observation consent naming a revision, for any repository (REQ-polaris-generation-047\'s class rule)', () => {
   const port = (files: Record<string, string>, now: number) => createAdmissionRecordsPort({ reader: reader(files), now: () => now });
   it('is satisfied by any observation record in force whose admitted revisions include it, whatever its repository', async () => {

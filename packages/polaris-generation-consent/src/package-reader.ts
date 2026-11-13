@@ -1013,6 +1013,19 @@ export interface AdmissionRecordsPortLike {
   /** An observation record in force now whose admitted revisions include `revision`, for any repository id (REQ-polaris-generation-047's
    * class rule); from the same records `check` reads, and nothing else. */
   readonly observationConsentNaming?: (revision: string) => Promise<AdmissionAnswerLike>;
+  /** Every observation record, in any state, with its subject, `Upstream:` URL as written, admitted revisions and state, for
+   * REQ-polaris-generation-046's matching of records made by other acts; from the same records `check` reads. Refused, never empty,
+   * when the records cannot be read. Reporting only: it grants nothing. */
+  readonly observationRecords?: () => Promise<{ readonly ok: true; readonly records: readonly ObservationRecordSummary[] } | { readonly ok: false; readonly why: string }>;
+}
+
+/** An observation record as REQ-polaris-generation-046's matching reads it. `state` is `in force`, or the reason it is not. */
+export interface ObservationRecordSummary {
+  readonly record: string;
+  readonly repositoryId: string;
+  readonly upstream: string | null;
+  readonly admittedRevisions: readonly string[];
+  readonly state: string;
 }
 
 const NOT_IN_FORCE_TEXT: Readonly<Record<NotInForce, string>> = {
@@ -1066,6 +1079,17 @@ export function createAdmissionRecordsPort(options: { readonly reader: Admission
         }
       }
       return Object.freeze([...byLabel.values()].map(pair => Object.freeze({ ...pair })));
+    },
+    observationRecords: async () => {
+      let records: readonly AdmissionRecord[];
+      try { records = await options.reader.read(); } catch (cause) {
+        return { ok: false, why: `the admission act records could not be read (${cause instanceof Error ? cause.message : 'unknown error'})` };
+      }
+      const why = notInForceRecords(records, options.now());
+      return { ok: true, records: Object.freeze(records.filter(r => r.class === 'observation' && r.repositoryId !== null).map(r => Object.freeze({
+        record: `${r.recordId}@${r.version}`, repositoryId: r.repositoryId!, upstream: r.upstream, admittedRevisions: Object.freeze([...r.admittedRevisions]),
+        state: why.has(r) ? NOT_IN_FORCE_TEXT[why.get(r)!] : 'in force',
+      }))) };
     },
     observationConsentNaming: async revision => {
       let live: readonly AdmissionRecord[];

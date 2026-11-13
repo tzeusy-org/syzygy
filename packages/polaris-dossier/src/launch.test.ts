@@ -1,3 +1,4 @@
+import type { ObservationRecordSummary } from '@syzygy/polaris-generation-consent/live';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as zlib from 'node:zlib';
@@ -406,6 +407,69 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
     const out = await run(clone, s);
     expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'identity', reason: 'the --upstream URL is not admitted: an https://, http:// or git:// locator carries no user information; it is not printed, stored or recorded' } });
     expect(JSON.stringify({ out, printed: s.terminal.printed }).includes('secret')).toBe(false);
+  });
+});
+
+describe('REQ-polaris-generation-046 line 17: observation consents made by other acts are existing records, matched by their normalised Upstream: URL', () => {
+  const otherAct = (over: Partial<ObservationRecordSummary> & { revisions?: readonly string[] }) => {
+    const record: ObservationRecordSummary = { record: 'PUBLIC-OBS-CD@1', repositoryId: 'c-d', upstream: 'https://git.example.org/c/d.git', admittedRevisions: over.revisions ?? [], state: 'in force', ...over };
+    return { ...noOtherActs(), observationRecords: async () => ({ ok: true as const, records: [record] }) };
+  };
+
+  it('scenario "Consent found by its upstream URL": it matches by URL, is named with how it matched, proposes its identity, and no new observation consent is asked', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, 'git@git.example.org:c/d');
+    const c = up.commits[0]!;
+    const sources = { ...otherAct({ revisions: [c] }),
+      observationConsentFor: async (id: string, r: string) => (id === 'c-d' && r === c ? { satisfied: true as const, record: 'PUBLIC-OBS-CD@1' } : { satisfied: false as const, why: 'no' }),
+      observationConsentNaming: async (r: string) => (r === c ? { satisfied: true as const, record: 'PUBLIC-OBS-CD@1' } : { satisfied: false as const, why: 'no' }) };
+    const s = setup(['public', 'none', `STATE NO KERNEL EVIDENCE DRAWER FOR repository:c-d AT ${c.slice(0, 12)}`], { ports: { sources } });
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'recorded', subject: { identity: 'repository:c-d', identitySource: 'matching-records', url: 'git.example.org/c/d' } });
+    expect(s.terminal.printed.join('\n')).toContain('- PUBLIC-OBS-CD@1 (observation consent made by another act, repository:c-d): in force; matches this run by identity and url and revision');
+    expect(askedPhrases(s.terminal)).toEqual([`STATE NO KERNEL EVIDENCE DRAWER FOR repository:c-d AT ${c.slice(0, 12)}`]);
+  });
+
+  it('by URL alone: a consent whose identity differs matches by its normalised Upstream: (host and whole path) and its identity is proposed', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, 'ssh://git@Git.Example.org:2222/C/D.git');
+    const s = setup([], { ports: { sources: otherAct({ record: 'PUBLIC-OBS-ZZ@1', repositoryId: 'zz-zz' }) } });
+    await run(clone, s);
+    expect(s.terminal.printed.join('\n')).toContain('- PUBLIC-OBS-ZZ@1 (observation consent made by another act, repository:zz-zz): in force; matches this run by url');
+    expect(s.terminal.printed.join('\n')).toContain('repository:zz-zz');
+  });
+
+  it('scenario "Same-named repository on two hosts": an Upstream on another host does not match by URL, but the identity does, and is named so', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, 'https://gitlab.com/a/b.git');
+    const s = setup([], { ports: { sources: otherAct({ record: 'PUBLIC-OBS-AB@1', repositoryId: 'a-b', upstream: 'https://github.com/a/b' }) } });
+    await run(clone, s);
+    expect(s.terminal.printed.join('\n')).toContain('- PUBLIC-OBS-AB@1 (observation consent made by another act, repository:a-b): in force; matches this run by identity');
+  });
+
+  it('a same-named repository under another group does not match by URL alone', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, 'https://git.example.org/x/sub/name');
+    const s = setup([], { request: { identity: 'mine-here' }, ports: { sources: otherAct({ record: 'PUBLIC-OBS-Y@1', repositoryId: 'other-id', upstream: 'https://git.example.org/y/sub/name' }) } });
+    await run(clone, s);
+    expect(s.terminal.printed.join('\n')).not.toContain('PUBLIC-OBS-Y@1');
+  });
+
+  it('a withdrawn consent made by another act still matches, named with its state; the URL match never stops a revision match', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, 'https://git.example.org/c/d');
+    const s = setup([], { ports: { sources: otherAct({ state: 'is withdrawn', upstream: 'https://elsewhere.example/z/z', revisions: [up.commits[0]!] }) } });
+    await run(clone, s);
+    expect(s.terminal.printed.join('\n')).toContain('- PUBLIC-OBS-CD@1 (observation consent made by another act, repository:c-d): is withdrawn; matches this run by identity and revision');
+  });
+
+  it('records that cannot be read refuse the launch before asking: the records matching the run are not known', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const s = setup([], { ports: { sources: { ...noOtherActs(), observationRecords: async () => ({ ok: false as const, why: 'fixture refusal' }) } } });
+    expect(await run(clone, s)).toMatchObject({ kind: 'refused', refusal: { stage: 'records',
+      reason: 'the observation consents made by other acts cannot be read, so the records matching the run are not known: fixture refusal' } });
+    expect(s.terminal.prompts).toEqual([]);
   });
 });
 

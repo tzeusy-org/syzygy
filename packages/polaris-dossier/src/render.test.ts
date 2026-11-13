@@ -99,6 +99,7 @@ const sources = (ruling: GateState = { state: 'ok', record: 'RFC7-20-RULING-FIXT
   consentedRevisionsFor: async () => [{ label: 'fixture', commitId: commit }],
   observationConsentFor: async (_id, revision) => (revision === commit ? { satisfied: true, record: 'PUBLIC-OBS-FIXTURE@1' } : { satisfied: false, why: 'the consent does not name it' }),
   observationConsentNaming: async revision => (revision === commit ? { satisfied: true, record: 'PUBLIC-OBS-FIXTURE@1' } : { satisfied: false, why: 'the consent does not name it' }),
+  observationRecords: async () => ({ ok: true, records: [] }),
   registryEntry: async () => OK,
   screeningPolicy: async () => OK,
   d9: async () => OK,
