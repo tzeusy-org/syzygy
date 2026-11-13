@@ -52,9 +52,10 @@ export interface LaunchState {
   readonly copy: CopyProgress | null;
   /** How the copy ended: kept (a run that completes), or removed or not removed (a run that ends before its brief). */
   readonly copyEnd: 'kept' | CopyEnd | null;
-  /** The pinned commit, and its committer date as the commit object records it; `unread` where the commit was pinned but its object was not
-   * read (a copy that failed its form check is not read); `not-read` for a run that was not launched, which reads no committer date. */
-  readonly pinned: { readonly commit: string; readonly committerDate: string | null | 'unread' | 'not-read' } | null;
+  /** The pinned commit, and its committer date as the commit object records it; `{ unknown }` where the commit was pinned and its commit
+   * object was not read, saying what happened (R-PDJA-33-SLICE-D-1 finding 2); `not-read` for a run that was not launched, which reads no
+   * committer date. */
+  readonly pinned: { readonly commit: string; readonly committerDate: string | null | { readonly unknown: string } | 'not-read' } | null;
   readonly questionAsked: boolean;
   /** A copy-class run that relies on a launch observation consent whose recorded scope holds the revision in the operator's own clone with no
    * fetch by Syzygy (the version 1.1 scope) and on no consent of another kind. */
@@ -97,9 +98,10 @@ export function stageStatements(s: LaunchState): readonly LaunchStatement[] {
   if (s.pinned === null) out.push(statement('pinned-commit', 'commit pinned', 'both', false, 'The commit was not pinned, and its committer date is Unknown.'));
   else if (s.pinned.committerDate === 'not-read') {
     out.push(statement('pinned-commit', 'commit pinned', 'both', true, `The pinned revision is ${s.pinned.commit}.`));
-  } else if (s.pinned.committerDate === 'unread') {
+  } else if (typeof s.pinned.committerDate === 'object' && s.pinned.committerDate !== null) {
+    const where = s.runClass === 'copy-class' ? ': the copy\'s detached checkout left the copy\'s HEAD there' : '';
     out.push(statement('pinned-commit', 'commit pinned', 'both', true,
-      `The pinned revision is ${s.pinned.commit}: the copy's detached checkout left the copy's HEAD there. Its committer date is Unknown: the copy did not pass its form check, so Syzygy read none of its objects.`));
+      `The pinned revision is ${s.pinned.commit}${where}. Its committer date is Unknown: ${s.pinned.committerDate.unknown}.`));
   } else {
     out.push(statement('pinned-commit', 'commit pinned', 'both', true,
       `The pinned revision is ${s.pinned.commit}; its committer date, as the commit object records it, is ${s.pinned.committerDate ?? 'Unknown: the commit records none Syzygy could read'}.`));

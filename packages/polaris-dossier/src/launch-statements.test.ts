@@ -103,9 +103,12 @@ describe('the stage rule over the launch statements (REQ-polaris-generation-047)
     ]);
   });
 
-  it('a commit pinned by the copy\'s checkout whose copy failed its form check: its committer date is Unknown', () => {
-    expect(texts({ ...base, pinned: { commit: C, committerDate: 'unread' } }).find(t => t[0] === 'pinned-commit')?.[4])
-      .toBe(`The pinned revision is ${C}: the copy's detached checkout left the copy's HEAD there. Its committer date is Unknown: the copy did not pass its form check, so Syzygy read none of its objects.`);
+  it('a pinned commit whose commit object was not read: its committer date is Unknown, saying what happened, in each class (R-PDJA-33-SLICE-D-1 finding 2)', () => {
+    const unknown = { unknown: 'Syzygy could not read the copy\'s commit object (fixture refusal)' };
+    expect(texts({ ...base, pinned: { commit: C, committerDate: unknown } }).find(t => t[0] === 'pinned-commit')?.[4])
+      .toBe(`The pinned revision is ${C}: the copy's detached checkout left the copy's HEAD there. Its committer date is Unknown: Syzygy could not read the copy's commit object (fixture refusal).`);
+    expect(texts({ ...base, runClass: 'no-copy', copy: null, copyEnd: null, pinned: { commit: C, committerDate: { unknown: 'Syzygy has not read its commit object' } } }).find(t => t[0] === 'pinned-commit')?.[4])
+      .toBe(`The pinned revision is ${C}. Its committer date is Unknown: Syzygy has not read its commit object.`);
   });
 });
 

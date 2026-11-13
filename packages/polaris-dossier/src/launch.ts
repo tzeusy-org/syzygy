@@ -260,7 +260,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
           pinnedState = { commit, committerDate: pinnedHead.committerDate };
         } catch (cause) {
           if (!(cause instanceof GitObjectReadRefusal)) throw cause;
-          pinnedState = { commit, committerDate: 'unread' };
+          pinnedState = { commit, committerDate: { unknown: `Syzygy could not read the copy's commit object (${cause.message})` } };
         }
       }
       if (!made.ok) {
@@ -300,14 +300,20 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
         },
       });
       if (!checked.ok) return refuse(checked.refusal.stage, checked.refusal.reason, checked.refusal.command);
-      pinnedState = { commit, committerDate: 'unread' };
+      pinnedState = { commit, committerDate: { unknown: 'Syzygy has not read its commit object' } };
     }
 
     // Pre-answer reads: the pinned commit's tree, parents and committer date, and the trees under it. No blob.
     let paths: readonly string[], parents: readonly string[], committerDate: string | null;
     try {
       const reader = (ports.openReader ?? openPinnedObjectReader)({ gitDir: runGitDir, revision: commit });
-      const head = pinnedHead ?? await reader.commitHead();
+      let head = pinnedHead;
+      if (head === null) {
+        try { head = await reader.commitHead(); } catch (cause) {
+          if (cause instanceof GitObjectReadRefusal) pinnedState = { commit, committerDate: { unknown: `Syzygy could not read the commit object (${cause.message})` } };
+          throw cause;
+        }
+      }
       parents = head.parents; committerDate = head.committerDate;
       pinnedState = { commit, committerDate };
       paths = (await reader.listTree()).map(e => e.path);

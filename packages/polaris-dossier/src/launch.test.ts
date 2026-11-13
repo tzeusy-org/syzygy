@@ -9,7 +9,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { initRun } from './init.js';
 import { EventEmitter } from 'node:events';
 import { interruptWatch, type CopyGitRun } from './launch-copy.js';
-import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
+import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { launchConsent, type LaunchOutcome, type LaunchPorts, type LaunchRequest } from './launch.js';
 import { LAUNCH_REF, readLaunchRecords, writeLaunchRecords } from './launch-store.js';
 import { parseLaunchRecord, renderLaunchRecord } from './launch-record.js';
@@ -311,6 +311,22 @@ describe('REQ-polaris-generation-047 against real clones', () => {
     expect(listing(clone)).toEqual(before);
     expect(s.reads.log.calls).toEqual([`storedType ${up.commits[1]}`, `tree ${up.commits[1]}`]);   // the pinned commit's header, then the commit re-hashed, before the refusal
     expect(s.reads.log.answers).toEqual(['commit']);
+  });
+
+  it('a pinned commit whose commit object cannot be read: the committer date is Unknown, saying what happened, in each class (R-PDJA-33-SLICE-D-1 finding 2)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const refusing = (o: PinnedObjectReaderOptions): PinnedObjectReader => ({ ...openPinnedObjectReader(o), commitHead: async () => { throw new GitObjectReadRefusal('corrupt-object', 'fixture refusal'); } });
+    const noCopy = setup([], { ports: { openReader: refusing, sources: { ...noOtherActs(), observationConsentNaming: async r => (r === up.commits[0] ? { satisfied: true, record: 'OTHER-ACT@1' } : { satisfied: false, why: 'no' }) } } });
+    const a = await run(fullClone(up.dir, URL_RR), noCopy);
+    expect(a).toMatchObject({ kind: 'refused', refusal: { stage: 'listing' } });
+    if (a.kind !== 'refused') return;
+    expect(a.refusal.statements.find(x => x.id === 'pinned-commit')?.text)
+      .toBe(`The pinned revision is ${up.commits[0]}. Its committer date is Unknown: Syzygy could not read the commit object (fixture refusal).`);
+    const copied = await run(fullClone(up.dir, URL_RR), setup([], { ports: { openReader: refusing } }));
+    expect(copied).toMatchObject({ kind: 'refused', refusal: { stage: 'listing', copy: { state: 'removed' } } });
+    if (copied.kind !== 'refused') return;
+    expect(copied.refusal.statements.find(x => x.id === 'pinned-commit')?.text)
+      .toBe(`The pinned revision is ${up.commits[0]}: the copy's detached checkout left the copy's HEAD there. Its committer date is Unknown: Syzygy could not read the commit object (fixture refusal).`);
   });
 
   it('an annotated tag or a blob named by --revision in a no-copy run refuses from its header alone; its body is never read (syzygy-pdja.30)', async () => {
