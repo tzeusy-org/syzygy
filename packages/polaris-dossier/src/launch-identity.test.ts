@@ -35,8 +35,8 @@ const QUERY = 'it carries a query or a fragment';
 const PERCENT = 'its user information or host holds a percent-encoded character';
 const CREDENTIALS = 'an https://, http:// or git:// locator carries no user information';
 const COLON = 'its user information holds a ":"';
-const HOST_RULE = 'its host is empty or holds a character other than a letter, a digit, ".", "-" or "_"';
-const PORT = 'its port is not a decimal number';
+const HOST_RULE = 'its host is empty or holds a character other than an ASCII letter, a digit, ".", "-" or "_": Syzygy admits only host names of that grammar, narrower than REQ-polaris-generation-046 states, so an IPv6 address literal and a Unicode host name are refused (give a Unicode host in its punycode form)';
+const PORT = 'its port is empty or not a decimal number: Syzygy admits a port only as one or more decimal digits, narrower than REQ-polaris-generation-046 states';
 const PATH_RULE = 'it names no path, or its path has an empty segment once normalised';
 const SCP_PATH = 'its scp-form path begins with "//"';
 const TRANSPORT = 'it is in Git\'s <transport>::<address> form (an scp-form path beginning with ":"), which names another transport';
@@ -80,6 +80,10 @@ describe('the admitted locator forms (046, line 17): what an operator may give',
     ['git@h:/a/b', 'admitted'],
     ['https://git.example.org:x/a/b', PORT],
     ['https://[::1]/a/b', HOST_RULE],
+    ['ssh://git@[::1]:22/a/b', HOST_RULE],
+    ['https://b\u00fccher.de/a/b', HOST_RULE],
+    ['https://xn--bcher-kva.de/a/b', 'admitted'],
+    ['https://github.com:/a/b', PORT],
     ['h:/a', 'admitted'],
     ['.h:a/b', 'admitted'],
     ['./x:y/z', FORM],
@@ -214,6 +218,13 @@ describe('the proposal', () => {
       locatorStatements: ['The URL of the clone\'s remote origin carried user information; Syzygy removed it before deriving anything and does not print, store or record it.'] });
     expect(JSON.stringify(p)).not.toContain('hunter2');
     expect(JSON.stringify(p)).not.toContain('bob');
+  });
+
+  it('the identity\'s first-character rule, narrower than 046 states, is named in each refusal it causes, --identity\'s included (R-PDJA-33-SLICE-C-1 finding 5)', () => {
+    const RULE = 'Syzygy admits only an identity whose part after "repository:" opens with a letter or a digit once case-folded and every other character replaced by "-", a rule narrower than REQ-polaris-generation-046 states, which applies to --identity as to a derived identity';
+    expect(proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'https://h.example/_org/x' }] })).toEqual({ ok: false, matches: [],
+      reason: `no identity derives from the normalised URL h.example/_org/x: its last two segments, joined and replaced, do not open with a letter or digit, and ${RULE}; give --identity` });
+    expect(proposeIdentity({ ...base, identityOption: '-x' })).toMatchObject({ ok: false, reason: `--identity cannot name a repository identity: ${RULE}` });
   });
 
   it('the identity remote with several url lines, or none, refuses, naming it and the rule, and never falls through to another remote (R-PDJA-33-SLICE-C-1 finding 6)', () => {

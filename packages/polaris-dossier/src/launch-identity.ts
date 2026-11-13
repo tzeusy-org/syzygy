@@ -16,6 +16,8 @@ export type IdentitySource = 'operator-option' | 'matching-records' | 'derived';
 export interface NormalisedUrl { readonly url: string; readonly host: string; readonly segments: readonly string[] }
 
 const IDENTITY = /^repository:[a-z0-9][a-z0-9._-]*$/;
+/** The identity's first-character rule, which 046 line 15 does not state; every refusal it causes says so (R-PDJA-33-SLICE-C-1 finding 5). */
+export const IDENTITY_RULE = 'Syzygy admits only an identity whose part after "repository:" opens with a letter or a digit once case-folded and every other character replaced by "-", a rule narrower than REQ-polaris-generation-046 states, which applies to --identity as to a derived identity';
 
 /** Which reading a URL gets (046, line 17): one the operator gives (`--url`, `--upstream`), which carries no credentials, or one read
  * from the clone's remote configuration, whose user information is removed, whatever it holds, before anything is derived from it. */
@@ -34,8 +36,9 @@ const RULE = {
   credentials: 'an https://, http:// or git:// locator carries no user information',
   colon: 'its user information holds a ":"',
   emptyUser: 'it has an "@" with no user name before it',
-  host: 'its host is empty or holds a character other than a letter, a digit, ".", "-" or "_"',
-  port: 'its port is not a decimal number',
+  // The host and port grammars are narrower than 046's "a host, an optional port"; each refusal says so (R-PDJA-33-SLICE-C-1 finding 4).
+  host: 'its host is empty or holds a character other than an ASCII letter, a digit, ".", "-" or "_": Syzygy admits only host names of that grammar, narrower than REQ-polaris-generation-046 states, so an IPv6 address literal and a Unicode host name are refused (give a Unicode host in its punycode form)',
+  port: 'its port is empty or not a decimal number: Syzygy admits a port only as one or more decimal digits, narrower than REQ-polaris-generation-046 states',
   path: 'it names no path, or its path has an empty segment once normalised',
   scpPath: 'its scp-form path begins with "//"',
   transport: 'it is in Git\'s <transport>::<address> form (an scp-form path beginning with ":"), which names another transport',
@@ -236,7 +239,7 @@ export function proposeIdentity(input: IdentityInput): IdentityProposal {
   const carried = [...new Set(matches.map(m => m.record.identity))].sort();
   if (input.identityOption !== undefined) {
     const identity = normaliseIdentityOption(input.identityOption);
-    if (identity === null) return { ok: false, reason: '--identity cannot name a repository identity: after normalising it must open with a letter or digit', matches };
+    if (identity === null) return { ok: false, reason: `--identity cannot name a repository identity: ${IDENTITY_RULE}`, matches };
     return { ok: true, identity, source: 'operator-option', url: url.url, urlSource, matches, notCarrying: matches.filter(m => m.record.identity !== identity), locatorStatements };
   }
   // The two-segment floor: "a normalised path of fewer than two segments derives no identity, and the operator SHALL give the identity
@@ -246,6 +249,6 @@ export function proposeIdentity(input: IdentityInput): IdentityProposal {
     return { ok: false, reason: `the matching records carry more than one identity, so Syzygy proposes none: ${matches.map(describe).join('; ')}; give the identity with --identity`, matches };
   }
   if (carried.length === 1) return { ok: true, identity: carried[0]!, source: 'matching-records', url: url.url, urlSource, matches, notCarrying: [], locatorStatements };
-  if (derived === null) return { ok: false, reason: `no identity derives from the normalised URL ${url.url}: its last two segments do not open with a letter or digit once joined; give --identity`, matches };
+  if (derived === null) return { ok: false, reason: `no identity derives from the normalised URL ${url.url}: its last two segments, joined and replaced, do not open with a letter or digit, and ${IDENTITY_RULE}; give --identity`, matches };
   return { ok: true, identity: derived, source: 'derived', url: url.url, urlSource, matches, notCarrying: [], locatorStatements };
 }
