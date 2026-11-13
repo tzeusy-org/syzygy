@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as zlib from 'node:zlib';
 import { describe, expect, it } from 'vitest';
+import { patchFs } from './fs-patch.testkit.js';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { launchConsent, type LaunchOutcome, type LaunchPorts, type LaunchRequest } from './launch.js';
 import { LAUNCH_REF, readLaunchRecords } from './launch-store.js';
@@ -342,3 +343,86 @@ describe('REQ-polaris-generation-047 against real clones', () => {
     expect(fs.existsSync(path.join(s.home, '.git', 'refs', 'heads', 'launch-consent-records'))).toBe(false);
   });
 });
+
+describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone are the closed list (registry entry v1.1, item 1b)', () => {
+  /** Every file under the clone's `.git` that the launch opened synchronously (the closed list's file-data reads), sorted; the object reads,
+   * which go through the re-hashing reader, are captured by `s.reads` instead. */
+  async function opened(clone: string, act: () => Promise<unknown>): Promise<readonly string[]> {
+    const gitDir = path.join(clone, '.git'), seen: string[] = [];
+    const restore = patchFs('openSync', openSync => ((target: fs.PathLike, ...rest: unknown[]) => {
+      const rel = path.relative(gitDir, path.resolve(String(target)));
+      if (!rel.startsWith('..')) seen.push(rel.split(path.sep).join('/'));
+      return (openSync as (...args: unknown[]) => number)(target, ...rest);
+    }) as typeof fs.openSync);
+    try { await act(); } finally { restore(); }
+    return [...new Set(seen)].sort();
+  }
+
+  it('a full clone with history, branches, tags, stash and a second remote: the values of the listed references alone', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' }, [{ 'b.c': 'y\n' }]);
+    gitIn(up.dir, 'tag', 'v1', up.commits[0]!);
+    gitIn(up.dir, 'branch', 'dev', up.commits[0]!);
+    const clone = fullClone(up.dir, URL_RR);
+    gitIn(clone, 'branch', 'topic', up.commits[0]!);
+    gitIn(clone, 'remote', 'add', 'mirror', 'https://example.org/mirror/redis.git');
+    gitIn(clone, 'update-ref', 'refs/remotes/mirror/main', up.commits[0]!);
+    fs.writeFileSync(path.join(clone, 'a.c'), 'changed\n');
+    gitIn(clone, 'stash', '-q');
+    const before = listing(clone);
+    const s = setup([], { isTTY: false });
+    const files = await opened(clone, () => run(clone, s));
+    expect(files).toEqual(['HEAD', 'config', 'packed-refs', 'refs/heads/main', 'refs/remotes/origin/HEAD']);
+    expect(listing(clone)).toEqual(before);
+  });
+
+  it('a reference --revision names is read; a full identifier lists no store and opens nothing more', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    gitIn(clone, 'tag', 'pin', up.commits[0]!);
+    expect(await opened(clone, () => run(clone, setup([], { isTTY: false, request: { revision: 'pin' } }))))
+      .toEqual(['HEAD', 'config', 'packed-refs', 'refs/heads/main', 'refs/remotes/origin/HEAD', 'refs/tags/pin']);
+    expect(await opened(clone, () => run(clone, setup([], { isTTY: false, request: { revision: up.commits[0]! } }))))
+      .toEqual(['HEAD', 'config', 'packed-refs', 'refs/heads/main', 'refs/remotes/origin/HEAD']);
+  });
+
+  it('references in the reftable backend: refused before any Git process starts and before any object is read', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const parent = path.dirname(fullClone(up.dir, URL_RR));
+    const clone = path.join(parent, 'reftable');
+    gitIn(parent, 'clone', '-q', '--ref-format=reftable', up.dir, clone);
+    const s = setup([]);
+    expect(await run(clone, s)).toEqual({ kind: 'refused', refusal: { stage: 'clone', missing: [], recorded: false,
+      reason: 'the clone stores its references in the reftable backend; Syzygy reads references only as loose files and packed-refs, so the run is refused before any Git process starts' } });
+    expect(s.reads.log.calls).toEqual([]);
+    expect(s.terminal.prompts).toEqual([]);
+  });
+
+  it('a SHA-256 clone is not refused for its object format; a 40-digit --revision abbreviates at its 64-digit width', async () => {
+    const dir = path.join(path.dirname(fullClone(makeUpstream({ 'x': 'x\n' }).dir, URL_RR)), 'up256');
+    gitIn(path.dirname(dir), 'init', '-q', '--object-format=sha256', '-b', 'main', dir);
+    writeFiles(dir, { 'a.c': 'x\n' });
+    gitIn(dir, 'add', '-A');
+    gitIn(dir, 'commit', '-q', '-m', 'upstream');
+    const commit = gitIn(dir, 'rev-parse', 'HEAD');
+    expect(commit).toHaveLength(64);
+    const clone = fullClone(dir, URL_RR);
+    const s = setup([], { isTTY: false, request: { revision: commit.slice(0, 40) } });
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal' } });
+    expect(s.reads.log.calls[0]).toBe(`storedType ${commit}`);
+  });
+
+  it('the width comes from the configuration, not from HEAD: an unborn HEAD in a SHA-256 clone still abbreviates at 64 digits', async () => {
+    const dir = path.join(path.dirname(fullClone(makeUpstream({ 'x': 'x\n' }).dir, URL_RR)), 'up256');
+    gitIn(path.dirname(dir), 'init', '-q', '--object-format=sha256', '-b', 'main', dir);
+    writeFiles(dir, { 'a.c': 'x\n' });
+    gitIn(dir, 'add', '-A');
+    gitIn(dir, 'commit', '-q', '-m', 'upstream');
+    const commit = gitIn(dir, 'rev-parse', 'HEAD');
+    const clone = fullClone(dir, URL_RR);
+    gitIn(clone, 'checkout', '-q', '--orphan', 'unborn');
+    const out = await run(clone, setup([], { isTTY: false, request: { revision: commit.slice(0, 12) } }));
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'head', reason: `the clone's HEAD is unresolvable, not the pinned revision ${commit} (--revision ${commit.slice(0, 12)}); Syzygy does not change the checkout` } });
+  });
+});
+

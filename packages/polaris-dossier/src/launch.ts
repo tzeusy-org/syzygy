@@ -132,7 +132,8 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   const refuse = (stage: LaunchStage, reason: string, command?: string): LaunchOutcome =>
     ({ kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false } });
 
-  const read = readCloneSnapshot(request.clone);
+  // The closed list of launch reads (047; registry entry v1.1, reads (1) to (4)); a reftable clone is refused here, before any Git process.
+  const read = readCloneSnapshot(request.clone, request.revision === undefined ? {} : { revision: request.revision });
   if (!read.ok) return refuse('clone', read.reason);
   const snapshot = read.snapshot;
   const clone = real(request.clone);
@@ -152,7 +153,8 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   const now = ports.now();
   const headOid = resolveRef(snapshot, 'HEAD');
   const launchNamesHead = headOid !== null && store.records.some(r => r.record.recordClass === 'observation-consent' && r.state === 'active' && r.record.revision === headOid && Date.parse(r.record.grantInstant) <= now);
-  const algorithm = headOid !== null && headOid.length === 64 ? 'sha256' : 'sha1';
+  // Read (5)'s width: the object format the configuration records, SHA-1 where it records none, never the length of HEAD's value.
+  const algorithm = snapshot.objectFormat === 'sha256' ? 'sha256' : 'sha1';
   const pinned = await pinLaunchRevision(
     { clone, snapshot, ...(request.revision === undefined ? {} : { revision: request.revision }), headConsented: request.headConsentedElsewhere || launchNamesHead },
     {
