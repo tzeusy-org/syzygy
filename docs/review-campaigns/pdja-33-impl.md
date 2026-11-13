@@ -12,7 +12,7 @@
 
 `REVISE` (`R-PDJA-33-SLICE-A-1-RAW.md:4`), over `db109c54`, slice A round 1. Each finding is repaired by its own commit on the same branch:
 
-- Finding 1 (revise), the read oracle saw only `openSync`: the fixtures make every non-admitted file unreadable (mode 000) and the oracle also patches the other read entry points; mutants R1 and R3 recorded killed in a new slice-A repair mutation record.
+- Finding 1 (revise), the read oracle saw only `openSync`: the fixtures make every non-admitted file unreadable (mode 000) and the oracle also patches the other read entry points; mutants R1 and R3 recorded killed in `docs/evidence/syzygy-pdja-33/slice-A-repair-mutation-2026-11-13.json`.
 - Finding 2 (revise), every remote's HEAD read: `refs/remotes/origin/HEAD` admitted first, the others only when it is absent or not symbolic; the FULL fixture re-pinned.
 - Finding 3 (note), the `.git/reftable` probe: dropped; the HEAD placeholder is the detection.
 - Finding 4 (note), `--revision HEAD` refused: HEAD admitted as a candidate.
