@@ -941,6 +941,18 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     }
   });
 
+  it('a copy whose commit object cannot be read once pinned, and whose form check then fails: that read is the one stated (R-PDJA-33-SLICE-D-1 finding 2)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const refusing = (o: PinnedObjectReaderOptions): PinnedObjectReader => ({ ...openPinnedObjectReader(o), commitHead: async () => { throw new GitObjectReadRefusal('corrupt-object', 'fixture refusal'); } });
+    const git = capturingGit();
+    const extraRef: CopyGitRun = (args, o) => { const r = git.run(args, o); if (r.status === 0 && args.includes('checkout')) gitIn(args[COPY_OPTIONS.length + 1]!, 'update-ref', 'refs/heads/extra', up.commits[0]!); return r; };
+    const formed = await run(fullClone(up.dir, URL_RR), setup([], { ports: { openReader: refusing, copyGit: extraRef } }));
+    expect(formed).toMatchObject({ kind: 'refused', refusal: { stage: 'copy' } });
+    if (formed.kind !== 'refused') return;
+    expect(formed.refusal.statements.find(x => x.id === 'pinned-commit')?.text)
+      .toBe(`The pinned revision is ${up.commits[0]}: the copy's detached checkout left the copy's HEAD there. Its committer date is Unknown: Syzygy could not read the copy's commit object (fixture refusal).`);
+  });
+
   it('a port that throws after the copy step started: refused, the copy removed and the removal said (R-PDJA-33-SLICE-B-1 finding 2)', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' });
     const clone = fullClone(up.dir, URL_RR);
