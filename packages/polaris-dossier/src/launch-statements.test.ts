@@ -129,5 +129,9 @@ describe('the brief stage and the question\'s copy statements', () => {
       'The authoring and inventory sessions are directed, by their briefs, to work in the copy, while the operator\'s clone stays on the host; that a session stayed in the copy is its own report.',
       'The copy, its checked-out files included, was made at /state/copies/copy-AbC123 before your answer, and Syzygy has read none of its blobs. It is removed if the run ends before its brief, or named with the removal\'s failure where its removal fails, and is otherwise kept after the run, at a location the launch output names, until the operator removes it.',
     ]);
+    // A no-copy run: the form of every copy statement is that no copy was made (R-PDJA-33-SLICE-D-1 finding 4).
+    expect(questionCopyStatements(null)).toEqual([
+      'How the copy was made, where the sessions are directed to work in it, and the copy made before your answer: no copy was made. This is a no-copy run, whose clone is the operator\'s own.',
+    ]);
   });
 });

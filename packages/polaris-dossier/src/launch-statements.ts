@@ -71,8 +71,14 @@ export const COPY_METHOD = 'The run\'s clone is a copy of the pinned commit alon
 /** 047: "Syzygy relies on Git starting no program that the operator's clone's own configuration or hooks name while it serves the copy." */
 export const COPY_RELIANCE = 'For every Git process the copy step started, Syzygy relies on Git starting no program that the operator\'s clone\'s own configuration or hooks name while it serves the copy.';
 
-/** The question's copy statements (046, line 11; stage: question asked; copy-class), before the answer is asked for. */
-export function questionCopyStatements(location: string): readonly string[] {
+/** A no-copy run's form of the question's copy statements: under the stage rule, a no-copy run's form of every copy statement is that no copy
+ * was made (R-PDJA-33-SLICE-D-1 finding 4). */
+export const QUESTION_NO_COPY = 'How the copy was made, where the sessions are directed to work in it, and the copy made before your answer: no copy was made. This is a no-copy run, whose clone is the operator\'s own.';
+
+/** The question's copy statements (046, line 11; stage: question asked; copy-class), before the answer is asked for; for a no-copy run
+ * (`location` null), their no-copy form. */
+export function questionCopyStatements(location: string | null): readonly string[] {
+  if (location === null) return [QUESTION_NO_COPY];
   return [
     COPY_METHOD,
     'The authoring and inventory sessions are directed, by their briefs, to work in the copy, while the operator\'s clone stays on the host; that a session stayed in the copy is its own report.',

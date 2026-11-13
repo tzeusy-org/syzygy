@@ -58,7 +58,7 @@ export interface QuestionFacts {
   /** Consents in force by another act that the run relies on. */
   readonly inForceElsewhere: readonly string[];
   readonly asks: { readonly observation: boolean; readonly drawer: boolean };
-  /** A copy-class run's copy statements (046, line 11; stage: question asked; copy-class); absent in a no-copy run. */
+  /** The copy statements (046, line 11; stage: question asked; copy-class), or a no-copy run's form of them. */
   readonly copyStatements?: readonly string[];
 }
 

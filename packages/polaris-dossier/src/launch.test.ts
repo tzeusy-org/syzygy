@@ -313,6 +313,15 @@ describe('REQ-polaris-generation-047 against real clones', () => {
     expect(s.reads.log.answers).toEqual(['commit']);
   });
 
+  it('a no-copy run\'s question states the no-copy form of each copy statement, and none of the copy-class forms (R-PDJA-33-SLICE-D-1 finding 4)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const s = setup([], { ports: { sources: { ...noOtherActs(), observationConsentNaming: async r => (r === up.commits[0] ? { satisfied: true, record: 'OTHER-ACT@1' } : { satisfied: false, why: 'no' }) } } });
+    expect(await run(fullClone(up.dir, URL_RR), s)).toMatchObject({ kind: 'refused', refusal: { stage: 'answer' } });
+    const opening = s.terminal.printed.find(p => p.startsWith('Syzygy launch consent'))!;
+    expect(opening.split('\n')).toContain('How the copy was made, where the sessions are directed to work in it, and the copy made before your answer: no copy was made. This is a no-copy run, whose clone is the operator\'s own.');
+    for (const copyClass of ['The run\'s clone is a copy', 'directed, by their briefs, to work in the copy', 'before your answer, and Syzygy has read none of its blobs']) expect(opening).not.toContain(copyClass);
+  });
+
   it('a pinned commit whose commit object cannot be read: the committer date is Unknown, saying what happened, in each class (R-PDJA-33-SLICE-D-1 finding 2)', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' });
     const refusing = (o: PinnedObjectReaderOptions): PinnedObjectReader => ({ ...openPinnedObjectReader(o), commitHead: async () => { throw new GitObjectReadRefusal('corrupt-object', 'fixture refusal'); } });

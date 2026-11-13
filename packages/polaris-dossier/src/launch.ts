@@ -408,7 +408,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     for (const line of proposal.locatorStatements) say(line);
     questionAsked = true;
     say(questionOpening({
-      ...(copy === null ? {} : { copyStatements: questionCopyStatements(copy.dir) }),
+      copyStatements: questionCopyStatements(copy === null ? null : copy.dir),
       identity, identitySource: proposal.source, url: proposal.url, urlSource: proposal.urlSource, revision: commit, revisionVia: via, committerDate,
       updateCommand: pin.updateCommand, existing, notCarrying: proposal.notCarrying, matchedElsewhere: proposal.matches.filter(m => m.record.madeBy === 'another act'), inForceElsewhere: relied, asks: { observation: needObservation, drawer: needDrawerQuestion },
     }));
