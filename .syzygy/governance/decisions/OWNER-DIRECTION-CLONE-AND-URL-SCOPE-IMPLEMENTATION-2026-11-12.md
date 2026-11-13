@@ -17,7 +17,7 @@ This is a plain owner direction in the sense of `PROCESS-GLOSSARY.md`.
 
 [Observed by the coordinating Claude Code session.] On 2026-11-12 the owner
 answered one structured question. The question said that launch-consent spec
-v1.2 and registry entry `public-git-source-acquisition-local-agent` v1.1 are
+v1.2 and the local-agent source-acquisition registry entry v1.1 are
 both signed, and that `OWNER-DIRECTION-CLONE-AND-URL-SCOPE-2026-11-09.md`
 withholds implementation until a separate direction. It then asked whether to
 implement:
@@ -59,8 +59,8 @@ following signed semantics, and nothing else:
      record, the pages, and the authoring and inventory briefs (review packets
      unchanged, as ruled "Briefs only (Recommended)");
    - `--revision` resolution and the reftable refusal as 047 states them.
-2. The launch reads that registry entry v1.1 admits, as signed in
-   `PUBLIC-GIT-SOURCE-ACQUISITION-LOCAL-AGENT-SIGNOFF-v1.1.md`: its impact
+2. The launch reads that registry entry v1.1 admits, as signed on
+   2026-11-11 (its sign-off record is in this directory): its impact
    ledger's item 1b (the reads narrowed to the closed list) and item 3 (the
    copy step).
 
