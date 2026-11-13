@@ -15,36 +15,92 @@ export type IdentitySource = 'operator-option' | 'matching-records' | 'derived';
 
 export interface NormalisedUrl { readonly url: string; readonly host: string; readonly segments: readonly string[] }
 
-const SCHEME = /^(https|http|ssh|git):\/\/(.*)$/is;
-const SCP = /^(?:[^@/:\s]+@)?([^/:\s]+):(?!\/\/)(.+)$/s;
 const IDENTITY = /^repository:[a-z0-9][a-z0-9._-]*$/;
 
-/** The URL normalised by the rule, or null when it is not a form the rule names (a local path, `file://`, another scheme). */
-export function normaliseUrl(input: string): NormalisedUrl | null {
-  const raw = input.trim();
-  let host: string, rest: string;
-  const scheme = SCHEME.exec(raw);
-  if (scheme !== null) {
-    const body = scheme[2]!;
+/** Which reading a URL gets (046, line 17): one the operator gives (`--url`, `--upstream`), which carries no credentials, or one read
+ * from the clone's remote configuration, whose user information is removed, whatever it holds, before anything is derived from it. */
+export type LocatorKind = 'operator' | 'remote';
+
+/** A locator, or the rule it fails. The rule is printed; the URL never is (046, line 17: "SHALL NOT print, store or record that URL"). */
+export type LocatorRead =
+  | { readonly ok: true; readonly url: NormalisedUrl; readonly userInformation: boolean }
+  | { readonly ok: false; readonly rule: string };
+
+/** The rules a URL may fail, in the words the refusal and the launch output print. */
+const RULE = {
+  form: 'it is not in an admitted locator form (https://, http://, git:// or ssh:// with a host and a path, or the scp form [user@]host:path); file URLs, other transports and local paths are not admitted',
+  queryOrFragment: 'it carries a query or a fragment',
+  percent: 'its user information or host holds a percent-encoded character',
+  credentials: 'an https://, http:// or git:// locator carries no user information',
+  colon: 'its user information holds a ":"',
+  emptyUser: 'it has an "@" with no user name before it',
+  host: 'its host is empty or holds a character other than a letter, a digit, ".", "-" or "_"',
+  port: 'its port is not a decimal number',
+  path: 'it names no path, or its path has an empty segment once normalised',
+  scpPath: 'its scp-form path begins with "//"',
+} as const;
+
+const HOST = /^[A-Za-z0-9._-]+$/;
+const LOCATOR_SCHEME = /^([A-Za-z][A-Za-z0-9+.-]*):\/\/(.*)$/s;
+/** The scp form: an optional user name and `@`, a host holding no `/` or `:`, then `:`, then a path. */
+const SCP_FORM = /^(?:([^@/]*)@)?([^/:@]*):(.*)$/s;
+
+/** Read a URL as a locator by REQ-polaris-generation-046's line 17, then normalise it by line 15: scheme, user information, port and a
+ * leading `www.` removed, then a trailing `/` and then a trailing `.git`, host and path case-folded. Nothing is fetched, resolved or
+ * rewritten (no Git `insteadOf`, no SSH host alias): an alias is the host it names. */
+export function readLocator(input: string, kind: LocatorKind): LocatorRead {
+  if (/[\s\u0000-\u001f\u007f]/.test(input) || input === '') return { ok: false, rule: RULE.form };
+  if (input.includes('?') || input.includes('#')) return { ok: false, rule: RULE.queryOrFragment };
+  let user: string | null, hostPort: string, rest: string, scheme: string;
+  const schemed = LOCATOR_SCHEME.exec(input);
+  if (schemed !== null) {
+    scheme = schemed[1]!.toLowerCase();
+    if (!['https', 'http', 'git', 'ssh'].includes(scheme)) return { ok: false, rule: RULE.form };
+    const body = schemed[2]!;
     const slash = body.indexOf('/');
     const authority = slash < 0 ? body : body.slice(0, slash);
     rest = slash < 0 ? '' : body.slice(slash + 1);
     const at = authority.lastIndexOf('@');
-    host = (at < 0 ? authority : authority.slice(at + 1)).replace(/:\d*$/, '');
+    user = at < 0 ? null : authority.slice(0, at);
+    hostPort = at < 0 ? authority : authority.slice(at + 1);
   } else {
-    const scp = SCP.exec(raw);
-    if (scp === null) return null;
-    host = scp[1]!; rest = scp[2]!;
+    if (input.startsWith('/') || input.startsWith('.') || input.startsWith('~')) return { ok: false, rule: RULE.form };
+    const scp = SCP_FORM.exec(input);
+    if (scp === null) return { ok: false, rule: RULE.form };
+    scheme = 'scp';
+    user = scp[1] ?? null; hostPort = scp[2]!; rest = scp[3]!;
+    if (rest.startsWith('//')) return { ok: false, rule: RULE.scpPath };
   }
-  host = host.replace(/^www\./i, '');
+  if ((user ?? '').includes('%') || hostPort.includes('%')) return { ok: false, rule: RULE.percent };
+  if (user !== null && kind === 'operator') {
+    if (scheme === 'https' || scheme === 'http' || scheme === 'git') return { ok: false, rule: RULE.credentials };
+    if (user.includes(':')) return { ok: false, rule: RULE.colon };
+    if (user === '') return { ok: false, rule: RULE.emptyUser };
+  }
+  let host = hostPort;
+  if (/[[\]]/.test(hostPort)) return { ok: false, rule: RULE.host };   // a bracketed address literal is not a host name the rule names
+  if (scheme !== 'scp') {
+    const colon = hostPort.lastIndexOf(':');
+    if (colon >= 0) {
+      if (!/^\d+$/.test(hostPort.slice(colon + 1))) return { ok: false, rule: RULE.port };
+      host = hostPort.slice(0, colon);
+    }
+  }
+  if (!HOST.test(host)) return { ok: false, rule: RULE.host };
+  host = host.toLowerCase().replace(/^www\./, '');
   let pathPart = rest.replace(/^\/+/, '');
   if (pathPart.endsWith('/')) pathPart = pathPart.slice(0, -1);
   if (pathPart.endsWith('.git')) pathPart = pathPart.slice(0, -4);
-  host = host.toLowerCase(); pathPart = pathPart.toLowerCase();
-  if (host === '' || pathPart === '') return null;
+  pathPart = pathPart.toLowerCase();
   const segments = pathPart.split('/');
-  if (segments.some(s => s === '')) return null;
-  return { url: `${host}/${pathPart}`, host, segments };
+  if (host === '' || pathPart === '' || segments.some(seg => seg === '')) return { ok: false, rule: host === '' ? RULE.host : RULE.path };
+  return { ok: true, url: { url: `${host}/${pathPart}`, host, segments }, userInformation: user !== null };
+}
+
+/** The URL as a remote locator, normalised, or null when it is not one (a local path, `file://`, another scheme, a query, …). */
+export function normaliseUrl(input: string): NormalisedUrl | null {
+  const read = readLocator(input, 'remote');
+  return read.ok ? read.url : null;
 }
 
 /** `repository:` and the last two path segments joined by `-`, every other character replaced; null for fewer than two segments. */

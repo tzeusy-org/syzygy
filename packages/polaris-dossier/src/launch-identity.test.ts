@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { deriveIdentity, identityRemote, matchRecords, normaliseIdentityOption, normaliseUrl, proposeIdentity, type MatchableRecord } from './launch-identity.js';
+import { deriveIdentity, identityRemote, matchRecords, normaliseIdentityOption, normaliseUrl, proposeIdentity, readLocator, type MatchableRecord } from './launch-identity.js';
 
 /** REQ-polaris-generation-046, line 15: the identity proposal rule. Expected values are literals written from the clause, never computed
  * by the module under test. */
@@ -27,6 +27,83 @@ describe('normalisation (line 15: scheme, user information, port, leading www., 
 
   it.each(['/srv/repo', 'file:///srv/repo', 'ftp://h/a/b', ''])('%s is not a form the rule normalises', input => {
     expect(normaliseUrl(input)).toBe(null);
+  });
+});
+
+const FORM = 'it is not in an admitted locator form (https://, http://, git:// or ssh:// with a host and a path, or the scp form [user@]host:path); file URLs, other transports and local paths are not admitted';
+const QUERY = 'it carries a query or a fragment';
+const PERCENT = 'its user information or host holds a percent-encoded character';
+const CREDENTIALS = 'an https://, http:// or git:// locator carries no user information';
+const COLON = 'its user information holds a ":"';
+const HOST_RULE = 'its host is empty or holds a character other than a letter, a digit, ".", "-" or "_"';
+const PORT = 'its port is not a decimal number';
+const PATH_RULE = 'it names no path, or its path has an empty segment once normalised';
+const SCP_PATH = 'its scp-form path begins with "//"';
+
+describe('the admitted locator forms (046, line 17): what an operator may give', () => {
+  it.each([
+    ['https://git.example.org/a/b', 'git.example.org/a/b'],
+    ['HTTPS://Git.Example.org:8443/A/B.git', 'git.example.org/a/b'],
+    ['http://git.example.org/a/b', 'git.example.org/a/b'],
+    ['git://git.example.org/a/b.git', 'git.example.org/a/b'],
+    ['ssh://git.example.org/team/sub/tool.git', 'git.example.org/team/sub/tool'],
+    ['ssh://git@git.example.org:2222/team/sub/tool.git', 'git.example.org/team/sub/tool'],
+    ['git@git.example.org:team/sub/tool.git', 'git.example.org/team/sub/tool'],
+    ['git.example.org:c/d', 'git.example.org/c/d'],
+    ['https://www.github.com/redis/redis/', 'github.com/redis/redis'],
+  ])('admits %s, normalised to %s', (input, url) => {
+    expect(readLocator(input, 'operator')).toEqual({ ok: true, url: { url, host: url.split('/')[0], segments: url.split('/').slice(1) }, userInformation: input.includes('@') });
+  });
+
+  it.each([
+    ['https://user@git.example.org/a/b', CREDENTIALS],
+    ['http://user:token@git.example.org/a/b', CREDENTIALS],
+    ['git://u@git.example.org/a/b', CREDENTIALS],
+    ['ssh://git:secret@git.example.org/a/b', COLON],
+    ['ssh://git%40x@git.example.org/a/b', PERCENT],
+    ['https://git%2eexample.org/a/b', PERCENT],
+    ['https://git.example.org/a/b?private_token=x', QUERY],
+    ['https://git.example.org/a/b#frag', QUERY],
+    ['file:///srv/repo', FORM],
+    ['ftp://h/a/b', FORM],
+    ['ext::ssh h', FORM],
+    ['/srv/repo', FORM],
+    ['./repo', FORM],
+    ['~/repo', FORM],
+    ['', FORM],
+    ['https://git.example.org/a b', FORM],
+    ['https://git.example.org', PATH_RULE],
+    ['https://git.example.org/a//b', PATH_RULE],
+    ['https://git.example.org:x/a/b', PORT],
+    ['https://[::1]/a/b', HOST_RULE],
+    ['h:/a', 'admitted'],
+    ['h://a/b', FORM],
+    ['git@h://a/b', SCP_PATH],
+  ])('%s is not admitted: %s', (input, rule) => {
+    if (rule === 'admitted') { expect(readLocator(input, 'operator').ok).toBe(true); return; }
+    expect(readLocator(input, 'operator')).toEqual({ ok: false, rule });
+  });
+});
+
+describe('the remote-locator forms (046, line 17): what a remote URL may be', () => {
+  it('removes the user information, whatever it holds, and says it was there', () => {
+    expect(readLocator('https://user:token@git.example.org/a/b', 'remote')).toEqual({ ok: true, url: { url: 'git.example.org/a/b', host: 'git.example.org', segments: ['a', 'b'] }, userInformation: true });
+    expect(readLocator('ssh://git:pw@git.example.org/a/b', 'remote')).toMatchObject({ ok: true, userInformation: true });
+    expect(readLocator('https://git.example.org/a/b', 'remote')).toMatchObject({ ok: true, userInformation: false });
+  });
+
+  it('is never a locator with a query, a fragment, a percent-encoded user or host, another transport or a local path', () => {
+    expect(readLocator('https://git.example.org/a/b?private_token=x', 'remote')).toEqual({ ok: false, rule: QUERY });
+    expect(readLocator('https://u%3Ap@git.example.org/a/b', 'remote')).toEqual({ ok: false, rule: PERCENT });
+    expect(readLocator('file:///srv/repo', 'remote')).toEqual({ ok: false, rule: FORM });
+    expect(readLocator('/srv/repo', 'remote')).toEqual({ ok: false, rule: FORM });
+  });
+});
+
+describe('the two-segment floor (046, line 15)', () => {
+  it('a normalised path of one segment derives no identity, on any host', () => {
+    expect(deriveIdentity(normaliseUrl('https://github.com/redis')!)).toBe(null);
+    expect(deriveIdentity(normaliseUrl('git@git.example.org:tool.git')!)).toBe(null);
   });
 });
 
