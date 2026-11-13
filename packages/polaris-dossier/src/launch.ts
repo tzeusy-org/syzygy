@@ -14,6 +14,7 @@ import {
 } from './launch-question.js';
 import { recordIdFor, renderLaunchRecord, type LaunchRecord, type LaunchRecordClass, type PublicDeclaration } from './launch-record.js';
 import { checkNoCopyPin, checkoutCommand, defaultRemote, nameLaunchRevision, updateCommand } from './launch-revision.js';
+import { questionCopyStatements, stageStatements, type CopyProgress, type LaunchState, type LaunchStatement } from './launch-statements.js';
 import { LAUNCH_REF, homeGitDirs, readLaunchRecords, recordingSubject, writeLaunchRecords, type StoreRead, type StoredRecord, type WriteResult } from './launch-store.js';
 import type { WriteConsentState } from './launch-write-consent.js';
 
@@ -101,6 +102,8 @@ export interface LaunchRefusal {
   readonly copyStatement?: string;
   /** What the URL reading said of the clone's remote, where it said anything: its user information removed (046, line 17). */
   readonly locatorStatements?: readonly string[];
+  /** The launch output's statements under 047's stage rule: each stage the run reached, and that each other was not reached. */
+  readonly statements: readonly LaunchStatement[];
 }
 
 /** The run's class (047), decided at launch from the consents and the named identifier, and a copy-class run's copy. */
@@ -124,9 +127,10 @@ export interface LaunchSubject {
 
 export type LaunchOutcome =
   | { readonly kind: 'head-consented'; readonly commit: string }
-  | { readonly kind: 'covered'; readonly subject: LaunchSubject; readonly pin: LaunchPin; readonly relied: readonly string[]; readonly output: string; readonly copy: LaunchCopy | null }
+  | { readonly kind: 'covered'; readonly subject: LaunchSubject; readonly pin: LaunchPin; readonly relied: readonly string[]; readonly output: string; readonly copy: LaunchCopy | null;
+      readonly statements: readonly LaunchStatement[]; readonly locatorStatements: readonly string[] }
   | { readonly kind: 'recorded'; readonly subject: LaunchSubject; readonly pin: LaunchPin; readonly commit: string; readonly records: readonly string[]; readonly relied: readonly string[];
-      readonly statementDeclined: boolean; readonly output: string; readonly copy: LaunchCopy | null }
+      readonly statementDeclined: boolean; readonly output: string; readonly copy: LaunchCopy | null; readonly statements: readonly LaunchStatement[]; readonly locatorStatements: readonly string[] }
   | { readonly kind: 'refused'; readonly refusal: LaunchRefusal };
 
 const real = (p: string): string => { try { return fs.realpathSync(p); } catch { return path.resolve(p); } };
@@ -160,11 +164,21 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
   let copyClass: boolean | null = null, copyDir: string | null = null;
   // What the URL reading says of the clone's remote, once read (046, line 17), for every outcome after it.
   let locatorStatements: readonly string[] = [];
+  // How far the run got, for the stage rule's statements (047): the named identifier, the copy step, the pinned commit, the question, and
+  // whether the run relies on a version 1.1 launch observation consent ("no fetch by Syzygy").
+  let named: LaunchState['named'] = null, progress: CopyProgress = { reached: 'not-started' }, pinnedState: LaunchState['pinned'] = null;
+  let questionAsked = false, beyondConsent = false;
+  const stateOf = (copyEnd: LaunchState['copyEnd']): LaunchState => ({
+    runClass: copyClass === null ? null : copyClass ? 'copy-class' : 'no-copy', named, copy: copyClass === true ? progress : null, copyEnd,
+    pinned: pinnedState, questionAsked, beyondConsent,
+  });
   const refuse = (stage: LaunchStage, reason: string, command?: string): LaunchOutcome => {
     const said = locatorStatements.length === 0 ? {} : { locatorStatements };
-    if (copyClass !== true) return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false, ...said } };
+    if (copyClass !== true) {
+      return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false, ...said, statements: stageStatements(stateOf(null)) } };
+    }
     const end = copyDir === null ? null : removeCopy(copyDir, ports.removeCopy);
-    return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false, ...said, copy: end, copyStatement: copyEndStatement(end) } };
+    return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false, ...said, copy: end, copyStatement: copyEndStatement(end), statements: stageStatements(stateOf(end)) } };
   };
 
   // Every path after the copy step starts ends in a refusal that removes the copy and says so, a thrown error included (R-PDJA-33-SLICE-B-1
@@ -201,13 +215,17 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     // Read (5)'s width: the object format the configuration records, SHA-1 where it records none, never the length of HEAD's value.
     const algorithm = snapshot.objectFormat === 'sha256' ? 'sha256' : 'sha1';
     const storedIds = async () => { try { return await storedIdentifiers(snapshot.gitDir, algorithm); } catch { return new Set<string>(); } };
-    const named = await nameLaunchRevision(
+    const naming = await nameLaunchRevision(
       { snapshot, ...(request.revision === undefined ? {} : { revision: request.revision }), headConsented: request.headConsentedElsewhere || launchNamesHead },
       { storedIds },
     );
-    if (!named.ok) return refuse(named.refusal.stage, named.refusal.reason, named.refusal.command);
-    if (named.named.kind === 'head-consented' && request.headConsentedElsewhere) return { kind: 'head-consented', commit: named.named.commit };
-    const commit = named.named.commit;
+    if (!naming.ok) return refuse(naming.refusal.stage, naming.refusal.reason, naming.refusal.command);
+    if (naming.named.kind === 'head-consented' && request.headConsentedElsewhere) return { kind: 'head-consented', commit: naming.named.commit };
+    const commit = naming.named.commit;
+    const via = naming.named.kind === 'pinned' ? naming.named.via : 'the clone\'s HEAD, which an in-force launch observation consent names';
+    const remoteName = naming.named.kind === 'pinned' && naming.named.remote !== null ? naming.named.remote : (snapshot.remotes.length > 0 ? (snapshot.remotes.find(r => r.name === 'origin') ?? snapshot.remotes[0]!).name : null);
+    const update = updateCommand(clone, remoteName);
+    named = { commit, via, updateCommand: update, localElsewhere: naming.named.kind === 'pinned' ? naming.named.localElsewhere ?? null : null };
 
     // The class (047): "SHALL run on a copy unless its named identifier is named by an in-force observation consent made by another act".
     copyClass = !(await sources.observationConsentNaming(commit)).satisfied;
@@ -230,9 +248,11 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
       if (violation !== null) return refuse('copy', violation);
       const made = makeCopy({ clone, named: commit, objectFormat: snapshot.objectFormat, copyRoot: ports.copyRoot }, ports.copyGit);
       copyDir = made.dir;
+      if (made.dir !== null) progress = copyProgressOf(made);
+      if (made.ok) pinnedState = { commit, committerDate: 'unread' };
       if (!made.ok) {
         const f = made.failure, given = request.revision === undefined ? '' : ` (--revision ${request.revision})`;
-        const via = named.named.kind === 'pinned' ? named.named.via : 'the clone\'s HEAD';
+        const via = naming.named.kind === 'pinned' ? naming.named.via : 'the clone\'s HEAD';
         if (f.kind === 'directory') return refuse('copy', f.reason);
         if (f.kind === 'process') return refuse('copy', `git ${f.process} for the copy failed (exit ${f.status}): ${gitReport(f.stderr)}`);
         if (f.kind === 'checkout') {
@@ -240,6 +260,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
         }
         return refuse('revision', `${via} names ${commit}, which is not a commit: the copy's detached checkout did not leave the copy's HEAD at it; Syzygy does not follow it`);
       }
+      progress = { reached: 'fetched', location: made.dir, where: 'at its form check' };
       const form = cloneGitDirShape(made.gitDir, commit, { objectFormatSetting: true });
       if (!form.ok) return refuse('copy', `the copy departs from the form one commit fetched alone and checked out detached leaves: ${form.reason}`);
       try {
@@ -250,10 +271,11 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
         throw cause;
       }
       copy = { dir: made.dir, gitDir: made.gitDir };
+      progress = { reached: 'formed', location: made.dir };
       runGitDir = made.gitDir;
     } else {
       // A no-copy run: the named identifier is read as a commit object, and the operator's HEAD must be it.
-      const checked = await checkNoCopyPin(clone, snapshot, named.named, {
+      const checked = await checkNoCopyPin(clone, snapshot, naming.named, {
         // The type from the header alone, so a tag or blob is never read past it (046's pre-answer reads); a commit is then re-hashed.
         isCommit: async oid => {
           try {
@@ -265,8 +287,8 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
         },
       });
       if (!checked.ok) return refuse(checked.refusal.stage, checked.refusal.reason, checked.refusal.command);
+      pinnedState = { commit, committerDate: 'unread' };
     }
-    const pinned = named;
 
     // Pre-answer reads: the pinned commit's tree, parents and committer date, and the trees under it. No blob.
     let paths: readonly string[], parents: readonly string[], committerDate: string | null;
@@ -274,6 +296,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
       const reader = (ports.openReader ?? openPinnedObjectReader)({ gitDir: runGitDir, revision: commit });
       const head = await reader.commitHead();
       parents = head.parents; committerDate = head.committerDate;
+      pinnedState = { commit, committerDate };
       paths = (await reader.listTree()).map(e => e.path);
     } catch (cause) {
       if (cause instanceof GitObjectReadRefusal) return refuse('listing', `the pinned tree could not be listed: ${cause.message}`);
@@ -304,11 +327,13 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     if (!proposal.ok) return refuse('identity', proposal.reason);
     locatorStatements = proposal.locatorStatements;
     const identity = proposal.identity, bare = identity.slice('repository:'.length);
-    const via = pinned.named.kind === 'pinned' ? pinned.named.via : 'the clone\'s HEAD, which an in-force launch observation consent names';
-    const remoteName = pinned.named.kind === 'pinned' && pinned.named.remote !== null ? pinned.named.remote : (snapshot.remotes.length > 0 ? (snapshot.remotes.find(r => r.name === 'origin') ?? snapshot.remotes[0]!).name : null);
-    const pin: LaunchPin = { commit, via, committerDate, fetched: false, updateCommand: updateCommand(clone, remoteName) };
+    const pin: LaunchPin = { commit, via, committerDate, fetched: false, updateCommand: update };
     // The pin, then what the URL reading says of the remote (046, line 17): user information removed, or a URL that is no locator.
-    const outputHead = [pinStatement(pin), ...proposal.locatorStatements].join('\n');
+    // The launch output (047's stage rule; 046 line 17's user-information statement), rebuilt at each outcome so it states how far the run got.
+    const outputOf = (tail: string) => {
+      const statements = stageStatements(stateOf(copy === null ? null : 'kept'));
+      return { statements, locatorStatements: proposal.locatorStatements, output: [...statements.map(x => x.text), ...proposal.locatorStatements, tail].join('\n') };
+    };
 
     // What is already in force, by any act.
     const mine = inForce(store.records, identity, now);
@@ -317,6 +342,8 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     const launchObs = mine.find(r => r.record.recordClass === 'observation-consent' && r.record.revision === commit);
     const needObservation = !elsewhereObs.satisfied && launchObs === undefined;
     if (elsewhereObs.satisfied) relied.push(`observation consent ${elsewhereObs.record}`);
+    // A copy-class run resting on a launch observation consent version 1.1 recorded, "in the operator's own clone with no fetch by Syzygy" (047).
+    beyondConsent = copyClass === true && !elsewhereObs.satisfied && launchObs !== undefined && launchObs.record.observationScope === 'operator-clone';
     if (launchObs !== undefined) relied.push(`launch observation consent ${launchObs.record.recordId} (${launchObs.commit})`);
     const elsewhereDrawer = await sources.projectInput.drawerFor(bare);
     const launchDrawer = mine.find(r => r.record.recordClass === 'drawer-statement');
@@ -342,7 +369,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     // Records already in force: use them, name them, ask nothing (line 23).
     if (missing.length === 0) {
       const subject: LaunchSubject = { identity, identitySource: proposal.source, url: proposal.url, urlSource: proposal.urlSource, publicDeclaration: launchObs?.record.publicDeclaration ?? null };
-      return { kind: 'covered', subject, pin, relied, copy, output: `${outputHead}\nIn-force records the run rests on, nothing asked: ${relied.join('; ')}` };
+      return { kind: 'covered', subject, pin, relied, copy, ...outputOf(`In-force records the run rests on, nothing asked: ${relied.join('; ')}`) };
     }
 
     const writeConsent = await ports.writeConsent();
@@ -359,7 +386,9 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     const existing = store.records.filter(r => r.record.identity === identity || proposal.matches.some(m => m.record.recordId === r.record.recordId))
       .map(r => ({ recordId: r.record.recordId, recordClass: r.record.recordClass, identity: r.record.identity, state: r.state === 'active' ? 'active' : `${r.state} by ${r.stateBy}`, commit: r.commit }));
     for (const line of proposal.locatorStatements) say(line);
+    questionAsked = true;
     say(questionOpening({
+      ...(copy === null ? {} : { copyStatements: questionCopyStatements(copy.dir) }),
       identity, identitySource: proposal.source, url: proposal.url, urlSource: proposal.urlSource, revision: commit, revisionVia: via, committerDate,
       updateCommand: pin.updateCommand, existing, notCarrying: proposal.notCarrying, matchedElsewhere: proposal.matches.filter(m => m.record.madeBy === 'another act'), inForceElsewhere: relied, asks: { observation: needObservation, drawer: needDrawerQuestion },
     }));
@@ -413,7 +442,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     }
     const subject: LaunchSubject = { identity, identitySource: proposal.source, url: proposal.url, urlSource: proposal.urlSource, publicDeclaration: declaration };
     if (accepted.length === 0) {
-      return { kind: 'recorded', subject, pin, commit: store.tip ?? '', records: [], relied, statementDeclined, copy, output: `${outputHead}\nNothing was recorded: the statement was declined.` };
+      return { kind: 'recorded', subject, pin, commit: store.tip ?? '', records: [], relied, statementDeclined, copy, ...outputOf('Nothing was recorded: the statement was declined.') };
     }
 
     const question = transcript.join('\n');
@@ -423,6 +452,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
         recordClass: a.recordClass, recordId, identity, identitySource: proposal.source, normalisedUrl: proposal.url, urlSource: proposal.urlSource,
         publicDeclaration: declaration, revision: commit, grantInstant: instant, supersedes: a.recordClass === 'provider-statement' ? supersedable : null,
         phrase: a.phrase, terminal: t.name, question,
+        ...(a.recordClass === 'observation-consent' ? { observationScope: 'copy' as const } : {}),
         ...(a.recordClass === 'provider-statement' ? { provider: { agentTool: request.agentTool, provider: request.agentProvider, contentClasses: preview.classes } } : {}),
       };
       return { recordId, text: renderLaunchRecord(record) };
@@ -434,9 +464,19 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     if (!written.ok) return refuse('write', `the records could not be committed: ${written.why}`);
     return {
       kind: 'recorded', subject, pin, commit: written.commit, records: records.map(r => r.recordId), relied, statementDeclined, copy,
-      output: `${outputHead}\nRecorded ${records.map(r => r.recordId).join(', ')} in ${written.commit} on ${LAUNCH_REF}. Syzygy never pushes ${LAUNCH_REF}.`,
+      ...outputOf(`Recorded ${records.map(r => r.recordId).join(', ')} in ${written.commit} on ${LAUNCH_REF}. Syzygy never pushes ${LAUNCH_REF}.`),
     };
   }
 }
 
 export { checkoutCommand };
+
+/** Where a copy step that made its directory ended (047's copy statements): before the fetch, at a failed fetch, or after it. */
+function copyProgressOf(made: ReturnType<typeof makeCopy>): CopyProgress {
+  if (made.ok) return { reached: 'fetched', location: made.dir, where: 'at its form check' };
+  const f = made.failure, location = made.dir!;
+  if (f.kind === 'directory') return f.fetchStarted === true ? { reached: 'fetch-failed', location, report: f.reason } : { reached: 'before-fetch', location };
+  if (f.kind === 'process') return f.process === 'fetch' ? { reached: 'fetch-failed', location, report: gitReport(f.stderr) } : { reached: 'before-fetch', location };
+  if (f.kind === 'checkout') return { reached: 'fetched', location, where: 'at the copy\'s detached checkout, which failed' };
+  return { reached: 'fetched', location, where: 'at the copy\'s detached checkout, which did not leave the copy\'s HEAD at the named identifier' };
+}

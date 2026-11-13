@@ -76,7 +76,10 @@ async function resolveName(snapshot: CloneSnapshot, name: string, ports: Pick<Re
  * here and HEAD is not compared: a copy-class run is shown its commit by the copy's checkout, and a no-copy run by `checkNoCopyPin`. */
 export type NamedRevision =
   | { readonly kind: 'head-consented'; readonly commit: string }
-  | { readonly kind: 'pinned'; readonly commit: string; readonly via: string; readonly remote: string | null };
+  | { readonly kind: 'pinned'; readonly commit: string; readonly via: string; readonly remote: string | null;
+      /** A local branch of the remote default's name that points elsewhere (047: "the launch output SHALL state both identifiers and that a
+       * local commit is not the trunk default"). */
+      readonly localElsewhere?: { readonly ref: string; readonly commit: string } };
 export type NameResult = { readonly ok: true; readonly named: NamedRevision } | { readonly ok: false; readonly refusal: RevisionRefusal };
 
 export async function nameLaunchRevision(
@@ -89,6 +92,7 @@ export async function nameLaunchRevision(
   if (input.revision === undefined && input.headConsented && head !== null) return { ok: true, named: { kind: 'head-consented', commit: head } };
 
   let commit: string, via: string, remote: string | null = null;
+  let localElsewhere: { readonly ref: string; readonly commit: string } | undefined;
   if (input.revision !== undefined) {
     const { found, unread } = await resolveName(snapshot, input.revision, ports);
     if (found.size === 0 && unread !== undefined) {
@@ -107,6 +111,12 @@ export async function nameLaunchRevision(
       const oid = resolveRef(snapshot, chosen.target);
       if (oid === null) return refuse(`refs/remotes/${chosen.remote}/HEAD names ${chosen.target}, which the clone does not hold; name the revision with --revision`);
       commit = oid; via = `refs/remotes/${chosen.remote}/HEAD -> ${chosen.target}`; remote = chosen.remote;
+      // The local branch of the remote default's name (read (2)); consulted for this statement alone, never for the pin.
+      const prefix = `refs/remotes/${chosen.remote}/`;
+      if (chosen.target.startsWith(prefix)) {
+        const ref = `refs/heads/${chosen.target.slice(prefix.length)}`, local = resolveRef(snapshot, ref);
+        if (local !== null && local !== oid) localElsewhere = { ref, commit: local };
+      }
     } else if (chosen.none === 'several') {
       return refuse(`the remotes ${chosen.names.join(', ')} each record a default branch and none is origin, so the clone records no one remote default; name the revision with --revision`);
     } else {
@@ -116,7 +126,7 @@ export async function nameLaunchRevision(
       else return refuse('the clone records no remote default branch and has neither a main nor a master branch; name the revision with --revision');
     }
   }
-  return { ok: true, named: { kind: 'pinned', commit, via, remote } };
+  return { ok: true, named: { kind: 'pinned', commit, via, remote, ...(localElsewhere === undefined ? {} : { localElsewhere }) } };
 }
 
 /** A no-copy run's pin (047): the named identifier is shown to be a commit by reading it as a commit object, as REQ-polaris-generation-033

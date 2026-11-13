@@ -94,7 +94,7 @@ export type CopyFailure =
   | { readonly kind: 'process'; readonly process: 'init' | 'fetch'; readonly status: number; readonly stderr: string }
   | { readonly kind: 'checkout'; readonly status: number; readonly stderr: string }
   | { readonly kind: 'not-commit' }
-  | { readonly kind: 'directory'; readonly reason: string };
+  | { readonly kind: 'directory'; readonly reason: string; readonly fetchStarted?: boolean };
 
 export type CopyResult =
   | { readonly ok: true; readonly dir: string; readonly gitDir: string }
@@ -116,17 +116,20 @@ export function makeCopy(input: { readonly clone: string; readonly named: string
   } catch (cause) {
     return { ok: false, dir: null, failure: { kind: 'directory', reason: `the copy's directory could not be created under ${input.copyRoot} (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` } };
   }
-  // Once the directory exists every outcome returns it, a thrown error included, so the caller can remove it.
-  try { return copyInto(dir, input, run); } catch (cause) {
-    return { ok: false, dir, failure: { kind: 'directory', reason: `the copy step failed after its directory was made (${cause instanceof Error ? `${cause.name}: ${cause.message}` : String(cause)})` } };
+  // Once the directory exists every outcome returns it, a thrown error included, so the caller can remove it, with whether the fetch process
+  // had been started (047's statements differ on either side of it).
+  const progress = { fetchStarted: false };
+  try { return copyInto(dir, input, run, progress); } catch (cause) {
+    return { ok: false, dir, failure: { kind: 'directory', reason: `the copy step failed after its directory was made (${cause instanceof Error ? `${cause.name}: ${cause.message}` : String(cause)})`, fetchStarted: progress.fetchStarted } };
   }
 }
 
-function copyInto(dir: string, input: { readonly clone: string; readonly named: string; readonly objectFormat: string }, run: CopyGitRun): CopyResult {
+function copyInto(dir: string, input: { readonly clone: string; readonly named: string; readonly objectFormat: string }, run: CopyGitRun, progress: { fetchStarted: boolean }): CopyResult {
   const env = copyEnvironment();
   const git = (args: readonly string[]) => run([...COPY_GIT_OPTIONS, ...args], { cwd: dir, env });
   const init = git(['init', '-q', '--template=', `--object-format=${input.objectFormat}`, dir]);
   if (init.status !== 0) return { ok: false, dir, failure: { kind: 'process', process: 'init', status: init.status, stderr: init.stderr } };
+  progress.fetchStarted = true;
   const fetch = git(['-C', dir, 'fetch', '-q', '--depth=1', '--no-tags', '--no-recurse-submodules', pathToFileURL(input.clone).href, input.named]);
   if (fetch.status !== 0) return { ok: false, dir, failure: { kind: 'process', process: 'fetch', status: fetch.status, stderr: fetch.stderr } };
   const checkout = git(['-C', dir, 'checkout', '-q', '--detach', input.named]);

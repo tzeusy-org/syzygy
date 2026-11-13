@@ -10,7 +10,8 @@ import { initRun } from './init.js';
 import type { CopyGitRun } from './launch-copy.js';
 import { openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
 import { launchConsent, type LaunchOutcome, type LaunchPorts, type LaunchRequest } from './launch.js';
-import { LAUNCH_REF, readLaunchRecords } from './launch-store.js';
+import { LAUNCH_REF, readLaunchRecords, writeLaunchRecords } from './launch-store.js';
+import { parseLaunchRecord, renderLaunchRecord } from './launch-record.js';
 import { withLaunchRecords } from './launch-sources.js';
 import { NON_PUBLIC_SUCCESSOR } from './launch-cli.js';
 import { fixtureClasses, fullClone, gitIn, listing, makeHome, makeUpstream, noOtherActs, scriptedTerminal, writeFiles, type ScriptedTerminal } from './launch.testkit.js';
@@ -177,7 +178,7 @@ describe('refusals before asking, and refusals of the answer, record nothing', (
     for (const declaration of ['not public', '']) {
       const s = setup([declaration]);
       const out = await run(clone, s);
-      expect(out).toEqual({ kind: 'refused', refusal: { stage: 'not-public', recorded: false, missing: expect.any(Array),
+      expect(out).toEqual({ kind: 'refused', refusal: { stage: 'not-public', recorded: false, statements: expect.any(Array), missing: expect.any(Array),
         reason: `the operator did not declare the repository public, and no effective policy admits non-public sources: ${NON_PUBLIC_SUCCESSOR} is missing; nothing was recorded`,
         copy: { state: 'removed', location: expect.stringMatching(/\/copies\/copy-[A-Za-z0-9]{6}$/) }, copyStatement: expect.stringMatching(/^The copy at \S+\/copies\/copy-[A-Za-z0-9]{6} was removed, its directory included\.$/) } });
       expect(gitIn(s.home, 'for-each-ref', LAUNCH_REF)).toBe('');
@@ -303,7 +304,7 @@ describe('REQ-polaris-generation-047 against real clones', () => {
     gitIn(clone, 'checkout', '-q', '--detach', up.commits[0]!);
     const before = listing(clone);
     const s = setup([], { ports: { sources: { ...noOtherActs(), observationConsentNaming: async r => (r === up.commits[1] ? { satisfied: true, record: 'OTHER-ACT@1' } : { satisfied: false, why: 'no' }) } } });
-    expect(await run(clone, s)).toEqual({ kind: 'refused', refusal: { stage: 'head', missing: [], recorded: false,
+    expect(await run(clone, s)).toEqual({ kind: 'refused', refusal: { stage: 'head', missing: [], recorded: false, statements: expect.any(Array),
       reason: `the clone's HEAD is ${up.commits[0]}, not the pinned revision ${up.commits[1]} (refs/remotes/origin/HEAD -> refs/remotes/origin/main); Syzygy does not change the checkout`,
       command: `git -C '${clone}' checkout --detach ${up.commits[1]}` } });
     expect(listing(clone)).toEqual(before);
@@ -325,7 +326,7 @@ describe('REQ-polaris-generation-047 against real clones', () => {
     }
     for (const [revision, id] of [['v1', tag], [blob, blob]] as const) {
       const s = setup([], { request: { revision }, ports: { sources: { ...noOtherActs(), observationConsentNaming: async () => ({ satisfied: true, record: 'OTHER-ACT@1' }) } } });
-      expect(await run(clone, s), revision).toEqual({ kind: 'refused', refusal: { stage: 'revision', missing: [], recorded: false,
+      expect(await run(clone, s), revision).toEqual({ kind: 'refused', refusal: { stage: 'revision', missing: [], recorded: false, statements: expect.any(Array),
         reason: `--revision ${revision} resolves to ${id}, which is not a commit the clone's store holds` } });
       expect(s.reads.log.calls, revision).toEqual([`storedType ${id}`]);
       expect(s.reads.log.answers, revision).toEqual([revision === 'v1' ? 'tag' : 'blob']);   // answered from the header, not a refused full read
@@ -535,7 +536,14 @@ describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone 
     const r = await sealedReads(clone, ['HEAD'], copyGit => setup([], { ports: { copyGit } }));
     const s = r.s;
     expect(r.out).toEqual({ kind: 'refused', refusal: { stage: 'clone', missing: [], recorded: false,
-      reason: 'the clone stores its references in the reftable backend; Syzygy reads references only as loose files and packed-refs, so the run is refused before any Git process starts' } });
+      reason: 'the clone stores its references in the reftable backend; Syzygy reads references only as loose files and packed-refs, so the run is refused before any Git process starts',
+      // 047's stage rule: every stage not reached, and nothing of the thing itself.
+      statements: [
+        { id: 'named-identifier', stage: 'identifier named', runClass: 'both', reached: false, label: 'Inferred', text: 'No identifier was named.' },
+        { id: 'copy', stage: 'copy step started', runClass: null, reached: false, label: 'Inferred', text: 'No copy was made: the run ended before its class was decided.' },
+        { id: 'pinned-commit', stage: 'commit pinned', runClass: 'both', reached: false, label: 'Inferred', text: 'The commit was not pinned, and its committer date is Unknown.' },
+        { id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' },
+      ] } });
     // Told by HEAD's placeholder alone: the reftable directory is neither examined nor read (R-PDJA-33-SLICE-A-1 finding 3).
     expect(r.opened).toEqual(['HEAD']);
     expect(r.examined.filter(p => p.startsWith('reftable'))).toEqual([]);
@@ -697,6 +705,75 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     expect(gitIn(copy.dir, 'rev-parse', 'HEAD')).toBe(commit);
   });
 
+  it('the question states the copy statements before any answer, and the launch output states every stage reached (REQ-polaris-generation-046 line 11; 047)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const s = setup(consentAnswers(up.commits[0]!));
+    const out = await run(clone, s);
+    if (out.kind !== 'recorded') throw new Error(JSON.stringify(out));
+    const copy = copyOf(out)!;
+    const printed = s.terminal.printed.join('\n');
+    for (const line of [
+      'The run\'s clone is a copy of the pinned commit alone, which Syzygy made from the operator\'s clone with Git over the local file transport and no network request. To make it, Git read the operator\'s clone\'s configuration, references and object store, the stored bytes of delta bases outside the pinned commit\'s objects included. Syzygy used nothing Git read but the copy it produced, and itself read of the operator\'s clone only the references, remote names and URLs and other files REQ-polaris-generation-047 lists.',
+      'The authoring and inventory sessions are directed, by their briefs, to work in the copy, while the operator\'s clone stays on the host; that a session stayed in the copy is its own report.',
+      `The copy, its checked-out files included, was made at ${copy.dir} before your answer, and Syzygy has read none of its blobs. It is removed if the run ends before its brief, or named with the removal's failure where its removal fails, and is otherwise kept after the run, at a location the launch output names, until the operator removes it.`,
+    ]) expect(printed.split('\n')).toContain(line);
+    // Stated before the first answer is asked for.
+    expect(s.terminal.prompts[0]).toBe('Is the repository public? Type "public", "not public", or press Enter to give no declaration: ');
+    expect(out.statements.map(x => [x.id, x.reached])).toEqual([['named-identifier', true], ['copy', true], ['copy-location', true], ['copy-reliance', true], ['pinned-commit', true], ['question', true]]);
+    expect(out.output.split('\n').slice(0, 6)).toEqual(out.statements.map(x => x.text));
+    expect(out.statements.find(x => x.id === 'copy-location')?.text).toBe(`The copy of the pinned commit at ${copy.dir} is the run's clone; it is kept after the run, outside the run's state directory, until the operator removes it.`);
+    // The record's scope is version 1.2's: held in the copy (046, line 21).
+    expect(recordsOf(s.home).find(r => r.record.recordClass === 'observation-consent')?.record.observationScope).toBe('copy');
+  });
+
+  it('a local branch of the remote default\'s name elsewhere: the output states both identifiers and that a local commit is not the trunk default (047)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' }, [{ 'b.c': 'y\n' }]);
+    const clone = fullClone(up.dir, URL_RR);
+    gitIn(clone, 'checkout', '-q', '--detach', up.commits[1]!);
+    gitIn(clone, 'branch', '-f', 'main', up.commits[0]!);
+    const out = await run(clone, setup(consentAnswers(up.commits[1]!)));
+    if (out.kind !== 'recorded') throw new Error(JSON.stringify(out));
+    expect(out.statements.find(x => x.id === 'local-not-trunk')?.text).toBe(`The local branch refs/heads/main points to ${up.commits[0]}, not to the trunk default ${up.commits[1]}: a local commit is not the trunk default, and no local branch is consulted while a remote default is recorded.`);
+    expect(out.output).toContain('a local commit is not the trunk default');
+  });
+
+  it('a run resting on a launch observation consent version 1.1 recorded: the copy goes beyond its "no fetch by Syzygy" wording (047)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    // The first launch writes its observation consent with the scope version 1.1 recorded.
+    const asV11: typeof writeLaunchRecords = (home, input) => writeLaunchRecords(home, { ...input, records: input.records.map(r => {
+      const parsed = parseLaunchRecord(r.text);
+      if (!parsed.ok || parsed.record.recordClass !== 'observation-consent') return r;
+      return { recordId: r.recordId, text: renderLaunchRecord({ ...parsed.record, observationScope: 'operator-clone' }) };
+    }) });
+    const first = setup(consentAnswers(up.commits[0]!), { ports: { writeStore: asV11 } });
+    expect((await run(clone, first)).kind).toBe('recorded');
+    expect(recordsOf(first.home).find(r => r.record.recordClass === 'observation-consent')?.record.observationScope).toBe('operator-clone');
+    const out = await run(clone, setup([], { home: first.home }));
+    if (out.kind !== 'covered') throw new Error(JSON.stringify(out));
+    expect(out.statements.find(x => x.id === 'copy-beyond-consent')?.text).toBe('The copy goes beyond the launch observation consent\'s "no fetch by Syzygy" wording: that consent records its scope in the operator\'s own clone, and Syzygy fetched the pinned commit from that clone into the copy over the local file transport. The consent is otherwise relied on as it was recorded.');
+    // A run resting on a version 1.2 record states none.
+    const fresh = setup(consentAnswers(up.commits[0]!));
+    await run(clone, fresh);
+    const again = await run(clone, setup([], { home: fresh.home }));
+    expect(again.kind === 'covered' && again.statements.some(x => x.id === 'copy-beyond-consent')).toBe(false);
+  });
+
+  it('a failed fetch: the refusal states that a fetch was started and failed, as Git reported, and that the copy was removed', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const failingFetch: CopyGitRun = (args, o) => args.includes('fetch') ? { status: 128, stderr: 'fatal: fixture fetch failure\n' } : (() => { const r = spawnSync('git', args, { cwd: o.cwd, env: o.env, encoding: 'utf8' }); return { status: r.status ?? -1, stderr: r.stderr ?? '' }; })();
+    const out = await run(clone, setup([], { ports: { copyGit: failingFetch } }));
+    if (out.kind !== 'refused') throw new Error(JSON.stringify(out));
+    expect(out.refusal.statements.filter(x => x.stage === 'copy step started').map(x => x.text)).toEqual([
+      'The copy step used the method a copy is made by: a local fetch of the pinned commit alone from the operator\'s clone over Git\'s local file transport, with no network request. A fetch was started and failed, as Git reported: fatal: fixture fetch failure. The copy had not passed its form check.',
+      `The copy at ${out.refusal.copy?.location} was removed, its directory included.`,
+      'For every Git process the copy step started, Syzygy relies on Git starting no program that the operator\'s clone\'s own configuration or hooks name while it serves the copy.',
+    ]);
+    expect(out.refusal.statements.find(x => x.id === 'pinned-commit')?.text).toBe('The commit was not pinned, and its committer date is Unknown.');
+  });
+
   it('a repeat run at a launch-consented HEAD: a copy-class run that asks nothing', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' });
     const clone = fullClone(up.dir, URL_RR);
@@ -716,7 +793,7 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     const tag = gitIn(clone, 'rev-parse', 'v1');
     const s = setup([], { request: { revision: 'v1' } });
     const out = await run(clone, s);
-    expect(out).toEqual({ kind: 'refused', refusal: { stage: 'revision', missing: [], recorded: false,
+    expect(out).toEqual({ kind: 'refused', refusal: { stage: 'revision', missing: [], recorded: false, statements: expect.any(Array),
       reason: `--revision v1 names ${tag}, which is not a commit: the copy's detached checkout did not leave the copy's HEAD at it; Syzygy does not follow it`,
       copy: { state: 'removed', location: expect.any(String) }, copyStatement: expect.stringMatching(/ was removed, its directory included\.$/) } });
     if (out.kind === 'refused') expect(fs.existsSync(out.refusal.copy!.location)).toBe(false);
@@ -758,7 +835,13 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     const s = setup([]);
     expect(await run(clone, s)).toEqual({ kind: 'refused', refusal: { stage: 'clone', missing: [], recorded: false,
       reason: 'the operator\'s clone has an objects/info/alternates file, and a copy-class run refuses a clone with an alternate before its copy step starts',
-      copy: null, copyStatement: 'No copy was made.' } });
+      copy: null, copyStatement: 'No copy was made.',
+      statements: [
+        expect.objectContaining({ id: 'named-identifier', reached: true }),
+        { id: 'copy', stage: 'copy step started', runClass: 'copy-class', reached: false, label: 'Inferred', text: 'No copy was made: the copy step did not start.' },
+        { id: 'pinned-commit', stage: 'commit pinned', runClass: 'both', reached: false, label: 'Inferred', text: 'The commit was not pinned, and its committer date is Unknown.' },
+        { id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' },
+      ] } });
     expect(fs.existsSync(s.ports.copyRoot!)).toBe(false);
     expect(s.reads.log.calls).toEqual([]);
   });

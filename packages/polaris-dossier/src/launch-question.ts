@@ -12,7 +12,7 @@ import { LAUNCH_REF } from './launch-store.js';
 export const OWNER_ONLY = 'Only the owner may answer this question, in person, by typing; never an agent. Syzygy cannot observe who typed the answer: it records the operator\'s declaration that the owner answered in person, labelled Inferred. An answer an agent typed is not an owner act, and accepting it is a trust-floor violation (RFC3-16) that disclosure makes visible and does not cure.';
 export const OWNER_ACTS = 'Each consent and statement is the owner\'s own act, recorded as its own launch consent record, and is revocable only by a later owner act naming it (RFC5-13).';
 export const AGENT_READS = 'The agent sessions read the clone without restriction, whatever content classes the statement names: neither those classes nor the screening policies bind what the agent reads or sends.';
-export const NOT_FETCHED = 'Syzygy did not fetch: the pinned revision is the one the operator\'s clone holds now, and whether it is the upstream\'s latest commit is Inferred.';
+export const NOT_FETCHED = 'Syzygy made no network request to choose or verify the revision: the pinned revision is the one the operator\'s clone holds now, and whether it is the upstream\'s latest commit is Inferred.';
 export const NO_EXECUTION = 'A launch consent is never an execution choice: this question asks for none and no record names one.';
 
 const rev12 = (revision: string): string => revision.slice(0, 12);
@@ -36,7 +36,8 @@ export const nameOnBranchWarning = (identity: string, url: string): string =>
 export const IDENTITY_RESIDUALS: readonly string[] = [
   '[Inferred] A clone re-identified under another URL, at a commit no record names and whose parents no record names, matches no earlier record, so the repository takes a second identity and a revoked or withdrawn record for it goes unnamed.',
   '[Inferred] A fork or mirror at a commit an upstream record names, or at a child of one, is proposed the upstream\'s identity and so relies on the upstream\'s drawer and provider statements unless the operator gives another identity.',
-  '[Inferred] Two repositories whose normalised URLs share their last two path segments (x/sub/name and y/sub/name) derive one identity and, absent another match, share its records.',
+  '[Inferred] Two repositories whose normalised URLs share their last two path segments, on one host or on two (x/sub/name and y/sub/name, or github.com/a/b and gitlab.com/a/b), or differ only in characters the rule replaces by or joins with "-" (a-b/c and a/b-c), derive one identity and, absent another match, share its records: a record made for either matches the other by identity, so the question names it and how it matched, and a confirmed answer under that identity relies on its drawer and provider statements, while an observation consent, which names revisions, covers only the commits it names.',
+  '[Inferred] Two repositories whose URLs differ only in a port, which normalisation drops, or only in letter case, which it lowercases, get one normalised URL and one identity, so each matches the other\'s records by URL as well as by identity and, absent another identity, relies on its drawer and provider statements.',
 ];
 
 export interface QuestionFacts {
@@ -57,6 +58,8 @@ export interface QuestionFacts {
   /** Consents in force by another act that the run relies on. */
   readonly inForceElsewhere: readonly string[];
   readonly asks: { readonly observation: boolean; readonly drawer: boolean };
+  /** A copy-class run's copy statements (046, line 11; stage: question asked; copy-class); absent in a no-copy run. */
+  readonly copyStatements?: readonly string[];
 }
 
 /** The question's opening, printed before any answer is asked for. */
@@ -72,10 +75,11 @@ export function questionOpening(f: QuestionFacts): string {
     NOT_FETCHED,
     `To update the clone before a later run: ${f.updateCommand}`,
     '',
+    ...(f.copyStatements === undefined ? [] : [...f.copyStatements, '']),
   ];
   if (f.asks.observation) {
     lines.push(
-      `The observation consent covers that one revision only. It permits Syzygy to read and index the commit ${f.revision} and the tree and blob objects reachable from its root tree, and nothing else, from the operator's own clone, under the observing project's classification and screening policies; Syzygy fetches nothing.`,
+      `The observation consent covers that one revision only. It permits Syzygy to read and index the commit ${f.revision} and the tree and blob objects reachable from its root tree, and nothing else, held in the copy that REQ-polaris-generation-047 makes from the operator's own clone, with no network request by Syzygy, under the observing project's classification and screening policies.`,
       '',
     );
   }
