@@ -471,7 +471,11 @@ export { checkoutCommand };
 function copyProgressOf(made: ReturnType<typeof makeCopy>): CopyProgress {
   if (made.ok) return { reached: 'fetched', location: made.dir, where: 'at its form check' };
   const f = made.failure, location = made.dir!;
-  if (f.kind === 'directory') return f.fetchStarted === true ? { reached: 'fetch-failed', location, report: f.reason } : { reached: 'before-fetch', location };
+  if (f.kind === 'directory') {
+    // A failure after the fetch succeeded is not a failed fetch: the step ended after it, before the form check.
+    if (f.fetchEnded === true) return { reached: 'fetched', location, where: `after the fetch, where it failed: ${f.reason}` };
+    return f.fetchStarted === true ? { reached: 'fetch-failed', location, report: f.reason } : { reached: 'before-fetch', location };
+  }
   if (f.kind === 'process') return f.process === 'fetch' ? { reached: 'fetch-failed', location, report: gitReport(f.stderr) } : { reached: 'before-fetch', location };
   if (f.kind === 'checkout') return { reached: 'fetched', location, where: 'at the copy\'s detached checkout, which failed' };
   return { reached: 'fetched', location, where: 'at the copy\'s detached checkout, which did not leave the copy\'s HEAD at the named identifier' };

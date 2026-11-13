@@ -774,6 +774,22 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     expect(out.refusal.statements.find(x => x.id === 'pinned-commit')?.text).toBe('The commit was not pinned, and its committer date is Unknown.');
   });
 
+  it('a copy step that throws before the fetch, in it and after it: Git read nothing; a fetch was started and failed; the step ended after the fetch', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const real: CopyGitRun = (args, o) => { const r = spawnSync('git', args, { cwd: o.cwd, env: o.env, encoding: 'utf8' }); return { status: r.status ?? -1, stderr: r.stderr ?? '' }; };
+    const throwing = (on: string): CopyGitRun => (args, o) => { if (args.includes(on)) throw new Error('fixture failure'); return real(args, o); };
+    const atInit = await run(clone, setup([], { ports: { copyGit: throwing('init') } }));
+    if (atInit.kind !== 'refused') throw new Error(JSON.stringify(atInit));
+    expect(atInit.refusal.statements.find(x => x.id === 'copy')?.text).toBe(`The copy step started at ${atInit.refusal.copy?.location} and ended there, before Syzygy started the fetch process: Git read nothing of the operator's clone.`);
+    const atCheckout = await run(clone, setup([], { ports: { copyGit: throwing('checkout') } }));
+    if (atCheckout.kind !== 'refused') throw new Error(JSON.stringify(atCheckout));
+    expect(atCheckout.refusal.statements.find(x => x.id === 'copy')?.text).toBe('The copy step used the method a copy is made by: a local fetch of the pinned commit alone from the operator\'s clone over Git\'s local file transport, with no network request. It ended after the fetch, where it failed: the copy step failed after its directory was made (Error: fixture failure); the copy had not passed its form check.');
+    const atFetch = await run(clone, setup([], { ports: { copyGit: throwing('fetch') } }));
+    if (atFetch.kind !== 'refused') throw new Error(JSON.stringify(atFetch));
+    expect(atFetch.refusal.statements.find(x => x.id === 'copy')?.text).toBe('The copy step used the method a copy is made by: a local fetch of the pinned commit alone from the operator\'s clone over Git\'s local file transport, with no network request. A fetch was started and failed, as Git reported: the copy step failed after its directory was made (Error: fixture failure). The copy had not passed its form check.');
+  });
+
   it('a repeat run at a launch-consented HEAD: a copy-class run that asks nothing', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' });
     const clone = fullClone(up.dir, URL_RR);

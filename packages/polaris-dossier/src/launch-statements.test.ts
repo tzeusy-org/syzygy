@@ -112,6 +112,8 @@ describe('the brief stage and the question\'s copy statements', () => {
       .toBe('Each brief Syzygy issued (the authoring brief and the inventory brief) directed its session to work in the copy and not to read the operator\'s clone. Whether a session stayed in the copy is its own report [Inferred].');
     expect(briefStageStatement('no-copy', { authoring: true, inventory: false }).text)
       .toBe('The run\'s clone, where the agent sessions are to work, is the operator\'s clone; whether a session worked there is its own report [Inferred]. No copy was made.');
+    expect(briefStageStatement('copy-class', { authoring: false, inventory: true }).text)
+      .toBe('Each brief Syzygy issued (the inventory brief) directed its session to work in the copy and not to read the operator\'s clone. Whether a session stayed in the copy is its own report [Inferred].');
     expect(briefStageStatement('copy-class', { authoring: false, inventory: false })).toEqual({ id: 'briefs', stage: 'brief or packet delivered', runClass: 'both', reached: false, label: 'Inferred', text: 'Syzygy issued no brief and delivered no packet.' });
   });
 
