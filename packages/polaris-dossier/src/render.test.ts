@@ -83,7 +83,7 @@ let statementClasses: readonly string[] | null = null;
 afterEach(() => { statementClasses = null; });
 const STATEMENT_ID = 'STATEMENT-KESTREL-ANTHROPIC';
 const subject = (clone: string): RunSubject => ({
-  repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
   clone: { path: clone, declaredBy: 'operator', label: 'Inferred', use: 'read' },
   pinnedRevision: { commit, label: 'fixture', consentRecord: 'PUBLIC-OBS-FIXTURE@1', pinnedAt: '2026-10-07T11:00:00.000Z' },
   startGates: { registryEntry: 'REGISTRY-ACT-FIXTURE', screeningPolicy: 'POLICY-ACT-FIXTURE' },
@@ -606,7 +606,7 @@ describe('render', () => {
     expect(files.has('understanding.html')).toBe(false);
     expect(files.has('discovery.html')).toBe(true);
     expect(marked(files.get('index.html')!, 'draft-layer/policy-state')).toEqual({ epistemic: 'unknown', reason: 'unconsented-source-or-provider' });
-    expect(files.get('index.html')).toContain('Dossier of https://github.com/redis/redis at ');
+    expect(files.get('index.html')).toContain('Dossier of github.com/redis/redis at ');
     expect([...files.keys()].filter((file) => file.startsWith('sources/') && file !== 'sources/index.html')).toHaveLength(2);
     expect(JSON.parse(files.get('machine.json')!).draftLayer.state).toBe('unknown');
   });

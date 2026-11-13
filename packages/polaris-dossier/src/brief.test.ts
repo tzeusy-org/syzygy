@@ -31,7 +31,7 @@ const REV = '498ecd0d6d007db11ddb3aea9428552598a78622';
 const RUN_ID = `run-${'a'.repeat(32)}`;
 
 const SUBJECT: RunSubject = {
-  repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
   clone: { path: '/srv/clones/redis', declaredBy: 'operator', label: 'Inferred', use: 'read' },
   // The recorded label is the agent-writable copy; the brief shows the live consent's label ('8.10.2') instead.
   pinnedRevision: { commit: REV, label: 'label-in-run-json', consentRecord: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', pinnedAt: '2026-10-07T10:00:00.000Z' },
@@ -180,7 +180,7 @@ describe('brief: issued', () => {
   it('carries no project content beyond the repository identity and the pinned revision', async () => {
     const other: RunSubject = {
       ...SUBJECT,
-      repository: { url: 'https://github.com/example/other', repositoryId: 'example-other' },
+      repository: { url: 'github.com/example/other', repositoryId: 'example-other' },
       pinnedRevision: { commit: 'c'.repeat(40), label: 'v9', consentRecord: 'OTHER-CONSENT@1', pinnedAt: '2026-10-07T11:00:00.000Z' },
       startGates: { registryEntry: 'OTHER-REGISTRY', screeningPolicy: 'OTHER-POLICY' },
       governed: { kind: 'governed', because: ['an openspec path in the pinned tree: openspec/specs/secret-name.md'] },

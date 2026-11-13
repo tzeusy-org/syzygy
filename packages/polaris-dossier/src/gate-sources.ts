@@ -7,6 +7,7 @@ import {
 import { readdir } from 'node:fs/promises';
 import * as path from 'node:path';
 import type { DrawerStatement } from './governed.js';
+import { normaliseUrl } from './launch-identity.js';
 
 /** The records Syzygy's start gates read (REQ-polaris-generation-033, 036), each re-read on every call and never cached.
  *
@@ -48,9 +49,10 @@ export interface ProviderStatementSource {
 export interface GateSources {
   /** Where the records are read from, for the disclosure. */
   readonly recordsRoot: string;
-  /** Repository ids of the observation consents in force whose `Upstream:` is exactly the URL. */
+  /** Repository ids of the observation consents in force whose `Upstream:` URL, normalised by REQ-polaris-generation-046's rule, equals
+   * `url`, a normalised locator (host and whole path), for every host (line 17). */
   readonly repositoryIdsFor: (url: string) => Promise<readonly string[]>;
-  /** Why no observation consent in force names the URL, for a refusal's reason only (R-POLARIS-DOSSIER-S3-GATES-1 finding 4). */
+  /** Why no observation consent in force names the normalised URL, for a refusal's reason only (R-POLARIS-DOSSIER-S3-GATES-1 finding 4). */
   readonly consentAbsenceFor?: (url: string) => Promise<string>;
   readonly consentedRevisionsFor: (repositoryId: string) => Promise<readonly ConsentedRevision[]>;
   readonly observationConsentFor: (repositoryId: string, revision: string) => Promise<ConsentAnswer>;
@@ -469,6 +471,9 @@ export interface PackageGateSourceOptions {
  * consents, the policy chain, the registry entry's version-tagged sign-off, D9 and the RFC7-20 reading, and the drawer and provider
  * statements of the local-agent sitting. With no act recorded each states nothing: D9 and the reading are not established, the
  * drawer is unstated and no statement exists. `projectInput` and `providerStatements` replace the package sources (tests). */
+/** Whether a record's `Upstream:` URL, normalised by the same rule, is the normalised locator `url`, host and whole path. */
+const upstreamIs = (upstream: string | null, url: string): boolean => upstream !== null && normaliseUrl(upstream)?.url === url;
+
 export function createPackageGateSources(options: PackageGateSourceOptions): GateSources {
   const fsOption = options.fs === undefined ? {} : { fs: options.fs };
   const port = createPackageAdmissionRecordsPort({ root: options.root, now: options.now, ...fsOption });
@@ -508,8 +513,20 @@ export function createPackageGateSources(options: PackageGateSourceOptions): Gat
   };
   return {
     recordsRoot: options.root,
-    repositoryIdsFor: url => port.repositoryIdsFor(url),
-    ...(port.consentAbsenceFor === undefined ? {} : { consentAbsenceFor: port.consentAbsenceFor }),
+    // By the whole normalised `Upstream:` URL, for every host (046, line 17), from the port's own listing of its records.
+    repositoryIdsFor: async url => {
+      const read = port.observationRecords === undefined ? null : await port.observationRecords();
+      if (read === null || !read.ok) return [];
+      return [...new Set(read.records.filter(r => r.state === 'in force' && upstreamIs(r.upstream, url)).map(r => r.repositoryId))].sort();
+    },
+    consentAbsenceFor: async url => {
+      const read = port.observationRecords === undefined ? { ok: false as const, why: 'the admission records port cannot list its observation records' } : await port.observationRecords();
+      if (!read.ok) return `${read.why}, so no consent can be established`;
+      const naming = read.records.filter(r => upstreamIs(r.upstream, url));
+      if (naming.length === 0) return `no observation record's Upstream normalises to ${url}`;
+      const each = naming.map(r => `${r.record} ${r.state === 'in force' ? 'is in force' : r.state}`).join('; ');
+      return naming.every(r => r.state !== 'in force') ? `the observation record(s) whose Upstream normalises to ${url} are not in force: ${each}` : `the observation record(s) whose Upstream normalises to ${url}: ${each}`;
+    },
     consentedRevisionsFor: repositoryId => port.consentedRevisionsFor(repositoryId),
     observationConsentFor: async (repositoryId, revision) => {
       const answer = await port.check({ kind: 'observation-consent', repositoryId, revision });

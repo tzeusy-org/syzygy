@@ -48,7 +48,7 @@ describe('dossier run evidence record (S12)', () => {
     expect(record.format).toBe('polaris-dossier-run-evidence/1');
     expect(record.measuredOn.syzygyCommit).toBe(execFileSync('git', ['-C', REAL_ROOT, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim());
     expect(record.subject.runId).toBe(path.basename(run));
-    expect(record.subject.repository.url).toBe(FIXTURE_URL);
+    expect(record.subject.repository.url).toBe('github.com/redis/redis');
     expect(record.subject.pinnedRevision.commit).toBe(commit);
     expect(record.subject.label).toBe('Inferred');
     expect(record.declared.values.agentTool).toBe('claude-code');

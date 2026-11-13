@@ -4,7 +4,7 @@ import { resolveCloneHead } from './clone-head.js';
 import { cloneGitDirShape, cloneStoreShape } from './clone-shape.js';
 import { RECORDS_WITHIN_REACH, providerStatementGate, type GateSources, type GateState } from './gate-sources.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
-import { dossierRepositoryUrl } from './github-url.js';
+import { dossierLocator } from './launch-identity.js';
 import { governedSubject, type GovernedDecision } from './governed.js';
 import type { Outcome } from './outcome.js';
 import { parseRunConfig, type RunConfigRefusal } from './run-config.js';
@@ -105,9 +105,12 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
     return { ok: false, refusal: { command: 'init', outcome: 'refused', stage, reason, ...extra, copy: end, copyStatement: copyEndStatement(end), objectsRead, disclosures: DISCLOSURES } };
   };
 
+  // The --url, read as an admitted locator and normalised (046, line 17): refused by its rule, never quoted.
+  let normalisedUrl: string | undefined;
   if (request.url !== undefined) {
-    const given = dossierRepositoryUrl(request.url);
+    const given = dossierLocator(request.url);
     if (!given.ok) return refuse('url', given.reason);
+    normalisedUrl = given.url;
   }
   const config = parseRunConfig(request.configText);
   if (!config.ok) return refuse('config', 'the run configuration is refused; there is no default', { refusals: config.refusals });
@@ -116,13 +119,10 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
 
   let sources = ports.sources;
   let launched: Exclude<LaunchOutcome, { kind: 'refused' } | { kind: 'head-consented' }> | null = null;
-  let urlText = request.url;
   // REQ-polaris-generation-047's first branch: no --revision, and an observation consent another act made names the clone's HEAD.
   let headConsentedElsewhere = false;
-  if (urlText !== undefined && request.revision === undefined) {
-    const parsed = dossierRepositoryUrl(urlText);
-    if (!parsed.ok) return refuse('url', parsed.reason);
-    const ids = await sources.repositoryIdsFor(parsed.url);
+  if (normalisedUrl !== undefined && request.revision === undefined) {
+    const ids = await sources.repositoryIdsFor(normalisedUrl);
     const head = resolveCloneHead(request.clone);
     headConsentedElsewhere = ids.length === 1 && head.ok && (await sources.observationConsentFor(ids[0]!, head.commit)).satisfied;
   }
@@ -147,21 +147,19 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
     if (outcome.kind !== 'head-consented') {
       launched = outcome;
       copy = outcome.copy;
-      const https = dossierRepositoryUrl(`https://${outcome.subject.url}`);
-      if (!https.ok) return refuse('url', `the launch recorded ${outcome.subject.url}, but a run record carries a public https://github.com/<owner>/<repo> URL only: ${https.reason}`);
-      urlText = https.url;
+      // The launch's normalised URL, for every host: the GitHub-only refusal is retired (046, line 17).
+      normalisedUrl = outcome.subject.url;
       sources = withLaunchRecords(ports.sources, { home: ports.launch.home, now: ports.now });
     }
   }
-  if (urlText === undefined) return refuse('url', 'no --url names an observation consent made by another act, and no launch is possible here');
-  const url = dossierRepositoryUrl(urlText);
-  if (!url.ok) return refuse('url', url.reason);
+  if (normalisedUrl === undefined) return refuse('url', 'no --url names an observation consent made by another act, and no launch is possible here');
+  const url = { url: normalisedUrl };
 
   const ids = await sources.repositoryIdsFor(url.url);
   if (ids.length !== 1) {
     return refuse('repository', ids.length === 0
-      ? `no observation consent in force names ${url.url} as its Upstream${sources.consentAbsenceFor === undefined ? '' : `: ${await sources.consentAbsenceFor(url.url)}`}`
-      : `${ids.length} observation consents in force name ${url.url} (${ids.join(', ')}); which one governs is ambiguous`);
+      ? `no observation consent in force has an Upstream that normalises to ${url.url}${sources.consentAbsenceFor === undefined ? '' : `: ${await sources.consentAbsenceFor(url.url)}`}`
+      : `${ids.length} observation consents in force have an Upstream that normalises to ${url.url} (${ids.join(', ')}); which one governs is ambiguous`);
   }
   const repositoryId = ids[0]!;
   if (launched !== null && repositoryId !== launched.subject.identity.slice('repository:'.length)) {

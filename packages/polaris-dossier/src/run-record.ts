@@ -1,7 +1,7 @@
 import * as path from 'node:path';
 import { BoundedJsonError, parseBoundedJson } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
-import { dossierRepositoryUrl } from './github-url.js';
+import { isNormalisedLocator } from './launch-identity.js';
 import type { GovernedKind } from './governed.js';
 import { validateRunConfig, type RunConfig, type RunConfigRefusal } from './run-config.js';
 
@@ -145,8 +145,9 @@ function readSubject(value: unknown): RunSubject | string {
   if (!isRecord(value) || !hasKeys(value, ['repository', 'clone', 'pinnedRevision', 'startGates', 'governed', 'providerStatement', 'workItem'])) return 'it must carry exactly repository, clone, pinnedRevision, startGates, governed, providerStatement and workItem';
   const { repository, clone, pinnedRevision, startGates, governed, providerStatement, workItem } = value;
   if (!isRecord(repository) || !hasKeys(repository, ['url', 'repositoryId']) || !isText(repository['url']) || !isText(repository['repositoryId'])) return 'repository must carry a url and a repositoryId';
-  const url = dossierRepositoryUrl(repository['url']);
-  if (!url.ok || url.url !== repository['url'] || !/^[a-z0-9][a-z0-9-]*$/.test(repository['repositoryId'])) return 'repository url or repositoryId is malformed';
+  // The normalised URL, for every host (046, line 17: "The normalised URL is the locator every launch consent record, the run record and
+  // every page carry, for every host").
+  if (!isNormalisedLocator(repository['url']) || !/^[a-z0-9][a-z0-9._-]*$/.test(repository['repositoryId'])) return 'repository url or repositoryId is malformed';
   if (!isRecord(clone) || !hasKeys(clone, ['path', 'declaredBy', 'label', 'use']) || clone['declaredBy'] !== 'operator' || clone['label'] !== 'Inferred' || clone['use'] !== 'read') return 'clone must carry its path, declared by the operator, labelled Inferred, for reading only';
   if (typeof clone['path'] !== 'string' || clone['path'].length > 4096 || path.resolve(clone['path']) !== clone['path'] || clone['path'].includes('\0')) return 'the clone path is not an absolute, normalised path';
   if (!isRecord(pinnedRevision) || !hasKeys(pinnedRevision, ['commit', 'label', 'consentRecord', 'pinnedAt'])) return 'pinnedRevision must carry commit, label, consentRecord and pinnedAt';

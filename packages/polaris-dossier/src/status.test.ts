@@ -15,7 +15,7 @@ const CONFIG = {
   operatorIsOwner: false,
 };
 const SUBJECT: RunSubject = {
-  repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
   clone: { path: '/srv/clones/redis', declaredBy: 'operator', label: 'Inferred', use: 'read' },
   pinnedRevision: { commit: '498ecd0d6d007db11ddb3aea9428552598a78622', label: '8.10.2', consentRecord: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', pinnedAt: '2026-10-07T10:00:00.000Z' },
   startGates: { registryEntry: 'PUBLIC-ADMISSION-REGISTRY-GIT-SOURCE-2026-10-07', screeningPolicy: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-APPROVAL-2026-10-04' },
@@ -172,7 +172,7 @@ describe('status (REQ-polaris-generation-033)', () => {
     ['a governed subject citing no statement', (record: Record<string, any>) => { record['subject']['governed']['kind'] = 'governed'; }, 'run.json subject is invalid: a governed subject must cite the per-project statement it relies on'],
     ['an unstated subject citing no statement', (record: Record<string, any>) => { record['subject']['governed']['kind'] = 'unstated'; }, 'run.json subject is invalid: an unstated subject must cite the per-project statement it relies on'],
     ['a work item identity filled in', (record: Record<string, any>) => { record['subject']['workItem']['identity'] = 'WI-1'; }, 'run.json subject is invalid: workItem must record an absent identity with its reason'],
-    ['a repository URL with a ref', (record: Record<string, any>) => { record['subject']['repository']['url'] = 'https://github.com/redis/redis/tree/8.0'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
+    ['a repository URL not in the normalised form a run record carries', (record: Record<string, any>) => { record['subject']['repository']['url'] = 'https://github.com/redis/redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
     ['a record naming no clone', (record: Record<string, any>) => { delete record['subject']['clone']; }, 'run.json subject is invalid: it must carry exactly repository, clone, pinnedRevision, startGates, governed, providerStatement and workItem'],
     ['a relative clone path', (record: Record<string, any>) => { record['subject']['clone']['path'] = 'clones/redis'; }, 'run.json subject is invalid: the clone path is not an absolute, normalised path'],
     ['a clone path that is not normalised', (record: Record<string, any>) => { record['subject']['clone']['path'] = '/srv/clones/../redis'; }, 'run.json subject is invalid: the clone path is not an absolute, normalised path'],

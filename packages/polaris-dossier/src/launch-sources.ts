@@ -1,5 +1,4 @@
 import type { GateSources } from './gate-sources.js';
-import { normaliseUrl } from './launch-identity.js';
 import { launchStatementRecord } from './launch.js';
 import { readLaunchRecords, type StoreRead, type StoredRecord } from './launch-store.js';
 
@@ -27,9 +26,7 @@ export function withLaunchRecords(base: GateSources, options: { readonly home: s
     repositoryIdsFor: async url => {
       const ids = await base.repositoryIdsFor(url);
       if (ids.length > 0) return ids;
-      const normalised = normaliseUrl(url);
-      if (normalised === null) return ids;
-      return [...new Set(records().filter(r => r.record.recordClass === 'observation-consent' && r.record.normalisedUrl === normalised.url)
+      return [...new Set(records().filter(r => r.record.recordClass === 'observation-consent' && r.record.normalisedUrl === url)
         .map(r => r.record.identity.slice('repository:'.length)))].sort();
     },
     consentedRevisionsFor: async repositoryId => {

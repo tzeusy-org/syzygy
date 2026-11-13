@@ -811,6 +811,16 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     expect(s.reads.log.dirs.every(d => d === path.join(copyDir, '.git'))).toBe(true);
   });
 
+  it('a repository on another host completes: the GitHub-only refusal is retired, and the run record carries the normalised URL', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, 'git@git.example.org:team/sub/tool.git');
+    const r12 = up.commits[0]!.slice(0, 12);
+    const { result } = initWith(clone, ['public', 'none', `CONSENT TO OBSERVE repository:sub-tool AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:sub-tool AT ${r12}`]);
+    const out = await result;
+    if (!out.ok) throw new Error(JSON.stringify(out.refusal));
+    expect(out.report.subject.repository).toEqual({ url: 'git.example.org/team/sub/tool', repositoryId: 'sub-tool' });
+  });
+
   it('a SHA-256 copy passes init\'s form check with the object-format setting its initialisation wrote', async () => {
     const parent = tempDir('syzygy-launch-init256-'), dir = path.join(parent, 'up');
     gitIn(parent, 'init', '-q', '--object-format=sha256', '-b', 'main', dir);

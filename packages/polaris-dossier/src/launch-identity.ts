@@ -103,6 +103,20 @@ export function normaliseUrl(input: string): NormalisedUrl | null {
   return read.ok ? read.url : null;
 }
 
+/** The locator an operator gives a dossier command (`--url`, the preflight argument), normalised: the URL every run record and page
+ * carries, for every host (046, line 17). Refused by its rule, never quoted. */
+export function dossierLocator(input: string, option = '--url'): { readonly ok: true; readonly url: string } | { readonly ok: false; readonly reason: string } {
+  const read = readLocator(input, 'operator');
+  return read.ok ? { ok: true, url: read.url.url } : { ok: false, reason: `the ${option} URL is not admitted: ${read.rule}; it is not printed, stored or recorded` };
+}
+
+/** Whether `text` is a locator in the normalised form the rule writes (`host/path`, case-folded, no `www.`, no trailing `/` or `.git`):
+ * the form a run record carries. */
+export function isNormalisedLocator(text: string): boolean {
+  const read = readLocator(`https://${text}`, 'operator');
+  return read.ok && read.url.url === text;
+}
+
 /** `repository:` and the last two path segments joined by `-`, every other character replaced; null for fewer than two segments. */
 export function deriveIdentity(url: NormalisedUrl): string | null {
   if (url.segments.length < 2) return null;
