@@ -591,6 +591,7 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     };
   }
   const copyOf = (out: LaunchOutcome) => (out.kind === 'covered' || out.kind === 'recorded' ? out.copy : null);
+  const COPY_OPTIONS = ['-c', 'core.hooksPath=/dev/null', '-c', 'core.attributesFile=/dev/null', '-c', 'user.name=Syzygy', '-c', 'user.email=syzygy@invalid', '-c', 'maintenance.auto=false'];
 
   it('HEAD elsewhere, on a branch with uncommitted changes: a copy at the trunk tip, the operator\'s checkout unchanged and absent from it', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' }, [{ 'b.c': 'y\n' }]);
@@ -614,11 +615,11 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     expect(listing(clone)).toEqual(before);
     // Three processes, in the stated environment, fetching the one identifier from the operator's clone over the file transport.
     expect(git.calls.map(c => c.args)).toEqual([
-      ['-c', 'core.hooksPath=/dev/null', 'init', '-q', '--template=', '--object-format=sha1', copy.dir],
-      ['-c', 'core.hooksPath=/dev/null', '-C', copy.dir, 'fetch', '-q', '--depth=1', '--no-tags', '--no-recurse-submodules', `file://${clone}`, up.commits[1]],
-      ['-c', 'core.hooksPath=/dev/null', '-C', copy.dir, 'checkout', '-q', '--detach', up.commits[1]],
+      [...COPY_OPTIONS, 'init', '-q', '--template=', '--object-format=sha1', copy.dir],
+      [...COPY_OPTIONS, '-C', copy.dir, 'fetch', '-q', '--depth=1', '--no-tags', '--no-recurse-submodules', `file://${clone}`, up.commits[1]],
+      [...COPY_OPTIONS, '-C', copy.dir, 'checkout', '-q', '--detach', up.commits[1]],
     ]);
-    for (const c of git.calls) expect(c.git).toEqual({ GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: '/dev/null', GIT_ALLOW_PROTOCOL: 'file', GIT_NO_LAZY_FETCH: '1', GIT_TERMINAL_PROMPT: '0' });
+    for (const c of git.calls) expect(c.git).toEqual({ GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: '/dev/null', GIT_ALLOW_PROTOCOL: 'file', GIT_NO_LAZY_FETCH: '1', GIT_TERMINAL_PROMPT: '0', GIT_ATTR_NOSYSTEM: '1' });
     // Syzygy itself reads no object of the operator's clone: every object read is of the copy, and no type test is made.
     expect(s.reads.log.dirs.every(d => d === copy.gitDir)).toBe(true);
     expect(s.reads.log.calls).toEqual([`inventory ${up.commits[1]}`, `commitHead ${up.commits[1]}`, `listTree ${up.commits[1]}`]);
@@ -636,7 +637,24 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     } finally {
       for (const [k, v] of Object.entries(saved)) if (v === undefined) delete process.env[k]; else process.env[k] = v;
     }
-    for (const c of git.calls) expect(Object.keys(c.git).sort()).toEqual(['GIT_ALLOW_PROTOCOL', 'GIT_CONFIG_GLOBAL', 'GIT_CONFIG_NOSYSTEM', 'GIT_NO_LAZY_FETCH', 'GIT_TERMINAL_PROMPT']);
+    for (const c of git.calls) expect(Object.keys(c.git).sort()).toEqual(['GIT_ALLOW_PROTOCOL', 'GIT_ATTR_NOSYSTEM', 'GIT_CONFIG_GLOBAL', 'GIT_CONFIG_NOSYSTEM', 'GIT_NO_LAZY_FETCH', 'GIT_TERMINAL_PROMPT']);
+  });
+
+  it('the operator\'s global attributes and identity do not reach the copy: its files are the pinned blobs, its reflog names Syzygy (R-PDJA-33-SLICE-B-1 findings 4 and 5)', async () => {
+    const up = makeUpstream({ 'a.c': 'x $Id$\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    const xdg = tempDir('syzygy-launch-xdg-');
+    fs.mkdirSync(path.join(xdg, 'git'));
+    fs.writeFileSync(path.join(xdg, 'git', 'attributes'), '* text eol=crlf ident\n');
+    const saved = { XDG_CONFIG_HOME: process.env['XDG_CONFIG_HOME'] };
+    process.env['XDG_CONFIG_HOME'] = xdg;
+    let out: LaunchOutcome;
+    try { out = await run(clone, setup(consentAnswers(up.commits[0]!))); } finally {
+      for (const [k, v] of Object.entries(saved)) if (v === undefined) delete process.env[k]; else process.env[k] = v;
+    }
+    const copy = copyOf(out)!;
+    expect(fs.readFileSync(path.join(copy.dir, 'a.c'), 'utf8')).toBe('x $Id$\n');
+    expect(fs.readFileSync(path.join(copy.gitDir, 'logs', 'HEAD'), 'utf8')).toMatch(/^[0-9a-f]{40} [0-9a-f]{40} Syzygy <syzygy@invalid> \d+ [+-]\d{4}\t/);
   });
 
   it('an existing full clone with history, tags, stash and reflogs: the copy holds one commit and what its tree reaches', async () => {
@@ -729,7 +747,8 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
     const out = await run(clone, setup([], { ports: { copyGit: git.run } }));
     expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'copy', copy: { state: 'removed' } } });
     expect(out.kind === 'refused' && out.refusal.reason.startsWith('git fetch for the copy failed (exit 128): ')).toBe(true);
-    expect(git.calls.map(c => c.args[2] === '-C' ? c.args[4] : c.args[2])).toEqual(['init', 'fetch']);
+    const after = (args: readonly string[]) => args.slice(COPY_OPTIONS.length);
+    expect(git.calls.map(c => after(c.args)[0] === '-C' ? after(c.args)[2] : after(c.args)[0])).toEqual(['init', 'fetch']);
   });
 
   it('a clone with an alternate: refused before the copy step starts, and no copy was made', async () => {
@@ -767,7 +786,7 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
       const git = capturingGit();
       return (args, o) => {
         const r = git.run(args, o);
-        if (r.status === 0 && args.includes('checkout')) extra(args[3]!);
+        if (r.status === 0 && args.includes('checkout')) extra(args[COPY_OPTIONS.length + 1]!);
         return r;
       };
     };

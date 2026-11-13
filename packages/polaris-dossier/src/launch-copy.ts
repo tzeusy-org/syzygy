@@ -20,8 +20,9 @@ import { pathToFileURL } from 'node:url';
  *
  * Three processes, in order: `git init --template= --object-format=<format>`, `git fetch --depth=1 --no-tags --no-recurse-submodules
  * file://<clone> <id>` and `git checkout --detach <id>`. Each runs with every `GIT_*` variable of the environment removed, then
- * `GIT_CONFIG_NOSYSTEM=1`, `GIT_CONFIG_GLOBAL=/dev/null`, `GIT_ALLOW_PROTOCOL=file`, `GIT_NO_LAZY_FETCH=1` and `GIT_TERMINAL_PROMPT=0`,
- * and `-c core.hooksPath=/dev/null`. Whether the object is a commit is told only from where the checkout leaves the copy's `HEAD` (a file
+ * `GIT_CONFIG_NOSYSTEM=1`, `GIT_CONFIG_GLOBAL=/dev/null`, `GIT_ALLOW_PROTOCOL=file`, `GIT_NO_LAZY_FETCH=1`, `GIT_TERMINAL_PROMPT=0`
+ * and `GIT_ATTR_NOSYSTEM=1`, and `COPY_GIT_OPTIONS` (no hook path, no global attributes file, a fixed identity, no automatic
+ * maintenance). Whether the object is a commit is told only from where the checkout leaves the copy's `HEAD` (a file
  * of the copy, read as data). Syzygy reads nothing of what Git read of the operator's clone. That Git starts no program the operator's
  * clone's own configuration or hooks name while it serves the copy is relied on, not checked [Inferred]. */
 
@@ -43,11 +44,22 @@ export function copyEnvironment(base: NodeJS.ProcessEnv = process.env): Readonly
   env['GIT_ALLOW_PROTOCOL'] = 'file';
   env['GIT_NO_LAZY_FETCH'] = '1';
   env['GIT_TERMINAL_PROMPT'] = '0';
+  // Syzygy's own setting, not a variable of the operator's environment: no system attributes file (R-PDJA-33-SLICE-B-1 finding 4).
+  env['GIT_ATTR_NOSYSTEM'] = '1';
   return env;
 }
 
-/** The options before every Git command for the copy: no hook path. */
-export const COPY_GIT_OPTIONS: readonly string[] = ['-c', 'core.hooksPath=/dev/null'];
+/** The options before every Git command for the copy, each Syzygy's own setting (R-PDJA-33-SLICE-B-1 findings 4 and 5):
+ * - no hook path (047);
+ * - no global attributes file, so the operator's `$XDG_CONFIG_HOME/git/attributes` cannot rewrite the checked-out files (end-of-line
+ *   conversion, `ident`, `working-tree-encoding`) away from the pinned commit's blobs;
+ * - a fixed identity for the checkout's reflog entry, so Git never canonicalises the host name, a lookup that can reach DNS ("so that no
+ *   network request is made");
+ * - no automatic maintenance, so the fetch starts no `git maintenance run` (registry entry v1.1 `fetch`: "no other process is started").
+ * None changes the copy's form. */
+export const COPY_GIT_OPTIONS: readonly string[] = [
+  '-c', 'core.hooksPath=/dev/null', '-c', 'core.attributesFile=/dev/null', '-c', 'user.name=Syzygy', '-c', 'user.email=syzygy@invalid', '-c', 'maintenance.auto=false',
+];
 
 /** A location, its real path where it exists, else its nearest existing ancestor's real path with the rest appended. */
 export function realOfNearest(p: string): string {
