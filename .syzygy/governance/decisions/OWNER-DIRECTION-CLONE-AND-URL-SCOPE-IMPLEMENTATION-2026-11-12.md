@@ -67,6 +67,15 @@ following signed semantics, and nothing else:
 Each slice merges only after an independent fresh-context review of its pull
 request.
 
+## Correction, 2026-11-13: the question misstated one item
+
+[Observed] The question listed "refusal of SHA-256 and reftable clones". The
+signed REQ-polaris-generation-047 refuses reftable clones but says a clone is
+never refused for its object format, save where an unsupported format fails
+the copy's initialisation. The question was wrong on that one point; this
+direction authorizes the signed semantics only, so no SHA-256 refusal is
+implemented. The owner is told of the misstatement in the same session.
+
 ## What it does not authorize
 
 - A dossier run, a body read of any observed repository, or a provider call
