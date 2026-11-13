@@ -148,6 +148,27 @@ describe('status (REQ-polaris-generation-033)', () => {
     expect(snapshot(runDir)).toEqual(before);
   });
 
+  it.each([
+    ['https://github.com/redis/redis', 'github.com/redis/redis'],
+    ['https://github.com/Redis-Labs/Redis.py', 'github.com/redis-labs/redis.py'],
+  ])('reads a run record the retired GitHub-only rule wrote (%s), normalising its URL on reading and rewriting nothing', (written, read) => {
+    const file = path.join(runDir, 'run.json');
+    const record = JSON.parse(fs.readFileSync(file, 'utf8')) as Record<string, any>;
+    record['subject']['repository']['url'] = written;
+    const bytes = JSON.stringify(record);
+    fs.writeFileSync(file, bytes);
+    const result = runStatus(runDir);
+    if (!result.ok) throw new Error(result.reason);
+    expect(result.report.subject.repository).toEqual({ url: read, repositoryId: 'redis-redis' });
+    expect(fs.readFileSync(file, 'utf8')).toBe(bytes);
+  });
+
+  it('writes a run record only with the normalised URL', () => {
+    const parsed = parseRunConfig(JSON.stringify(CONFIG));
+    if (!parsed.ok) throw new Error('fixture configuration refused');
+    expect(() => encodeRunRecord(parsed.config, { ...SUBJECT, repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' } })).toThrow('a run record carries the normalised URL only');
+  });
+
   it('refuses a missing run directory', () => {
     const result = runStatus(path.join(runDir, 'absent'));
     expect(result).toEqual({ ok: false, reason: `run directory ${path.join(runDir, 'absent')} cannot be read (ENOENT)` });
@@ -172,7 +193,10 @@ describe('status (REQ-polaris-generation-033)', () => {
     ['a governed subject citing no statement', (record: Record<string, any>) => { record['subject']['governed']['kind'] = 'governed'; }, 'run.json subject is invalid: a governed subject must cite the per-project statement it relies on'],
     ['an unstated subject citing no statement', (record: Record<string, any>) => { record['subject']['governed']['kind'] = 'unstated'; }, 'run.json subject is invalid: an unstated subject must cite the per-project statement it relies on'],
     ['a work item identity filled in', (record: Record<string, any>) => { record['subject']['workItem']['identity'] = 'WI-1'; }, 'run.json subject is invalid: workItem must record an absent identity with its reason'],
-    ['a repository URL not in the normalised form a run record carries', (record: Record<string, any>) => { record['subject']['repository']['url'] = 'https://github.com/redis/redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
+    ['a repository URL neither normalised nor in the form the retired rule wrote', (record: Record<string, any>) => { record['subject']['repository']['url'] = 'https://github.com/redis/redis.git'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
+    ['a repository URL on another scheme', (record: Record<string, any>) => { record['subject']['repository']['url'] = 'http://github.com/redis/redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
+    ['a legacy-form URL on another host', (record: Record<string, any>) => { record['subject']['repository']['url'] = 'https://gitlab.com/redis/redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
+    ['a repository URL that is not normalised (upper case)', (record: Record<string, any>) => { record['subject']['repository']['url'] = 'github.com/Redis/redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
     ['a record naming no clone', (record: Record<string, any>) => { delete record['subject']['clone']; }, 'run.json subject is invalid: it must carry exactly repository, clone, pinnedRevision, startGates, governed, providerStatement and workItem'],
     ['a relative clone path', (record: Record<string, any>) => { record['subject']['clone']['path'] = 'clones/redis'; }, 'run.json subject is invalid: the clone path is not an absolute, normalised path'],
     ['a clone path that is not normalised', (record: Record<string, any>) => { record['subject']['clone']['path'] = '/srv/clones/../redis'; }, 'run.json subject is invalid: the clone path is not an absolute, normalised path'],
