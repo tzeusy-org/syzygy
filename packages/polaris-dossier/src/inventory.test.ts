@@ -586,6 +586,33 @@ describe('what the review will not see (syzygy-mea.3)', () => {
     expect(listsCode.text).toContain('does not list: 0\n');
   });
 
+  it('a copy-class run\'s inventory brief names the copy as the clone to work in and tells the session not to read the operator\'s clone (REQ-polaris-generation-046, 047)', async () => {
+    const run = await runWithDrafts();
+    const opened = await openRun(run, sources(), LATER, 'fixture');
+    if (!opened.ok) throw new Error(opened.reason);
+    const census = { loadScreen: async () => SCREEN };
+    const clone = opened.subject.clone.path;
+    const plain = await buildInventoryBrief(opened, 1, sources(), LATER, census);
+    if (!plain.ok) throw new Error(plain.reason);
+    const cloneLine = `- Clone: \`${clone}\`, as the operator gave it at init (operator-declared, Inferred); read it by this path, never as your working directory\n`;
+    expect(plain.text).toContain(cloneLine);
+    fs.writeFileSync(path.join(run, 'launch.json'), JSON.stringify({
+      format: 'polaris-dossier-launch-disclosure/1', runClass: 'copy-class', launched: true, operatorClone: '/home/op/redis', copy: clone,
+      consents: { recorded: [], commit: null, relied: ['launch observation consent X'] },
+      subject: { identity: 'repository:redis-redis', url: 'github.com/redis/redis', source: 'the clone\'s remote origin', proposedBy: 'derived', publicDeclaration: null },
+      drawer: null, statements: [{ id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' }], label: 'Inferred',
+    }));
+    const copied = await buildInventoryBrief(opened, 1, sources(), LATER, census);
+    if (!copied.ok) throw new Error(copied.reason);
+    expect(copied.text).toBe(plain.text.replace(cloneLine, [
+      `- Clone: \`${clone}\`, a copy of the pinned commit alone, which Syzygy made from the operator's clone (Inferred, from the run's launch disclosure); this copy is the run's clone: work in it, and read it by this path, never as your working directory`,
+      '- The operator\'s clone, at `/home/op/redis`: do not read it, or anything under it. Everything this brief says of the clone means the copy. Whether you stayed in the copy is your own report.',
+    ].join('\n') + '\n'));
+    fs.writeFileSync(path.join(run, 'launch.json'), '{}');
+    expect(await buildInventoryBrief(opened, 1, sources(), LATER, census)).toEqual({ ok: false, stage: 'launch-record',
+      reason: 'the run\'s launch.json cannot be read as the record init writes (it is not a polaris-dossier-launch-disclosure/1 record), so whether the brief must direct its session to a copy cannot be decided; no inventory brief is rendered' });
+  });
+
   it('loads the census screen for repository:<id> at the pinned commit (syzygy-mea.4: the version-5 owner placements)', async () => {
     const run = await runWithDrafts();
     const opened = await openRun(run, sources(), LATER, 'fixture');

@@ -15,6 +15,7 @@ import { poleLimitOf, type RunConfig } from './run-config.js';
 import type { RunSubject } from './run-record.js';
 import { READER_STANDARDS_SHA256, READER_STANDARDS_VERSION, readerStandardsSection } from './reader-standards.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
+import { briefCopyLines, briefCopyOf, readLaunchDisclosure, type BriefCopy } from './launch-disclosure.js';
 
 /** `syzygy dossier brief <run>` (REQ-polaris-generation-033, 034, 036).
  *
@@ -32,7 +33,7 @@ import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-export const BRIEF_VERSION = 'polaris-dossier-brief-v6';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v7';
 
 /** Which blocks the fidelity review can never confirm (syzygy-pdja.20), and which elements render with none of their text (syzygy-pdja.24):
  * the brief's rule, which carries no project content; `check` names them under `reviewReach` (`review-reach.ts`). Advice: no check refuses a draft for it. */
@@ -99,6 +100,8 @@ export interface BriefInput {
   /** The revision's label as the in-force consent gives it at this step (`reverifyPinnedRevision`), never the run record's copy; null
    * when it gives the commit more than one label. */
   readonly revisionLabel: string | null;
+  /** A copy-class run's copy and the operator's clone (`briefCopyOf`); null otherwise. */
+  readonly copy: BriefCopy | null;
 }
 
 /** The brief's text. Pure: everything in it is Syzygy-authored or comes from the run record, the revision label the step guard returned
@@ -117,6 +120,7 @@ export function renderBrief(input: BriefInput): string {
     `- Run: \`${input.runId}\``,
     `- Repository: ${subject.repository.url} (\`${subject.repository.repositoryId}\`)`,
     `- Pinned revision: \`${commit}\` (${input.revisionLabel ?? 'the in-force consent gives it no single label'})`,
+    ...(input.copy === null ? [] : briefCopyLines(input.copy)),
     `- Draft schema: \`${LOCAL_DRAFT_SCHEMA_VERSION}\`, in \`${RUN_LAYOUT.draftSchema}\` beside this brief (sha256 \`${input.schemaSha256}\`)`,
     `- Issued: ${isoOf(input.issuedAt)}, on Syzygy's clock`,
     '',
@@ -212,7 +216,7 @@ export function renderBrief(input: BriefInput): string {
   ].join('\n');
 }
 
-export type BriefStage = 'run' | 'reverify' | 'issued-already' | 'doctrine' | 'write';
+export type BriefStage = 'run' | 'reverify' | 'issued-already' | 'launch-record' | 'doctrine' | 'write';
 
 export interface BriefRefusal {
   readonly command: 'brief';
@@ -280,6 +284,9 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
   const issued = [RUN_LAYOUT.brief, RUN_LAYOUT.draftSchema, RUN_LAYOUT.briefRecord].filter((name) => fs.existsSync(path.join(run, name)));
   if (issued.length > 0) return refuse('issued-already', `the run already holds ${issued.join(', ')}: a run is briefed once, and its deadline clock has started`);
 
+  const copy = briefCopyOf(readLaunchDisclosure(run), subject.clone.path);
+  if (!copy.ok) return refuse('launch-record', `${copy.reason}; no brief is issued`);
+
   const doctrine = readSec3(deps.sources.recordsRoot);
   if (!doctrine.ok) return refuse('doctrine', `SEC-3 cannot be quoted as adopted: ${doctrine.reason}`);
 
@@ -290,7 +297,7 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
   });
   const schemaText = `${JSON.stringify(draftSchemaDocument({ pinnedRevision: subject.pinnedRevision.commit, maxQuestions: declared.maxQuestions }), null, 2)}\n`;
   const schemaSha256 = sha256(schemaText);
-  const briefText = renderBrief({ runId, subject, declared, issuedAt, schemaSha256, executionRule, revisionLabel: checked.revision.label });
+  const briefText = renderBrief({ runId, subject, declared, issuedAt, schemaSha256, executionRule, revisionLabel: checked.revision.label, copy: copy.copy });
   const deadlineEnds = issuedAt + declared.deadline.seconds * 1000;
   const record = {
     format: BRIEF_RECORD_FORMAT,
@@ -306,6 +313,8 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
     files: { brief: { name: RUN_LAYOUT.brief, sha256: sha256(briefText) }, draftSchema: { name: RUN_LAYOUT.draftSchema, sha256: schemaSha256 } },
     executionRule,
     agent: { tool: declared.agentTool, provider: declared.agentProvider, declaredBy: 'operator', label: 'Inferred' },
+    // A copy-class run's brief names the copy and directs its session not to read the operator's clone; null in any other run.
+    copy: copy.copy,
     label: 'Inferred',
   };
   try {

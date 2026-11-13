@@ -135,10 +135,6 @@ export type LaunchOutcome =
 
 const real = (p: string): string => { try { return fs.realpathSync(p); } catch { return path.resolve(p); } };
 
-/** The launch output's revision statement (047, line 184): the revision in full, its reference, the committer date, no fetch, the update command. */
-export const pinStatement = (pin: LaunchPin): string =>
-  `Pinned revision ${pin.commit} from ${pin.via}, committer date ${pin.committerDate ?? 'not recorded in the commit'}. Syzygy did not fetch; whether this is the upstream's latest commit is Inferred. Update the clone before a later run with: ${pin.updateCommand}`;
-
 /** The in-force launch records the run can rely on, by class. */
 function inForce(records: readonly StoredRecord[], identity: string, now: number): readonly StoredRecord[] {
   return records.filter(r => r.state === 'active' && r.record.identity === identity && Date.parse(r.record.grantInstant) <= now);

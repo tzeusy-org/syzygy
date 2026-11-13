@@ -81,7 +81,7 @@ describe('brief: issued', () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v6', schemaVersion: 'polaris-dossier-local-draft-v4',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v7', schemaVersion: 'polaris-dossier-local-draft-v4',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     const brief = read(run, 'brief.md'), schema = read(run, 'draft.schema.json');
@@ -107,13 +107,14 @@ describe('brief: issued', () => {
     expect(brief).toContain('The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.');
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
-      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v6', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
+      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v7', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
       schemaVersion: 'polaris-dossier-local-draft-v4', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
       readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
       files: { brief: { name: 'brief.md', sha256: sha(brief) }, draftSchema: { name: 'draft.schema.json', sha256: sha(schema) } },
       executionRule: { arm: 'sec-3', cites: 'SEC-3', sec3Head: { text: lines(61, 62), startLine: 61, endLine: 62 } },
       agent: { tool: 'claude-code', provider: 'anthropic', declaredBy: 'operator', label: 'Inferred' },
+      copy: null,
       label: 'Inferred',
     });
     for (const name of ['brief.md', 'draft.schema.json', 'brief.json']) expect(fs.statSync(path.join(run, name)).mode & 0o777).toBe(0o600);
@@ -200,15 +201,30 @@ describe('brief: issued', () => {
     const sec3 = readSec3(REAL_ROOT);
     if (!sec3.ok) throw new Error(sec3.reason);
     const rule = await decideExecutionRule({ role: 'authoring', runDir: '/r', runId: RUN_ID, pinnedRevision: REV, operatorIsOwner: true, sec3: sec3.sec3, now: NOW, d9: async () => OK, launched: () => 'absent', permitting: { enabled: false } });
-    const input = { runId: RUN_ID, subject: SUBJECT, declared: configOf(), issuedAt: NOW, schemaSha256: '0'.repeat(64), executionRule: rule, revisionLabel: '8.10.2' };
+    const input = { runId: RUN_ID, subject: SUBJECT, declared: configOf(), issuedAt: NOW, schemaSha256: '0'.repeat(64), executionRule: rule, revisionLabel: '8.10.2', copy: null };
     expect(renderBrief(input)).toBe(renderBrief(structuredClone(input)));
+  });
+
+  it('a copy-class run\'s brief names the copy as the clone to work in and tells the session not to read the operator\'s clone (REQ-polaris-generation-046, 047)', async () => {
+    const sec3 = readSec3(REAL_ROOT);
+    if (!sec3.ok) throw new Error(sec3.reason);
+    const rule = await decideExecutionRule({ role: 'authoring', runDir: '/r', runId: RUN_ID, pinnedRevision: REV, operatorIsOwner: true, sec3: sec3.sec3, now: NOW, d9: async () => OK, launched: () => 'absent', permitting: { enabled: false } });
+    const input = { runId: RUN_ID, subject: SUBJECT, declared: configOf(), issuedAt: NOW, schemaSha256: '0'.repeat(64), executionRule: rule, revisionLabel: '8.10.2' };
+    const plain = renderBrief({ ...input, copy: null });
+    const copied = renderBrief({ ...input, copy: { dir: '/state/copies/copy-AbC123', operatorClone: '/home/op/redis' } });
+    const pinnedLine = `- Pinned revision: \`${REV}\` (8.10.2)\n`;
+    expect(copied).toBe(plain.replace(pinnedLine, `${pinnedLine}${[
+      '- Clone: `/state/copies/copy-AbC123`, a copy of the pinned commit alone, which Syzygy made from the operator\'s clone (Inferred, from the run\'s launch disclosure); this copy is the run\'s clone: work in it, and read it by this path, never as your working directory',
+      '- The operator\'s clone, at `/home/op/redis`: do not read it, or anything under it. Everything this brief says of the clone means the copy. Whether you stayed in the copy is your own report.',
+    ].join('\n')}\n`));
+    expect(plain).not.toContain('- Clone:');
   });
 
   it('carries the readability rules, after the profile guidance (syzygy-mea.10.4)', async () => {
     const sec3 = readSec3(REAL_ROOT);
     if (!sec3.ok) throw new Error(sec3.reason);
     const rule = await decideExecutionRule({ role: 'authoring', runDir: '/r', runId: RUN_ID, pinnedRevision: REV, operatorIsOwner: true, sec3: sec3.sec3, now: NOW, d9: async () => OK, launched: () => 'absent', permitting: { enabled: false } });
-    const text = renderBrief({ runId: RUN_ID, subject: SUBJECT, declared: configOf(), issuedAt: NOW, schemaSha256: '0'.repeat(64), executionRule: rule, revisionLabel: '8.10.2' });
+    const text = renderBrief({ runId: RUN_ID, subject: SUBJECT, declared: configOf(), issuedAt: NOW, schemaSha256: '0'.repeat(64), executionRule: rule, revisionLabel: '8.10.2', copy: null });
     const heading = '## Readability (`polaris-dossier-readability-v4`)';
     expect(text).toContain(`${heading}\n\nThese rules shape how the dossier reads; every claim, citation and quotation rule above still holds.\n\n${READABILITY_GUIDANCE}\n`);
     expect(text.indexOf(heading)).toBeGreaterThan(text.indexOf(DOSSIER_GUIDANCE));
@@ -333,6 +349,45 @@ describe('brief: refused', () => {
     const again = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW + 60_000 });
     expect(again).toMatchObject({ ok: false, refusal: { stage: 'issued-already', reason: 'the run already holds brief.md, draft.schema.json, brief.json: a run is briefed once, and its deadline clock has started' } });
     expect(read(run, 'brief.json')).toBe(before);
+  });
+
+  describe('a copy-class run (REQ-polaris-generation-046, 047): the launch disclosure decides whether the brief names a copy', () => {
+    const disclosure = (over: Record<string, unknown> = {}) => JSON.stringify({
+      format: 'polaris-dossier-launch-disclosure/1', runClass: 'copy-class', launched: true, operatorClone: '/home/op/redis', copy: '/srv/clones/redis',
+      consents: { recorded: [], commit: null, relied: ['launch observation consent X'] },
+      subject: { identity: 'repository:redis-redis', url: 'github.com/redis/redis', source: 'the clone\'s remote origin', proposedBy: 'derived', publicDeclaration: null },
+      drawer: null, statements: [{ id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' }],
+      label: 'Inferred', ...over,
+    });
+
+    it('names the copy and the operator\'s clone, in the brief and its record', async () => {
+      const run = runDirectory();
+      fs.writeFileSync(path.join(run, 'launch.json'), disclosure());
+      expect((await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW })).ok).toBe(true);
+      expect(read(run, 'brief.md')).toContain(`- Pinned revision: \`${REV}\` (8.10.2)\n- Clone: \`/srv/clones/redis\`, a copy of the pinned commit alone, which Syzygy made from the operator's clone (Inferred, from the run's launch disclosure); this copy is the run's clone: work in it, and read it by this path, never as your working directory\n- The operator's clone, at \`/home/op/redis\`: do not read it, or anything under it. Everything this brief says of the clone means the copy. Whether you stayed in the copy is your own report.\n`);
+      expect(JSON.parse(read(run, 'brief.json')).copy).toEqual({ dir: '/srv/clones/redis', operatorClone: '/home/op/redis' });
+    });
+
+    it('a no-copy run\'s brief names none', async () => {
+      const run = runDirectory();
+      fs.writeFileSync(path.join(run, 'launch.json'), disclosure({ runClass: 'no-copy', copy: null }));
+      expect((await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW })).ok).toBe(true);
+      expect(read(run, 'brief.md')).not.toContain('- Clone:');
+      expect(JSON.parse(read(run, 'brief.json')).copy).toBeNull();
+    });
+
+    it('refuses where the disclosure cannot be read, or names a copy that is not the run record\'s clone; nothing is written', async () => {
+      const unreadable = runDirectory();
+      fs.writeFileSync(path.join(unreadable, 'launch.json'), disclosure({ label: 'Observed' }));
+      expect(await issueBrief(unreadable, { sources: sources(), openReader: tree(), now: () => NOW })).toMatchObject({ ok: false, refusal: { stage: 'launch-record',
+        reason: 'the run\'s launch.json cannot be read as the record init writes (it is not a polaris-dossier-launch-disclosure/1 record), so whether the brief must direct its session to a copy cannot be decided; no brief is issued' } });
+      expect(fs.readdirSync(unreadable)).toEqual(['launch.json', 'run.json']);
+      const elsewhere = runDirectory();
+      fs.writeFileSync(path.join(elsewhere, 'launch.json'), disclosure({ copy: '/state/copies/copy-Other1' }));
+      expect(await issueBrief(elsewhere, { sources: sources(), openReader: tree(), now: () => NOW })).toMatchObject({ ok: false, refusal: { stage: 'launch-record',
+        reason: 'the run\'s launch.json names the copy /state/copies/copy-Other1, but the run record\'s clone is /srv/clones/redis; no brief is issued' } });
+      expect(fs.readdirSync(elsewhere)).toEqual(['launch.json', 'run.json']);
+    });
   });
 
   it('refuses when SEC-3 cannot be quoted as adopted', async () => {

@@ -483,6 +483,33 @@ describe('render', () => {
     });
   });
 
+  it('carries the run record\'s launch disclosure on every page, with the brief stage\'s statement from what the run directory holds (REQ-polaris-generation-046, 047)', async () => {
+    const run = await prepared();
+    fs.writeFileSync(path.join(run, 'launch.json'), JSON.stringify({
+      format: 'polaris-dossier-launch-disclosure/1', runClass: 'no-copy', launched: false, operatorClone: '/home/op/kestrel', copy: null,
+      consents: { recorded: [], commit: null, relied: [] },
+      subject: { identity: 'repository:kestrel', url: 'github.com/example/kestrel', source: 'the Upstream of the observation consent another act recorded, which --url names', proposedBy: null, publicDeclaration: null },
+      drawer: null,
+      statements: [{ id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' }],
+      label: 'Inferred',
+    }));
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const launch = (JSON.parse(files.get('machine.json')!).disclosure as { id: string; text: string; label: string }[]).filter(item => item.id.startsWith('launch/'));
+    expect(launch).toEqual([
+      { id: 'launch/consents', label: 'Inferred', text: 'No consent was recorded at launch: the run was not launched, and rests on the observation consent another act recorded.' },
+      { id: 'launch/identity', label: 'Inferred', text: 'The repository identity repository:kestrel and its normalised URL github.com/example/kestrel are Inferred, from the Upstream of the observation consent another act recorded, which --url names.' },
+      { id: 'launch/public', label: 'Inferred', text: 'The operator made no declaration whether the repository is public [Inferred].' },
+      { id: 'launch/proposed', label: 'Inferred', text: 'The identity was not proposed at launch: it is the one the observation consent another act recorded names.' },
+      { id: 'launch/question-asked/both/not-reached/question', label: 'Inferred', text: 'No question was asked.' },
+      { id: 'launch/brief-or-packet-delivered/no-copy/reached/briefs', label: 'Inferred', text: 'The run\'s clone, where the agent sessions are to work, is the operator\'s clone; whether a session worked there is its own report [Inferred]. No copy was made.' },
+      { id: 'launch/drawer', label: 'Inferred', text: 'No drawer statement was relied on.' },
+      { id: 'launch/answered', label: 'Inferred', text: 'No question was asked, so no one answered it.' },
+    ]);
+    expect(files.get('appendix.html')).toContain('No copy was made.');
+  });
+
   it('carries the one sentence and the machine disclosure on every page, the human disclosure in the appendix, and one review-status region per page holding no claim', async () => {
     const run = await prepared();
     const result = await renderRun(run, renderDeps());
@@ -491,7 +518,7 @@ describe('render', () => {
     const machine = JSON.parse(files.get('machine.json')!);
     const ids = (machine.disclosure as { id: string }[]).map((item) => item.id);
     expect(ids).toEqual(['mode', 'agent', 'unrestricted-reading', 'read-account', 'execution-rule', 'reported-commands', 'no-provider-call', 'pinned-revision',
-      'pinned-revision-verified', 'quotations', 'stored-records', 'records-within-reach', 'unattributed-execution', 'draft-layer']);
+      'pinned-revision-verified', 'launch/unknown', 'quotations', 'stored-records', 'records-within-reach', 'unattributed-execution', 'draft-layer']);
     expect(html(files).length).toBeGreaterThan(5);
     const sentence = 'This is a draft written by claude-code with claude-opus-5-5; no human review is recorded. It has 2 Unknown claim(s).';
     for (const [file, page] of html(files)) {

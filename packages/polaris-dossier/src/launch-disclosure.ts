@@ -141,3 +141,31 @@ export function launchDisclosureUnknown(read: Exclude<LaunchDisclosureRead, { st
     ? { id: 'launch/unknown', text: `The run directory holds no ${RUN_LAYOUT.launchDisclosure}: the run was initialised before Syzygy recorded its launch disclosure, so whether it was launched, its class, whether a copy was made and every launch statement are Unknown.`, label: 'Unknown' }
     : { id: 'launch/unknown', text: `The run's ${RUN_LAYOUT.launchDisclosure} cannot be read as the record init writes (${read.why}), so whether it was launched, its class, whether a copy was made and every launch statement are Unknown.`, label: 'Unknown' };
 }
+
+/** What a brief says of the run's clone (REQ-polaris-generation-046 and 047; briefs only, review packets unchanged): in a copy-class run the
+ * copy, named as the clone to work in, and the operator's clone, which the session is not to read. */
+export interface BriefCopy { readonly dir: string; readonly operatorClone: string }
+
+export type BriefCopyDecision = { readonly ok: true; readonly copy: BriefCopy | null } | { readonly ok: false; readonly reason: string };
+
+/** Whether the run's briefs name a copy, decided from the launch disclosure: a copy-class run's copy, which must be the run record's clone;
+ * none for a no-copy run, or a run initialised before the disclosure was written. A disclosure that cannot be read decides nothing, so no
+ * brief is issued: a copy-class run's brief that omitted the copy would send its session to read nothing but what the record names. */
+export function briefCopyOf(read: LaunchDisclosureRead, runClone: string): BriefCopyDecision {
+  if (read.state === 'absent') return { ok: true, copy: null };
+  if (read.state === 'unreadable') {
+    return { ok: false, reason: `the run's ${RUN_LAYOUT.launchDisclosure} cannot be read as the record init writes (${read.why}), so whether the brief must direct its session to a copy cannot be decided` };
+  }
+  const d = read.disclosure;
+  if (d.runClass === 'no-copy' || d.copy === null) return { ok: true, copy: null };
+  if (d.copy !== runClone) return { ok: false, reason: `the run's ${RUN_LAYOUT.launchDisclosure} names the copy ${d.copy}, but the run record's clone is ${runClone}` };
+  return { ok: true, copy: { dir: d.copy, operatorClone: d.operatorClone } };
+}
+
+/** The lines a copy-class run's brief adds, for either session. */
+export function briefCopyLines(copy: BriefCopy): readonly string[] {
+  return [
+    `- Clone: \`${copy.dir}\`, a copy of the pinned commit alone, which Syzygy made from the operator's clone (Inferred, from the run's launch disclosure); this copy is the run's clone: work in it, and read it by this path, never as your working directory`,
+    `- The operator's clone, at \`${copy.operatorClone}\`: do not read it, or anything under it. Everything this brief says of the clone means the copy. Whether you stayed in the copy is your own report.`,
+  ];
+}
