@@ -134,7 +134,7 @@ export function normaliseIdentityOption(input: string): string | null {
 }
 
 /** The remote the identity rule reads: the one REQ-047 read the default of, else `origin`, else the only remote. */
-export function identityRemote(remotes: readonly { readonly name: string; readonly url: string }[], defaultRemote: string | null): { readonly name: string; readonly url: string } | null {
+export function identityRemote<R extends { readonly name: string }>(remotes: readonly R[], defaultRemote: string | null): R | null {
   const named = (name: string) => remotes.find(r => r.name === name) ?? null;
   if (defaultRemote !== null && named(defaultRemote) !== null) return named(defaultRemote);
   if (named('origin') !== null) return named('origin');
@@ -173,7 +173,8 @@ export type IdentityProposal =
   | { readonly ok: false; readonly reason: string; readonly matches: readonly RecordMatch[] };
 
 export interface IdentityInput {
-  readonly remotes: readonly { readonly name: string; readonly url: string }[];
+  /** A remote whose `url` is null has no single URL the rule can read (`urlLines` of them). */
+  readonly remotes: readonly { readonly name: string; readonly url: string | null; readonly urlLines?: number }[];
   readonly defaultRemote: string | null;
   readonly identityOption?: string;
   readonly upstreamOption?: string;
@@ -197,7 +198,12 @@ export function proposeIdentity(input: IdentityInput): IdentityProposal {
   const remote = identityRemote(input.remotes, input.defaultRemote);
   const locatorStatements: string[] = [];
   let url: NormalisedUrl | null = null, urlSource = '', remoteRule: string | null = null;
-  if (remote !== null) {
+  if (remote !== null && remote.url === null) {
+    // A remote with several url lines, or none, has no one URL to read: it derives nothing, and the rule never falls through to another
+    // remote (R-PDJA-33-SLICE-C-1 finding 6).
+    remoteRule = `it has ${remote.urlLines ?? 0} url lines, and the rule reads a remote with exactly one non-empty url`;
+    locatorStatements.push(`The clone's remote ${remote.name} has no one URL to read, so it derives nothing: ${remoteRule}. Syzygy does not print, store or record its URLs.`);
+  } else if (remote !== null && remote.url !== null) {
     const read = readLocator(remote.url, 'remote');
     if (read.ok) {
       url = read.url;
@@ -210,7 +216,8 @@ export function proposeIdentity(input: IdentityInput): IdentityProposal {
   }
   if (url === null) {
     if (upstream === null || input.identityOption === undefined) {
-      const why = remote !== null ? `the URL of the clone's remote ${remote.name} is not a remote locator (${remoteRule}), so it derives nothing, as for a clone with no remote; give --identity and --upstream`
+      const why = remote !== null && remote.url === null ? `the clone's remote ${remote.name}, which the identity rule reads, has no one URL (${remoteRule}), so it derives nothing, as for a clone with no remote; give --identity and --upstream`
+        : remote !== null ? `the URL of the clone's remote ${remote.name} is not a remote locator (${remoteRule}), so it derives nothing, as for a clone with no remote; give --identity and --upstream`
         : input.remotes.length === 0 ? 'the clone has no remote, so the operator must give --identity and --upstream'
           : `the clone has ${input.remotes.length} remotes and none is origin, so no remote is read; give --identity and --upstream`;
       return { ok: false, reason: why, matches: [] };

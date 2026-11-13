@@ -189,9 +189,9 @@ describe('read (3): the configuration, as text, for remotes and the object forma
     expect(parseConfig('[core]\n\tobjectformat = sha256\n').objectFormat).toBe('sha1');   // only the extensions section records it
   });
 
-  it('a remote\'s url, with the subsection name matched exactly; a remote with two urls is left out', () => {
-    expect(parseConfig('[remote "origin"]\n\turl = https://h/a/b\n[remote "two"]\n\turl = x\n\turl = y\n[REMOTE "Up"]\n\tURL = ssh://h/c/d\n').remotes)
-      .toEqual([{ name: 'origin', url: 'https://h/a/b' }, { name: 'Up', url: 'ssh://h/c/d' }]);
+  it('a remote\'s url, with the subsection name matched exactly; a remote with two urls, or an empty one, is kept with no URL (R-PDJA-33-SLICE-C-1 finding 6)', () => {
+    expect(parseConfig('[remote "origin"]\n\turl = https://h/a/b\n[remote "two"]\n\turl = x\n\turl = y\n[REMOTE "Up"]\n\tURL = ssh://h/c/d\n[remote "blank"]\n\turl =\n').remotes)
+      .toEqual([{ name: 'origin', url: 'https://h/a/b' }, { name: 'two', url: null, urlLines: 2 }, { name: 'Up', url: 'ssh://h/c/d' }, { name: 'blank', url: null, urlLines: 1 }]);
   });
 });
 

@@ -31,7 +31,10 @@ import * as path from 'node:path';
 
 export type RefValue = { readonly kind: 'oid'; readonly oid: string } | { readonly kind: 'symbolic'; readonly target: string };
 
-export interface CloneRemote { readonly name: string; readonly url: string }
+/** A remote and its one URL; `url` is null where the remote has no single non-empty `url` line (none, an empty one, or several, `urlLines`
+ * of them), which the identity rule cannot read: such a remote is kept, named, so that the rule never falls through to another remote
+ * (R-PDJA-33-SLICE-C-1 finding 6). */
+export interface CloneRemote { readonly name: string; readonly url: string | null; readonly urlLines?: number }
 
 export interface CloneSnapshot {
   readonly gitDir: string;
@@ -147,7 +150,7 @@ export function parseConfig(config: string): CloneConfig {
     }
   }
   return {
-    remotes: [...urls].flatMap(([name, list]) => (list.length === 1 && list[0] !== '' ? [{ name, url: list[0]! }] : [])),
+    remotes: [...urls].map(([name, list]): CloneRemote => (list.length === 1 && list[0] !== '' ? { name, url: list[0]! } : { name, url: null, urlLines: list.length })),
     objectFormat: objectFormat ?? 'sha1',
     bare,
     worktree,

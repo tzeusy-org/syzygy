@@ -206,6 +206,19 @@ describe('the proposal', () => {
     expect(JSON.stringify(p)).not.toContain('bob');
   });
 
+  it('the identity remote with several url lines, or none, refuses, naming it and the rule, and never falls through to another remote (R-PDJA-33-SLICE-C-1 finding 6)', () => {
+    const fork = { name: 'fork', url: 'https://h/fork/repo' };
+    const several = proposeIdentity({ ...base, remotes: [{ name: 'origin', url: null, urlLines: 2 }, fork], defaultRemote: null });
+    expect(several).toEqual({ ok: false, matches: [],
+      reason: 'the clone\'s remote origin, which the identity rule reads, has no one URL (it has 2 url lines, and the rule reads a remote with exactly one non-empty url), so it derives nothing, as for a clone with no remote; give --identity and --upstream' });
+    // The only remote, counted with the one that has no URL: still that remote, never the other.
+    const only = proposeIdentity({ ...base, remotes: [{ name: 'mirror', url: null, urlLines: 0 }], defaultRemote: null });
+    expect(only).toMatchObject({ ok: false, reason: 'the clone\'s remote mirror, which the identity rule reads, has no one URL (it has 0 url lines, and the rule reads a remote with exactly one non-empty url), so it derives nothing, as for a clone with no remote; give --identity and --upstream' });
+    const given = proposeIdentity({ ...base, remotes: [{ name: 'origin', url: null, urlLines: 2 }, fork], defaultRemote: null, identityOption: 'x-y', upstreamOption: 'https://h.example/x/y' });
+    expect(given).toMatchObject({ ok: true, identity: 'repository:x-y', urlSource: 'the operator\'s --upstream option',
+      locatorStatements: ['The clone\'s remote origin has no one URL to read, so it derives nothing: it has 2 url lines, and the rule reads a remote with exactly one non-empty url. Syzygy does not print, store or record its URLs.'] });
+  });
+
   it('a remote URL that is no remote locator derives nothing, names the remote and the rule, never the URL (scenario "Remote URL that is not a locator")', () => {
     const remotes = [{ name: 'origin', url: 'https://git.example.org/a/b?private_token=x' }];
     const p = proposeIdentity({ ...base, remotes });
