@@ -388,6 +388,15 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
     expect(everything.includes('hunter2') || everything.includes('bob')).toBe(false);
   });
 
+  it('a refusal after the identity carries the user-information statement too', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, 'https://bob:hunter2@git.example.org/a/b.git');
+    const out = await run(clone, setup([], { isTTY: false }));
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'terminal',
+      locatorStatements: ['The URL of the clone\'s remote origin carried user information; Syzygy removed it before deriving anything and does not print, store or record it.'] } });
+    expect(JSON.stringify(out).includes('hunter2')).toBe(false);
+  });
+
   it('a remote URL that is no locator: refused before asking, naming the remote and the rule, the URL in no output', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' });
     const clone = fullClone(up.dir, 'https://git.example.org/a/b?private_token=x');

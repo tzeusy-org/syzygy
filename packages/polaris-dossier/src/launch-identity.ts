@@ -64,7 +64,7 @@ export function readLocator(input: string, kind: LocatorKind): LocatorRead {
     user = at < 0 ? null : authority.slice(0, at);
     hostPort = at < 0 ? authority : authority.slice(at + 1);
   } else {
-    if (input.startsWith('/') || input.startsWith('.') || input.startsWith('~')) return { ok: false, rule: RULE.form };
+    // A local path holds a "/" before any ":" (or no ":"), so the scp form below never reads one: its host holds no "/" or ":".
     const scp = SCP_FORM.exec(input);
     if (scp === null) return { ok: false, rule: RULE.form };
     scheme = 'scp';
