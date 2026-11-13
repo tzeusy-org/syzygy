@@ -30,10 +30,12 @@ function layout(files: Readonly<Record<string, string>>): string {
 function logged(clone: string, revision?: string, sealed?: readonly string[]): { readonly read: CloneSnapshotRead; readonly opened: readonly string[]; readonly examined: readonly string[] } {
   const gitDir = path.join(clone, '.git');
   if (sealed !== undefined) sealExcept(gitDir, sealed);
-  const { log, restore } = installReadLog(gitDir);
+  // Rooted at the clone, so a read outside .git is seen too ("../x"); paths are given relative to .git (R-PDJA-33-SLICE-B-1 finding 3).
+  const fromGitDir = (rel: string) => rel === '.git' ? '.' : rel.startsWith('.git/') ? rel.slice('.git/'.length) : rel === '.' ? '..' : `../${rel}`;
+  const { log, restore } = installReadLog(clone);
   try {
     const read = readCloneSnapshot(clone, revision === undefined ? {} : { revision });
-    return { read, opened: [...new Set(log.opened)].sort(), examined: [...new Set(log.examined)].sort() };
+    return { read, opened: [...new Set(log.opened.map(fromGitDir))].sort(), examined: [...new Set(log.examined.map(fromGitDir))].sort() };
   } finally {
     restore();
   }
@@ -196,7 +198,8 @@ describe('read (3): the configuration, as text, for remotes and the object forma
 describe('the read oracle is independent of the API the reader uses (R-PDJA-33-SLICE-A-1 finding 1)', () => {
   it('logs a content read through every entry point, the utf8 fast path and the promise API included', async () => {
     const dir = tempDir('syzygy-read-log-');
-    for (const name of ['a', 'b', 'c', 'd', 'e', 'f', 'g']) fs.writeFileSync(path.join(dir, name), 'x\n');
+    for (const name of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']) fs.writeFileSync(path.join(dir, name), 'x\n');
+    const out = tempDir('syzygy-read-log-out-');
     const { log, restore } = installReadLog(dir);
     try {
       fs.readFileSync(path.join(dir, 'a'), 'utf8');
@@ -206,13 +209,20 @@ describe('the read oracle is independent of the API the reader uses (R-PDJA-33-S
       await (await fs.promises.open(path.join(dir, 'e'), 'r')).close();
       await new Promise<void>((resolve, reject) => fs.createReadStream(path.join(dir, 'f')).on('close', resolve).on('error', reject).resume());
       await new Promise<void>((resolve, reject) => fs.readFile(path.join(dir, 'g'), 'utf8', e => (e ? reject(e) : resolve())));
+      // The copy entry points read content too (R-PDJA-33-SLICE-B-1 finding 3, mutant O3).
+      fs.copyFileSync(path.join(dir, 'h'), path.join(out, 'h'));
+      fs.cpSync(path.join(dir, 'i'), path.join(out, 'i'));
+      await fs.promises.copyFile(path.join(dir, 'j'), path.join(out, 'j'));
+      await fs.promises.cp(path.join(dir, 'k'), path.join(out, 'k'));
+      await new Promise<void>((resolve, reject) => fs.copyFile(path.join(dir, 'l'), path.join(out, 'l'), e => (e ? reject(e) : resolve())));
       fs.lstatSync(path.join(dir, 'a'));
       fs.existsSync(path.join(dir, 'b'));
     } finally {
       restore();
     }
-    expect([...new Set(log.opened)].sort()).toEqual(['a', 'b', 'c', 'd', 'e', 'f', 'g']);
-    expect(log.examined).toEqual(['a', 'b']);
+    expect([...new Set(log.opened)].sort()).toEqual(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']);
+    // cpSync examines its source (a stat) before it copies, so 'i' is examined too.
+    expect([...new Set(log.examined)].sort()).toEqual(['a', 'b', 'i']);
   });
 
   it('a sealed fixture makes every read of an unlisted file fail, whatever API makes it', () => {

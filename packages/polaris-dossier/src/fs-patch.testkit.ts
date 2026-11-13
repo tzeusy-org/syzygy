@@ -14,6 +14,10 @@ interface Patchable {
   readFileSync: typeof fs.readFileSync;
   readFile: typeof fs.readFile;
   createReadStream: typeof fs.createReadStream;
+  copyFileSync: typeof fs.copyFileSync;
+  copyFile: typeof fs.copyFile;
+  cpSync: typeof fs.cpSync;
+  cp: typeof fs.cp;
   lstatSync: typeof fs.lstatSync;
   statSync: typeof fs.statSync;
   existsSync: typeof fs.existsSync;
@@ -22,7 +26,7 @@ interface Patchable {
 
 const require = createRequire(import.meta.url);
 const cjsFs = require('node:fs') as Patchable;
-interface PatchablePromises { open: typeof fs.promises.open; readFile: typeof fs.promises.readFile }
+interface PatchablePromises { open: typeof fs.promises.open; readFile: typeof fs.promises.readFile; copyFile: typeof fs.promises.copyFile; cp: typeof fs.promises.cp }
 const cjsPromises = require('node:fs/promises') as PatchablePromises;
 
 /** Install `replace(original)` as `node:fs`'s `name`; the returned function puts the original back. */
@@ -54,9 +58,9 @@ export async function opensOf(file: string, act: () => Promise<unknown>): Promis
 /** Every entry point through which a process reads a file's content, and every one through which it examines a path without reading
  * it, as named in `node:fs` and `node:fs/promises`. A read through any of the first is logged under `opened`, whatever the API; the
  * second under `examined`. Directory listings are neither (a reference's name is listed, never read). */
-const CONTENT_READS = ['openSync', 'open', 'readFileSync', 'readFile', 'createReadStream'] as const;
+const CONTENT_READS = ['openSync', 'open', 'readFileSync', 'readFile', 'createReadStream', 'copyFileSync', 'copyFile', 'cpSync', 'cp'] as const;
 const EXAMINATIONS = ['lstatSync', 'statSync', 'existsSync', 'accessSync'] as const;
-const PROMISE_READS = ['open', 'readFile'] as const;
+const PROMISE_READS = ['open', 'readFile', 'copyFile', 'cp'] as const;
 
 export interface ReadLog {
   /** Paths under the root whose content some entry point was asked to read (opened, read whole or streamed), relative, in call order. */
@@ -111,8 +115,10 @@ export function installReadLog(root: string): { readonly log: ReadLog; readonly 
 }
 
 /** Make every regular file under `dir` unreadable (mode 000) but the relative paths in `readable`, so that a read of any other fails
- * whatever API makes it; names stay listable and paths examinable. The second, API-independent half of the launch-read oracle. */
-export function sealExcept(dir: string, readable: readonly string[]): { readonly sealed: readonly string[]; readonly unseal: () => void } {
+ * whatever API makes it; names stay listable and paths examinable. The second, API-independent half of the launch-read oracle. `unseal`
+ * gives each file its mode back and `reseal` takes it away again, so a Git process can be let read while it runs and no longer
+ * (R-PDJA-33-SLICE-B-1 finding 3). */
+export function sealExcept(dir: string, readable: readonly string[]): { readonly sealed: readonly string[]; readonly unseal: () => void; readonly reseal: () => void } {
   const keep = new Set(readable);
   const sealed: { readonly rel: string; readonly mode: number }[] = [];
   const walk = (rel: string): void => {
@@ -122,5 +128,9 @@ export function sealExcept(dir: string, readable: readonly string[]): { readonly
     if (st.isFile() && !keep.has(rel)) { sealed.push({ rel, mode: st.mode & 0o7777 }); fs.chmodSync(abs, 0o000); }
   };
   walk('');
-  return { sealed: sealed.map(s => s.rel), unseal: () => { for (const s of sealed) fs.chmodSync(path.join(dir, ...s.rel.split('/')), s.mode); } };
+  return {
+    sealed: sealed.map(s => s.rel),
+    unseal: () => { for (const s of sealed) fs.chmodSync(path.join(dir, ...s.rel.split('/')), s.mode); },
+    reseal: () => { for (const s of sealed) fs.chmodSync(path.join(dir, ...s.rel.split('/')), 0o000); },
+  };
 }

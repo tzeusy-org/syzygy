@@ -358,19 +358,24 @@ describe('REQ-polaris-generation-047 against real clones', () => {
  * Syzygy, then reads the clone; and every content read and path examination under `.git`, by any `node:fs` or `node:fs/promises` entry
  * point, is logged for the whole run. The object reads of the copy go through the re-hashing reader and are captured by `s.reads`. */
 async function sealedReads<T extends ReturnType<typeof setup>>(clone: string, readable: readonly string[], make: (copyGit: CopyGitRun) => T, inner?: CopyGitRun): Promise<{ readonly opened: readonly string[]; readonly examined: readonly string[]; readonly out: LaunchOutcome; readonly s: T; readonly sealed: readonly string[] }> {
-  const gitDir = path.join(clone, '.git');
-  const seal = sealExcept(gitDir, readable);
-  let unsealed = false;
+  // The seal and the log are rooted at the clone, its working tree included, and paths are given relative to its .git ("../a.c" is a
+  // working-tree file): 046's closed list admits none of the working tree. The clone is unsealed only while a Git process for the copy
+  // runs, and re-sealed when it returns, so an in-process read after the copy step starts fails too (R-PDJA-33-SLICE-B-1 finding 3).
+  const fromGitDir = (rel: string) => rel === '.git' ? '.' : rel.startsWith('.git/') ? rel.slice('.git/'.length) : rel === '.' ? '..' : `../${rel}`;
+  const seal = sealExcept(clone, readable.map(r => `.git/${r}`));
   const s = make((args, o) => {
-    if (!unsealed) { seal.unseal(); unsealed = true; }
-    if (inner !== undefined) return inner(args, o);
-    const r = spawnSync('git', args, { cwd: o.cwd, env: o.env, encoding: 'utf8' });
-    return { status: r.status ?? -1, stderr: r.stderr ?? '' };
+    seal.unseal();
+    try {
+      if (inner !== undefined) return inner(args, o);
+      const r = spawnSync('git', args, { cwd: o.cwd, env: o.env, encoding: 'utf8' });
+      return { status: r.status ?? -1, stderr: r.stderr ?? '' };
+    } finally { seal.reseal(); }
   });
-  const { log, restore } = installReadLog(gitDir);
+  const { log, restore } = installReadLog(clone);
   let out: LaunchOutcome;
-  try { out = await run(clone, s); } finally { restore(); if (!unsealed) seal.unseal(); }
-  return { opened: [...new Set(log.opened)].sort(), examined: [...new Set(log.examined)].sort(), out, s, sealed: seal.sealed };
+  try { out = await run(clone, s); } finally { restore(); seal.unseal(); }
+  const of = (paths: readonly string[]) => [...new Set(paths.map(fromGitDir))].sort();
+  return { opened: of(log.opened), examined: of(log.examined), out, s, sealed: seal.sealed.map(fromGitDir) };
 }
 
 describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote locator, against real clones', () => {
