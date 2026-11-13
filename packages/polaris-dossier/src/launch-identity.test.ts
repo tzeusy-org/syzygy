@@ -39,6 +39,7 @@ const HOST_RULE = 'its host is empty or holds a character other than a letter, a
 const PORT = 'its port is not a decimal number';
 const PATH_RULE = 'it names no path, or its path has an empty segment once normalised';
 const SCP_PATH = 'its scp-form path begins with "//"';
+const TRANSPORT = 'it is in Git\'s <transport>::<address> form (an scp-form path beginning with ":"), which names another transport';
 
 describe('the admitted locator forms (046, line 17): what an operator may give', () => {
   it.each([
@@ -82,6 +83,10 @@ describe('the admitted locator forms (046, line 17): what an operator may give',
     ['/srv/x:y', FORM],
     ['h://a/b', FORM],
     ['git@h://a/b', SCP_PATH],
+    ['ext::x/a/b', TRANSPORT],
+    ['fd::3/a/b', TRANSPORT],
+    ['persistent-https::h/a/b', TRANSPORT],
+    ['testgit::/a/b', TRANSPORT],
   ])('%s is not admitted: %s', (input, rule) => {
     if (rule === 'admitted') { expect(readLocator(input, 'operator').ok).toBe(true); return; }
     expect(readLocator(input, 'operator')).toEqual({ ok: false, rule });
@@ -100,6 +105,8 @@ describe('the remote-locator forms (046, line 17): what a remote URL may be', ()
     expect(readLocator('https://u%3Ap@git.example.org/a/b', 'remote')).toEqual({ ok: false, rule: PERCENT });
     expect(readLocator('file:///srv/repo', 'remote')).toEqual({ ok: false, rule: FORM });
     expect(readLocator('/srv/repo', 'remote')).toEqual({ ok: false, rule: FORM });
+    // Git's <transport>::<address> form (R-PDJA-33-SLICE-C-1 finding 1), user name or none.
+    for (const input of ['ext::x/a/b', 'fd::3/a/b', 'persistent-https::h/a/b', 'testgit::/a/b', 'git@ext::x/a/b']) expect(readLocator(input, 'remote')).toEqual({ ok: false, rule: TRANSPORT });
   });
 });
 

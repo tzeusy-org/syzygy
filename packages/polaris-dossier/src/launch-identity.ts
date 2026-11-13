@@ -38,6 +38,7 @@ const RULE = {
   port: 'its port is not a decimal number',
   path: 'it names no path, or its path has an empty segment once normalised',
   scpPath: 'its scp-form path begins with "//"',
+  transport: 'it is in Git\'s <transport>::<address> form (an scp-form path beginning with ":"), which names another transport',
 } as const;
 
 const HOST = /^[A-Za-z0-9._-]+$/;
@@ -70,6 +71,9 @@ export function readLocator(input: string, kind: LocatorKind): LocatorRead {
     scheme = 'scp';
     user = scp[1] ?? null; hostPort = scp[2]!; rest = scp[3]!;
     if (rest.startsWith('//')) return { ok: false, rule: RULE.scpPath };
+    // `ext::…`, `fd::…`, `testgit::…`: Git reads a host followed by `::` as a transport, which 046 neither admits nor reads as a remote
+    // locator (R-PDJA-33-SLICE-C-1 finding 1).
+    if (rest.startsWith(':')) return { ok: false, rule: RULE.transport };
   }
   if ((user ?? '').includes('%') || hostPort.includes('%')) return { ok: false, rule: RULE.percent };
   if (user !== null && kind === 'operator') {
