@@ -537,6 +537,9 @@ describe('session-prompt <run> all', () => {
     }
     const brief = fs.readFileSync(path.join(h.sessions, 'session-1', 'inventory-brief.md'));
     expect(readJson(path.join(h.run, 'inventory', 'session-1.json'))['brief']).toEqual({ name: 'inventory-brief.md', sha256: sha256(brief) });
+    // The inventory brief's own brief-stage statement, stored when Syzygy issued it (R-PDJA-33-SLICE-D-1 finding 5): this run names no copy.
+    expect(readJson(path.join(h.run, 'inventory', 'session-1.json'))['stageStatement']).toEqual({ id: 'briefs/inventory-1', stage: 'brief or packet delivered', runClass: 'no-copy', reached: true, label: 'Inferred',
+      text: 'The inventory brief for session 1 Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' });
   });
 
   it('prints each command with only its role\'s permission rules and SEC-3\'s rule, never a permission (mutant: drop a rule or widen one)', async () => {
