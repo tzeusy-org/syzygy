@@ -11,8 +11,10 @@ import { parseRunConfig, type RunConfigRefusal } from './run-config.js';
 import { NO_WORK_ITEM_REASON, encodeRunRecord, type RunSubject } from './run-record.js';
 import { createRunDirectory, stateRootViolation, type RunPorts } from './state-directory.js';
 import { isoOf } from './iso-of.js';
-import { failureText, launchConsent, pinStatement, type LaunchCopy, type LaunchOutcome, type LaunchPorts, type LaunchRefusal } from './launch.js';
-import { copyEndStatement, copyKeptStatement, removeCopy, type CopyEnd } from './launch-copy.js';
+import { failureText, launchConsent, type LaunchCopy, type LaunchOutcome, type LaunchPorts, type LaunchRefusal } from './launch.js';
+import { copyEndStatement, removeCopy, type CopyEnd } from './launch-copy.js';
+import { LAUNCH_DISCLOSURE_FORMAT, launchDisclosureItems, type LaunchDisclosure } from './launch-disclosure.js';
+import { stageStatements } from './launch-statements.js';
 import { withLaunchRecords } from './launch-sources.js';
 
 /** `syzygy dossier init <clone> --url <url> --config <run.json> --state-root <dir>` (REQ-polaris-generation-033, 036).
@@ -24,7 +26,7 @@ import { withLaunchRecords } from './launch-sources.js';
  * decide whether the subject is governed; a governed subject, or one whose project input is silent, needs the per-project statement.
  * Any failure refuses the run with its reason in human and machine form, and nothing is written. On success the run directory is made
  * under the state root, never inside or around the clone, and holds only `run.json`, which records the clone's real path as the one
- * location every later step reads objects from. */
+ * location every later step reads objects from, and `launch.json`, the run record's launch disclosure (REQ-polaris-generation-046). */
 
 export type InitStage = 'failure' | 'launch' | 'url' | 'config' | 'state-root' | 'repository' | 'start-gates' | 'head' | 'revision' | 'clone-shape' | 'listing' | 'statement' | 'write';
 
@@ -245,7 +247,13 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
       providerStatement,
       workItem: { identity: null, reason: NO_WORK_ITEM_REASON },
     };
-    const created = createRunDirectory(request.stateRoot, request.clone, encodeRunRecord(config.config, subject), ports.runId === undefined ? {} : { runId: ports.runId });
+    let operatorClone: string;
+    try { operatorClone = fs.realpathSync(path.resolve(request.clone)); } catch (cause) {
+      return refuse('head', `the operator's clone's real path cannot be resolved (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})`);
+    }
+    const launch = launchDisclosure(launched, { operatorClone, url: url.url, repositoryId, head, drawer: governed.drawer.stated ? governed.drawer.record : null });
+    const created = createRunDirectory(request.stateRoot, request.clone, encodeRunRecord(config.config, subject), ports.runId === undefined ? {} : { runId: ports.runId },
+      { launchDisclosure: `${JSON.stringify(launch, null, 2)}\n` });
     if (!created.created) return refuse('write', created.detail);
     return {
       ok: true,
@@ -259,8 +267,7 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
         governed,
         disclosures: [
           ...DISCLOSURES,
-          ...(launched === null ? [] : launchDisclosures(launched)),
-          ...(copy === null ? [] : [copyKeptStatement(copy.dir)]),
+          ...launchDisclosureItems(launch, null).map(item => item.text),
           governed.kind === 'non-governed'
             ? 'the subject is non-governed, so no per-project statement is required; the agent sessions\' sends to their provider are the operator\'s own act'
             : `the subject is ${governed.kind}; the run relies on the per-project statement ${providerStatement}, a consent record and not an egress record; neither the content classes it names nor the screening policies bind what the agent reads or sends`,
@@ -270,15 +277,35 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
   }
 }
 
-/** What `init` discloses of a launch (REQ-polaris-generation-046, line 33; 047, line 184). */
-function launchDisclosures(l: Exclude<LaunchOutcome, { kind: 'refused' } | { kind: 'head-consented' }>): readonly string[] {
-  return [
-    pinStatement(l.pin),
-    l.kind === 'recorded' && l.records.length > 0
-      ? `the consents were recorded at launch: ${l.records.join(', ')}, in the recording commit ${l.commit}`
-      : `the run rests on launch consent records already in force: ${l.relied.join('; ')}`,
-    `the repository identity ${l.subject.identity} and its normalised URL ${l.subject.url} are Inferred, from ${l.subject.urlSource}; the identity was proposed by the rule (${l.subject.identitySource}) and declared by the owner's phrase`,
-    `the operator's declaration whether the repository is public: ${l.subject.publicDeclaration ?? 'as the records state'} [Inferred]`,
-    'who answered rests on the operator\'s declaration that the owner answered in person [Inferred]',
-  ];
+/** The run record's launch disclosure (REQ-polaris-generation-046, line 37): of the launch where the run was launched; otherwise of a no-copy
+ * run that rests on the observation consent another act recorded, whose named identifier is the clone's HEAD and which asked nothing. */
+function launchDisclosure(
+  l: Exclude<LaunchOutcome, { kind: 'refused' } | { kind: 'head-consented' }> | null,
+  run: { readonly operatorClone: string; readonly url: string; readonly repositoryId: string; readonly head: { readonly commit: string; readonly via: string }; readonly drawer: string | null },
+): LaunchDisclosure {
+  const disclosure = (fields: Omit<LaunchDisclosure, 'format' | 'operatorClone' | 'drawer' | 'label'>): LaunchDisclosure => ({
+    format: LAUNCH_DISCLOSURE_FORMAT, runClass: fields.runClass, launched: fields.launched, operatorClone: run.operatorClone, copy: fields.copy,
+    consents: fields.consents, subject: fields.subject, drawer: run.drawer, statements: fields.statements, label: 'Inferred',
+  });
+  if (l === null) {
+    return disclosure({
+      runClass: 'no-copy', launched: false, copy: null, consents: { recorded: [], commit: null, relied: [] },
+      subject: { identity: `repository:${run.repositoryId}`, url: run.url, source: 'the Upstream of the observation consent another act recorded, which --url names', proposedBy: null, publicDeclaration: null },
+      statements: stageStatements({
+        runClass: 'no-copy', named: { commit: run.head.commit, via: run.head.via, updateCommand: null, localElsewhere: null }, copy: null, copyEnd: null,
+        pinned: { commit: run.head.commit, committerDate: 'not-read' }, questionAsked: false, beyondConsent: false,
+      }),
+    });
+  }
+  const recorded = l.kind === 'recorded' ? l.records : [];
+  const declaration = l.subject.publicDeclaration;
+  return disclosure({
+    runClass: l.copy === null ? 'no-copy' : 'copy-class', launched: true, copy: l.copy === null ? null : l.copy.dir,
+    consents: { recorded, commit: recorded.length > 0 && l.kind === 'recorded' ? l.commit : null, relied: l.relied },
+    subject: {
+      identity: l.subject.identity, url: l.subject.url, source: l.subject.urlSource, proposedBy: l.subject.identitySource,
+      publicDeclaration: declaration === null ? 'as the launch consent records already in force state it' : declaration === 'not-given' ? null : declaration,
+    },
+    statements: l.statements,
+  });
 }

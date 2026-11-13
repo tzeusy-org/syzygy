@@ -179,7 +179,7 @@ async function init(setup: Setup = {}): Promise<{ result: InitResult; readerOpen
 const refusal = (result: InitResult) => (result.ok ? null : result.refusal);
 
 describe('init: a run that passes every start gate', () => {
-  it('pins the consented HEAD, records the subject and writes only run.json under the state root', async () => {
+  it('pins the consented HEAD, records the subject and writes only run.json and its launch disclosure under the state root', async () => {
     const { result, stateRoot, clone } = await init();
     expect(result.ok).toBe(true);
     if (!result.ok) return;
@@ -194,7 +194,34 @@ describe('init: a run that passes every start gate', () => {
       workItem: { identity: null, reason: 'the operator-agent run makes no provider dispatch and no scheduler effect, so no scheduler work item, Proposal or materialization record exists for it; it is rendered as unattributed execution under RFC4-19, never dropped' },
     });
     expect(fs.readdirSync(stateRoot)).toEqual(['run-0123456789abcdef0123456789abcdef']);
-    expect(fs.readdirSync(result.report.run)).toEqual(['run.json']);
+    expect(fs.readdirSync(result.report.run)).toEqual(['launch.json', 'run.json']);
+    // The run record's launch disclosure (046, line 37) of a run that was not launched: a no-copy run, every stage up to the question stated.
+    const notLaunchedStatement = (id: string, stage: string, runClass: string, reached: boolean, text: string) => ({ id, stage, runClass, reached, label: 'Inferred', text });
+    expect(JSON.parse(fs.readFileSync(path.join(result.report.run, 'launch.json'), 'utf8'))).toEqual({
+      format: 'polaris-dossier-launch-disclosure/1', runClass: 'no-copy', launched: false, operatorClone: clone, copy: null,
+      consents: { recorded: [], commit: null, relied: [] },
+      subject: { identity: 'repository:redis-redis', url: 'github.com/redis/redis', source: 'the Upstream of the observation consent another act recorded, which --url names', proposedBy: null, publicDeclaration: null },
+      drawer: 'PROJECT-INPUT-REDIS@1',
+      statements: [
+        notLaunchedStatement('named-identifier', 'identifier named', 'both', true, `The named identifier is ${commits.A}, from detached HEAD. Syzygy made no network request to choose or verify it; whether it is the upstream's latest commit is Inferred.`),
+        notLaunchedStatement('copy', 'copy step started', 'no-copy', false, 'No copy was made: this is a no-copy run, whose clone is the operator\'s own.'),
+        notLaunchedStatement('pinned-commit', 'commit pinned', 'both', true, `The pinned revision is ${commits.A}.`),
+        notLaunchedStatement('question', 'question asked', 'both', false, 'No question was asked.'),
+      ],
+      label: 'Inferred',
+    });
+    expect(result.report.disclosures.slice(4, -1)).toEqual([
+      'No consent was recorded at launch: the run was not launched, and rests on the observation consent another act recorded.',
+      'The repository identity repository:redis-redis and its normalised URL github.com/redis/redis are Inferred, from the Upstream of the observation consent another act recorded, which --url names.',
+      'The operator made no declaration whether the repository is public [Inferred].',
+      'The identity was not proposed at launch: it is the one the observation consent another act recorded names.',
+      `The named identifier is ${commits.A}, from detached HEAD. Syzygy made no network request to choose or verify it; whether it is the upstream's latest commit is Inferred.`,
+      'No copy was made: this is a no-copy run, whose clone is the operator\'s own.',
+      `The pinned revision is ${commits.A}.`,
+      'No question was asked.',
+      'The drawer statement relied on: PROJECT-INPUT-REDIS@1.',
+      'No question was asked, so no one answered it.',
+    ]);
     expect(execFileSync('git', ['-C', clone, 'status', '--porcelain', '--ignored'], { encoding: 'utf8', env: GIT_ENV })).toBe('');
     const status = runStatus(result.report.run);
     expect(status.ok && status.report.subject.pinnedRevision.commit).toBe(commits.A);

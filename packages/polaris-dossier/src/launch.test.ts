@@ -1010,9 +1010,19 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     expect(fs.readdirSync(path.join(stateRoot, 'copies'))).toEqual([path.basename(copyDir)]);
     expect(s.reads.log.dirs.length).toBeGreaterThan(0);
     // The launch's records are named as launch records, once each: none satisfies the launch's "another act" lookups.
-    expect(again.report.disclosures.filter(d => d.startsWith('the run rests on'))).toEqual([expect.stringMatching(
-      /^the run rests on launch consent records already in force: launch observation consent LAUNCH-OBSERVATION-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8} \([0-9a-f]{40}\); drawer statement LAUNCH-DRAWER-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}$/)]);
+    expect(again.report.disclosures.filter(d => d.includes('the run rests on'))).toEqual([expect.stringMatching(
+      /^No consent was recorded at launch: the run rests on launch consent records already in force: launch observation consent LAUNCH-OBSERVATION-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8} \([0-9a-f]{40}\); drawer statement LAUNCH-DRAWER-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}\.$/)]);
     expect(s.reads.log.dirs.every(d => d === path.join(copyDir, '.git'))).toBe(true);
+    // The run record's launch disclosure (046, line 37): a launched copy-class run that recorded nothing, its copy and the operator's clone.
+    const disclosure = JSON.parse(fs.readFileSync(path.join(again.report.run, 'launch.json'), 'utf8')) as Record<string, unknown> & { statements: { id: string; reached: boolean }[] };
+    expect({ ...disclosure, consents: { ...(disclosure['consents'] as object), relied: 'checked above' }, statements: disclosure.statements.map(x => [x.id, x.reached]) }).toEqual({
+      format: 'polaris-dossier-launch-disclosure/1', runClass: 'copy-class', launched: true, operatorClone: fs.realpathSync(clone), copy: copyDir,
+      consents: { recorded: [], commit: null, relied: 'checked above' },
+      subject: { identity: 'repository:redis-redis', url: 'github.com/redis/redis', source: 'the clone\'s remote origin', proposedBy: 'matching-records', publicDeclaration: 'public' },
+      drawer: expect.stringMatching(/^LAUNCH-DRAWER-[0-9a-f]{12}-20261109T120000Z-[0-9a-f]{8}$/),
+      statements: [['named-identifier', true], ['copy', true], ['copy-location', true], ['copy-reliance', true], ['pinned-commit', true], ['question', false]],
+      label: 'Inferred',
+    });
   });
 
   it('a port that throws after the launch made the copy: init refuses, removes the copy and says so (R-PDJA-33-SLICE-B-1 finding 2)', async () => {

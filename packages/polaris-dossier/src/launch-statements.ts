@@ -43,7 +43,8 @@ export interface LaunchState {
   readonly named: {
     readonly commit: string;
     readonly via: string;
-    readonly updateCommand: string;
+    /** The command that updates the clone before a later run; null for a run that was not launched, which names none. */
+    readonly updateCommand: string | null;
     /** A local branch of the remote default's name pointing elsewhere (047): both identifiers are stated. */
     readonly localElsewhere: { readonly ref: string; readonly commit: string } | null;
   } | null;
@@ -52,8 +53,8 @@ export interface LaunchState {
   /** How the copy ended: kept (a run that completes), or removed or not removed (a run that ends before its brief). */
   readonly copyEnd: 'kept' | CopyEnd | null;
   /** The pinned commit, and its committer date as the commit object records it; `unread` where the commit was pinned but its object was not
-   * read (a copy that failed its form check is not read). */
-  readonly pinned: { readonly commit: string; readonly committerDate: string | null | 'unread' } | null;
+   * read (a copy that failed its form check is not read); `not-read` for a run that was not launched, which reads no committer date. */
+  readonly pinned: { readonly commit: string; readonly committerDate: string | null | 'unread' | 'not-read' } | null;
   readonly questionAsked: boolean;
   /** A copy-class run that relies on a launch observation consent whose recorded scope holds the revision in the operator's own clone with no
    * fetch by Syzygy (the version 1.1 scope) and on no consent of another kind. */
@@ -84,7 +85,7 @@ export function stageStatements(s: LaunchState): readonly LaunchStatement[] {
   if (s.named === null) out.push(statement('named-identifier', 'identifier named', 'both', false, 'No identifier was named.'));
   else {
     out.push(statement('named-identifier', 'identifier named', 'both', true,
-      `The named identifier is ${s.named.commit}, from ${s.named.via}. Syzygy made no network request to choose or verify it; whether it is the upstream's latest commit is Inferred. To update the clone before a later run: ${s.named.updateCommand}`));
+      `The named identifier is ${s.named.commit}, from ${s.named.via}. Syzygy made no network request to choose or verify it; whether it is the upstream's latest commit is Inferred.${s.named.updateCommand === null ? '' : ` To update the clone before a later run: ${s.named.updateCommand}`}`));
     if (s.named.localElsewhere !== null) {
       out.push(statement('local-not-trunk', 'identifier named', 'both', true,
         `The local branch ${s.named.localElsewhere.ref} points to ${s.named.localElsewhere.commit}, not to the trunk default ${s.named.commit}: a local commit is not the trunk default, and no local branch is consulted while a remote default is recorded.`));
@@ -94,7 +95,9 @@ export function stageStatements(s: LaunchState): readonly LaunchStatement[] {
   out.push(...copyStatements(s));
 
   if (s.pinned === null) out.push(statement('pinned-commit', 'commit pinned', 'both', false, 'The commit was not pinned, and its committer date is Unknown.'));
-  else if (s.pinned.committerDate === 'unread') {
+  else if (s.pinned.committerDate === 'not-read') {
+    out.push(statement('pinned-commit', 'commit pinned', 'both', true, `The pinned revision is ${s.pinned.commit}.`));
+  } else if (s.pinned.committerDate === 'unread') {
     out.push(statement('pinned-commit', 'commit pinned', 'both', true,
       `The pinned revision is ${s.pinned.commit}: the copy's detached checkout left the copy's HEAD there. Its committer date is Unknown: the copy did not pass its form check, so Syzygy read none of its objects.`));
   } else {

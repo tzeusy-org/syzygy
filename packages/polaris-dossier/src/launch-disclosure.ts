@@ -1,0 +1,143 @@
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { BoundedJsonError, parseBoundedJson, type LocalDisclosureItem } from '@syzygy/polaris-generation-core/live';
+import { isRecord } from '@syzygy/support';
+import { IDENTITY_RESIDUALS } from './launch-question.js';
+import type { LaunchStageName, LaunchStatement, RunClass, StatementClass } from './launch-statements.js';
+import { RUN_LAYOUT } from './state-directory.js';
+
+/** The run record's launch disclosure (REQ-polaris-generation-046, line 37, under 047's stage rule).
+ *
+ * "The run record and every rendered page SHALL disclose, in human and machine form: that the consents were recorded at launch, with each
+ * record's identity and its recording commit, or that none was recorded; the repository identity, its normalised URL, their source and
+ * their Inferred label; the operator's declaration whether the repository is public, labelled Inferred, or that none was made; how the
+ * identity was proposed and the identity residuals above; under REQ-polaris-generation-047's stage rule ...; the drawer statement relied on,
+ * if any; that who answered rests on the operator's declaration, labelled Inferred".
+ *
+ * `init` writes it once (through `createRunDirectory`), as `launch.json` beside `run.json`, for every run it creates: run.json's exact key set is read by every step, so
+ * the disclosure is its own file and a run initialised before it existed stays readable. It holds the stages a run reaches by `init`; the
+ * brief stage's statement is decided when a brief is issued and is derived from what the run directory holds. The file lies within the agent
+ * sessions' write reach, so every value read back is Inferred, and it is re-validated in full. */
+
+export const LAUNCH_DISCLOSURE_FORMAT = 'polaris-dossier-launch-disclosure/1';
+const LIMITS = Object.freeze({ maxBytes: 65_536, maxNodes: 512, maxDepth: 4 });
+const TEXT_MAX = 4096;
+
+export interface LaunchDisclosure {
+  readonly format: typeof LAUNCH_DISCLOSURE_FORMAT;
+  readonly runClass: RunClass;
+  /** Whether `init` launched the run (asked or relied on launch consent records), or the run rests on consents another act recorded. */
+  readonly launched: boolean;
+  /** The operator's clone, as `init` resolved the path it was given; in a copy-class run the copy is the run's clone and this is not. */
+  readonly operatorClone: string;
+  /** A copy-class run's copy; null for a no-copy run. */
+  readonly copy: string | null;
+  /** The launch consent records written at launch and their recording commit; none recorded: an empty list and a null commit. */
+  readonly consents: { readonly recorded: readonly string[]; readonly commit: string | null; readonly relied: readonly string[] };
+  readonly subject: {
+    readonly identity: string;
+    readonly url: string;
+    readonly source: string;
+    /** How the identity was proposed at launch; null for a run that was not launched. */
+    readonly proposedBy: string | null;
+    /** The operator's declaration whether the repository is public; null where none was made. */
+    readonly publicDeclaration: string | null;
+  };
+  /** The drawer statement relied on, or null. */
+  readonly drawer: string | null;
+  readonly statements: readonly LaunchStatement[];
+  readonly label: 'Inferred';
+}
+
+export type LaunchDisclosureRead =
+  | { readonly state: 'absent' }
+  | { readonly state: 'ok'; readonly disclosure: LaunchDisclosure }
+  | { readonly state: 'unreadable'; readonly why: string };
+
+const STAGES: readonly LaunchStageName[] = ['identifier named', 'copy step started', 'commit pinned', 'question asked', 'brief or packet delivered'];
+const CLASSES: readonly StatementClass[] = ['copy-class', 'no-copy', 'both'];
+const isText = (v: unknown): v is string => typeof v === 'string' && v.length > 0 && v.length <= TEXT_MAX;
+const isTexts = (v: unknown): v is readonly string[] => Array.isArray(v) && v.every(isText);
+const nullOr = <T>(v: unknown, test: (x: unknown) => x is T): boolean => v === null || test(v);
+const exactKeys = (r: Readonly<Record<string, unknown>>, keys: readonly string[]): boolean => Object.keys(r).sort().join(',') === [...keys].sort().join(',');
+
+function isStatement(v: unknown): v is LaunchStatement {
+  if (!isRecord(v) || !exactKeys(v, ['id', 'stage', 'runClass', 'reached', 'label', 'text'])) return false;
+  return isText(v['id']) && (v['stage'] === null || STAGES.includes(v['stage'] as LaunchStageName))
+    && (v['runClass'] === null || CLASSES.includes(v['runClass'] as StatementClass)) && typeof v['reached'] === 'boolean'
+    && v['label'] === 'Inferred' && isText(v['text']);
+}
+
+/** The run's launch disclosure, read fail-closed: `absent` where no file of that name exists (a run initialised before it was written);
+ * `unreadable`, with why, where something is there that is not the record `init` writes. */
+export function readLaunchDisclosure(runDir: string): LaunchDisclosureRead {
+  let text: string;
+  try {
+    const file = path.join(runDir, RUN_LAYOUT.launchDisclosure);
+    const stat = fs.lstatSync(file);
+    if (!stat.isFile()) return { state: 'unreadable', why: 'it is not a regular file' };
+    text = fs.readFileSync(file, 'utf8');
+  } catch (cause) {
+    const code = (cause as NodeJS.ErrnoException).code;
+    return code === 'ENOENT' ? { state: 'absent' } : { state: 'unreadable', why: `it cannot be read (${code ?? 'unknown-error'})` };
+  }
+  let v: unknown;
+  try { v = parseBoundedJson(text, LIMITS); } catch (cause) {
+    return { state: 'unreadable', why: `it is not one bounded JSON object (${cause instanceof BoundedJsonError ? cause.code : 'invalid-json'})` };
+  }
+  const keys = ['format', 'runClass', 'launched', 'operatorClone', 'copy', 'consents', 'subject', 'drawer', 'statements', 'label'];
+  if (!isRecord(v) || !exactKeys(v, keys) || v['format'] !== LAUNCH_DISCLOSURE_FORMAT || v['label'] !== 'Inferred') {
+    return { state: 'unreadable', why: `it is not a ${LAUNCH_DISCLOSURE_FORMAT} record` };
+  }
+  const consents = v['consents'], subject = v['subject'];
+  const ok = (v['runClass'] === 'copy-class' || v['runClass'] === 'no-copy') && typeof v['launched'] === 'boolean' && isText(v['operatorClone'])
+    // A run that was not launched is a no-copy run: every copy-class run is launch-consented (046).
+    && (v['launched'] === true || v['runClass'] === 'no-copy')
+    && (v['runClass'] === 'copy-class' ? isText(v['copy']) : v['copy'] === null)
+    && isRecord(consents) && exactKeys(consents, ['recorded', 'commit', 'relied']) && isTexts(consents['recorded']) && nullOr(consents['commit'], isText)
+    // A recording commit exactly where records were written.
+    && (consents['commit'] === null) === ((consents['recorded'] as readonly string[]).length === 0);
+  const subjectOk = isRecord(subject) && exactKeys(subject, ['identity', 'url', 'source', 'proposedBy', 'publicDeclaration'])
+    && isText(subject['identity']) && isText(subject['url']) && isText(subject['source']) && nullOr(subject['proposedBy'], isText) && nullOr(subject['publicDeclaration'], isText);
+  const rest = isRecord(consents) && isTexts(consents['relied']) && nullOr(v['drawer'], isText)
+    && Array.isArray(v['statements']) && v['statements'].length > 0 && v['statements'].every(isStatement);
+  if (!ok || !subjectOk || !rest) return { state: 'unreadable', why: `it carries a field that is not of the form ${LAUNCH_DISCLOSURE_FORMAT} gives` };
+  return { state: 'ok', disclosure: v as unknown as LaunchDisclosure };
+}
+
+/** A statement's id on a page, carrying its machine form: the stage it needs, the run class that requires it, and whether it was reached. */
+export const statementItemId = (s: LaunchStatement): string =>
+  `launch/${(s.stage ?? 'no-stage').replace(/ /g, '-')}/${s.runClass ?? 'class-undecided'}/${s.reached ? 'reached' : 'not-reached'}/${s.id}`;
+
+/** The launch disclosure in human form, each item with its id and label, for the init output and every page. `briefs` is the brief stage's
+ * statement where the caller decides it (a page, from what the run directory holds); `init` passes none, since no brief exists yet. */
+export function launchDisclosureItems(d: LaunchDisclosure, briefs: LaunchStatement | null): LocalDisclosureItem[] {
+  const items: LocalDisclosureItem[] = [];
+  const item = (id: string, text: string): void => { items.push({ id: `launch/${id}`, text, label: 'Inferred' }); };
+  if (!d.launched) item('consents', 'No consent was recorded at launch: the run was not launched, and rests on the observation consent another act recorded.');
+  else if (d.consents.recorded.length > 0) item('consents', `The consents were recorded at launch: ${d.consents.recorded.join(', ')}, in the recording commit ${d.consents.commit ?? ''}.`);
+  else item('consents', `No consent was recorded at launch: the run rests on launch consent records already in force: ${d.consents.relied.join('; ')}.`);
+  item('identity', `The repository identity ${d.subject.identity} and its normalised URL ${d.subject.url} are Inferred, from ${d.subject.source}.`);
+  item('public', d.subject.publicDeclaration === null
+    ? 'The operator made no declaration whether the repository is public [Inferred].'
+    : `The operator's declaration whether the repository is public: ${d.subject.publicDeclaration} [Inferred].`);
+  if (d.subject.proposedBy === null) item('proposed', 'The identity was not proposed at launch: it is the one the observation consent another act recorded names.');
+  else {
+    item('proposed', `The identity was proposed by the rule (${d.subject.proposedBy}) and declared by the owner's phrase.`);
+    IDENTITY_RESIDUALS.forEach((residual, i) => item(`residual-${i + 1}`, residual));
+  }
+  for (const s of [...d.statements, ...(briefs === null ? [] : [briefs])]) items.push({ id: statementItemId(s), text: s.text, label: s.label });
+  item('drawer', d.drawer === null ? 'No drawer statement was relied on.' : `The drawer statement relied on: ${d.drawer}.`);
+  const asked = d.statements.some(s => s.id === 'question' && s.reached);
+  item('answered', asked
+    ? 'Who answered rests on the operator\'s declaration that the owner answered in person [Inferred].'
+    : 'No question was asked, so no one answered it.');
+  return items;
+}
+
+/** A page's item where the run carries no launch disclosure it can read. */
+export function launchDisclosureUnknown(read: Exclude<LaunchDisclosureRead, { state: 'ok' }>): LocalDisclosureItem {
+  return read.state === 'absent'
+    ? { id: 'launch/unknown', text: `The run directory holds no ${RUN_LAYOUT.launchDisclosure}: the run was initialised before Syzygy recorded its launch disclosure, so whether it was launched, its class, whether a copy was made and every launch statement are Unknown.`, label: 'Unknown' }
+    : { id: 'launch/unknown', text: `The run's ${RUN_LAYOUT.launchDisclosure} cannot be read as the record init writes (${read.why}), so whether it was launched, its class, whether a copy was made and every launch statement are Unknown.`, label: 'Unknown' };
+}

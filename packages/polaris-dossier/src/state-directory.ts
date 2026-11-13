@@ -27,6 +27,7 @@ export const RUN_LAYOUT = Object.freeze({
   site: 'site',
   record: 'record.json',
   launched: 'launched.json',
+  launchDisclosure: 'launch.json',
 });
 export const REVISION_FILE = /^rev-(0|[1-9][0-9]*)\.json$/;
 export const REVIEW_PACKET_DIR = /^(fidelity|design)-packet-([0-9a-f]{64})$/;
@@ -104,10 +105,13 @@ export type CreateRunResult =
   | { readonly created: true; readonly runId: string; readonly runDir: string }
   | { readonly created: false; readonly detail: string };
 
-/** Make a new, empty run directory under the state root and write its configuration document.
+/** Make a new, empty run directory under the state root and write its configuration document and, where given, the run record's launch
+ * disclosure (`launch-disclosure.ts`).
  * The directory is the operator's alone (mode 0700) and the configuration file 0600. An existing run
  * directory is never reused. Nothing is written anywhere else. */
-export function createRunDirectory(stateRoot: string, clone: string, configJson: string, ports: RunPorts = {}): CreateRunResult {
+export function createRunDirectory(
+  stateRoot: string, clone: string, configJson: string, ports: RunPorts = {}, files: { readonly launchDisclosure?: string } = {},
+): CreateRunResult {
   const violation = stateRootViolation(stateRoot, clone);
   if (violation !== null) return { created: false, detail: violation };
   const runId = (ports.runId ?? (() => `run-${randomBytes(16).toString('hex')}`))();
@@ -120,5 +124,8 @@ export function createRunDirectory(stateRoot: string, clone: string, configJson:
     return { created: false, detail: `run directory ${runDir} could not be created (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'})` };
   }
   fs.writeFileSync(path.join(runDir, RUN_LAYOUT.config), configJson, { mode: 0o600, flag: 'wx' });
+  if (files.launchDisclosure !== undefined) {
+    fs.writeFileSync(path.join(runDir, RUN_LAYOUT.launchDisclosure), files.launchDisclosure, { mode: 0o600, flag: 'wx' });
+  }
   return { created: true, runId, runDir };
 }

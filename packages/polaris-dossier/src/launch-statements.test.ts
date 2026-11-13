@@ -91,6 +91,15 @@ describe('the stage rule over the launch statements (REQ-polaris-generation-047)
       ['local-not-trunk', 'identifier named', 'both', true, `The local branch refs/heads/main points to ${L}, not to the trunk default ${C}: a local commit is not the trunk default, and no local branch is consulted while a remote default is recorded.`]);
   });
 
+  it('a run that was not launched: its HEAD named with no update command, and its pinned revision with no committer date read', () => {
+    expect(texts({ ...base, runClass: 'no-copy', named: { ...base.named!, via: 'detached HEAD', updateCommand: null }, copy: null, copyEnd: null, pinned: { commit: C, committerDate: 'not-read' }, questionAsked: false })).toEqual([
+      ['named-identifier', 'identifier named', 'both', true, `The named identifier is ${C}, from detached HEAD. Syzygy made no network request to choose or verify it; whether it is the upstream's latest commit is Inferred.`],
+      ['copy', 'copy step started', 'no-copy', false, 'No copy was made: this is a no-copy run, whose clone is the operator\'s own.'],
+      ['pinned-commit', 'commit pinned', 'both', true, `The pinned revision is ${C}.`],
+      ['question', 'question asked', 'both', false, 'No question was asked.'],
+    ]);
+  });
+
   it('a commit pinned by the copy\'s checkout whose copy failed its form check: its committer date is Unknown', () => {
     expect(texts({ ...base, pinned: { commit: C, committerDate: 'unread' } }).find(t => t[0] === 'pinned-commit')?.[4])
       .toBe(`The pinned revision is ${C}: the copy's detached checkout left the copy's HEAD there. Its committer date is Unknown: the copy did not pass its form check, so Syzygy read none of its objects.`);
