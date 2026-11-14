@@ -10,7 +10,16 @@
 
 ## Last verdict of record, and where the findings landed
 
-`CONFIRM WITH EXCEPTIONS` (`R-PDJA-33-SLICE-CD-5-RAW.md:4`), over `61baeff6`, the round-4 repairs, notes only. The raw confirms CD-4's Findings 1 and 4 resolved; CD-4's Findings 2 and 3 stay with the owner. Its two notes need no change:
+`REVISE` (`R-PDJA-33-RULINGS-1-RAW.md:2`), over `f83fd7e8`, the commits implementing the owner's rulings of 2026-11-14 (host widening and the `launch.json` rewrite). Each finding the lead directed to repair is repaired by its own commit on the same branch:
+
+- Finding 1 (blocking): the scp form admitted a bracketed IPv6 host, which 046 line 17 excludes (its scp host holds no `:`).
+- Finding 2 (non-blocking): ASCII and non-ASCII hosts were normalised by two rules.
+- Finding 3 (non-blocking): the host refusal no longer said its grammar is narrower than 046, and the comment saying so went stale.
+- Finding 7 (non-blocking): a session-prompt whose `launch.json` rewrite failed left the issued session out of the step log.
+- Finding 5 (note): the identity-tail report cited one reader, `generation-source.ts:164`, that does not pin the first character; the report is corrected and the identity-tail question goes to the owner. `IDENTITY` is unchanged.
+- Findings 4, 6, 8 and 9 (notes): no change directed.
+
+Earlier: `CONFIRM WITH EXCEPTIONS` (`R-PDJA-33-SLICE-CD-5-RAW.md:4`), over `61baeff6`, the round-4 repairs, notes only. The raw confirms CD-4's Findings 1 and 4 resolved; CD-4's Findings 2 and 3 stay with the owner. Its two notes need no change:
 - Finding 1 (note): a configuration that is unreadable or over its bound is now refused after the alternates existence probe; that probe is read (4) of 047's list, which 047 does not order.
 - Finding 2 (note): the CD-4 mutation record names `1c015d5a`; the mutated files hash the same at `61baeff6` and both mutants reproduce.
 
