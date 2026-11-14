@@ -182,7 +182,9 @@ function parseInstance(text: string, act: Act, inForceAt: number | null): Admiss
   // Supersession follows the act's instant, not the bytes: a successor whose bytes later drift still replaced its predecessor.
   const base = { recordId, version, digest: act.digest, inForceAt, withdrawnAt: null, supersedes: act.version === 2 ? V2_SUPERSEDES : null, supersessionAt: act.version === 2 ? act.inForce : null, project: 'project:syzygy' } as const;
   if (act.type === 'observation') {
-    const m = /^\(project:syzygy, repository:([a-z0-9][a-z0-9-]*)\)$/.exec(subject) ?? refuse();
+    // The repository identity's grammar is REQ-polaris-generation-046's (line 15): one or more of a-z, 0-9, '.', '_' and '-', with no case
+    // folding; ids compare exactly, so 'a.b' and 'a-b' stay two repositories (the owner's ruling of 2026-11-14, "Widen all readers now").
+    const m = /^\(project:syzygy, repository:([a-z0-9._-]+)\)$/.exec(subject) ?? refuse();
     // Only the rows of the admitted-revisions table count: the one header, its separator, then consecutive rows.
     one(text, /^(\| Label \| Commit object id \|)$/gm);
     const lines = outsideFences(text).split('\n'), head = lines.indexOf('| Label | Commit object id |');
@@ -199,7 +201,7 @@ function parseInstance(text: string, act: Act, inForceAt: number | null): Admiss
   }
   const m = /^\(project:syzygy, provider:([a-z0-9][a-z0-9-]*)\)$/.exec(subject) ?? refuse();
   // Only the Scope section lists admitted repositories: a bullet naming one elsewhere ("not admitted", an example) is not a grant.
-  const repositories = sectionList(text, '## Scope').map(line => /^- `\(project:syzygy, repository:([a-z0-9][a-z0-9-]*)\)`$/.exec(line)?.[1]).filter((id): id is string => id !== undefined);
+  const repositories = sectionList(text, '## Scope').map(line => /^- `\(project:syzygy, repository:([a-z0-9._-]+)\)`$/.exec(line)?.[1]).filter((id): id is string => id !== undefined);
   const classes = bullets(text, /^Permitted content classes/m).map(line => /^`([a-z-]+)`$/.exec(line)?.[1] ?? refuse());
   if (repositories.length === 0 || classes.length === 0 || new Set(repositories).size !== repositories.length) refuse();
   return Object.freeze({ ...base, class: 'egress', repositoryId: null, providerId: m![1]!, upstream: null, admittedRevisions: Object.freeze([]), revisionLabels: Object.freeze([]), admittedRepositories: Object.freeze(repositories), contentClasses: Object.freeze(classes) });

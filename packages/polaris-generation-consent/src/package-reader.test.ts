@@ -142,6 +142,29 @@ describe('package admission reader', () => {
     ];
     for (const [name, over] of cases) await expect(reader(world(over)).read(), name).rejects.toBeInstanceOf(AdmissionRecordError);
   });
+  it('reads a repository identity by 046\'s grammar (a-z, 0-9, ".", "_", "-"), exactly and with no folding (the owner\'s ruling of 2026-11-14)', async () => {
+    const act = `${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-REDIS-OBSERVATION-ACT.md`;
+    const observed = async (subject: string) => {
+      const t = obsText({ subject });
+      const records = await reader(world({ [REDIS_PATH]: t, [act]: actText('consent-observation', REDIS_PATH, t) })).read();
+      return records.find(r => r.class === 'observation')!.repositoryId;
+    };
+    for (const id of ['nodejs-node.js', '_a', '-x', '.dotfiles-config', 'a_b.c-d', '9']) expect(await observed(`(project:syzygy, repository:${id})`)).toBe(id);
+    for (const id of ['', 'Redis-redis', 'a/b', 'a b', 'a~b']) {
+      const t = obsText({ subject: `(project:syzygy, repository:${id})` });
+      await expect(reader(world({ [REDIS_PATH]: t, [act]: actText('consent-observation', REDIS_PATH, t) })).read(), id).rejects.toBeInstanceOf(AdmissionRecordError);
+    }
+    const scoped = (line: string) => egressText().replace('- `(project:syzygy, repository:psf-requests)`', line);
+    const egressAct = `${DECISIONS_DIR}/PUBLIC-REPO-ADMISSION-EGRESS-ANTHROPIC-ACT.md`;
+    const scope = async (line: string) => {
+      const t = scoped(line);
+      const records = await reader(world({ [EGRESS_PATH]: t, [egressAct]: actText('consent-egress', EGRESS_PATH, t) })).read();
+      return records.find(r => r.class === 'egress')!.admittedRepositories;
+    };
+    expect(await scope('- `(project:syzygy, repository:nodejs-node.js)`')).toEqual(['nodejs-node.js', 'redis-redis']);
+    // A scope line outside the grammar is not a grant: it is left out, never folded into another identity.
+    expect(await scope('- `(project:syzygy, repository:Nodejs-Node.js)`')).toEqual(['redis-redis']);
+  });
   it('refuses when the decisions directory cannot be listed', async () => {
     await expect(createPackageAdmissionReader({ root: '/missing', fs: memoryFs(world()) }).read()).rejects.toBeInstanceOf(AdmissionRecordError);
   });
