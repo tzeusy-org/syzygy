@@ -164,6 +164,13 @@ describe('package admission reader', () => {
     expect(await scope('- `(project:syzygy, repository:nodejs-node.js)`')).toEqual(['nodejs-node.js', 'redis-redis']);
     // A scope line outside the grammar is not a grant: it is left out, never folded into another identity.
     expect(await scope('- `(project:syzygy, repository:Nodejs-Node.js)`')).toEqual(['redis-redis']);
+    // A scope line is the bullet and nothing after it (R-PDJA-33-RULINGS-2 mutant O1): trailing text makes it no grant.
+    expect(await scope('- `(project:syzygy, repository:nodejs-node.js)` withdrawn')).toEqual(['redis-redis']);
+    expect(await scope('- `(project:syzygy, repository:nodejs-node.js)`x')).toEqual(['redis-redis']);
+    // Nor is a bullet that only holds a scope line after other text.
+    expect(await scope('- not - `(project:syzygy, repository:nodejs-node.js)`')).toEqual(['redis-redis']);
+    // Nor is an indented line inside the list: it is a continuation, never a scope bullet of its own.
+    expect(await scope('- `(project:syzygy, repository:psf-requests)`\n  - `(project:syzygy, repository:nodejs-node.js)`')).toEqual(['psf-requests', 'redis-redis']);
   });
   it('refuses when the decisions directory cannot be listed', async () => {
     await expect(createPackageAdmissionReader({ root: '/missing', fs: memoryFs(world()) }).read()).rejects.toBeInstanceOf(AdmissionRecordError);
