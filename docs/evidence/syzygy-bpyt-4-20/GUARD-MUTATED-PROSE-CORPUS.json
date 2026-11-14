@@ -1,0 +1,170 @@
+{
+  "subject": "38eab812488c85198f37b8be18f1dd24cd5898f8",
+  "source_sha256": "96aba7927e4a60108e227d122223c74e3cfea006a3960565549cfe8c4b1256b2",
+  "corpus_population": 16,
+  "rows": [
+    {
+      "prose": "original-prose",
+      "case": "missing",
+      "root": "/tmp/s420-corpus-oeqk4pwf/missing",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": false,
+      "expected_refused": false,
+      "diagnostic": null,
+      "function_sha256": "2050a945f14b55d8eebf4ee4b33f921a33773c6f3c3441c9b17ff134574ef232"
+    },
+    {
+      "prose": "original-prose",
+      "case": "empty",
+      "root": "/tmp/s420-corpus-oeqk4pwf/empty",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": false,
+      "expected_refused": false,
+      "diagnostic": null,
+      "function_sha256": "2050a945f14b55d8eebf4ee4b33f921a33773c6f3c3441c9b17ff134574ef232"
+    },
+    {
+      "prose": "original-prose",
+      "case": "empty-shared-home",
+      "root": "/tmp/s420-corpus-oeqk4pwf/home",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": true,
+      "expected_refused": true,
+      "diagnostic": "refusing /tmp/s420-corpus-oeqk4pwf/home: it is, or contains, the shared directory /tmp/s420-corpus-oeqk4pwf/home",
+      "function_sha256": "2050a945f14b55d8eebf4ee4b33f921a33773c6f3c3441c9b17ff134574ef232"
+    },
+    {
+      "prose": "original-prose",
+      "case": "shared-temp",
+      "root": "/tmp/s420-corpus-oeqk4pwf/shared",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": true,
+      "expected_refused": true,
+      "diagnostic": "refusing /tmp/s420-corpus-oeqk4pwf/shared: it is, or contains, the shared directory /tmp/s420-corpus-oeqk4pwf/shared",
+      "function_sha256": "2050a945f14b55d8eebf4ee4b33f921a33773c6f3c3441c9b17ff134574ef232"
+    },
+    {
+      "prose": "original-prose",
+      "case": "contains-shared",
+      "root": "/tmp/s420-corpus-oeqk4pwf",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": true,
+      "expected_refused": true,
+      "diagnostic": "refusing /tmp/s420-corpus-oeqk4pwf: it is, or contains, the shared directory /tmp/s420-corpus-oeqk4pwf/shared",
+      "function_sha256": "2050a945f14b55d8eebf4ee4b33f921a33773c6f3c3441c9b17ff134574ef232"
+    },
+    {
+      "prose": "original-prose",
+      "case": "occupied",
+      "root": "/tmp/s420-corpus-oeqk4pwf/occupied",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": true,
+      "expected_refused": true,
+      "diagnostic": "refusing /tmp/s420-corpus-oeqk4pwf/occupied: it exists and is not an empty directory",
+      "function_sha256": "2050a945f14b55d8eebf4ee4b33f921a33773c6f3c3441c9b17ff134574ef232"
+    },
+    {
+      "prose": "original-prose",
+      "case": "non-directory",
+      "root": "/tmp/s420-corpus-oeqk4pwf/file",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": true,
+      "expected_refused": true,
+      "diagnostic": "refusing /tmp/s420-corpus-oeqk4pwf/file: it exists and is not an empty directory",
+      "function_sha256": "2050a945f14b55d8eebf4ee4b33f921a33773c6f3c3441c9b17ff134574ef232"
+    },
+    {
+      "prose": "original-prose",
+      "case": "shared-symlink",
+      "root": "/tmp/s420-corpus-oeqk4pwf/home-alias",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": true,
+      "expected_refused": true,
+      "diagnostic": "refusing /tmp/s420-corpus-oeqk4pwf/home: it is, or contains, the shared directory /tmp/s420-corpus-oeqk4pwf/home",
+      "function_sha256": "2050a945f14b55d8eebf4ee4b33f921a33773c6f3c3441c9b17ff134574ef232"
+    },
+    {
+      "prose": "altered-prose",
+      "case": "missing",
+      "root": "/tmp/s420-corpus-oeqk4pwf/missing",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": false,
+      "expected_refused": false,
+      "diagnostic": null,
+      "function_sha256": "2e945e17ea92d1c7171723e68072e51acb9c784c668f5cab963a7684dd92495e"
+    },
+    {
+      "prose": "altered-prose",
+      "case": "empty",
+      "root": "/tmp/s420-corpus-oeqk4pwf/empty",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": false,
+      "expected_refused": false,
+      "diagnostic": null,
+      "function_sha256": "2e945e17ea92d1c7171723e68072e51acb9c784c668f5cab963a7684dd92495e"
+    },
+    {
+      "prose": "altered-prose",
+      "case": "empty-shared-home",
+      "root": "/tmp/s420-corpus-oeqk4pwf/home",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": true,
+      "expected_refused": true,
+      "diagnostic": "refusing /tmp/s420-corpus-oeqk4pwf/home: it is, or contains, the shared directory /tmp/s420-corpus-oeqk4pwf/home",
+      "function_sha256": "2e945e17ea92d1c7171723e68072e51acb9c784c668f5cab963a7684dd92495e"
+    },
+    {
+      "prose": "altered-prose",
+      "case": "shared-temp",
+      "root": "/tmp/s420-corpus-oeqk4pwf/shared",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": true,
+      "expected_refused": true,
+      "diagnostic": "refusing /tmp/s420-corpus-oeqk4pwf/shared: it is, or contains, the shared directory /tmp/s420-corpus-oeqk4pwf/shared",
+      "function_sha256": "2e945e17ea92d1c7171723e68072e51acb9c784c668f5cab963a7684dd92495e"
+    },
+    {
+      "prose": "altered-prose",
+      "case": "contains-shared",
+      "root": "/tmp/s420-corpus-oeqk4pwf",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": true,
+      "expected_refused": true,
+      "diagnostic": "refusing /tmp/s420-corpus-oeqk4pwf: it is, or contains, the shared directory /tmp/s420-corpus-oeqk4pwf/shared",
+      "function_sha256": "2e945e17ea92d1c7171723e68072e51acb9c784c668f5cab963a7684dd92495e"
+    },
+    {
+      "prose": "altered-prose",
+      "case": "occupied",
+      "root": "/tmp/s420-corpus-oeqk4pwf/occupied",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": true,
+      "expected_refused": true,
+      "diagnostic": "refusing /tmp/s420-corpus-oeqk4pwf/occupied: it exists and is not an empty directory",
+      "function_sha256": "2e945e17ea92d1c7171723e68072e51acb9c784c668f5cab963a7684dd92495e"
+    },
+    {
+      "prose": "altered-prose",
+      "case": "non-directory",
+      "root": "/tmp/s420-corpus-oeqk4pwf/file",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": true,
+      "expected_refused": true,
+      "diagnostic": "refusing /tmp/s420-corpus-oeqk4pwf/file: it exists and is not an empty directory",
+      "function_sha256": "2e945e17ea92d1c7171723e68072e51acb9c784c668f5cab963a7684dd92495e"
+    },
+    {
+      "prose": "altered-prose",
+      "case": "shared-symlink",
+      "root": "/tmp/s420-corpus-oeqk4pwf/home-alias",
+      "legacy_unguarded_boundary": "accepted by static absence of guard; unsafe full predecessor is NOT executed",
+      "guarded_refused": true,
+      "expected_refused": true,
+      "diagnostic": "refusing /tmp/s420-corpus-oeqk4pwf/home: it is, or contains, the shared directory /tmp/s420-corpus-oeqk4pwf/home",
+      "function_sha256": "2e945e17ea92d1c7171723e68072e51acb9c784c668f5cab963a7684dd92495e"
+    }
+  ],
+  "comparison_scope": "Predicate boundary differential only. Legacy absence statically admits these paths; no full unsafe predecessor/writer invoked. Altered source prose must not affect predicate results. This does not replace actual guarded-script controls or five-tool probe.",
+  "base": "/tmp/s420-corpus-oeqk4pwf",
+  "canary_bytes_preserved": true
+}

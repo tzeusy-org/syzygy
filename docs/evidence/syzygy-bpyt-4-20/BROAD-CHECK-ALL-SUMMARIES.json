@@ -1,0 +1,196 @@
+{
+  "subject": "38eab812488c85198f37b8be18f1dd24cd5898f8",
+  "commands": [
+    {
+      "line": 2,
+      "command": "check:all"
+    },
+    {
+      "line": 3,
+      "command": "npm run check && npm run test:tiers && npm run test:integration && npm run test:e2e && npm run check:battery"
+    },
+    {
+      "line": 6,
+      "command": "check"
+    },
+    {
+      "line": 7,
+      "command": "npm run typecheck && npm test"
+    },
+    {
+      "line": 10,
+      "command": "typecheck"
+    },
+    {
+      "line": 11,
+      "command": "tsc -p tsconfig.json"
+    },
+    {
+      "line": 14,
+      "command": "test"
+    },
+    {
+      "line": 15,
+      "command": "node scripts/check_unit_tmpdir.mjs"
+    },
+    {
+      "line": 448,
+      "command": "test:tiers"
+    },
+    {
+      "line": 449,
+      "command": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check_test_tiers.mjs"
+    },
+    {
+      "line": 455,
+      "command": "test:integration"
+    },
+    {
+      "line": 456,
+      "command": "node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration"
+    },
+    {
+      "line": 963,
+      "command": "test:e2e"
+    },
+    {
+      "line": 964,
+      "command": "vitest run --project e2e && npm run test:system"
+    },
+    {
+      "line": 1058,
+      "command": "test:system"
+    },
+    {
+      "line": 1059,
+      "command": "npm run build && vitest run --config packages/cap1-system/vitest.config.ts"
+    },
+    {
+      "line": 1062,
+      "command": "build"
+    },
+    {
+      "line": 1063,
+      "command": "node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier"
+    },
+    {
+      "line": 1101,
+      "command": "check:battery"
+    },
+    {
+      "line": 1102,
+      "command": "python3 scripts/run_status_battery.py"
+    }
+  ],
+  "summary_lines": [
+    {
+      "line": 439,
+      "summary": "Test Files  169 passed (169)",
+      "preceding_command": {
+        "line": 15,
+        "command": "node scripts/check_unit_tmpdir.mjs"
+      }
+    },
+    {
+      "line": 440,
+      "summary": "Tests  3794 passed (3794)",
+      "preceding_command": {
+        "line": 15,
+        "command": "node scripts/check_unit_tmpdir.mjs"
+      }
+    },
+    {
+      "line": 515,
+      "summary": "Test Files  1 failed (1)",
+      "preceding_command": {
+        "line": 456,
+        "command": "node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration"
+      }
+    },
+    {
+      "line": 516,
+      "summary": "Tests  1 failed (1)",
+      "preceding_command": {
+        "line": 456,
+        "command": "node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration"
+      }
+    },
+    {
+      "line": 541,
+      "summary": "Test Files  1 failed (1)",
+      "preceding_command": {
+        "line": 456,
+        "command": "node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration"
+      }
+    },
+    {
+      "line": 570,
+      "summary": "Test Files  1 failed (1)",
+      "preceding_command": {
+        "line": 456,
+        "command": "node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration"
+      }
+    },
+    {
+      "line": 571,
+      "summary": "Tests  1 failed (1)",
+      "preceding_command": {
+        "line": 456,
+        "command": "node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration"
+      }
+    },
+    {
+      "line": 957,
+      "summary": "Test Files  90 passed (90)",
+      "preceding_command": {
+        "line": 456,
+        "command": "node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration"
+      }
+    },
+    {
+      "line": 958,
+      "summary": "Tests  2673 passed | 3 skipped (2676)",
+      "preceding_command": {
+        "line": 456,
+        "command": "node scripts/check_unit_tmpdir.mjs --selftest && vitest run --project integration"
+      }
+    },
+    {
+      "line": 1052,
+      "summary": "Test Files  13 passed (13)",
+      "preceding_command": {
+        "line": 964,
+        "command": "vitest run --project e2e && npm run test:system"
+      }
+    },
+    {
+      "line": 1053,
+      "summary": "Tests  125 passed | 2 skipped (127)",
+      "preceding_command": {
+        "line": 964,
+        "command": "vitest run --project e2e && npm run test:system"
+      }
+    },
+    {
+      "line": 1095,
+      "summary": "Test Files  10 passed | 1 skipped (11)",
+      "preceding_command": {
+        "line": 1063,
+        "command": "node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier"
+      }
+    },
+    {
+      "line": 1096,
+      "summary": "Tests  52 passed | 1 skipped (53)",
+      "preceding_command": {
+        "line": 1063,
+        "command": "node scripts/clean_build.mjs packages/support packages/cap1-core packages/http-host packages/cap1-daemon packages/three-surface-poc-core apps/syzygy apps/three-surface-poc packages/polaris-generation-core packages/polaris-generation-consent packages/polaris-dossier"
+      }
+    },
+    {
+      "line": 1224,
+      "summary": "battery: 120 ok, 0 failed, 120 commands"
+    }
+  ],
+  "limit": "Selftest fixtures deliberately emit failure records; outer command exit and actual tier summaries remain distinct. No sum over selftest rows is claimed."
+}

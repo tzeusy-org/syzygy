@@ -1,0 +1,101 @@
+[
+  {
+    "path": ".",
+    "mode": 17856,
+    "inode": 93224033,
+    "size": 4096,
+    "mtime_ns": 1793964512966366756,
+    "link": null,
+    "sha256": null
+  },
+  {
+    "path": "empty-ancestor",
+    "mode": 17896,
+    "inode": 93224040,
+    "size": 4096,
+    "mtime_ns": 1793964512965338502,
+    "link": null,
+    "sha256": null
+  },
+  {
+    "path": "home",
+    "mode": 17896,
+    "inode": 93224035,
+    "size": 4096,
+    "mtime_ns": 1793964512965338502,
+    "link": null,
+    "sha256": null
+  },
+  {
+    "path": "home-alias",
+    "mode": 41471,
+    "inode": 93224044,
+    "size": 85,
+    "mtime_ns": 1793964512966366756,
+    "link": "/home/orca/.tmp/syzygy-pr776-full-outcome-correction-20261106/s420-diff-oapqy96_/home",
+    "sha256": null
+  },
+  {
+    "path": "non-directory",
+    "mode": 33184,
+    "inode": 93224042,
+    "size": 37,
+    "mtime_ns": 1793964512966323754,
+    "link": null,
+    "sha256": "e3682f7119ccc47431a1e3bf7e019a3c40a6a3524bb060c504996218e46ab692"
+  },
+  {
+    "path": "occupied",
+    "mode": 17896,
+    "inode": 93224039,
+    "size": 4096,
+    "mtime_ns": 1793964512965338502,
+    "link": null,
+    "sha256": null
+  },
+  {
+    "path": "occupied/canary",
+    "mode": 33184,
+    "inode": 93224041,
+    "size": 32,
+    "mtime_ns": 1793964512966275854,
+    "link": null,
+    "sha256": "6eb2a0e66ddca14d44b431c3c09b1a72cd3fddfe7a4b2327280864d7a5c379e7"
+  },
+  {
+    "path": "private-empty",
+    "mode": 17896,
+    "inode": 93224038,
+    "size": 4096,
+    "mtime_ns": 1793964512965338502,
+    "link": null,
+    "sha256": null
+  },
+  {
+    "path": "shared-tmp",
+    "mode": 17896,
+    "inode": 93224036,
+    "size": 4096,
+    "mtime_ns": 1793964512965338502,
+    "link": null,
+    "sha256": null
+  },
+  {
+    "path": "sibling-canary",
+    "mode": 33184,
+    "inode": 93224043,
+    "size": 45,
+    "mtime_ns": 1793964512966366756,
+    "link": null,
+    "sha256": "60ca8b032997571dcb64b7a5bb8f94ddd4733a0f954221b10f41b84a87a304c4"
+  },
+  {
+    "path": "temp-cache",
+    "mode": 17896,
+    "inode": 93224037,
+    "size": 4096,
+    "mtime_ns": 1793964512965338502,
+    "link": null,
+    "sha256": null
+  }
+]

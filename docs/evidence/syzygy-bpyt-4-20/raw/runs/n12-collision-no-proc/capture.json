@@ -1,0 +1,52 @@
+{
+  "observer": "outer task-owned observe.py process; captures distinct child emitter stdio",
+  "observer_pid": 683780,
+  "observer_sha256": "c6a3e3a19aab952f6ee14dde24d8c4c9a7199ddfb3e98fc258cb521f9c32e4c5",
+  "captured_at": "2026-11-06T10:34:36.495946+00:00",
+  "cwd": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/controls/n12-collision",
+  "argv": [
+    "/usr/bin/python3",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/isolated.py",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/controls/n12-collision",
+    "node",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "--project",
+    "integration",
+    "apps/three-surface-poc/src/fixture-directories.test.ts",
+    "--reporter",
+    "verbose",
+    "--reporter",
+    "json",
+    "--outputFile",
+    "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/n12-collision-no-proc.json"
+  ],
+  "timeout_seconds": 300.0,
+  "no_proc": true,
+  "subject": "38eab812488c85198f37b8be18f1dd24cd5898f8",
+  "subject_status": " M apps/three-surface-poc/src/fixture-directories.test.ts\n",
+  "sources": {
+    "apps/three-surface-poc/src/fixture-directories.test.ts": "736e9ac84e1ee5fdeacf2134b75ce0ce4f8ba8274e5a9d6e25a12534f1f5f695",
+    "apps/three-surface-poc/src/fixture-directories.ts": "df5a319e02b9bbc3294bf0b0b90a987ecea86bfd219a41d0341855a3e9dc5ada",
+    "docs/evidence/poc-fixture-leak-2026-10-22/leak_by_file.py": "96aba7927e4a60108e227d122223c74e3cfea006a3960565549cfe8c4b1256b2",
+    "docs/evidence/poc-fixture-leak-2026-10-22/guard_probe.py": "c2db048db78e7064d2e7dd32e1fbe255eebb286110bd53a18005065d5c602e19"
+  },
+  "pid": 683817,
+  "pidfd_owned": true,
+  "timed_out": true,
+  "exit": -9,
+  "reaped_adopted_children": [
+    {
+      "pid": 683827,
+      "wait_status": 9
+    },
+    {
+      "pid": 683829,
+      "wait_status": 9
+    }
+  ],
+  "remaining_owned_direct_children": [],
+  "elapsed_seconds": 300.1408351769787,
+  "stdout_sha256": "0d17e9935bd43dd2d214345073c606a1ab079b619e07d04bea1f894759f89abd",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

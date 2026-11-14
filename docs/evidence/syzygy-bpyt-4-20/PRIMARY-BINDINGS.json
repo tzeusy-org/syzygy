@@ -1,0 +1,92 @@
+[
+  {
+    "path": ".syzygy/governance/decisions/CAPABILITY-1-IMPLEMENTATION-AUTHORIZATION-ACT.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "0c8a18596847e8cca8bff26f4a7afca142053f62334bf18ccf7c3727bba28aed",
+    "copy": "primary/.syzygy/governance/decisions/CAPABILITY-1-IMPLEMENTATION-AUTHORIZATION-ACT.md"
+  },
+  {
+    "path": ".syzygy/governance/decisions/THREE-SURFACE-POC-MODE-DIRECTION.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "e27f5ee30fbf080c5f86dc7c710b01287d2812ab3ef8cce9aa00c8f0518a3567",
+    "copy": "primary/.syzygy/governance/decisions/THREE-SURFACE-POC-MODE-DIRECTION.md"
+  },
+  {
+    "path": ".syzygy/governance/decisions/THREE-SURFACE-POC-IMPROVEMENT-CYCLES-DIRECTION.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "a1209a61a182deb12fd26243edba5505fb1512c1de33abef6af63cbca15ecf26",
+    "copy": "primary/.syzygy/governance/decisions/THREE-SURFACE-POC-IMPROVEMENT-CYCLES-DIRECTION.md"
+  },
+  {
+    "path": ".syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "e00aee73c0c846e4995e54ebe40f370d36f007b483a854388d4d97da17721d5e",
+    "copy": "primary/.syzygy/governance/decisions/OWNER-DIRECTION-GREENFIELD-PARITY-ANSWERS-2026-10-21.md"
+  },
+  {
+    "path": ".syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "b7cd6c1bdb099cdf5447f2228652654013b045aa22b7f7760138a2361fa8412b",
+    "copy": "primary/.syzygy/governance/decisions/OWNER-DIRECTION-QUESTIONNAIRE-ANSWERS-2026-11-03.md"
+  },
+  {
+    "path": ".syzygy/governance/doctrine/vision.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "ff8410443dee3b53e4c8aad2e3b4072239e18ca9c16e3bef2518c8a44ae9ceeb",
+    "copy": "primary/.syzygy/governance/doctrine/vision.md"
+  },
+  {
+    "path": ".syzygy/governance/doctrine/security.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "766c953d01d1a7bba3319b538a35851c88b9901d8fe79399af0f23ec3011bc00",
+    "copy": "primary/.syzygy/governance/doctrine/security.md"
+  },
+  {
+    "path": ".syzygy/governance/policies/craft-and-care/engineering-bar.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "7427a66662976a287648731e724fa454ece3ea683767b99f01e8637dc87e1ce6",
+    "copy": "primary/.syzygy/governance/policies/craft-and-care/engineering-bar.md"
+  },
+  {
+    "path": ".syzygy/governance/policies/craft-and-care/testing-and-verification.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "8157c0c63ff27341365c9c29e0f620bd7eb7b986fd40432e9c5a30891d3e0782",
+    "copy": "primary/.syzygy/governance/policies/craft-and-care/testing-and-verification.md"
+  },
+  {
+    "path": ".syzygy/governance/policies/craft-and-care/review-and-documentation.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "13928819f6573d85e3074bb6d042fef49c2d42d5beece658a3bc5292f1ea97e1",
+    "copy": "primary/.syzygy/governance/policies/craft-and-care/review-and-documentation.md"
+  },
+  {
+    "path": ".syzygy/governance/policies/craft-and-care/agent-provenance-and-execution-evidence.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "0c256bc607b2272e827f79d07a5efb5c400737ef29d830b08cebc83bad768b52",
+    "copy": "primary/.syzygy/governance/policies/craft-and-care/agent-provenance-and-execution-evidence.md"
+  },
+  {
+    "path": "PROJECT-STATUS.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "7b40588b81651d136d0dbdf5b09db621c03ad36537c47718a05c62f8ee7cf9a2",
+    "copy": "primary/PROJECT-STATUS.md"
+  },
+  {
+    "path": "CONTRIBUTING.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "14bfc42a54c3b75665d8ca5125cb6965e9625a515c7429f23596556b44ca3b1f",
+    "copy": "primary/CONTRIBUTING.md"
+  },
+  {
+    "path": "docs/reviews/R-GP-IMPL-FIXTURE-PID-SWEEP-3-RAW.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "ce2ec214240c71c4b8d64aed4f9af93ebce426eddb2f9c2c4defd0f0a090b449",
+    "copy": "primary/docs/reviews/R-GP-IMPL-FIXTURE-PID-SWEEP-3-RAW.md"
+  },
+  {
+    "path": "docs/evidence/fixture-pid-sweep-round-3-dispositions-2026-10-24.md",
+    "subject": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+    "sha256": "e0f8b363baf3898d797569ab0e1e8782c550a4b0a1771aad94636f1deaea74f6",
+    "copy": "primary/docs/evidence/fixture-pid-sweep-round-3-dispositions-2026-10-24.md"
+  }
+]

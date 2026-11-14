@@ -1,0 +1,9 @@
+{
+  "subject": "38eab812488c85198f37b8be18f1dd24cd5898f8",
+  "path": "apps/three-surface-poc/src/fixture-directories.test.ts",
+  "old": "      `${FIXTURE_PREFIX}p${dead}-n0-AbCdEf`,\n      `${FIXTURE_PREFIX}template-p${dead}-n0-AbCdEf`,\n      `${FIXTURE_PREFIX}p${dead}-n${NS}-Own123`,",
+  "new": "      `${FIXTURE_PREFIX}p${dead}-n0-AbCdEf`,\n      `${FIXTURE_PREFIX}template-p${dead}-n0-AbCdEf`,\n      `${FIXTURE_PREFIX}p${dead}-n${NS}-AbCdEf`,",
+  "occurrences": 1,
+  "before_sha256": "7d6c805bff973d5cab16e2470db436d8351bfdf58cca9f84c5a315beb6a7e980",
+  "mutated_sha256": "736e9ac84e1ee5fdeacf2134b75ce0ce4f8ba8274e5a9d6e25a12534f1f5f695"
+}

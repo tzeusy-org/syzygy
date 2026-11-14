@@ -1,0 +1,38 @@
+{
+  "issue": "syzygy-bpyt.4.20",
+  "source_commit": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+  "recorded_at": "2026-11-06T10:22:44.073363+00:00",
+  "actual_answer": {
+    "source": "syzygy-bpyt.4.20",
+    "review": "syzygy-o75r",
+    "questionItemId": "[\"request_user_input_async\",\"call_aea1297dccbc4c22b879f79168abc77b\",0]",
+    "answer": "Authorize the exact combined N12/N13 repair for syzygy-bpyt.4.20, retaining all verification and merge gates (Recommended)"
+  },
+  "answer_recording_time": "2026-11-06T10:11:39.215619+00:00",
+  "per_message_receive_time": "Unknown; not retained",
+  "direction_path": ".syzygy/governance/decisions/OWNER-DIRECTION-N12-N13-FIXTURE-SAFETY-2026-11-06.md",
+  "direction_sha256": "ec147106813cb3b7b608a211271761b5c729e123f66b422a5ac5cbaca6813058",
+  "inputs": [
+    {
+      "path": "/home/orca/.tmp/syzygy-owner-three-approvals-20261106/USER-ANSWERS.json",
+      "sha256": "e7b28671dd84272db553d2563ee0e7c36336c17adb223c327dae5d9b15180f99"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/inputs/PROPOSED-OWNER-DIRECTION.md",
+      "sha256": "4764045f5d6146197cc419128559988c625a2d9dd2e2658bd220bac9ef333f24"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/inputs/PRESENTED-OFFERING.md",
+      "sha256": "a3ee590adee8e00eaac22dac6fa222f014a1fd337d76478572acd4de1553ca80"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-bpyt420-owner-approved-full-outcome-20261106/inputs/FULL-OBLIGATION-AUTHORITY-MAP.json",
+      "sha256": "e9c0e12057cabe80caf557b2f516fe66b796b4b11a05bedae7bc7aabed5cda91"
+    },
+    {
+      "path": "/home/orca/.tmp/syzygy-three-approved-root-allocations-20261106/ROOT-ALLOCATION.json",
+      "sha256": "451d32776032d631a1aeb5071003667d4f6721c5989aa4e80f576859eae1d2f0"
+    }
+  ],
+  "boundary": "Actual owner selected exact full combined repair; no specification adoption, waiver, merge-hold release or implementation verification is recorded. ROOT separately allocated exact paths; no known current ROOT writer overlap, external unpublished absence unproved."
+}

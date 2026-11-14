@@ -1,0 +1,9 @@
+{
+  "actual_cwd": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.4.20",
+  "branch": "agent/syzygy-bpyt.4.20",
+  "head": "4a5d0f38dd3ed215f10c56592ab08788b1002923",
+  "status": "",
+  "common_git_directory": "/home/orca/orca/projects/syzygy/.git",
+  "origin": "https://github.com/tzeusy-org/syzygy",
+  "live_pr_identity": []
+}

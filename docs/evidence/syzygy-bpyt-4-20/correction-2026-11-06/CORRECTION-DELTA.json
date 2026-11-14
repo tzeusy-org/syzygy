@@ -1,0 +1,32 @@
+{
+  "created_at": "2026-11-06T11:30:20.870514+00:00",
+  "N12": "F1 remains incomplete; no runtime repeat or semantic substitution",
+  "N13": "F2 safe admission differential captured; independent fresh review pending",
+  "correction_vitest_delta": "+0 ~0 -0",
+  "cumulative_vitest_delta": "+0 ~2 -0",
+  "existing_probe_additions": {
+    "refusal": 6,
+    "predicate_mutant": 3,
+    "wiring": 1
+  },
+  "previous_controls": {
+    "actual_guarded_adapter_primary": 6,
+    "occupied_failed_replays": 4,
+    "source_docstring_predicate_controls": 16,
+    "real_parser_commands": 3
+  },
+  "correction_controls": {
+    "structured_cases": 11,
+    "input_prose_variants": 3,
+    "record_comparisons": 33,
+    "executed_prefixes_per_record": 2,
+    "checker_sensitivity_corruptions": 4
+  },
+  "legacy_sources_unchanged": {
+    "apps/three-surface-poc/src/fixture-directories.test.ts": "7d6c805bff973d5cab16e2470db436d8351bfdf58cca9f84c5a315beb6a7e980",
+    "docs/evidence/poc-fixture-leak-2026-10-22/leak_by_file.py": "96aba7927e4a60108e227d122223c74e3cfea006a3960565549cfe8c4b1256b2",
+    "docs/evidence/poc-fixture-leak-2026-10-22/guard_probe.py": "c2db048db78e7064d2e7dd32e1fbe255eebb286110bd53a18005065d5c602e19"
+  },
+  "scope": "No Vitest or production code changed in correction. No unsafe full predecessor writer/shared root or observed repository body execution. Source records narrate synthetic argv/environment, not a new native script schema. tempfile cached directory is an explicit controlled seam input; actual helper source is unchanged.",
+  "prior_review_raw_sha256": "159cd397f4933cff2ed3e743e6e7e5d56b3639203c4f33685f751dc504f47763"
+}

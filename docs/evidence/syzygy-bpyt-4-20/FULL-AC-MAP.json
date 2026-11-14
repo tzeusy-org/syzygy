@@ -1,0 +1,234 @@
+{
+  "issue": "syzygy-bpyt.4.20",
+  "full_outcome": "OPEN; AC7/8 completion not satisfied",
+  "criteria": [
+    {
+      "id": 1,
+      "exact_criterion": "1. The two F5 cases pass inside bwrap --unshare-user --unshare-pid --tmpfs /proc (recorded with the full commit).",
+      "state": "INCOMPLETE",
+      "observations_and_limits": "Both F5 assertions pass under exact no-proc flags, but runner timed out300s; no exit0/JSON completion.",
+      "artifacts": "N12-POPULATION-AND-IDENTITIES.json; runs/n12-no-proc/"
+    },
+    {
+      "id": 2,
+      "exact_criterion": "2. leak_by_file.py refuses a shared or non-empty root, and guard_probe covers it (rule-6 wiring mutant killed).",
+      "state": "IMPLEMENTED; REVIEW PENDING",
+      "observations_and_limits": "Five-tool probe30/15/5 and bounded controls captured. Final independent full-outcome review remains.",
+      "artifacts": "guard-probe-2.json; GUARD-OUTER-OBSERVATION-2.json; SOURCE-AND-TEST-DELTA.json"
+    },
+    {
+      "id": 3,
+      "exact_criterion": "3. Tests: +a ~b -c stated.",
+      "state": "DOCUMENTED",
+      "observations_and_limits": "Vitest +0 ~2 -0; evidence-control expansion and standalone counts kept separate.",
+      "artifacts": "SOURCE-AND-TEST-DELTA.json"
+    },
+    {
+      "id": 4,
+      "exact_criterion": "4. Preserve the full original description verbatim and the three original acceptance criteria above as a verbatim prefix, together with every original case, lineage, field metadata and dependency ID/type. Both N12 and N13 stay in this single OPEN child until their complete landed outcome is verified; neither a narrowed comment nor a four-of-five disclaimer is a substitute repair.",
+      "state": "PRESERVED; LANDING OPEN",
+      "observations_and_limits": "Original description/three-criterion prefix,16 current criteria and16 original obligation rows preserved. No BD writes; no partial closure.",
+      "artifacts": "inputs/FULL-OBLIGATION-AUTHORITY-MAP.json; CANONICAL-SOURCE.json"
+    },
+    {
+      "id": 5,
+      "exact_criterion": "5. Before execution, bind a clean committed subject and refresh independent ownership/readiness against actual open full-file PR allocations and unpublished owners known to root. Keep the three named source files and new owned evidence bounded. Respect PR763's Chrome/lifetime ownership, PR764's private standalone unit driver/helper/package/CONTRIBUTING ownership, and 8.13's recorder correction; no borrowed unmerged implementation or parallel shared-harness edits. Record actual governing authority/applicability for the evidence-tool refusal correction. If any governing gate consequence lacks authority, keep the exact full-scope consequence held/Unknown and complete the concrete reviewed same-bead offering; do not infer a grant, ask about routine engineering choices or implement first. Packet-complete and runnable-now are separate states.",
+      "state": "RECORDED AND ALLOCATED",
+      "observations_and_limits": "Actual plain direction32e16046 precedes code38eab812; two-method19PR194file census plus root known-writer allocation. External unpublished absence not proved.",
+      "artifacts": "BOOTSTRAP.json; ALLOCATION-CENSUS.json; RECORDING-ALLOCATION-PROPOSAL.json; inputs/USER-ANSWERS.json"
+    },
+    {
+      "id": 6,
+      "exact_criterion": "6. Fix the existing F5 fixture names with a distinct own suffix, retaining all three physical directories even when independent NS is '0'. Keep both named parameter rows, title, three-directory survivor assertion, empty listings assertion, both n0 prefix assertions, mocked boundary restoration and afterEach cleanup. Preserve seven actual unreadable-namespace skips for removal-dependent tests; the two F5 rows must execute and pass, never skip. Production namespace, deletion, listing, name, UID and symlink/live/legacy/foreign semantics stay unchanged.",
+      "state": "IMPLEMENTED; FOCUSED ASSERTIONS OBSERVED",
+      "observations_and_limits": "Only third fixture-name suffix changes; full test file otherwise exact, production source untouched; readable16pass and no-proc9pass7skip emits bothF5pass.",
+      "artifacts": "SOURCE-AND-TEST-DELTA.json; n12-readable.json; N12-POPULATION-AND-IDENTITIES.json"
+    },
+    {
+      "id": 7,
+      "exact_criterion": "7. At the exact repaired full commit, capture a readable-proc control (16/16 expanded cases pass) and the original no-proc bwrap flags --unshare-user --unshare-pid --tmpfs /proc against current --project integration. The no-proc run must demonstrate unreadable inner PID-namespace link and report the same 16-case population, 9 pass including both exact F5 identities, 7 legitimate skips, 0 failures and exit0 without a post-summary hang. Retain complete argv/mount/runtime/subject/output records captured by an outer observer distinct from the emitter, which does not depend on inner /proc. An unsupported sandbox, absent tool, timeout124, missing/zero tests or identity visibility failure is a remaining gate, never a pass or exemption. Diagnose before any justified retry and retain every attempt.",
+      "state": "INCOMPLETE",
+      "observations_and_limits": "Literal no-proc16case run emitted9pass7skip but did not finish or emit JSON; timeout300s and reaped namespace. No unsupported-sandbox exemption.",
+      "artifacts": "runs/n12-no-proc/capture.json; NO-PROC-DIAGNOSIS-BINDINGS.json"
+    },
+    {
+      "id": 8,
+      "exact_criterion": "8. Demonstrate N12 regression sensitivity in a contained clone by restoring the original colliding suffix at the same no-proc seam: both F5 identities must fail the intended directory assertion while the fixed control passes. Re-run the relevant existing no-namespace early-return and thrown/unparseable-reading fallback counterexamples as source-bound controls if using them as current evidence; do not carry historical kills as new runs. Each mutation records old/new, one matching occurrence, full reachable subject/digest, collection count and named executed failure; timeout/collection errors do not count as kills. Restore and rehash source after each.",
+      "state": "INCOMPLETE",
+      "observations_and_limits": "Original suffix restored in isolatedclone causes both intended directory-count failures, but runner timeout prevents completed meaningful kill. Source restored and rehashed. Historical early-return/fallback mutants not claimed as new executions.",
+      "artifacts": "N12-COLLISION-MUTATION-RESULT.json; runs/n12-collision-no-proc/"
+    },
+    {
+      "id": 9,
+      "exact_criterion": "9. Add and call the same private_directory predicate on leak_by_file.py's tmp_root before any tracked query, mkdir, rmtree or test launch. Preserve its four positional arguments. A resolved shared root (/, tempfile.gettempdir(), TMPDIR/default /tmp, HOME), an ancestor of those, an occupied directory and a non-directory refuse nonzero before effects; empty shared HOME and an empty ancestor of a missing TMPDIR still refuse. Missing or empty independent private roots remain accepted. Resolve links as the inherited predicate does; do not add unrelated skip/refusal/deletion policy or claim atomic/concurrent ownership. Existing admitted-run measurement schema, child failure recording and fNN deletion behavior remain as specified in design.",
+      "state": "IMPLEMENTED; BOUNDED CONTROLS OBSERVED",
+      "observations_and_limits": "Exact inherited helper before firstquery/action; shared/ancestor/occupied+non-directory refusals; missing/empty accepted using explicit synthetic subprocess boundary. Inherited non-atomic/race/resolve limitations remain.",
+      "artifacts": "SOURCE-AND-TEST-DELTA.json; guard-probe-2.json; leak-control-*.json; GUARD-MUTATED-PROSE-CORPUS.json"
+    },
+    {
+      "id": 10,
+      "exact_criterion": "10. Extend guard_probe.py's invocation/variable/wiring populations to include leak_by_file.py with actual argument order and a drop-call mutant. Execute it only against a new private fixture with synthetic HOME/TMPDIR/canaries; retain the old four tools and all six case identities. Inspect all 30 planned refusal rows, 15 planned predicate-mutant rows and 5 planned wiring rows, and the JSON holds fields, not just process exit or printed totals. Require nonzero refusing, intact independently observed canary contents and no result file or child launch for each refused invocation. The new tool's exact guard-before-first-action wiring mutant must be killed by the existing static check. A missing population row, accidental no-op, AST/collection error or timeout invalidates the claimed denominator.",
+      "state": "CAPTURED; REVIEW PENDING",
+      "observations_and_limits": "30 refusal/15 predicate-mutant/5 wiring rows holds. Outer sampling5466complete snapshots stablebytes+metadata; kernel successfulexecs86 onlypython3/git. V1observerfalsepositive and lost samples remain disclosed; root-confirmed onev2capture; actualnode/npx/vitest parserpositivecontrols.",
+      "artifacts": "guard-probe-2.json; GUARD-OUTER-OBSERVATION-2.json; GUARD-OUTER-SAMPLES-2.json; ROOT-OBSERVER-CLASSIFICATION.json; PARSER-POSITIVE-CONTROL.json"
+    },
+    {
+      "id": 11,
+      "exact_criterion": "11. Add bounded positive and failure controls using the actual guarded script with a declared synthetic subprocess boundary: a missing root and an existing empty root accept, produce the unchanged record shape, clean their own fNN leaf, and preserve a sibling canary; refusal occurs before any subprocess call; re-running a now-occupied root refuses without erasure. Each predicate mutant must target its isolated distinguishing case. Never run the unsafe legacy full writer, unguarded drop-call copy, real shared root or another session's scratch to prove the safety check. Do not misrepresent the stale legacy --project selector or synthetic child results as current full-app measurement.",
+      "state": "BOUNDED CONTROLS CAPTURED",
+      "observations_and_limits": "6primarycases+4occupied/failed replays=10actualguardedscriptinvocations. Threeadmittedcases use syntheticchildresults; failurecase retainslegacyexception/fNNstorage. No current full-app measurement.",
+      "artifacts": "leak-control-*.json; ADAPTER-OUTER-FINAL-OBSERVATION.json"
+    },
+    {
+      "id": 12,
+      "exact_criterion": "12. Keep concurrent runs in distinct private roots and require the unrelated sibling/decoy to survive; record the inherited non-atomic same-root/race residual. Use verified owned stable handles for any authorized future process termination and complete wait/reaping before removing fixture storage. Retain final owned directory/process observations and visibility remainders; no command-pattern signal, broad /tmp sweep or Unknown-as-zero. Preserve a refused occupied/failed-run root until its accountable owner has inspected it. No signals, runtime probes, installations or implementation happen during shaping.",
+      "state": "CAPTURED; RETAINED ROOTS DISCLOSED",
+      "observations_and_limits": "Concurrent controls use6distinctprivateroots; siblingbytes/metadata preserved; eachoutercapture reapedownedchildren; occupied/failedroots retained and enumerated for accountableinspection. Same-root/non-atomic residual unchanged.",
+      "artifacts": "ADAPTER-OUTER-FINAL-OBSERVATION.json; runs/n13-control-*/capture.json"
+    },
+    {
+      "id": 13,
+      "exact_criterion": "13. New evidence names both N12/N13, predecessor review/disposition, full test/guard subject commits and scripted file digests, actual command/runtime/environment boundaries, independently captured raw output, named test/skip populations, per-row and mutant outcomes, test delta, cleanup and limitations. Keep original raw/act-bound/evidence bytes intact; add current evidence beside them and label historical four-tool claims at their specific cited sentences when describing them. The legacy project's obsolete selector, .split() discovery limitation, recorded-only commit argument, prefix count and failure-cleanup/same-root limitations are disclosed, not silently migrated. No observed repository code/body, consent state, provider or product output is involved.",
+      "state": "ADDITIVE EVIDENCE PREPARED; FINAL SEAL PENDING",
+      "observations_and_limits": "Bothfindings/lineage/subject+tool+inputbindings/rawattempts/cleanup/limitations retained. No historicalrecordrewrite; legacyselector/.split/recorded-onlycommit/prefixcounts/failurecleanup disclosed.",
+      "artifacts": "inputs/FULL-OBLIGATION-AUTHORITY-MAP.json; SOURCE-AND-TEST-DELTA.json; terminal packet manifest"
+    },
+    {
+      "id": 14,
+      "exact_criterion": "14. State actual Tests: +a ~b -c separately for Vitest and evidence/observer controls. Expected repair delta is Vitest +0 ~2 -0; the existing fifth-tool guard expansion adds 6 refusal, 3 predicate-mutant and 1 wiring row, with new safe adapter control counts separately enumerated. Preserve each original test identity and skipped identity. An unexpected growth/change needs review against the nearest existing tests. Shaping itself has product executions0 and +0 ~0 -0; no current pass is claimed.",
+      "state": "DOCUMENTED",
+      "observations_and_limits": "ActualVitest+0~2-0; probe+6refusal+3predicate+1wiring;6adaptercases4replays;16predicate/prosemutatedcorpusstates;3realparsercommands. No addedVitesttestfile or changedidentity.",
+      "artifacts": "SOURCE-AND-TEST-DELTA.json"
+    },
+    {
+      "id": 15,
+      "exact_criterion": "15. Complete focused integration checks, npm run check and one clean-clone npm run check:all using the then-current CONTRIBUTING placement and PROJECT-STATUS canonical battery, with the shared full-suite lock. Retain the exact tree, complete outputs, collected/executed/skip denominators and any failed attempts. Do not execute the obsolete historical app-project selector as a current tier, silently weaken assertions/timeouts/corpora or self-classify an outside-code failure. Fresh independent exact-head full-original-outcome review rules classes, all seven CC-BAR-5 floors, authority applicability, safety, evidence and actual test delta; retain verbatim -RAW.md/exact verdict and every disposition, plus applicable GP-Q0 differential/mutants/nonblocking cycle notice. Hosted node/governance and protected merge-group checks remain distinct actual-tree gates.",
+      "state": "PARTIAL; FINAL GATES OPEN",
+      "observations_and_limits": "Focused readable16pass; npm run check169files3794tests exit0; one clean-clone check:all exit0/603.394s, canonical battery120/120, sharedflock, remaining owned direct children[]. Failed no-proc/observer attempts retained; ROOT late read-time byte custody explicitly bounded. Independent review/class ruling/all floors/GPQ0 notice/hosted/protected merge-group remain ROOT gates.",
+      "artifacts": "runs/broad-check/; runs/broad-check-all-clean-clone/; ROOT-LIVE-CAPTURE-READY.json"
+    },
+    {
+      "id": 16,
+      "exact_criterion": "16. The November3 item4 app/core MERGE hold remains until actual owner judgment syzygy-1z3.22 AND cycle report syzygy-1z3.25 are recorded. PR763's corrected technical PASS/notice does not lift it. After lawful release and appropriate root-authorized landing, reconcile every original criterion and both repairs against landed bytes, report remaining Unknowns and improvement-cycle notice before a new cycle, and only then consider closure. No shaping application, review-only success, guard-only landing or future-owner assumption satisfies the whole original outcome.",
+      "state": "OPEN; NO MERGE AUTHORIZED",
+      "observations_and_limits": "Bothactualownerjudgment syzygy-1z3.22 ANDcyclereport syzygy-1z3.25 still required beforeapp/coremerge. No landedoutcome/holdrelease/closure claimed.",
+      "artifacts": "actual plainowner direction; original Nov3item4 primary binding"
+    }
+  ],
+  "original_obligations": [
+    {
+      "id": "O1",
+      "obligation": "Full original description and historical lineage retained",
+      "origin": "Unchanged original description; enrollment/ORIGINAL.json; R-GP-IMPL-FIXTURE-PID-SWEEP-3/PR509/round3/N12+N13",
+      "proposed_coverage": "Design outcome/lineage and AC4",
+      "current_state": "Preserved as text; actual repairs OPEN"
+    },
+    {
+      "id": "O2",
+      "obligation": "N12 NS fallback 0 collides first and third names",
+      "origin": "Original N12 paragraph; fixture-directories.test.ts:19,153-157",
+      "proposed_coverage": "Design N12 and AC6-8",
+      "current_state": "Observed statically; executable outcome Unknown"
+    },
+    {
+      "id": "O3",
+      "obligation": "Two original F5 reading identities both execute without readable own namespace",
+      "origin": "cannot be read; names no inode; original full parameterized title",
+      "proposed_coverage": "AC6-8",
+      "current_state": "Both preserved; no execution in shaping"
+    },
+    {
+      "id": "O4",
+      "obligation": "No-list, no-remove fail-closed product behavior stays correct",
+      "origin": "Original says sweep itself behaved correctly; existing listings[] and survivor assertions",
+      "proposed_coverage": "Design N12, AC6-8",
+      "current_state": "Production changes excluded; actual runtime Unknown"
+    },
+    {
+      "id": "O5",
+      "obligation": "Distinct third suffix concrete chosen repair, not weaker comment",
+      "origin": "Original example -n${NS}-Own123 and otherwise-narrow-comment alternative",
+      "proposed_coverage": "Design N12 and AC4/6",
+      "current_state": "Choose repair; comment narrowing cannot close full requested outcome"
+    },
+    {
+      "id": "O6",
+      "obligation": "Original bwrap no-proc execution and exact full-commit evidence",
+      "origin": "Original AC1; --unshare-user --unshare-pid --tmpfs /proc; 16 tests | 0 failed | 7 skipped",
+      "proposed_coverage": "AC7-8",
+      "current_state": "Required future 9 pass/7 skip/0 fail/exit0; not observed"
+    },
+    {
+      "id": "O7",
+      "obligation": "Historical failed summary and hung runner remain disclosed",
+      "origin": "Raw run9: 16 tests/2 failed/7 skipped; timeout124",
+      "proposed_coverage": "Portable observer design, AC7",
+      "current_state": "Historical fact only; post-summary hang remains failure"
+    },
+    {
+      "id": "O8",
+      "obligation": "N13 argv scratch-root plus both destructive fNN removals",
+      "origin": "Original N13; leak_by_file.py:23,36-37,53",
+      "proposed_coverage": "Design N13, AC9-12",
+      "current_state": "Observed unguarded static source; repair Unknown"
+    },
+    {
+      "id": "O9",
+      "obligation": "Guard same private_directory semantics before loop",
+      "origin": "Original offers existing helper or mkdtemp; chosen helper preserves accepted private-root CLI",
+      "proposed_coverage": "N13 precise predicate, AC9/11",
+      "current_state": "Concrete chosen design; exact refusal/output authority applicability unresolved for future implementation"
+    },
+    {
+      "id": "O10",
+      "obligation": "Shared and occupied roots refused before effects",
+      "origin": "Original AC2; inherited slash/temp/TMPDIR/HOME/ancestor/nonempty predicates",
+      "proposed_coverage": "AC9-11",
+      "current_state": "All named cases proposed; actual behavior Unknown"
+    },
+    {
+      "id": "O11",
+      "obligation": "Five-tool population, invocation and static wiring propagation",
+      "origin": "Original add leak_by_file.py to guard_probe tool list/wiring; avoid four-of-five fallback",
+      "proposed_coverage": "AC10",
+      "current_state": "Planned 30 refusal/15 predicate/5 wiring rows; current historical 24/12/4 not relabeled"
+    },
+    {
+      "id": "O12",
+      "obligation": "Rule6 wiring mutant killed",
+      "origin": "Original AC2; exact new guard call dropped",
+      "proposed_coverage": "AC10-11",
+      "current_state": "Static gate + actual intended counterexample planned; not executed"
+    },
+    {
+      "id": "O13",
+      "obligation": "Original Tests +a ~b -c disclosure",
+      "origin": "Original AC3",
+      "proposed_coverage": "AC14",
+      "current_state": "Planned Vitest +0 ~2 -0; probe expansion separately; shaping actual +0 ~0 -0"
+    },
+    {
+      "id": "O14",
+      "obligation": "Test-only/evidence tooling; original class-none expectation contested",
+      "origin": "Original final description paragraph; primary CC-REV-1/GP-Q0",
+      "proposed_coverage": "Design authority/verification; AC5/15",
+      "current_state": "No product widening; reviewer decides classes and gates"
+    },
+    {
+      "id": "O15",
+      "obligation": "Original metadata and exact existing dependency retained",
+      "origin": "Original fields and syzygy-bpyt.4 parent-child edge",
+      "proposed_coverage": "AC4-5; FIELD-PRESERVATION-CHECK.json",
+      "current_state": "No proposed metadata/edge changes; enrollment added needs-shaping before dispatch"
+    },
+    {
+      "id": "O16",
+      "obligation": "Full original outcome closure through actual gates",
+      "origin": "Original whole child remains open; no narrower substitute authorized",
+      "proposed_coverage": "AC15-16",
+      "current_state": "OPEN; authority/readiness/review/runtime/hosted/merge-group/actual owner judgment+cycle report/landing remain"
+    }
+  ],
+  "scope_preserved_verbatim": "inputs/FULL-OBLIGATION-AUTHORITY-MAP.json",
+  "no_owner_merge_holds_waived": true
+}

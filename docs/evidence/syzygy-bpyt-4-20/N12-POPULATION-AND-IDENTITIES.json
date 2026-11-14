@@ -1,0 +1,108 @@
+[
+  {
+    "run": "n12-readable",
+    "verbose_counts": {
+      "passed": 16,
+      "skipped": 0,
+      "failed": 0
+    },
+    "population": 16,
+    "states": {
+      "passed": [
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes the copy and the template of a process that is gone 47ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps the directories of a live process, the current one included 1ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a name that carries no pid and namespace segment, whatever its suffix 43ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory whose pid fails with anything but ESRCH 46ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > follows no symlink and removes no file: only a directory with a dead pid in its name goes 41ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps the directories of a dead pid that belong to another PID namespace, whatever the neighbouring value 40ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists nothing, where the PID namespace cannot be read, so a sandbox without /proc never sweeps another sandbox's live directories 46ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists nothing, where the PID namespace names no inode, so a sandbox without /proc never sweeps another sandbox's live directories 39ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory that belongs to another user, the sweep never descending into it 36ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > checks no user where the system has no user ids, and removes the dead process's directory 40ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when the temp directory cannot be listed 52ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > lists only the directory it is given: nothing beside it, nothing below a non-fixture entry 47ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when a dead process's directory cannot be removed 35ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy 44ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset 35ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > is registered as the one global setup of every tier project and of no other entry 150ms"
+      ],
+      "skipped": [],
+      "failed": []
+    },
+    "terminal_capture_exists": true,
+    "json_counts": {
+      "numTotalTests": 16,
+      "numPassedTests": 16,
+      "numPendingTests": 0,
+      "numFailedTests": 0,
+      "success": true
+    }
+  },
+  {
+    "run": "n12-no-proc",
+    "verbose_counts": {
+      "passed": 9,
+      "skipped": 7,
+      "failed": 0
+    },
+    "population": 16,
+    "states": {
+      "passed": [
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps the directories of a live process, the current one included 3ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a name that carries no pid and namespace segment, whatever its suffix 35ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory whose pid fails with anything but ESRCH 31ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists nothing, where the PID namespace cannot be read, so a sandbox without /proc never sweeps another sandbox's live directories 38ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists nothing, where the PID namespace names no inode, so a sandbox without /proc never sweeps another sandbox's live directories 35ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory that belongs to another user, the sweep never descending into it 30ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when the temp directory cannot be listed 30ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > lists only the directory it is given: nothing beside it, nothing below a non-fixture entry 30ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > is registered as the one global setup of every tier project and of no other entry 138ms"
+      ],
+      "skipped": [
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes the copy and the template of a process that is gone",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > follows no symlink and removes no file: only a directory with a dead pid in its name goes",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps the directories of a dead pid that belong to another PID namespace, whatever the neighbouring value",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > checks no user where the system has no user ids, and removes the dead process's directory",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when a dead process's directory cannot be removed",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset"
+      ],
+      "failed": []
+    },
+    "terminal_capture_exists": true
+  },
+  {
+    "run": "n12-collision-no-proc",
+    "verbose_counts": {
+      "passed": 7,
+      "skipped": 7,
+      "failed": 2
+    },
+    "population": 16,
+    "states": {
+      "passed": [
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps the directories of a live process, the current one included 3ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a name that carries no pid and namespace segment, whatever its suffix 32ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory whose pid fails with anything but ESRCH 29ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps a directory that belongs to another user, the sweep never descending into it 26ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when the temp directory cannot be listed 26ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > lists only the directory it is given: nothing beside it, nothing below a non-fixture entry 30ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > is registered as the one global setup of every tier project and of no other entry 115ms"
+      ],
+      "skipped": [
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes the copy and the template of a process that is gone",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > follows no symlink and removes no file: only a directory with a dead pid in its name goes",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > keeps the directories of a dead pid that belong to another PID namespace, whatever the neighbouring value",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > checks no user where the system has no user ids, and removes the dead process's directory",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > does not fail the run when a dead process's directory cannot be removed",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > sweeps the temp directory the process runs under when the global setup runs, and keeps the live and the legacy",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > asks the operating system for the temp directory, so it sweeps the same directory the copies are made in when TMPDIR is unset"
+      ],
+      "failed": [
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists nothing, where the PID namespace cannot be read, so a sandbox without /proc never sweeps another sandbox's live directories 46ms",
+        "fixture directories a killed run left behind (syzygy-bpyt.4.10) > removes nothing, and lists nothing, where the PID namespace names no inode, so a sandbox without /proc never sweeps another sandbox's live directories 33ms"
+      ]
+    },
+    "terminal_capture_exists": true
+  }
+]

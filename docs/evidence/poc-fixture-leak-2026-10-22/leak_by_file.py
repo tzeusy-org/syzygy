@@ -19,8 +19,24 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
+
+def private_directory(path: pathlib.Path) -> pathlib.Path:
+    """This script empties the directory it is given, recursively. Refuse a directory that is, or contains, a shared one
+    (/, the temp directory, $TMPDIR, $HOME) and one that already holds anything this script did not make: whoever
+    re-runs it removes a leftover by hand, after reading it (syzygy-bpyt.4.10, review round 2, N10)."""
+    resolved = path.resolve()
+    shared = [pathlib.Path('/'), pathlib.Path(tempfile.gettempdir()), pathlib.Path(os.environ.get('TMPDIR') or '/tmp'), pathlib.Path.home()]
+    for directory in (d.resolve() for d in shared):
+        if resolved == directory or resolved in directory.parents:
+            raise SystemExit(f'refusing {resolved}: it is, or contains, the shared directory {directory}')
+    if resolved.exists() and (not resolved.is_dir() or any(resolved.iterdir())):
+        raise SystemExit(f'refusing {resolved}: it exists and is not an empty directory')
+    return resolved
+
 
 repo, commit, tmp_root, out = pathlib.Path(sys.argv[1]).resolve(), sys.argv[2], pathlib.Path(sys.argv[3]).resolve(), pathlib.Path(sys.argv[4]).resolve()
+tmp_root = private_directory(tmp_root)
 PROJECT = '@syzygy/three-surface-poc-app'
 SRC = 'apps/three-surface-poc/src'
 
