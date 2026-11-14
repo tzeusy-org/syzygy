@@ -29,6 +29,18 @@ describe('the record', () => {
     expect(parsed).toEqual({ ok: true, record: base, digest: digestOf(text) });
   });
 
+  it('reads back an identity by 046\'s grammar, a tail opening with any of its characters, and refuses one outside it (the owner\'s ruling of 2026-11-14)', () => {
+    for (const identity of ['repository:-redis', 'repository:_x.y', 'repository:nodejs-node.js', 'repository:.dotfiles']) {
+      const record: LaunchRecord = { ...base, identity, recordId: recordIdFor('observation-consent', REV, '2026-11-09T10:00:00Z', identity), phrase: `CONSENT TO OBSERVE ${identity} AT 0123456789ab` };
+      const text = renderLaunchRecord(record);
+      expect(parseLaunchRecord(text)).toEqual({ ok: true, record, digest: digestOf(text) });
+    }
+    for (const identity of ['repository:Redis-redis', 'repository:a/b', 'repository:']) {
+      const record: LaunchRecord = { ...base, identity, recordId: recordIdFor('observation-consent', REV, '2026-11-09T10:00:00Z', identity), phrase: `CONSENT TO OBSERVE ${identity} AT 0123456789ab` };
+      expect(parseLaunchRecord(renderLaunchRecord(record)).ok).toBe(false);
+    }
+  });
+
   it('carries every field line 17 lists, for an observation consent', () => {
     const text = renderLaunchRecord(base);
     for (const line of [

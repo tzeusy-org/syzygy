@@ -138,7 +138,9 @@ export function parseLaunchRecord(text: string): ParsedLaunchRecord {
   if (sha256(content) !== m[1]) return { ok: false, why: 'the record\'s bytes do not hash to the content digest it binds' };
   const recordClass = one(text, /^Record class: `(observation-consent|drawer-statement|provider-statement)`$/gm) as LaunchRecordClass | null;
   const recordId = one(text, /^Record ID: `(LAUNCH-[A-Z]+-[0-9a-f]{12}-\d{8}T\d{6}Z-[0-9a-f]{8})`$/gm);
-  const identity = one(text, /^Repository identity: `(repository:[a-z0-9][a-z0-9._-]*)` \[Inferred\]: proposed from (.+) and declared by the owner's phrase$/gm);
+  // The identity by REQ-polaris-generation-046's grammar (line 15: a-z, 0-9, '.', '_', '-'), so Syzygy reads back every launch record it
+  // writes (the owner's ruling of 2026-11-14, "Widen all readers now").
+  const identity = one(text, /^Repository identity: `(repository:[a-z0-9._-]+)` \[Inferred\]: proposed from (.+) and declared by the owner's phrase$/gm);
   const identitySource = one(text, /^Repository identity: `[^`]+` \[Inferred\]: proposed from (.+) and declared by the owner's phrase$/gm);
   const normalisedUrl = one(text, /^Normalised URL: `([^`\n]+)` \[Inferred\]: from /gm);
   const urlSource = one(text, /^Normalised URL: `[^`\n]+` \[Inferred\]: from (.+); a locator hint, never the identity; /gm);
