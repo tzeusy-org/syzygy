@@ -37,7 +37,7 @@ export type RefValue = { readonly kind: 'oid'; readonly oid: string } | { readon
  * (R-PDJA-33-SLICE-C-1 finding 6). */
 export interface CloneRemote {
   readonly name: string; readonly url: string | null; readonly urlLines?: number;
-  /** Where `url` is null: true where any of its url lines carries user information, which the launch says without printing it. */
+  /** True where any of its url lines carries user information, which the launch says without printing it (046, line 17). */
   readonly userInformation?: boolean;
 }
 
@@ -155,7 +155,7 @@ export function parseConfig(config: string): CloneConfig {
     }
   }
   return {
-    remotes: [...urls].map(([name, list]): CloneRemote => (list.length === 1 && list[0] !== '' ? { name, url: list[0]! } : { name, url: null, urlLines: list.length, ...(list.some(carriesUserInformation) ? { userInformation: true } : {}) })),
+    remotes: [...urls].map(([name, list]): CloneRemote => ({ ...(list.length === 1 && list[0] !== '' ? { name, url: list[0]! } : { name, url: null, urlLines: list.length }), ...(list.some(carriesUserInformation) ? { userInformation: true } : {}) })),
     objectFormat: objectFormat ?? 'sha1',
     bare,
     worktree,

@@ -7,7 +7,7 @@ import { isoOf } from './iso-of.js';
 import { cloneGitDirShape, cloneStoreShape } from './clone-shape.js';
 import { linkedWorktrees, readCloneSnapshot, resolveRef } from './launch-clone.js';
 import { copyEndStatement, copyRootViolation, gitReport, makeCopy, removeCopy, type CopyEnd, type CopyGitRun, type ForbiddenPlace, type InterruptWatch } from './launch-copy.js';
-import { normaliseUrl, proposeIdentity, type IdentitySource, type MatchableRecord } from './launch-identity.js';
+import { normaliseUrl, proposeIdentity, remoteUserInformationStatement, type IdentitySource, type MatchableRecord } from './launch-identity.js';
 import {
   DRAWER_QUESTION, PUBLIC_QUESTION, drawerPhrase, nameOnBranchWarning, observationPhrase, providerPhrase, questionOpening, statementText,
   type StatementOffer,
@@ -196,6 +196,12 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     if (!read.ok) return refuse('clone', read.reason);
     const snapshot = read.snapshot;
     const clone = real(request.clone);
+    // 046, line 17: from the clone step on, every launch output says the identity remote's URL carried user information, whatever later
+    // happens to that URL (R-PDJA-33-SLICE-CD-3 finding 1).
+    const remoteChoice = defaultRemote(snapshot);
+    const userInformation = remoteUserInformationStatement(snapshot.remotes, 'remote' in remoteChoice ? remoteChoice.remote : null);
+    const cloneStatements: readonly string[] = userInformation === null ? [] : [userInformation];
+    locatorStatements = cloneStatements;
 
     // Self-observation from the governance home is refused before asking (line 27).
     const home = homeGitDirs(ports.home);
@@ -347,17 +353,17 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
       records: matchable, pinned: commit, parents,
     });
     if (!proposal.ok) {
-      locatorStatements = proposal.locatorStatements ?? [];
+      locatorStatements = [...cloneStatements, ...(proposal.locatorStatements ?? [])];
       return refuse('identity', proposal.reason);
     }
-    locatorStatements = proposal.locatorStatements;
+    locatorStatements = [...cloneStatements, ...proposal.locatorStatements];
     const identity = proposal.identity, bare = identity.slice('repository:'.length);
     const pin: LaunchPin = { commit, via, committerDate, fetched: false, updateCommand: update };
     // The pin, then what the URL reading says of the remote (046, line 17): user information removed, or a URL that is no locator.
     // The launch output (047's stage rule; 046 line 17's user-information statement), rebuilt at each outcome so it states how far the run got.
     const outputOf = (tail: string) => {
       const statements = stageStatements(stateOf(copy === null ? null : 'kept'));
-      return { statements, locatorStatements: proposal.locatorStatements, output: [...statements.map(x => x.text), ...proposal.locatorStatements, tail].join('\n') };
+      return { statements, locatorStatements, output: [...statements.map(x => x.text), ...locatorStatements, tail].join('\n') };
     };
 
     // What is already in force, by any act.
@@ -411,7 +417,7 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     const existing = store.records.filter(r => r.record.identity === identity || proposal.matches.some(m => m.record.recordId === r.record.recordId))
       .map(r => ({ recordId: r.record.recordId, recordClass: r.record.recordClass, identity: r.record.identity, state: r.state === 'active' ? 'active' : `${r.state} by ${r.stateBy}`, commit: r.commit }));
     ports.interrupt?.check();
-    for (const line of proposal.locatorStatements) say(line);
+    for (const line of locatorStatements) say(line);
     questionAsked = true;
     say(questionOpening({
       copyStatements: questionCopyStatements(copy === null ? null : copy.dir),

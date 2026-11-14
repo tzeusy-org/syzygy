@@ -49,14 +49,15 @@ const LOCATOR_SCHEME = /^([A-Za-z][A-Za-z0-9+.-]*):\/\/(.*)$/s;
 /** The scp form: an optional user name and `@`, a host holding no `/` or `:`, then `:`, then a path. */
 const SCP_FORM = /^(?:([^@/]*)@)?([^/:@]*):(.*)$/s;
 
-/** Whether a URL holds user information before its host, in either admitted shape, whether or not it is otherwise admitted: an `@` in a
- * scheme URL's authority, or a user name before an scp-form host. Read for a remote whose url lines the identity rule does not read, so
- * the launch can say one carried user information without reading or printing it (R-PDJA-33-SLICE-CD-2 finding 6). */
+/** Whether a URL holds user information before its host, in either shape, whether or not it is otherwise admitted as a locator: an `@` in a
+ * scheme URL's authority (which ends at the first `/`, `?` or `#`), or a user name before an scp-form host. Read for every url line at the
+ * clone step, so the launch says a URL carried user information however that URL later fares, without printing it (046, line 17;
+ * R-PDJA-33-SLICE-CD-3 findings 1 and 4). */
 export function carriesUserInformation(input: string): boolean {
   const schemed = LOCATOR_SCHEME.exec(input);
   if (schemed !== null) {
-    const body = schemed[2]!, slash = body.indexOf('/');
-    return (slash < 0 ? body : body.slice(0, slash)).includes('@');
+    const body = schemed[2]!, end = body.search(/[/?#]/);
+    return (end < 0 ? body : body.slice(0, end)).includes('@');
   }
   const scp = SCP_FORM.exec(input);
   return scp !== null && scp[1] !== undefined;
@@ -163,6 +164,20 @@ export function identityRemote<R extends { readonly name: string }>(remotes: rea
   return remotes.length === 1 ? remotes[0]! : null;
 }
 
+/** 046, line 17: "Where a remote URL carried user information, the launch output SHALL say so." The statement for the remote the identity
+ * rule reads (its `userInformation`, set for every url line at the clone step), made once from the clone step on, whatever later happens
+ * to that URL: a locator, not a locator, one of several url lines, or a run refused before the identity is proposed (R-PDJA-33-SLICE-CD-3
+ * finding 1). The URL is never printed. */
+export function remoteUserInformationStatement(
+  remotes: readonly { readonly name: string; readonly url: string | null; readonly urlLines?: number; readonly userInformation?: boolean }[], defaultRemote: string | null,
+): string | null {
+  const remote = identityRemote(remotes, defaultRemote);
+  if (remote === null || remote.userInformation !== true) return null;
+  return remote.url === null
+    ? `A url line of the clone's remote ${remote.name} carried user information; Syzygy does not print, store or record it, and reads none of that remote's URLs as a locator.`
+    : `The URL of the clone's remote ${remote.name} carried user information; Syzygy does not print, store or record it, and removes it before deriving anything from that URL.`;
+}
+
 /** A record as the matching rule reads it, in any state: a launch consent record, or an observation consent made by another act, whose
  * normalised URL is its `Upstream:` URL normalised by the same rule (046, line 17) and whose revisions are those it admits. */
 export interface MatchableRecord {
@@ -228,13 +243,11 @@ export function proposeIdentity(input: IdentityInput): IdentityProposal {
     // remote (R-PDJA-33-SLICE-C-1 finding 6).
     remoteRule = `it has ${remote.urlLines ?? 0} url lines, and the rule reads a remote with exactly one non-empty url`;
     locatorStatements.push(`The clone's remote ${remote.name} has no one URL to read, so it derives nothing: ${remoteRule}. Syzygy does not print, store or record its URLs.`);
-    if (remote.userInformation === true) locatorStatements.push(`A url line of the clone's remote ${remote.name} carried user information; Syzygy read none of those URLs as a locator and does not print, store or record them.`);
   } else if (remote !== null && remote.url !== null) {
     const read = readLocator(remote.url, 'remote');
     if (read.ok) {
       url = read.url;
       urlSource = `the clone's remote ${remote.name}`;
-      if (read.userInformation) locatorStatements.push(`The URL of the clone's remote ${remote.name} carried user information; Syzygy removed it before deriving anything and does not print, store or record it.`);
     } else {
       remoteRule = read.rule;
       locatorStatements.push(`The URL of the clone's remote ${remote.name} is not a remote locator, so it derives nothing: ${read.rule}. Syzygy does not print, store or record it.`);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { carriesUserInformation, deriveIdentity, identityRemote, matchRecords, normaliseIdentityOption, normaliseUrl, proposeIdentity, readLocator, type MatchableRecord } from './launch-identity.js';
+import { carriesUserInformation, deriveIdentity, remoteUserInformationStatement, identityRemote, matchRecords, normaliseIdentityOption, normaliseUrl, proposeIdentity, readLocator, type MatchableRecord } from './launch-identity.js';
 
 /** REQ-polaris-generation-046, line 15: the identity proposal rule. Expected values are literals written from the clause, never computed
  * by the module under test. */
@@ -212,10 +212,10 @@ describe('the proposal', () => {
     expect(p).toMatchObject({ ok: true, identity: 'repository:x-y', url: 'h.example/x/y', urlSource: 'the operator\'s --upstream option' });
   });
 
-  it('a remote URL with user information: removed before anything derives, and said so without printing it (scenario "Credentials in a remote URL")', () => {
-    const p = proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'https://bob:hunter2@git.example.org/a/b.git' }] });
+  it('a remote URL with user information: removed before anything derives, printed nowhere (scenario "Credentials in a remote URL"); the launch says so from the clone step', () => {
+    const p = proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'https://bob:hunter2@git.example.org/a/b.git', userInformation: true }] });
     expect(p).toEqual({ ok: true, identity: 'repository:a-b', source: 'derived', url: 'git.example.org/a/b', urlSource: 'the clone\'s remote origin', matches: [], notCarrying: [],
-      locatorStatements: ['The URL of the clone\'s remote origin carried user information; Syzygy removed it before deriving anything and does not print, store or record it.'] });
+      locatorStatements: [] });
     expect(JSON.stringify(p)).not.toContain('hunter2');
     expect(JSON.stringify(p)).not.toContain('bob');
   });
@@ -241,15 +241,28 @@ describe('the proposal', () => {
       locatorStatements: ['The clone\'s remote origin has no one URL to read, so it derives nothing: it has 2 url lines, and the rule reads a remote with exactly one non-empty url. Syzygy does not print, store or record its URLs.'] });
   });
 
-  it('a remote with several url lines, one carrying user information: the refusal says so, printing no URL (R-PDJA-33-SLICE-CD-2 finding 6)', () => {
-    const p = proposeIdentity({ ...base, remotes: [{ name: 'origin', url: null, urlLines: 2, userInformation: true }], defaultRemote: null });
-    expect(p).toMatchObject({ ok: false, locatorStatements: [
+  it('the user-information statement, for the remote the identity rule reads, whatever its URL then fares (R-PDJA-33-SLICE-CD-3 finding 1)', () => {
+    const SEVERAL = 'A url line of the clone\'s remote origin carried user information; Syzygy does not print, store or record it, and reads none of that remote\'s URLs as a locator.';
+    expect(remoteUserInformationStatement([{ name: 'origin', url: 'https://x/a/b', userInformation: true }], null)).toBe('The URL of the clone\'s remote origin carried user information; Syzygy does not print, store or record it, and removes it before deriving anything from that URL.');
+    expect(remoteUserInformationStatement([{ name: 'origin', url: null, urlLines: 2, userInformation: true }], null)).toBe(SEVERAL);
+    expect(remoteUserInformationStatement([{ name: 'origin', url: 'https://x/a/b' }], null)).toBeNull();
+    // The identity remote alone: the default's remote, else origin, else the only remote; another remote's user information is not it.
+    const two = [{ name: 'origin', url: 'https://x/a/b' }, { name: 'up', url: 'https://x/c/d', userInformation: true }];
+    expect(remoteUserInformationStatement(two, null)).toBeNull();
+    expect(remoteUserInformationStatement(two, 'up')).toBe('The URL of the clone\'s remote up carried user information; Syzygy does not print, store or record it, and removes it before deriving anything from that URL.');
+    expect(remoteUserInformationStatement([{ name: 'fork', url: 'https://x/c/d', userInformation: true }], null)).toBe('The URL of the clone\'s remote fork carried user information; Syzygy does not print, store or record it, and removes it before deriving anything from that URL.');
+    expect(remoteUserInformationStatement([{ name: 'a', url: 'https://x', userInformation: true }, { name: 'b', url: 'https://y' }], null)).toBeNull();
+    // The proposal itself carries only what the URL reading says.
+    expect(proposeIdentity({ ...base, remotes: [{ name: 'origin', url: null, urlLines: 2, userInformation: true }], defaultRemote: null })).toMatchObject({ ok: false, locatorStatements: [
       'The clone\'s remote origin has no one URL to read, so it derives nothing: it has 2 url lines, and the rule reads a remote with exactly one non-empty url. Syzygy does not print, store or record its URLs.',
-      'A url line of the clone\'s remote origin carried user information; Syzygy read none of those URLs as a locator and does not print, store or record them.',
     ] });
+  });
+
+  it('whether a URL carries user information: an @ in a scheme URL\'s authority, which ends at the first /, ? or #, or an scp-form user (R-PDJA-33-SLICE-CD-3 findings 3 and 4)', () => {
     expect([
-      'https://bob:pw@h/a/b', 'ssh://bob@h/a/b', 'git@h:a/b', 'https://h/a@b', 'h:a/b', 'https://h/a/b', 'file:///x@y/z', 'not a url',
-    ].map(carriesUserInformation)).toEqual([true, true, true, false, false, false, false, false]);
+      'https://bob:pw@h/a/b', 'ssh://bob@h/a/b', 'git@h:a/b', 'https://bob:pw@h', 'https://bob:pw@h?x=1', 'ftp://bob:pw@h/a', 'https://bob%41:pw@h/a',
+      'https://h/a@b', 'h:a/b', 'https://h/a/b', 'https://h', 'https://h?x@y/a/b', 'https://h#@/a', 'file:///x@y/z', 'not a url',
+    ].map(carriesUserInformation)).toEqual([true, true, true, true, true, true, true, false, false, false, false, false, false, false, false]);
   });
 
   it('a remote URL that is no remote locator derives nothing, names the remote and the rule, never the URL (scenario "Remote URL that is not a locator")', () => {
@@ -281,7 +294,7 @@ describe('the proposal', () => {
   it('GitHub identities keep their form (scenario), and other hosts take the last two segments (scenario "Locator on another host over ssh")', () => {
     // A user name alone is user information too (046, line 17: "Where a remote URL carried user information, the launch output SHALL say so").
     expect(proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'ssh://git@github.com/redis/redis.git' }] })).toMatchObject({ ok: true, identity: 'repository:redis-redis', url: 'github.com/redis/redis',
-      locatorStatements: ['The URL of the clone\'s remote origin carried user information; Syzygy removed it before deriving anything and does not print, store or record it.'] });
+      locatorStatements: [] });
     expect(proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'https://github.com/redis/redis' }] })).toMatchObject({ ok: true, identity: 'repository:redis-redis', url: 'github.com/redis/redis', locatorStatements: [] });
     expect(proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'git@git.example.org:team/sub/tool.git' }] })).toMatchObject({ ok: true, identity: 'repository:sub-tool', url: 'git.example.org/team/sub/tool' });
     for (const url of ['git://git.example.org/a/b.git', 'http://git.example.org/a/b']) {

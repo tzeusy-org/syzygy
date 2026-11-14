@@ -72,7 +72,7 @@ describe('REQ-polaris-generation-047: Syzygy\'s own reads of the operator\'s clo
       'refs/remotes/origin/HEAD': { kind: 'symbolic', target: 'refs/remotes/origin/main' },
       'refs/remotes/origin/main': { kind: 'oid', oid: C },
     });
-    expect(read.snapshot.remotes).toEqual([{ name: 'origin', url: 'https://example.org/group/repo.git' }, { name: 'up', url: 'git@example.org:up/repo.git' }]);
+    expect(read.snapshot.remotes).toEqual([{ name: 'origin', url: 'https://example.org/group/repo.git' }, { name: 'up', url: 'git@example.org:up/repo.git', userInformation: true }]);   // a user name alone is user information (046, line 17)
     expect(read.snapshot.objectFormat).toBe('sha1');
     expect(read.snapshot.alternates).toBe(false);
   });
