@@ -55,15 +55,16 @@ const SCP_FORM = /^(?:([^@/]*)@)?([^/:@]*):(.*)$/s;
  * first). 046's scp host holds no ":", so this is refused by name rather than read as the host "[" (R-PDJA-33-RULINGS-1 finding 1). */
 const SCP_BRACKETED = /^(?:[^@/]*@)?\[[^/]*:/s;
 
-/** A host name, case-folded (046, line 15). An ASCII name is lower-cased. A name holding any other character is mapped by IDNA (UTS 46,
- * as WHATWG URL hosts are) to its punycode ASCII form, which case-folds and normalises it, so every spelling of one Unicode host
- * (upper or lower case, composed or decomposed, or already in punycode) normalises to the same text. Null where it is no host name. */
+/** A host name, case-folded (046, line 15), by one rule for every name, ASCII or not (R-PDJA-33-RULINGS-1 finding 2): the WHATWG host
+ * parser's domain-to-ASCII (IDNA, UTS 46), which case-folds and normalises a name, maps it to its punycode form, validates an `xn--`
+ * label, and writes a name that parses as an IPv4 address in its dotted-decimal form (`0x7f.1` and its fullwidth spelling are both
+ * `127.0.0.1`). Every spelling of one host so normalises to the same text. The result must still be a host name by `HOST`: null where
+ * it is not, or where the mapping is empty (a forbidden host code point such as ':', '@', '[' or ']', or an invalid label). A '%', which
+ * IDNA would percent-decode, and a '/', at which it would stop, never reach here: the percent rule refuses the first, and the authority
+ * or scp host ends before the second. The identity is derived from the path alone, so no host's normalisation changes an identity. */
 function hostName(name: string): string | null {
-  if (/^[\x00-\x7f]*$/.test(name)) return HOST.test(name) ? name.toLowerCase() : null;
-  // IDNA maps a name holding a forbidden host code point (':', '@', '[', ']', a space…) to ''. A '%', which it would percent-decode, and a
-  // '/', at which it would stop, never reach here: the percent rule refuses the first, and the authority or scp host ends before the second.
   const ascii = domainToASCII(name);
-  return HOST.test(ascii) ? ascii : null; // an empty mapping fails HOST too
+  return HOST.test(ascii) ? ascii : null;
 }
 
 /** A bracketed IPv6 literal in its canonical form (lower case, the longest run of zero groups compressed), brackets kept; null where the

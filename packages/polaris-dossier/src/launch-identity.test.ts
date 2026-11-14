@@ -53,6 +53,26 @@ describe('a Unicode host normalises by IDNA to its punycode form, so every spell
     expect(isNormalisedLocator('b\u00fccher.de/a/b')).toBe(false);   // a stored URL is the normalised (punycode) form
     expect(isNormalisedLocator('[0::1]/a/b')).toBe(false);
   });
+
+  it('one rule for ASCII and non-ASCII names alike (R-PDJA-33-RULINGS-1 finding 2): an IPv4 spelling and an xn-- label are read the same either way', () => {
+    const read = (u: string) => { const r = readLocator(u, 'operator'); return r.ok ? r.url.url : r.rule; };
+    // A name that parses as an IPv4 address is its dotted-decimal form, in ASCII or fullwidth digits.
+    expect(['https://0x7f.1/a/b', 'https://\uff10x7f.1/a/b', 'https://127.0.0.1/a/b', 'https://0177.0.0.1/a/b'].map(read)).toEqual(['127.0.0.1/a/b', '127.0.0.1/a/b', '127.0.0.1/a/b', '127.0.0.1/a/b']);
+    // An xn-- label that decodes to nothing is no host, in an ASCII name as in a Unicode one.
+    expect(['https://xn--zz.de/a/b', 'https://\u00fc.xn--zz/a/b'].map(read)).toEqual([HOST_RULE, HOST_RULE]);
+    // A name that only looks numeric, or a number out of range, is no host.
+    expect(['https://999.1.1.1/a/b', 'https://foo.123/a/b'].map(read)).toEqual([HOST_RULE, HOST_RULE]);
+    // Plain ASCII names keep their spelling, case-folded; an underscore stays.
+    expect(['https://GitHub.COM/a/b', 'https://my_host.example/a/b', 'git@GitLab.Example.co.uk:a/b'].map(read)).toEqual(['github.com/a/b', 'my_host.example/a/b', 'gitlab.example.co.uk/a/b']);
+    expect(isNormalisedLocator('0x7f.1/a/b')).toBe(false);
+  });
+
+  it('a host\'s normalisation never changes the identity: it is derived from the path alone', () => {
+    for (const host of ['0x7f.1', '127.0.0.1', 'b\u00fccher.de', 'GitHub.com']) {
+      const url = normaliseUrl(`https://${host}/Redis/Redis.git`);
+      expect(url === null ? null : deriveIdentity(url)).toBe('repository:redis-redis');
+    }
+  });
 });
 
 describe('the admitted locator forms (046, line 17): what an operator may give', () => {
