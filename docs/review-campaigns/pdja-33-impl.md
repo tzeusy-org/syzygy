@@ -10,7 +10,14 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-PDJA-33-SLICE-CD-2-RAW.md:4`), over `7a7a52ee`, the slice-C and slice-D repairs. The raw confirms every C-1 and D-1 finding resolved and upholds the implementer's choices. Each finding repaired is repaired by its own commit on the same branch. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/slice-CD-2-repair-mutation-2026-11-14.json`:
+`REVISE` (`R-PDJA-33-SLICE-CD-3-RAW.md:4`), over `ef668003`, the round-2 repairs. The raw confirms every round-2 finding resolved. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/slice-CD-3-repair-mutation-2026-11-14.json`:
+
+- Findings 1 and 2 (revise; note), repaired together at the root, as directed: the user-information statement was lost for a single URL that is no locator and for refusals before the identity stage. The configuration reader now marks every remote any of whose url lines carries user information. From the clone step on, the launch states it once for the remote the identity rule reads, on every refusal and on success, whatever later happens to the URL. It never prints the URL (`05e0b829`, `9db1e99d`). The one refusal that reads the configuration and still cannot state it is the alternates file that cannot be examined. Refusals made before the configuration is read, such as reftable or a missing HEAD, carry no statement.
+- Finding 3 (note): the predicate's no-path arm is now tabled with `https://bob:pw@h` (true) and `https://h` (false) (`05e0b829`).
+- Finding 4 (note): a scheme URL's authority now ends at the first "/", "?" or "#" (`05e0b829`).
+- Finding 5 (note): the held-interrupt statement is made in the run's class (`e16b8bc7`).
+
+Earlier: `REVISE` (`R-PDJA-33-SLICE-CD-2-RAW.md:4`), over `7a7a52ee`, the slice-C and slice-D repairs. The raw confirms every C-1 and D-1 finding resolved and upholds the implementer's choices. Each finding repaired is repaired by its own commit on the same branch. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/slice-CD-2-repair-mutation-2026-11-14.json`:
 
 - Finding 1 (revise): an identity refusal made after the remote URL was read dropped the user-information statement. Every such refusal now carries the locator statements, and the launch's refusal and init's output pass them on (`ae6d7a05`).
 - Finding 2 (revise): a refused launch never stated the brief stage. Every refusal's statements now end with "Syzygy issued no brief and delivered no packet", and the "Clone with an alternate" scenario's full list is pinned (`b8632777`).
