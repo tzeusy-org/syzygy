@@ -203,7 +203,11 @@ describe('derivation', () => {
   it('normalises the identity option the same way', () => {
     expect(normaliseIdentityOption('Repository:My Repo')).toBe('repository:my-repo');
     expect(normaliseIdentityOption('owner-name')).toBe('repository:owner-name');
-    expect(normaliseIdentityOption('-x')).toBe(null);
+    // 046's grammar, whatever the first character (the owner's ruling of 2026-11-14); only an empty identity is none.
+    expect(normaliseIdentityOption('-x')).toBe('repository:-x');
+    expect(normaliseIdentityOption('_A.b')).toBe('repository:_a.b');
+    expect(normaliseIdentityOption('.')).toBe('repository:.');
+    for (const empty of ['', '   ', 'repository:', 'Repository:']) expect(normaliseIdentityOption(empty)).toBe(null);
   });
 });
 
@@ -276,11 +280,14 @@ describe('the proposal', () => {
     expect(JSON.stringify(p)).not.toContain('bob');
   });
 
-  it('the identity\'s first-character rule, narrower than 046 states, is named in each refusal it causes, --identity\'s included (R-PDJA-33-SLICE-C-1 finding 5)', () => {
-    const RULE = 'Syzygy admits only an identity whose part after "repository:" opens with a letter or a digit once case-folded and every other character replaced by "-", a rule narrower than REQ-polaris-generation-046 states, which applies to --identity as to a derived identity';
-    expect(proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'https://h.example/_org/x' }] })).toEqual({ ok: false, matches: [],
-      reason: `no identity derives from the normalised URL h.example/_org/x: its last two segments, joined and replaced, do not open with a letter or digit, and ${RULE}; give --identity` });
-    expect(proposeIdentity({ ...base, identityOption: '-x' })).toMatchObject({ ok: false, reason: `--identity cannot name a repository identity: ${RULE}` });
+  it('the identity is 046\'s grammar, whatever its first character: derived and given alike; only an empty option is refused (the owner\'s ruling of 2026-11-14)', () => {
+    const RULE = 'an identity is "repository:" followed by one or more characters, once case-folded and every character outside a to z, 0 to 9, ".", "_" and "-" replaced by "-" (REQ-polaris-generation-046, line 15), and the option names none';
+    expect(proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'https://h.example/_org/x' }] })).toMatchObject({ ok: true, identity: 'repository:_org-x', source: 'derived' });
+    expect(proposeIdentity({ ...base, remotes: [{ name: 'origin', url: 'https://h.example/-a/.b' }] })).toMatchObject({ ok: true, identity: 'repository:-a-.b', source: 'derived' });
+    expect(proposeIdentity({ ...base, identityOption: '-x' })).toMatchObject({ ok: true, identity: 'repository:-x', source: 'operator-option' });
+    expect(proposeIdentity({ ...base, identityOption: 'repository:' })).toMatchObject({ ok: false, reason: `--identity cannot name a repository identity: ${RULE}` });
+    expect(deriveIdentity({ url: 'h/_a/b', host: 'h', segments: ['_a', 'b'] })).toBe('repository:_a-b');
+    expect(deriveIdentity({ url: 'h/a', host: 'h', segments: ['a'] })).toBe(null);
   });
 
   it('the identity remote with several url lines, or none, refuses, naming it and the rule, and never falls through to another remote (R-PDJA-33-SLICE-C-1 finding 6)', () => {

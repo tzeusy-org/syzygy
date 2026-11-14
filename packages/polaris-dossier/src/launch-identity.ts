@@ -17,9 +17,11 @@ export type IdentitySource = 'operator-option' | 'matching-records' | 'derived';
 
 export interface NormalisedUrl { readonly url: string; readonly host: string; readonly segments: readonly string[] }
 
-const IDENTITY = /^repository:[a-z0-9][a-z0-9._-]*$/;
-/** The identity's first-character rule, which 046 line 15 does not state; every refusal it causes says so (R-PDJA-33-SLICE-C-1 finding 5). */
-export const IDENTITY_RULE = 'Syzygy admits only an identity whose part after "repository:" opens with a letter or a digit once case-folded and every other character replaced by "-", a rule narrower than REQ-polaris-generation-046 states, which applies to --identity as to a derived identity';
+// 046 line 15's grammar exactly: `repository:` and one or more of a-z, 0-9, '.', '_' and '-', whatever the first (the owner's ruling of
+// 2026-11-14, "Widen to all" and "Widen all readers now"). Every reader of an identity Syzygy writes accepts this grammar.
+const IDENTITY = /^repository:[a-z0-9._-]+$/;
+/** Why an identity option names no identity: only an option that is empty once normalised (R-PDJA-33-SLICE-C-1 finding 5). */
+export const IDENTITY_RULE = 'an identity is "repository:" followed by one or more characters, once case-folded and every character outside a to z, 0 to 9, ".", "_" and "-" replaced by "-" (REQ-polaris-generation-046, line 15), and the option names none';
 
 /** Which reading a URL gets (046, line 17): one the operator gives (`--url`, `--upstream`), which carries no credentials, or one read
  * from the clone's remote configuration, whose user information is removed, whatever it holds, before anything is derived from it. */
@@ -187,7 +189,7 @@ export function deriveIdentity(url: NormalisedUrl): string | null {
 }
 
 /** The operator's identity option, normalised the same way (case-folded, every other character replaced), or null when it cannot name
- * one (an identity must open with a letter or digit). */
+ * one (it is empty once normalised). */
 export function normaliseIdentityOption(input: string): string | null {
   const bare = input.trim().toLowerCase().replace(/^repository:/, '').replace(/[^a-z0-9._-]/g, '-');
   const identity = `repository:${bare}`;
@@ -317,6 +319,6 @@ export function proposeIdentity(input: IdentityInput): IdentityProposal {
     return { ok: false, reason: `the matching records carry more than one identity, so Syzygy proposes none: ${matches.map(describe).join('; ')}; give the identity with --identity`, matches, ...said() };
   }
   if (carried.length === 1) return { ok: true, identity: carried[0]!, source: 'matching-records', url: url.url, urlSource, matches, notCarrying: [], locatorStatements };
-  if (derived === null) return { ok: false, reason: `no identity derives from the normalised URL ${url.url}: its last two segments, joined and replaced, do not open with a letter or digit, and ${IDENTITY_RULE}; give --identity`, matches, ...said() };
-  return { ok: true, identity: derived, source: 'derived', url: url.url, urlSource, matches, notCarrying: [], locatorStatements };
+  // Past the two-segment floor the derived identity always exists: two non-empty segments joined by '-' are never empty.
+  return { ok: true, identity: derived!, source: 'derived', url: url.url, urlSource, matches, notCarrying: [], locatorStatements };
 }
