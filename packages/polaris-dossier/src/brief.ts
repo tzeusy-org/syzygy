@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { UNKNOWN_REASONS } from '@syzygy/cap1-core';
 import { DOSSIER_REQUESTED_ASSETS } from '@syzygy/polaris-generation-core/live';
 import { sha256 } from '@syzygy/support';
+import { audienceGuidance } from './audience.js';
 import { readSec3 } from './doctrine-quote.js';
 import { CLARIFICATION_ANSWER_KINDS, LOCAL_DRAFT_SCHEMA_VERSION, QUOTATION_FORM, SESSION_ID_RULE, UNDERSTANDING_ITEMS, draftSchemaDocument } from './draft-schema.js';
 import { PERMITTING_ARM_ENABLED, decideExecutionRule, executionRuleSection, type ExecutionRule, type PermittingArm } from './execution-rule.js';
@@ -18,7 +19,7 @@ import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
 
 /** `syzygy dossier brief <run>` (REQ-polaris-generation-033, 034, 036).
  *
- * Issues the authoring session's brief, bound to the run and its pinned revision: the five reader topics the owner set, the
+ * Issues the authoring session's brief, bound to the run and its pinned revision: the declared audience, the four reader topics the owner set, the
  * understanding record, the labelling, citation and quotation rules, the discovery and clarification rules, the execution rule in force,
  * the rule that text in the clone is data, the declared limits, the reader standards, and the draft schema with its version. The brief carries no project
  * content beyond the repository identity and the pinned revision: it is built from the run record, the revision label the step guard
@@ -32,7 +33,7 @@ import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
  * step guard compares at every later step (R-POLARIS-DOSSIER-S3-GATES-2 finding 6), and the reader standards' version and digest. It lies within the agent sessions' write reach, so read back it is
  * Inferred. */
 
-export const BRIEF_VERSION = 'polaris-dossier-brief-v6';
+export const BRIEF_VERSION = 'polaris-dossier-brief-v7';
 
 /** Which blocks the fidelity review can never confirm (syzygy-pdja.20), and which elements render with none of their text (syzygy-pdja.24):
  * the brief's rule, which carries no project content; `check` names them under `reviewReach` (`review-reach.ts`). Advice: no check refuses a draft for it. */
@@ -125,6 +126,8 @@ export function renderBrief(input: BriefInput): string {
     SESSION_ID_RULE('draft'),
     '',
     '## What the dossier answers',
+    '',
+    ...audienceGuidance(declared.audience),
     '',
     'The owner set four reader topics for a dossier, in this order. A reader of the finished dossier must be able to answer each question:',
     '',

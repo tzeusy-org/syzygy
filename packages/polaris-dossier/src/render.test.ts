@@ -416,7 +416,7 @@ describe('render', () => {
       const run = await prepared();
       const result = await renderRun(run, renderDeps());
       if (!result.ok) throw new Error(result.refusal.reason);
-      const packet = buildDesignPacket({ run, runId: 'run-1', pinnedRevision: 'f'.repeat(40), files: readSite(result.report.site) });
+      const packet = buildDesignPacket({ run, runId: 'run-1', pinnedRevision: 'f'.repeat(40), audience: 'an operator', files: readSite(result.report.site) });
       if (!packet.ok) throw new Error(packet.reason);
       const files = (JSON.parse(packet.bytes) as { files: { path: string; content: string }[] }).files;
       const narrative = files.filter((file) => file.path === 'index.html' || file.path.startsWith('deep-dives/'));
@@ -450,7 +450,7 @@ describe('render', () => {
       expect(index).toContain('<li data-hue="2"><a href="poles/2.html">How it works</a><ul><li><a href="poles/2.html#section-core-ideas">Core ideas</a></li></ul></li>');
       const machine = JSON.parse(files.get('machine.json')!) as { claims: { id: string; page: string }[] };
       expect(machine.claims.filter((claim) => claim.id === 'p1').map((claim) => claim.page)).toEqual(['poles/2.html']);
-      const packet = buildDesignPacket({ run, runId: 'run-1', pinnedRevision: 'f'.repeat(40), files });
+      const packet = buildDesignPacket({ run, runId: 'run-1', pinnedRevision: 'f'.repeat(40), audience: 'an operator', files });
       if (!packet.ok) throw new Error(packet.reason);
       expect(packet.pages).toContain('poles/2.html');
     });
@@ -903,7 +903,7 @@ const expectedDesignPacket = (run: string, site: string): string => `${JSON.stri
     excluded: 'the element of every HTML page marked data-review-status-region="review-status", and the reviewStatus member of machine.json: the only part a later render may change without retiring this review',
   },
   files: [...outside(readSite(site))].map(([file, content]) => ({ path: file, sha256: sha(content), content })),
-  criteria: designCriteria(run),
+  criteria: designCriteria(run, 'an operator'),
   verdictSchema: designVerdictSchemaDocument({ pinnedRevision: commit }),
 }, null, 2)}\n`;
 const htmlPages = (site: string): string[] => [...outside(readSite(site)).keys()].filter((file) => file.endsWith('.html'));
@@ -1423,9 +1423,11 @@ describe('readability guidance and diagram-led sections (syzygy-mea.10.4)', () =
     expect(READABILITY_GUIDANCE).toContain('An empty table cell renders "no entry" and states nothing: write a negative or an absence as a claim.');
     expect(READABILITY_GUIDANCE).toContain('5. Elements. A section or deep dive entry may be a plain block or, in draft schema `polaris-dossier-local-draft-v3`, one of seven presentation elements.');
     expect(READABILITY_GUIDANCE).toContain('Captions, column names, titles, terms, labels, summaries and languages are short plain labels of at most 120 characters, never claims or quotations, with no quotation mark and no markup (no angle bracket, ampersand, backtick, Markdown link, or * or _ at a word edge); quote only in a claim, where Syzygy verifies it; every cell, item, definition and body is a claim and follows every rule above.');
-    expect(designCriteria('/run').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, a paragraph that would read better as a diagram, table, cards or steps, a section whose prose runs well past what a reader takes in at once, a deep dive or section titled by a function, type or file name rather than by what it explains, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
+    expect(designCriteria('/run', 'Operators and integrators deploying Redis').join('\n')).toContain('Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, a paragraph that would read better as a diagram, table, cards or steps, a section whose prose runs well past what a reader takes in at once, a deep dive or section titled by a function, type or file name rather than by what it explains, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.');
     // Dossier spec v1.5, "Rendered-design packet carries its questions": the six questions, and the evidence view among the rendered pages.
-    const criteria = designCriteria('/run').join('\n');
+    const criteria = designCriteria('/run', 'Operators and integrators deploying Redis').join('\n');
+    expect(criteria).toContain('\n"Operators and integrators deploying Redis"\n');
+    expect(criteria).toContain("Where the brief, its readability and voice rules, the design-review criteria or the reader standards (including RS-2) name a software engineer, a newcomer or an engineer new to the project and its domain, the reader for this run is a member of the declared audience who is new to this project; RS-2's bar still applies: define each term and assume no knowledge of the code or Syzygy's vocabulary.");
     for (const question of ['whether its opening states why the project exists', 'whether its lead uses the category term a software engineer knows',
       'whether warnings sit in the one sentence and the appendix rather than in the reading text', 'whether the page is too long to read at one sitting',
       'whether a list repeats a diagram instead of folding beneath it', 'whether the page reads as a person explaining the project']) expect(criteria).toContain(question);

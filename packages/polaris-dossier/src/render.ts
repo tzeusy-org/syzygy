@@ -190,13 +190,13 @@ export async function renderRun(runDir: string, deps: RenderDeps): Promise<Rende
   // unless the second drawing equals the first outside the region.
   const pending = draw(built.local);
   if (typeof pending === 'string') return refuse('render', pending);
-  const reviewed = buildDesignPacket({ run, runId, pinnedRevision: pinned, files: pending });
+  const reviewed = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files: pending });
   if (!reviewed.ok) return refuse('render', `the rendered pages cannot be compared outside the review-status region: ${reviewed.reason}`);
   const design = await designReviewOfRecord(opened, reviewed, { sources: deps.sources, now: () => now });
   const local: LocalRenderInput = { ...built.local, reviewStatus: built.local.reviewStatus.map((item) => (item.id === 'review-status/design' ? designStatusItem(design, run) : item)) };
   const files = draw(local);
   if (typeof files === 'string') return refuse('render', files);
-  const published = buildDesignPacket({ run, runId, pinnedRevision: pinned, files });
+  const published = buildDesignPacket({ run, runId, pinnedRevision: pinned, audience: declared.audience, files });
   if (!published.ok || published.sha256 !== reviewed.sha256) {
     return refuse('render', 'stating the rendered-design review in the review-status region changed the pages outside that region, so the review of record cannot be decided from them');
   }

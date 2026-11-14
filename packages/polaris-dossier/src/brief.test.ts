@@ -79,7 +79,7 @@ describe('brief: issued', () => {
     const run = runDirectory();
     const result = await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     expect(result).toMatchObject({ ok: true, report: {
-      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v6', schemaVersion: 'polaris-dossier-local-draft-v4',
+      command: 'brief', outcome: 'issued', run, briefVersion: 'polaris-dossier-brief-v7', schemaVersion: 'polaris-dossier-local-draft-v4',
       pinnedRevision: REV, issuedAt: '2026-10-07T12:00:00.000Z', deadlineEndsAt: '2026-10-07T13:00:00.000Z', executionRule: { arm: 'sec-3' },
     } });
     const brief = read(run, 'brief.md'), schema = read(run, 'draft.schema.json');
@@ -105,7 +105,7 @@ describe('brief: issued', () => {
     expect(brief).toContain('The heading below names the digest of the skill\'s `references/reader-standards.md`; the text under it is that file without its version line and with every heading one level down, so it does not itself hash to that digest.');
     const record = JSON.parse(read(run, 'brief.json'));
     expect(record).toMatchObject({
-      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v6', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
+      format: 'polaris-dossier-brief/1', briefVersion: 'polaris-dossier-brief-v7', role: 'authoring', runId: RUN_ID, pinnedRevision: REV,
       schemaVersion: 'polaris-dossier-local-draft-v4', guidanceVersion: 'polaris-author-dossier-v2', issuedAt: '2026-10-07T12:00:00.000Z',
       readerStandards: { version: 'polaris-reader-standards-v1', sha256: sha(STANDARDS) },
       deadline: { declared: 'PT1H', seconds: 3600, endsAt: '2026-10-07T13:00:00.000Z' },
@@ -132,9 +132,12 @@ describe('brief: issued', () => {
   });
 
   it('states the four reader topics in the owner\'s order, the voice rules, the understanding record and every rule 034 and 036 name', async () => {
-    const run = runDirectory();
+    const run = runDirectory(SUBJECT, configOf({ audience: 'Operators and integrators deploying Redis' }));
     await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
     const brief = read(run, 'brief.md');
+    const topics = brief.split('## What the dossier answers\n')[1]!.split('\n## ')[0]!;
+    expect(topics).toContain('\n"Operators and integrators deploying Redis"\n');
+    expect(topics).toContain("Where the brief, its readability and voice rules, the design-review criteria or the reader standards (including RS-2) name a software engineer, a newcomer or an engineer new to the project and its domain, the reader for this run is a member of the declared audience who is new to this project; RS-2's bar still applies: define each term and assume no knowledge of the code or Syzygy's vocabulary.");
     // Dossier spec v1.5: why the project exists first, holding the maintainers' stated advantages; then core ideas, workflows, and
     // mechanisms and trade-offs. The order is the brief's, so the four lines are checked as one run.
     expect(brief).toContain([
@@ -167,6 +170,19 @@ describe('brief: issued', () => {
     expect(brief).not.toContain('Every `inferred` block cites at least one source.');
     expect(brief).not.toContain('You may build and run');
     expect(brief).not.toContain('Shape illustration for a fictional project');
+  });
+
+  it('keeps a multiline audience on one quoted line without introducing Markdown headings', async () => {
+    const headings: string[][] = [];
+    for (const audience of ['Operators and integrators deploying Redis', '  Operators\n# Redis administrators\r\n\tand integrators  ']) {
+      const run = runDirectory(SUBJECT, configOf({ audience }));
+      await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW });
+      const brief = read(run, 'brief.md');
+      headings.push(brief.split('\n').filter(line => line.startsWith('#')));
+      const topics = brief.split('## What the dossier answers\n')[1]!.split('\n## ')[0]!;
+      expect(topics).toContain(audience.startsWith('  ') ? '\n"Operators # Redis administrators and integrators"\n' : '\n"Operators and integrators deploying Redis"\n');
+    }
+    expect(headings[1]).toEqual(headings[0]);
   });
 
   it('quotes SEC-3\'s head byte-equal to the adopted security.md, read live', async () => {

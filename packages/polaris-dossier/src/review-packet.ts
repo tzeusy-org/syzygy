@@ -205,6 +205,6 @@ export const DESIGN_PACKET_DISCLOSURES = [
 export function buildStoredDesignPacket(opened: Extract<OpenedRun, { ok: true }>): (DesignPacketBuild & { readonly site?: number }) | { readonly ok: false; readonly stage: 'site'; readonly reason: string } {
   const site = readLatestSite(opened.run);
   if (!site.ok) return { ok: false, stage: 'site', reason: site.reason };
-  const built = buildDesignPacket({ run: opened.run, runId: opened.runId, pinnedRevision: opened.subject.pinnedRevision.commit, files: site.files });
+  const built = buildDesignPacket({ run: opened.run, runId: opened.runId, pinnedRevision: opened.subject.pinnedRevision.commit, audience: opened.declared.audience, files: site.files });
   return built.ok ? { ...built, site: site.number } : built;
 }
