@@ -116,12 +116,12 @@ async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Pro
         child.once('exit', resolve);
       });
       expect(code, errors).toBe(0);
-      expect(errors).not.toContain('private Chrome lifetime cleanup failed:');
       const report = JSON.parse(output) as {
         milestone: { helpers: unknown[] }; decoySurvived: boolean;
         after: { procFamilyDenominator: number; proc: unknown[]; psFamily: unknown[] };
         afterRecovery: { proc: unknown[] };
         unexpectedReaps: unknown[]; refusals: string[];
+        guardians: { pid: number }[]; guardianExits: { pid: number; exited: boolean; code: number }[];
         deniedSibling: { uid: number; namespaceDenied: boolean }; ownedUnreadableRefusals: string[]; scanRefusals: string[];
       };
       expect(report.deniedSibling.uid).toBe(process.getuid?.());
@@ -129,6 +129,15 @@ async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Pro
       expect(report.scanRefusals).toEqual(['guardian-scan-reused', 'observer-scan-reused']);
       expect(report.ownedUnreadableRefusals).toEqual(['guardian-scan', 'observer-scan', 'guardian-signal']);
       expect(report.milestone.helpers).toHaveLength(mode === 'startup' ? 0 : 1);
+      if (mode !== 'startup') {
+        expect(report.guardians).toHaveLength(1);
+        expect(report.guardianExits).toHaveLength(1);
+        expect(report.guardianExits[0]?.pid).toBe(report.guardians[0]?.pid);
+        expect(report.guardianExits[0]?.exited).toBe(true);
+        // Exit 70 is the guardian's failed-cleanup result. A child that also
+        // exits 70 is ambiguous here and must fail this lifetime proof too.
+        expect(report.guardianExits[0]?.code).not.toBe(70);
+      }
       expect(report.decoySurvived).toBe(true);
       expect(report.refusals).toEqual(['start-reused', 'other-uid', 'other-namespace', 'outside-family',
         'owned-sibling-unreadable', 'owned-sibling-reused']);

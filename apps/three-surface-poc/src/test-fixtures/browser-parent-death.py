@@ -284,7 +284,9 @@ try:
         assert helpers[0]['pid'] in {r['pid'] for r in report['before']['proc']}, 'proc census missed the stopped owned helper'
         assert helpers[0]['pid'] in {int(r.split()[0]) for r in report['before']['psFamily']}, 'ps census missed the stopped owned helper'
     report['milestone'] = {'helpers': helpers, 'family': rows}
-    permitted_reaps = {worker.pid, *(r['pid'] for r in rows if r['ppid'] == worker.pid)}
+    report['guardians'] = [r for r in rows if r['ppid'] == worker.pid]
+    guardian_pids = {r['pid'] for r in report['guardians']}
+    permitted_reaps = {worker.pid, *guardian_pids}
     if mode == 'startup':
         assert worker.wait(timeout=30) == 0, 'startup failure control failed'
     else:
@@ -296,6 +298,11 @@ try:
             break
         time.sleep(.025)
     report['after'] = census()
+    # The worker's stderr/ack pipes die with it. The independent subreaper
+    # still observes the guardian's exit, before any recovery can mask it.
+    report['guardianExits'] = [{'pid': r['pid'], 'exited': os.WIFEXITED(r['status']),
+                               'code': os.waitstatus_to_exitcode(r['status'])}
+                              for r in report['reaped'] if r['pid'] in guardian_pids]
     # A guardian must reap its own escaped Chrome children. An init-style
     # observer may reap the killed worker and the now-orphaned guardian,
     # but must not hide a missing subreaper by reaping Chrome's helpers.
