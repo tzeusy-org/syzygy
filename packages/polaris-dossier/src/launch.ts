@@ -302,7 +302,8 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
         },
       });
       if (!checked.ok) return refuse(checked.refusal.stage, checked.refusal.reason, checked.refusal.command);
-      pinnedState = { commit, committerDate: { unknown: 'Syzygy has not read its commit object' } };
+      // The commit is pinned here; its state is set by the commit-object read below, which states the date or why it is Unknown
+      // (R-PDJA-33-SLICE-CD-2 finding 5).
     }
 
     // Pre-answer reads: the pinned commit's tree, parents and committer date, and the trees under it. No blob.

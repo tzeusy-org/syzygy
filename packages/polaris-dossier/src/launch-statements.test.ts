@@ -107,8 +107,8 @@ describe('the stage rule over the launch statements (REQ-polaris-generation-047)
     const unknown = { unknown: 'Syzygy could not read the copy\'s commit object (fixture refusal)' };
     expect(texts({ ...base, pinned: { commit: C, committerDate: unknown } }).find(t => t[0] === 'pinned-commit')?.[4])
       .toBe(`The pinned revision is ${C}: the copy's detached checkout left the copy's HEAD there. Its committer date is Unknown: Syzygy could not read the copy's commit object (fixture refusal).`);
-    expect(texts({ ...base, runClass: 'no-copy', copy: null, copyEnd: null, pinned: { commit: C, committerDate: { unknown: 'Syzygy has not read its commit object' } } }).find(t => t[0] === 'pinned-commit')?.[4])
-      .toBe(`The pinned revision is ${C}. Its committer date is Unknown: Syzygy has not read its commit object.`);
+    expect(texts({ ...base, runClass: 'no-copy', copy: null, copyEnd: null, pinned: { commit: C, committerDate: { unknown: 'Syzygy could not read the commit object (fixture refusal)' } } }).find(t => t[0] === 'pinned-commit')?.[4])
+      .toBe(`The pinned revision is ${C}. Its committer date is Unknown: Syzygy could not read the commit object (fixture refusal).`);
   });
 });
 
