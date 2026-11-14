@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
 import { installReadLog, sealExcept } from './fs-patch.testkit.js';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { initRun } from './init.js';
+import { initRun, interruptAfterCreation } from './init.js';
 import { EventEmitter } from 'node:events';
 import { interruptWatch, type CopyGitRun } from './launch-copy.js';
 import { GitObjectReadRefusal, openPinnedObjectReader, type PinnedObjectReader, type PinnedObjectReaderOptions } from './git-object-reader.js';
@@ -1278,9 +1278,12 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     const out = await initRun({ clone: fullClone(up.dir, URL_RR), configText: CONFIG, stateRoot },
       { sources: noOtherActs(), now: () => NOW, openReader: s.reads.open, launch, runId: () => { signals.emit('SIGINT'); return 'run-0123456789abcdef0123456789abcdef'; } });
     if (!out.ok) throw new Error(JSON.stringify(out.refusal));
-    expect(out.report.disclosures.at(-1)).toBe('An interrupt arrived after the run was created; the run is kept, with its copy where it has one, and nothing was undone. Remove the run directory and the copy to discard it.');
+    // In the run's class (R-PDJA-33-SLICE-CD-3 finding 5): this copy-class run names its copy.
+    expect(out.report.disclosures.at(-1)).toBe(`An interrupt arrived after the run was created; the run is kept, with its copy at ${out.report.subject.clone.path}, and nothing was undone. Remove the run directory and the copy to discard it.`);
     expect(fs.existsSync(out.report.subject.clone.path)).toBe(true);
     expect(signals.listenerCount('SIGINT')).toBe(0);
+    // A no-copy run's form: no copy was made.
+    expect(interruptAfterCreation(null)).toBe('An interrupt arrived after the run was created; the run is kept, and nothing was undone. No copy was made. Remove the run directory to discard it.');
   });
 
   it('objectsRead is decided from the reads: a copy-stage refusal reads none, a refusal after the pre-answer reads read some (R-PDJA-33-SLICE-B-1 finding 6)', async () => {

@@ -89,8 +89,11 @@ export interface InitPorts extends RunPorts {
 
 export { COPY_DIRECTORY } from './state-directory.js';
 
-/** init's output where an interrupt arrived after the run directory was written. */
-export const INTERRUPT_AFTER_CREATION = 'An interrupt arrived after the run was created; the run is kept, with its copy where it has one, and nothing was undone. Remove the run directory and the copy to discard it.';
+/** init's output where an interrupt arrived after the run directory was written, in the run's class (R-PDJA-33-SLICE-CD-3 finding 5): a
+ * copy-class run names its copy; a no-copy run's form is that no copy was made. */
+export const interruptAfterCreation = (copyDir: string | null): string => copyDir === null
+  ? 'An interrupt arrived after the run was created; the run is kept, and nothing was undone. No copy was made. Remove the run directory to discard it.'
+  : `An interrupt arrived after the run was created; the run is kept, with its copy at ${copyDir}, and nothing was undone. Remove the run directory and the copy to discard it.`;
 
 const DISCLOSURES = [
   RECORDS_WITHIN_REACH,
@@ -136,7 +139,7 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
     // An interrupt after init's last check, once the run directory is written, is not dropped silently (R-PDJA-33-SLICE-CD-2 finding 7): the
     // run stands, and its output says so.
     if (result.ok && ports.launch?.interrupt?.held?.() === true) {
-      return { ...result, report: { ...result.report, disclosures: [...result.report.disclosures, INTERRUPT_AFTER_CREATION] } };
+      return { ...result, report: { ...result.report, disclosures: [...result.report.disclosures, interruptAfterCreation((copy as LaunchCopy | null)?.dir ?? null)] } };
     }
     return result;
   } catch (cause) {
