@@ -10,6 +10,11 @@ is in `docs/pursuits/2026-11-09-vision-pursuit-data.json`:
 > The owner released five beads that do not depend on the gate, and later decisions moved parts
 > of P8 and P13. The beads under epic `syzygy-fnry` are the current plan; this file records the
 > run. See "Owner decisions after the run".
+>
+> *Corrected 2026-11-09 (full review):* a full review by three independent reviewers found errors in this report; each is
+> fixed or marked where it occurs, and "Full review 2026-11-09" lists them. The data file is the
+> run's record and is not edited: its P8 and P13 slices predate the owner's decisions, so the beads
+> win where the two differ.
 
 ```sh
 jq '.units[] | select(.lane=="design" and .unit=="first-screen")' docs/pursuits/2026-11-09-vision-pursuit-data.json
@@ -22,16 +27,18 @@ jq '.ranked_moves[] | {id, title, owner_value, build_cost, prereq}' docs/pursuit
 |---|---|
 | Run | Third Polaris pursuit, and the first scoped to **dossier generation**: `syzygy dossier` / `syzygy polaris`, `packages/polaris-dossier`, the live part of `packages/polaris-generation-core`, the dossier-site renderer and the `polaris-dossier` skill. The earlier pursuits tiered the Butlers `/polaris` page, so this board has no tier baseline (see Tier board). |
 | Owner's questions | "What major feature adds should we consider in our auto-generation mechanism, to make Polaris able to generate a beautiful and intuitive manifesto for any generalized codebase?" and "Is the current state of the Polaris codebase one that you would be proud of? Does it uphold /th-engineering and /th-design standards?" |
-| Syzygy | Audited at `fd08ea62` (the local main checkout). `origin/main` reached `256a41b9` during the run (launch-time consent pdja.21, fidelity cost pdja.19, P3 notes). The orchestrator checked that drift: `close.ts` is unchanged, and `brief.ts` still never states the declared audience, so no finding below is retired by it. |
+| Syzygy | Audited at `fd08ea62` (the local main checkout). `origin/main` reached `256a41b9` during the run (launch-time consent pdja.21, fidelity cost pdja.19, P3 notes). The orchestrator checked that drift: `close.ts` is unchanged, and `brief.ts` still never states the declared audience, so no finding below is retired by it. *Corrected 2026-11-09 (full review):* every `file:line` reference and every line or call count in this report is at `fd08ea62`. At `0405cfb7` the `polaris.ts` references are off by up to 27 lines and `packages/polaris-dossier` has about 2,100 more non-test lines; no finding is retired by that drift. |
 | Subject output | Redis 8.10.2 dossier, run `run-ffe579c7…` (closed 2026-11-08). It was compared with `run-2ecdcab0…` (2026-11-07) and `run-d9411d26…` (the run the owner reviewed on 2026-11-06, epic `syzygy-pdja`). The run directories were read only. |
 | Lanes | Three long-lived lanes, each with a checkpoint file per unit and at most three in flight: engineering audit (6 units, `/th-engineering`), design audit (6 units, `/th-design`, headless-Chrome screenshots at 1440×900 and 390×844, light and dark), and ideation (7 lenses plus a synthesis). There were 0 lane errors. |
-| Orchestrator checks | The orchestrator re-derived these from disk: render at draft revision 5 only; revision 6 fidelity `not-ready`; the audience absent from `brief.md`; 20 credential copies (paths and modes only); a glossary with 1 entry; 0 `judgement` marks in the latest draft; 0 of 45 pages with a script; a 64-hex digest on `index.html`; `renderDossierSite` at 563 lines. |
+| Orchestrator checks | The orchestrator re-derived these from disk: render at draft revision 5 only; revision 6 fidelity `not-ready`; the audience absent from `brief.md`; 20 credential copies (paths and modes only; *Updated 2026-11-09, after the run:* removed under owner item `creds`, state root now 700); a glossary with 1 entry; 0 `judgement` marks in the latest draft; 0 of 45 pages with a script; a 64-hex digest on `index.html`; `renderDossierSite` at 563 lines. |
 
 ## North star (quoted)
 
-The doctrine (`.syzygy/governance/doctrine/vision.md`) begins: "Showing the truth is the soul
-of the product." VIS-1 sets the order: truth, then comprehension ("comprehension is achieved by
-simplifying presentation, never content"), then momentum. VIS-2: no evidence means Unknown.
+The doctrine (`.syzygy/governance/doctrine/vision.md:38`) says: "Showing the truth is the soul
+of the product." VIS-1 sets the order: truth, then comprehension ("comprehension is bought by
+simplifying the presentation, never the content", `vision.md:115-117`), then momentum.
+(*Corrected 2026-11-09 (full review):* an earlier version paraphrased VIS-1 inside quotation marks and said the doctrine
+"begins" with the first sentence.) VIS-2: no evidence means Unknown.
 VIS-3: digestible by a human unfamiliar with the project. VIS-4: humans steer; agents draft.
 VIS-7: every encoding means what its legend says. The product goal (2026-09-12) is
 generalizable LLM-assisted manifesto generation, with Redis and Butlers as proving cases. The
@@ -53,7 +60,8 @@ neither the code nor the output meets the `/th-engineering` or `/th-design` bar 
 - **Where the engineering falls short [Observed].**
   - The run that is actually used, `syzygy polaris`, is still labelled "prototype". It parses
     its own stdout back as JSON and reaches sessions by typing into their terminals with
-    `tmux send-keys`. Its state machine has no test.
+    `tmux send-keys`. Its main loop has no test; its pure decision helpers do (27 `it(`/`test(`
+    cases in `polaris-launch-guidance.test.ts`, static count). (*Corrected 2026-11-09 (full review):* this said the state machine has no test.)
   - The renderer is one 563-line closure that builds HTML by string concatenation.
   - The live renderer still carries the parked provider mode.
   - The live path is about 19.1k lines, roughly 1.4–2× a greenfield sketch. The excess is in
@@ -92,9 +100,9 @@ against `run-d9411d26` is quoted where a lane measured it [Observed].
 |---|---|---|---|
 | eng | Run lifecycle (`polaris.ts`, `close.ts`, sessions, broker) | functional | Sound step commands under a "prototype" supervisor: stdout parsed back, `tmux send-keys`, no state-machine test. `close` neither refuses nor discloses an unrendered or not-ready final revision. |
 | eng | Check and schema | functional | Near world-class at integrity, barely measures quality. Fidelity and design share one repair budget, with design last. |
-| eng | Renderer (`dossier-site.ts`) | functional | All links resolve and the SVG is inert. One 563-line string-concatenating closure with 88 manual `escape()` calls. The provider mode is still live. |
+| eng | Renderer (`dossier-site.ts`) | functional | All links resolve and the SVG is inert. One 563-line string-concatenating closure with 158 manual `escape()` calls on 88 lines (corrected 2026-11-09; this said 88 calls). The provider mode is still live. |
 | eng | Generation core | functional | 18 of 27 modules are live and careful. The other 9 (2,097 lines) form a parked island that still shapes the live draft model. |
-| eng | Test rigor | solid | Enforced tiers, literal expectations, kept mutation records. The supervisor has no test. 12 of 2,846 tests timed out under load (157 s wall time). |
+| eng | Test rigor | solid | Enforced tiers, literal expectations, kept mutation records. The supervisor loop has no test; its decision helpers do (corrected 2026-11-09). 12 of 2,846 tests timed out under load (157 s wall time). |
 | eng | Greenfield parity | functional | About 1.4–2× the sketch. Authority reads are scattered, the supervisor parses strings, and the renderer is not componentized. |
 | design | First screen | functional | A correct one-line "what", but only after 141 words of apparatus (544 before). On a phone the first screen holds no thesis. |
 | design | Poles and navigation | weak | One page became 5 (index 30.7 → 4.6 screens). The Poles are the brief's generic questions, not Redis's own categories. No current-page mark, no previous/next links, and a glossary that cannot be used. |
@@ -139,6 +147,8 @@ against `run-d9411d26` is quoted where a lane measured it [Observed].
    each session's agent home. 20 copies persist across 5 runs, 16 of them at mode 777. The
    state root is 777. `~/.local` is 700, which bounds the exposure. The orchestrator
    re-derived the paths and modes only, never the contents. Exemplar: E1-F1.
+   *Updated 2026-11-09, after the run:* the owner's `creds` choice removed the 20 copies and their session files, and
+   the state root is now 700. The code still makes new copies, so P2 is still needed.
 
 ## Ranked moves
 
@@ -148,6 +158,16 @@ act), then how many lanes converged. Ids are P1…P15, so they cannot be confuse
 (2026-09-13) or N1…N15 (2026-09-22). Every move was deduped against the 70-row known ledger.
 Where a move continues an open bead, it says so. Full slices, merged agent moves and evidence
 are under `.ranked_moves[]`.
+
+*Corrected 2026-11-09 (full review):* the published order does not follow this rule in four places, and the rule names no
+place for three classes the moves use (breadth, VIS-4, truth over time).
+- P4 (5/2, no prerequisite) should rank above P3 (5/2, spec amendment).
+- P10 (5/3, no prerequisite as published) should rank above P9 (5/3, spec amendment and owner act).
+- Read with VIS-1 class before cost, P12 (comprehension) would rank above P9 and P10 (breadth,
+  VIS-1's fourth priority), and P15 (truth over time) above P13 and P14.
+- The ids are kept because the beads use them. The order is not a sequence: sequencing is the
+  gate, the released slices and the v1.7 delta, all on the beads. 12 of the 15 moves score owner
+  value 5, so the value score does not order them either.
 
 **P1 — Honest close and a review loop on every revision (truth; 5/2; spec amendment, sequenced after dossier spec v1.6).**
 - Render each checked revision; rendering is deterministic and cheap.
@@ -169,7 +189,7 @@ are under `.ranked_moves[]`.
   through the broker.
 - Refuse a state root wider than 0700.
 - Merges E1-M2.
-- Slice 2's remedy, deletion or broker hand-over, is the question already open as P-117 Q1 (`syzygy-bpyt.8.15`).
+- Slice 2's remedy, deletion or broker hand-over, is the question already open as P-117 Q1 (register row P-117; *Corrected 2026-11-09 (full review):* there is no open bead for Q1, and `syzygy-bpyt.8.15` is the item behind Q2).
 - Cleaning up the existing files is owner item `creds`.
 
 **P3 — Thesis-first landing and a spine (comprehension; 5/2; spec amendment).**
@@ -217,6 +237,9 @@ amendment).**
 - A fresh "newcomer reader" session sees only the rendered site.
 - It answers the frozen questions (TARGETS' seven) through the existing `ReaderAnswerPort`.
 - Answers are graded against the understanding record and kept with the page locations used.
+  *Corrected 2026-11-09 (full review):* the understanding record is the author's own self-reported understanding, so grading
+  against it alone measures self-consistency, not comprehension. `syzygy-fnry.7` now grades
+  against fidelity-confirmed claims and the independent inventory, and a pass is advice only.
 - The result shows on the review page and feeds readiness.
 - Merges E4-M1, I4-M1 and S-M4. The scored cross-target corpus (I4-M3, an owner act) is slice 4.
 
@@ -244,6 +267,10 @@ amendment).**
   `syzygy-mea.2`.
 
 **P10 — Hierarchical exploration with a coverage map (breadth; 5/3; none).**
+*Corrected 2026-11-09 (full review):* the prerequisite is not "none" if the partition goes in the brief: the signed spec
+says the brief carries no project content beyond the repository identity and the pinned revision
+(local-agent-mode spec line 230, scenario line 269). The same clause binds P9's docs-site navigation
+and P11's steering record. The beads say so.
 - Syzygy partitions the pinned tree into subsystems.
 - Scout sessions return cited subsystem cards.
 - `check` requires a card or a `deferred-by-budget` entry for every subsystem.
@@ -312,6 +339,9 @@ spine, show-then-tell, opinion with receipts, archetype awareness, hierarchical 
 diagram grammar. P6 and P7 are what let anyone know that those additions worked. P1 and P2 come
 first because the system that would ship them currently seals unreviewed output and a false
 record sentence.
+*Corrected 2026-11-09 (full review):* this answer is `[Inferred]`. All 5 stored dossier runs are of `redis/redis`, and the
+report itself says generality is unmeasured (L8 persists). Which of these moves matter for a
+library, a CLI or a monorepo has not been observed.
 
 ### Retained, not ranked
 
@@ -391,6 +421,8 @@ and the epic is assigned to the owner so it stays off `bd ready`. **Closing the 
 owner's move, and it releases the children.**
 *Updated 2026-11-09, after the run:* "each child" means the move beads `syzygy-fnry.1` to `.15`. The
 released slices `.16` to `.20` do not depend on the gate.
+*Corrected 2026-11-09 (full review):* "so it stays off `bd ready`" is false: `bd ready` lists both the epic and the gate. Their
+`no-dispatch` label is what keeps them out of the coordinator's dispatch ranking.
 
 ## Known ledger and deviations
 
@@ -398,7 +430,30 @@ released slices `.16` to `.20` do not depend on the gate.
   `-1z8m`, `-bpyt.5`/`.8` and others), LEARNING-LOG L1–L13 and the Redis gap list. L8, which
   says generality is unmeasured, persists.
 - **Retention deviation.** The deliverables rule keeps only the two newest data files.
-  `2026-09-13-vision-pursuit-data.json` has live citers under `docs/evidence/` (9 files), so it
+  `2026-09-13-vision-pursuit-data.json` has live citers under `docs/evidence/` (8 files cite it by full filename, `git grep -l -F` at `0405cfb7`; corrected 2026-11-09 from 9), so it
   was not pruned. The cap is exceeded by one file, deliberately.
 - **No harvest file is committed.** The raw lane checkpoints stayed in the session scratchpad.
   The data file holds every unit's structured output verbatim.
+
+## Full review 2026-11-09
+
+Three independent reviewers read this report, its data file, the beads and both owner packets
+in fresh contexts: one for evidence, one for the work plan and one for strategy. Each returned
+"ready with fixes". Their findings were checked against the repository, the tracker and the
+run directories before anything was changed.
+
+- **Evidence.** 25 of 31 re-derived claims reproduced, including everything behind the "would you
+  be proud of it?" answer. The six that did not are corrected above at the sentence: the VIS-1
+  quotation, the escape count, the citer count, the ranking order, the stale credential
+  sentences, and where `bd ready` stands.
+- **Plan.** Fixed on the beads: `.19`'s stale start condition and four missing settle-items,
+  including the provenance of displayed quotations under option B; `.20`'s `no-dispatch` label;
+  a missing `.17` to `.18` edge; and an unlinked bead (`syzygy-pdja.27`) that also targeted v1.7.
+- **Strategy.** Fixed on the beads: `.9`, `.10` and `.11` now cite the brief clause they would
+  amend; `.7` no longer grades readers against the author's own record; `.3` and `.4` must show
+  how many Unknowns a view hides. A new analysis bead, `syzygy-fnry.21`, measures why first drafts
+  fail fidelity (18 of 23 verdicts across the 5 runs were not ready).
+- **Owner questions raised, not decided here.** Whether to run the current pipeline on two or
+  three non-Redis repositories before building P9, P10 or P12; and whether the v1.7 delta should
+  also carry P6's first slice (screenshots for the design reviewer), which would widen choice A.
+
