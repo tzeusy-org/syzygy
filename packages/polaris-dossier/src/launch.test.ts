@@ -467,6 +467,19 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
     expect(leaks({ done, printed: s.terminal.printed, prompts: s.terminal.prompts, records: recordsOf(s.home) })).toBe(false);
   }, 20_000);
 
+  it('the identity remote is the default\'s remote where it is not origin: its user information is said, never origin\'s want of it (R-PDJA-33-SLICE-CD-3 finding 1)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, URL_RR);
+    gitIn(clone, 'remote', 'add', 'up', 'https://bob:hunter2@github.com/redis/redis');
+    gitIn(clone, 'update-ref', 'refs/remotes/up/main', up.commits[0]!);
+    gitIn(clone, 'symbolic-ref', 'refs/remotes/up/HEAD', 'refs/remotes/up/main');
+    gitIn(clone, 'symbolic-ref', '--delete', 'refs/remotes/origin/HEAD');
+    const out = await run(clone, setup([], { isTTY: false }));
+    expect(out).toMatchObject({ kind: 'refused', refusal: { locatorStatements: [
+      'The URL of the clone\'s remote up carried user information; Syzygy does not print, store or record it, and removes it before deriving anything from that URL.'] } });
+    expect(/hunter2|bob/.test(JSON.stringify(out))).toBe(false);
+  });
+
   it('a refusal after the identity carries the user-information statement too', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' });
     const clone = fullClone(up.dir, 'https://bob:hunter2@git.example.org/a/b.git');
