@@ -134,9 +134,10 @@ async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Pro
         expect(report.guardianExits).toHaveLength(1);
         expect(report.guardianExits[0]?.pid).toBe(report.guardians[0]?.pid);
         expect(report.guardianExits[0]?.exited).toBe(true);
-        // Exit 70 is the guardian's failed-cleanup result. A child that also
-        // exits 70 is ambiguous here and must fail this lifetime proof too.
-        expect(report.guardianExits[0]?.code).not.toBe(70);
+        // This controlled Chrome either exits normally or is terminated by
+        // the guardian. Unexpected statuses (including Python flush failure
+        // 120 and cleanup refusal 70) cannot establish successful cleanup.
+        expect([0, 137, 143]).toContain(report.guardianExits[0]?.code);
       }
       expect(report.decoySurvived).toBe(true);
       expect(report.refusals).toEqual(['start-reused', 'other-uid', 'other-namespace', 'outside-family',

@@ -285,6 +285,11 @@ try:
         assert helpers[0]['pid'] in {int(r.split()[0]) for r in report['before']['psFamily']}, 'ps census missed the stopped owned helper'
     report['milestone'] = {'helpers': helpers, 'family': rows}
     report['guardians'] = [r for r in rows if r['ppid'] == worker.pid]
+    for row in report['guardians']:
+        current = identity(row['pid'])
+        assert current and current['start'] == row['start'], 'guardian identity changed before role check'
+        argv = Path('/proc', str(row['pid']), 'cmdline').read_bytes().split(b'\0')
+        assert len(argv) > 1 and os.fsdecode(argv[1]) == guardian_path, 'worker child is not the expected guardian'
     guardian_pids = {r['pid'] for r in report['guardians']}
     permitted_reaps = {worker.pid, *guardian_pids}
     if mode == 'startup':
@@ -294,7 +299,9 @@ try:
     deadline = time.monotonic() + 5
     while time.monotonic() < deadline:
         report['reaped'] += reap(worker)
-        if not family():
+        # Wait on the pinned guardian, without competing with its full-host
+        # scans. The independent final censuses below still check its work.
+        if guardian_pids.issubset({r['pid'] for r in report['reaped']}):
             break
         time.sleep(.025)
     report['after'] = census()
