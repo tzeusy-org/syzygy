@@ -1172,6 +1172,9 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     expect(refused).toMatchObject({ ok: false, refusal: { stage: 'launch' } });
     if (refused.ok) return;
     expect(refused.refusal.disclosures).toContain(said);
+    // Once in init's document: the nested launch refusal does not repeat it (R-PDJA-33-SLICE-CD-4 finding 4).
+    expect(JSON.stringify(refused).split('carried user information').length - 1).toBe(1);
+    expect(refused.refusal.launch !== undefined && 'locatorStatements' in refused.refusal.launch).toBe(false);
     expect(JSON.stringify(refused).includes('hunter2')).toBe(false);
   }, 20_000);
 

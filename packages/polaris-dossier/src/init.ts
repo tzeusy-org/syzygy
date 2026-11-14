@@ -189,7 +189,10 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
       }, { ...ports.launch, sources, now: ports.now, copyRoot: path.join(request.stateRoot, COPY_DIRECTORY), openReader: trackedReader });
       locatorLines = outcome.kind === 'refused' ? outcome.refusal.locatorStatements ?? [] : outcome.kind === 'head-consented' ? [] : outcome.locatorStatements;
       if (outcome.kind === 'refused') {
-        return refuse('launch', outcome.refusal.reason, { launch: outcome.refusal });
+        // The locator statements are init's own disclosures (above); the nested launch refusal does not repeat them (R-PDJA-33-SLICE-CD-4
+        // finding 4).
+        const { locatorStatements: _inDisclosures, ...nested } = outcome.refusal;
+        return refuse('launch', outcome.refusal.reason, { launch: nested });
       }
       if (outcome.kind !== 'head-consented') {
         launched = outcome;
