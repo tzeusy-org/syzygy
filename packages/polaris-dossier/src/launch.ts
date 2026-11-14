@@ -14,7 +14,7 @@ import {
 } from './launch-question.js';
 import { recordIdFor, renderLaunchRecord, type LaunchRecord, type LaunchRecordClass, type PublicDeclaration } from './launch-record.js';
 import { checkNoCopyPin, checkoutCommand, defaultRemote, nameLaunchRevision, updateCommand } from './launch-revision.js';
-import { questionCopyStatements, stageStatements, type CopyProgress, type LaunchState, type LaunchStatement } from './launch-statements.js';
+import { BRIEFS_NOT_REACHED, questionCopyStatements, stageStatements, type CopyProgress, type LaunchState, type LaunchStatement } from './launch-statements.js';
 import { LAUNCH_REF, homeGitDirs, readLaunchRecords, recordingSubject, writeLaunchRecords, type StoreRead, type StoredRecord, type WriteResult } from './launch-store.js';
 import type { WriteConsentState } from './launch-write-consent.js';
 
@@ -170,13 +170,15 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     runClass: copyClass === null ? null : copyClass ? 'copy-class' : 'no-copy', named, copy: copyClass === true ? progress : null, copyEnd,
     pinned: pinnedState, questionAsked, beyondConsent,
   });
+  // A refused launch reaches no brief stage, so its statements end with that stage not reached (047's stage rule; scenario "Clone with an
+  // alternate"; R-PDJA-33-SLICE-CD-2 finding 2).
   const refuse = (stage: LaunchStage, reason: string, command?: string): LaunchOutcome => {
     const said = locatorStatements.length === 0 ? {} : { locatorStatements };
     if (copyClass !== true) {
-      return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false, ...said, statements: stageStatements(stateOf(null)) } };
+      return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false, ...said, statements: [...stageStatements(stateOf(null)), BRIEFS_NOT_REACHED] } };
     }
     const end = copyDir === null ? null : removeCopy(copyDir, ports.removeCopy);
-    return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false, ...said, copy: end, copyStatement: copyEndStatement(end), statements: stageStatements(stateOf(end)) } };
+    return { kind: 'refused', refusal: { stage, reason, missing: [...missing], ...(command === undefined ? {} : { command }), recorded: false, ...said, copy: end, copyStatement: copyEndStatement(end), statements: [...stageStatements(stateOf(end)), BRIEFS_NOT_REACHED] } };
   };
 
   // Every path after the copy step starts ends in a refusal that removes the copy and says so, a thrown error included (R-PDJA-33-SLICE-B-1

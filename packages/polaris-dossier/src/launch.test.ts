@@ -582,6 +582,7 @@ describe('REQ-polaris-generation-047: the launch reads of the operator\'s clone 
         { id: 'copy', stage: 'copy step started', runClass: null, reached: false, label: 'Inferred', text: 'No copy was made: the run ended before its class was decided.' },
         { id: 'pinned-commit', stage: 'commit pinned', runClass: 'both', reached: false, label: 'Inferred', text: 'The commit was not pinned, and its committer date is Unknown.' },
         { id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' },
+        { id: 'briefs', stage: 'brief or packet delivered', runClass: 'both', reached: false, label: 'Inferred', text: 'Syzygy issued no brief and delivered no packet.' },
       ] } });
     // Told by HEAD's placeholder alone: the reftable directory is neither examined nor read (R-PDJA-33-SLICE-A-1 finding 3).
     expect(r.opened).toEqual(['HEAD']);
@@ -899,10 +900,13 @@ describe('REQ-polaris-generation-047: the copy step of a copy-class run', () => 
       reason: 'the operator\'s clone has an objects/info/alternates file, and a copy-class run refuses a clone with an alternate before its copy step starts',
       copy: null, copyStatement: 'No copy was made.',
       statements: [
-        expect.objectContaining({ id: 'named-identifier', reached: true }),
+        { id: 'named-identifier', stage: 'identifier named', runClass: 'both', reached: true, label: 'Inferred',
+          text: `The named identifier is ${up.commits[0]}, from refs/remotes/origin/HEAD -> refs/remotes/origin/main. Syzygy made no network request to choose or verify it; whether it is the upstream's latest commit is Inferred. To update the clone before a later run: git -C '${clone}' fetch origin` },
         { id: 'copy', stage: 'copy step started', runClass: 'copy-class', reached: false, label: 'Inferred', text: 'No copy was made: the copy step did not start.' },
         { id: 'pinned-commit', stage: 'commit pinned', runClass: 'both', reached: false, label: 'Inferred', text: 'The commit was not pinned, and its committer date is Unknown.' },
         { id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' },
+        // 047 line 353: "and that Syzygy issued no brief and delivered no packet" (R-PDJA-33-SLICE-CD-2 finding 2).
+        { id: 'briefs', stage: 'brief or packet delivered', runClass: 'both', reached: false, label: 'Inferred', text: 'Syzygy issued no brief and delivered no packet.' },
       ] } });
     expect(fs.existsSync(s.ports.copyRoot!)).toBe(false);
     expect(s.reads.log.calls).toEqual([]);
