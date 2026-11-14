@@ -38,8 +38,9 @@ const RULE = {
   credentials: 'an https://, http:// or git:// locator carries no user information',
   colon: 'its user information holds a ":"',
   emptyUser: 'it has an "@" with no user name before it',
-  // The host and port grammars are narrower than 046's "a host, an optional port"; each refusal says so (R-PDJA-33-SLICE-C-1 finding 4).
-  host: 'its host is empty, or is neither a host name (ASCII letters, digits, ".", "-" and "_", or a Unicode name that IDNA maps to one), nor a bracketed IPv6 address literal',
+  // The port rule is 046's ("an optional port", any decimal, empty included). The host grammar is still narrower than 046's "a host" after
+  // the owner's widening of 2026-11-14, and its refusal names what it refuses (R-PDJA-33-SLICE-C-1 finding 4; R-PDJA-33-RULINGS-1 finding 3).
+  host: 'its host is empty, or is neither a host name (ASCII letters, digits, ".", "-" and "_", once IDNA has mapped it) nor a bracketed IPv6 address literal. This is narrower than REQ-polaris-generation-046 states, which says only "a host": a host name holding "~" or a sub-delimiter ("!", "$", "&", "\'", "(", ")", "*", "+", ",", ";" or "="), and an IPvFuture literal such as [v1.x], are refused',
   port: 'its port is not a decimal number',
   path: 'it names no path, or its path has an empty segment once normalised',
   scpPath: 'its scp-form path begins with "//"',
@@ -123,8 +124,9 @@ export function readLocator(input: string, kind: LocatorKind): LocatorRead {
     if (user.includes(':')) return { ok: false, rule: RULE.colon };
     if (user === '') return { ok: false, rule: RULE.emptyUser };
   }
-  // The owner widened the host and port rules to all 046 states (2026-11-14): a bracketed IPv6 literal, a Unicode host name and an empty
-  // port are admitted. The port, empty or not, is removed.
+  // The owner widened the host and port rules on 2026-11-14, within what 046 states: a bracketed IPv6 literal (in a URL form; an scp-form host
+  // holds no ":"), a Unicode host name and an empty port are admitted. The host grammar is still narrower than 046 (RULE.host says how).
+  // The port, empty or not, is removed.
   let host: string | null;
   if (hostPort.startsWith('[')) {
     const close = hostPort.indexOf(']');

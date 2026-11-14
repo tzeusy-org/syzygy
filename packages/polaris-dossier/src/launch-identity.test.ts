@@ -35,7 +35,7 @@ const QUERY = 'it carries a query or a fragment';
 const PERCENT = 'its user information or host holds a percent-encoded character';
 const CREDENTIALS = 'an https://, http:// or git:// locator carries no user information';
 const COLON = 'its user information holds a ":"';
-const HOST_RULE = 'its host is empty, or is neither a host name (ASCII letters, digits, ".", "-" and "_", or a Unicode name that IDNA maps to one), nor a bracketed IPv6 address literal';
+const HOST_RULE = 'its host is empty, or is neither a host name (ASCII letters, digits, ".", "-" and "_", once IDNA has mapped it) nor a bracketed IPv6 address literal. This is narrower than REQ-polaris-generation-046 states, which says only "a host": a host name holding "~" or a sub-delimiter ("!", "$", "&", "\'", "(", ")", "*", "+", ",", ";" or "="), and an IPvFuture literal such as [v1.x], are refused';
 const PORT = 'its port is not a decimal number';
 const PATH_RULE = 'it names no path, or its path has an empty segment once normalised';
 const SCP_PATH = 'its scp-form path begins with "//"';
@@ -135,7 +135,10 @@ describe('the admitted locator forms (046, line 17): what an operator may give',
     ['https://\u00fc:1:2/a/b', HOST_RULE],      // the name before the port holds a ':'
     ['ssh://\u00fc]x/a/b', HOST_RULE],
     ['https://\u00fc!.de/a/b', HOST_RULE],       // IDNA maps it to xn--!-dha.de, which is no host name
-    ['https://\u00fc%2ecom/a/b', PERCENT],       // refused before IDNA, which would percent-decode it to xn--tda.com
+    ['https://\u00fc%2ecom/a/b', PERCENT],
+    ['https://a~b.example/a/b', HOST_RULE],      // narrower than 046: '~' and the sub-delimiters
+    ['https://a$b.example/a/b', HOST_RULE],
+    ['https://[v1.x]/a/b', HOST_RULE],           // narrower than 046: an IPvFuture literal       // refused before IDNA, which would percent-decode it to xn--tda.com
     ['https://xn--bcher-kva.de/a/b', 'admitted'],
     ['h:/a', 'admitted'],
     ['.h:a/b', 'admitted'],
