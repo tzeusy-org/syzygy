@@ -195,6 +195,8 @@ describe('session-prompt inventory', () => {
       reason: 'inventory session 3\'s brief was issued and its files stay, but the run\'s launch.json is not in the exact form init writes, so it cannot be rewritten keeping every other field byte-identical, so the run record does not say it was issued and every page says the two disagree' } });
     expect(fs.readFileSync(file, 'utf8')).toBe(compact);
     expect(fs.existsSync(path.join(run, 'inventory', 'session-3.json'))).toBe(true);
+    // The session was issued, so its step is logged though the rewrite refused (R-PDJA-33-RULINGS-1 finding 7).
+    expect(steps(run).at(-1)).toMatchObject({ step: 'session-prompt', outcome: 'issued', role: 'inventory', session: 3 });
   });
 
   it('puts the session directory where no ancestor below the state root reaches a draft, so `..` never finds drafts/', async () => {

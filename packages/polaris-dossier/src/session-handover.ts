@@ -232,10 +232,12 @@ export async function sessionPrompt(runDir: string, request: SessionPromptReques
   } catch (cause) {
     return refuse('write', `inventory session ${session} could not be prepared (${errno(cause)}); anything already written stays, and the next session-prompt takes the next number`);
   }
+  // The session is issued once its files are written, so its step is logged before launch.json is rewritten: a failed rewrite then
+  // refuses, but never leaves an issued session out of the step log (R-PDJA-33-RULINGS-1 finding 7).
+  logStep(run, 'session-prompt', now, { outcome: 'issued', role: 'inventory', session, promptSha256 });
   // The run record's brief stage, rewritten to the reached form the prompt record stores (the owner's ruling of 2026-11-14).
   const rewritten = recordIssuedBrief(run, built.stageStatement);
   if (!rewritten.ok) return refuse('write', `inventory session ${session}'s brief was issued and its files stay, but ${rewritten.reason}, so the run record does not say it was issued and every page says the two disagree`);
-  logStep(run, 'session-prompt', now, { outcome: 'issued', role: 'inventory', session, promptSha256 });
   return { ok: true, report: {
     command: 'session-prompt', outcome: 'issued', role: 'inventory', run, session, directory, prompt, promptSha256, commands, context,
     executionRule: { arm: 'sec-3', notPermittedBecause: built.executionRule.notPermittedBecause },
@@ -446,10 +448,11 @@ export async function startSessions(runDir: string, request: Omit<SessionPromptR
   } catch (cause) {
     return refuse('write', `the waiting sessions could not be prepared (${errno(cause)}); anything already written stays, and the next session-prompt takes the next numbers`);
   }
+  // Logged before launch.json is rewritten, as above (R-PDJA-33-RULINGS-1 finding 7).
+  logStep(run, 'session-prompt', now, { outcome: 'issued', role: 'all', mode: WAITING_MODE, sessions: plan.map(({ started }) => ({ role: started.role, ...(started.kind ? { kind: started.kind } : {}), session: started.session, promptSha256: started.promptSha256 })) });
   // The run record's brief stage, rewritten to the reached form the inventory prompt record stores (the owner's ruling of 2026-11-14).
   const rewritten = recordIssuedBrief(run, built.stageStatement);
   if (!rewritten.ok) return refuse('write', `the waiting sessions were prepared and inventory session ${inventorySession}'s brief was issued, and their files stay, but ${rewritten.reason}, so the run record does not say it was issued and every page says the two disagree`);
-  logStep(run, 'session-prompt', now, { outcome: 'issued', role: 'all', mode: WAITING_MODE, sessions: plan.map(({ started }) => ({ role: started.role, ...(started.kind ? { kind: started.kind } : {}), session: started.session, promptSha256: started.promptSha256 })) });
   return { ok: true, report: {
     command: 'session-prompt', outcome: 'issued', role: 'all', mode: WAITING_MODE, run, sessions: plan.map(({ started }) => started), context,
     executionRule: { arm: 'sec-3', notPermittedBecause: built.executionRule.notPermittedBecause },

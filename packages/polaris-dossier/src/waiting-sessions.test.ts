@@ -160,6 +160,9 @@ describe('launch.json\'s brief stage (the owner\'s ruling of 2026-11-14, "Update
       reason: 'the waiting sessions were prepared and inventory session 1\'s brief was issued, and their files stay, but the run\'s launch.json is not in the exact form init writes, so it cannot be rewritten keeping every other field byte-identical, so the run record does not say it was issued and every page says the two disagree' });
     expect(fs.readFileSync(file, 'utf8')).toBe(compact);
     expect(fs.existsSync(path.join(h.run, 'inventory', 'session-1.json'))).toBe(true);
+    // The sessions were issued, so their step is logged though the rewrite refused (R-PDJA-33-RULINGS-1 finding 7).
+    const last = JSON.parse(fs.readFileSync(path.join(h.run, 'steps.jsonl'), 'utf8').trim().split('\n').at(-1)!);
+    expect(last).toMatchObject({ step: 'session-prompt', outcome: 'issued', role: 'all' });
   });
 });
 
