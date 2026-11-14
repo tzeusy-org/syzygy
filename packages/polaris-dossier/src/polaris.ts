@@ -285,6 +285,8 @@ class Screen {
 }
 
 async function supervise(options: Options, ports: CliPorts): Promise<number> {
+  const previous = options.run === undefined ? null : readState(options.stateRoot, options.run);
+  if (previous === null && (options.audience === undefined || options.audience.trim() === '')) return refuse('--audience is required for a new launched run');
   const screen = new Screen('syzygy polaris — launched run (prototype)   detach: C-b d   windows: C-b n / C-b p');
   const fail = async (reason: string): Promise<number> => {
     screen.event(`STOPPED: ${reason}`);
@@ -293,8 +295,8 @@ async function supervise(options: Options, ports: CliPorts): Promise<number> {
     return 1;
   };
   let state: SupervisorState;
-  if (options.run !== undefined && readState(options.stateRoot, options.run) !== null) {
-    state = readState(options.stateRoot, options.run)!;
+  if (previous !== null) {
+    state = previous;
     delete state.stopped;
     screen.event(`resuming ${state.runId}`);
   } else {
@@ -376,7 +378,7 @@ async function setUp(options: Options, ports: CliPorts, screen: Screen): Promise
   const config = {
     operator: options.operator, agentTool: 'claude-code', agentToolVersion: version, agentProvider: 'anthropic', model: options.model,
     deadline: options.deadline, agentTokenBudget: options.tokenBudget, agentTurnBudget: options.turnBudget, maxRepairCycles: options.repairCycles,
-    maxQuestions: options.questions, audience: options.audience ?? 'unspecified', operatorIsOwner: true,
+    maxQuestions: options.questions, audience: options.audience, operatorIsOwner: true,
   };
   fs.mkdirSync(options.stateRoot, { recursive: true, mode: 0o700 });
   const configFile = path.join(options.stateRoot, `.polaris-config-${process.pid}.json`);

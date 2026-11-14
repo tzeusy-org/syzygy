@@ -37,7 +37,7 @@ describe('reader standards: one text', () => {
   });
 
   it('is carried, with its version and digest, in the design review\'s criteria', () => {
-    const criteria = designCriteria('/r');
+    const criteria = designCriteria('/r', 'an operator');
     expect(criteria).toContain(READER_STANDARDS);
     const lead = criteria[criteria.indexOf(READER_STANDARDS) - 1]!;
     expect(lead).toContain(`(polaris-reader-standards-v1, sha256 ${sha(READER_STANDARDS)})`);

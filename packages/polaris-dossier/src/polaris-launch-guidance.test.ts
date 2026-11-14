@@ -1,16 +1,28 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { tempDir } from '@syzygy/test-kit';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   AUTHOR_SELF_CHECK, DEFAULT_REPAIR_CYCLES, LAUNCHED_GUIDANCE, RUN_LIMITS, isoSeconds, limitFault, limitsAnswer, limitsQuestion, OWNER_LINE, POLARIS_USAGE, authorPrompt, cycleBreakdown, endScreen,
-  fidelityDeliveryDue, fidelityRepairSpent, inventoryRepairMessage, readVerdict, latestChecks, limitStop, refusedAtLimit, repairSides, sessionClaudeArgs,
+  runPolarisCli, fidelityDeliveryDue, fidelityRepairSpent, inventoryRepairMessage, readVerdict, latestChecks, limitStop, refusedAtLimit, repairSides, sessionClaudeArgs,
 } from './polaris.js';
 import { inventoryPrompt, reviewPrompt, waitingInventoryPrompt, waitingReviewPrompt } from './session-handover.js';
 
 // syzygy-1z8m.1 and syzygy-1z8m.2: what the 2026-11-04 Redis run taught the launched run. Expected values are literals.
 
 describe('the run limits of a launched run (syzygy-1z8m.7)', () => {
+  it('refuses a new supervisor without a declared audience before setup writes or launches anything', async () => {
+    const stateRoot = tempDir('polaris-audience-');
+    const stderr = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
+    try {
+      for (const flags of [[], ['--audience', '  \n\t'], ['--resume', 'run-missing']]) {
+        expect(await runPolarisCli(['https://example.invalid/o/r', '--supervise', '--state-root', stateRoot, ...flags])).toBe(1);
+        expect(stderr).toHaveBeenLastCalledWith('syzygy polaris: refused: --audience is required for a new launched run\n');
+        expect(fs.readdirSync(stateRoot)).toEqual([]);
+      }
+    } finally { stderr.mockRestore(); }
+  });
+
   it('have no default: the usage says so, and the one question suggests values only for the operator to declare', () => {
     expect(DEFAULT_REPAIR_CYCLES).toBe(6);
     expect(POLARIS_USAGE).not.toContain('default 6');

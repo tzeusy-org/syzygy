@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { REVIEW_STATUS_REGION, isDossierPagePath, leadInQuotations, withoutReviewStatusRegion } from '@syzygy/polaris-generation-core/live';
 import { isRecord, sha256 } from '@syzygy/support';
+import { audienceGuidance } from './audience.js';
 import { declaredSessionId } from './check.js';
 import { DEFICIENT_SUBJECTS, checkDraftShape, designVerdictSchemaDocument, localDesignVerdictSchema } from './draft-schema.js';
 import { errno } from './inventory.js';
@@ -72,8 +73,9 @@ export function readLatestSite(run: string): SiteRead {
 }
 
 /** The criteria the design packet carries: Syzygy's own text. */
-export function designCriteria(runDir: string): readonly string[] {
+export function designCriteria(runDir: string, audience: string): readonly string[] {
   return [
+    ...audienceGuidance(audience),
     'You are the rendered-design review session of a Polaris dossier (REQ-polaris-generation-006, read for this mode by REQ-polaris-generation-035). Judge the rendered pages only from this packet: every file of one render, each HTML page with its review-status region removed and the machine view without its reviewStatus member. You are given nothing else and must use nothing else.',
     'Judge the dossier as a reader meets it: whether each page is navigable and legible; whether every label (Observed, Inferred, Unknown, non-normative) shows where it applies and agrees with machine.json, which on a narrative page (index.html, poles/ and deep-dives/) means in its evidence view; whether each quotation shows its anchor, each Unknown its reason and each diagram its relationship and line styles; and whether every page carries the run\'s one sentence and a link to the appendix, which holds the disclosure. The cited spans are on the source pages under sources/, as Syzygy located them at the render. Whether the prose is faithful to its sources is the fidelity review\'s question, not yours.',
     'Judge too whether a software engineer new to the project could follow each page on one reading: a section that describes components, steps or hand-offs with no diagram, an enumeration of three or more items written as one sentence, a paragraph that would read better as a diagram, table, cards or steps, a section whose prose runs well past what a reader takes in at once, a deep dive or section titled by a function, type or file name rather than by what it explains, or a passage that needs prior knowledge of the project or its domain is a finding against that page (advisory, or blocking where the page cannot be followed). An advisory finding alone does not make a page deficient.',
@@ -118,8 +120,8 @@ export function outsideRegion(files: ReadonlyMap<string, string>): { readonly ok
   return { ok: true, files: out };
 }
 
-/** Build the design packet from one render's files. Pure: the same files outside the region always give the same bytes. */
-export function buildDesignPacket(input: { readonly run: string; readonly runId: string; readonly pinnedRevision: string; readonly files: ReadonlyMap<string, string> }): DesignPacketBuild {
+/** Build the design packet from one render's files and declared audience. Pure: the same inputs give the same bytes. */
+export function buildDesignPacket(input: { readonly run: string; readonly runId: string; readonly pinnedRevision: string; readonly audience: string; readonly files: ReadonlyMap<string, string> }): DesignPacketBuild {
   const outside = outsideRegion(input.files);
   if (!outside.ok) return { ok: false, stage: 'region', reason: outside.reason };
   const pages = [...outside.files.keys()].filter((file) => file.endsWith('.html'));
@@ -133,7 +135,7 @@ export function buildDesignPacket(input: { readonly run: string; readonly runId:
       excluded: `the element of every HTML page marked data-review-status-region="${REVIEW_STATUS_REGION}", and the ${MACHINE_VIEW_REGION_MEMBER} member of ${MACHINE_VIEW_FILE}: the only part a later render may change without retiring this review`,
     },
     files: [...outside.files].map(([file, content]) => ({ path: file, sha256: sha256(content), content })),
-    criteria: designCriteria(input.run),
+    criteria: designCriteria(input.run, input.audience),
     verdictSchema: designVerdictSchemaDocument({ pinnedRevision: input.pinnedRevision }),
   };
   const bytes = `${JSON.stringify(packet, null, 2)}\n`;

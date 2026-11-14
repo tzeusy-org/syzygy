@@ -29,7 +29,7 @@ describe('outsideRegion and buildDesignPacket', () => {
   const site = (region: string, status: unknown): Map<string, string> => new Map([
     ['index.html', page('<p>Overview.</p>', region)], ['sources/a.html', page('<p>A.</p>', region)], ['dossier.json', '{"pages":[]}\n'], ['machine.json', machine(status)],
   ]);
-  const input = (files: ReadonlyMap<string, string>) => ({ run: '/state/run-x', runId: 'run-x', pinnedRevision: 'a'.repeat(40), files });
+  const input = (files: ReadonlyMap<string, string>) => ({ run: '/state/run-x', runId: 'run-x', pinnedRevision: 'a'.repeat(40), audience: 'an operator', files });
 
   it('gives the same packet for two renders that differ only in the region and the machine view\'s reviewStatus', () => {
     const one = buildDesignPacket(input(site(`${OPEN}<ul><li>none</li></ul></aside>`, [{ id: 'review-status/design', text: 'none' }])));
@@ -45,6 +45,10 @@ describe('outsideRegion and buildDesignPacket', () => {
 
   it('changes the packet for a change outside the region on any file', () => {
     const base = buildDesignPacket(input(site(`${OPEN}</aside>`, [])));
+    const otherAudience = buildDesignPacket({ ...input(site(`${OPEN}</aside>`, [])), audience: 'Operators and integrators deploying Redis' });
+    if (!base.ok || !otherAudience.ok) throw new Error('packet refused');
+    expect(otherAudience.sha256).not.toBe(base.sha256);
+    expect(JSON.parse(otherAudience.bytes).criteria).toContain('"Operators and integrators deploying Redis"');
     for (const [file, change] of [['index.html', (t: string) => t.replace('Overview.', 'Overview!')], ['dossier.json', (t: string) => t.replace('[]', '[1]')], ['machine.json', (t: string) => t.replace('Kestrel', 'Kestrel.')]] as const) {
       const files = site(`${OPEN}</aside>`, []);
       files.set(file, change(files.get(file)!));
