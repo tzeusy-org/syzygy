@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { tempDir } from '@syzygy/test-kit';
-import { briefCopyOf, launchDisclosureItems, launchDisclosureUnknown, publicDeclarationOf, readLaunchDisclosure, statementItemId, storedBriefItem, type LaunchDisclosure } from './launch-disclosure.js';
+import { briefCopyOf, briefStatementsAfter, launchDisclosureItems, launchDisclosureUnknown, publicDeclarationOf, readLaunchDisclosure, recordIssuedBrief, statementItemId, storedBriefItem, type LaunchDisclosure } from './launch-disclosure.js';
 
 /** The run record's launch disclosure (REQ-polaris-generation-046, line 37): read back fail-closed, and its human form, item by item. Every
  * expected value is a literal. */
@@ -23,6 +23,7 @@ const launched: LaunchDisclosure = {
   ] as LaunchDisclosure['statements'],
   label: 'Inferred',
 };
+const DISAGREE = 'The run record\'s brief-stage statements in launch.json and the briefs\' own records disagree, so which briefs Syzygy issued, and where each directed its session, is Unknown beyond what each brief\'s own record says.';
 const write = (text: string): string => {
   const dir = tempDir('launch-disclosure-');
   fs.writeFileSync(path.join(dir, 'launch.json'), text);
@@ -72,7 +73,8 @@ describe('reading the run record\'s launch disclosure back (fail-closed)', () =>
 describe('the launch disclosure in human form', () => {
   it('a launched run that recorded its consents: each item 046 names, the residuals, the stage statements, the drawer and who answered', () => {
     const briefs = statement('briefs/authoring', 'brief or packet delivered', 'copy-class', true, 'Briefed.');
-    expect(launchDisclosureItems(launched, [storedBriefItem({ stageStatement: briefs }, 'The authoring brief', 'authoring')]).map(i => [i.id, i.label, i.text.slice(0, 80)])).toEqual([
+    const rewritten = { ...launched, statements: [...launched.statements.slice(0, 4), briefs] } as LaunchDisclosure;
+    expect(launchDisclosureItems(rewritten, [storedBriefItem({ stageStatement: briefs }, 'The authoring brief', 'authoring')]).map(i => [i.id, i.label, i.text.slice(0, 80)])).toEqual([
       ['launch/consents', 'Inferred', 'The consents were recorded at launch: LAUNCH-OBSERVATION-x, LAUNCH-DRAWER-y, in '],
       ['launch/identity', 'Inferred', 'The repository identity repository:redis-redis and its normalised URL github.com'],
       ['launch/public', 'Inferred', 'The operator\'s declaration whether the repository is public: public [Inferred].'],
@@ -100,11 +102,33 @@ describe('the launch disclosure in human form', () => {
     expect(briefItems([storedBriefItem({ stageStatement: noCopy }, 'The inventory brief for session 1', 'inventory-1'), storedBriefItem({ copy: null }, 'The authoring brief', 'authoring')])).toEqual([
       ['launch/brief-or-packet-delivered/no-copy/reached/briefs/inventory-1', 'Inferred', 'Sent to the operator\'s clone.'],
       ['launch/brief-or-packet-delivered/unknown/authoring', 'Unknown', 'The authoring brief was issued, and its record carries no brief-stage statement Syzygy can read, so whether it directed its session to a copy is Unknown.'],
+      // launch.json still says no brief was issued: the two disagree.
+      ['launch/brief-or-packet-delivered/disagree', 'Unknown', DISAGREE],
     ]);
     // A stored statement of another stage, or not reached, is not a brief's statement.
     for (const bad of [{ ...noCopy, stage: 'question asked' }, { ...noCopy, reached: false }, { ...noCopy, label: 'Observed' }, 'Briefed.']) {
       expect(storedBriefItem({ stageStatement: bad }, 'The authoring brief', 'authoring').label).toBe('Unknown');
     }
+  });
+
+  it('the record\'s brief-stage statements and the briefs\' own records must agree; where they do not, an Unknown item says so (the owner\'s ruling of 2026-11-14)', () => {
+    const briefItems = (d: LaunchDisclosure, issued: Parameters<typeof launchDisclosureItems>[1]) => launchDisclosureItems(d, issued).filter(i => i.id.includes('brief')).map(i => [i.id, i.label, i.text]);
+    const one = statement('briefs/authoring', 'brief or packet delivered', 'no-copy', true, 'Sent to the clone.');
+    const two = statement('briefs/inventory-1', 'brief or packet delivered', 'no-copy', true, 'Sent to the clone too.');
+    const withBriefs = (...s: ReturnType<typeof statement>[]) => ({ ...launched, statements: [...launched.statements.slice(0, 4), ...s] }) as LaunchDisclosure;
+    const item1 = ['launch/brief-or-packet-delivered/no-copy/reached/briefs/authoring', 'Inferred', 'Sent to the clone.'];
+    const item2 = ['launch/brief-or-packet-delivered/no-copy/reached/briefs/inventory-1', 'Inferred', 'Sent to the clone too.'];
+    const stored = (s: ReturnType<typeof statement>, which: string, id: string) => storedBriefItem({ stageStatement: s }, which, id);
+    const issued = [stored(one, 'The authoring brief', 'authoring'), stored(two, 'The inventory brief for session 1', 'inventory-1')];
+    // Agreeing: the stored statements alone.
+    expect(briefItems(withBriefs(one, two), issued)).toEqual([item1, item2]);
+    // The record holds one fewer, one more, another text, or another order: they disagree.
+    expect(briefItems(withBriefs(one), issued)).toEqual([item1, item2, ['launch/brief-or-packet-delivered/disagree', 'Unknown', DISAGREE]]);
+    expect(briefItems(withBriefs(one, two), issued.slice(0, 1))).toEqual([item1, ['launch/brief-or-packet-delivered/disagree', 'Unknown', DISAGREE]]);
+    expect(briefItems(withBriefs(one, { ...two, text: 'Other.' }), issued)).toEqual([item1, item2, ['launch/brief-or-packet-delivered/disagree', 'Unknown', DISAGREE]]);
+    expect(briefItems(withBriefs(two, one), issued)).toEqual([item1, item2, ['launch/brief-or-packet-delivered/disagree', 'Unknown', DISAGREE]]);
+    // The record says a brief was issued, but no brief's record exists: the record's own statements, and the disagreement.
+    expect(briefItems(withBriefs(one), [])).toEqual([item1, ['launch/brief-or-packet-delivered/disagree', 'Unknown', DISAGREE]]);
   });
 
   it('none recorded, no declaration, no drawer, no question', () => {
@@ -169,5 +193,66 @@ describe('whether a brief names a copy, decided fail-closed (R-PDJA-33-SLICE-D-1
   it('the copies directory itself, or a sibling of it named alike, is not under it', () => {
     expect(briefCopyOf({ state: 'absent' }, { dir: runDir, clone: path.join(root, 'copies'), pinnedAt: before })).toEqual({ ok: true, copy: null });
     expect(briefCopyOf({ state: 'absent' }, { dir: runDir, clone: path.join(root, 'copies-x', 'copy-AbC123'), pinnedAt: before })).toEqual({ ok: true, copy: null });
+  });
+});
+
+describe('rewriting launch.json when a brief is issued (the owner\'s ruling of 2026-11-14, "Update launch.json")', () => {
+  const stmt = (...a: Parameters<typeof statement>) => statement(...a) as LaunchDisclosure['statements'][number];
+  const canonical = (d: unknown): string => `${JSON.stringify(d, null, 2)}\n`;
+  const authoring = stmt('briefs/authoring', 'brief or packet delivered', 'copy-class', true, 'Briefed.');
+  const inventory = stmt('briefs/inventory-1', 'brief or packet delivered', 'copy-class', true, 'Inventory briefed.');
+  const head = launched.statements.slice(0, 4);
+  const file = (dir: string): string => fs.readFileSync(path.join(dir, 'launch.json'), 'utf8');
+
+  it('the brief stage: the not-reached form and an earlier statement of the same brief dropped, the issued one appended', () => {
+    expect(briefStatementsAfter(launched.statements, authoring)).toEqual([...head, authoring]);
+    expect(briefStatementsAfter([...head, authoring], inventory)).toEqual([...head, authoring, inventory]);
+    expect(briefStatementsAfter([...head, authoring, inventory], { ...authoring, text: 'Again.' })).toEqual([...head, inventory, { ...authoring, text: 'Again.' }]);
+    // A statement of another stage that happens to carry the id is kept.
+    const odd = stmt('briefs', 'question asked', 'both', false, 'Odd.');
+    expect(briefStatementsAfter([odd], authoring)).toEqual([odd, authoring]);
+  });
+
+  it('rewrites the brief stage atomically, every other field byte-identical, leaving no temporary file', () => {
+    const dir = write(canonical(launched));
+    expect(recordIssuedBrief(dir, authoring)).toEqual({ ok: true, updated: true });
+    expect(file(dir)).toBe(canonical({ ...launched, statements: [...head, authoring] }));
+    expect(fs.readdirSync(dir)).toEqual(['launch.json']);
+    // Every byte but the brief stage's is the original's: restoring the statements restores the file.
+    expect(canonical({ ...JSON.parse(file(dir)), statements: launched.statements })).toBe(canonical(launched));
+    expect(file(dir).split('"statements"')[0]).toBe(canonical(launched).split('"statements"')[0]);
+    expect(readLaunchDisclosure(dir)).toEqual({ state: 'ok', disclosure: { ...launched, statements: [...head, authoring] } });
+    expect(recordIssuedBrief(dir, inventory)).toEqual({ ok: true, updated: true });
+    expect(file(dir)).toBe(canonical({ ...launched, statements: [...head, authoring, inventory] }));
+    expect(fs.statSync(path.join(dir, 'launch.json')).mode & 0o777).toBe(0o600);
+  });
+
+  it('a run with no launch.json has nothing to rewrite, and none is made', () => {
+    const dir = tempDir('launch-disclosure-');
+    expect(recordIssuedBrief(dir, authoring)).toEqual({ ok: true, updated: false });
+    expect(fs.readdirSync(dir)).toEqual([]);
+  });
+
+  it('refuses, leaving the file as it is, where it is not the record or not in the exact form init writes', () => {
+    for (const [text, reason] of [
+      ['{}', 'the run\'s launch.json cannot be read as the record init writes (it is not a polaris-dossier-launch-disclosure/1 record)'],
+      [JSON.stringify(launched), 'the run\'s launch.json is not in the exact form init writes, so it cannot be rewritten keeping every other field byte-identical'],
+      [canonical(launched).trimEnd(), 'the run\'s launch.json is not in the exact form init writes, so it cannot be rewritten keeping every other field byte-identical'],
+    ] as const) {
+      const dir = write(text);
+      expect(recordIssuedBrief(dir, authoring)).toEqual({ ok: false, reason });
+      expect(file(dir)).toBe(text);
+      expect(fs.readdirSync(dir)).toEqual(['launch.json']);
+    }
+  });
+
+  it('refuses where the temporary file cannot be written; launch.json is unchanged', () => {
+    const dir = write(canonical(launched));
+    fs.chmodSync(dir, 0o500);
+    try {
+      expect(recordIssuedBrief(dir, authoring)).toEqual({ ok: false, reason: 'the run\'s launch.json could not be rewritten (EACCES); it is unchanged' });
+    } finally { fs.chmodSync(dir, 0o700); }
+    expect(file(dir)).toBe(canonical(launched));
+    expect(fs.readdirSync(dir)).toEqual(['launch.json']);
   });
 });

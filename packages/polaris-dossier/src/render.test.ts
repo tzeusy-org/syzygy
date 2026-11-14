@@ -490,7 +490,12 @@ describe('render', () => {
       consents: { recorded: [], commit: null, relied: [] },
       subject: { identity: 'repository:kestrel', url: 'github.com/example/kestrel', source: 'the Upstream of the observation consent another act recorded, which --url names', proposedBy: null, publicDeclaration: null },
       drawer: null,
-      statements: [{ id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' }],
+      // As Syzygy rewrote it when each brief was issued (the owner's ruling of 2026-11-14): it agrees with the briefs' own records.
+      statements: [
+        { id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' },
+        { id: 'briefs/authoring', stage: 'brief or packet delivered', runClass: 'no-copy', reached: true, label: 'Inferred', text: 'The authoring brief Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' },
+        { id: 'briefs/inventory-1', stage: 'brief or packet delivered', runClass: 'no-copy', reached: true, label: 'Inferred', text: 'The inventory brief for session 1 Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' },
+      ],
       label: 'Inferred',
     }));
     const result = await renderRun(run, renderDeps());
@@ -533,6 +538,8 @@ describe('render', () => {
     expect(launch).toEqual([
       { id: 'launch/brief-or-packet-delivered/copy-class/reached/briefs/authoring', label: 'Inferred', text: 'STORED-AUTHORING-STATEMENT' },
       { id: 'launch/brief-or-packet-delivered/unknown/inventory-1', label: 'Unknown', text: 'The inventory brief for session 1 was issued, and its record carries no brief-stage statement Syzygy can read, so whether it directed its session to a copy is Unknown.' },
+      // launch.json still holds the not-reached form: it and the briefs' records disagree.
+      { id: 'launch/brief-or-packet-delivered/disagree', label: 'Unknown', text: 'The run record\'s brief-stage statements in launch.json and the briefs\' own records disagree, so which briefs Syzygy issued, and where each directed its session, is Unknown beyond what each brief\'s own record says.' },
     ]);
   });
 

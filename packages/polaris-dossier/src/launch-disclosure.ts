@@ -1,9 +1,10 @@
+import { randomBytes } from 'node:crypto';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { BoundedJsonError, parseBoundedJson, type LocalDisclosureItem } from '@syzygy/polaris-generation-core/live';
 import { isRecord } from '@syzygy/support';
 import { IDENTITY_RESIDUALS } from './launch-question.js';
-import type { LaunchStageName, LaunchStatement, RunClass, StatementClass } from './launch-statements.js';
+import { BRIEFS_NOT_REACHED, type LaunchStageName, type LaunchStatement, type RunClass, type StatementClass } from './launch-statements.js';
 import { COPY_DIRECTORY, RUN_LAYOUT } from './state-directory.js';
 
 /** The run record's launch disclosure (REQ-polaris-generation-046, line 37, under 047's stage rule).
@@ -14,11 +15,13 @@ import { COPY_DIRECTORY, RUN_LAYOUT } from './state-directory.js';
  * identity was proposed and the identity residuals above; under REQ-polaris-generation-047's stage rule ...; the drawer statement relied on,
  * if any; that who answered rests on the operator's declaration, labelled Inferred".
  *
- * `init` writes it once (through `createRunDirectory`), as `launch.json` beside `run.json`, for every run it creates: run.json's exact key set is read by every step, so
+ * `init` writes it (through `createRunDirectory`), as `launch.json` beside `run.json`, for every run it creates: run.json's exact key set is read by every step, so
  * the disclosure is its own file and a run initialised before it existed stays readable. It holds the stages a run reaches by `init`, the
- * brief stage's among them in its not-reached form; each brief Syzygy issues stores its own reached form in its record (`brief.json`, an
- * inventory session's prompt record), and a page reads those stored statements, never deriving them. The file lies within the agent
- * sessions' write reach, so every value read back is Inferred, and it is re-validated in full. */
+ * brief stage's among them in its not-reached form. Each brief Syzygy issues stores its own reached form in its record (`brief.json`, an
+ * inventory session's prompt record), and, by the owner's ruling of 2026-11-14 ("Update launch.json"), Syzygy then rewrites this file's
+ * brief-stage statements to the reached forms (`recordIssuedBrief`), every other field byte-identical. A page reads the stored statements,
+ * never deriving them, and says where the two disagree. The file lies within the agent sessions' write reach, so every value read back is
+ * Inferred, and it is re-validated in full. */
 
 export const LAUNCH_DISCLOSURE_FORMAT = 'polaris-dossier-launch-disclosure/1';
 const LIMITS = Object.freeze({ maxBytes: 65_536, maxNodes: 512, maxDepth: 4 });
@@ -72,23 +75,29 @@ export function isStatement(v: unknown): v is LaunchStatement {
 /** The run's launch disclosure, read fail-closed: `absent` where no file of that name exists (a run initialised before it was written);
  * `unreadable`, with why, where something is there that is not the record `init` writes. */
 export function readLaunchDisclosure(runDir: string): LaunchDisclosureRead {
+  return readDisclosureFile(runDir).read;
+}
+
+/** The read, with the file's text where it reads as the record. */
+function readDisclosureFile(runDir: string): { readonly read: LaunchDisclosureRead; readonly text: string | null } {
+  const done = (read: LaunchDisclosureRead, text: string | null = null) => ({ read, text });
   let text: string;
   try {
     const file = path.join(runDir, RUN_LAYOUT.launchDisclosure);
     const stat = fs.lstatSync(file);
-    if (!stat.isFile()) return { state: 'unreadable', why: 'it is not a regular file' };
+    if (!stat.isFile()) return done({ state: 'unreadable', why: 'it is not a regular file' });
     text = fs.readFileSync(file, 'utf8');
   } catch (cause) {
     const code = (cause as NodeJS.ErrnoException).code;
-    return code === 'ENOENT' ? { state: 'absent' } : { state: 'unreadable', why: `it cannot be read (${code ?? 'unknown-error'})` };
+    return done(code === 'ENOENT' ? { state: 'absent' } : { state: 'unreadable', why: `it cannot be read (${code ?? 'unknown-error'})` });
   }
   let v: unknown;
   try { v = parseBoundedJson(text, LIMITS); } catch (cause) {
-    return { state: 'unreadable', why: `it is not one bounded JSON object (${cause instanceof BoundedJsonError ? cause.code : 'invalid-json'})` };
+    return done({ state: 'unreadable', why: `it is not one bounded JSON object (${cause instanceof BoundedJsonError ? cause.code : 'invalid-json'})` });
   }
   const keys = ['format', 'runClass', 'launched', 'operatorClone', 'copy', 'consents', 'subject', 'drawer', 'statements', 'label'];
   if (!isRecord(v) || !exactKeys(v, keys) || v['format'] !== LAUNCH_DISCLOSURE_FORMAT || v['label'] !== 'Inferred') {
-    return { state: 'unreadable', why: `it is not a ${LAUNCH_DISCLOSURE_FORMAT} record` };
+    return done({ state: 'unreadable', why: `it is not a ${LAUNCH_DISCLOSURE_FORMAT} record` });
   }
   const consents = v['consents'], subject = v['subject'];
   const ok = (v['runClass'] === 'copy-class' || v['runClass'] === 'no-copy') && typeof v['launched'] === 'boolean' && isText(v['operatorClone'])
@@ -102,8 +111,43 @@ export function readLaunchDisclosure(runDir: string): LaunchDisclosureRead {
     && isText(subject['identity']) && isText(subject['url']) && isText(subject['source']) && nullOr(subject['proposedBy'], isText) && nullOr(subject['publicDeclaration'], isText);
   const rest = isRecord(consents) && isTexts(consents['relied']) && nullOr(v['drawer'], isText)
     && Array.isArray(v['statements']) && v['statements'].length > 0 && v['statements'].every(isStatement);
-  if (!ok || !subjectOk || !rest) return { state: 'unreadable', why: `it carries a field that is not of the form ${LAUNCH_DISCLOSURE_FORMAT} gives` };
-  return { state: 'ok', disclosure: v as unknown as LaunchDisclosure };
+  if (!ok || !subjectOk || !rest) return done({ state: 'unreadable', why: `it carries a field that is not of the form ${LAUNCH_DISCLOSURE_FORMAT} gives` });
+  return done({ state: 'ok', disclosure: v as unknown as LaunchDisclosure }, text);
+}
+
+const BRIEF_STAGE: LaunchStageName = 'brief or packet delivered';
+
+/** The run record's brief-stage statements once Syzygy has issued a brief: the not-reached form and any earlier statement of the same brief
+ * dropped, the issued brief's reached form appended (the brief stage is the last, so the order of stages holds). */
+export function briefStatementsAfter(statements: readonly LaunchStatement[], issued: LaunchStatement): LaunchStatement[] {
+  return [...statements.filter(s => !(s.stage === BRIEF_STAGE && (s.id === BRIEFS_NOT_REACHED.id || s.id === issued.id))), issued];
+}
+
+export type IssuedBriefRecord = { readonly ok: true; readonly updated: boolean } | { readonly ok: false; readonly reason: string };
+
+/** Rewrite the run's launch disclosure for a brief Syzygy has just issued (the owner's ruling of 2026-11-14, "Update launch.json"): its
+ * brief-stage statements become `briefStatementsAfter`, every other field byte-identical, written to a temporary file in the run directory
+ * and renamed over `launch.json`, so a reader sees the old file or the new one, never a part. A run with no launch disclosure (one
+ * initialised before it existed, which `briefCopyOf` admits) has nothing to rewrite. A file that is not the record `init` writes, or not
+ * in the exact form it writes it, is left as it is and the rewrite refused, since no other field could be kept byte-identical. */
+export function recordIssuedBrief(runDir: string, issued: LaunchStatement): IssuedBriefRecord {
+  const file = path.join(runDir, RUN_LAYOUT.launchDisclosure);
+  const { read, text } = readDisclosureFile(runDir);
+  if (read.state === 'absent') return { ok: true, updated: false };
+  if (read.state === 'unreadable') return { ok: false, reason: `the run's ${RUN_LAYOUT.launchDisclosure} cannot be read as the record init writes (${read.why})` };
+  if (text !== `${JSON.stringify(read.disclosure, null, 2)}\n`) {
+    return { ok: false, reason: `the run's ${RUN_LAYOUT.launchDisclosure} is not in the exact form init writes, so it cannot be rewritten keeping every other field byte-identical` };
+  }
+  const next = `${JSON.stringify({ ...read.disclosure, statements: briefStatementsAfter(read.disclosure.statements, issued) }, null, 2)}\n`;
+  const temp = path.join(runDir, `.${RUN_LAYOUT.launchDisclosure}.${randomBytes(8).toString('hex')}.tmp`);
+  try {
+    fs.writeFileSync(temp, next, { mode: 0o600, flag: 'wx' });
+    fs.renameSync(temp, file);
+  } catch (cause) {
+    try { fs.rmSync(temp, { force: true }); } catch { /* the temporary file is left; launch.json is unchanged */ }
+    return { ok: false, reason: `the run's ${RUN_LAYOUT.launchDisclosure} could not be rewritten (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'}); it is unchanged` };
+  }
+  return { ok: true, updated: true };
 }
 
 /** The run record's form of the operator's public declaration: as given, or as the launch observation consent relied on records it; none
@@ -128,8 +172,9 @@ export function storedBriefItem(record: unknown, which: string, id: string): Loc
 }
 
 /** The launch disclosure in human form, each item with its id and label, for the init output and every page. `issued` holds an item per brief
- * Syzygy issued, from each brief's own record (`storedBriefItem`); where there is any, they stand in place of the record's not-reached
- * brief-stage statement. `init` passes none, since no brief exists yet. */
+ * Syzygy issued, from each brief's own record (`storedBriefItem`); where there is any, they stand in place of the record's brief-stage
+ * statements. `init` passes none, since no brief exists yet. The record's brief-stage statements must agree with them (the not-reached
+ * form where no brief was issued); where they do not, an Unknown item says so. */
 export function launchDisclosureItems(d: LaunchDisclosure, issued: readonly LocalDisclosureItem[]): LocalDisclosureItem[] {
   const items: LocalDisclosureItem[] = [];
   const item = (id: string, text: string): void => { items.push({ id: `launch/${id}`, text, label: 'Inferred' }); };
@@ -145,8 +190,14 @@ export function launchDisclosureItems(d: LaunchDisclosure, issued: readonly Loca
     item('proposed', `The identity was proposed by the rule (${d.subject.proposedBy}) and declared by the owner's phrase.`);
     IDENTITY_RESIDUALS.forEach((residual, i) => item(`residual-${i + 1}`, residual));
   }
-  for (const s of d.statements) if (!(issued.length > 0 && s.id === 'briefs')) items.push(statementItem(s));
-  items.push(...issued);
+  const recorded = d.statements.filter(s => s.stage === BRIEF_STAGE).map(statementItem);
+  const shown = issued.length > 0 ? issued : [statementItem(BRIEFS_NOT_REACHED)];
+  for (const s of d.statements) if (s.stage !== BRIEF_STAGE) items.push(statementItem(s));
+  items.push(...(issued.length > 0 ? issued : recorded));
+  const key = (i: LocalDisclosureItem): string => JSON.stringify([i.id, i.label, i.text]);
+  if (recorded.map(key).join('\n') !== shown.map(key).join('\n')) {
+    items.push({ id: 'launch/brief-or-packet-delivered/disagree', label: 'Unknown', text: `The run record's brief-stage statements in ${RUN_LAYOUT.launchDisclosure} and the briefs' own records disagree, so which briefs Syzygy issued, and where each directed its session, is Unknown beyond what each brief's own record says.` });
+  }
   item('drawer', d.drawer === null ? 'No drawer statement was relied on.' : `The drawer statement relied on: ${d.drawer}.`);
   const asked = d.statements.some(s => s.id === 'question' && s.reached);
   item('answered', asked

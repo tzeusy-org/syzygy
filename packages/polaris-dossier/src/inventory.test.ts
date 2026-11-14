@@ -171,6 +171,32 @@ describe('session-prompt inventory', () => {
     expect(steps(run).at(-1)).toMatchObject({ step: 'session-prompt', outcome: 'issued', session: 1 });
   });
 
+  it('rewrites launch.json\'s brief stage to each inventory brief it issues, every other field byte-identical (the owner\'s ruling of 2026-11-14)', async () => {
+    const run = await runWithDrafts();
+    const QUESTION = { id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' };
+    const fields = (statements: unknown[]) => `${JSON.stringify({
+      format: 'polaris-dossier-launch-disclosure/1', runClass: 'no-copy', launched: false, operatorClone: cloneOf(run), copy: null,
+      consents: { recorded: [], commit: null, relied: [] },
+      subject: { identity: 'repository:redis-redis', url: 'github.com/redis/redis', source: 'the Upstream of the observation consent another act recorded, which --url names', proposedBy: null, publicDeclaration: null },
+      drawer: null, statements, label: 'Inferred',
+    }, null, 2)}\n`;
+    const issued = (n: number) => ({ id: `briefs/inventory-${n}`, stage: 'brief or packet delivered', runClass: 'no-copy', reached: true, label: 'Inferred', text: `The inventory brief for session ${n} Syzygy issued named the operator's clone as the run's clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.` });
+    const file = path.join(run, 'launch.json');
+    fs.writeFileSync(file, fields([QUESTION, { id: 'briefs', stage: 'brief or packet delivered', runClass: 'both', reached: false, label: 'Inferred', text: 'Syzygy issued no brief and delivered no packet.' }]));
+    expect((await sessionPrompt(run, { role: 'inventory' }, hand)).ok).toBe(true);
+    expect(fs.readFileSync(file, 'utf8')).toBe(fields([QUESTION, issued(1)]));
+    expect(JSON.parse(fs.readFileSync(path.join(run, 'inventory', 'session-1.json'), 'utf8')).stageStatement).toEqual(issued(1));
+    expect((await sessionPrompt(run, { role: 'inventory' }, hand)).ok).toBe(true);
+    expect(fs.readFileSync(file, 'utf8')).toBe(fields([QUESTION, issued(1), issued(2)]));
+    // A launch.json not in init's exact form is left as it is; the session's files stay, and the refusal says so.
+    const compact = JSON.stringify(JSON.parse(fs.readFileSync(file, 'utf8')));
+    fs.writeFileSync(file, compact);
+    expect(await sessionPrompt(run, { role: 'inventory' }, hand)).toMatchObject({ ok: false, refusal: { stage: 'write',
+      reason: 'inventory session 3\'s brief was issued and its files stay, but the run\'s launch.json is not in the exact form init writes, so it cannot be rewritten keeping every other field byte-identical, so the run record does not say it was issued and every page says the two disagree' } });
+    expect(fs.readFileSync(file, 'utf8')).toBe(compact);
+    expect(fs.existsSync(path.join(run, 'inventory', 'session-3.json'))).toBe(true);
+  });
+
   it('puts the session directory where no ancestor below the state root reaches a draft, so `..` never finds drafts/', async () => {
     const run = await runWithDrafts();
     const dir = await handedOver(run);

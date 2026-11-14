@@ -313,7 +313,8 @@ function launchDisclosure(
 ): LaunchDisclosure {
   const disclosure = (fields: Omit<LaunchDisclosure, 'format' | 'operatorClone' | 'drawer' | 'label'>): LaunchDisclosure => ({
     format: LAUNCH_DISCLOSURE_FORMAT, runClass: fields.runClass, launched: fields.launched, operatorClone: run.operatorClone, copy: fields.copy,
-    // The brief stage's not-reached form: init issues no brief (R-PDJA-33-SLICE-D-1 finding 5); each brief stores its reached form.
+    // The brief stage's not-reached form: init issues no brief (R-PDJA-33-SLICE-D-1 finding 5); each brief stores its reached form, and
+    // Syzygy rewrites this one to match when it issues the brief (`recordIssuedBrief`, the owner's ruling of 2026-11-14).
     consents: fields.consents, subject: fields.subject, drawer: run.drawer, statements: [...fields.statements, BRIEFS_NOT_REACHED], label: 'Inferred',
   });
   if (l === null) {

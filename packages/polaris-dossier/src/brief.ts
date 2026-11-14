@@ -15,7 +15,7 @@ import { poleLimitOf, type RunConfig } from './run-config.js';
 import type { RunSubject } from './run-record.js';
 import { READER_STANDARDS_SHA256, READER_STANDARDS_VERSION, readerStandardsSection } from './reader-standards.js';
 import { RUN_ID, RUN_LAYOUT } from './state-directory.js';
-import { briefCopyLines, briefCopyOf, readLaunchDisclosure, type BriefCopy } from './launch-disclosure.js';
+import { briefCopyLines, briefCopyOf, readLaunchDisclosure, recordIssuedBrief, type BriefCopy } from './launch-disclosure.js';
 import { issuedBriefStatement } from './launch-statements.js';
 
 /** `syzygy dossier brief <run>` (REQ-polaris-generation-033, 034, 036).
@@ -320,6 +320,7 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
     stageStatement: issuedBriefStatement({ role: 'authoring' }, copy.copy !== null),
     label: 'Inferred',
   };
+  const stageStatement = record.stageStatement;
   try {
     fs.writeFileSync(path.join(run, RUN_LAYOUT.brief), briefText, { mode: 0o600, flag: 'wx' });
     fs.writeFileSync(path.join(run, RUN_LAYOUT.draftSchema), schemaText, { mode: 0o600, flag: 'wx' });
@@ -327,6 +328,9 @@ export async function issueBrief(runDir: string, deps: BriefDeps): Promise<Brief
   } catch (cause) {
     return refuse('write', `the brief could not be written (${(cause as NodeJS.ErrnoException).code ?? 'unknown-error'}); any file already written stays, and the run cannot be briefed again`);
   }
+  // The run record's brief stage, rewritten to the reached form the brief's record stores (the owner's ruling of 2026-11-14).
+  const rewritten = recordIssuedBrief(run, stageStatement);
+  if (!rewritten.ok) return refuse('write', `the brief was issued and its files stay, but ${rewritten.reason}, so the run record still says no brief was issued and every page says the two disagree; the run cannot be briefed again`);
   return {
     ok: true,
     report: {

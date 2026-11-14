@@ -352,13 +352,17 @@ describe('brief: refused', () => {
   });
 
   describe('a copy-class run (REQ-polaris-generation-046, 047): the launch disclosure decides whether the brief names a copy', () => {
-    const disclosure = (over: Record<string, unknown> = {}) => JSON.stringify({
+    const QUESTION = { id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' };
+    const NOT_REACHED = { id: 'briefs', stage: 'brief or packet delivered', runClass: 'both', reached: false, label: 'Inferred', text: 'Syzygy issued no brief and delivered no packet.' };
+    const fields = (over: Record<string, unknown> = {}) => ({
       format: 'polaris-dossier-launch-disclosure/1', runClass: 'copy-class', launched: true, operatorClone: '/home/op/redis', copy: '/srv/clones/redis',
       consents: { recorded: [], commit: null, relied: ['launch observation consent X'] },
       subject: { identity: 'repository:redis-redis', url: 'github.com/redis/redis', source: 'the clone\'s remote origin', proposedBy: 'derived', publicDeclaration: null },
-      drawer: null, statements: [{ id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' }],
+      drawer: null, statements: [QUESTION, NOT_REACHED],
       label: 'Inferred', ...over,
     });
+    // As init writes it.
+    const disclosure = (over: Record<string, unknown> = {}) => `${JSON.stringify(fields(over), null, 2)}\n`;
 
     it('names the copy and the operator\'s clone, in the brief and its record', async () => {
       const run = runDirectory();
@@ -366,6 +370,11 @@ describe('brief: refused', () => {
       expect((await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW })).ok).toBe(true);
       expect(read(run, 'brief.md')).toContain(`- Pinned revision: \`${REV}\` (8.10.2)\n- Clone: \`/srv/clones/redis\`, a copy of the pinned commit alone, which Syzygy made from the operator's clone (Inferred, from the run's launch disclosure); this copy is the run's clone: work in it, and read it by this path, never as your working directory\n- The operator's clone, at \`/home/op/redis\`: do not read it, or anything under it. Everything this brief says of the clone means the copy. Whether you stayed in the copy is your own report.\n`);
       expect(JSON.parse(read(run, 'brief.json')).copy).toEqual({ dir: '/srv/clones/redis', operatorClone: '/home/op/redis' });
+      // launch.json's brief stage now says what the brief's record stores (the owner's ruling of 2026-11-14); every other field as it was.
+      const reached = { id: 'briefs/authoring', stage: 'brief or packet delivered', runClass: 'copy-class', reached: true, label: 'Inferred', text: 'The authoring brief Syzygy issued directed its session to work in the copy and not to read the operator\'s clone. Whether the session stayed in the copy is its own report [Inferred].' };
+      expect(read(run, 'launch.json')).toBe(disclosure({ statements: [QUESTION, reached] }));
+      expect(JSON.parse(read(run, 'brief.json')).stageStatement).toEqual(reached);
+      expect(fs.readdirSync(run).sort()).toEqual(['brief.json', 'brief.md', 'draft.schema.json', 'launch.json', 'run.json']);
     });
 
     it('a no-copy run\'s brief names none', async () => {
@@ -374,6 +383,17 @@ describe('brief: refused', () => {
       expect((await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW })).ok).toBe(true);
       expect(read(run, 'brief.md')).not.toContain('- Clone:');
       expect(JSON.parse(read(run, 'brief.json')).copy).toBeNull();
+      expect(read(run, 'launch.json')).toBe(disclosure({ runClass: 'no-copy', copy: null, statements: [QUESTION, { id: 'briefs/authoring', stage: 'brief or packet delivered', runClass: 'no-copy', reached: true, label: 'Inferred', text: 'The authoring brief Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' }] }));
+    });
+
+    it('a launch.json not in the exact form init writes is left as it is: the brief stays issued, and the refusal says the record disagrees', async () => {
+      const run = runDirectory();
+      const compact = JSON.stringify(fields({ runClass: 'no-copy', copy: null }));
+      fs.writeFileSync(path.join(run, 'launch.json'), compact);
+      expect(await issueBrief(run, { sources: sources(), openReader: tree(), now: () => NOW })).toMatchObject({ ok: false, refusal: { stage: 'write',
+        reason: 'the brief was issued and its files stay, but the run\'s launch.json is not in the exact form init writes, so it cannot be rewritten keeping every other field byte-identical, so the run record still says no brief was issued and every page says the two disagree; the run cannot be briefed again' } });
+      expect(read(run, 'launch.json')).toBe(compact);
+      expect(fs.readdirSync(run).sort()).toEqual(['brief.json', 'brief.md', 'draft.schema.json', 'launch.json', 'run.json']);
     });
 
     it('refuses where the disclosure cannot be read, or names a copy that is not the run record\'s clone; nothing is written', async () => {

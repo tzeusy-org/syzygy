@@ -8,6 +8,7 @@ import {
 } from './inventory.js';
 import { isoOf } from './iso-of.js';
 import { SYZYGY_LAUNCHED, launchedMarkerState } from './launched.js';
+import { recordIssuedBrief } from './launch-disclosure.js';
 import type { Outcome } from './outcome.js';
 import type { ReverifyOptions, ReverifyRefusal } from './reverify.js';
 import {
@@ -231,6 +232,9 @@ export async function sessionPrompt(runDir: string, request: SessionPromptReques
   } catch (cause) {
     return refuse('write', `inventory session ${session} could not be prepared (${errno(cause)}); anything already written stays, and the next session-prompt takes the next number`);
   }
+  // The run record's brief stage, rewritten to the reached form the prompt record stores (the owner's ruling of 2026-11-14).
+  const rewritten = recordIssuedBrief(run, built.stageStatement);
+  if (!rewritten.ok) return refuse('write', `inventory session ${session}'s brief was issued and its files stay, but ${rewritten.reason}, so the run record does not say it was issued and every page says the two disagree`);
   logStep(run, 'session-prompt', now, { outcome: 'issued', role: 'inventory', session, promptSha256 });
   return { ok: true, report: {
     command: 'session-prompt', outcome: 'issued', role: 'inventory', run, session, directory, prompt, promptSha256, commands, context,
@@ -442,6 +446,9 @@ export async function startSessions(runDir: string, request: Omit<SessionPromptR
   } catch (cause) {
     return refuse('write', `the waiting sessions could not be prepared (${errno(cause)}); anything already written stays, and the next session-prompt takes the next numbers`);
   }
+  // The run record's brief stage, rewritten to the reached form the inventory prompt record stores (the owner's ruling of 2026-11-14).
+  const rewritten = recordIssuedBrief(run, built.stageStatement);
+  if (!rewritten.ok) return refuse('write', `the waiting sessions were prepared and inventory session ${inventorySession}'s brief was issued, and their files stay, but ${rewritten.reason}, so the run record does not say it was issued and every page says the two disagree`);
   logStep(run, 'session-prompt', now, { outcome: 'issued', role: 'all', mode: WAITING_MODE, sessions: plan.map(({ started }) => ({ role: started.role, ...(started.kind ? { kind: started.kind } : {}), session: started.session, promptSha256: started.promptSha256 })) });
   return { ok: true, report: {
     command: 'session-prompt', outcome: 'issued', role: 'all', mode: WAITING_MODE, run, sessions: plan.map(({ started }) => started), context,
