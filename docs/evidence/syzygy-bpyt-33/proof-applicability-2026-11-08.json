@@ -1,0 +1,632 @@
+{
+  "schema": "syzygy-bpyt33-proof-applicability/1",
+  "epistemic": "[Observed] retained artifact identities and static source comparison; applicability [Inferred], uncovered obligations [Unknown].",
+  "measured_subject": "e8bc911d7328b5f035b06dbe571f8fb59c3bc879",
+  "review_basis": {
+    "path": "/home/orca/.tmp/syzygy-33-current-fullscope-evidence-quality-review-20261108/REVIEW-MANIFEST.json",
+    "bytes": 15528,
+    "sha256": "eed413123ffaf9e5b81270b4bcd987f1f9b0523dd4ff66e8033a450b6961ea1e"
+  },
+  "independent_classes": [
+    1,
+    3,
+    4
+  ],
+  "predicate_inventory": [
+    {
+      "predicate_group": "Measurement identity/cardinality/completed status/duration/full-file/unhandled/process/lifetime/default/headroom/maximum",
+      "retained_proof": {
+        "path": "/home/orca/.tmp/syzygy-bpyt33-full-outcome-20261106/DATA-CONTROL-PROOF.json",
+        "bytes": 5728224,
+        "sha256": "046fbc4c2de79bce7118d39801e47cde8b3a859dda3f708a099d408e43cd3712"
+      },
+      "old_algorithm": {
+        "path": "/home/orca/.tmp/syzygy-bpyt33-full-outcome-20261106/measurement_identity.py",
+        "bytes": 2005,
+        "sha256": "6ff00e29025a7959d86ea8b12e2c4843f29c7659e59effd4d901280a2a4ee5d1"
+      },
+      "current_algorithm": {
+        "path": "/home/orca/.tmp/syzygy-33-actual-setup-fullgate-owner-20261108-0rbufc1w/adapters/current_measurement_identity.py",
+        "bytes": 2005,
+        "sha256": "2b3bf812e4503f0d9e00735e75ea8b51490702ec8ffb6ffee74b9669fcc08b97"
+      },
+      "applicability": "Historical20 controls remain historical; algorithm normalized AST is identical after FILE/NAME/SUBJECT/SOURCE_SHA data constants only. Current constants/report subject are separately bound. No new execution.",
+      "limit": "size(five) remains unchanged and is not called on the single current observation. Independent applicability is not an author certification.",
+      "retained_controls": [
+        {
+          "id": "subject",
+          "old_new_reference": "retained_proof controls entry id=subject; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "subject"
+          ],
+          "expected_first_failure": "subject identity",
+          "actual_first_failure": "subject identity",
+          "intended_population": 1
+        },
+        {
+          "id": "source",
+          "old_new_reference": "retained_proof controls entry id=source; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "source_sha256"
+          ],
+          "expected_first_failure": "source identity",
+          "actual_first_failure": "source identity",
+          "intended_population": 1
+        },
+        {
+          "id": "path",
+          "old_new_reference": "retained_proof controls entry id=path; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "report",
+            "tests",
+            348,
+            "file"
+          ],
+          "expected_first_failure": "exact identity cardinality",
+          "actual_first_failure": "exact identity cardinality",
+          "intended_population": 1
+        },
+        {
+          "id": "full-name",
+          "old_new_reference": "retained_proof controls entry id=full-name; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "report",
+            "tests",
+            348,
+            "name"
+          ],
+          "expected_first_failure": "exact identity cardinality",
+          "actual_first_failure": "exact identity cardinality",
+          "intended_population": 1
+        },
+        {
+          "id": "missing",
+          "old_new_reference": "retained_proof controls entry id=missing; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "report",
+            "tests"
+          ],
+          "expected_first_failure": "exact identity cardinality",
+          "actual_first_failure": "exact identity cardinality",
+          "intended_population": 1
+        },
+        {
+          "id": "duplicate",
+          "old_new_reference": "retained_proof controls entry id=duplicate; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "report",
+            "tests"
+          ],
+          "expected_first_failure": "exact identity cardinality",
+          "actual_first_failure": "exact identity cardinality",
+          "intended_population": 1
+        },
+        {
+          "id": "skipped",
+          "old_new_reference": "retained_proof controls entry id=skipped; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "report",
+            "tests",
+            348,
+            "state"
+          ],
+          "expected_first_failure": "completed passing observation required",
+          "actual_first_failure": "completed passing observation required",
+          "intended_population": 1
+        },
+        {
+          "id": "failed-censored",
+          "old_new_reference": "retained_proof controls entry id=failed-censored; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "report",
+            "tests",
+            348,
+            "state"
+          ],
+          "expected_first_failure": "completed passing observation required",
+          "actual_first_failure": "completed passing observation required",
+          "intended_population": 1
+        },
+        {
+          "id": "missing-duration",
+          "old_new_reference": "retained_proof controls entry id=missing-duration; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "report",
+            "tests",
+            348,
+            "durationMs"
+          ],
+          "expected_first_failure": "finite completed duration required",
+          "actual_first_failure": "finite completed duration required",
+          "intended_population": 1
+        },
+        {
+          "id": "negative-duration",
+          "old_new_reference": "retained_proof controls entry id=negative-duration; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "report",
+            "tests",
+            348,
+            "durationMs"
+          ],
+          "expected_first_failure": "finite completed duration required",
+          "actual_first_failure": "finite completed duration required",
+          "intended_population": 1
+        },
+        {
+          "id": "incomplete-file",
+          "old_new_reference": "retained_proof controls entry id=incomplete-file; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "report",
+            "tests"
+          ],
+          "expected_first_failure": "complete six-case file required",
+          "actual_first_failure": "complete six-case file required",
+          "intended_population": 1
+        },
+        {
+          "id": "unhandled",
+          "old_new_reference": "retained_proof controls entry id=unhandled; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "report",
+            "unhandledErrors"
+          ],
+          "expected_first_failure": "unhandled errors",
+          "actual_first_failure": "unhandled errors",
+          "intended_population": 1
+        },
+        {
+          "id": "failed-process",
+          "old_new_reference": "retained_proof controls entry id=failed-process; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "process_exit"
+          ],
+          "expected_first_failure": "complete successful process required",
+          "actual_first_failure": "complete successful process required",
+          "intended_population": 1
+        },
+        {
+          "id": "unreaped",
+          "old_new_reference": "retained_proof controls entry id=unreaped; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "lifetime_complete"
+          ],
+          "expected_first_failure": "complete successful process required",
+          "actual_first_failure": "complete successful process required",
+          "intended_population": 1
+        },
+        {
+          "id": "global-override",
+          "old_new_reference": "retained_proof controls entry id=global-override; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "report",
+            "budgets",
+            0,
+            "testTimeout"
+          ],
+          "expected_first_failure": "ordinary effective defaults required",
+          "actual_first_failure": "ordinary effective defaults required",
+          "intended_population": 1
+        },
+        {
+          "id": "hook-override",
+          "old_new_reference": "retained_proof controls entry id=hook-override; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "kind",
+            "input_path",
+            "old",
+            "new",
+            "expected_first_failure",
+            "actual_first_failure",
+            "restored_control_duration_ms",
+            "source_commit",
+            "adapter_sha256",
+            "intended_population"
+          ],
+          "restoration_record_fields": [
+            "restored_control_duration_ms"
+          ],
+          "input_path": [
+            "report",
+            "budgets",
+            0,
+            "hookTimeout"
+          ],
+          "expected_first_failure": "ordinary effective defaults required",
+          "actual_first_failure": "ordinary effective defaults required",
+          "intended_population": 1
+        },
+        {
+          "id": "default-floor",
+          "old_new_reference": "retained_proof controls entry id=default-floor; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "expected_first_failure",
+            "actual_first_failure",
+            "old",
+            "new",
+            "restored_control"
+          ],
+          "restoration_record_fields": [
+            "restored_control"
+          ],
+          "expected_first_failure": "default floor",
+          "actual_first_failure": "default floor"
+        },
+        {
+          "id": "headroom-boundary",
+          "old_new_reference": "retained_proof controls entry id=headroom-boundary; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "expected_first_failure",
+            "actual_first_failure",
+            "old",
+            "new",
+            "restored_control"
+          ],
+          "restoration_record_fields": [
+            "restored_control"
+          ],
+          "expected_first_failure": "positive headroom",
+          "actual_first_failure": "positive headroom"
+        },
+        {
+          "id": "missing-attempt",
+          "old_new_reference": "retained_proof controls entry id=missing-attempt; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "expected_first_failure",
+            "actual_first_failure",
+            "old",
+            "new",
+            "restored_control"
+          ],
+          "restoration_record_fields": [
+            "restored_control"
+          ],
+          "expected_first_failure": "five complete attempts required",
+          "actual_first_failure": "five complete attempts required"
+        },
+        {
+          "id": "maximum-outlier",
+          "old_new_reference": "retained_proof controls entry id=maximum-outlier; exact old/new retained there, not recopied",
+          "recorded_fields": [
+            "id",
+            "input_path",
+            "old",
+            "new",
+            "expected",
+            "actual",
+            "restored_control"
+          ],
+          "restoration_record_fields": [
+            "restored_control"
+          ],
+          "input_path": [
+            "attempt",
+            1,
+            "target",
+            "durationMs"
+          ]
+        }
+      ]
+    },
+    {
+      "predicate_group": "Existing depth-guard fixture construction/ordered exhaustive input sequence",
+      "current_artifact": {
+        "path": "/home/orca/orca/projects/syzygy/.worktrees/parallel-agents/syzygy-bpyt.33/packages/three-surface-poc-core/src/obfuscated-destination-equivalence.test.ts",
+        "bytes": 10169,
+        "sha256": "606ee96e5702079cbd3134563542394cd2a5691ae41742056edb6601622738d3"
+      },
+      "retained_proofs": [
+        {
+          "path": "/home/orca/.tmp/syzygy-33-qualified-diagnostics-code-side-candidate-20261107-j_ofs1ej/ORDERED-CORPUS-PROOF.json",
+          "bytes": 1524,
+          "sha256": "4a7959b070cf36eb11ce12f4023603b609772c9aa2ba35ed1e876d93a23af57c"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-33-qualified-diagnostics-code-side-candidate-20261107-j_ofs1ej/INERT-CONTROLS.json",
+          "bytes": 4960,
+          "sha256": "f54d879230437a05620070a48461f599af0b2afa22add43ea1f89f1a0e96a731"
+        },
+        {
+          "path": "/home/orca/.tmp/syzygy-33-qualified-diagnostics-code-side-candidate-20261107-j_ofs1ej/SELF-READ-CORPUS-QUALIFICATION.json",
+          "bytes": 1977,
+          "sha256": "a5956ce79cdfb911ae55c24bf6ec78a6e28b5344ce0a79f0f576ddfab75be37e"
+        }
+      ],
+      "review": {
+        "path": "/home/orca/.tmp/syzygy-33-code-candidate-independent-review-20261107-lko5_9n8/FROZEN-REVIEW-MANIFEST.json",
+        "bytes": 2912,
+        "sha256": "5687d3fc50f08b32a1c8ba0bbd4ec3762023c639397d1b1a881a079c80908b5e"
+      },
+      "applicability": "Reviewed606ee96e candidate equals current source;597871 ordered inputs,6 exact-source+3 independent-corpus controls and two+15-byte self-read qualifications retained.",
+      "limit": "Static contract/corpus controls are not a product-refusal altered-prose differential."
+    },
+    {
+      "predicate_group": "Setup continuation collision/order guards",
+      "retained_proof": {
+        "path": "/home/orca/.tmp/syzygy-33-isolated-controls-root-custody-20261108/ROOT-ACTUAL-CONTROL-OUTCOME.json",
+        "bytes": 1115,
+        "sha256": "b12604d9ce7ebdecc3de5eae13fcda1456440877ec29c65df10c20f3c2a6333b"
+      },
+      "applicability": "464 admitted synthetic cases:180 occupied,2 originals,94 mutation triplets; source/old-new/restoration retained in exact proof package.",
+      "limit": "Synthetic/in-memory proof only; no universal filesystem/race or product-differential claim."
+    },
+    {
+      "predicate_group": "Retained setup receipt !-f/-L branches and five separate lineage-checksum items",
+      "retained_proof": {
+        "path": "/home/orca/.tmp/syzygy-33-eight-guard-cases-root-actual-20261108/ROOT-ACTUAL-GUARD-OUTCOME.json",
+        "bytes": 32101,
+        "sha256": "95af09a35548ddb407e59e130c1e7a1b106e383c05e952ab78ffe1f6f2b506ec"
+      },
+      "independent_review": {
+        "path": "/home/orca/.tmp/syzygy-33-actual-guard-review-s_39q8ep/REVIEW-MANIFEST.json",
+        "bytes": 3387,
+        "sha256": "d1836a8a0334b1766e71f391210ae457bc13694202297e89a3579924da8f0b6f"
+      },
+      "applicability": "Baseline succeeds; absent receipt, matching regular-target symlink and five one-row appended-byte mutations reject at intended stages, with exact raw original/mutant/restored inputs retained.",
+      "limit": "QUALIFIED CONFIRM - OBSERVED GUARD PREDICATES ONLY; RUNNER FAILED. Wrong diagnostic-prefix expectation keeps native1/3true/5false aggregate. Six unchanged collisions and87 prerequisites are outside new8-case dynamic scope."
+    },
+    {
+      "predicate_group": "Actually changed/reused feature assurance and evidence predicates; unchanged product semantics remain outside new-proof scope",
+      "governing_clause": "GP-Q0 part1 Review rule, as quoted in independent raw83: old-versus-new differential over a mutated-record corpus including altered prose; rule6 mutant for each actually relied-on predicate; nonblocking notice in existing cycle report. AC8/13 retain this scope.",
+      "changed_feature_seam": "The existing depth<6 fixture-construction optimization and its two explicitly allowed self-read input changes; current evidence identity/capture/application guards.",
+      "retained_boundary": "597871 ordered-input proof and6+3 inert controls cover exact reviewed fixture construction, with explicit self-read qualification. Current ordinary gate executes existing differential assertions, including the unchanged security oracle.20 historical extraction controls plus normalized unchanged algorithms and qualified8 new receipt guards cover only their named seams.",
+      "specific_unknown": "Whether these retained records supply the meaningful altered-prose differential/per-predicate applicability required for those actually relied-on feature seams is not established in this selected inventory; independent affected disposition is required. No unrelated product predicate is identified as uncovered.",
+      "unchanged_semantics": "The authority keyed-line/POLARIS_SURFACE acceptance/refusal rule and product security oracle are unchanged by the reason/evidence edits; this inventory does not require a new mutation proof or algorithm review merely because those existing semantics are exercised.",
+      "next": "First disposition this exact applicability boundary using valid retained proofs. Only if a genuinely uncovered affected predicate is named should ROOT decide a separate existing-governed proof step. No universal filesystem/product proof or new helper/framework is proposed."
+    }
+  ],
+  "altered_prose_differential": {
+    "status": "Unknown only as applicability to actually relied-on changed/reused feature seams in the named inventory; not a global absence or universal product-proof requirement",
+    "requirement": "GP-Q0 part1/AC8/AC13 as quoted in independent raw83; reuse valid unchanged proof, distinguish retained operational/source-contract controls, and name a concrete affected uncovered predicate before proposing execution."
+  },
+  "cycle_notice_disposition": {
+    "status": "DRAFT for existing cycle report; no actual owner message or cycle act",
+    "text": "Independent review classifies the bounded source/evidence support1/3/4. One current ordinary e8 check:all naturally0 contains the exact named4624.105763ms pass; existing25000 retains20375.894237ms one-observation headroom. Historicalfive retain subject/corpus limits. Exact8guard runner remainsFAILED with qualified observed-predicate reliance. Applicable GP-Q0 altered-prose/per-predicate sufficiency for the actually relied-on feature seams remains unresolved; BOTH actualowner1z3.22 AND actualcycle1z3.25, finalreview/hosted/lawful landing remain.",
+    "disposition": "Route nonblocking notice through the existing improvement-cycle report. This record sends nothing and closes no issue."
+  },
+  "whole_outcome": "OPEN full15/original12/all7classes/floors; no waiver/adoption/owner act/merge clearance."
+}
