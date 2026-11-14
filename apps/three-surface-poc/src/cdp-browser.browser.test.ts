@@ -116,6 +116,7 @@ async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Pro
         child.once('exit', resolve);
       });
       expect(code, errors).toBe(0);
+      expect(errors).not.toContain('private Chrome lifetime cleanup failed:');
       const report = JSON.parse(output) as {
         milestone: { helpers: unknown[] }; decoySurvived: boolean;
         after: { procFamilyDenominator: number; proc: unknown[]; psFamily: unknown[] };

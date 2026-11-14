@@ -9,6 +9,7 @@ import subprocess
 import sys
 import time
 import runpy
+from contextlib import nullcontext
 from types import SimpleNamespace
 from unittest.mock import mock_open, patch
 
@@ -245,6 +246,7 @@ for label, scanner, reader, root_row, child_row in [
         return ((child_row[0], 'reused', *child_row[2:]) if isinstance(child_row, tuple)
                 else child_row | {'start': 'reused'})
     with patch.dict(scanner.__globals__, {reader: scanned}), \
+            patch('os.scandir', return_value=nullcontext([SimpleNamespace(name='999999999')])), \
             patch.object(Path, 'iterdir', return_value=iter([Path('/proc/999999999')])):
         try:
             scanner()
@@ -255,6 +257,7 @@ for label, scanner, reader, root_row, child_row in [
     def disappeared(pid, *, with_namespace=True):
         return root_row if pid == ROOT else (None if with_namespace else child_row)
     with patch.dict(scanner.__globals__, {reader: disappeared}), \
+            patch('os.scandir', return_value=nullcontext([SimpleNamespace(name='999999999')])), \
             patch.object(Path, 'iterdir', return_value=iter([Path('/proc/999999999')])):
         assert not scanner(), 'a disappeared candidate remained in the family'
 decoy = subprocess.Popen(['sleep', '3600'], start_new_session=True)

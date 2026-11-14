@@ -46,12 +46,25 @@ def identity(pid, *, with_namespace=True):
         return None
 
 
+def process_names():
+    # Python 3.14's Path iterator materializes scandir entries. Keep that
+    # syscall and ordering without allocating a Path for every host PID.
+    # Other runtimes retain their own Path iterator's behavior.
+    if sys.version_info[:2] == (3, 14):
+        with os.scandir('/proc') as entries:
+            names = [entry.name for entry in entries]
+        yield from names
+    else:
+        for directory in Path('/proc').iterdir():
+            yield directory.name
+
+
 def descendants():
     # Read metadata only. Never inspect another process's argv/environment.
     rows = {}
-    for directory in Path('/proc').iterdir():
-        if directory.name.isdigit():
-            row = identity(int(directory.name), with_namespace=False)
+    for name in process_names():
+        if name.isdigit():
+            row = identity(int(name), with_namespace=False)
             if row is not None:
                 rows[row[0]] = row
     owned = {ROOT: identity(ROOT, with_namespace=False)}
