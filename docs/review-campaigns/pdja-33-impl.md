@@ -10,12 +10,12 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-PDJA-33-RULINGS-1-RAW.md:2`), over `f83fd7e8`, the commits implementing the owner's rulings of 2026-11-14 (host widening and the `launch.json` rewrite). Each finding the lead directed to repair is repaired by its own commit on the same branch:
+`REVISE` (`R-PDJA-33-RULINGS-1-RAW.md:2`), over `f83fd7e8`, the commits implementing the owner's rulings of 2026-11-14 (host widening and the `launch.json` rewrite). Each finding the lead directed to repair is repaired by its own commit on the same branch. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/rulings-1-repair-mutation-2026-11-14.json`:
 
-- Finding 1 (blocking): the scp form admitted a bracketed IPv6 host, which 046 line 17 excludes (its scp host holds no `:`).
-- Finding 2 (non-blocking): ASCII and non-ASCII hosts were normalised by two rules.
-- Finding 3 (non-blocking): the host refusal no longer said its grammar is narrower than 046, and the comment saying so went stale.
-- Finding 7 (non-blocking): a session-prompt whose `launch.json` rewrite failed left the issued session out of the step log.
+- Finding 1 (blocking): the scp form admitted a bracketed IPv6 host, which 046 line 17 excludes (its scp host holds no `:`). A bracketed scp host is now refused by its own rule, with or without a user; bracketed IPv6 stays admitted in the URL forms (`87c5b880`).
+- Finding 2 (non-blocking): ASCII and non-ASCII hosts were normalised by two rules. Every host now goes through IDNA domain-to-ASCII; no identity changes, since it is derived from the path alone (`96613e8c`).
+- Finding 3 (non-blocking): the host refusal no longer said its grammar is narrower than 046, and the comment saying so went stale. The refusal now names what it still refuses (`~`, the sub-delimiters, IPvFuture), and the comments are corrected (`f5ada885`).
+- Finding 7 (non-blocking): a session-prompt whose `launch.json` rewrite failed left the issued session out of the step log. Both paths now log the issued step before the rewrite (`fdccc501`).
 - Finding 5 (note): the identity-tail report cited one reader, `generation-source.ts:164`, that does not pin the first character; the report is corrected and the identity-tail question goes to the owner. `IDENTITY` is unchanged.
 - Findings 4, 6, 8 and 9 (notes): no change directed.
 

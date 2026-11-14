@@ -1,0 +1,242 @@
+{
+  "subject": "syzygy-pdja.33 R-PDJA-33-RULINGS-1 repairs (21472fbf..fdccc501)",
+  "date": "2026-11-14",
+  "note": "Rule-6 mutants for the RULINGS-1 repairs, each section at its own repair commit. Each mutant was applied alone to the file at the commit, the unit and integration tiers listed in commands were run, and the file was restored byte-identical. The reviewer's R5 (a bracketed scp host requires a user) is K2-R5; the reviewer's R1 (ASCII names bypass IDNA) is N1-R1. Both survived at f83fd7e8 and are killed here.",
+  "sections": [
+    {
+      "subject": "finding 1: refuse a bracketed scp-form host by name",
+      "commit": "87c5b880e63a594bafe3d19c7bfadbf7d7f16dc0",
+      "note": "K1 drops the refusal; K2-R5 requires a user; K3 refuses any bracket, local paths included; K4 names the form rule; K5 requires '::'.",
+      "total": 5,
+      "killed": 5,
+      "survived": [],
+      "mutants": [
+        {
+          "id": "K1",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "    if (SCP_BRACKETED.test(input)) return { ok: false, rule: RULE.scpHost };\n",
+          "new": "",
+          "commit": "87c5b880e63a594bafe3d19c7bfadbf7d7f16dc0",
+          "unit": "Tests  4 failed | 245 passed (249)",
+          "integration": "Tests  495 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "624f98a687025e6c17e702d5cc2bf13f92986807ec9dceac6f2d68a74c816f3d",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        },
+        {
+          "id": "K2-R5",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "const SCP_BRACKETED = /^(?:[^@/]*@)?\\[[^/]*:/s;",
+          "new": "const SCP_BRACKETED = /^(?:[^@/]*@)\\[[^/]*:/s;",
+          "commit": "87c5b880e63a594bafe3d19c7bfadbf7d7f16dc0",
+          "unit": "Tests  2 failed | 247 passed (249)",
+          "integration": "Tests  495 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "624f98a687025e6c17e702d5cc2bf13f92986807ec9dceac6f2d68a74c816f3d",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        },
+        {
+          "id": "K3",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "const SCP_BRACKETED = /^(?:[^@/]*@)?\\[[^/]*:/s;",
+          "new": "const SCP_BRACKETED = /^(?:[^@/]*@)?\\[/s;",
+          "commit": "87c5b880e63a594bafe3d19c7bfadbf7d7f16dc0",
+          "unit": "Tests  1 failed | 248 passed (249)",
+          "integration": "Tests  495 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "624f98a687025e6c17e702d5cc2bf13f92986807ec9dceac6f2d68a74c816f3d",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        },
+        {
+          "id": "K4",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "    if (SCP_BRACKETED.test(input)) return { ok: false, rule: RULE.scpHost };",
+          "new": "    if (SCP_BRACKETED.test(input)) return { ok: false, rule: RULE.form };",
+          "commit": "87c5b880e63a594bafe3d19c7bfadbf7d7f16dc0",
+          "unit": "Tests  4 failed | 245 passed (249)",
+          "integration": "Tests  495 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "624f98a687025e6c17e702d5cc2bf13f92986807ec9dceac6f2d68a74c816f3d",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        },
+        {
+          "id": "K5",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "const SCP_BRACKETED = /^(?:[^@/]*@)?\\[[^/]*:/s;",
+          "new": "const SCP_BRACKETED = /^(?:[^@/]*@)?\\[[^/]*::/s;",
+          "commit": "87c5b880e63a594bafe3d19c7bfadbf7d7f16dc0",
+          "unit": "Tests  1 failed | 248 passed (249)",
+          "integration": "Tests  495 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "624f98a687025e6c17e702d5cc2bf13f92986807ec9dceac6f2d68a74c816f3d",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "subject": "finding 2: one host normalisation rule (IDNA domain-to-ASCII)",
+      "commit": "96613e8cb62c4a218e9f940d2fd7e932c96f49b4",
+      "note": "N1-R1 restores the ASCII bypass; N2 replaces IDNA by lower-casing; N3 drops the HOST check on the mapping.",
+      "total": 3,
+      "killed": 3,
+      "survived": [],
+      "mutants": [
+        {
+          "id": "N1-R1",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "function hostName(name: string): string | null {\n  const ascii",
+          "new": "function hostName(name: string): string | null {\n  if (/^[\\x00-\\x7f]*$/.test(name)) return HOST.test(name) ? name.toLowerCase() : null;\n  const ascii",
+          "commit": "96613e8cb62c4a218e9f940d2fd7e932c96f49b4",
+          "unit": "Tests  1 failed | 250 passed (251)",
+          "integration": "Tests  495 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "2bce0dc57f6ba0d9207b3e32c77f67b515cd919bfa736606c6b7df8f390194ba",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        },
+        {
+          "id": "N2",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "  const ascii = domainToASCII(name);",
+          "new": "  const ascii = name.toLowerCase();",
+          "commit": "96613e8cb62c4a218e9f940d2fd7e932c96f49b4",
+          "unit": "Tests  4 failed | 247 passed (251)",
+          "integration": "Tests  495 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "2bce0dc57f6ba0d9207b3e32c77f67b515cd919bfa736606c6b7df8f390194ba",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        },
+        {
+          "id": "N3",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "  return HOST.test(ascii) ? ascii : null;\n}",
+          "new": "  return ascii;\n}",
+          "commit": "96613e8cb62c4a218e9f940d2fd7e932c96f49b4",
+          "unit": "Tests  1 failed | 250 passed (251)",
+          "integration": "Tests  495 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "2bce0dc57f6ba0d9207b3e32c77f67b515cd919bfa736606c6b7df8f390194ba",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "subject": "finding 3: the host refusal names what it refuses beyond 046",
+      "commit": "f5ada88588e22c727bdda64b8a9f5bd517e16ae9",
+      "note": "P1 admits '~'; P2 admits '$'; P3 admits an IPvFuture literal.",
+      "total": 3,
+      "killed": 3,
+      "survived": [],
+      "mutants": [
+        {
+          "id": "P1",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "const HOST = /^[A-Za-z0-9._-]+$/;",
+          "new": "const HOST = /^[A-Za-z0-9._~-]+$/;",
+          "commit": "f5ada88588e22c727bdda64b8a9f5bd517e16ae9",
+          "unit": "Tests  1 failed | 253 passed (254)",
+          "integration": "Tests  495 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "593d8158654c2e7b328fcc150a7c335b66af0540df646185b227190fc83b6d1f",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        },
+        {
+          "id": "P2",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "const HOST = /^[A-Za-z0-9._-]+$/;",
+          "new": "const HOST = /^[A-Za-z0-9._$-]+$/;",
+          "commit": "f5ada88588e22c727bdda64b8a9f5bd517e16ae9",
+          "unit": "Tests  1 failed | 253 passed (254)",
+          "integration": "Tests  495 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "593d8158654c2e7b328fcc150a7c335b66af0540df646185b227190fc83b6d1f",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        },
+        {
+          "id": "P3",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "  try { return new URL(`http://[${inner}]/`).hostname; } catch { return null; }",
+          "new": "  if (/^v/i.test(inner)) return `[${inner.toLowerCase()}]`;\n  try { return new URL(`http://[${inner}]/`).hostname; } catch { return null; }",
+          "commit": "f5ada88588e22c727bdda64b8a9f5bd517e16ae9",
+          "unit": "Tests  1 failed | 253 passed (254)",
+          "integration": "Tests  495 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "593d8158654c2e7b328fcc150a7c335b66af0540df646185b227190fc83b6d1f",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "subject": "finding 7: an issued session is logged before launch.json is rewritten",
+      "commit": "fdccc50163fa38944b11855b31d23ee9341a06e9",
+      "note": "Q1 and Q2 restore the old order (rewrite and refuse before logging) in session-prompt inventory and session-prompt all.",
+      "total": 2,
+      "killed": 2,
+      "survived": [],
+      "mutants": [
+        {
+          "id": "Q1",
+          "file": "packages/polaris-dossier/src/session-handover.ts",
+          "old": "  logStep(run, 'session-prompt', now, { outcome: 'issued', role: 'inventory', session, promptSha256 });\n  // The run record's brief stage, rewritten to the reached form the prompt record stores (the owner's ruling of 2026-11-14).\n  const rewritten = recordIssuedBrief(run, built.stageStatement);\n  if (!rewritten.ok) return refuse('write', `inventory session ${session}'s brief was issued and its files stay, but ${rewritten.reason}, so the run record does not say it was issued and every page says the two disagree`);\n",
+          "new": "  // The run record's brief stage, rewritten to the reached form the prompt record stores (the owner's ruling of 2026-11-14).\n  const rewritten = recordIssuedBrief(run, built.stageStatement);\n  if (!rewritten.ok) return refuse('write', `inventory session ${session}'s brief was issued and its files stay, but ${rewritten.reason}, so the run record does not say it was issued and every page says the two disagree`);\n  logStep(run, 'session-prompt', now, { outcome: 'issued', role: 'inventory', session, promptSha256 });\n",
+          "commit": "fdccc50163fa38944b11855b31d23ee9341a06e9",
+          "unit": "Tests  254 passed (254)",
+          "integration": "Tests  1 failed | 494 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "f7a377815be436c03bf4fbdb1fcd7befd0498475356fd681a7d52b3ea0eb4664",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        },
+        {
+          "id": "Q2",
+          "file": "packages/polaris-dossier/src/session-handover.ts",
+          "old": "  logStep(run, 'session-prompt', now, { outcome: 'issued', role: 'all', mode: WAITING_MODE, sessions: plan.map(({ started }) => ({ role: started.role, ...(started.kind ? { kind: started.kind } : {}), session: started.session, promptSha256: started.promptSha256 })) });\n  // The run record's brief stage, rewritten to the reached form the inventory prompt record stores (the owner's ruling of 2026-11-14).\n  const rewritten = recordIssuedBrief(run, built.stageStatement);\n  if (!rewritten.ok) return refuse('write', `the waiting sessions were prepared and inventory session ${inventorySession}'s brief was issued, and their files stay, but ${rewritten.reason}, so the run record does not say it was issued and every page says the two disagree`);\n",
+          "new": "  // The run record's brief stage, rewritten to the reached form the inventory prompt record stores (the owner's ruling of 2026-11-14).\n  const rewritten = recordIssuedBrief(run, built.stageStatement);\n  if (!rewritten.ok) return refuse('write', `the waiting sessions were prepared and inventory session ${inventorySession}'s brief was issued, and their files stay, but ${rewritten.reason}, so the run record does not say it was issued and every page says the two disagree`);\n  logStep(run, 'session-prompt', now, { outcome: 'issued', role: 'all', mode: WAITING_MODE, sessions: plan.map(({ started }) => ({ role: started.role, ...(started.kind ? { kind: started.kind } : {}), session: started.session, promptSha256: started.promptSha256 })) });\n",
+          "commit": "fdccc50163fa38944b11855b31d23ee9341a06e9",
+          "unit": "Tests  254 passed (254)",
+          "integration": "Tests  1 failed | 494 passed (495)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "f7a377815be436c03bf4fbdb1fcd7befd0498475356fd681a7d52b3ea0eb4664",
+          "commands": [
+            "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+            "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+          ]
+        }
+      ]
+    }
+  ]
+}
