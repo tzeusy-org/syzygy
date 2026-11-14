@@ -80,7 +80,9 @@ export function parseReaderConfig(text: string, overrides: Partial<Pick<ReaderCo
 }
 
 function assertIdentity(repositoryId: string, revision: string): void {
-  if (!/^[A-Za-z0-9:_-]+$/u.test(repositoryId)) throw new Error('invalid-repository-id');
+  // Every 046 identity (line 15: a-z, 0-9, '.', '_', '-', after `repository:`) is admitted, compared exactly; ':' and upper case stay for the
+  // `github:<owner>:<repo>` form (the owner's ruling of 2026-11-14, "Widen all readers now"; R-PDJA-33-RULINGS-2 finding 1).
+  if (!/^[A-Za-z0-9:._-]+$/u.test(repositoryId)) throw new Error('invalid-repository-id');
   if (!/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(revision)) throw new Error('invalid-pinned-commit');
 }
 

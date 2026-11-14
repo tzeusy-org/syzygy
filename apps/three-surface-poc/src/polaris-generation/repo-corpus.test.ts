@@ -159,6 +159,9 @@ describe('any-repo reader', () => {
     await expect(readRepoCorpus(root, cfg({ revision: 'main' }), { admission: allow })).rejects.toThrow('invalid-pinned-commit');
     await expect(readRepoCorpus(root, cfg({ revision: '0'.repeat(40) }), { admission: allow })).rejects.toThrow();
     await expect(readRepoCorpus(root, cfg({ repositoryId: 'bad id!' }), { admission: allow })).rejects.toThrow('invalid-repository-id');
+    await expect(readRepoCorpus(root, cfg({ repositoryId: 'repository:a/b' }), { admission: allow })).rejects.toThrow('invalid-repository-id');
+    // 046's identity grammar, '.' included (the owner's ruling of 2026-11-14; R-PDJA-33-RULINGS-2 finding 1).
+    for (const repositoryId of ['repository:nodejs-node.js', 'repository:-x', 'repository:.dotfiles']) expect((await readRepoCorpus(root, cfg({ repositoryId }), { admission: allow })).sources.length).toBeGreaterThan(0);
   });
 
   it('is deterministic for one commit', async () => {

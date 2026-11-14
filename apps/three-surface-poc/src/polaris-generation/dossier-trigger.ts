@@ -125,7 +125,9 @@ export async function runDossierTrigger(rawUrl: string, ports: TriggerPorts = {}
   try { pinned = pinRevision((ports.lsRemote ?? gitLsRemote)(target.url), target.ref); }
   catch (error) { return { state: 'unresolved-revision', reason: error instanceof Error ? error.message : 'ls-remote-failed' }; }
   const records = ports.records ?? noAdmissionRecords;
-  const idPattern = /^[A-Za-z0-9:_-]+$/u;
+  // Every 046 identity (line 15: a-z, 0-9, '.', '_', '-', after `repository:`) is admitted, compared exactly; ':' and upper case stay for the
+  // `github:<owner>:<repo>` form (the owner's ruling of 2026-11-14, "Widen all readers now"; R-PDJA-33-RULINGS-2 finding 1).
+  const idPattern = /^[A-Za-z0-9:._-]+$/u;
   // The port must answer an array of exactly one valid id; anything else (none, several, duplicates, a malformed element, a non-array, a throw) is an unmet gate.
   let answer: unknown;
   try { answer = await records.repositoryIdsFor(target.url); } catch { answer = undefined; }
