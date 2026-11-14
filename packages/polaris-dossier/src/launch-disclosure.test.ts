@@ -157,7 +157,10 @@ describe('whether a brief names a copy, decided fail-closed (R-PDJA-33-SLICE-D-1
     const run = { dir: runDir, clone: '/home/op/redis', pinnedAt: before };
     expect(briefCopyOf({ state: 'absent' }, run)).toEqual({ ok: true, copy: null });
     expect(briefCopyOf({ state: 'absent' }, { ...run, pinnedAt: since })).toEqual({ ok: false,
-      reason: `the run directory holds no launch.json, and its run record was pinned at ${since}, not before 2026-11-13T00:00:00Z, when init began writing one for every run, so whether the brief must direct its session to a copy cannot be decided` });
+      reason: `the run directory holds no launch.json, and its run record was pinned at ${since}, not before 2026-11-13T00:00:00Z, the cutoff before which a run record may lack one, so it is not taken for a run initialised before the disclosure existed, so whether the brief must direct its session to a copy cannot be decided` });
+    // A pinnedAt that does not parse is never before the cutoff (R-PDJA-33-SLICE-CD-2 finding 4).
+    expect(briefCopyOf({ state: 'absent' }, { ...run, pinnedAt: 'not-an-instant' })).toEqual({ ok: false,
+      reason: 'the run directory holds no launch.json, and its run record was pinned at not-an-instant, not before 2026-11-13T00:00:00Z, the cutoff before which a run record may lack one, so it is not taken for a run initialised before the disclosure existed, so whether the brief must direct its session to a copy cannot be decided' });
     expect(briefCopyOf({ state: 'unreadable', why: 'x' }, run)).toEqual({ ok: false, reason: 'the run\'s launch.json cannot be read as the record init writes (x), so whether the brief must direct its session to a copy cannot be decided' });
     expect(briefCopyOf(ok({ ...own, runClass: 'no-copy', copy: null }), { ...run, pinnedAt: since })).toEqual({ ok: true, copy: null });
     expect(briefCopyOf(ok(own), run)).toEqual({ ok: false, reason: `the run's launch.json names the copy ${copy}, but the run record's clone is /home/op/redis` });

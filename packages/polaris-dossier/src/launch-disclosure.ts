@@ -168,8 +168,10 @@ export interface BriefCopy { readonly dir: string; readonly operatorClone: strin
 
 export type BriefCopyDecision = { readonly ok: true; readonly copy: BriefCopy | null } | { readonly ok: false; readonly reason: string };
 
-/** The first instant at which `init` writes a launch disclosure for every run it creates. A run record pinned before it predates the
- * disclosure, and only such a run may lack one (R-PDJA-33-SLICE-D-1 finding 7). */
+/** The cutoff before which a run record may lack a launch disclosure (R-PDJA-33-SLICE-D-1 finding 7). It is the day the disclosure was first
+ * written on the branch that adds it (agent/syzygy-pdja-33-impl, from d19a11bd); `main` writes none until that branch merges. So a run
+ * that `main`'s `init` creates on or after it, before the merge, is refused at `brief` after the upgrade, fail-closed: such a run is
+ * re-initialised (R-PDJA-33-SLICE-CD-2 finding 4). A pinnedAt that does not parse is never before it. */
 export const LAUNCH_DISCLOSURE_SINCE = '2026-11-13T00:00:00Z';
 
 const realOr = (p: string): string => { try { return fs.realpathSync(p); } catch { return path.resolve(p); } };
@@ -196,7 +198,7 @@ export function briefCopyOf(read: LaunchDisclosureRead, run: { readonly dir: str
     : `${why}, so whether the brief must direct its session to a copy cannot be decided` });
   if (read.state === 'absent') {
     if (!underCopies && Date.parse(run.pinnedAt) < Date.parse(LAUNCH_DISCLOSURE_SINCE)) return { ok: true, copy: null };
-    return undecided(`the run directory holds no ${RUN_LAYOUT.launchDisclosure}${underCopies ? '' : `, and its run record was pinned at ${run.pinnedAt}, not before ${LAUNCH_DISCLOSURE_SINCE}, when init began writing one for every run`}`);
+    return undecided(`the run directory holds no ${RUN_LAYOUT.launchDisclosure}${underCopies ? '' : `, and its run record was pinned at ${run.pinnedAt}, not before ${LAUNCH_DISCLOSURE_SINCE}, the cutoff before which a run record may lack one, so it is not taken for a run initialised before the disclosure existed`}`);
   }
   if (read.state === 'unreadable') return undecided(`the run's ${RUN_LAYOUT.launchDisclosure} cannot be read as the record init writes (${read.why})`);
   const d = read.disclosure;
