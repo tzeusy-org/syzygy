@@ -10,7 +10,20 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-PDJA-33-SLICE-C-1-RAW.md:4`), over `f970825c`, slice C and the slice-B repairs. The raw confirms slice-B findings 1 to 6 resolved and upholds the reading of 047's copy settings as properties. Each finding is repaired by its own commit on the same branch. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/slice-C-repair-mutation-2026-11-14.json`:
+`REVISE` (`R-PDJA-33-SLICE-D-1-RAW.md:4`), over `3c879e36`, slice D. Each revise finding is repaired by its own commit on the same branch. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/slice-D-repair-mutation-2026-11-14.json`:
+
+- Finding 1 (revise): a copy statement said "the pinned commit" for a run whose commit was never pinned. The fetch-failed and fetched forms now say "the named identifier" until the commit is pinned (`4653d320`).
+- Finding 2 (revise): the fixed text for an unread committer date gave a false reason and, in a no-copy run, named a copy. The pinned state now carries the reason from what happened. Only a copy-class run says where the copy's checkout left its HEAD (`7bfa1686`, `7c85d578`).
+- Finding 3 (revise): a reached commit-pinned stage withheld the committer date. The copy's commit object is now read as soon as the copy's checkout pins the commit, so the date is stated even where the form or store check then fails (`d29a96f2`).
+- Finding 4 (revise): a no-copy run's question carried no copy statement. It now states the no-copy form, "no copy was made", for the three copy statements 046 requires of the question (`761f22fe`).
+- Findings 5 and 10 (revise; note): the run record never stated the brief stage, and pages derived it from `launch.json`. `launch.json` now carries the not-reached form from `init`. Each brief, when issued, stores its own reached form, worded from whether that brief named a copy: `brief.json` for the authoring brief, the session prompt record for each inventory brief. Pages read those stored statements, and show Unknown where a record carries none (`bab94075`, `53ced694`).
+- Finding 6 (revise): on a covered run the user-information statement never reached the operator. `init` now prints the launch's locator statements in its output on every path (`fc63caa9`).
+- Finding 7 (revise): briefs failed open when `launch.json` was absent. A run whose clone lies under the state root's copies directory is copy-class whatever `launch.json` says, and an absent, unreadable or no-copy disclosure for it refuses the brief. An absent disclosure counts as a legacy no-copy run only where the run record was pinned before 2026-11-13T00:00:00Z (`64a99c18`).
+- Finding 8 (note): the spec-inherited "held in the copy" wording in a no-copy run's observation-consent offer. Not repaired here; the lead takes it to the owner.
+- Finding 9 (note): stage, class and reached are carried only inside the item id. Not repaired: the disclosure item shape is shared, and adding fields to it reaches beyond this slice.
+- The three-launch version 1.1 test has a 20 s timeout (`a48ee80e`).
+
+Earlier: `REVISE` (`R-PDJA-33-SLICE-C-1-RAW.md:4`), over `f970825c`, slice C and the slice-B repairs. The raw confirms slice-B findings 1 to 6 resolved and upholds the reading of 047's copy settings as properties. Each finding is repaired by its own commit on the same branch. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/slice-C-repair-mutation-2026-11-14.json`:
 
 - Finding 1 (revise): Git's `<transport>::<address>` form read as an scp-form locator. An scp-form path beginning with ":" is now refused, for an operator's URL and a remote's (`495bf19e`).
 - Finding 2 (note): a leading empty path segment was collapsed. It is now refused, as an inner one is (`cfa93e7c`).
