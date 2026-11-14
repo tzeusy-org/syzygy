@@ -480,6 +480,20 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
     expect(/hunter2|bob/.test(JSON.stringify(out))).toBe(false);
   });
 
+  it('an alternates file that cannot be examined is refused before the configuration is read, so no user-information statement is owed (R-PDJA-33-SLICE-CD-4 finding 1)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, 'https://bob:hunter2@github.com/redis/redis');
+    const info = path.join(clone, '.git', 'objects', 'info');
+    fs.chmodSync(info, 0o000);
+    const { log, restore } = installReadLog(clone);
+    let out: LaunchOutcome;
+    try { out = await run(clone, setup([])); } finally { restore(); fs.chmodSync(info, 0o755); }
+    expect(out).toEqual({ kind: 'refused', refusal: expect.objectContaining({ stage: 'clone', reason: `${path.join(fs.realpathSync(clone), '.git', 'objects', 'info', 'alternates')} cannot be examined (EACCES)` }) });
+    expect(out.kind === 'refused' && 'locatorStatements' in out.refusal).toBe(false);
+    expect(log.opened.some(p => p.endsWith(`${path.sep}config`))).toBe(false);
+    expect(/hunter2|bob/.test(JSON.stringify(out))).toBe(false);
+  });
+
   it('a refusal after the identity carries the user-information statement too', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' });
     const clone = fullClone(up.dir, 'https://bob:hunter2@git.example.org/a/b.git');

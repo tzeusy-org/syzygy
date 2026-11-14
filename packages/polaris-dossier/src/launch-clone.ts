@@ -284,14 +284,17 @@ export function readCloneSnapshot(clone: string, options: { readonly revision?: 
     if (named !== undefined) { why = admit(named); if (why !== null) return { ok: false, reason: why }; }
   }
 
-  const config = readBounded(path.join(gitDir, 'config'), MAX_FILE_BYTES);
-  if (config !== null && 'reason' in config) return { ok: false, reason: config.reason };
-  const parsed: CloneConfig = config === null ? { remotes: [], objectFormat: 'sha1', bare: null, worktree: null } : parseConfig(config.text);
-
+  // The alternates probe comes before the configuration read, so every refusal here precedes it and the configuration is read last: once it
+  // is read, the snapshot carries its remotes, and the launch states their user information on every later output (R-PDJA-33-SLICE-CD-4
+  // finding 1).
   let alternates = false;
   try { fs.lstatSync(path.join(gitDir, 'objects', 'info', 'alternates')); alternates = true; } catch (cause) {
     if (code(cause) !== 'ENOENT') return { ok: false, reason: `${path.join(gitDir, 'objects', 'info', 'alternates')} cannot be examined (${code(cause)})` };
   }
+
+  const config = readBounded(path.join(gitDir, 'config'), MAX_FILE_BYTES);
+  if (config !== null && 'reason' in config) return { ok: false, reason: config.reason };
+  const parsed: CloneConfig = config === null ? { remotes: [], objectFormat: 'sha1', bare: null, worktree: null } : parseConfig(config.text);
   return { ok: true, snapshot: { gitDir, head, names, refs, remotes: parsed.remotes, objectFormat: parsed.objectFormat, alternates, bare: parsed.bare, worktree: parsed.worktree } };
 }
 

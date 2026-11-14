@@ -196,8 +196,11 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
     if (!read.ok) return refuse('clone', read.reason);
     const snapshot = read.snapshot;
     const clone = real(request.clone);
-    // 046, line 17: from the clone step on, every launch output says the identity remote's URL carried user information, whatever later
-    // happens to that URL (R-PDJA-33-SLICE-CD-3 finding 1).
+    // 046, line 17: once the clone's configuration is read, every launch output says the identity remote's URL carried user information,
+    // whatever later happens to that URL (R-PDJA-33-SLICE-CD-3 finding 1). The configuration is the snapshot's last read, so a refusal of
+    // the snapshot was made before it was read and states nothing of its URLs: the reftable placeholder, an unreadable or unadmitted HEAD
+    // or reference, a .git that is missing, a link or a file, an alternates file that cannot be examined, and a configuration that cannot be
+    // read or exceeds its bound (R-PDJA-33-SLICE-CD-4 finding 1).
     const remoteChoice = defaultRemote(snapshot);
     const userInformation = remoteUserInformationStatement(snapshot.remotes, 'remote' in remoteChoice ? remoteChoice.remote : null);
     const cloneStatements: readonly string[] = userInformation === null ? [] : [userInformation];
