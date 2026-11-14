@@ -105,7 +105,11 @@ export type CopyResult =
  * step starts, it records a SIGINT instead of letting the process die with the copy left unremoved and unnamed; each checkpoint the launch
  * and init pass before asking, before writing and before the run directory throws `Interrupted`, which their failure path turns into a
  * refusal that removes the copy and says so. Disarmed once the run's outcome is returned, when the default action returns. */
-export interface InterruptWatch { arm(): void; check(): void; disarm(): void }
+export interface InterruptWatch {
+  arm(): void; check(): void; disarm(): void;
+  /** Whether an interrupt arrived since the watch was armed, without throwing: for one that arrives after the last check. */
+  held?(): boolean;
+}
 
 export class Interrupted extends Error {
   constructor() { super('the run was interrupted (SIGINT)'); this.name = 'Interrupted'; }
@@ -117,6 +121,7 @@ export function interruptWatch(signals: Pick<NodeJS.EventEmitter, 'on' | 'remove
   return {
     arm: () => { if (!armed) { armed = true; signals.on('SIGINT', onInterrupt); } },
     check: () => { if (hit) throw new Interrupted(); },
+    held: () => hit,
     disarm: () => { if (armed) { armed = false; signals.removeListener('SIGINT', onInterrupt); } },
   };
 }

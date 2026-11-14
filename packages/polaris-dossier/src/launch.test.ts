@@ -1217,7 +1217,24 @@ describe('REQ-polaris-generation-047: init runs a copy-class run on its copy, re
     watch.check();
     signals.emit('SIGINT');
     expect(() => watch.check()).toThrow('the run was interrupted (SIGINT)');
+    expect(watch.held!()).toBe(true);
     watch.disarm();
+    expect(signals.listenerCount('SIGINT')).toBe(0);
+  });
+
+  it('an interrupt after init\'s last check: the run is kept, and init\'s output says so (R-PDJA-33-SLICE-CD-2 finding 7)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const r12 = up.commits[0]!.slice(0, 12);
+    const signals = new EventEmitter();
+    const s = setup(['public', 'none', `CONSENT TO OBSERVE repository:redis-redis AT ${r12}`, `STATE NO KERNEL EVIDENCE DRAWER FOR repository:redis-redis AT ${r12}`], { ports: { interrupt: interruptWatch(signals) } });
+    const stateRoot = path.join(tempDir('syzygy-launch-init-'), 'runs');
+    const { sources: _sources, now: _now, openReader: _open, copyRoot: _root, ...launch } = s.ports;
+    // The run id is drawn inside createRunDirectory, after init's last check: the interrupt lands there.
+    const out = await initRun({ clone: fullClone(up.dir, URL_RR), configText: CONFIG, stateRoot },
+      { sources: noOtherActs(), now: () => NOW, openReader: s.reads.open, launch, runId: () => { signals.emit('SIGINT'); return 'run-0123456789abcdef0123456789abcdef'; } });
+    if (!out.ok) throw new Error(JSON.stringify(out.refusal));
+    expect(out.report.disclosures.at(-1)).toBe('An interrupt arrived after the run was created; the run is kept, with its copy where it has one, and nothing was undone. Remove the run directory and the copy to discard it.');
+    expect(fs.existsSync(out.report.subject.clone.path)).toBe(true);
     expect(signals.listenerCount('SIGINT')).toBe(0);
   });
 

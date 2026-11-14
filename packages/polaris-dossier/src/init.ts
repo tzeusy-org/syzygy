@@ -89,6 +89,9 @@ export interface InitPorts extends RunPorts {
 
 export { COPY_DIRECTORY } from './state-directory.js';
 
+/** init's output where an interrupt arrived after the run directory was written. */
+export const INTERRUPT_AFTER_CREATION = 'An interrupt arrived after the run was created; the run is kept, with its copy where it has one, and nothing was undone. Remove the run directory and the copy to discard it.';
+
 const DISCLOSURES = [
   RECORDS_WITHIN_REACH,
   'HEAD was read from the clone\'s own .git files, which the agent sessions can write; it is compared with the revisions the consent names, and every object at the pinned revision is read by identifier and re-hashed',
@@ -129,7 +132,13 @@ export async function initRun(request: InitRequest, ports: InitPorts): Promise<I
   // An interrupt from the copy step until this outcome is a failure too (R-PDJA-33-SLICE-C-1 finding 3): the launch arms the watch when its
   // copy step starts, init checks it before it writes the run directory, and the default action returns with the outcome.
   try {
-    return await steps();
+    const result = await steps();
+    // An interrupt after init's last check, once the run directory is written, is not dropped silently (R-PDJA-33-SLICE-CD-2 finding 7): the
+    // run stands, and its output says so.
+    if (result.ok && ports.launch?.interrupt?.held?.() === true) {
+      return { ...result, report: { ...result.report, disclosures: [...result.report.disclosures, INTERRUPT_AFTER_CREATION] } };
+    }
+    return result;
   } catch (cause) {
     if (copy === null) throw cause;
     return refuse('failure', `init failed after the launch made the copy: ${failureText(cause)}${recordedNote}`);
