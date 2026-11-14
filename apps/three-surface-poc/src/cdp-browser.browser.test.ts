@@ -129,7 +129,8 @@ async function runLifetimeScenario(mode: 'SIGTERM' | 'SIGKILL' | 'startup'): Pro
       expect(report.ownedUnreadableRefusals).toEqual(['guardian-scan', 'observer-scan', 'guardian-signal']);
       expect(report.milestone.helpers).toHaveLength(mode === 'startup' ? 0 : 1);
       expect(report.decoySurvived).toBe(true);
-      expect(report.refusals).toEqual(['start-reused', 'other-uid', 'other-namespace', 'outside-family']);
+      expect(report.refusals).toEqual(['start-reused', 'other-uid', 'other-namespace', 'outside-family',
+        'owned-sibling-unreadable', 'owned-sibling-reused']);
       expect(report.unexpectedReaps).toEqual([]);
       expect(report.after.procFamilyDenominator).toBe(0);
       expect(report.after.proc).toEqual([]);

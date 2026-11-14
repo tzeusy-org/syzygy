@@ -10,7 +10,7 @@ import sys
 import time
 import runpy
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import mock_open, patch
 
 assert ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0) == 0
 ROOT = os.getpid()
@@ -101,32 +101,40 @@ assert mode in ('SIGTERM', 'SIGKILL', 'startup')
 # real process is signalled by these controls; the real lifetime case below
 # supplies the independent process/census evidence.
 guardian = runpy.run_path(guardian_path)
-with patch.object(Path, 'read_text', side_effect=ProcessLookupError('process exited during read')):
+with patch.object(Path, 'read_text', side_effect=ProcessLookupError('process exited during read')), \
+        patch('io.open', side_effect=ProcessLookupError('process exited during read')):
     assert identity(999999999) is None
     assert guardian['identity'](999999999) is None
 foreign_fields = ['S', '123'] + ['0'] * 17 + ['foreign-start']
 with patch.object(Path, 'read_text', return_value='999999999 (foreign) ' + ' '.join(foreign_fields)), \
-        patch.object(Path, 'stat', return_value=SimpleNamespace(st_uid=UID + 1)), \
+        patch('io.open', mock_open(read_data='999999999 (foreign) ' + ' '.join(foreign_fields))), \
+        patch('os.stat', return_value=SimpleNamespace(st_uid=UID + 1)), \
         patch('os.readlink', side_effect=AssertionError('foreign UID namespace was inspected')):
     assert guardian['identity'](999999999)[4:] == (UID + 1, None)
     assert identity(999999999)['namespace'] is None
 stop = guardian['stop']
 ports = stop.__globals__
-row = (999999999, 'original-start', 123, 'S', UID, NAMESPACE)
+row = (999999999, 'original-start', ROOT, 'S', UID, NAMESPACE)
 refusals = []
 for label, current, members in [
     ('start-reused', (row[0], 'reused-start', *row[2:]), {row[0]: row}),
     ('other-uid', (*row[:4], UID + 1, NAMESPACE), {row[0]: row}),
     ('other-namespace', (*row[:5], 'pid:[other]'), {row[0]: row}),
-    ('outside-family', row, {}),
+    ('outside-family', (*row[:2], 123, *row[3:]), {}),
+    ('owned-sibling-unreadable', row, PermissionError('owned sibling namespace denied')),
+    ('owned-sibling-reused', row, RuntimeError('private Chrome descendant identity changed during scan')),
 ]:
-    with patch.dict(ports, {'identity': lambda _pid: current, 'descendants': lambda: members}), \
+    def checked_family():
+        if isinstance(members, Exception):
+            raise members
+        return members
+    with patch.dict(ports, {'identity': lambda _pid: current, 'descendants': checked_family}), \
             patch('os.pidfd_open', return_value=12345), patch('os.close'), \
             patch('signal.pidfd_send_signal', side_effect=AssertionError('unsafe identity was signalled')), \
             patch('os.kill', side_effect=AssertionError('PID-addressed signal bypassed stable handle')):
         try:
             stop(row, signal.SIGKILL)
-        except RuntimeError:
+        except (RuntimeError, PermissionError):
             refusals.append(label)
         else:
             raise AssertionError(f'{label} did not refuse signalling')
@@ -145,6 +153,22 @@ with patch('os.pidfd_open', side_effect=ProcessLookupError('already reaped')), \
         patch('signal.pidfd_send_signal') as sent:
     stop(row, signal.SIGKILL)
     sent.assert_not_called()
+# Default-decoder warnings precede attempted file access, including a failed
+# read. The optimized reader must preserve this supported interpreter mode.
+warning_control = subprocess.run([sys.executable, '-X', 'warn_default_encoding',
+    '-W', 'error::EncodingWarning', '-c', '''
+import runpy, sys
+from unittest.mock import patch
+guardian = runpy.run_path(sys.argv[1])
+with patch('io.open', side_effect=AssertionError('stat opened before decoder warning')):
+    try:
+        guardian['identity'](999999999)
+    except EncodingWarning:
+        pass
+    else:
+        raise AssertionError('missing decoder warning before stat access')
+''', guardian_path], capture_output=True, text=True)
+assert warning_control.returncode == 0, warning_control.stderr
 # The deadline refuses rather than acknowledging an unverified family.
 ticks = iter([0, 0])
 clock = SimpleNamespace(monotonic=lambda: next(ticks, 4), sleep=lambda _seconds: None)

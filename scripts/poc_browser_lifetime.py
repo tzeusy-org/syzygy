@@ -8,6 +8,7 @@ the worker: EOF is the parent-death notification. Operator launches do not
 use this test-only adapter.
 """
 import ctypes
+import io
 import os
 from pathlib import Path
 import select
@@ -22,16 +23,23 @@ UID = os.getuid()
 NAMESPACE = os.readlink('/proc/self/ns/pid')
 
 
+def read_stat_text(path):
+    # Keep Path.read_text's default-decoder warning before opening the file.
+    encoding = io.text_encoding(None)
+    with io.open(path, mode='r', encoding=encoding) as stream:
+        return stream.read()
+
+
 def identity(pid, *, with_namespace=True):
-    directory = Path('/proc', str(pid))
+    directory = f'/proc/{pid}'
     try:
-        text = (directory / 'stat').read_text()
+        text = read_stat_text(directory + '/stat')
         fields = text[text.rfind(')') + 2:].split()
-        owner = directory.stat().st_uid
+        owner = os.stat(directory).st_uid
         # Namespace links for another UID may be unreadable on a normal
         # host. Retain its parent metadata so a foreign-UID descendant is
         # refused, while unrelated processes require no namespace access.
-        namespace = os.readlink(directory / 'ns/pid') if with_namespace and owner == UID else None
+        namespace = os.readlink(directory + '/ns/pid') if with_namespace and owner == UID else None
         return (pid, fields[19], int(fields[1]), fields[0],
                 owner, namespace)
     except (FileNotFoundError, ProcessLookupError):
