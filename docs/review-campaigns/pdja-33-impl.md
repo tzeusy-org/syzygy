@@ -10,12 +10,12 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-PDJA-33-RULINGS-2-RAW.md:2`), over `b340177a`, the RULINGS-1 repairs and the identity widening ordered by the owner on 2026-11-14 ("Widen all readers now"). Each finding the lead directed to repair is repaired by its own commit on the same branch:
+`REVISE` (`R-PDJA-33-RULINGS-2-RAW.md:2`), over `b340177a`, the RULINGS-1 repairs and the identity widening ordered by the owner on 2026-11-14 ("Widen all readers now"). Each finding the lead directed to repair is repaired by its own commit on the same branch. The repair mutants, and the re-sweep's regex, population and hits, are recorded in `docs/evidence/syzygy-pdja-33/rulings-2-repair-mutation-2026-11-14.json`:
 
-- Finding 1 (blocking): three identity readers were missed by the widening, each still refusing ".": `dossier-trigger.ts:128`, `repo-corpus.ts:83` and `generation-source.ts:164`.
-- Finding 2 (non-blocking): the single IDNA host rule of `96613e8c` refused ASCII hosts `main` admitted and rewrote numeric hosts, beyond 046 line 15's normalisation; its "no identity changes" claim is false for the hosts it refused.
-- Finding 3 (non-blocking): this file's "`IDENTITY` is unchanged" went stale at `5ef9dabd`.
-- Reviewer mutant O1 (survived): the egress scope-line regex's `$` anchor was unpinned.
+- Finding 1 (blocking): three identity readers were missed by the widening, each still refusing ".": `dossier-trigger.ts:128`, `repo-corpus.ts:83` and `generation-source.ts:164`. Each now admits "." by an exact, case-preserving match (`72ab522a`). A re-sweep of every bracket-class regex within three lines of an identity word, in packages, apps and scripts, found no further reader.
+- Finding 2 (non-blocking): the single IDNA host rule of `96613e8c` refused ASCII hosts `main` admitted and rewrote numeric hosts, beyond 046 line 15's normalisation; its "no identity changes" claim is false for the hosts it refused. Each label is now IDNA-mapped and lower-cased with no IPv4 reading or `xn--` validation, so every host `main` admitted within the host grammar keeps `main`'s form; `fe05f21c`'s message corrects the claim (`fe05f21c`).
+- Finding 3 (non-blocking): this file's "`IDENTITY` is unchanged" went stale at `5ef9dabd`. Both stale sentences are marked where they stand (`1b748c0e`).
+- Reviewer mutant O1 (survived): the egress scope-line regex's `$` anchor was unpinned. Tests now pin both anchors, with no behaviour change (`609256da`).
 - Findings 4 to 10 (notes): the RULINGS-1 repairs hold; no change directed.
 
 Earlier: `REVISE` (`R-PDJA-33-RULINGS-1-RAW.md:2`), over `f83fd7e8`, the commits implementing the owner's rulings of 2026-11-14 (host widening and the `launch.json` rewrite). Each finding the lead directed to repair is repaired by its own commit on the same branch. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/rulings-1-repair-mutation-2026-11-14.json`:
