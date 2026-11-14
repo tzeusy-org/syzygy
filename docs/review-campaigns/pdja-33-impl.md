@@ -10,7 +10,15 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-PDJA-33-RULINGS-1-RAW.md:2`), over `f83fd7e8`, the commits implementing the owner's rulings of 2026-11-14 (host widening and the `launch.json` rewrite). Each finding the lead directed to repair is repaired by its own commit on the same branch. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/rulings-1-repair-mutation-2026-11-14.json`:
+`REVISE` (`R-PDJA-33-RULINGS-2-RAW.md:2`), over `b340177a`, the RULINGS-1 repairs and the identity widening ordered by the owner on 2026-11-14 ("Widen all readers now"). Each finding the lead directed to repair is repaired by its own commit on the same branch:
+
+- Finding 1 (blocking): three identity readers were missed by the widening, each still refusing ".": `dossier-trigger.ts:128`, `repo-corpus.ts:83` and `generation-source.ts:164`.
+- Finding 2 (non-blocking): the single IDNA host rule of `96613e8c` refused ASCII hosts `main` admitted and rewrote numeric hosts, beyond 046 line 15's normalisation; its "no identity changes" claim is false for the hosts it refused.
+- Finding 3 (non-blocking): this file's "`IDENTITY` is unchanged" went stale at `5ef9dabd`.
+- Reviewer mutant O1 (survived): the egress scope-line regex's `$` anchor was unpinned.
+- Findings 4 to 10 (notes): the RULINGS-1 repairs hold; no change directed.
+
+Earlier: `REVISE` (`R-PDJA-33-RULINGS-1-RAW.md:2`), over `f83fd7e8`, the commits implementing the owner's rulings of 2026-11-14 (host widening and the `launch.json` rewrite). Each finding the lead directed to repair is repaired by its own commit on the same branch. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/rulings-1-repair-mutation-2026-11-14.json`:
 
 - Finding 1 (blocking): the scp form admitted a bracketed IPv6 host, which 046 line 17 excludes (its scp host holds no `:`). A bracketed scp host is now refused by its own rule, with or without a user; bracketed IPv6 stays admitted in the URL forms (`87c5b880`).
 - Finding 2 (non-blocking): ASCII and non-ASCII hosts were normalised by two rules. Every host now goes through IDNA domain-to-ASCII; no identity changes, since it is derived from the path alone (`96613e8c`).
