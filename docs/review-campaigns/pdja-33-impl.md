@@ -10,7 +10,12 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-PDJA-33-RULINGS-2-RAW.md:2`), over `b340177a`, the RULINGS-1 repairs and the identity widening ordered by the owner on 2026-11-14 ("Widen all readers now"). Each finding the lead directed to repair is repaired by its own commit on the same branch. The repair mutants, and the re-sweep's regex, population and hits, are recorded in `docs/evidence/syzygy-pdja-33/rulings-2-repair-mutation-2026-11-14.json`:
+`CONFIRM WITH EXCEPTIONS` (`R-PDJA-33-RULINGS-3-RAW.md:2`), over `c2d26151`, the RULINGS-2 repairs (`b340177a..c2d26151`). The raw confirms RULINGS-2 findings 1, 2 and 3 and mutant O1 resolved. By the lead's stopping rule, this branch takes no further code change:
+
+- Finding 2 (non-blocking): reviewer mutant O8, which narrows `dossier-trigger.ts:130`'s `idPattern` to lower case, survived; the comment's reason for keeping upper case does not hold at that site. Deferred to the follow-up bead `syzygy-pdja.35`; not repaired here.
+- Findings 1 and 3 to 7 (notes): no change directed.
+
+Earlier: `REVISE` (`R-PDJA-33-RULINGS-2-RAW.md:2`), over `b340177a`, the RULINGS-1 repairs and the identity widening ordered by the owner on 2026-11-14 ("Widen all readers now"). Each finding the lead directed to repair is repaired by its own commit on the same branch. The repair mutants, and the re-sweep's regex, population and hits, are recorded in `docs/evidence/syzygy-pdja-33/rulings-2-repair-mutation-2026-11-14.json`:
 
 - Finding 1 (blocking): three identity readers were missed by the widening, each still refusing ".": `dossier-trigger.ts:128`, `repo-corpus.ts:83` and `generation-source.ts:164`. Each now admits "." by an exact, case-preserving match (`72ab522a`). A re-sweep of every bracket-class regex within three lines of an identity word, in packages, apps and scripts, found no further reader.
 - Finding 2 (non-blocking): the single IDNA host rule of `96613e8c` refused ASCII hosts `main` admitted and rewrote numeric hosts, beyond 046 line 15's normalisation; its "no identity changes" claim is false for the hosts it refused. Each label is now IDNA-mapped and lower-cased with no IPv4 reading or `xn--` validation, so every host `main` admitted within the host grammar keeps `main`'s form; `fe05f21c`'s message corrects the claim (`fe05f21c`).
