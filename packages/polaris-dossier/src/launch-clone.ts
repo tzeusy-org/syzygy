@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { carriesUserInformation } from './launch-identity.js';
 
 /** What a launch reads of the operator's clone, in process, before any object (REQ-polaris-generation-047's closed list, which the
  * source-acquisition registry entry v1.1's `readAuthority` repeats as reads (1) to (5)), with no process run and nothing honoured.
@@ -34,7 +35,11 @@ export type RefValue = { readonly kind: 'oid'; readonly oid: string } | { readon
 /** A remote and its one URL; `url` is null where the remote has no single non-empty `url` line (none, an empty one, or several, `urlLines`
  * of them), which the identity rule cannot read: such a remote is kept, named, so that the rule never falls through to another remote
  * (R-PDJA-33-SLICE-C-1 finding 6). */
-export interface CloneRemote { readonly name: string; readonly url: string | null; readonly urlLines?: number }
+export interface CloneRemote {
+  readonly name: string; readonly url: string | null; readonly urlLines?: number;
+  /** Where `url` is null: true where any of its url lines carries user information, which the launch says without printing it. */
+  readonly userInformation?: boolean;
+}
 
 export interface CloneSnapshot {
   readonly gitDir: string;
@@ -150,7 +155,7 @@ export function parseConfig(config: string): CloneConfig {
     }
   }
   return {
-    remotes: [...urls].map(([name, list]): CloneRemote => (list.length === 1 && list[0] !== '' ? { name, url: list[0]! } : { name, url: null, urlLines: list.length })),
+    remotes: [...urls].map(([name, list]): CloneRemote => (list.length === 1 && list[0] !== '' ? { name, url: list[0]! } : { name, url: null, urlLines: list.length, ...(list.some(carriesUserInformation) ? { userInformation: true } : {}) })),
     objectFormat: objectFormat ?? 'sha1',
     bare,
     worktree,

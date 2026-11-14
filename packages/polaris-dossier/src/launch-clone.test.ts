@@ -193,6 +193,11 @@ describe('read (3): the configuration, as text, for remotes and the object forma
     expect(parseConfig('[remote "origin"]\n\turl = https://h/a/b\n[remote "two"]\n\turl = x\n\turl = y\n[REMOTE "Up"]\n\tURL = ssh://h/c/d\n[remote "blank"]\n\turl =\n').remotes)
       .toEqual([{ name: 'origin', url: 'https://h/a/b' }, { name: 'two', url: null, urlLines: 2 }, { name: 'Up', url: 'ssh://h/c/d' }, { name: 'blank', url: null, urlLines: 1 }]);
   });
+
+  it('a remote with several urls, one carrying user information, is marked so, the URLs kept by no field (R-PDJA-33-SLICE-CD-2 finding 6)', () => {
+    expect(parseConfig('[remote "origin"]\n\turl = https://h/a/b\n\turl = https://bob:hunter2@h/a/b\n[remote "scp"]\n\turl = git@h:a/b\n\turl = h:c/d\n[remote "plain"]\n\turl = https://h/a\n\turl = h:b/c\n').remotes)
+      .toEqual([{ name: 'origin', url: null, urlLines: 2, userInformation: true }, { name: 'scp', url: null, urlLines: 2, userInformation: true }, { name: 'plain', url: null, urlLines: 2 }]);
+  });
 });
 
 describe('the read oracle is independent of the API the reader uses (R-PDJA-33-SLICE-A-1 finding 1)', () => {

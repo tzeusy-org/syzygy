@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { deriveIdentity, identityRemote, matchRecords, normaliseIdentityOption, normaliseUrl, proposeIdentity, readLocator, type MatchableRecord } from './launch-identity.js';
+import { carriesUserInformation, deriveIdentity, identityRemote, matchRecords, normaliseIdentityOption, normaliseUrl, proposeIdentity, readLocator, type MatchableRecord } from './launch-identity.js';
 
 /** REQ-polaris-generation-046, line 15: the identity proposal rule. Expected values are literals written from the clause, never computed
  * by the module under test. */
@@ -239,6 +239,17 @@ describe('the proposal', () => {
     const given = proposeIdentity({ ...base, remotes: [{ name: 'origin', url: null, urlLines: 2 }, fork], defaultRemote: null, identityOption: 'x-y', upstreamOption: 'https://h.example/x/y' });
     expect(given).toMatchObject({ ok: true, identity: 'repository:x-y', urlSource: 'the operator\'s --upstream option',
       locatorStatements: ['The clone\'s remote origin has no one URL to read, so it derives nothing: it has 2 url lines, and the rule reads a remote with exactly one non-empty url. Syzygy does not print, store or record its URLs.'] });
+  });
+
+  it('a remote with several url lines, one carrying user information: the refusal says so, printing no URL (R-PDJA-33-SLICE-CD-2 finding 6)', () => {
+    const p = proposeIdentity({ ...base, remotes: [{ name: 'origin', url: null, urlLines: 2, userInformation: true }], defaultRemote: null });
+    expect(p).toMatchObject({ ok: false, locatorStatements: [
+      'The clone\'s remote origin has no one URL to read, so it derives nothing: it has 2 url lines, and the rule reads a remote with exactly one non-empty url. Syzygy does not print, store or record its URLs.',
+      'A url line of the clone\'s remote origin carried user information; Syzygy read none of those URLs as a locator and does not print, store or record them.',
+    ] });
+    expect([
+      'https://bob:pw@h/a/b', 'ssh://bob@h/a/b', 'git@h:a/b', 'https://h/a@b', 'h:a/b', 'https://h/a/b', 'file:///x@y/z', 'not a url',
+    ].map(carriesUserInformation)).toEqual([true, true, true, false, false, false, false, false]);
   });
 
   it('a remote URL that is no remote locator derives nothing, names the remote and the rule, never the URL (scenario "Remote URL that is not a locator")', () => {

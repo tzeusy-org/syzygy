@@ -49,6 +49,19 @@ const LOCATOR_SCHEME = /^([A-Za-z][A-Za-z0-9+.-]*):\/\/(.*)$/s;
 /** The scp form: an optional user name and `@`, a host holding no `/` or `:`, then `:`, then a path. */
 const SCP_FORM = /^(?:([^@/]*)@)?([^/:@]*):(.*)$/s;
 
+/** Whether a URL holds user information before its host, in either admitted shape, whether or not it is otherwise admitted: an `@` in a
+ * scheme URL's authority, or a user name before an scp-form host. Read for a remote whose url lines the identity rule does not read, so
+ * the launch can say one carried user information without reading or printing it (R-PDJA-33-SLICE-CD-2 finding 6). */
+export function carriesUserInformation(input: string): boolean {
+  const schemed = LOCATOR_SCHEME.exec(input);
+  if (schemed !== null) {
+    const body = schemed[2]!, slash = body.indexOf('/');
+    return (slash < 0 ? body : body.slice(0, slash)).includes('@');
+  }
+  const scp = SCP_FORM.exec(input);
+  return scp !== null && scp[1] !== undefined;
+}
+
 /** Read a URL as a locator by REQ-polaris-generation-046's line 17, then normalise it by line 15: scheme, user information, port and a
  * leading `www.` removed, then a trailing `/` and then a trailing `.git`, host and path case-folded. Nothing is fetched, resolved or
  * rewritten (no Git `insteadOf`, no SSH host alias): an alias is the host it names. */
@@ -184,7 +197,7 @@ export type IdentityProposal =
 
 export interface IdentityInput {
   /** A remote whose `url` is null has no single URL the rule can read (`urlLines` of them). */
-  readonly remotes: readonly { readonly name: string; readonly url: string | null; readonly urlLines?: number }[];
+  readonly remotes: readonly { readonly name: string; readonly url: string | null; readonly urlLines?: number; readonly userInformation?: boolean }[];
   readonly defaultRemote: string | null;
   readonly identityOption?: string;
   readonly upstreamOption?: string;
@@ -215,6 +228,7 @@ export function proposeIdentity(input: IdentityInput): IdentityProposal {
     // remote (R-PDJA-33-SLICE-C-1 finding 6).
     remoteRule = `it has ${remote.urlLines ?? 0} url lines, and the rule reads a remote with exactly one non-empty url`;
     locatorStatements.push(`The clone's remote ${remote.name} has no one URL to read, so it derives nothing: ${remoteRule}. Syzygy does not print, store or record its URLs.`);
+    if (remote.userInformation === true) locatorStatements.push(`A url line of the clone's remote ${remote.name} carried user information; Syzygy read none of those URLs as a locator and does not print, store or record them.`);
   } else if (remote !== null && remote.url !== null) {
     const read = readLocator(remote.url, 'remote');
     if (read.ok) {
