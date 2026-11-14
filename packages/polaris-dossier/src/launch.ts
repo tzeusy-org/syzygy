@@ -343,7 +343,10 @@ export async function launchConsent(request: LaunchRequest, ports: LaunchPorts):
       ...(request.upstream === undefined ? {} : { upstreamOption: request.upstream }),
       records: matchable, pinned: commit, parents,
     });
-    if (!proposal.ok) return refuse('identity', proposal.reason);
+    if (!proposal.ok) {
+      locatorStatements = proposal.locatorStatements ?? [];
+      return refuse('identity', proposal.reason);
+    }
     locatorStatements = proposal.locatorStatements;
     const identity = proposal.identity, bare = identity.slice('repository:'.length);
     const pin: LaunchPin = { commit, via, committerDate, fetched: false, updateCommand: update };

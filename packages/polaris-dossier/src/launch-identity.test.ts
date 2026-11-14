@@ -231,7 +231,8 @@ describe('the proposal', () => {
     const fork = { name: 'fork', url: 'https://h/fork/repo' };
     const several = proposeIdentity({ ...base, remotes: [{ name: 'origin', url: null, urlLines: 2 }, fork], defaultRemote: null });
     expect(several).toEqual({ ok: false, matches: [],
-      reason: 'the clone\'s remote origin, which the identity rule reads, has no one URL (it has 2 url lines, and the rule reads a remote with exactly one non-empty url), so it derives nothing, as for a clone with no remote; give --identity and --upstream' });
+      reason: 'the clone\'s remote origin, which the identity rule reads, has no one URL (it has 2 url lines, and the rule reads a remote with exactly one non-empty url), so it derives nothing, as for a clone with no remote; give --identity and --upstream',
+      locatorStatements: ['The clone\'s remote origin has no one URL to read, so it derives nothing: it has 2 url lines, and the rule reads a remote with exactly one non-empty url. Syzygy does not print, store or record its URLs.'] });
     // The only remote, counted with the one that has no URL: still that remote, never the other.
     const only = proposeIdentity({ ...base, remotes: [{ name: 'mirror', url: null, urlLines: 0 }], defaultRemote: null });
     expect(only).toMatchObject({ ok: false, reason: 'the clone\'s remote mirror, which the identity rule reads, has no one URL (it has 0 url lines, and the rule reads a remote with exactly one non-empty url), so it derives nothing, as for a clone with no remote; give --identity and --upstream' });
@@ -243,7 +244,8 @@ describe('the proposal', () => {
   it('a remote URL that is no remote locator derives nothing, names the remote and the rule, never the URL (scenario "Remote URL that is not a locator")', () => {
     const remotes = [{ name: 'origin', url: 'https://git.example.org/a/b?private_token=x' }];
     const p = proposeIdentity({ ...base, remotes });
-    expect(p).toEqual({ ok: false, reason: 'the URL of the clone\'s remote origin is not a remote locator (it carries a query or a fragment), so it derives nothing, as for a clone with no remote; give --identity and --upstream', matches: [] });
+    expect(p).toEqual({ ok: false, reason: 'the URL of the clone\'s remote origin is not a remote locator (it carries a query or a fragment), so it derives nothing, as for a clone with no remote; give --identity and --upstream', matches: [],
+      locatorStatements: ['The URL of the clone\'s remote origin is not a remote locator, so it derives nothing: it carries a query or a fragment. Syzygy does not print, store or record it.'] });
     const given = proposeIdentity({ ...base, remotes, identityOption: 'c-d', upstreamOption: 'https://git.example.org/c/d' });
     expect(given).toMatchObject({ ok: true, identity: 'repository:c-d', url: 'git.example.org/c/d', urlSource: 'the operator\'s --upstream option',
       locatorStatements: ['The URL of the clone\'s remote origin is not a remote locator, so it derives nothing: it carries a query or a fragment. Syzygy does not print, store or record it.'] });

@@ -179,7 +179,8 @@ export function matchRecords(records: readonly MatchableRecord[], derived: { rea
 export type IdentityProposal =
   | { readonly ok: true; readonly identity: string; readonly source: IdentitySource; readonly url: string; readonly urlSource: string;
       readonly matches: readonly RecordMatch[]; readonly notCarrying: readonly RecordMatch[]; readonly locatorStatements: readonly string[] }
-  | { readonly ok: false; readonly reason: string; readonly matches: readonly RecordMatch[] };
+  /** A refusal made once the remote was read carries what the URL reading said of it (046, line 17; R-PDJA-33-SLICE-CD-2 finding 1). */
+  | { readonly ok: false; readonly reason: string; readonly matches: readonly RecordMatch[]; readonly locatorStatements?: readonly string[] };
 
 export interface IdentityInput {
   /** A remote whose `url` is null has no single URL the rule can read (`urlLines` of them). */
@@ -206,6 +207,8 @@ export function proposeIdentity(input: IdentityInput): IdentityProposal {
   // locator derives nothing, as for a clone with no remote, and the output names the remote and the rule, never the URL.
   const remote = identityRemote(input.remotes, input.defaultRemote);
   const locatorStatements: string[] = [];
+  // A refusal from here on carries them where there are any.
+  const said = () => (locatorStatements.length === 0 ? {} : { locatorStatements });
   let url: NormalisedUrl | null = null, urlSource = '', remoteRule: string | null = null;
   if (remote !== null && remote.url === null) {
     // A remote with several url lines, or none, has no one URL to read: it derives nothing, and the rule never falls through to another
@@ -229,7 +232,7 @@ export function proposeIdentity(input: IdentityInput): IdentityProposal {
         : remote !== null ? `the URL of the clone's remote ${remote.name} is not a remote locator (${remoteRule}), so it derives nothing, as for a clone with no remote; give --identity and --upstream`
         : input.remotes.length === 0 ? 'the clone has no remote, so the operator must give --identity and --upstream'
           : `the clone has ${input.remotes.length} remotes and none is origin, so no remote is read; give --identity and --upstream`;
-      return { ok: false, reason: why, matches: [] };
+      return { ok: false, reason: why, matches: [], ...said() };
     }
     url = upstream;
     urlSource = 'the operator\'s --upstream option';
@@ -239,16 +242,16 @@ export function proposeIdentity(input: IdentityInput): IdentityProposal {
   const carried = [...new Set(matches.map(m => m.record.identity))].sort();
   if (input.identityOption !== undefined) {
     const identity = normaliseIdentityOption(input.identityOption);
-    if (identity === null) return { ok: false, reason: `--identity cannot name a repository identity: ${IDENTITY_RULE}`, matches };
+    if (identity === null) return { ok: false, reason: `--identity cannot name a repository identity: ${IDENTITY_RULE}`, matches, ...said() };
     return { ok: true, identity, source: 'operator-option', url: url.url, urlSource, matches, notCarrying: matches.filter(m => m.record.identity !== identity), locatorStatements };
   }
   // The two-segment floor: "a normalised path of fewer than two segments derives no identity, and the operator SHALL give the identity
   // option", whatever the matching records carry.
-  if (url.segments.length < 2) return { ok: false, reason: `the normalised URL ${url.url} has fewer than two path segments, so no identity derives from it; give --identity`, matches };
+  if (url.segments.length < 2) return { ok: false, reason: `the normalised URL ${url.url} has fewer than two path segments, so no identity derives from it; give --identity`, matches, ...said() };
   if (carried.length > 1) {
-    return { ok: false, reason: `the matching records carry more than one identity, so Syzygy proposes none: ${matches.map(describe).join('; ')}; give the identity with --identity`, matches };
+    return { ok: false, reason: `the matching records carry more than one identity, so Syzygy proposes none: ${matches.map(describe).join('; ')}; give the identity with --identity`, matches, ...said() };
   }
   if (carried.length === 1) return { ok: true, identity: carried[0]!, source: 'matching-records', url: url.url, urlSource, matches, notCarrying: [], locatorStatements };
-  if (derived === null) return { ok: false, reason: `no identity derives from the normalised URL ${url.url}: its last two segments, joined and replaced, do not open with a letter or digit, and ${IDENTITY_RULE}; give --identity`, matches };
+  if (derived === null) return { ok: false, reason: `no identity derives from the normalised URL ${url.url}: its last two segments, joined and replaced, do not open with a letter or digit, and ${IDENTITY_RULE}; give --identity`, matches, ...said() };
   return { ok: true, identity: derived, source: 'derived', url: url.url, urlSource, matches, notCarrying: [], locatorStatements };
 }

@@ -431,6 +431,18 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
     expect(JSON.stringify(out).includes('hunter2')).toBe(false);
   });
 
+  it('an identity refusal after the remote URL is read carries the user-information statement: a one-segment path (R-PDJA-33-SLICE-CD-2 finding 1)', async () => {
+    const up = makeUpstream({ 'a.c': 'x\n' });
+    const clone = fullClone(up.dir, 'https://bob:hunter2@git.example.org/onlyone.git');
+    const s = setup([]);
+    const out = await run(clone, s);
+    expect(out).toMatchObject({ kind: 'refused', refusal: { stage: 'identity',
+      reason: 'the normalised URL git.example.org/onlyone has fewer than two path segments, so no identity derives from it; give --identity',
+      locatorStatements: ['The URL of the clone\'s remote origin carried user information; Syzygy removed it before deriving anything and does not print, store or record it.'] } });
+    expect(s.terminal.prompts).toEqual([]);
+    expect(JSON.stringify({ out, printed: s.terminal.printed }).includes('hunter2') || JSON.stringify(out).includes('bob')).toBe(false);
+  });
+
   it('a remote URL that is no locator: refused before asking, naming the remote and the rule, the URL in no output', async () => {
     const up = makeUpstream({ 'a.c': 'x\n' });
     const clone = fullClone(up.dir, 'https://git.example.org/a/b?private_token=x');
