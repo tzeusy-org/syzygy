@@ -10,7 +10,17 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-PDJA-33-SLICE-D-1-RAW.md:4`), over `3c879e36`, slice D. Each revise finding is repaired by its own commit on the same branch. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/slice-D-repair-mutation-2026-11-14.json`:
+`REVISE` (`R-PDJA-33-SLICE-CD-2-RAW.md:4`), over `7a7a52ee`, the slice-C and slice-D repairs. The raw confirms every C-1 and D-1 finding resolved and upholds the implementer's choices. Each finding repaired is repaired by its own commit on the same branch. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/slice-CD-2-repair-mutation-2026-11-14.json`:
+
+- Finding 1 (revise): an identity refusal made after the remote URL was read dropped the user-information statement. Every such refusal now carries the locator statements, and the launch's refusal and init's output pass them on (`ae6d7a05`).
+- Finding 2 (revise): a refused launch never stated the brief stage. Every refusal's statements now end with "Syzygy issued no brief and delivered no packet", and the "Clone with an alternate" scenario's full list is pinned (`b8632777`).
+- Finding 3 (note): `launch.json` keeps the brief stage's not-reached form after a brief is issued. Not repaired; it goes to the owner.
+- Finding 4 (note): `LAUNCH_DISCLOSURE_SINCE`'s comment and refusal named a basis true only of this branch. Both now name the cutoff as what it is, and a unit case pins the refusal of an unparseable `pinnedAt` (`d8ee1926`).
+- Finding 5 (note): the unreachable no-copy pinned state is dropped (`07b7ca2a`).
+- Finding 6 (note): a multi-URL identity remote whose url lines carried user information now gets a statement saying so, printing no URL (`b23d3003`).
+- Finding 7 (note): an interrupt held after init's last check is now said in init's output, with the run kept (`d0afb1be`).
+
+Earlier: `REVISE` (`R-PDJA-33-SLICE-D-1-RAW.md:4`), over `3c879e36`, slice D. Each revise finding is repaired by its own commit on the same branch. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/slice-D-repair-mutation-2026-11-14.json`:
 
 - Finding 1 (revise): a copy statement said "the pinned commit" for a run whose commit was never pinned. The fetch-failed and fetched forms now say "the named identifier" until the commit is pinned (`4653d320`).
 - Finding 2 (revise): the fixed text for an unread committer date gave a false reason and, in a no-copy run, named a copy. The pinned state now carries the reason from what happened. Only a copy-class run says where the copy's checkout left its HEAD (`7bfa1686`, `7c85d578`).
