@@ -161,7 +161,8 @@ function validateSources(value: readonly GenerationSource[], requireVerified: bo
       || Object.keys(source.exclusion).some(key => !['excluded', 'reason'].includes(key))
       || (source.exclusion.excluded === false && Object.hasOwn(source.exclusion, 'reason'))) fail('invalid-source');
     if (!handle.test(source.sourceId) || source.sourceId.length > SOURCE_ID_MAX_LENGTH
-      || !/^[A-Za-z0-9:_-]+$/u.test(source.repositoryId) || !source.evaluationId || !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(source.revision)
+      // Every 046 identity ('.' included) and the github:<owner>:<repo> form, compared exactly (R-PDJA-33-RULINGS-2 finding 1).
+      || !/^[A-Za-z0-9:._-]+$/u.test(source.repositoryId) || !source.evaluationId || !/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u.test(source.revision)
       || (source.objectId !== null && !hexObjectId.test(source.objectId)) || source.path.startsWith('/')
       || source.path.split('/').some(part => part === '' || part === '.' || part === '..') || source.path.includes('\0')
       || source.path.includes('\\') || !['body', 'path-only'].includes(source.classificationBasis)

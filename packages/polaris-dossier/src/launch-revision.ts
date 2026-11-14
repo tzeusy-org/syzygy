@@ -1,4 +1,4 @@
-import { resolveRef, validRefName, type CloneSnapshot } from './launch-clone.js';
+import { defaultRemoteOf, holdsRef, resolveRef, revisionRefCandidates, type CloneSnapshot } from './launch-clone.js';
 
 /** The revision a launch pins (REQ-polaris-generation-047), decided from the clone's references alone, with no network request.
  *
@@ -8,7 +8,13 @@ import { resolveRef, validRefName, type CloneSnapshot } from './launch-clone.js'
  * pinned before any question: absent `--revision`, "the branch the clone records as its remote's default (the remote's `HEAD`
  * reference), or, where it records none, the clone's `main` branch, or, where there is none, its `master` branch"; none of them refuses,
  * naming `--revision`. With `--revision`, "a full or unambiguous abbreviated object identifier or a reference the clone holds, resolved
- * once to a full object identifier; a name that resolves to no commit, or to more than one, SHALL be refused."
+ * once to a full object identifier; a name that resolves to no object identifier, or to more than one, SHALL be refused. An abbreviated
+ * identifier resolves to more than one when more than one object identifier the operator's clone names in its loose object file names and
+ * pack indexes begins with it." The store is listed "for an abbreviated `--revision` alone, … at the width of the object format its
+ * configuration records (`extensions.objectFormat`, SHA-1 where it records none)" (read (5)): a name of exactly that width is a full
+ * identifier and names itself, with no listing, and a name of 4 or more hexadecimal digits short of it is an abbreviation; a 40-digit name
+ * in a SHA-256 clone is therefore an abbreviation. Whether a full identifier names an object the clone holds is not asked here: "a mismatch
+ * failing closed in the copy's fetch or, in a no-copy run, in REQ-polaris-generation-033's object read".
  *
  * Which remote's default is read: `origin`'s when it records one, else the one remote that records one. Where several remotes record a
  * default and none is `origin`, the clone records no single remote default; that case is refused naming `--revision`, never resolved by
@@ -17,7 +23,8 @@ import { resolveRef, validRefName, type CloneSnapshot } from './launch-clone.js'
  * pinned revision" (047, line 186). Syzygy never changes the checkout. */
 
 export interface RevisionPorts {
-  /** Every object identifier the clone's store names, for an abbreviation (the object reader's store listing, no object read). */
+  /** Every object identifier the clone's store names, for an abbreviation alone (the object reader's store listing, at the width of the
+   * snapshot's object format; no object read). */
   readonly storedIds: () => Promise<ReadonlySet<string>>;
   /** Whether `oid` is a commit in the clone's store, re-hashed. */
   readonly isCommit: (oid: string) => Promise<boolean>;
@@ -30,54 +37,71 @@ export type PinnedRevision =
 export type RevisionRefusal = { readonly stage: 'revision' | 'head'; readonly reason: string; readonly command?: string };
 export type RevisionResult = { readonly ok: true; readonly pinned: PinnedRevision } | { readonly ok: false; readonly refusal: RevisionRefusal };
 
-const HEX_PREFIX = /^[0-9a-f]{4,64}$/;
-const quote = (value: string): string => `'${value.replace(/'/g, `'\\''`)}'`;
+const HEX = /^[0-9a-f]+$/;
+/** The fewest hexadecimal digits Git takes as an abbreviated object identifier. */
+const MIN_ABBREVIATION = 4;
+/** The identifier width of each object format; another format has none, and no name is then read as an identifier. */
+const WIDTH: Readonly<Record<string, number>> = { sha1: 40, sha256: 64 };
+/** One POSIX shell word: the value single-quoted, each `'` written as `'\\''`. */
+export const quote = (value: string): string => `'${value.replace(/'/g, `'\\''`)}'`;
 
 export const checkoutCommand = (clone: string, commit: string): string => `git -C ${quote(clone)} checkout --detach ${commit}`;
 
 /** The remote whose `HEAD` reference the trunk rule reads, or why there is none to read. */
-export function defaultRemote(snapshot: CloneSnapshot): { readonly remote: string; readonly target: string } | { readonly none: 'none' | 'several'; readonly names: readonly string[] } {
-  const recorded = [...snapshot.refs].flatMap(([name, value]) => {
-    const m = /^refs\/remotes\/([^/]+)\/HEAD$/.exec(name);
-    return m !== null && value.kind === 'symbolic' ? [{ remote: m[1]!, target: value.target }] : [];
-  });
-  const origin = recorded.find(r => r.remote === 'origin');
-  if (origin !== undefined) return origin;
-  if (recorded.length === 1) return recorded[0]!;
-  return { none: recorded.length === 0 ? 'none' : 'several', names: recorded.map(r => r.remote).sort() };
-}
+export const defaultRemote = (snapshot: CloneSnapshot) => defaultRemoteOf(snapshot.refs);
 
-/** The candidates a `--revision` name resolves to: the reference rules git uses for a short name, then the store's identifiers. */
-async function resolveName(snapshot: CloneSnapshot, name: string, ports: RevisionPorts): Promise<ReadonlySet<string>> {
+/** The candidates a `--revision` name resolves to: the first reference of Git's short-name rules the clone holds, then, for a hexadecimal
+ * name, itself where it is a full identifier, or the store's identifiers it begins where it is an abbreviation. `unread` names a
+ * symbolic reference whose target's value is not among the reads the closed list admits. */
+async function resolveName(snapshot: CloneSnapshot, name: string, ports: Pick<RevisionPorts, 'storedIds'>): Promise<{ readonly found: ReadonlySet<string>; readonly unread?: { readonly ref: string; readonly target: string } }> {
   const out = new Set<string>();
-  const refCandidates = name.startsWith('refs/') ? [name] : [`refs/${name}`, `refs/tags/${name}`, `refs/heads/${name}`, `refs/remotes/${name}`, `refs/remotes/${name}/HEAD`];
-  for (const ref of refCandidates) {
-    if (!validRefName(ref)) continue;
+  let unread: { readonly ref: string; readonly target: string } | undefined;
+  const ref = revisionRefCandidates(name).find(n => holdsRef(snapshot, n));
+  if (ref !== undefined) {
     const oid = resolveRef(snapshot, ref);
-    if (oid !== null) { out.add(oid); break; }
+    const value = ref === 'HEAD' ? snapshot.head : snapshot.refs.get(ref);
+    if (oid !== null) out.add(oid);
+    else if (value?.kind === 'symbolic' && !snapshot.refs.has(value.target)) unread = { ref, target: value.target };
   }
-  if (HEX_PREFIX.test(name)) {
-    for (const id of await ports.storedIds()) if (id.startsWith(name)) out.add(id);
+  const width = WIDTH[snapshot.objectFormat];
+  if (width !== undefined && HEX.test(name)) {
+    if (name.length === width) out.add(name);
+    else if (name.length >= MIN_ABBREVIATION && name.length < width) {
+      for (const id of await ports.storedIds()) if (id.length === width && id.startsWith(name)) out.add(id);
+    }
   }
-  return out;
+  return { found: out, ...(unread === undefined ? {} : { unread }) };
 }
 
-export async function pinLaunchRevision(
-  input: { readonly clone: string; readonly snapshot: CloneSnapshot; readonly revision?: string; readonly headConsented: boolean },
-  ports: RevisionPorts,
-): Promise<RevisionResult> {
+/** The run's named identifier (047): "The full object identifier a run's pin rule gives, before any object is read". No object is read
+ * here and HEAD is not compared: a copy-class run is shown its commit by the copy's checkout, and a no-copy run by `checkNoCopyPin`. */
+export type NamedRevision =
+  | { readonly kind: 'head-consented'; readonly commit: string }
+  | { readonly kind: 'pinned'; readonly commit: string; readonly via: string; readonly remote: string | null;
+      /** A local branch of the remote default's name that points elsewhere (047: "the launch output SHALL state both identifiers and that a
+       * local commit is not the trunk default"). */
+      readonly localElsewhere?: { readonly ref: string; readonly commit: string } };
+export type NameResult = { readonly ok: true; readonly named: NamedRevision } | { readonly ok: false; readonly refusal: RevisionRefusal };
+
+export async function nameLaunchRevision(
+  input: { readonly snapshot: CloneSnapshot; readonly revision?: string; readonly headConsented: boolean },
+  ports: Pick<RevisionPorts, 'storedIds'>,
+): Promise<NameResult> {
   const { snapshot } = input;
   const head = resolveRef(snapshot, 'HEAD');
-  const refuse = (stage: RevisionRefusal['stage'], reason: string, command?: string): RevisionResult =>
-    ({ ok: false, refusal: { stage, reason, ...(command === undefined ? {} : { command }) } });
-  if (input.revision === undefined && input.headConsented && head !== null) return { ok: true, pinned: { kind: 'head-consented', commit: head } };
+  const refuse = (reason: string): NameResult => ({ ok: false, refusal: { stage: 'revision', reason } });
+  if (input.revision === undefined && input.headConsented && head !== null) return { ok: true, named: { kind: 'head-consented', commit: head } };
 
   let commit: string, via: string, remote: string | null = null;
+  let localElsewhere: { readonly ref: string; readonly commit: string } | undefined;
   if (input.revision !== undefined) {
-    const found = await resolveName(snapshot, input.revision, ports);
+    const { found, unread } = await resolveName(snapshot, input.revision, ports);
+    if (found.size === 0 && unread !== undefined) {
+      return refuse(`--revision ${JSON.stringify(input.revision.slice(0, 200))} names ${unread.ref}, a symbolic reference to ${unread.target}, whose value Syzygy does not read (it reads the value of the reference --revision names, not of a reference that one names); give ${unread.target} or an object identifier with --revision`);
+    }
     if (found.size !== 1) {
-      return refuse('revision', found.size === 0
-        ? `--revision ${JSON.stringify(input.revision.slice(0, 200))} resolves to no object the clone holds`
+      return refuse(found.size === 0
+        ? `--revision ${JSON.stringify(input.revision.slice(0, 200))} resolves to no object identifier`
         : `--revision ${JSON.stringify(input.revision.slice(0, 200))} is ambiguous: it resolves to ${found.size} objects`);
     }
     commit = [...found][0]!;
@@ -86,22 +110,47 @@ export async function pinLaunchRevision(
     const chosen = defaultRemote(snapshot);
     if ('remote' in chosen) {
       const oid = resolveRef(snapshot, chosen.target);
-      if (oid === null) return refuse('revision', `refs/remotes/${chosen.remote}/HEAD names ${chosen.target}, which the clone does not hold; name the revision with --revision`);
+      if (oid === null) return refuse(`refs/remotes/${chosen.remote}/HEAD names ${chosen.target}, which the clone does not hold; name the revision with --revision`);
       commit = oid; via = `refs/remotes/${chosen.remote}/HEAD -> ${chosen.target}`; remote = chosen.remote;
+      // The local branch of the remote default's name (read (2)); consulted for this statement alone, never for the pin.
+      const prefix = `refs/remotes/${chosen.remote}/`;
+      if (chosen.target.startsWith(prefix)) {
+        const ref = `refs/heads/${chosen.target.slice(prefix.length)}`, local = resolveRef(snapshot, ref);
+        if (local !== null && local !== oid) localElsewhere = { ref, commit: local };
+      }
     } else if (chosen.none === 'several') {
-      return refuse('revision', `the remotes ${chosen.names.join(', ')} each record a default branch and none is origin, so the clone records no one remote default; name the revision with --revision`);
+      return refuse(`the remotes ${chosen.names.join(', ')} each record a default branch and none is origin, so the clone records no one remote default; name the revision with --revision`);
     } else {
       const main = resolveRef(snapshot, 'refs/heads/main'), master = resolveRef(snapshot, 'refs/heads/master');
       if (main !== null) { commit = main; via = 'refs/heads/main'; }
       else if (master !== null) { commit = master; via = 'refs/heads/master'; }
-      else return refuse('revision', 'the clone records no remote default branch and has neither a main nor a master branch; name the revision with --revision');
+      else return refuse('the clone records no remote default branch and has neither a main nor a master branch; name the revision with --revision');
     }
   }
-  if (!(await ports.isCommit(commit))) return refuse('revision', `${via} resolves to ${commit}, which is not a commit the clone's store holds`);
-  if (head !== commit) {
-    return refuse('head', `the clone's HEAD is ${head ?? 'unresolvable'}, not the pinned revision ${commit} (${via}); Syzygy does not change the checkout`, checkoutCommand(input.clone, commit));
+  return { ok: true, named: { kind: 'pinned', commit, via, remote, ...(localElsewhere === undefined ? {} : { localElsewhere }) } };
+}
+
+/** A no-copy run's pin (047): the named identifier is shown to be a commit by reading it as a commit object, as REQ-polaris-generation-033
+ * and 046 permit, and "where the clone's HEAD is not the named identifier, Syzygy SHALL refuse before asking for consent and print the one
+ * command that checks out that revision". Never used for a copy-class run, which is never refused for the operator's HEAD. */
+export async function checkNoCopyPin(clone: string, snapshot: CloneSnapshot, named: NamedRevision, ports: Pick<RevisionPorts, 'isCommit'>): Promise<RevisionResult> {
+  if (named.kind === 'head-consented') return { ok: true, pinned: named };
+  const head = resolveRef(snapshot, 'HEAD');
+  if (!(await ports.isCommit(named.commit))) return { ok: false, refusal: { stage: 'revision', reason: `${named.via} resolves to ${named.commit}, which is not a commit the clone's store holds` } };
+  if (head !== named.commit) {
+    return { ok: false, refusal: { stage: 'head', reason: `the clone's HEAD is ${head ?? 'unresolvable'}, not the pinned revision ${named.commit} (${named.via}); Syzygy does not change the checkout`, command: checkoutCommand(clone, named.commit) } };
   }
-  return { ok: true, pinned: { kind: 'pinned', commit, via, remote } };
+  return { ok: true, pinned: named };
+}
+
+/** A no-copy run's whole pin: the named identifier, then `checkNoCopyPin`. */
+export async function pinLaunchRevision(
+  input: { readonly clone: string; readonly snapshot: CloneSnapshot; readonly revision?: string; readonly headConsented: boolean },
+  ports: RevisionPorts,
+): Promise<RevisionResult> {
+  const named = await nameLaunchRevision(input, ports);
+  if (!named.ok) return named;
+  return checkNoCopyPin(input.clone, input.snapshot, named.named, ports);
 }
 
 /** The operator's own command to update the clone before a later run (047, line 184). */

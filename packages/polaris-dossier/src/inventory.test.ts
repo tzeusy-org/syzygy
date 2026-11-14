@@ -66,7 +66,7 @@ beforeAll(() => {
 });
 
 const subject = (clone: string): RunSubject => ({
-  repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
   clone: { path: clone, declaredBy: 'operator', label: 'Inferred', use: 'read' },
   pinnedRevision: { commit, label: 'fixture', consentRecord: 'PUBLIC-OBS-FIXTURE@1', pinnedAt: '2026-10-07T11:00:00.000Z' },
   startGates: { registryEntry: 'REGISTRY-ACT-FIXTURE', screeningPolicy: 'POLICY-ACT-FIXTURE' },
@@ -80,6 +80,8 @@ const sources = (): GateSources => ({
   repositoryIdsFor: async () => ['redis-redis'],
   consentedRevisionsFor: async () => [{ label: 'fixture', commitId: commit }],
   observationConsentFor: async (_id, revision) => (revision === commit ? { satisfied: true, record: 'PUBLIC-OBS-FIXTURE@1' } : { satisfied: false, why: 'the consent does not name it' }),
+  observationConsentNaming: async revision => (revision === commit ? { satisfied: true, record: 'PUBLIC-OBS-FIXTURE@1' } : { satisfied: false, why: 'the consent does not name it' }),
+  observationRecords: async () => ({ ok: true, records: [] }),
   registryEntry: async () => OK,
   screeningPolicy: async () => OK,
   d9: async () => OK,
@@ -167,6 +169,34 @@ describe('session-prompt inventory', () => {
     expect(dir.startsWith(`${clone}${path.sep}`)).toBe(false);
     expect(dir).not.toBe(run);
     expect(steps(run).at(-1)).toMatchObject({ step: 'session-prompt', outcome: 'issued', session: 1 });
+  });
+
+  it('rewrites launch.json\'s brief stage to each inventory brief it issues, every other field byte-identical (the owner\'s ruling of 2026-11-14)', async () => {
+    const run = await runWithDrafts();
+    const QUESTION = { id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' };
+    const fields = (statements: unknown[]) => `${JSON.stringify({
+      format: 'polaris-dossier-launch-disclosure/1', runClass: 'no-copy', launched: false, operatorClone: cloneOf(run), copy: null,
+      consents: { recorded: [], commit: null, relied: [] },
+      subject: { identity: 'repository:redis-redis', url: 'github.com/redis/redis', source: 'the Upstream of the observation consent another act recorded, which --url names', proposedBy: null, publicDeclaration: null },
+      drawer: null, statements, label: 'Inferred',
+    }, null, 2)}\n`;
+    const issued = (n: number) => ({ id: `briefs/inventory-${n}`, stage: 'brief or packet delivered', runClass: 'no-copy', reached: true, label: 'Inferred', text: `The inventory brief for session ${n} Syzygy issued named the operator's clone as the run's clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.` });
+    const file = path.join(run, 'launch.json');
+    fs.writeFileSync(file, fields([QUESTION, { id: 'briefs', stage: 'brief or packet delivered', runClass: 'both', reached: false, label: 'Inferred', text: 'Syzygy issued no brief and delivered no packet.' }]));
+    expect((await sessionPrompt(run, { role: 'inventory' }, hand)).ok).toBe(true);
+    expect(fs.readFileSync(file, 'utf8')).toBe(fields([QUESTION, issued(1)]));
+    expect(JSON.parse(fs.readFileSync(path.join(run, 'inventory', 'session-1.json'), 'utf8')).stageStatement).toEqual(issued(1));
+    expect((await sessionPrompt(run, { role: 'inventory' }, hand)).ok).toBe(true);
+    expect(fs.readFileSync(file, 'utf8')).toBe(fields([QUESTION, issued(1), issued(2)]));
+    // A launch.json not in init's exact form is left as it is; the session's files stay, and the refusal says so.
+    const compact = JSON.stringify(JSON.parse(fs.readFileSync(file, 'utf8')));
+    fs.writeFileSync(file, compact);
+    expect(await sessionPrompt(run, { role: 'inventory' }, hand)).toMatchObject({ ok: false, refusal: { stage: 'write',
+      reason: 'inventory session 3\'s brief was issued and its files stay, but the run\'s launch.json is not in the exact form init writes, so it cannot be rewritten keeping every other field byte-identical, so the run record does not say it was issued and every page says the two disagree' } });
+    expect(fs.readFileSync(file, 'utf8')).toBe(compact);
+    expect(fs.existsSync(path.join(run, 'inventory', 'session-3.json'))).toBe(true);
+    // The session was issued, so its step is logged though the rewrite refused (R-PDJA-33-RULINGS-1 finding 7).
+    expect(steps(run).at(-1)).toMatchObject({ step: 'session-prompt', outcome: 'issued', role: 'inventory', session: 3 });
   });
 
   it('puts the session directory where no ancestor below the state root reaches a draft, so `..` never finds drafts/', async () => {
@@ -582,6 +612,33 @@ describe('what the review will not see (syzygy-mea.3)', () => {
     const listsCode = await buildInventoryBrief({ ...opened, contentClasses: ['code-content'] }, 1, sources(), LATER, census);
     if (!listsCode.ok) throw new Error(listsCode.reason);
     expect(listsCode.text).toContain('does not list: 0\n');
+  });
+
+  it('a copy-class run\'s inventory brief names the copy as the clone to work in and tells the session not to read the operator\'s clone (REQ-polaris-generation-046, 047)', async () => {
+    const run = await runWithDrafts();
+    const opened = await openRun(run, sources(), LATER, 'fixture');
+    if (!opened.ok) throw new Error(opened.reason);
+    const census = { loadScreen: async () => SCREEN };
+    const clone = opened.subject.clone.path;
+    const plain = await buildInventoryBrief(opened, 1, sources(), LATER, census);
+    if (!plain.ok) throw new Error(plain.reason);
+    const cloneLine = `- Clone: \`${clone}\`, as the operator gave it at init (operator-declared, Inferred); read it by this path, never as your working directory\n`;
+    expect(plain.text).toContain(cloneLine);
+    fs.writeFileSync(path.join(run, 'launch.json'), JSON.stringify({
+      format: 'polaris-dossier-launch-disclosure/1', runClass: 'copy-class', launched: true, operatorClone: '/home/op/redis', copy: clone,
+      consents: { recorded: [], commit: null, relied: ['launch observation consent X'] },
+      subject: { identity: 'repository:redis-redis', url: 'github.com/redis/redis', source: 'the clone\'s remote origin', proposedBy: 'derived', publicDeclaration: null },
+      drawer: null, statements: [{ id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' }], label: 'Inferred',
+    }));
+    const copied = await buildInventoryBrief(opened, 1, sources(), LATER, census);
+    if (!copied.ok) throw new Error(copied.reason);
+    expect(copied.text).toBe(plain.text.replace(cloneLine, [
+      `- Clone: \`${clone}\`, a copy of the pinned commit alone, which Syzygy made from the operator's clone (Inferred, from the run's launch disclosure); this copy is the run's clone: work in it, and read it by this path, never as your working directory`,
+      '- The operator\'s clone, at `/home/op/redis`: do not read it, or anything under it. Everything this brief says of the clone means the copy. Whether you stayed in the copy is your own report.',
+    ].join('\n') + '\n'));
+    fs.writeFileSync(path.join(run, 'launch.json'), '{}');
+    expect(await buildInventoryBrief(opened, 1, sources(), LATER, census)).toEqual({ ok: false, stage: 'launch-record',
+      reason: 'the run\'s launch.json cannot be read as the record init writes (it is not a polaris-dossier-launch-disclosure/1 record), so whether the brief must direct its session to a copy cannot be decided; no inventory brief is rendered' });
   });
 
   it('loads the census screen for repository:<id> at the pinned commit (syzygy-mea.4: the version-5 owner placements)', async () => {

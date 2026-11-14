@@ -179,13 +179,13 @@ async function init(setup: Setup = {}): Promise<{ result: InitResult; readerOpen
 const refusal = (result: InitResult) => (result.ok ? null : result.refusal);
 
 describe('init: a run that passes every start gate', () => {
-  it('pins the consented HEAD, records the subject and writes only run.json under the state root', async () => {
+  it('pins the consented HEAD, records the subject and writes only run.json and its launch disclosure under the state root', async () => {
     const { result, stateRoot, clone } = await init();
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.report.run).toBe(path.join(stateRoot, 'run-0123456789abcdef0123456789abcdef'));
     expect(result.report.subject).toEqual({
-      repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },
+      repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
       clone: { path: clone, declaredBy: 'operator', label: 'Inferred', use: 'read' },
       pinnedRevision: { commit: commits.A, label: 'fixture-a', consentRecord: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7', pinnedAt: '2026-10-07T12:00:00.000Z' },
       startGates: { registryEntry: 'public-git-source-acquisition-local-agent-v1.1', screeningPolicy: 'PWB-SECRET-CLASSIFICATION-POLICY-PUBLIC-SOURCE-SCOPE-APPROVAL-2026-10-04' },
@@ -194,7 +194,37 @@ describe('init: a run that passes every start gate', () => {
       workItem: { identity: null, reason: 'the operator-agent run makes no provider dispatch and no scheduler effect, so no scheduler work item, Proposal or materialization record exists for it; it is rendered as unattributed execution under RFC4-19, never dropped' },
     });
     expect(fs.readdirSync(stateRoot)).toEqual(['run-0123456789abcdef0123456789abcdef']);
-    expect(fs.readdirSync(result.report.run)).toEqual(['run.json']);
+    expect(fs.readdirSync(result.report.run)).toEqual(['launch.json', 'run.json']);
+    // The run record's launch disclosure (046, line 37) of a run that was not launched: a no-copy run, every stage up to the question stated.
+    const notLaunchedStatement = (id: string, stage: string, runClass: string, reached: boolean, text: string) => ({ id, stage, runClass, reached, label: 'Inferred', text });
+    expect(JSON.parse(fs.readFileSync(path.join(result.report.run, 'launch.json'), 'utf8'))).toEqual({
+      format: 'polaris-dossier-launch-disclosure/1', runClass: 'no-copy', launched: false, operatorClone: clone, copy: null,
+      consents: { recorded: [], commit: null, relied: [] },
+      subject: { identity: 'repository:redis-redis', url: 'github.com/redis/redis', source: 'the Upstream of the observation consent another act recorded, which --url names', proposedBy: null, publicDeclaration: null },
+      drawer: 'PROJECT-INPUT-REDIS@1',
+      statements: [
+        notLaunchedStatement('named-identifier', 'identifier named', 'both', true, `The named identifier is ${commits.A}, from detached HEAD. Syzygy made no network request to choose or verify it; whether it is the upstream's latest commit is Inferred.`),
+        notLaunchedStatement('copy', 'copy step started', 'no-copy', false, 'No copy was made: this is a no-copy run, whose clone is the operator\'s own.'),
+        notLaunchedStatement('pinned-commit', 'commit pinned', 'both', true, `The pinned revision is ${commits.A}.`),
+        notLaunchedStatement('question', 'question asked', 'both', false, 'No question was asked.'),
+        // The brief stage, not reached at init: each brief stores its own reached form (R-PDJA-33-SLICE-D-1 finding 5).
+        notLaunchedStatement('briefs', 'brief or packet delivered', 'both', false, 'Syzygy issued no brief and delivered no packet.'),
+      ],
+      label: 'Inferred',
+    });
+    expect(result.report.disclosures.slice(4, -1)).toEqual([
+      'No consent was recorded at launch: the run was not launched, and rests on the observation consent another act recorded.',
+      'The repository identity repository:redis-redis and its normalised URL github.com/redis/redis are Inferred, from the Upstream of the observation consent another act recorded, which --url names.',
+      'The operator made no declaration whether the repository is public [Inferred].',
+      'The identity was not proposed at launch: it is the one the observation consent another act recorded names.',
+      `The named identifier is ${commits.A}, from detached HEAD. Syzygy made no network request to choose or verify it; whether it is the upstream's latest commit is Inferred.`,
+      'No copy was made: this is a no-copy run, whose clone is the operator\'s own.',
+      `The pinned revision is ${commits.A}.`,
+      'No question was asked.',
+      'Syzygy issued no brief and delivered no packet.',
+      'The drawer statement relied on: PROJECT-INPUT-REDIS@1.',
+      'No question was asked, so no one answered it.',
+    ]);
     expect(execFileSync('git', ['-C', clone, 'status', '--porcelain', '--ignored'], { encoding: 'utf8', env: GIT_ENV })).toBe('');
     const status = runStatus(result.report.run);
     expect(status.ok && status.report.subject.pinnedRevision.commit).toBe(commits.A);
@@ -644,10 +674,10 @@ describe('init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone a
     expect(fs.existsSync(run.stateRoot)).toBe(false);
   };
 
-  const NO_RECORD = 'no observation record names https://github.com/redis/redis as its Upstream';
+  const NO_RECORD = 'no observation record\'s Upstream normalises to github.com/redis/redis';
   // The admission reader defines no withdrawal form: a decisions file naming the record refuses the whole read rather than be parsed.
   const UNREADABLE = 'the admission act records could not be read (invalid-records), so no consent can be established';
-  const recordIs = (text: string): string => `the observation record(s) naming https://github.com/redis/redis are not in force: PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7 ${text}`;
+  const recordIs = (text: string): string => `the observation record(s) whose Upstream normalises to github.com/redis/redis are not in force: PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7 ${text}`;
   it.each([
     ['absent: no act record', { [CONSENT_ACT]: null }, NO_RECORD],
     ['ineffective: the consent bytes changed after the act', { [CONSENT_PATH]: `${consentText([['fixture-a', '0'.repeat(40)]])}` }, recordIs('has no owner act in force over its current bytes')],
@@ -657,7 +687,7 @@ describe('init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone a
   ])('refuses before any object read when the observation consent is %s, naming why', async (name, over, why) => {
     // An ineffective consent's act names other bytes, so it keeps the original act over the original text.
     const root = name.startsWith('ineffective') ? (() => { const r = records(); fs.writeFileSync(path.join(r, CONSENT_PATH), consentText([['fixture-a', commits.A]], '\n<!-- edited -->\n')); return r; })() : records(over);
-    await expectRefused({ root, ...(name === 'not in force yet' ? { now: Date.UTC(2026, 9, 4, 9, 29, 59) } : {}) }, 'repository', `no observation consent in force names https://github.com/redis/redis as its Upstream: ${why}`, false);
+    await expectRefused({ root, ...(name === 'not in force yet' ? { now: Date.UTC(2026, 9, 4, 9, 29, 59) } : {}) }, 'repository', `no observation consent in force has an Upstream that normalises to github.com/redis/redis: ${why}`, false);
   });
 
   it.each([
@@ -769,8 +799,11 @@ describe('init: every refusal arm (REQ-polaris-generation-033 scenarios "Clone a
   });
 
   it.each([
-    ['a URL with a ref', { url: 'https://github.com/redis/redis/tree/8.0.0' }, 'url'],
-    ['a URL on another host', { url: 'https://gitlab.com/redis/redis' }, 'url'],
+    // Any host and any path is a locator now (046, line 17); one that no consent's Upstream normalises to is refused for the repository.
+    ['a URL with a ref, a locator no consent\'s Upstream normalises to', { url: 'https://github.com/redis/redis/tree/8.0.0' }, 'repository'],
+    ['a URL on another host, a locator no consent\'s Upstream normalises to', { url: 'https://gitlab.com/redis/redis' }, 'repository'],
+    ['a URL that is not admitted (user information on https)', { url: 'https://user:token@github.com/redis/redis' }, 'url'],
+    ['a URL that is not admitted (a query)', { url: 'https://github.com/redis/redis?x=1' }, 'url'],
     ['a configuration with an unlimited limit', { config: CONFIG.replace('"maxRepairCycles":2', '"maxRepairCycles":"unlimited"') }, 'config'],
     ['a relative state root', { stateRoot: 'runs' }, 'state-root'],
   ])('refuses %s before reading anything', async (_name, setup, stage) => {
@@ -901,13 +934,13 @@ describe('reverifyPinnedRevision: the guard every later step calls (scenario "Re
     ['a withdrawal in a form the reader does not define refuses the whole read', (root: string) => fs.writeFileSync(path.join(root, DECISIONS_DIR, 'PUBLIC-OBS-REDIS-WITHDRAWAL.md'), 'Withdrawn: PUBLIC-OBS-REDIS-2026-10-03.\n'),
       'the admission act records could not be read (invalid-records), so no consent can be established'],
     ['the consent bytes changed after the act', (root: string) => fs.appendFileSync(path.join(root, CONSENT_PATH), '\n<!-- edited -->\n'),
-      `the observation record(s) naming ${URL_} are not in force: ${CONSENT_RECORD} has no owner act in force over its current bytes`],
-    ['the act record removed', (root: string) => fs.rmSync(path.join(root, CONSENT_ACT)), `no observation record names ${URL_} as its Upstream`],
+      `the observation record(s) whose Upstream normalises to github.com/redis/redis are not in force: ${CONSENT_RECORD} has no owner act in force over its current bytes`],
+    ['the act record removed', (root: string) => fs.rmSync(path.join(root, CONSENT_ACT)), 'no observation record\'s Upstream normalises to github.com/redis/redis'],
   ])('names why the consent is gone when %s', async (_name, mutate, why) => {
     const { runDir, root } = await started();
     mutate(root);
     const result = await guard(runDir, root);
-    expect(!result.ok && result.refusals[0]).toEqual({ code: 'consent-ids', reason: `the observation consents in force for ${URL_} are [], not exactly the recorded redis-redis: ${why}` });
+    expect(!result.ok && result.refusals[0]).toEqual({ code: 'consent-ids', reason: `the observation consents in force for github.com/redis/redis are [], not exactly the recorded redis-redis: ${why}` });
   });
 
   it('refuses when the statement a governed run relies on is withdrawn mid-run', async () => {
@@ -1030,15 +1063,15 @@ describe('preflight', () => {
     if (!result.ok) return;
     expect(result.report).toMatchObject({
       outcome: 'ready',
-      url: URL_,
+      url: 'github.com/redis/redis',
       repository: { repositoryId: 'redis-redis' },
       consentedRevisions: [{ label: 'fixture-a', commit: commits.A }, { label: 'fixture-b', commit: commits.B }, { label: 'fixture-c', commit: commits.C }],
       startGates: { registryEntry: { state: 'ok', record: 'public-git-source-acquisition-local-agent-v1.1' }, screeningPolicy: { state: 'ok' } },
       missing: [],
       cloneCommands: [
-        'git init <dir>   # fixture-a: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 ${URL_} ${commits.A}`, 'git -C <dir> checkout --detach FETCH_HEAD',
-        'git init <dir>   # fixture-b: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 ${URL_} ${commits.B}`, 'git -C <dir> checkout --detach FETCH_HEAD',
-        'git init <dir>   # fixture-c: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 ${URL_} ${commits.C}`, 'git -C <dir> checkout --detach FETCH_HEAD',
+        'git init <dir>   # fixture-a: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 'https://github.com/redis/redis' ${commits.A}`, 'git -C <dir> checkout --detach FETCH_HEAD',
+        'git init <dir>   # fixture-b: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 'https://github.com/redis/redis' ${commits.B}`, 'git -C <dir> checkout --detach FETCH_HEAD',
+        'git init <dir>   # fixture-c: a new, empty directory for this revision alone', `git -C <dir> fetch --depth=1 'https://github.com/redis/redis' ${commits.C}`, 'git -C <dir> checkout --detach FETCH_HEAD',
       ],
     });
     expect(result.report.cloneCommands.some((command) => /\bgit clone\b/u.test(command))).toBe(false);
@@ -1053,7 +1086,9 @@ describe('preflight', () => {
     execFileSync('git', ['clone', '-q', '--bare', '--no-local', origin, upstream], { env: GIT_ENV });
     execFileSync('git', ['-C', upstream, 'config', 'uploadpack.allowAnySHA1InWant', 'true'], { env: GIT_ENV });
     for (const line of result.report.cloneCommands.slice(3, 6)) {
-      const argv = line.replace(/\s+#.*$/u, '').replaceAll('<dir>', dir).replace(URL_, `file://${upstream}`).split(' ');
+      // Split as the shell reads it: the URL is one single-quoted word (R-PDJA-33-SLICE-C-1 finding 7).
+      const command = line.replace(/\s+#.*$/u, '').replaceAll('<dir>', dir).replace(`'${URL_}'`, `'file://${upstream}'`);
+      const argv = [...command.matchAll(/'([^']*)'|(\S+)/g)].map(m => m[1] ?? m[2]!);
       expect(argv[0]).toBe('git');
       execFileSync('git', argv.slice(1), { env: GIT_ENV, stdio: 'pipe' });
     }
@@ -1067,7 +1102,7 @@ describe('preflight', () => {
     const result = await run(records({ [CONSENT_ACT]: null, [POLICY_ACT]: null }));
     expect(result.ok && result.report.outcome).toBe('not-ready');
     expect(result.ok && result.report.missing).toEqual([
-      'observation consent: no observation consent in force names https://github.com/redis/redis as its Upstream: no observation record names https://github.com/redis/redis as its Upstream',
+      'observation consent: no observation consent in force has an Upstream that normalises to github.com/redis/redis: no observation record\'s Upstream normalises to github.com/redis/redis',
       'classification and screening policy: no screening-scope policy act is recorded',
     ]);
   });
@@ -1102,8 +1137,13 @@ describe('preflight', () => {
     expect(edited.ok && edited.report.d9).toEqual({ state: 'refused', why: 'the bytes of .syzygy/governance/doctrine/security.md differ from the digest the act\'s artifact binds' });
     expect(edited.ok && edited.report.rfc720Ruling.state).toBe('ok');
   });
-  it('refuses a URL it cannot parse, and never fetches', async () => {
-    expect(await run(records(), 'https://github.com/redis/redis/tree/unstable')).toMatchObject({ ok: false });
+  it('refuses a URL that is not an admitted locator, by its rule and never quoting it, and never fetches', async () => {
+    expect(await run(records(), 'https://user:token@github.com/redis/redis')).toEqual({ ok: false,
+      reason: 'the repository URL is not admitted: an https://, http:// or git:// locator carries no user information; it is not printed, stored or recorded' });
+  });
+  it('a locator on another host, or under another path, is read and simply matches no consent (no GitHub-only refusal)', async () => {
+    const other = await run(records(), 'https://github.com/redis/redis/tree/unstable');
+    expect(other.ok && other.report).toMatchObject({ outcome: 'not-ready', url: 'github.com/redis/redis/tree/unstable', repository: { repositoryId: null } });
   });
 });
 
@@ -1160,5 +1200,14 @@ describe('the CLI: preflight and init', () => {
     expect(missing.code).toBe(1);
     expect(missing.stdout).toContain('outcome: not-ready\n');
     expect(missing.stdout).toMatch(/^missing\.0: source-acquisition registry entry: no owner-act record /m);
+  });
+});
+
+describe('the package gate sources answer whether another act\'s observation consent names a revision (REQ-polaris-generation-047\'s class rule)', () => {
+  it('answers from the observation records in force, for any repository, and is unsatisfied for an identifier none names', async () => {
+    const sources = createPackageGateSources({ root: records(), now: () => NOW });
+    expect(await sources.observationConsentNaming(commits.A)).toEqual({ satisfied: true, record: 'PUBLIC-OBS-REDIS-2026-10-03@0.1.0-candidate.7' });
+    expect((await sources.observationConsentNaming(commits.U)).satisfied).toBe(false);
+    expect((await sources.observationConsentNaming('f'.repeat(40))).satisfied).toBe(false);
   });
 });

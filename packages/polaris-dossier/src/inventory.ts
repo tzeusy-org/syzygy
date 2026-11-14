@@ -19,6 +19,8 @@ import type { RunConfig } from './run-config.js';
 import type { RunSubject } from './run-record.js';
 import { placementSubjectOf } from './screen.js';
 import { REVISION_FILE, RUN_LAYOUT, within } from './state-directory.js';
+import { briefCopyLines, briefCopyOf, readLaunchDisclosure, type BriefCopy } from './launch-disclosure.js';
+import { issuedBriefStatement, type LaunchStatement } from './launch-statements.js';
 import { type OpenedRun, errno, openRun, readRecord, sessionDirectory } from './run-dir.js';
 export { SESSION_DIR, sessionDirName, sessionsRoot, sessionDirectory, sessionsRootViolation, errno, openRun, logStep, readRecord } from './run-dir.js';
 export type { OpenedRun } from './run-dir.js';
@@ -35,7 +37,7 @@ export type { OpenedRun } from './run-dir.js';
  * (`inventoryOfRecord`, `session-statement.ts`). Every stored value is within the agent sessions' write reach and Inferred; the
  * inventory's completeness over the clone is the inventory session's self-report and never verified. */
 
-export const INVENTORY_BRIEF_VERSION = 'polaris-dossier-inventory-brief-v1';
+export const INVENTORY_BRIEF_VERSION = 'polaris-dossier-inventory-brief-v2';
 export const INVENTORY_CHECK_FORMAT = 'polaris-dossier-inventory-check/1';
 export const INVENTORY_BRIEF_FILE = 'inventory-brief.md';
 export const INVENTORY_FILE = 'inventory.json';
@@ -83,6 +85,8 @@ export interface InventoryBriefInput {
   readonly executionRule: ExecutionRule;
   /** The path-only census of the files screening withholds from the review session (`census.ts`), or why it is Unknown. */
   readonly census: CensusLoad;
+  /** A copy-class run's copy and the operator's clone (`briefCopyOf`); null otherwise. */
+  readonly copy: BriefCopy | null;
 }
 
 const KIND_GLOSS: Readonly<Record<(typeof INVENTORY_ENTRY_KINDS)[number], string>> = {
@@ -112,7 +116,9 @@ export function renderInventoryBrief(input: InventoryBriefInput): string {
     `- Run: \`${input.runId}\`, inventory session ${input.session}`,
     `- Repository: ${subject.repository.url} (\`${subject.repository.repositoryId}\`)`,
     `- Pinned revision: \`${commit}\` (${subject.pinnedRevision.label})`,
-    `- Clone: \`${subject.clone.path}\`, as the operator gave it at init (operator-declared, Inferred); read it by this path, never as your working directory`,
+    ...(input.copy === null
+      ? [`- Clone: \`${subject.clone.path}\`, as the operator gave it at init (operator-declared, Inferred); read it by this path, never as your working directory`]
+      : briefCopyLines(input.copy)),
     `- Inventory schema: \`${LOCAL_INVENTORY_SCHEMA_VERSION}\`, at the end of this brief`,
     '',
     `You are the inventory session. Prepare, from the clone at the pinned revision, an independent inventory of what the project itself states. Another session is writing a dossier of this project; you are not given its draft, and you must not look for it: never open the run directory's \`${RUN_LAYOUT.drafts}/\`, \`${RUN_LAYOUT.checks}/\`, \`${RUN_LAYOUT.brief}\` or any other session's directory. A reviewer will measure the dossier against your inventory, so cover what the project states, not what you expect a dossier to say.`,
@@ -163,10 +169,12 @@ export function renderInventoryBrief(input: InventoryBriefInput): string {
   ].join('\n');
 }
 
-export type InventoryBriefLoad = { readonly ok: true; readonly text: string; readonly executionRule: ExecutionRule } | { readonly ok: false; readonly stage: 'doctrine'; readonly reason: string };
+export type InventoryBriefLoad = { readonly ok: true; readonly text: string; readonly executionRule: ExecutionRule; readonly stageStatement: LaunchStatement } | { readonly ok: false; readonly stage: 'doctrine' | 'launch-record'; readonly reason: string };
 
 /** Syzygy's rendering of session `session`'s inventory brief, with the execution rule it carries: always SEC-3's, never the permission. */
 export async function buildInventoryBrief(opened: Extract<OpenedRun, { ok: true }>, session: number, sources: GateSources, now: number, deps: CensusDeps = {}): Promise<InventoryBriefLoad> {
+  const copy = briefCopyOf(readLaunchDisclosure(opened.run), { dir: opened.run, clone: opened.subject.clone.path, pinnedAt: opened.subject.pinnedRevision.pinnedAt });
+  if (!copy.ok) return { ok: false, stage: 'launch-record', reason: `${copy.reason}; no inventory brief is rendered` };
   const doctrine = readSec3(sources.recordsRoot);
   if (!doctrine.ok) return { ok: false, stage: 'doctrine', reason: `SEC-3 cannot be quoted as adopted: ${doctrine.reason}` };
   const executionRule = await decideExecutionRule({
@@ -175,9 +183,9 @@ export async function buildInventoryBrief(opened: Extract<OpenedRun, { ok: true 
   });
   const census = await loadCensus({ clonePath: opened.subject.clone.path, pinned: opened.subject.pinnedRevision.commit, consented: opened.contentClasses, recordsRoot: sources.recordsRoot, now, placement: placementSubjectOf(opened.subject) }, deps);
   const text = renderInventoryBrief({
-    runDir: opened.run, runId: opened.runId, subject: opened.subject, declared: opened.declared, deadlineEnds: opened.deadlineEnds, session, executionRule, census,
+    runDir: opened.run, runId: opened.runId, subject: opened.subject, declared: opened.declared, deadlineEnds: opened.deadlineEnds, session, executionRule, census, copy: copy.copy,
   });
-  return { ok: true, text, executionRule };
+  return { ok: true, text, executionRule, stageStatement: issuedBriefStatement({ role: 'inventory', session }, copy.copy !== null) };
 }
 
 const BRIEF_DISCLOSURES = [

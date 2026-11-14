@@ -83,7 +83,7 @@ let statementClasses: readonly string[] | null = null;
 afterEach(() => { statementClasses = null; });
 const STATEMENT_ID = 'STATEMENT-KESTREL-ANTHROPIC';
 const subject = (clone: string): RunSubject => ({
-  repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
   clone: { path: clone, declaredBy: 'operator', label: 'Inferred', use: 'read' },
   pinnedRevision: { commit, label: 'fixture', consentRecord: 'PUBLIC-OBS-FIXTURE@1', pinnedAt: '2026-10-07T11:00:00.000Z' },
   startGates: { registryEntry: 'REGISTRY-ACT-FIXTURE', screeningPolicy: 'POLICY-ACT-FIXTURE' },
@@ -98,6 +98,8 @@ const sources = (ruling: GateState = { state: 'ok', record: 'RFC7-20-RULING-FIXT
   repositoryIdsFor: async () => ['redis-redis'],
   consentedRevisionsFor: async () => [{ label: 'fixture', commitId: commit }],
   observationConsentFor: async (_id, revision) => (revision === commit ? { satisfied: true, record: 'PUBLIC-OBS-FIXTURE@1' } : { satisfied: false, why: 'the consent does not name it' }),
+  observationConsentNaming: async revision => (revision === commit ? { satisfied: true, record: 'PUBLIC-OBS-FIXTURE@1' } : { satisfied: false, why: 'the consent does not name it' }),
+  observationRecords: async () => ({ ok: true, records: [] }),
   registryEntry: async () => OK,
   screeningPolicy: async () => OK,
   d9: async () => OK,
@@ -481,6 +483,66 @@ describe('render', () => {
     });
   });
 
+  it('carries the run record\'s launch disclosure on every page, with the brief stage\'s statement from what the run directory holds (REQ-polaris-generation-046, 047)', async () => {
+    const run = await prepared();
+    fs.writeFileSync(path.join(run, 'launch.json'), JSON.stringify({
+      format: 'polaris-dossier-launch-disclosure/1', runClass: 'no-copy', launched: false, operatorClone: '/home/op/kestrel', copy: null,
+      consents: { recorded: [], commit: null, relied: [] },
+      subject: { identity: 'repository:kestrel', url: 'github.com/example/kestrel', source: 'the Upstream of the observation consent another act recorded, which --url names', proposedBy: null, publicDeclaration: null },
+      drawer: null,
+      // As Syzygy rewrote it when each brief was issued (the owner's ruling of 2026-11-14): it agrees with the briefs' own records.
+      statements: [
+        { id: 'question', stage: 'question asked', runClass: 'both', reached: false, label: 'Inferred', text: 'No question was asked.' },
+        { id: 'briefs/authoring', stage: 'brief or packet delivered', runClass: 'no-copy', reached: true, label: 'Inferred', text: 'The authoring brief Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' },
+        { id: 'briefs/inventory-1', stage: 'brief or packet delivered', runClass: 'no-copy', reached: true, label: 'Inferred', text: 'The inventory brief for session 1 Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' },
+      ],
+      label: 'Inferred',
+    }));
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const files = readSite(result.report.site);
+    const launch = (JSON.parse(files.get('machine.json')!).disclosure as { id: string; text: string; label: string }[]).filter(item => item.id.startsWith('launch/'));
+    expect(launch).toEqual([
+      { id: 'launch/consents', label: 'Inferred', text: 'No consent was recorded at launch: the run was not launched, and rests on the observation consent another act recorded.' },
+      { id: 'launch/identity', label: 'Inferred', text: 'The repository identity repository:kestrel and its normalised URL github.com/example/kestrel are Inferred, from the Upstream of the observation consent another act recorded, which --url names.' },
+      { id: 'launch/public', label: 'Inferred', text: 'The operator made no declaration whether the repository is public [Inferred].' },
+      { id: 'launch/proposed', label: 'Inferred', text: 'The identity was not proposed at launch: it is the one the observation consent another act recorded names.' },
+      { id: 'launch/question-asked/both/not-reached/question', label: 'Inferred', text: 'No question was asked.' },
+      // Each issued brief's own stored statement (R-PDJA-33-SLICE-D-1 findings 5 and 10): the authoring brief's record, and inventory session 1's prompt record.
+      { id: 'launch/brief-or-packet-delivered/no-copy/reached/briefs/authoring', label: 'Inferred', text: 'The authoring brief Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' },
+      { id: 'launch/brief-or-packet-delivered/no-copy/reached/briefs/inventory-1', label: 'Inferred', text: 'The inventory brief for session 1 Syzygy issued named the operator\'s clone as the run\'s clone, where its session is to work; whether the session worked there is its own report [Inferred]. No copy was made.' },
+      { id: 'launch/drawer', label: 'Inferred', text: 'No drawer statement was relied on.' },
+      { id: 'launch/answered', label: 'Inferred', text: 'No question was asked, so no one answered it.' },
+    ]);
+    expect(files.get('appendix.html')).toContain('No copy was made.');
+  });
+
+  it('reads each brief\'s stored brief-stage statement, never deriving it from launch.json; a record without one is Unknown (R-PDJA-33-SLICE-D-1 findings 5 and 10)', async () => {
+    const run = await prepared();
+    fs.writeFileSync(path.join(run, 'launch.json'), JSON.stringify({
+      format: 'polaris-dossier-launch-disclosure/1', runClass: 'no-copy', launched: false, operatorClone: '/home/op/kestrel', copy: null,
+      consents: { recorded: [], commit: null, relied: [] },
+      subject: { identity: 'repository:kestrel', url: 'github.com/example/kestrel', source: 'the Upstream of the observation consent another act recorded, which --url names', proposedBy: null, publicDeclaration: null },
+      drawer: null,
+      statements: [{ id: 'briefs', stage: 'brief or packet delivered', runClass: 'both', reached: false, label: 'Inferred', text: 'Syzygy issued no brief and delivered no packet.' }],
+      label: 'Inferred',
+    }));
+    const briefRecord = JSON.parse(fs.readFileSync(path.join(run, 'brief.json'), 'utf8')) as Record<string, unknown>;
+    fs.writeFileSync(path.join(run, 'brief.json'), JSON.stringify({ ...briefRecord, stageStatement: { id: 'briefs/authoring', stage: 'brief or packet delivered', runClass: 'copy-class', reached: true, label: 'Inferred', text: 'STORED-AUTHORING-STATEMENT' } }));
+    const prompt = path.join(run, 'inventory', 'session-1.json');
+    const { stageStatement: _dropped, ...withoutStatement } = JSON.parse(fs.readFileSync(prompt, 'utf8')) as Record<string, unknown>;
+    fs.writeFileSync(prompt, JSON.stringify(withoutStatement));
+    const result = await renderRun(run, renderDeps());
+    if (!result.ok) throw new Error(result.refusal.reason);
+    const launch = (JSON.parse(readSite(result.report.site).get('machine.json')!).disclosure as { id: string; text: string; label: string }[]).filter(item => item.id.includes('brief'));
+    expect(launch).toEqual([
+      { id: 'launch/brief-or-packet-delivered/copy-class/reached/briefs/authoring', label: 'Inferred', text: 'STORED-AUTHORING-STATEMENT' },
+      { id: 'launch/brief-or-packet-delivered/unknown/inventory-1', label: 'Unknown', text: 'The inventory brief for session 1 was issued, and its record carries no brief-stage statement Syzygy can read, so whether it directed its session to a copy is Unknown.' },
+      // launch.json still holds the not-reached form: it and the briefs' records disagree.
+      { id: 'launch/brief-or-packet-delivered/disagree', label: 'Unknown', text: 'The run record\'s brief-stage statements in launch.json and the briefs\' own records disagree, so which briefs Syzygy issued, and where each directed its session, is Unknown beyond what each brief\'s own record says.' },
+    ]);
+  });
+
   it('carries the one sentence and the machine disclosure on every page, the human disclosure in the appendix, and one review-status region per page holding no claim', async () => {
     const run = await prepared();
     const result = await renderRun(run, renderDeps());
@@ -489,7 +551,7 @@ describe('render', () => {
     const machine = JSON.parse(files.get('machine.json')!);
     const ids = (machine.disclosure as { id: string }[]).map((item) => item.id);
     expect(ids).toEqual(['mode', 'agent', 'unrestricted-reading', 'read-account', 'execution-rule', 'reported-commands', 'no-provider-call', 'pinned-revision',
-      'pinned-revision-verified', 'quotations', 'stored-records', 'records-within-reach', 'unattributed-execution', 'draft-layer']);
+      'pinned-revision-verified', 'launch/unknown', 'quotations', 'stored-records', 'records-within-reach', 'unattributed-execution', 'draft-layer']);
     expect(html(files).length).toBeGreaterThan(5);
     const sentence = 'This is a draft written by claude-code with claude-opus-5-5; no human review is recorded. It has 2 Unknown claim(s).';
     for (const [file, page] of html(files)) {
@@ -604,7 +666,7 @@ describe('render', () => {
     expect(files.has('understanding.html')).toBe(false);
     expect(files.has('discovery.html')).toBe(true);
     expect(marked(files.get('index.html')!, 'draft-layer/policy-state')).toEqual({ epistemic: 'unknown', reason: 'unconsented-source-or-provider' });
-    expect(files.get('index.html')).toContain('Dossier of https://github.com/redis/redis at ');
+    expect(files.get('index.html')).toContain('Dossier of github.com/redis/redis at ');
     expect([...files.keys()].filter((file) => file.startsWith('sources/') && file !== 'sources/index.html')).toHaveLength(2);
     expect(JSON.parse(files.get('machine.json')!).draftLayer.state).toBe('unknown');
   });

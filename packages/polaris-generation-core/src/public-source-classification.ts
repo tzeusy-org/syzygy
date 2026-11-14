@@ -82,7 +82,9 @@ const unmatchable = (entry: string): boolean => /[A-Z/\\]/u.test(entry);
 // refuse modules/modules.md). It is never matchable when it holds an A-Z letter or a backslash, or an empty, '.' or '..' segment, which
 // also covers a leading or trailing '/': a folded path with any of those matches no path rule.
 const placementPath = (entry: string): boolean => entry.length > 0 && !/[A-Z\\]/u.test(entry) && entry.split('/').every(part => part !== '' && part !== '.' && part !== '..');
-const REPOSITORY_ID = /^repository:[a-z0-9][a-z0-9-]*$/u;
+// A placement's repository is `repository:` and an identity by REQ-polaris-generation-046's grammar (line 15: a-z, 0-9, '.', '_', '-'), compared
+// exactly with the subject, never folded (the owner's ruling of 2026-11-14, "Widen all readers now").
+const REPOSITORY_ID = /^repository:[a-z0-9._-]+$/u;
 const COMMIT_ID = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/u;
 const distinct = (value: unknown, valid: (entry: string) => boolean): value is readonly string[] =>
   Array.isArray(value) && value.length > 0 && value.every(entry => typeof entry === 'string' && valid(entry)) && new Set(value).size === value.length;

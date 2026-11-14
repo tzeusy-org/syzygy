@@ -182,7 +182,9 @@ function parseInstance(text: string, act: Act, inForceAt: number | null): Admiss
   // Supersession follows the act's instant, not the bytes: a successor whose bytes later drift still replaced its predecessor.
   const base = { recordId, version, digest: act.digest, inForceAt, withdrawnAt: null, supersedes: act.version === 2 ? V2_SUPERSEDES : null, supersessionAt: act.version === 2 ? act.inForce : null, project: 'project:syzygy' } as const;
   if (act.type === 'observation') {
-    const m = /^\(project:syzygy, repository:([a-z0-9][a-z0-9-]*)\)$/.exec(subject) ?? refuse();
+    // The repository identity's grammar is REQ-polaris-generation-046's (line 15): one or more of a-z, 0-9, '.', '_' and '-', with no case
+    // folding; ids compare exactly, so 'a.b' and 'a-b' stay two repositories (the owner's ruling of 2026-11-14, "Widen all readers now").
+    const m = /^\(project:syzygy, repository:([a-z0-9._-]+)\)$/.exec(subject) ?? refuse();
     // Only the rows of the admitted-revisions table count: the one header, its separator, then consecutive rows.
     one(text, /^(\| Label \| Commit object id \|)$/gm);
     const lines = outsideFences(text).split('\n'), head = lines.indexOf('| Label | Commit object id |');
@@ -199,7 +201,7 @@ function parseInstance(text: string, act: Act, inForceAt: number | null): Admiss
   }
   const m = /^\(project:syzygy, provider:([a-z0-9][a-z0-9-]*)\)$/.exec(subject) ?? refuse();
   // Only the Scope section lists admitted repositories: a bullet naming one elsewhere ("not admitted", an example) is not a grant.
-  const repositories = sectionList(text, '## Scope').map(line => /^- `\(project:syzygy, repository:([a-z0-9][a-z0-9-]*)\)`$/.exec(line)?.[1]).filter((id): id is string => id !== undefined);
+  const repositories = sectionList(text, '## Scope').map(line => /^- `\(project:syzygy, repository:([a-z0-9._-]+)\)`$/.exec(line)?.[1]).filter((id): id is string => id !== undefined);
   const classes = bullets(text, /^Permitted content classes/m).map(line => /^`([a-z-]+)`$/.exec(line)?.[1] ?? refuse());
   if (repositories.length === 0 || classes.length === 0 || new Set(repositories).size !== repositories.length) refuse();
   return Object.freeze({ ...base, class: 'egress', repositoryId: null, providerId: m![1]!, upstream: null, admittedRevisions: Object.freeze([]), revisionLabels: Object.freeze([]), admittedRepositories: Object.freeze(repositories), contentClasses: Object.freeze(classes) });
@@ -1010,6 +1012,22 @@ export interface AdmissionRecordsPortLike {
    * it, or each that does is withdrawn, superseded, not yet in force, bound by no act, or voided by a byte-different twin. Reporting only;
    * it grants nothing (R-POLARIS-DOSSIER-S3-GATES-1 finding 4). */
   readonly consentAbsenceFor?: (url: string) => Promise<string>;
+  /** An observation record in force now whose admitted revisions include `revision`, for any repository id (REQ-polaris-generation-047's
+   * class rule); from the same records `check` reads, and nothing else. */
+  readonly observationConsentNaming?: (revision: string) => Promise<AdmissionAnswerLike>;
+  /** Every observation record, in any state, with its subject, `Upstream:` URL as written, admitted revisions and state, for
+   * REQ-polaris-generation-046's matching of records made by other acts; from the same records `check` reads. Refused, never empty,
+   * when the records cannot be read. Reporting only: it grants nothing. */
+  readonly observationRecords?: () => Promise<{ readonly ok: true; readonly records: readonly ObservationRecordSummary[] } | { readonly ok: false; readonly why: string }>;
+}
+
+/** An observation record as REQ-polaris-generation-046's matching reads it. `state` is `in force`, or the reason it is not. */
+export interface ObservationRecordSummary {
+  readonly record: string;
+  readonly repositoryId: string;
+  readonly upstream: string | null;
+  readonly admittedRevisions: readonly string[];
+  readonly state: string;
 }
 
 const NOT_IN_FORCE_TEXT: Readonly<Record<NotInForce, string>> = {
@@ -1063,6 +1081,23 @@ export function createAdmissionRecordsPort(options: { readonly reader: Admission
         }
       }
       return Object.freeze([...byLabel.values()].map(pair => Object.freeze({ ...pair })));
+    },
+    observationRecords: async () => {
+      let records: readonly AdmissionRecord[];
+      try { records = await options.reader.read(); } catch (cause) {
+        return { ok: false, why: `the admission act records could not be read (${cause instanceof Error ? cause.message : 'unknown error'})` };
+      }
+      const why = notInForceRecords(records, options.now());
+      return { ok: true, records: Object.freeze(records.filter(r => r.class === 'observation' && r.repositoryId !== null).map(r => Object.freeze({
+        record: `${r.recordId}@${r.version}`, repositoryId: r.repositoryId!, upstream: r.upstream, admittedRevisions: Object.freeze([...r.admittedRevisions]),
+        state: why.has(r) ? NOT_IN_FORCE_TEXT[why.get(r)!] : 'in force',
+      }))) };
+    },
+    observationConsentNaming: async revision => {
+      let live: readonly AdmissionRecord[];
+      try { live = inForceRecords(await options.reader.read(), options.now()); } catch { return { satisfied: false, why: 'no record found: the admission act records could not be read' }; }
+      const hit = live.find(r => r.class === 'observation' && r.admittedRevisions.includes(revision));
+      return hit === undefined ? { satisfied: false, why: `no record found: no owner act puts an observation consent naming ${revision} in force` } : { satisfied: true, record: `${hit.recordId}@${hit.version}` };
     },
     check: async requirement => {
       if (requirement.kind === 'public-source-policy') {

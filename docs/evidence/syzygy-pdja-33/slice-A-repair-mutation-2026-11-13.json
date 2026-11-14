@@ -1,0 +1,143 @@
+{
+  "subject": "syzygy-pdja.33 slice A repairs for R-PDJA-33-SLICE-A-1 (findings 1 to 5): the launch reads of the operator's clone (REQ-polaris-generation-047 reads (1) to (5))",
+  "date": "2026-11-13",
+  "rule": "AGENTS.md verification rule 6: mutate the input and confirm the check fails, per predicate",
+  "method": "Each mutant replaces one exact old fragment (asserted to occur once) with new, runs the two commands with TMPDIR=/home/orca/.tmp/pdja33, and restores the file. Killed means either command exited non-zero.",
+  "runner": "a scratch Python script, not retained; every input it used is the file, old, new and commit of each entry",
+  "supersedes_in_part": "docs/evidence/syzygy-pdja-33/slice-A-mutation-2026-11-13.json, whose M10 note (\"equivalent\") is corrected here and whose M4 targets a probe since removed; that record is left unedited",
+  "mutants": [
+    {
+      "id": "R1-alternates-opened",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "fs.lstatSync(path.join(gitDir, 'objects', 'info', 'alternates')); alternates = true;",
+      "new": "fs.readFileSync(path.join(gitDir, 'objects', 'info', 'alternates'), 'utf8'); alternates = true;",
+      "commit": "afdc15a5aeb83c3d6646c7f585375bc62f76d1fa",
+      "unit": "Tests  9 failed | 26 passed (35)",
+      "integration": "Tests  3 failed | 43 passed (46)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "ad79d9c790b9bb3422de914cd97b8b73a3e3389856643d01d0b99f82577e6fbe",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+      ],
+      "note": "The reviewer's R1, exact old/new text (R-PDJA-33-SLICE-A-1-RAW.md, What I ran). Survived at db109c54; killed by the API-independent oracle (finding 1)."
+    },
+    {
+      "id": "R3-every-loose-value-read-utf8",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "if (entry.isFile() && validRefName(rel)) looseNames.add(rel);",
+      "new": "if (entry.isFile() && validRefName(rel)) { looseNames.add(rel); fs.readFileSync(abs, 'utf8'); }",
+      "commit": "afdc15a5aeb83c3d6646c7f585375bc62f76d1fa",
+      "unit": "Tests  8 failed | 27 passed (35)",
+      "integration": "Tests  2 failed | 44 passed (46)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "ad79d9c790b9bb3422de914cd97b8b73a3e3389856643d01d0b99f82577e6fbe",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+      ],
+      "note": "The reviewer's R3, exact old/new text. Survived at db109c54; killed by the API-independent oracle (finding 1)."
+    },
+    {
+      "id": "M4r-reftable-dir-examined",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "  const headText = readBounded(path.join(gitDir, 'HEAD'), MAX_REF_BYTES);",
+      "new": "  try { fs.lstatSync(path.join(gitDir, 'reftable')); return reftable(); } catch { /* absent */ }\n  const headText = readBounded(path.join(gitDir, 'HEAD'), MAX_REF_BYTES);",
+      "commit": "afdc15a5aeb83c3d6646c7f585375bc62f76d1fa",
+      "unit": "Tests  1 failed | 34 passed (35)",
+      "integration": "Tests  1 failed | 45 passed (46)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "ad79d9c790b9bb3422de914cd97b8b73a3e3389856643d01d0b99f82577e6fbe",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+      ],
+      "note": "M4 updated for finding 3: the .git/reftable probe is gone, so the mutant re-introduces it; the tests that assert the reftable directory is never examined kill it."
+    },
+    {
+      "id": "M10-symlink-followed",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW)",
+      "new": "fs.openSync(fs.realpathSync(file), fs.constants.O_RDONLY)",
+      "commit": "afdc15a5aeb83c3d6646c7f585375bc62f76d1fa",
+      "unit": "Tests  1 failed | 34 passed (35)",
+      "integration": "Tests  46 passed (46)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "ad79d9c790b9bb3422de914cd97b8b73a3e3389856643d01d0b99f82577e6fbe",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+      ],
+      "note": "The slice-A record called M10 equivalent; per finding 5 it was surviving with the race unstaged, not equivalent. The staged race (lstat reporting a regular file for a link) now kills it."
+    },
+    {
+      "id": "M10b-nofollow-dropped-alone",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW)",
+      "new": "fs.openSync(file, fs.constants.O_RDONLY)",
+      "commit": "afdc15a5aeb83c3d6646c7f585375bc62f76d1fa",
+      "unit": "Tests  1 failed | 34 passed (35)",
+      "integration": "Tests  46 passed (46)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "ad79d9c790b9bb3422de914cd97b8b73a3e3389856643d01d0b99f82577e6fbe",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+      ],
+      "note": "Finding 5 noted M10's text also adds realpathSync; this mutant drops O_NOFOLLOW alone."
+    },
+    {
+      "id": "F2m-every-remote-head-admitted",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "  if (refs.get(ORIGIN_HEAD)?.kind !== 'symbolic') {",
+      "new": "  if (true) {",
+      "commit": "afdc15a5aeb83c3d6646c7f585375bc62f76d1fa",
+      "unit": "Tests  5 failed | 30 passed (35)",
+      "integration": "Tests  46 passed (46)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "ad79d9c790b9bb3422de914cd97b8b73a3e3389856643d01d0b99f82577e6fbe",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+      ],
+      "note": "Finding 2's repair reverted: every remote's HEAD admitted whatever origin records."
+    },
+    {
+      "id": "F4m-head-candidate-dropped",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "  ...(name === 'HEAD' ? ['HEAD'] : []),",
+      "new": "",
+      "commit": "afdc15a5aeb83c3d6646c7f585375bc62f76d1fa",
+      "unit": "Tests  1 failed | 34 passed (35)",
+      "integration": "Tests  1 failed | 45 passed (46)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "ad79d9c790b9bb3422de914cd97b8b73a3e3389856643d01d0b99f82577e6fbe",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+      ],
+      "note": "Finding 4's repair reverted: HEAD no longer a --revision candidate."
+    },
+    {
+      "id": "M5-no-reftable-head-refusal",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "  if (head.kind === 'symbolic' && head.target === REFTABLE_HEAD) return reftable();\n",
+      "new": "\n",
+      "commit": "afdc15a5aeb83c3d6646c7f585375bc62f76d1fa",
+      "unit": "Tests  2 failed | 33 passed (35)",
+      "integration": "Tests  1 failed | 45 passed (46)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "ad79d9c790b9bb3422de914cd97b8b73a3e3389856643d01d0b99f82577e6fbe",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts"
+      ],
+      "note": "The slice-A M5 re-run over the repaired code: the HEAD placeholder is now the only reftable detection."
+    }
+  ],
+  "summary": {
+    "mutants": 8,
+    "killed": 8,
+    "survived": []
+  }
+}

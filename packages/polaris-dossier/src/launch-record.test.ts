@@ -12,7 +12,7 @@ const base: LaunchRecord = {
   recordClass: 'observation-consent', recordId: recordIdFor('observation-consent', REV, '2026-11-09T10:00:00Z', 'repository:redis-redis'), identity: 'repository:redis-redis',
   identitySource: 'derived from the clone\'s remote URL by the identity rule', normalisedUrl: 'github.com/redis/redis', urlSource: 'the clone\'s remote origin',
   publicDeclaration: 'public', revision: REV, grantInstant: '2026-11-09T10:00:00Z', supersedes: null,
-  phrase: 'CONSENT TO OBSERVE repository:redis-redis AT 0123456789ab', terminal: '/dev/pts/7', question: 'Q line 1\nQ line 2',
+  phrase: 'CONSENT TO OBSERVE repository:redis-redis AT 0123456789ab', terminal: '/dev/pts/7', question: 'Q line 1\nQ line 2', observationScope: 'copy',
 };
 const digestOf = (text: string): string => createHash('sha256').update(text.slice(0, text.lastIndexOf('Content digest'))).digest('hex');
 
@@ -29,6 +29,18 @@ describe('the record', () => {
     expect(parsed).toEqual({ ok: true, record: base, digest: digestOf(text) });
   });
 
+  it('reads back an identity by 046\'s grammar, a tail opening with any of its characters, and refuses one outside it (the owner\'s ruling of 2026-11-14)', () => {
+    for (const identity of ['repository:-redis', 'repository:_x.y', 'repository:nodejs-node.js', 'repository:.dotfiles']) {
+      const record: LaunchRecord = { ...base, identity, recordId: recordIdFor('observation-consent', REV, '2026-11-09T10:00:00Z', identity), phrase: `CONSENT TO OBSERVE ${identity} AT 0123456789ab` };
+      const text = renderLaunchRecord(record);
+      expect(parseLaunchRecord(text)).toEqual({ ok: true, record, digest: digestOf(text) });
+    }
+    for (const identity of ['repository:Redis-redis', 'repository:a/b', 'repository:']) {
+      const record: LaunchRecord = { ...base, identity, recordId: recordIdFor('observation-consent', REV, '2026-11-09T10:00:00Z', identity), phrase: `CONSENT TO OBSERVE ${identity} AT 0123456789ab` };
+      expect(parseLaunchRecord(renderLaunchRecord(record)).ok).toBe(false);
+    }
+  });
+
   it('carries every field line 17 lists, for an observation consent', () => {
     const text = renderLaunchRecord(base);
     for (const line of [
@@ -36,7 +48,7 @@ describe('the record', () => {
       'Subject: `(project:syzygy, repository:redis-redis)`',
       'Repository identity: `repository:redis-redis` [Inferred]: proposed from derived from the clone\'s remote URL by the identity rule and declared by the owner\'s phrase',
       'Public declaration: `public` [Inferred]: the operator\'s declaration whether the repository is public',
-      `Scope: the commit object \`${REV}\` and the tree and blob objects reachable from its root tree, and nothing else, held in the operator's own clone; Syzygy fetches nothing`,
+      `Scope: the commit object \`${REV}\` and the tree and blob objects reachable from its root tree, and nothing else, held in the copy that REQ-polaris-generation-047 makes from the operator's own clone, with no network request by Syzygy`,
       'Granting principal: the owner, as declared by the operator [Inferred]',
       'Grant instant: `2026-11-09T10:00:00Z` (Syzygy\'s clock at the answer)',
       'Revocation state: none',
@@ -49,6 +61,15 @@ describe('the record', () => {
       'Q line 1',
     ]) expect(text.split('\n')).toContain(line);
     expect(text).toContain('a locator hint, never the identity');
+  });
+
+  it('an observation consent version 1.1 recorded, held in the operator\'s own clone with no fetch by Syzygy, reads back unchanged with that scope (046, line 21)', () => {
+    const v11 = renderLaunchRecord({ ...base, observationScope: 'operator-clone' });
+    expect(v11.split('\n')).toContain(`Scope: the commit object \`${REV}\` and the tree and blob objects reachable from its root tree, and nothing else, held in the operator's own clone; Syzygy fetches nothing`);
+    expect(parseLaunchRecord(v11)).toEqual({ ok: true, record: { ...base, observationScope: 'operator-clone' }, digest: digestOf(v11) });
+    const other = v11.replace("held in the operator's own clone; Syzygy fetches nothing", 'held anywhere');
+    const rebound = `${other.slice(0, other.lastIndexOf('Content digest'))}Content digest (SHA-256): \`${digestOf(other)}\`\n`;
+    expect(parseLaunchRecord(rebound)).toEqual({ ok: false, why: 'the observation consent does not record a scope the launch record form writes' });
   });
 
   it('a drawer statement and a provider statement are separate records, neither naming a revision as its scope', () => {
@@ -111,16 +132,28 @@ describe('the question', () => {
     'Repository identity (proposed): repository:redis-redis [Inferred], derived from the clone\'s remote URL by the identity rule. The phrase you type declares it.',
     'Normalised URL: github.com/redis/redis [Inferred], from the clone\'s remote origin; a locator hint, never the identity.',
     `Pinned revision: ${REV}, chosen by refs/remotes/origin/HEAD -> refs/remotes/origin/unstable; committer date 1762000000 +0000.`,
-    'Syzygy did not fetch',
+    'Syzygy made no network request to choose or verify the revision',
     'To update the clone before a later run: git -C \'/c\' fetch origin',
     'The observation consent covers that one revision only.',
     '- LAUNCH-OBSERVATION-aaaaaaaaaaaa-20261101T000000Z-00000000 (observation-consent, repository:redis-redis): revoked by .syzygy/governance/decisions/X.md',
     '[Inferred] A clone re-identified under another URL',
     '[Inferred] A fork or mirror at a commit an upstream record names',
-    '[Inferred] Two repositories whose normalised URLs share their last two path segments',
+    '[Inferred] Two repositories whose normalised URLs share their last two path segments, on one host or on two (x/sub/name and y/sub/name, or github.com/a/b and gitlab.com/a/b), or differ only in characters the rule replaces by or joins with "-" (a-b/c and a/b-c)',
+    '[Inferred] Two repositories whose URLs differ only in a port, which normalisation drops, or only in letter case, which it lowercases, get one normalised URL and one identity',
+    'held in the copy that REQ-polaris-generation-047 makes from the operator\'s own clone, with no network request by Syzygy, under the observing project\'s classification and screening policies.',
     'revocable only by a later owner act naming it (RFC5-13)',
     'A launch consent is never an execution choice',
   ])('states %s', words => expect(opening).toContain(words));
+
+  it('a copy-class run\'s question states its copy statements after the pinned revision; a no-copy run\'s states none', () => {
+    const facts = {
+      identity: 'repository:redis-redis', identitySource: 'derived' as const, url: 'github.com/redis/redis', urlSource: 'the clone\'s remote origin', revision: REV,
+      revisionVia: 'refs/heads/main', committerDate: null, updateCommand: 'u', existing: [], notCarrying: [], inForceElsewhere: [], asks: { observation: true, drawer: false },
+    };
+    const lines = questionOpening({ ...facts, copyStatements: ['COPY ONE', 'COPY TWO'] }).split('\n');
+    expect(lines.slice(lines.indexOf('To update the clone before a later run: u'), lines.indexOf('To update the clone before a later run: u') + 5)).toEqual(['To update the clone before a later run: u', '', 'COPY ONE', 'COPY TWO', '']);
+    expect(questionOpening(facts)).not.toContain('COPY');
+  });
 
   it('labels the statement\'s classes a preview and says the agent reads the clone without restriction', () => {
     const text = statementText({ agentTool: 'claude-code', provider: 'anthropic', classes: ['code-content'], supersedes: null });

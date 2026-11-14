@@ -80,7 +80,7 @@ let world: { readonly screen: ScreenLoad; readonly classes: readonly string[] | 
 afterEach(() => { world = null; });
 const STATEMENT_ID = 'STATEMENT-KESTREL-ANTHROPIC';
 const subject = (clone: string): RunSubject => ({
-  repository: { url: 'https://github.com/redis/redis', repositoryId: 'redis-redis' },
+  repository: { url: 'github.com/redis/redis', repositoryId: 'redis-redis' },
   clone: { path: clone, declaredBy: 'operator', label: 'Inferred', use: 'read' },
   pinnedRevision: { commit, label: 'fixture', consentRecord: 'PUBLIC-OBS-FIXTURE@1', pinnedAt: '2026-10-07T11:00:00.000Z' },
   startGates: { registryEntry: 'REGISTRY-ACT-FIXTURE', screeningPolicy: 'POLICY-ACT-FIXTURE' },
@@ -94,6 +94,8 @@ const sources = (): GateSources => ({
   repositoryIdsFor: async () => ['redis-redis'],
   consentedRevisionsFor: async () => [{ label: 'fixture', commitId: commit }],
   observationConsentFor: async (_id, revision) => (revision === commit ? { satisfied: true, record: 'PUBLIC-OBS-FIXTURE@1' } : { satisfied: false, why: 'the consent does not name it' }),
+  observationConsentNaming: async revision => (revision === commit ? { satisfied: true, record: 'PUBLIC-OBS-FIXTURE@1' } : { satisfied: false, why: 'the consent does not name it' }),
+  observationRecords: async () => ({ ok: true, records: [] }),
   registryEntry: async () => OK,
   screeningPolicy: async () => OK,
   d9: async () => OK,

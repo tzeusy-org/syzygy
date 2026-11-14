@@ -1,0 +1,41 @@
+{
+  "subject": "syzygy-pdja.33 R-PDJA-33-SLICE-CD-4 repairs (3864b641..1c015d5a)",
+  "commit": "1c015d5a29ede604811eb35fd4d6ad5f1e566407",
+  "date": "2026-11-14",
+  "note": "Rule-6 mutants for the CD-4 repairs. Each mutant was applied alone to the file at the commit, the unit and integration tiers listed in commands were run, and the file was restored byte-identical. H1 restores the old order, with the configuration read before the alternates probe. H2 restores the nested locator statements in init's refusal.",
+  "total": 2,
+  "killed": 2,
+  "survived": [],
+  "mutants": [
+    {
+      "id": "H1-F1",
+      "file": "packages/polaris-dossier/src/launch-clone.ts",
+      "old": "  // The alternates probe comes before the configuration read, so every refusal here precedes it and the configuration is read last: once it\n  // is read, the snapshot carries its remotes, and the launch states their user information on every later output (R-PDJA-33-SLICE-CD-4\n  // finding 1).\n  let alternates = false;\n  try { fs.lstatSync(path.join(gitDir, 'objects', 'info', 'alternates')); alternates = true; } catch (cause) {\n    if (code(cause) !== 'ENOENT') return { ok: false, reason: `${path.join(gitDir, 'objects', 'info', 'alternates')} cannot be examined (${code(cause)})` };\n  }\n\n  const config = readBounded(path.join(gitDir, 'config'), MAX_FILE_BYTES);\n  if (config !== null && 'reason' in config) return { ok: false, reason: config.reason };\n  const parsed: CloneConfig = config === null ? { remotes: [], objectFormat: 'sha1', bare: null, worktree: null } : parseConfig(config.text);\n",
+      "new": "  const config = readBounded(path.join(gitDir, 'config'), MAX_FILE_BYTES);\n  if (config !== null && 'reason' in config) return { ok: false, reason: config.reason };\n  const parsed: CloneConfig = config === null ? { remotes: [], objectFormat: 'sha1', bare: null, worktree: null } : parseConfig(config.text);\n\n  // The alternates probe comes before the configuration read, so every refusal here precedes it and the configuration is read last: once it\n  // is read, the snapshot carries its remotes, and the launch states their user information on every later output (R-PDJA-33-SLICE-CD-4\n  // finding 1).\n  let alternates = false;\n  try { fs.lstatSync(path.join(gitDir, 'objects', 'info', 'alternates')); alternates = true; } catch (cause) {\n    if (code(cause) !== 'ENOENT') return { ok: false, reason: `${path.join(gitDir, 'objects', 'info', 'alternates')} cannot be examined (${code(cause)})` };\n  }\n\n",
+      "commit": "1c015d5a29ede604811eb35fd4d6ad5f1e566407",
+      "unit": "Tests  225 passed (225)",
+      "integration": "Tests  1 failed | 490 passed (491)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "af6fe735f0096bb97b9e9c0c9bb7338a6761702d09c83fdacd4baa64abb0b875",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+      ]
+    },
+    {
+      "id": "H2-F4",
+      "file": "packages/polaris-dossier/src/init.ts",
+      "old": "return refuse('launch', outcome.refusal.reason, { launch: nested });",
+      "new": "return refuse('launch', outcome.refusal.reason, { launch: outcome.refusal });",
+      "commit": "1c015d5a29ede604811eb35fd4d6ad5f1e566407",
+      "unit": "Tests  225 passed (225)",
+      "integration": "Tests  1 failed | 490 passed (491)",
+      "outcome": "killed",
+      "file_sha256_at_commit": "208eed8dfcab3d7ea486b85ffa2fe078372573f33db01b802e3e2de87a060eab",
+      "commands": [
+        "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-statements.test.ts packages/polaris-dossier/src/launch-disclosure.test.ts packages/polaris-dossier/src/launch-record.test.ts packages/polaris-dossier/src/launch-revision.test.ts packages/polaris-dossier/src/status.test.ts",
+        "npx vitest run --project integration packages/polaris-dossier/src/waiting-sessions.test.ts packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts packages/polaris-dossier/src/brief.test.ts packages/polaris-dossier/src/inventory.test.ts packages/polaris-dossier/src/render.test.ts"
+      ]
+    }
+  ]
+}
