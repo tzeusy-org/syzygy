@@ -163,7 +163,9 @@ function readSubject(value: unknown): RunSubject | string {
   // every page carry, for every host"). A record written before that rule carries the canonical https://github.com/<owner>/<repo> URL
   // the retired GitHub-only rule wrote; it is read, and normalised on reading, so an existing run is neither refused nor rewritten.
   const url = readRecordedUrl(repository['url']);
-  if (url === null || !/^[a-z0-9][a-z0-9._-]*$/.test(repository['repositoryId'])) return 'repository url or repositoryId is malformed';
+  // The identity after `repository:`, by REQ-polaris-generation-046's grammar (line 15: a-z, 0-9, '.', '_', '-'), compared exactly wherever
+  // it is used (the owner's ruling of 2026-11-14, "Widen all readers now").
+  if (url === null || !/^[a-z0-9._-]+$/.test(repository['repositoryId'])) return 'repository url or repositoryId is malformed';
   if (!isRecord(clone) || !hasKeys(clone, ['path', 'declaredBy', 'label', 'use']) || clone['declaredBy'] !== 'operator' || clone['label'] !== 'Inferred' || clone['use'] !== 'read') return 'clone must carry its path, declared by the operator, labelled Inferred, for reading only';
   if (typeof clone['path'] !== 'string' || clone['path'].length > 4096 || path.resolve(clone['path']) !== clone['path'] || clone['path'].includes('\0')) return 'the clone path is not an absolute, normalised path';
   if (!isRecord(pinnedRevision) || !hasKeys(pinnedRevision, ['commit', 'label', 'consentRecord', 'pinnedAt'])) return 'pinnedRevision must carry commit, label, consentRecord and pinnedAt';

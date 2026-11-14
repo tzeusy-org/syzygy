@@ -197,6 +197,9 @@ describe('status (REQ-polaris-generation-033)', () => {
     ['a repository URL on another scheme', (record: Record<string, any>) => { record['subject']['repository']['url'] = 'http://github.com/redis/redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
     ['a legacy-form URL on another host', (record: Record<string, any>) => { record['subject']['repository']['url'] = 'https://gitlab.com/redis/redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
     ['a repository URL that is not normalised (upper case)', (record: Record<string, any>) => { record['subject']['repository']['url'] = 'github.com/Redis/redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
+    ['a repositoryId in upper case', (record: Record<string, any>) => { record['subject']['repository']['repositoryId'] = 'Redis-redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
+    ['a repositoryId holding a "/"', (record: Record<string, any>) => { record['subject']['repository']['repositoryId'] = 'redis/redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
+    ['a repositoryId holding a "~"', (record: Record<string, any>) => { record['subject']['repository']['repositoryId'] = 'redis~redis'; }, 'run.json subject is invalid: repository url or repositoryId is malformed'],
     ['a record naming no clone', (record: Record<string, any>) => { delete record['subject']['clone']; }, 'run.json subject is invalid: it must carry exactly repository, clone, pinnedRevision, startGates, governed, providerStatement and workItem'],
     ['a relative clone path', (record: Record<string, any>) => { record['subject']['clone']['path'] = 'clones/redis'; }, 'run.json subject is invalid: the clone path is not an absolute, normalised path'],
     ['a clone path that is not normalised', (record: Record<string, any>) => { record['subject']['clone']['path'] = '/srv/clones/../redis'; }, 'run.json subject is invalid: the clone path is not an absolute, normalised path'],
@@ -213,5 +216,13 @@ describe('status (REQ-polaris-generation-033)', () => {
     const result = runStatus(runDir);
     expect(result.ok).toBe(false);
     expect(!result.ok && result.reason).toBe(reason);
+  });
+
+  it.each(['-redis', '_redis.conf', 'nodejs-node.js', '.dotfiles', '9'])('reads a repositoryId by 046\'s grammar, a tail opening with any of its characters: %s (the owner\'s ruling of 2026-11-14)', (id) => {
+    const file = path.join(runDir, 'run.json');
+    const record = JSON.parse(fs.readFileSync(file, 'utf8')) as Record<string, any>;
+    record['subject']['repository']['repositoryId'] = id;
+    fs.writeFileSync(file, JSON.stringify(record));
+    expect(runStatus(runDir).ok).toBe(true);
   });
 });
