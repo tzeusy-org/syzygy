@@ -35,7 +35,7 @@ const QUERY = 'it carries a query or a fragment';
 const PERCENT = 'its user information or host holds a percent-encoded character';
 const CREDENTIALS = 'an https://, http:// or git:// locator carries no user information';
 const COLON = 'its user information holds a ":"';
-const HOST_RULE = 'its host is empty, or is neither a host name (ASCII letters, digits, ".", "-" and "_", once IDNA has mapped it) nor a bracketed IPv6 address literal. This is narrower than REQ-polaris-generation-046 states, which says only "a host": a host name holding "~" or a sub-delimiter ("!", "$", "&", "\'", "(", ")", "*", "+", ",", ";" or "="), and an IPvFuture literal such as [v1.x], are refused';
+const HOST_RULE = 'its host is empty, or is neither a host name (ASCII letters, digits, ".", "-" and "_", once IDNA has mapped it) nor a bracketed IPv6 address literal. This is narrower than REQ-polaris-generation-046 states, which says only "a host": a host name holding "~" or a sub-delimiter ("!", "$", "&", "\'", "(", ")", "*", "+", ",", ";" or "="), an IPvFuture literal such as [v1.x], and a non-ASCII label that IDNA maps to nothing or cannot map, are refused';
 const PORT = 'its port is not a decimal number';
 const PATH_RULE = 'it names no path, or its path has an empty segment once normalised';
 const SCP_PATH = 'its scp-form path begins with "//"';
@@ -54,17 +54,24 @@ describe('a Unicode host normalises by IDNA to its punycode form, so every spell
     expect(isNormalisedLocator('[0::1]/a/b')).toBe(false);
   });
 
-  it('one rule for ASCII and non-ASCII names alike (R-PDJA-33-RULINGS-1 finding 2): an IPv4 spelling and an xn-- label are read the same either way', () => {
+  it('one rule for every label (R-PDJA-33-RULINGS-2 finding 2): IDNA maps each label and lower-cases it, and does nothing else', () => {
     const read = (u: string) => { const r = readLocator(u, 'operator'); return r.ok ? r.url.url : r.rule; };
-    // A name that parses as an IPv4 address is its dotted-decimal form, in ASCII or fullwidth digits.
-    expect(['https://0x7f.1/a/b', 'https://\uff10x7f.1/a/b', 'https://127.0.0.1/a/b', 'https://0177.0.0.1/a/b'].map(read)).toEqual(['127.0.0.1/a/b', '127.0.0.1/a/b', '127.0.0.1/a/b', '127.0.0.1/a/b']);
-    // An xn-- label that decodes to nothing is no host, in an ASCII name as in a Unicode one.
-    expect(['https://xn--zz.de/a/b', 'https://\u00fc.xn--zz/a/b'].map(read)).toEqual([HOST_RULE, HOST_RULE]);
-    // A name that only looks numeric, or a number out of range, is no host.
-    expect(['https://999.1.1.1/a/b', 'https://foo.123/a/b'].map(read)).toEqual([HOST_RULE, HOST_RULE]);
+    // No IPv4 reading: a numeric-looking name keeps the spelling main gave it, and its fullwidth spelling maps to the same text.
+    expect(['https://0x7f.1/a/b', 'https://０x7f.1/a/b', 'git@1.2.3:a/b', 'https://123/a/b', 'https://0177.0.0.1/a/b', 'https://127.0.0.1/a/b'].map(read))
+      .toEqual(['0x7f.1/a/b', '0x7f.1/a/b', '1.2.3/a/b', '123/a/b', '0177.0.0.1/a/b', '127.0.0.1/a/b']);
+    expect(['https://１．２．３/a/b', 'https://１.2.3/a/b'].map(read)).toEqual(['1.2.3/a/b', '1.2.3/a/b']);
+    // Hosts main admitted stay admitted, with main's lower-cased form: no xn-- validation, no numeric-label rule.
+    expect(['https://foo.123/a/b', 'https://git.example.09/a/b', 'https://foo.0/a/b', 'host.0x10:a/b', 'https://xn--zz.de/a/b', 'https://999.1.1.1/a/b', 'https://XN--ZZ.De/a/b'].map(read))
+      .toEqual(['foo.123/a/b', 'git.example.09/a/b', 'foo.0/a/b', 'host.0x10/a/b', 'xn--zz.de/a/b', '999.1.1.1/a/b', 'xn--zz.de/a/b']);
+    // A Unicode label is mapped to punycode beside an ASCII label left as it is.
+    expect(['https://ü.xn--zz/a/b', 'https://Ü.Example/a/b', 'https://a。b.de/a/b'].map(read)).toEqual(['xn--tda.xn--zz/a/b', 'xn--tda.example/a/b', 'a.b.de/a/b']);
+    // A Unicode label IDNA maps to nothing is refused by the host rule, which names it.
+    expect(['https://­.de/a/b', 'https://xn--zz。ü.de/a/b'].map(read)).toEqual([HOST_RULE, HOST_RULE]);
+    expect(HOST_RULE).toContain('a non-ASCII label that IDNA maps to nothing or cannot map');
     // Plain ASCII names keep their spelling, case-folded; an underscore stays.
     expect(['https://GitHub.COM/a/b', 'https://my_host.example/a/b', 'git@GitLab.Example.co.uk:a/b'].map(read)).toEqual(['github.com/a/b', 'my_host.example/a/b', 'gitlab.example.co.uk/a/b']);
-    expect(isNormalisedLocator('0x7f.1/a/b')).toBe(false);
+    for (const stored of ['0x7f.1/a/b', '1.2.3/a/b', 'foo.123/a/b', 'xn--zz.de/a/b']) expect(isNormalisedLocator(stored)).toBe(true);
+    expect(isNormalisedLocator('127.0.0.1/a/b')).toBe(true);
   });
 
   it('a host\'s normalisation never changes the identity: it is derived from the path alone', () => {

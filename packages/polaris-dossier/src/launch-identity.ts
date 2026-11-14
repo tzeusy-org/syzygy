@@ -42,7 +42,7 @@ const RULE = {
   emptyUser: 'it has an "@" with no user name before it',
   // The port rule is 046's ("an optional port", any decimal, empty included). The host grammar is still narrower than 046's "a host" after
   // the owner's widening of 2026-11-14, and its refusal names what it refuses (R-PDJA-33-SLICE-C-1 finding 4; R-PDJA-33-RULINGS-1 finding 3).
-  host: 'its host is empty, or is neither a host name (ASCII letters, digits, ".", "-" and "_", once IDNA has mapped it) nor a bracketed IPv6 address literal. This is narrower than REQ-polaris-generation-046 states, which says only "a host": a host name holding "~" or a sub-delimiter ("!", "$", "&", "\'", "(", ")", "*", "+", ",", ";" or "="), and an IPvFuture literal such as [v1.x], are refused',
+  host: 'its host is empty, or is neither a host name (ASCII letters, digits, ".", "-" and "_", once IDNA has mapped it) nor a bracketed IPv6 address literal. This is narrower than REQ-polaris-generation-046 states, which says only "a host": a host name holding "~" or a sub-delimiter ("!", "$", "&", "\'", "(", ")", "*", "+", ",", ";" or "="), an IPvFuture literal such as [v1.x], and a non-ASCII label that IDNA maps to nothing or cannot map, are refused',
   port: 'its port is not a decimal number',
   path: 'it names no path, or its path has an empty segment once normalised',
   scpPath: 'its scp-form path begins with "//"',
@@ -58,15 +58,24 @@ const SCP_FORM = /^(?:([^@/]*)@)?([^/:@]*):(.*)$/s;
  * first). 046's scp host holds no ":", so this is refused by name rather than read as the host "[" (R-PDJA-33-RULINGS-1 finding 1). */
 const SCP_BRACKETED = /^(?:[^@/]*@)?\[[^/]*:/s;
 
-/** A host name, case-folded (046, line 15), by one rule for every name, ASCII or not (R-PDJA-33-RULINGS-1 finding 2): the WHATWG host
- * parser's domain-to-ASCII (IDNA, UTS 46), which case-folds and normalises a name, maps it to its punycode form, validates an `xn--`
- * label, and writes a name that parses as an IPv4 address in its dotted-decimal form (`0x7f.1` and its fullwidth spelling are both
- * `127.0.0.1`). Every spelling of one host so normalises to the same text. The result must still be a host name by `HOST`: null where
- * it is not, or where the mapping is empty (a forbidden host code point such as ':', '@', '[' or ']', or an invalid label). A '%', which
- * IDNA would percent-decode, and a '/', at which it would stop, never reach here: the percent rule refuses the first, and the authority
- * or scp host ends before the second. The identity is derived from the path alone, so no host's normalisation changes an identity. */
+/** A host name, case-folded (046, line 15), by one rule for every label (R-PDJA-33-RULINGS-1 finding 2; R-PDJA-33-RULINGS-2 finding 2):
+ * each '.'-separated label is IDNA-mapped (UTS 46, as WHATWG URL hosts are) to its ASCII form, which for an ASCII label is its lower-case
+ * spelling and for any other label is its punycode form, case-folded and normalised. Nothing else is done: no label is validated as an
+ * `xn--` label and no name is read as an IPv4 address, so `1.2.3`, `0x7f.1`, `foo.123` and `xn--zz.de` keep the spelling `main` gave them
+ * (lower-cased), and the fullwidth spelling of `0x7f.1` is `0x7f.1`. A non-ASCII label is mapped with a trailing `.x` label, which no IPv4 reading
+ * admits, and the `.x` is then removed. The result must still be a host name by `HOST`: null where it is not, or where IDNA maps a
+ * non-ASCII label to nothing or cannot map it (a forbidden host code point such as ':', '@', '[' or ']'). A '%', which IDNA would
+ * percent-decode, and a '/', at which it would stop, never reach here: the percent rule refuses the first, and the authority or scp host
+ * ends before the second. The identity is derived from the path alone, so no host this admits changes an identity; a host this refuses
+ * derives no identity at all, and the operator gives `--identity`. */
 function hostName(name: string): string | null {
-  const ascii = domainToASCII(name);
+  const labels = name.split('.').map(label => {
+    if (/^[\x00-\x7f]*$/.test(label)) return label.toLowerCase();
+    const mapped = domainToASCII(`${label}.x`);
+    return mapped.endsWith('.x') && mapped.length > 2 ? mapped.slice(0, -2) : null;
+  });
+  if (labels.includes(null)) return null;
+  const ascii = labels.join('.');
   return HOST.test(ascii) ? ascii : null;
 }
 
