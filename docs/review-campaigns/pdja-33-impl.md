@@ -10,7 +10,11 @@
 
 ## Last verdict of record, and where the findings landed
 
-`REVISE` (`R-PDJA-33-SLICE-CD-4-RAW.md:4`), over `3864b641`, the round-3 repairs. The raw confirms every round-3 finding resolved. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/slice-CD-4-repair-mutation-2026-11-14.json`:
+`CONFIRM WITH EXCEPTIONS` (`R-PDJA-33-SLICE-CD-5-RAW.md:4`), over `61baeff6`, the round-4 repairs, notes only. The raw confirms CD-4's Findings 1 and 4 resolved; CD-4's Findings 2 and 3 stay with the owner. Its two notes need no change:
+- Finding 1 (note): a configuration that is unreadable or over its bound is now refused after the alternates existence probe; that probe is read (4) of 047's list, which 047 does not order.
+- Finding 2 (note): the CD-4 mutation record names `1c015d5a`; the mutated files hash the same at `61baeff6` and both mutants reproduce.
+
+Earlier: `REVISE` (`R-PDJA-33-SLICE-CD-4-RAW.md:4`), over `3864b641`, the round-3 repairs. The raw confirms every round-3 finding resolved. The repair mutants are recorded in `docs/evidence/syzygy-pdja-33/slice-CD-4-repair-mutation-2026-11-14.json`:
 
 - Finding 1 (revise): an alternates file that could not be examined was refused after the configuration was read, with no user-information statement. The alternates probe now precedes the configuration read, which is the snapshot's last read. A test pins that the EACCES refusal opens no config and carries no statement (`3e198a82`). The residual is restated, and it is now exact: no user-information statement is made on any refusal before the configuration is read. Those refusals are the reftable placeholder, an unreadable or unadmitted HEAD or reference, a `.git` that is missing, a link or a file, an alternates file that cannot be examined, and a configuration that cannot be read or exceeds its bound.
 - Findings 2 and 3 (notes): whether line 17 owes the statement before the configuration is read, and for remotes other than the identity remote. These are reading questions for the owner; not repaired.
