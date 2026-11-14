@@ -44,14 +44,16 @@ const RULE = {
   path: 'it names no path, or its path has an empty segment once normalised',
   scpPath: 'its scp-form path begins with "//"',
   transport: 'it is in Git\'s <transport>::<address> form (an scp-form path beginning with ":"), which names another transport',
+  scpHost: 'its scp-form host is a bracketed address: an scp-form host holds no ":" (046, line 17), so an IPv6 literal is admitted only in an https://, http://, git:// or ssh:// URL',
 } as const;
 
 const HOST = /^[A-Za-z0-9._-]+$/;
 const LOCATOR_SCHEME = /^([A-Za-z][A-Za-z0-9+.-]*):\/\/(.*)$/s;
 /** The scp form: an optional user name and `@`, a host holding no `/` or `:`, then `:`, then a path. */
 const SCP_FORM = /^(?:([^@/]*)@)?([^/:@]*):(.*)$/s;
-/** The scp form with a bracketed host: an optional user name and `@`, `[`, the literal, `]`, then `:`, then a path. */
-const SCP_IPV6 = /^(?:([^@/]*)@)?(\[[^\]/@]*\]):(.*)$/s;
+/** An scp-form text whose host is bracketed: an optional user name and `@`, then `[`, with a ":" before any "/" (a local path holds a "/"
+ * first). 046's scp host holds no ":", so this is refused by name rather than read as the host "[" (R-PDJA-33-RULINGS-1 finding 1). */
+const SCP_BRACKETED = /^(?:[^@/]*@)?\[[^/]*:/s;
 
 /** A host name, case-folded (046, line 15). An ASCII name is lower-cased. A name holding any other character is mapped by IDNA (UTS 46,
  * as WHATWG URL hosts are) to its punycode ASCII form, which case-folds and normalises it, so every spelling of one Unicode host
@@ -104,8 +106,8 @@ export function readLocator(input: string, kind: LocatorKind): LocatorRead {
     hostPort = at < 0 ? authority : authority.slice(at + 1);
   } else {
     // A local path holds a "/" before any ":" (or no ":"), so the scp form below never reads one: its host holds no "/" or ":".
-    // A bracketed IPv6 literal as an scp-form host ([user@][::1]:path), as Git reads it; then the plain scp form.
-    const scp = SCP_IPV6.exec(input) ?? SCP_FORM.exec(input);
+    if (SCP_BRACKETED.test(input)) return { ok: false, rule: RULE.scpHost };
+    const scp = SCP_FORM.exec(input);
     if (scp === null) return { ok: false, rule: RULE.form };
     scheme = 'scp';
     user = scp[1] ?? null; hostPort = scp[2]!; rest = scp[3]!;

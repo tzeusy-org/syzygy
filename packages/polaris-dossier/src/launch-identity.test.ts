@@ -39,6 +39,7 @@ const HOST_RULE = 'its host is empty, or is neither a host name (ASCII letters, 
 const PORT = 'its port is not a decimal number';
 const PATH_RULE = 'it names no path, or its path has an empty segment once normalised';
 const SCP_PATH = 'its scp-form path begins with "//"';
+const SCP_HOST = 'its scp-form host is a bracketed address: an scp-form host holds no ":" (046, line 17), so an IPv6 literal is admitted only in an https://, http://, git:// or ssh:// URL';
 const TRANSPORT = 'it is in Git\'s <transport>::<address> form (an scp-form path beginning with ":"), which names another transport';
 
 describe('a Unicode host normalises by IDNA to its punycode form, so every spelling of one host matches (owner ruling 2026-11-14)', () => {
@@ -70,7 +71,6 @@ describe('the admitted locator forms (046, line 17): what an operator may give',
     ['https://[::1]/a/b', '[::1]/a/b'],
     ['ssh://git@[0:0:0::1]:22/a/b', '[::1]/a/b'],
     ['https://[2001:DB8::0:1]:/a/b', '[2001:db8::1]/a/b'],
-    ['git@[::1]:a/b', '[::1]/a/b'],
     ['https://b\u00fccher.de/a/b', 'xn--bcher-kva.de/a/b'],
   ])('admits %s, normalised to %s', (input, url) => {
     expect(readLocator(input, 'operator')).toEqual({ ok: true, url: { url, host: url.split('/')[0], segments: url.split('/').slice(1) }, userInformation: input.includes('@') });
@@ -104,8 +104,12 @@ describe('the admitted locator forms (046, line 17): what an operator may give',
     ['https://[]/a/b', HOST_RULE],
     ['https://[::1]x/a/b', PORT],
     ['https://[::1]:x/a/b', PORT],
-    ['git@[::1]:a/b', 'admitted'],
-    ['git@[::1]::x', TRANSPORT],
+    // 046's scp host holds no ":": a bracketed scp host is refused by name, with or without a user, an IPv6 literal or not.
+    ['git@[::1]:a/b', SCP_HOST],
+    ['[::1]:a/b', SCP_HOST],
+    ['git@[::1]::x', SCP_HOST],
+    ['[github.com]:a/b', SCP_HOST],
+    ['[a]/b:c', FORM],                      // a "/" before the ":": a local path
     ['https://b\u00fc_cher\u2603\u0000.de/a/b', FORM],
     ['https://xn--zz\u00fc.de/a/b', HOST_RULE],   // IDNA maps it to no name
     ['https://\u00fc:1:2/a/b', HOST_RULE],      // the name before the port holds a ':'
