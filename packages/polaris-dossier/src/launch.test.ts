@@ -431,7 +431,7 @@ describe('REQ-polaris-generation-046 line 17: the remote URL read as a remote lo
       ['https://bob:hunter2@github.com/redis/redis.git?x=1', 'it carries a query or a fragment'],
       ['ftp://bob:hunter2@git.example.org/a/b.git', 'it is not in an admitted locator form'],
       ['https://bob%41:hunter2@git.example.org/a/b.git', 'its user information or host holds a percent-encoded character'],
-      ['https://bob:hunter2@git.example.org:x/a/b.git', 'its port is empty or not a decimal number'],
+      ['https://bob:hunter2@git.example.org:x/a/b.git', 'its port is not a decimal number'],
     ] as const) {
       const s = setup([]);
       const out = await run(fullClone(up.dir, url), s);

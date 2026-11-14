@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { carriesUserInformation, deriveIdentity, remoteUserInformationStatement, identityRemote, matchRecords, normaliseIdentityOption, normaliseUrl, proposeIdentity, readLocator, type MatchableRecord } from './launch-identity.js';
+import { carriesUserInformation, deriveIdentity, remoteUserInformationStatement, identityRemote, isNormalisedLocator, matchRecords, normaliseIdentityOption, normaliseUrl, proposeIdentity, readLocator, type MatchableRecord } from './launch-identity.js';
 
 /** REQ-polaris-generation-046, line 15: the identity proposal rule. Expected values are literals written from the clause, never computed
  * by the module under test. */
@@ -35,11 +35,24 @@ const QUERY = 'it carries a query or a fragment';
 const PERCENT = 'its user information or host holds a percent-encoded character';
 const CREDENTIALS = 'an https://, http:// or git:// locator carries no user information';
 const COLON = 'its user information holds a ":"';
-const HOST_RULE = 'its host is empty or holds a character other than an ASCII letter, a digit, ".", "-" or "_": Syzygy admits only host names of that grammar, narrower than REQ-polaris-generation-046 states, so an IPv6 address literal and a Unicode host name are refused (give a Unicode host in its punycode form)';
-const PORT = 'its port is empty or not a decimal number: Syzygy admits a port only as one or more decimal digits, narrower than REQ-polaris-generation-046 states';
+const HOST_RULE = 'its host is empty, or is neither a host name (ASCII letters, digits, ".", "-" and "_", or a Unicode name that IDNA maps to one), nor a bracketed IPv6 address literal';
+const PORT = 'its port is not a decimal number';
 const PATH_RULE = 'it names no path, or its path has an empty segment once normalised';
 const SCP_PATH = 'its scp-form path begins with "//"';
 const TRANSPORT = 'it is in Git\'s <transport>::<address> form (an scp-form path beginning with ":"), which names another transport';
+
+describe('a Unicode host normalises by IDNA to its punycode form, so every spelling of one host matches (owner ruling 2026-11-14)', () => {
+  it('upper or lower case, composed or decomposed, or already punycode: one normalised URL', () => {
+    const urls = ['https://B\u00dcCHER.de/a/b', 'https://b\u00fccher.de/a/b', 'https://bu\u0308cher.de/a/b', 'https://xn--bcher-kva.de/a/b', 'https://www.b\u00fccher.de:/a/b']
+      .map(u => readLocator(u, 'operator')).map(r => (r.ok ? r.url.url : r.rule));
+    expect(urls).toEqual(['xn--bcher-kva.de/a/b', 'xn--bcher-kva.de/a/b', 'xn--bcher-kva.de/a/b', 'xn--bcher-kva.de/a/b', 'xn--bcher-kva.de/a/b']);
+    expect(normaliseUrl('git@b\u00fccher.de:a/b')?.url).toBe('xn--bcher-kva.de/a/b');
+    expect(isNormalisedLocator('xn--bcher-kva.de/a/b')).toBe(true);
+    expect(isNormalisedLocator('[::1]/a/b')).toBe(true);
+    expect(isNormalisedLocator('b\u00fccher.de/a/b')).toBe(false);   // a stored URL is the normalised (punycode) form
+    expect(isNormalisedLocator('[0::1]/a/b')).toBe(false);
+  });
+});
 
 describe('the admitted locator forms (046, line 17): what an operator may give', () => {
   it.each([
@@ -52,6 +65,13 @@ describe('the admitted locator forms (046, line 17): what an operator may give',
     ['git@git.example.org:team/sub/tool.git', 'git.example.org/team/sub/tool'],
     ['git.example.org:c/d', 'git.example.org/c/d'],
     ['https://www.github.com/redis/redis/', 'github.com/redis/redis'],
+    // Widened by the owner, 2026-11-14: an empty port, a bracketed IPv6 literal (canonical form), a Unicode host (IDNA, to punycode).
+    ['https://github.com:/a/b', 'github.com/a/b'],
+    ['https://[::1]/a/b', '[::1]/a/b'],
+    ['ssh://git@[0:0:0::1]:22/a/b', '[::1]/a/b'],
+    ['https://[2001:DB8::0:1]:/a/b', '[2001:db8::1]/a/b'],
+    ['git@[::1]:a/b', '[::1]/a/b'],
+    ['https://b\u00fccher.de/a/b', 'xn--bcher-kva.de/a/b'],
   ])('admits %s, normalised to %s', (input, url) => {
     expect(readLocator(input, 'operator')).toEqual({ ok: true, url: { url, host: url.split('/')[0], segments: url.split('/').slice(1) }, userInformation: input.includes('@') });
   });
@@ -79,11 +99,20 @@ describe('the admitted locator forms (046, line 17): what an operator may give',
     ['ssh://git@git.example.org:22//a/b', PATH_RULE],
     ['git@h:/a/b', 'admitted'],
     ['https://git.example.org:x/a/b', PORT],
-    ['https://[::1]/a/b', HOST_RULE],
-    ['ssh://git@[::1]:22/a/b', HOST_RULE],
-    ['https://b\u00fccher.de/a/b', HOST_RULE],
+    ['https://[::1/a/b', HOST_RULE],
+    ['https://[zz::1]/a/b', HOST_RULE],
+    ['https://[]/a/b', HOST_RULE],
+    ['https://[::1]x/a/b', PORT],
+    ['https://[::1]:x/a/b', PORT],
+    ['git@[::1]:a/b', 'admitted'],
+    ['git@[::1]::x', TRANSPORT],
+    ['https://b\u00fc_cher\u2603\u0000.de/a/b', FORM],
+    ['https://xn--zz\u00fc.de/a/b', HOST_RULE],   // IDNA maps it to no name
+    ['https://\u00fc:1:2/a/b', HOST_RULE],      // the name before the port holds a ':'
+    ['ssh://\u00fc]x/a/b', HOST_RULE],
+    ['https://\u00fc!.de/a/b', HOST_RULE],       // IDNA maps it to xn--!-dha.de, which is no host name
+    ['https://\u00fc%2ecom/a/b', PERCENT],       // refused before IDNA, which would percent-decode it to xn--tda.com
     ['https://xn--bcher-kva.de/a/b', 'admitted'],
-    ['https://github.com:/a/b', PORT],
     ['h:/a', 'admitted'],
     ['.h:a/b', 'admitted'],
     ['./x:y/z', FORM],

@@ -11,6 +11,8 @@
  * carry more than one identity and the operator gives none, Syzygy SHALL propose none and SHALL refuse before asking". The identity and
  * the URL are Inferred; the URL is a locator hint and never the identity. */
 
+import { domainToASCII } from 'node:url';
+
 export type IdentitySource = 'operator-option' | 'matching-records' | 'derived';
 
 export interface NormalisedUrl { readonly url: string; readonly host: string; readonly segments: readonly string[] }
@@ -37,8 +39,8 @@ const RULE = {
   colon: 'its user information holds a ":"',
   emptyUser: 'it has an "@" with no user name before it',
   // The host and port grammars are narrower than 046's "a host, an optional port"; each refusal says so (R-PDJA-33-SLICE-C-1 finding 4).
-  host: 'its host is empty or holds a character other than an ASCII letter, a digit, ".", "-" or "_": Syzygy admits only host names of that grammar, narrower than REQ-polaris-generation-046 states, so an IPv6 address literal and a Unicode host name are refused (give a Unicode host in its punycode form)',
-  port: 'its port is empty or not a decimal number: Syzygy admits a port only as one or more decimal digits, narrower than REQ-polaris-generation-046 states',
+  host: 'its host is empty, or is neither a host name (ASCII letters, digits, ".", "-" and "_", or a Unicode name that IDNA maps to one), nor a bracketed IPv6 address literal',
+  port: 'its port is not a decimal number',
   path: 'it names no path, or its path has an empty segment once normalised',
   scpPath: 'its scp-form path begins with "//"',
   transport: 'it is in Git\'s <transport>::<address> form (an scp-form path beginning with ":"), which names another transport',
@@ -48,6 +50,25 @@ const HOST = /^[A-Za-z0-9._-]+$/;
 const LOCATOR_SCHEME = /^([A-Za-z][A-Za-z0-9+.-]*):\/\/(.*)$/s;
 /** The scp form: an optional user name and `@`, a host holding no `/` or `:`, then `:`, then a path. */
 const SCP_FORM = /^(?:([^@/]*)@)?([^/:@]*):(.*)$/s;
+/** The scp form with a bracketed host: an optional user name and `@`, `[`, the literal, `]`, then `:`, then a path. */
+const SCP_IPV6 = /^(?:([^@/]*)@)?(\[[^\]/@]*\]):(.*)$/s;
+
+/** A host name, case-folded (046, line 15). An ASCII name is lower-cased. A name holding any other character is mapped by IDNA (UTS 46,
+ * as WHATWG URL hosts are) to its punycode ASCII form, which case-folds and normalises it, so every spelling of one Unicode host
+ * (upper or lower case, composed or decomposed, or already in punycode) normalises to the same text. Null where it is no host name. */
+function hostName(name: string): string | null {
+  if (/^[\x00-\x7f]*$/.test(name)) return HOST.test(name) ? name.toLowerCase() : null;
+  // IDNA maps a name holding a forbidden host code point (':', '@', '[', ']', a space…) to ''. A '%', which it would percent-decode, and a
+  // '/', at which it would stop, never reach here: the percent rule refuses the first, and the authority or scp host ends before the second.
+  const ascii = domainToASCII(name);
+  return HOST.test(ascii) ? ascii : null; // an empty mapping fails HOST too
+}
+
+/** A bracketed IPv6 literal in its canonical form (lower case, the longest run of zero groups compressed), brackets kept; null where the
+ * text between the brackets is not an IPv6 address. */
+function ipv6Literal(inner: string): string | null {
+  try { return new URL(`http://[${inner}]/`).hostname; } catch { return null; }
+}
 
 /** Whether a URL holds user information before its host, in either shape, whether or not it is otherwise admitted as a locator: an `@` in a
  * scheme URL's authority (which ends at the first `/`, `?` or `#`), or a user name before an scp-form host. Read for every url line at the
@@ -83,7 +104,8 @@ export function readLocator(input: string, kind: LocatorKind): LocatorRead {
     hostPort = at < 0 ? authority : authority.slice(at + 1);
   } else {
     // A local path holds a "/" before any ":" (or no ":"), so the scp form below never reads one: its host holds no "/" or ":".
-    const scp = SCP_FORM.exec(input);
+    // A bracketed IPv6 literal as an scp-form host ([user@][::1]:path), as Git reads it; then the plain scp form.
+    const scp = SCP_IPV6.exec(input) ?? SCP_FORM.exec(input);
     if (scp === null) return { ok: false, rule: RULE.form };
     scheme = 'scp';
     user = scp[1] ?? null; hostPort = scp[2]!; rest = scp[3]!;
@@ -98,17 +120,28 @@ export function readLocator(input: string, kind: LocatorKind): LocatorRead {
     if (user.includes(':')) return { ok: false, rule: RULE.colon };
     if (user === '') return { ok: false, rule: RULE.emptyUser };
   }
-  let host = hostPort;
-  if (/[[\]]/.test(hostPort)) return { ok: false, rule: RULE.host };   // a bracketed address literal is not a host name the rule names
-  if (scheme !== 'scp') {
-    const colon = hostPort.lastIndexOf(':');
-    if (colon >= 0) {
-      if (!/^\d+$/.test(hostPort.slice(colon + 1))) return { ok: false, rule: RULE.port };
-      host = hostPort.slice(0, colon);
+  // The owner widened the host and port rules to all 046 states (2026-11-14): a bracketed IPv6 literal, a Unicode host name and an empty
+  // port are admitted. The port, empty or not, is removed.
+  let host: string | null;
+  if (hostPort.startsWith('[')) {
+    const close = hostPort.indexOf(']');
+    const after = close < 0 ? '' : hostPort.slice(close + 1);
+    if (close < 0) return { ok: false, rule: RULE.host };
+    if (after !== '' && !/^:\d*$/.test(after)) return { ok: false, rule: RULE.port };
+    host = ipv6Literal(hostPort.slice(1, close));
+  } else {
+    let name = hostPort;
+    if (scheme !== 'scp') {
+      const colon = hostPort.lastIndexOf(':');
+      if (colon >= 0) {
+        if (!/^\d*$/.test(hostPort.slice(colon + 1))) return { ok: false, rule: RULE.port };
+        name = hostPort.slice(0, colon);
+      }
     }
+    host = hostName(name);
   }
-  if (!HOST.test(host)) return { ok: false, rule: RULE.host };
-  host = host.toLowerCase().replace(/^www\./, '');
+  if (host === null) return { ok: false, rule: RULE.host };
+  host = host.replace(/^www\./, '');
   // No slash is collapsed: a URL's path begins after the authority's one '/', so a leading empty segment (https://h//a/b) is refused as
   // an inner one is; an scp-form path may begin with one '/' (h:/a/b), its second already refused (R-PDJA-33-SLICE-C-1 finding 2).
   let pathPart = scheme === 'scp' ? rest.replace(/^\//, '') : rest;
