@@ -113,6 +113,14 @@ with patch.object(Path, 'read_text', return_value='999999999 (foreign) ' + ' '.j
         patch('os.readlink', side_effect=AssertionError('foreign UID namespace was inspected')):
     assert guardian['identity'](999999999)[4:] == (UID + 1, None)
     assert identity(999999999)['namespace'] is None
+# Fields after the start identity are unused; retained tokens and malformed
+# prefix refusals must be independent of the unconsumed stat/prose tail.
+for suffix in ('', ' extra ignored fields', '\tunused\ntrailing prose', '\u00a0unused'):
+    for whitespace in (' ', '\t', '\u00a0'):
+        text = '999999999 (synthetic ) name) ' + whitespace.join(foreign_fields) + suffix
+        with patch('io.open', mock_open(read_data=text)), \
+                patch('os.stat', return_value=SimpleNamespace(st_uid=UID + 1)):
+            assert guardian['identity'](999999999) == (999999999, 'foreign-start', 123, 'S', UID + 1, None)
 stop = guardian['stop']
 ports = stop.__globals__
 row = (999999999, 'original-start', ROOT, 'S', UID, NAMESPACE)

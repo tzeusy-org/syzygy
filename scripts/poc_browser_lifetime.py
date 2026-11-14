@@ -34,7 +34,9 @@ def identity(pid, *, with_namespace=True):
     directory = f'/proc/{pid}'
     try:
         text = read_stat_text(directory + '/stat')
-        fields = text[text.rfind(')') + 2:].split()
+        # Only state, parent and start identity (fields 0, 1 and 19) are read.
+        # Keep those tokens exact without allocating every unused stat field.
+        fields = text[text.rfind(')') + 2:].split(None, 20)
         owner = os.stat(directory).st_uid
         # Namespace links for another UID may be unreadable on a normal
         # host. Retain its parent metadata so a foreign-UID descendant is
