@@ -63,6 +63,22 @@ const openReader = () => ({ listTree: async () => [{ path: 'src/server.c' }] }) 
 const deps = (over: Partial<GateSources> = {}) => ({ sources: sources(over), now: () => NOW, recordId: () => 'choice-0123456789abcdef', openReader });
 const allow = (run: string, revision = REV, declarations = ALL, over: Partial<GateSources> = {}) => allowExecution(run, { revision, declarations }, deps(over));
 
+// syzygy-bpyt.8.11: the launched refusals, as literals, and the disclosures every allow-execution refusal carries.
+const LAUNCHED_REASON = 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing';
+const UNREADABLE_REASON = 'this run\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)';
+const REFUSAL_DISCLOSURES = [
+  'Syzygy cannot observe who ran allow-execution or whether the owner attends the session: both are the operator\'s declaration, labelled Inferred.',
+  'This per-run execution choice is not an execution consent (RFC5-12, SOURCE-POLICY.md): it is never read, stored or reported as one, and it approves no execution profile.',
+  'the consent, registry, policy and statement records the gates read lie in Syzygy\'s checkout, which the agent sessions can write; Syzygy re-reads and re-checks them at every step, and cannot rule out that a session changed them',
+  'The choice is stored in the run directory, which the agent sessions can write; read back, it is Inferred.',
+];
+const UNREADABLE_MARKERS: [string, (marker: string) => void][] = [
+  ['an empty file', (marker) => fs.writeFileSync(marker, '')],
+  ['invalid JSON', (marker) => fs.writeFileSync(marker, '{"format": "polaris-dossier-launched/1"')],
+  ['another format', (marker) => fs.writeFileSync(marker, '{"format": "polaris-dossier-launched/2"}')],
+  ['a directory', (marker) => fs.mkdirSync(marker)],
+];
+
 describe('allow-execution: recorded', () => {
   it('records one run and its pinned revision, what it covers, the three declarations as Inferred, and that it is no consent', async () => {
     const run = runDirectory();
@@ -180,6 +196,31 @@ describe('allow-execution: refused', () => {
   it('refuses a directory that is not a run directory', async () => {
     expect(await allow(runDirectory(true, 'not-a-run'))).toMatchObject({ ok: false, refusal: { stage: 'run' } });
   });
+
+  // syzygy-bpyt.8.11: the library refuses a launched run itself, so no caller can record a choice beside a launched marker.
+  it('refuses a launched run and records nothing', async () => {
+    const run = runDirectory();
+    writeLaunchedMarker(run, RUN_ID, NOW);
+    expect(await allow(run)).toEqual({ ok: false, refusal: { command: 'allow-execution', outcome: 'refused', stage: 'launched', reason: LAUNCHED_REASON, disclosures: REFUSAL_DISCLOSURES } });
+    nothingWritten(run);
+  });
+
+  it.each(UNREADABLE_MARKERS)('refuses a run whose launched marker is %s, as a launched run, and records nothing', async (_name, plant) => {
+    const run = runDirectory();
+    plant(path.join(run, 'launched.json'));
+    expect(await allow(run)).toEqual({ ok: false, refusal: { command: 'allow-execution', outcome: 'refused', stage: 'launched', reason: UNREADABLE_REASON, disclosures: REFUSAL_DISCLOSURES } });
+    nothingWritten(run);
+  });
+
+  it('checks the marker before every other refusal, where the CLI checked it before', async () => {
+    const misnamed = runDirectory(true, 'not-a-run');
+    writeLaunchedMarker(misnamed, RUN_ID, NOW);
+    expect(await allow(misnamed)).toMatchObject({ ok: false, refusal: { stage: 'launched' } });
+    const run = runDirectory(false);
+    writeLaunchedMarker(run, RUN_ID, NOW);
+    expect(await allow(run, 'f'.repeat(40), ['owner-attends'], { d9: async () => ({ state: 'absent', why: 'no act' }) })).toMatchObject({ ok: false, refusal: { stage: 'launched' } });
+    nothingWritten(run);
+  });
 });
 
 describe('the stored choice is read strictly and never as a consent (R3-F7)', () => {
@@ -252,21 +293,32 @@ describe('syzygy dossier allow-execution', () => {
     writeLaunchedMarker(run, RUN_ID, NOW);
     const result = await choose(run);
     expect(result.code).toBe(1);
-    expect(JSON.parse(result.stdout)).toEqual({ command: 'allow-execution', outcome: 'refused', stage: 'launched', reason: 'this run was launched by `syzygy polaris`, and Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9); a launched run executes nothing' });
+    expect(JSON.parse(result.stdout)).toEqual({ command: 'allow-execution', outcome: 'refused', stage: 'launched', reason: LAUNCHED_REASON, disclosures: REFUSAL_DISCLOSURES });
     expect(fs.existsSync(path.join(run, 'execution-choice.json'))).toBe(false);
   });
 
-  it.each([
-    ['an empty file', (marker: string) => fs.writeFileSync(marker, '')],
-    ['invalid JSON', (marker: string) => fs.writeFileSync(marker, '{"format": "polaris-dossier-launched/1"')],
-    ['another format', (marker: string) => fs.writeFileSync(marker, '{"format": "polaris-dossier-launched/2"}')],
-    ['a directory', (marker: string) => fs.mkdirSync(marker)],
-  ])('refuses a run whose launched marker is %s, as a launched run, and records nothing', async (_name, plant) => {
+  it.each(UNREADABLE_MARKERS)('refuses a run whose launched marker is %s, as a launched run, and records nothing', async (_name, plant) => {
     const run = runDirectory();
     plant(path.join(run, 'launched.json'));
     const result = await choose(run);
     expect(result.code).toBe(1);
-    expect(JSON.parse(result.stdout)).toEqual({ command: 'allow-execution', outcome: 'refused', stage: 'launched', reason: 'this run\'s launched marker is present but cannot be read as the one `syzygy polaris` writes, so the run is treated as launched: Syzygy never gives the execution instruction to a session it started (SEC-3, as amended by D9)' });
+    expect(JSON.parse(result.stdout)).toEqual({ command: 'allow-execution', outcome: 'refused', stage: 'launched', reason: UNREADABLE_REASON, disclosures: REFUSAL_DISCLOSURES });
+    expect(fs.existsSync(path.join(run, 'execution-choice.json'))).toBe(false);
+  });
+
+  // syzygy-bpyt.8.11 (owner answer pr652-refusal-disclosures): the text form carries the four disclosures as stderr lines, in order.
+  it('renders the launched refusal\'s four disclosures as text lines disclosures.0 to disclosures.3, in order', async () => {
+    const run = runDirectory();
+    writeLaunchedMarker(run, RUN_ID, NOW);
+    const result = await cli(['allow-execution', run, '--revision', REV, '--declare', ALL.join(',')]);
+    expect(result.code).toBe(1);
+    expect(result.stderr.split('\n')).toContain('stage: launched');
+    expect(result.stderr.split('\n').filter((line) => line.startsWith('disclosures'))).toEqual([
+      `disclosures.0: ${REFUSAL_DISCLOSURES[0]}`,
+      `disclosures.1: ${REFUSAL_DISCLOSURES[1]}`,
+      `disclosures.2: ${REFUSAL_DISCLOSURES[2]}`,
+      `disclosures.3: ${REFUSAL_DISCLOSURES[3]}`,
+    ]);
     expect(fs.existsSync(path.join(run, 'execution-choice.json'))).toBe(false);
   });
 });
