@@ -41,7 +41,16 @@ export interface LaunchRecordCommon {
   readonly phrase: string;
   readonly terminal: string;
   readonly question: string;
+  /** An observation consent's recorded scope (046, line 21): `copy`, held in the copy REQ-polaris-generation-047 makes from the operator's
+   * own clone with no network request by Syzygy (version 1.2, every record written now); `operator-clone`, held in the operator's own clone
+   * with no fetch by Syzygy (the scope version 1.1 recorded, read back unchanged). Absent on a statement. */
+  readonly observationScope?: ObservationScope;
 }
+export type ObservationScope = 'copy' | 'operator-clone';
+const SCOPE_TAIL: Readonly<Record<ObservationScope, string>> = {
+  copy: 'held in the copy that REQ-polaris-generation-047 makes from the operator\'s own clone, with no network request by Syzygy',
+  'operator-clone': 'held in the operator\'s own clone; Syzygy fetches nothing',
+};
 export interface ProviderFields { readonly agentTool: string; readonly provider: string; readonly contentClasses: readonly string[] }
 export type LaunchRecord = LaunchRecordCommon & { readonly provider?: ProviderFields };
 
@@ -78,7 +87,7 @@ export function renderLaunchRecord(r: LaunchRecord): string {
   if (r.recordClass === 'observation-consent') {
     lines.push(
       `Pinned revision: \`${r.revision}\``, '',
-      `Scope: the commit object \`${r.revision}\` and the tree and blob objects reachable from its root tree, and nothing else, held in the operator's own clone; Syzygy fetches nothing`, '',
+      `Scope: the commit object \`${r.revision}\` and the tree and blob objects reachable from its root tree, and nothing else, ${SCOPE_TAIL[r.observationScope ?? 'copy']}`, '',
     );
   } else if (r.recordClass === 'drawer-statement') {
     lines.push(
@@ -129,7 +138,9 @@ export function parseLaunchRecord(text: string): ParsedLaunchRecord {
   if (sha256(content) !== m[1]) return { ok: false, why: 'the record\'s bytes do not hash to the content digest it binds' };
   const recordClass = one(text, /^Record class: `(observation-consent|drawer-statement|provider-statement)`$/gm) as LaunchRecordClass | null;
   const recordId = one(text, /^Record ID: `(LAUNCH-[A-Z]+-[0-9a-f]{12}-\d{8}T\d{6}Z-[0-9a-f]{8})`$/gm);
-  const identity = one(text, /^Repository identity: `(repository:[a-z0-9][a-z0-9._-]*)` \[Inferred\]: proposed from (.+) and declared by the owner's phrase$/gm);
+  // The identity by REQ-polaris-generation-046's grammar (line 15: a-z, 0-9, '.', '_', '-'), so Syzygy reads back every launch record it
+  // writes (the owner's ruling of 2026-11-14, "Widen all readers now").
+  const identity = one(text, /^Repository identity: `(repository:[a-z0-9._-]+)` \[Inferred\]: proposed from (.+) and declared by the owner's phrase$/gm);
   const identitySource = one(text, /^Repository identity: `[^`]+` \[Inferred\]: proposed from (.+) and declared by the owner's phrase$/gm);
   const normalisedUrl = one(text, /^Normalised URL: `([^`\n]+)` \[Inferred\]: from /gm);
   const urlSource = one(text, /^Normalised URL: `[^`\n]+` \[Inferred\]: from (.+); a locator hint, never the identity; /gm);
@@ -158,10 +169,16 @@ export function parseLaunchRecord(text: string): ParsedLaunchRecord {
     if (agentTool === null || name === null || at < 0) return { ok: false, why: 'the provider statement does not name exactly one agent tool and provider' };
     provider = { agentTool, provider: name, contentClasses: classes };
   }
+  let observationScope: ObservationScope | undefined;
+  if (recordClass === 'observation-consent') {
+    const tail = one(text, /^Scope: the commit object `[0-9a-f]+` and the tree and blob objects reachable from its root tree, and nothing else, (.+)$/gm);
+    observationScope = tail === SCOPE_TAIL['operator-clone'] ? 'operator-clone' : tail === SCOPE_TAIL.copy ? 'copy' : undefined;
+    if (observationScope === undefined) return { ok: false, why: 'the observation consent does not record a scope the launch record form writes' };
+  }
   const record: LaunchRecord = {
     recordClass, recordId, identity, identitySource, normalisedUrl, urlSource, publicDeclaration, revision, grantInstant,
     supersedes: supersedesRaw === 'none' ? null : supersedesRaw.slice(1, -1), phrase, terminal, question,
-    ...(provider === undefined ? {} : { provider }),
+    ...(provider === undefined ? {} : { provider }), ...(observationScope === undefined ? {} : { observationScope }),
   };
   let again: string;
   try { again = renderLaunchRecord(record); } catch { return { ok: false, why: 'the record cannot be rendered back' }; }

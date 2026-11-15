@@ -42,6 +42,17 @@ describe('the live rule', () => {
     });
   });
 
+  it('reads a placement\'s repository by 046\'s identity grammar, and places only for that exact repository (the owner\'s ruling of 2026-11-14)', () => {
+    const C = '498ecd0d6d007db11ddb3aea9428552598a78622';
+    const placing = (repository: string) => read(withField('ownerPlacements', [{ repository, commits: [C], paths: ['tls.md'] }]));
+    for (const repository of ['repository:nodejs-node.js', 'repository:_a', 'repository:-x', 'repository:.dot_files']) expect(placing(repository).ok).toBe(true);
+    for (const repository of ['repository:', 'repository:Nodejs-node.js', 'repository:a/b', 'repository:a~b', 'nodejs-node.js']) expect(placing(repository)).toEqual({ ok: false, why: 'its project-documentation rule ownerPlacements is unreadable' });
+    const rule = ruleOf(withField('ownerPlacements', [{ repository: 'repository:a.b', commits: [C], paths: ['tls.md'] }]));
+    expect(documentationPathRules('tls.md', rule, { repository: 'repository:a.b', commit: C })).toEqual(['owner-placement']);
+    // '.' and '-' are two identities: a placement for one never places for the other.
+    expect(documentationPathRules('tls.md', rule, { repository: 'repository:a-b', commit: C })).toEqual([]);
+  });
+
   // "a path with one segment whose name, after removing rootStemNumericPrefix when it is present and then one suffix from
   // documentSuffixes (any that fits), is one of rootStems"
   it.each<[string, string[]]>([

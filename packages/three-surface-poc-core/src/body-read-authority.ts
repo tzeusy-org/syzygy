@@ -342,7 +342,9 @@ export interface BodyReadAuthorityEvaluation {
 
 // The owner-act field rules both owner-act evaluators share live in
 // `act-fields.ts`; these two are this gate's own.
-const REPOSITORY_IDENTITY = /^repository:[a-z0-9][a-z0-9-]*$/;
+// REQ-polaris-generation-046's identity grammar (line 15: a-z, 0-9, '.', '_', '-'); an identity is still compared exactly with the configured
+// one, so a well-formed other identity is `wrong`, never admitted (the owner's ruling of 2026-11-14, "Widen all readers now").
+const REPOSITORY_IDENTITY = /^repository:[a-z0-9._-]+$/;
 const SEMVER = /^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/;
 
 function isString(value: unknown): value is string {

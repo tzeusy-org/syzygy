@@ -1,0 +1,302 @@
+{
+  "subject": "syzygy-pdja.33 R-PDJA-33-RULINGS-2 repairs (72ab522a, fe05f21c, 609256da, 1b748c0e)",
+  "date": "2026-11-14",
+  "note": "Rule-6 mutants for the R-PDJA-33-RULINGS-2 repairs, each section at its own commit. Each mutant was applied alone, the named test files run with npx vitest run, and the file restored byte-identical. 19 mutants, 19 killed.",
+  "identitySweep": {
+    "purpose": "Finding 1: every regex in packages, apps and scripts (tests excluded) that validates a repository identity or an id that carries one.",
+    "population": "git ls-files packages apps scripts, extension .ts .tsx .mjs .js .cjs .py .sh, excluding paths containing /dist/, .test., /fixtures/ or .testkit.: 476 files, 704 lines holding a regex literal with a bracket class.",
+    "regex": "(?<![\\w)\\]])/\\^?[^/\\n]*\\[[^\\]\\n]+\\][^/\\n]*/[a-z]*|re\\.compile\\(r?[\"\\'][^\"\\'\\n]*\\[[^\\]\\n]+\\]",
+    "regexFlags": "Python re, no flags; applied per line",
+    "identityWindow": {
+      "regex": "repositoryId|repository_id|repository:|REPOSITORY|repoId|repo_id|idPattern|identity|IDENTITY|subject",
+      "flags": "re.I",
+      "window": "3 lines before and after the regex line"
+    },
+    "hitLines": 126,
+    "identityReaders": [
+      "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts:130 (widened 72ab522a)",
+      "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts:85 (widened 72ab522a)",
+      "packages/polaris-generation-core/src/generation-source.ts:165 (widened 72ab522a)",
+      "packages/polaris-dossier/src/launch-identity.ts:22 (5ef9dabd)",
+      "packages/polaris-dossier/src/launch-record.ts:143 (0be2c2f8)",
+      "packages/polaris-dossier/src/run-record.ts:168 (8623cf0e)",
+      "packages/polaris-generation-consent/src/package-reader.ts:187 and 204 (cd303259)",
+      "packages/polaris-generation-core/src/public-source-classification.ts:87 (e007eee3)",
+      "packages/three-surface-poc-core/src/body-read-authority.ts:347 (44777bc1)",
+      "scripts/differential_consent_act_families.mjs:837 (not widened: an evidence tool reading the two fixed instance files to set a probe; it gates nothing, and the lead directed it be left unchanged)"
+    ],
+    "identityWriters": [
+      "packages/polaris-dossier/src/launch-identity.ts:186 and 194: derivation replaces every character outside [a-z0-9._-] by \"-\"; they write the grammar, they validate nothing"
+    ],
+    "otherHits": "The remaining hit lines validate or parse commit and object ids, digests, act, record, project, provider, walkthrough, evaluation, campaign and response-identity keys, GitHub URLs, refs, paths, HTML attributes or Markdown fields; none reads a repository identity.",
+    "secondMethod": "Lines in the same population naming repositoryId, repository:, repoId, idPattern or REPOSITORY together with .test(, .exec(, .match( or re.match/fullmatch/search(: 11 lines, every one inside the readers above or admission-record.ts:68 (isNullableText, no grammar).",
+    "whyFirstSweepMissed": "The first sweep's predicates were 'repository:' followed by a character class or capture, '[Rr]epositoryId[^\\n]{0,80}/\\^' (the name before the regex on the same line) and '[a-z0-9][a-z0-9'. generation-source.ts and repo-corpus.ts put the regex before the name ('/^[...]+$/u.test(source.repositoryId)'), dossier-trigger.ts names the pattern idPattern on another line, and all three classes begin [A-Za-z0-9 (upper case first), so no predicate matched. The re-sweep keys on every bracket-class regex and an identity word within three lines, in either order."
+  },
+  "sections": [
+    {
+      "finding": "1: the three missed identity readers",
+      "commit": "72ab522a",
+      "mutants": [
+        {
+          "id": "R1-DT-nodot",
+          "file": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts",
+          "old": "/^[A-Za-z0-9:._-]+$/u;",
+          "new": "/^[A-Za-z0-9:_-]+$/u;",
+          "commit": "72ab522afb361641c8bebe761967a47d6ccf9aa6",
+          "tests": "Tests  1 failed | 32 passed (33)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "9d549ec4c3eb907eb0a3943e522a9904a03e6ea4fb5dff0fa2826383725b1557",
+          "commands": [
+            "npx vitest run apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts"
+          ]
+        },
+        {
+          "id": "R1-DT-slash",
+          "file": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts",
+          "old": "/^[A-Za-z0-9:._-]+$/u;",
+          "new": "/^[A-Za-z0-9:._/-]+$/u;",
+          "commit": "72ab522afb361641c8bebe761967a47d6ccf9aa6",
+          "tests": "Tests  1 failed | 32 passed (33)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "9d549ec4c3eb907eb0a3943e522a9904a03e6ea4fb5dff0fa2826383725b1557",
+          "commands": [
+            "npx vitest run apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts"
+          ]
+        },
+        {
+          "id": "R1-DT-noanchor",
+          "file": "apps/three-surface-poc/src/polaris-generation/dossier-trigger.ts",
+          "old": "/^[A-Za-z0-9:._-]+$/u;",
+          "new": "/^[A-Za-z0-9:._-]+/u;",
+          "commit": "72ab522afb361641c8bebe761967a47d6ccf9aa6",
+          "tests": "Tests  1 failed | 32 passed (33)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "9d549ec4c3eb907eb0a3943e522a9904a03e6ea4fb5dff0fa2826383725b1557",
+          "commands": [
+            "npx vitest run apps/three-surface-poc/src/polaris-generation/dossier-trigger.test.ts"
+          ]
+        },
+        {
+          "id": "R1-RC-nodot",
+          "file": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+          "old": "/^[A-Za-z0-9:._-]+$/u.test(repositoryId)",
+          "new": "/^[A-Za-z0-9:_-]+$/u.test(repositoryId)",
+          "commit": "72ab522afb361641c8bebe761967a47d6ccf9aa6",
+          "tests": "Tests  1 failed | 21 passed (22)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "8a45cfc6e802248fb27315cd383ac0ccda1dc7073feae9616055703cd7680ca2",
+          "commands": [
+            "npx vitest run apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts"
+          ]
+        },
+        {
+          "id": "R1-RC-slash",
+          "file": "apps/three-surface-poc/src/polaris-generation/repo-corpus.ts",
+          "old": "/^[A-Za-z0-9:._-]+$/u.test(repositoryId)",
+          "new": "/^[A-Za-z0-9:._/-]+$/u.test(repositoryId)",
+          "commit": "72ab522afb361641c8bebe761967a47d6ccf9aa6",
+          "tests": "Tests  1 failed | 21 passed (22)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "8a45cfc6e802248fb27315cd383ac0ccda1dc7073feae9616055703cd7680ca2",
+          "commands": [
+            "npx vitest run apps/three-surface-poc/src/polaris-generation/repo-corpus.test.ts"
+          ]
+        },
+        {
+          "id": "R1-GS-nodot",
+          "file": "packages/polaris-generation-core/src/generation-source.ts",
+          "old": "/^[A-Za-z0-9:._-]+$/u.test(source.repositoryId)",
+          "new": "/^[A-Za-z0-9:_-]+$/u.test(source.repositoryId)",
+          "commit": "72ab522afb361641c8bebe761967a47d6ccf9aa6",
+          "tests": "Tests  1 failed | 17 passed (18)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "a74fd1b9b9c1b6992f8babbdb392f0db6dbb7a628e6fa72c27892443713c3705",
+          "commands": [
+            "npx vitest run packages/polaris-generation-core/src/generation-source.test.ts"
+          ]
+        },
+        {
+          "id": "R1-GS-slash",
+          "file": "packages/polaris-generation-core/src/generation-source.ts",
+          "old": "/^[A-Za-z0-9:._-]+$/u.test(source.repositoryId)",
+          "new": "/^[A-Za-z0-9:._/-]+$/u.test(source.repositoryId)",
+          "commit": "72ab522afb361641c8bebe761967a47d6ccf9aa6",
+          "tests": "Tests  1 failed | 17 passed (18)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "a74fd1b9b9c1b6992f8babbdb392f0db6dbb7a628e6fa72c27892443713c3705",
+          "commands": [
+            "npx vitest run packages/polaris-generation-core/src/generation-source.test.ts"
+          ]
+        },
+        {
+          "id": "R1-GS-tilde",
+          "file": "packages/polaris-generation-core/src/generation-source.ts",
+          "old": "/^[A-Za-z0-9:._-]+$/u.test(source.repositoryId)",
+          "new": "/^[A-Za-z0-9:._~-]+$/u.test(source.repositoryId)",
+          "commit": "72ab522afb361641c8bebe761967a47d6ccf9aa6",
+          "tests": "Tests  1 failed | 17 passed (18)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "a74fd1b9b9c1b6992f8babbdb392f0db6dbb7a628e6fa72c27892443713c3705",
+          "commands": [
+            "npx vitest run packages/polaris-generation-core/src/generation-source.test.ts"
+          ]
+        },
+        {
+          "id": "R1-GS-noanchor",
+          "file": "packages/polaris-generation-core/src/generation-source.ts",
+          "old": "/^[A-Za-z0-9:._-]+$/u.test(source.repositoryId)",
+          "new": "/^[A-Za-z0-9:._-]+/u.test(source.repositoryId)",
+          "commit": "72ab522afb361641c8bebe761967a47d6ccf9aa6",
+          "tests": "Tests  1 failed | 17 passed (18)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "a74fd1b9b9c1b6992f8babbdb392f0db6dbb7a628e6fa72c27892443713c3705",
+          "commands": [
+            "npx vitest run packages/polaris-generation-core/src/generation-source.test.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "finding": "2: per-label IDNA host rule, no IPv4 reading or xn-- validation; corrects 96613e8c's 'no identity changes' (false for every host it refused)",
+      "commit": "fe05f21c",
+      "mutants": [
+        {
+          "id": "R2-whole-name-idna",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "  const labels = name.split('.').map(label => {\n    if (/^[\\x00-\\x7f]*$/.test(label)) return label.toLowerCase();\n    const mapped = domainToASCII(`${label}.x`);\n    return mapped.endsWith('.x') && mapped.length > 2 ? mapped.slice(0, -2) : null;\n  });\n  if (labels.includes(null)) return null;\n  const ascii = labels.join('.');",
+          "new": "  const ascii = domainToASCII(name);",
+          "commit": "fe05f21c4ffe0d90f23f78585d716618ec183503",
+          "tests": "Tests  1 failed | 110 passed (111)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "1b360ab546375881c1657d0bdb09e7235334867bd6aa7b9ee3ff828b625eb070",
+          "commands": [
+            "npx vitest run packages/polaris-dossier/src/launch-identity.test.ts"
+          ]
+        },
+        {
+          "id": "R2-no-x-suffix",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "const mapped = domainToASCII(`${label}.x`);\n    return mapped.endsWith('.x') && mapped.length > 2 ? mapped.slice(0, -2) : null;",
+          "new": "const mapped = domainToASCII(label);\n    return mapped === '' ? null : mapped;",
+          "commit": "fe05f21c4ffe0d90f23f78585d716618ec183503",
+          "tests": "Tests  1 failed | 110 passed (111)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "1b360ab546375881c1657d0bdb09e7235334867bd6aa7b9ee3ff828b625eb070",
+          "commands": [
+            "npx vitest run packages/polaris-dossier/src/launch-identity.test.ts"
+          ]
+        },
+        {
+          "id": "R2-ascii-no-lowercase",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "return label.toLowerCase();",
+          "new": "return label;",
+          "commit": "fe05f21c4ffe0d90f23f78585d716618ec183503",
+          "tests": "Tests  3 failed | 108 passed (111)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "1b360ab546375881c1657d0bdb09e7235334867bd6aa7b9ee3ff828b625eb070",
+          "commands": [
+            "npx vitest run packages/polaris-dossier/src/launch-identity.test.ts"
+          ]
+        },
+        {
+          "id": "R2-ascii-through-idna",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "if (/^[\\x00-\\x7f]*$/.test(label)) return label.toLowerCase();",
+          "new": "if (false) return label.toLowerCase();",
+          "commit": "fe05f21c4ffe0d90f23f78585d716618ec183503",
+          "tests": "Tests  2 failed | 109 passed (111)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "1b360ab546375881c1657d0bdb09e7235334867bd6aa7b9ee3ff828b625eb070",
+          "commands": [
+            "npx vitest run packages/polaris-dossier/src/launch-identity.test.ts"
+          ]
+        },
+        {
+          "id": "R2-empty-mapping-admitted",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "mapped.endsWith('.x') && mapped.length > 2 ?",
+          "new": "mapped.endsWith('.x') ?",
+          "commit": "fe05f21c4ffe0d90f23f78585d716618ec183503",
+          "tests": "Tests  1 failed | 110 passed (111)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "1b360ab546375881c1657d0bdb09e7235334867bd6aa7b9ee3ff828b625eb070",
+          "commands": [
+            "npx vitest run packages/polaris-dossier/src/launch-identity.test.ts"
+          ]
+        },
+        {
+          "id": "R2-null-label-joined",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "  if (labels.includes(null)) return null;\n",
+          "new": "",
+          "commit": "fe05f21c4ffe0d90f23f78585d716618ec183503",
+          "tests": "Tests  2 failed | 109 passed (111)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "1b360ab546375881c1657d0bdb09e7235334867bd6aa7b9ee3ff828b625eb070",
+          "commands": [
+            "npx vitest run packages/polaris-dossier/src/launch-identity.test.ts"
+          ]
+        },
+        {
+          "id": "R2-no-HOST-check",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": "  return HOST.test(ascii) ? ascii : null;\n}\n\n/** A bracketed",
+          "new": "  return ascii;\n}\n\n/** A bracketed",
+          "commit": "fe05f21c4ffe0d90f23f78585d716618ec183503",
+          "tests": "Tests  3 failed | 108 passed (111)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "1b360ab546375881c1657d0bdb09e7235334867bd6aa7b9ee3ff828b625eb070",
+          "commands": [
+            "npx vitest run packages/polaris-dossier/src/launch-identity.test.ts"
+          ]
+        },
+        {
+          "id": "R2-rule-text-drops-class",
+          "file": "packages/polaris-dossier/src/launch-identity.ts",
+          "old": ", and a non-ASCII label that IDNA maps to nothing or cannot map, are refused'",
+          "new": ", are refused'",
+          "commit": "fe05f21c4ffe0d90f23f78585d716618ec183503",
+          "tests": "Tests  11 failed | 100 passed (111)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "1b360ab546375881c1657d0bdb09e7235334867bd6aa7b9ee3ff828b625eb070",
+          "commands": [
+            "npx vitest run packages/polaris-dossier/src/launch-identity.test.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "finding": "reviewer mutant O1: the egress scope line's anchors (tests only, 609256da; run at 1b748c0e, whose package-reader files equal 609256da's)",
+      "commit": "1b748c0e",
+      "mutants": [
+        {
+          "id": "O1-scope-line-no-end-anchor",
+          "file": "packages/polaris-generation-consent/src/package-reader.ts",
+          "old": "/^- `\\(project:syzygy, repository:([a-z0-9._-]+)\\)`$/.exec(line)",
+          "new": "/^- `\\(project:syzygy, repository:([a-z0-9._-]+)\\)`/.exec(line)",
+          "commit": "1b748c0e5ac699466f1a9379b2c12b6ed0f85dd0",
+          "tests": "Tests  1 failed | 341 passed (342)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "ae01b576dc08602518fc0cc331d63179eefe3faa92b28a4c444d387d4a345450",
+          "commands": [
+            "npx vitest run packages/polaris-generation-consent/src/package-reader.test.ts"
+          ]
+        },
+        {
+          "id": "O1b-scope-line-no-start-anchor",
+          "file": "packages/polaris-generation-consent/src/package-reader.ts",
+          "old": "/^- `\\(project:syzygy, repository:([a-z0-9._-]+)\\)`$/.exec(line)",
+          "new": "/- `\\(project:syzygy, repository:([a-z0-9._-]+)\\)`$/.exec(line)",
+          "commit": "1b748c0e5ac699466f1a9379b2c12b6ed0f85dd0",
+          "tests": "Tests  1 failed | 341 passed (342)",
+          "outcome": "killed",
+          "file_sha256_at_commit": "ae01b576dc08602518fc0cc331d63179eefe3faa92b28a4c444d387d4a345450",
+          "commands": [
+            "npx vitest run packages/polaris-generation-consent/src/package-reader.test.ts"
+          ]
+        }
+      ]
+    }
+  ]
+}

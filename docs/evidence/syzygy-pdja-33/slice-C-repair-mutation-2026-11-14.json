@@ -1,0 +1,506 @@
+{
+ "subject": "syzygy-pdja.33: repairs of R-PDJA-33-SLICE-C-1 findings 1 to 7 (the <transport>::<address> refusal, the leading empty segment, the interrupt watch, the disclosed host, port and identity rules, an identity remote with no one URL, the quoted preflight URL)",
+ "date": "2026-11-14",
+ "rule": "AGENTS.md verification rule 6: mutate the input and confirm the check fails, per predicate",
+ "method": "Each mutant replaces one exact old fragment (asserted to occur once) with new, runs the two commands with TMPDIR=/home/orca/.tmp/pdja33, and restores the file (its bytes asserted unchanged). Killed means either command exited non-zero.",
+ "runner": "a scratch Python script, not retained; every input it used is the file, old, new and commit of each entry",
+ "runs": {
+  "first": "CR1 to CR15 at 85bb5fb1, after the repair commits",
+  "full": "CR1 to CR15 at 4c64ca0b, after the interrupt-check tests"
+ },
+ "mutants": [
+  {
+   "id": "CR1-transport-admitted",
+   "file": "packages/polaris-dossier/src/launch-identity.ts",
+   "old": "    if (rest.startsWith(':')) return { ok: false, rule: RULE.transport };\n",
+   "new": "",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  5 failed | 117 passed (122)",
+   "integration": "Tests  183 passed (183)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "aa86fe2ff4c58aa0b52a7a0906d6542f5e2cc224a21d64d05fb6fe3c254a45a7",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR1-transport-admitted@85bb5fb1"
+  },
+  {
+   "id": "CR2-leading-slashes-collapsed",
+   "file": "packages/polaris-dossier/src/launch-identity.ts",
+   "old": "  let pathPart = scheme === 'scp' ? rest.replace(/^\\//, '') : rest;",
+   "new": "  let pathPart = rest.replace(/^\\/+/, '');",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  2 failed | 120 passed (122)",
+   "integration": "Tests  183 passed (183)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "aa86fe2ff4c58aa0b52a7a0906d6542f5e2cc224a21d64d05fb6fe3c254a45a7",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR2-leading-slashes-collapsed@85bb5fb1"
+  },
+  {
+   "id": "CR3-not-armed",
+   "file": "packages/polaris-dossier/src/launch.ts",
+   "old": "      ports.interrupt?.arm();\n",
+   "new": "",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  1 failed | 182 passed (183)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "1088c9e3d2891f75f8f65be17b844900414da1a14db18df5ac32a32358cefb31",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR3-not-armed@85bb5fb1"
+  },
+  {
+   "id": "CR4-no-check-after-copy",
+   "file": "packages/polaris-dossier/src/launch.ts",
+   "old": "      copyDir = made.dir;\n      ports.interrupt?.check();\n",
+   "new": "      copyDir = made.dir;\n",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  183 passed (183)",
+   "outcome": "survived",
+   "file_sha256_at_commit": "1088c9e3d2891f75f8f65be17b844900414da1a14db18df5ac32a32358cefb31",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "note": "Survived at 85bb5fb1: each launch check was covered by the next one (or, for the last, by init's). Resolved at 4c64ca0b by a test per check; killed there.",
+   "run_id": "CR4-no-check-after-copy@85bb5fb1"
+  },
+  {
+   "id": "CR5-no-check-before-question",
+   "file": "packages/polaris-dossier/src/launch.ts",
+   "old": "    ports.interrupt?.check();\n    for (const line of proposal.locatorStatements) say(line);",
+   "new": "    for (const line of proposal.locatorStatements) say(line);",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  183 passed (183)",
+   "outcome": "survived",
+   "file_sha256_at_commit": "1088c9e3d2891f75f8f65be17b844900414da1a14db18df5ac32a32358cefb31",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "note": "Survived at 85bb5fb1: each launch check was covered by the next one (or, for the last, by init's). Resolved at 4c64ca0b by a test per check; killed there.",
+   "run_id": "CR5-no-check-before-question@85bb5fb1"
+  },
+  {
+   "id": "CR6-no-check-before-write",
+   "file": "packages/polaris-dossier/src/launch.ts",
+   "old": "    ports.interrupt?.check();\n    const written: WriteResult",
+   "new": "    const written: WriteResult",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  183 passed (183)",
+   "outcome": "survived",
+   "file_sha256_at_commit": "1088c9e3d2891f75f8f65be17b844900414da1a14db18df5ac32a32358cefb31",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "note": "Survived at 85bb5fb1: each launch check was covered by the next one (or, for the last, by init's). Resolved at 4c64ca0b by a test per check; killed there.",
+   "run_id": "CR6-no-check-before-write@85bb5fb1"
+  },
+  {
+   "id": "CR7-no-init-check",
+   "file": "packages/polaris-dossier/src/init.ts",
+   "old": "    ports.launch?.interrupt?.check();\n",
+   "new": "",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  1 failed | 182 passed (183)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "822482621a38294de59828c88b35444c0939cba59d30db367a9735fdedb7d5ad",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR7-no-init-check@85bb5fb1"
+  },
+  {
+   "id": "CR8-not-disarmed",
+   "file": "packages/polaris-dossier/src/init.ts",
+   "old": "  } finally {\n    ports.launch?.interrupt?.disarm();\n  }\n",
+   "new": "  }\n",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  1 failed | 182 passed (183)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "822482621a38294de59828c88b35444c0939cba59d30db367a9735fdedb7d5ad",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR8-not-disarmed@85bb5fb1"
+  },
+  {
+   "id": "CR9-records-unnamed",
+   "file": "packages/polaris-dossier/src/init.ts",
+   "old": "${failureText(cause)}${recordedNote}`",
+   "new": "${failureText(cause)}`",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  2 failed | 181 passed (183)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "822482621a38294de59828c88b35444c0939cba59d30db367a9735fdedb7d5ad",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR9-records-unnamed@85bb5fb1"
+  },
+  {
+   "id": "CR10-multi-url-dropped",
+   "file": "packages/polaris-dossier/src/launch-clone.ts",
+   "old": "    remotes: [...urls].map(([name, list]): CloneRemote => (list.length === 1 && list[0] !== '' ? { name, url: list[0]! } : { name, url: null, urlLines: list.length })),",
+   "new": "    remotes: [...urls].flatMap(([name, list]) => (list.length === 1 && list[0] !== '' ? [{ name, url: list[0]! }] : [])),",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  1 failed | 121 passed (122)",
+   "integration": "Tests  183 passed (183)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "2b278eed2beb4e09b84c68e6a25b82af67cf19b2f6b6c2de97ec7edf2ac442b6",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR10-multi-url-dropped@85bb5fb1"
+  },
+  {
+   "id": "CR11-no-url-remote-unnamed",
+   "file": "packages/polaris-dossier/src/launch-identity.ts",
+   "old": "  if (remote !== null && remote.url === null) {",
+   "new": "  if (false) {",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  1 failed | 121 passed (122)",
+   "integration": "Tests  183 passed (183)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "aa86fe2ff4c58aa0b52a7a0906d6542f5e2cc224a21d64d05fb6fe3c254a45a7",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR11-no-url-remote-unnamed@85bb5fb1"
+  },
+  {
+   "id": "CR12-host-rule-undisclosed",
+   "file": "packages/polaris-dossier/src/launch-identity.ts",
+   "old": ": Syzygy admits only host names of that grammar, narrower than REQ-polaris-generation-046 states, so an IPv6 address literal and a Unicode host name are refused (give a Unicode host in its punycode form)',",
+   "new": "',",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  3 failed | 119 passed (122)",
+   "integration": "Tests  183 passed (183)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "aa86fe2ff4c58aa0b52a7a0906d6542f5e2cc224a21d64d05fb6fe3c254a45a7",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR12-host-rule-undisclosed@85bb5fb1"
+  },
+  {
+   "id": "CR13-port-rule-undisclosed",
+   "file": "packages/polaris-dossier/src/launch-identity.ts",
+   "old": "  port: 'its port is empty or not a decimal number: Syzygy admits a port only as one or more decimal digits, narrower than REQ-polaris-generation-046 states',",
+   "new": "  port: 'its port is not a decimal number',",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  2 failed | 120 passed (122)",
+   "integration": "Tests  183 passed (183)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "aa86fe2ff4c58aa0b52a7a0906d6542f5e2cc224a21d64d05fb6fe3c254a45a7",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR13-port-rule-undisclosed@85bb5fb1"
+  },
+  {
+   "id": "CR14-identity-rule-unnamed",
+   "file": "packages/polaris-dossier/src/launch-identity.ts",
+   "old": "reason: `--identity cannot name a repository identity: ${IDENTITY_RULE}`",
+   "new": "reason: '--identity cannot name a repository identity: after normalising it must open with a letter or digit'",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  1 failed | 121 passed (122)",
+   "integration": "Tests  183 passed (183)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "aa86fe2ff4c58aa0b52a7a0906d6542f5e2cc224a21d64d05fb6fe3c254a45a7",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR14-identity-rule-unnamed@85bb5fb1"
+  },
+  {
+   "id": "CR15-url-unquoted",
+   "file": "packages/polaris-dossier/src/preflight.ts",
+   "old": "fetch --depth=1 ${quote(input)} ${r.commitId}`",
+   "new": "fetch --depth=1 ${input} ${r.commitId}`",
+   "commit": "85bb5fb1f1de1dc5a035cd7046dffaaf844cd6c9",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  2 failed | 181 passed (183)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "9272093d78182445656a55370db1ea8aba6235280cee8392c0f344ceb4ac4e81",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR15-url-unquoted@85bb5fb1"
+  },
+  {
+   "id": "CR1-transport-admitted",
+   "file": "packages/polaris-dossier/src/launch-identity.ts",
+   "old": "    if (rest.startsWith(':')) return { ok: false, rule: RULE.transport };\n",
+   "new": "",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  5 failed | 117 passed (122)",
+   "integration": "Tests  184 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "aa86fe2ff4c58aa0b52a7a0906d6542f5e2cc224a21d64d05fb6fe3c254a45a7",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR1-transport-admitted@4c64ca0b"
+  },
+  {
+   "id": "CR2-leading-slashes-collapsed",
+   "file": "packages/polaris-dossier/src/launch-identity.ts",
+   "old": "  let pathPart = scheme === 'scp' ? rest.replace(/^\\//, '') : rest;",
+   "new": "  let pathPart = rest.replace(/^\\/+/, '');",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  2 failed | 120 passed (122)",
+   "integration": "Tests  184 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "aa86fe2ff4c58aa0b52a7a0906d6542f5e2cc224a21d64d05fb6fe3c254a45a7",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR2-leading-slashes-collapsed@4c64ca0b"
+  },
+  {
+   "id": "CR3-not-armed",
+   "file": "packages/polaris-dossier/src/launch.ts",
+   "old": "      ports.interrupt?.arm();\n",
+   "new": "",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  2 failed | 182 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "1088c9e3d2891f75f8f65be17b844900414da1a14db18df5ac32a32358cefb31",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR3-not-armed@4c64ca0b"
+  },
+  {
+   "id": "CR4-no-check-after-copy",
+   "file": "packages/polaris-dossier/src/launch.ts",
+   "old": "      copyDir = made.dir;\n      ports.interrupt?.check();\n",
+   "new": "      copyDir = made.dir;\n",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  1 failed | 183 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "1088c9e3d2891f75f8f65be17b844900414da1a14db18df5ac32a32358cefb31",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR4-no-check-after-copy@4c64ca0b"
+  },
+  {
+   "id": "CR5-no-check-before-question",
+   "file": "packages/polaris-dossier/src/launch.ts",
+   "old": "    ports.interrupt?.check();\n    for (const line of proposal.locatorStatements) say(line);",
+   "new": "    for (const line of proposal.locatorStatements) say(line);",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  1 failed | 183 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "1088c9e3d2891f75f8f65be17b844900414da1a14db18df5ac32a32358cefb31",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR5-no-check-before-question@4c64ca0b"
+  },
+  {
+   "id": "CR6-no-check-before-write",
+   "file": "packages/polaris-dossier/src/launch.ts",
+   "old": "    ports.interrupt?.check();\n    const written: WriteResult",
+   "new": "    const written: WriteResult",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  1 failed | 183 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "1088c9e3d2891f75f8f65be17b844900414da1a14db18df5ac32a32358cefb31",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR6-no-check-before-write@4c64ca0b"
+  },
+  {
+   "id": "CR7-no-init-check",
+   "file": "packages/polaris-dossier/src/init.ts",
+   "old": "    ports.launch?.interrupt?.check();\n",
+   "new": "",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  1 failed | 183 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "822482621a38294de59828c88b35444c0939cba59d30db367a9735fdedb7d5ad",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR7-no-init-check@4c64ca0b"
+  },
+  {
+   "id": "CR8-not-disarmed",
+   "file": "packages/polaris-dossier/src/init.ts",
+   "old": "  } finally {\n    ports.launch?.interrupt?.disarm();\n  }\n",
+   "new": "  }\n",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  1 failed | 183 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "822482621a38294de59828c88b35444c0939cba59d30db367a9735fdedb7d5ad",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR8-not-disarmed@4c64ca0b"
+  },
+  {
+   "id": "CR9-records-unnamed",
+   "file": "packages/polaris-dossier/src/init.ts",
+   "old": "${failureText(cause)}${recordedNote}`",
+   "new": "${failureText(cause)}`",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  2 failed | 182 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "822482621a38294de59828c88b35444c0939cba59d30db367a9735fdedb7d5ad",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR9-records-unnamed@4c64ca0b"
+  },
+  {
+   "id": "CR10-multi-url-dropped",
+   "file": "packages/polaris-dossier/src/launch-clone.ts",
+   "old": "    remotes: [...urls].map(([name, list]): CloneRemote => (list.length === 1 && list[0] !== '' ? { name, url: list[0]! } : { name, url: null, urlLines: list.length })),",
+   "new": "    remotes: [...urls].flatMap(([name, list]) => (list.length === 1 && list[0] !== '' ? [{ name, url: list[0]! }] : [])),",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  1 failed | 121 passed (122)",
+   "integration": "Tests  184 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "2b278eed2beb4e09b84c68e6a25b82af67cf19b2f6b6c2de97ec7edf2ac442b6",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR10-multi-url-dropped@4c64ca0b"
+  },
+  {
+   "id": "CR11-no-url-remote-unnamed",
+   "file": "packages/polaris-dossier/src/launch-identity.ts",
+   "old": "  if (remote !== null && remote.url === null) {",
+   "new": "  if (false) {",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  1 failed | 121 passed (122)",
+   "integration": "Tests  184 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "aa86fe2ff4c58aa0b52a7a0906d6542f5e2cc224a21d64d05fb6fe3c254a45a7",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR11-no-url-remote-unnamed@4c64ca0b"
+  },
+  {
+   "id": "CR12-host-rule-undisclosed",
+   "file": "packages/polaris-dossier/src/launch-identity.ts",
+   "old": ": Syzygy admits only host names of that grammar, narrower than REQ-polaris-generation-046 states, so an IPv6 address literal and a Unicode host name are refused (give a Unicode host in its punycode form)',",
+   "new": "',",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  3 failed | 119 passed (122)",
+   "integration": "Tests  184 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "aa86fe2ff4c58aa0b52a7a0906d6542f5e2cc224a21d64d05fb6fe3c254a45a7",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR12-host-rule-undisclosed@4c64ca0b"
+  },
+  {
+   "id": "CR13-port-rule-undisclosed",
+   "file": "packages/polaris-dossier/src/launch-identity.ts",
+   "old": "  port: 'its port is empty or not a decimal number: Syzygy admits a port only as one or more decimal digits, narrower than REQ-polaris-generation-046 states',",
+   "new": "  port: 'its port is not a decimal number',",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  2 failed | 120 passed (122)",
+   "integration": "Tests  184 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "aa86fe2ff4c58aa0b52a7a0906d6542f5e2cc224a21d64d05fb6fe3c254a45a7",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR13-port-rule-undisclosed@4c64ca0b"
+  },
+  {
+   "id": "CR14-identity-rule-unnamed",
+   "file": "packages/polaris-dossier/src/launch-identity.ts",
+   "old": "reason: `--identity cannot name a repository identity: ${IDENTITY_RULE}`",
+   "new": "reason: '--identity cannot name a repository identity: after normalising it must open with a letter or digit'",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  1 failed | 121 passed (122)",
+   "integration": "Tests  184 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "aa86fe2ff4c58aa0b52a7a0906d6542f5e2cc224a21d64d05fb6fe3c254a45a7",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR14-identity-rule-unnamed@4c64ca0b"
+  },
+  {
+   "id": "CR15-url-unquoted",
+   "file": "packages/polaris-dossier/src/preflight.ts",
+   "old": "fetch --depth=1 ${quote(input)} ${r.commitId}`",
+   "new": "fetch --depth=1 ${input} ${r.commitId}`",
+   "commit": "4c64ca0b00e71d4df1769077c3b400cb327b5ff4",
+   "unit": "Tests  122 passed (122)",
+   "integration": "Tests  2 failed | 182 passed (184)",
+   "outcome": "killed",
+   "file_sha256_at_commit": "9272093d78182445656a55370db1ea8aba6235280cee8392c0f344ceb4ac4e81",
+   "commands": [
+    "npx vitest run --project unit packages/polaris-dossier/src/launch-identity.test.ts packages/polaris-dossier/src/launch-clone.test.ts packages/polaris-dossier/src/launch-revision.test.ts",
+    "npx vitest run --project integration packages/polaris-dossier/src/launch.test.ts packages/polaris-dossier/src/start-gates.test.ts"
+   ],
+   "run_id": "CR15-url-unquoted@4c64ca0b"
+  }
+ ],
+ "summary": {
+  "runs": 30,
+  "killed": 27,
+  "survived": [
+   "CR4-no-check-after-copy@85bb5fb1",
+   "CR5-no-check-before-question@85bb5fb1",
+   "CR6-no-check-before-write@85bb5fb1"
+  ],
+  "survivors_resolved": "CR4, CR5 and CR6 at 85bb5fb1 are killed at 4c64ca0b, where every mutant is killed."
+ }
+}

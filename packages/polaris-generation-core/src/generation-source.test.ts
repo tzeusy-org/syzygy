@@ -23,6 +23,15 @@ describe('evaluation-bound generation sources', () => {
     expect(quotableGenerationSources([first, second])).toEqual([{ sourceId: 'purpose', text: body }, { sourceId: 'other', text: secondBody }]);
   });
 
+  it('reads a repository id by 046\'s identity grammar, "." included, and the github: form; refuses one outside (R-PDJA-33-RULINGS-2 finding 1)', () => {
+    const withId = (repositoryId: string): GenerationSource => {
+      const b = { ...base, repositoryId };
+      return { ...source(), repositoryId, spans: [{ anchorId: generationAnchorId(b, 0, Buffer.byteLength(body)), start: 0, end: Buffer.byteLength(body), text: body }] };
+    };
+    for (const id of ['repository:nodejs-node.js', 'repository:-x', 'repository:_a.b', 'github:Owner:repo_d']) expect(validateGenerationSources([withId(id)]), id).toHaveLength(1);
+    for (const id of ['repository:a b', 'repository:a/b', 'repository:a~b', '']) expect(() => validateGenerationSources([withId(id)]), id).toThrow('invalid-source');
+  });
+
   it('counts path-only, excluded and unavailable sources while withholding their bytes and anchors', () => {
     const quoted = source();
     const { body: _body, ...withoutBody } = quoted;
