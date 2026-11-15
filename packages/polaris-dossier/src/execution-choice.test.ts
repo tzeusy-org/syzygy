@@ -305,4 +305,20 @@ describe('syzygy dossier allow-execution', () => {
     expect(JSON.parse(result.stdout)).toEqual({ command: 'allow-execution', outcome: 'refused', stage: 'launched', reason: UNREADABLE_REASON, disclosures: REFUSAL_DISCLOSURES });
     expect(fs.existsSync(path.join(run, 'execution-choice.json'))).toBe(false);
   });
+
+  // syzygy-bpyt.8.11 (owner answer pr652-refusal-disclosures): the text form carries the four disclosures as stderr lines, in order.
+  it('renders the launched refusal\'s four disclosures as text lines disclosures.0 to disclosures.3, in order', async () => {
+    const run = runDirectory();
+    writeLaunchedMarker(run, RUN_ID, NOW);
+    const result = await cli(['allow-execution', run, '--revision', REV, '--declare', ALL.join(',')]);
+    expect(result.code).toBe(1);
+    expect(result.stderr.split('\n')).toContain('stage: launched');
+    expect(result.stderr.split('\n').filter((line) => line.startsWith('disclosures'))).toEqual([
+      `disclosures.0: ${REFUSAL_DISCLOSURES[0]}`,
+      `disclosures.1: ${REFUSAL_DISCLOSURES[1]}`,
+      `disclosures.2: ${REFUSAL_DISCLOSURES[2]}`,
+      `disclosures.3: ${REFUSAL_DISCLOSURES[3]}`,
+    ]);
+    expect(fs.existsSync(path.join(run, 'execution-choice.json'))).toBe(false);
+  });
 });

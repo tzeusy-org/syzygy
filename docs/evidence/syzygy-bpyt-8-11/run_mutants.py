@@ -2,7 +2,7 @@
 
 Run from the repository root: python3 docs/evidence/syzygy-bpyt-8-11/run_mutants.py <out.json>. A mutant is killed when vitest exits non-zero.
 """
-import json, subprocess, sys
+import hashlib, json, subprocess, sys
 
 TARGET = 'packages/polaris-dossier/src/execution-choice.ts'
 TEST = 'packages/polaris-dossier/src/execution-choice.test.ts'
@@ -25,10 +25,14 @@ def main() -> None:
             end = original.index('  const runId = path.basename(run);')
             block = original[start:end]
             anchor = "  if (!RUN_ID.test(runId)) return refuse('run', `${run} is not a run directory: its name is not of the form run-<32 hex>`);\n"
-            mutated = original[:start] + original[end:]
-            assert mutated.count(anchor) == 1
-            mutated = mutated.replace(anchor, anchor + block, 1)
-            old, new = block + 'const runId ... RUN_ID refusal', 'RUN_ID refusal\n' + block
+            stop = original.index(anchor) + len(anchor)
+            # The literal bytes replaced (block, run-name line, RUN_ID refusal) and their replacement (the same lines, block last).
+            old = original[start:stop]
+            new = original[end:stop] + block
+            assert original.count(old) == 1, ident
+            mutated = original.replace(old, new)
+            removed = original[:start] + original[end:]
+            assert removed.count(anchor) == 1 and mutated == removed.replace(anchor, anchor + block, 1), ident
         else:
             assert original.count(old) == 1, ident
             mutated = original.replace(old, new)
@@ -39,7 +43,8 @@ def main() -> None:
             open(TARGET, 'w', encoding='utf-8').write(original)
         failed = [line.strip() for line in run.stdout.splitlines() if line.strip().startswith('×')]
         results.append({'id': ident, 'old': old, 'new': new, 'exit': run.returncode, 'killed': run.returncode != 0, 'failedTests': failed})
-    json.dump({'subject': TARGET, 'test': TEST, 'commit': commit, 'mutants': results}, open(sys.argv[1], 'w'), indent=2)
+    digest = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+    json.dump({'subject': TARGET, 'subjectSha256': digest(TARGET), 'test': TEST, 'testSha256': digest(TEST), 'commit': commit, 'mutants': results}, open(sys.argv[1], 'w'), indent=2)
     print(json.dumps([(r['id'], r['killed'], len(r['failedTests'])) for r in results]))
 
 main()
