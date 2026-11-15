@@ -9,9 +9,9 @@ import subprocess
 import sys
 import time
 import runpy
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
 from types import SimpleNamespace
-from unittest.mock import mock_open, patch
+from unittest.mock import patch
 
 assert ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0) == 0
 ROOT = os.getpid()
@@ -30,6 +30,27 @@ def identity(pid, *, with_namespace=True):
                 'namespace': os.readlink(p / 'ns/pid') if with_namespace and owner == UID else None}
     except (FileNotFoundError, ProcessLookupError):
         return None
+
+
+@contextmanager
+def guardian_stat(data=None, error=None):
+    # The guardian reads stat bodies with raw os.open/os.read calls. Serve
+    # one synthetic body, or a read-time error, for the unreal PID only, and
+    # require the descriptor to be closed.
+    real_open = os.open
+    chunks = [] if data is None else [data[i:i + 4096] for i in range(0, len(data), 4096)]
+    def opened(path, flags, *args, **kwargs):
+        return 4242 if path == '/proc/999999999/stat' else real_open(path, flags, *args, **kwargs)
+    def read(fd, _size):
+        assert fd == 4242, 'guardian read an unexpected descriptor'
+        if error is not None:
+            raise error
+        return chunks.pop(0) if chunks else b''
+    with patch('os.open', side_effect=opened), patch('os.read', side_effect=read), \
+            patch('os.close') as closed:
+        yield
+    assert [call.args for call in closed.call_args_list] == [(4242,)] * len(closed.call_args_list) != [], \
+        'guardian left a stat descriptor open'
 
 
 def family():
@@ -103,12 +124,16 @@ assert mode in ('SIGTERM', 'SIGKILL', 'startup')
 # supplies the independent process/census evidence.
 guardian = runpy.run_path(guardian_path)
 with patch.object(Path, 'read_text', side_effect=ProcessLookupError('process exited during read')), \
-        patch('io.open', side_effect=ProcessLookupError('process exited during read')):
+        patch('os.open', side_effect=ProcessLookupError('process exited during open')):
     assert identity(999999999) is None
     assert guardian['identity'](999999999) is None
+    assert guardian['lineage'](999999999) is None
+for _reader in ('identity', 'lineage'):
+    with guardian_stat(error=ProcessLookupError('process exited during read')):
+        assert guardian[_reader](999999999) is None, f'{_reader} kept a process that exited during read'
 foreign_fields = ['S', '123'] + ['0'] * 17 + ['foreign-start']
 with patch.object(Path, 'read_text', return_value='999999999 (foreign) ' + ' '.join(foreign_fields)), \
-        patch('io.open', mock_open(read_data='999999999 (foreign) ' + ' '.join(foreign_fields))), \
+        guardian_stat(('999999999 (foreign) ' + ' '.join(foreign_fields)).encode()), \
         patch('os.stat', return_value=SimpleNamespace(st_uid=UID + 1)), \
         patch('os.readlink', side_effect=AssertionError('foreign UID namespace was inspected')):
     assert guardian['identity'](999999999)[4:] == (UID + 1, None)
@@ -118,9 +143,27 @@ with patch.object(Path, 'read_text', return_value='999999999 (foreign) ' + ' '.j
 for suffix in ('', ' extra ignored fields', '\tunused\ntrailing prose', '\u00a0unused'):
     for whitespace in (' ', '\t', '\u00a0'):
         text = '999999999 (synthetic ) name) ' + whitespace.join(foreign_fields) + suffix
-        with patch('io.open', mock_open(read_data=text)), \
+        with guardian_stat(text.encode()), \
                 patch('os.stat', return_value=SimpleNamespace(st_uid=UID + 1)):
             assert guardian['identity'](999999999) == (999999999, 'foreign-start', 123, 'S', UID + 1, None)
+        # A family scan reads only lineage, never the owner of a host process.
+        with guardian_stat(text.encode()), \
+                patch('os.stat', side_effect=AssertionError('scan row read an unused owner')):
+            assert guardian['lineage'](999999999) == (999999999, 'foreign-start', 123)
+# A stat body longer than one read is read whole, and a body the text codec
+# cannot decode still refuses rather than being skipped or repaired.
+long_text = '999999999 (' + 'n' * 5000 + ') ' + ' '.join(foreign_fields)
+for _reader in ('identity', 'lineage'):
+    with guardian_stat(long_text.encode()), patch('os.stat', return_value=SimpleNamespace(st_uid=UID + 1)):
+        assert guardian[_reader](999999999)[:3] == (999999999, 'foreign-start', 123), f'{_reader} truncated stat'
+    with guardian_stat(b'999999999 (\xff) ' + ' '.join(foreign_fields).encode()), \
+            patch('os.stat', return_value=SimpleNamespace(st_uid=UID + 1)):
+        try:
+            guardian[_reader](999999999)
+        except UnicodeDecodeError:
+            pass
+        else:
+            raise AssertionError(f'{_reader} accepted an undecodable stat body')
 stop = guardian['stop']
 ports = stop.__globals__
 row = (999999999, 'original-start', ROOT, 'S', UID, NAMESPACE)
@@ -169,15 +212,35 @@ warning_control = subprocess.run([sys.executable, '-X', 'warn_default_encoding',
 import runpy, sys
 from unittest.mock import patch
 guardian = runpy.run_path(sys.argv[1])
-with patch('io.open', side_effect=AssertionError('stat opened before decoder warning')):
-    try:
-        guardian['identity'](999999999)
-    except EncodingWarning:
-        pass
-    else:
-        raise AssertionError('missing decoder warning before stat access')
+with patch('os.open', side_effect=AssertionError('stat opened before decoder warning')):
+    for reader in ('identity', 'lineage'):
+        try:
+            guardian[reader](999999999)
+        except EncodingWarning:
+            pass
+        else:
+            raise AssertionError('missing decoder warning before stat access')
 ''', guardian_path], capture_output=True, text=True)
 assert warning_control.returncode == 0, warning_control.stderr
+# The stat body is decoded with the interpreter's locale codec, as a text-mode
+# read does: under a non-UTF-8 locale, non-ASCII bytes still refuse.
+codec_control = subprocess.run([sys.executable, '-X', 'utf8=0', '-c', '''
+import runpy, sys
+from unittest.mock import patch
+guardian = runpy.run_path(sys.argv[1])
+fields = ' '.join(['S', '123'] + ['0'] * 17 + ['start'])
+for reader in ('identity', 'lineage'):
+    with patch('os.open', return_value=4242), patch('os.close'), \\
+            patch('os.read', side_effect=[('999999999 (\\u00e9) ' + fields).encode(), b'']):
+        try:
+            guardian[reader](999999999)
+        except UnicodeDecodeError as error:
+            assert error.encoding == 'ascii', error.encoding
+        else:
+            raise AssertionError(reader + ' decoded stat with another codec than the locale')
+''', guardian_path], capture_output=True, text=True,
+    env={**os.environ, 'LC_ALL': 'C', 'PYTHONCOERCECLOCALE': '0', 'PYTHONUTF8': '0'})
+assert codec_control.returncode == 0, codec_control.stderr
 # The deadline refuses rather than acknowledging an unverified family.
 ticks = iter([0, 0])
 clock = SimpleNamespace(monotonic=lambda: next(ticks, 4), sleep=lambda _seconds: None)
@@ -240,12 +303,18 @@ finally:
 # A PID reused between the lineage snapshot and namespace verification is a
 # refusal, while a genuinely disappeared candidate has no live target.
 scan_refusals = []
-for label, scanner, reader, root_row, child_row in [
-    ('guardian-scan-reused', guardian['descendants'], 'identity',
+for label, scanner, scan_reader, root_row, child_row in [
+    ('guardian-scan-reused', guardian['descendants'], 'lineage',
      (ROOT, 'root', 0, 'S', UID, None), (999999999, 'original', ROOT, 'S', UID, None)),
-    ('observer-scan-reused', family, 'identity',
+    ('observer-scan-reused', family, None,
      {'pid': ROOT, 'start': 'root', 'ppid': 0}, {'pid': 999999999, 'start': 'original', 'ppid': ROOT}),
 ]:
+    def readers(identity_reader):
+        # The guardian scans lineage rows and verifies owned rows by identity.
+        ports = {'identity': identity_reader}
+        if scan_reader is not None:
+            ports[scan_reader] = lambda pid: identity_reader(pid, with_namespace=False)[:3]
+        return ports
     def scanned(pid, *, with_namespace=True):
         if pid == ROOT:
             return root_row
@@ -253,7 +322,7 @@ for label, scanner, reader, root_row, child_row in [
             return child_row
         return ((child_row[0], 'reused', *child_row[2:]) if isinstance(child_row, tuple)
                 else child_row | {'start': 'reused'})
-    with patch.dict(scanner.__globals__, {reader: scanned}), \
+    with patch.dict(scanner.__globals__, readers(scanned)), \
             patch('os.scandir', return_value=nullcontext([SimpleNamespace(name='999999999')])), \
             patch.object(Path, 'iterdir', return_value=iter([Path('/proc/999999999')])):
         try:
@@ -264,7 +333,7 @@ for label, scanner, reader, root_row, child_row in [
             raise AssertionError(f'{label} accepted a reused owned PID')
     def disappeared(pid, *, with_namespace=True):
         return root_row if pid == ROOT else (None if with_namespace else child_row)
-    with patch.dict(scanner.__globals__, {reader: disappeared}), \
+    with patch.dict(scanner.__globals__, readers(disappeared)), \
             patch('os.scandir', return_value=nullcontext([SimpleNamespace(name='999999999')])), \
             patch.object(Path, 'iterdir', return_value=iter([Path('/proc/999999999')])):
         assert not scanner(), 'a disappeared candidate remained in the family'

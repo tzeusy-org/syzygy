@@ -9,6 +9,7 @@ use this test-only adapter.
 """
 import ctypes
 import io
+import locale
 import os
 from pathlib import Path
 import select
@@ -24,19 +25,31 @@ NAMESPACE = os.readlink('/proc/self/ns/pid')
 
 
 def read_stat_text(path):
-    # Keep Path.read_text's default-decoder warning before opening the file.
+    # Keep the default-decoder warning before opening the file, then decode
+    # the whole file with that codec, as a text-mode read does. Raw reads skip
+    # a text stream's per-file setup, paid once per host process per scan.
     encoding = io.text_encoding(None)
-    with io.open(path, mode='r', encoding=encoding) as stream:
-        return stream.read()
+    fd = os.open(path, os.O_RDONLY)
+    try:
+        chunks = []
+        while chunk := os.read(fd, 4096):
+            chunks.append(chunk)
+    finally:
+        os.close(fd)
+    return b''.join(chunks).decode(locale.getencoding() if encoding == 'locale' else encoding)
+
+
+def stat_fields(pid):
+    text = read_stat_text(f'/proc/{pid}/stat')
+    # Only state, parent and start identity (fields 0, 1 and 19) are read.
+    # Keep those tokens exact without allocating every unused stat field.
+    return text[text.rfind(')') + 2:].split(None, 20)
 
 
 def identity(pid, *, with_namespace=True):
     directory = f'/proc/{pid}'
     try:
-        text = read_stat_text(directory + '/stat')
-        # Only state, parent and start identity (fields 0, 1 and 19) are read.
-        # Keep those tokens exact without allocating every unused stat field.
-        fields = text[text.rfind(')') + 2:].split(None, 20)
+        fields = stat_fields(pid)
         owner = os.stat(directory).st_uid
         # Namespace links for another UID may be unreadable on a normal
         # host. Retain its parent metadata so a foreign-UID descendant is
@@ -44,6 +57,17 @@ def identity(pid, *, with_namespace=True):
         namespace = os.readlink(directory + '/ns/pid') if with_namespace and owner == UID else None
         return (pid, fields[19], int(fields[1]), fields[0],
                 owner, namespace)
+    except (FileNotFoundError, ProcessLookupError):
+        return None
+
+
+def lineage(pid):
+    # A family scan reads every host process, and only start and parent
+    # decide lineage there: skip the owner lookup identity() makes. Each
+    # owned row is re-read by identity() before it is returned or signalled.
+    try:
+        fields = stat_fields(pid)
+        return (pid, fields[19], int(fields[1]))
     except (FileNotFoundError, ProcessLookupError):
         return None
 
@@ -66,7 +90,7 @@ def descendants():
     rows = {}
     for name in process_names():
         if name.isdigit():
-            row = identity(int(name), with_namespace=False)
+            row = lineage(int(name))
             if row is not None:
                 rows[row[0]] = row
     owned = {ROOT: identity(ROOT, with_namespace=False)}
